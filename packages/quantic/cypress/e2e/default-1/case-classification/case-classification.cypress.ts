@@ -1,5 +1,5 @@
 import {fetchClassifications} from '../../../page-objects/actions/action-fetch-classifications';
-import {AnalyticsModeEnum} from '../../../page-objects/analytics';
+import {analyticsModeTest} from '../../../page-objects/analytics';
 import {
   interceptCaseAssist,
   mockCaseClassification,
@@ -76,13 +76,7 @@ describe('quantic-case-classification', () => {
     configure(options);
   }
 
-  // TODO: (SFINT-5732)
-  [
-    {
-      mode: AnalyticsModeEnum.legacy,
-      label: 'when legacy analytics are sent',
-    },
-  ].forEach((analytics) => {
+  analyticsModeTest.forEach((analytics) => {
     describe(analytics.label, () => {
       before(() => {
         analyticsMode = analytics.mode;
@@ -119,16 +113,14 @@ describe('quantic-case-classification', () => {
             );
             Expect.numberOfInlineOptions(0);
             if (analyticsMode === 'next') {
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
+                {
+                  classificationId: allOptions[firstSuggestionIndex].id,
+                  responseId: exampleResponseId,
+                  autoselected: true,
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickedSuggestion(firstSuggestionIndex, true);
             }
@@ -140,18 +132,15 @@ describe('quantic-case-classification', () => {
 
             Actions.clickSuggestion(clickedIndex);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[clickedIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: false,
-              //   },
-              //   exampleTrackingId
-              // );
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
+                {
+                  classificationId: allOptions[clickedIndex].id,
+                  responseId: exampleResponseId,
+                  autoselected: false,
+                },
+                exampleTrackingId
+              );
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -176,7 +165,7 @@ describe('quantic-case-classification', () => {
             Actions.clickSelectOption(clickedIndex);
             Expect.hideSuggestions(true);
             if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -225,17 +214,14 @@ describe('quantic-case-classification', () => {
             Expect.displaySelectInput(false);
             Expect.displaySelectTitle(true);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
+                {
+                  classificationId: allOptions[firstSuggestionIndex].id,
+                  responseId: exampleResponseId,
+                  autoselected: true,
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickedSuggestion(firstSuggestionIndex, true);
             }
@@ -249,7 +235,7 @@ describe('quantic-case-classification', () => {
             Actions.openSelectInput();
             Actions.clickSelectOption(clickedIndex);
             if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -298,17 +284,14 @@ describe('quantic-case-classification', () => {
             Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
             Expect.displaySelectInput(false);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
+                {
+                  classificationId: allOptions[firstSuggestionIndex].id,
+                  responseId: exampleResponseId,
+                  autoselected: true,
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickedSuggestion(firstSuggestionIndex, true);
             }
@@ -320,18 +303,15 @@ describe('quantic-case-classification', () => {
 
             Actions.clickSuggestion(clickedIndex);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[clickedIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: false,
-              //   },
-              //   exampleTrackingId
-              // );
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
+                {
+                  classificationId: allOptions[clickedIndex].id,
+                  responseId: exampleResponseId,
+                  autoselected: false,
+                },
+                exampleTrackingId
+              );
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -353,7 +333,7 @@ describe('quantic-case-classification', () => {
 
             Actions.clickInlineOption(clickedIndex);
             if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex + suggestionsCount].value,
@@ -403,21 +383,6 @@ describe('quantic-case-classification', () => {
             Expect.numberOfSuggestions(suggestionsCount);
             Expect.numberOfInlineOptions(allOptions.length - suggestionsCount);
             Expect.displaySelectInput(false);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
           });
         });
@@ -444,20 +409,6 @@ describe('quantic-case-classification', () => {
 
             Actions.openSelectInput();
             Actions.clickSelectOption(clickedIndex);
-            if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
-                {
-                  fieldName: coveoDefaultField,
-                  fieldValue: allOptions[clickedIndex].value,
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logUpdatedClassificationFromSelectOption(
-                coveoDefaultField,
-                clickedIndex
-              );
-            }
             Actions.reportValidity();
             Expect.displayError(false);
           });
@@ -482,34 +433,8 @@ describe('quantic-case-classification', () => {
             Expect.displaySelectTitle(true);
             Expect.displaySelectInput(false);
             Expect.numberOfSuggestions(suggestionsCount);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
             Actions.clickSuggestion(firstSuggestionIndex);
-            if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
-                {
-                  fieldName: coveoDefaultField,
-                  fieldValue: '',
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logDeselect(coveoDefaultField);
-            }
             Expect.correctValue('');
             Actions.reportValidity();
             Expect.displayError(true);
@@ -529,32 +454,6 @@ describe('quantic-case-classification', () => {
             Expect.numberOfSuggestions(suggestionsCount);
             Actions.clickSuggestion(firstSuggestionIndex);
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: false,
-              //   },
-              //   exampleTrackingId
-              // );
-              NextAnalyticsExpectations.emitUpdateField(
-                {
-                  fieldName: coveoDefaultField,
-                  fieldValue: allOptions[firstSuggestionIndex].value,
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex);
-              Expect.logUpdatedClassificationFromSuggestion(
-                coveoDefaultField,
-                firstSuggestionIndex
-              );
-            }
             Actions.reportValidity();
             Expect.displayError(false);
           });
@@ -586,21 +485,6 @@ describe('quantic-case-classification', () => {
               exampleResponseId
             );
             fetchClassifications();
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
             Expect.displaySelectTitle(true);
             Expect.displaySelectInput(false);
@@ -666,52 +550,11 @@ describe('quantic-case-classification', () => {
               allOptions.slice(0, suggestionsCount)
             );
             Expect.numberOfInlineOptions(0);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
           });
 
           scope('when selecting a suggestion', () => {
             Actions.clickSuggestion(clickedIndex);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[clickedIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: false,
-              //   },
-              //   exampleTrackingId
-              // );
-              NextAnalyticsExpectations.emitUpdateField(
-                {
-                  fieldName: coveoDefaultField,
-                  fieldValue: allOptions[clickedIndex].value,
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logClickedSuggestion(clickedIndex);
-              Expect.logUpdatedClassificationFromSuggestion(
-                coveoDefaultField,
-                clickedIndex
-              );
-            }
             Expect.correctValue(allOptions[clickedIndex].value);
           });
 
@@ -768,53 +611,12 @@ describe('quantic-case-classification', () => {
                 allOptions.slice(0, suggestionsCount)
               );
               Expect.numberOfInlineOptions(0);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             }
           );
 
           scope('when selecting a suggestion', () => {
             Actions.clickSuggestion(clickedIndex);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[clickedIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: false,
-              //   },
-              //   exampleTrackingId
-              // );
-              NextAnalyticsExpectations.emitUpdateField(
-                {
-                  fieldName: coveoDefaultField,
-                  fieldValue: allOptions[clickedIndex].value,
-                },
-                exampleTrackingId
-              );
-            } else {
-              Expect.logClickedSuggestion(clickedIndex);
-              Expect.logUpdatedClassificationFromSuggestion(
-                coveoDefaultField,
-                clickedIndex
-              );
-            }
             Expect.correctValue(allOptions[clickedIndex].value);
           });
 
@@ -879,7 +681,7 @@ describe('quantic-case-classification', () => {
             Actions.openSelectInput();
             Actions.clickSelectOption(clickedIndex);
             if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -944,27 +746,11 @@ describe('quantic-case-classification', () => {
               allOptions.slice(0, suggestionsCount)
             );
             Expect.numberOfInlineOptions(0);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
           });
 
           scope('when fetching suggestions again', () => {
             const suggestionsCount = 2;
-            const firstDisplayedSuggestionIndex = 0;
             const firstSuggestionIndex = 1;
 
             mockCaseClassification(
@@ -986,21 +772,6 @@ describe('quantic-case-classification', () => {
               )
             );
             Expect.numberOfInlineOptions(0);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstDisplayedSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
           });
         });
@@ -1026,7 +797,7 @@ describe('quantic-case-classification', () => {
           scope('when selecting an inline option', () => {
             Actions.clickInlineOption(clickedIndex);
             if (analyticsMode === 'next') {
-              NextAnalyticsExpectations.emitUpdateField(
+              NextAnalyticsExpectations.emitCaseAssistUpdateField(
                 {
                   fieldName: coveoDefaultField,
                   fieldValue: allOptions[clickedIndex].value,
@@ -1095,52 +866,11 @@ describe('quantic-case-classification', () => {
                 allOptions.slice(0, suggestionsCount)
               );
               Expect.numberOfInlineOptions(0);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
             scope('when selecting a suggestion', () => {
               Actions.clickSuggestion(clickedIndex);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[clickedIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: false,
-                //   },
-                //   exampleTrackingId
-                // );
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue: allOptions[clickedIndex].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logClickedSuggestion(clickedIndex);
-                Expect.logUpdatedClassificationFromSuggestion(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.correctValue(allOptions[clickedIndex].value);
               Expect.fetchClassifications();
             });
@@ -1180,21 +910,6 @@ describe('quantic-case-classification', () => {
                 allOptions.length - suggestionsCount
               );
               Expect.displaySelectInput(false);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
@@ -1202,21 +917,6 @@ describe('quantic-case-classification', () => {
               const clickedIndex = 0;
 
               Actions.clickInlineOption(clickedIndex);
-              if (analyticsMode === 'next') {
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue:
-                      allOptions[clickedIndex + suggestionsCount].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logUpdatedClassificationFromInlineOption(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.correctValue(
                 allOptions[clickedIndex + suggestionsCount].value
               );
@@ -1257,21 +957,6 @@ describe('quantic-case-classification', () => {
                 allOptions.slice(0, suggestionsCount)
               );
               Expect.numberOfInlineOptions(0);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
@@ -1281,20 +966,6 @@ describe('quantic-case-classification', () => {
               Actions.openSelectInput();
               Actions.clickSelectOption(clickedIndex);
               Expect.correctValue(allOptions[clickedIndex].value);
-              if (analyticsMode === 'next') {
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue: allOptions[clickedIndex].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logUpdatedClassificationFromSelectOption(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.fetchClassifications();
             });
           });
@@ -1336,53 +1007,12 @@ describe('quantic-case-classification', () => {
                 allOptions.slice(0, suggestionsCount)
               );
               Expect.numberOfInlineOptions(0);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
             scope('when selecting a suggestion', () => {
               Actions.clickSuggestion(clickedIndex);
               Expect.correctValue(allOptions[clickedIndex].value);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[clickedIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: false,
-                //   },
-                //   exampleTrackingId
-                // );
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue: allOptions[clickedIndex].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logClickedSuggestion(clickedIndex);
-                Expect.logUpdatedClassificationFromSuggestion(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.fetchDocumentSuggestions();
             });
           });
@@ -1423,21 +1053,6 @@ describe('quantic-case-classification', () => {
                 allOptions.length - suggestionsCount
               );
               Expect.displaySelectInput(false);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
@@ -1445,21 +1060,6 @@ describe('quantic-case-classification', () => {
               const clickedIndex = 0;
 
               Actions.clickInlineOption(clickedIndex);
-              if (analyticsMode === 'next') {
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue:
-                      allOptions[clickedIndex + suggestionsCount].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logUpdatedClassificationFromInlineOption(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.correctValue(
                 allOptions[clickedIndex + suggestionsCount].value
               );
@@ -1501,21 +1101,6 @@ describe('quantic-case-classification', () => {
                 allOptions.slice(0, suggestionsCount)
               );
               Expect.numberOfInlineOptions(0);
-              if (analyticsMode === 'next') {
-                // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-                // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-                //   {
-                //     fieldClassification: {
-                //       id: allOptions[firstSuggestionIndex].id,
-                //       responseId: exampleResponseId,
-                //     },
-                //     autoselected: true,
-                //   },
-                //   exampleTrackingId
-                // );
-              } else {
-                Expect.logClickedSuggestion(firstSuggestionIndex, true);
-              }
               Expect.correctValue(allOptions[firstSuggestionIndex].value);
             });
 
@@ -1526,20 +1111,6 @@ describe('quantic-case-classification', () => {
               Actions.openSelectInput();
               Actions.clickSelectOption(clickedIndex);
               Expect.correctValue(allOptions[clickedIndex].value);
-              if (analyticsMode === 'next') {
-                NextAnalyticsExpectations.emitUpdateField(
-                  {
-                    fieldName: coveoDefaultField,
-                    fieldValue: allOptions[clickedIndex].value,
-                  },
-                  exampleTrackingId
-                );
-              } else {
-                Expect.logUpdatedClassificationFromSelectOption(
-                  coveoDefaultField,
-                  clickedIndex
-                );
-              }
               Expect.fetchDocumentSuggestions();
             });
           });
@@ -1570,21 +1141,6 @@ describe('quantic-case-classification', () => {
               allOptions.slice(0, suggestionsCount)
             );
             Expect.numberOfInlineOptions(0);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistSelectFieldClassification(
-              //   {
-              //     fieldClassification: {
-              //       id: allOptions[firstSuggestionIndex].id,
-              //       responseId: exampleResponseId,
-              //     },
-              //     autoselected: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logClickedSuggestion(firstSuggestionIndex, true);
-            }
             Expect.correctValue(allOptions[firstSuggestionIndex].value);
           });
         });
