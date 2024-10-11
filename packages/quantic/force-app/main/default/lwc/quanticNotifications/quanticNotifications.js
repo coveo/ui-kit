@@ -48,8 +48,8 @@ export default class QuanticNotifications extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.notifyTrigger = this.headless.buildNotifyTrigger(engine);
-    this.unsubscribe = this.notifyTrigger.subscribe(() => this.updateState());
     this.ariaLiveNotificationsRegion = AriaLiveRegion('notifications', this);
+    this.unsubscribe = this.notifyTrigger.subscribe(() => this.updateState());
   };
 
   disconnectedCallback() {

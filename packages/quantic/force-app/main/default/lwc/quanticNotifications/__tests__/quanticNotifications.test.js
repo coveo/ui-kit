@@ -4,6 +4,7 @@ import QuanticNotifications from 'c/quanticNotifications';
 // @ts-ignore
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {AriaLiveRegion} from 'c/quanticUtils';
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils');
@@ -16,7 +17,7 @@ let notificationsState = {
 let isInitialized = false;
 
 const exampleEngine = {
-  id: 'dummy engine',
+  id: 'mock engine',
 };
 
 const functionsMocks = {
@@ -24,9 +25,7 @@ const functionsMocks = {
     state: notificationsState,
     subscribe: functionsMocks.subscribe,
   })),
-  AriaLiveRegion: jest.fn(() => ({
-    dispatchMessage: jest.fn(),
-  })),
+  dispatchMessage: jest.fn(() => {}),
   subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
@@ -34,8 +33,15 @@ const functionsMocks = {
   unsubscribe: jest.fn(() => {}),
 };
 
+// @ts-ignore
+AriaLiveRegion.mockImplementation(() => {
+  return {
+    dispatchMessage: functionsMocks.dispatchMessage,
+  };
+});
+
 const selectors = {
-  notifications: 'c-quantic-notifications',
+  notifications: '[data-test="notification"]',
   initializationError: 'c-quantic-component-error',
 };
 
@@ -62,7 +68,6 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
-      AriaLiveRegion: functionsMocks.AriaLiveRegion,
     };
   };
 }
@@ -135,7 +140,24 @@ describe('c-quantic-notifications', () => {
   });
 
   describe('when the component is initialized successfully', () => {
-    describe('when no notification is fired by the pipeline trigger', () => {
+    describe('when some notifications are fired by the pipeline trigger', () => {
+      it('should render the notifications component', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const notifications = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notifications).not.toBeNull();
+        expect(notifications.length).toBe(exampleNotifications.length);
+        notifications.forEach((notification, index) => {
+          expect(notification.textContent).toEqual(exampleNotifications[index]);
+        });
+      });
+    });
+
+    describe('when no notifications are fired by the pipeline trigger', () => {
       beforeEach(() => {
         notificationsState = {
           notifications: [],
@@ -146,24 +168,14 @@ describe('c-quantic-notifications', () => {
         const element = createTestComponent();
         await flushPromises();
 
-        const notifications = element.shadowRoot.querySelector(
+        const notifications = element.shadowRoot.querySelectorAll(
           selectors.notifications
         );
 
-        expect(notifications).toBeNull();
-      });
-    });
-
-    describe('when some notifications are fired by the pipeline trigger', () => {
-      it('should render the notifications component', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const notifications = element.shadowRoot.querySelector(
-          selectors.notifications
-        );
-
-        expect(notifications).not.toBeNull();
+        notifications.forEach((notification) => {
+          expect(notification.textContent).toEqual(null);
+        });
+        expect(notifications.length).toEqual(0);
       });
     });
 
