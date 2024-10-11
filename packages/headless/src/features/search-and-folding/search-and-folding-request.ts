@@ -29,9 +29,6 @@ export const buildSearchAndFoldingLoadCollectionRequest = (
     tab: state.configuration.analytics.originLevel2,
     referrer: navigatorContext.referrer,
     timezone: state.configuration.search.timezone,
-    ...(state.configuration.analytics.enabled && {
-      visitorId: navigatorContext.clientId,
-    }),
     ...(state.advancedSearchQueries?.aq && {
       aq: state.advancedSearchQueries.aq,
     }),

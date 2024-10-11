@@ -41,9 +41,6 @@ export const buildContentURL = (req: HtmlRequest, path: string) => {
   if (req.requestedOutputSize !== undefined) {
     url.addParam('requestedOutputSize', `${req.requestedOutputSize}`);
   }
-  if (req.visitorId !== undefined) {
-    url.addParam('visitorId', `${req.visitorId}`);
-  }
   return url.href;
 };
 

@@ -251,7 +251,6 @@ describe('search api client', () => {
           fieldsToInclude: state.fields.fieldsToInclude,
           pipeline: state.pipeline,
           searchHub: state.searchHub,
-          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'search'},
@@ -346,7 +345,6 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
-          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'plan'},
@@ -416,7 +414,6 @@ describe('search api client', () => {
           timezone: state.configuration.search.timezone,
           locale: state.configuration.search.locale,
           actionsHistory: expect.any(Array),
-          visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
         requestMetadata: {method: 'querySuggest'},
@@ -570,7 +567,6 @@ describe('search api client', () => {
             ignoreValues: [],
             searchContext: {
               ...searchRequest,
-              visitorId: expect.any(String),
               analytics: {
                 ...searchRequest.analytics,
                 clientId: expect.any(String),
@@ -622,7 +618,6 @@ it calls PlatformClient.call with the category facet search params`, async () =>
             ignorePaths: [],
             searchContext: {
               ...searchRequest,
-              visitorId: expect.any(String),
               analytics: {
                 ...searchRequest.analytics,
                 clientId: expect.any(String),
@@ -685,7 +680,6 @@ it calls PlatformClient.call with the category facet search params`, async () =>
           actionsHistory: expect.any(Array),
           tab: originLevel2,
           referrer: originLevel3,
-          visitorId: expect.any(String),
           numberOfResults: recommendationState.pagination.numberOfResults,
         },
         preprocessRequest: NoopPreprocessRequest,
