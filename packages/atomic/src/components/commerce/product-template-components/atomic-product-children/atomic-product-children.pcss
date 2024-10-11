@@ -6,24 +6,21 @@ atomic-product-children .children-container {
 }
 
 .display-grid {
-  &.image-small,
-  &.image-large {
-    & atomic-product-children .children-container .product-child  {
-      &:nth-child(n + 6) {
-        display: none;
+  & atomic-product-children .children-container .product-child  {
+    &:nth-child(n + 6) {
+      display: none;
+    }
+    &:nth-child(6) {
+      & ~ .plus-button {
+        display: block;
       }
-      &:nth-child(6) {
-        & ~ .plus-button {
-          display: block;
-        }
-        &:last-child ~ .plus-button {
-          display: none;
-        }
+      &:last-child ~ .plus-button {
+        display: none;
       }
     }
   }
 }
 
-.display-grid atomic-product-children .children-container .plus-button {
+atomic-product-children .children-container .plus-button {
   display: none;
 }
