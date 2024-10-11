@@ -42,7 +42,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
 
 exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
 [
-  "Rga.SubmitRgaFeedback",
+  "Rga.SubmitFeedback",
   {
     "additionalNotes": undefined,
     "correctAnswerUrl": undefined,

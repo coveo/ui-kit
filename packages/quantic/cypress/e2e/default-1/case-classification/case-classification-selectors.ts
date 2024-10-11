@@ -55,7 +55,9 @@ export const CaseClassificationSelectors: CaseClassificationSelector &
       .find('.case-classification-option input')
       .eq(idx),
   error: () =>
-    CaseClassificationSelectors.get().find('.slds-form-element__help'),
+    CaseClassificationSelectors.get().find(
+      '[data-cy="case-classification-error-message"]'
+    ),
   loadingSpinner: () =>
     CaseClassificationSelectors.get().find('lightning-spinner'),
   componentError: () =>
