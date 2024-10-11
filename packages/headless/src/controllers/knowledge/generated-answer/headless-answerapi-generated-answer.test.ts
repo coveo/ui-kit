@@ -31,16 +31,30 @@ vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 vi.mock('../../../features/search/search-actions');
+
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
     '../../../api/knowledge/stream-answer-api'
   );
+  const queryCounter = {count: 0};
+  const queries = [
+    {q: '', requestId: ''},
+    {q: 'this est une question', requestId: '12'},
+    {q: 'this est une another question', requestId: '12'},
+    {q: '', requestId: '34'},
+    {q: 'this est une yet another question', requestId: '56'},
+  ];
   return {
     ...originalStreamAnswerApi,
     fetchAnswer: vi.fn(),
     selectAnswer: () => ({
       data: {answer: 'This est une answer', answerId: '12345_6'},
     }),
+    selectAnswerTriggerParams: () => {
+      const query = {...queries[queryCounter.count]};
+      queryCounter.count++;
+      return query;
+    },
   };
 });
 vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
@@ -54,10 +68,6 @@ vi.mock('../../../api/knowledge/post-answer-evaluation', () => ({
 }));
 
 describe('knowledge-generated-answer', () => {
-  it('should be tested', () => {
-    expect(true).toBe(true);
-  });
-
   let engine: MockedSearchEngine;
 
   const createGeneratedAnswer = (props: GeneratedAnswerProps = {}) =>
@@ -174,5 +184,33 @@ describe('knowledge-generated-answer', () => {
     expect(answerEvaluation.endpoints.post.initiate).toHaveBeenCalledWith(
       expectedArgs
     );
+  });
+
+  describe('subscribeToSearchRequest', () => {
+    it('triggers a fetchAnswer only when there is a request id, a query, and the request is made with another request than the last one', () => {
+      createGeneratedAnswer();
+
+      const listener = engine.subscribe.mock.calls[0][0];
+
+      // no request id, no call
+      listener();
+      expect(fetchAnswer).not.toHaveBeenCalled();
+
+      // first request id, call
+      listener();
+      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+
+      // same request id, no call
+      listener();
+      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+
+      // empty query, no call
+      listener();
+      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+
+      // new request id, call
+      listener();
+      expect(fetchAnswer).toHaveBeenCalledTimes(2);
+    });
   });
 });
