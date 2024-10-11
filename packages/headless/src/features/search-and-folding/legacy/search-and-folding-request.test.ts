@@ -109,9 +109,9 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.configuration.analytics.enabled = true;
     });
 
-    it('#visitorId is included in the request', async () => {
+    it('#analytics is included in the request', async () => {
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
-      expect(request.visitorId).toBeDefined();
+      expect(request.analytics).toBeDefined();
     });
 
     it('#actionsHistory is included in the request', async () => {
@@ -127,9 +127,9 @@ describe('buildSearchAndFoldingLoadCollectionRequest', () => {
       state.configuration.analytics.enabled = false;
     });
 
-    it('#visitorId is not included in the request', async () => {
+    it('#analytics is not included in the request', async () => {
       const request = await buildSearchAndFoldingLoadCollectionRequest(state);
-      expect(request.visitorId).toBeUndefined();
+      expect(request.analytics).toBeUndefined();
     });
 
     it('#actionsHistory is not included in the request', async () => {
