@@ -67,11 +67,7 @@ test.describe('when more results are available & there are result children', () 
     await expect(foldedResultList.resultChildren.first()).toBeVisible();
   });
 
-  test('should NOT the "no results" label', async ({foldedResultList}) => {
-    await expect(foldedResultList.noResultsLabel.first()).not.toBeVisible();
-  });
-
-  test('should NOT show a "no results" label', async ({foldedResultList}) => {
+  test('should NOT show the "no results" label', async ({foldedResultList}) => {
     await expect(foldedResultList.noResultsLabel.first()).not.toBeVisible();
   });
 });
