@@ -14,6 +14,7 @@ export interface GeneratedAnswerCitation {
   title: string;
   uri: string;
   permanentid: string;
+  source: string;
   clickUri?: string;
   text?: string;
   fields?: Raw;

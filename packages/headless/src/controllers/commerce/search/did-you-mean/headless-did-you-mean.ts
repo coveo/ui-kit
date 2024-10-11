@@ -50,7 +50,7 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
         wasCorrectedTo: state.wasCorrectedTo,
         queryCorrection: state.queryCorrection,
         hasQueryCorrection: hasQueryCorrection(),
-        wasAutomaticallyCorrected: hasQueryCorrection(),
+        wasAutomaticallyCorrected: state.wasCorrectedTo !== '',
       };
     },
   };

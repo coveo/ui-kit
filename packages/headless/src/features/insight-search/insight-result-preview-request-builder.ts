@@ -1,4 +1,3 @@
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {
   HtmlRequest,
@@ -15,8 +14,7 @@ export async function buildInsightResultPreviewRequest(
   state: StateNeededByInsightHtmlEndpoint,
   options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
-  const {accessToken, organizationId, analytics, environment} =
-    state.configuration;
+  const {accessToken, organizationId, environment} = state.configuration;
   const {insightId} = state.insightConfiguration;
 
   const q = state.query?.q || '';
@@ -32,9 +30,6 @@ export async function buildInsightResultPreviewRequest(
     accessToken,
     organizationId,
     enableNavigation: false,
-    ...(analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
-    }),
     q,
     ...options,
     requestedOutputSize: options.requestedOutputSize || 0,

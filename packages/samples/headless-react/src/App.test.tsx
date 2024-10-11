@@ -3,13 +3,10 @@ import {
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
 import {render} from '@testing-library/react';
-import {vi, SpyInstance} from 'vitest';
+import {vi, MockInstance} from 'vitest';
 import App from './App';
 
-let errorSpy: SpyInstance<
-  [message?: unknown, ...optionalParams: unknown[]],
-  void
->;
+let errorSpy: MockInstance;
 
 beforeEach(() => {
   errorSpy = vi.spyOn(global.console, 'error');
