@@ -3,7 +3,7 @@
  *
  * @example
  * ```typescript
- * import { buildCommerceEngine, getSampleCommerceEngineConfiguration, buildSearch } from '@coveo/headless-commerce';
+ * import { buildCommerceEngine, getSampleCommerceEngineConfiguration, buildSearch } from '@coveo/headless/commerce';
  *
  * const engine = buildCommerceEngine({
  *  configuration: getSampleCommerceEngineConfiguration(),
