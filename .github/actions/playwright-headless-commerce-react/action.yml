@@ -8,6 +8,6 @@ runs:
       working-directory: packages/samples/headless-commerce-react
       shell: bash
     - name: Run Playwright tests
-      run: pnpm dlx playwright test
+      run: pnpm playwright test
       working-directory: packages/samples/headless-commerce-react
       shell: bash

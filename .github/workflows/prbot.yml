@@ -19,8 +19,7 @@ jobs:
       - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
         with:
           node-version-file: '.nvmrc'
-      - run: enable corepack
-      - run: pnpm i
+      - uses: ./.github/actions/setup
       - run: pnpm run pr:report
   build:
     name: 'Build'

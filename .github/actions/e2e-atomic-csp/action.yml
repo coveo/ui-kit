@@ -6,7 +6,7 @@ runs:
     - name: Complementary setup
       run: |
         pnpm i
-        pnpm run build --filter @coveo/atomic
+        pnpm --filter @coveo/atomic run build
       shell: bash
     - name: Run tests
       # TODO KIT-3105

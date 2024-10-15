@@ -36,7 +36,6 @@
     "@cspell/eslint-plugin": "8.12.1",
     "@nx/js": "19.5.3",
     "@nx/storybook": "19.5.3",
-    "@nx/vite": "19.5.3",
     "@nx/web": "19.5.3",
     "@octokit/rest": "20.1.1",
     "@rollup/plugin-typescript": "11.1.6",
@@ -127,7 +126,7 @@
       "@stencil/react-output-target@0.5.3": "patches/@stencil__react-output-target@0.5.3.patch",
       "@storybook/blocks@8.1.11": "patches/@storybook__blocks@8.1.11.patch",
       "@storybook/web-components@8.1.11": "patches/@storybook__web-components@8.1.11.patch",
-      "coveo.analytics@2.30.38": "patches/coveo.analytics@2.30.38.patch",
+      "coveo.analytics@2.30.39": "patches/coveo.analytics@2.30.39.patch",
       "eslint-plugin-canonical@4.18.0": "patches/eslint-plugin-canonical@4.18.0.patch",
       "tailwindcss@3.4.7": "patches/tailwindcss@3.4.7.patch"
     }

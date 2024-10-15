@@ -23,9 +23,10 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'pnpm exec cypress-repeat --filter @coveo/atomic run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'pnpm exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        working-directory: packages/atomic
         spec: ${{ inputs.spec }}
-        start: pnpm start --filter @coveo/atomic
+        start: pnpm --filter @coveo/atomic start
         wait-on: 'http://localhost:3333/ping'
         wait-on-timeout: 600000
         install: false
