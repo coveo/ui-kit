@@ -13,7 +13,6 @@ export async function buildMockResultPreviewRequest(
     accessToken: 'access-token-xxxxx',
     organizationId: 'some-org-id',
     enableNavigation: false,
-    visitorId: 'visitor-id',
     q: 'query',
     requestedOutputSize: options.requestedOutputSize || 0,
     ...options,

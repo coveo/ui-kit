@@ -805,7 +805,7 @@ export namespace Components {
          */
         "automaticallyCorrectQuery": boolean;
         /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode": 'legacy' | 'next';
     }
@@ -1583,6 +1583,10 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         "isOpen": boolean;
         "openButton"?: HTMLElement;
         /**
@@ -1614,6 +1618,10 @@ export namespace Components {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -1623,6 +1631,10 @@ export namespace Components {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
@@ -2051,6 +2063,7 @@ export namespace Components {
         "field": string;
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * @type {string}
          */
         "imageAltField"?: string;
         /**
@@ -6731,7 +6744,7 @@ declare namespace LocalJSX {
          */
         "automaticallyCorrectQuery"?: boolean;
         /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode"?: 'legacy' | 'next';
     }
@@ -7478,6 +7491,10 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
         /**
@@ -7509,6 +7526,10 @@ declare namespace LocalJSX {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -7518,6 +7539,10 @@ declare namespace LocalJSX {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
@@ -7935,6 +7960,7 @@ declare namespace LocalJSX {
         "field"?: string;
         /**
           * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * @type {string}
          */
         "imageAltField"?: string;
     }

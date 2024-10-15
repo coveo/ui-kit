@@ -74,7 +74,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
 
     if (isOpen) {
       this.wasEverOpened = true;
-      //TODO: remove the addition of a class to the body in atomicV3
       document.body.classList.add(modalOpenedClass);
       this.bindings.interfaceElement.classList.add(modalOpenedClass);
       await this.waitForAnimationEnded();
@@ -83,7 +82,6 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       }
       this.focusTrap!.active = true;
     } else {
-      //TODO: remove the removal of a class to the body in atomicV3
       document.body.classList.remove(modalOpenedClass);
       this.bindings.interfaceElement.classList.remove(modalOpenedClass);
       if (isIOS()) {

@@ -1,3 +1,22 @@
+## 3.2.0 (2024-10-10)
+
+- fix(atomic, headless): use `next` as default value for queryCorrectionMode (#4495) ([ddce004](https://github.com/coveo/ui-kit/commits/ddce004)), closes [#4495](https://github.com/coveo/ui-kit/issues/4495)
+- fix(quantic,atomic): fixed timezone issue with user actions timeline (#4514) ([1142855](https://github.com/coveo/ui-kit/commits/1142855)), closes [#4514](https://github.com/coveo/ui-kit/issues/4514)
+- feat(headless): change citation from custom to click event (#4492) ([1cc5aee](https://github.com/coveo/ui-kit/commits/1cc5aee)), closes [#4492](https://github.com/coveo/ui-kit/issues/4492)
+- feat(quantic): quantic user actions toggle component created (#4494) ([374918c](https://github.com/coveo/ui-kit/commits/374918c)), closes [#4494](https://github.com/coveo/ui-kit/issues/4494)
+- feat(quantic): user actions timeline component created (#4477) ([bc54381](https://github.com/coveo/ui-kit/commits/bc54381)), closes [#4477](https://github.com/coveo/ui-kit/issues/4477)
+- fix(quantic): added missing privilege to insight token provider class (#4489) ([8208b17](https://github.com/coveo/ui-kit/commits/8208b17)), closes [#4489](https://github.com/coveo/ui-kit/issues/4489)
+- fix(quantic): alignment of time frame facet inputs fixed (#4491) ([e0c140d](https://github.com/coveo/ui-kit/commits/e0c140d)), closes [#4491](https://github.com/coveo/ui-kit/issues/4491)
+- fix(quantic): Clear icon not being displayed after selecting a suggestion in quantic searchbox (#448 ([80e6ba1](https://github.com/coveo/ui-kit/commits/80e6ba1)), closes [#4481](https://github.com/coveo/ui-kit/issues/4481)
+- fix(quantic): fix quick view modal close icon after salesforce winter 25 (#4490) ([aca3516](https://github.com/coveo/ui-kit/commits/aca3516)), closes [#4490](https://github.com/coveo/ui-kit/issues/4490)
+- fix(quantic): Limit the document.referrer to 256 chars in quantic interfaces (#4496) ([908de9d](https://github.com/coveo/ui-kit/commits/908de9d)), closes [#4496](https://github.com/coveo/ui-kit/issues/4496)
+
+## 3.1.0 (2024-10-02)
+
+- feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
+- feat(quantic): quantic user action component created (#4472) ([7add130](https://github.com/coveo/ui-kit/commits/7add130)), closes [#4472](https://github.com/coveo/ui-kit/issues/4472)
+- feat(quantic): quantic user actions session component created (#4473) ([0882dbc](https://github.com/coveo/ui-kit/commits/0882dbc)), closes [#4473](https://github.com/coveo/ui-kit/issues/4473)
+
 ## <small>3.0.4 (2024-09-25)</small>
 
 - test(quantic): added new apex class test to increase code coverage (#4464) ([b595d0d](https://github.com/coveo/ui-kit/commits/b595d0d)), closes [#4464](https://github.com/coveo/ui-kit/issues/4464)

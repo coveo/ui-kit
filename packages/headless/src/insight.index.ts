@@ -281,6 +281,12 @@ export type {
 export {buildTab} from './controllers/insight/tab/headless-insight-tab.js';
 
 export type {
+  NotifyTrigger,
+  NotifyTriggerState,
+} from './controllers/insight/triggers/headless-insight-notify-trigger.js';
+export {buildNotifyTrigger} from './controllers/insight/triggers/headless-insight-notify-trigger.js';
+
+export type {
   FacetConditionsManager,
   FacetConditionsManagerProps,
   AnyFacetValuesCondition,

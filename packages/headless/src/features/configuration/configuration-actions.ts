@@ -215,8 +215,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * - `legacy`: The legacy analytics client, i.e., the Coveo Analytics.js library.
    * - `next`: The next analytics client, i.e., the Coveo Event Protocol with the Relay library.
    *
-   * Starting at V3.0, the default value will be `next`.
-   * @default 'legacy'
+   * @default 'next'
    */
   analyticsMode?: 'legacy' | 'next';
   /**

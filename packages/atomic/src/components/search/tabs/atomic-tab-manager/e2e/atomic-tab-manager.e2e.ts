@@ -44,7 +44,7 @@ test.describe('AtomicTabManager', () => {
       test.beforeEach(async ({facets}) => {
         await facets.facetValue.first().waitFor({state: 'visible'});
       });
-      test.fixme('facets', async ({tabManager}) => {
+      test('facets', async ({tabManager}) => {
         const includedFacets = await tabManager.includedFacet.all();
         for (let i = 0; i < includedFacets.length; i++) {
           await expect(includedFacets[i]).toBeHidden();
@@ -64,15 +64,25 @@ test.describe('AtomicTabManager', () => {
         await tabManager.sortDropdown.waitFor({state: 'visible'});
 
         await expect(tabManager.sortDropdownOptions).toHaveText([
+          'Relevance',
           'Name descending',
           'Name ascending',
-          'Relevance',
         ]);
       });
 
       test('result list', async ({tabManager}) => {
         await expect(tabManager.excludedResultList).toBeVisible();
         await expect(tabManager.includedResultList).toBeHidden();
+      });
+
+      test('generated answer', async ({tabManager, searchBox}) => {
+        await searchBox.searchInput.waitFor({state: 'visible'});
+        await searchBox.searchInput.fill(
+          // eslint-disable-next-line @cspell/spellchecker
+          'how to resolve netflix connection with tivo'
+        );
+        await searchBox.searchInput.press('Enter');
+        await expect(tabManager.generatedAnswer).toBeHidden();
       });
     });
 
@@ -119,15 +129,27 @@ test.describe('AtomicTabManager', () => {
           await tabManager.sortDropdown.waitFor({state: 'visible'});
 
           await expect(tabManager.sortDropdownOptions).toHaveText([
+            'Relevance',
             'Most Recent',
             'Least Recent',
-            'Relevance',
           ]);
         });
 
         test('result list', async ({tabManager}) => {
           await expect(tabManager.includedResultList).toBeVisible();
           await expect(tabManager.excludedResultList).toBeHidden();
+        });
+
+        test('generated answer', async ({tabManager, searchBox}) => {
+          await searchBox.searchInput.waitFor({state: 'visible'});
+          await searchBox.searchInput.fill(
+            // eslint-disable-next-line @cspell/spellchecker
+            'how to resolve netflix connection with tivo'
+          );
+          await searchBox.searchInput.press('Enter');
+
+          await tabManager.generatedAnswer.waitFor({state: 'visible'});
+          await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
 
@@ -138,7 +160,7 @@ test.describe('AtomicTabManager', () => {
         });
 
         test.describe('should change other component visibility', async () => {
-          test.fixme('facets', async ({tabManager}) => {
+          test('facets', async ({tabManager}) => {
             const excludedFacets = await tabManager.excludedFacet.all();
             for (let i = 0; i < excludedFacets.length; i++) {
               await expect(excludedFacets[i]).toBeVisible();
@@ -158,15 +180,25 @@ test.describe('AtomicTabManager', () => {
             await tabManager.sortDropdown.waitFor({state: 'visible'});
 
             await expect(tabManager.sortDropdownOptions).toHaveText([
+              'Relevance',
               'Name descending',
               'Name ascending',
-              'Relevance',
             ]);
           });
 
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
             await expect(tabManager.includedResultList).toBeHidden();
+          });
+
+          test('generated answer', async ({tabManager, searchBox}) => {
+            await searchBox.searchInput.waitFor({state: 'visible'});
+            await searchBox.searchInput.fill(
+              // eslint-disable-next-line @cspell/spellchecker
+              'how to resolve netflix connection with tivo'
+            );
+            await searchBox.searchInput.press('Enter');
+            await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
       });
@@ -255,15 +287,27 @@ test.describe('AtomicTabManager', () => {
           await tabManager.refineModalHeader.waitFor({state: 'visible'});
 
           await expect(tabManager.refineModalSortDropdownOptions).toHaveText([
+            'Relevance',
             'Most Recent',
             'Least Recent',
-            'Relevance',
           ]);
         });
 
         test('result list', async ({tabManager}) => {
           await expect(tabManager.includedResultList).toBeVisible();
           await expect(tabManager.excludedResultList).toBeHidden();
+        });
+
+        test('generated answer', async ({tabManager, searchBox}) => {
+          await searchBox.searchInput.waitFor({state: 'visible'});
+          await searchBox.searchInput.fill(
+            // eslint-disable-next-line @cspell/spellchecker
+            'how to resolve netflix connection with tivo'
+          );
+
+          await searchBox.searchInput.press('Enter');
+
+          await expect(tabManager.generatedAnswer).toBeVisible();
         });
       });
 
@@ -297,15 +341,25 @@ test.describe('AtomicTabManager', () => {
             await tabManager.refineModalHeader.waitFor({state: 'visible'});
 
             await expect(tabManager.refineModalSortDropdownOptions).toHaveText([
+              'Relevance',
               'Name descending',
               'Name ascending',
-              'Relevance',
             ]);
           });
 
           test('result list', async ({tabManager}) => {
             await expect(tabManager.excludedResultList).toBeVisible();
             await expect(tabManager.includedResultList).toBeHidden();
+          });
+
+          test('generated answer', async ({tabManager, searchBox}) => {
+            await searchBox.searchInput.waitFor({state: 'visible'});
+            await searchBox.searchInput.fill(
+              // eslint-disable-next-line @cspell/spellchecker
+              'how to resolve netflix connection with tivo'
+            );
+            await searchBox.searchInput.press('Enter');
+            await expect(tabManager.generatedAnswer).toBeHidden();
           });
         });
       });

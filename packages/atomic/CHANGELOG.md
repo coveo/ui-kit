@@ -1,3 +1,31 @@
+## 3.3.0 (2024-10-10)
+
+- test(atomic): add tests & stories for atomic-product-image (#4469) ([bc09766](https://github.com/coveo/ui-kit/commits/bc09766)), closes [#4469](https://github.com/coveo/ui-kit/issues/4469)
+- test(atomic): add tests for atomic-product-price (#4441) ([09c56b4](https://github.com/coveo/ui-kit/commits/09c56b4)), closes [#4441](https://github.com/coveo/ui-kit/issues/4441)
+- test(atomic): fix flaky atomic-external tests (#4515) ([d207ff5](https://github.com/coveo/ui-kit/commits/d207ff5)), closes [#4515](https://github.com/coveo/ui-kit/issues/4515)
+- fix(atomic, headless): use `next` as default value for queryCorrectionMode (#4495) ([ddce004](https://github.com/coveo/ui-kit/commits/ddce004)), closes [#4495](https://github.com/coveo/ui-kit/issues/4495)
+- fix(quantic,atomic): fixed timezone issue with user actions timeline (#4514) ([1142855](https://github.com/coveo/ui-kit/commits/1142855)), closes [#4514](https://github.com/coveo/ui-kit/issues/4514)
+- feat(headless): change citation from custom to click event (#4492) ([1cc5aee](https://github.com/coveo/ui-kit/commits/1cc5aee)), closes [#4492](https://github.com/coveo/ui-kit/issues/4492)
+- fix(atomic): atomic-product-image crashes when giving an invalid image-alt-field value (#4482) ([1fb3864](https://github.com/coveo/ui-kit/commits/1fb3864)), closes [#4482](https://github.com/coveo/ui-kit/issues/4482)
+- fix(atomic): atomic-product-image fallback image is not using 1:1 ratio (#4483) ([816f529](https://github.com/coveo/ui-kit/commits/816f529)), closes [#4483](https://github.com/coveo/ui-kit/issues/4483)
+- fix(atomic): dim unselected facet value (#4410) ([5ba9101](https://github.com/coveo/ui-kit/commits/5ba9101)), closes [#4410](https://github.com/coveo/ui-kit/issues/4410)
+- fix(atomic): fix styling issues with atomic tabs (#4498) ([6d17ed7](https://github.com/coveo/ui-kit/commits/6d17ed7)), closes [#4498](https://github.com/coveo/ui-kit/issues/4498)
+- fix(atomic): improve error message for atomic-tabs without name (#4497) ([a25bc35](https://github.com/coveo/ui-kit/commits/a25bc35)), closes [#4497](https://github.com/coveo/ui-kit/issues/4497)
+- fix(atomic): prevent quickview from reopening when changing tab (#4508) ([35ab282](https://github.com/coveo/ui-kit/commits/35ab282)), closes [#4508](https://github.com/coveo/ui-kit/issues/4508)
+- fix(atomic): show atomic-tab-manager dropdown based on available space instead of fixed breakpoint ( ([78a429c](https://github.com/coveo/ui-kit/commits/78a429c)), closes [#4502](https://github.com/coveo/ui-kit/issues/4502)
+- fix(genqa): fix rga feedback position with chrome (#4480) ([e2585e4](https://github.com/coveo/ui-kit/commits/e2585e4)), closes [#4480](https://github.com/coveo/ui-kit/issues/4480)
+- chore: Add CI healthcheck for CDN builds (#4458) ([904df53](https://github.com/coveo/ui-kit/commits/904df53)), closes [#4458](https://github.com/coveo/ui-kit/issues/4458)
+- chore(atomic): fix atomic-tab-manager flaky test (#4507) ([42645c8](https://github.com/coveo/ui-kit/commits/42645c8)), closes [#4507](https://github.com/coveo/ui-kit/issues/4507)
+
+## <small>3.2.4 (2024-10-02)</small>
+
+- test(atomic): add tests for atomic-commerce-recommendation-list (#4437) ([74dff0d](https://github.com/coveo/ui-kit/commits/74dff0d)), closes [#4437](https://github.com/coveo/ui-kit/issues/4437)
+- test(atomic): add tests for generated answer tab support (#4447) ([7ab3dae](https://github.com/coveo/ui-kit/commits/7ab3dae)), closes [#4447](https://github.com/coveo/ui-kit/issues/4447)
+- test(atomic): move recs-interface, recs-list and external to playwright (#4425) ([ef53640](https://github.com/coveo/ui-kit/commits/ef53640)), closes [#4425](https://github.com/coveo/ui-kit/issues/4425)
+- test(atomic): rewrite "show more" facet tests in playwright (#4465) ([025804a](https://github.com/coveo/ui-kit/commits/025804a)), closes [#4465](https://github.com/coveo/ui-kit/issues/4465)
+- fix(atomic): remove product currency glitch on render (#4408) ([ff39242](https://github.com/coveo/ui-kit/commits/ff39242)), closes [#4408](https://github.com/coveo/ui-kit/issues/4408)
+- chore(atomic): only build atomic-react generated file during build mode (#4463) ([ce63c06](https://github.com/coveo/ui-kit/commits/ce63c06)), closes [#4463](https://github.com/coveo/ui-kit/issues/4463)
+
 ## <small>3.2.3 (2024-09-25)</small>
 
 - chore(atomic): fix tsconfig resolution for the e2e folders (#4462) ([2a037ff](https://github.com/coveo/ui-kit/commits/2a037ff)), closes [#4462](https://github.com/coveo/ui-kit/issues/4462)
