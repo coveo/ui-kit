@@ -43,6 +43,10 @@ export class AtomicInsightUserActionsModal
    * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
    */
   @Prop() public ticketCreationDateTime!: string;
+  /**
+   * The names of custom events to exclude.
+   */
+  @Prop() public excludedCustomActions: string[] = [];
 
   public componentDidLoad() {
     this.host.style.display = '';
@@ -115,6 +119,7 @@ export class AtomicInsightUserActionsModal
           <atomic-insight-user-actions-timeline
             userId={this.userId}
             ticketCreationDateTime={this.ticketCreationDateTime}
+            excludedCustomActions={this.excludedCustomActions}
             class="flex-1"
           ></atomic-insight-user-actions-timeline>
         </aside>
