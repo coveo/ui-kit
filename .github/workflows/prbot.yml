@@ -80,7 +80,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-csp
   prepare-playwright-atomic:
     name: 'Determine Playwright E2E tests to run'
-    if: ${{ always() && github.event_name == 'pull_request'}}
+    needs: build
     runs-on: ubuntu-latest
     env:
       maximumShards: 24
