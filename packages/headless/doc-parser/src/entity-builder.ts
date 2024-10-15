@@ -133,7 +133,8 @@ function getCustomTagValue(comment: DocComment | undefined, customTag: string) {
 }
 
 function getParamDescription(param: Parameter) {
-  const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  let nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  nodes = removeBlockTagNodes(nodes);
   const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (!description) {
@@ -162,13 +163,15 @@ function getReturnTypeDescription(m: ApiMethodSignature) {
 }
 
 function removeBlockTagNodes(nodes: readonly DocNode[]) {
-  return nodes.filter((n) => !hasBlockTag([n]));
+  const a = nodes.filter((n) => !hasBlockTag([n]));
+  return a;
 }
 
 function hasBlockTag(nodes: readonly DocNode[]): boolean {
   return nodes.some((n) => {
     const isBlockTag = n.kind === 'BlockTag';
-    const hasBlockTagChild = hasBlockTag(n.getChildNodes());
+    const c = n.getChildNodes();
+    const hasBlockTagChild = hasBlockTag(c);
     return isBlockTag || hasBlockTagChild;
   });
 }
