@@ -3,6 +3,7 @@ import {
   applyDidYouMeanCorrection,
   disableAutomaticQueryCorrection,
   enableDidYouMean,
+  setCorrectionMode,
 } from '../../../features/did-you-mean/did-you-mean-actions.js';
 import {didYouMeanReducer as didYouMean} from '../../../features/did-you-mean/did-you-mean-slice.js';
 import {
@@ -13,6 +14,7 @@ import {createMockState} from '../../../test/mock-state.js';
 import {
   buildCoreDidYouMean,
   DidYouMean,
+  DidYouMeanOptions,
   DidYouMeanProps,
 } from './headless-core-did-you-mean.js';
 
@@ -69,6 +71,15 @@ describe('did you mean', () => {
     expect(applyDidYouMeanCorrection).toHaveBeenCalledWith('bar');
   });
 
+  it('should allow to update the query correction mode', () => {
+    const initialState = createMockState();
+    initialState.didYouMean.queryCorrectionMode = 'legacy';
+    initDidYouMean({}, initialState);
+    dym.updateQueryCorrectionMode('next');
+
+    expect(engine.dispatch).toHaveBeenCalledWith(setCorrectionMode('next'));
+  });
+
   it('should dispatch disableAutomaticQueryCorrection at initialization when specified', () => {
     initDidYouMean({options: {automaticallyCorrectQuery: false}});
     expect(disableAutomaticQueryCorrection).toHaveBeenCalledTimes(1);
@@ -86,5 +97,18 @@ describe('did you mean', () => {
 
     dym.applyCorrection();
     expect(applyDidYouMeanCorrection).toHaveBeenCalledWith('bar');
+  });
+
+  it('should dispatch setCorrectionMode with the correct value', () => {
+    const options = {queryCorrectionMode: 'legacy'} as DidYouMeanOptions;
+    initDidYouMean({options});
+
+    expect(engine.dispatch).toHaveBeenCalledWith(setCorrectionMode('legacy'));
+  });
+
+  it('should dispatch setCorrectionMode with the default value "next" when no mode is provided', () => {
+    initDidYouMean();
+
+    expect(engine.dispatch).toHaveBeenCalledWith(setCorrectionMode('next'));
   });
 });

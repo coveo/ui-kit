@@ -772,7 +772,7 @@
   </labels>
   <labels>
     <fullName>quantic_DatePatternMonth</fullName>
-    <value>M</value>
+    <value>m</value>
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>Month part of the date pattern</shortDescription>
@@ -1553,5 +1553,54 @@
     <language>en_US</language>
     <protected>false</protected>
     <shortDescription>12 more actions in this session</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowFollowingSessions</fullName>
+    <value>Show following sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show following sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_HideFollowingSessions</fullName>
+    <value>Hide following sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Hide following sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_ShowPrecedingSessions</fullName>
+    <value>Show preceding sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Show preceding sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_HidePrecedingSessions</fullName>
+    <value>Hide preceding sessions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Hide preceding sessions</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoUserActionsAvailable</fullName>
+    <value>No user actions available</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>No user actions available</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_NoUserActionsAssociatedWithParams</fullName>
+    <value>There are no user actions associated with the user id or the case is too old to detect related actions.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>There are no user actions associated.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>quantic_UserActions</fullName>
+    <value>User actions</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>User actions</shortDescription>
   </labels>
 </CustomLabels>

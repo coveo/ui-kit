@@ -1,6 +1,5 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint.js';
 import {PlanRequest} from '../../api/search/plan/plan-request.js';
@@ -188,9 +187,6 @@ export const buildPlanRequest = async (
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),
     ...(state.searchHub && {searchHub: state.searchHub}),
-    ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
-    }),
     ...(state.configuration.analytics.enabled &&
     state.configuration.analytics.analyticsMode === 'legacy'
       ? await legacyFromAnalyticsStateToAnalyticsParams(

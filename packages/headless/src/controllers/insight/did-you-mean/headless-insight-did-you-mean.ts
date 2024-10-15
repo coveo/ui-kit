@@ -22,7 +22,9 @@ export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
  * @param engine - The insight engine.
  */
 export function buildDidYouMean(engine: InsightEngine): DidYouMean {
-  const controller = buildCoreDidYouMean(engine);
+  const controller = buildCoreDidYouMean(engine, {
+    options: {queryCorrectionMode: 'legacy'},
+  });
   const {dispatch} = engine;
 
   return {

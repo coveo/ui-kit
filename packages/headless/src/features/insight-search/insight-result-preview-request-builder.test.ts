@@ -45,7 +45,6 @@ describe('ResultPreviewRequestBuilder', () => {
       requestedOutputSize: 0,
       uniqueId: '1',
       url: expectedUrl,
-      visitorId: expect.any(String),
     });
   });
 });
