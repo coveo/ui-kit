@@ -2,7 +2,6 @@ import {Schema, StringValue} from '@coveo/bueno';
 import {Product} from '@coveo/headless/commerce';
 import {Component, State, h, Element, Prop} from '@stencil/core';
 import PlusIcon from '../../../../images/plus.svg';
-import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -44,7 +43,8 @@ export class AtomicProductDescription
   /**
    * The name of the description field to use.
    */
-  @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
+  @Prop() public field: 'ec_description' | 'ec_shortdesc' | 'excerpt' =
+    'ec_shortdesc';
 
   constructor() {
     this.resizeObserver = new ResizeObserver(() => {
@@ -65,7 +65,9 @@ export class AtomicProductDescription
       truncateAfter: new StringValue({
         constrainTo: ['none', '1', '2', '3', '4'],
       }),
-      field: new StringValue({constrainTo: ['ec_shortdesc', 'ec_description']}),
+      field: new StringValue({
+        constrainTo: ['ec_shortdesc', 'ec_description', 'excerpt'],
+      }),
     }).validate({
       truncateAfter: this.truncateAfter,
       field: this.field,
@@ -109,14 +111,10 @@ export class AtomicProductDescription
 
     if (productDescription !== null) {
       return (
-        <atomic-commerce-text
+        <atomic-product-text
           class={`product-description-text ${!this.isExpanded ? this.getLineClampClass() : ''}`}
-          value={getFieldValueCaption(
-            this.field,
-            productDescription,
-            this.bindings.i18n
-          )}
-        ></atomic-commerce-text>
+          field={this.field}
+        ></atomic-product-text>
       );
     }
   }
@@ -126,7 +124,7 @@ export class AtomicProductDescription
       <Button
         style="text-primary"
         part="label-button"
-        class={`my-2 p-1 text-xs ${this.isExpanded || !this.isTruncated || this.truncateAfter === 'none' ? 'invisible' : ''}`}
+        class={`p-1 text-xs ${this.isExpanded || !this.isTruncated || this.truncateAfter === 'none' ? 'invisible' : ''}`}
         title={this.bindings.i18n.t('show-more')}
         onClick={(e) => this.onToggleExpand(e)}
       >

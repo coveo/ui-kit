@@ -2027,7 +2027,7 @@ export namespace Components {
         /**
           * The name of the description field to use.
          */
-        "field": 'ec_description' | 'ec_shortdesc';
+        "field": 'ec_description' | 'ec_shortdesc' | 'excerpt';
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
@@ -7924,7 +7924,7 @@ declare namespace LocalJSX {
         /**
           * The name of the description field to use.
          */
-        "field"?: 'ec_description' | 'ec_shortdesc';
+        "field"?: 'ec_description' | 'ec_shortdesc' | 'excerpt';
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
