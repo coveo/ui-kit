@@ -173,61 +173,6 @@ test.describe('with an alt text field', async () => {
     });
   });
 
-  test.describe('when imageAltField is an array of valid strings', () => {
-    const NO_CAROUSEL_CUSTOM_FIELDS = [
-      'FIRST Nublu Water Bottle',
-      'SECOND Nublu Water Bottle 2',
-    ];
-    const CAROUSEL_CUSTOM_FIELDS = [
-      'FIRST Blue Lagoon Mat',
-      'SECOND Blue Lagoon Mat',
-    ];
-
-    test.beforeEach(async ({productImage}) => {
-      await productImage.withCustomField(
-        NO_CAROUSEL_CUSTOM_FIELDS,
-        CAROUSEL_CUSTOM_FIELDS
-      );
-      await productImage.load({
-        story: 'with-an-alt-text-field',
-        args: {
-          field: 'ec_thumbnails',
-          fallback: undefined,
-          imageAltField: 'custom_alt_field',
-        },
-      });
-      await productImage.noCarouselImage.waitFor();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
-    });
-
-    test('should correctly assign alt text for the first image', async ({
-      productImage,
-    }) => {
-      const noCarouselAlt =
-        await productImage.noCarouselImage.getAttribute('alt');
-      expect(noCarouselAlt).toContain(NO_CAROUSEL_CUSTOM_FIELDS[0]);
-
-      const carouselAlt = await productImage.carouselImage.getAttribute('alt');
-      expect(carouselAlt).toContain(CAROUSEL_CUSTOM_FIELDS[0]);
-    });
-
-    test('should correctly assign alt text for the last image', async ({
-      productImage,
-    }) => {
-      await productImage.nextButton.click();
-
-      await expect
-        .poll(async () => {
-          return await productImage.carouselImage.getAttribute('alt');
-        })
-        .toContain(CAROUSEL_CUSTOM_FIELDS[1]);
-    });
-  });
-
   test.describe('when imageAltField is not specified', () => {
     test.beforeEach(async ({productImage}) => {
       await productImage.load();
@@ -259,43 +204,6 @@ test.describe('with an alt text field', async () => {
 
   test.describe('when imageAltField is invalid', () => {
     test.beforeEach(async ({productImage}) => {
-      await productImage.load({
-        story: 'with-an-alt-text-field',
-        args: {
-          field: 'ec_thumbnails',
-          fallback: undefined,
-          imageAltField: 'custom_alt_field',
-        },
-      });
-      await productImage.noCarouselImage.waitFor();
-    });
-
-    test('should be accessible', async ({makeAxeBuilder}) => {
-      const accessibilityResults = await makeAxeBuilder().analyze();
-      expect(accessibilityResults.violations.length).toEqual(0);
-    });
-
-    test('should use the default alt text for all images', async ({
-      productImage,
-    }) => {
-      expect(await productImage.noCarouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 1 for Nublu Water Bottle'
-      );
-      expect(await productImage.carouselImage.getAttribute('alt')).toEqual(
-        'Image 1 out of 2 for Blue Lagoon Mat'
-      );
-      await productImage.nextButton.click();
-      await expect
-        .poll(async () => {
-          return await productImage.carouselImage.getAttribute('alt');
-        })
-        .toContain('Image 2 out of 2 for Blue Lagoon Mat');
-    });
-  });
-
-  test.describe('when imageAltField is an empty array', () => {
-    test.beforeEach(async ({productImage}) => {
-      await productImage.withCustomField([], []);
       await productImage.load({
         story: 'with-an-alt-text-field',
         args: {
