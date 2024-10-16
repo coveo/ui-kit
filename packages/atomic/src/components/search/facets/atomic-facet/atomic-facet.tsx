@@ -101,6 +101,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * @part show-less - The show less results button.
  * @part show-more-less-icon - The icons of the show more & show less buttons.
  * test
+ * test
  */
 @Component({
   tag: 'atomic-facet',
