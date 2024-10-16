@@ -1,3 +1,8 @@
+## <small>3.2.1 (2024-10-16)</small>
+
+- chore(quantic): skip consistently failing quantic tests (#4540) ([4a1b1f6](https://github.com/coveo/ui-kit/commits/4a1b1f6)), closes [#4540](https://github.com/coveo/ui-kit/issues/4540)
+- test(quantic): ep analytics tests fixed in the e2e (#4529) ([435e2c2](https://github.com/coveo/ui-kit/commits/435e2c2)), closes [#4529](https://github.com/coveo/ui-kit/issues/4529)
+
 ## 3.2.0 (2024-10-10)
 
 - fix(atomic, headless): use `next` as default value for queryCorrectionMode (#4495) ([ddce004](https://github.com/coveo/ui-kit/commits/ddce004)), closes [#4495](https://github.com/coveo/ui-kit/issues/4495)
