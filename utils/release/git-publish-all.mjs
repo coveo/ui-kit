@@ -56,7 +56,7 @@ process.chdir(process.env.INIT_CWD);
     **/package.json
     CHANGELOG.md
     package.json
-    package-lock.json
+    pnpm-lock.yml
   `;
 
   // Craft the commit (complex process, see function)

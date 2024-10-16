@@ -88,7 +88,7 @@ This task is only run for the scheduled release.
 This task will create a new "version bump" commit, which will contain:
 
 - The new `package.json` files.
-- The new `package-lock.json` file.
+- The new `pnpm-lock.yml` file.
 - The new `CHANGELOG.md` files.
 - Git tags for each bumped package version.
 

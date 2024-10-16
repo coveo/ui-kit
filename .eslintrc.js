@@ -23,19 +23,6 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/package-lock.json'],
-      parser: 'eslint-plugin-json-es',
-      plugins: ['package-lock'],
-      rules: {
-        'package-lock/lock-file-version': [
-          'error',
-          {
-            version: 3,
-          },
-        ],
-      },
-    },
-    {
       // Note: *.md files are directly checked using cspell cli in lint-staged
       files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx', '**/*.mjs'],
       extends: ['plugin:@cspell/recommended'],

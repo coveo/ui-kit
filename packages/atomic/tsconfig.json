@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.stencil.json",
-  "exclude": ["node_modules", "src/external-builds"]
+  "exclude": ["node_modules", "src/external-builds"],
+  "compilerOptions": {
+    "paths": {
+      "@storybookUtils/*": ["./storybookUtils/*"]
+    }
+  }
 }
