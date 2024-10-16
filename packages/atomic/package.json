@@ -85,7 +85,6 @@
   "devDependencies": {
     "@axe-core/playwright": "4.9.1",
     "@babel/core": "7.24.9",
-    "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "workspace:*",
     "@coveo/rollup-plugin-replace-with-ast": "workspace:*",
     "@custom-elements-manifest/analyzer": "0.10.3",

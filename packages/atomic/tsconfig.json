@@ -3,7 +3,7 @@
   "exclude": ["node_modules", "src/external-builds"],
   "compilerOptions": {
     "paths": {
-      "@storybookUtils/*": ["./storybookUtils/*"]
+      "@coveo/atomic-storybook-utils/*": ["./storybookUtils/*"]
     }
   }
 }

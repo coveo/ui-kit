@@ -275,9 +275,6 @@ importers:
       '@babel/core':
         specifier: 7.24.9
         version: 7.24.9
-      '@coveo/atomic-storybook-utils':
-        specifier: file:./storybookUtils
-        version: storybookUtils@file:packages/atomic/storybookUtils
       '@coveo/release':
         specifier: workspace:*
         version: link:../../utils/release
@@ -13782,9 +13779,6 @@ packages:
   storybook@8.1.2:
     resolution: {integrity: sha512-6yJ7e320AmT6x8IGeNd3P79RDZI+8v9Pp3AZaHLgBnxdp4qehSfBZxW9MtZunVnXlgpI+HXOogwMJMWayg428A==}
     hasBin: true
-
-  storybookUtils@file:packages/atomic/storybookUtils:
-    resolution: {directory: packages/atomic/storybookUtils, type: directory}
 
   stream-log-stats@3.0.2:
     resolution: {integrity: sha512-393j7aeF9iRdHvyANqEQU82UQmpw2CTxgsT83caefh+lOxavVLbVrw8Mr4zjXeZLh2+xeHZMKfVx4T0rJ/EchA==}
@@ -33610,8 +33604,6 @@ snapshots:
       - react-dom
       - supports-color
       - utf-8-validate
-
-  storybookUtils@file:packages/atomic/storybookUtils: {}
 
   stream-log-stats@3.0.2:
     dependencies:
