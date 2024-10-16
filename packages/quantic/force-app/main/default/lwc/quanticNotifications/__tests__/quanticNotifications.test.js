@@ -156,6 +156,24 @@ describe('c-quantic-notifications', () => {
 
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
+
+    it('should call AriaLiveRegion with the right parameters', async () => {
+      await createTestComponent();
+      await flushPromises();
+
+      const expectedObject = {
+        headless: {
+          buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
+        },
+        unsubscribe: functionsMocks.unsubscribe,
+      };
+
+      expect(AriaLiveRegion).toHaveBeenCalledTimes(1);
+      expect(AriaLiveRegion).toHaveBeenCalledWith(
+        'notifications',
+        expect.objectContaining(expectedObject)
+      );
+    });
   });
 
   describe('when the component is initialized successfully', () => {
