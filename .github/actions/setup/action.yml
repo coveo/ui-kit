@@ -21,9 +21,7 @@ runs:
       shell: bash
     - name: Enable Corepack (installs pnpm)
       shell: bash
-      run:
-        corepack enable
-        # TODO: Is this needed now ? with setup node cache
+      run: corepack enable
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: npm-cache
       with:

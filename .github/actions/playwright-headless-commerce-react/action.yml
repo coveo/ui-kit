@@ -4,7 +4,7 @@ runs:
   using: composite
   steps:
     - name: Install Playwright Browsers
-      run: pnpm dlx playwright install --with-deps
+      run: pnpm playwright install --with-deps
       working-directory: packages/samples/headless-commerce-react
       shell: bash
     - name: Run Playwright tests

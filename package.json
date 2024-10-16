@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "postinstall": "husky install && pnpm dlx playwright install",
+    "postinstall": "husky install && pnpm playwright install",
     "reset:install": "git checkout origin/master pnpm-lock.yml && pnpm i",
     "clean:install": "git clean -xfd && pnpm run reset:install",
     "dev:atomic": "concurrently \"pnpm run --filter @coveo/headless dev\" \"pnpm run --filter @coveo/atomic start\"",

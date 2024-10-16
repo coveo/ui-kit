@@ -45,5 +45,5 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
-      - run: pnpm dlx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
+      - run: pnpm --no-install ts-node packages/quantic/scripts/build/delete-org.ts
         shell: bash

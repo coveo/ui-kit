@@ -17,7 +17,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: pnpm dlx cypress install
+    - run: pnpm cypress install
       shell: bash
     - uses: cypress-io/github-action@v5
       name: Run Cypress
