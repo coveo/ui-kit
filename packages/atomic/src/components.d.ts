@@ -2029,7 +2029,7 @@ export namespace Components {
          */
         "field": 'ec_description' | 'ec_shortdesc';
         /**
-          * Whether the excerpt should be collapsible after being expanded.
+          * Whether the description should be collapsible after being expanded.
          */
         "isCollapsible": boolean;
         /**
@@ -7953,7 +7953,7 @@ declare namespace LocalJSX {
          */
         "field"?: 'ec_description' | 'ec_shortdesc';
         /**
-          * Whether the excerpt should be collapsible after being expanded.
+          * Whether the description should be collapsible after being expanded.
          */
         "isCollapsible"?: boolean;
         /**
