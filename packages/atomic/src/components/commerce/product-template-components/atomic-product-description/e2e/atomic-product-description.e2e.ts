@@ -12,10 +12,9 @@ test.describe('atomic-product-description', async () => {
     expect(accessibilityResults.violations.length).toEqual(0);
   });
 
-  const fields: Array<'ec_description' | 'ec_shortdesc' | 'excerpt'> = [
+  const fields: Array<'ec_description' | 'ec_shortdesc'> = [
     'ec_description',
     'ec_shortdesc',
-    'excerpt',
   ];
 
   fields.forEach((field) => {
@@ -59,10 +58,58 @@ test.describe('atomic-product-description', async () => {
           expect(showMoreButton).toBeVisible();
         });
 
-        test('should expand description', async ({productDescription}) => {
-          await productDescription.showMoreButton.first().click();
-          const descriptionText = productDescription.textContent.first();
-          expect(descriptionText).not.toHaveClass(/line-clamp-2/);
+        test.describe('when clicking the "Show More" button', async () => {
+          test.describe('when isCollapsible is true', async () => {
+            test.beforeEach(async ({productDescription}) => {
+              await productDescription.load({
+                args: {truncateAfter: value, isCollapsible: true},
+              });
+              await productDescription.hydrated.first().waitFor();
+              await productDescription.showMoreButton.first().click();
+            });
+
+            test('should expand description', async ({productDescription}) => {
+              const descriptionText = productDescription.textContent.first();
+              expect(descriptionText).not.toHaveClass(expectedClass);
+            });
+
+            test('should show "Show Less" button', async ({
+              productDescription,
+            }) => {
+              const showLessButton = productDescription.showLessButton.first();
+              expect(showLessButton).toBeVisible();
+            });
+
+            test('should collapse description when clicking the "Show Less" button', async ({
+              productDescription,
+            }) => {
+              const descriptionText = productDescription.textContent.first();
+              await productDescription.showLessButton.first().click();
+
+              expect(descriptionText).toHaveClass(expectedClass);
+            });
+          });
+
+          test.describe('when isCollapsible is false', async () => {
+            test.beforeEach(async ({productDescription}) => {
+              await productDescription.load({
+                args: {truncateAfter: value, isCollapsible: false},
+              });
+              await productDescription.hydrated.first().waitFor();
+              await productDescription.showMoreButton.first().click();
+            });
+
+            test('should expand description', async ({productDescription}) => {
+              const descriptionText = productDescription.textContent.first();
+              expect(descriptionText).not.toHaveClass(expectedClass);
+            });
+
+            test('should not show "Show Less" button', async ({
+              productDescription,
+            }) => {
+              expect(productDescription.showLessButton).not.toBeVisible();
+            });
+          });
         });
       });
     });
