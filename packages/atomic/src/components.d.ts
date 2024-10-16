@@ -2027,7 +2027,7 @@ export namespace Components {
         /**
           * The name of the description field to use.
          */
-        "field": 'ec_description' | 'ec_shortdesc' | 'excerpt';
+        "field": 'ec_description' | 'ec_shortdesc';
         /**
           * Whether the excerpt should be collapsible after being expanded.
          */
@@ -7951,7 +7951,7 @@ declare namespace LocalJSX {
         /**
           * The name of the description field to use.
          */
-        "field"?: 'ec_description' | 'ec_shortdesc' | 'excerpt';
+        "field"?: 'ec_description' | 'ec_shortdesc';
         /**
           * Whether the excerpt should be collapsible after being expanded.
          */
