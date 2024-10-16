@@ -4,10 +4,10 @@ import {
   interceptSearch,
   mockSearchWithNotifyTrigger,
 } from '../../../page-objects/search';
+import {useCaseParamTest} from '../../../page-objects/use-case';
 import {NotificationsExpectations as Expect} from './notifications-expectations';
 
 const exampleNotifications = ['Notification one', 'Notification two'];
-const useCases = ['search', 'insights'];
 
 describe('quantic-notifications', () => {
   const pageUrl = 's/quantic-notifications';
@@ -18,8 +18,8 @@ describe('quantic-notifications', () => {
     configure();
   }
 
-  useCases.forEach((useCase) => {
-    describe(`when no notification is fired by the pipeline trigger for the ${useCase} use case`, () => {
+  useCaseParamTest.forEach((param) => {
+    describe(`when no notification is fired by the pipeline trigger ${param.label}`, () => {
       it('should not render any notification', () => {
         visitNotifications();
 
@@ -28,10 +28,10 @@ describe('quantic-notifications', () => {
       });
     });
 
-    describe(`when some notifications are fired by the pipeline trigger for the ${useCase} use case`, () => {
+    describe(`when some notifications are fired by the pipeline trigger for the ${param.label}`, () => {
       it('should render the notifications', () => {
         visitNotifications();
-        mockSearchWithNotifyTrigger(useCase, exampleNotifications);
+        mockSearchWithNotifyTrigger(param.useCase, exampleNotifications);
 
         cy.wait(getQueryAlias());
         Expect.displayNotifications(true);

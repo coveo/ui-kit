@@ -139,8 +139,27 @@ describe('c-quantic-notifications', () => {
     });
   });
 
+  describe('component initialization', () => {
+    it('should build the controller with the proper paramters', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildNotifyTrigger).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildNotifyTrigger).toHaveBeenCalledWith(
+        exampleEngine
+      );
+    });
+
+    it('should subscribe to the headless state changes', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('when the component is initialized successfully', () => {
-    describe('when some notifications are fired by the pipeline trigger', () => {
+    describe('when some notifications are present in the state', () => {
       it('should render the notifications component', async () => {
         const element = createTestComponent();
         await flushPromises();
@@ -157,7 +176,7 @@ describe('c-quantic-notifications', () => {
       });
     });
 
-    describe('when no notifications are fired by the pipeline trigger', () => {
+    describe('when no notifications are present in the state', () => {
       beforeEach(() => {
         notificationsState = {
           notifications: [],
@@ -172,18 +191,8 @@ describe('c-quantic-notifications', () => {
           selectors.notifications
         );
 
-        notifications.forEach((notification) => {
-          expect(notification.textContent).toEqual(null);
-        });
         expect(notifications.length).toEqual(0);
       });
-    });
-
-    it('should subscribe to the headless state changes', async () => {
-      createTestComponent();
-      await flushPromises();
-
-      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
   });
 });
