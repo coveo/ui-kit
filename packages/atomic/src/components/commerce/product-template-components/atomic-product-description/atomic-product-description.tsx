@@ -45,7 +45,7 @@ export class AtomicProductDescription
   @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
 
   /**
-   * Whether the excerpt should be collapsible after being expanded.
+   * Whether the description should be collapsible after being expanded.
    */
   @Prop() public isCollapsible = true;
 
