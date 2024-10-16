@@ -1,3 +1,4 @@
+import {EOL} from 'os';
 import {publint} from 'publint';
 
 let exitCode = 0;
@@ -43,24 +44,27 @@ const issues = await Promise.all(
   })
 );
 
+function prettyPrintJSON(label, jsonObject, logFunction) {
+  logFunction(`${label}:`, EOL);
+  logFunction(JSON.stringify(jsonObject, null, 2), EOL);
+}
+
 if (issues.length > 0) {
   console.info('The publint scan detected compatibility issues:\n');
 
-  for (const issue of issues) {
-    console.info(`\n********** ${issue.pkgDir} **********\n`);
-    if (issue.errors.length > 0) {
+  for (const {errors, warnings, suggestions, pkgDir} of issues) {
+    console.group(`\n********** ${pkgDir} **********\n`);
+    if (errors.length > 0) {
       exitCode = 1;
-      console.info('Errors:\n');
-      console.error(JSON.stringify(issue.errors, null, 2));
+      prettyPrintJSON('Errors', errors, console.error);
     }
-    if (issue.warnings.length > 0) {
-      console.info('Warnings:\n');
-      console.warn(JSON.stringify(issue.warnings, null, 2));
+    if (warnings.length > 0) {
+      prettyPrintJSON('Warnings', warnings, console.warn);
     }
-    if (issue.suggestions.length > 0) {
-      console.info('Suggestions:\n');
-      console.info(JSON.stringify(issue.suggestions, null, 2));
+    if (suggestions.length > 0) {
+      prettyPrintJSON('Suggestions', suggestions, console.info);
     }
+    console.groupEnd();
   }
 } else {
   console.info('No compatibility issues found by publint.');
