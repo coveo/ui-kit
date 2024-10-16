@@ -105,4 +105,6 @@ export {
   UserSession as InsightUserSession,
   UserAction as InsightUserAction,
   buildUserActions as buildInsightUserActions,
+  Quickview as InsightQuickview,
+  QuickviewState as InsightQuickviewState,
 } from '@coveo/headless/insight';
