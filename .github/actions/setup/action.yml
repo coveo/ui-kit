@@ -30,15 +30,15 @@ runs:
         path: |
           **/node_modules/
           !.nx/cache/
-        key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
+        key: npm-${{ hashFiles('pnpm-lock.yml', 'patches/*') }}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
-        key: quantic-${{ hashFiles('package-lock.json') }}}}
+        key: quantic-${{ hashFiles('pnpm-lock.json') }}}}
     - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       with:
         path: ~/.cache/Cypress
-        key: cy-${{ hashFiles('package-lock.json') }}
+        key: cy-${{ hashFiles('pnpm-lock.json') }}
     - if: inputs.load-cache == 'true'
       uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
       id: nx-cache
