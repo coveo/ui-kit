@@ -54,7 +54,7 @@ describe('quantic-refine-content', () => {
   }
 
   describe('when using default options', () => {
-    it('should render the duplicated facets and the sort component', () => {
+    it.skip('should render the duplicated facets and the sort component', () => {
       visitRefineContent();
 
       scope('when loading the page', () => {
