@@ -41,7 +41,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
 
   /**
    * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object.
-   * It will be used as the alt text for all the images.
+   * If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
    * @type {string}
