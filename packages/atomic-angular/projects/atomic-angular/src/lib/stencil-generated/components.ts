@@ -1278,14 +1278,14 @@ export declare interface AtomicProductChildren extends Components.AtomicProductC
 
 
 @ProxyCmp({
-  inputs: ['field', 'truncateAfter']
+  inputs: ['field', 'isCollapsible', 'truncateAfter']
 })
 @Component({
   selector: 'atomic-product-description',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'truncateAfter'],
+  inputs: ['field', 'isCollapsible', 'truncateAfter'],
 })
 export class AtomicProductDescription {
   protected el: HTMLElement;
@@ -1297,6 +1297,28 @@ export class AtomicProductDescription {
 
 
 export declare interface AtomicProductDescription extends Components.AtomicProductDescription {}
+
+
+@ProxyCmp({
+  inputs: ['isCollapsible', 'truncateAfter']
+})
+@Component({
+  selector: 'atomic-product-excerpt',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['isCollapsible', 'truncateAfter'],
+})
+export class AtomicProductExcerpt {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductExcerpt extends Components.AtomicProductExcerpt {}
 
 
 @ProxyCmp({

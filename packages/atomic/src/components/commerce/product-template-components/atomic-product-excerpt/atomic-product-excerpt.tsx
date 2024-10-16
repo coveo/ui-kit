@@ -12,13 +12,13 @@ import {ProductContext} from '../product-template-decorators';
 
 /**
  * @alpha
- * The `atomic-product-description` component renders the description of a product.
+ * The `atomic-product-excerpt` component renders the excerpt of a product.
  */
 @Component({
-  tag: 'atomic-product-description',
+  tag: 'atomic-product-excerpt',
   shadow: false,
 })
-export class AtomicProductDescription
+export class AtomicProductExcerpt
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;
@@ -31,29 +31,24 @@ export class AtomicProductDescription
   @State() private isExpanded = false;
   @State() private isTruncated = false;
 
-  private descriptionText!: HTMLDivElement;
+  private excerptText!: HTMLDivElement;
   private resizeObserver: ResizeObserver;
 
   /**
-   * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
+   * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
    */
   @Prop() public truncateAfter: 'none' | '1' | '2' | '3' | '4' = '2';
 
   /**
-   * The name of the description field to use.
-   */
-  @Prop() public field: 'ec_description' | 'ec_shortdesc' = 'ec_shortdesc';
-
-  /**
    * Whether the excerpt should be collapsible after being expanded.
    */
-  @Prop() public isCollapsible = true;
+  @Prop() public isCollapsible = false;
 
   constructor() {
     this.resizeObserver = new ResizeObserver(() => {
       if (
-        this.descriptionText &&
-        this.descriptionText.scrollHeight > this.descriptionText.clientHeight
+        this.excerptText &&
+        this.excerptText.scrollHeight > this.excerptText.offsetHeight
       ) {
         this.isTruncated = true;
       } else {
@@ -68,21 +63,17 @@ export class AtomicProductDescription
       truncateAfter: new StringValue({
         constrainTo: ['none', '1', '2', '3', '4'],
       }),
-      field: new StringValue({
-        constrainTo: ['ec_shortdesc', 'ec_description'],
-      }),
     }).validate({
       truncateAfter: this.truncateAfter,
-      field: this.field,
     });
   }
 
   componentDidLoad() {
-    this.descriptionText = this.hostElement.querySelector(
+    this.excerptText = this.hostElement.querySelector(
       '.expandable-text'
     ) as HTMLDivElement;
-    if (this.descriptionText) {
-      this.resizeObserver.observe(this.descriptionText);
+    if (this.excerptText) {
+      this.resizeObserver.observe(this.excerptText);
     }
   }
 
@@ -99,9 +90,9 @@ export class AtomicProductDescription
   }
 
   public render() {
-    const productDescription = this.product[this.field] ?? null;
+    const productExcerpt = this.product['excerpt'] ?? null;
 
-    if (!productDescription) {
+    if (!productExcerpt) {
       return <Hidden />;
     }
 
@@ -114,8 +105,8 @@ export class AtomicProductDescription
         showMoreLabel={this.bindings.i18n.t('show-more')}
         isCollapsible={this.isCollapsible}
       >
-        <atomic-product-text field={this.field}>
-          {productDescription}
+        <atomic-product-text field="excerpt">
+          {productExcerpt}
         </atomic-product-text>
       </ExpandableText>
     );
