@@ -113,13 +113,11 @@ export class AtomicProductMultiValueText {
       this.sortedValues = null;
       return;
     }
-    const allValuesSet = new Set(allValues);
     const firstValues = this.facetSelectedValues.filter((value) =>
-      allValuesSet.has(value)
+      allValues.includes(value)
     );
-    this.sortedValues = Array.from(
-      allValues.reduce((set, value) => set.add(value), new Set(firstValues))
     );
+    this.sortedValues = Array.from(new Set([...firstValues, ...allValues]));
   }
 
   private getShouldDisplayLabel(values: string[]) {
