@@ -192,6 +192,18 @@ describe('c-quantic-notifications', () => {
           expect(notification.textContent).toEqual(exampleNotifications[index]);
         });
       });
+
+      it('should call dispatchMessage with the correct message', async () => {
+        await createTestComponent();
+        await flushPromises();
+
+        const expectedMessage =
+          ' Notification 1: notification1 Notification 2: notification2';
+
+        expect(functionsMocks.dispatchMessage).toHaveBeenCalledWith(
+          expectedMessage
+        );
+      });
     });
 
     describe('when no notifications are present in the state', () => {
