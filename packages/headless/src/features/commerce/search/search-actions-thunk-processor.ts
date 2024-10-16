@@ -126,7 +126,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
 
     const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
 
-    this.onUpdateQueryForCorrection(correctedQuery);
+    this.onUpdateQueryForCorrection(correctedQuery ?? '');
 
     return {
       ...fetched,
@@ -134,7 +134,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
         ...successResponse,
       },
       queryExecuted: queryExecutedFromResponseSelector(state, successResponse),
-      originalQuery,
+      originalQuery: originalQuery ?? '',
     };
   }
 
