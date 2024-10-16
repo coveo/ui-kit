@@ -2,144 +2,121 @@
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCopyGeneratedAnswer with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "copyToClipboard",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDislikeGeneratedAnswer with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "dislike",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerCollapse with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "collapse",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerExpand with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "expand",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
 [
-  "Qna.SubmitRgaFeedback",
+  "Rga.SubmitFeedback",
   {
-    "answer": {
-      "responseId": "456",
+    "additionalNotes": undefined,
+    "correctAnswerUrl": undefined,
+    "details": {
+      "correctTopic": false,
+      "documented": true,
+      "hallucinationFree": undefined,
+      "readable": true,
     },
-    "feedback": {
-      "correct_topic": "no",
-      "details": undefined,
-      "document_url": undefined,
-      "documented": "yes",
-      "hallucination_free": "unknown",
-      "helpful": true,
-      "readable": "yes",
-    },
+    "helpful": true,
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "hide",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "show",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logHoverCitation with the right payload 1`] = `
 [
-  "Qna.CitationHover",
+  "Rga.CitationHover",
   {
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
-    "citation": {
-      "id": "citation_id",
-      "type": "Source",
-    },
     "citationHoverTimeInMs": 100,
+    "citationId": "citation_id",
+    "itemMetadata": {
+      "title": "example title",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "citation_permanentid",
+      "url": "example: click uri",
+    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logLikeGeneratedAnswer with the right payload 1`] = `
 [
-  "Qna.AnswerAction",
+  "Rga.AnswerAction",
   {
     "action": "like",
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
-    },
+    "responseId": "123",
   },
 ]
 `;
 
 exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
 [
-  "Qna.CitationClick",
+  "Rga.CitationClick",
   {
-    "answer": {
-      "responseId": "456",
-      "type": "RGA",
+    "citationId": "citation_id",
+    "itemMetadata": {
+      "title": "example title",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "citation_permanentid",
+      "url": "example: click uri",
     },
-    "citation": {
-      "id": "citation_id",
-      "type": "Source",
-    },
+    "responseId": "123",
   },
 ]
 `;

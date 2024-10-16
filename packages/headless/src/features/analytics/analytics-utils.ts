@@ -44,6 +44,7 @@ import {
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics.js';
+import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {PreprocessRequest} from '../../api/preprocess-request.js';
 import {Raw} from '../../api/search/search/raw.js';
 import {Result} from '../../api/search/search/result.js';
@@ -623,6 +624,38 @@ export const partialRecommendationInformation = (
 
   return buildPartialDocumentInformation(result, resultIndex, state);
 };
+
+export const partialCitationInformation = (
+  citation: GeneratedAnswerCitation,
+  state: Partial<SearchAppState>
+): PartialDocumentInformation => {
+  return {
+    sourceName: getCitationSourceName(citation),
+    documentPosition: 1,
+    documentTitle: citation.title,
+    documentUri: citation.uri,
+    documentUrl: citation.clickUri,
+    queryPipeline: state.pipeline || getPipelineInitialState(),
+  };
+};
+
+function getCitationSourceName(citation: GeneratedAnswerCitation) {
+  const source = citation.source;
+  if (isNullOrUndefined(source)) {
+    return 'unknown';
+  }
+  return source;
+}
+
+export const citationDocumentIdentifier = (
+  citation: GeneratedAnswerCitation
+) => {
+  return {
+    contentIdKey: 'permanentid',
+    contentIdValue: citation.permanentid || '',
+  };
+};
+
 function buildPartialDocumentInformation(
   result: Result,
   resultIndex: number,

@@ -1,9 +1,6 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  getVisitorID,
-  historyStore,
-} from '../../api/analytics/coveo-analytics-utils.js';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request.js';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response.js';
@@ -181,7 +178,6 @@ export const buildQuerySuggestRequest = async (
     ...(s.searchHub && {searchHub: s.searchHub}),
     tab: s.configuration.analytics.originLevel2,
     ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(s.configuration.analytics),
       ...(s.configuration.analytics.enabled &&
       s.configuration.analytics.analyticsMode === 'legacy'
         ? await legacyFromAnalyticsStateToAnalyticsParams(

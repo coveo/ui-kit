@@ -1,8 +1,10 @@
-import {Qna} from '@coveo/relay-event-types';
+import {Rga} from '@coveo/relay-event-types';
 import {
+  citationDocumentIdentifier,
   CustomAction,
   LegacySearchAction,
   makeAnalyticsAction,
+  partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {SearchAction} from '../search/search-actions.js';
@@ -22,7 +24,18 @@ export type GeneratedAnswerFeedback = {
   details?: string;
   documentUrl?: string;
 };
-const RGAType = 'RGA';
+
+export const parseEvaluationDetails = (
+  detail: 'yes' | 'no' | 'unknown'
+): boolean | undefined => {
+  if (detail === 'yes') {
+    return true;
+  }
+  if (detail === 'no') {
+    return false;
+  }
+  return undefined;
+};
 
 //TODO: KIT-2859
 export const logRetryGeneratedAnswer = (): LegacySearchAction =>
@@ -43,26 +56,33 @@ export const logOpenGeneratedAnswerSource = (
         return null;
       }
 
-      return client.makeOpenGeneratedAnswerSource({
-        ...(answerAPIEnabled
-          ? {answerAPIStreamId: rgaID}
-          : {generativeQuestionAnsweringId: rgaID}),
-        permanentId: citation.permanentid,
-        citationId: citation.id,
-      });
+      return client.makeGeneratedAnswerCitationClick(
+        partialCitationInformation(citation, state),
+        {
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
+          citationId: citation.id,
+          documentId: citationDocumentIdentifier(citation),
+        }
+      );
     },
-    analyticsType: 'Qna.CitationClick',
-    analyticsPayloadBuilder: (state): Qna.CitationClick => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        citation: {
-          id: citationId,
-          type: 'Source',
-        },
-      };
+    analyticsType: 'Rga.CitationClick',
+    analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
+      const citation = citationSourceSelector(state, citationId);
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID ?? '',
+          citationId,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: citation?.permanentid ?? '',
+            title: citation?.title,
+            url: citation?.clickUri,
+          },
+        };
+      }
     },
   });
 
@@ -89,19 +109,23 @@ export const logHoverCitation = (
         citationHoverTimeMs: citationHoverTimeInMs,
       });
     },
-    analyticsType: 'Qna.CitationHover',
-    analyticsPayloadBuilder: (state): Qna.CitationHover => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-        citation: {
-          id: citationId,
-          type: 'Source',
-        },
-        citationHoverTimeInMs,
-      };
+    analyticsType: 'Rga.CitationHover',
+    analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
+      const citation = citationSourceSelector(state, citationId);
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          citationId,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: citation?.permanentid ?? '',
+            title: citation?.title,
+            url: citation?.clickUri,
+          },
+          citationHoverTimeInMs,
+        };
+      }
     },
   });
 
@@ -120,15 +144,15 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'like',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'like',
+        };
+      }
     },
   });
 
@@ -147,15 +171,15 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'dislike',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'dislike',
+        };
+      }
     },
   });
 
@@ -177,34 +201,32 @@ export const logGeneratedAnswerFeedback = (
         ...feedback,
       });
     },
-    analyticsType: 'Qna.SubmitRgaFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitRgaFeedback => {
-      const {search} = state;
-      const {response} = search || {};
-      const responseId = response?.searchUid || '';
-      const {
-        helpful,
-        readable,
-        documented,
-        details,
-        hallucinationFree: hallucination_free,
-        correctTopic: correct_topic,
-        documentUrl: document_url,
-      } = feedback;
-      return {
-        answer: {
-          responseId,
-        },
-        feedback: {
+    analyticsType: 'Rga.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        const {
           helpful,
           readable,
           documented,
+          hallucinationFree,
+          correctTopic,
+          documentUrl,
           details,
-          hallucination_free,
-          correct_topic,
-          document_url,
-        },
-      };
+        } = feedback;
+        return {
+          responseId: rgaID,
+          helpful,
+          details: {
+            readable: parseEvaluationDetails(readable),
+            documented: parseEvaluationDetails(documented),
+            correctTopic: parseEvaluationDetails(correctTopic),
+            hallucinationFree: parseEvaluationDetails(hallucinationFree),
+          },
+          additionalNotes: details,
+          correctAnswerUrl: documentUrl,
+        };
+      }
     },
   });
 
@@ -212,9 +234,9 @@ export const logGeneratedAnswerFeedback = (
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): CustomAction =>
-  makeAnalyticsAction(
-    'analytics/generatedAnswer/streamEnd',
-    (client, state) => {
+  makeAnalyticsAction({
+    prefix: 'analytics/generatedAnswer/streamEnd',
+    __legacy__getBuilder: (client, state) => {
       const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
       const answerTextIsEmpty = answerGenerated
@@ -231,8 +253,18 @@ export const logGeneratedAnswerStreamEnd = (
         answerGenerated,
         answerTextIsEmpty,
       });
-    }
-  );
+    },
+    analyticsType: 'Rga.StreamEnd',
+    analyticsPayloadBuilder: (state): Rga.StreamEnd | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          answerGenerated: true,
+        };
+      }
+    },
+  });
 
 export const logGeneratedAnswerShowAnswers = (): CustomAction =>
   makeAnalyticsAction({
@@ -249,15 +281,15 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'show',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'show',
+        };
+      }
     },
   });
 
@@ -276,15 +308,15 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'hide',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'hide',
+        };
+      }
     },
   });
 
@@ -303,15 +335,15 @@ export const logGeneratedAnswerExpand = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'expand',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'expand',
+        };
+      }
     },
   });
 
@@ -330,15 +362,15 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'collapse',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'collapse',
+        };
+      }
     },
   });
 
@@ -357,15 +389,15 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
           : {generativeQuestionAnsweringId: rgaID}),
       });
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'copyToClipboard',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'copyToClipboard',
+        };
+      }
     },
   });
 

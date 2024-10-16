@@ -6,7 +6,7 @@ import {
   buildQueryTrigger,
   QueryTriggerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Watch} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -57,17 +57,21 @@ export class AtomicDidYouMean implements InitializableComponent {
    */
   @Prop({reflect: true}) public automaticallyCorrectQuery = true;
 
-  // TODO: V3: Default to `next`
   /**
    * Define which query correction system to use
    *
    * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
    * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
    *
-   * Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+   * Default value is `next`.
    */
   @Prop({reflect: true})
-  public queryCorrectionMode: 'legacy' | 'next' = 'legacy';
+  public queryCorrectionMode: 'legacy' | 'next' = 'next';
+
+  @Watch('queryCorrectionMode')
+  public updateQueryCorrectionMode() {
+    this.didYouMean.updateQueryCorrectionMode(this.queryCorrectionMode);
+  }
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine, {

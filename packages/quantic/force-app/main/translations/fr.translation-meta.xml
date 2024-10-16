@@ -836,4 +836,48 @@
     <label>Veuillez fournir un lien vers la bonne réponse</label>
     <name>quantic_FeedbackDocumentUrlExplanation</name>
   </customLabels>
+  <customLabels>
+    <label>Ticket créé</label>
+    <name>quantic_TicketCreated</name>
+  </customLabels>
+  <customLabels>
+    <label>Recherche vide</label>
+    <name>quantic_EmptySearch</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} action supplémentaire dans cette session</label>
+    <name>quantic_MoreActionsInThisSession</name>
+  </customLabels>
+  <customLabels>
+    <label>{{count}} autres actions dans cette session</label>
+    <name>quantic_MoreActionsInThisSession_plural</name>
+  </customLabels>
+  <customLabels>
+    <label>Afficher les sessions suivantes</label>
+    <name>quantic_ShowFollowingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions suivantes</label>
+    <name>quantic_HideFollowingSessions</name>
+  </customLabels>
+    <customLabels>
+    <label>Afficher les sessions précédentes</label>
+    <name>quantic_ShowPrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Masquer les sessions précédentes</label>
+    <name>quantic_HidePrecedingSessions</name>
+  </customLabels>
+  <customLabels>
+    <label>Aucune action utilisateur disponible</label>
+    <name>quantic_NoUserActionsAvailable</name>
+  </customLabels>
+  <customLabels>
+    <label>Il n'y a pas d'actions utilisateur associées à l'identifiant utilisateur ou le cas est trop ancien pour détecter des actions liées.</label>
+    <name>quantic_NoUserActionsAssociatedWithParams</name>
+  </customLabels>
+  <customLabels>
+    <label>Actions de l'utilisateur</label>
+    <name>quantic_UserActions</name>
+  </customLabels>
 </Translations>

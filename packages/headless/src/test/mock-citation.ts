@@ -16,6 +16,7 @@ export function buildMockCitation(
     uri: '',
     permanentid: '',
     clickUri: '',
+    source: '',
     text: '',
     ...config,
   };

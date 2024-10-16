@@ -1,10 +1,4 @@
 {
   "extends": "./tsconfig.stencil.json",
-  "exclude": [
-    "node_modules",
-    "src/external-builds",
-    "**/*.stories.tsx",
-    "**/*.stories.ts",
-    "**/*.stories.js"
-  ]
+  "exclude": ["node_modules", "src/external-builds"]
 }

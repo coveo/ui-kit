@@ -84,16 +84,19 @@ describe('quantic-document-suggestion', () => {
 
             Actions.clickSuggestion(clickIndex);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
-              //   {
-              //     documentSuggestion: {
-              //       id: allDocuments[clickIndex].uniqueId,
-              //       responseId: exampleResponseId,
-              //     },
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
+                {
+                  responseId: exampleResponseId,
+                  position: clickIndex + 1,
+                  itemMetadata: {
+                    uniqueFieldName: 'uniqueId',
+                    uniqueFieldValue: allDocuments[clickIndex].uniqueId,
+                    title: allDocuments[clickIndex].title,
+                    url: allDocuments[clickIndex].clickUri,
+                  },
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickingSuggestion(clickIndex, allDocuments);
             }
@@ -108,17 +111,19 @@ describe('quantic-document-suggestion', () => {
 
             sendRating(clickIndex);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionFeedback(
-              //   {
-              //     documentSuggestion: {
-              //       id: allDocuments[clickIndex].uniqueId,
-              //       responseId: exampleResponseId,
-              //     },
-              //     liked: true,
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionFeedback(
+                {
+                  responseId: exampleResponseId,
+                  itemMetadata: {
+                    uniqueFieldName: 'uniqueId',
+                    uniqueFieldValue: allDocuments[clickIndex].uniqueId,
+                    title: allDocuments[clickIndex].title,
+                    url: allDocuments[clickIndex].clickUri,
+                  },
+                  liked: true,
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logRatingSuggestion(clickIndex, allDocuments);
             }
@@ -130,21 +135,19 @@ describe('quantic-document-suggestion', () => {
             Actions.openQuickview(clickIndex);
             cy.wait(InterceptAliases.ResultHtml);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitItemClick(
-              //   {
-              //     position: clickIndex + 1,
-              //     actionCause: 'preview',
-              //     itemMetadata: {
-              //       uniqueFieldName: 'uniqueId',
-              //       uniqueFieldValue: allDocuments[clickIndex].uniqueId,
-              //       title: allDocuments[clickIndex].title,
-              //       url: allDocuments[clickIndex].clickUri,
-              //     },
-              //     searchUid: exampleResponseId,
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
+                {
+                  responseId: exampleResponseId,
+                  position: clickIndex + 1,
+                  itemMetadata: {
+                    uniqueFieldName: 'uniqueId',
+                    uniqueFieldValue: allDocuments[clickIndex].uniqueId,
+                    title: allDocuments[clickIndex].title,
+                    url: allDocuments[clickIndex].clickUri,
+                  },
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickingSuggestion(clickIndex, allDocuments, true);
             }
@@ -183,9 +186,13 @@ describe('quantic-document-suggestion', () => {
             if (analyticsMode === 'next') {
               NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
                 {
-                  documentSuggestion: {
-                    id: allDocuments[clickIndex].uniqueId,
-                    responseId: exampleResponseId,
+                  responseId: exampleResponseId,
+                  position: clickIndex + 1,
+                  itemMetadata: {
+                    uniqueFieldName: 'uniqueId',
+                    uniqueFieldValue: allDocuments[clickIndex].uniqueId,
+                    title: allDocuments[clickIndex].title,
+                    url: allDocuments[clickIndex].clickUri,
                   },
                 },
                 exampleTrackingId
@@ -227,42 +234,24 @@ describe('quantic-document-suggestion', () => {
 
             Actions.clickSuggestion(clickIndex);
             if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
-              //   {
-              //     documentSuggestion: {
-              //       id: similarDocuments[clickIndex].uniqueId,
-              //       responseId: exampleResponseId,
-              //     },
-              //   },
-              //   exampleTrackingId
-              // );
+              NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionClick(
+                {
+                  responseId: exampleResponseId,
+                  position: clickIndex + 1,
+                  itemMetadata: {
+                    uniqueFieldName: 'uniqueId',
+                    uniqueFieldValue: similarDocuments[clickIndex].uniqueId,
+                    title: similarDocuments[clickIndex].title,
+                    url: similarDocuments[clickIndex].clickUri,
+                  },
+                },
+                exampleTrackingId
+              );
             } else {
               Expect.logClickingSuggestion(clickIndex, similarDocuments);
             }
             Expect.displayAccordionSectionContent(false, 0);
             Expect.displayAccordionSectionContent(true, clickIndex);
-          });
-
-          scope('when rating a document suggestion', () => {
-            const clickIndex = 1;
-
-            sendRating(clickIndex);
-            if (analyticsMode === 'next') {
-              // TODO: SFINT-5670 - Fix the Next Analytics expectations following schema changes
-              // NextAnalyticsExpectations.emitCaseAssistDocumentSuggestionFeedback(
-              //   {
-              //     documentSuggestion: {
-              //       id: similarDocuments[clickIndex].uniqueId,
-              //       responseId: exampleResponseId,
-              //     },
-              //     liked: true,
-              //   },
-              //   exampleTrackingId
-              // );
-            } else {
-              Expect.logRatingSuggestion(clickIndex, similarDocuments);
-            }
           });
         });
       });

@@ -1,17 +1,20 @@
-import {Qna} from '@coveo/relay-event-types';
+import {Rga} from '@coveo/relay-event-types';
 import {
+  citationDocumentIdentifier,
   InsightAction,
   makeInsightAnalyticsActionFactory,
+  partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
-import {GeneratedAnswerFeedback} from './generated-answer-analytics-actions.js';
+import {
+  GeneratedAnswerFeedback,
+  parseEvaluationDetails,
+} from './generated-answer-analytics-actions.js';
 import {
   citationSourceSelector,
   generativeQuestionAnsweringIdSelector,
 } from './generated-answer-selectors.js';
-
-const RGAType = 'RGA';
 
 //TODO: SFINT-5435
 export const logRetryGeneratedAnswer = (): InsightAction =>
@@ -37,30 +40,34 @@ export const logOpenGeneratedAnswerSource = (
         if (!rgaID || !citation) {
           return null;
         }
-        return client.logOpenGeneratedAnswerSource(
+        return client.logGeneratedAnswerCitationClick(
+          partialCitationInformation(citation, state),
           {
             ...(answerAPIEnabled
               ? {answerAPIStreamId: rgaID}
               : {generativeQuestionAnsweringId: rgaID}),
-            permanentId: citation.permanentid,
             citationId: citation.id,
+            documentId: citationDocumentIdentifier(citation),
           },
           getCaseContextAnalyticsMetadata(state.insightCaseContext)
         );
       },
-      analyticsType: 'Qna.CitationClick',
-      analyticsPayloadBuilder: (state): Qna.CitationClick => {
-        return {
-          answer: {
-            responseId: state.search?.response.searchUid || '',
-
-            type: RGAType,
-          },
-          citation: {
-            id: citationId,
-            type: 'Source',
-          },
-        };
+      analyticsType: 'Rga.CitationClick',
+      analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
+        const citation = citationSourceSelector(state, citationId);
+        const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+        if (rgaID) {
+          return {
+            responseId: rgaID ?? '',
+            citationId,
+            itemMetadata: {
+              uniqueFieldName: 'permanentid',
+              uniqueFieldValue: citation?.permanentid ?? '',
+              title: citation?.title,
+              url: citation?.clickUri,
+            },
+          };
+        }
       },
     }
   );
@@ -93,20 +100,23 @@ export const logHoverCitation = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.CitationHover',
-    analyticsPayloadBuilder: (state): Qna.CitationHover => {
-      return {
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-
-          type: RGAType,
-        },
-        citation: {
-          id: citationId,
-          type: 'Source',
-        },
-        citationHoverTimeInMs,
-      };
+    analyticsType: 'Rga.CitationHover',
+    analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
+      const citation = citationSourceSelector(state, citationId);
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          citationId,
+          itemMetadata: {
+            uniqueFieldName: 'permanentid',
+            uniqueFieldValue: citation?.permanentid ?? '',
+            title: citation?.title,
+            url: citation?.clickUri,
+          },
+          citationHoverTimeInMs,
+        };
+      }
     },
   });
 
@@ -128,15 +138,15 @@ export const logLikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'like',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'like',
+        };
+      }
     },
   });
 
@@ -158,15 +168,15 @@ export const logDislikeGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'dislike',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'dislike',
+        };
+      }
     },
   });
 
@@ -193,34 +203,32 @@ export const logGeneratedAnswerFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.SubmitRgaFeedback',
-    analyticsPayloadBuilder: (state): Qna.SubmitRgaFeedback => {
-      const {search} = state;
-      const {response} = search || {};
-      const responseId = response?.searchUid || '';
-      const {
-        helpful,
-        readable,
-        documented,
-        details,
-        hallucinationFree: hallucination_free,
-        correctTopic: correct_topic,
-        documentUrl: document_url,
-      } = feedback;
-      return {
-        answer: {
-          responseId,
-        },
-        feedback: {
+    analyticsType: 'Rga.SubmitFeedback',
+    analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        const {
           helpful,
           readable,
           documented,
+          hallucinationFree,
+          correctTopic,
+          documentUrl,
           details,
-          hallucination_free,
-          correct_topic,
-          document_url,
-        },
-      };
+        } = feedback;
+        return {
+          responseId: rgaID,
+          helpful,
+          details: {
+            readable: parseEvaluationDetails(readable),
+            documented: parseEvaluationDetails(documented),
+            correctTopic: parseEvaluationDetails(correctTopic),
+            hallucinationFree: parseEvaluationDetails(hallucinationFree),
+          },
+          additionalNotes: details,
+          correctAnswerUrl: documentUrl,
+        };
+      }
     },
   });
 
@@ -228,11 +236,15 @@ export const logGeneratedAnswerFeedback = (
 export const logGeneratedAnswerStreamEnd = (
   answerGenerated: boolean
 ): InsightAction =>
-  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)(
-    'analytics/generatedAnswer/streamEnd',
-    (client, state) => {
+  makeInsightAnalyticsActionFactory(SearchPageEvents.generatedAnswerStreamEnd)({
+    prefix: 'analytics/generatedAnswer/streamEnd',
+    __legacy__getBuilder: (client, state) => {
       const {id: rgaID, answerAPIEnabled} =
         generativeQuestionAnsweringIdSelector(state);
+      const answerTextIsEmpty = answerGenerated
+        ? !state.generatedAnswer?.answer ||
+          !state.generatedAnswer?.answer.length
+        : undefined;
       if (!rgaID) {
         return null;
       }
@@ -242,11 +254,22 @@ export const logGeneratedAnswerStreamEnd = (
             ? {answerAPIStreamId: rgaID}
             : {generativeQuestionAnsweringId: rgaID}),
           answerGenerated,
+          answerTextIsEmpty,
         },
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
-    }
-  );
+    },
+    analyticsType: 'Rga.StreamEnd',
+    analyticsPayloadBuilder: (state): Rga.StreamEnd | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          answerGenerated,
+        };
+      }
+    },
+  });
 
 export const logGeneratedAnswerShowAnswers = (): InsightAction =>
   makeInsightAnalyticsActionFactory(
@@ -268,15 +291,15 @@ export const logGeneratedAnswerShowAnswers = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'show',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'show',
+        };
+      }
     },
   });
 
@@ -300,15 +323,15 @@ export const logGeneratedAnswerHideAnswers = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'hide',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'hide',
+        };
+      }
     },
   });
 
@@ -330,15 +353,15 @@ export const logGeneratedAnswerExpand = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'expand',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'expand',
+        };
+      }
     },
   });
 
@@ -360,15 +383,15 @@ export const logGeneratedAnswerCollapse = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'collapse',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'collapse',
+        };
+      }
     },
   });
 
@@ -392,15 +415,15 @@ export const logCopyGeneratedAnswer = (): InsightAction =>
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Qna.AnswerAction',
-    analyticsPayloadBuilder: (state): Qna.AnswerAction => {
-      return {
-        action: 'copyToClipboard',
-        answer: {
-          responseId: state.search?.response.searchUid || '',
-          type: RGAType,
-        },
-      };
+    analyticsType: 'Rga.AnswerAction',
+    analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
+      const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
+      if (rgaID) {
+        return {
+          responseId: rgaID,
+          action: 'copyToClipboard',
+        };
+      }
     },
   });
 
