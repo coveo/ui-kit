@@ -22,7 +22,7 @@ runs:
       working-directory: packages/atomic
       shell: bash
     - name: Run Playwright tests
-      run: npx playwright test ${{ inputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
+      run: npx playwright test --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
     - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
