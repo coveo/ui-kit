@@ -6,7 +6,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:bundles", "npm run build:definitions"],
+        "commands": ["pnpm run build:bundles", "pnpm run build:definitions"],
         "parallel": true,
         "cwd": "packages/auth"
       }

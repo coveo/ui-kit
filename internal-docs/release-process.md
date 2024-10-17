@@ -79,7 +79,7 @@ This task is run once at the root of the repository after every package's versio
 
 The purpose of this task is to re-generate the root `package-lock.json` file using [Arborist](https://www.npmjs.com/package/@npmcli/arborist), which should confirm that the version bumps were successful.
 
-Scheduled releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `npm install` without unnecessary changes being made to their `package-lock.json`.
+Scheduled releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `pnpm install` without unnecessary changes being made to their `package-lock.json`.
 
 ## `release:phase3` (commit version bumps)
 
@@ -88,7 +88,7 @@ This task is only run for the scheduled release.
 This task will create a new "version bump" commit, which will contain:
 
 - The new `package.json` files.
-- The new `package-lock.json` file.
+- The new `pnpm-lock.yml` file.
 - The new `CHANGELOG.md` files.
 - Git tags for each bumped package version.
 

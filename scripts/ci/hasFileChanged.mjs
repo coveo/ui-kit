@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
 import {context} from '@actions/github';
-import {minimatch} from 'minimatch';
+import minimatch from 'minimatch';
 import {execSync} from 'node:child_process';
 
 export function getBaseHeadSHAs() {

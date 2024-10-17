@@ -12,8 +12,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npm run -w @coveo/headless-ssr-samples-app-router e2e'
-        start: npx nx run headless-ssr-samples-app-router:dev
+        command-prefix: 'pnpm --filter @coveo/atomic exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        start: pnpm nx run headless-ssr-samples-app-router:dev
         wait-on: 'http://localhost:3000'
         wait-on-timeout: 600000
         install: false

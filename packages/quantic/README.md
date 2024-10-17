@@ -17,7 +17,7 @@
 
 [Salesforce cli](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm#sfdx_setup_install_cli_npm)
 
-- Run `npm install --global @salesforce/cli@2.x`
+- Run `pnpm install --global @salesforce/cli@2.x`
 - Optional: [Setup CLI autocomplete](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_dev_cli_autocomplete.htm)
 
 ### Update SFDX CLI Plugins
@@ -45,7 +45,7 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 ### Single command run
 
 - Make sure you are at the root of `packages/quantic`.
-- Run `npm run scratch:dev`.
+- Run `pnpm run scratch:dev`.
 - You should now have a scratch org with Quantic and the test community deployed. Watch your commandline for the url to the examples community.
 
 Or you can run the individual commands below.
@@ -53,7 +53,7 @@ Or you can run the individual commands below.
 #### Create a Default Scratch Org
 
 - Make sure you are in the `packages/quantic` root folder.
-- Run this command to create the default scratch org. `npm run scratch:create`.
+- Run this command to create the default scratch org. `pnpm run scratch:create`.
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
 - You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/project-scratch-def.json --alias "LWC"`
 - `LWC` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
@@ -71,7 +71,7 @@ Example components are available as a Salesforce community (Digital Experience) 
 To setup the community in the `LWC` scratch org, run:
 
 ```bash
-npm run setup:examples
+pnpm run setup:examples
 ```
 
 This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script output, as in the following example:
@@ -83,14 +83,14 @@ The 'Quantic Examples' community is ready, you can access it at the following UR
 https://your-salesforce-scratch-org-instance.force.com/examples
 
 To open Cypress, run:
-npm run e2e:watch
+pnpm run e2e:watch
 ```
 
 Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
 
 ```bash
-npm run deploy:main
-npm run deploy:examples
+pnpm run deploy:main
+pnpm run deploy:examples
 ```
 
 ### Run Cypress for Quantic Components
@@ -104,19 +104,19 @@ To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 To open Cypress in browser mode, run:
 
 ```bash
-npm run e2e:watch
+pnpm run e2e:watch
 ```
 
 To run Cypress tests directly in your console, run:
 
 ```bash
-npm run e2e
+pnpm run e2e
 ```
 
 To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
-npm run e2e:detailed
+pnpm run e2e:detailed
 ```
 
 ### Run LWC unit tests for Quantic Components
@@ -124,20 +124,20 @@ npm run e2e:detailed
 To run LWC unit tests directly in your console, run:
 
 ```bash
-npm run test:unit
+pnpm run test:unit
 ```
 
 To run specific file/components LWC unit tests directly in your console, run:
 
 ```bash
-npm run test:unit -p force-app/main/default/lwc/nameOfComponent/
+pnpm run test:unit -p force-app/main/default/lwc/nameOfComponent/
 ```
 
 ## Use Quantic From Source
 
-After you have cloned the repository and have run `npm install`, run the following commands:
+After you have cloned the repository and have run `pnpm install`, run the following commands:
 
-- `npm run build`
+- `pnpm run build`
 - `sf project deploy start --source-dir force-app/main/default`
 
 ## Other Useful Commands

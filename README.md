@@ -14,13 +14,13 @@
 To install all dependencies and link local packages, run:
 
 ```sh
-npm i
+pnpm i
 ```
 
 To install a dependency in a specific package, specify the workspace:
 
 ```sh
-npm i lodash -w @coveo/headless-react-samples
+pnpm add lodash --filter @coveo/headless-react-samples
 ```
 
 ## Build
@@ -28,13 +28,13 @@ npm i lodash -w @coveo/headless-react-samples
 To build all projects for production, run:
 
 ```sh
-npm run build
+pnpm run build
 ```
 
 To build a single project for production (for instance, the `atomic` package), run:
 
 ```sh
-npx nx run atomic:build
+pnpm nx run atomic:build
 ```
 
 ## Development mode
@@ -42,25 +42,25 @@ npx nx run atomic:build
 To start Atomic & Headless simultaneously in development (recommended), run:
 
 ```sh
-npx nx run atomic:dev
+pnpm nx run atomic:dev
 ```
 
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
-npx nx run quantic:dev
+pnpm nx run quantic:dev
 ```
 
 To run a specific task in a package separate it with colon e.g. to run `test:watch` inside quantic
 
 ```sh
-npx nx run quantic:test:watch
+pnpm nx run quantic:test:watch
 ```
 
 To start story book in development, run:
 
 ```sh
-npx nx run atomic-storybook:dev
+pnpm nx run atomic-storybook:dev
 ```
 
 ## Test
@@ -68,33 +68,29 @@ npx nx run atomic-storybook:dev
 To run the tests for a specific package (recommended) e.g. `atomic` package
 
 ```sh
-npx nx run atomic:test
+pnpm nx run atomic:test
 ```
 
 For e2e tests
 
 ```sh
-npx nx run atomic:dev
+pnpm nx run atomic:dev
 # In a separate terminal
-npx nx run atomic:e2e
+pnpm nx run atomic:e2e
 ```
 
 To run e2e tests for specific files/components using the Cypress GUI
 
 ```sh
-npx nx run atomic:e2e:watch
+pnpm nx run atomic:e2e:watch
 ```
 
 ## Lint
 
 ```sh
-npm run lint:check
-npm run lint:fix
+pnpm run lint:check
+pnpm run lint:fix
 ```
-
-## Misc
-
-The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
 
 The following Visual Studio Code extensions are recommended:
 

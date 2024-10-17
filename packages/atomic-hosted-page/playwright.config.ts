@@ -70,7 +70,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm start',
+    command: 'pnpm start',
     cwd: __dirname,
     timeout: 10 * 60e3,
     port: 3335,

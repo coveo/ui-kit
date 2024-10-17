@@ -102,9 +102,9 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "npm run publish:bump",
-          "npm run build",
-          "npm run publish:npm"
+          "pnpm run publish:bump",
+          "pnpm run build",
+          "pnpm run publish:npm"
         ],
         "parallel": false,
         "cwd": "{projectRoot}"

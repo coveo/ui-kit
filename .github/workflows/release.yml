@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Release
-        run: npm run release
+        run: pnpm run release
         env:
           VERSION: ${{ inputs.version }}
           DEBUG: ${{ inputs.debug && '*' || '' }}
@@ -59,7 +59,7 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
-        run: npm run promote:npm:latest
+        run: pnpm run promote:npm:latest
   docs-prod:
     needs: release
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
           ref: 'release/v3'
       - uses: ./.github/actions/setup
       - name: Notify Docs
-        run: npm run notify:docs
+        run: pnpm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   quantic-prod:
@@ -90,7 +90,7 @@ jobs:
       - name: Promote SFDX package to production
         run: |
           echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
-          npx --no-install nx run quantic:"promote:sfdx:ci"
+          pnpm exec --no-install nx run quantic:"promote:sfdx:ci"
           rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
         env:
           SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
@@ -111,7 +111,7 @@ jobs:
   #         registry-url: 'https://npm.pkg.github.com'
   #         node-version-file: '.nvmrc'
   #     - name: Publish to GitHub Packages
-  #       run: npm run release:phase4
+  #       run: pnpm run release:phase4
   #       env:
   #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #         DEBUG: ${{ inputs.debug && '*' || '' }}

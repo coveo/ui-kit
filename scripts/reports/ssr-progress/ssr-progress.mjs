@@ -2,7 +2,7 @@ import fs from 'fs';
 import {execute} from '../../exec.mjs';
 
 async function buildHeadless() {
-  await execute('npx', ['nx', 'run', 'headless:build']);
+  await execute('pnpm', ['nx', 'run', 'headless:build']);
 }
 
 function getParsedDoc() {

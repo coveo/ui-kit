@@ -1,0 +1,7 @@
+packages:
+  - 'packages/**'
+  - 'packages/atomic-angular/projects/**'
+  - 'packages/atomic-react/**'
+  - 'packages/samples/**'
+  - 'packages/samples/headless-ssr/**'
+  - 'utils/**'

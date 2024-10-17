@@ -24,19 +24,19 @@ Once you have cloned the repo, follow the instructions in the top-level [README.
 To start the project in development mode, run:
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 To build the library for production, run:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 To run the unit tests for the components, run:
 
 ```bash
-npm test
+pnpm test
 ```
 
 ## Run Cypress for Atomic components
@@ -50,19 +50,19 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run e2e:watch
+pnpm run e2e:watch
 ```
 
 To run all the test, run:
 
 ```sh
-npm run e2e
+pnpm run e2e
 ```
 
 To run all the test in Firefox:
 
 ```sh
-npm run e2e:firefox
+pnpm run e2e:firefox
 ```
 
 ### Separate test for Hosted Search Page
@@ -70,9 +70,9 @@ npm run e2e:firefox
 To test the current Atomic build against the hosted search pages for Trials, use the following commands:
 
 ```sh
-npm run e2e:hsp:watch
-npm run e2e:hsp
-npm run e2e:hsp:firefox
+pnpm run e2e:hsp:watch
+pnpm run e2e:hsp
+pnpm run e2e:hsp:firefox
 ```
 
 ## Utilities

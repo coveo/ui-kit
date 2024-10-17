@@ -12,8 +12,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-stencil-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npx nx run atomic-stencil-samples:dev
+        command-prefix: 'pnpm --filter @coveo/atomic-stencil-samples exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        start: pnpm nx run atomic-stencil-samples:dev
         wait-on: 'http://localhost:3666'
         wait-on-timeout: 600000
         install: false

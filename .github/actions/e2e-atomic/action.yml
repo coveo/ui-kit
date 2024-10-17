@@ -17,15 +17,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx cypress install
+    - run: pnpm cypress install
       shell: bash
     - uses: cypress-io/github-action@v5
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        command-prefix: 'pnpm exec cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        working-directory: packages/atomic
         spec: ${{ inputs.spec }}
-        start: npm start -w @coveo/atomic
+        start: pnpm --filter @coveo/atomic start
         wait-on: 'http://localhost:3333/ping'
         wait-on-timeout: 600000
         install: false

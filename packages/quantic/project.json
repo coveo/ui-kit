@@ -21,7 +21,7 @@
       ],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:staticresources", "npm run build:doc"],
+        "commands": ["pnpm run build:staticresources", "pnpm run build:doc"],
         "parallel": true,
         "cwd": "packages/quantic"
       }

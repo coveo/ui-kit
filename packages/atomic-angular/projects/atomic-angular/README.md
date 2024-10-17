@@ -14,7 +14,7 @@ Run `ng build atomic-angular` to build the project. The build artifacts will be 
 
 ## Publishing
 
-After building your library with `ng build atomic-angular`, go to the dist folder `cd dist/atomic-angular` and run `npm publish`.
+After building your library with `ng build atomic-angular`, go to the dist folder `cd dist/atomic-angular` and run `pnpm publish`.
 
 ## Running unit tests
 

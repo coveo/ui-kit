@@ -15,11 +15,11 @@ async function updateNpmTag(packageName, version) {
   }
 
   console.log(`updating ${packageName}@${version} to ${tag}.`);
-  await execute('npm', ['dist-tag', 'add', `${packageName}@${version}`, tag]);
+  await execute('pnpm', ['tag', 'add', `${packageName}@${version}`, tag]);
 }
 
 async function getLatestVersion(packageName) {
-  const res = await execute('npm', ['view', packageName, 'version']);
+  const res = await execute('pnpm', ['view', packageName, 'version']);
   return res.trim();
 }
 

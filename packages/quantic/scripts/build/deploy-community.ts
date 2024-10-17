@@ -344,7 +344,7 @@ async function deleteScratchOrg(
     );
     console.log(communityUrl);
     console.log('\nTo open Cypress, run:');
-    console.log('npm run e2e:watch');
+    console.log('pnpm run e2e:watch');
   } catch (error) {
     console.error('Failed to complete');
     console.error(error);

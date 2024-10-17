@@ -5,8 +5,8 @@ runs:
   steps:
     - name: Complementary setup
       run: |
-        npm ci
-        npm run build -w=@coveo/atomic
+        pnpm i
+        pnpm --filter @coveo/atomic run build
       shell: bash
     - name: Run tests
       # TODO KIT-3105

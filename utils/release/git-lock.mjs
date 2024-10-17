@@ -13,7 +13,7 @@ import {
 } from './lock-master.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run-script');
 }
 process.chdir(process.env.INIT_CWD);
 

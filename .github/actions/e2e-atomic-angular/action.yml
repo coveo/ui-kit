@@ -12,8 +12,8 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-angular-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npx nx run atomic-angular-samples:dev
+        command-prefix: 'pnpm --filter @coveo/atomic-angular-samples exec cypress-repeat  run -n 3 --until-passes --rerun-failed-only --'
+        start: pnpm nx run atomic-angular-samples:dev
         wait-on: 'http://localhost:4200'
         # Wait up to 10min for the Angular Server to spool up.
         wait-on-timeout: 600000

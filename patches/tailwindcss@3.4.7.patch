@@ -1,7 +1,7 @@
-diff --git a/node_modules/tailwindcss/lib/lib/expandTailwindAtRules.js b/node_modules/tailwindcss/lib/lib/expandTailwindAtRules.js
-index 338a619..98aa7d2 100644
---- a/node_modules/tailwindcss/lib/lib/expandTailwindAtRules.js
-+++ b/node_modules/tailwindcss/lib/lib/expandTailwindAtRules.js
+diff --git a/lib/lib/expandTailwindAtRules.js b/lib/lib/expandTailwindAtRules.js
+index 338a6195bb6fb5e4a7f2bc4822fab82f698b84ce..98aa7d2f2ccc2aa5422e7efd2e26a1392326fa92 100644
+--- a/lib/lib/expandTailwindAtRules.js
++++ b/lib/lib/expandTailwindAtRules.js
 @@ -166,7 +166,7 @@ function expandTailwindAtRules(context) {
                  }
              ]);

@@ -1,6 +1,6 @@
 // This is the same js file as what we load inside the LWC via a static resource.
 import {transformMarkdownToHtml} from 'c/quanticUtils';
-import {marked} from '../../../../../../node_modules/marked/lib/marked.cjs';
+import {marked} from '../../../../../../../../node_modules/marked/lib/marked.cjs';
 
 const removeLineBreaks = (text) => text.replace(/\n/g, '');
 

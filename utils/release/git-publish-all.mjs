@@ -28,7 +28,7 @@ import {
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
+  throw new Error('Should be called using pnpm run-script');
 }
 process.chdir(process.env.INIT_CWD);
 
@@ -56,7 +56,7 @@ process.chdir(process.env.INIT_CWD);
     **/package.json
     CHANGELOG.md
     package.json
-    package-lock.json
+    pnpm-lock.yml
   `;
 
   // Craft the commit (complex process, see function)
@@ -146,10 +146,10 @@ async function commitChanges(commitMessage, octokit) {
 }
 
 /**
- * Run `npm run pre-commit`
+ * Run `pnpm run pre-commit`
  */
 function runPrecommit() {
-  spawnSync(appendCmdIfWindows`npm`, ['run', 'pre-commit']);
+  spawnSync(appendCmdIfWindows`pnpm`, ['run', 'pre-commit']);
 }
 
 /**

@@ -18,5 +18,5 @@ runs:
         path: .nx/cache
         key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: steps.nx-cache.outputs.cache-hit != 'true'
-      run: npm run build
+      run: pnpm run build
       shell: bash
