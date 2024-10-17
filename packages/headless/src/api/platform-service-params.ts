@@ -28,10 +28,6 @@ export interface ClientIDParam {
   clientId?: string;
 }
 
-export interface VisitorIDParam {
-  visitorId?: string;
-}
-
 export interface FoldingParam {
   filterField?: string;
   parentField?: string;

@@ -1,9 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {EventDescription} from 'coveo.analytics';
-import {
-  getVisitorID,
-  historyStore,
-} from '../../../api/analytics/coveo-analytics-utils.js';
+import {historyStore} from '../../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../../api/platform-client.js';
 import {SearchRequest} from '../../../api/search/search/search-request.js';
 import {SearchAppState} from '../../../state/search-app-state.js';
@@ -32,7 +29,6 @@ export const buildSearchAndFoldingLoadCollectionRequest = async (
     referrer: state.configuration.analytics.originLevel3,
     timezone: state.configuration.search.timezone,
     ...(state.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
       actionsHistory: historyStore.getHistory(),
     }),
     ...(state.advancedSearchQueries?.aq && {

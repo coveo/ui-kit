@@ -5,7 +5,6 @@ import {
 import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {didYouMeanReducer as didYouMean} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
-import {hasQueryCorrectionSelector} from '../../../../features/did-you-mean/did-you-mean-selectors.js';
 import {CommerceDidYouMeanSection} from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {
@@ -37,8 +36,6 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   const controller = buildController(engine);
   const getState = () => engine[stateKey].didYouMean;
 
-  const hasQueryCorrection = () => hasQueryCorrectionSelector(getState());
-
   return {
     ...controller,
 
@@ -49,7 +46,7 @@ export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
         originalQuery: state.originalQuery,
         wasCorrectedTo: state.wasCorrectedTo,
         queryCorrection: state.queryCorrection,
-        hasQueryCorrection: hasQueryCorrection(),
+        hasQueryCorrection: state.queryCorrection.correctedQuery !== '',
         wasAutomaticallyCorrected: state.wasCorrectedTo !== '',
       };
     },

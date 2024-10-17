@@ -1,5 +1,4 @@
-import {Qna, CaseAssist, ItemClick} from '@coveo/relay-event-types';
-import {Interception} from 'cypress/types/net-stubbing';
+import {SmartSnippets, CaseAssist, Rga} from '@coveo/relay-event-types';
 import {InterceptAliases} from '../page-objects/search';
 
 interface EventMetadata {
@@ -36,231 +35,291 @@ async function validateEventWithEventAPI(request: {
   expect(parsedResponse).to.have.property('valid', true);
 }
 
-function validateSubmitFeedbackEvent(
-  interception: Interception,
-  expectedEvent: Qna.SubmitFeedback,
-  expectedTrackingId: string
-) {
-  const eventBody = interception?.request?.body?.[0];
-  const eventMeta: EventMetadata = eventBody.meta;
-
-  expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
-  expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
-
-  expect(eventMeta).to.have.property('type', 'Qna.SubmitFeedback');
-  expect(eventMeta.config).to.have.property('trackingId', expectedTrackingId);
-}
-
 function nextAnalyticsExpectations() {
   return {
-    emitQnaAnswerActionEvent: (
-      expectedEvent: Qna.AnswerAction,
+    emitSmartSnippetsSourceClick: (
+      expectedEvent: SmartSnippets.SourceClick,
       expectedTrackingId: string
     ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.AnswerAction)
+      cy.wait(InterceptAliases.NextAnalytics.SmartSnippets.SourceClick)
         .then((interception): void => {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
-          expect(eventBody).to.have.property('action', expectedEvent.action);
-          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
-          expect(eventMeta).to.have.property('type', 'Qna.AnswerAction');
-          expect(eventMeta.config).to.have.property(
-            'trackingId',
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail(
-          `should emit the Qna.AnswerAction event with action "${expectedEvent.action}"`
-        );
-    },
-
-    emitQnaCitationHover: (
-      expectedEvent: Qna.CitationHover,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.CitationHover)
-        .then((interception): void => {
-          const eventBody = interception?.request?.body?.[0];
-          const eventMeta: EventMetadata = eventBody.meta;
-
-          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
-          expect(eventBody.citation).to.deep.equal(expectedEvent.citation);
-          expect(eventMeta).to.have.property('type', 'Qna.CitationHover');
-          expect(eventMeta.config).to.have.property(
-            'trackingId',
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail('should emit the Qna.CitationHover event');
-    },
-
-    emitQnaCitationClick: (
-      expectedEvent: Qna.CitationClick,
-      expectedTrackingId: string
-    ) => {
-      const type: 'Source' | 'InlineLink' = expectedEvent.citation.type;
-      cy.wait(InterceptAliases.NextAnalytics.Qna.CitationClick[type])
-        .then((interception): void => {
-          const eventBody = interception?.request?.body?.[0];
-          const eventMeta: EventMetadata = eventBody.meta;
-
-          expect(eventBody.citation).to.deep.equal(expectedEvent.citation);
-          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
-          expect(eventMeta).to.have.property('type', 'Qna.CitationClick');
-          expect(eventMeta.config).to.have.property(
-            'trackingId',
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail('should emit the Qna.CitationClick event');
-    },
-
-    emitQnaLikeEvent: (
-      expectedEvent: Qna.SubmitFeedback,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitFeedback.Like)
-        .then((interception): void => {
-          validateSubmitFeedbackEvent(
-            interception,
-            expectedEvent,
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail(
-          'should emit the Qna.SubmitFeedback event for the like action'
-        );
-    },
-
-    emitQnaDislikeEvent: (
-      expectedEvent: Qna.SubmitFeedback,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitFeedback.Dislike)
-        .then((interception): void => {
-          validateSubmitFeedbackEvent(
-            interception,
-            expectedEvent,
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail(
-          'should emit the Qna.SubmitFeedback event for the dislike action'
-        );
-    },
-
-    emitQnaSubmitFeedbackReasonEvent: (
-      expectedEvent: Qna.SubmitFeedback,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitFeedback.ReasonSubmit)
-        .then((interception): void => {
-          validateSubmitFeedbackEvent(
-            interception,
-            expectedEvent,
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail(
-          'should emit the Qna.SubmitFeedback event for the feedback reason submission'
-        );
-    },
-
-    emitQnaSubmitRgaFeedbackEvent: (
-      expectedEvent: Qna.SubmitRgaFeedback,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Qna.SubmitRgaFeedback)
-        .then((interception): void => {
-          const eventBody = interception?.request?.body?.[0];
-          const eventMeta: EventMetadata = eventBody.meta;
-          expect(eventBody.answer).to.deep.equal(expectedEvent.answer);
-          expect(eventBody.feedback).to.deep.equal(expectedEvent.feedback);
-
-          expect(eventMeta).to.have.property('type', 'Qna.SubmitRgaFeedback');
-          expect(eventMeta.config).to.have.property(
-            'trackingId',
-            expectedTrackingId
-          );
-
-          validateEventWithEventAPI(interception.request);
-        })
-        .logDetail(
-          'should emit the Qna.SubmitRgaFeedback event for submitting rga feedback'
-        );
-    },
-
-    emitCaseAssistSelectFieldClassification: (
-      expectedEvent: CaseAssist.SelectFieldClassification,
-      expectedTrackingId: string
-    ) => {
-      cy.wait(
-        InterceptAliases.NextAnalytics.CaseAssist.SelectFieldClassification
-      )
-        .then((interception): void => {
-          const eventBody = interception?.request?.body?.[0];
-          const eventMeta: EventMetadata = eventBody.meta;
-
-          expect(eventBody.fieldClassification).to.deep.equal(
-            expectedEvent.fieldClassification
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
           );
           expect(eventBody).to.have.property(
-            'autoselected',
-            expectedEvent.autoselected
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'snippetType',
+            expectedEvent.snippetType
           );
           expect(eventMeta).to.have.property(
             'type',
-            'caseAssist.selectFieldClassification'
+            'SmartSnippets.SourceClick'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
           );
 
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
           validateEventWithEventAPI(interception.request);
         })
-        .logDetail('should emit the caseAssist.selectFieldClassification');
+        .logDetail('should emit the SmartSnippets.SourceClick event');
     },
 
-    emitUpdateField: (
-      expectedEvent: CaseAssist.UpdateField,
+    emitSmartSnippetsAnswerAction: (
+      expectedEvent: SmartSnippets.AnswerAction,
       expectedTrackingId: string
     ) => {
-      cy.wait(InterceptAliases.NextAnalytics.CaseAssist.UpdateField)
+      cy.wait(InterceptAliases.NextAnalytics.SmartSnippets.AnswerAction)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'snippetType',
+            expectedEvent.snippetType
+          );
+          expect(eventBody).to.have.property('action', expectedEvent.action);
+          expect(eventMeta).to.have.property(
+            'type',
+            'SmartSnippets.AnswerAction'
+          );
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail(
+          `should emit the SmartSnippets.AnswerAction event with action "${expectedEvent.action}"`
+        );
+    },
+
+    emitSmartSnippetsSubmitFeedback: (
+      expectedEvent: SmartSnippets.SubmitFeedback,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.SmartSnippets.SubmitFeedback)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'snippetType',
+            expectedEvent.snippetType
+          );
+          expect(eventBody).to.have.property('reason', expectedEvent.reason);
+          if (expectedEvent.additionalNotes) {
+            expect(eventBody).to.have.property(
+              'additionalNotes',
+              expectedEvent.additionalNotes
+            );
+          }
+          expect(eventMeta).to.have.property(
+            'type',
+            'SmartSnippets.SubmitFeedback'
+          );
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail(
+          'should emit the SmartSnippets.SubmitFeedback event with action'
+        );
+    },
+
+    emitRgaAnswerAction: (
+      expectedEvent: Rga.AnswerAction,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Rga.AnswerAction)
         .then((interception): void => {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
           expect(eventBody).to.have.property(
-            'fieldName',
-            expectedEvent.fieldName
+            'responseId',
+            expectedEvent.responseId
           );
-          expect(eventBody).to.have.property(
-            'fieldValue',
-            expectedEvent.fieldValue
-          );
-          expect(eventMeta).to.have.property('type', 'caseAssist.updateField');
+          expect(eventBody).to.have.property('action', expectedEvent.action);
+          expect(eventMeta).to.have.property('type', 'Rga.AnswerAction');
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
           );
 
+          eventBody.meta.ts = Date.now();
           validateEventWithEventAPI(interception.request);
         })
-        .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
+        .logDetail(
+          `should emit the Rga.AnswerAction event with action "${expectedEvent.action}"`
+        );
+    },
+
+    emitRgaStreamEnd: (
+      expectedEvent: Rga.StreamEnd,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Rga.StreamEnd)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'answerGenerated',
+            expectedEvent.answerGenerated
+          );
+          expect(eventMeta).to.have.property('type', 'Rga.StreamEnd');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          eventBody.meta.ts = Date.now();
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail('should emit the Rga.StreamEnd event');
+    },
+
+    emitRgaSubmitFeedback: (
+      expectedEvent: Rga.SubmitFeedback,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Rga.SubmitFeedback)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody.details).to.deep.equal(expectedEvent.details);
+          expect(eventBody).to.have.property('helpful', expectedEvent.helpful);
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          if (expectedEvent.additionalNotes) {
+            expect(eventBody).to.have.property(
+              'additionalNotes',
+              expectedEvent.additionalNotes
+            );
+          }
+          if (expectedEvent.correctAnswerUrl) {
+            expect(eventBody).to.have.property(
+              'correctAnswerUrl',
+              expectedEvent.correctAnswerUrl
+            );
+          }
+          expect(eventMeta).to.have.property('type', 'Rga.SubmitFeedback');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail(
+          'should emit the Rga.SubmitFeedback event for submitting rga feedback'
+        );
+    },
+
+    emitRgaCitationHover: (
+      expectedEvent: Omit<Rga.CitationHover, 'citationHoverTimeInMs'>,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Rga.CitationHover)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'citationId',
+            expectedEvent.citationId
+          );
+          expect(eventBody).to.have.property('citationHoverTimeInMs');
+          expect(eventMeta).to.have.property('type', 'Rga.CitationHover');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          eventBody.meta.ts = Date.now();
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail('should emit the Rga.CitationHover event');
+    },
+
+    emitRgaCitationClick: (
+      expectedEvent: Rga.CitationClick,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.Rga.CitationClick)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
+          );
+          expect(eventBody).to.have.property(
+            'citationId',
+            expectedEvent.citationId
+          );
+          expect(eventMeta).to.have.property('type', 'Rga.CitationClick');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+
+          eventBody.meta.ts = Date.now();
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail('should emit the Rga.CitationClick event');
     },
 
     emitCaseAssistDocumentSuggestionClick: (
@@ -272,18 +331,28 @@ function nextAnalyticsExpectations() {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
-          expect(eventBody.documentSuggestion).to.deep.equal(
-            expectedEvent.documentSuggestion
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'position',
+            expectedEvent.position
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
           );
           expect(eventMeta).to.have.property(
             'type',
-            'caseAssist.documentSuggestionClick'
+            'CaseAssist.DocumentSuggestionClick'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
           );
 
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
           validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the CaseAssist.DocumentSuggestionClick event');
@@ -300,19 +369,25 @@ function nextAnalyticsExpectations() {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
-          expect(eventBody.documentSuggestion).to.deep.equal(
-            expectedEvent.documentSuggestion
+          expect(eventBody.itemMetadata).to.deep.equal(
+            expectedEvent.itemMetadata
+          );
+          expect(eventBody).to.have.property(
+            'responseId',
+            expectedEvent.responseId
           );
           expect(eventBody).to.have.property('liked', expectedEvent.liked);
           expect(eventMeta).to.have.property(
             'type',
-            'caseAssist.documentSuggestionFeedback'
+            'CaseAssist.DocumentSuggestionFeedback'
           );
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
           );
 
+          // Updating the URL to a valid one, as '#' is used in the tests to simplify link testing
+          eventBody.itemMetadata.url = 'https://www.coveo.com/';
           validateEventWithEventAPI(interception.request);
         })
         .logDetail(
@@ -320,40 +395,66 @@ function nextAnalyticsExpectations() {
         );
     },
 
-    emitItemClick: (expectedEvent: ItemClick, expectedTrackingId: string) => {
-      cy.wait(InterceptAliases.NextAnalytics.ItemClick)
+    emitCaseAssistSelectFieldClassification: (
+      expectedEvent: CaseAssist.SelectFieldClassification,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(
+        InterceptAliases.NextAnalytics.CaseAssist.SelectFieldClassification
+      )
         .then((interception): void => {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
-          expect(eventBody.itemMetadata).to.deep.equal(
-            expectedEvent.itemMetadata
-          );
-          if (expectedEvent.actionCause) {
-            expect(eventBody).to.have.property(
-              'actionCause',
-              expectedEvent.actionCause
-            );
-          }
           expect(eventBody).to.have.property(
-            'position',
-            expectedEvent.position
+            'classificationId',
+            expectedEvent.classificationId
           );
           expect(eventBody).to.have.property(
-            'searchUid',
-            expectedEvent.searchUid
+            'responseId',
+            expectedEvent.responseId
           );
-          expect(eventMeta).to.have.property('type', 'itemClick');
+          expect(eventBody).to.have.property(
+            'autoselected',
+            expectedEvent.autoselected
+          );
+          expect(eventMeta).to.have.property(
+            'type',
+            'CaseAssist.SelectFieldClassification'
+          );
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
           );
-
           validateEventWithEventAPI(interception.request);
         })
-        .logDetail(
-          'should emit the CaseAssist.DocumentSuggestionFeedback event'
-        );
+        .logDetail('should emit the CaseAssist.SelectFieldClassification');
+    },
+
+    emitCaseAssistUpdateField: (
+      expectedEvent: CaseAssist.UpdateField,
+      expectedTrackingId: string
+    ) => {
+      cy.wait(InterceptAliases.NextAnalytics.CaseAssist.UpdateField)
+        .then((interception): void => {
+          const eventBody = interception?.request?.body?.[0];
+          const eventMeta: EventMetadata = eventBody.meta;
+          expect(eventBody).to.have.property(
+            'fieldName',
+            expectedEvent.fieldName
+          );
+          expect(eventBody).to.have.property(
+            'fieldValue',
+            expectedEvent.fieldValue
+          );
+          expect(eventMeta).to.have.property('type', 'CaseAssist.UpdateField');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
+          validateEventWithEventAPI(interception.request);
+        })
+        .logDetail('should emit the CaseAssist.UpdateField event');
     },
   };
 }

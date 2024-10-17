@@ -647,7 +647,7 @@ describe('Color Facet Test Suites', () => {
     describe('as a dependent', () => {
       const parentFacetId = 'def';
       const parentField = 'author';
-      const expectedValue = 'amoreau';
+      const expectedValue = 'Susan Cook';
       beforeEach(() => {
         new TestFixture()
           .with(

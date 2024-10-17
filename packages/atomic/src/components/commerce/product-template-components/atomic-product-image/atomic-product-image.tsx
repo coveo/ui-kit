@@ -41,11 +41,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
 
   /**
    * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object.
-   * The field can be a string or an array of strings.
-   *
-   * If the value of the field is a string, it will be used as the alt text for all the images.
-   *
-   * If the value of the field is an array of strings, the alt text will be used in the order of the images.
+   * If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.
    *
    * If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
    * @type {string}
@@ -138,9 +134,7 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
       this.validateUrl(finalUrl);
       let altText;
 
-      if (Array.isArray(validImageAlt) && validImageAlt[index]) {
-        altText = validImageAlt[index];
-      } else if (typeof validImageAlt === 'string') {
+      if (typeof validImageAlt === 'string') {
         altText = validImageAlt;
       } else {
         altText = this.bindings.i18n.t('image-alt-fallback-multiple', {
@@ -167,22 +161,17 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
   }
 
   private get imageAlt() {
-    if (this.imageAltField) {
-      const value = ProductTemplatesHelpers.getProductProperty(
-        this.product,
-        this.imageAltField
-      );
-
-      if (isNullOrUndefined(value)) {
-        return null;
-      }
-
-      if (Array.isArray(value)) {
-        return value.map((v) => `${v}`.trim());
-      }
-      return (value as string).trim();
+    if (!this.imageAltField) {
+      return null;
     }
-    return null;
+    const value = ProductTemplatesHelpers.getProductProperty(
+      this.product,
+      this.imageAltField
+    );
+    if (isNullOrUndefined(value)) {
+      return null;
+    }
+    return (value as string).trim();
   }
 
   private get numberOfImages() {
@@ -212,13 +201,18 @@ export class AtomicProductImage implements InitializableComponent<Bindings> {
         alt: image.alt,
       };
     });
+
     if (this.images.length === 0) {
       this.validateUrl(this.fallback);
+      const alt = this.imageAlt
+        ? this.imageAlt
+        : this.bindings.i18n.t('image-not-found-alt', {
+            itemName: this.product.ec_name,
+          });
       return (
         <img
-          //TODO - KIT-3641 use image-alt-field prior to image-not-found-alt
           class="aspect-square"
-          alt={this.bindings.i18n.t('image-not-found-alt')}
+          alt={alt}
           src={this.fallback}
           loading="eager"
         />

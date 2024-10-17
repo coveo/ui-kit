@@ -205,6 +205,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private get recommendationListStateWithAugment() {
+    // TODO: some changes
     return {
       ...this.recommendationListState,
       firstRequestExecuted:

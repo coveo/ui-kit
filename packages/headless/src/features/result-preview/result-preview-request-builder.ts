@@ -1,4 +1,3 @@
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {
   HtmlRequest,
@@ -18,7 +17,7 @@ export async function buildResultPreviewRequest(
   state: StateNeededByHtmlEndpoint,
   options: HtmlRequestOptions
 ): Promise<HtmlRequest> {
-  const {search, accessToken, organizationId, analytics} = state.configuration;
+  const {search, accessToken, organizationId} = state.configuration;
   const q = state.query?.q || '';
 
   return {
@@ -31,9 +30,6 @@ export async function buildResultPreviewRequest(
     accessToken,
     organizationId,
     enableNavigation: false,
-    ...(analytics.enabled && {
-      visitorId: await getVisitorID(state.configuration.analytics),
-    }),
     q,
     ...options,
     requestedOutputSize: options.requestedOutputSize || 0,

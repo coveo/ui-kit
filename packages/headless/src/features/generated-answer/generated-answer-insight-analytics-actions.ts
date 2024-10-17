@@ -203,7 +203,7 @@ export const logGeneratedAnswerFeedback = (
         getCaseContextAnalyticsMetadata(state.insightCaseContext)
       );
     },
-    analyticsType: 'Rga.SubmitRgaFeedback',
+    analyticsType: 'Rga.SubmitFeedback',
     analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
       const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
       if (rgaID) {

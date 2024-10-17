@@ -1,7 +1,4 @@
-import {
-  historyStore,
-  getVisitorID,
-} from '../../api/analytics/coveo-analytics-utils.js';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request.js';
 import {InsightAppState} from '../../state/insight-app-state.js';
@@ -37,7 +34,6 @@ export const buildInsightQuerySuggestRequest = async (
       context: s.insightCaseContext.caseContext,
     }),
     ...(s.configuration.analytics.enabled && {
-      visitorId: await getVisitorID(s.configuration.analytics),
       ...(s.configuration.analytics.enabled &&
         (await fromAnalyticsStateToAnalyticsParams(s.configuration.analytics))),
     }),

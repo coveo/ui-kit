@@ -104,31 +104,29 @@ export const InterceptAliases = {
     OmniboxAnalytics: uaAlias('omniboxAnalytics'),
   },
   NextAnalytics: {
-    Qna: {
-      AnswerAction: nextAnalyticsAlias('Qna.AnswerAction'),
-      CitationHover: nextAnalyticsAlias('Qna.CitationHover'),
-      CitationClick: {
-        Source: nextAnalyticsAlias('Qna.CitationClick.Source'),
-        InlineLink: nextAnalyticsAlias('Qna.CitationClick.InlineLink'),
-      },
-      SubmitFeedback: {
-        Like: nextAnalyticsAlias('Qna.SubmitFeedback.Like'),
-        Dislike: nextAnalyticsAlias('Qna.SubmitFeedback.Dislike'),
-        ReasonSubmit: nextAnalyticsAlias('Qna.SubmitFeedback.ReasonSubmit'),
-      },
-      SubmitRgaFeedback: nextAnalyticsAlias('Qna.SubmitRgaFeedback'),
+    SmartSnippets: {
+      SourceClick: nextAnalyticsAlias('SmartSnippets.SourceClick'),
+      AnswerAction: nextAnalyticsAlias('SmartSnippets.AnswerAction'),
+      SubmitFeedback: nextAnalyticsAlias('SmartSnippets.SubmitFeedback'),
+    },
+    Rga: {
+      AnswerAction: nextAnalyticsAlias('Rga.AnswerAction'),
+      SubmitFeedback: nextAnalyticsAlias('Rga.SubmitFeedback'),
+      CitationHover: nextAnalyticsAlias('Rga.CitationHover'),
+      CitationClick: nextAnalyticsAlias('Rga.CitationClick'),
+      StreamEnd: nextAnalyticsAlias('Rga.StreamEnd'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(
-        'caseAssist.documentSuggestionClick'
+        'CaseAssist.DocumentSuggestionClick'
       ),
       DocumentSuggestionFeedback: nextAnalyticsAlias(
-        'caseAssist.documentSuggestionFeedback'
+        'CaseAssist.DocumentSuggestionFeedback'
       ),
       SelectFieldClassification: nextAnalyticsAlias(
-        'caseAssist.selectFieldClassification'
+        'CaseAssist.SelectFieldClassification'
       ),
-      UpdateField: nextAnalyticsAlias('caseAssist.updateField'),
+      UpdateField: nextAnalyticsAlias('CaseAssist.UpdateField'),
     },
     ItemClick: nextAnalyticsAlias('itemClick'),
   },

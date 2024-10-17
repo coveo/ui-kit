@@ -132,7 +132,11 @@ export class AtomicProductChildren
           event.key === 'Enter' && this.onSelectChild(child)
         }
         onMouseEnter={() => this.onSelectChild(child)}
-        onTouchStart={() => this.onSelectChild(child)}
+        onTouchStart={(event) => {
+          event.stopPropagation();
+          event.preventDefault();
+          this.onSelectChild(child);
+        }}
       >
         <img
           class="aspect-square p-1"

@@ -3,6 +3,18 @@ import MARKED_JS from '@salesforce/resourceUrl/marked';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 
+/**
+ * Transforms a single line of text that may contain HTML to plain text.
+ * @param {string} textWithHtml A single line of text that may contain HTML
+ * @returns {string} The value as plain text
+ */
+const toInlinePlainText = (textWithHtml) => {
+  const withoutHtmlTags = textWithHtml.replace(/<[^>]*>/g, ' ');
+  const withCollapsedWhitespaces = withoutHtmlTags.replace(/\s{2,}/g, ' ');
+
+  return withCollapsedWhitespaces.trim();
+};
+
 // Any number of `*` between 1 and 3, or a single backtick, followed by a word character or whitespace character
 const unclosedElement = /(\*{1,3}|`)($|\w[\w\s]*$)/;
 
@@ -49,7 +61,9 @@ const customRenderer = {
    * @param {string} level
    */
   heading(text, level) {
-    return `<div data-level="answer-heading-${level}" aria-label="${text}">${text}</div>`;
+    const plainText = toInlinePlainText(text);
+
+    return `<div data-level="answer-heading-${level}" aria-label="${plainText}">${text}</div>`;
   },
 
   /**

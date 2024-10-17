@@ -2,7 +2,6 @@ import {
   BaseParam,
   ContextParam,
   LocaleParam,
-  VisitorIDParam,
 } from '../../platform-service-params.js';
 import {
   AnalyticsParam,
@@ -20,6 +19,5 @@ export type PlanRequest = BaseParam &
   PipelineParam &
   LocaleParam &
   TimezoneParam &
-  VisitorIDParam &
   AnalyticsParam &
   AuthenticationParam;

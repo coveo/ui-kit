@@ -4,7 +4,7 @@ import {context} from '@actions/github';
 import {minimatch} from 'minimatch';
 import {execSync} from 'node:child_process';
 
-function getBaseHeadSHAs() {
+export function getBaseHeadSHAs() {
   switch (context.eventName) {
     case 'pull_request':
       return {
@@ -19,7 +19,7 @@ function getBaseHeadSHAs() {
   }
 }
 
-function getChangedFiles(from, to) {
+export function getChangedFiles(from, to) {
   return execSync(`git diff --name-only ${from}..${to}`, {
     stdio: 'pipe',
     encoding: 'utf-8',
@@ -41,7 +41,7 @@ function checkPatterns(files, patterns) {
   return false;
 }
 
-function getOutputName() {
+export function getOutputName() {
   return process.argv[2];
 }
 
