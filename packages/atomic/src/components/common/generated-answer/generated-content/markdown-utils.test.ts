@@ -302,6 +302,22 @@ describe('markdownUtils', () => {
           );
         });
       });
+
+      it('should transform formatted heading', () => {
+        const text = '# **bold** *emphasized* with `code` title';
+        const html = transformMarkdownToHtml(text);
+        expect(removeLineBreaks(html)).toBe(
+          '<div part="answer-heading-1" aria-label="bold emphasized with code title"><strong part="answer-strong">bold</strong> <em part="answer-emphasis">emphasized</em> with <code part="answer-inline-code">code</code> title</div>'
+        );
+      });
+
+      it('should transform heading with nested formatting', () => {
+        const text = '# ***bold** emphasized with `code`* title';
+        const html = transformMarkdownToHtml(text);
+        expect(removeLineBreaks(html)).toBe(
+          '<div part="answer-heading-1" aria-label="bold emphasized with code title"><em part="answer-emphasis"><strong part="answer-strong">bold</strong> emphasized with <code part="answer-inline-code">code</code></em> title</div>'
+        );
+      });
     });
 
     describe('with unclosed inline elements in text', () => {
