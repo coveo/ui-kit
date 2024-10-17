@@ -28,9 +28,19 @@ export class AtomicProductFieldCondition {
    */
   @Prop({reflect: true}) ifNotDefined?: string;
 
-  @MapProp({splitValues: true}) mustMatch: Record<string, string[]> = {};
+  /**
+   * Verifies whether the specified fields match the specified values.
+   * @type {Record<string, string[]>}
+   */
+  @Prop() @MapProp({splitValues: true}) mustMatch: Record<string, string[]> =
+    {};
 
-  @MapProp({splitValues: true}) mustNotMatch: Record<string, string[]> = {};
+  /**
+   * Verifies whether the specified fields do not match the specified values.
+   * @type {Record<string, string[]>}
+   */
+  @Prop() @MapProp({splitValues: true}) mustNotMatch: Record<string, string[]> =
+    {};
 
   private conditions: ProductTemplateCondition[] = [];
   private shouldBeRemoved = false;
