@@ -63,6 +63,7 @@ test.describe('when using a field that supports highlights', async () => {
     });
   });
 });
+
 test.describe('when displaying a field that does not support highlights', async () => {
   test.beforeEach(async ({productText}) => {
     await productText.load({args: {field: 'ec_description'}});
