@@ -1,3 +1,9 @@
+## 3.4.1 (2024-10-17)
+
+### Bug Fixes
+
+- **genqa:** fix rga feedback position with chrome ([#4501](https://github.com/coveo/ui-kit/issues/4501)) ([3814405](https://github.com/coveo/ui-kit/commits/381440540ab9224595f061cc7eaf37561b7674b6))
+
 ## 2.78.2 (2024-09-16)
 
 ### Bug Fixes
