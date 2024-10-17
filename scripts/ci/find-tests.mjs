@@ -100,7 +100,7 @@ function ensureIsNotCoveoPackage(file) {
 }
 
 function dependsOnCoveoPackage(file) {
-  const externalPackages = ['packages/headless', 'packages/bueno'];
+  const externalPackages = ['packages/headless/', 'packages/bueno/'];
   for (const pkg of externalPackages) {
     if (file.includes(pkg)) {
       return true;
