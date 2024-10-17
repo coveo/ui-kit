@@ -3,7 +3,7 @@
 atomic-insight-result-action-bar {
   @apply invisible absolute right-6 top-[-1rem] flex;
 
-  > atomic-insight-result-action:not(:last-child) {
+  > :not(:last-child) {
     button {
       @apply rounded-r-none border-r-0;
       &:hover {
@@ -11,7 +11,7 @@ atomic-insight-result-action-bar {
       }
     }
   }
-  > atomic-insight-result-action:not(:first-child) {
+  > :not(:first-child) {
     button {
       @apply rounded-bl-none rounded-tl-none;
     }
