@@ -10,7 +10,6 @@ export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> 
     return this.page.getByRole('button', {name: 'Quick View'});
   }
 
-  // Modal
   get modal() {
     return this.page.getByRole('dialog');
   }
@@ -19,7 +18,6 @@ export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> 
     return this.modal.locator('article');
   }
 
-  // Nav bar
   get keywordsHighlight() {
     return this.page.getByText('Keywords highlight');
   }
@@ -36,7 +34,6 @@ export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> 
     return this.page.getByLabel('Remove highlights').first();
   }
 
-  // Header
   get header() {
     return this.modal.locator('[part="header"]');
   }
@@ -49,7 +46,6 @@ export class AtomicQuickviewLocators extends BasePageObject<'atomic-quickview'> 
     return this.page.getByLabel('Close');
   }
 
-  // Footer
   get pagerSummary() {
     return this.page.getByText('Result 1 of');
   }
