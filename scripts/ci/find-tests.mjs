@@ -92,7 +92,7 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
 
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
-    throw new Error('Change detected in an different Coveo package.');
+    throw new Error('Change detected in an different Coveo package.', file);
   }
 }
 
@@ -115,7 +115,11 @@ try {
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
-  setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
+  console.log('testsToRun:', testsToRun);
+  setOutput(
+    outputName,
+    testsToRun !== undefined ? testsToRun : '--grep @no-test'
+  );
 
   if (!testsToRun) {
     console.log('No relevant source file changes detected for E2E tests.');
