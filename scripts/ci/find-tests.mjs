@@ -77,6 +77,7 @@ function createTestFileMappings(testPaths, projectRoot) {
 function determineTestFilesToRun(changedFiles, testDependencies) {
   const testsToRun = new Set();
   for (const changedFile of changedFiles) {
+    console.log('changedFile:', changedFile);
     for (const [testFile, sourceFiles] of testDependencies) {
       ensureIsNotCoveoPackage(changedFile);
       const isChangedTestFile = testFile === basename(changedFile);
