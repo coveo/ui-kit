@@ -1,32 +1,21 @@
 import {configure} from '../../../page-objects/configurator';
+import {performSearch} from '../../../page-objects/actions/action-perform-search';
 import {
   getQueryAlias,
   interceptSearch,
   mockSearchWithNotifyTrigger,
 } from '../../../page-objects/search';
 import {NotificationsExpectations as Expect} from './notifications-expectations';
-
+import {
+  useCaseParamTest,
+  useCaseEnum,
+  InsightInterfaceExpectations as InsightInterfaceExpect,
+} from '../../../page-objects/use-case';
 const exampleNotifications = ['Notification one', 'Notification two'];
 
 interface NotificationsOptions {
   useCase: string;
 }
-
-const enum useCaseEnum {
-  search = 'search',
-  insight = 'insights',
-}
-
-const useCaseParamTest = [
-  {
-    useCase: useCaseEnum.search,
-    label: 'with search use case',
-  },
-  {
-    useCase: useCaseEnum.insight,
-    label: 'with insight use case',
-  },
-];
 
 describe('quantic-notifications', () => {
   const pageUrl = 's/quantic-notifications';
@@ -35,12 +24,17 @@ describe('quantic-notifications', () => {
     interceptSearch();
     cy.visit(pageUrl);
     configure(options);
+    if (options.useCase === useCaseEnum.insight) {
+      InsightInterfaceExpect.isInitialized();
+      performSearch();
+    }
   }
 
   useCaseParamTest.forEach((param) => {
     describe(`when no notification is fired by the pipeline trigger ${param.label}`, () => {
       it('should not render any notification', () => {
         visitNotifications({useCase: param.useCase});
+        mockSearchWithNotifyTrigger(param.useCase, []);
 
         cy.wait(getQueryAlias(param.useCase));
         Expect.displayNotifications(false);
@@ -49,8 +43,8 @@ describe('quantic-notifications', () => {
 
     describe(`when some notifications are fired by the pipeline trigger for the ${param.label}`, () => {
       it('should render the notifications', () => {
-        visitNotifications({useCase: param.useCase});
         mockSearchWithNotifyTrigger(param.useCase, exampleNotifications);
+        visitNotifications({useCase: param.useCase});
 
         cy.wait(getQueryAlias(param.useCase));
         Expect.displayNotifications(true);

@@ -647,15 +647,20 @@ export function mockSearchWithNotifyTrigger(
   useCase: string,
   notifications: string[]
 ) {
+  const InterceptAliasesToUse =
+    useCase === useCaseEnum.insight
+      ? InterceptAliases.Insight
+      : InterceptAliases.Search;
+
   cy.intercept(getRoute(useCase), (req) => {
     req.continue((res) => {
-      res.body.triggers = notifications.map((notification) => ({
+      res.body.triggers = notifications?.map((notification) => ({
         type: 'notify',
         content: notification,
       }));
       res.send();
     });
-  }).as(InterceptAliases.Search.substring(1));
+  }).as(InterceptAliasesToUse.substring(1));
 }
 
 export function mockQuerySuggestions(suggestions: string[]) {
