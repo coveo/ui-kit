@@ -93,7 +93,17 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
 
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
-    throw new Error('Change detected in an different Coveo package.', file);
+    const externalPackages = ['packages/headless', 'packages/bueno'];
+    for (const pkg of externalPackages) {
+      if (file.includes(pkg)) {
+        console.log('*********************');
+        console.log(file, pkg);
+        console.log('*********************');
+      }
+    }
+    throw new Error(
+      'Change detected in an different Coveo package: -' + file + '-'
+    );
   }
 }
 
