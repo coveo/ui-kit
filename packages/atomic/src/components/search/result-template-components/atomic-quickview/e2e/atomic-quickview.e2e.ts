@@ -26,7 +26,7 @@ test.describe('Quickview', () => {
     });
   });
 
-  test.describe('when the quickview button is clicked after a search with no query', () => {
+  test.describe('when the quickview button is clicked', () => {
     test.beforeEach(async ({quickview}) => {
       await quickview.load();
       await quickview.resultButton.click();
