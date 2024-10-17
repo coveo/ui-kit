@@ -3,26 +3,19 @@ import {test, expect} from './fixture';
 
 function mobileViewportSize() {
   return {
-    // width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1,
-    width: 1023, // TODO: change
+    width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1,
     height: 1080,
   };
 }
 
 function desktopViewportSize() {
   return {
-    // width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) + 1,
-    width: 1025, // TODO: change
+    width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) + 1,
     height: 1080,
   };
 }
 
 test.describe('Quickview', () => {
-  // const layouts = ['list', 'grid'];
-
-  // layouts.forEach((layout) => {
-  // test.describe(`when used in ${layout} layout`, () => {
-
   test.describe('when displaying search results', () => {
     test.beforeEach(async ({quickview}) => {
       await quickview.load();
@@ -164,8 +157,6 @@ test.describe('Quickview', () => {
       expect(modalWidth).toBe(width);
     });
   });
-  //   });
-  // });
 
   test.describe('when not used inside a result template', () => {
     test('should should not log error to console', async ({
