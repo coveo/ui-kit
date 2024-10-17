@@ -159,12 +159,11 @@ test.describe('Quickview', () => {
   });
 
   test.describe('when not used inside a result template', () => {
-    test('should should not log error to console', async ({
-      quickview,
-      page,
-    }) => {
+    test.beforeEach(async ({quickview}) => {
       await quickview.load({story: 'outside-result-template'});
+    });
 
+    test('should should not log error to console', async ({page}) => {
       const errorMessage = await page.waitForEvent('console', (msg) => {
         return msg.type() === 'error';
       });
