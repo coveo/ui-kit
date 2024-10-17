@@ -1,3 +1,15 @@
+## 3.4.0 (2024-10-16)
+
+- fix(atomic): add hover effect for atomic-product clickable element in mobile/grid (#4519) ([0828b1f](https://github.com/coveo/ui-kit/commits/0828b1f)), closes [#4519](https://github.com/coveo/ui-kit/issues/4519)
+- fix(atomic): fix product image not always respect imageSize on grid display mode (#4520) ([95b6571](https://github.com/coveo/ui-kit/commits/95b6571)), closes [#4520](https://github.com/coveo/ui-kit/issues/4520)
+- fix(atomic): hide carousel buttons when image size is set to icon (#4518) ([479cc41](https://github.com/coveo/ui-kit/commits/479cc41)), closes [#4518](https://github.com/coveo/ui-kit/issues/4518)
+- test(atomic): fix flaky atomic did you mean tests (#4516) ([ec36b2e](https://github.com/coveo/ui-kit/commits/ec36b2e)), closes [#4516](https://github.com/coveo/ui-kit/issues/4516)
+- test(atomic): skip quickview cypress tests (#4532) ([bb65136](https://github.com/coveo/ui-kit/commits/bb65136)), closes [#4532](https://github.com/coveo/ui-kit/issues/4532)
+- feat(atomic): added logic to send analytics when opening user actions (#4512) ([06bea5a](https://github.com/coveo/ui-kit/commits/06bea5a)), closes [#4512](https://github.com/coveo/ui-kit/issues/4512)
+- feat(didyoumean): allow shifting queryCorrectionMode on the fly (#4305) ([7b007a2](https://github.com/coveo/ui-kit/commits/7b007a2)), closes [#4305](https://github.com/coveo/ui-kit/issues/4305)
+- feat(ipx): add exportparts to atomic-ipx-body (#4523) ([70754a0](https://github.com/coveo/ui-kit/commits/70754a0)), closes [#4523](https://github.com/coveo/ui-kit/issues/4523)
+- ci(atomic): run only affected E2E tests in atomic (#4484) ([497ede3](https://github.com/coveo/ui-kit/commits/497ede3)), closes [#4484](https://github.com/coveo/ui-kit/issues/4484)
+
 ## 3.3.0 (2024-10-10)
 
 - test(atomic): add tests & stories for atomic-product-image (#4469) ([bc09766](https://github.com/coveo/ui-kit/commits/bc09766)), closes [#4469](https://github.com/coveo/ui-kit/issues/4469)
