@@ -2,12 +2,15 @@
  * @jest-environment jsdom
  */
 
-import messenger from "@coveo/explorer-messenger";
 import { buildBrowserEnvironment } from "./browser";
 import { createMockEvent } from "../../__mocks__/event";
 
 jest.mock("uuid", () => ({
   v4: () => "2136b353-74be-42d7-904f-ea33a8f4a43c",
+}));
+const sendMessageSpy = jest.fn();
+jest.mock("@coveo/explorer-messenger", () => ({
+  createExplorerMessenger: () => ({ sendMessage: sendMessageSpy }),
 }));
 
 describe("buildBrowserEnvironment", () => {
@@ -23,6 +26,7 @@ describe("buildBrowserEnvironment", () => {
     Object.defineProperty(navigator, "sendBeacon", {
       value: jest.fn(() => true),
     });
+    sendMessageSpy.mockReset();
   });
 
   it("environment is browser", () => {
@@ -102,10 +106,6 @@ describe("buildBrowserEnvironment", () => {
   });
 
   it("calls sendMessage when calling send", () => {
-    const sendMessageSpy = jest.fn();
-    jest
-      .spyOn(messenger, "createExplorerMessenger")
-      .mockImplementationOnce(() => ({ sendMessage: sendMessageSpy }));
     const event = createMockEvent();
 
     buildBrowserEnvironment().send("url", "token", event);
