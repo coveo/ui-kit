@@ -92,12 +92,12 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
 
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
-    throw new Error('Change detected in an different Coveo package.');
+    throw new Error(`Change detected in an different Coveo package: ${file}`);
   }
 }
 
 function dependsOnCoveoPackage(file) {
-  const externalPackages = ['packages/headless', 'packages/bueno'];
+  const externalPackages = ['packages/headless/', 'packages/bueno/'];
   for (const pkg of externalPackages) {
     if (file.includes(pkg)) {
       return true;
@@ -122,4 +122,5 @@ try {
   }
 } catch (error) {
   console.warn(error?.message || error);
+  setOutput(outputName, ''); // Passing an empty string will run all tests.
 }
