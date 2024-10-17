@@ -11,8 +11,11 @@ const getVersion = () => {
   return version;
 };
 
-const commonPlugins = [
-  typescript({ tsconfig: "./config/tsconfig.base.json" }),
+const commonPlugins = (compilerOptions) => [
+  typescript({
+    tsconfig: "./config/tsconfig.base.json",
+    compilerOptions,
+  }),
   replace({
     preventAssignment: true,
     values: {
@@ -28,6 +31,13 @@ const browser = {
       file: "./lib/relay.js",
       format: "esm",
     },
+  ],
+  plugins: [nodeResolve({ browser: true }), ...commonPlugins()],
+};
+
+const cdn = {
+  input: "./src/relay.ts",
+  output: [
     {
       sourcemap: true,
       file: "./lib/cdn/relay.min.js",
@@ -35,7 +45,15 @@ const browser = {
       plugins: [terser()],
     },
   ],
-  plugins: [nodeResolve({ browser: true }), ...commonPlugins],
+  plugins: [
+    nodeResolve({ browser: true }),
+    ...commonPlugins({
+      declaration: false,
+      outDir: "./lib/cdn",
+      declarationDir: undefined,
+      declarationMap: undefined,
+    }),
+  ],
 };
 
 const nodejs = {
@@ -50,7 +68,7 @@ const nodejs = {
       format: "cjs",
     },
   ],
-  plugins: [nodeResolve({ exportConditions: ["node"] }), ...commonPlugins],
+  plugins: [nodeResolve({ exportConditions: ["node"] }), ...commonPlugins()],
 };
 
-export default [browser, nodejs];
+export default [browser, cdn, nodejs];

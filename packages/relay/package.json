@@ -5,20 +5,20 @@
   "files": [
     "lib/**/*"
   ],
-  "types": "./lib/types/relay.d.ts",
+  "types": "./lib/relay.d.ts",
   "exports": {
     "node": {
       "import": {
-        "types": "./lib/types/relay.d.ts",
+        "types": "./lib/relay.d.ts",
         "default": "./lib/relay.mjs"
       },
       "require": {
-        "types": "./lib/types/relay.d.ts",
+        "types": "./lib/relay.d.ts",
         "default": "./lib/relay.cjs"
       }
     },
     "default": {
-      "types": "./lib/types/relay.d.ts",
+      "types": "./lib/relay.d.ts",
       "default": "./lib/relay.js"
     }
   },
@@ -53,7 +53,7 @@
     "@rollup/plugin-node-resolve": "^15.2.1",
     "@rollup/plugin-replace": "^6.0.0",
     "@rollup/plugin-terser": "^0.4.3",
-    "@rollup/plugin-typescript": "^11.1.2",
+    "@rollup/plugin-typescript": "^12.0.0",
     "@types/jest": "^29.5.3",
     "@types/node": "^17.0.12",
     "@types/uuid": "^9.0.4",
