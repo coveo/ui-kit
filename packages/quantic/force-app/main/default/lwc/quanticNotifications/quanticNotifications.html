@@ -5,7 +5,7 @@
   </template>
   <template lwc:else>
     <template for:each={notifications} for:item="notification">
-      <div key={notification.id} class="slds-notify_container slds-is-relative">
+      <div key={notification.id} data-test="notification" class="slds-notify_container slds-is-relative">
         <div data-cy="notification" class="slds-notify slds-notify_toast notification" role="status">
           <lightning-icon icon-name="utility:info_alt" alternative-text="info" title="info"
             size="small"></lightning-icon>
