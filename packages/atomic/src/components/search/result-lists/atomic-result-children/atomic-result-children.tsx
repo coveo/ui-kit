@@ -4,7 +4,15 @@ import {
   FoldedResultList,
   FoldedResultListState,
 } from '@coveo/headless';
-import {Component, Element, State, h, Listen, Prop} from '@stencil/core';
+import {
+  Component,
+  Element,
+  State,
+  h,
+  Listen,
+  Prop,
+  Fragment,
+} from '@stencil/core';
 import {buildCustomEvent} from '../../../../utils/event-utils';
 import {
   InitializableComponent,
@@ -163,6 +171,7 @@ export class AtomicResultChildren implements InitializableComponent {
     });
   }
   private loadFullCollection() {
+    this.loadedFullCollection = true;
     this.host.dispatchEvent(
       buildCustomEvent('atomic/loadCollection', this.collection)
     );
@@ -177,6 +186,8 @@ export class AtomicResultChildren implements InitializableComponent {
     this.showInitialChildren = !this.showInitialChildren;
   };
 
+  @State() private loadedFullCollection = false;
+
   private renderCollection() {
     const collection = this.collection!;
 
@@ -184,30 +195,38 @@ export class AtomicResultChildren implements InitializableComponent {
       ? this.initialChildren
       : collection.children;
 
+    const showShouldButtons =
+      this.loadedFullCollection || collection.moreResultsAvailable;
+
     return (
-      <CollectionGuard
-        isLoadingMoreResults={collection.isLoadingMoreResults}
-        moreResultsAvailable={collection.moreResultsAvailable}
-        hasChildren={collection.children.length > 0}
-        numberOfChildren={collection.children.length}
-        density={this.displayConfig.density}
-        imageSize={this.imageSize || this.displayConfig.imageSize}
-        noResultText={this.bindings.i18n.t(this.noResultText)}
-      >
-        <ShowHideButton
+      <Fragment>
+        {showShouldButtons && (
+          <ShowHideButton
+            moreResultsAvailable={collection.moreResultsAvailable}
+            loadFullCollection={() => this.loadFullCollection()}
+            showInitialChildren={this.showInitialChildren}
+            toggleShowInitialChildren={this.toggleShowInitialChildren}
+            loadAllResults={this.bindings.i18n.t('load-all-results')}
+            collapseResults={this.bindings.i18n.t('collapse-results')}
+          />
+        )}
+
+        <CollectionGuard
+          isLoadingMoreResults={collection.isLoadingMoreResults}
           moreResultsAvailable={collection.moreResultsAvailable}
-          loadFullCollection={() => this.loadFullCollection()}
-          showInitialChildren={this.showInitialChildren}
-          toggleShowInitialChildren={this.toggleShowInitialChildren}
-          loadAllResults={this.bindings.i18n.t('load-all-results')}
-          collapseResults={this.bindings.i18n.t('collapse-results')}
-        ></ShowHideButton>
-        <ChildrenWrapper hasChildren={collection.children.length > 0}>
-          {children.map((child, i) =>
-            this.renderChild(child, i === children.length - 1)
-          )}
-        </ChildrenWrapper>
-      </CollectionGuard>
+          hasChildren={collection.children.length > 0}
+          numberOfChildren={collection.children.length}
+          density={this.displayConfig.density}
+          imageSize={this.imageSize || this.displayConfig.imageSize}
+          noResultText={this.bindings.i18n.t(this.noResultText)}
+        >
+          <ChildrenWrapper hasChildren={collection.children.length > 0}>
+            {children.map((child, i) =>
+              this.renderChild(child, i === children.length - 1)
+            )}
+          </ChildrenWrapper>
+        </CollectionGuard>
+      </Fragment>
     );
   }
 
