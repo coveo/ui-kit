@@ -1,12 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended",
     "github>coveo-platform/renovate-presets",
     "schedule:earlyMondays",
     "group:allNonMajor"
   ],
-  "rebaseWhen": "auto",
-  "prConcurrentLimit": 3,
   "prHeader": "UA-5791"
 }
