@@ -71,10 +71,11 @@ import {
   RegularFacetRequest,
   NumericFacetRequest,
   DateFacetRequest,
-  CategoryFacetRequest,
+  CategoryFacetRequest, LocationFacetRequest,
 } from './interfaces/request.js';
 import {CategoryFacetValue} from './interfaces/response.js';
 import {AnyFacetResponse} from './interfaces/response.js';
+import {toggleExcludeLocationFacetValue} from '../location-facet/location-facet-actions.js';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),
@@ -209,6 +210,29 @@ export const commerceFacetSetReducer = createReducer(
         if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
           return;
         }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.values.find(
+          (req) => req.value === selection.value
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.freezeCurrentValues = true;
+      })
+      .addCase(toggleExcludeLocationFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || !ensureLocationFacetRequest(facetRequest)) {
+          return;
+        }
+
+        // TODO(nico): Make sure these params are actually used by location facets
 
         facetRequest.preventAutoSelect = true;
 
@@ -448,6 +472,12 @@ function ensureRegularFacetRequest(
   facetRequest: AnyFacetRequest
 ): facetRequest is RegularFacetRequest {
   return facetRequest.type === 'regular';
+}
+
+function ensureLocationFacetRequest(
+  facetRequest: AnyFacetRequest
+): facetRequest is LocationFacetRequest {
+  return facetRequest.type === 'location';
 }
 
 function ensureNumericFacetRequest(

@@ -61,6 +61,7 @@ import {
   UrlManager,
   type UrlManagerProps,
 } from '../url-manager/headless-core-url-manager.js';
+import {buildCommerceLocationFacet} from '../facets/location/headless-commerce-location-facet.js';
 
 export interface BaseSolutionTypeSubControllers<S extends SummaryState> {
   /**
@@ -277,6 +278,8 @@ export function buildSearchAndListingsSubControllers<
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+        buildLocationFacet: (_engine, options) =>
+          buildCommerceLocationFacet(engine, {...options, ...commonOptions}),
         fetchProductsActionCreator,
       });
     },

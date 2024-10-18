@@ -22,6 +22,6 @@ export interface BaseFacetSearchRequest
   filterFacetCount: boolean;
 }
 
-export interface FacetSearchType<T extends 'specific' | 'hierarchical'> {
+export interface FacetSearchType<T extends 'specific' | 'location' | 'hierarchical'> {
   type: T;
 }

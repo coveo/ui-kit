@@ -37,6 +37,7 @@ export interface CommerceFacetSearchAPIClient {
   facetSearch(
     req: CommerceFacetSearchRequest,
     facetSearchOrigin: string
+    // TODO(nico): This means we might need to use the same type for location facet search
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>>;
 }
 

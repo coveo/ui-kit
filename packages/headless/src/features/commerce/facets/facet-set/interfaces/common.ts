@@ -19,4 +19,5 @@ export type FacetType =
   | 'regular'
   | 'dateRange'
   | 'numericalRange'
-  | 'hierarchical';
+  | 'hierarchical'
+  | 'location';

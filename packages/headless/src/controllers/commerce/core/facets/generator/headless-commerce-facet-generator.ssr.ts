@@ -58,6 +58,10 @@ import {
   FacetGenerator as CSRFacetGenerator,
   MappedGeneratedFacetController,
 } from './headless-commerce-facet-generator.js';
+import {getLocationFacetState, LocationFacetState} from '../location/headless-commerce-location-facet.js';
+import {
+  locationFacetSearchStateSelector
+} from '../../../../../features/facets/facet-search-set/location/location-facet-search-state-selector.js';
 
 export type {
   BaseFacetSearchResult,
@@ -87,7 +91,9 @@ type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : never;
+          : T extends 'location'
+            ? LocationFacetState
+            : never;
 };
 
 export function defineFacetGenerator<
@@ -234,6 +240,11 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
+            );
+          case 'location':
+            return getLocationFacetState(
+              createFacetState(facetResponseSelector) as LocationFacetState,
+              locationFacetSearchStateSelector(getEngineState(), facetId)
             );
         }
       });

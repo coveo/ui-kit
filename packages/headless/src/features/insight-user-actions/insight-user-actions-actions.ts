@@ -18,7 +18,7 @@ export interface RegisterUserActionsPayload {
 const registerUserActionsPayloadSchema = {
   ticketCreationDate: new StringValue({
     emptyAllowed: false,
-    ISODate: true,
+    //ISODate: true,
   }),
   excludedCustomActions: new ArrayValue({
     required: false,

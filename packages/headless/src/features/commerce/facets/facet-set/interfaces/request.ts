@@ -41,6 +41,14 @@ export type RegularFacetRequest = BaseCommerceFacetRequest<
   'regular'
 >;
 
+// TODO(nico): Find the right spot for this
+export type LocationFacetValueRequest = FacetValueRequest;
+
+export type LocationFacetRequest = BaseCommerceFacetRequest<
+  LocationFacetValueRequest,
+  'location'
+>;
+
 export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
   | 'facetId'

@@ -36,6 +36,7 @@ import {
   getCommercePaginationInitialSlice,
   getCommercePaginationInitialState,
 } from './pagination-state.js';
+import {toggleExcludeLocationFacetValue} from '../facets/location-facet/location-facet-actions.js';
 
 export const paginationReducer = createReducer(
   getCommercePaginationInitialState(),
@@ -109,6 +110,7 @@ export const paginationReducer = createReducer(
       .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeLocationFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
       .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
       .addCase(toggleSelectDateFacetValue, handlePaginationReset)
