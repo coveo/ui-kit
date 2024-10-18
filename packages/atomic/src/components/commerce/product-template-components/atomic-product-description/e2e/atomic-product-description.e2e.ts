@@ -12,6 +12,25 @@ test.describe('atomic-product-description', async () => {
     expect(accessibilityResults.violations.length).toEqual(0);
   });
 
+  test.describe('when providing an invalid field', async () => {
+    test('should return error', async ({page, productDescription}) => {
+      await productDescription.load({
+        args: {
+          // @ts-expect-error needed to test error on invalid field
+          field: 'ec_name',
+        },
+      });
+
+      const errorMessage = await page.waitForEvent('console', (msg) => {
+        return msg.type() === 'error';
+      });
+
+      expect(errorMessage.text()).toContain(
+        'field: value should be one of: ec_shortdesc, ec_description.'
+      );
+    });
+  });
+
   const fields: Array<'ec_description' | 'ec_shortdesc'> = [
     'ec_description',
     'ec_shortdesc',
