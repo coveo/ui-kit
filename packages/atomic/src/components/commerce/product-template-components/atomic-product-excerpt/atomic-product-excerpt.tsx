@@ -15,7 +15,7 @@ import {ProductContext} from '../product-template-decorators';
 
 /**
  * @alpha
- * The `atomic-product-excerpt` component renders the excerpt of a product.
+ * The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
  */
 @Component({
   tag: 'atomic-product-excerpt',
