@@ -2,9 +2,7 @@
   "enabled": false,
   "extends": [
     "github>coveo/renovate-presets",
-    ":semanticPrefixFixDepsChoreOthers",
-    "helpers:pinGitHubActionDigests",
-    "schedule:earlyMondays"
+    "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependencies"],
   "packageRules": [
@@ -156,6 +154,5 @@
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false
-  },
-  "ignoreDeps": ["@monaco-editor/react"]
+  }
 }
