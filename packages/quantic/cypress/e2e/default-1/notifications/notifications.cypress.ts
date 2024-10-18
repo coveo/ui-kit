@@ -31,26 +31,28 @@ describe('quantic-notifications', () => {
   }
 
   useCaseParamTest.forEach((param) => {
-    describe(`when no notification is fired by the pipeline trigger ${param.label}`, () => {
-      it('should not render any notification', () => {
-        visitNotifications({useCase: param.useCase});
-        mockSearchWithNotifyTrigger(param.useCase, []);
+    describe(param.label, () => {
+      describe('when no notification is fired by the pipeline trigger', () => {
+        it('should not render any notification', () => {
+          visitNotifications({useCase: param.useCase});
+          mockSearchWithNotifyTrigger(param.useCase, []);
 
-        cy.wait(getQueryAlias(param.useCase));
-        Expect.displayNotifications(false);
+          cy.wait(getQueryAlias(param.useCase));
+          Expect.displayNotifications(false);
+        });
       });
-    });
 
-    describe(`when some notifications are fired by the pipeline trigger for the ${param.label}`, () => {
-      it('should render the notifications', () => {
-        mockSearchWithNotifyTrigger(param.useCase, exampleNotifications);
-        visitNotifications({useCase: param.useCase});
+      describe('when some notifications are fired by the pipeline trigger', () => {
+        it('should render the notifications', () => {
+          mockSearchWithNotifyTrigger(param.useCase, exampleNotifications);
+          visitNotifications({useCase: param.useCase});
 
-        cy.wait(getQueryAlias(param.useCase));
-        Expect.displayNotifications(true);
-        Expect.logQueryPipelineTriggersNotification(exampleNotifications);
-        exampleNotifications.forEach((notification, index) => {
-          Expect.notificationContains(index, notification);
+          cy.wait(getQueryAlias(param.useCase));
+          Expect.displayNotifications(true);
+          Expect.logQueryPipelineTriggersNotification(exampleNotifications);
+          exampleNotifications.forEach((notification, index) => {
+            Expect.notificationContains(index, notification);
+          });
         });
       });
     });

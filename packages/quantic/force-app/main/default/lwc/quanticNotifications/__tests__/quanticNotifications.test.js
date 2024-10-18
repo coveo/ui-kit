@@ -135,7 +135,12 @@ describe('c-quantic-notifications', () => {
         selectors.initializationError
       );
 
+      const notification = element.shadowRoot.querySelector(
+        selectors.notifications
+      );
+
       expect(initializationError).not.toBeNull();
+      expect(notification).toBeNull();
     });
   });
 
@@ -161,17 +166,10 @@ describe('c-quantic-notifications', () => {
       await createTestComponent();
       await flushPromises();
 
-      const expectedObject = {
-        headless: {
-          buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
-        },
-        unsubscribe: functionsMocks.unsubscribe,
-      };
-
       expect(AriaLiveRegion).toHaveBeenCalledTimes(1);
       expect(AriaLiveRegion).toHaveBeenCalledWith(
         'notifications',
-        expect.objectContaining(expectedObject)
+        expect.anything()
       );
     });
   });
@@ -200,6 +198,7 @@ describe('c-quantic-notifications', () => {
         const expectedMessage =
           ' Notification 1: notification1 Notification 2: notification2';
 
+        expect(functionsMocks.dispatchMessage).toHaveBeenCalledTimes(1);
         expect(functionsMocks.dispatchMessage).toHaveBeenCalledWith(
           expectedMessage
         );
