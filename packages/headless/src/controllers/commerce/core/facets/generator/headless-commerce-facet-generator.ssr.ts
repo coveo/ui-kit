@@ -72,6 +72,7 @@ export type {
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
+  MappedGeneratedFacetController,
 };
 
 export type FacetGeneratorState = MappedFacetStates;
