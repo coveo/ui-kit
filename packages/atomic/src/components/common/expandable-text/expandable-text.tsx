@@ -12,7 +12,7 @@ interface ExpandableTextProps {
   truncateAfter: TruncateAfter;
   onToggleExpand: (e: MouseEvent | undefined) => void;
   showMoreLabel: string;
-  showLessLabel?: string;
+  showLessLabel: string;
 }
 
 const getLineClampClass = (truncateAfter: TruncateAfter) => {
@@ -67,8 +67,8 @@ export const ExpandableText: FunctionalComponent<ExpandableTextProps> = (
     truncateAfter,
     onToggleExpand,
     showMoreLabel,
+    showLessLabel,
     isCollapsible = false,
-    showLessLabel = 'Show Less',
   },
   children
 ) => {
