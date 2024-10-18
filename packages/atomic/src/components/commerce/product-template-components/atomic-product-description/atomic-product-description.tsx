@@ -115,6 +115,7 @@ export class AtomicProductDescription
         truncateAfter={this.truncateAfter}
         onToggleExpand={(e) => this.onToggleExpand(e)}
         showMoreLabel={this.bindings.i18n.t('show-more')}
+        showLessLabel={this.bindings.i18n.t('show-less')}
         isCollapsible={this.isCollapsible}
       >
         <atomic-product-text field={this.field}>
