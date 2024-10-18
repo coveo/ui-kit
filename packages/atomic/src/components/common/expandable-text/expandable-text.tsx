@@ -3,18 +3,20 @@ import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
 import {Button} from '../button';
 
+export type TruncateAfter = 'none' | '1' | '2' | '3' | '4';
+
 interface ExpandableTextProps {
   isExpanded: boolean;
   isTruncated: boolean;
   isCollapsible?: boolean;
-  truncateAfter: 'none' | '1' | '2' | '3' | '4';
+  truncateAfter: TruncateAfter;
   onToggleExpand: (e: MouseEvent | undefined) => void;
   showMoreLabel: string;
   showLessLabel?: string;
 }
 
-const getLineClampClass = (truncateAfter: 'none' | '1' | '2' | '3' | '4') => {
-  const lineClampMap: Record<typeof truncateAfter, string> = {
+const getLineClampClass = (truncateAfter: TruncateAfter) => {
+  const lineClampMap: Record<TruncateAfter, string> = {
     none: 'line-clamp-none',
     1: 'line-clamp-1',
     2: 'line-clamp-2',

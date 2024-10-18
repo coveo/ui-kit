@@ -28,6 +28,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -58,6 +59,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -2035,7 +2037,7 @@ export namespace Components {
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter": TruncateAfter;
     }
     /**
      * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
@@ -2048,7 +2050,7 @@ export namespace Components {
         /**
           * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter": TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -7959,7 +7961,7 @@ declare namespace LocalJSX {
         /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter"?: TruncateAfter;
     }
     /**
      * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
@@ -7972,7 +7974,7 @@ declare namespace LocalJSX {
         /**
           * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter"?: TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.

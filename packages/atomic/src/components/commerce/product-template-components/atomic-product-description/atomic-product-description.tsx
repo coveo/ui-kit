@@ -5,7 +5,10 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {ExpandableText} from '../../../common/expandable-text/expandable-text';
+import {
+  ExpandableText,
+  TruncateAfter,
+} from '../../../common/expandable-text/expandable-text';
 import {Hidden} from '../../../common/hidden';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
@@ -37,7 +40,7 @@ export class AtomicProductDescription
   /**
    * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
    */
-  @Prop() public truncateAfter: 'none' | '1' | '2' | '3' | '4' = '2';
+  @Prop() public truncateAfter: TruncateAfter = '2';
 
   /**
    * The name of the description field to use.
