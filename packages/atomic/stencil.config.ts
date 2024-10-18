@@ -5,6 +5,7 @@ import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
 import {readFileSync, readdirSync} from 'fs';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
@@ -13,6 +14,7 @@ import mixins from 'postcss-mixins';
 import postcssNesting from 'postcss-nested';
 import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
+// import {visualizer} from 'rollup-plugin-visualizer';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
@@ -215,6 +217,7 @@ export const config: Config = {
         focusVisible(),
         postcssNesting(),
         autoprefixer(),
+        cssnano(),
       ],
     }),
     replace(),
