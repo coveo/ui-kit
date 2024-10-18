@@ -12,6 +12,32 @@ test.describe('atomic-product-excerpt', async () => {
     expect(accessibilityResults.violations.length).toEqual(0);
   });
 
+  test.describe('when providing an invalid truncate-after value', async () => {
+    const invalidValues = ['foo', '0', '-1', '5'];
+
+    invalidValues.forEach((value) => {
+      test(`should return error for value: ${value}`, async ({
+        page,
+        productExcerpt,
+      }) => {
+        await productExcerpt.load({
+          args: {
+            // @ts-expect-error needed to test error on invalid value
+            truncateAfter: value,
+          },
+        });
+
+        const errorMessage = await page.waitForEvent('console', (msg) => {
+          return msg.type() === 'error';
+        });
+
+        expect(errorMessage.text()).toContain(
+          'truncateAfter: value should be one of: none, 1, 2, 3, 4'
+        );
+      });
+    });
+  });
+
   test('should render excerpt text', async ({productExcerpt}) => {
     await productExcerpt.hydrated.first().waitFor();
 

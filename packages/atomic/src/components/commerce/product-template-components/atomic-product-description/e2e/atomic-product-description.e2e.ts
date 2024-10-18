@@ -30,6 +30,31 @@ test.describe('atomic-product-description', async () => {
       );
     });
   });
+  test.describe('when providing an invalid truncate-after value', async () => {
+    const invalidValues = ['foo', '0', '-1', '5'];
+
+    invalidValues.forEach((value) => {
+      test(`should return error for value: ${value}`, async ({
+        page,
+        productDescription,
+      }) => {
+        await productDescription.load({
+          args: {
+            // @ts-expect-error needed to test error on invalid value
+            truncateAfter: value,
+          },
+        });
+
+        const errorMessage = await page.waitForEvent('console', (msg) => {
+          return msg.type() === 'error';
+        });
+
+        expect(errorMessage.text()).toContain(
+          'truncateAfter: value should be one of: none, 1, 2, 3, 4'
+        );
+      });
+    });
+  });
 
   const fields: Array<'ec_description' | 'ec_shortdesc'> = [
     'ec_description',
