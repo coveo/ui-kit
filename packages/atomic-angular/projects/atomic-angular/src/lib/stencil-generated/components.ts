@@ -873,14 +873,14 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 
 @ProxyCmp({
-  inputs: ['ifDefined', 'ifNotDefined']
+  inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
 })
 @Component({
   selector: 'atomic-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['ifDefined', 'ifNotDefined'],
+  inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
 })
 export class AtomicFieldCondition {
   protected el: HTMLElement;
@@ -1300,14 +1300,14 @@ export declare interface AtomicProductDescription extends Components.AtomicProdu
 
 
 @ProxyCmp({
-  inputs: ['ifDefined', 'ifNotDefined']
+  inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
 })
 @Component({
   selector: 'atomic-product-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['ifDefined', 'ifNotDefined'],
+  inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
 })
 export class AtomicProductFieldCondition {
   protected el: HTMLElement;
@@ -1893,7 +1893,7 @@ export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
 
 
 @ProxyCmp({
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
 })
 @Component({
@@ -1901,7 +1901,7 @@ export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'ifDefined', 'ifNotDefined'],
+  inputs: ['conditions', 'ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
 })
 export class AtomicRecsResultTemplate {
   protected el: HTMLElement;
@@ -2052,7 +2052,7 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
 
 
 @ProxyCmp({
-  inputs: ['conditions'],
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
 })
 @Component({
@@ -2060,7 +2060,7 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions'],
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
 })
 export class AtomicResultChildrenTemplate {
   protected el: HTMLElement;
@@ -2228,14 +2228,14 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 
 @ProxyCmp({
-  inputs: ['fieldCount', 'localeKey']
+  inputs: ['field', 'fieldCount', 'localeKey']
 })
 @Component({
   selector: 'atomic-result-localized-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['fieldCount', 'localeKey'],
+  inputs: ['field', 'fieldCount', 'localeKey'],
 })
 export class AtomicResultLocalizedText {
   protected el: HTMLElement;
@@ -2528,7 +2528,7 @@ export declare interface AtomicResultSectionVisual extends Components.AtomicResu
 
 
 @ProxyCmp({
-  inputs: ['conditions'],
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
 })
 @Component({
@@ -2536,7 +2536,7 @@ export declare interface AtomicResultSectionVisual extends Components.AtomicResu
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions'],
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
 })
 export class AtomicResultTemplate {
   protected el: HTMLElement;

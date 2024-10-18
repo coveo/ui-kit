@@ -36,10 +36,23 @@ export class AtomicResultTemplate {
    */
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
-  @MapProp({splitValues: true}) public mustMatch: Record<string, string[]> = {};
+  /**
+   * Verifies whether the specified fields match the specified values.
+   * @type {Record<string, string[]>}
+   */
+  @Prop() @MapProp({splitValues: true}) public mustMatch: Record<
+    string,
+    string[]
+  > = {};
 
-  @MapProp({splitValues: true}) public mustNotMatch: Record<string, string[]> =
-    {};
+  /**
+   * Verifies whether the specified fields do not match the specified values.
+   * @type {Record<string, string[]>}
+   */
+  @Prop() @MapProp({splitValues: true}) public mustNotMatch: Record<
+    string,
+    string[]
+  > = {};
 
   constructor() {
     this.resultTemplateCommon = new ResultTemplateCommon({
