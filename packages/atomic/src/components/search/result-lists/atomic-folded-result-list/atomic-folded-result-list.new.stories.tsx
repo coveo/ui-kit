@@ -133,7 +133,6 @@ const meta: Meta = {
   component: 'atomic-folded-result-list',
   title: 'Atomic/FoldedResultList',
   id: 'atomic-folded-result-list',
-
   render: renderComponent,
   decorators: [decorator],
   parameters,
