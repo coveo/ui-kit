@@ -21,6 +21,7 @@ import {
   REPO_HOST,
   REPO_NAME,
   REPO_OWNER,
+  REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
@@ -82,7 +83,10 @@ await (async () => {
   );
   const versionPrefix = `${packageJson.name}@`;
   const convention = await angularChangelogConvention();
-  const lastTag = await getLastTag(versionPrefix);
+  const lastTag = await getLastTag({
+    prefix: versionPrefix,
+    onBranch: REPO_RELEASE_BRANCH,
+  });
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
     return;
