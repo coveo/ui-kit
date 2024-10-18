@@ -2040,7 +2040,7 @@ export namespace Components {
         "truncateAfter": TruncateAfter;
     }
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
      */
     interface AtomicProductExcerpt {
         /**
@@ -4819,7 +4819,7 @@ declare global {
         new (): HTMLAtomicProductDescriptionElement;
     };
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
      */
     interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
     }
@@ -7964,7 +7964,7 @@ declare namespace LocalJSX {
         "truncateAfter"?: TruncateAfter;
     }
     /**
-     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
      */
     interface AtomicProductExcerpt {
         /**
@@ -10082,7 +10082,7 @@ declare module "@stencil/core" {
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
-             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product.
+             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
              */
             "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
             /**
