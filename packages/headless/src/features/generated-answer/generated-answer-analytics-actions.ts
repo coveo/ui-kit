@@ -201,7 +201,7 @@ export const logGeneratedAnswerFeedback = (
         ...feedback,
       });
     },
-    analyticsType: 'Rga.SubmitRgaFeedback',
+    analyticsType: 'Rga.SubmitFeedback',
     analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
       const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
       if (rgaID) {

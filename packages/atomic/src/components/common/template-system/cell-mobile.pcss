@@ -20,6 +20,13 @@
       margin-bottom: 1rem;
     }
 
+    &.image-small {
+      $(section-visual) {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
+    }
+
     $(section-badges) {
       @mixin set-font-size var(--atomic-text-sm);
 
@@ -78,6 +85,13 @@
       margin-bottom: 0.75rem;
     }
 
+    &.image-small {
+      $(section-visual) {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
+    }
+
     $(section-badges) {
       @mixin set-font-size var(--atomic-text-sm);
 
@@ -134,6 +148,18 @@
   &.density-compact {
     $(section-visual) {
       margin-bottom: 0.5rem;
+    }
+
+    &.image-large {
+      $(section-visual) {
+        width: 100%;
+      }
+    }
+    &.image-small {
+      $(section-visual) {
+        width: 10.25rem;
+        height: 10.25rem;
+      }
     }
 
     $(section-badges) {

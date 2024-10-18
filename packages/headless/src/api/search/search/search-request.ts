@@ -6,7 +6,6 @@ import {
   FoldingParam,
   LocaleParam,
   NumberOfResultsParam,
-  VisitorIDParam,
 } from '../../platform-service-params.js';
 import {
   ActionsHistoryParam,
@@ -54,7 +53,6 @@ export type SearchRequest = BaseParam &
   PipelineParam &
   SearchHubParam &
   FacetOptionsParam &
-  VisitorIDParam &
   DebugParam &
   LocaleParam &
   FoldingParam &
