@@ -51,7 +51,10 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
                 ? 'pointer-events-auto opacity-80'
                 : 'pointer-events-none hidden opacity-0'
             }`}
-            onClick={() => navigateToImage(index)}
+            onClick={(event) => {
+              event.stopPropagation();
+              navigateToImage(index);
+            }}
           ></li>
         );
       })}
