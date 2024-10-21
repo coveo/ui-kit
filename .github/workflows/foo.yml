@@ -1,0 +1,19 @@
+on:
+  pull_request:
+
+jobs:
+  foo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run git describe with branch refs
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@ --exact-match release/v3
+        continue-on-error: true
+      - name: Run git describe with local heads
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@ --exact-match refs/heads/release/v3
+        continue-on-error: true
+      - name: Run git describe with remote heads
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@ --exact-match refs/remotes/origin/release/v3
+        continue-on-error: true
