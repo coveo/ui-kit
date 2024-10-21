@@ -7,10 +7,11 @@ import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
+  LocationFacetRequest,
   NumericFacetRequest,
   RegularFacetRequest,
 } from './interfaces/request.js';
-import {RegularFacetValue} from './interfaces/response.js';
+import {LocationFacetValue, RegularFacetValue} from './interfaces/response.js';
 
 export function restoreFromParameters(
   state: CommerceFacetSetState,
@@ -22,6 +23,9 @@ export function restoreFromParameters(
 
   if (action.payload.f) {
     restoreRegularFacets(state, action.payload.f);
+  }
+  if (action.payload.lf) {
+    restoreLocationFacets(state, action.payload.lf);
   }
   if (action.payload.nf) {
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
@@ -51,6 +55,27 @@ function restoreRegularFacets(
           };
         }),
       } as RegularFacetRequest,
+    };
+  }
+}
+
+function restoreLocationFacets(
+  state: CommerceFacetSetState,
+  parameterFacets: Record<string, string[]>
+) {
+  const entries = Object.entries(parameterFacets);
+  for (const [facetId, values] of entries) {
+    state[facetId] = {
+      request: {
+        ...restoreFacet(facetId),
+        type: 'location',
+        values: values.map((value): LocationFacetValue => {
+          return {
+            ...restoreFacetValue(),
+            value,
+          };
+        }),
+      } as LocationFacetRequest,
     };
   }
 }
