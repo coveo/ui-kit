@@ -10,21 +10,15 @@ export class InstantProductPageObject extends BasePageObject<'atomic-commerce-se
     return this.page.locator('atomic-commerce-search-box-instant-products');
   }
 
-  get products() {
-    // return this.component.locator('[part~="instant-results-item"]');
-    return this.component.getByLabel('instant result');
+  get instantProducts() {
+    return this.page.getByLabel('instant result');
   }
 
-  get activeProduct() {
-    // return this.component.locator(
-    //   '[part~="active-suggestion"][part~="instant-results-item"]'
-    // );
-    return this.products.filter({
-      has: this.component.locator('[part~="active-suggestion"]'),
-    });
+  get productRoots() {
+    return this.page.locator('.result-root');
   }
 
   get showAllButton() {
-    return this.component.getByLabel('See all results');
+    return this.page.getByLabel('See all results');
   }
 }

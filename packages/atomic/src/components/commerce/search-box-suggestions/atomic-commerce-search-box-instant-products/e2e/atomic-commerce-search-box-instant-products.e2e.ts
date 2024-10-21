@@ -1,38 +1,75 @@
 import {test, expect} from './fixture';
 
-// @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
-// @Prop({reflect: true}) public imageSize: ItemDisplayImageSize = 'icon';
-// @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 test.describe('default', () => {
   test.beforeEach(async ({instantProduct, searchBox}) => {
     await instantProduct.load();
     await searchBox.hydrated.waitFor();
-    await searchBox.submitButton.click();
+    await searchBox.searchInput.click();
   });
 
   test('should display instant products', async ({instantProduct}) => {
-    for (const product of await instantProduct.products.all()) {
-      await expect(product).toBeVisible();
+    const products = await instantProduct.instantProducts.all();
+    for (let i = 0; i < products.length; i++) {
+      await expect(products[i]).toBeVisible();
     }
-    // const results = await instantProduct.products.all();
-    // for (let i = 0; i < results.length; i++) {
-    //   await expect(results[i]).toBeVisible();
-    // }
   });
 
-  test('should be clickable anywhere on the atomic-result component', async () => {
-    // TODO:
+  test('should be clickable anywhere on the atomic-result component', async ({
+    instantProduct,
+    page,
+  }) => {
+    await expect(instantProduct.instantProducts.first()).toBeEnabled();
+    await instantProduct.instantProducts.first().click();
+    await page.waitForURL(/https:\/\/sports\.barca\.group\/*/);
   });
 
-  test.describe('with a custom aria label', () => {
-    test('should render correctly', () => {});
+  test.describe('with density set to comfortable', () => {
+    test.beforeEach(async ({instantProduct, searchBox}) => {
+      await instantProduct.load({story: 'with-comfortable-density'});
+      await searchBox.hydrated.waitFor();
+      await searchBox.searchInput.click();
+    });
+
+    test('should apply comfortable density class', async ({instantProduct}) => {
+      await expect(instantProduct.productRoots.first()).toHaveClass(
+        /.*density-comfortable.*/
+      );
+    });
   });
 
-  test.describe('with keyboard navigating', () => {
-    test('should render correctly', () => {});
+  test.describe('with imageSize set to none', () => {
+    test.beforeEach(async ({instantProduct, searchBox}) => {
+      await instantProduct.load({story: 'with-no-image'});
+      await searchBox.hydrated.waitFor();
+      await searchBox.searchInput.click();
+    });
+
+    test('should apply no image class', async ({instantProduct}) => {
+      await expect(instantProduct.productRoots.first()).toHaveClass(
+        /.*image-none.*/
+      );
+    });
   });
 
-  test.describe('with mouse navigating', () => {
-    test('should render correctly', () => {});
+  test.describe('with a custom aria label', async () => {
+    test.beforeEach(async ({instantProduct, searchBox}) => {
+      await instantProduct.load({
+        args: {ariaLabelGenerator: () => 'custom-aria-label'},
+      });
+      await searchBox.hydrated.waitFor();
+      await searchBox.searchInput.click();
+    });
+
+    test('should update the instant product aria label', async ({
+      instantProduct,
+    }) => {
+      const products = await instantProduct.instantProducts.all();
+      for (let i = 0; i < products.length; i++) {
+        await expect(products[i]).toHaveAttribute(
+          'aria-live',
+          'custom-aria-label'
+        );
+      }
+    });
   });
 });
