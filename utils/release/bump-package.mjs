@@ -85,7 +85,7 @@ await (async () => {
   const convention = await changelogConvention();
   const lastTag = await getLastTag({
     prefix: versionPrefix,
-    onBranch: ` refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
+    onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
   });
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
