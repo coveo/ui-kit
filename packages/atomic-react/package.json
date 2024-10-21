@@ -12,6 +12,7 @@
   "scripts": {
     "build": "nx build",
     "clean": "rimraf -rf dist",
+    "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles:esm": "tsc -p tsconfig.esm.json",
     "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
