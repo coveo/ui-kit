@@ -54,6 +54,7 @@ describe('commerce common actions', () => {
         country: 'CA',
         currency: 'CAD',
         clientId: 'client_id',
+        page: 0,
         context: {
           user: {
             userAgent: 'user_agent',
@@ -93,15 +94,26 @@ describe('commerce common actions', () => {
       };
     });
 
+    it('given a basic state, returns the expected base request', () => {
+      const request = Actions.buildBaseCommerceAPIRequest(
+        state,
+        navigatorContext
+      );
+
+      expect(request).toEqual(expected);
+    });
+
     it('given a state with no commercePagination section, returns the expected base request', () => {
       delete state.commercePagination;
+
+      const {page, ...expectedWithoutPagination} = expected;
 
       const request = Actions.buildBaseCommerceAPIRequest(
         state,
         navigatorContext
       );
 
-      expect(request).toEqual({...expected});
+      expect(request).toEqual(expectedWithoutPagination);
     });
 
     it('given a state that has the commercePagination section, returns expected base request with expected #page and #perPage', () => {
@@ -154,6 +166,32 @@ describe('commerce common actions', () => {
       );
 
       expect(request).toEqual(expectedWithPagination);
+    });
+
+    it('given a state that has latitude and longitude, returns expected base request with expected #latitude and #longitude', () => {
+      state.commerceContext.user = {
+        latitude: 48.8566,
+        longitude: 2.3522,
+      };
+
+      const expectedWithLatitudeAndLongitude: CommerceAPIRequest = {
+        ...expected,
+        context: {
+          ...expected.context,
+          user: {
+            ...expected.context.user,
+            latitude: state.commerceContext.user.latitude,
+            longitude: state.commerceContext.user.longitude,
+          },
+        },
+      };
+
+      const request = Actions.buildBaseCommerceAPIRequest(
+        state,
+        navigatorContext
+      );
+
+      expect(request).toEqual(expectedWithLatitudeAndLongitude);
     });
   });
 

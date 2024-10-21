@@ -5,10 +5,12 @@ import {
   SetViewPayload,
   setContext,
   setView,
+  SetUserPayload,
+  setUser,
 } from './context-actions.js';
 import {contextReducer as commerceContext} from './context-slice.js';
 
-export type {SetContextPayload, SetViewPayload};
+export type {SetContextPayload, SetViewPayload, SetUserPayload};
 
 /**
  * The context action creators.
@@ -29,6 +31,14 @@ export interface ContextActionCreators {
    * @returns A dispatchable action.
    */
   setView(payload: SetViewPayload): PayloadAction<SetViewPayload>;
+
+  /**
+   * Sets the user context property without modifying any other context properties.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  setUser(payload: SetUserPayload): PayloadAction<SetUserPayload>;
 }
 
 /**
@@ -44,5 +54,6 @@ export function loadContextActions(
   return {
     setContext,
     setView,
+    setUser,
   };
 }

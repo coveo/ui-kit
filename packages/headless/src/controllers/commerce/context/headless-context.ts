@@ -3,6 +3,7 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
+  setUser,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
@@ -19,10 +20,16 @@ export interface ContextOptions {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
+  user?: User;
 }
 
 export interface View {
   url: string;
+}
+
+export interface User {
+  latitude: number;
+  longitude: number;
 }
 
 export interface ContextProps {
@@ -61,6 +68,12 @@ export interface Context extends Controller {
   setView(view: View): void;
 
   /**
+   * Sets the user.
+   * @param user - The new user.
+   */
+  setUser(user: User): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
@@ -71,6 +84,7 @@ export interface ContextState {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
+  user?: User;
 }
 
 /**
@@ -129,6 +143,8 @@ export function buildContext(
       ),
 
     setView: (view: View) => dispatch(setView(view)),
+
+    setUser: (user: User) => dispatch(setUser(user)),
   };
 }
 
