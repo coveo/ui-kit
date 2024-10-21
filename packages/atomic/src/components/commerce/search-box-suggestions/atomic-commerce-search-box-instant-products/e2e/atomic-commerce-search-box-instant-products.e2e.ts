@@ -14,7 +14,7 @@ test.describe('default', () => {
     }
   });
 
-  test('should be clickable anywhere on the atomic-result component', async ({
+  test('should be clickable anywhere on the instant result component', async ({
     instantProduct,
     page,
   }) => {
@@ -51,7 +51,7 @@ test.describe('default', () => {
     });
   });
 
-  test.describe('with a custom aria label', async () => {
+  test.describe('with a custom aria label generator', async () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
       await instantProduct.load({
         args: {ariaLabelGenerator: () => 'custom-aria-label'},
