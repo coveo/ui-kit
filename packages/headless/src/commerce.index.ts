@@ -51,6 +51,7 @@ export * from './features/commerce/sort/sort-actions-loader.js';
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
+// TODO COMHUB-247 export location facets actions loader
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
 export * from './features/commerce/query-set/query-set-actions-loader.js';
@@ -165,6 +166,10 @@ export type {
   RegularFacetState,
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet.js';
 export type {
+  LocationFacet,
+  LocationFacetState,
+} from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
+export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet.js';
@@ -178,6 +183,8 @@ export type {
   FacetType,
   FacetValueRequest,
   RegularFacetValue,
+  LocationFacetValueRequest,
+  LocationFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
   DateRangeRequest,
@@ -194,6 +201,11 @@ export type {
   RegularFacetSearchState,
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet-search.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
+export type {
+  LocationFacetSearch,
+  LocationFacetSearchState,
+} from './controllers/commerce/core/facets/location/headless-commerce-location-facet-search.js';
+export type {LocationFacetSearchResult} from './api/commerce/facet-search/location-facet-search/location-facet-search-response.js';
 export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
