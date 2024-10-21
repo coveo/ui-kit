@@ -18,3 +18,19 @@ jobs:
       - name: Run git describe with remote heads
         run: git describe --tags --abbrev=0 --match=@coveo/atomic@* refs/remotes/origin/release/v3
         continue-on-error: true
+  foo-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          refs: 'v2'
+      - name: Run git describe with branch refs
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@* release/v2
+        continue-on-error: true
+      - name: Run git describe with local heads
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@* refs/heads/release/v2
+        continue-on-error: true
+      - name: Run git describe with remote heads
+        run: git describe --tags --abbrev=0 --match=@coveo/atomic@* refs/remotes/origin/release/v2
+        continue-on-error: true
