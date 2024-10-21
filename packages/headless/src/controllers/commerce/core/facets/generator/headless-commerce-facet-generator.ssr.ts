@@ -11,11 +11,13 @@ import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
 import {
   AnyFacetResponse,
+  LocationFacetValue,
   RegularFacetValue,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
+import {locationFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/location/location-facet-search-state-selector.js';
 import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import {ManualRangeSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
@@ -45,6 +47,11 @@ import {
   getCoreFacetState,
 } from '../headless-core-commerce-facet.js';
 import {
+  getLocationFacetState,
+  LocationFacet,
+  LocationFacetState,
+} from '../location/headless-commerce-location-facet.js';
+import {
   getNumericFacetState,
   NumericFacet,
   NumericFacetState,
@@ -72,6 +79,9 @@ export type {
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
+  LocationFacet,
+  LocationFacetState,
+  LocationFacetValue,
 };
 
 export type FacetGeneratorState = MappedFacetStates;
@@ -87,7 +97,9 @@ type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : never;
+          : T extends 'location'
+            ? LocationFacetState
+            : never;
 };
 
 export function defineFacetGenerator<
@@ -234,6 +246,11 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
+            );
+          case 'location':
+            return getLocationFacetState(
+              createFacetState(facetResponseSelector) as LocationFacetState,
+              locationFacetSearchStateSelector(getEngineState(), facetId)
             );
         }
       });
