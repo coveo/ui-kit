@@ -101,25 +101,6 @@ describe('LocationFacet', () => {
     });
   });
 
-  it('#state.facetSearch returns the facet search state', () => {
-    const facetSearchState = buildMockFacetSearch();
-    facetSearchState.isLoading = true;
-    facetSearchState.response.moreValuesAvailable = true;
-    facetSearchState.options.query = 'test';
-    facetSearchState.response.values = [
-      {count: 1, displayValue: 'test', rawValue: 'test'},
-    ];
-
-    state.facetSearchSet[facetId] = facetSearchState;
-
-    expect(facet.state.facetSearch).toEqual({
-      isLoading: true,
-      moreValuesAvailable: true,
-      query: 'test',
-      values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
-    });
-  });
-
   it('#type returns "location"', () => {
     expect(facet.type).toBe('location');
   });

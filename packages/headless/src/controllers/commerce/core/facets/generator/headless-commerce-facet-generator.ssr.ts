@@ -17,7 +17,6 @@ import {
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
-import {locationFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/location/location-facet-search-state-selector.js';
 import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
 import {ManualRangeSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
@@ -249,8 +248,7 @@ export function buildFacetGenerator(
             );
           case 'location':
             return getLocationFacetState(
-              createFacetState(facetResponseSelector) as LocationFacetState,
-              locationFacetSearchStateSelector(getEngineState(), facetId)
+              createFacetState(facetResponseSelector) as LocationFacetState
             );
         }
       });
