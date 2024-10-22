@@ -386,7 +386,7 @@ describe('c-quantic-user-action', () => {
       });
     });
 
-    describe('when the contentIdKey of action is not clickable', () => {
+    describe('when the contentIdKey of the action is not clickable', () => {
       it('should display the action title as a text', async () => {
         const element = createTestComponent({
           action: {
