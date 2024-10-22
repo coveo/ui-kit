@@ -21,5 +21,6 @@ export const RELEASER_AUTH_SECRETS = {
   installationId: process.env.RELEASER_INSTALLATION_ID,
 };
 
+export const NPM_LATEST_TAG = 'v2-latest';
 export const NPM_BETA_TAG = 'v2-beta';
 export const NPM_ALPHA_TAG = 'v2-alpha';
