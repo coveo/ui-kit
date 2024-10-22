@@ -16,6 +16,7 @@
     "*"
   ],
   "entryPoints": [
+    "./src/core.index.ts",
     "./src/index.ts",
     "./src/case-assist.index.ts",
     "./src/commerce.index.ts",

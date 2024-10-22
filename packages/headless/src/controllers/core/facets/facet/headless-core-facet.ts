@@ -76,7 +76,7 @@ export interface CoreFacetProps {
  * - [facet-search.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet/facet-search.tsx)
  * - [facet.class.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet/facet.class.tsx)
  *
- * @group Core facets
+ * @group Core controllers
  * @category Facet
  */
 export interface Facet extends CoreFacet {
@@ -94,7 +94,7 @@ export interface Facet extends CoreFacet {
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  *
- * @group Core facets
+ * @group Core controllers
  * @category Facet
  */
 export interface CoreFacet extends Controller {
@@ -191,7 +191,7 @@ export interface CoreFacet extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  *
- * @group Core facets
+ * @group Core controllers
  * @category Facet
  */
 export interface FacetState extends CoreFacetState {
@@ -202,7 +202,7 @@ export interface FacetState extends CoreFacetState {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  *
- * @group Core facets
+ * @group Core controllers
  * @category Facet
  */
 export interface CoreFacetState {
@@ -361,7 +361,7 @@ export interface FacetValue {
  * @param optionsSchema - The facet options schema to use when validating options upon facet initialization.
  * @returns A `Facet` controller instance.
  *
- * @group Core facets
+ * @group Core controllers
  * @category Facet
  * */
 export function buildCoreFacet(
