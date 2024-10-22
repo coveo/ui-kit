@@ -458,19 +458,19 @@ describe('search request', () => {
     });
   });
 
-  it('should send visitorId if analytics is enable', async () => {
+  it('should send analytics if analytics is enable', async () => {
     state.configuration.analytics.enabled = true;
     expect(
       (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.visitorId
+        .request.analytics
     ).toBeDefined();
   });
 
-  it('should not send visitorId if analytics is disabled', async () => {
+  it('should not send analytics if analytics is disabled', async () => {
     state.configuration.analytics.enabled = false;
     expect(
       (await buildSearchRequest(state, buildMockNavigatorContextProvider()()))
-        .request.visitorId
+        .request.analytics
     ).not.toBeDefined();
   });
 

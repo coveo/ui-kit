@@ -1,3 +1,17 @@
+## 3.4.0 (2024-10-16)
+
+- fix(headless): set wasCorrectedTo to empty string unless query was automatically corrected (#4538) ([f44de0f](https://github.com/coveo/ui-kit/commits/f44de0f)), closes [#4538](https://github.com/coveo/ui-kit/issues/4538)
+- test(quantic): ep analytics tests fixed in the e2e (#4529) ([435e2c2](https://github.com/coveo/ui-kit/commits/435e2c2)), closes [#4529](https://github.com/coveo/ui-kit/issues/4529)
+- feat(didyoumean): allow shifting queryCorrectionMode on the fly (#4305) ([7b007a2](https://github.com/coveo/ui-kit/commits/7b007a2)), closes [#4305](https://github.com/coveo/ui-kit/issues/4305)
+- feat(headless): remove visitorId (#4485) ([afe47a3](https://github.com/coveo/ui-kit/commits/afe47a3)), closes [#4485](https://github.com/coveo/ui-kit/issues/4485)
+
+## 3.3.0 (2024-10-10)
+
+- fix(atomic, headless): use `next` as default value for queryCorrectionMode (#4495) ([ddce004](https://github.com/coveo/ui-kit/commits/ddce004)), closes [#4495](https://github.com/coveo/ui-kit/issues/4495)
+- feat(headless): change citation from custom to click event (#4492) ([1cc5aee](https://github.com/coveo/ui-kit/commits/1cc5aee)), closes [#4492](https://github.com/coveo/ui-kit/issues/4492)
+- feat(headless): Refactor the Headless Notify Trigger controller to make it compatible with the insig ([e8e81e1](https://github.com/coveo/ui-kit/commits/e8e81e1)), closes [#4362](https://github.com/coveo/ui-kit/issues/4362)
+- fix(headless commerce): did you mean wasAutomaticallyCorrected should only be true when query was au ([ec06f49](https://github.com/coveo/ui-kit/commits/ec06f49)), closes [#4476](https://github.com/coveo/ui-kit/issues/4476)
+
 ## 3.2.0 (2024-10-02)
 
 - feat(headless): analytics actions updated to send valid ep events (#4450) ([0a60d40](https://github.com/coveo/ui-kit/commits/0a60d40)), closes [#4450](https://github.com/coveo/ui-kit/issues/4450)
