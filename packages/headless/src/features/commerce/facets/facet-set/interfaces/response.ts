@@ -11,8 +11,16 @@ export type CategoryFacetResponse = BaseFacetResponse<
 > &
   CategoryFacetDelimitingCharacter;
 
-export interface CategoryFacetValue extends BaseFacetValue {
+interface NonLocationFacetValue {
   numberOfResults: number;
+  isAutoSelected: boolean;
+  isSuggested: boolean;
+  moreValuesAvailable: boolean;
+}
+
+export interface CategoryFacetValue
+  extends BaseFacetValue,
+    NonLocationFacetValue {
   value: string;
   path: string[];
   isLeafValue: boolean;
@@ -36,8 +44,9 @@ export type RegularFacetResponse = BaseFacetResponse<
   'regular'
 >;
 
-export interface RegularFacetValue extends BaseFacetValue {
-  numberOfResults: number;
+export interface RegularFacetValue
+  extends BaseFacetValue,
+    NonLocationFacetValue {
   value: string;
 }
 
@@ -50,8 +59,9 @@ export interface LocationFacetValue extends BaseFacetValue {
   value: string;
 }
 
-export interface RangeFacetValue<T> extends BaseFacetValue {
-  numberOfResults: number;
+export interface RangeFacetValue<T>
+  extends BaseFacetValue,
+    NonLocationFacetValue {
   start: T;
   end: T;
   endInclusive: boolean;
@@ -74,9 +84,6 @@ export interface BaseFacetResponse<
 
 export interface BaseFacetValue {
   state: FacetValueState;
-  isAutoSelected: boolean;
-  isSuggested: boolean;
-  moreValuesAvailable: boolean;
 }
 
 export type AnyFacetValueResponse =
