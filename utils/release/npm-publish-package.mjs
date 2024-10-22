@@ -2,6 +2,7 @@
 import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
 import retry from 'async-retry';
 import {readFileSync} from 'node:fs';
+import {NPM_ALPHA_TAG, NPM_BETA_TAG} from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
   throw new Error('Should be called using npm run-script');
@@ -38,7 +39,7 @@ if (!name || !version) {
   throw 'Expected name and version to exist in package.json.';
 }
 if (!(await isPublished(name, version))) {
-  const tagToPublish = isPrerelease ? 'v2-alpha' : 'v2-beta';
+  const tagToPublish = isPrerelease ? NPM_ALPHA_TAG : NPM_BETA_TAG;
   await npmPublish('.', {
     tag: tagToPublish,
     provenance: shouldProvideProvenance,
