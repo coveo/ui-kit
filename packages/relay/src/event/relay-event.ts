@@ -19,7 +19,7 @@ export function createRelayEvent(
   payload: RelayPayload,
   config: RelayConfig,
   environment: Environment,
-  clientIdManager: ClientIdManager
+  clientIdManager: ClientIdManager,
 ): Readonly<RelayEvent> {
   return {
     ...payload,

@@ -1,7 +1,7 @@
 import { ListenerManager } from "../listener/listener";
 
 export function createMockListenerManager(
-  config: Partial<ListenerManager> = {}
+  config: Partial<ListenerManager> = {},
 ): ListenerManager {
   return {
     add: jest.fn(),

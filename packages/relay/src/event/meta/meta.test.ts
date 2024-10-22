@@ -16,7 +16,7 @@ describe("createMeta", () => {
     "itemView",
     defaultConfig,
     mockEnv,
-    defaultClientIdManager
+    defaultClientIdManager,
   );
 
   it("returns meta with the clientId field", () => {
@@ -38,7 +38,7 @@ describe("createMeta", () => {
       "itemView",
       defaultConfig,
       mockEnv,
-      defaultClientIdManager
+      defaultClientIdManager,
     );
     expect(specfiedtimeMeta.ts).toBe(1692057600000);
   });
@@ -48,7 +48,7 @@ describe("createMeta", () => {
       "itemView",
       createMockConfig({ source: ["atomic@1.2", "headless@3.4"] }),
       mockEnv,
-      defaultClientIdManager
+      defaultClientIdManager,
     );
     expect(sourcedMeta.source).toEqual([
       "atomic@1.2",

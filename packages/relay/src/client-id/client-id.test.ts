@@ -16,7 +16,7 @@ describe("createClientIdManager", () => {
     });
 
     const clientIdManager = createClientIdManager(
-      environmentManagerWithoutStorage
+      environmentManagerWithoutStorage,
     );
 
     expect(clientIdManager.getClientId()).toBe("UUID-generated");
@@ -36,7 +36,7 @@ describe("createClientIdManager", () => {
     });
 
     const clientIdManager = createClientIdManager(
-      environmentManagerWithStorage
+      environmentManagerWithStorage,
     );
     expect(clientIdManager.getClientId()).toBe(uuidStored);
   });
@@ -54,7 +54,7 @@ describe("createClientIdManager", () => {
     });
 
     const clientIdManager = createClientIdManager(
-      environmentManagerWithStorage
+      environmentManagerWithStorage,
     );
     expect(clientIdManager.getClientId()).toBe("UUID-generated");
   });

@@ -27,7 +27,7 @@ function isBrowser() {
 }
 
 export function createEnvironmentManager(
-  configManager: ConfigManager
+  configManager: ConfigManager,
 ): Readonly<EnvironmentManager> {
   return {
     get: () => Object.freeze(buildEnvironment(configManager)),

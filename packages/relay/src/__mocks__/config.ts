@@ -10,7 +10,7 @@ export function createMockConfig(config?: Partial<RelayConfig>): RelayConfig {
 }
 
 export function createMockConfigManager(
-  manager?: Partial<ConfigManager>
+  manager?: Partial<ConfigManager>,
 ): ConfigManager {
   return {
     get: () => createMockConfig(),

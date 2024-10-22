@@ -24,7 +24,7 @@
     "conventional-changelog-angular": "^6.0.0",
     "eslint": "^8.56.0",
     "pnpm": "8.15.9",
-    "prettier": "^2.5.1",
+    "prettier": "^3.0.0",
     "ts-dedent": "^2.2.0",
     "turbo": "latest"
   },

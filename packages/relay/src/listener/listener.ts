@@ -26,7 +26,7 @@ export function createListenerManager(): ListenerManager {
 
   function getListenerIndex({ type, callback }: Listener): number {
     return listeners.findIndex(
-      (listener) => listener.type === type && listener.callback === callback
+      (listener) => listener.type === type && listener.callback === callback,
     );
   }
 

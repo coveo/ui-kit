@@ -54,7 +54,7 @@ function pick({
 }
 
 export function createConfigManager(
-  initialConfig: RelayConfig
+  initialConfig: RelayConfig,
 ): Readonly<ConfigManager> {
   let _config: Readonly<RelayConfig> = pick(initialConfig);
 

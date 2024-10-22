@@ -30,7 +30,7 @@ describe("emit", () => {
     expect(params.environment.send).toHaveBeenCalledWith(
       params.config.url,
       "I am token",
-      params.event
+      params.event,
     );
   });
 

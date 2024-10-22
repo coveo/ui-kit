@@ -35,7 +35,7 @@ describe("relay", () => {
     const relay = createRelay(createMockConfig());
 
     expect(relay.getMeta("type").clientId).toEqual(
-      "da3248bd-48f3-4dbf-b898-6fee32069b53"
+      "da3248bd-48f3-4dbf-b898-6fee32069b53",
     );
     relay.updateConfig({ mode: "disabled" });
 

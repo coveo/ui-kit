@@ -72,7 +72,7 @@ export function createMeta(
   type: string,
   config: RelayConfig,
   environment: Environment,
-  clientIdManager: ClientIdManager
+  clientIdManager: ClientIdManager,
 ): Readonly<Meta> {
   const { getReferrer, getLocation, getUserAgent } = environment;
   const eventConfig = getEventConfig(config);

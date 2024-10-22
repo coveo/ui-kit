@@ -18,7 +18,7 @@ export function buildBrowserEnvironment(): Environment {
         `${url}?access_token=${token}`,
         new Blob([JSON.stringify([event])], {
           type: "application/json",
-        })
+        }),
       );
 
       const messenger = createExplorerMessenger();
@@ -26,7 +26,7 @@ export function buildBrowserEnvironment(): Environment {
 
       if (!response) {
         throw new Error(
-          `Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists.`
+          `Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists.`,
         );
       }
     },

@@ -38,7 +38,7 @@ describe("buildBrowserEnvironment", () => {
       value: "https://www.coveo.com/",
     });
     expect(buildBrowserEnvironment().getReferrer()).toBe(
-      "https://www.coveo.com/"
+      "https://www.coveo.com/",
     );
   });
 
@@ -56,7 +56,7 @@ describe("buildBrowserEnvironment", () => {
       },
     });
     expect(buildBrowserEnvironment().getLocation()).toBe(
-      "https://www.patate.com/recettes"
+      "https://www.patate.com/recettes",
     );
   });
 
@@ -69,7 +69,7 @@ describe("buildBrowserEnvironment", () => {
 
   it("generates a UUID when calling generateUUID", () => {
     expect(buildBrowserEnvironment().generateUUID()).toBe(
-      "2136b353-74be-42d7-904f-ea33a8f4a43c"
+      "2136b353-74be-42d7-904f-ea33a8f4a43c",
     );
   });
 
@@ -84,13 +84,13 @@ describe("buildBrowserEnvironment", () => {
     expect(beaconSpy).toHaveBeenCalledTimes(1);
     expect(beaconSpy).toHaveBeenCalledWith(
       `anything?access_token=token`,
-      new Blob(['{"bloup": "something"}'], { type: "application/json" })
+      new Blob(['{"bloup": "something"}'], { type: "application/json" }),
     );
   });
 
   it("returns undefined when calling send", () => {
     expect(
-      buildBrowserEnvironment().send("", "", createMockEvent())
+      buildBrowserEnvironment().send("", "", createMockEvent()),
     ).toBeUndefined();
   });
 
@@ -99,9 +99,9 @@ describe("buildBrowserEnvironment", () => {
       value: jest.fn(() => false),
     });
     expect(() =>
-      buildBrowserEnvironment().send("", "", createMockEvent())
+      buildBrowserEnvironment().send("", "", createMockEvent()),
     ).toThrow(
-      "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists."
+      "Failed to send the event(s) because the payload size exceeded the maximum allowed size (32 KB). Please contact support if the problem persists.",
     );
   });
 

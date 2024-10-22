@@ -13,7 +13,7 @@ const defaultEnvironment: Environment = {
 };
 
 export function createMockEnvironment(
-  environment?: Partial<Environment>
+  environment?: Partial<Environment>,
 ): Environment {
   return {
     ...defaultEnvironment,
@@ -22,7 +22,7 @@ export function createMockEnvironment(
 }
 
 export function createMockEnvironmentManager(
-  environmentManager?: Partial<EnvironmentManager>
+  environmentManager?: Partial<EnvironmentManager>,
 ): EnvironmentManager {
   return {
     get: () => createMockEnvironment(),

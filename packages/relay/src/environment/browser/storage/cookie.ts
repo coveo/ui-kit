@@ -22,7 +22,7 @@ function createCookieManager(): CookieManager {
         if (prettifyCookie.lastIndexOf(cookiePrefix, 0) === 0) {
           return prettifyCookie.substring(
             cookiePrefix.length,
-            prettifyCookie.length
+            prettifyCookie.length,
           );
         }
       }
@@ -31,7 +31,7 @@ function createCookieManager(): CookieManager {
     setItem(key: string, data: string, expire: number): void {
       const domain = getDomain(window.location.hostname);
       const expireSection = `;expires=${new Date(
-        new Date().getTime() + expire
+        new Date().getTime() + expire,
       ).toUTCString()}`;
       const domainSection = domain ? `;domain=${domain}` : "";
       document.cookie = `${prefix}${key}=${data}${expireSection}${domainSection};path=/;SameSite=Lax`;

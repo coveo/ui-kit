@@ -75,7 +75,7 @@ const updateChangelog = async ({
       currentTag: newVersionTag,
       previousTag: lastTag,
     },
-    convention.writerOpts
+    convention.writerOpts,
   );
   await writeChangelog(path, changelog);
 };
@@ -101,7 +101,7 @@ const runPackageBump = async (pkg) => {
   const changedPackages = await pnpmGetChangedPackages(lastTag);
   if (!changedPackages.includes(name)) {
     console.info(
-      `\x1b[33m No files changed, skipping version bump for ${name} \n`
+      `\x1b[33m No files changed, skipping version bump for ${name} \n`,
     );
     return;
   }
@@ -157,7 +157,7 @@ const commitAndPush = async (tags) => {
 const bumpVersions = async () => {
   try {
     const rawTags = await Promise.all(
-      packages.map(async (pkg) => await runPackageBump(pkg))
+      packages.map(async (pkg) => await runPackageBump(pkg)),
     );
     const tags = rawTags.filter((tag) => !!tag);
 

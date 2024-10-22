@@ -7,14 +7,14 @@ const exec = promisify(syncExec);
 
 const updateNpmTag = async () => {
   const { name, version } = JSON.parse(
-    readFileSync("./package.json", { encoding: "utf-8" })
+    readFileSync("./package.json", { encoding: "utf-8" }),
   );
   const tag = process.argv[2];
   const latestVersion = await getLatestVersion(name);
 
   if (versionCompare(version, latestVersion) < 1) {
     console.info(
-      `skipping tag update for ${name} because version "${version}" is smaller or equal than the latest version "${latestVersion}"`
+      `skipping tag update for ${name} because version "${version}" is smaller or equal than the latest version "${latestVersion}"`,
     );
     return;
   }

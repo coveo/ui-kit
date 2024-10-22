@@ -90,7 +90,7 @@ export function createRelay(initialConfig: RelayConfig): Relay {
         payload,
         config,
         environment,
-        clientIdManager
+        clientIdManager,
       );
 
       return emit({
@@ -105,7 +105,7 @@ export function createRelay(initialConfig: RelayConfig): Relay {
         type,
         configManager.get(),
         environmentManager.get(),
-        clientIdManager
+        clientIdManager,
       ),
     on: (type: string, callback: EventCallback) =>
       listenerManager.add({ type, callback }),

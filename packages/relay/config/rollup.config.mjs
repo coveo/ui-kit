@@ -6,7 +6,7 @@ import { readFileSync } from "fs";
 
 const getVersion = () => {
   const { version } = JSON.parse(
-    readFileSync("./package.json", { encoding: "utf-8" })
+    readFileSync("./package.json", { encoding: "utf-8" }),
   );
   return version;
 };

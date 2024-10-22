@@ -6,7 +6,7 @@ export interface ClientIdManager {
 }
 
 export function createClientIdManager(
-  environmentManager: EnvironmentManager
+  environmentManager: EnvironmentManager,
 ): ClientIdManager {
   return {
     getClientId: () => {
