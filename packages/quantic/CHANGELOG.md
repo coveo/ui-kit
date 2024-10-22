@@ -1,3 +1,9 @@
+## 2.57.4 (2024-10-22)
+
+### Bug Fixes
+
+- **atomic,quantic:** broken HTML because of formatting in CRGA markdown heading ([#4564](https://github.com/coveo/ui-kit/issues/4564)) ([9fd1f95](https://github.com/coveo/ui-kit/commits/9fd1f95ca50fb57a0a3e2b49f7e675313a121994))
+
 ## 2.57.3 (2024-09-16)
 
 ## 2.57.2 (2024-08-29)

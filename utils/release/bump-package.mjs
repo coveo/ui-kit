@@ -17,10 +17,12 @@ import {appendFileSync, readFileSync, writeFileSync} from 'node:fs';
 import {resolve, join} from 'node:path';
 import {gt, SemVer} from 'semver';
 import {
+  NPM_BETA_TAG,
   REPO_FS_ROOT,
   REPO_HOST,
   REPO_NAME,
   REPO_OWNER,
+  REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
 
 if (!process.env.INIT_CWD) {
@@ -82,7 +84,10 @@ await (async () => {
   );
   const versionPrefix = `${packageJson.name}@`;
   const convention = await angularChangelogConvention();
-  const lastTag = await getLastTag(versionPrefix);
+  const lastTag = await getLastTag({
+    prefix: versionPrefix,
+    onBranch: `refs/remotes/origin/${REPO_RELEASE_BRANCH}`,
+  });
   const commits = await getCommits(PATH, lastTag);
   if (commits.length === 0 && !hasPackageJsonChanged(PATH)) {
     return;
@@ -92,7 +97,7 @@ await (async () => {
   let currentNpmVersion = new SemVer(
     privatePackage
       ? '0.0.0' // private package does not have a npm version, so we default to the 'lowest' possible
-      : await describeNpmTag(packageJson.name, 'beta')
+      : await describeNpmTag(packageJson.name, NPM_BETA_TAG)
   );
   const isRedo = gt(currentNpmVersion, currentGitVersion);
   const bumpInfo = isRedo

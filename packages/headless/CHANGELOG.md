@@ -1,3 +1,10 @@
+## 2.80.3 (2024-10-22)
+
+### Bug Fixes
+
+- **answerApi:** custom event ([#4478](https://github.com/coveo/ui-kit/issues/4478)) ([a4534e0](https://github.com/coveo/ui-kit/commits/a4534e01ace5580edb658dd6a06b0dd872ae963b))
+- **headless:** ensure each result keep a reference of its 'source' searchId V2 ([#4510](https://github.com/coveo/ui-kit/issues/4510)) ([269b205](https://github.com/coveo/ui-kit/commits/269b2051b8e07559ef37782423e05c77461fd663)), closes [#4391](https://github.com/coveo/ui-kit/issues/4391)
+
 ## 2.80.2 (2024-09-16)
 
 ## 2.80.1 (2024-08-29)
