@@ -30,6 +30,8 @@ import {
 /**
  * The SSR search engine.
  *
+ * See [Implement server-side rendering](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/headless-implement-ssr).
+ *
  * @group Engine
  */
 export interface SSRSearchEngine extends SearchEngine {
@@ -89,6 +91,9 @@ export interface SearchEngineDefinition<
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
+ *
+ * See [Implement server-side rendering](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/headless-implement-ssr).
+ *
  * @param options - The search engine definition
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
