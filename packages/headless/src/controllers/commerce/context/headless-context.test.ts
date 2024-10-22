@@ -1,6 +1,6 @@
 import {
   setContext,
-  setUser,
+  setLocation,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
 import {contextReducer} from '../../../features/commerce/context/context-slice.js';
@@ -84,11 +84,11 @@ describe('headless commerce context', () => {
     expect(setView).toHaveBeenCalled();
   });
 
-  it('setUser dispatches #setUser', () => {
-    context.setUser({
+  it('setLocation dispatches #setLocation', () => {
+    context.setLocation({
       latitude: 27.1127,
       longitude: 109.3497,
     });
-    expect(setUser).toHaveBeenCalled();
+    expect(setLocation).toHaveBeenCalled();
   });
 });

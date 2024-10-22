@@ -14,7 +14,7 @@ export const viewDefinition = {
   url: requiredNonEmptyString,
 };
 
-export const userDefinition = {
+export const locationDefinition = {
   latitude: new NumberValue({min: -90, max: 90, required: true}),
   longitude: new NumberValue({min: -180, max: 180, required: true}),
 };
@@ -27,9 +27,9 @@ export const contextDefinition = {
     options: {required: true},
     values: viewDefinition,
   }),
-  user: new RecordValue({
+  location: new RecordValue({
     options: {required: false},
-    values: userDefinition,
+    values: locationDefinition,
   }),
 };
 

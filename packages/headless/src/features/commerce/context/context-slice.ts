@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, setUser, setView} from './context-actions.js';
+import {setContext, setLocation, setView} from './context-actions.js';
 import {getContextInitialState} from './context-state.js';
 
 export const contextReducer = createReducer(
@@ -13,8 +13,8 @@ export const contextReducer = createReducer(
       .addCase(setView, (state, {payload}) => {
         state.view = payload;
       })
-      .addCase(setUser, (state, {payload}) => {
-        state.user = payload;
+      .addCase(setLocation, (state, {payload}) => {
+        state.location = payload;
       });
   }
 );

@@ -169,7 +169,7 @@ describe('commerce common actions', () => {
     });
 
     it('given a state that has latitude and longitude, returns expected base request with expected #latitude and #longitude', () => {
-      state.commerceContext.user = {
+      state.commerceContext.location = {
         latitude: 48.8566,
         longitude: 2.3522,
       };
@@ -180,8 +180,8 @@ describe('commerce common actions', () => {
           ...expected.context,
           user: {
             ...expected.context.user,
-            latitude: state.commerceContext.user.latitude,
-            longitude: state.commerceContext.user.longitude,
+            latitude: state.commerceContext.location.latitude,
+            longitude: state.commerceContext.location.longitude,
           },
         },
       };

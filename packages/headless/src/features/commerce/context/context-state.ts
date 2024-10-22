@@ -4,14 +4,16 @@ import {
   ViewParams,
 } from '../../../api/commerce/commerce-api-params.js';
 
-export type UserState = Required<Pick<UserParams, 'latitude' | 'longitude'>>;
+export type LocationState = Required<
+  Pick<UserParams, 'latitude' | 'longitude'>
+>;
 
 export interface CommerceContextState {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
   view: ViewParams;
-  user?: UserState;
+  location?: LocationState;
 }
 
 export const getContextInitialState = (): CommerceContextState => ({

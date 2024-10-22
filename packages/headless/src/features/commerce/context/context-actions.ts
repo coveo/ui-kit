@@ -2,10 +2,10 @@ import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {createAction} from '@reduxjs/toolkit';
 import {ViewParams} from '../../../api/commerce/commerce-api-params.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
-import {UserState} from './context-state.js';
+import {LocationState} from './context-state.js';
 import {
   contextDefinition,
-  userDefinition,
+  locationDefinition,
   viewDefinition,
 } from './context-validation.js';
 
@@ -14,6 +14,7 @@ export interface SetContextPayload {
   country: string;
   currency: CurrencyCodeISO4217;
   view: SetViewPayload;
+  location?: SetLocationPayload;
 }
 
 export const setContext = createAction(
@@ -28,9 +29,9 @@ export const setView = createAction(
   (payload: SetViewPayload) => validatePayload(payload, viewDefinition)
 );
 
-export type SetUserPayload = UserState;
+export type SetLocationPayload = LocationState;
 
-export const setUser = createAction(
-  'commerce/context/setUser',
-  (payload: SetUserPayload) => validatePayload(payload, userDefinition)
+export const setLocation = createAction(
+  'commerce/context/setLocation',
+  (payload: SetLocationPayload) => validatePayload(payload, locationDefinition)
 );
