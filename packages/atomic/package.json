@@ -39,8 +39,7 @@
   "files": [
     "dist/",
     "docs/",
-    "licenses/",
-    "loader/"
+    "licenses/"
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* loader/* playwright-report/*",
