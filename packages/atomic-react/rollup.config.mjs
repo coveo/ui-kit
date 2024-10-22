@@ -129,7 +129,7 @@ export default defineConfig([
     plugins: plugins,
   },
   {
-    input: 'src/index.ts',
+    input: 'src/recommendation.index.ts',
     output: [outputESM({useCase: 'recommendation/'})],
     external: commonExternal,
     plugins: plugins,
@@ -141,7 +141,7 @@ export default defineConfig([
     plugins: plugins,
   },
   {
-    input: 'src/index.ts',
+    input: 'src/commerce.index.ts',
     output: [outputESM({useCase: 'commerce/'})],
     external: commonExternal,
     plugins: plugins,

@@ -68,7 +68,7 @@
     },
     "./commerce": {
       "types": "./dist/commerce.index.d.ts",
-      "import": "./dist/esm/atomic-react.mjs",
+      "import": "./dist/esm/commerce/atomic-react.mjs",
       "require": "./dist/cjs/commerce/atomic-react.cjs"
     },
     "./recommendation": {
