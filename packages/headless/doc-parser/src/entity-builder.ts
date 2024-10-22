@@ -163,15 +163,13 @@ function getReturnTypeDescription(m: ApiMethodSignature) {
 }
 
 function removeBlockTagNodes(nodes: readonly DocNode[]) {
-  const a = nodes.filter((n) => !hasBlockTag([n]));
-  return a;
+  return nodes.filter((n) => !hasBlockTag([n]));
 }
 
 function hasBlockTag(nodes: readonly DocNode[]): boolean {
   return nodes.some((n) => {
     const isBlockTag = n.kind === 'BlockTag';
-    const c = n.getChildNodes();
-    const hasBlockTagChild = hasBlockTag(c);
+    const hasBlockTagChild = hasBlockTag(n.getChildNodes());
     return isBlockTag || hasBlockTagChild;
   });
 }
