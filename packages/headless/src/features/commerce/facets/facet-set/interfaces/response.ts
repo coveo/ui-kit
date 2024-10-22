@@ -12,6 +12,7 @@ export type CategoryFacetResponse = BaseFacetResponse<
   CategoryFacetDelimitingCharacter;
 
 export interface CategoryFacetValue extends BaseFacetValue {
+  numberOfResults: number;
   value: string;
   path: string[];
   isLeafValue: boolean;
@@ -36,6 +37,7 @@ export type RegularFacetResponse = BaseFacetResponse<
 >;
 
 export interface RegularFacetValue extends BaseFacetValue {
+  numberOfResults: number;
   value: string;
 }
 
@@ -49,6 +51,7 @@ export interface LocationFacetValue extends BaseFacetValue {
 }
 
 export interface RangeFacetValue<T> extends BaseFacetValue {
+  numberOfResults: number;
   start: T;
   end: T;
   endInclusive: boolean;
@@ -71,7 +74,6 @@ export interface BaseFacetResponse<
 
 export interface BaseFacetValue {
   state: FacetValueState;
-  numberOfResults: number;
   isAutoSelected: boolean;
   isSuggested: boolean;
   moreValuesAvailable: boolean;
