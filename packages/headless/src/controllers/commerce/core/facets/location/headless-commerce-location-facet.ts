@@ -12,13 +12,11 @@ import {
   FacetValueRequest,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 
 export type LocationFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
-> &
-  SearchableFacetOptions;
+>;
 
 export type LocationFacetState = Omit<
   CoreCommerceFacetState<LocationFacetValue>,

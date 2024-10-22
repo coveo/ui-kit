@@ -13,7 +13,6 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {
   LocationFacet,
   LocationFacetOptions,
@@ -47,7 +46,6 @@ describe('LocationFacet', () => {
     state.productListing.facets = [
       buildMockCommerceLocationFacetResponse({facetId}),
     ];
-    state.facetSearchSet[facetId] = buildMockFacetSearch();
     facetResponseSelector.mockReturnValue(
       buildMockCommerceLocationFacetResponse({facetId})
     );
@@ -61,7 +59,6 @@ describe('LocationFacet', () => {
       fetchProductsActionCreator: vi.fn(),
       facetResponseSelector,
       isFacetLoadingResponseSelector: vi.fn(),
-      facetSearch: {type: 'SEARCH'},
     };
 
     state = buildMockCommerceState();
