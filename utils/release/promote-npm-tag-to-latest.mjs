@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import {describeNpmTag, npmSetTag} from '@coveo/semantic-monorepo-tools';
 import {readFileSync} from 'node:fs';
 import {gt} from 'semver';
