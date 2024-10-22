@@ -63,17 +63,17 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
+      "import": "./dist/esm/atomic-react.mjs",
       "require": "./dist/cjs/atomic-react.cjs"
     },
     "./commerce": {
       "types": "./dist/commerce.index.d.ts",
-      "import": "./dist/commerce.index.js",
+      "import": "./dist/esm/atomic-react.mjs",
       "require": "./dist/cjs/commerce/atomic-react.cjs"
     },
     "./recommendation": {
       "types": "./dist/recommendation.index.d.ts",
-      "import": "./dist/recommendation.index.js",
+      "import": "./dist/esm/recommendation/atomic-react.mjs",
       "require": "./dist/cjs/recommendation/atomic-react.cjs"
     }
   }
