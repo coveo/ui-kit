@@ -77,6 +77,7 @@ describe('quantic-refine-content', () => {
         Expect.displayClearAllFiltersButton(true);
         Expect.displayDuplicatedTimeframeFacetClearFiltersButton(true);
         Expect.displayTimeframeFacetClearFiltersButton(true);
+        Actions.clickClearAllFilters();
         Actions.clickDuplicatedFacetExpandButton();
         Actions.clickDuplicatedFacetFirstOption();
         Expect.displayClearAllFiltersButton(true);

@@ -24,6 +24,7 @@ import {
   RELEASER_AUTH_SECRETS,
   REPO_NAME,
   REPO_OWNER,
+  REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
@@ -73,12 +74,10 @@ process.chdir(process.env.INIT_CWD);
   await gitPushTags();
 
   // Current release branch
-  // TODO v3: Bump to release/v3
-  const currentReleaseBranch = 'release/v2';
   await octokit.rest.git.updateRef({
     owner: REPO_OWNER,
     repo: REPO_NAME,
-    ref: `heads/${currentReleaseBranch}`,
+    ref: `heads/${REPO_RELEASE_BRANCH}`,
     sha: commit,
     force: false,
   });
