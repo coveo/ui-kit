@@ -104,7 +104,7 @@ export interface NumericFilterProps {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `NumericFilter` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category NumericFilter
  */
 export interface NumericFilterState {
@@ -134,7 +134,7 @@ export interface NumericFilterState {
  *
  * Example: [numeric-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/numeric-filter/numeric-filter.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category NumericFilter
  */
 export interface NumericFilter extends Controller {

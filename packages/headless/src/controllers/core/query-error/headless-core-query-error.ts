@@ -13,7 +13,7 @@ import {
  *
  * Example: [query-error.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/query-error/query-error.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category QueryError
  */
 export interface QueryError extends Controller {
@@ -26,7 +26,7 @@ export interface QueryError extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `QueryError` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category QueryError
  */
 export interface QueryErrorState {

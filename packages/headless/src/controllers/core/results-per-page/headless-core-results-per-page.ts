@@ -40,7 +40,7 @@ export interface ResultsPerPageInitialState {
  *
  * Example: [results-per-page.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category ResultsPerPage
  */
 export interface ResultsPerPage extends Controller {
@@ -67,7 +67,7 @@ export interface ResultsPerPage extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultsPerPage` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category ResultsPerPage
  * */
 export interface ResultsPerPageState {

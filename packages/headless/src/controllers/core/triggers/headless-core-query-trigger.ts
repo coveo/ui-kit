@@ -5,7 +5,7 @@ import {Controller} from '../../controller/headless-controller.js';
  *
  * Example: [query-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/triggers/query-trigger.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category QueryTrigger
  */
 export interface QueryTrigger extends Controller {
@@ -22,7 +22,7 @@ export interface QueryTrigger extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `QueryTrigger` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category QueryTrigger
  */
 export interface QueryTriggerState {

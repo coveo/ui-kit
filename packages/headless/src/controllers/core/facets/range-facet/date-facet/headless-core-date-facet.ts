@@ -69,7 +69,7 @@ export interface DateFacetProps {
  *
  * @document relative-date-format.md
  *
- * @group Core controllers
+ * @group Controllers
  * @category DateFacet
  * */
 export interface DateFacet extends Controller {
@@ -147,7 +147,7 @@ export interface DateFacet extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `DateFacet` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category DateFacet
  */
 export interface DateFacetState {
@@ -189,7 +189,7 @@ export interface DateFacetState {
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category DateFacet
  */
 export function buildCoreDateFacet(

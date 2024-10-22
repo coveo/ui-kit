@@ -5,7 +5,7 @@ import {Controller} from '../../controller/headless-controller.js';
  *
  * Example: [redirection-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/triggers/redirection-trigger.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category RedirectionTrigger
  */
 export interface RedirectionTrigger extends Controller {
@@ -18,7 +18,7 @@ export interface RedirectionTrigger extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `RedirectionTrigger` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category RedirectionTrigger
  */
 export interface RedirectionTriggerState {

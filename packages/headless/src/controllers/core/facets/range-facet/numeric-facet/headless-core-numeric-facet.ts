@@ -58,7 +58,7 @@ export interface NumericFacetProps {
  *
  * Example: [numeric-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category NumericFacet
  */
 export interface NumericFacet extends Controller {
@@ -122,7 +122,7 @@ export interface NumericFacet extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `NumericFacet` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category NumericFacet
  */
 export interface NumericFacetState {
@@ -164,7 +164,7 @@ export interface NumericFacetState {
  * @param props - The configurable `NumericFacet` properties.
  * @returns A `NumericFacet` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category NumericFacet
  */
 export function buildCoreNumericFacet(

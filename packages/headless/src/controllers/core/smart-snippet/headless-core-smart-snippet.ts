@@ -120,7 +120,7 @@ export interface SmartSnippetCore extends Controller {
  *
  * Example: [smart-snippet.fn.tsx](https://github.com/coveo/ui-kit/blob/c090c1bd676792027815c52507e2aef8ccfaab91/packages/samples/headless-react/src/components/smart-snippet/smart-snippet.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category SmartSnippet
  */
 export interface SmartSnippet extends SmartSnippetCore {
@@ -157,7 +157,7 @@ export interface SmartSnippet extends SmartSnippetCore {
 /**
  * A scoped and simplified part of the headless engine that is relevant to the `SmartSnippet` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category SmartSnippet
  */
 export interface SmartSnippetState {

@@ -26,7 +26,7 @@ export interface InteractiveCitationProps extends InteractiveResultCoreProps {
 /**
  * The `InteractiveCitation` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a generated answer citation.
  *
- * @group Core controllers
+ * @group Controllers
  * @category InteractiveCitation
  */
 export interface InteractiveCitation extends InteractiveResultCore {}

@@ -1,6 +1,7 @@
 /**
  * @module Core
  */
+export type {CoreEngine} from './app/engine.js';
 
 export type {
   buildCoreContext,
@@ -13,6 +14,8 @@ export type {
   DidYouMean,
   DidYouMeanState,
 } from './controllers/core/did-you-mean/headless-core-did-you-mean.ts';
+
+export type {CoreInstantProductPayload} from './features/commerce/instant-products/instant-products-actions.ts';
 
 export type {
   CategoryFacet,
@@ -39,6 +42,8 @@ export type {
   CoreFacetState,
 } from './controllers/core/facets/facet/headless-core-facet.js';
 
+export type {FacetOptions} from './controllers/core/facets/facet/headless-core-facet-options.js';
+
 export type {
   buildCoreNumericFacet,
   NumericFacet,
@@ -61,6 +66,13 @@ export type {
   CoreBreadcrumbManagerState,
 } from './controllers/breadcrumb-manager/headless-breadcrumb-manager.js';
 
+export type {SmartSnippetCore} from './controllers/core/smart-snippet/headless-core-smart-snippet.js';
+
+export type {
+  CoreSmartSnippetQuestionsList,
+  CoreSmartSnippetQuestionsListState,
+} from './controllers/core/smart-snippet-questions-list/headless-core-smart-snippet-questions-list.js';
+
 export type {
   buildCoreFoldedResultList,
   FoldedResultList,
@@ -77,6 +89,11 @@ export type {
   GeneratedAnswerState,
 } from './controllers/core/generated-answer/headless-core-generated-answer.js';
 
+export type {
+  InteractiveResultCore,
+  InteractiveResultCoreOptions,
+  InteractiveResultCoreProps,
+} from './controllers/core/interactive-result/headless-core-interactive-result.js';
 export type {InteractiveCitation} from './controllers/core/generated-answer/headless-core-interactive-citation.js';
 
 export type {

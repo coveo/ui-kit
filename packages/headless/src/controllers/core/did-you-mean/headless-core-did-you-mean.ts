@@ -55,7 +55,7 @@ export interface DidYouMeanOptions {
  *
  * Example: [did-you-mean.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/did-you-mean/did-you-mean.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category DidYouMean
  */
 export interface DidYouMean extends Controller {
@@ -73,7 +73,7 @@ export interface DidYouMean extends Controller {
 /**
  * A scoped and simplified part of the headless engine that is relevant to the `DidYouMean` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category DidYouMean
  */
 export interface DidYouMeanState {
@@ -111,7 +111,7 @@ export interface DidYouMeanState {
  * @param props - The configurable `DidYouMean` controller properties.
  * @returns A `DidYouMean` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category DidYouMean
  */
 export function buildCoreDidYouMean(

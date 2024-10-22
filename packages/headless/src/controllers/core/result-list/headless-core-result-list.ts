@@ -58,7 +58,7 @@ export interface ResultListProps {
  *
  * Example: [result-list.fn.tsx](https://github.com/coveo/ui-kit/blob/example/packages/samples/headless-react/src/components/result-list/result-list.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category ResultList
  */
 export interface ResultList extends Controller {
@@ -79,7 +79,7 @@ export interface ResultList extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ResultList` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category ResultList
  * */
 export interface ResultListState extends SearchStatusState {

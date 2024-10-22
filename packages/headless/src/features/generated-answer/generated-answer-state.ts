@@ -7,7 +7,7 @@ import {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `GeneratedAnswer` component.
  *
- * @group Core controllers
+ * @group Controllers
  * @category GeneratedAnswer
  */
 export interface GeneratedAnswerState {

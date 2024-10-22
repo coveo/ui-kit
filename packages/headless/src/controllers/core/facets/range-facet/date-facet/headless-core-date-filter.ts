@@ -104,7 +104,7 @@ export interface DateFilterProps {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `DateFilter` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category DateFilter
  */
 export interface DateFilterState {
@@ -134,7 +134,7 @@ export interface DateFilterState {
  *
  * Example: [date-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/date-filter/date-filter.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category DateFilter
  */
 export interface DateFilter extends Controller {

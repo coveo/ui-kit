@@ -13,7 +13,7 @@ import {
  *
  * Example: [search-status.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/search-status/search-status.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category SearchStatus
  */
 export interface SearchStatus extends Controller {
@@ -26,7 +26,7 @@ export interface SearchStatus extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchStatus` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category SearchStatus
  */
 export interface SearchStatusState {

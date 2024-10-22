@@ -11,7 +11,7 @@ import {
 /**
  * The `TabManager` components lets you manage tabs.
  *
- * @group Core controllers
+ * @group Controllers
  * @category TabManager
  */
 export interface TabManager extends Controller {
@@ -24,7 +24,7 @@ export interface TabManager extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `TabManager` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category TabManager
  */
 export interface TabManagerState {

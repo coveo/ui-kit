@@ -68,7 +68,7 @@ const initialStateSchema = new Schema({
  *
  * [pager.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/pager/pager.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category Pager
  */
 export interface Pager extends Controller {
@@ -106,7 +106,7 @@ export interface Pager extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category Pager
  */
 export interface PagerState {

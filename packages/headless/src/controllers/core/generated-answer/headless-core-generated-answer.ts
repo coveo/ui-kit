@@ -41,7 +41,7 @@ export type {
 /**
  * The `GeneratedAnswer` controller uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  *
- * @group Core controllers
+ * @group Controllers
  * @category GeneratedAnswer
  */
 export interface GeneratedAnswer extends Controller {
@@ -173,7 +173,7 @@ export interface GeneratedAnswerProps extends GeneratedAnswerPropsInitialState {
  * @param props - The configurable `GeneratedAnswer` properties.
  * @returns A `GeneratedAnswer` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category GeneratedAnswer
  */
 export function buildCoreGeneratedAnswer(

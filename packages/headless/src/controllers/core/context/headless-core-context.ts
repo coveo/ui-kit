@@ -55,7 +55,7 @@ const initialStateSchema = new Schema<ContextInitialState>({
  *
  * Example: [context.ts](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/context/context.ts)
  *
- * @group Core controllers
+ * @group Controllers
  * @category Context
  */
 export interface Context extends Controller {
@@ -89,7 +89,7 @@ export interface Context extends Controller {
 /**
  * A scoped and simplified part of the headless engine that is relevant to the `Context` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category Context
  */
 export interface ContextState {
@@ -107,7 +107,7 @@ export interface ContextState {
  *
  * @returns a `Context` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category Context
  */
 export function buildCoreContext(

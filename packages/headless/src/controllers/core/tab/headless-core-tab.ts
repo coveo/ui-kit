@@ -79,7 +79,7 @@ export interface TabProps {
  *
  * Example: [tab.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/tab/tab.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category Tab
  */
 export interface Tab extends Controller {
@@ -96,7 +96,7 @@ export interface Tab extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Tab` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category Tab
  */
 export interface TabState {

@@ -18,7 +18,7 @@ import {
 /**
  * The `QuerySummary` headless controller offers a high-level interface for designing a common query summary UI controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category QuerySummary
  * */
 export interface QuerySummary extends Controller {
@@ -29,7 +29,7 @@ export interface QuerySummary extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `QuerySummary` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category QuerySummary
  * */
 export interface QuerySummaryState extends SearchStatusState {

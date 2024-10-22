@@ -29,7 +29,7 @@ export interface FacetManagerPayload<T> {
  *
  * Example: [facet-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx)
  *
- * @group Core controllers
+ * @group Controllers
  * @category FacetManager
  */
 export interface FacetManager extends Controller {
@@ -50,7 +50,7 @@ export interface FacetManager extends Controller {
 /**
  * A scoped and simplified part of the headless engine relevant to the `FacetManager` controller.
  *
- * @group Core controllers
+ * @group Controllers
  * @category FacetManager
  */
 export interface FacetManagerState {
@@ -66,7 +66,7 @@ export interface FacetManagerState {
  * @param engine - The headless engine.
  * @returns The `FacetManager` controller instance.
  *
- * @group Core controllers
+ * @group Controllers
  * @category FacetManager
  */
 export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
