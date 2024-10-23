@@ -9,7 +9,7 @@
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ../../../../scripts/deploy/update-npm-tag.mjs v2-latest",
+        "command": "npm run-script -w=@coveo/release promote-npm-prod",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     }

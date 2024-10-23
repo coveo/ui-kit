@@ -40,7 +40,7 @@
     "promote:sfdx:ci": "npm run publish:sfdx -- --promote --ci",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs v2-latest",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
     "postinstall": "node scripts/npm/setup-quantic.js"
   },
