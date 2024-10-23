@@ -1,3 +1,7 @@
+## <small>3.1.8 (2024-10-23)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([604456c](https://github.com/coveo/ui-kit/commits/604456c))
+
 ## 3.1.0 (2024-09-24)
 
 - feat(atomic): add tab support for atomic-generated-answer (#4285) ([744fb61](https://github.com/coveo/ui-kit/commits/744fb61)), closes [#4285](https://github.com/coveo/ui-kit/issues/4285)
