@@ -1,5 +1,4 @@
 import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
-import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
@@ -53,7 +52,6 @@ function generateReplaceValues() {
   }, {});
 }
 
-//TODO(alex): Should I add package mappings for atomic ?
 const packageMappings = {
   '@coveo/headless/commerce': {
     cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
@@ -92,8 +90,6 @@ const outputCJS = ({useCase}) => ({
   sourcemap: true,
 });
 
-//TODO(alex): also output types, a mts and dts file
-
 /** @returns {import('rollup').OutputOptions} */
 const outputESM = ({useCase}) => ({
   file: `dist/esm/${useCase}atomic-react.mjs`,
@@ -103,14 +99,8 @@ const outputESM = ({useCase}) => ({
 
 /**@type {import('rollup').InputPluginOption} */
 const plugins = [
-  json(),
   nodePolyfills(),
-  typescript({
-    tsconfig: './tsconfig.json',
-    declaration: true,
-    declarationDir: 'dist/types',
-    rootDir: 'src',
-  }),
+  typescript(),
   nodeResolve(),
   isCDN &&
     replaceWithASTPlugin({
