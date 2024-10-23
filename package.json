@@ -110,7 +110,6 @@
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
-    "packages/rollup-plugin-replace-with-ast",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "utils/*"
