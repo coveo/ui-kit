@@ -75,7 +75,7 @@ describe('SSR FacetGenerator', () => {
           type: facet.type,
         }),
       };
-      if (type === 'regular' || type === 'location') {
+      if (type === 'regular') {
         state.facetSearchSet[facet.facetId] = buildMockFacetSearch();
       } else if (type === 'hierarchical') {
         state.categoryFacetSearchSet[facet.facetId] =

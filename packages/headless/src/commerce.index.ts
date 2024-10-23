@@ -202,11 +202,6 @@ export type {
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet-search.js';
 export type {SpecificFacetSearchResult as RegularFacetSearchResult} from './api/search/facet-search/specific-facet-search/specific-facet-search-response.js';
 export type {
-  LocationFacetSearch,
-  LocationFacetSearchState,
-} from './controllers/commerce/core/facets/location/headless-commerce-location-facet-search.js';
-export type {LocationFacetSearchResult} from './api/commerce/facet-search/location-facet-search/location-facet-search-response.js';
-export type {
   CategoryFacetSearch,
   CategoryFacetSearchState,
 } from './controllers/commerce/core/facets/category/headless-commerce-category-facet-search.js';
