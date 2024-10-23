@@ -2,7 +2,7 @@ import {getNonce} from './nonce';
 
 const styleSheetMap = new Map<string, WeakRef<CSSStyleSheet>>();
 const supportsAdoptingStyleSheets: boolean =
-  global.ShadowRoot &&
+  globalThis.ShadowRoot &&
   'adoptedStyleSheets' in Document.prototype &&
   'replace' in CSSStyleSheet.prototype;
 
@@ -21,7 +21,7 @@ function getStyleSheet(styleSheet: string): CSSStyleSheet {
 // Thanks Lit, https://github.com/lit/lit/blob/main/packages/reactive-element/src/css-tag.ts#L170
 export const adoptStyles = (renderRoot: ShadowRoot, styles: Array<string>) => {
   const dedupedStyles = new Set(styles);
-  if (supportsAdoptingStyleSheets) {
+  if (supportsAdoptingStyleSheets && renderRoot) {
     (renderRoot as ShadowRoot).adoptedStyleSheets = Array.from(
       dedupedStyles
     ).map((s) => getStyleSheet(s));

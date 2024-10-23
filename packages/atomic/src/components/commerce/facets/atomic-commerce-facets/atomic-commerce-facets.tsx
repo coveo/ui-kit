@@ -13,6 +13,7 @@ import {
   ProductListingSummaryState,
 } from '@coveo/headless/commerce';
 import {Component, h, Element, State, Prop, Fragment} from '@stencil/core';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -20,6 +21,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-facets.css';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
@@ -30,7 +32,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 @Component({
   tag: 'atomic-commerce-facets',
   styleUrl: 'atomic-commerce-facets.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   @InitializeBindings() public bindings!: Bindings;
@@ -52,6 +54,10 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   public facetGeneratorState!: FacetGeneratorState;
 
   @State() public error!: Error;
+
+  connectedCallback() {
+    adoptStyles(this.host.shadowRoot!, css);
+  }
 
   public initialize() {
     this.validateProps();

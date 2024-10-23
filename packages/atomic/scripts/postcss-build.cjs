@@ -30,6 +30,10 @@ const postCss = postCssFactory([
 const files = [
   'src/components/commerce/facets/atomic-commerce-category-facet/atomic-commerce-category-facet.pcss',
   'src/components/commerce/facets/atomic-commerce-facet/atomic-commerce-facet.pcss',
+  'src/components/commerce/facets/atomic-commerce-numeric-facet/atomic-commerce-numeric-facet.pcss',
+  'src/components/commerce/facets/atomic-commerce-timeframe-facet/atomic-commerce-timeframe-facet.pcss',
+  'src/components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input.pcss',
+  'src/components/commerce/facets/atomic-commerce-facets/atomic-commerce-facets.pcss',
 ];
 
 const cssToJs = (css) => `const css = \`${css}\`;`;

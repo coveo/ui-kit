@@ -11,6 +11,7 @@ import {
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {parseDate} from '../../../../utils/date-utils';
 import {
   BindStateToController,
@@ -27,6 +28,7 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-valu
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-timeframe-facet.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -36,7 +38,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
-  styleUrl: './atomic-commerce-timeframe-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceTimeframeFacet
@@ -97,6 +98,7 @@ export class AtomicCommerceTimeframeFacet
   }
 
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
     this.ensureSubscribed();
   }
 

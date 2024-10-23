@@ -1,8 +1,18 @@
 import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
-import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Event,
+  EventEmitter,
+  State,
+  Element,
+} from '@stencil/core';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {Button} from '../../../common/button';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-facet-number-input.css';
 
 export type Range = {start: number; end: number};
 
@@ -13,11 +23,13 @@ export type Range = {start: number; end: number};
 @Component({
   tag: 'atomic-commerce-facet-number-input',
   styleUrl: 'atomic-commerce-facet-number-input.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class FacetNumberInput {
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
+
+  @Element() private host!: HTMLElement;
 
   @State() private start?: number;
   @State() private end?: number;
@@ -33,6 +45,7 @@ export class FacetNumberInput {
   private applyInput!: EventEmitter;
 
   public connectedCallback() {
+    adoptStyles(this.host.shadowRoot!, css);
     this.start = this.range?.start;
     this.end = this.range?.end;
   }

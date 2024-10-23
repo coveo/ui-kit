@@ -11,6 +11,7 @@ import {
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -30,6 +31,7 @@ import {
 } from '../../../common/formats/format-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+import css from './atomic-commerce-numeric-facet.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -38,7 +40,6 @@ import type {Range} from '../facet-number-input/atomic-commerce-facet-number-inp
  */
 @Component({
   tag: 'atomic-commerce-numeric-facet',
-  styleUrl: './atomic-commerce-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceNumericFacet
@@ -101,6 +102,7 @@ export class AtomicCommerceNumericFacet
   }
 
   public connectedCallback() {
+    adoptStyles(this.host.shadowRoot!, css);
     this.ensureSubscribed();
   }
 
