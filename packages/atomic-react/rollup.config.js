@@ -1,4 +1,3 @@
-import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
@@ -45,13 +44,6 @@ if (isCDN) {
   }
 }
 
-function generateReplaceValues() {
-  return Object.entries(packageMappings).reduce((acc, [find, paths]) => {
-    acc[find] = paths.cdn;
-    return acc;
-  }, {});
-}
-
 const packageMappings = {
   '@coveo/headless/commerce': {
     cdn: `/headless/${headlessVersion}/commerce/headless.esm.js`,
@@ -73,6 +65,26 @@ const packageMappings = {
   },
 };
 
+const externalizeDependenciesPlugin = () => {
+  return {
+    name: 'externalize-dependencies',
+    resolveId: (source, _importer, _options) => {
+      const packageMapping = packageMappings[source];
+
+      if (packageMapping) {
+        console.log(`Package cdn import : ${packageMapping.cdn}`);
+
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+};
+
 /** @type {import('rollup').ExternalOption} */
 const commonExternal = [
   'react',
@@ -81,6 +93,16 @@ const commonExternal = [
   'react-dom/server',
   '@coveo/atomic/loader',
   '@coveo/headless',
+  '@coveo/headless/recommendation',
+  '@coveo/headless/commerce',
+];
+
+/** @type {import('rollup').ExternalOption} */
+const cdnExternal = [
+  'react',
+  'react-dom',
+  'react-dom/client',
+  'react-dom/server',
 ];
 
 /** @returns {import('rollup').OutputOptions} */
@@ -102,47 +124,44 @@ const plugins = [
   nodePolyfills(),
   typescript(),
   nodeResolve(),
-  isCDN &&
-    replaceWithASTPlugin({
-      replacements: generateReplaceValues(),
-    }),
+  isCDN && externalizeDependenciesPlugin(),
 ];
 
 export default defineConfig([
   {
     input: 'src/index.ts',
     output: [outputCJS({useCase: ''})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
   {
     input: 'src/index.ts',
     output: [outputESM({useCase: ''})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
   {
     input: 'src/recommendation.index.ts',
     output: [outputCJS({useCase: 'recommendation/'})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
   {
     input: 'src/recommendation.index.ts',
     output: [outputESM({useCase: 'recommendation/'})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
   {
     input: 'src/commerce.index.ts',
     output: [outputCJS({useCase: 'commerce/'})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
   {
     input: 'src/commerce.index.ts',
     output: [outputESM({useCase: 'commerce/'})],
-    external: commonExternal,
+    external: isCDN ? cdnExternal : commonExternal,
     plugins: plugins,
   },
 ]);
