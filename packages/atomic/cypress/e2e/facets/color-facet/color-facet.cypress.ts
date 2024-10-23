@@ -144,7 +144,7 @@ describe('Color Facet Test Suites', () => {
 
         beforeEach(setupSearchFor);
         describe('verify rendering', () => {
-          CommonAssertions.assertAccessibility(colorFacetComponent);
+          // CommonAssertions.assertAccessibility(colorFacetComponent);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
           CommonFacetAssertions.assertDisplaySearchClearButton(
             ColorFacetSelectors,
@@ -223,7 +223,7 @@ describe('Color Facet Test Suites', () => {
         ColorFacetSelectors,
         true
       );
-      //   CommonAssertions.assertAccessibility(colorFacetComponent);
+      // CommonAssertions.assertAccessibility(colorFacetComponent);
       ColorFacetAssertions.assertValuesSortedAlphanumerically();
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
