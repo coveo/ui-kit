@@ -28,6 +28,7 @@ describe('CSR FacetGenerator', () => {
   let facetGenerator: FacetGenerator;
   const mockBuildNumericFacet = vi.fn();
   const mockBuildRegularFacet = vi.fn();
+  const mockBuildLocationFacet = vi.fn();
   const mockBuildDateFacet = vi.fn();
   const mockBuildCategoryFacet = vi.fn();
   const mockFetchProductsActionCreator = vi.fn();
@@ -61,6 +62,7 @@ describe('CSR FacetGenerator', () => {
     options = {
       buildNumericFacet: mockBuildNumericFacet,
       buildRegularFacet: mockBuildRegularFacet,
+      buildLocationFacet: mockBuildLocationFacet,
       buildDateFacet: mockBuildDateFacet,
       buildCategoryFacet: mockBuildCategoryFacet,
       fetchProductsActionCreator: mockFetchProductsActionCreator,
@@ -97,6 +99,14 @@ describe('CSR FacetGenerator', () => {
       expect(mockBuildRegularFacet).toHaveBeenCalledWith(engine, {facetId});
     });
 
+    it('when engine facet state contains a location facet, generates a location facet controller', () => {
+      const facetId = 'location_facet_id';
+      setFacetState([{facetId, type: 'location'}]);
+
+      expect(facetGenerator.facets.length).toEqual(1);
+      expect(mockBuildLocationFacet).toHaveBeenCalledWith(engine, {facetId});
+    });
+
     it('when engine facet state contains a numeric facet, generates a numeric facet controller', () => {
       const facetId = 'numeric_facet_id';
       setFacetState([{facetId, type: 'numericalRange'}]);
@@ -128,6 +138,10 @@ describe('CSR FacetGenerator', () => {
           type: 'regular',
         },
         {
+          facetId: 'location_facet_id',
+          type: 'location',
+        },
+        {
           facetId: 'numeric_facet_id',
           type: 'numericalRange',
         },
@@ -142,24 +156,29 @@ describe('CSR FacetGenerator', () => {
       ];
       setFacetState(facets);
 
+      let index = 0;
       mockBuildRegularFacet.mockReturnValue({
-        state: {facetId: facets[0].facetId},
+        state: {facetId: facets[index++].facetId},
+      });
+      mockBuildLocationFacet.mockReturnValue({
+        state: {facetId: facets[index++].facetId},
       });
       mockBuildNumericFacet.mockReturnValue({
-        state: {facetId: facets[1].facetId},
+        state: {facetId: facets[index++].facetId},
       });
-      mockBuildDateFacet.mockReturnValue({state: {facetId: facets[2].facetId}});
+      mockBuildDateFacet.mockReturnValue({
+        state: {facetId: facets[index++].facetId},
+      });
       mockBuildCategoryFacet.mockReturnValue({
-        state: {facetId: facets[3].facetId},
+        state: {facetId: facets[index++].facetId},
       });
 
       const facetState = facetGenerator.facets;
 
-      expect(facetState.length).toEqual(4);
-      expect(facetState[0].state.facetId).toEqual(facets[0].facetId);
-      expect(facetState[1].state.facetId).toEqual(facets[1].facetId);
-      expect(facetState[2].state.facetId).toEqual(facets[2].facetId);
-      expect(facetState[3].state.facetId).toEqual(facets[3].facetId);
+      expect(facetState.length).toEqual(5);
+      expect(facetState.map((f) => f.state.facetId)).toEqual(
+        facets.map((f) => f.facetId)
+      );
     });
   });
 
