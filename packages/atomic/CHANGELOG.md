@@ -1,3 +1,9 @@
+## 2.78.4 (2024-10-23)
+
+### Bug Fixes
+
+- **atomic:** fix atomic-commerce product card click invalid selector ([#4588](https://github.com/coveo/ui-kit/issues/4588)) ([22c2e70](https://github.com/coveo/ui-kit/commits/22c2e7084fab0517ccece7b6fdf1a2ca66b993b7))
+
 ## 2.78.3 (2024-10-22)
 
 ### Bug Fixes
