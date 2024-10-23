@@ -3,8 +3,9 @@ import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 // following docs https://typedoc.org/guides/development/#plugins
 // eslint-disable-next-line n/no-unpublished-import
-import {Application, JSX, RendererEvent} from 'typedoc';
+import {Application, JSX, RendererEvent, Converter} from 'typedoc';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
+import {insertCustomComments} from './insertComments.js';
 import {insertCoveoLogo} from './insertCoveoLogo.js';
 import {insertSurveyLink} from './insertSurveyLink.js';
 
@@ -60,4 +61,6 @@ export function load(app: Application) {
   };
 
   app.renderer.on(RendererEvent.END, onRenderEnd);
+
+  app.converter.on(Converter.EVENT_CREATE_DECLARATION, insertCustomComments);
 }
