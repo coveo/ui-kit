@@ -5,8 +5,8 @@ import {fileURLToPath} from 'node:url';
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent, Converter} from 'typedoc';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
-import {insertCustomComments} from './insertComments.js';
 import {insertCoveoLogo} from './insertCoveoLogo.js';
+import {insertCustomComments} from './insertCustomComments.js';
 import {insertSurveyLink} from './insertSurveyLink.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
