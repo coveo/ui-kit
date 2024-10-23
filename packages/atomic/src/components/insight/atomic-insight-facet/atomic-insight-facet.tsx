@@ -135,6 +135,8 @@ export class AtomicInsightFacet
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     const options: InsightFacetOptions = {
@@ -156,8 +158,23 @@ export class AtomicInsightFacet
     this.registerFacet();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.facetConditionsManager?.stopWatching();
   }
 
   private get focusTargets(): {
@@ -179,13 +196,6 @@ export class AtomicInsightFacet
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
-  }
-
-  public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.facetConditionsManager?.stopWatching();
   }
 
   public render() {

@@ -78,6 +78,8 @@ export class AtomicCommerceTimeframeFacet
 
   private headerFocus?: FocusTargetController;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get displayName() {
     return this.facetState.displayName || 'no-label';
@@ -100,10 +102,26 @@ export class AtomicCommerceTimeframeFacet
     this.registerFacetToStore();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
+  }
+
+  public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   @Listen('atomic/dateInputApply')
@@ -168,14 +186,6 @@ export class AtomicCommerceTimeframeFacet
 
   private get hasInputRange() {
     return !!this.inputRange;
-  }
-
-  public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.unsubscribeFacetController?.();
-    this.unsubscribeFacetController = undefined;
   }
 
   private get isHidden() {

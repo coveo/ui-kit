@@ -192,6 +192,8 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   private dependenciesManager!: FacetConditionsManager;
   private twind!: Twind;
   @Element() private host!: HTMLElement;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (
@@ -218,12 +220,23 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     );
   }
 
-  connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
   }
 
-  disconnectedCallback() {
-    this.dependenciesManager.stopWatching();
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private renderValuesContainer(children: VNode[]) {

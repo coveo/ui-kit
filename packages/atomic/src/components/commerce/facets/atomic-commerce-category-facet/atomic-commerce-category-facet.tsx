@@ -131,6 +131,8 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
   private twind!: Twind;
+  twOnDisconnect: (element: HTMLElement) => void;
+  twOnConnected: (element: HTMLElement) => void;
 
   public initialize() {
     if (!this.facet) {
@@ -185,17 +187,25 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     };
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public disconnectedCallback() {
     if (this.host.isConnected) {
       return;
     }
+    this.twOnDisconnect(this.host);
     this.unsubscribeFacetController?.();
     this.unsubscribeFacetController = undefined;
   }
 
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
   }
 
@@ -424,7 +434,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   private renderShowMoreLess() {
     return (
-      <div class={this.hasParents ? 'pl-9' : ''}>
+      <div class={this.twind(this.hasParents ? 'pl-9' : '')}>
         <FacetShowMoreLess
           label={this.displayName}
           i18n={this.bindings.i18n}
@@ -485,7 +495,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
                       {this.renderSearchResults()}
                     </FacetValuesGroup>
                   ) : (
-                    <div class="mt-3"></div>
+                    <div class={this.twind('mt-3')}></div>
                   )}
                   {this.renderMatches()}
                 </Fragment>

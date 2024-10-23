@@ -166,6 +166,8 @@ export class AtomicInsightNumericFacet
 
   private headerFocus?: FocusTargetController;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     this.validateProps();
@@ -185,11 +187,19 @@ export class AtomicInsightNumericFacet
     return this.headerFocus;
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
   }
 
   public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }

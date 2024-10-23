@@ -74,9 +74,22 @@ export class AtomicAutomaticFacet implements InitializableComponent {
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed!: boolean;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
+
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
 
   connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
   }
 
   private headerFocus?: FocusTargetController;

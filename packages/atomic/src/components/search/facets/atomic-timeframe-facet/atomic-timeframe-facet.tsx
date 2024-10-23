@@ -21,6 +21,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -28,6 +29,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../../common/facets/timeframe-facet-common';
@@ -205,12 +207,34 @@ export class AtomicTimeframeFacet implements InitializableComponent {
     'descending';
 
   private headerFocus?: FocusTargetController;
+  twind: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
       this.headerFocus = new FocusTargetController(this);
     }
     return this.headerFocus;
+  }
+
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.timeframeFacetCommon?.disconnectedCallback();
   }
 
   public initialize() {
@@ -250,13 +274,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
       min: this.min,
       max: this.max,
       sortCriteria: this.sortCriteria,
+      twind: this.twind,
     });
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.tabManager = buildTabManager(this.bindings.engine);
-  }
-
-  public disconnectedCallback() {
-    this.timeframeFacetCommon?.disconnectedCallback();
   }
 
   private initializeFacetForDatePicker() {

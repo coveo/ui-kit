@@ -196,6 +196,8 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
 
   private headerFocus?: FocusTargetController;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget() {
     if (!this.headerFocus) {
@@ -219,11 +221,19 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
     this.initializeDependenciesManager();
   }
 
-  connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
   }
 
-  public disconnectedCallback() {
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }

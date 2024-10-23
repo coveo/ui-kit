@@ -282,6 +282,8 @@ export class AtomicColorFacet implements InitializableComponent {
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (
@@ -335,11 +337,19 @@ export class AtomicColorFacet implements InitializableComponent {
     };
   }
 
-  connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
   }
 
-  public disconnectedCallback() {
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }

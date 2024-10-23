@@ -22,9 +22,9 @@ function getStyleSheet(styleSheet: string): CSSStyleSheet {
 export const adoptStyles = (renderRoot: ShadowRoot, styles: Array<string>) => {
   const dedupedStyles = new Set(styles);
   if (supportsAdoptingStyleSheets && renderRoot) {
-    (renderRoot as ShadowRoot).adoptedStyleSheets = Array.from(
-      dedupedStyles
-    ).map((s) => getStyleSheet(s));
+    (renderRoot as ShadowRoot).adoptedStyleSheets?.push(
+      ...Array.from(dedupedStyles).map((s) => getStyleSheet(s))
+    );
   } else {
     for (const s of dedupedStyles) {
       const style = document.createElement('style');

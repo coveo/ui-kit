@@ -224,6 +224,8 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   private headerFocus?: FocusTargetController;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -253,11 +255,19 @@ export class AtomicNumericFacet implements InitializableComponent {
     this.registerFacetToStore();
   }
 
-  connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
   }
 
-  public disconnectedCallback() {
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }

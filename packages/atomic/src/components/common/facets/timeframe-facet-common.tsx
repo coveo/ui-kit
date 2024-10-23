@@ -3,7 +3,6 @@ import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import {getTwind} from '../../../utils/twind';
 import {randomID} from '../../../utils/utils';
 import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
@@ -57,6 +56,7 @@ interface TimeframeFacetCommonOptions {
   min?: string;
   max?: string;
   sortCriteria: RangeFacetSortCriterion;
+  twind: Twind;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -74,12 +74,10 @@ export class TimeframeFacetCommon {
   private filter?: DateFilter;
   private manualTimeframes: Timeframe[] = [];
   private dependenciesManager?: FacetConditionsManager;
-  private twind: Twind;
 
   constructor(private props: TimeframeFacetCommonOptions) {
     this.facetId = this.determineFacetId;
     this.props.setFacetId(this.facetId);
-    this.twind = getTwind(this.props.host.shadowRoot!);
 
     this.manualTimeframes = this.getManualTimeframes();
 
@@ -285,7 +283,7 @@ export class TimeframeFacetCommon {
         numberOfResults={facetValue.numberOfResults}
         i18n={this.props.bindings.i18n}
         onClick={() => this.facetForDateRange!.toggleSingleSelect(facetValue)}
-        twind={this.twind}
+        twind={this.props.twind}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}

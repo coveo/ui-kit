@@ -31,7 +31,6 @@ import css from './atomic-commerce-facets.css';
  */
 @Component({
   tag: 'atomic-commerce-facets',
-  styleUrl: 'atomic-commerce-facets.pcss',
   shadow: true,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {

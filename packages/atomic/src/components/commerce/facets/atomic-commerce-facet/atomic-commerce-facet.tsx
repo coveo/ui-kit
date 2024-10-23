@@ -131,6 +131,8 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
   private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (!this.facet) {
@@ -141,13 +143,21 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     this.initPopover();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
   }
 
   public disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     this.unsubscribeFacetController?.();
     this.unsubscribeFacetController = undefined;
   }

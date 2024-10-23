@@ -69,6 +69,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
   };
   private twind!: Twind;
   @Element() private host!: HTMLElement;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
   @Watch('highlightKeywords')
   watchHighlightKeywords() {
     this.handleHighlightsScripts();
@@ -91,8 +93,22 @@ export class AtomicQuickviewModal implements InitializableComponent {
 
   private interactiveResult?: InteractiveResult;
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   connectedCallback(): void {
-    this.twind = getTwind(this.host.shadowRoot!);
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
   }
 
   public componentWillLoad(): void {
