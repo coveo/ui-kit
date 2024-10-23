@@ -1,4 +1,5 @@
 import {FacetValueState} from '../../../facets/facet-api/value.js';
+import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request.js';
 import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request.js';
 import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {Parameters} from '../../parameters/parameters-actions.js';
@@ -7,11 +8,9 @@ import {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
-  LocationFacetRequest,
+  LocationFacetValueRequest,
   NumericFacetRequest,
-  RegularFacetRequest,
 } from './interfaces/request.js';
-import {LocationFacetValue, RegularFacetValue} from './interfaces/response.js';
 
 export function restoreFromParameters(
   state: CommerceFacetSetState,
@@ -22,10 +21,10 @@ export function restoreFromParameters(
   }
 
   if (action.payload.f) {
-    restoreRegularFacets(state, action.payload.f);
+    restoreFacets(state, action.payload.f, 'regular');
   }
   if (action.payload.lf) {
-    restoreLocationFacets(state, action.payload.lf);
+    restoreFacets(state, action.payload.lf, 'location');
   }
   if (action.payload.nf) {
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
@@ -38,44 +37,30 @@ export function restoreFromParameters(
   }
 }
 
-function restoreRegularFacets(
+function restoreFacets(
   state: CommerceFacetSetState,
-  parameterFacets: Record<string, string[]>
+  parameterFacets: Record<string, string[]>,
+  type: 'regular' | 'location'
 ) {
   const entries = Object.entries(parameterFacets);
   for (const [facetId, values] of entries) {
     state[facetId] = {
       request: {
         ...restoreFacet(facetId),
-        type: 'regular',
-        values: values.map((value): RegularFacetValue => {
-          return {
+        type,
+        values: values.map((value) => {
+          const facetValue = {
             ...restoreFacetValue(),
             value,
           };
+          switch (type) {
+            case 'regular':
+              return facetValue as FacetValueRequest;
+            case 'location':
+              return facetValue as LocationFacetValueRequest;
+          }
         }),
-      } as RegularFacetRequest,
-    };
-  }
-}
-
-function restoreLocationFacets(
-  state: CommerceFacetSetState,
-  parameterFacets: Record<string, string[]>
-) {
-  const entries = Object.entries(parameterFacets);
-  for (const [facetId, values] of entries) {
-    state[facetId] = {
-      request: {
-        ...restoreFacet(facetId),
-        type: 'location',
-        values: values.map((value): LocationFacetValue => {
-          return {
-            ...restoreFacetValue(),
-            value,
-          };
-        }),
-      } as LocationFacetRequest,
+      },
     };
   }
 }
