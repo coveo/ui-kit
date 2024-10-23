@@ -29,6 +29,7 @@ import {
   buildFacetGenerator,
   FacetGenerator,
 } from '../facets/generator/headless-commerce-facet-generator.js';
+import {buildCommerceLocationFacet} from '../facets/location/headless-commerce-location-facet.js';
 import {buildCommerceNumericFacet} from '../facets/numeric/headless-commerce-numeric-facet.js';
 import {buildCommerceRegularFacet} from '../facets/regular/headless-commerce-regular-facet.js';
 import {
@@ -277,6 +278,8 @@ export function buildSearchAndListingsSubControllers<
           buildCommerceDateFacet(engine, {...options, ...commonOptions}),
         buildCategoryFacet: (_engine, options) =>
           buildCategoryFacet(engine, {...options, ...commonOptions}),
+        buildLocationFacet: (_engine, options) =>
+          buildCommerceLocationFacet(engine, {...options, ...commonOptions}),
         fetchProductsActionCreator,
       });
     },

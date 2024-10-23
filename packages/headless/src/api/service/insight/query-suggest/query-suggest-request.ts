@@ -1,8 +1,4 @@
-import {
-  ContextParam,
-  LocaleParam,
-  VisitorIDParam,
-} from '../../../platform-service-params.js';
+import {ContextParam, LocaleParam} from '../../../platform-service-params.js';
 import {
   ActionsHistoryParam,
   AnalyticsParam,
@@ -18,7 +14,6 @@ export type InsightQuerySuggestRequest = InsightParam &
   LocaleParam &
   TimezoneParam &
   ActionsHistoryParam &
-  VisitorIDParam &
   AuthenticationParam &
   AnalyticsParam & {
     count: number;

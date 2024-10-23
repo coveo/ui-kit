@@ -139,9 +139,12 @@ export class AtomicQuickview implements InitializableComponent {
     this.quickview.fetchResultContent();
   }
 
-  public render() {
+  componentWillUpdate(): void {
     this.addQuickviewModalIfNeeded();
     this.updateModalContent();
+  }
+
+  public render() {
     if (this.quickviewState.resultHasPreview) {
       return (
         <Button

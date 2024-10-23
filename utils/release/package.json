@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.4.43",
+    "@coveo/semantic-monorepo-tools": "2.4.61",
     "@npmcli/arborist": "7.5.4",
     "@octokit/auth-app": "6.1.1",
     "async-retry": "1.3.3",

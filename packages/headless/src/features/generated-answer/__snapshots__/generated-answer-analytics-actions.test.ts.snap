@@ -42,7 +42,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
 
 exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
 [
-  "Rga.SubmitRgaFeedback",
+  "Rga.SubmitFeedback",
   {
     "additionalNotes": undefined,
     "correctAnswerUrl": undefined,
@@ -88,7 +88,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
       "title": "Sample citation",
       "uniqueFieldName": "permanentid",
       "uniqueFieldValue": "citation-permanent-id",
-      "url": undefined,
+      "url": "http://localhost/citations/some-citation-id",
     },
     "responseId": "123",
   },
@@ -114,7 +114,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
       "title": "Sample citation",
       "uniqueFieldName": "permanentid",
       "uniqueFieldValue": "citation-permanent-id",
-      "url": undefined,
+      "url": "http://localhost/citations/some-citation-id",
     },
     "responseId": "123",
   },
