@@ -13,7 +13,6 @@ module.exports = {
     'src/external-builds/**/*',
     'dist/**/*',
     'www/**/*',
-    'loader/**/*',
     'docs/**/*',
     'dist-storybook',
   ],
