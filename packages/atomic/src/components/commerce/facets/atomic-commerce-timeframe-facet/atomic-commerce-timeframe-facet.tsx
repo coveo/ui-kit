@@ -10,13 +10,16 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {parseDate} from '../../../../utils/date-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -27,6 +30,7 @@ import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-valu
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-timeframe-facet.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.
@@ -36,7 +40,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-timeframe-facet',
-  styleUrl: './atomic-commerce-timeframe-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceTimeframeFacet
@@ -74,6 +77,9 @@ export class AtomicCommerceTimeframeFacet
   @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get displayName() {
     return this.facetState.displayName || 'no-label';
@@ -96,8 +102,26 @@ export class AtomicCommerceTimeframeFacet
     this.registerFacetToStore();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
+  }
+
+  public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.unsubscribeFacetController?.();
+    this.unsubscribeFacetController = undefined;
   }
 
   @Listen('atomic/dateInputApply')
@@ -164,14 +188,6 @@ export class AtomicCommerceTimeframeFacet
     return !!this.inputRange;
   }
 
-  public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.unsubscribeFacetController?.();
-    this.unsubscribeFacetController = undefined;
-  }
-
   private get isHidden() {
     return !this.shouldRenderFacet;
   }
@@ -234,6 +250,7 @@ export class AtomicCommerceTimeframeFacet
         numberOfResults={facetValue.numberOfResults}
         i18n={this.bindings.i18n}
         onClick={() => this.facet.toggleSingleSelect(facetValue)}
+        twind={this.twind}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}

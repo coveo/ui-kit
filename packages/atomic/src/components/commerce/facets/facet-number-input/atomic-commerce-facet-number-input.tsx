@@ -1,8 +1,20 @@
 import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
-import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
+import {
+  Component,
+  h,
+  Prop,
+  Event,
+  EventEmitter,
+  State,
+  Element,
+} from '@stencil/core';
+import {Twind} from '@twind/core';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
+import {getTwind} from '../../../../utils/twind';
 import {Button} from '../../../common/button';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-facet-number-input.css';
 
 export type Range = {start: number; end: number};
 
@@ -12,12 +24,13 @@ export type Range = {start: number; end: number};
  */
 @Component({
   tag: 'atomic-commerce-facet-number-input',
-  styleUrl: 'atomic-commerce-facet-number-input.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class FacetNumberInput {
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
+
+  @Element() private host!: HTMLElement;
 
   @State() private start?: number;
   @State() private end?: number;
@@ -31,10 +44,26 @@ export class FacetNumberInput {
     eventName: 'atomic/numberInputApply',
   })
   private applyInput!: EventEmitter;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
+
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
 
   public connectedCallback() {
+    adoptStyles(this.host.shadowRoot!, css);
+    this.twOnConnected(this.host);
     this.start = this.range?.start;
     this.end = this.range?.end;
+  }
+
+  disconnectedCallback() {
+    this.twOnDisconnect(this.host);
   }
 
   private apply() {
@@ -79,7 +108,7 @@ export class FacetNumberInput {
 
     return (
       <form
-        class="mt-4 gap-y-0.5 px-2"
+        class={this.twind('mt-4 gap-y-0.5 px-2')}
         part="input-form"
         onSubmit={(e) => {
           e.preventDefault();
@@ -89,7 +118,7 @@ export class FacetNumberInput {
       >
         <label
           part="label-start"
-          class={labelClasses}
+          class={this.twind(labelClasses)}
           htmlFor={`${facetId}_start`}
         >
           {minText}
@@ -100,7 +129,7 @@ export class FacetNumberInput {
           type="number"
           step={step}
           ref={(ref) => (this.startRef = ref!)}
-          class={inputClasses}
+          class={this.twind(inputClasses)}
           aria-label={minAria}
           required
           min={this.absoluteMinimum}
@@ -110,7 +139,11 @@ export class FacetNumberInput {
             (this.start = (e.target as HTMLInputElement).valueAsNumber)
           }
         />
-        <label part="label-end" class={labelClasses} htmlFor={`${facetId}_end`}>
+        <label
+          part="label-end"
+          class={this.twind(labelClasses)}
+          htmlFor={`${facetId}_end`}
+        >
           {maxText}
         </label>
         <input
@@ -119,7 +152,7 @@ export class FacetNumberInput {
           type="number"
           step={step}
           ref={(ref) => (this.endRef = ref!)}
-          class={inputClasses}
+          class={this.twind(inputClasses)}
           aria-label={maxAria}
           required
           min={this.minimumInputValue}
@@ -133,7 +166,7 @@ export class FacetNumberInput {
           style="outline-primary"
           type="submit"
           part="input-apply-button"
-          class="flex-none truncate p-2.5"
+          class={this.twind('flex-none truncate p-2.5')}
           ariaLabel={applyAria}
           text={apply}
         ></Button>

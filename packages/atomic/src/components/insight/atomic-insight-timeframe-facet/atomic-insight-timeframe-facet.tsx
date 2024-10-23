@@ -1,4 +1,5 @@
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   buildInsightDateFacet,
   buildInsightDateFilter,
@@ -25,6 +26,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {getTwind} from '../../../utils/twind';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';
@@ -130,6 +132,9 @@ export class AtomicInsightTimeframeFacet
     'descending';
 
   private headerFocus?: FocusTargetController;
+  twind: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     this.timeframeFacetCommon = new TimeframeFacetCommon({
@@ -158,6 +163,7 @@ export class AtomicInsightTimeframeFacet
         this.initializeFacetForDateRange(values),
       initializeFilter: () => this.initializeFilter(),
       sortCriteria: this.sortCriteria,
+      twind: this.twind,
     });
     this.searchStatus = buildInsightSearchStatus(this.bindings.engine);
   }
@@ -169,7 +175,22 @@ export class AtomicInsightTimeframeFacet
     return this.headerFocus;
   }
 
-  public disconnectedCallback() {
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
     this.timeframeFacetCommon?.disconnectedCallback();
   }
 

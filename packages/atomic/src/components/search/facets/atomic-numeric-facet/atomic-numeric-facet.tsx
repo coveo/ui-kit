@@ -23,6 +23,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -30,6 +31,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
@@ -221,6 +223,9 @@ export class AtomicNumericFacet implements InitializableComponent {
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -250,7 +255,19 @@ export class AtomicNumericFacet implements InitializableComponent {
     this.registerFacetToStore();
   }
 
-  public disconnectedCallback() {
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }
@@ -474,6 +491,7 @@ export class AtomicNumericFacet implements InitializableComponent {
                 ? this.facetForRange!.toggleSingleSelect(value)
                 : this.facetForRange!.toggleSelect(value)
             }
+            twind={this.twind}
           />
         ))}
       </NumericFacetValuesContainer>

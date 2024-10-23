@@ -19,6 +19,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Twind} from '@twind/core';
 import Star from '../../../../images/star.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -27,6 +28,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
@@ -202,6 +204,9 @@ export class AtomicRatingFacet implements InitializableComponent {
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -268,12 +273,25 @@ export class AtomicRatingFacet implements InitializableComponent {
     });
   }
 
-  public disconnectedCallback() {
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }
     this.dependenciesManager?.stopWatching();
   }
+
   private get isHidden() {
     return (
       this.searchStatusState.hasError ||
@@ -369,6 +387,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            twind={this.twind}
           >
             {this.ratingContent(facetValue)}
           </FacetValueCheckbox>
@@ -382,6 +401,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             i18n={this.bindings.i18n}
             onClick={onClick}
             class={shouldBeDimmed ? 'opacity-80' : undefined}
+            twind={this.twind}
           >
             {this.ratingContent(facetValue)}
           </FacetValueLink>

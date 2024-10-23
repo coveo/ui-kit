@@ -18,6 +18,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -32,6 +33,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -279,6 +281,9 @@ export class AtomicColorFacet implements InitializableComponent {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (
@@ -332,7 +337,19 @@ export class AtomicColorFacet implements InitializableComponent {
     };
   }
 
-  public disconnectedCallback() {
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }
@@ -454,6 +471,7 @@ export class AtomicColorFacet implements InitializableComponent {
               isShowMoreFocusTarget &&
                 this.focusTargets.showMoreFocus.setTarget(element);
             }}
+            twind={this.twind}
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -477,6 +495,7 @@ export class AtomicColorFacet implements InitializableComponent {
               isShowMoreFocusTarget &&
                 this.focusTargets.showMoreFocus.setTarget(element);
             }}
+            twind={this.twind}
           >
             <div
               part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}

@@ -15,12 +15,15 @@ import {
   Method,
   VNode,
   Fragment,
+  Element,
 } from '@stencil/core';
+import {Twind} from '@twind/core';
 import CloseIcon from '../../../../images/close.svg';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
@@ -64,6 +67,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
     highlightNone: false,
     keywords: {},
   };
+  private twind!: Twind;
+  @Element() private host!: HTMLElement;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
   @Watch('highlightKeywords')
   watchHighlightKeywords() {
     this.handleHighlightsScripts();
@@ -85,6 +92,24 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() modalCloseCallback?: () => void;
 
   private interactiveResult?: InteractiveResult;
+
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+  }
 
   public componentWillLoad(): void {
     this.minimizeSidebar = this.bindings.store.isMobile();
@@ -159,6 +184,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             }
             minimized={this.minimizeSidebar}
             onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
+            twind={this.twind}
           />
         </div>
         <div class="relative overflow-auto">

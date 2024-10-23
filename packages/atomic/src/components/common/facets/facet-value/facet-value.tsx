@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
@@ -18,6 +19,7 @@ export interface FacetValueProps {
   displayValuesAs: 'checkbox' | 'link' | 'box';
   facetSearchQuery: string;
   setRef?: (btn?: HTMLButtonElement) => void;
+  twind: Twind;
 }
 
 export const FacetValue: FunctionalComponent<FacetValueProps> = ({
@@ -32,6 +34,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
   onExclude,
   onSelect,
   setRef,
+  twind,
 }) => {
   const displayValue = getFieldValueCaption(field, facetValue, i18n);
   const isSelected = facetState === 'selected';
@@ -56,6 +59,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           buttonRef={(element) => {
             setRef && setRef(element);
           }}
+          twind={twind}
         >
           <FacetValueLabelHighlight
             displayValue={displayValue}
@@ -77,6 +81,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           buttonRef={(element) => {
             setRef && setRef(element);
           }}
+          twind={twind}
         >
           <FacetValueLabelHighlight
             displayValue={displayValue}
@@ -97,6 +102,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = ({
           buttonRef={(element) => {
             setRef && setRef(element);
           }}
+          twind={twind}
         >
           <FacetValueLabelHighlight
             displayValue={displayValue}

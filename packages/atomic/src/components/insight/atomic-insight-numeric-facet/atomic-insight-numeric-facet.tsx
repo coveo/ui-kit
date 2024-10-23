@@ -1,5 +1,6 @@
 import {Schema, StringValue} from '@coveo/bueno';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   buildInsightFacetConditionsManager,
   buildInsightNumericFacet,
@@ -27,6 +28,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {getTwind} from '../../../utils/twind';
 import {randomID} from '../../../utils/utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
@@ -163,6 +165,9 @@ export class AtomicInsightNumericFacet
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     this.validateProps();
@@ -182,7 +187,19 @@ export class AtomicInsightNumericFacet
     return this.headerFocus;
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
   public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }
@@ -407,6 +424,7 @@ export class AtomicInsightNumericFacet
                 ? this.facetForRange!.toggleSingleSelect(value)
                 : this.facetForRange!.toggleSelect(value)
             }
+            twind={this.twind}
           />
         ))}
       </NumericFacetValuesContainer>

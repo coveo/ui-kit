@@ -1,4 +1,5 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {i18n} from 'i18next';
 import Add from '../../../../images/add.svg';
 import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
@@ -20,6 +21,7 @@ export interface QuickviewSidebarProps {
   onHighlightKeywords: (highlight: HighlightKeywords) => void;
   minimized: boolean;
   onMinimize: (minimize: boolean) => void;
+  twind: Twind;
 }
 
 export const QuickviewSidebar: FunctionalComponent<QuickviewSidebarProps> = (
@@ -76,9 +78,9 @@ const MinimizeButton: FunctionalComponent<
 const HighlightKeywordsCheckbox: FunctionalComponent<
   Pick<
     QuickviewSidebarProps,
-    'i18n' | 'highlightKeywords' | 'onHighlightKeywords' | 'minimized'
+    'i18n' | 'highlightKeywords' | 'onHighlightKeywords' | 'minimized' | 'twind'
   >
-> = ({i18n, highlightKeywords, onHighlightKeywords, minimized}) => (
+> = ({i18n, highlightKeywords, onHighlightKeywords, minimized, twind}) => (
   <Fragment>
     <Checkbox
       text={i18n.t('keywords-highlight')}
@@ -91,6 +93,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
           highlightNone: !checked,
         })
       }
+      twind={twind}
     ></Checkbox>
     {!minimized && (
       <label

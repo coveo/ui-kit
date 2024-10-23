@@ -1,3 +1,4 @@
+import {Twind} from '@twind/core';
 import {i18n} from 'i18next';
 import {FacetValue, SearchStatusState} from '../types';
 
@@ -12,6 +13,7 @@ export interface FacetValueProps {
   part?: string;
   additionalPart?: string;
   buttonRef?: (element?: HTMLButtonElement) => void;
+  twind: Twind;
 }
 
 export function shouldDisplayInputForFacetRange(facetRange: {

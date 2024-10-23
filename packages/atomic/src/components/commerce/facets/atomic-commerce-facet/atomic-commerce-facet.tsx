@@ -14,15 +14,18 @@ import {
   VNode,
   Fragment,
 } from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
@@ -44,6 +47,7 @@ import {
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-facet.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -87,7 +91,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-facet',
-  styleUrl: 'atomic-commerce-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
@@ -127,6 +130,9 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (!this.facet) {
@@ -137,11 +143,21 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
     this.initPopover();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
   }
 
   public disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     this.unsubscribeFacetController?.();
     this.unsubscribeFacetController = undefined;
   }
@@ -253,6 +269,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
           onExclude={() => this.facet.facetSearch.exclude(value)}
           onSelect={() => this.facet.facetSearch.select(value)}
           facetValue={value.rawValue}
+          twind={this.twind}
         />
       ))
     );
@@ -280,6 +297,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
                 this.showMoreFocus?.setTarget(btn);
               }
             }}
+            twind={this.twind}
           />
         );
       })

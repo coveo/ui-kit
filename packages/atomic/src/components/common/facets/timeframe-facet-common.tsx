@@ -1,4 +1,5 @@
 import {h, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
@@ -55,6 +56,7 @@ interface TimeframeFacetCommonOptions {
   min?: string;
   max?: string;
   sortCriteria: RangeFacetSortCriterion;
+  twind: Twind;
 }
 
 interface TimeframeFacetCommonRenderProps {
@@ -281,6 +283,7 @@ export class TimeframeFacetCommon {
         numberOfResults={facetValue.numberOfResults}
         i18n={this.props.bindings.i18n}
         onClick={() => this.facetForDateRange!.toggleSingleSelect(facetValue)}
+        twind={this.props.twind}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}

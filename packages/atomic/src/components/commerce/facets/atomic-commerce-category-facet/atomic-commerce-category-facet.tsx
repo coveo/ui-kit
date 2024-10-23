@@ -7,16 +7,19 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
@@ -41,6 +44,7 @@ import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/fac
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-category-facet.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -85,7 +89,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-category-facet',
-  styleUrl: 'atomic-commerce-category-facet.pcss',
   shadow: true,
 })
 export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
@@ -127,6 +130,9 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
+  twOnDisconnect: (element: HTMLElement) => void;
+  twOnConnected: (element: HTMLElement) => void;
 
   public initialize() {
     if (!this.facet) {
@@ -181,15 +187,25 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
     };
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public disconnectedCallback() {
     if (this.host.isConnected) {
       return;
     }
+    this.twOnDisconnect(this.host);
     this.unsubscribeFacetController?.();
     this.unsubscribeFacetController = undefined;
   }
 
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
+    this.twOnConnected(this.host);
     this.ensureSubscribed();
   }
 
@@ -328,6 +344,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
         }}
         searchQuery={this.facetState.facetSearch.query}
         setRef={(el) => this.focusTargets.activeValueFocus.setTarget(el)}
+        twind={this.twind}
       >
         <CategoryFacetChildrenAsTreeContainer>
           {this.renderChildren()}
@@ -365,6 +382,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
           isShowMoreFocusTarget &&
             this.focusTargets.showMoreFocus.setTarget(element);
         }}
+        twind={this.twind}
       ></CategoryFacetChildValueLink>
     );
   }
@@ -416,7 +434,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   private renderShowMoreLess() {
     return (
-      <div class={this.hasParents ? 'pl-9' : ''}>
+      <div class={this.twind(this.hasParents ? 'pl-9' : '')}>
         <FacetShowMoreLess
           label={this.displayName}
           i18n={this.bindings.i18n}
@@ -477,7 +495,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
                       {this.renderSearchResults()}
                     </FacetValuesGroup>
                   ) : (
-                    <div class="mt-3"></div>
+                    <div class={this.twind('mt-3')}></div>
                   )}
                   {this.renderMatches()}
                 </Fragment>

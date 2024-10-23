@@ -1,5 +1,6 @@
 import {FacetResultsMustMatch} from '@coveo/headless';
 import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   buildInsightFacet,
   buildInsightFacetConditionsManager,
@@ -23,6 +24,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {getTwind} from '../../../utils/twind';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/facet-container';
@@ -132,6 +134,9 @@ export class AtomicInsightFacet
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     const options: InsightFacetOptions = {
@@ -153,6 +158,25 @@ export class AtomicInsightFacet
     this.registerFacet();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.facetConditionsManager?.stopWatching();
+  }
+
   private get focusTargets(): {
     showLess: FocusTargetController;
     showMore: FocusTargetController;
@@ -172,13 +196,6 @@ export class AtomicInsightFacet
       showMore: this.showMoreFocus,
       header: this.headerFocus,
     };
-  }
-
-  public disconnectedCallback() {
-    if (this.host.isConnected) {
-      return;
-    }
-    this.facetConditionsManager?.stopWatching();
   }
 
   public render() {
@@ -260,6 +277,7 @@ export class AtomicInsightFacet
                 this.showMoreFocus?.setTarget(btn);
               }
             }}
+            twind={this.twind}
           />
         );
       })

@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import type {Twind} from '@twind/core';
 import Tick from '../../images/checkbox.svg';
 
 export interface CheckboxProps {
@@ -14,6 +15,7 @@ export interface CheckboxProps {
   ariaCurrent?: string;
   ref?(element?: HTMLElement): void;
   onMouseDown?(evt: MouseEvent): void;
+  twind: Twind;
 }
 
 export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
@@ -55,7 +57,7 @@ export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
     >
       <atomic-icon
         style={{stroke: 'white'}}
-        class={`w-3/5 ${props.checked ? 'block' : 'hidden'}`}
+        class={props.twind(`w-3/5 ${props.checked ? 'block' : 'hidden'}`)}
         icon={Tick}
         part={props.iconPart}
       ></atomic-icon>

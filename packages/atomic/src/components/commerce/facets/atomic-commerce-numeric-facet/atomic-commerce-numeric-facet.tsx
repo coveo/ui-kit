@@ -10,12 +10,15 @@ import {
   buildContext,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -30,6 +33,7 @@ import {
 } from '../../../common/formats/format-common';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+import css from './atomic-commerce-numeric-facet.css';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -38,7 +42,6 @@ import type {Range} from '../facet-number-input/atomic-commerce-facet-number-inp
  */
 @Component({
   tag: 'atomic-commerce-numeric-facet',
-  styleUrl: './atomic-commerce-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceNumericFacet
@@ -80,6 +83,9 @@ export class AtomicCommerceNumericFacet
   @Prop({reflect: true}) field?: string;
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -100,11 +106,21 @@ export class AtomicCommerceNumericFacet
     this.registerFacetToStore();
   }
 
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
   public connectedCallback() {
+    this.twOnConnected(this.host);
+    adoptStyles(this.host.shadowRoot!, css);
     this.ensureSubscribed();
   }
 
   public disconnectedCallback() {
+    this.twOnDisconnect(this.host);
     this.unsubscribeFacetController?.();
     this.unsubscribeFacetController = undefined;
   }
@@ -212,6 +228,7 @@ export class AtomicCommerceNumericFacet
             logger={logger}
             manualRanges={manualRanges}
             onClick={() => this.facet.toggleSelect(value)}
+            twind={this.twind}
           />
         ))}
       </NumericFacetValuesContainer>

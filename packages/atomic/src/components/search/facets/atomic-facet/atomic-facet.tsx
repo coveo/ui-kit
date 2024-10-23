@@ -25,6 +25,7 @@ import {
   VNode,
   Fragment,
 } from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -36,6 +37,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -289,6 +291,9 @@ export class AtomicFacet implements InitializableComponent {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (
@@ -309,7 +314,19 @@ export class AtomicFacet implements InitializableComponent {
     this.registerFacet();
   }
 
-  public disconnectedCallback() {
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
     if (this.host.isConnected) {
       return;
     }
@@ -434,6 +451,7 @@ export class AtomicFacet implements InitializableComponent {
               : this.facet.facetSearch.select(value)
           }
           facetValue={value.rawValue}
+          twind={this.twind}
         />
       ))
     );
@@ -469,6 +487,7 @@ export class AtomicFacet implements InitializableComponent {
                 this.showMoreFocus?.setTarget(btn);
               }
             }}
+            twind={this.twind}
           />
         );
       })

@@ -16,7 +16,8 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode} from '@stencil/core';
+import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
@@ -24,6 +25,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
@@ -188,6 +190,10 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   public customSort: string[] | string = '[]';
 
   private dependenciesManager!: FacetConditionsManager;
+  private twind!: Twind;
+  @Element() private host!: HTMLElement;
+  twOnConnected: (element: HTMLElement) => void;
+  twOnDisconnect: (element: HTMLElement) => void;
 
   public initialize() {
     if (
@@ -214,8 +220,23 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     );
   }
 
-  disconnectedCallback() {
-    this.dependenciesManager.stopWatching();
+  constructor() {
+    const {tw, twOnConnected, twOnDisconnect} = getTwind();
+    this.twind = tw;
+    this.twOnConnected = twOnConnected;
+    this.twOnDisconnect = twOnDisconnect;
+  }
+
+  connectedCallback(): void {
+    this.twOnConnected(this.host);
+  }
+
+  disconnectedCallback(): void {
+    this.twOnDisconnect(this.host);
+    if (this.host.isConnected) {
+      return;
+    }
+    this.dependenciesManager?.stopWatching();
   }
 
   private renderValuesContainer(children: VNode[]) {
@@ -245,6 +266,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         i18n={this.bindings.i18n}
         onClick={onClick}
         searchQuery={this.facetState.facetSearch.query}
+        twind={this.twind}
       ></FacetSegmentedValue>
     );
   }
