@@ -81,6 +81,7 @@ export type {
   LocationFacet,
   LocationFacetState,
   LocationFacetValue,
+  MappedGeneratedFacetController,
 };
 
 export type FacetGeneratorState = MappedFacetStates;
