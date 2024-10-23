@@ -385,6 +385,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
       this.getPropsForAtomicRecsResult(recommendation);
     return (
       <DisplayGrid
+        selectorForItem="atomic-recs-result"
         item={recommendation}
         {...propsForAtomicRecsResult.interactiveResult}
         setRef={(element) =>

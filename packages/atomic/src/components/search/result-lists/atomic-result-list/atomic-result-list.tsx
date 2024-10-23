@@ -246,6 +246,7 @@ export class AtomicResultList implements InitializableComponent {
       const propsForAtomicResult = this.getPropsForAtomicResult(result);
       return (
         <DisplayGrid
+          selectorForItem="atomic-result"
           item={result}
           {...propsForAtomicResult.interactiveResult}
           setRef={(element) =>
