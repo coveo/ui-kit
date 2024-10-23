@@ -7,6 +7,10 @@ const comments = [
     file: 'ssr.ts',
     text: '\n\nSee [Implement server-side rendering](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/headless-implement-ssr).',
   },
+  {
+    file: 'actions-loader.ts',
+    text: '\n\nSee [Dispatch actions](https://docs.coveo.com/en/headless/latest/usage/#dispatch-actions).',
+  },
 ];
 
 export function insertCustomComments(
