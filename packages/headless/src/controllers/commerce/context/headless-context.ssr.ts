@@ -5,11 +5,11 @@ import {
   ContextProps,
   ContextOptions,
   View,
-  Location,
+  UserLocation,
 } from './headless-context.js';
 
 export type {ContextState, Context, ContextProps} from './headless-context.js';
-export type {View, Location, ContextOptions};
+export type {View, UserLocation, ContextOptions};
 
 export interface ContextDefinition
   extends UniversalControllerDefinitionWithoutProps<Context> {}

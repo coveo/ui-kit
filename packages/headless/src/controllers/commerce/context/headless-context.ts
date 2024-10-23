@@ -20,14 +20,14 @@ export interface ContextOptions {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
-  location?: Location;
+  location?: UserLocation;
 }
 
 export interface View {
   url: string;
 }
 
-export interface Location {
+export interface UserLocation {
   latitude: number;
   longitude: number;
 }
@@ -71,7 +71,7 @@ export interface Context extends Controller {
    * Sets the location.
    * @param location - The new location.
    */
-  setLocation(location: Location): void;
+  setLocation(location: UserLocation): void;
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
@@ -84,7 +84,7 @@ export interface ContextState {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
-  location?: Location;
+  location?: UserLocation;
 }
 
 /**
@@ -144,7 +144,7 @@ export function buildContext(
 
     setView: (view: View) => dispatch(setView(view)),
 
-    setLocation: (location: Location) => dispatch(setLocation(location)),
+    setLocation: (location: UserLocation) => dispatch(setLocation(location)),
   };
 }
 

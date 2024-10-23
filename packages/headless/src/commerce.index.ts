@@ -78,7 +78,7 @@ export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   ContextOptions,
   View,
-  Location,
+  UserLocation,
   ContextProps,
   Context,
   ContextState,
