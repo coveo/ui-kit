@@ -1,4 +1,4 @@
-## <small>3.1.7 (2024-10-18)</small>
+## <small>3.1.10 (2024-10-23)</small>
 
 - chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)
 
