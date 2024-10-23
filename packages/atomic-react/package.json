@@ -14,17 +14,16 @@
     "clean": "rimraf -rf dist",
     "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
-    "build:bundles:esm": "tsc -p tsconfig.esm.json",
-    "build:bundles:iife-cjs": "rollup --config rollup.config.mjs --bundleConfigAsCjs",
-    "build:bundles": "concurrently \"npm run build:bundles:esm\" \"npm run build:bundles:iife-cjs\"",
+    "build:bundles": "rollup --config rollup.config.js",
+    "build:types": "tsc --project tsconfig.types.json",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
+  "module": "./dist/esm/atomic-react.mjs",
   "main": "./dist/cjs/atomic-react.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "files": [
     "dist/",
     "recommendation/",
@@ -37,7 +36,6 @@
     "@coveo/release": "1.0.0",
     "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
     "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
@@ -61,17 +59,17 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/atomic-react.mjs",
       "require": "./dist/cjs/atomic-react.cjs"
     },
     "./commerce": {
-      "types": "./dist/commerce.index.d.ts",
+      "types": "./dist/types/commerce.index.d.ts",
       "import": "./dist/esm/commerce/atomic-react.mjs",
       "require": "./dist/cjs/commerce/atomic-react.cjs"
     },
     "./recommendation": {
-      "types": "./dist/recommendation.index.d.ts",
+      "types": "./dist/types/recommendation.index.d.ts",
       "import": "./dist/esm/recommendation/atomic-react.mjs",
       "require": "./dist/cjs/recommendation/atomic-react.cjs"
     }
