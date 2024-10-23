@@ -84,7 +84,7 @@ export interface ContextState {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
-  user?: Location;
+  location?: Location;
 }
 
 /**
