@@ -1,7 +1,6 @@
 import replaceWithASTPlugin from '@coveo/rollup-plugin-replace-with-ast';
 import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
-import replace from '@rollup/plugin-replace';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
 import {join, dirname} from 'path';
@@ -15,6 +14,7 @@ const __dirname = dirname(__filename);
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 let headlessVersion;
+let atomicVersion;
 
 if (isCDN) {
   console.log('Building for CDN');
@@ -23,6 +23,10 @@ if (isCDN) {
     __dirname,
     '../../packages/headless/package.json'
   );
+  const atomicPackageJsonPath = join(
+    __dirname,
+    '../../packages/atomic/package.json'
+  );
 
   try {
     const headlessPackageJson = JSON.parse(
@@ -30,6 +34,12 @@ if (isCDN) {
     );
     headlessVersion = 'v' + headlessPackageJson.version;
     console.log('Using headless version from package.json:', headlessVersion);
+
+    const atomicPackageJson = JSON.parse(
+      readFileSync(atomicPackageJsonPath, 'utf8')
+    );
+    atomicVersion = 'v' + atomicPackageJson.version;
+    console.log('Using atomic version from package.json:', atomicVersion);
   } catch (error) {
     console.error('Error reading headless package.json:', error);
     throw new Error('Error reading headless package.json');
@@ -60,6 +70,9 @@ const packageMappings = {
   '@coveo/headless': {
     cdn: `/headless/${headlessVersion}/headless.esm.js`,
   },
+  '@coveo/atomic/loader': {
+    cdn: `/atomic/${atomicVersion}/loader/index.js`,
+  },
 };
 
 /** @type {import('rollup').ExternalOption} */
@@ -68,7 +81,7 @@ const commonExternal = [
   'react-dom',
   'react-dom/client',
   'react-dom/server',
-  '@coveo/atomic',
+  '@coveo/atomic/loader',
   '@coveo/headless',
 ];
 
@@ -76,32 +89,29 @@ const commonExternal = [
 const outputCJS = ({useCase}) => ({
   file: `dist/cjs/${useCase}atomic-react.cjs`,
   format: 'cjs',
+  sourcemap: true,
 });
 
 //TODO(alex): also output types, a mts and dts file
-//TODO(alex): output sourcemaps
 
 /** @returns {import('rollup').OutputOptions} */
 const outputESM = ({useCase}) => ({
   file: `dist/esm/${useCase}atomic-react.mjs`,
   format: 'esm',
+  sourcemap: true,
 });
 
 /**@type {import('rollup').InputPluginOption} */
 const plugins = [
   json(),
   nodePolyfills(),
-  typescript(),
-  nodeResolve(),
-  replace({
-    delimiters: ['', ''],
-    values: {
-      'process.env.NODE_ENV': JSON.stringify('dev'),
-      'util.TextEncoder();': 'TextEncoder();',
-      "import { defineCustomElements } from '@coveo/atomic/loader';": '',
-      'defineCustomElements();': '',
-    },
+  typescript({
+    tsconfig: './tsconfig.json',
+    declaration: true,
+    declarationDir: 'dist/types',
+    rootDir: 'src',
   }),
+  nodeResolve(),
   isCDN &&
     replaceWithASTPlugin({
       replacements: generateReplaceValues(),
@@ -115,7 +125,6 @@ export default defineConfig([
     external: commonExternal,
     plugins: plugins,
   },
-  //I should do this : https://gist.github.com/kripod/8a01a8a7f5baa1d121dcd07eb8a943b9
   {
     input: 'src/index.ts',
     output: [outputESM({useCase: ''})],
