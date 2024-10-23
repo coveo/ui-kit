@@ -25,7 +25,7 @@ import {
   Watch,
   Element,
   State,
-  setNonce,
+  setNonce as setStencilNonce,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
@@ -34,6 +34,7 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
+import {setNonce} from '../../../utils/nonce';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
@@ -196,6 +197,7 @@ export class AtomicCommerceInterface
   componentWillLoad() {
     if (this.CspNonce) {
       setNonce(this.CspNonce);
+      setStencilNonce(this.CspNonce);
     }
     this.initAriaLive();
   }

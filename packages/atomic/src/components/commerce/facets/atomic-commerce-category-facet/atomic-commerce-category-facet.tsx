@@ -11,6 +11,7 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
@@ -41,6 +42,7 @@ import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/fac
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-category-facet.css';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -85,7 +87,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-category-facet',
-  styleUrl: 'atomic-commerce-category-facet.pcss',
   shadow: true,
 })
 export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
@@ -190,6 +191,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   }
 
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
     this.ensureSubscribed();
   }
 

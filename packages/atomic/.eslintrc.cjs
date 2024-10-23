@@ -10,6 +10,7 @@ module.exports = {
     curly: ['error'],
   },
   ignorePatterns: [
+    'src/**/*.css.ts',
     'src/external-builds/**/*',
     'dist/**/*',
     'www/**/*',
