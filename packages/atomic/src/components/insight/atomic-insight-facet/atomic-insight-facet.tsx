@@ -1,5 +1,6 @@
 import {FacetResultsMustMatch} from '@coveo/headless';
 import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   buildInsightFacet,
   buildInsightFacetConditionsManager,
@@ -23,6 +24,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {getTwind} from '../../../utils/twind';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/facet-container';
@@ -132,6 +134,7 @@ export class AtomicInsightFacet
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
 
   public initialize() {
     const options: InsightFacetOptions = {
@@ -151,6 +154,10 @@ export class AtomicInsightFacet
     this.initConditionManager();
     this.initPopover();
     this.registerFacet();
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   private get focusTargets(): {
@@ -260,6 +267,7 @@ export class AtomicInsightFacet
                 this.showMoreFocus?.setTarget(btn);
               }
             }}
+            twind={this.twind}
           />
         );
       })

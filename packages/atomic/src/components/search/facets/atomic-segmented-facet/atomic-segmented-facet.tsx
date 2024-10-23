@@ -16,7 +16,8 @@ import {
   TabManager,
   TabManagerState,
 } from '@coveo/headless';
-import {Component, h, Prop, State, VNode} from '@stencil/core';
+import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
@@ -24,6 +25,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {Hidden} from '../../../common/hidden';
@@ -188,6 +190,8 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   public customSort: string[] | string = '[]';
 
   private dependenciesManager!: FacetConditionsManager;
+  private twind!: Twind;
+  @Element() private host!: HTMLElement;
 
   public initialize() {
     if (
@@ -212,6 +216,10 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         >(this.dependsOn),
       }
     );
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   disconnectedCallback() {
@@ -245,6 +253,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
         i18n={this.bindings.i18n}
         onClick={onClick}
         searchQuery={this.facetState.facetSearch.query}
+        twind={this.twind}
       ></FacetSegmentedValue>
     );
   }

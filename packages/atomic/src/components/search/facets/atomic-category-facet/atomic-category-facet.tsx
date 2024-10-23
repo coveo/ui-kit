@@ -17,6 +17,7 @@ import {
   buildTabManager,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -31,6 +32,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
@@ -255,6 +257,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
 
   public initialize() {
     if (
@@ -326,6 +329,10 @@ export class AtomicCategoryFacet implements InitializableComponent {
       headerFocus: this.headerFocus,
       activeValueFocus: this.activeValueFocus,
     };
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   public disconnectedCallback() {
@@ -493,6 +500,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
         }}
         searchQuery={this.facetState.facetSearch.query}
         setRef={(el) => this.focusTargets.activeValueFocus.setTarget(el)}
+        twind={this.twind}
       >
         <CategoryFacetChildrenAsTreeContainer>
           {this.renderChildren()}
@@ -530,6 +538,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
           isShowMoreFocusTarget &&
             this.focusTargets.showMoreFocus.setTarget(element);
         }}
+        twind={this.twind}
       ></CategoryFacetChildValueLink>
     );
   }

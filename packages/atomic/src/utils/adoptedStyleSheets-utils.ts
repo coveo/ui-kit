@@ -1,7 +1,7 @@
 import {getNonce} from './nonce';
 
 const styleSheetMap = new Map<string, WeakRef<CSSStyleSheet>>();
-const supportsAdoptingStyleSheets: boolean =
+export const supportsAdoptingStyleSheets: boolean =
   globalThis.ShadowRoot &&
   'adoptedStyleSheets' in Document.prototype &&
   'replace' in CSSStyleSheet.prototype;

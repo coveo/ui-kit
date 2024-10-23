@@ -18,6 +18,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -32,6 +33,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -279,6 +281,7 @@ export class AtomicColorFacet implements InitializableComponent {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
 
   public initialize() {
     if (
@@ -330,6 +333,10 @@ export class AtomicColorFacet implements InitializableComponent {
       showMoreFocus: this.showMoreFocus,
       headerFocus: this.headerFocus,
     };
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   public disconnectedCallback() {
@@ -454,6 +461,7 @@ export class AtomicColorFacet implements InitializableComponent {
               isShowMoreFocusTarget &&
                 this.focusTargets.showMoreFocus.setTarget(element);
             }}
+            twind={this.twind}
           >
             <FacetValueLabelHighlight
               displayValue={displayValue}
@@ -477,6 +485,7 @@ export class AtomicColorFacet implements InitializableComponent {
               isShowMoreFocusTarget &&
                 this.focusTargets.showMoreFocus.setTarget(element);
             }}
+            twind={this.twind}
           >
             <div
               part={`value-${partValueWithDisplayValue} value-${partValueWithAPIValue} default-color-value`}

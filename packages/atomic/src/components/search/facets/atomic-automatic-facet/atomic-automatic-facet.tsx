@@ -1,12 +1,14 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
-import {Component, Prop, State, h, VNode} from '@stencil/core';
+import {Component, Prop, State, h, VNode, Element} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
@@ -49,6 +51,7 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 export class AtomicAutomaticFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   @State() public error!: Error;
+  @Element() host!: HTMLElement;
 
   /**
    * @internal
@@ -70,6 +73,11 @@ export class AtomicAutomaticFacet implements InitializableComponent {
    * @internal
    */
   @Prop({reflect: true, mutable: true}) public isCollapsed!: boolean;
+  private twind!: Twind;
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
+  }
 
   private headerFocus?: FocusTargetController;
 
@@ -103,6 +111,7 @@ export class AtomicAutomaticFacet implements InitializableComponent {
         isSelected={this.isSelected(facetValue)}
         i18n={this.bindings.i18n}
         onClick={onClick}
+        twind={this.twind}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}

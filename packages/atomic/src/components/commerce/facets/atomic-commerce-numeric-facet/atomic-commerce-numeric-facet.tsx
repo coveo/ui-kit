@@ -10,6 +10,7 @@ import {
   buildContext,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
@@ -17,6 +18,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -81,6 +83,7 @@ export class AtomicCommerceNumericFacet
   @Prop({reflect: true}) field?: string;
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -103,6 +106,7 @@ export class AtomicCommerceNumericFacet
 
   public connectedCallback() {
     adoptStyles(this.host.shadowRoot!, css);
+    this.twind = getTwind(this.host.shadowRoot!);
     this.ensureSubscribed();
   }
 
@@ -214,6 +218,7 @@ export class AtomicCommerceNumericFacet
             logger={logger}
             manualRanges={manualRanges}
             onClick={() => this.facet.toggleSelect(value)}
+            twind={this.twind}
           />
         ))}
       </NumericFacetValuesContainer>

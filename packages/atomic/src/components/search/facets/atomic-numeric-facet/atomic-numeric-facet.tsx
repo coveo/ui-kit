@@ -23,6 +23,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
@@ -30,6 +31,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
@@ -221,6 +223,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -248,6 +251,10 @@ export class AtomicNumericFacet implements InitializableComponent {
     this.initializeSearchStatus();
 
     this.registerFacetToStore();
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   public disconnectedCallback() {
@@ -474,6 +481,7 @@ export class AtomicNumericFacet implements InitializableComponent {
                 ? this.facetForRange!.toggleSingleSelect(value)
                 : this.facetForRange!.toggleSelect(value)
             }
+            twind={this.twind}
           />
         ))}
       </NumericFacetValuesContainer>

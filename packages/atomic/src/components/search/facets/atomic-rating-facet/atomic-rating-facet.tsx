@@ -19,6 +19,7 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
+import {Twind} from '@twind/core';
 import Star from '../../../../images/star.svg';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
@@ -27,6 +28,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {getTwind} from '../../../../utils/twind';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
@@ -202,6 +204,7 @@ export class AtomicRatingFacet implements InitializableComponent {
   @MapProp() @Prop() public dependsOn: Record<string, string> = {};
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
 
   private get focusTarget(): FocusTargetController {
     if (!this.headerFocus) {
@@ -266,6 +269,10 @@ export class AtomicRatingFacet implements InitializableComponent {
       hasValues: () => !!this.valuesToRender.length,
       numberOfActiveValues: () => this.numberOfSelectedValues,
     });
+  }
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
   }
 
   public disconnectedCallback() {
@@ -369,6 +376,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
+            twind={this.twind}
           >
             {this.ratingContent(facetValue)}
           </FacetValueCheckbox>
@@ -382,6 +390,7 @@ export class AtomicRatingFacet implements InitializableComponent {
             i18n={this.bindings.i18n}
             onClick={onClick}
             class={shouldBeDimmed ? 'opacity-80' : undefined}
+            twind={this.twind}
           >
             {this.ratingContent(facetValue)}
           </FacetValueLink>

@@ -15,12 +15,15 @@ import {
   Method,
   VNode,
   Fragment,
+  Element,
 } from '@stencil/core';
+import {Twind} from '@twind/core';
 import CloseIcon from '../../../../images/close.svg';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
@@ -64,6 +67,8 @@ export class AtomicQuickviewModal implements InitializableComponent {
     highlightNone: false,
     keywords: {},
   };
+  private twind!: Twind;
+  @Element() private host!: HTMLElement;
   @Watch('highlightKeywords')
   watchHighlightKeywords() {
     this.handleHighlightsScripts();
@@ -85,6 +90,10 @@ export class AtomicQuickviewModal implements InitializableComponent {
   @Prop() modalCloseCallback?: () => void;
 
   private interactiveResult?: InteractiveResult;
+
+  connectedCallback(): void {
+    this.twind = getTwind(this.host.shadowRoot!);
+  }
 
   public componentWillLoad(): void {
     this.minimizeSidebar = this.bindings.store.isMobile();
@@ -159,6 +168,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
             }
             minimized={this.minimizeSidebar}
             onMinimize={(minimize) => (this.minimizeSidebar = minimize)}
+            twind={this.twind}
           />
         </div>
         <div class="relative overflow-auto">

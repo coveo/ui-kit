@@ -7,6 +7,7 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -18,6 +19,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
@@ -128,6 +130,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
 
   public initialize() {
     if (!this.facet) {
@@ -192,6 +195,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
 
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
+    this.twind = getTwind(this.host.shadowRoot!);
     this.ensureSubscribed();
   }
 
@@ -330,6 +334,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
         }}
         searchQuery={this.facetState.facetSearch.query}
         setRef={(el) => this.focusTargets.activeValueFocus.setTarget(el)}
+        twind={this.twind}
       >
         <CategoryFacetChildrenAsTreeContainer>
           {this.renderChildren()}
@@ -367,6 +372,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
           isShowMoreFocusTarget &&
             this.focusTargets.showMoreFocus.setTarget(element);
         }}
+        twind={this.twind}
       ></CategoryFacetChildValueLink>
     );
   }

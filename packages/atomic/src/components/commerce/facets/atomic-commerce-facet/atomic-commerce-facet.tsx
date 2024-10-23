@@ -14,6 +14,7 @@ import {
   VNode,
   Fragment,
 } from '@stencil/core';
+import {Twind} from '@twind/core';
 import {
   AriaLiveRegion,
   FocusTargetController,
@@ -24,6 +25,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
@@ -128,6 +130,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   @AriaLiveRegion('facet-search')
   protected facetSearchAriaMessage!: string;
+  private twind!: Twind;
 
   public initialize() {
     if (!this.facet) {
@@ -140,6 +143,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
 
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
+    this.twind = getTwind(this.host.shadowRoot!);
     this.ensureSubscribed();
   }
 
@@ -255,6 +259,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
           onExclude={() => this.facet.facetSearch.exclude(value)}
           onSelect={() => this.facet.facetSearch.select(value)}
           facetValue={value.rawValue}
+          twind={this.twind}
         />
       ))
     );
@@ -282,6 +287,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
                 this.showMoreFocus?.setTarget(btn);
               }
             }}
+            twind={this.twind}
           />
         );
       })

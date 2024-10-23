@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
@@ -8,6 +9,7 @@ interface NumericFacetValueLinkProps extends FormatFacetValueRange {
   onClick: () => void;
   logger: Pick<Console, 'error'>;
   displayValuesAs: 'checkbox' | 'link';
+  twind: Twind;
 }
 
 export const NumericFacetValueLink: FunctionalComponent<
@@ -25,6 +27,7 @@ export const NumericFacetValueLink: FunctionalComponent<
           isSelected={isSelected}
           i18n={i18n}
           onClick={() => onClick()}
+          twind={props.twind}
         >
           <FacetValueLabelHighlight
             displayValue={displayValue}
@@ -40,6 +43,7 @@ export const NumericFacetValueLink: FunctionalComponent<
           isSelected={isSelected}
           i18n={i18n}
           onClick={onClick}
+          twind={props.twind}
         >
           <FacetValueLabelHighlight
             displayValue={displayValue}

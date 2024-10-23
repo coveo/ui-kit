@@ -45,6 +45,7 @@ export const FacetValueCheckbox: FunctionalComponent<
       onMouseDown: (e: MouseEvent) =>
         createRipple(e, {color: 'neutral', parent: labelRef}),
       iconPart: 'value-checkbox-icon',
+      twind: props.twind,
     };
 
     if (isTriStateCheckbox(props)) {

@@ -1,4 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {i18n} from 'i18next';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
@@ -13,6 +14,7 @@ export interface CategoryFacetValueLinkProps {
   searchQuery: string;
   isLeafValue: boolean;
   setRef: (el?: HTMLButtonElement) => void;
+  twind: Twind;
 }
 
 export const CategoryFacetValueLink: FunctionalComponent<
@@ -28,6 +30,7 @@ export const CategoryFacetValueLink: FunctionalComponent<
     searchQuery,
     isLeafValue,
     setRef,
+    twind,
   },
   children
 ) => {
@@ -58,6 +61,7 @@ export const CategoryFacetValueLink: FunctionalComponent<
       class="contents"
       buttonRef={(btn) => setRef(btn)}
       subList={children}
+      twind={twind}
     >
       <FacetValueLabelHighlight
         displayValue={displayValue}

@@ -10,6 +10,7 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
+import {Twind} from '@twind/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {parseDate} from '../../../../utils/date-utils';
@@ -18,6 +19,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {getTwind} from '../../../../utils/twind';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -75,6 +77,7 @@ export class AtomicCommerceTimeframeFacet
   @State() private inputRange?: DateFilterRange;
 
   private headerFocus?: FocusTargetController;
+  private twind!: Twind;
 
   private get displayName() {
     return this.facetState.displayName || 'no-label';
@@ -99,6 +102,7 @@ export class AtomicCommerceTimeframeFacet
 
   public connectedCallback(): void {
     adoptStyles(this.host.shadowRoot!, css);
+    this.twind = getTwind(this.host.shadowRoot!);
     this.ensureSubscribed();
   }
 
@@ -236,6 +240,7 @@ export class AtomicCommerceTimeframeFacet
         numberOfResults={facetValue.numberOfResults}
         i18n={this.bindings.i18n}
         onClick={() => this.facet.toggleSingleSelect(facetValue)}
+        twind={this.twind}
       >
         <FacetValueLabelHighlight
           displayValue={displayValue}
