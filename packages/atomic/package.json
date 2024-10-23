@@ -86,7 +86,6 @@
     "@babel/core": "7.24.9",
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
-    "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.3",
     "@fullhuman/postcss-purgecss": "6.0.0",
     "@nx/js": "19.5.3",
