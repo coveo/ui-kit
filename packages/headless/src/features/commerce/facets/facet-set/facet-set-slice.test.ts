@@ -9,6 +9,7 @@ import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-face
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
+  buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response.js';
@@ -16,6 +17,7 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {
   buildMockCategoryFacetValue,
   buildMockCommerceDateFacetValue,
+  buildMockCommerceLocationFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
 } from '../../../../test/mock-commerce-facet-value.js';
@@ -66,6 +68,10 @@ import {
 } from '../date-facet/date-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions.js';
 import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../location-facet/location-facet-actions.js';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateNumericFacetValues,
@@ -78,13 +84,17 @@ import * as CommerceFacetReducers from './facet-set-reducer-helpers.js';
 import {
   commerceFacetSetReducer,
   convertCategoryFacetValueToRequest,
+  convertLocationFacetValueToRequest,
 } from './facet-set-slice.js';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state.js';
 import {FacetType} from './interfaces/common.js';
-import {CategoryFacetValueRequest} from './interfaces/request.js';
+import {
+  CategoryFacetValueRequest,
+  LocationFacetValueRequest,
+} from './interfaces/request.js';
 import {AnyFacetResponse, CategoryFacetValue} from './interfaces/response.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -558,6 +568,10 @@ describe('commerceFacetSetReducer', () => {
           facetResponseBuilder: buildMockCommerceRegularFacetResponse,
         },
         {
+          type: 'location' as FacetType,
+          facetResponseBuilder: buildMockCommerceLocationFacetResponse,
+        },
+        {
           type: 'numericalRange' as FacetType,
           facetResponseBuilder: buildMockCommerceNumericFacetResponse,
         },
@@ -975,6 +989,296 @@ describe('commerceFacetSetReducer', () => {
         request: facet,
       });
       const action = toggleExcludeFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('for location facets', () => {
+    describe.each([
+      {
+        title:
+          'dispatching #toggleSelectLocationFacetValue with a registered facet id',
+        facetValueState: 'selected' as FacetValueState,
+        toggleAction: toggleSelectLocationFacetValue,
+      },
+      {
+        title:
+          'dispatching #toggleExcludeLocationFacetValue with a registered facet id',
+        facetValueState: 'excluded' as FacetValueState,
+        toggleAction: toggleExcludeLocationFacetValue,
+      },
+    ])(
+      '$title',
+      ({
+        facetValueState,
+        toggleAction,
+      }: {
+        facetValueState: FacetValueState;
+        toggleAction: Function;
+      }) => {
+        const facetId = '1';
+        const oppositeFacetValueState = facetValueStates.find(
+          (valueState) => ![facetValueState, 'idle'].includes(valueState)
+        );
+        describe('when the facet value exists', () => {
+          it(`sets the state of an idle value to ${facetValueState}`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe(facetValueState);
+          });
+
+          it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+              state: oppositeFacetValueState,
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe(facetValueState);
+          });
+
+          it(`sets the state of a ${facetValueState} value to idle`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+              state: facetValueState,
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe('idle');
+          });
+
+          it('sets #preventAutoSelect to true', () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+          });
+
+          it('sets #freezeCurrentValues to true', () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(true);
+          });
+        });
+
+        describe.each([
+          {
+            facetValueState: 'selected' as FacetValueState,
+            toggleAction: toggleSelectLocationFacetValue,
+          },
+          {
+            facetValueState: 'excluded' as FacetValueState,
+            toggleAction: toggleExcludeLocationFacetValue,
+          },
+        ])(
+          'when the facet value does not exist',
+          ({
+            facetValueState,
+            toggleAction,
+          }: {
+            facetValueState: FacetValueState;
+            toggleAction: Function;
+          }) => {
+            it('replaces the first idle value with the new value', () => {
+              const newFacetValue = buildMockCommerceLocationFacetValue({
+                value: 'TED',
+                state: facetValueState,
+              });
+
+              state[facetId] = buildMockCommerceFacetSlice({
+                request: buildMockCommerceFacetRequest({
+                  type: 'location',
+                  values: [
+                    buildMockCommerceLocationFacetValue({
+                      value: 'active1',
+                      state: facetValueState,
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'active2',
+                      state: facetValueState,
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'idle1',
+                      state: 'idle',
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'idle2',
+                      state: 'idle',
+                    }),
+                  ],
+                }),
+              });
+
+              const action = toggleAction({
+                facetId,
+                selection: newFacetValue,
+              });
+
+              const finalState = commerceFacetSetReducer(state, action);
+              expect(
+                (
+                  finalState[facetId]?.request
+                    .values as LocationFacetValueRequest[]
+                ).indexOf(newFacetValue)
+              ).toBe(2);
+              expect(finalState[facetId]?.request.values.length).toBe(4);
+            });
+
+            it('sets #preventAutoSelect to true', () => {
+              state[facetId] = buildMockCommerceFacetSlice({
+                request: buildMockCommerceFacetRequest({type: 'location'}),
+              });
+
+              const action = toggleAction({
+                facetId,
+                selection: buildMockCommerceLocationFacetValue({value: 'TED'}),
+              });
+              const finalState = commerceFacetSetReducer(state, action);
+
+              expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
+            });
+          }
+        );
+      }
+    );
+    it('dispatching #toggleSelectLocationFacetValue with an invalid id does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const action = toggleSelectLocationFacetValue({
+        facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleSelectLocationFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectLocationFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeLocationFacetValue with an invalid id does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const action = toggleExcludeLocationFacetValue({
+        facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleExcludeLocationFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleExcludeLocationFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
       });
@@ -2365,6 +2669,7 @@ describe('commerceFacetSetReducer', () => {
   describe('#updateCoreFacetIsFieldExpanded', () => {
     describe.each([
       {type: 'regular' as FacetType},
+      {type: 'location' as FacetType},
       {type: 'numericalRange' as FacetType},
       {type: 'dateRange' as FacetType},
       {type: 'hierarchical' as FacetType},

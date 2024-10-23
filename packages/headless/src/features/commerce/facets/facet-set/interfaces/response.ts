@@ -39,6 +39,15 @@ export interface RegularFacetValue extends BaseFacetValue {
   value: string;
 }
 
+export type LocationFacetResponse = BaseFacetResponse<
+  LocationFacetValue,
+  'location'
+>;
+
+export interface LocationFacetValue extends BaseFacetValue {
+  value: string;
+}
+
 export interface RangeFacetValue<T> extends BaseFacetValue {
   start: T;
   end: T;
@@ -70,6 +79,7 @@ export interface BaseFacetValue {
 
 export type AnyFacetValueResponse =
   | RegularFacetValue
+  | LocationFacetValue
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
@@ -83,7 +93,9 @@ type MappedFacetResponse = {
         ? DateFacetResponse
         : T extends 'hierarchical'
           ? CategoryFacetResponse
-          : never;
+          : T extends 'location'
+            ? LocationFacetResponse
+            : never;
 };
 
 export type AnyFacetResponse = MappedFacetResponse[FacetType];
