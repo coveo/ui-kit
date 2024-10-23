@@ -29,6 +29,7 @@ const postCss = postCssFactory([
 
 const files = [
   'src/components/commerce/facets/atomic-commerce-category-facet/atomic-commerce-category-facet.pcss',
+  'src/components/commerce/facets/atomic-commerce-facet/atomic-commerce-facet.pcss',
 ];
 
 const cssToJs = (css) => `const css = \`${css}\`;`;

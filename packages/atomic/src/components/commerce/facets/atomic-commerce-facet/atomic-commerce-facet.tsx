@@ -18,6 +18,7 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '../../../../utils/accessibility-utils';
+import {adoptStyles} from '../../../../utils/adoptedStyleSheets-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -44,6 +45,7 @@ import {
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import css from './atomic-commerce-facet.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -87,7 +89,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-facet',
-  styleUrl: 'atomic-commerce-facet.pcss',
   shadow: true,
 })
 export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
@@ -138,6 +139,7 @@ export class AtomicCommerceFacet implements InitializableComponent<Bindings> {
   }
 
   public connectedCallback(): void {
+    adoptStyles(this.host.shadowRoot!, css);
     this.ensureSubscribed();
   }
 
