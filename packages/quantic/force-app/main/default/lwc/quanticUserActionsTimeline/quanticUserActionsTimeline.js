@@ -29,7 +29,7 @@ import initializationErrorTemplate from './templates/initializationError.html';
  *
  * @category Internal
  * @example
- * <c-quantic-user-actions-timeline user-id="someone@company.com" ticket-creation-date-time="2024-01-01T00:00:00Z"></c-quantic-user-actions-timeline>
+ * <c-quantic-user-actions-timeline engine-id={engineId} user-id="someone@company.com" ticket-creation-date-time="2024-01-01T00:00:00Z"></c-quantic-user-actions-timeline>
  */
 export default class QuanticUserActionsTimeline extends LightningElement {
   /**
@@ -68,6 +68,8 @@ export default class QuanticUserActionsTimeline extends LightningElement {
   state;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {Array<string>} */
+  _excludedCustomActions;
 
   labels = {
     showFollowingSessions,
@@ -91,10 +93,16 @@ export default class QuanticUserActionsTimeline extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
+
+    if (this.excludedCustomActions?.length) {
+      this._excludedCustomActions = [...this.excludedCustomActions];
+    } else {
+      this._excludedCustomActions = [];
+    }
     this.userActions = this.headless.buildUserActions(engine, {
       options: {
         ticketCreationDate: this.ticketCreationDateTime,
-        excludedCustomActions: this.excludedCustomActions,
+        excludedCustomActions: this._excludedCustomActions,
       },
     });
 

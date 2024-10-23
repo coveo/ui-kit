@@ -11,6 +11,7 @@ import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
 import {
   AnyFacetResponse,
+  LocationFacetValue,
   RegularFacetValue,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
@@ -45,6 +46,11 @@ import {
   getCoreFacetState,
 } from '../headless-core-commerce-facet.js';
 import {
+  getLocationFacetState,
+  LocationFacet,
+  LocationFacetState,
+} from '../location/headless-commerce-location-facet.js';
+import {
   getNumericFacetState,
   NumericFacet,
   NumericFacetState,
@@ -72,6 +78,9 @@ export type {
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
+  LocationFacet,
+  LocationFacetState,
+  LocationFacetValue,
   MappedGeneratedFacetController,
 };
 
@@ -88,7 +97,9 @@ type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : never;
+          : T extends 'location'
+            ? LocationFacetState
+            : never;
 };
 
 export function defineFacetGenerator<
@@ -235,6 +246,10 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
+            );
+          case 'location':
+            return getLocationFacetState(
+              createFacetState(facetResponseSelector) as LocationFacetState
             );
         }
       });
