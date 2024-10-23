@@ -1,11 +1,9 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
-import {stateKey} from '../../../../../app/state-key.js';
 import {LocationFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
   toggleExcludeLocationFacetValue,
   toggleSelectLocationFacetValue,
 } from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
-import {locationFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/location/location-facet-search-state-selector.js';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -14,24 +12,16 @@ import {
   FacetValueRequest,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
-import {
-  LocationFacetSearch,
-  LocationFacetSearchState,
-  buildLocationFacetSearch,
-} from './headless-commerce-location-facet-search.js';
 
 export type LocationFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
-> &
-  SearchableFacetOptions;
+>;
 
 export type LocationFacetState = Omit<
   CoreCommerceFacetState<LocationFacetValue>,
   'type'
 > & {
-  facetSearch: LocationFacetSearchState;
   type: 'location';
 };
 
@@ -43,7 +33,6 @@ export type LocationFacet = CoreCommerceFacet<
   FacetValueRequest,
   LocationFacetValue
 > & {
-  facetSearch: Omit<LocationFacetSearch, 'state'>;
   state: LocationFacetState;
 } & FacetControllerType<'location'>;
 
@@ -73,29 +62,12 @@ export function buildCommerceLocationFacet(
       toggleExcludeActionCreator: toggleExcludeLocationFacetValue,
     },
   });
-  const getFacetId = () => coreController.state.facetId;
-  const {dispatch} = engine;
-
-  const facetSearch = buildLocationFacetSearch(engine, {
-    options: {facetId: getFacetId(), ...options.facetSearch},
-    select: () => {
-      dispatch(options.fetchProductsActionCreator());
-    },
-    exclude: () => {
-      dispatch(options.fetchProductsActionCreator());
-    },
-    isForFieldSuggestions: false,
-  });
 
   return {
     ...coreController,
-    facetSearch,
 
     get state() {
-      return getLocationFacetState(
-        coreController.state,
-        locationFacetSearchStateSelector(engine[stateKey], getFacetId())
-      );
+      return getLocationFacetState(coreController.state);
     },
 
     type: 'location',
@@ -103,18 +75,10 @@ export function buildCommerceLocationFacet(
 }
 
 export const getLocationFacetState = (
-  coreState: CoreCommerceFacetState<LocationFacetValue>,
-  facetSearchSelector: ReturnType<typeof locationFacetSearchStateSelector>
+  coreState: CoreCommerceFacetState<LocationFacetValue>
 ): LocationFacetState => {
   return {
     ...coreState,
-    facetSearch: {
-      isLoading: facetSearchSelector?.isLoading ?? false,
-      moreValuesAvailable:
-        facetSearchSelector?.response.moreValuesAvailable ?? false,
-      query: facetSearchSelector?.options.query ?? '',
-      values: facetSearchSelector?.response.values ?? [],
-    },
     type: 'location',
   };
 };

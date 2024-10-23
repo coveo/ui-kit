@@ -13,7 +13,6 @@ import {
   MockedCommerceEngine,
   buildMockCommerceEngine,
 } from '../../../../../test/mock-engine-v2.js';
-import {buildMockFacetSearch} from '../../../../../test/mock-facet-search.js';
 import {
   LocationFacet,
   LocationFacetOptions,
@@ -47,7 +46,6 @@ describe('LocationFacet', () => {
     state.productListing.facets = [
       buildMockCommerceLocationFacetResponse({facetId}),
     ];
-    state.facetSearchSet[facetId] = buildMockFacetSearch();
     facetResponseSelector.mockReturnValue(
       buildMockCommerceLocationFacetResponse({facetId})
     );
@@ -61,7 +59,6 @@ describe('LocationFacet', () => {
       fetchProductsActionCreator: vi.fn(),
       facetResponseSelector,
       isFacetLoadingResponseSelector: vi.fn(),
-      facetSearch: {type: 'SEARCH'},
     };
 
     state = buildMockCommerceState();
@@ -98,25 +95,6 @@ describe('LocationFacet', () => {
     expect(toggleExcludeLocationFacetValue).toHaveBeenCalledWith({
       facetId,
       selection: facetValue,
-    });
-  });
-
-  it('#state.facetSearch returns the facet search state', () => {
-    const facetSearchState = buildMockFacetSearch();
-    facetSearchState.isLoading = true;
-    facetSearchState.response.moreValuesAvailable = true;
-    facetSearchState.options.query = 'test';
-    facetSearchState.response.values = [
-      {count: 1, displayValue: 'test', rawValue: 'test'},
-    ];
-
-    state.facetSearchSet[facetId] = facetSearchState;
-
-    expect(facet.state.facetSearch).toEqual({
-      isLoading: true,
-      moreValuesAvailable: true,
-      query: 'test',
-      values: [{count: 1, displayValue: 'test', rawValue: 'test'}],
     });
   });
 
