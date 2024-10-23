@@ -8,6 +8,7 @@ import {
   buildMockCommerceDateFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
+  buildMockCommerceLocationFacetResponse,
 } from '../../../../../test/mock-commerce-facet-response.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {
@@ -54,6 +55,9 @@ describe('SSR FacetGenerator', () => {
           break;
         case 'numericalRange':
           response = buildMockCommerceNumericFacetResponse({facetId, type});
+          break;
+        case 'location':
+          response = buildMockCommerceLocationFacetResponse({facetId, type});
           break;
         case 'regular':
         default:
@@ -117,6 +121,10 @@ describe('SSR FacetGenerator', () => {
             facetId: 'regular-facet',
             type: 'regular',
           },
+          {
+            facetId: 'location-facet',
+            type: 'location',
+          },
         ];
         state = buildMockCommerceState();
         setFacetState(facetsInEngineState);
@@ -131,7 +139,7 @@ describe('SSR FacetGenerator', () => {
         expect(facetGenerator).toBeTruthy();
       });
       it('#state is an array containing the state of each facet', () => {
-        expect(facetGenerator.state.length).toBe(4);
+        expect(facetGenerator.state.length).toBe(5);
         expect(
           facetGenerator.state.map((facet) => ({
             facetId: facet.facetId,

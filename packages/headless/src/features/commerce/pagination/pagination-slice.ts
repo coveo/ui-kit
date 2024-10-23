@@ -10,6 +10,10 @@ import {
   toggleSelectDateFacetValue,
 } from '../facets/date-facet/date-facet-actions.js';
 import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../facets/location-facet/location-facet-actions.js';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../facets/numeric-facet/numeric-facet-actions.js';
@@ -109,6 +113,8 @@ export const paginationReducer = createReducer(
       .addCase(deselectAllValuesInCoreFacet, handlePaginationReset)
       .addCase(toggleSelectFacetValue, handlePaginationReset)
       .addCase(toggleExcludeFacetValue, handlePaginationReset)
+      .addCase(toggleSelectLocationFacetValue, handlePaginationReset)
+      .addCase(toggleExcludeLocationFacetValue, handlePaginationReset)
       .addCase(toggleSelectNumericFacetValue, handlePaginationReset)
       .addCase(toggleExcludeNumericFacetValue, handlePaginationReset)
       .addCase(toggleSelectDateFacetValue, handlePaginationReset)
