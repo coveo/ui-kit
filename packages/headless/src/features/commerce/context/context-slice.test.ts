@@ -1,4 +1,4 @@
-import {setContext, setView} from './context-actions.js';
+import {setContext, setLocation, setView} from './context-actions.js';
 import {contextReducer} from './context-slice.js';
 import {CommerceContextState, getContextInitialState} from './context-state.js';
 
@@ -42,5 +42,15 @@ describe('context-slice', () => {
       url: 'https://example.org',
     };
     expect(contextReducer(state, setView(view)).view).toEqual(view);
+  });
+
+  it('should allow to set the location', () => {
+    const location = {
+      latitude: -10.2,
+      longitude: 20.1,
+    };
+    expect(contextReducer(state, setLocation(location)).location).toEqual(
+      location
+    );
   });
 });

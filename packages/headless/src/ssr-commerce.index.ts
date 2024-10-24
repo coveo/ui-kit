@@ -126,6 +126,7 @@ export type {
   ContextProps,
   ContextState,
   View,
+  UserLocation,
   ContextDefinition,
 } from './controllers/commerce/context/headless-context.ssr.js';
 export {defineContext} from './controllers/commerce/context/headless-context.ssr.js';
