@@ -148,12 +148,13 @@ export class TabBar {
         style="text-transparent"
         class="truncate rounded px-4 py-2 font-semibold"
         ariaLabel={tab.label}
+        title={tab.label}
         onClick={() => {
           tab.select();
           this.tabPopover?.togglePopover();
         }}
       >
-        {tab.label}
+        {tab.label} !
       </Button>
     ));
   };
