@@ -16,19 +16,18 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {IconButton} from '../../common/iconButton';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
-import {InsightResultActionClickedEvent} from '../atomic-insight-result-action/atomic-insight-result-action';
 
 /**
  * @internal
  */
 @Component({
-  tag: 'atomic-insight-quickview',
-  styleUrl: 'atomic-insight-quickview.pcss',
+  tag: 'atomic-insight-result-quickview-action',
+  styleUrl: 'atomic-insight-result-quickview-action.pcss',
 })
-export class AtomicInsightResultActionQuickview
+export class AtomicInsightResultQuickviewAction
   implements InitializableComponent
 {
   @InitializeBindings() public bindings!: Bindings;
@@ -72,17 +71,6 @@ export class AtomicInsightResultActionQuickview
   public onPreviousQuickview(evt: Event) {
     evt.stopImmediatePropagation();
     this.quickview.previous();
-  }
-
-  @Listen('atomicInsightResultActionClicked', {target: 'body'})
-  public onInsightResultActionClicked(evt: Event) {
-    const {action, result} = (
-      evt as CustomEvent<InsightResultActionClickedEvent>
-    ).detail;
-    if (action === 'quickview' && result === this.result) {
-      evt.stopImmediatePropagation();
-      this.quickview.fetchResultContent();
-    }
   }
 
   private quickviewModalRef?: HTMLAtomicQuickviewModalElement;
@@ -147,14 +135,8 @@ export class AtomicInsightResultActionQuickview
     this.quickview.fetchResultContent();
   }
 
-  private get isChildOfResultAction() {
-    return (
-      this.host.parentElement?.tagName === 'ATOMIC-INSIGHT-RESULT-ACTION' &&
-      this.host.parentElement?.getAttribute('action') === 'quickview'
-    );
-  }
   private get shouldRenderQuickview() {
-    return !this.isChildOfResultAction && this.quickviewState.resultHasPreview;
+    return this.quickviewState.resultHasPreview;
   }
 
   public render() {
@@ -162,20 +144,14 @@ export class AtomicInsightResultActionQuickview
     this.updateModalContent();
     if (this.shouldRenderQuickview) {
       return (
-        <Button
-          part="button"
-          title={this.bindings.i18n.t('quickview')}
-          style="outline-primary"
-          class="p-2"
-          onClick={(event) => this.onClick(event)}
+        <IconButton
+          partPrefix="result-action"
+          style="outline-neutral"
           ref={this.focusTarget.setTarget}
-        >
-          <atomic-icon
-            part="icon"
-            class="flex w-5 justify-center"
-            icon={QuickviewIcon}
-          ></atomic-icon>
-        </Button>
+          icon={QuickviewIcon}
+          title={this.bindings.i18n.t('quickview')}
+          onClick={() => this.onClick()}
+        />
       );
     }
   }
