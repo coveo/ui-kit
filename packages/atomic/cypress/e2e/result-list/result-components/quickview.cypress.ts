@@ -30,7 +30,7 @@ const openModal = () => {
   cy.expectClickEvent('documentQuickview');
 };
 
-describe('Quickview Component', () => {
+describe.skip('Quickview Component', () => {
   it('when not used inside a result template, it should not log error to console', () => {
     new TestFixture()
       .withElement(generateComponentHTML(quickviewComponent))

@@ -14,7 +14,8 @@ import {
   AtomicCommonStoreData,
   createAtomicCommonStore,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
+
+import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
 
 export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   fieldsToInclude: string[];
@@ -28,8 +29,16 @@ export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   currentQuickviewPosition: number;
 }
 
+export interface FacetInfoMap {
+  [facetId: string]:
+    | FacetInfo
+    | (FacetInfo & FacetValueFormat<InsightNumericFacetValue>)
+    | (FacetInfo & FacetValueFormat<InsightDateFacetValue>);
+}
+
 export interface AtomicInsightStore
   extends AtomicCommonStore<AtomicInsightStoreData> {
+  getAllFacets(): FacetInfoMap;
   isMobile(): boolean;
 }
 
@@ -48,6 +57,15 @@ export function createAtomicInsightStore(): AtomicInsightStore {
   });
   return {
     ...commonStore,
+
+    getAllFacets() {
+      return {
+        ...commonStore.state.facets,
+        ...commonStore.state.dateFacets,
+        ...commonStore.state.categoryFacets,
+        ...commonStore.state.numericFacets,
+      };
+    },
 
     isMobile() {
       return !window.matchMedia(

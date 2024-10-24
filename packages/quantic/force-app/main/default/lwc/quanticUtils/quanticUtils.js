@@ -450,13 +450,12 @@ export class DateUtils {
     ];
 
     const date = new Date(timestamp);
-
-    const dayOfWeek = daysOfWeek[date.getUTCDay()];
-    const month = months[date.getUTCMonth()];
-    const day = date.getUTCDate();
-    const year = date.getUTCFullYear();
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
 
     return {
       year,

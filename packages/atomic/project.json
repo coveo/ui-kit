@@ -50,6 +50,7 @@
     "build": {
       "dependsOn": [
         "cached:build:stencil",
+        "delete-loader-package-json",
         "validate:definitions",
         "build-storybook"
       ],
@@ -145,6 +146,14 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "test-storybook -c packages/atomic/.storybook --url=http://localhost:4400"
+      }
+    },
+    "delete-loader-package-json": {
+      "dependsOn": ["^build", "cached:build:stencil"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rm ./dist/loader/package.json",
+        "cwd": "packages/atomic"
       }
     }
   }

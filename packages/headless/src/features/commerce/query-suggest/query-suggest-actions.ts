@@ -139,13 +139,12 @@ export const buildQuerySuggestRequest = (
       ? {clientId: navigatorContext.clientId}
       : {}),
     context: {
-      ...(navigatorContext.userAgent
-        ? {
-            user: {
-              userAgent: navigatorContext.userAgent,
-            },
-          }
-        : {}),
+      user: {
+        ...location,
+        ...(navigatorContext.userAgent
+          ? {userAgent: navigatorContext.userAgent}
+          : {}),
+      },
       view: {
         ...view,
         ...(navigatorContext.referrer

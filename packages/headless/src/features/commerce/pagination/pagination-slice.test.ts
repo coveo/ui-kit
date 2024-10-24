@@ -12,6 +12,10 @@ import {
   toggleSelectDateFacetValue,
 } from '../facets/date-facet/date-facet-actions.js';
 import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../facets/location-facet/location-facet-actions.js';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../facets/numeric-facet/numeric-facet-actions.js';
@@ -268,6 +272,14 @@ describe('pagination slice', () => {
     {
       actionName: '#toggleExcludeFacetValue',
       action: toggleExcludeFacetValue,
+    },
+    {
+      actionName: '#toggleSelectLocationFacetValue',
+      action: toggleSelectLocationFacetValue,
+    },
+    {
+      actionName: '#toggleExcludeLocationFacetValue',
+      action: toggleExcludeLocationFacetValue,
     },
     {
       actionName: '#toggleSelectNumericFacetValue',

@@ -11,7 +11,7 @@
 }
 
 .user-action__title {
-  color: var(--lwc-brandContrast, #1a1b1e);
+  color: #1a1b1e;
 }
 
 .user-action__ticket-creation-title {
@@ -20,7 +20,7 @@
 
 .user-action__custom-action-icon,
 .user-action__search-action-icon {
-  --slds-c-icon-color-foreground-default: var(--lwc-brandContrast, #1a1b1e);
+  --slds-c-icon-color-foreground-default: #1a1b1e;
 }
 
 .user-action__click-action-icon,

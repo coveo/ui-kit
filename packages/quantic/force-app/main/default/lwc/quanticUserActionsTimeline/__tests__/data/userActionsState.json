@@ -1,0 +1,89 @@
+{
+  "timeline": {
+    "followingSessions": [
+      {
+        "start": 1727220420000,
+        "end": 1727220480000,
+        "actions": [
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1727220480000,
+            "query": "example query"
+          },
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1727220420000,
+            "query": "example query"
+          }
+        ]
+      },
+      {
+        "start": 1724423220000,
+        "end": 1724423280000,
+        "actions": [
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1727220480000,
+            "query": "example query"
+          },
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1727220420000,
+            "query": "example query"
+          }
+        ]
+      }
+    ],
+    "session": {
+      "start": 1726949220000,
+      "end": 1726949280000,
+      "actions": [
+        {
+          "actionType": "TICKET_CREATION",
+          "timestamp": 1726949280000,
+          "query": "example query"
+        },
+        {
+          "actionType": "SEARCH",
+          "timestamp": 1726949220000,
+          "query": "example query"
+        }
+      ]
+    },
+    "precedingSessions": [
+      {
+        "start": 1726862820000,
+        "end": 1726862880000,
+        "actions": [
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1726862880000,
+            "query": "example query"
+          },
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1726862820000,
+            "query": "example query"
+          }
+        ]
+      },
+      {
+        "start": 1724065620000,
+        "end": 1724065680000,
+        "actions": [
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1726862880000,
+            "query": "example query"
+          },
+          {
+            "actionType": "SEARCH",
+            "timestamp": 1726862820000,
+            "query": "example query"
+          }
+        ]
+      }
+    ]
+  },
+  "error": null
+}
