@@ -1095,52 +1095,6 @@ describe('commerceFacetSetReducer', () => {
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe('idle');
           });
-
-          it('sets #preventAutoSelect to true', () => {
-            const facetValue = buildMockCommerceLocationFacetValue({
-              value: 'TED',
-            });
-            const facetValueRequest =
-              convertLocationFacetValueToRequest(facetValue);
-
-            state[facetId] = buildMockCommerceFacetSlice({
-              request: buildMockCommerceFacetRequest({
-                values: [facetValueRequest],
-                type: 'location',
-              }),
-            });
-
-            const action = toggleAction({
-              facetId,
-              selection: facetValue,
-            });
-            const finalState = commerceFacetSetReducer(state, action);
-
-            expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
-          });
-
-          it('sets #freezeCurrentValues to true', () => {
-            const facetValue = buildMockCommerceLocationFacetValue({
-              value: 'TED',
-            });
-            const facetValueRequest =
-              convertLocationFacetValueToRequest(facetValue);
-
-            state[facetId] = buildMockCommerceFacetSlice({
-              request: buildMockCommerceFacetRequest({
-                values: [facetValueRequest],
-                type: 'location',
-              }),
-            });
-
-            const action = toggleAction({
-              facetId,
-              selection: facetValue,
-            });
-            const finalState = commerceFacetSetReducer(state, action);
-
-            expect(finalState[facetId]?.request.freezeCurrentValues).toBe(true);
-          });
         });
 
         describe.each([
@@ -1200,20 +1154,6 @@ describe('commerceFacetSetReducer', () => {
                 ).indexOf(newFacetValue)
               ).toBe(2);
               expect(finalState[facetId]?.request.values.length).toBe(4);
-            });
-
-            it('sets #preventAutoSelect to true', () => {
-              state[facetId] = buildMockCommerceFacetSlice({
-                request: buildMockCommerceFacetRequest({type: 'location'}),
-              });
-
-              const action = toggleAction({
-                facetId,
-                selection: buildMockCommerceLocationFacetValue({value: 'TED'}),
-              });
-              const finalState = commerceFacetSetReducer(state, action);
-
-              expect(finalState[facetId]?.request.preventAutoSelect).toBe(true);
             });
           }
         );

@@ -133,8 +133,6 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        facetRequest.preventAutoSelect = true;
-
         const existingValue = facetRequest.values.find(
           (req) => req.value === selection.value
         );
@@ -144,7 +142,6 @@ export const commerceFacetSetReducer = createReducer(
         }
 
         updateExistingFacetValueState(existingValue, 'select');
-        facetRequest.freezeCurrentValues = true;
       })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
