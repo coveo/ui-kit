@@ -27,6 +27,7 @@ import {
   CommerceFacetOptions,
   CoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
+import {LocationFacet} from '../location/headless-commerce-location-facet.js';
 import {NumericFacet} from '../numeric/headless-commerce-numeric-facet.js';
 import {RegularFacet} from '../regular/headless-commerce-regular-facet.js';
 import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
@@ -47,7 +48,7 @@ export interface FacetGenerator extends Controller {
 
   /**
    * The facet sub-controllers created by the facet generator.
-   * Array of [RegularFacet](./regular-facet), [DateRangeFacet](./date-range-facet), [NumericFacet](./numeric-facet), and [CategoryFacet](./category-facet).
+   * Array of [RegularFacet](./regular-facet), [DateRangeFacet](./date-range-facet), [NumericFacet](./numeric-facet), [CategoryFacet](./category-facet), and [LocationFacet](./location-facet).
    */
   facets: GeneratedFacetControllers;
 
@@ -79,7 +80,9 @@ export type MappedGeneratedFacetController = {
         ? DateFacet
         : T extends 'hierarchical'
           ? CategoryFacet
-          : never;
+          : T extends 'location'
+            ? LocationFacet
+            : never;
 };
 
 type CommerceFacetBuilder<
@@ -108,6 +111,7 @@ export interface FacetGeneratorOptions {
   buildNumericFacet: CommerceFacetBuilder<NumericFacet>;
   buildDateFacet: CommerceFacetBuilder<DateFacet>;
   buildCategoryFacet: CommerceFacetBuilder<CategoryFacet>;
+  buildLocationFacet: CommerceFacetBuilder<LocationFacet>;
   fetchProductsActionCreator: FetchProductsActionCreator;
 }
 
@@ -159,6 +163,8 @@ export function buildFacetGenerator(
           return options.buildNumericFacet(engine, {facetId});
         case 'regular':
           return options.buildRegularFacet(engine, {facetId});
+        case 'location':
+          return options.buildLocationFacet(engine, {facetId});
       }
     }
   );

@@ -4,6 +4,7 @@ import {
   DateFacetResponse,
   AnyFacetResponse,
   CategoryFacetResponse,
+  LocationFacetResponse,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 function getMockBaseCommerceFacetResponse(): Omit<
@@ -27,6 +28,17 @@ export function buildMockCommerceRegularFacetResponse(
   return {
     ...getMockBaseCommerceFacetResponse(),
     type: 'regular',
+    values: [],
+    ...config,
+  };
+}
+
+export function buildMockCommerceLocationFacetResponse(
+  config: Partial<LocationFacetResponse> = {}
+): LocationFacetResponse {
+  return {
+    ...getMockBaseCommerceFacetResponse(),
+    type: 'location',
     values: [],
     ...config,
   };
