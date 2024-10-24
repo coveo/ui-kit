@@ -26,6 +26,7 @@ const prepareRecommendationsRequestParams = (
     country,
     currency,
     page,
+    perPage,
   } = req;
   return {
     slotId,
@@ -36,5 +37,6 @@ const prepareRecommendationsRequestParams = (
     country,
     currency,
     page,
+    perPage,
   };
 };
