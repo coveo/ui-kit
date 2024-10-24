@@ -12,12 +12,14 @@ import {
   Event,
   EventEmitter,
   State,
+  Host,
 } from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
+import {Button} from '../../../common/button';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
@@ -164,10 +166,15 @@ export class AtomicProductChildren
     }
 
     return (
-      <div>
+      <Host>
         {this.label.trim() !== '' && this.renderLabel()}
-        <div>{this.children.map((child) => this.renderChild(child))}</div>
-      </div>
+        <div class="children-container">
+          {this.children.map((child) => this.renderChild(child))}
+          <Button style="text-primary" class="product-child plus-button">
+            +{this.children.length - 5}
+          </Button>
+        </div>
+      </Host>
     );
   }
 }
