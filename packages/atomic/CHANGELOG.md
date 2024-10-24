@@ -1,3 +1,27 @@
+## <small>3.6.2 (2024-10-23)</small>
+
+- chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): delete ./loader/package.json when building atomic (#4539) ([c39f716](https://github.com/coveo/ui-kit/commits/c39f716)), closes [#4539](https://github.com/coveo/ui-kit/issues/4539)
+- fix(atomic): fix layout issue on product variants with imageSize set to none (#4521) ([cbfca7f](https://github.com/coveo/ui-kit/commits/cbfca7f)), closes [#4521](https://github.com/coveo/ui-kit/issues/4521)
+- fix(atomic): prevent clicks on atomic-product-image indicators from opening the product page (#4534) ([4d53962](https://github.com/coveo/ui-kit/commits/4d53962)), closes [#4534](https://github.com/coveo/ui-kit/issues/4534)
+- fix(atomic): prevent touch events on atomic-product-children from opening the product page (#4533) ([7739951](https://github.com/coveo/ui-kit/commits/7739951)), closes [#4533](https://github.com/coveo/ui-kit/issues/4533)
+- fix(insight): error "getAllFacets is undefined" in insight panel interface (#4474) ([836ef3a](https://github.com/coveo/ui-kit/commits/836ef3a)), closes [#4474](https://github.com/coveo/ui-kit/issues/4474)
+- feat(atomic): remove imageAltField as an array option & use image alt field prior to image not found ([ee7e1d9](https://github.com/coveo/ui-kit/commits/ee7e1d9)), closes [#4511](https://github.com/coveo/ui-kit/issues/4511)
+- test(atomic): fix failing atomic-color-facet test because of source change (#4543) ([c423e15](https://github.com/coveo/ui-kit/commits/c423e15)), closes [#4543](https://github.com/coveo/ui-kit/issues/4543)
+
+## 3.4.0 (2024-10-16)
+
+- fix(atomic): add hover effect for atomic-product clickable element in mobile/grid (#4519) ([0828b1f](https://github.com/coveo/ui-kit/commits/0828b1f)), closes [#4519](https://github.com/coveo/ui-kit/issues/4519)
+- fix(atomic): fix product image not always respect imageSize on grid display mode (#4520) ([95b6571](https://github.com/coveo/ui-kit/commits/95b6571)), closes [#4520](https://github.com/coveo/ui-kit/issues/4520)
+- fix(atomic): hide carousel buttons when image size is set to icon (#4518) ([479cc41](https://github.com/coveo/ui-kit/commits/479cc41)), closes [#4518](https://github.com/coveo/ui-kit/issues/4518)
+- test(atomic): fix flaky atomic did you mean tests (#4516) ([ec36b2e](https://github.com/coveo/ui-kit/commits/ec36b2e)), closes [#4516](https://github.com/coveo/ui-kit/issues/4516)
+- test(atomic): skip quickview cypress tests (#4532) ([bb65136](https://github.com/coveo/ui-kit/commits/bb65136)), closes [#4532](https://github.com/coveo/ui-kit/issues/4532)
+- feat(atomic): added logic to send analytics when opening user actions (#4512) ([06bea5a](https://github.com/coveo/ui-kit/commits/06bea5a)), closes [#4512](https://github.com/coveo/ui-kit/issues/4512)
+- feat(didyoumean): allow shifting queryCorrectionMode on the fly (#4305) ([7b007a2](https://github.com/coveo/ui-kit/commits/7b007a2)), closes [#4305](https://github.com/coveo/ui-kit/issues/4305)
+- feat(ipx): add exportparts to atomic-ipx-body (#4523) ([70754a0](https://github.com/coveo/ui-kit/commits/70754a0)), closes [#4523](https://github.com/coveo/ui-kit/issues/4523)
+- ci(atomic): run only affected E2E tests in atomic (#4484) ([497ede3](https://github.com/coveo/ui-kit/commits/497ede3)), closes [#4484](https://github.com/coveo/ui-kit/issues/4484)
+
 ## 3.3.0 (2024-10-10)
 
 - test(atomic): add tests & stories for atomic-product-image (#4469) ([bc09766](https://github.com/coveo/ui-kit/commits/bc09766)), closes [#4469](https://github.com/coveo/ui-kit/issues/4469)

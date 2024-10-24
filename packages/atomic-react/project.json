@@ -8,6 +8,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
+          "npm run build:fixLoaderImportPaths",
           "npm run build:fixGeneratedImportPaths",
           "npm run build:bundles",
           "npm run build:assets"

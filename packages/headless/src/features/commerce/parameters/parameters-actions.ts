@@ -9,6 +9,11 @@ export interface Parameters {
   f?: Record<string, string[]>;
 
   /**
+   * A record of the location facets, where the key is the facet id, and value is an array containing the selected values.
+   */
+  lf?: Record<string, string[]>;
+
+  /**
    * A record of the category facets, where the key is the facet id, and value is an array containing the parts of the selected path.
    */
   cf?: Record<string, string[]>;
@@ -22,6 +27,7 @@ export interface Parameters {
    * A record of the numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
    */
   nf?: Record<string, NumericRangeRequest[]>;
+
   /**
    * A record of manual numeric facets, where the key is the facet id, and the value is an array containing the numeric ranges to request.
    */

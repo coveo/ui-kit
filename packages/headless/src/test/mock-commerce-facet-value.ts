@@ -3,11 +3,26 @@ import {
   NumericFacetValue,
   DateFacetValue,
   CategoryFacetValue,
+  LocationFacetValue,
 } from '../features/commerce/facets/facet-set/interfaces/response.js';
 
 export function buildMockCommerceRegularFacetValue(
   config: Partial<RegularFacetValue> = {}
 ): RegularFacetValue {
+  return {
+    value: '',
+    state: 'idle',
+    numberOfResults: 0,
+    isAutoSelected: false,
+    isSuggested: false,
+    moreValuesAvailable: false,
+    ...config,
+  };
+}
+
+export function buildMockCommerceLocationFacetValue(
+  config: Partial<LocationFacetValue> = {}
+): LocationFacetValue {
   return {
     value: '',
     state: 'idle',
