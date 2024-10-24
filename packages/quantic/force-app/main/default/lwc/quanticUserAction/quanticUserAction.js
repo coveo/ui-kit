@@ -33,6 +33,7 @@ export default class QuanticUserAction extends LightningElement {
     ticketCreated,
     emptySearch,
   };
+  clickableContentIdKeys = ['@clickableuri'];
 
   get iconName() {
     return icons[this.action?.actionType];
@@ -74,6 +75,10 @@ export default class QuanticUserAction extends LightningElement {
     return this.action?.document?.contentIdValue;
   }
 
+  get contentIdKey() {
+    return this.action?.document?.contentIdKey;
+  }
+
   get iconClass() {
     switch (this.action?.actionType) {
       case 'TICKET_CREATION':
@@ -97,7 +102,11 @@ export default class QuanticUserAction extends LightningElement {
   }
 
   render() {
-    if (this.action?.actionType === 'VIEW') return viewActionTemplate;
+    const viewEventCanBeDisplayedAsLink = this.clickableContentIdKeys.includes(
+      this.contentIdKey
+    );
+    if (this.action?.actionType === 'VIEW' && viewEventCanBeDisplayedAsLink)
+      return viewActionTemplate;
     return actionTemplate;
   }
 }
