@@ -1,9 +1,6 @@
 import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {LocationFacetValue} from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   CoreCommerceFacet,
   CoreCommerceFacetOptions,
@@ -29,9 +26,9 @@ export type LocationFacetState = Omit<
  * The `LocationFacet` sub-controller offers a high-level programming interface for implementing a location commerce
  * facet UI component.
  */
-export type LocationFacet = CoreCommerceFacet<
-  FacetValueRequest,
-  LocationFacetValue
+export type LocationFacet = Omit<
+  CoreCommerceFacet<FacetValueRequest, LocationFacetValue>,
+  'isValueExcluded' | 'toggleExclude' | 'toggleSingleExclude'
 > & {
   state: LocationFacetState;
 } & FacetControllerType<'location'>;
@@ -52,14 +49,15 @@ export function buildCommerceLocationFacet(
   engine: CommerceEngine,
   options: LocationFacetOptions
 ): LocationFacet {
-  const coreController = buildCoreCommerceFacet<
-    FacetValueRequest,
-    LocationFacetValue
-  >(engine, {
+  const {
+    toggleSingleExclude,
+    toggleExclude,
+    isValueExcluded,
+    ...coreController
+  } = buildCoreCommerceFacet<FacetValueRequest, LocationFacetValue>(engine, {
     options: {
       ...options,
       toggleSelectActionCreator: toggleSelectLocationFacetValue,
-      toggleExcludeActionCreator: toggleExcludeLocationFacetValue,
     },
   });
 

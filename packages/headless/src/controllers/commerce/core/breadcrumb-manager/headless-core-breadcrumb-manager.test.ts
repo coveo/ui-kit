@@ -18,10 +18,7 @@ import {
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -270,10 +267,23 @@ describe('core breadcrumb manager', () => {
       expectBreadcrumbToBePresentInState(breadcrumb);
     });
 
-    describe.each([
-      ['selected', toggleSelectLocationFacetValue],
-      ['excluded', toggleExcludeLocationFacetValue],
-    ])('#deselect when facet is %s', generateDeselectionTestCases(breadcrumb));
+    describe('#deselect when facet is selected', () => {
+      beforeEach(() => {
+        breadcrumb.state = 'selected';
+        deselectBreadcrumb();
+      });
+
+      it('dispatches #toggleSelectActionCreator', () => {
+        expect(toggleSelectLocationFacetValue).toHaveBeenCalledWith({
+          facetId,
+          selection: breadcrumb,
+        });
+      });
+
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {

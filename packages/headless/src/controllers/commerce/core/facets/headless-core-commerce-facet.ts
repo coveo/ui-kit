@@ -16,6 +16,7 @@ import {
 import {
   AnyFacetResponse,
   AnyFacetValueResponse,
+  BaseFacetValue,
   CategoryFacetValue,
   DateFacetValue,
   LocationFacetValue,
@@ -47,6 +48,7 @@ export type {
   DateFacetValue,
   CategoryFacetValueRequest,
   CategoryFacetValue,
+  BaseFacetValue,
 };
 
 export interface FacetControllerType<T extends FacetType> {

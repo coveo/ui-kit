@@ -26,10 +26,6 @@ export function buildMockCommerceLocationFacetValue(
   return {
     value: '',
     state: 'idle',
-    numberOfResults: 0,
-    isAutoSelected: false,
-    isSuggested: false,
-    moreValuesAvailable: false,
     ...config,
   };
 }
