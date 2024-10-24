@@ -59,6 +59,23 @@ test.describe('Default', () => {
     });
   });
 
+  test('when restoring a manual numerical range from URL, should show the corresponding breadcrumb', async ({
+    page,
+    breadbox,
+  }) => {
+    const baseUrl =
+      'http://localhost:4400/iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance&mnf-ec_price=20..30';
+    await page.goto(baseUrl);
+
+    const expectedBreadcrumbLabel = 'Price:$20.00 to $30.00';
+
+    const breadcrumbButton = breadbox.getBreadcrumbButtons(
+      expectedBreadcrumbLabel
+    );
+
+    await expect(breadcrumbButton).toHaveText(expectedBreadcrumbLabel);
+  });
+
   test.describe('when a regular facet value is selected', () => {
     let firstValueText: string | RegExp;
 
@@ -79,6 +96,20 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should display the "Clear all" button', async ({breadbox}) => {
+      await expect(breadbox.getClearAllButton()).toBeVisible();
+    });
+
+    test('should disappear when clicking on the "Clear all" button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      const clearButton = breadbox.getClearAllButton();
+      await clearButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
     });
@@ -111,6 +142,20 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should display the "Clear all" button', async ({breadbox}) => {
+      await expect(breadbox.getClearAllButton()).toBeVisible();
+    });
+
+    test('should disappear when clicking on the "Clear all" button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      const clearButton = breadbox.getClearAllButton();
+      await clearButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
     });
@@ -156,6 +201,20 @@ test.describe('Default', () => {
         await expect(breadcrumbButton).not.toBeVisible();
       });
 
+      test('should display the "Clear all" button', async ({breadbox}) => {
+        await expect(breadbox.getClearAllButton()).toBeVisible();
+      });
+
+      test('should disappear when clicking on the "Clear all" button', async ({
+        breadbox,
+      }) => {
+        const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+        const clearButton = breadbox.getClearAllButton();
+        await clearButton.click();
+
+        await expect(breadcrumbButton).not.toBeVisible();
+      });
+
       test('should contain the selected value and the facet name in the breadcrumb button', async ({
         breadbox,
       }) => {
@@ -185,6 +244,63 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should display the "Clear all" button', async ({breadbox}) => {
+      await expect(breadbox.getClearAllButton()).toBeVisible();
+    });
+
+    test('should disappear when clicking on the "Clear all" button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      const clearButton = breadbox.getClearAllButton();
+      await clearButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should contain the selected value and the facet name in the breadcrumb button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+
+      await expect(breadcrumbButton).toHaveText('Price:' + firstValueText);
+    });
+  });
+
+  test.describe('when a manual numerical facet range is applied', () => {
+    let firstValueText: string | RegExp;
+
+    test.beforeEach(async ({breadbox}) => {
+      await breadbox.applyManualNumericalRange(20, 30);
+      firstValueText = '$20.00 to $30.00';
+      await breadbox
+        .getBreadcrumbButtons(firstValueText)
+        .waitFor({state: 'visible'});
+    });
+
+    test('should disappear when clicking on the breadcrumb button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should display the "Clear all" button', async ({breadbox}) => {
+      await expect(breadbox.getClearAllButton()).toBeVisible();
+    });
+
+    test('should disappear when clicking on the "Clear all" button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      const clearButton = breadbox.getClearAllButton();
+      await clearButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
     });
@@ -219,6 +335,20 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
       await breadcrumbButton.click();
+
+      await expect(breadcrumbButton).not.toBeVisible();
+    });
+
+    test('should display the "Clear all" button', async ({breadbox}) => {
+      await expect(breadbox.getClearAllButton()).toBeVisible();
+    });
+
+    test('should disappear when clicking on the "Clear all" button', async ({
+      breadbox,
+    }) => {
+      const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
+      const clearButton = breadbox.getClearAllButton();
+      await clearButton.click();
 
       await expect(breadcrumbButton).not.toBeVisible();
     });

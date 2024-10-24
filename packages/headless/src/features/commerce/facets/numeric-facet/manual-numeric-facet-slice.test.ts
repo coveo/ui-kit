@@ -1,7 +1,10 @@
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {restoreProductListingParameters} from '../../product-listing-parameters/product-listing-parameters-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
-import {deselectAllValuesInCoreFacet} from '../core-facet/core-facet-actions.js';
+import {
+  clearAllCoreFacets,
+  deselectAllValuesInCoreFacet,
+} from '../core-facet/core-facet-actions.js';
 import {manualNumericFacetReducer} from './manual-numeric-facet-slice.js';
 import {
   toggleExcludeNumericFacetValue,
@@ -81,5 +84,28 @@ describe('manualNumericFacetSlice', () => {
     );
 
     expect(finalState).toEqual({'some-facet': {manualRange: someManualRange}});
+  });
+
+  it('should clear all manual ranges when #clearAllCoreFacets is dispatched', () => {
+    const state = buildMockCommerceState({
+      manualNumericFacetSet: {
+        'some-facet': {
+          manualRange: someManualRange,
+        },
+        'some-other-facet': {
+          manualRange: someManualRange,
+        },
+      },
+    });
+
+    const finalState = manualNumericFacetReducer(
+      state.manualNumericFacetSet,
+      clearAllCoreFacets()
+    );
+
+    expect(finalState).toEqual({
+      'some-facet': {manualRange: undefined},
+      'some-other-facet': {manualRange: undefined},
+    });
   });
 });

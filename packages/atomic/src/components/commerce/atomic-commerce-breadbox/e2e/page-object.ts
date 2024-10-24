@@ -6,6 +6,26 @@ export class AtomicCommerceBreadboxPageObject extends BasePageObject<'atomic-com
     super(page, 'atomic-commerce-breadbox');
   }
 
+  async applyManualNumericalRange(min: number, max: number) {
+    const facetLocator = this.page.locator('atomic-commerce-numeric-facet');
+
+    const minInputLocator = facetLocator.getByLabel(
+      'Enter a minimum numerical value for the Price facet'
+    );
+
+    const maxInputLocator = facetLocator.getByLabel(
+      'Enter a maximum numerical value for the Price facet'
+    );
+
+    const applyButtonLocator = facetLocator.getByLabel(
+      'Apply custom numerical values for the Price facet'
+    );
+
+    await minInputLocator.fill(String(min));
+    await maxInputLocator.fill(String(max));
+    await applyButtonLocator.click();
+  }
+
   getFacetValue(
     facetType:
       | 'regular'
