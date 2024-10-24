@@ -1484,6 +1484,12 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
+    }
     interface AtomicInsightResultTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -4563,6 +4569,12 @@ declare global {
         prototype: HTMLAtomicInsightResultListElement;
         new (): HTMLAtomicInsightResultListElement;
     };
+    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultQuickviewActionElement: {
+        prototype: HTMLAtomicInsightResultQuickviewActionElement;
+        new (): HTMLAtomicInsightResultQuickviewActionElement;
+    };
     interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultTemplateElement: {
@@ -6014,6 +6026,7 @@ declare global {
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
@@ -7496,6 +7509,12 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+    }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -9747,6 +9766,7 @@ declare namespace LocalJSX {
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
@@ -10143,6 +10163,7 @@ declare module "@stencil/core" {
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
