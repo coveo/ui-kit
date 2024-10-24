@@ -186,12 +186,15 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(
-              updateCoreFacetFreezeCurrentValues({
-                facetId: facet.facetId,
-                freezeCurrentValues: false,
-              })
-            );
+
+            if (facet.type !== 'location') {
+              dispatch(
+                updateCoreFacetFreezeCurrentValues({
+                  facetId: facet.facetId,
+                  freezeCurrentValues: false,
+                })
+              );
+            }
             dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&

@@ -268,10 +268,21 @@ describe('core breadcrumb manager', () => {
     });
 
     describe('#deselect when facet is selected', () => {
-      generateDeselectionTestCases(breadcrumb)(
-        'selected',
-        toggleSelectLocationFacetValue
-      );
+      beforeEach(() => {
+        breadcrumb.state = 'selected';
+        deselectBreadcrumb();
+      });
+
+      it('dispatches #toggleSelectActionCreator', () => {
+        expect(toggleSelectLocationFacetValue).toHaveBeenCalledWith({
+          facetId,
+          selection: breadcrumb,
+        });
+      });
+
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
     });
   });
 
