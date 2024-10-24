@@ -290,7 +290,7 @@ export class AtomicCommerceBreadbox
           (pathValue: string) =>
             getFieldValueCaption(field, pathValue, this.bindings.i18n)
         );
-      default:
+      case 'regular':
         return [
           getFieldValueCaption(
             field,
@@ -298,6 +298,11 @@ export class AtomicCommerceBreadbox
             this.bindings.i18n
           ),
         ];
+      default: {
+        // TODO COMHUB-291 support location breadcrumb
+        this.bindings.engine.logger.warn('Unexpected breadcrumb type.');
+        return [];
+      }
     }
   };
 
