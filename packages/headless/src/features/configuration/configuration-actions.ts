@@ -60,21 +60,7 @@ export interface UpdateSearchConfigurationActionCreatorPayload {
    * This is an advanced option that you should only set if you need to proxy Coveo searchrequests through your own
    * server. In most cases, you should not set this option.
    *
-   * By default, no proxy is used and the Coveo Search API requests are sent directly to the Coveo platform through the
-   * search [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
-   * `environment` values provided in your engine configuration (i.e., `https://<organizationId>.org.coveo.com` or
-   * `https://<organizationId>.org<environment>.coveo.com`, if the `environment` values is specified and different from
-   * `prod`).
-   *
-   * If you set this option, you must also implement the following proxy endpoints on your server, otherwise the search
-   * engine will not work properly:
-   *
-   * - `POST` `/` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/searchUsingPost)
-   * - `POST` `/facet` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/facet`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/facetSearch)
-   * - `GET` `/fields` to proxy requests to [`GET` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/fields`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/fields)
-   * - `POST` `/html` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/html`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/htmlPost)
-   * - `POST` `/plan` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/plan`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/planSearchUsingPost)
-   * - `POST` `/querySuggest` to proxy requests to [`POST` `https://<organizationId>.org<environment|>.coveo.com/rest/search/v2/querySuggest`](https://docs.coveo.com/en/13/api-reference/search-api#tag/Search-V2/operation/querySuggestPost)
+   *  See [Headless proxy: Search](https://docs.coveo.com/en/headless/latest/usage/proxy#search).
    */
   proxyBaseUrl?: string;
 
@@ -152,36 +138,7 @@ export interface UpdateAnalyticsConfigurationActionCreatorPayload {
    * This is an advanced option that you should only set if you need to proxy Coveo analytics requests through your own
    * server. In most cases, you should not set this option.
    *
-   * By default, no proxy is used and the Coveo analytics requests are sent directly to the Coveo platform through the
-   * analytics [organization endpoint](https://docs.coveo.com/en/mcc80216) resolved from the `organizationId` and
-   * `environment` values provided in your engine configuration (i.e.,
-   * `https://<organizationId>.analytics.org.coveo.com` or
-   * `https://<organizationId>.analytics.org<environment>.coveo.com`, if the `environment` values is specified and
-   * different from `prod`).
-   *
-   * If you set this option, you must also implement the correct proxy endpoints on your server, depending on the
-   * `analyticsMode` you are using.
-   *
-   * If you are using the `next` analytics mode, you must implement the following proxy endpoints:
-   *
-   * - `POST` `/` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_post)
-   * - `POST` `/validate` to proxy requests to [`POST https://<organizationId>.analytics.org<environment|>.coveo.com/rest/organizations/{organizationId}/events/v1/validate`](https://platform.cloud.coveo.com/docs?urls.primaryName=Event#/Event%20API/rest_organizations_paramId_events_v1_validate_post)
-   *
-   * The [Event Protocol Reference](https://docs.coveo.com/en/n9da0377) provides documentation on the analytics event
-   * schemas that can be passed as request bodies to the above endpoints.
-   *
-   * If your are using the `legacy` analytics mode, your `proxyBaseUrl` must end with `/rest/v15/analytics`, and you must implement the following proxy endpoints:
-   *
-   * - `POST` `/click` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/click`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_click)
-   * - `POST` `/collect` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/collect`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_collect)
-   * - `POST` `/custom` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/custom`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_custom)
-   * - `GET` `/monitoring/health` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/monitoring/health`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_monitoring_health)
-   * - `POST` `/search` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/search`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_search)
-   * - `POST` `/searches` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/searches`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_searches)
-   * - `GET` `/status` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/status`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_status)
-   * - `POST` `/view` to proxy requests to [`POST` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/view`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/post__v15_analytics_view)
-   * - `DELETE` `/visit` to proxy requests to [`DELETE` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/delete__v15_analytics_visit)
-   * - `GET` `/visit` to proxy requests to [`GET` `https://<organizationId>.analytics.org<environment|>.coveo.com/rest/v15/analytics/visit`](https://docs.coveo.com/en/18/api-reference/usage-analytics-write-api#tag/Analytics-API-Version-15/operation/get__v15_analytics_visit)
+   * See [Headless proxy: Analytics](https://docs.coveo.com/en/headless/latest/usage/proxy#analytics).
    */
   proxyBaseUrl?: string;
 

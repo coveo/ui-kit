@@ -14,7 +14,6 @@ utils/**/.storybook/**
 scripts/deploy/execute-deployment-pipeline.mjs
 **/staticresources/**
 packages/atomic-hosted-page/loader/**/*
-packages/atomic/loader/**/*
 packages/atomic/docs/**/*
 packages/atomic/dist-storybook/**/*
 packages/atomic/src/components/search/atomic-search-interface/lang/*.json
