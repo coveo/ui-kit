@@ -59,6 +59,8 @@ export default class QuanticUserActionsToggle extends LightningElement {
   hasInitializationError = false;
   /** @type {UserActions} */
   userActions;
+  /** @type {Array<string>} */
+  _excludedCustomActions;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -74,12 +76,16 @@ export default class QuanticUserActionsToggle extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
 
+    if (this.excludedCustomActions?.length) {
+      this._excludedCustomActions = [...this.excludedCustomActions];
+    } else {
+      this._excludedCustomActions = [];
+    }
+
     this.userActions = this.headless.buildUserActions(engine, {
       options: {
         ticketCreationDate: this.ticketCreationDateTime,
-        excludedCustomActions: this.excludedCustomActions?.length
-          ? this.excludedCustomActions
-          : [],
+        excludedCustomActions: this._excludedCustomActions,
       },
     });
   };
