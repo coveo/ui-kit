@@ -154,7 +154,7 @@ export class TabBar {
           this.tabPopover?.togglePopover();
         }}
       >
-        {tab.label} !
+        {tab.label}
       </Button>
     ));
   };
