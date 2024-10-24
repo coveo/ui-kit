@@ -7,27 +7,6 @@ import {
 import {facetValueDefinition} from '../../../facets/facet-set/facet-set-validate-payload.js';
 import {LocationFacetValue} from '../facet-set/interfaces/response.js';
 
-export interface ToggleExcludeLocationFacetValuePayload {
-  /**
-   * The unique identifier of the facet (e.g., `"1"`).
-   */
-  facetId: string;
-
-  /**
-   * The target location facet value.
-   */
-  selection: LocationFacetValue;
-}
-
-export const toggleExcludeLocationFacetValue = createAction(
-  'commerce/facets/locationFacet/toggleExcludeValue',
-  (payload: ToggleExcludeLocationFacetValuePayload) =>
-    validatePayload(payload, {
-      facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
-);
-
 export interface ToggleSelectLocationFacetValuePayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

@@ -67,10 +67,7 @@ import {
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -1005,12 +1002,6 @@ describe('commerceFacetSetReducer', () => {
         facetValueState: 'selected' as FacetValueState,
         toggleAction: toggleSelectLocationFacetValue,
       },
-      {
-        title:
-          'dispatching #toggleExcludeLocationFacetValue with a registered facet id',
-        facetValueState: 'excluded' as FacetValueState,
-        toggleAction: toggleExcludeLocationFacetValue,
-      },
     ])(
       '$title',
       ({
@@ -1157,10 +1148,6 @@ describe('commerceFacetSetReducer', () => {
             facetValueState: 'selected' as FacetValueState,
             toggleAction: toggleSelectLocationFacetValue,
           },
-          {
-            facetValueState: 'excluded' as FacetValueState,
-            toggleAction: toggleExcludeLocationFacetValue,
-          },
         ])(
           'when the facet value does not exist',
           ({
@@ -1252,33 +1239,6 @@ describe('commerceFacetSetReducer', () => {
         request: facet,
       });
       const action = toggleSelectLocationFacetValue({
-        facetId: facet.facetId,
-        selection: facetValue,
-      });
-
-      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
-    });
-
-    it('dispatching #toggleExcludeLocationFacetValue with an invalid id does not throw', () => {
-      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
-      const action = toggleExcludeLocationFacetValue({
-        facetId: '1',
-        selection: facetValue,
-      });
-
-      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
-    });
-
-    it('dispatching #toggleExcludeLocationFacetValue with an invalid facet type does not throw', () => {
-      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
-      const facet = buildMockCommerceFacetRequest({
-        type: 'numericalRange',
-        values: [facetValue],
-      });
-      state[facet.facetId] = buildMockCommerceFacetSlice({
-        request: facet,
-      });
-      const action = toggleExcludeLocationFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
       });

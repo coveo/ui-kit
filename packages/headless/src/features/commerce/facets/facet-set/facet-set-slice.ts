@@ -44,10 +44,7 @@ import {
   executeCommerceFieldSuggest,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../facet-search-set/commerce-facet-search-actions.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -234,27 +231,6 @@ export const commerceFacetSetReducer = createReducer(
         const facetRequest = state[facetId]?.request;
 
         if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
-          return;
-        }
-
-        facetRequest.preventAutoSelect = true;
-
-        const existingValue = facetRequest.values.find(
-          (req) => req.value === selection.value
-        );
-        if (!existingValue) {
-          insertNewValue(facetRequest, selection);
-          return;
-        }
-
-        updateExistingFacetValueState(existingValue, 'exclude');
-        facetRequest.freezeCurrentValues = true;
-      })
-      .addCase(toggleExcludeLocationFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId]?.request;
-
-        if (!facetRequest || !ensureLocationFacetRequest(facetRequest)) {
           return;
         }
 
