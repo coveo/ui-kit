@@ -50,7 +50,7 @@ export const buildInsightBaseRequest = async (
         fieldsToInclude: state.fields.fieldsToInclude,
       }),
     ...(state.didYouMean && {
-      queryCorrections: {
+      queryCorrection: {
         enabled:
           state.didYouMean.enableDidYouMean &&
           state.didYouMean.queryCorrectionMode === 'next',
