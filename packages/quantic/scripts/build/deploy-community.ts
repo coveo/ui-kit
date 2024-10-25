@@ -6,6 +6,8 @@ import waitOn from 'wait-on';
 import {StepLogger, StepsRunner} from './util/log';
 import * as sfdx from './util/sfdx-commands';
 import {SfdxJWTAuth, authorizeOrg} from './util/sfdx-commands';
+import dotenv from 'dotenv';
+dotenv.config({path: path.resolve(__dirname, '.env')});
 
 interface Options {
   configFile: string;
@@ -22,6 +24,44 @@ interface Options {
     defFile: string;
     duration: number;
   };
+}
+
+/**
+ * Utility function to update or add environment variables in a .env file
+ * @param {string} filePath - The path to the .env file
+ * @param {object} newVariables - An object containing the key-value pairs of variables to update or add
+ */
+function updateEnvFile(filePath, newVariables) {
+  try {
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, '', 'utf8');
+    }
+
+    const envData = fs.readFileSync(filePath, 'utf8');
+
+    const lines = envData.split('\n');
+    const envVariables = {};
+
+    lines.forEach((line) => {
+      const [key, value] = line.split('=');
+      if (key) {
+        envVariables[key.trim()] = value ? value.trim() : '';
+      }
+    });
+
+    Object.keys(newVariables).forEach((key) => {
+      envVariables[key] = newVariables[key];
+    });
+
+    const updatedEnvContent = Object.entries(envVariables)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n');
+
+    fs.writeFileSync(filePath, updatedEnvContent, 'utf8');
+    console.log('.env file updated successfully!');
+  } catch (error) {
+    console.error(`Error updating .env file: ${error.message}`);
+  }
 }
 
 function ensureEnvVariables() {
@@ -271,6 +311,19 @@ async function updateCommunityConfigFile(
   log('Configuration file updated.');
 }
 
+async function setCommunituBaseUrlAsEnvVariable(log, communityUrl) {
+  const pathSegments = [__dirname, '..', '..', '.env'];
+
+  // Use path.join to create the full path without manually writing slashes
+  const envFilePath = path.join(...pathSegments);
+  const newEnvVariables = {
+    BASE_URL: communityUrl,
+  };
+
+  updateEnvFile(envFilePath, newEnvVariables);
+  log('process env for base url for configuration file 2');
+}
+
 async function authorizeDevOrg(log: StepLogger, options: Options) {
   log(`Authorizing user: ${options.jwt.username}`);
   await authorizeOrg({
@@ -334,6 +387,9 @@ async function deleteScratchOrg(
       .add(
         async (log) =>
           await updateCommunityConfigFile(log, options, communityUrl)
+      )
+      .add(
+        async (log) => await setCommunituBaseUrlAsEnvVariable(log, communityUrl)
       )
       .add(async (log) => await waitForCommunity(log, communityUrl));
 
