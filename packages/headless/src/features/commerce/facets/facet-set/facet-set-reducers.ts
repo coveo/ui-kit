@@ -29,6 +29,9 @@ export function restoreFromParameters(
   if (action.payload.nf) {
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
   }
+  if (action.payload.mnf) {
+    restoreRangeFacets(state, action.payload.mnf, 'numericalRange');
+  }
   if (action.payload.df) {
     restoreRangeFacets(state, action.payload.df, 'dateRange');
   }
