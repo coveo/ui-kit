@@ -34,7 +34,11 @@ const renderShowHideButton = (
   showMoreLabel: string,
   showLessLabel: string
 ) => {
-  if (!isTruncated || (!isCollapsible && isExpanded)) {
+  if (!isTruncated && !isExpanded) {
+    return null;
+  }
+
+  if (!isCollapsible && !isTruncated && isExpanded) {
     return null;
   }
 
