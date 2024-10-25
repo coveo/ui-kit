@@ -30,6 +30,12 @@ import {FacetControllerType} from '../core/facets/headless-core-commerce-facet.j
 
 export type {CategoryFieldSuggestionsValue};
 
+/**
+ * The state of the `CategoryFieldSuggestions` controller.
+ *
+ * @group Buildable controllers
+ * @category CategoryFieldSuggestions
+ */
 export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
   Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
 
@@ -39,6 +45,9 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item category.
  *
  * This controller is a wrapper around the basic category facet controller search functionality, and thus exposes similar options and properties.
+ *
+ * @group Buildable controllers
+ * @category CategoryFieldSuggestions
  */
 export interface CategoryFieldSuggestions
   extends Controller,
@@ -72,6 +81,15 @@ export interface CategoryFieldSuggestions
   state: CategoryFieldSuggestionsState;
 }
 
+/**
+ * The `CategoryFieldSuggestions` controller provides query suggestions based on a particular category facet field.
+ * @param engine - The headless commerce engine.
+ * @param options - The options for the `CategoryFieldSuggestions` controller.
+ * @returns A `CategoryFieldSuggestions` controller instance.
+ *
+ * @group Buildable controllers
+ * @category CategoryFieldSuggestions
+ */
 export function buildCategoryFieldSuggestions(
   engine: CommerceEngine,
   options: CategoryFacetOptions

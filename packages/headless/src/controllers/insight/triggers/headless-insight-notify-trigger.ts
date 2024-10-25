@@ -13,6 +13,9 @@ export type {NotifyTrigger, NotifyTriggerState};
  *
  * @param engine - The insight engine.
  * @returns A `NotifyTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category NotifyTrigger
  * */
 export function buildNotifyTrigger(engine: InsightEngine): NotifyTrigger {
   return buildCoreNotifyTrigger(engine, {

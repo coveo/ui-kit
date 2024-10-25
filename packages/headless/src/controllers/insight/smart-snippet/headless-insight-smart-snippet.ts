@@ -24,6 +24,9 @@ export type {InlineLink};
  * @param engine - The headless insight engine.
  * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
+ *
+ * @group Controllers
+ * @category SmartSnippet
  * */
 export function buildSmartSnippet(
   engine: InsightEngine,

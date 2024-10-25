@@ -7,6 +7,9 @@ export type {ApplySortPayload};
 
 /**
  * The sort action creators.
+ *
+ * @group Actions
+ * @category Sort
  */
 export interface SortActionCreators {
   /**
@@ -23,6 +26,9 @@ export interface SortActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the sort action creators.
+ *
+ * @group Actions
+ * @category Sort
  */
 export function loadSortActions(engine: CommerceEngine): SortActionCreators {
   engine.addReducers({commerceSort});

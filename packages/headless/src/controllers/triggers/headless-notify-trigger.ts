@@ -13,6 +13,9 @@ export type {NotifyTrigger, NotifyTriggerState};
  *
  * @param engine - The headless engine.
  * @returns A `NotifyTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category NotifyTrigger
  * */
 export function buildNotifyTrigger(engine: SearchEngine): NotifyTrigger {
   return buildCoreNotifyTrigger(engine, {

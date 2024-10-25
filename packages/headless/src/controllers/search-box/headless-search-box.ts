@@ -35,6 +35,11 @@ export interface SearchBoxProps {
 /**
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
+ *
+ * Example: [search-box.fn.tsx](https://github.com/coveo/ui-kit/blob/c090c1bd676792027815c52507e2aef8ccfaab91/packages/samples/headless-react/src/components/search-box/search-box.fn.tsx)
+ *
+ * @group Controllers
+ * @category SearchBox
  */
 export interface SearchBox extends Controller {
   /**
@@ -78,6 +83,9 @@ export interface SearchBox extends Controller {
  * @param engine - The headless engine.
  * @param props - The configurable `SearchBox` properties.
  * @returns A `SearchBox` controller instance.
+ *
+ * @group Controllers
+ * @category SearchBox
  */
 export function buildSearchBox(
   engine: SearchEngine,

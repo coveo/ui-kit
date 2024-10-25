@@ -23,6 +23,9 @@ export type {
 
 /**
  * The recommendations action creators.
+ *
+ * @group Actions
+ * @category Recommendations
  */
 export interface RecommendationsActionCreator {
   /**
@@ -79,6 +82,9 @@ export interface RecommendationsActionCreator {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the recommendations action creators.
+ *
+ * @group Actions
+ * @category Recommendations
  */
 export function loadRecommendationsActions(
   engine: CommerceEngine

@@ -14,6 +14,9 @@ import {CorrectionMode} from './did-you-mean-state.js';
 
 /**
  * The DidYouMean action creators.
+ *
+ * @group Actions
+ * @category DidYouMean
  */
 export interface DidYouMeanActionCreators {
   /**
@@ -67,6 +70,9 @@ export interface DidYouMeanActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category DidYouMean
  */
 export function loadDidYouMeanActions(
   engine: SearchEngine

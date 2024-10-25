@@ -12,6 +12,9 @@ export type {FacetManagerState, FacetManagerPayload, FacetManager};
  * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
+ *
+ * @group Controllers
+ * @category FacetManager
  */
 export function buildFacetManager(engine: SearchEngine): FacetManager {
   return buildCoreFacetManager(engine);

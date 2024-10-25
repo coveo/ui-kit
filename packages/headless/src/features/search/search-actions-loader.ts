@@ -25,6 +25,9 @@ import {
 
 /**
  * The search action creators.
+ *
+ * @group Actions
+ * @category Search
  */
 export interface SearchActionCreators {
   /**
@@ -130,6 +133,9 @@ export interface SearchActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Search
  */
 export function loadSearchActions(engine: SearchEngine): SearchActionCreators {
   engine.addReducers({search});

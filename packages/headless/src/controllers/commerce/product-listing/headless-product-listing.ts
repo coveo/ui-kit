@@ -47,6 +47,9 @@ import {ProductListingSummaryState} from './summary/headless-product-listing-sum
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
+ *
+ * @group Buildable controllers
+ * @category ProductListing
  */
 export interface ProductListing
   extends Controller,
@@ -84,6 +87,12 @@ export interface ProductListing
   state: ProductListingState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `ProductListing` controller.
+ *
+ * @group Buildable controllers
+ * @category ProductListing
+ */
 export interface ProductListingState {
   products: Product[];
   error: CommerceAPIErrorStatusResponse | null;
@@ -96,6 +105,9 @@ export interface ProductListingState {
  *
  * @param engine - The headless commerce engine.
  * @returns A `ProductListing` controller instance.
+ *
+ * @group Buildable controllers
+ * @category ProductListing
  */
 export function buildProductListing(engine: CommerceEngine): ProductListing {
   if (!loadBaseProductListingReducers(engine)) {

@@ -12,6 +12,9 @@ import {
 export type {RegisterRecentResultsCreatorPayload};
 /**
  * The RecentResults action creators
+ *
+ * @group Actions
+ * @category RecentResults
  */
 export interface RecentResultsActionCreators {
   /**
@@ -42,6 +45,9 @@ export interface RecentResultsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category RecentResults
  */
 export function loadRecentResultsActions(
   engine: SearchEngine

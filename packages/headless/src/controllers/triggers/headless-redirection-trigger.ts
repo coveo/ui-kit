@@ -11,6 +11,9 @@ import {RedirectionTrigger} from '../core/triggers/headless-core-redirection-tri
  *
  * @param engine - The headless engine.
  * @returns A `RedirectionTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category RedirectionTrigger
  * */
 export function buildRedirectionTrigger(
   engine: SearchEngine

@@ -10,6 +10,9 @@ import {
 
 /**
  * The document suggestion action creators.
+ *
+ * @group Actions
+ * @category DocumentSuggestion
  */
 export interface DocumentSuggestionActionCreators {
   /**
@@ -30,6 +33,9 @@ export interface DocumentSuggestionActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category DocumentSuggestion
  */
 export function loadDocumentSuggestionActions(
   engine: CaseAssistEngine

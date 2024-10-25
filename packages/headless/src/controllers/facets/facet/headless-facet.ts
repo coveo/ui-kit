@@ -86,6 +86,9 @@ export interface FacetProps {
  * @param engine - The headless engine.
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
+ *
+ * @group Controllers
+ * @category Facet
  * */
 export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {

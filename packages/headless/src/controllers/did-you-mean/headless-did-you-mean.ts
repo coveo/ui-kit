@@ -32,6 +32,9 @@ export type {
  *
  * @param engine - The headless engine.
  * @param props - The configurable `DidYouMean` properties.
+ *
+ * @group Controllers
+ * @category DidYouMean
  */
 export function buildDidYouMean(
   engine: SearchEngine,

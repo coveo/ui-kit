@@ -12,6 +12,9 @@ export type {ProductClickPayload, ProductViewPayload};
 
 /**
  * The product action creators.
+ *
+ * @group Actions
+ * @category Product
  */
 export interface ProductActionCreators {
   /**
@@ -47,6 +50,9 @@ export interface ProductActionCreators {
  * Returns the possible product action creators.
  *
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Product
  */
 export function loadProductActions(): ProductActionCreators {
   return {

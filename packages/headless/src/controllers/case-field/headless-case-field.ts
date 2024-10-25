@@ -47,6 +47,12 @@ export interface CaseFieldOptions {
   field: string;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CaseField` controller.
+ *
+ * @group Controllers
+ * @category CaseField
+ */
 export interface CaseFieldState {
   /**
    * Whether suggestions are being retrieved for the field.
@@ -68,6 +74,13 @@ export interface CaseFieldState {
 
 /**
  * The `CaseField` controller is responsible for setting the value and retrieving suggestions for a field from the case creation form and optionally trigger Case Assist API requests.
+ *
+ * For example implementations, see the following [Coveo Quantic Case Assist components](https://docs.coveo.com/en/quantic/latest/reference/case-assist-components/):
+ * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
+ * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
+ *
+ * @group Controllers
+ * @category CaseField
  */
 export interface CaseField extends Controller {
   /**
@@ -100,6 +113,9 @@ export interface UpdateCaseFieldFetchOptions {
  * @param engine - The headless engine.
  * @param props - The configurable `CaseField` controller properties.
  * @returns A `CaseField` controller instance.
+ *
+ * @group Controllers
+ * @category CaseField
  */
 export function buildCaseField(
   engine: CaseAssistEngine,

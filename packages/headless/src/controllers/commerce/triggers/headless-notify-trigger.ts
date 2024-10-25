@@ -12,6 +12,9 @@ import {NotifyTrigger} from '../../core/triggers/headless-core-notify-trigger.js
  *
  * @param engine - The headless commerce engine.
  * @returns A `NotifyTrigger` controller instance.
+ *
+ * @group Buildable controllers
+ * @category NotifyTrigger
  * */
 export function buildNotifyTrigger(engine: CommerceEngine): NotifyTrigger {
   if (!loadNotifyTriggerReducers(engine)) {

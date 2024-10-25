@@ -25,6 +25,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `SmartSnippet` properties.
  * @returns A `SmartSnippet` controller instance.
+ *
+ * @group Controllers
+ * @category SmartSnippet
  * */
 export function buildSmartSnippet(
   engine: SearchEngine,

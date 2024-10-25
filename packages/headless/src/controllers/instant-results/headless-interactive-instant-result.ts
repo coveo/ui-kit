@@ -23,6 +23,9 @@ export interface InteractiveInstantResultProps
 
 /**
  * The `InteractiveInstantResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ *
+ * @group Controllers
+ * @category InteractiveInstantResult
  */
 export interface InteractiveInstantResult extends InteractiveResult {}
 
@@ -32,6 +35,9 @@ export interface InteractiveInstantResult extends InteractiveResult {}
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveInstantResult` properties.
  * @returns An `InteractiveInstantResult` controller instance.
+ *
+ * @group Controllers
+ * @category InteractiveInstantResult
  */
 export function buildInteractiveInstantResult(
   engine: SearchEngine,

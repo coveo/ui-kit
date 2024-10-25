@@ -15,6 +15,12 @@ import {DidYouMeanState} from '../../../did-you-mean/headless-did-you-mean.js';
 
 export type {QueryCorrection, WordCorrection, DidYouMeanState};
 
+/**
+ * The `DidYouMean` controller is responsible for handling query corrections.
+ *
+ * @group Sub-controllers
+ * @category DidYouMean
+ */
 export interface DidYouMean extends Controller {
   /**
    * A scoped and simplified part of the headless state that is relevant to the `DidYouMean` controller.
@@ -27,6 +33,9 @@ export interface DidYouMean extends Controller {
  *
  * @param engine - The commerce engine.
  * @returns A `DidYouMean` controller.
+ *
+ * @group Sub-controllers
+ * @category DidYouMean
  */
 export function buildDidYouMean(engine: CommerceEngine): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {

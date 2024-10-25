@@ -11,6 +11,9 @@ import {automaticFacetSetReducer as automaticFacetSet} from './automatic-facet-s
 
 /**
  * The action creators to manage automatic facets.
+ *
+ * @group Actions
+ * @category Automatic facets
  */
 export interface AutomaticFacetsActionCreators {
   /**
@@ -47,6 +50,9 @@ export interface AutomaticFacetsActionCreators {
  *
  * @param engine - The headless search engine.
  * @returns An object holding the automatic facets action creators.
+ *
+ * @group Actions
+ * @category Automatic facets
  */
 export function loadAutomaticFacetSetActions(
   engine: SearchEngine

@@ -39,6 +39,9 @@ import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable
  * Commerce facets are not requested by the implementer, but rather pre-configured through the Coveo Merchandising Hub
  * (CMH). The implementer is only responsible for leveraging the facet controllers created by this sub-controller to
  * properly render facets in their application.
+ *
+ * @group Sub-controllers
+ * @category FacetGenerator
  */
 export interface FacetGenerator extends Controller {
   /**
@@ -60,6 +63,9 @@ export interface FacetGenerator extends Controller {
 
 /**
  * Represents the state of a facet generator.
+ *
+ * @group Sub-controllers
+ * @category FacetGenerator
  */
 export type FacetGeneratorState = FacetGenerator['state'];
 

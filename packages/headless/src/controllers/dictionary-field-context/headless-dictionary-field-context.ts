@@ -17,6 +17,11 @@ export type {DictionaryFieldContextPayload};
 
 /**
  * The `DictionaryFieldContext` controller allows specifying which [dictionary field](https://docs.coveo.com/en/2036/index-content/about-fields#dictionary-fields) keys to retrieve.
+ *
+ * Example: [dictionary-field-context.fn.ts](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/dictionary-field-context/dictionary-field-context.fn.ts)
+ *
+ * @group Controllers
+ * @category DictionaryFieldContext
  */
 export interface DictionaryFieldContext extends Controller {
   /**
@@ -46,6 +51,12 @@ export interface DictionaryFieldContext extends Controller {
   state: DictionaryFieldContextState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `DictionaryFieldContext` controller.
+ *
+ * @group Controllers
+ * @category DictionaryFieldContext
+ */
 export interface DictionaryFieldContextState {
   /**
    * An object holding the dictionary field context fields and keys to retrieve values for.
@@ -58,6 +69,9 @@ export interface DictionaryFieldContextState {
  *
  * @param engine - The headless engine.
  * @returns A `DictionaryFieldContext` controller instance.
+ *
+ * @group Controllers
+ * @category DictionaryFieldContext
  */
 export function buildDictionaryFieldContext(
   engine: CoreEngine

@@ -31,6 +31,12 @@ export type GeneratedFieldSuggestionsControllers = Array<
   FieldSuggestions | CategoryFieldSuggestions
 >;
 
+/**
+ * The `FieldSuggestionsGenerator` controller is responsible for generating field suggestions controllers for a given commerce engine.
+ *
+ * @group Buildable controllers
+ * @category FieldSuggestionsGenerator
+ */
 export interface FieldSuggestionsGenerator extends Controller {
   /**
    * The facet controllers created by the facet generator.
@@ -47,6 +53,9 @@ export interface FieldSuggestionsGenerator extends Controller {
  * Builds a field suggestions generator controller for a given commerce engine.
  * @param engine The commerce engine.
  * @returns The field suggestions generator controller.
+ *
+ * @group Buildable controllers
+ * @category FieldSuggestionsGenerator
  */
 export function buildFieldSuggestionsGenerator(
   engine: CommerceEngine

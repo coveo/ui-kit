@@ -21,6 +21,9 @@ export type {
 
 /**
  * The generic analytics action creators.
+ *
+ * @group Actions
+ * @category GenericAnalytics
  */
 export interface GenericAnalyticsActionCreators {
   /**
@@ -55,6 +58,9 @@ export interface GenericAnalyticsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category GenericAnalytics
  */
 export function loadGenericAnalyticsActions(
   engine: SearchEngine

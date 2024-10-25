@@ -8,6 +8,13 @@ import {
 import {AttachedResult} from './attached-results-state.js';
 
 export type {SetAttachedResultsActionCreatorPayload, AttachedResult};
+
+/**
+ * The attached results action creators.
+ *
+ * @group Actions
+ * @category AttachedResults
+ */
 export interface AttachedResultsActionCreators {
   /**
    * Creates an action that sets the attached results to a record.
@@ -35,6 +42,9 @@ export interface AttachedResultsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category AttachedResults
  */
 export function loadAttachedResultsActions(
   engine: InsightEngine

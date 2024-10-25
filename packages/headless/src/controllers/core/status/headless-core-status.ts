@@ -8,6 +8,14 @@ import {
   Controller,
 } from '../../controller/headless-controller.js';
 
+/**
+ * The `SearchStatus` controller lets you access search status information.
+ *
+ * Example: [search-status.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/search-status/search-status.fn.tsx)
+ *
+ * @group Controllers
+ * @category SearchStatus
+ */
 export interface SearchStatus extends Controller {
   /**
    * The state of the `SearchStatus` controller.
@@ -17,6 +25,9 @@ export interface SearchStatus extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchStatus` controller.
+ *
+ * @group Controllers
+ * @category SearchStatus
  */
 export interface SearchStatusState {
   /**

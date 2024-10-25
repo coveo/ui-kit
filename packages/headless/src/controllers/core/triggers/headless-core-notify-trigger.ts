@@ -14,6 +14,11 @@ import {
 
 /**
  * The `NotifyTrigger` controller handles notify triggers. A [Notify trigger](https://docs.coveo.com/en/3413#notify) query pipeline rule lets you define a message to be displayed to the end user when a certain condition is met.
+ *
+ * Example: [notify-trigger.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/triggers/notify-trigger.fn.tsx)
+ *
+ * @group Controllers
+ * @category NotifyTrigger
  */
 export interface NotifyTrigger extends Controller {
   /**
@@ -24,6 +29,9 @@ export interface NotifyTrigger extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `NotifyTrigger` controller.
+ *
+ * @group Controllers
+ * @category NotifyTrigger
  */
 export interface NotifyTriggerState {
   /**
@@ -45,6 +53,9 @@ export interface NotifyTriggerOptions {
  *
  * @param engine - The headless engine.
  * @returns A `NotifyTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category NotifyTrigger
  */
 export function buildCoreNotifyTrigger(
   engine: CoreEngine,

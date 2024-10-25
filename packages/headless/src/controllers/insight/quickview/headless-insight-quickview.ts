@@ -30,6 +30,12 @@ export interface QuickviewOptions {
   maximumPreviewSize?: number;
 }
 
+/**
+ * The `Quickview` controller provides a way to fetch and display a preview of a result.
+ *
+ * @group Controllers
+ * @category Quickview
+ */
 export interface Quickview extends Controller {
   /**
    * Updates the `contentURL` state property with the correct URL.
@@ -42,6 +48,12 @@ export interface Quickview extends Controller {
   state: QuickviewState;
 }
 
+/**
+ * The state of the `Quickview` controller.
+ *
+ * @group Controllers
+ * @category Quickview
+ */
 export interface QuickviewState {
   /**
    * `true` if the configured result has a preview, and `false` otherwise.
@@ -64,6 +76,9 @@ export interface QuickviewState {
  * @param engine - The insight engine.
  * @param props - The configurable `Quickview` properties.
  * @returns A `Quickview` controller instance.
+ *
+ * @group Controllers
+ * @category Quickview
  */
 export function buildQuickview(
   engine: InsightEngine,

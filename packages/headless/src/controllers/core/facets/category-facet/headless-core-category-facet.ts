@@ -65,6 +65,13 @@ export interface CategoryFacetProps {
 
 /**
  * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
+ *
+ * Example:
+ * - [category-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/category-facet/category-facet.fn.tsx)
+ * - [category-facet-search.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx)
+ *
+ * @group Controllers
+ * @category CategoryFacet
  */
 export interface CategoryFacet extends CoreCategoryFacet {
   /**
@@ -80,6 +87,9 @@ export interface CategoryFacet extends CoreCategoryFacet {
 
 /**
  * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values hierarchically.
+ *
+ * @group Controllers
+ * @category CategoryFacet
  */
 export interface CoreCategoryFacet extends Controller {
   /**
@@ -135,6 +145,12 @@ export interface CoreCategoryFacet extends Controller {
   state: CoreCategoryFacetState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
+ *
+ * @group Controllers
+ * @category CategoryFacet
+ */
 export interface CategoryFacetState extends CoreCategoryFacetState {
   /** The state of the facet's searchbox. */
   facetSearch: CategoryFacetSearchState;
@@ -142,6 +158,9 @@ export interface CategoryFacetState extends CoreCategoryFacetState {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
+ *
+ * @group Controllers
+ * @category CategoryFacet
  */
 export interface CoreCategoryFacetState {
   /** The facet ID. */
@@ -278,6 +297,9 @@ export interface CategoryFacetSearchResult {
  * @param engine - The headless engine.
  * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
+ *
+ * @group Controllers
+ * @category CategoryFacet
  * */
 export function buildCoreCategoryFacet(
   engine: CoreEngine,

@@ -21,6 +21,9 @@ export type {Sort, SortProps, SortState, SortInitialState};
  * @param engine - The headless engine.
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
+ *
+ * @group Controllers
+ * @category Sort
  */
 export function buildSort(engine: SearchEngine, props: SortProps = {}): Sort {
   const {dispatch} = engine;

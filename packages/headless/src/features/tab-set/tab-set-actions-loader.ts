@@ -11,6 +11,9 @@ export type {RegisterTabActionCreatorPayload};
 
 /**
  * The tab set action creators.
+ *
+ * @group Actions
+ * @category TabSet
  */
 export interface TabSetActionCreators {
   /**
@@ -34,6 +37,9 @@ export interface TabSetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category TabSet
  */
 export function loadTabSetActions(engine: SearchEngine): TabSetActionCreators {
   engine.addReducers({tabSet});

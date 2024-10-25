@@ -34,6 +34,9 @@ export interface FoldedResultListProps {
  * @param engine - The headless engine.
  * @param props - The configurable `FoldedResultList` properties.
  * @returns A `FoldedResultList` controller instance.
+ *
+ * @group Controllers
+ * @category FoldedResultList
  */
 export function buildFoldedResultList(
   engine: SearchEngine,

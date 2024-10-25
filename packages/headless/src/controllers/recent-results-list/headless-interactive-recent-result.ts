@@ -26,6 +26,9 @@ export interface InteractiveRecentResultProps
 
 /**
  * The `InteractiveRecentResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a recent query result.
+ *
+ * @group Controllers
+ * @category InteractiveRecentResult
  */
 export interface InteractiveRecentResult extends InteractiveResultCore {}
 
@@ -35,6 +38,9 @@ export interface InteractiveRecentResult extends InteractiveResultCore {}
  * @param engine - The headless engine.
  * @param props - The configurable `InteractiveRecentResult` properties.
  * @returns An `InteractiveRecentResult` controller instance.
+ *
+ * @group Controllers
+ * @category InteractiveRecentResult
  */
 export function buildInteractiveRecentResult(
   engine: SearchEngine,

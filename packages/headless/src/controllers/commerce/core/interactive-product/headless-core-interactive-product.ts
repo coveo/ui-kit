@@ -52,6 +52,9 @@ export interface InteractiveProduct extends InteractiveResultCore {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `InteractiveProduct` properties.
  * @returns An `InteractiveProduct` sub-controller instance.
+ *
+ * @group Buildable controllers
+ * @category CoreInteractiveProduct
  */
 export function buildCoreInteractiveProduct(
   engine: CommerceEngine,

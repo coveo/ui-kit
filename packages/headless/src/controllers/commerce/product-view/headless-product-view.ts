@@ -4,6 +4,9 @@ import {productView} from '../../../features/commerce/product/product-actions.js
 
 /**
  * The `ProductView` controller provides an interface for triggering an analytics event for a product view.
+ *
+ * @group Buildable controllers
+ * @category ProductView
  */
 export interface ProductView {
   /**
@@ -18,6 +21,9 @@ export interface ProductView {
  *
  * @param engine - The headless commerce engine.
  * @returns A `ProductView` controller instance.
+ *
+ * @group Buildable controllers
+ * @category ProductView
  */
 export function buildProductView(engine: CommerceEngine): ProductView {
   return {

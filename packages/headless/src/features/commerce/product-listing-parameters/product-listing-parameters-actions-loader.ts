@@ -13,6 +13,9 @@ export type {RestoreProductListingParametersPayload};
 
 /**
  * The product listing parameters action creators.
+ *
+ * @group Actions
+ * @category ProductListingParameters
  */
 export interface ProductListingParametersActionCreators {
   /**
@@ -31,6 +34,9 @@ export interface ProductListingParametersActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the product listing parameters action creators.
+ *
+ * @group Actions
+ * @category ProductListingParameters
  */
 export function loadProductListingParametersActions(
   engine: CommerceEngine

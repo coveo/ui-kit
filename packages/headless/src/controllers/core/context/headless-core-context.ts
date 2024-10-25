@@ -52,6 +52,11 @@ const initialStateSchema = new Schema<ContextInitialState>({
 /**
  * The `Context` controller injects [custom contextual information](https://docs.coveo.com/en/3389/)
  * into the search requests and usage analytics search events sent from a search interface.
+ *
+ * Example: [context.ts](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/context/context.ts)
+ *
+ * @group Controllers
+ * @category Context
  */
 export interface Context extends Controller {
   /**
@@ -81,6 +86,12 @@ export interface Context extends Controller {
   state: ContextState;
 }
 
+/**
+ * A scoped and simplified part of the headless engine that is relevant to the `Context` controller.
+ *
+ * @group Controllers
+ * @category Context
+ */
 export interface ContextState {
   /**
    * An object holding the context keys and their values.
@@ -95,6 +106,9 @@ export interface ContextState {
  * @param props - The configurable `Context` controller properties.
  *
  * @returns a `Context` controller instance.
+ *
+ * @group Controllers
+ * @category Context
  */
 export function buildCoreContext(
   engine: CoreEngine,

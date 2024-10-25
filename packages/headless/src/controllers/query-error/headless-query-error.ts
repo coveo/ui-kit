@@ -11,6 +11,9 @@ export type {QueryError, QueryErrorState};
  * Creates a `QueryError` controller instance.
  *
  * @param engine - The headless engine.
+ *
+ * @group Controllers
+ * @category QueryError
  */
 export function buildQueryError(engine: SearchEngine): QueryError {
   return buildCoreQueryError(engine);

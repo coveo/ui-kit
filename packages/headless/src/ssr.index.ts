@@ -1,3 +1,7 @@
+/**
+ * @module SSR
+ */
+
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';

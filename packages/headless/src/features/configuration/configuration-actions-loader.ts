@@ -25,6 +25,9 @@ export type {
 
 /**
  * The configuration action creators.
+ *
+ * @group Actions
+ * @category Configuration
  */
 export interface ConfigurationActionCreators {
   /**
@@ -87,6 +90,9 @@ export interface ConfigurationActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Configuration
  */
 export function loadConfigurationActions(
   engine: CoreEngine | CoreEngineNext

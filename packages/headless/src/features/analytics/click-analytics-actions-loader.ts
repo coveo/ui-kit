@@ -15,6 +15,9 @@ import {ClickAction} from './analytics-utils.js';
 
 /**
  * The click analytics action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export interface ClickAnalyticsActionCreators {
   /**
@@ -66,6 +69,9 @@ export interface ClickAnalyticsActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export function loadClickAnalyticsActions(
   engine: SearchEngine

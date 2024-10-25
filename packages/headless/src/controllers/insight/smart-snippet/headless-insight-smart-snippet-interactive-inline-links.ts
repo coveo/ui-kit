@@ -72,6 +72,9 @@ export interface SmartSnippetInteractiveInlineLinks {
  * @param props - The configurable controller properties.
  * @param action - The action to be triggered on select.
  * @returns A controller instance.
+ *
+ * @group Controllers
+ * @category SmartSnippetInteractiveInlineLinks
  */
 export function buildSmartSnippetInteractiveInlineLinks(
   engine: InsightEngine,

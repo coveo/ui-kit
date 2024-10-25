@@ -1,0 +1,29 @@
+{
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Engine",
+    "Controllers",
+    "Search controllers",
+    "Buildable controllers",
+    "Sub-controllers",
+    "Core controllers",
+    "Actions",
+    "*"
+  ],
+  "entryPoints": [
+    "./src/core.index.ts",
+    "./src/index.ts",
+    "./src/case-assist.index.ts",
+    "./src/commerce.index.ts",
+    "./src/insight.index.ts",
+    "./src/recommendation.index.ts",
+    "./src/ssr.index.ts"
+  ],
+  "gitRevision": "typedoc-POC",
+  "plugin": ["./typedoc/dist/index.js"]
+}

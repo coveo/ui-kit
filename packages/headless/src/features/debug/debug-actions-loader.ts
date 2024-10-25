@@ -5,6 +5,9 @@ import {disableDebug, enableDebug} from './debug-actions.js';
 
 /**
  * The debug action creators.
+ *
+ * @group Actions
+ * @category Debug
  */
 export interface DebugActionCreators {
   /**
@@ -27,6 +30,9 @@ export interface DebugActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Debug
  */
 export function loadDebugActions(engine: CoreEngine): DebugActionCreators {
   engine.addReducers({debug});

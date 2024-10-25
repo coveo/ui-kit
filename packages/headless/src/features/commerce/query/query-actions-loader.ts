@@ -7,6 +7,9 @@ export type {UpdateQueryPayload};
 
 /**
  * The query action creators.
+ *
+ * @group Actions
+ * @category Query
  */
 export interface QueryActionCreators {
   /**
@@ -23,6 +26,9 @@ export interface QueryActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the query action creators.
+ *
+ * @group Actions
+ * @category Query
  */
 export function loadQueryActions(engine: CommerceEngine): QueryActionCreators {
   engine.addReducers({query});

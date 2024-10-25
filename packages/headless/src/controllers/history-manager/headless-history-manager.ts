@@ -27,6 +27,11 @@ import {
 
 /**
  * The `HistoryManager` controller is in charge of allowing navigating back and forward in the search interface history.
+ *
+ * Example: [history-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/history-manager/history-manager.fn.tsx)
+ *
+ * @group Controllers
+ * @category HistoryManager
  */
 export interface HistoryManager extends Controller {
   /**
@@ -56,6 +61,12 @@ export interface HistoryManager extends Controller {
   state: HistoryManagerState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `HistoryManager` controller.
+ *
+ * @group Controllers
+ * @category HistoryManager
+ */
 export type HistoryManagerState = StateWithHistory<HistoryState>;
 
 /**
@@ -63,6 +74,9 @@ export type HistoryManagerState = StateWithHistory<HistoryState>;
  *
  * @param engine - The headless engine.
  * @returns A `HistoryManager` controller instance.
+ *
+ * @group Controllers
+ * @category HistoryManager
  */
 export function buildHistoryManager(engine: SearchEngine): HistoryManager {
   if (!loadHistoryManagerReducers(engine)) {

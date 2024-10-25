@@ -13,6 +13,9 @@ export type {AddContextActionCreatorPayload};
 
 /**
  * The context action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export interface ContextActionCreators {
   /**
@@ -47,6 +50,9 @@ export interface ContextActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export function loadContextActions(engine: CoreEngine): ContextActionCreators {
   engine.addReducers({context});

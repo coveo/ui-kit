@@ -21,12 +21,18 @@ export type {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  */
 export interface SmartSnippetQuestionsListState
   extends CoreSmartSnippetQuestionsListState {}
 
 /**
  * The insight `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  */
 export interface SmartSnippetQuestionsList
   extends CoreSmartSnippetQuestionsList {
@@ -101,6 +107,9 @@ export interface SmartSnippetQuestionsList
  * @param engine - The headless engine.
  * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsList` controller instance.
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  * */
 export function buildSmartSnippetQuestionsList(
   engine: InsightEngine,

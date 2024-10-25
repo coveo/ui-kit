@@ -50,6 +50,12 @@ export interface FieldSuggestionsValue {
   count: number;
 }
 
+/**
+ * The state of the `FieldSuggestions` controller.
+ *
+ * @group Controllers
+ * @category FieldSuggestions
+ */
 export interface FieldSuggestionsState {
   /**
    * The field suggestions.
@@ -78,6 +84,11 @@ export interface FieldSuggestionsState {
  * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item title.
  *
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
+ *
+ * Example: [field-suggestions.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/field-suggestions/specific-field/field-suggestions.fn.tsx)
+ *
+ * @group Controllers
+ * @category FieldSuggestions
  */
 export interface FieldSuggestions extends Subscribable {
   /**
@@ -153,6 +164,9 @@ export interface FieldSuggestionsProps {
  * @param engine The headless engine.
  * @param props The configurable `FieldSuggestions` controller properties.
  * @returns A `FieldSuggestions` controller instance.
+ *
+ * @group Controllers
+ * @category FieldSuggestions
  */
 export function buildFieldSuggestions(
   engine: SearchEngine,

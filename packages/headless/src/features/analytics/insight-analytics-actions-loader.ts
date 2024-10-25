@@ -70,6 +70,9 @@ export type {
 
 /**
  * The insight analytics action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export interface InsightAnalyticsActionCreators {
   /**
@@ -268,6 +271,9 @@ export interface InsightAnalyticsActionCreators {
  *
  * @param engine - The insight engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export function loadInsightAnalyticsActions(
   engine: InsightEngine

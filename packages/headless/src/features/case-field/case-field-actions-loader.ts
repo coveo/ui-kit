@@ -15,6 +15,9 @@ export type {SetCaseFieldActionCreatorPayload};
 
 /**
  * The case field action creators.
+ *
+ * @group Actions
+ * @category CaseField
  */
 export interface CaseFieldActionCreators {
   /**
@@ -56,6 +59,9 @@ export interface CaseFieldActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category CaseField
  */
 export function loadCaseFieldActions(
   engine: CaseAssistEngine

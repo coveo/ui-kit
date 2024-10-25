@@ -12,6 +12,9 @@ export type {SearchStatus, SearchStatusState};
  *
  * @param engine - The insight engine.
  * @returns A `SearchStatus` controller instance.
+ *
+ * @group Controllers
+ * @category SearchStatus
  */
 export function buildSearchStatus(engine: InsightEngine): SearchStatus {
   return buildCoreStatus(engine);

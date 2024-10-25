@@ -13,6 +13,9 @@ export type {FacetManagerState, FacetManagerPayload, FacetManager};
  *
  * @param engine - The insight engine.
  * @returns A `FacetManager` controller instance.
+ *
+ * @group Controllers
+ * @category FacetManager
  */
 export function buildFacetManager(engine: InsightEngine): FacetManager {
   return buildCoreFacetManager(engine);

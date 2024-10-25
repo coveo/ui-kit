@@ -18,6 +18,9 @@ import {QueryTrigger} from '../core/triggers/headless-core-query-trigger.js';
  *
  * @param engine - The headless engine.
  * @returns A `QueryTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category QueryTrigger
  * */
 export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
   if (!loadQueryTriggerReducers(engine)) {

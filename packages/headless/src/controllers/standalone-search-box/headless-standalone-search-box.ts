@@ -44,6 +44,11 @@ export interface StandaloneSearchBoxProps {
 /**
  * The `StandaloneSearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
  * Meant to be used for a search box that will redirect instead of executing a query.
+ *
+ * Example: [standalone-search-box.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.fn.tsx)
+ *
+ * @group Controllers
+ * @category StandaloneSearchBox
  */
 export interface StandaloneSearchBox extends SearchBox {
   /**
@@ -68,6 +73,12 @@ export interface StandaloneSearchBox extends SearchBox {
   state: StandaloneSearchBoxState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `StandaloneSearchBox` controller.
+ *
+ * @group Controllers
+ * @category StandaloneSearchBox
+ */
 export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
    * The analytics data to send when performing the first query on the search page the user is redirected to.
@@ -86,6 +97,9 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @param engine - The headless engine.
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns A `StandaloneSearchBox` instance.
+ *
+ * @group Controllers
+ * @category StandaloneSearchBox
  */
 export function buildStandaloneSearchBox(
   engine: SearchEngine,

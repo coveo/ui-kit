@@ -1,3 +1,6 @@
+/**
+ * @module Search
+ */
 import * as HighlightUtils from './utils/highlight.js';
 
 // 3rd Party Libraries

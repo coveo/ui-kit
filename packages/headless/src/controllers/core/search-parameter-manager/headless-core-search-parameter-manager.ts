@@ -54,6 +54,9 @@ const initialStateSchema = new Schema<
 
 /**
  * The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.
+ *
+ * @group Controllers
+ * @category SearchParameterManager
  * */
 export interface SearchParameterManager extends Controller {
   /**
@@ -69,6 +72,12 @@ export interface SearchParameterManager extends Controller {
   state: SearchParameterManagerState;
 }
 
+/**
+ * A scoped and simplified part of the Headless state that is relevant to the `SearchParameterManager` controller.
+ *
+ * @group Controllers
+ * @category SearchParameterManager
+ */
 export interface SearchParameterManagerState {
   /**
    * The parameters affecting the search response.

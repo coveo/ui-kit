@@ -1,3 +1,7 @@
+/**
+ * @module Case Assist
+ */
+
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';

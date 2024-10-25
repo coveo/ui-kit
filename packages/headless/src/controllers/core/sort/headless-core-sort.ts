@@ -64,6 +64,11 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
 
 /**
  * The `Sort` controller manages how the results are sorted.
+ *
+ * Example: [sort.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/sort/sort.fn.tsx)
+ *
+ * @group Controllers
+ * @category Sort
  */
 export interface Sort extends Controller {
   /**
@@ -87,6 +92,12 @@ export interface Sort extends Controller {
   state: SortState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+ *
+ * @group Controllers
+ * @category Sort
+ */
 export interface SortState {
   /**
    * The current sort criteria.

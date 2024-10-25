@@ -57,6 +57,9 @@ export type {BreadcrumbValue, DeselectableValue};
 
 /**
  * Represents a generic breadcrumb type.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface Breadcrumb<Value extends BaseFacetValue> {
   /**
@@ -88,6 +91,9 @@ export type CoreBreadcrumbManagerOptions = Pick<
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface BreadcrumbManagerState {
   /**

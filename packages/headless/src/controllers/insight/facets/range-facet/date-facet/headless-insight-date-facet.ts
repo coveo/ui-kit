@@ -41,6 +41,9 @@ export {buildDateRange};
  * @param engine - The insight engine.
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
+ *
+ * @group Controllers
+ * @category DateFacet
  */
 export function buildDateFacet(
   engine: InsightEngine,

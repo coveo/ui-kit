@@ -16,6 +16,9 @@ export type {
 
 /**
  * The triggers action creators.
+ *
+ * @group Actions
+ * @category Triggers
  */
 export interface TriggersActionCreators {
   /**
@@ -44,6 +47,9 @@ export interface TriggersActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the triggers actions.
+ *
+ * @group Actions
+ * @category Triggers
  */
 export function loadTriggersActions(engine: CommerceEngine) {
   engine.addReducers({triggers});

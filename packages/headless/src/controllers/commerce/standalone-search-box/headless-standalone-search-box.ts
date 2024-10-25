@@ -33,6 +33,12 @@ import {
   standaloneSearchBoxSchema,
 } from './headless-standalone-search-box-options.js';
 
+/**
+ * The `StandaloneSearchBox` controller is responsible for handling a standalone search box.
+ *
+ * @group Buildable controllers
+ * @category StandaloneSearchBox
+ */
 export interface StandaloneSearchBox extends SearchBox {
   /**
    * Triggers a redirection.
@@ -53,6 +59,12 @@ export interface StandaloneSearchBox extends SearchBox {
   state: StandaloneSearchBoxState;
 }
 
+/**
+ * The state of the `StandaloneSearchBox` controller.
+ *
+ * @group Buildable controllers
+ * @category StandaloneSearchBox
+ */
 export interface StandaloneSearchBoxState extends SearchBoxState {
   /**
    * The URL to redirect to.
@@ -66,6 +78,9 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns A `StandaloneSearchBox` controller instance.
+ *
+ * @group Buildable controllers
+ * @category StandaloneSearchBox
  */
 export function buildStandaloneSearchBox(
   engine: CommerceEngine,

@@ -20,10 +20,26 @@ export interface CaseAssistQuickviewProps extends QuickviewProps {}
 
 export interface CaseAssistQuickviewOptions extends QuickviewOptions {}
 
+/**
+ * The `CaseAssistQuickview` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user interacts with a quickview.
+ *
+ * For example implementations, see the following [Coveo Quantic Case Assist components](https://docs.coveo.com/en/quantic/latest/reference/case-assist-components/):
+ * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
+ * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
+ *
+ * @group Controllers
+ * @category CaseAssistQuickview
+ */
 export interface CaseAssistQuickview extends Quickview {
   state: CaseAssistQuickviewState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CaseAssistQuickview` controller.
+ *
+ * @group Controllers
+ * @category CaseAssistQuickview
+ */
 export interface CaseAssistQuickviewState extends QuickviewState {
   /**
    * The number of available document for the current document set.
@@ -45,6 +61,9 @@ export interface CaseAssistQuickviewState extends QuickviewState {
  * @param engine - The headless engine.
  * @param props - The configurable `CaseAssistQuickview` properties.
  * @returns A `CaseAssistQuickview` controller instance.
+ *
+ * @group Controllers
+ * @category CaseAssistQuickview
  */
 export function buildCaseAssistQuickview(
   engine: CaseAssistEngine,

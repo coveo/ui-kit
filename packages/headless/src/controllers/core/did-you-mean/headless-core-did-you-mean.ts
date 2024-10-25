@@ -50,6 +50,15 @@ export interface DidYouMeanOptions {
    */
   queryCorrectionMode?: QueryCorrectionMode;
 }
+
+/**
+ * The `DidYouMean` controller is responsible for handling query corrections.
+ *
+ * Example: [did-you-mean.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/did-you-mean/did-you-mean.fn.tsx)
+ *
+ * @group Controllers
+ * @category DidYouMean
+ */
 export interface DidYouMean extends Controller {
   /**
    * Apply query correction using the query correction, if any, currently present in the state.
@@ -73,6 +82,12 @@ export interface DidYouMean extends Controller {
   state: DidYouMeanState;
 }
 
+/**
+ * A scoped and simplified part of the headless engine that is relevant to the `DidYouMean` controller.
+ *
+ * @group Controllers
+ * @category DidYouMean
+ */
 export interface DidYouMeanState {
   /**
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.
@@ -107,6 +122,9 @@ export interface DidYouMeanState {
  * @param engine - The headless engine.
  * @param props - The configurable `DidYouMean` controller properties.
  * @returns A `DidYouMean` controller instance.
+ *
+ * @group Controllers
+ * @category DidYouMean
  */
 export function buildCoreDidYouMean(
   engine: CoreEngine,

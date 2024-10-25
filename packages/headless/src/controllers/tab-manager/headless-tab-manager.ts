@@ -13,6 +13,9 @@ export type {TabManager, TabManagerState};
  * @param engine - The headless engine.
  * @param props - The configurable `Tab Manager` properties.
  * @returns A `Tab Manager` controller instance.
+ *
+ * @group Controllers
+ * @category TabManager
  */
 export function buildTabManager(engine: SearchEngine): TabManager {
   const tabManager = buildCoreTabManager(engine);

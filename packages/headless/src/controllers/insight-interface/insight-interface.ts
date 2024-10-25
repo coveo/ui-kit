@@ -19,6 +19,9 @@ import {
 
 /**
  * The `InsightInterface` controller is responsible for retrieving the Insight interface configuration.
+ *
+ * @group Controllers
+ * @category InsightInterface
  */
 export interface InsightInterface extends Controller {
   /**
@@ -36,6 +39,9 @@ export interface InsightInterface extends Controller {
  * Creates an `InsightInterface` controller instance.
  * @param engine  - The insight engine.
  * @returns An `InsightInterface controller instance.
+ *
+ * @group Controllers
+ * @category InsightInterface
  */
 export function buildInsightInterface(engine: InsightEngine): InsightInterface {
   if (!loadInsightInterfaceReducers(engine)) {
