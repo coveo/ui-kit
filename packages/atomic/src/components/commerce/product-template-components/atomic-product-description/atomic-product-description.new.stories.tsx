@@ -31,6 +31,10 @@ const meta: Meta = {
       name: 'field',
       type: 'string',
     },
+    'attributes-is-collapsible': {
+      name: 'is-collapsible',
+      type: 'boolean',
+    },
   },
 };
 
