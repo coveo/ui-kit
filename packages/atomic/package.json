@@ -14,9 +14,9 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
-      "types": "./loader/index.d.ts",
-      "import": "./loader/index.js",
-      "require": "./loader/index.cjs.js"
+      "types": "./dist/loader/index.d.ts",
+      "import": "./dist/loader/index.js",
+      "require": "./dist/loader/index.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -39,8 +39,7 @@
   "files": [
     "dist/",
     "docs/",
-    "licenses/",
-    "loader/"
+    "licenses/"
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* loader/* playwright-report/*",

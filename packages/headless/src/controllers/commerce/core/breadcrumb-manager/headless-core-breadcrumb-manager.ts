@@ -26,6 +26,10 @@ import {
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
 } from '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions.js';
@@ -117,11 +121,14 @@ interface ActionCreators {
 
 const facetTypeWithoutExcludeAction: FacetType = 'hierarchical';
 
-// TODO: COMHUB-247 add support for location facet
-const actions: Record<Exclude<FacetType, 'location'>, ActionCreators> = {
+const actions: Record<FacetType, ActionCreators> = {
   regular: {
     toggleSelectActionCreator: toggleSelectFacetValue,
     toggleExcludeActionCreator: toggleExcludeFacetValue,
+  },
+  location: {
+    toggleSelectActionCreator: toggleSelectLocationFacetValue,
+    toggleExcludeActionCreator: toggleExcludeLocationFacetValue,
   },
   numericalRange: {
     toggleSelectActionCreator: toggleSelectNumericFacetValue,
@@ -155,10 +162,7 @@ export function buildCoreBreadcrumbManager(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  // TODO: COMHUB-247 add support for location facet
-  const createBreadcrumb = (
-    facet: Exclude<AnyFacetResponse, LocationFacetResponse>
-  ) => ({
+  const createBreadcrumb = (facet: AnyFacetResponse) => ({
     facetId: facet.facetId,
     facetDisplayName: facet.displayName,
     field: facet.field,
@@ -170,7 +174,11 @@ export function buildCoreBreadcrumbManager(
   });
 
   const getValuesForNonCategoryFacet = (
-    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
+    facet:
+      | RegularFacetResponse
+      | NumericFacetResponse
+      | DateFacetResponse
+      | LocationFacetResponse
   ) => {
     return facet.values
       .filter((value) => value.state !== 'idle')
@@ -259,8 +267,7 @@ export function buildCoreBreadcrumbManager(
       const breadcrumbs = facetOrder.flatMap((facetId) => {
         const facet = options.facetResponseSelector(engine[stateKey], facetId);
 
-        // TODO: COMHUB-247 add support for location facet
-        if (hasActiveValue(facet) && facet.type !== 'location') {
+        if (hasActiveValue(facet)) {
           return [createBreadcrumb(facet)];
         }
         return [];

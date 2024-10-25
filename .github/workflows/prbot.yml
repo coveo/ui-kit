@@ -70,6 +70,14 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm test
+  package-compatibility:
+    name: 'Verify compatibility of packages'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run package-compatibility
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build
