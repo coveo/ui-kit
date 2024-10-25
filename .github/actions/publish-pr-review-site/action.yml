@@ -56,7 +56,6 @@ runs:
       run: |
         cp -R packages/atomic/dist-storybook prs/${{github.event.pull_request.number}}
         cp -R packages/atomic/playwright-report prs/${{github.event.pull_request.number}}
-        cp -R packages/headless/docs prs/${{github.event.pull_request.number}}
       shell: bash
     - name: 'Commit/Push'
       run: |
