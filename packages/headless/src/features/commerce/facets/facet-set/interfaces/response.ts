@@ -15,7 +15,6 @@ interface NonLocationFacetValue {
   numberOfResults: number;
   isAutoSelected: boolean;
   isSuggested: boolean;
-  moreValuesAvailable: boolean;
 }
 
 export interface CategoryFacetValue
@@ -84,6 +83,7 @@ export interface BaseFacetResponse<
 
 export interface BaseFacetValue {
   state: FacetValueState;
+  moreValuesAvailable: boolean;
 }
 
 export type AnyFacetValueResponse =

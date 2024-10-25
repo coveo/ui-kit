@@ -26,6 +26,7 @@ export function buildMockCommerceLocationFacetValue(
   return {
     value: '',
     state: 'idle',
+    moreValuesAvailable: false,
     ...config,
   };
 }
