@@ -25,7 +25,9 @@ export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
  * @category DidYouMean
  */
 export function buildDidYouMean(engine: InsightEngine): DidYouMean {
-  const controller = buildCoreDidYouMean(engine);
+  const controller = buildCoreDidYouMean(engine, {
+    options: {queryCorrectionMode: 'legacy'},
+  });
   const {dispatch} = engine;
 
   return {

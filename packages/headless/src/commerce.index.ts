@@ -68,6 +68,7 @@ export * from './features/commerce/sort/sort-actions-loader.js';
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
+export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
 export * from './features/commerce/query-set/query-set-actions-loader.js';
@@ -94,6 +95,7 @@ export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   ContextOptions,
   View,
+  UserLocation,
   ContextProps,
   Context,
   ContextState,
@@ -182,6 +184,10 @@ export type {
   RegularFacetState,
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet.js';
 export type {
+  LocationFacet,
+  LocationFacetState,
+} from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
+export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet.js';
@@ -195,6 +201,8 @@ export type {
   FacetType,
   FacetValueRequest,
   RegularFacetValue,
+  LocationFacetValueRequest,
+  LocationFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
   DateRangeRequest,

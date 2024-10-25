@@ -1,0 +1,12 @@
+.user-actions-modal__action {
+  right: 0;
+}
+
+.user-actions-modal__content {
+  width: 100%;
+  max-width: 40rem;
+}
+
+.user-actions-toggle-button {
+  height: 100%;
+}

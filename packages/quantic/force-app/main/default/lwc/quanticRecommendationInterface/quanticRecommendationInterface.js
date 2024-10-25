@@ -79,6 +79,9 @@ export default class QuanticRecommendationInterface extends LightningElement {
                 analytics: {
                   analyticsMode: 'legacy',
                   originContext: this.analyticsOriginContext,
+                  ...(document.referrer && {
+                    originLevel3: document.referrer.substring(0, 256),
+                  }),
                 },
                 ...rest,
               },

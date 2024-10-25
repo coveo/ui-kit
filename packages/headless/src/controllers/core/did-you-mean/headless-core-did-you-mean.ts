@@ -28,6 +28,8 @@ export interface DidYouMeanProps {
   options?: DidYouMeanOptions;
 }
 
+type QueryCorrectionMode = 'legacy' | 'next';
+
 export interface DidYouMeanOptions {
   /**
    * Whether to automatically apply corrections for queries that would otherwise return no results.
@@ -38,16 +40,15 @@ export interface DidYouMeanOptions {
    */
   automaticallyCorrectQuery?: boolean;
 
-  // TODO: V3: Change the default value to `next`.
   /**
    * Define which query correction system to use
    *
    * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
    * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
    *
-   * Default value is `legacy`. In the next major version of Headless, the default value will be `next`.
+   * Default value is `next`.
    */
-  queryCorrectionMode?: 'legacy' | 'next';
+  queryCorrectionMode?: QueryCorrectionMode;
 }
 
 /**
@@ -63,6 +64,17 @@ export interface DidYouMean extends Controller {
    * Apply query correction using the query correction, if any, currently present in the state.
    */
   applyCorrection(): void;
+
+  /**
+   * Update which query correction system to use
+   *
+   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+   *
+   *  @param queryCorrectionMode - the query correction mode to use
+   *
+   */
+  updateQueryCorrectionMode(queryCorrectionMode: QueryCorrectionMode): void;
 
   /**
    * The state of the `DidYouMean` controller.
@@ -131,7 +143,7 @@ export function buildCoreDidYouMean(
     dispatch(disableAutomaticQueryCorrection());
   }
 
-  dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'legacy'));
+  dispatch(setCorrectionMode(props.options?.queryCorrectionMode || 'next'));
 
   const getState = () => engine.state;
   const hasQueryCorrection = () =>
@@ -156,6 +168,9 @@ export function buildCoreDidYouMean(
       dispatch(
         applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
       );
+    },
+    updateQueryCorrectionMode(queryCorrectionMode: QueryCorrectionMode) {
+      dispatch(setCorrectionMode(queryCorrectionMode));
     },
   };
 }

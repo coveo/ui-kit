@@ -1,8 +1,10 @@
 import {Rga} from '@coveo/relay-event-types';
 import {
+  citationDocumentIdentifier,
   CustomAction,
   LegacySearchAction,
   makeAnalyticsAction,
+  partialCitationInformation,
 } from '../analytics/analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {SearchAction} from '../search/search-actions.js';
@@ -54,13 +56,16 @@ export const logOpenGeneratedAnswerSource = (
         return null;
       }
 
-      return client.makeOpenGeneratedAnswerSource({
-        ...(answerAPIEnabled
-          ? {answerAPIStreamId: rgaID}
-          : {generativeQuestionAnsweringId: rgaID}),
-        permanentId: citation.permanentid,
-        citationId: citation.id,
-      });
+      return client.makeGeneratedAnswerCitationClick(
+        partialCitationInformation(citation, state),
+        {
+          ...(answerAPIEnabled
+            ? {answerAPIStreamId: rgaID}
+            : {generativeQuestionAnsweringId: rgaID}),
+          citationId: citation.id,
+          documentId: citationDocumentIdentifier(citation),
+        }
+      );
     },
     analyticsType: 'Rga.CitationClick',
     analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
@@ -196,7 +201,7 @@ export const logGeneratedAnswerFeedback = (
         ...feedback,
       });
     },
-    analyticsType: 'Rga.SubmitRgaFeedback',
+    analyticsType: 'Rga.SubmitFeedback',
     analyticsPayloadBuilder: (state): Rga.SubmitFeedback | undefined => {
       const {id: rgaID} = generativeQuestionAnsweringIdSelector(state);
       if (rgaID) {

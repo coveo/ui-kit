@@ -314,7 +314,7 @@ describe('quantic-timeframe-facet', () => {
               Actions.submitForm();
 
               Expect.numberOfValidationErrors(2);
-              Expect.validationError('Complete this field.');
+              Expect.validationError('Complete this field');
             });
 
             scope('when entering then erasing dates', () => {
@@ -322,7 +322,7 @@ describe('quantic-timeframe-facet', () => {
               Actions.submitForm();
 
               Expect.numberOfValidationErrors(1);
-              Expect.validationError('Complete this field.');
+              Expect.validationError('Complete this field');
 
               Actions.typeEndDate(validRange.end);
               Actions.submitForm();
@@ -343,7 +343,7 @@ describe('quantic-timeframe-facet', () => {
 
               Expect.numberOfValidationErrors(1);
               Expect.validationError(
-                'Your entry does not match the allowed format yyyy-MM-dd.'
+                'Your entry does not match the allowed format'
               );
             });
 
@@ -352,7 +352,7 @@ describe('quantic-timeframe-facet', () => {
 
               Expect.numberOfValidationErrors(1);
               Expect.validationError(
-                'Your entry does not match the allowed format yyyy-MM-dd.'
+                'Your entry does not match the allowed format'
               );
             });
 

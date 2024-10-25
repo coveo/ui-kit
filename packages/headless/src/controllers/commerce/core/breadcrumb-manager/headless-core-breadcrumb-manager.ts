@@ -21,9 +21,14 @@ import {
   BaseFacetValue,
   CategoryFacetResponse,
   DateFacetResponse,
+  LocationFacetResponse,
   NumericFacetResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -127,6 +132,10 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleSelectActionCreator: toggleSelectFacetValue,
     toggleExcludeActionCreator: toggleExcludeFacetValue,
   },
+  location: {
+    toggleSelectActionCreator: toggleSelectLocationFacetValue,
+    toggleExcludeActionCreator: toggleExcludeLocationFacetValue,
+  },
   numericalRange: {
     toggleSelectActionCreator: toggleSelectNumericFacetValue,
     toggleExcludeActionCreator: toggleExcludeNumericFacetValue,
@@ -171,7 +180,11 @@ export function buildCoreBreadcrumbManager(
   });
 
   const getValuesForNonCategoryFacet = (
-    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
+    facet:
+      | RegularFacetResponse
+      | NumericFacetResponse
+      | DateFacetResponse
+      | LocationFacetResponse
   ) => {
     return facet.values
       .filter((value) => value.state !== 'idle')
@@ -259,6 +272,7 @@ export function buildCoreBreadcrumbManager(
     (facetOrder): BreadcrumbManagerState => {
       const breadcrumbs = facetOrder.flatMap((facetId) => {
         const facet = options.facetResponseSelector(engine[stateKey], facetId);
+
         if (hasActiveValue(facet)) {
           return [createBreadcrumb(facet)];
         }
