@@ -152,7 +152,7 @@
       "dependsOn": ["^build", "cached:build:stencil"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "rm ./loader/package.json",
+        "command": "rm ./dist/loader/package.json",
         "cwd": "packages/atomic"
       }
     }

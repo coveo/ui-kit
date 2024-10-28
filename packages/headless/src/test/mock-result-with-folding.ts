@@ -8,6 +8,7 @@ export function buildMockResultWithFolding(
     ...buildMockResult(config),
     parentResult: null,
     childResults: [],
+    totalNumberOfChildResults: 1,
     ...config,
   };
 }

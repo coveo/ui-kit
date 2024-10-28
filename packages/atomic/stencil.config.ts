@@ -155,7 +155,6 @@ export const config: Config = {
     {
       type: 'dist',
       collectionDir: null,
-      esmLoaderPath: '../loader',
       copy: [
         {src: 'themes'},
         {

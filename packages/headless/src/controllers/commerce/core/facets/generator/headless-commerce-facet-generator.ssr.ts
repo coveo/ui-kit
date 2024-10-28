@@ -86,9 +86,9 @@ export type {
 
 export type FacetGeneratorState = MappedFacetStates;
 
-type MappedFacetStates = Array<MappedFacetState[FacetType]>;
+export type MappedFacetStates = Array<MappedFacetState[FacetType]>;
 
-type MappedFacetState = {
+export type MappedFacetState = {
   [T in FacetType]: T extends 'numericalRange'
     ? NumericFacetState
     : T extends 'regular'

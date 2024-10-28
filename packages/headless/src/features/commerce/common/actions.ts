@@ -59,7 +59,7 @@ export const buildBaseCommerceAPIRequest = (
   navigatorContext: NavigatorContext,
   slotId?: string
 ): BaseCommerceAPIRequest => {
-  const {view, ...restOfContext} = state.commerceContext;
+  const {view, location, ...restOfContext} = state.commerceContext;
   return {
     accessToken: state.configuration.accessToken,
     url:
@@ -75,13 +75,12 @@ export const buildBaseCommerceAPIRequest = (
       ? {clientId: navigatorContext.clientId}
       : {}),
     context: {
-      ...(navigatorContext.userAgent
-        ? {
-            user: {
-              userAgent: navigatorContext.userAgent,
-            },
-          }
-        : {}),
+      user: {
+        ...location,
+        ...(navigatorContext.userAgent
+          ? {userAgent: navigatorContext.userAgent}
+          : {}),
+      },
       view: {
         ...view,
         ...(navigatorContext.referrer

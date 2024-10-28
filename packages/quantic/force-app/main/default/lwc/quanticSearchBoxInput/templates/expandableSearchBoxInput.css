@@ -37,6 +37,7 @@ textarea.searchbox__input {
   border: none;
   box-shadow: none;
   overflow-x: clip;
+  overflow-y: hidden;
   margin-right: 0.8rem;
 }
 

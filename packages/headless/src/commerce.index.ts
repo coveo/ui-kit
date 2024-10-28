@@ -51,7 +51,7 @@ export * from './features/commerce/sort/sort-actions-loader.js';
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
-// TODO COMHUB-247 export location facets actions loader
+export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
 export * from './features/commerce/query-set/query-set-actions-loader.js';
@@ -78,6 +78,7 @@ export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   ContextOptions,
   View,
+  UserLocation,
   ContextProps,
   Context,
   ContextState,

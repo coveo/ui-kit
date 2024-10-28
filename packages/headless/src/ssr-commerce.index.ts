@@ -74,6 +74,8 @@ export type {
   RegularFacetState,
   RegularFacetValue,
   MappedGeneratedFacetController,
+  MappedFacetStates,
+  MappedFacetState,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 
@@ -125,6 +127,7 @@ export type {
   ContextProps,
   ContextState,
   View,
+  UserLocation,
   ContextDefinition,
 } from './controllers/commerce/context/headless-context.ssr.js';
 export {defineContext} from './controllers/commerce/context/headless-context.ssr.js';
