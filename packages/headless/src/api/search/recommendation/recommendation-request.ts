@@ -4,7 +4,6 @@ import {
   DictionaryFieldContextParam,
   LocaleParam,
   NumberOfResultsParam,
-  VisitorIDParam,
 } from '../../platform-service-params.js';
 import {
   ActionsHistoryParam,
@@ -35,7 +34,6 @@ export type RecommendationRequest = BaseParam &
   ReferrerParam &
   LocaleParam &
   TimezoneParam &
-  VisitorIDParam &
   AnalyticsParam &
   AuthenticationParam &
   NumberOfResultsParam;

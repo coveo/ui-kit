@@ -805,7 +805,7 @@ export namespace Components {
          */
         "automaticallyCorrectQuery": boolean;
         /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode": 'legacy' | 'next';
     }
@@ -946,6 +946,16 @@ export namespace Components {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<string, string[]>;
     }
     interface AtomicFocusTrap {
         "active": boolean;
@@ -1444,6 +1454,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightResultList {
         /**
@@ -1459,6 +1483,12 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+    }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -1477,6 +1507,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -1583,6 +1627,10 @@ export namespace Components {
         "withDatePicker": boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         "isOpen": boolean;
         "openButton"?: HTMLElement;
         /**
@@ -1614,6 +1662,10 @@ export namespace Components {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -1623,6 +1675,10 @@ export namespace Components {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions": string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
@@ -2035,6 +2091,16 @@ export namespace Components {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -2050,7 +2116,8 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * @type {string}
          */
         "imageAltField"?: string;
         /**
@@ -2608,6 +2675,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -2768,6 +2849,22 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-date` component renders the value of a date result field.
@@ -2883,6 +2980,10 @@ export namespace Components {
      * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
      */
     interface AtomicResultLocalizedText {
+        /**
+          * The field value to dynamically evaluate.
+         */
+        "field": Record<string, string>;
         /**
           * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
@@ -3068,6 +3169,22 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -4451,6 +4568,12 @@ declare global {
     var HTMLAtomicInsightResultListElement: {
         prototype: HTMLAtomicInsightResultListElement;
         new (): HTMLAtomicInsightResultListElement;
+    };
+    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultQuickviewActionElement: {
+        prototype: HTMLAtomicInsightResultQuickviewActionElement;
+        new (): HTMLAtomicInsightResultQuickviewActionElement;
     };
     interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
     }
@@ -5903,6 +6026,7 @@ declare global {
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
@@ -6731,7 +6855,7 @@ declare namespace LocalJSX {
          */
         "automaticallyCorrectQuery"?: boolean;
         /**
-          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `legacy`. In the next major version of Atomic, the default value will be `next`.
+          * Define which query correction system to use  `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms. `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.  Default value is `next`.
          */
         "queryCorrectionMode"?: 'legacy' | 'next';
     }
@@ -6874,6 +6998,16 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<string, string[]>;
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
@@ -7351,6 +7485,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightResultList {
         /**
@@ -7361,6 +7509,12 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+    }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -7375,6 +7529,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -7478,6 +7646,10 @@ declare namespace LocalJSX {
         "withDatePicker"?: boolean;
     }
     interface AtomicInsightUserActionsModal {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         "isOpen"?: boolean;
         "openButton"?: HTMLElement;
         /**
@@ -7509,6 +7681,10 @@ declare namespace LocalJSX {
      */
     interface AtomicInsightUserActionsTimeline {
         /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
+        /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
         "ticketCreationDateTime": string;
@@ -7518,6 +7694,10 @@ declare namespace LocalJSX {
         "userId": string;
     }
     interface AtomicInsightUserActionsToggle {
+        /**
+          * The names of custom events to exclude.
+         */
+        "excludedCustomActions"?: string[];
         /**
           * The date and time when the case was created. For example "2024-01-01T00:00:00Z"
          */
@@ -7919,6 +8099,16 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -7934,7 +8124,8 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. The field can be a string or an array of strings.  If the value of the field is a string, it will be used as the alt text for all the images.  If the value of the field is an array of strings, the alt text will be used in the order of the images.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * The product field that contains the alt text for the images. This will look for the field in the product object first, then in the product.additionalFields object. If the product has multiple images, the value of the `imageAltField` will be used as the alt text for every image.  If the field is not specified, or does not contain a valid value, the alt text will be set to "Image {index} out of {totalImages} for {productName}".
+          * @type {string}
          */
         "imageAltField"?: string;
     }
@@ -8447,6 +8638,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -8604,6 +8809,22 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-date` component renders the value of a date result field.
@@ -8714,6 +8935,10 @@ declare namespace LocalJSX {
      * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
      */
     interface AtomicResultLocalizedText {
+        /**
+          * The field value to dynamically evaluate.
+         */
+        "field"?: Record<string, string>;
         /**
           * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
@@ -8895,6 +9120,22 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -9525,6 +9766,7 @@ declare namespace LocalJSX {
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
@@ -9921,6 +10163,7 @@ declare module "@stencil/core" {
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;

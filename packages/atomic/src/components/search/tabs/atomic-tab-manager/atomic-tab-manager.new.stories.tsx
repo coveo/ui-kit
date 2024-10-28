@@ -204,6 +204,10 @@ export const Default: Story = {
             <atomic-query-summary></atomic-query-summary>
             <atomic-refine-toggle></atomic-refine-toggle>
             <atomic-sort-dropdown>
+            <atomic-sort-expression
+                label="relevance"
+                expression="relevancy"
+              ></atomic-sort-expression>
               <atomic-sort-expression
                 tabs-excluded='["article"]'
                 label="Name descending"
@@ -224,10 +228,7 @@ export const Default: Story = {
                 label="Least Recent"
                 expression="date ascending"
               ></atomic-sort-expression>
-              <atomic-sort-expression
-                label="relevance"
-                expression="relevancy"
-              ></atomic-sort-expression>
+
             </atomic-sort-dropdown>
           </atomic-layout-section>
           <atomic-layout-section section="results">

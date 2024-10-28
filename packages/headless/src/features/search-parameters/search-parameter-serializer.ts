@@ -191,7 +191,7 @@ function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
-    .map(preprocessObjectPairs)
+    .map((parts) => preprocessObjectPairs(parts))
     .filter(isValidPair)
     .map((pair) => cast(pair));
 
@@ -214,9 +214,12 @@ export function splitOnFirstEqual(str: string) {
   return [first, second];
 }
 
-export function preprocessObjectPairs(pair: string[]) {
+export function preprocessObjectPairs(
+  pair: string[],
+  regex = facetSearchParamRegex
+) {
   const [key, val] = pair;
-  const result = facetSearchParamRegex.exec(key);
+  const result = regex.exec(key);
 
   if (!result) {
     return pair;

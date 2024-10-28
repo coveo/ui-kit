@@ -1,8 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  getVisitorID,
-  historyStore,
-} from '../../api/analytics/coveo-analytics-utils.js';
+import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
 import {
@@ -118,9 +115,6 @@ export const buildRecommendationRequest = async (
   }),
   ...(s.fields && {
     fieldsToInclude: s.fields.fieldsToInclude,
-  }),
-  ...(s.configuration.analytics.enabled && {
-    visitorId: await getVisitorID(s.configuration.analytics),
   }),
   ...(s.configuration.analytics.enabled &&
     (await buildAnalyticsSection(s, recommendationInterfaceLoad()))),
