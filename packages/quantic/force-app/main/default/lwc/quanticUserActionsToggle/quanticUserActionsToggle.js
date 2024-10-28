@@ -77,7 +77,7 @@ export default class QuanticUserActionsToggle extends LightningElement {
     this.userActions = this.headless.buildUserActions(engine, {
       options: {
         ticketCreationDate: this.ticketCreationDateTime,
-        excludedCustomActions: this.excludedCustomActions?.length
+        excludedCustomActions: Array.isArray(this.excludedCustomActions)
           ? [...this.excludedCustomActions]
           : [],
       },
