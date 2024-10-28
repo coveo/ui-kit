@@ -167,6 +167,7 @@ export default class QuanticFacet extends LightningElement {
     'displayValuesAs',
     'noFilterFacetCount',
     'injectionDepth',
+    'customSort',
   ];
 
   /** @type {FacetState} */
@@ -262,7 +263,9 @@ export default class QuanticFacet extends LightningElement {
       facetId: this.facetId ?? this.field,
       filterFacetCount: !this.noFilterFacetCount,
       injectionDepth: Number(this.injectionDepth),
-      customSort: this.customSort?.length ? [...this.customSort] : undefined,
+      customSort: Array.isArray(this.customSort)
+        ? [...this.customSort]
+        : undefined,
     };
     this.facet = this.headless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
