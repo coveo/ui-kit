@@ -3,12 +3,25 @@ import {setOutput} from '@actions/core';
 import {readdirSync, statSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
-import {
-  getBaseHeadSHAs,
-  getChangedFiles,
-  getOutputName,
-} from './hasFileChanged.mjs';
+import {getBaseHeadSHAs, getChangedFiles} from './hasFileChanged.mjs';
 import {listImports, ensureFileExists} from './list-imports.mjs';
+
+class NoRelevantChangesError extends Error {
+  constructor() {
+    super('Change detected elsewhere, running no tests.');
+    this.name = 'NoRelevantChangesError';
+  }
+}
+
+class DependentPackageChangeError extends Error {
+  constructor(file) {
+    super(
+      `Change detected in an atomic dependent Coveo package: ${file}. Running all tests.`
+    );
+    this.name = 'DependentPackageChangeError';
+    this.file = file;
+  }
+}
 
 /**
  * Recursively finds all end-to-end test files with the `.e2e.ts` extension in a given directory.
@@ -99,7 +112,7 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
  */
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
-    throw new Error(`Change detected in an different Coveo package: ${file}`);
+    throw new DependentPackageChangeError(file);
   }
 }
 
@@ -131,9 +144,7 @@ function allocateShards(testToRun, maximumShards) {
   const testCount = testToRun.split(' ');
   const shardTotal =
     testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
-  console.log('shardTotal:', shardTotal);
   const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
-  console.log('shardIndex:', shardIndex);
   return [shardIndex, [shardTotal]];
 }
 
@@ -149,14 +160,14 @@ try {
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
-  const {shardIndex, shardTotal} = testsToRun
-    ? allocateShards(testsToRun, process.env.maximumShards)
-    : [[0], [0]];
-
-  // const {shardIndex, shardTotal} = allocateShards(
-  //   testsToRun,
-  //   process.env.maximumShards
-  // );
+  if (testsToRun === '') {
+    throw new NoRelevantChangesError();
+  }
+  const {shardIndex, shardTotal} = allocateShards(
+    testsToRun,
+    process.env.maximumShards
+  );
+  console.log('Running tests for the following files:', testsToRun);
   setOutput(outputNameTestsToRun, testsToRun);
   console.log('testsToRun:', testsToRun);
   setOutput(outputNameShardIndex, shardIndex);
@@ -164,15 +175,27 @@ try {
   setOutput(outputNameShardTotal, shardTotal);
   console.log('shardTotal:', shardTotal);
   //TODO : Add logging for each particular case, quantic, subset of atomic, and dependant package.
+  // TO achieve this, throw the two error and catch them below, one where testsToRun is empty, and the other where a dependant package is detected.
 } catch (error) {
-  console.warn(error?.message || error);
-  setOutput(outputNameTestsToRun, ''); // Passing a special value to signal that changes in a dependant package were detected. Therefore, all tests should run.
-  const {shardIndex, shardTotal} = allocateShards(
-    '',
-    process.env.maximumShards
-  );
-  setOutput(outputNameShardIndex, shardIndex);
-  console.log('shardIndex:', shardIndex);
-  setOutput(outputNameShardTotal, shardTotal);
-  console.log('shardTotal:', shardTotal);
+  if (error instanceof NoRelevantChangesError) {
+    console.warn(error?.message || error);
+    setOutput(outputNameTestsToRun, '');
+    // should those be arrays ???
+    setOutput(outputNameShardIndex, [0]);
+    setOutput(outputNameShardTotal, [0]);
+  }
+
+  if (error instanceof DependentPackageChangeError) {
+    console.warn(error?.message || error);
+    setOutput(outputNameTestsToRun, '');
+    const shardIndex = Array.from(
+      {length: process.env.maximumShards},
+      (_, i) => i + 1
+    );
+    const shardTotal = [process.env.maximumShards];
+    setOutput(outputNameShardIndex, shardIndex);
+    console.log('shardIndex:', shardIndex);
+    setOutput(outputNameShardTotal, shardTotal);
+    console.log('shardTotal:', shardTotal);
+  }
 }
