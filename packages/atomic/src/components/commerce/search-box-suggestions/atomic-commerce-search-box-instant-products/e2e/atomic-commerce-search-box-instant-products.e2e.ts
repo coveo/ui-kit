@@ -51,6 +51,29 @@ test.describe('default', () => {
     });
   });
 
+  test.describe('when clicking on "See All Results"', () => {
+    test.beforeEach(async ({instantProduct, searchBox}) => {
+      await instantProduct.load();
+      await searchBox.component.evaluate((node) =>
+        node.setAttribute(
+          'redirection-url',
+          './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story'
+        )
+      );
+      await searchBox.hydrated.waitFor();
+      await searchBox.searchInput.click();
+    });
+    test('should redirect to the specified url after selecting a suggestion', async ({
+      instantProduct,
+      page,
+    }) => {
+      await instantProduct.showAllButton.click();
+      await page.waitForURL(
+        '**/iframe.html?id=atomic-commerce-search-box--in-page*'
+      );
+    });
+  });
+
   test.describe('with a custom aria label generator', async () => {
     test.beforeEach(async ({instantProduct, searchBox}) => {
       await instantProduct.load({
