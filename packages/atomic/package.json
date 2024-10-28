@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.4.0",
+  "version": "3.6.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -61,7 +61,7 @@
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.mjs --browser chrome",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
