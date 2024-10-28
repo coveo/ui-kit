@@ -25,6 +25,7 @@ export interface AtomicInsightStoreData extends AtomicCommonStoreData {
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<InsightDateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
   mobileBreakpoint: string;
+  currentQuickviewPosition: number;
 }
 
 export interface FacetInfoMap {
@@ -51,6 +52,7 @@ export function createAtomicInsightStore(): AtomicInsightStore {
     fieldsToInclude: [],
     facetElements: [],
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
+    currentQuickviewPosition: -1,
   });
   return {
     ...commonStore,
