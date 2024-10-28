@@ -11,11 +11,10 @@ import {
 import {listImports, ensureFileExists} from './list-imports.mjs';
 
 /**
- * Recursively searches for all end-to-end (E2E) test files in a given directory.
- * E2E test files are identified by the `.e2e.ts` file extension.
+ * Recursively finds all end-to-end test files with the `.e2e.ts` extension in a given directory.
  *
- * @param dir - The root directory to start the search from.
- * @returns An array of strings, each representing the full path to an E2E test file.
+ * @param {string} dir - The directory to search for test files.
+ * @returns {string[]} An array of paths to the found test files.
  */
 function findAllTestFiles(dir) {
   function searchFiles(currentDir, testFiles) {
@@ -39,10 +38,11 @@ function findAllTestFiles(dir) {
 }
 
 /**
- * Creates a mapping of test file names to the set of files they import.
+ * Creates a mapping of test file names to their respective import dependencies.
  *
- * @param testPaths - An array of E2E test file paths.
- * @returns A map where each key is a test file name and the value is the set of files it imports.
+ * @param {string[]} testPaths - An array of paths to the test files.
+ * @param {string} projectRoot - The root directory of the project.
+ * @returns {Map<string, Set<string>>} A map where the key is the test file name and the value is a set of import dependencies.
  */
 function createTestFileMappings(testPaths, projectRoot) {
   const testFileMappings = testPaths.map((testPath) => {
@@ -68,11 +68,11 @@ function createTestFileMappings(testPaths, projectRoot) {
 }
 
 /**
- * Determines which E2E test files to run based on the files that have changed.
+ * Determines which test files need to be run based on the changed files and their dependencies.
  *
- * @param changedFiles - An array of files that have changed.
- * @param testDependencies - A map of test file names to the set of files they import.
- * @returns A space-separated string of test files to run.
+ * @param {string[]} changedFiles - An array of file paths that have been changed.
+ * @param {Map<string, Set<string>>} testDependencies - A map where the keys are test file paths and the values are sets of source file paths that the test files depend on.
+ * @returns {string} A space-separated string of test file paths that need to be run.
  */
 function determineTestFilesToRun(changedFiles, testDependencies) {
   const testsToRun = new Set();
@@ -90,12 +90,25 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
   return [...testsToRun].join(' ');
 }
 
+/**
+ * Ensures that the given file is not part of a Coveo package.
+ * Throws an error if the file depends on a Coveo package.
+ *
+ * @param {string} file - The path to the file to check.
+ * @throws {Error} If the file depends on a Coveo package.
+ */
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
     throw new Error(`Change detected in an different Coveo package: ${file}`);
   }
 }
 
+/**
+ * Checks if a given file depends on any of the specified external Coveo packages.
+ *
+ * @param {string} file - The path of the file to check.
+ * @returns {boolean} - Returns true if the file path includes any of the external package paths, otherwise false.
+ */
 function dependsOnCoveoPackage(file) {
   const externalPackages = ['packages/headless/', 'packages/bueno/'];
   for (const pkg of externalPackages) {
@@ -105,9 +118,33 @@ function dependsOnCoveoPackage(file) {
   }
 }
 
+/**
+ * Allocates test shards based on the number of tests to run and the maximum number of shards.
+ *
+ * @param {string} testToRun - A string containing the tests to run, separated by spaces.
+ * @param {number} maximumShards - The maximum number of shards that can be allocated.
+ * @returns {Array} An array containing two arrays:
+ *   - The first array contains the indices of the allocated shards.
+ *   - The second array contains the total number of allocated shards.
+ */
+function allocateShards(testToRun, maximumShards) {
+  if ((testToRun = '')) {
+    return [[0], [0]];
+  }
+  const testCount = testToRun.split(' ');
+  const shardTotal =
+    testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
+  console.log('shardTotal:', shardTotal);
+  const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
+  console.log('shardIndex:', shardIndex);
+  return [shardIndex, [shardTotal]];
+}
+
 const {base, head} = getBaseHeadSHAs();
 const changedFiles = getChangedFiles(base, head).split(EOL);
-const outputName = getOutputName();
+const outputNameTestsToRun = process.argv[2];
+const outputNameShardIndex = process.argv[3];
+const outputNameShardTotal = process.argv[4];
 const projectRoot = process.env.projectRoot;
 const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
@@ -115,12 +152,19 @@ try {
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
-  setOutput(outputName, testsToRun ? testsToRun : '--grep @no-test');
-
-  if (!testsToRun) {
-    console.log('No relevant source file changes detected for E2E tests.');
-  }
+  const {shardIndex, shardTotal} = allocateShards(
+    testsToRun,
+    process.env.maximumShards
+  );
+  setOutput(outputNameTestsToRun, testsToRun);
+  console.log('testsToRun:', testsToRun);
+  setOutput(outputNameShardIndex, shardIndex);
+  console.log('shardIndex:', shardIndex);
+  setOutput(outputNameShardTotal, shardTotal);
+  console.log('shardTotal:', shardTotal);
+  //TODO : Add logging for each particular case, quantic, subset of atomic, and dependant package.
 } catch (error) {
   console.warn(error?.message || error);
-  setOutput(outputName, ''); // Passing an empty string will run all tests.
+  setOutput(outputNameTestsToRun, ''); // Passing a special value to signal that changes in a dependant package were detected. Therefore, all tests should run.
+  setOutput(outputNameType, 'string');
 }
