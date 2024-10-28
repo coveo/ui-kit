@@ -128,9 +128,6 @@ function dependsOnCoveoPackage(file) {
  *   - The second array contains the total number of allocated shards.
  */
 function allocateShards(testToRun, maximumShards) {
-  if ((testToRun = '')) {
-    return [[0], [0]];
-  }
   const testCount = testToRun.split(' ');
   const shardTotal =
     testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
@@ -152,10 +149,14 @@ try {
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
-  const {shardIndex, shardTotal} = allocateShards(
-    testsToRun,
-    process.env.maximumShards
-  );
+  const {shardIndex, shardTotal} = testsToRun
+    ? allocateShards(testsToRun, process.env.maximumShards)
+    : [[0], [0]];
+
+  // const {shardIndex, shardTotal} = allocateShards(
+  //   testsToRun,
+  //   process.env.maximumShards
+  // );
   setOutput(outputNameTestsToRun, testsToRun);
   console.log('testsToRun:', testsToRun);
   setOutput(outputNameShardIndex, shardIndex);
@@ -166,5 +167,12 @@ try {
 } catch (error) {
   console.warn(error?.message || error);
   setOutput(outputNameTestsToRun, ''); // Passing a special value to signal that changes in a dependant package were detected. Therefore, all tests should run.
-  setOutput(outputNameType, 'string');
+  const {shardIndex, shardTotal} = allocateShards(
+    '',
+    process.env.maximumShards
+  );
+  setOutput(outputNameShardIndex, shardIndex);
+  console.log('shardIndex:', shardIndex);
+  setOutput(outputNameShardTotal, shardTotal);
+  console.log('shardTotal:', shardTotal);
 }
