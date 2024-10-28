@@ -101,7 +101,7 @@ const numericFacetValueDefinition = {
     required: true,
     constrainTo: ['idle', 'selected', 'excluded'],
   }),
-  start: new NumberValue({required: true, min: 0}),
-  end: new NumberValue({required: true, min: 0}),
+  start: new NumberValue({required: true}),
+  end: new NumberValue({required: true}),
   endInclusive: new BooleanValue({required: true}),
 };
