@@ -13,7 +13,7 @@ import {
   NumericFacetExtraProperties,
 } from './common.js';
 
-export type NonLocationFacetRequestProperties = {
+export type FreezableFacetRequestProperties = {
   preventAutoSelect: boolean;
   freezeCurrentValues?: boolean;
 };
@@ -23,7 +23,7 @@ export type CategoryFacetRequest = BaseCommerceFacetRequest<
   'hierarchical'
 > &
   CategoryFacetDelimitingCharacter &
-  NonLocationFacetRequestProperties;
+  FreezableFacetRequestProperties;
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   children: CategoryFacetValueRequest[];
@@ -35,20 +35,20 @@ export type DateFacetRequest = BaseCommerceFacetRequest<
   DateRangeRequest,
   'dateRange'
 > &
-  NonLocationFacetRequestProperties;
+  FreezableFacetRequestProperties;
 
 export type NumericFacetRequest = BaseCommerceFacetRequest<
   NumericRangeRequest,
   'numericalRange'
 > &
   NumericFacetExtraProperties &
-  NonLocationFacetRequestProperties;
+  FreezableFacetRequestProperties;
 
 export type RegularFacetRequest = BaseCommerceFacetRequest<
   FacetValueRequest,
   'regular'
 > &
-  NonLocationFacetRequestProperties;
+  FreezableFacetRequestProperties;
 
 export type LocationFacetValueRequest = FacetValueRequest;
 
@@ -82,7 +82,7 @@ export type AnyFacetRequest = BaseCommerceFacetRequest<
   Partial<
     CategoryFacetDelimitingCharacter &
       NumericFacetExtraProperties &
-      NonLocationFacetRequestProperties
+      FreezableFacetRequestProperties
   >;
 
 type MappedFacetRequest = {

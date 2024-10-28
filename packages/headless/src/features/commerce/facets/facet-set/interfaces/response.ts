@@ -24,6 +24,7 @@ export interface CategoryFacetValue
   path: string[];
   isLeafValue: boolean;
   children: CategoryFacetValue[];
+  moreValuesAvailable: boolean;
 }
 
 export type DateFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
@@ -47,6 +48,10 @@ export interface RegularFacetValue
   extends BaseFacetValue,
     NonLocationFacetValue {
   value: string;
+  /**
+   * @deprecated Use the facet's `moreValuesAvailable` property instead.
+   */
+  moreValuesAvailable: boolean;
 }
 
 export type LocationFacetResponse = BaseFacetResponse<
@@ -64,6 +69,10 @@ export interface RangeFacetValue<T>
   start: T;
   end: T;
   endInclusive: boolean;
+  /**
+   * @deprecated Use the facet's `moreValuesAvailable` property instead.
+   */
+  moreValuesAvailable: boolean;
 }
 
 export interface BaseFacetResponse<
@@ -83,7 +92,6 @@ export interface BaseFacetResponse<
 
 export interface BaseFacetValue {
   state: FacetValueState;
-  moreValuesAvailable: boolean;
 }
 
 export type AnyFacetValueResponse =
