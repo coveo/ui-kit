@@ -137,14 +137,14 @@ describe('Color Facet Test Suites', () => {
       });
 
       describe('when searching for a value that returns results', () => {
-        const query = 'html';
+        const query = 'doc';
         function setupSearchFor() {
           typeFacetSearchQuery(ColorFacetSelectors, query, true);
         }
 
         beforeEach(setupSearchFor);
         describe('verify rendering', () => {
-          // CommonAssertions.assertAccessibility(colorFacetComponent);
+          CommonAssertions.assertAccessibility(colorFacetComponent);
           ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
           CommonFacetAssertions.assertDisplaySearchClearButton(
             ColorFacetSelectors,
@@ -223,7 +223,7 @@ describe('Color Facet Test Suites', () => {
         ColorFacetSelectors,
         true
       );
-      // CommonAssertions.assertAccessibility(colorFacetComponent);
+      CommonAssertions.assertAccessibility(colorFacetComponent);
       ColorFacetAssertions.assertValuesSortedAlphanumerically();
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2
