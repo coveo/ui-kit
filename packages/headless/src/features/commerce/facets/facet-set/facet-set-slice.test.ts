@@ -2926,6 +2926,44 @@ describe('commerceFacetSetReducer', () => {
       );
     });
 
+    it('populates location facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          lf: {
+            location_facet_1: ['1a', '1b'],
+            location_facet_2: ['2a'],
+          },
+        })
+      );
+
+      const firstRequest = finalState['location_facet_1'].request;
+      expect(firstRequest.type).toEqual('location');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '1a',
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            value: '1b',
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['location_facet_2'].request;
+      expect(secondRequest.type).toEqual('location');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '2a',
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
     it('populates numeric facet requests', () => {
       const finalState = commerceFacetSetReducer(
         state,
