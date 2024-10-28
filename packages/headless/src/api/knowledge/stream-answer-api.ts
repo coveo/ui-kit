@@ -17,6 +17,7 @@ import {SearchAppState} from '../../state/search-app-state.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
+  InsightConfigurationSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
@@ -30,6 +31,7 @@ export type StateNeededByAnswerAPI = {
   answer: ReturnType<typeof answerApi.reducer>;
 } & ConfigurationSection &
   Partial<SearchAppState> &
+  InsightConfigurationSection &
   GeneratedAnswerSection;
 
 export interface GeneratedAnswerStream {
@@ -176,15 +178,17 @@ export const answerApi = answerSlice.injectEndpoints({
          * It cannot use the inferred state used by Redux, thus the casting.
          * https://redux-toolkit.js.org/rtk-query/usage-with-typescript#typing-dispatch-and-getstate
          */
-        const {configuration, generatedAnswer} =
+        const {configuration, generatedAnswer, insightConfiguration} =
           getState() as unknown as StateNeededByAnswerAPI;
         const {organizationId, environment, accessToken} = configuration;
         const platformEndpoint = getOrganizationEndpoint(
           organizationId,
           environment
         );
+        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
+        const generateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`;
         await fetchEventSource(
-          `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`,
+          insightConfiguration ? insightGenerateEndpoint : generateEndpoint,
           {
             method: 'POST',
             body: JSON.stringify(args),
