@@ -54,7 +54,7 @@ describe('quantic-refine-content', () => {
   }
 
   describe('when using default options', () => {
-    it.skip('should render the duplicated facets and the sort component', () => {
+    it('should render the duplicated facets and the sort component', () => {
       visitRefineContent();
 
       scope('when loading the page', () => {
@@ -77,6 +77,7 @@ describe('quantic-refine-content', () => {
         Expect.displayClearAllFiltersButton(true);
         Expect.displayDuplicatedTimeframeFacetClearFiltersButton(true);
         Expect.displayTimeframeFacetClearFiltersButton(true);
+        Actions.clickClearAllFilters();
         Actions.clickDuplicatedFacetExpandButton();
         Actions.clickDuplicatedFacetFirstOption();
         Expect.displayClearAllFiltersButton(true);
