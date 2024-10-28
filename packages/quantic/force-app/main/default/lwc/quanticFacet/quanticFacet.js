@@ -130,6 +130,19 @@ export default class QuanticFacet extends LightningElement {
    */
   @api injectionDepth = 1000;
   /**
+   * Identifies the facet values that must appear at the top, in this order.
+   * This parameter can be used in conjunction with the `sortCriteria` parameter.
+   *
+   * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
+   *
+   * The maximum amount of custom sort values is 25.
+   *
+   * The default value is `undefined`, and the facet values will be sorted using only the `sortCriteria`.
+   * @api
+   * @type {String[]}
+   */
+  @api customSort;
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -249,6 +262,7 @@ export default class QuanticFacet extends LightningElement {
       facetId: this.facetId ?? this.field,
       filterFacetCount: !this.noFilterFacetCount,
       injectionDepth: Number(this.injectionDepth),
+      customSort: this.customSort?.length ? [...this.customSort] : undefined,
     };
     this.facet = this.headless.buildFacet(engine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
