@@ -26,6 +26,7 @@ const [shardIndex, shardTotal] = allocateShards(
   maximumShards
 );
 console.log('shardIndex:', shardIndex);
+console.log('shardTotal:', shardTotal);
 
 setOutput(shardIndexOutputName, shardIndex);
 setOutput(shardTotalOutputName, shardTotal);
