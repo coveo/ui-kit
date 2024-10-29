@@ -132,22 +132,20 @@ function dependsOnCoveoPackage(file) {
 }
 
 /**
- * Allocates test shards based on the number of tests to run and the maximum number of shards.
+ * Allocates test shards based on the total number of tests and the maximum number of shards.
  *
- * @param {string} testToRun - A string containing the tests to run, separated by spaces.
- * @param {number} maximumShards - The maximum number of shards that can be allocated.
- * @returns {Array} An array containing two arrays:
- *   - The first array contains the indices of the allocated shards.
- *   - The second array contains the total number of allocated shards.
+ * @param {number} testCount - The total number of tests.
+ * @param {number} maximumShards - The maximum number of shards to allocate.
+ * @returns {[number[], number[]]} An array containing two elements:
+ *   - The first element is an array of shard indices.
+ *   - The second element is an array containing the total number of shards.
  */
-function allocateShards(testToRun, maximumShards) {
-  const testCount = testToRun.split(' ');
-  console.log('testCount:', testCount);
+function allocateShards(testCount, maximumShards) {
   const shardTotal =
     testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
-  console.log('shardTotal in allocateShards:', shardTotal);
+  console.log('shardTotal in allocateShards', shardTotal);
   const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
-  console.log('shardIndex in allocateShards:', shardIndex);
+  console.log('shardIndex in allocateShards', shardIndex);
   return [shardIndex, [shardTotal]];
 }
 
@@ -166,10 +164,12 @@ try {
   if (testsToRun === '') {
     throw new NoRelevantChangesError();
   }
-  console.log('maximumShards', process.env.maximumShards);
-  const {shardIndex, shardTotal} = allocateShards(
-    testsToRun,
-    process.env.maximumShards
+  const maximumShards = parseInt(process.env.maximumShards, 10);
+  console.log('maximumShards', maximumShards);
+
+  const [shardIndex, shardTotal] = allocateShards(
+    testsToRun.length,
+    maximumShards
   );
   console.log('Running tests for the following files:', testsToRun);
   setOutput(outputNameTestsToRun, testsToRun);
