@@ -23,6 +23,16 @@ class DependentPackageChangeError extends Error {
   }
 }
 
+class PackageJsonChangeError extends Error {
+  constructor(file) {
+    super(
+      `Change detected in a package.json or package-lock.json file: ${file}. Running all tests.`
+    );
+    this.name = 'PackageJsonChangeError';
+    this.file = file;
+  }
+}
+
 /**
  * Recursively finds all end-to-end test files with the `.e2e.ts` extension in a given directory.
  *
@@ -92,6 +102,7 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
   for (const changedFile of changedFiles) {
     for (const [testFile, sourceFiles] of testDependencies) {
       ensureIsNotCoveoPackage(changedFile);
+      ensureIsNotPackageJsonOrPackageLockJson(changedFile);
       const isChangedTestFile = testFile === basename(changedFile);
       const isAffectedSourceFile = sourceFiles.has(changedFile);
       if (isChangedTestFile || isAffectedSourceFile) {
@@ -113,6 +124,19 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
     throw new DependentPackageChangeError(file);
+  }
+}
+
+/**
+ * Ensures that the provided file is not 'package.json' or 'package-lock.json'.
+ * Throws a PackageJsonChangeError if the file is either of these.
+ *
+ * @param {string} file - The name or path of the file to check.
+ * @throws {PackageJsonChangeError} If the file is 'package.json' or 'package-lock.json'.
+ */
+function ensureIsNotPackageJsonOrPackageLockJson(file) {
+  if (file.includes('package.json') || file.includes('package-lock.json')) {
+    throw new PackageJsonChangeError(file);
   }
 }
 
@@ -143,9 +167,7 @@ function dependsOnCoveoPackage(file) {
 function allocateShards(testCount, maximumShards) {
   const shardTotal =
     testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
-  console.log('shardTotal in allocateShards', shardTotal);
   const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
-  console.log('shardIndex in allocateShards', shardIndex);
   return [shardIndex, [shardTotal]];
 }
 
@@ -165,42 +187,35 @@ try {
     throw new NoRelevantChangesError();
   }
   const maximumShards = parseInt(process.env.maximumShards, 10);
-  console.log('maximumShards', maximumShards);
 
   const [shardIndex, shardTotal] = allocateShards(
     testsToRun.split(' ').length,
     maximumShards
   );
 
-  console.log('Running tests for the following files:', testsToRun);
   setOutput(outputNameTestsToRun, testsToRun);
-  console.log('testsToRun:', testsToRun);
   setOutput(outputNameShardIndex, shardIndex);
-  console.log('shardIndex:', shardIndex);
   setOutput(outputNameShardTotal, shardTotal);
-  console.log('shardTotal:', shardTotal);
-  //TODO : Add logging for each particular case, quantic, subset of atomic, and dependant package.
-  // TO achieve this, throw the two error and catch them below, one where testsToRun is empty, and the other where a dependant package is detected.
 } catch (error) {
   if (error instanceof NoRelevantChangesError) {
     console.warn(error?.message || error);
     setOutput(outputNameTestsToRun, '');
-    // should those be arrays ???
     setOutput(outputNameShardIndex, [0]);
     setOutput(outputNameShardTotal, [0]);
   }
 
-  if (error instanceof DependentPackageChangeError) {
+  if (
+    error instanceof DependentPackageChangeError ||
+    error instanceof PackageJsonChangeError
+  ) {
     console.warn(error?.message || error);
     setOutput(outputNameTestsToRun, '');
     const shardIndex = Array.from(
       {length: process.env.maximumShards},
       (_, i) => i + 1
     );
-    const shardTotal = [process.env.maximumShards];
     setOutput(outputNameShardIndex, shardIndex);
-    console.log('shardIndex:', shardIndex);
+    const shardTotal = [process.env.maximumShards];
     setOutput(outputNameShardTotal, shardTotal);
-    console.log('shardTotal:', shardTotal);
   }
 }

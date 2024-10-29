@@ -104,7 +104,7 @@ jobs:
       - run: npm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
-        run: node ./scripts/ci/find-tests.mjs testsToRun shardIndex shardTotal
+        run: node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal
         env:
           projectRoot: ${{ github.workspace }}
           maximumShards: ${{ env.maximumShards }}
