@@ -93,7 +93,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   }
 
   const {dispatch} = engine;
-  console.log('alex');
   const coreController = buildCoreFacet(
     engine,
     {
