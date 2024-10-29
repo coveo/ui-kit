@@ -108,7 +108,7 @@ function determineTestFilesToRun(changedFiles, testDependencies) {
  * Throws an error if the file depends on a Coveo package.
  *
  * @param {string} file - The path to the file to check.
- * @throws {Error} If the file depends on a Coveo package.
+ * @throws {DependentPackageChangeError} If the file depends on a Coveo package.
  */
 function ensureIsNotCoveoPackage(file) {
   if (dependsOnCoveoPackage(file)) {
