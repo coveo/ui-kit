@@ -142,9 +142,12 @@ function dependsOnCoveoPackage(file) {
  */
 function allocateShards(testToRun, maximumShards) {
   const testCount = testToRun.split(' ');
+  console.log('testCount:', testCount);
   const shardTotal =
     testCount === 0 ? maximumShards : Math.min(testCount, maximumShards);
+  console.log('shardTotal in allocateShards:', shardTotal);
   const shardIndex = Array.from({length: shardTotal}, (_, i) => i + 1);
+  console.log('shardIndex in allocateShards:', shardIndex);
   return [shardIndex, [shardTotal]];
 }
 
@@ -163,6 +166,7 @@ try {
   if (testsToRun === '') {
     throw new NoRelevantChangesError();
   }
+  console.log('maximumShards', process.env.maximumShards);
   const {shardIndex, shardTotal} = allocateShards(
     testsToRun,
     process.env.maximumShards
