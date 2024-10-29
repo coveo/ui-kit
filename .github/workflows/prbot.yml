@@ -111,8 +111,8 @@ jobs:
         shell: bash
       - name: Log Shard Values for Debugging
         run: |
-          echo "Shard Index: ${{ steps.set-matrix.outputs.shardIndex }}"
-          echo "Shard Total: ${{ steps.set-matrix.outputs.shardTotal }}"
+          echo "Shard Index: ${{ steps.determine-tests.outputs.shardIndex }}"
+          echo "Shard Total: ${{ steps.determine-tests.outputs.shardTotal }}"
         shell: bash
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
