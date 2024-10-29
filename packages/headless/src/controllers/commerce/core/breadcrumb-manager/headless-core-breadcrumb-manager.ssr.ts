@@ -14,10 +14,9 @@ import {
 export type {BreadcrumbManager, BreadcrumbManagerState};
 
 /**
- * Defines a `Sort` controller instance.
+ * Defines a `BreadcrumbManager` controller instance.
  *
- * @param props - The configurable `Sort` properties.
- * @returns The `Sort` controller definition.
+ * @returns The `BreadcrumbManager` controller definition.
  *
  * @internal
  */
