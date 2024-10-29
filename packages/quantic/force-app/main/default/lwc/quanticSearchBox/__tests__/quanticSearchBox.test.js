@@ -6,13 +6,6 @@ import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 jest.mock('c/quanticHeadlessLoader');
 
-let searchBoxState = {
-  value: '',
-  suggestions: [],
-  isLoading: false,
-  isLoadingSuggestions: false,
-  searchBoxId: '123',
-};
 let isInitialized = false;
 
 const exampleEngine = {
@@ -21,7 +14,7 @@ const exampleEngine = {
 
 const functionsMocks = {
   buildSearchBox: jest.fn(() => ({
-    state: searchBoxState,
+    state: {},
     subscribe: functionsMocks.subscribe,
   })),
   loadQuerySuggestActions: jest.fn(() => {}),
