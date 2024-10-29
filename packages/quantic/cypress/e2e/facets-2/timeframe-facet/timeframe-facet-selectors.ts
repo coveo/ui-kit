@@ -58,5 +58,8 @@ export const TimeframeFacetSelectors: TimeframeFacetSelector = {
   applyButton: () =>
     TimeframeFacetSelectors.get().find('.timeframe-facet__apply'),
   form: () => TimeframeFacetSelectors.get().find('form'),
-  validationError: () => TimeframeFacetSelectors.form().find('.slds-has-error'),
+  validationError: () =>
+    TimeframeFacetSelectors.form().find(
+      '.slds-form-element__help[data-error-message]'
+    ),
 };
