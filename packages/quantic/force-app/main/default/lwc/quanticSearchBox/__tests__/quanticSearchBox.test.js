@@ -114,7 +114,7 @@ describe('c-quantic-search-box', () => {
     });
 
     describe('when disableClearFilters is false (default)', () => {
-      it('should initialize the controller with the correct default clearFilters value', async () => {
+      it('should properly initialize the controller with clear filters enabled', async () => {
         const expectedDefaultOptions = {
           clearFilters: true,
           numberOfSuggestions: 7,
@@ -137,29 +137,31 @@ describe('c-quantic-search-box', () => {
       });
     });
 
-    it('should properly initialize the controller with clear filters disabled', async () => {
-      const expectedDefaultOptions = {
-        clearFilters: false,
-        numberOfSuggestions: 7,
-        highlightOptions: {
-          notMatchDelimiters: {
-            open: '<b>',
-            close: '</b>',
+    describe('when disableClearFilters is true', () => {
+      it('should properly initialize the controller with clear filters disabled', async () => {
+        const expectedDefaultOptions = {
+          clearFilters: false,
+          numberOfSuggestions: 7,
+          highlightOptions: {
+            notMatchDelimiters: {
+              open: '<b>',
+              close: '</b>',
+            },
           },
-        },
-      };
-      const element = createTestComponent({
-        ...defaultOptions,
-        disableClearFilters: true,
-      });
-      await flushPromises();
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          disableClearFilters: true,
+        });
+        await flushPromises();
 
-      expect(element.disableClearFilters).toBe(true);
-      expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
-        exampleEngine,
-        {options: expectedDefaultOptions}
-      );
+        expect(element.disableClearFilters).toBe(true);
+        expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
+          exampleEngine,
+          {options: expectedDefaultOptions}
+        );
+      });
     });
   });
 });
