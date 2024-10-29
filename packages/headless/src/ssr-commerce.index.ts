@@ -119,7 +119,6 @@ export type {
   CartProps,
   CartState,
   CartDefinition,
-  CartItemWithMetadata,
 } from './controllers/commerce/context/cart/headless-cart.ssr.js';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
 
