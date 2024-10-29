@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -30,10 +30,10 @@
     "lint": "eslint .; publint",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/headless": "3.3.0"
+    "@coveo/headless": "3.4.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",

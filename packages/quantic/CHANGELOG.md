@@ -1,3 +1,12 @@
+## <small>3.2.5 (2024-10-23)</small>
+
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+
+## <small>3.2.1 (2024-10-16)</small>
+
+- chore(quantic): skip consistently failing quantic tests (#4540) ([4a1b1f6](https://github.com/coveo/ui-kit/commits/4a1b1f6)), closes [#4540](https://github.com/coveo/ui-kit/issues/4540)
+- test(quantic): ep analytics tests fixed in the e2e (#4529) ([435e2c2](https://github.com/coveo/ui-kit/commits/435e2c2)), closes [#4529](https://github.com/coveo/ui-kit/issues/4529)
+
 ## 3.2.0 (2024-10-10)
 
 - fix(atomic, headless): use `next` as default value for queryCorrectionMode (#4495) ([ddce004](https://github.com/coveo/ui-kit/commits/ddce004)), closes [#4495](https://github.com/coveo/ui-kit/issues/4495)

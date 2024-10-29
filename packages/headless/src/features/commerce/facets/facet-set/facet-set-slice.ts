@@ -45,6 +45,10 @@ import {
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../facet-search-set/commerce-facet-search-actions.js';
 import {
+  toggleExcludeLocationFacetValue,
+  toggleSelectLocationFacetValue,
+} from '../location-facet/location-facet-actions.js';
+import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
   updateManualNumericFacetRange,
@@ -72,8 +76,10 @@ import {
   NumericFacetRequest,
   DateFacetRequest,
   CategoryFacetRequest,
+  LocationFacetRequest,
+  LocationFacetValueRequest,
 } from './interfaces/request.js';
-import {CategoryFacetValue} from './interfaces/response.js';
+import {CategoryFacetValue, LocationFacetValue} from './interfaces/response.js';
 import {AnyFacetResponse} from './interfaces/response.js';
 
 export const commerceFacetSetReducer = createReducer(
@@ -106,6 +112,27 @@ export const commerceFacetSetReducer = createReducer(
         const facetRequest = state[facetId]?.request;
 
         if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.values.find(
+          (req) => req.value === selection.value
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'select');
+        facetRequest.freezeCurrentValues = true;
+      })
+      .addCase(toggleSelectLocationFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || !ensureLocationFacetRequest(facetRequest)) {
           return;
         }
 
@@ -207,6 +234,27 @@ export const commerceFacetSetReducer = createReducer(
         const facetRequest = state[facetId]?.request;
 
         if (!facetRequest || !ensureRegularFacetRequest(facetRequest)) {
+          return;
+        }
+
+        facetRequest.preventAutoSelect = true;
+
+        const existingValue = facetRequest.values.find(
+          (req) => req.value === selection.value
+        );
+        if (!existingValue) {
+          insertNewValue(facetRequest, selection);
+          return;
+        }
+
+        updateExistingFacetValueState(existingValue, 'exclude');
+        facetRequest.freezeCurrentValues = true;
+      })
+      .addCase(toggleExcludeLocationFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId]?.request;
+
+        if (!facetRequest || !ensureLocationFacetRequest(facetRequest)) {
           return;
         }
 
@@ -366,8 +414,7 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        // TODO: KIT-3226 No need for this function if the values in the payload already contains appropriate parameters
-        request.values = convertToNumericRangeRequests(values);
+        request.values = values;
         request.numberOfValues = values.length;
       })
       .addCase(updateDateFacetValues, (state, action) => {
@@ -448,6 +495,12 @@ function ensureRegularFacetRequest(
   facetRequest: AnyFacetRequest
 ): facetRequest is RegularFacetRequest {
   return facetRequest.type === 'regular';
+}
+
+function ensureLocationFacetRequest(
+  facetRequest: AnyFacetRequest
+): facetRequest is LocationFacetRequest {
+  return facetRequest.type === 'location';
 }
 
 function ensureNumericFacetRequest(
@@ -533,7 +586,10 @@ function ensurePathAndReturnChildren(
 }
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
-    FacetValueRequest | NumericRangeRequest | DateRangeRequest
+    | FacetValueRequest
+    | LocationFacetValueRequest
+    | NumericRangeRequest
+    | DateRangeRequest
   >,
   toggleAction: 'select' | 'exclude'
 ) {
@@ -613,6 +669,8 @@ function getFacetRequestValuesFromFacetResponse(
         : facetResponse.values.map(convertCategoryFacetValueToRequest);
     case 'regular':
       return facetResponse.values.map(convertFacetValueToRequest);
+    case 'location':
+      return facetResponse.values.map(convertLocationFacetValueToRequest);
     default:
       return;
   }
@@ -633,6 +691,14 @@ export function convertCategoryFacetValueToRequest(
     value,
     retrieveCount: defaultNumberOfValuesIncrement,
   };
+}
+
+export function convertLocationFacetValueToRequest(
+  facetValue: LocationFacetValue
+): LocationFacetValueRequest {
+  const {value, state} = facetValue;
+
+  return {value, state};
 }
 
 function insertNewValue(

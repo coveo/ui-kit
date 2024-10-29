@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.3.0",
+  "version": "3.6.2",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -14,9 +14,9 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
-      "types": "./loader/index.d.ts",
-      "import": "./loader/index.js",
-      "require": "./loader/index.cjs.js"
+      "types": "./dist/loader/index.d.ts",
+      "import": "./dist/loader/index.js",
+      "require": "./dist/loader/index.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -39,8 +39,7 @@
   "files": [
     "dist/",
     "docs/",
-    "licenses/",
-    "loader/"
+    "licenses/"
   ],
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* loader/* playwright-report/*",
@@ -62,12 +61,12 @@
     "e2e:insight:watch": "cypress open --config-file cypress-insight-panel.config.mjs --browser chrome",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
     "@coveo/bueno": "1.0.1",
-    "@coveo/headless": "3.3.0",
+    "@coveo/headless": "3.4.0",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/store": "2.0.16",
@@ -87,7 +86,6 @@
     "@babel/core": "7.24.9",
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
-    "@coveo/rollup-plugin-replace-with-ast": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.3",
     "@fullhuman/postcss-purgecss": "6.0.0",
     "@nx/js": "19.5.3",
@@ -149,7 +147,7 @@
     "postcss-nested": "6.2.0",
     "puppeteer": "22.14.0",
     "react": "18.3.1",
-    "rollup": "4.22.4",
+    "rollup": "4.24.0",
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.11.2",
     "storybook": "8.1.2",
@@ -163,7 +161,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.1",
-    "@coveo/headless": "3.3.0"
+    "@coveo/headless": "3.4.0"
   },
   "license": "Apache-2.0",
   "engines": {

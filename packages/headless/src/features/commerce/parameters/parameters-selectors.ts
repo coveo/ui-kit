@@ -11,6 +11,7 @@ import {
   AnyFacetRequest,
   CategoryFacetRequest,
   DateFacetRequest,
+  LocationFacetRequest,
   NumericFacetRequest,
   RegularFacetRequest,
 } from '../facets/facet-set/interfaces/request.js';
@@ -40,6 +41,7 @@ export function initialParametersSelector(
     mnf: {},
     df: {},
     f: {},
+    lf: {},
   };
 }
 
@@ -67,6 +69,12 @@ export function activeParametersSelector(
       facetIsOfType(state, 'regular'),
       getSelectedValues,
       'f'
+    ),
+    ...getFacets(
+      state.commerceFacetSet,
+      facetIsOfType(state, 'location'),
+      getSelectedLocationValues,
+      'lf'
     ),
     ...getFacets(
       state.commerceFacetSet,
@@ -130,6 +138,12 @@ function getPerPage(
 
 function getSelectedValues(request: AnyFacetRequest) {
   return (request as RegularFacetRequest).values
+    .filter((fv) => fv.state === 'selected')
+    .map((fv) => fv.value);
+}
+
+function getSelectedLocationValues(request: AnyFacetRequest) {
+  return (request as LocationFacetRequest).values
     .filter((fv) => fv.state === 'selected')
     .map((fv) => fv.value);
 }
