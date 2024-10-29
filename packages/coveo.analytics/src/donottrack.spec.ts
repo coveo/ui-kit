@@ -2,6 +2,7 @@ describe('doNotTrack', () => {
     let doNotTrack: () => boolean;
     function initModule(
         hasNav: boolean,
+        hasWin: boolean,
         options?: {
             navigatorGlobalPrivacyControl?: any;
             navigatorDoNotTrack?: any;
@@ -12,6 +13,7 @@ describe('doNotTrack', () => {
         jest.resetModules();
         jest.mock('./detector', () => ({
             hasNavigator: () => hasNav,
+            hasWindow: () => hasWin,
         }));
         if (hasNav) {
             Object.defineProperty(<any>navigator, 'globalPrivacyControl', {
@@ -32,6 +34,8 @@ describe('doNotTrack', () => {
                 },
                 configurable: true,
             });
+        }
+        if (hasWin) {
             Object.defineProperty(<any>window, 'doNotTrack', {
                 get() {
                     return options!.windowDoNotTrack;
@@ -41,30 +45,30 @@ describe('doNotTrack', () => {
         }
         doNotTrack = require('./donottrack').doNotTrack;
     }
-    describe('without a Navigator', () => {
+    describe('without a Navigator and without window', () => {
         it('should be false', () => {
-            initModule(false);
+            initModule(false, false);
 
             expect(doNotTrack()).toBeFalsy();
         });
     });
     describe('with a Navigator', () => {
         it('should respect GPC false', () => {
-            initModule(true, {
+            initModule(true, false, {
                 navigatorGlobalPrivacyControl: false,
             });
 
             expect(doNotTrack()).toBeFalsy();
         });
         it('should respect GPC true', () => {
-            initModule(true, {
+            initModule(true, false, {
                 navigatorGlobalPrivacyControl: true,
             });
 
             expect(doNotTrack()).toBeTruthy();
         });
         it('should respect GPC undefined', () => {
-            initModule(true, {
+            initModule(true, false, {
                 navigatorGlobalPrivacyControl: undefined,
             });
 
@@ -73,7 +77,7 @@ describe('doNotTrack', () => {
 
         [true, 'yes', '1'].forEach((value) => {
             it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
+                initModule(true, false, {
                     navigatorDoNotTrack: value,
                 });
 
@@ -81,15 +85,8 @@ describe('doNotTrack', () => {
             });
 
             it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
+                initModule(true, false, {
                     navigatorMsDoNotTrack: value,
-                });
-                expect(doNotTrack()).toBeTruthy();
-            });
-
-            it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
-                    windowDoNotTrack: value,
                 });
                 expect(doNotTrack()).toBeTruthy();
             });
@@ -97,7 +94,7 @@ describe('doNotTrack', () => {
 
         [false, 'no', '0', 'unspecified'].forEach((value) => {
             it('should fallback on `navigator.doNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
+                initModule(true, false, {
                     navigatorDoNotTrack: value,
                 });
 
@@ -105,18 +102,43 @@ describe('doNotTrack', () => {
             });
 
             it('should fallback on `navigator.msDoNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
+                initModule(true, false, {
                     navigatorMsDoNotTrack: value,
                 });
                 expect(doNotTrack()).toBeFalsy();
             });
+        });
+    });
 
+    describe('with a Window', () => {
+        [true, 'yes', '1'].forEach((value) => {
             it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
-                initModule(true, {
+                initModule(false, true, {
+                    windowDoNotTrack: value,
+                });
+                expect(doNotTrack()).toBeTruthy();
+            });
+        });
+
+        [false, 'no', '0', 'unspecified'].forEach((value) => {
+            it('should fallback on `window.doNotTrack`: ' + JSON.stringify(value), () => {
+                initModule(false, true, {
                     windowDoNotTrack: value,
                 });
                 expect(doNotTrack()).toBeFalsy();
             });
+        });
+    });
+
+    describe('with a Navigator and a Window', () => {
+        it('should fallback on `window.doNotTrack` if all navigator properties are falsy', () => {
+            initModule(true, true, {
+                navigatorDoNotTrack: false,
+                navigatorGlobalPrivacyControl: undefined,
+                navigatorMsDoNotTrack: '0',
+                windowDoNotTrack: 1,
+            });
+            expect(doNotTrack()).toBeTruthy();
         });
     });
 });
