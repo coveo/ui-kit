@@ -63,11 +63,10 @@ async function setupWithPauseBeforeSearch(
     const stalledRequest = search.interceptSearchIndefinitely();
     await search.performSearch();
     return stalledRequest;
-  } else {
-    const stalledRequest = search.interceptSearchIndefinitely();
-    configuration.configure(options);
-    return stalledRequest;
   }
+  const stalledRequest = search.interceptSearchIndefinitely();
+  configuration.configure(options);
+  return stalledRequest;
 }
 
 const fixtures = {
@@ -88,7 +87,7 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when the page is loading ${useCase.label', () => {
-      test('should display the pager only after the search request is completed', async ({
+      test('should display the pager only after the search request has been completed', async ({
         page,
         search,
         insight,

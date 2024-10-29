@@ -1,7 +1,9 @@
 import {Page} from '@playwright/test';
 
 export class ConfigurationObject {
-  constructor(private page: Page) {}
+  constructor(private page: Page) {
+    this.page = page;
+  }
 
   get tryButton() {
     return this.page.locator('lightning-button[data-cy="cfg-try"]');

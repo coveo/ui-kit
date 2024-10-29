@@ -2,7 +2,9 @@ import {Page} from '@playwright/test';
 import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
 
 export class PagerObject {
-  constructor(public page: Page) {}
+  constructor(public page: Page) {
+    this.page = page;
+  }
 
   get nextPageButton() {
     return this.page.locator('button[title="Next Page"]');

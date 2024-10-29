@@ -6,7 +6,10 @@ export class SearchObject {
   constructor(
     private page: Page,
     private useCase: UseCase = 'search'
-  ) {}
+  ) {
+    this.page = page;
+    this.useCase = useCase;
+  }
 
   get performSearchButton() {
     return this.page.locator('c-action-perform-search button');

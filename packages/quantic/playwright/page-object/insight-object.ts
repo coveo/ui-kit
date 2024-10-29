@@ -1,7 +1,9 @@
 import {Page, expect} from '@playwright/test';
 
 export class InsightObject {
-  constructor(private page: Page) {}
+  constructor(private page: Page) {
+    this.page = page;
+  }
 
   get initializationInput() {
     return this.page.locator(
