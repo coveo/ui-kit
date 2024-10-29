@@ -13,6 +13,7 @@ export interface RelevanceInspectorDefinition
 
 /**
  * Defines a `RelevanceInspector` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `RelevanceInspector` properties.
  * @returns The `RelevanceInspector` controller definition.

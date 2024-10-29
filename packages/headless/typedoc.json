@@ -1,4 +1,5 @@
 {
+  "entryPointStrategy": "merge",
   "navigation": {
     "includeCategories": true,
     "includeGroups": true,
@@ -16,13 +17,13 @@
     "*"
   ],
   "entryPoints": [
-    "./src/core.index.ts",
-    "./src/index.ts",
-    "./src/case-assist.index.ts",
-    "./src/commerce.index.ts",
-    "./src/insight.index.ts",
-    "./src/recommendation.index.ts",
-    "./src/ssr.index.ts"
+    "./temp/index.json",
+    "./temp/ssr.json",
+    "./temp/commerce.json",
+    "./temp/ssr-commerce.json",
+    "./temp/case-assist.json",
+    "./temp/insight.json",
+    "./temp/recommendation.json"
   ],
   "gitRevision": "typedoc-POC",
   "plugin": ["./typedoc/dist/index.js"]
