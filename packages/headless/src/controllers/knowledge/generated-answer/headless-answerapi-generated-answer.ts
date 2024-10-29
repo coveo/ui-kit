@@ -96,16 +96,24 @@ const subscribeToSearchRequest = (
   const strictListener = () => {
     const state = engine.state;
     const triggerParams = selectAnswerTriggerParams(state);
-    if (triggerParams.q.length === 0 || triggerParams.requestId.length === 0) {
+
+    if (!lastTriggerParams || triggerParams.q.length === 0) {
+      lastTriggerParams = triggerParams;
+    }
+
+    if (
+      triggerParams.q.length === 0 ||
+      triggerParams.requestId.length === 0 ||
+      triggerParams.requestId === lastTriggerParams.requestId
+    ) {
       return;
     }
-    if (triggerParams?.requestId === lastTriggerParams?.requestId) {
-      return;
-    }
+
     lastTriggerParams = triggerParams;
     engine.dispatch(resetAnswer());
     engine.dispatch(fetchAnswer(state));
   };
+
   engine.subscribe(strictListener);
 };
 
