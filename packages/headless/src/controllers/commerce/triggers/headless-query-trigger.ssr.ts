@@ -13,7 +13,6 @@ export interface QueryTriggerDefinition
  *
  * @returns The `NotifyTrigger` controller definition.
  *
- * @internal
  */
 export function defineQueryTrigger(): QueryTriggerDefinition {
   return {

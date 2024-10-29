@@ -155,7 +155,6 @@ export interface FacetGeneratorProps {
 }
 
 /**
- * @internal
  *
  * Creates a `FacetGenerator` sub-controller for server-side rendering purposes (SSR).
  *

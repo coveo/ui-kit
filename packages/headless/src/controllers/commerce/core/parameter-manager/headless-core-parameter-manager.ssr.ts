@@ -39,7 +39,6 @@ export type {
  *
  * @returns The `ParameterManager` controller definition.
  *
- * @internal
  */
 export function defineParameterManager<
   TOptions extends ControllerDefinitionOption | undefined,

@@ -11,7 +11,6 @@ export type {Recommendations, RecommendationsState};
 export interface RecommendationsDefinition
   extends UniversalControllerDefinitionWithoutProps<Recommendations> {}
 /**
- * @internal
  * Defines a `Recommendations` controller instance.
  * @group Definers
  *
