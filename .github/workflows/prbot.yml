@@ -94,8 +94,8 @@ jobs:
       maximumShards: 24
     outputs:
       testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
-      shardIndex: ${{ steps.set-matrix.outputs.shardIndex }}
-      shardTotal: ${{ steps.set-matrix.outputs.shardTotal }}
+      shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
+      shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
@@ -109,13 +109,11 @@ jobs:
           projectRoot: ${{ github.workspace }}
           maximumShards: ${{ env.maximumShards }}
         shell: bash
-      # - name: Determine Shard Values
-      #   id: set-matrix
-      #   run: node ./scripts/ci/determine-shard.mjs shardIndex shardTotal
-      #   env:
-      #     testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
-      #     maximumShards: ${{ env.maximumShards }}
-      #   shell: bash
+      - name: Log Shard Values for Debugging
+        run: |
+          echo "Shard Index: ${{ steps.set-matrix.outputs.shardIndex }}"
+          echo "Shard Total: ${{ steps.set-matrix.outputs.shardTotal }}"
+        shell: bash
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic
