@@ -7,6 +7,7 @@
   "categorizeByGroup": true,
   "groupOrder": [
     "Engine",
+    "Definers",
     "Controllers",
     "Buildable controllers",
     "Sub-controllers",

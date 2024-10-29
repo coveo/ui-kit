@@ -1,4 +1,16 @@
 /**
+ * The Coveo Headless Case Assist sub-package exposes exposes the engine, controllers, actions, and utility functions to build a case assist experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildCaseInput, buildCaseAssistEngine } from '@coveo/headless/case-assist';
+ *
+ * const engine = buildCaseAssistEngine({
+ *    configuration: ...
+ * });
+ *
+ * const caseInput = buildCaseInput(engine);
+ * ```
  * @module Case Assist
  */
 

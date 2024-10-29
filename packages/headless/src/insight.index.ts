@@ -1,4 +1,16 @@
 /**
+ * The Coveo Headless Insight sub-package exposes exposes the engine, controllers, actions, and utility functions to build an insight experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildSearchBox, buildInsightEngine, getSampleInsightEngineConfiguration } from '@coveo/headless/insight';
+ *
+ * const engine = buildInsightEngine({
+ *    configuration: getSampleInsightEngineConfiguration()
+ * });
+ *
+ * const searchBox = buildSearchBox(engine);
+ * ```
  * @module Insight
  */
 import * as HighlightUtils from './utils/highlight.js';
