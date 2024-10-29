@@ -168,9 +168,10 @@ try {
   console.log('maximumShards', maximumShards);
 
   const [shardIndex, shardTotal] = allocateShards(
-    testsToRun.length,
+    testsToRun.split(' ').length,
     maximumShards
   );
+
   console.log('Running tests for the following files:', testsToRun);
   setOutput(outputNameTestsToRun, testsToRun);
   console.log('testsToRun:', testsToRun);
