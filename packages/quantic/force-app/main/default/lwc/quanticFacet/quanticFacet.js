@@ -130,7 +130,7 @@ export default class QuanticFacet extends LightningElement {
    */
   @api injectionDepth = 1000;
   /**
-   * Identifies the facet values that must appear at the top, in this order.
+   * Identifies the facet values that must appear at the top, in order.
    * This parameter can be used in conjunction with the `sortCriteria` parameter.
    * Facet values not part of the `customSort` list will be sorted according to the `sortCriteria`.
    * The maximum amount of custom sort values is 25.
