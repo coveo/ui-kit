@@ -3024,6 +3024,67 @@ describe('commerceFacetSetReducer', () => {
       );
     });
 
+    it('populates manual numeric facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          mnf: {
+            manual_numeric_facet_1: [
+              {
+                start: 1,
+                end: 10,
+                endInclusive: false,
+              },
+              {
+                start: 15,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+            manual_numeric_facet_2: [
+              {
+                start: 11,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+          },
+        })
+      );
+
+      const firstRequest = finalState['manual_numeric_facet_1'].request;
+      expect(firstRequest.type).toEqual('numericalRange');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 1,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            start: 15,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['manual_numeric_facet_2'].request;
+      expect(secondRequest.type).toEqual('numericalRange');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 11,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
     it('populates date facet requests', () => {
       const finalState = commerceFacetSetReducer(
         state,
