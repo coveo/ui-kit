@@ -88,6 +88,8 @@ export type FacetGeneratorState = MappedFacetStates;
 
 export type MappedFacetStates = Array<MappedFacetState[FacetType]>;
 
+export type {FacetType};
+
 export type MappedFacetState = {
   [T in FacetType]: T extends 'numericalRange'
     ? NumericFacetState

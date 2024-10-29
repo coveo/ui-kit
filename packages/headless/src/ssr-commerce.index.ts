@@ -76,6 +76,7 @@ export type {
   MappedGeneratedFacetController,
   MappedFacetStates,
   MappedFacetState,
+  FacetType,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 
@@ -118,6 +119,7 @@ export type {
   CartProps,
   CartState,
   CartDefinition,
+  CartItemWithMetadata,
 } from './controllers/commerce/context/cart/headless-cart.ssr.js';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
 

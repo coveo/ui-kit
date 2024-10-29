@@ -2,6 +2,7 @@ import {UniversalControllerDefinitionWithoutProps} from '../../../../app/commerc
 import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart.js';
 
 export type {CartState, CartItem, CartProps} from './headless-cart.js';
+export type {CartItemWithMetadata} from '../../../../features/commerce/context/cart/cart-state.js';
 export type {Cart, CartInitialState};
 
 export interface CartDefinition
