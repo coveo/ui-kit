@@ -311,7 +311,7 @@ async function updateCommunityConfigFile(
   log('Configuration file updated.');
 }
 
-async function setCommunituBaseUrlAsEnvVariable(log, communityUrl) {
+async function setCommunityBaseUrlAsEnvVariable(log, communityUrl) {
   const pathSegments = [__dirname, '..', '..', '.env'];
 
   // Use path.join to create the full path without manually writing slashes
@@ -389,7 +389,7 @@ async function deleteScratchOrg(
           await updateCommunityConfigFile(log, options, communityUrl)
       )
       .add(
-        async (log) => await setCommunituBaseUrlAsEnvVariable(log, communityUrl)
+        async (log) => await setCommunityBaseUrlAsEnvVariable(log, communityUrl)
       )
       .add(async (log) => await waitForCommunity(log, communityUrl));
 
