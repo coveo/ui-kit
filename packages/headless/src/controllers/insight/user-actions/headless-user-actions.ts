@@ -44,6 +44,9 @@ export interface UserActionsOptions {
 
 /**
  * The UserActions controller is responsible for fetching user actions surrounding a given case creation event.
+ *
+ * @group Controllers
+ * @category UserActions
  */
 export interface UserActions extends Controller {
   /**
@@ -61,6 +64,15 @@ export interface UserActions extends Controller {
   state: UserActionsState;
 }
 
+/**
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `UserActions` properties.
+ * @returns A `UserActions` controller instance.
+ *
+ * @group Controllers
+ * @category UserActions
+ */
 export function buildUserActions(
   engine: InsightEngine,
   props: UserActionsProps

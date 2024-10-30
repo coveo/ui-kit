@@ -56,6 +56,9 @@ export interface InstantProductsProps {
 
 /**
  * The `InstantProducts` controller allows the end user to manage instant products queries.
+ *
+ * @group Buildable controllers
+ * @category InstantProducts
  */
 export interface InstantProducts extends Controller {
   /**
@@ -98,6 +101,12 @@ export interface InstantProducts extends Controller {
   state: InstantProductsState;
 }
 
+/**
+ * The state of the `InstantProducts` controller.
+ *
+ * @group Buildable controllers
+ * @category InstantProducts
+ */
 export interface InstantProductsState {
   /**
    * The current query for instant products.
@@ -127,6 +136,9 @@ export interface InstantProductsState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `InstantProducts` properties.
  * @returns An `InstantProducts` controller instance.
+ *
+ * @group Buildable controllers
+ * @category InstantProducts
  */
 export function buildInstantProducts(
   engine: CommerceEngine,

@@ -43,6 +43,9 @@ export interface AttachToCaseOptions {
 /**
  * The AttachToCase controller is responsible for handling the attach and detach actions on a specific result.
  * It also provides a function `isAttached` to verify if currently a specific result is part of the attachedResults state.
+ *
+ * @group Controllers
+ * @category AttachToCase
  */
 export interface AttachToCase extends Controller {
   /**
@@ -68,6 +71,9 @@ export interface AttachToCase extends Controller {
  * @param engine - The headless engine.
  * @param props - The configurable `AttachToCase` properties.
  * @returns - A `AttachToCase` controller instance.
+ *
+ * @group Controllers
+ * @category AttachToCase
  */
 export function buildAttachToCase(
   engine: InsightEngine,

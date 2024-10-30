@@ -13,6 +13,7 @@ export interface SmartSnippetDefinition
 
 /**
  * Defines a `SmartSnippet` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `SmartSnippet` properties.
  * @returns The `SmartSnippet` controller definition.

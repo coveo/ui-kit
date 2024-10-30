@@ -9,6 +9,7 @@ export interface SearchStatusDefinition
 
 /**
  * Defines a `SearchStatus` controller instance.
+ * @group Definers
  *
  * @returns The `SearchStatus` controller definition.
  * */

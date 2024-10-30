@@ -1,3 +1,72 @@
+/**
+ * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ *
+ * @example
+ * ```typescript
+ * import {
+ *   Controller,
+ *   ControllerDefinitionsMap,
+ *   CommerceEngineDefinitionOptions,
+ *   CommerceEngine,
+ *   defineCommerceEngine,
+ *   InferStaticState,
+ *   InferHydratedState,
+ *   defineProductList,
+ *   getSampleCommerceEngineConfiguration,
+ * } from '@coveo/headless/ssr-commerce';
+ *
+ * type CommerceEngineConfig = CommerceEngineDefinitionOptions<
+ *   ControllerDefinitionsMap<CommerceEngine, Controller>
+ * >;
+ *
+ * const config = {
+ *   configuration: {
+ *     ...getSampleCommerceEngineConfiguration(),
+ *     context: {
+ *       language: 'en',
+ *       country: 'US',
+ *       currency: 'USD',
+ *       view: {
+ *         url: '...',
+ *       },
+ *     },
+ *   },
+ *   controllers: {
+ *     productList: defineProductList(),
+ *   },
+ * } satisfies CommerceEngineConfig;
+ *
+ * const engineDefinition = defineCommerceEngine(engineConfig);
+ *
+ * export const {
+ *   listingEngineDefinition,
+ *   searchEngineDefinition,
+ *   standaloneEngineDefinition,
+ * } = engineDefinition;
+ *
+ * export type ListingStaticState = InferStaticState<
+ *   typeof listingEngineDefinition
+ * >;
+ * export type ListingHydratedState = InferHydratedState<
+ *   typeof listingEngineDefinition
+ * >;
+ *
+ * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+ * export type SearchHydratedState = InferHydratedState<
+ *   typeof searchEngineDefinition
+ * >;
+ *
+ * export type StandaloneStaticState = InferStaticState<
+ *   typeof standaloneEngineDefinition
+ * >;
+ * export type StandaloneHydratedState = InferHydratedState<
+ *   typeof standaloneEngineDefinition
+ * >;
+ *
+ * ```
+ * @module SSR Commerce
+ */
+
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 

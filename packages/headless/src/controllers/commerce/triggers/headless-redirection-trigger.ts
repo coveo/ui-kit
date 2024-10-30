@@ -11,6 +11,9 @@ import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-
  *
  * @param engine - The headless commerce engine.
  * @returns A `RedirectionTrigger` controller instance.
+ *
+ * @group Buildable controllers
+ * @category RedirectionTrigger
  * */
 export function buildRedirectionTrigger(
   engine: CommerceEngine

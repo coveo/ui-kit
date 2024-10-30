@@ -9,6 +9,7 @@ export interface SortDefinition
 
 /**
  * Defines a `Sort` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Sort` properties.
  * @returns The `Sort` controller definition.
