@@ -17,6 +17,8 @@ export type {BreadcrumbManager, BreadcrumbManagerState};
  * Defines a `BreadcrumbManager` controller instance.
  *
  * @returns The `BreadcrumbManager` controller definition.
+ *
+ * @internal
  */
 export function defineBreadcrumbManager<
   TOptions extends ControllerDefinitionOption | undefined,
