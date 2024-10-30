@@ -31,6 +31,6 @@ export const Default: Story = {
   name: 'atomic-numeric-facet',
   decorators: [facetDecorator],
   args: {
-    field: 'ytviewcount',
+    'attributes-field': 'ytviewcount',
   },
 };

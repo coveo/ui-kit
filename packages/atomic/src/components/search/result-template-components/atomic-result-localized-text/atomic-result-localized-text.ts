@@ -41,7 +41,7 @@ export class AtomicResultLocalizedText implements InitializableComponent {
   /**
    * The field value to dynamically evaluate.
    */
-  @MapProp() field: Record<string, string> = {};
+  @Prop() @MapProp() field: Record<string, string> = {};
   /**
    * The numerical field value used to determine whether to use the singular or plural value of a translation.
    * */
