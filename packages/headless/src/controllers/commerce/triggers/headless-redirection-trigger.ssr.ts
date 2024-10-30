@@ -13,6 +13,7 @@ export interface RedirectionTriggerDefinition
  *
  * @returns The `NotifyTrigger` controller definition.
  *
+ * @internal
  */
 export function defineRedirectionTrigger(): RedirectionTriggerDefinition {
   return {

@@ -13,6 +13,7 @@ export interface NotifyTriggerDefinition
  *
  * @returns The `NotifyTrigger` controller definition.
  *
+ * @internal
  */
 export function defineNotifyTrigger(): NotifyTriggerDefinition {
   return {

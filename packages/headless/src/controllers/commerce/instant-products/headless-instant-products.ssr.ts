@@ -20,6 +20,7 @@ export interface InstantProductsDefinition
  *
  * @returns The `InstantProducts` controller definition.
  *
+ * @internal
  */
 export function defineInstantProducts(
   props: InstantProductsProps

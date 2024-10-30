@@ -21,6 +21,7 @@ export type {Pagination, PaginationProps, PaginationState};
  * @param props - The configurable `Pagination` properties.
  * @returns The `Pagination` controller definition.
  *
+ * @internal
  */
 export function definePagination<
   TOptions extends ControllerDefinitionOption | undefined,

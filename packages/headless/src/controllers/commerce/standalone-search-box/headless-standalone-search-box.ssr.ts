@@ -19,6 +19,7 @@ export interface StandaloneSearchBoxDefinition
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns The `StandaloneSearchBox` controller definition.
  *
+ * @internal
  */
 export function defineStandaloneSearchBox(
   props: StandaloneSearchBoxProps

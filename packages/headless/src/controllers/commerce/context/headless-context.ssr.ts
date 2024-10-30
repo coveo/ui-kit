@@ -20,6 +20,7 @@ export interface ContextDefinition
  *
  * @returns The `Context` controller definition.
  *
+ * @internal
  */
 export function defineContext(props: ContextProps = {}): ContextDefinition {
   return {
