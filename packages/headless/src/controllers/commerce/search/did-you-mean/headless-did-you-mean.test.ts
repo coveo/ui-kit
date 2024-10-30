@@ -1,11 +1,16 @@
 import {stateKey} from '../../../../app/state-key.js';
+import {applyCorrection} from '../../../../features/commerce/did-you-mean/did-you-mean-actions.js';
 import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {executeSearch} from '../../../../features/commerce/search/search-actions.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
   buildMockCommerceEngine,
   MockedCommerceEngine,
 } from '../../../../test/mock-engine-v2.js';
 import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
+
+vi.mock('../../../../features/commerce/did-you-mean/did-you-mean-actions');
+vi.mock('../../../../features/commerce/search/search-actions');
 
 describe('did you mean', () => {
   let didYouMean: DidYouMean;
@@ -144,6 +149,38 @@ describe('did you mean', () => {
       };
 
       expect(didYouMean.state.wasAutomaticallyCorrected).toEqual(false);
+    });
+  });
+
+  describe('#applyCorrection', () => {
+    it('dispatches applyCorrection with the corrected query', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'corrected query',
+          wordCorrections: [],
+        },
+      };
+
+      didYouMean.applyCorrection();
+
+      expect(applyCorrection).toHaveBeenCalledWith('corrected query');
+    });
+
+    it('dispatches executeSearch', () => {
+      engine[stateKey].didYouMean = {
+        originalQuery: '',
+        wasCorrectedTo: '',
+        queryCorrection: {
+          correctedQuery: 'corrected query',
+          wordCorrections: [],
+        },
+      };
+
+      didYouMean.applyCorrection();
+
+      expect(executeSearch).toHaveBeenCalled();
     });
   });
 });
