@@ -5,13 +5,13 @@ import {
   useCaseTestCases,
   useCaseEnum,
 } from '../../../../../../playwright/utils/use-case';
-import {InsightObject} from '../../../../../../playwright/page-object/insight-object';
+import {InsightSetupObject} from '../../../../../../playwright/page-object/insight-setup-object';
 import {ConfigurationObject} from '../../../../../../playwright/page-object/configuration-object';
 
 interface PageObjects {
   configuration: ConfigurationObject;
   search: SearchObject;
-  insight?: InsightObject;
+  insightSetup?: InsightSetupObject;
 }
 
 interface PagerOptions {
@@ -21,14 +21,14 @@ interface PagerOptions {
 
 async function visitPage(
   page: Page,
-  {search, insight, configuration}: PageObjects,
+  {search, insightSetup, configuration}: PageObjects,
   options: Partial<PagerOptions> = {}
 ) {
   const pageUrl = 's/quantic-pager';
   await page.goto(pageUrl);
   configuration.configure(options);
   if (options.useCase === useCaseEnum.insight) {
-    await insight?.waitForInsightInterfaceInitialization();
+    await insightSetup?.waitForInsightInterfaceInitialization();
     await search.interceptSearchAndLimitResultPages(5);
     await search.performSearch();
     await search.waitForSearchResponse();
@@ -51,7 +51,7 @@ async function visitPageAndloadOptionsFromUrl(
 
 async function setupWithPauseBeforeSearch(
   page: Page,
-  {search, insight, configuration}: PageObjects,
+  {search, insightSetup, configuration}: PageObjects,
   options: Partial<PagerOptions> = {}
 ) {
   const pageUrl = 's/quantic-pager';
@@ -59,7 +59,7 @@ async function setupWithPauseBeforeSearch(
 
   if (options.useCase === useCaseEnum.insight) {
     configuration.configure(options);
-    await insight?.waitForInsightInterfaceInitialization();
+    await insightSetup?.waitForInsightInterfaceInitialization();
     const stalledRequest = search.interceptSearchIndefinitely();
     await search.performSearch();
     return stalledRequest;
@@ -78,10 +78,10 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic pager ${useCase.label}`, () => {
-    test.beforeEach(async ({page, search, insight, configuration}) => {
+    test.beforeEach(async ({page, search, insightSetup, configuration}) => {
       await visitPage(
         page,
-        {search, insight, configuration},
+        {search, insightSetup, configuration},
         {useCase: useCase.value}
       );
     });
@@ -90,13 +90,13 @@ useCaseTestCases.forEach((useCase) => {
       test('should display the pager only after the search request has been completed', async ({
         page,
         search,
-        insight,
+        insightSetup,
         pager,
         configuration,
       }) => {
         const resumeSearchRequest = await setupWithPauseBeforeSearch(
           page,
-          {search, insight, configuration},
+          {search, insightSetup, configuration},
           {useCase: useCase.value}
         );
 

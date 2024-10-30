@@ -5,6 +5,7 @@ import {SearchObject} from '../../../../../../playwright/page-object/search-obje
 
 type QuanticPagerE2EFixtures = {
   pager: PagerObject;
+  search: SearchObject;
 };
 
 export const testSearch = quanticBase.extend<QuanticPagerE2EFixtures>({

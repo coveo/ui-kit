@@ -1,6 +1,6 @@
 import {Page, expect} from '@playwright/test';
 
-export class InsightObject {
+export class InsightSetupObject {
   constructor(private page: Page) {
     this.page = page;
   }
