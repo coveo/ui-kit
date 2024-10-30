@@ -19,8 +19,21 @@ export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
     [controller]
   );
 
-  if (!state.wasAutomaticallyCorrected) {
+  if (!state.hasQueryCorrection) {
     return null;
+  }
+
+  if (state.wasAutomaticallyCorrected) {
+    return (
+      <div>
+        <p>
+          No results for <b>{state.originalQuery}</b>
+        </p>
+        <p>
+          Query was automatically corrected to <b>{state.wasCorrectedTo}</b>
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -29,7 +42,11 @@ export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
         No results for <b>{state.originalQuery}</b>
       </p>
       <p>
-        Query was automatically corrected to <b>{state.wasCorrectedTo}</b>
+        Search for
+        <span onClick={() => controller?.applyCorrection()}>
+          <b>{state.queryCorrection.correctedQuery}</b>
+        </span>
+        instead?
       </p>
     </div>
   );
