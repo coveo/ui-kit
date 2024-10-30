@@ -21,6 +21,7 @@ import {
   getSampleCommerceEngineConfiguration,
   defineDidYouMean,
   defineRecommendations, //defineParameterManager,
+  defineBreadcrumbManager,
 } from '@coveo/headless/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -69,5 +70,6 @@ export default {
     didYouMean: defineDidYouMean(),
     //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
     facetGenerator: defineFacetGenerator(),
+    breadcrumbManager: defineBreadcrumbManager(),
   },
 } satisfies CommerceEngineConfig;

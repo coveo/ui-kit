@@ -65,10 +65,12 @@ export type {
   CategoryFacetValue,
   CategoryFacetSearchResult,
   DateFacet,
+  DateFacetValue,
   DateFacetState,
   FacetGenerator,
   FacetGeneratorState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
   RegularFacet,
   RegularFacetState,
@@ -148,6 +150,12 @@ export type {
   SortState,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
 export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
+
+export type {
+  BreadcrumbManager,
+  BreadcrumbManagerState,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
+export {defineBreadcrumbManager} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
 
 export type {
   Summary,

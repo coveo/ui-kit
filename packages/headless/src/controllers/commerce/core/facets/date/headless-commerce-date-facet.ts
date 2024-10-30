@@ -15,6 +15,8 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 
+export type {DateFacetValue};
+
 export type DateFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'

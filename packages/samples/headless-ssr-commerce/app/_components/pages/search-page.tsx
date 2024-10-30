@@ -7,6 +7,7 @@ import {
   SearchStaticState,
   searchEngineDefinition,
 } from '../../_lib/commerce-engine';
+import BreadcrumbManager from '../breadcrumb-manager';
 import DidYouMean from '../did-you-mean';
 import FacetGenerator from '../facets/facet-generator';
 import ProductList from '../product-list';
@@ -79,6 +80,10 @@ export default function SearchPage({
           <DidYouMean
             staticState={staticState.controllers.didYouMean.state}
             controller={hydratedState?.controllers.didYouMean}
+          />
+          <BreadcrumbManager
+            staticState={staticState.controllers.breadcrumbManager.state}
+            controller={hydratedState?.controllers.breadcrumbManager}
           />
           <FacetGenerator
             staticState={staticState.controllers.facetGenerator.state}
