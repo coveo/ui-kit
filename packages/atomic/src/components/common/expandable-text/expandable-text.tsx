@@ -34,12 +34,11 @@ const renderShowHideButton = (
   showMoreLabel: string,
   showLessLabel: string
 ) => {
+  let buttonClass = 'expandable-text-button p-1 text-xs';
   if (!isTruncated && !isExpanded) {
-    return null;
-  }
-
-  if (!isCollapsible && !isTruncated && isExpanded) {
-    return null;
+    buttonClass += ' invisible';
+  } else if (!isCollapsible && !isTruncated && isExpanded) {
+    buttonClass += ' hidden';
   }
 
   const label = isExpanded ? showLessLabel : showMoreLabel;
@@ -47,7 +46,7 @@ const renderShowHideButton = (
   return (
     <Button
       style="text-primary"
-      class="expandable-text-button p-1 text-xs"
+      class={buttonClass}
       title={label}
       onClick={onToggleExpand}
     >
@@ -76,7 +75,7 @@ export const ExpandableText: FunctionalComponent<ExpandableTextProps> = (
     <div class="flex flex-col items-start">
       <div
         part="expandable-text"
-        class={`expandable-text ${!isExpanded ? getLineClampClass(truncateAfter) : ''}`}
+        class={`expandable-text ${!isExpanded ? getLineClampClass(truncateAfter) : ''} min-lines-${truncateAfter}`}
       >
         {children}
       </div>

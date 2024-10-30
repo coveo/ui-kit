@@ -14,6 +14,16 @@
       }
     }
     &.display-grid {
+      &.image-large,
+      &.image-small,
+      &.image-icon,
+      &.image-none {
+        atomic-product-section-name {
+          min-height: calc(var(--line-height) * 2);
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+        }
+      }
       @screen desktop-only {
         &.image-large {
           atomic-product-section-children .product-child {
