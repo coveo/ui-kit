@@ -20,6 +20,8 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 
+export type {NumericFacetValue};
+
 export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'

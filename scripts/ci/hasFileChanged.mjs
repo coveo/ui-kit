@@ -41,7 +41,7 @@ function checkPatterns(files, patterns) {
   return false;
 }
 
-export function getOutputName() {
+function getOutputName() {
   return process.argv[2];
 }
 
