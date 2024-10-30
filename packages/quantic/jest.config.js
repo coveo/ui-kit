@@ -29,6 +29,8 @@ module.exports = {
       '<rootDir>/force-app/main/default/lwc/quanticResultActionStyles/quanticResultActionStyles',
     '^c/searchBoxStyle$':
       '<rootDir>/force-app/main/default/lwc/searchBoxStyle/searchBoxStyle',
+    '^c/quanticFacetStyles$':
+      '<rootDir>/force-app/main/default/lwc/quanticFacetStyles/quanticFacetStyles',
   },
   modulePathIgnorePatterns: ['.cache'],
   // add any custom configurations here

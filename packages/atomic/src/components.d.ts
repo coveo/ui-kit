@@ -28,6 +28,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -58,6 +59,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -1484,6 +1486,12 @@ export namespace Components {
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
+    }
     interface AtomicInsightResultTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -2067,9 +2075,26 @@ export namespace Components {
          */
         "field": 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter": TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter": TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -4563,6 +4588,12 @@ declare global {
         prototype: HTMLAtomicInsightResultListElement;
         new (): HTMLAtomicInsightResultListElement;
     };
+    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultQuickviewActionElement: {
+        prototype: HTMLAtomicInsightResultQuickviewActionElement;
+        new (): HTMLAtomicInsightResultQuickviewActionElement;
+    };
     interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultTemplateElement: {
@@ -4896,6 +4927,15 @@ declare global {
     var HTMLAtomicProductDescriptionElement: {
         prototype: HTMLAtomicProductDescriptionElement;
         new (): HTMLAtomicProductDescriptionElement;
+    };
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicProductExcerptElement: {
+        prototype: HTMLAtomicProductExcerptElement;
+        new (): HTMLAtomicProductExcerptElement;
     };
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -6014,6 +6054,7 @@ declare global {
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
@@ -6048,6 +6089,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
+        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -7497,6 +7539,12 @@ declare namespace LocalJSX {
          */
         "imageSize"?: ItemDisplayImageSize;
     }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
+    }
     interface AtomicInsightResultTemplate {
         /**
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
@@ -8062,9 +8110,26 @@ declare namespace LocalJSX {
          */
         "field"?: 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter"?: TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter"?: TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -9747,6 +9812,7 @@ declare namespace LocalJSX {
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
@@ -9781,6 +9847,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
+        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -10143,6 +10210,7 @@ declare module "@stencil/core" {
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
@@ -10230,6 +10298,10 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-description` component renders the description of a product.
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
+            /**
+             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+             */
+            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
             /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
