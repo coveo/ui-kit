@@ -185,7 +185,7 @@ export const answerApi = answerSlice.injectEndpoints({
           organizationId,
           environment
         );
-        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
+        const insightGenerateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/insight/v1/configs/${insightConfiguration?.insightId}/answer/${generatedAnswer.answerConfigurationId}/generate`;
         const generateEndpoint = `${platformEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${generatedAnswer.answerConfigurationId}/generate`;
         await fetchEventSource(
           insightConfiguration ? insightGenerateEndpoint : generateEndpoint,
