@@ -8,7 +8,7 @@ import {listImports, ensureFileExists} from './list-imports.mjs';
 
 class NoRelevantChangesError extends Error {
   constructor() {
-    super('Change detected elsewhere, running no tests.');
+    super('No changes that would affect Atomic were detected. Skipping tests.');
     this.name = 'NoRelevantChangesError';
   }
 }
@@ -16,7 +16,7 @@ class NoRelevantChangesError extends Error {
 class DependentPackageChangeError extends Error {
   constructor(file) {
     super(
-      `Change detected in an atomic dependent Coveo package: ${file}. Running all tests.`
+      `Changes detected in a package on which Atomic depend: ${file}. Running all tests.`
     );
     this.name = 'DependentPackageChangeError';
     this.file = file;
@@ -26,7 +26,7 @@ class DependentPackageChangeError extends Error {
 class PackageJsonChangeError extends Error {
   constructor(file) {
     super(
-      `Change detected in a package.json or package-lock.json file: ${file}. Running all tests.`
+      `Changes detected in a package.json or package-lock.json file: ${file}. Running all tests.`
     );
     this.name = 'PackageJsonChangeError';
     this.file = file;
