@@ -32,7 +32,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
     },
   },
   insightConfiguration: {
-    insightId: 'allo',
+    insightId: 'insight-id',
   },
   version: '2.77.0',
   debug: false,
