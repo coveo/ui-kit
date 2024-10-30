@@ -145,7 +145,7 @@ export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
-function allEntriesAreValid(
+export function allEntriesAreValid(
   obj: object,
   isValidValue: (v: unknown) => boolean
 ) {

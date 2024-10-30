@@ -27,7 +27,7 @@ import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
-const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf|lf)-(.+)$/;
+export const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf|lf)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -46,8 +46,8 @@ export const productListingSerializer = {
   deserialize,
 } as Serializer<ProductListingParameters>;
 
-type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<
+export type ParametersKey = keyof CommerceSearchParameters;
+export type FacetParameters = keyof Pick<
   Parameters,
   'f' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
 >;
