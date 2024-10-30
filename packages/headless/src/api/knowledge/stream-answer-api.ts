@@ -31,7 +31,7 @@ export type StateNeededByAnswerAPI = {
   answer: ReturnType<typeof answerApi.reducer>;
 } & ConfigurationSection &
   Partial<SearchAppState> &
-  InsightConfigurationSection &
+  Partial<InsightConfigurationSection> &
   GeneratedAnswerSection;
 
 export interface GeneratedAnswerStream {
