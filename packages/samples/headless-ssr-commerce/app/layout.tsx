@@ -1,4 +1,5 @@
-import Link from 'next/link';
+import NavBar from './_components/nav-bar';
+import {standaloneEngineDefinition} from './_lib/commerce-engine';
 
 export const metadata = {
   title: 'Headless SSR examples',
@@ -6,17 +7,18 @@ export const metadata = {
     'Examples of using framework agnostic @coveo/headless/ssr-commerce',
 };
 
-export default function RootLayout({children}: {children: React.ReactNode}) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const staticState = await standaloneEngineDefinition.fetchStaticState();
+
   return (
     <html lang="en">
       <body>
         <h1>Coveo Headless Commerce Next.js</h1>
-        <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-          <Link href={'/search'}>Search Page</Link>
-          <Link href={'/listing'}>Listing Page</Link>
-          <Link href={'/recommendation'}>Recommendations</Link>
-        </div>
-
+        <NavBar staticState={staticState} />
         {children}
       </body>
     </html>
