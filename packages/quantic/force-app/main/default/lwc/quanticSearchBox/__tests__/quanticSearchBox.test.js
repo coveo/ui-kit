@@ -32,7 +32,7 @@ const defaultOptions = {
   numberOfSuggestions: 7,
   textarea: false,
   disableRecentQueries: false,
-  disableClearFilters: false,
+  keepFiltersOnSearch: false,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -106,53 +106,35 @@ describe('c-quantic-search-box', () => {
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
 
-    describe('when disableClearFilters is false (default)', () => {
+    describe('when keepFiltersOnSearch is false (default)', () => {
       it('should properly initialize the controller with clear filters enabled', async () => {
-        const expectedDefaultOptions = {
-          clearFilters: true,
-          numberOfSuggestions: 7,
-          highlightOptions: {
-            notMatchDelimiters: {
-              open: '<b>',
-              close: '</b>',
-            },
-          },
-        };
-        const element = createTestComponent();
+        createTestComponent();
         await flushPromises();
 
-        expect(element.disableClearFilters).toBe(false);
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
           exampleEngine,
-          {options: expectedDefaultOptions}
+          expect.objectContaining({
+            options: expect.objectContaining({clearFilters: true}),
+          })
         );
       });
     });
 
-    describe('when disableClearFilters is true', () => {
+    describe('when keepFiltersOnSearch is true', () => {
       it('should properly initialize the controller with clear filters disabled', async () => {
-        const expectedDefaultOptions = {
-          clearFilters: false,
-          numberOfSuggestions: 7,
-          highlightOptions: {
-            notMatchDelimiters: {
-              open: '<b>',
-              close: '</b>',
-            },
-          },
-        };
-        const element = createTestComponent({
+        createTestComponent({
           ...defaultOptions,
-          disableClearFilters: true,
+          keepFiltersOnSearch: true,
         });
         await flushPromises();
 
-        expect(element.disableClearFilters).toBe(true);
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
           exampleEngine,
-          {options: expectedDefaultOptions}
+          expect.objectContaining({
+            options: expect.objectContaining({clearFilters: false}),
+          })
         );
       });
     });

@@ -56,12 +56,12 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
    */
   @api numberOfSuggestions = 5;
   /**
-   * Whether to disable clearing all active query filters when the end user submits a new query from the standalone search box.
+   * Whether to keep all active query filters when the end user submits a new query from the standalone search box.
    * @api
    * @type {boolean}
    * @defaultValue false
    */
-  @api disableClearFilters = false;
+  @api keepFiltersOnSearch = false;
   /**
    * The url of the search page to redirect to when a query is made.
    * The target search page should contain a `QuanticSearchInterface` with the same engine ID as the one specified for this component.
@@ -178,7 +178,7 @@ export default class QuanticStandaloneSearchBox extends NavigationMixin(
             close: '</b>',
           },
         },
-        clearFilters: !this.disableClearFilters,
+        clearFilters: !this.keepFiltersOnSearch,
         redirectionUrl: 'http://placeholder.com',
       },
     });
