@@ -19,6 +19,8 @@ interface PagerOptions {
   numberOfPages: number;
 }
 
+const numberOfResultsPerPage = 10;
+
 async function visitPage(
   page: Page,
   {search, insightSetup, configuration}: PageObjects,
@@ -143,7 +145,9 @@ useCaseTestCases.forEach((useCase) => {
         search,
       }) => {
         await pager.clickNextPageButton();
-        await search.waitForSearchResponse();
+        const response = await search.waitForSearchResponse();
+        const {firstResult} = await response.request().postDataJSON();
+        await expect(firstResult).toBe(numberOfResultsPerPage);
         await pager.waitForPagerUaAnalytics('pagerNext');
       });
     });
@@ -157,7 +161,9 @@ useCaseTestCases.forEach((useCase) => {
         await search.waitForSearchResponse();
 
         await pager.clickPreviousPageButton();
-        await search.waitForSearchResponse();
+        const response = await search.waitForSearchResponse();
+        const {firstResult} = await response.request().postDataJSON();
+        await expect(firstResult).toBe(0);
         await pager.waitForPagerUaAnalytics('pagerPrevious');
       });
     });
@@ -167,8 +173,13 @@ useCaseTestCases.forEach((useCase) => {
         pager,
         search,
       }) => {
-        await pager.clickPageNumberButton(2);
-        await search.waitForSearchResponse();
+        const examplePage = 3;
+        await pager.clickPageNumberButton(examplePage);
+        const response = await search.waitForSearchResponse();
+        const {firstResult} = await response.request().postDataJSON();
+        await expect(firstResult).toBe(
+          numberOfResultsPerPage * (examplePage - 1)
+        );
         await pager.waitForPagerUaAnalytics('pagerNumber');
       });
     });
