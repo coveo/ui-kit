@@ -56,6 +56,9 @@ test.describe('atomic-product-excerpt', async () => {
     ];
 
     truncateValues.forEach(({value, expectedClass}) => {
+      test.beforeEach(async ({productExcerpt}) => {
+        await productExcerpt.withLongExcerpt();
+      });
       test.describe(`when truncateAfter is set to ${value}`, async () => {
         test(`should truncate excerpt after ${value} lines`, async ({
           productExcerpt,
