@@ -114,7 +114,7 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe('when being in the first page', () => {
+    test.describe('when on the first page', () => {
       test('should disable the previous page button', async ({pager}) => {
         await expect(pager.pageButtons.nth(0)).toHaveAttribute(
           'aria-pressed',
