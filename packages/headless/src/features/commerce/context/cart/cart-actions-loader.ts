@@ -26,6 +26,9 @@ export type {
 
 /**
  * The cart action creators.
+ *
+ * @group Actions
+ * @category Cart
  */
 export interface CartActionCreators {
   /**
@@ -95,6 +98,9 @@ export interface CartActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the cart action creators.
+ *
+ * @group Actions
+ * @category Cart
  */
 export function loadCartActions(engine: CommerceEngine): CartActionCreators {
   engine.addReducers({cart});

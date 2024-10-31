@@ -14,6 +14,7 @@ export interface NotifyTriggerDefinition
 
 /**
  * Defines a `NotifyTrigger` controller instance.
+ * @group Definers
  *
  * @returns The `NotifyTrigger` controller definition.
  * */

@@ -19,6 +19,9 @@ export type {Tab, TabProps, TabState, TabInitialState, TabOptions};
  * @param engine - The headless engine.
  * @param props - The configurable `Tab` properties.
  * @returns An insight `Tab` controller instance.
+ *
+ * @group Controllers
+ * @category Tab
  */
 export function buildTab(engine: InsightEngine, props: TabProps): Tab {
   const {dispatch} = engine;

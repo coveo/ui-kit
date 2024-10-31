@@ -1,3 +1,16 @@
+## 3.7.0 (2024-10-30)
+
+- feat(atomic): support highlights in atomic-product-description (#4541) ([5c235a8](https://github.com/coveo/ui-kit/commits/5c235a8)), closes [#4541](https://github.com/coveo/ui-kit/issues/4541)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+- chore: remove rollup-plugin-replace-with-ast package (#4591) ([34cd096](https://github.com/coveo/ui-kit/commits/34cd096)), closes [#4591](https://github.com/coveo/ui-kit/issues/4591)
+- ci: reenable tests disabled in #4294 (#4306) ([ebf55db](https://github.com/coveo/ui-kit/commits/ebf55db)), closes [#4294](https://github.com/coveo/ui-kit/issues/4294) [#4306](https://github.com/coveo/ui-kit/issues/4306)
+- feat(atomic, headless): leverage totalNumberOfChildResults in folded results (#4513) ([9dc3af1](https://github.com/coveo/ui-kit/commits/9dc3af1)), closes [#4513](https://github.com/coveo/ui-kit/issues/4513)
+- feat(atomic,headless): add Quickview Support for Insight (#4479) ([95ac6a8](https://github.com/coveo/ui-kit/commits/95ac6a8)), closes [#4479](https://github.com/coveo/ui-kit/issues/4479)
+- fix(headless,commerce): clear manual ranges on clearAllCoreFacets (#4593) ([208cd63](https://github.com/coveo/ui-kit/commits/208cd63)), closes [#4593](https://github.com/coveo/ui-kit/issues/4593)
+- fix(atomic-angular): add @Prop decorator to @MapProp props so they are generated in the angular-outp ([dc2faaf](https://github.com/coveo/ui-kit/commits/dc2faaf)), closes [#4548](https://github.com/coveo/ui-kit/issues/4548)
+- fix(atomic-numeric-facet storybook): storybook bug fix for numeric facet (#4565) ([2dbad78](https://github.com/coveo/ui-kit/commits/2dbad78)), closes [#4565](https://github.com/coveo/ui-kit/issues/4565)
+- fix(atomic): allow atomic loader to be deployed to the CDN (#4568) ([b579cb0](https://github.com/coveo/ui-kit/commits/b579cb0)), closes [#4568](https://github.com/coveo/ui-kit/issues/4568)
+
 ## <small>3.6.2 (2024-10-23)</small>
 
 - chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)

@@ -12,6 +12,9 @@ import {
 
 /**
  * The pagination action creators.
+ *
+ * @group Actions
+ * @category Pagination
  */
 export interface PaginationActionCreators {
   /**
@@ -66,6 +69,9 @@ export interface PaginationActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Pagination
  */
 export function loadPaginationActions(
   engine: CoreEngine

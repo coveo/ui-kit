@@ -19,6 +19,7 @@ export interface SearchBoxDefinition
 
 /**
  * Defines a `SearchBox` controller instance.
+ * @group Definers
  *
  * @returns The `SearchBox` controller definition.
  *

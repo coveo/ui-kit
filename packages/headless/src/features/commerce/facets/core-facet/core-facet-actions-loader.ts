@@ -25,6 +25,9 @@ export type {
 
 /**
  * The core facet action creators.
+ *
+ * @group Actions
+ * @category CategoryFacet
  */
 export interface CoreFacetActionsCreators {
   /**
@@ -92,6 +95,9 @@ export interface CoreFacetActionsCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the core facet action creators.
+ *
+ * @group Actions
+ * @category CategoryFacet
  */
 export function loadCoreFacetActions(
   engine: CommerceEngine

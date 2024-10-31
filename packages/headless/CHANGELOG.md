@@ -1,3 +1,22 @@
+## 3.5.0 (2024-10-30)
+
+- feat(commerce): add breadcrumbs and parameters support for location facets (#4571) ([47a9758](https://github.com/coveo/ui-kit/commits/47a9758)), closes [#4571](https://github.com/coveo/ui-kit/issues/4571)
+- feat(commerce): add location facets (#4562) ([1dbd9a9](https://github.com/coveo/ui-kit/commits/1dbd9a9)), closes [#4562](https://github.com/coveo/ui-kit/issues/4562)
+- feat(commerce): add location facets actions loader (#4569) ([05cb497](https://github.com/coveo/ui-kit/commits/05cb497)), closes [#4569](https://github.com/coveo/ui-kit/issues/4569)
+- feat(commerce): support setting latitude and longitude on context controller (#4572) ([7a33a0b](https://github.com/coveo/ui-kit/commits/7a33a0b)), closes [#4572](https://github.com/coveo/ui-kit/issues/4572)
+- feat(headless): add support for breadcrumb manager in commerce ssr (#4601) ([851257f](https://github.com/coveo/ui-kit/commits/851257f)), closes [#4601](https://github.com/coveo/ui-kit/issues/4601)
+- feat(headless): restore range facet state after refresh (#4599) ([f304b63](https://github.com/coveo/ui-kit/commits/f304b63)), closes [#4599](https://github.com/coveo/ui-kit/issues/4599)
+- fix(answerAPI): controller search listener (#4531) ([3b02591](https://github.com/coveo/ui-kit/commits/3b02591)), closes [#4531](https://github.com/coveo/ui-kit/issues/4531)
+- fix(headless): do not require numberOfValues in commerce numeric facet action payloads (#4488) ([1143cae](https://github.com/coveo/ui-kit/commits/1143cae)), closes [#4488](https://github.com/coveo/ui-kit/issues/4488)
+- fix(headless): export missing types for ssr facet generator (#4384) ([50dd308](https://github.com/coveo/ui-kit/commits/50dd308)), closes [#4384](https://github.com/coveo/ui-kit/issues/4384)
+- fix(headless): export more types for ssr implementation (#4407) ([4721971](https://github.com/coveo/ui-kit/commits/4721971)), closes [#4407](https://github.com/coveo/ui-kit/issues/4407)
+- fix(headless): include perPage when building commerce recommendations requests (#4577) ([2d95730](https://github.com/coveo/ui-kit/commits/2d95730)), closes [#4577](https://github.com/coveo/ui-kit/issues/4577)
+- feat(atomic, headless): leverage totalNumberOfChildResults in folded results (#4513) ([9dc3af1](https://github.com/coveo/ui-kit/commits/9dc3af1)), closes [#4513](https://github.com/coveo/ui-kit/issues/4513)
+- feat(atomic,headless): add Quickview Support for Insight (#4479) ([95ac6a8](https://github.com/coveo/ui-kit/commits/95ac6a8)), closes [#4479](https://github.com/coveo/ui-kit/issues/4479)
+- fix(headless,commerce): clear manual ranges on clearAllCoreFacets (#4593) ([208cd63](https://github.com/coveo/ui-kit/commits/208cd63)), closes [#4593](https://github.com/coveo/ui-kit/issues/4593)
+- docs(headless): link to proxy docs and remove long proxy comments (#4535) ([4dd0cf7](https://github.com/coveo/ui-kit/commits/4dd0cf7)), closes [#4535](https://github.com/coveo/ui-kit/issues/4535)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+
 ## 3.4.0 (2024-10-16)
 
 - fix(headless): set wasCorrectedTo to empty string unless query was automatically corrected (#4538) ([f44de0f](https://github.com/coveo/ui-kit/commits/f44de0f)), closes [#4538](https://github.com/coveo/ui-kit/issues/4538)

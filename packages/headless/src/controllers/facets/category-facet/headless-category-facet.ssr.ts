@@ -13,6 +13,7 @@ export interface CategoryFacetDefinition
 
 /**
  * Defines a `CategoryFacet` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `CategoryFacet` properties.
  * @returns The `CategoryFacet` controller definition.
