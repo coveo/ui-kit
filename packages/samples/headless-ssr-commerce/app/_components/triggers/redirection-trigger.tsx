@@ -1,25 +1,11 @@
-import {
-  RedirectionTrigger as RedirectionTriggerController,
-  RedirectionTriggerState,
-} from '@coveo/headless/commerce';
-import {useCallback, useEffect, useState} from 'react';
+'use client';
 
-interface RedirectionTriggerProps {
-  controller?: RedirectionTriggerController;
-  staticState: RedirectionTriggerState;
-}
+import {useRedirectionTrigger} from '@/app/_lib/commerce-engine';
+import {useCallback, useEffect} from 'react';
 
 // The redirection trigger query example in the searchuisamples org is 'redirect me'.
-export default function RedirectionTrigger({
-  controller,
-  staticState,
-}: RedirectionTriggerProps) {
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+export default function RedirectionTrigger() {
+  const {state} = useRedirectionTrigger();
 
   const redirect = useCallback(() => {
     if (state.redirectTo) {

@@ -1,9 +1,11 @@
+'use client';
+
 import {
   BaseFacetSearchResult,
   RegularFacet as HeadlessRegularFacet,
   RegularFacetState,
   RegularFacetValue,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useRef, useState} from 'react';
 
 interface IRegularFacetProps {

@@ -1,28 +1,23 @@
 'use client';
 
-import {NavigatorContext} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {PropsWithChildren, useEffect, useState} from 'react';
 import {
   SearchHydratedState,
   SearchStaticState,
   searchEngineDefinition,
 } from '../../_lib/commerce-engine';
-import BreadcrumbManager from '../breadcrumb-manager';
-import FacetGenerator from '../facets/facet-generator';
-import ProductList from '../product-list';
-import {Recommendations} from '../recommendation-list';
-import SearchBox from '../search-box';
-import ShowMore from '../show-more';
-import Summary from '../summary';
-import Triggers from '../triggers/triggers';
+
+interface SearchPageProps {
+  staticState: SearchStaticState;
+  navigatorContext: NavigatorContext;
+}
 
 export default function SearchPage({
   staticState,
   navigatorContext,
-}: {
-  staticState: SearchStaticState;
-  navigatorContext: NavigatorContext;
-}) {
+  children,
+}: PropsWithChildren<SearchPageProps>) {
   const [hydratedState, setHydratedState] = useState<
     SearchHydratedState | undefined
   >(undefined);
@@ -40,77 +35,30 @@ export default function SearchPage({
 
         // Refreshing recommendations in the browser after hydrating the state in the client-side
         // Recommendation refresh in the server is not supported yet.
-        controllers.popularBoughtRecs.refresh();
+        // controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
-  return (
-    <>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div style={{flex: 1}}>
-          <Triggers
-            redirectionStaticState={
-              staticState.controllers.redirectionTrigger.state
-            }
-            redirectionController={
-              hydratedState?.controllers.redirectionTrigger
-            }
-            queryStaticState={staticState.controllers.queryTrigger.state}
-            queryDontroller={hydratedState?.controllers.queryTrigger}
-            notifyStaticState={staticState.controllers.notifyTrigger.state}
-            notifyController={hydratedState?.controllers.notifyTrigger}
-          />
-          <SearchBox
-            staticState={staticState.controllers.searchBox.state}
-            controller={hydratedState?.controllers.searchBox}
-            staticStateRecentQueries={
-              staticState.controllers.recentQueriesList.state
-            }
-            recentQueriesController={
-              hydratedState?.controllers.recentQueriesList
-            }
-            staticStateInstantProducts={
-              staticState.controllers.instantProducts.state
-            }
-            instantProductsController={
-              hydratedState?.controllers.instantProducts
-            }
-          />
-          <BreadcrumbManager
-            staticState={staticState.controllers.breadcrumbManager.state}
-            controller={hydratedState?.controllers.breadcrumbManager}
-          />
-          <FacetGenerator
-            staticState={staticState.controllers.facetGenerator.state}
-            controller={hydratedState?.controllers.facetGenerator}
-          />
-          <Summary
-            staticState={staticState.controllers.summary.state}
-            controller={hydratedState?.controllers.summary}
-          />
-          <ProductList
-            staticState={staticState.controllers.productList.state}
-            controller={hydratedState?.controllers.productList}
-          />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
-          {/* <Pagination
-          staticState={staticState.controllers.pagination.state}
-          controller={hydratedState?.controllers.pagination}
-        ></Pagination> */}
-          <ShowMore
-            staticState={staticState.controllers.pagination.state}
-            controller={hydratedState?.controllers.pagination}
-            summaryController={hydratedState?.controllers.summary}
-          />
-        </div>
-
-        <div style={{flex: 1}}>
-          <Recommendations
-            staticState={staticState.controllers.popularBoughtRecs.state}
-            controller={hydratedState?.controllers.popularBoughtRecs}
-          />
-        </div>
-      </div>
-    </>
-  );
+  if (hydratedState) {
+    return (
+      <searchEngineDefinition.HydratedStateProvider
+        engine={hydratedState.engine}
+        controllers={hydratedState.controllers}
+      >
+        {/* // TODO: FIXME:  Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>{children}</>
+      </searchEngineDefinition.HydratedStateProvider>
+    );
+  } else {
+    return (
+      <searchEngineDefinition.StaticStateProvider
+        controllers={staticState.controllers}
+      >
+        {/* // TODO: FIXME:  Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>{children}</>
+      </searchEngineDefinition.StaticStateProvider>
+    );
+  }
 }

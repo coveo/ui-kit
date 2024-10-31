@@ -1,27 +1,9 @@
-import {
-  Summary as HeadlessSummary,
-  ProductListingSummaryState,
-  SearchSummaryState,
-  RecommendationsSummaryState,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface ISummaryProps {
-  controller?: HeadlessSummary;
-  staticState:
-    | ProductListingSummaryState
-    | SearchSummaryState
-    | RecommendationsSummaryState;
-}
+import {useSummary} from '../_lib/commerce-engine';
 
-export default function Summary(props: ISummaryProps) {
-  const {controller, staticState} = props;
-
-  const [state, setState] = useState(staticState);
-
-  useEffect(() => {
-    controller?.subscribe(() => setState(controller.state));
-  }, [controller]);
+export default function Summary() {
+  const {state} = useSummary();
 
   const renderBaseSummary = () => {
     const {firstProduct, lastProduct, totalNumberOfProducts} = state;
@@ -38,11 +20,12 @@ export default function Summary(props: ISummaryProps) {
       return null;
     }
 
-    return (
-      <span>
-        for <b>{state.query}</b>
-      </span>
-    );
+    // TODO: add query to summary state
+    // return (
+    //   <span>
+    //     for <b>{state.query}</b>
+    //   </span>
+    // );
   };
 
   const renderSummary = () => {

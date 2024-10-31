@@ -1,7 +1,9 @@
+'use client';
+
 import {
   DateFacetState,
   DateFacet as HeadlessDateFacet,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useState} from 'react';
 
 interface IDateFacetProps {

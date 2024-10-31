@@ -1,28 +1,13 @@
-import {
-  FacetGenerator as HeadlessFacetGenerator,
-  FacetGeneratorState,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
+
+import {useFacetGenerator} from '@/app/_lib/commerce-engine';
 import CategoryFacet from './category-facet';
 import DateFacet from './date-facet';
 import NumericFacet from './numeric-facet';
 import RegularFacet from './regular-facet';
 
-interface IFacetGeneratorProps {
-  controller?: HeadlessFacetGenerator;
-  staticState: FacetGeneratorState;
-}
-
-export default function FacetGenerator(props: IFacetGeneratorProps) {
-  const {controller, staticState} = props;
-
-  const [state, setState] = useState(staticState);
-
-  useEffect(() => {
-    controller?.subscribe(() => {
-      setState(controller.state);
-    });
-  }, [controller]);
+export default function FacetGenerator() {
+  const {state, controller} = useFacetGenerator();
 
   return (
     <nav className="Facets">

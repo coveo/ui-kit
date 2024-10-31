@@ -5,7 +5,7 @@ import {
   StandaloneHydratedState,
   StandaloneStaticState,
 } from '@/app/_lib/commerce-engine';
-import {NavigatorContext} from '@coveo/headless/ssr-commerce';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import {Recommendations} from '../recommendation-list';
@@ -59,10 +59,7 @@ export default function ProductPage(props: IProductPageProps) {
         {name} ({productId}) - ${price}
       </p>
       <br />
-      <Recommendations
-        staticState={staticState.controllers.popularBoughtRecs.state}
-        controller={hydratedState?.controllers.popularBoughtRecs}
-      />
+      <Recommendations />
     </>
   );
 }

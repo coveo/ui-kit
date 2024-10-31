@@ -1,33 +1,10 @@
-import {
-  Pagination as HeadlessPagination,
-  PaginationState,
-  Summary,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface IShowMoreProps {
-  staticState: PaginationState;
-  summaryController?: Summary;
-  controller?: HeadlessPagination;
-}
+import {usePagination, useSummary} from '../_lib/commerce-engine';
 
-export default function ShowMore(props: IShowMoreProps) {
-  const {controller, summaryController, staticState} = props;
-
-  const [state, setState] = useState(staticState);
-  const [summaryState, setSummaryState] = useState(
-    props.summaryController?.state
-  );
-
-  useEffect(() => {
-    controller?.subscribe(() => setState(controller.state));
-  }, [controller]);
-
-  useEffect(() => {
-    summaryController?.subscribe(() =>
-      setSummaryState(summaryController.state)
-    );
-  }, [summaryController]);
+export default function ShowMore() {
+  const {state, controller} = usePagination();
+  const {state: summaryState} = useSummary();
 
   const handleFetchMore = () => {
     controller?.fetchMoreProducts();

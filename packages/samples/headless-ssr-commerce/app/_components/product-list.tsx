@@ -1,28 +1,13 @@
-import {
-  Product,
-  ProductList as ProductListingController,
-  ProductListState,
-} from '@coveo/headless/ssr-commerce';
+'use client';
+
+import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import {useProductList} from '../_lib/commerce-engine';
 
-interface ProductListProps {
-  staticState: ProductListState;
-  controller?: ProductListingController;
-}
-
-export default function ProductList({
-  staticState,
-  controller,
-}: ProductListProps) {
-  const [state, setState] = useState(staticState);
+export default function ProductList() {
+  const {state, controller} = useProductList();
 
   const router = useRouter();
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
 
   const onProductClick = (product: Product) => {
     controller?.interactiveProduct({options: {product}}).select();

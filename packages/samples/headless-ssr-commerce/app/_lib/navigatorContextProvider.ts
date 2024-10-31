@@ -1,4 +1,4 @@
-import {NavigatorContext} from '@coveo/headless/ssr-commerce';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import type {ReadonlyHeaders} from 'next/dist/server/web/spec-extension/adapters/headers';
 
 /**

@@ -1,25 +1,11 @@
-import {
-  NotifyTrigger as NotifyTriggerController,
-  NotifyTriggerState,
-} from '@coveo/headless/commerce';
-import {useCallback, useEffect, useState} from 'react';
+'use client';
 
-interface NotifyTriggerProps {
-  controller?: NotifyTriggerController;
-  staticState: NotifyTriggerState;
-}
+import {useNotifyTrigger} from '@/app/_lib/commerce-engine';
+import {useCallback, useEffect} from 'react';
 
 // The notify trigger query example in the searchuisamples org is 'notify me'.
-export default function NotifyTrigger({
-  controller,
-  staticState,
-}: NotifyTriggerProps) {
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+export default function NotifyTrigger() {
+  const {state} = useNotifyTrigger();
 
   const notify = useCallback(() => {
     state.notifications.forEach((notification) => {

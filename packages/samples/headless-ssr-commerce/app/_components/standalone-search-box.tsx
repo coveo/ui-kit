@@ -1,52 +1,24 @@
-import {
-  StandaloneSearchBoxState,
-  StandaloneSearchBox as StandaloneSearchBoxController,
-  RecentQueriesState,
-  InstantProductsState,
-  RecentQueriesList as RecentQueriesListController,
-  InstantProducts as InstantProductsController,
-} from '@coveo/headless/ssr-commerce';
+'use client';
+
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
+import {
+  useInstantProducts,
+  useRecentQueriesList,
+  useStandaloneSearchBox,
+} from '../_lib/commerce-engine';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-interface StandaloneSearchBoxProps {
-  staticState: StandaloneSearchBoxState;
-  controller?: StandaloneSearchBoxController;
-  staticStateRecentQueries: RecentQueriesState;
-  recentQueriesController?: RecentQueriesListController;
-  staticStateInstantProducts: InstantProductsState;
-  instantProductsController?: InstantProductsController;
-}
+export default function StandaloneSearchBox() {
+  const {state, controller} = useStandaloneSearchBox();
+  const {state: recentQueriesState} = useRecentQueriesList();
+  const {state: instantProductsState, controller: instantProductsController} =
+    useInstantProducts();
 
-export default function StandaloneSearchBox({
-  staticState,
-  controller,
-  staticStateRecentQueries,
-  recentQueriesController,
-  staticStateInstantProducts,
-  instantProductsController,
-}: StandaloneSearchBoxProps) {
-  const [state, setState] = useState(staticState);
-  const [recentQueriesState, setRecentQueriesState] = useState(
-    staticStateRecentQueries
-  );
-  const [instantProductsState, setInstantProductsState] = useState(
-    staticStateInstantProducts
-  );
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
 
-  useEffect(() => {
-    controller?.subscribe(() => setState({...controller.state}));
-    recentQueriesController?.subscribe(() =>
-      setRecentQueriesState({...recentQueriesController.state})
-    );
-    instantProductsController?.subscribe(() =>
-      setInstantProductsState({...instantProductsController.state})
-    );
-  }, [controller, instantProductsController, recentQueriesController]);
   const router = useRouter();
 
   useEffect(() => {
@@ -90,13 +62,7 @@ export default function StandaloneSearchBox({
 
       {isInputFocused && (
         <>
-          {recentQueriesState.queries.length > 0 && (
-            <RecentQueries
-              staticState={staticStateRecentQueries}
-              controller={recentQueriesController}
-              instantProductsController={instantProductsController}
-            />
-          )}
+          {recentQueriesState.queries.length > 0 && <RecentQueries />}
           {state.suggestions.length > 0 && (
             <ul>
               Suggestions :
@@ -119,12 +85,7 @@ export default function StandaloneSearchBox({
               ))}
             </ul>
           )}
-          {instantProductsState.products.length > 0 && (
-            <InstantProducts
-              staticState={staticStateInstantProducts}
-              controller={instantProductsController}
-            />
-          )}
+          {instantProductsState.products.length > 0 && <InstantProducts />}
         </>
       )}
     </div>

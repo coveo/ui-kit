@@ -13,6 +13,7 @@ import {
   defineRedirectionTrigger,
   defineStandaloneSearchBox,
   defineInstantProducts,
+  defineBreadcrumbManager,
   defineSummary,
   definePagination,
   defineFacetGenerator,
@@ -21,8 +22,7 @@ import {
   getSampleCommerceEngineConfiguration,
   defineDidYouMean,
   defineRecommendations, //defineParameterManager,
-  defineBreadcrumbManager,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>

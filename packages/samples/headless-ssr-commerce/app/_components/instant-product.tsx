@@ -1,31 +1,11 @@
-import {
-  InstantProductsState,
-  InstantProducts as InstantProductsController,
-  Product,
-} from '@coveo/headless/ssr-commerce';
+import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import {useInstantProducts} from '../_lib/commerce-engine';
 
-interface InstantProductsProps {
-  staticState: InstantProductsState;
-  controller?: InstantProductsController;
-}
-
-export default function InstantProducts({
-  staticState,
-  controller,
-}: InstantProductsProps) {
+export default function InstantProducts() {
   const router = useRouter();
 
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () =>
-      controller?.subscribe(() => {
-        setState({...controller.state});
-      }),
-    [controller]
-  );
+  const {state, controller} = useInstantProducts();
 
   const clickProduct = (product: Product) => {
     controller?.interactiveProduct({options: {product}}).select();

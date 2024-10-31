@@ -1,26 +1,15 @@
+'use client';
+
 import {
-  BreadcrumbManagerState,
   NumericFacetValue,
   DateFacetValue,
   CategoryFacetValue,
-  BreadcrumbManager as HeadlessBreadcrumbManager,
   RegularFacetValue,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+} from '@coveo/headless-react/ssr-commerce';
+import {useBreadcrumbManager} from '../_lib/commerce-engine';
 
-interface BreadcrumbManagerProps {
-  staticState: BreadcrumbManagerState;
-  controller?: HeadlessBreadcrumbManager;
-}
-
-export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
-  const {staticState, controller} = props;
-
-  const [state, setState] = useState(staticState);
-
-  useEffect(() => {
-    controller?.subscribe(() => setState(controller.state));
-  }, [controller]);
+export default function BreadcrumbManager() {
+  const {state, controller} = useBreadcrumbManager();
 
   const renderBreadcrumbValue = (
     value:

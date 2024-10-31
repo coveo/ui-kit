@@ -1,22 +1,9 @@
-import {
-  Pagination as HeadlessPagination,
-  PaginationState,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface IPaginationProps {
-  staticState: PaginationState;
-  controller?: HeadlessPagination;
-}
+import {usePagination} from '../_lib/commerce-engine';
 
-export default function Pagination(props: IPaginationProps) {
-  const {staticState, controller} = props;
-
-  const [state, setState] = useState(staticState);
-
-  useEffect(() => {
-    controller?.subscribe(() => setState(controller.state));
-  }, [controller]);
+export default function Pagination() {
+  const {state, controller} = usePagination();
 
   const renderPageRadioButtons = () => {
     return Array.from({length: state.totalPages}, (_, i) => {

@@ -1,51 +1,22 @@
+'use client';
+
+import {useState} from 'react';
 import {
-  SearchBoxState,
-  SearchBox as SearchBoxController,
-  RecentQueriesList as RecentQueriesListController,
-  RecentQueriesState,
-  InstantProductsState,
-  InstantProducts as InstantProductsController,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+  useInstantProducts,
+  useRecentQueriesList,
+  useSearchBox,
+} from '../_lib/commerce-engine';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-interface SearchBoxProps {
-  staticState: SearchBoxState;
-  controller?: SearchBoxController;
-  staticStateRecentQueries: RecentQueriesState;
-  recentQueriesController?: RecentQueriesListController;
-  staticStateInstantProducts: InstantProductsState;
-  instantProductsController?: InstantProductsController;
-}
+export default function SearchBox() {
+  const {state, controller} = useSearchBox();
+  const {state: recentQueriesState} = useRecentQueriesList();
+  const {state: instantProductsState, controller: instantProductsController} =
+    useInstantProducts();
 
-export default function SearchBox({
-  staticState,
-  controller,
-  staticStateRecentQueries,
-  recentQueriesController,
-  staticStateInstantProducts,
-  instantProductsController,
-}: SearchBoxProps) {
-  const [state, setState] = useState(staticState);
-  const [recentQueriesState, setRecentQueriesState] = useState(
-    staticStateRecentQueries
-  );
-  const [instantProductsState, setInstantProductsState] = useState(
-    staticStateInstantProducts
-  );
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
-
-  useEffect(() => {
-    controller?.subscribe(() => setState({...controller.state}));
-    recentQueriesController?.subscribe(() =>
-      setRecentQueriesState({...recentQueriesController.state})
-    );
-    instantProductsController?.subscribe(() =>
-      setInstantProductsState({...instantProductsController.state})
-    );
-  }, [controller, instantProductsController, recentQueriesController]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -80,13 +51,7 @@ export default function SearchBox({
 
       {isInputFocused && (
         <>
-          {recentQueriesState.queries.length > 0 && (
-            <RecentQueries
-              staticState={staticStateRecentQueries}
-              controller={recentQueriesController}
-              instantProductsController={instantProductsController}
-            />
-          )}
+          {recentQueriesState.queries.length > 0 && <RecentQueries />}
           {state.suggestions.length > 0 && (
             <ul>
               Suggestions :
@@ -109,12 +74,7 @@ export default function SearchBox({
               ))}
             </ul>
           )}
-          {instantProductsState.products.length > 0 && (
-            <InstantProducts
-              staticState={staticStateInstantProducts}
-              controller={instantProductsController}
-            />
-          )}
+          {instantProductsState.products.length > 0 && <InstantProducts />}
         </>
       )}
     </div>

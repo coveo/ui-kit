@@ -1,28 +1,16 @@
-import {
-  Product,
-  Recommendations as RecommendationsController,
-  RecommendationsState,
-} from '@coveo/headless/ssr-commerce';
+'use client';
+
+import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
+import {usePopularBoughtRecs} from '../_lib/commerce-engine';
 
-interface RecommendationsProps {
-  staticState: RecommendationsState;
-  controller?: RecommendationsController;
-}
-
-export const Recommendations: FunctionComponent<RecommendationsProps> = ({
-  staticState,
-  controller,
-}) => {
-  const [state, setState] = useState(staticState);
+export const Recommendations: FunctionComponent = () => {
+  // TODO: find a way to make the recommendation generic
+  const {state, controller} = usePopularBoughtRecs();
+  // TODO: recommendation are not refreshed server-side FIXME:
 
   const router = useRouter();
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
 
   const onProductClick = (product: Product) => {
     controller?.interactiveProduct({options: {product}}).select();
