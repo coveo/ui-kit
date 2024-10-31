@@ -14,6 +14,7 @@ import {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
 } from './common.js';
 
+export type {HydrateStaticState, FetchStaticState};
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
   TControllers extends ControllerDefinitionsMap<
