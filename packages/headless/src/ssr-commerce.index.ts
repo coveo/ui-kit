@@ -151,6 +151,8 @@ export type {
   MappedGeneratedFacetController,
   MappedFacetStates,
   MappedFacetState,
+  LocationFacetValue,
+  LocationFacetState,
   FacetType,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';

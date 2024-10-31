@@ -4,6 +4,7 @@ import {
   NumericFacetValue,
   DateFacetValue,
   BreadcrumbManager as HeadlessBreadcrumbManager,
+  LocationFacetValue,
 } from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
@@ -29,7 +30,8 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
       | CategoryFacetValue
       | RegularFacetValue
       | NumericFacetValue
-      | DateFacetValue,
+      | DateFacetValue
+      | LocationFacetValue,
     type: string
   ) => {
     switch (type) {
@@ -50,6 +52,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
           (value as DateFacetValue).end
         );
       default:
+        // TODO COMHUB-292 add location facet example
         return null;
     }
   };
