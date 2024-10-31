@@ -124,7 +124,7 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe('when being in the last page', () => {
+    test.describe('when on the last page', () => {
       test.beforeEach(async ({pager, search}) => {
         await pager.goToLastPage();
         await search.waitForSearchResponse();
