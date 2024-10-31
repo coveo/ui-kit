@@ -10,6 +10,7 @@ export default function Sort() {
     return null;
   }
 
+  // TODO: uncomment when KIT-3700: is fixed
   // const getSortLabel = (criterion: SortCriterion) => {
   //   switch (criterion.by) {
   //     case SortBy.Relevancy:
@@ -35,7 +36,7 @@ export default function Sort() {
             value={JSON.stringify(sort)}
             onSelect={() => controller?.sortBy(sort)}
           >
-            {/* TODO: there is a type mismatch with the sort criterion FIXME:!!*/}
+            {/* TODO:KIT-3700: there is a type mismatch with the sort criterion FIXME:!!*/}
             {/* {getSortLabel(sort)} */}
           </option>
         ))}
