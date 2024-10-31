@@ -16,6 +16,7 @@ export interface InstantProductsDefinition
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @returns The `InstantProducts` controller definition.
  *

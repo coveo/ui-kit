@@ -17,6 +17,7 @@ export interface RecentQueriesListDefinition
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @param props - The configuration `RecentQueriesList` properties.
  * @returns The `RecentQueriesList` controller definition.

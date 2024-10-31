@@ -9,6 +9,7 @@ export interface CartDefinition
 
 /**
  * Defines a `Cart` controller instance.
+ * @group Definers
  *
  * @returns The `Cart` controller definition.
  *

@@ -18,6 +18,7 @@ export type ProductList = Pick<
 
 /**
  * Defines a `ProductList` controller instance.
+ * @group Definers
  *
  * @returns The `ProductList` controller definition.
  *

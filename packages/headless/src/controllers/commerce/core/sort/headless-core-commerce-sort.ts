@@ -65,6 +65,9 @@ function validateSortInitialState(
 
 /**
  * The `Sort` sub-controller lets you sort the products in a commerce interface.
+ *
+ * @group Sub-controllers
+ * @category Sort
  */
 export interface Sort extends Controller {
   /**
@@ -96,6 +99,12 @@ export interface Sort extends Controller {
   state: SortState;
 }
 
+/**
+ * The state of the `Sort` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category Sort
+ */
 export interface SortState {
   /**
    * The current sort criterion.

@@ -18,6 +18,9 @@ export type {
  * @param engine - The insight engine.
  * @param props - The configurable `FacetConditionsManager` properties.
  * @returns A `FacetConditionsManager` controller instance.
+ *
+ * @group Controllers
+ * @category FacetConditionsManager
  */
 export function buildFacetConditionsManager(
   engine: InsightEngine,

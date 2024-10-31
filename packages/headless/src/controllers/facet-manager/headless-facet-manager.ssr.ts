@@ -9,6 +9,7 @@ export interface FacetManagerDefinition
 
 /**
  * Defines a `FacetManager` controller instance.
+ * @group Definers
  *
  * @returns The `FacetManager` controller definition.
  * */

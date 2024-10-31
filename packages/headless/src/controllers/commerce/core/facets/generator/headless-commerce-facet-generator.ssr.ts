@@ -38,6 +38,7 @@ import {
 import {
   DateFacet,
   DateFacetState,
+  DateFacetValue,
   getDateFacetState,
 } from '../date/headless-commerce-date-facet.js';
 import {
@@ -53,6 +54,7 @@ import {
 import {
   getNumericFacetState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
 } from '../numeric/headless-commerce-numeric-facet.js';
 import {
@@ -72,8 +74,10 @@ export type {
   CategoryFacetValue,
   CategoryFacetSearchResult,
   DateFacet,
+  DateFacetValue,
   DateFacetState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
   RegularFacet,
   RegularFacetState,

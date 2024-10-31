@@ -15,11 +15,19 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 
+export type {DateFacetValue};
+
 export type DateFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+/**
+ * The state of the `DateFacet` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category DateFacet
+ */
 export type DateFacetState = Omit<
   CoreCommerceFacetState<DateFacetValue>,
   'type'
@@ -30,6 +38,9 @@ export type DateFacetState = Omit<
 /**
  * The `DateFacet` sub-controller offers a high-level programming interface for implementing date commerce
  * facet UI component.
+ *
+ * @group Sub-controllers
+ * @category DateFacet
  */
 export type DateFacet = CoreCommerceFacet<DateRangeRequest, DateFacetValue> & {
   /**

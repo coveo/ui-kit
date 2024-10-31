@@ -6,6 +6,7 @@ export type {DidYouMean, DidYouMeanState};
 
 /**
  * Defines a `DidYouMean` controller instance.
+ * @group Definers
  *
  * @returns The `DidYouMean` controller definition.
  *

@@ -30,6 +30,9 @@ export type {
 
 /**
  * The category facet set action creators.
+ *
+ * @group Actions
+ * @category CategoryFacetSet
  */
 export interface CategoryFacetSetActionCreators {
   /**
@@ -105,6 +108,9 @@ export interface CategoryFacetSetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category CategoryFacetSet
  */
 export function loadCategoryFacetSetActions(
   engine: SearchEngine

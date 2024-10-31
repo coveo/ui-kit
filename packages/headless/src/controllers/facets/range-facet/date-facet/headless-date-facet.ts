@@ -42,6 +42,9 @@ export {buildDateRange};
  * @param engine - The headless engine.
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
+ *
+ * @group Controllers
+ * @category DateFacet
  */
 export function buildDateFacet(
   engine: SearchEngine,
