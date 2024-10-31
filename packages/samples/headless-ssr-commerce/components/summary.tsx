@@ -20,11 +20,12 @@ export default function Summary() {
       return null;
     }
 
-    return (
-      <span>
-        for <b>{state.query}</b>
-      </span>
-    );
+    // TODO: add query to summary state
+    // return (
+    //   <span>
+    //     for <b>{state.query}</b>
+    //   </span>
+    // );
   };
 
   const renderSummary = () => {
