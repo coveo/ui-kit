@@ -3,6 +3,7 @@ import QuanticStandaloneSearchBox from 'c/quanticStandaloneSearchBox';
 // @ts-ignore
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {CurrentPageReference} from 'lightning/navigation';
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -38,6 +39,7 @@ const defaultOptions = {
   textarea: false,
   disableRecentQueries: false,
   keepFiltersOnSearch: false,
+  redirectUrl: '/global-search/%40uri',
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -90,6 +92,7 @@ function cleanup() {
 
 describe('c-quantic-standalone-search-box', () => {
   beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     mockSuccessfulHeadlessInitialization();
   });
 
@@ -103,6 +106,30 @@ describe('c-quantic-standalone-search-box', () => {
         is: QuanticStandaloneSearchBox,
       })
     ).not.toThrow();
+  });
+
+  describe('when the current page reference changes', () => {
+    it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
+      const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
+      Object.defineProperty(window, 'location', {
+        writable: true,
+        value: {href: nonStandaloneURL},
+      });
+      const element = createTestComponent({
+        ...defaultOptions,
+        keepFiltersOnSearch: false,
+      });
+      // eslint-disable-next-line @lwc/lwc/no-unexpected-wire-adapter-usages
+      CurrentPageReference.emit({url: nonStandaloneURL});
+      await flushPromises();
+
+      const searchBox = element.shadowRoot.querySelector(
+        'c-quantic-search-box'
+      );
+
+      expect(searchBox).not.toBeNull();
+      expect(searchBox.keepFiltersOnSearch).toEqual(false);
+    });
   });
 
   describe('controller initialization', () => {
