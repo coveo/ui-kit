@@ -2539,12 +2539,11 @@ describe('commerceFacetSetReducer', () => {
         buildMockCommerceNumericFacetValue({start: 0, end: 5}),
         buildMockCommerceNumericFacetValue({start: 6, end: 10}),
       ];
-      const valuesRequest = convertToNumericRangeRequests(values);
 
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({
           type: 'numericalRange',
-          values: valuesRequest,
+          values,
         }),
       });
 
@@ -2561,7 +2560,7 @@ describe('commerceFacetSetReducer', () => {
       const finalState = commerceFacetSetReducer(state, action);
 
       const targetValues = finalState[facetId]?.request.values;
-      expect(targetValues).toEqual(convertToNumericRangeRequests(newValues));
+      expect(targetValues).toEqual(newValues);
     });
   });
 
@@ -3012,6 +3011,67 @@ describe('commerceFacetSetReducer', () => {
       );
 
       const secondRequest = finalState['numeric_facet_2'].request;
+      expect(secondRequest.type).toEqual('numericalRange');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 11,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
+    it('populates manual numeric facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          mnf: {
+            manual_numeric_facet_1: [
+              {
+                start: 1,
+                end: 10,
+                endInclusive: false,
+              },
+              {
+                start: 15,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+            manual_numeric_facet_2: [
+              {
+                start: 11,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+          },
+        })
+      );
+
+      const firstRequest = finalState['manual_numeric_facet_1'].request;
+      expect(firstRequest.type).toEqual('numericalRange');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 1,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            start: 15,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['manual_numeric_facet_2'].request;
       expect(secondRequest.type).toEqual('numericalRange');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([

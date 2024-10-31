@@ -9,6 +9,7 @@ export interface TabManagerDefinition
 
 /**
  * Defines a `TabManager` controller instance.
+ * @group Definers
  *
  * @returns The `TabManager` controller definition.
  * */

@@ -17,6 +17,9 @@ export type {PrepareForSearchWithQueryPayload};
 
 /**
  * The search action creators.
+ *
+ * @group Actions
+ * @category Search
  */
 export interface SearchActionCreators {
   /**
@@ -71,6 +74,9 @@ export interface SearchActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the search action creators.
+ *
+ * @group Actions
+ * @category Search
  */
 export function loadSearchActions(
   engine: CommerceEngine

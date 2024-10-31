@@ -7,6 +7,7 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '../../_lib/commerce-engine';
+import BreadcrumbManager from '../breadcrumb-manager';
 import Cart from '../cart';
 import FacetGenerator from '../facets/facet-generator';
 import Pagination from '../pagination';
@@ -62,6 +63,10 @@ export default function ListingPage({
             instantProductsController={
               hydratedState?.controllers.instantProducts
             }
+          />
+          <BreadcrumbManager
+            staticState={staticState.controllers.breadcrumbManager.state}
+            controller={hydratedState?.controllers.breadcrumbManager}
           />
           <FacetGenerator
             staticState={staticState.controllers.facetGenerator.state}

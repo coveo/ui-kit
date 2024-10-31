@@ -1,3 +1,18 @@
+/**
+ * The Coveo Headless Search sub-package exposes exposes the engine, controllers, actions, and utility functions to build a search experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildSearchBox, buildSearchEngine, getSampleSearchEngineConfiguration } from '@coveo/headless';
+ *
+ * const engine = buildSearchEngine({
+ *    configuration: getSampleSearchEngineConfiguration()
+ * });
+ *
+ * const searchBox = buildSearchBox(engine);
+ * ```
+ * @module Search
+ */
 import * as HighlightUtils from './utils/highlight.js';
 
 // 3rd Party Libraries

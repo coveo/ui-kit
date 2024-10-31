@@ -15,6 +15,7 @@ export interface NumericFacetDefinition
 
 /**
  * Defines a `NumericFacet` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `NumericFacet` properties.
  * @returns The `NumericFacet` controller definition.

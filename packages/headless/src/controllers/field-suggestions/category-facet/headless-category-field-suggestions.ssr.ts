@@ -16,6 +16,7 @@ export interface CategoryFieldSuggestionsDefinition
 
 /**
  * Defines a `CategoryFieldSuggestions` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `CategoryFieldSuggestions` properties.
  * @returns The `CategoryFieldSuggestions` controller definition.

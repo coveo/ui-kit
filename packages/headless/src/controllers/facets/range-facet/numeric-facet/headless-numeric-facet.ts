@@ -49,6 +49,9 @@ export {buildNumericRange};
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFacet` properties.
  * @returns A `NumericFacet` controller instance.
+ *
+ * @group Controllers
+ * @category NumericFacet
  */
 export function buildNumericFacet(
   engine: SearchEngine,

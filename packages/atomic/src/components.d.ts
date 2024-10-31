@@ -28,6 +28,7 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -58,6 +59,7 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -2073,9 +2075,26 @@ export namespace Components {
          */
         "field": 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter": TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter": TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -4910,6 +4929,15 @@ declare global {
         new (): HTMLAtomicProductDescriptionElement;
     };
     /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicProductExcerptElement: {
+        prototype: HTMLAtomicProductExcerptElement;
+        new (): HTMLAtomicProductExcerptElement;
+    };
+    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -6061,6 +6089,7 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
+        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
@@ -8081,9 +8110,26 @@ declare namespace LocalJSX {
          */
         "field"?: 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter"?: TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter"?: TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -9801,6 +9847,7 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
+        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
@@ -10251,6 +10298,10 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-description` component renders the description of a product.
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
+            /**
+             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+             */
+            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
             /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).

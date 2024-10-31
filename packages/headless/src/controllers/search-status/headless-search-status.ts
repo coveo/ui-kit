@@ -12,6 +12,9 @@ export type {SearchStatusState, SearchStatus};
  *
  * @param engine - The headless engine.
  * @returns A `SearchStatus` controller instance.
+ *
+ * @group Controllers
+ * @category SearchStatus
  * */
 export function buildSearchStatus(engine: SearchEngine): SearchStatus {
   return buildCoreStatus(engine);

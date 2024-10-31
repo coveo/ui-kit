@@ -21,6 +21,9 @@ export type {
 
 /**
  * The commerce standalone search box set action creators.
+ *
+ * @group Actions
+ * @category StandaloneSearchBoxSet
  */
 export interface StandaloneSearchBoxSetActionCreators {
   /**
@@ -72,6 +75,9 @@ export interface StandaloneSearchBoxSetActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the commerce standalone search box set action creators.
+ *
+ * @group Actions
+ * @category StandaloneSearchBoxSet
  */
 export function loadStandaloneSearchBoxSetActions(
   engine: CommerceEngine

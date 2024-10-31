@@ -6,6 +6,9 @@ import {back, forward} from './history-actions.js';
 
 /**
  * The history action creators.
+ *
+ * @group Actions
+ * @category History
  */
 export interface HistoryActionCreators {
   /**
@@ -28,6 +31,9 @@ export interface HistoryActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category History
  */
 export function loadHistoryActions(
   engine: SearchEngine
