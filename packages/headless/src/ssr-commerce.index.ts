@@ -108,7 +108,11 @@ export type {
   FetchStaticState,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {
+  NavigatorContext,
+  BrowserNavigatorContextProvider,
+  NavigatorContextProvider,
+} from './app/navigatorContextProvider.js';
 
 export type {LogLevel} from './app/logger.js';
 
