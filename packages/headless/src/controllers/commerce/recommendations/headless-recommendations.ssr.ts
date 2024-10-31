@@ -20,11 +20,12 @@ export interface RecommendationsDefinition
  * */
 export function defineRecommendations(
   props: RecommendationsProps
-): RecommendationsDefinition {
+): RecommendationsDefinition & {isRecs: true} {
   return {
     search: true,
     listing: true,
     standalone: true,
+    isRecs: true,
     build: (engine) => buildRecommendations(engine, props),
   };
 }

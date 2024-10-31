@@ -7,7 +7,10 @@ import {buildProductListing} from '../../controllers/commerce/product-listing/he
 import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
-import {buildControllerDefinitions} from '../commerce-ssr-engine/common.js';
+import {
+  buildControllerDefinitions,
+  buildRecommendationFilter,
+} from '../commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionsMap,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
@@ -37,7 +40,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForRequestCompletedAction(): Promise<Action>;
+  waitForRequestCompletedAction(): Promise<Action>[];
 }
 
 export type CommerceEngineDefinitionOptions<
@@ -56,13 +59,20 @@ function isSearchCompletedAction(action: unknown): action is Action {
   );
 }
 
+function isRecommendationCompletedAction(action: unknown): action is Action {
+  return /^commerce\/recommendations\/fetch\/(fulfilled|rejected)$/.test(
+    (action as UnknownAction).type
+  );
+}
+
 function noSearchActionRequired(_action: unknown): _action is Action {
   return true;
 }
 
 function buildSSRCommerceEngine(
   solutionType: SolutionType,
-  options: CommerceEngineOptions
+  options: CommerceEngineOptions,
+  recommendationCount: number
 ): SSRCommerceEngine {
   let actionCompletionMiddleware: ReturnType<
     typeof createWaitForActionMiddleware
@@ -85,11 +95,17 @@ function buildSSRCommerceEngine(
       );
   }
 
+  const recommendationActionMiddlewares = Array.from(
+    {length: recommendationCount},
+    () => createWaitForActionMiddleware(isRecommendationCompletedAction)
+  );
+
   const commerceEngine = buildCommerceEngine({
     ...options,
     middlewares: [
       ...(options.middlewares ?? []),
       actionCompletionMiddleware.middleware,
+      ...recommendationActionMiddlewares.map(({middleware}) => middleware),
     ],
   });
 
@@ -101,7 +117,10 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return actionCompletionMiddleware.promise;
+      return [
+        actionCompletionMiddleware.promise,
+        ...recommendationActionMiddlewares.map(({promise}) => promise),
+      ];
     },
   };
 }
@@ -163,6 +182,10 @@ export function defineCommerceEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
+  const recommendationHelper = buildRecommendationFilter(
+    controllerDefinitions ?? {}
+  );
+
   const getOptions = () => {
     return engineOptions;
   };
@@ -180,7 +203,8 @@ export function defineCommerceEngine<
         solutionType,
         buildOptions?.extend
           ? await buildOptions.extend(getOptions())
-          : getOptions()
+          : getOptions(),
+        recommendationHelper.count
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -232,10 +256,14 @@ export function defineCommerceEngine<
             buildSearch(engine).executeFirstSearch();
           }
 
-          const searchAction = await engine.waitForRequestCompletedAction();
+          recommendationHelper.refresh(controllers);
+
+          const searchActions = await Promise.all(
+            engine.waitForRequestCompletedAction()
+          );
 
           return createStaticState({
-            searchAction,
+            searchActions,
             controllers,
           }) as EngineStaticState<
             UnknownAction,
@@ -266,7 +294,7 @@ export function defineCommerceEngine<
           solutionType
         ).fromBuildResult({
           buildResult,
-          searchAction: params[0]!.searchAction,
+          searchActions: params[0]!.searchActions,
         });
         return staticState;
       },
@@ -277,10 +305,13 @@ export function defineCommerceEngine<
           const [
             {
               buildResult: {engine, controllers},
-              searchAction,
+              searchActions,
             },
           ] = params;
-          engine.dispatch(searchAction);
+
+          searchActions.forEach((action) => {
+            engine.dispatch(action);
+          });
           await engine.waitForRequestCompletedAction();
           return {engine, controllers};
         },

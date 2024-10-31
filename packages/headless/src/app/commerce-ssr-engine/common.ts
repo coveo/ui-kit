@@ -1,3 +1,4 @@
+import {Recommendations} from '../../controllers/commerce/recommendations/headless-recommendations.js';
 import {Controller} from '../../controllers/controller/headless-controller.js';
 import {InvalidControllerDefinition} from '../../utils/errors.js';
 import {filterObject, mapObject} from '../../utils/utils.js';
@@ -102,4 +103,38 @@ export function ensureAtLeastOneSolutionType(
   if (options?.listing === false && options?.search === false) {
     throw new InvalidControllerDefinition();
   }
+}
+export function buildRecommendationFilter<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
+>(controllerDefinitions: TControllerDefinitions) {
+  const keys = Object.entries(controllerDefinitions)
+    .filter(([_, value]) => 'isRecs' in value && value.isRecs)
+    .map(([key, _]) => key);
+
+  return {
+    /**
+     * Gets the number of recommendation controllers from the controller definitions map.
+     *
+     * @returns {number} The number of recommendation controllers in the controller definition map
+     */
+    get count() {
+      return keys.length;
+    },
+
+    /**
+     * Go through all the controllers passed in argument and only refresh recommendation controllers.
+     *
+     * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
+     */
+    refresh(controllers: Record<string, Controller>) {
+      const isRecommendationController = (key: string) => keys.includes(key);
+
+      Object.entries(controllers)
+        .filter(([key, _]) => isRecommendationController(key))
+        .forEach(([_, controller]) =>
+          (controller as Recommendations).refresh?.()
+        );
+    },
+  };
 }

@@ -34,13 +34,10 @@ export default function ListingPage({
   useEffect(() => {
     listingEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-        // Refreshing recommendations in the browser after hydrating the state in the client-side
-        // Recommendation refresh in the server is not supported yet.
-        controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
