@@ -88,6 +88,7 @@ export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration.js';
+export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
 export type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
@@ -95,6 +96,7 @@ export type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  InferControllerPropsMapFromDefinitions,
 } from './app/commerce-ssr-engine/types/common.js';
 export type {Build} from './app/ssr-engine/types/build.js';
 export type {
@@ -102,6 +104,8 @@ export type {
   InferStaticState,
   InferHydratedState,
   InferBuildResult,
+  HydrateStaticState,
+  FetchStaticState,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
 export type {NavigatorContext} from './app/navigatorContextProvider.js';
@@ -149,6 +153,7 @@ export type {
   MappedFacetState,
   LocationFacetValue,
   LocationFacetState,
+  FacetType,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 
