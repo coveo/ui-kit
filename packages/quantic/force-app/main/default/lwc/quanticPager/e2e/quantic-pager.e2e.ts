@@ -193,7 +193,7 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     if (useCase.value === 'search') {
-      test.describe('when loading optins from the url', () => {
+      test.describe('when loading options from the url', () => {
         test('should reflect the options of url in the component', async ({
           page,
           pager,
