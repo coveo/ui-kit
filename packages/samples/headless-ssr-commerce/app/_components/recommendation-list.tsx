@@ -6,9 +6,8 @@ import {FunctionComponent} from 'react';
 import {usePopularBoughtRecs} from '../_lib/commerce-engine';
 
 export const Recommendations: FunctionComponent = () => {
-  // TODO: find a way to make the recommendation generic
+  // TODO: KIT-3503: refresh recs server side
   const {state, controller} = usePopularBoughtRecs();
-  // TODO: recommendation are not refreshed server-side FIXME:
 
   const router = useRouter();
 

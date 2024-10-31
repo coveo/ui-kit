@@ -41,7 +41,7 @@ export default async function Search() {
 
         <div style={{flex: 1}}>
           {/* popularBoughtRecs */}
-          {/* TODO: need to find a better way to target a recommendation slot id */}
+          {/* TODO: KIT-3503: need to revisit the way recommendations are added*/}
           <Recommendations />
         </div>
       </div>
