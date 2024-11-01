@@ -19,7 +19,8 @@ export type {QueryCorrection, WordCorrection, DidYouMeanState};
 
 export interface DidYouMean extends Controller {
   /**
-   * Apply query correction using the query correction, if any, currently present in the state.
+   * Applies query correction using the query correction, if any, currently present in the state.
+   * Also triggers a search with the corrected query.
    */
   applyCorrection(): void;
   /**
