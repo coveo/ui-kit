@@ -92,7 +92,7 @@ function serializeSortCriteria(key: string, val: SortCriterion | undefined) {
   return serializeSpecialCharacters(key, buildCriterionExpression(val));
 }
 
-function buildCriterionExpression(criterion: SortCriterion | undefined) {
+export function buildCriterionExpression(criterion: SortCriterion | undefined) {
   if (!criterion) {
     return '';
   }
@@ -205,7 +205,9 @@ function cast<K extends keyof Parameters>(pair: [K, string]): [K, unknown] {
   return [key, decodeURIComponent(value)];
 }
 
-function deserializeSortCriteria(value: string): SortCriterion | undefined {
+export function deserializeSortCriteria(
+  value: string
+): SortCriterion | undefined {
   if (value === 'relevance') {
     return buildRelevanceSortCriterion();
   }
