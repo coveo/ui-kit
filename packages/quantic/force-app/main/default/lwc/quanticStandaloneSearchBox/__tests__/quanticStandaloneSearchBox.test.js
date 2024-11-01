@@ -4,13 +4,33 @@ import QuanticStandaloneSearchBox from 'c/quanticStandaloneSearchBox';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {CurrentPageReference} from 'lightning/navigation';
+import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+
+const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
+const defaultHeadlessConfiguration = JSON.stringify({
+  organization: 'testOrgId',
+  accessToken: 'testAccessToken',
+});
 
 jest.mock('c/quanticHeadlessLoader');
+
+jest.mock(
+  '@salesforce/apex/HeadlessController.getHeadlessConfiguration',
+  () => ({
+    default: jest.fn(),
+  }),
+  {virtual: true}
+);
+
+mockHeadlessLoader.loadDependencies = () =>
+  new Promise((resolve) => {
+    resolve();
+  });
 
 let isInitialized = false;
 
 const exampleEngine = {
-  id: 'engineId__standalone',
+  id: 'engineId',
 };
 
 const functionsMocks = {
@@ -18,12 +38,6 @@ const functionsMocks = {
     state: {},
     subscribe: functionsMocks.subscribe,
   })),
-  loadDependencies: jest.fn(
-    () =>
-      new Promise((resolve) => {
-        resolve();
-      })
-  ),
   subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
@@ -44,7 +58,6 @@ const defaultOptions = {
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
-
   const element = createElement('c-quantic-standalone-search-box', {
     is: QuanticStandaloneSearchBox,
   });
@@ -57,11 +70,8 @@ function createTestComponent(options = defaultOptions) {
 
 function prepareHeadlessState() {
   // @ts-ignore
-  mockHeadlessLoader.loadDependencies = functionsMocks.loadDependencies;
-  // @ts-ignore
   global.CoveoHeadless = {
     buildStandaloneSearchBox: functionsMocks.buildStandaloneSearchBox,
-    subscribe: functionsMocks.subscribe,
   };
 }
 
@@ -91,8 +101,8 @@ function cleanup() {
 }
 
 describe('c-quantic-standalone-search-box', () => {
-  beforeAll(() => {
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+  beforeEach(() => {
+    getHeadlessConfiguration.mockResolvedValue(defaultHeadlessConfiguration);
     mockSuccessfulHeadlessInitialization();
   });
 
@@ -101,20 +111,18 @@ describe('c-quantic-standalone-search-box', () => {
   });
 
   it('construct itself without throwing', () => {
-    expect(() =>
-      createElement('c-quantic-standalone-search-box', {
-        is: QuanticStandaloneSearchBox,
-      })
-    ).not.toThrow();
+    expect(() => createTestComponent()).not.toThrow();
   });
 
   describe('when the current page reference changes', () => {
-    it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
-      const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
+    beforeAll(() => {
       Object.defineProperty(window, 'location', {
         writable: true,
         value: {href: nonStandaloneURL},
       });
+    });
+
+    it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
       const element = createTestComponent({
         ...defaultOptions,
         keepFiltersOnSearch: false,
