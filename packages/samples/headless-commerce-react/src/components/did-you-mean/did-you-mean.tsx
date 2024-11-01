@@ -34,9 +34,6 @@ export default function DidYouMean(props: IDidYouMeanProps) {
   return (
     <div>
       <p>
-        No results for <b>{state.originalQuery}</b>
-      </p>
-      <p>
         Search for
         <span onClick={() => controller?.applyCorrection()}>
           <b>{state.queryCorrection.correctedQuery}</b>
