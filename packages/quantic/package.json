@@ -11,7 +11,7 @@
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
-    "test": "npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
+    "test": "npm run babel:headless && npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:fix": "npm run lint:fix:js",
     "lint:fix:js": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
@@ -42,7 +42,8 @@
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "preinstall": "node scripts/npm/check-sfdx-project.js",
-    "postinstall": "node scripts/npm/setup-quantic.js"
+    "postinstall": "node scripts/npm/setup-quantic.js",
+    "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
     "@coveo/bueno": "1.0.2",
@@ -54,6 +55,8 @@
     "node": "^20.9.0"
   },
   "devDependencies": {
+    "@babel/cli": "7.25.6",
+    "@babel/plugin-transform-async-to-generator": "7.24.7",
     "@ckeditor/jsdoc-plugins": "39.9.1",
     "@coveo/relay-event-types": "12.0.1",
     "@coveo/release": "1.0.0",
