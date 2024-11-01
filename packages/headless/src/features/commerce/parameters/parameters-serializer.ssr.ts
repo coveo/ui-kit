@@ -21,8 +21,11 @@ import {
   toArray,
 } from '../../search-parameters/search-parameter-utils.js';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
+import {SortCriterion} from '../sort/sort.js';
 import {
+  buildCriterionExpression,
   commerceFacetsRegex,
+  deserializeSortCriteria,
   FacetParameters,
   keyHasObjectValue,
 } from './parameters-serializer.js';
@@ -113,6 +116,11 @@ function applyToUrlSearchParam(
     return;
   }
 
+  if (isSortPair(pair)) {
+    applySortToSearchParams(urlSearchParams, pair);
+    return;
+  }
+
   if (isFacetPair(pair)) {
     applyFacetValuesToSearchParams(urlSearchParams, previousState, pair);
     return;
@@ -124,6 +132,14 @@ function applyToUrlSearchParam(
   }
 
   urlSearchParams.set(pair[0], `${pair[1] as string | number | boolean}`);
+}
+
+function applySortToSearchParams(
+  urlSearchParams: URLSearchParams,
+  [key, value]: CommerceSearchParamPair<SortCriterion>
+) {
+  const sortCriteria = encodeURIComponent(buildCriterionExpression(value));
+  urlSearchParams.set(key, sortCriteria);
 }
 
 function applyFacetValuesToSearchParams(
@@ -200,6 +216,12 @@ export function extendSearchParams(
   if (isNullOrUndefined(value)) {
     return;
   }
+  if (key === 'sortCriteria') {
+    commerceSearchParams[key] = deserializeSortCriteria(
+      decodeURIComponent(value as string)
+    );
+    return;
+  }
   if (
     isValidBasicKey(key) &&
     typeof value === 'string' &&
@@ -253,6 +275,15 @@ export function cast<K extends CommerceSearchParametersKey>(
 
 export function isValidSearchParam(key: string) {
   return commerceFacetsRegex.exec(key) !== null || isValidBasicKey(key);
+}
+
+export function isSortPair(
+  pair: [CommerceSearchParametersKey, unknown]
+): pair is CommerceSearchParamPair<SortCriterion> {
+  const [key, value] = pair;
+  const isValidKey = key === 'sortCriteria';
+  const isValidValue = isObject(value) && 'by' in value;
+  return isValidKey && isValidValue;
 }
 
 export function isFacetPair(

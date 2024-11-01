@@ -61,9 +61,9 @@ export function defineParameterManager<
       }
     },
   } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<typeof options>>,
+    ParameterManager<MappedParameterTypes<TOptions>>,
     TOptions,
-    ParameterManagerProps<MappedParameterTypes<typeof options>>
+    ParameterManagerProps<MappedParameterTypes<TOptions>>
   >;
 }
 
