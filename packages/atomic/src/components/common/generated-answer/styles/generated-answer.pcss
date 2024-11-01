@@ -99,6 +99,7 @@
 [part='generated-container'] {
   &.answer-collapsed {
     @apply relative max-h-64 overflow-hidden content-[''];
+    max-height: var(--atomic-crga-collapsed-height, 16rem);
 
     .feedback-buttons {
       @apply hidden;
@@ -106,7 +107,10 @@
   }
   &.answer-collapsed:before {
     @apply absolute left-0 top-0 h-full w-full content-[''];
-    background: linear-gradient(transparent 11.25rem, var(--atomic-background));
+    background: linear-gradient(
+      transparent calc(var(--atomic-crga-collapsed-height, 16rem) - 4.75rem),
+      var(--atomic-background)
+    );
   }
 }
 
