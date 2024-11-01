@@ -1,3 +1,14 @@
+## 3.3.0 (2024-10-30)
+
+- feat(quantic): added E2E and unit tests for insight notify trigger in quantic (#4528) ([a114213](https://github.com/coveo/ui-kit/commits/a114213)), closes [#4528](https://github.com/coveo/ui-kit/issues/4528)
+- feat(quantic): added support to the custom sort property in the quantic facet component (#4600) ([44563fd](https://github.com/coveo/ui-kit/commits/44563fd)), closes [#4600](https://github.com/coveo/ui-kit/issues/4600)
+- fix(quantic): fix search box scroll issue (#4573) ([aa7afda](https://github.com/coveo/ui-kit/commits/aa7afda)), closes [#4573](https://github.com/coveo/ui-kit/issues/4573)
+- fix(quantic): fixed sf proxy issue with excludedCustomActions property (#4566) ([52f4a6b](https://github.com/coveo/ui-kit/commits/52f4a6b)), closes [#4566](https://github.com/coveo/ui-kit/issues/4566)
+- fix(quantic): improved the logic that displays view events as links (#4579) ([1461a93](https://github.com/coveo/ui-kit/commits/1461a93)), closes [#4579](https://github.com/coveo/ui-kit/issues/4579)
+- test(quantic): fixed quantic e2e after salesforce 25 winter release (#4559) ([6069c5d](https://github.com/coveo/ui-kit/commits/6069c5d)), closes [#4559](https://github.com/coveo/ui-kit/issues/4559)
+- feat(atomic, headless): leverage totalNumberOfChildResults in folded results (#4513) ([9dc3af1](https://github.com/coveo/ui-kit/commits/9dc3af1)), closes [#4513](https://github.com/coveo/ui-kit/issues/4513)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+
 ## <small>3.2.5 (2024-10-23)</small>
 
 - fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)

@@ -9,6 +9,7 @@ export interface QueryTriggerDefinition
 
 /**
  * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @returns The `NotifyTrigger` controller definition.
  *

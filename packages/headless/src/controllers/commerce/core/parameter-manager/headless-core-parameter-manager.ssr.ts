@@ -35,6 +35,7 @@ export type {
 
 /**
  * Defines a `ParameterManager` controller instance.
+ * @group Definers
  *
  * @returns The `ParameterManager` controller definition.
  *

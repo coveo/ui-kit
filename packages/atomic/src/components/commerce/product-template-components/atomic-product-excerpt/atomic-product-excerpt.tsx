@@ -19,6 +19,7 @@ import {ProductContext} from '../product-template-decorators';
  */
 @Component({
   tag: 'atomic-product-excerpt',
+  styleUrl: 'atomic-product-excerpt.pcss',
   shadow: false,
 })
 export class AtomicProductExcerpt
@@ -109,9 +110,7 @@ export class AtomicProductExcerpt
         showLessLabel={this.bindings.i18n.t('show-less')}
         isCollapsible={this.isCollapsible}
       >
-        <atomic-product-text field="excerpt">
-          {productExcerpt}
-        </atomic-product-text>
+        <atomic-product-text field="excerpt"></atomic-product-text>
       </ExpandableText>
     );
   }

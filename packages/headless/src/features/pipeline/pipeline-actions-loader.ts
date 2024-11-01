@@ -5,6 +5,9 @@ import {setPipeline} from './pipeline-actions.js';
 
 /**
  * The pipeline action creators.
+ *
+ * @group Actions
+ * @category Pipeline
  */
 export interface PipelineActionCreators {
   /**
@@ -21,6 +24,9 @@ export interface PipelineActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Pipeline
  */
 export function loadPipelineActions(
   engine: CoreEngine

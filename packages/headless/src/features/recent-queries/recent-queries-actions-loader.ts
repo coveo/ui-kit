@@ -9,6 +9,9 @@ import {
 
 /**
  * The RecentQueries action creators.
+ *
+ * @group Actions
+ * @category RecentQueries
  */
 export interface RecentQueriesActionCreators {
   /**
@@ -32,6 +35,9 @@ export interface RecentQueriesActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category RecentQueries
  */
 export function loadRecentQueriesActions(
   engine: SearchEngine

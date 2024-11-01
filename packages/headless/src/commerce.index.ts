@@ -1,3 +1,20 @@
+/**
+ * The Coveo Headless Commerce sub-package exposes exposes the engine, controllers, actions, and utility functions to build a commerce search experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildCommerceEngine, getSampleCommerceEngineConfiguration, buildSearch } from '@coveo/headless/commerce';
+ *
+ * const engine = buildCommerceEngine({
+ *  configuration: getSampleCommerceEngineConfiguration(),
+ * });
+ *
+ * const search = buildSearch(engine);
+ * search.executeFirstSearch();
+ * ```
+ *
+ * @module Commerce
+ */
 import * as Selectors from './selectors/commerce-selectors.index.js';
 import * as HighlightUtils from './utils/highlight.js';
 
@@ -182,6 +199,7 @@ export type {
 export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';
 export type {
   FacetType,
+  BaseFacetValue,
   FacetValueRequest,
   RegularFacetValue,
   LocationFacetValueRequest,

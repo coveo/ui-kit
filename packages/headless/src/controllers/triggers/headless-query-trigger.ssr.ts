@@ -15,6 +15,7 @@ export interface QueryTriggerDefinition
 
 /**
  * Defines a `QueryTrigger` controller instance.
+ * @group Definers
  *
  * @returns The `QueryTrigger` controller definition.
  * */

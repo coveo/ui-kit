@@ -13,6 +13,7 @@ export interface FoldedResultListDefinition
 
 /**
  * Defines a `FoldedResultList` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `FoldedResultList` properties.
  * @returns The `FoldedResultList` controller definition.

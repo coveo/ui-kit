@@ -90,6 +90,7 @@ export class AtomicIPXTab implements InitializableComponent {
         part="tab"
         class={buttonClasses.join(' ')}
         ariaLabel={this.bindings.i18n.t('tab-search', {label: this.label})}
+        title={this.label}
         ariaPressed={`${this.tabState.isActive}`}
         onClick={() => this.tab.select()}
       >
