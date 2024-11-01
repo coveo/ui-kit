@@ -3,9 +3,13 @@ import {getAbsoluteWidth} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /**
- *  The `QuanticTabBar` component displays the Quantic Tabs in a responsive manner. When tabs are wider than the available space, the tabs that cannot fit in the space are moved in the "More" dropdown list.
+ * The `QuanticTabBar` component presents a set of tabs in a responsive, adaptable layout.
+ * When the width of the container is insufficient to display all tabs, the excess tabs are moved into a "More" dropdown menu,
+ * ensuring accessibility across different screen sizes.
  * @category Search
  * @category Insight Panel
+ * @slot - Accepts `QuanticTab` components or custom tab elements for display in the tab bar.
+ *         Custom tab elements must include the attribute `data-role="tab"` to be recognized by `QuanticTabBar`.
  * @example
  * <c-quantic-tab-bar light-theme>
  *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
@@ -353,9 +357,11 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {Array<Element>}
    */
   getTabsFromSlot() {
-    const isTab = (tagName) => /-quantic-tab$/i.test(tagName);
+    const isTab = (element) =>
+      /-quantic-tab$/i.test(element.tagName) || element.dataset?.role === 'tab';
+
     return Array.from(this.querySelectorAll('*')).filter((element) =>
-      isTab(element.tagName)
+      isTab(element)
     );
   }
 
