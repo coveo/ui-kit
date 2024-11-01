@@ -186,12 +186,22 @@ export function createWaitForActionMiddlewareForRecommendation<
   const middleware: Middleware = () => (next) => (action) => {
     next(action);
 
+    // if (isDesiredAction(action) && isRecommendationActionPayload(action)) {
+    //   console.log('');
+    //   console.log('slotId:', action.meta.arg.slotId);
+    //   console.log(
+    //     'condition: ',
+    //     hasBeenResolved,
+    //     memo.has(action.meta.arg.slotId)
+    //   );
+    // }
     if (
       isDesiredAction(action) &&
       !hasBeenResolved &&
       isRecommendationActionPayload(action) &&
       !hasSlotBeenProcessed(action.meta.arg.slotId)
     ) {
+      // console.log(' --- RESOLVE ---');
       hasBeenResolved = true;
       memo.add(action.meta.arg.slotId);
       resolve(action);

@@ -108,9 +108,27 @@ export function buildRecommendationFilter<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
 >(controllerDefinitions: TControllerDefinitions) {
-  const keys = Object.entries(controllerDefinitions)
-    .filter(([_, value]) => 'isRecs' in value && value.isRecs)
-    .map(([key, _]) => key);
+  const seenSlotIds = new Set<string>();
+  const filtered = Object.entries(controllerDefinitions).filter(
+    ([_, value]) => {
+      if ('isRecs' in value && value.isRecs) {
+        const slotId = (value as unknown as {slotId: string}).slotId; // TODO: fix type and CLEAN THAT!
+        // TODO: use a combination of slotId and productId name to identify the controller
+        if (seenSlotIds.has(slotId)) {
+          console.log(
+            'WARNING: Multiple recommendation controllers found for the same slotId',
+            slotId
+          );
+          return false;
+        } else {
+          seenSlotIds.add(slotId);
+          return true;
+        }
+      }
+    }
+  );
+
+  const keys = filtered.map(([key, _]) => key);
 
   return {
     /**

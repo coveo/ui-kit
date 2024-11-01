@@ -20,12 +20,17 @@ export interface RecommendationsDefinition
  * */
 export function defineRecommendations(
   props: RecommendationsProps
-): RecommendationsDefinition & {isRecs: true} {
+): RecommendationsDefinition & {
+  isRecs: true;
+} & RecommendationsProps['options'] {
+  // TODO: have an extended recommendationDefinition that is not exposed
   return {
     search: true,
     listing: true,
     standalone: true,
-    isRecs: true,
+    // TODO: encapsulate into a single object called meta (e.g. meta: {isRecs: true, ...props.options})
+    isRecs: true, // TODO: mark internal
+    ...props.options, // TODO: mark internal
     build: (engine) => buildRecommendations(engine, props),
   };
 }
