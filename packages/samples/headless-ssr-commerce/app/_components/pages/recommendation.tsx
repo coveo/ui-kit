@@ -29,6 +29,13 @@ export default function Recommendation({
     standaloneEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          searchParameterManager: {
+            initialState: {
+              parameters: {},
+            },
+          },
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

@@ -16,7 +16,9 @@ export default async function RecommendationPage() {
   );
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await standaloneEngineDefinition.fetchStaticState();
+  const staticState = await standaloneEngineDefinition.fetchStaticState({
+    controllers: {searchParameterManager: {initialState: {parameters: {}}}},
+  });
 
   return (
     <Recommendation
