@@ -36,7 +36,7 @@ export default function ProductPage(props: IProductPageProps) {
   useEffect(() => {
     standaloneEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

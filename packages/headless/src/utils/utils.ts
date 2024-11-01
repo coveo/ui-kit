@@ -157,3 +157,39 @@ export function createWaitForActionMiddleware<TAction extends Action>(
 
   return {promise, middleware};
 }
+
+export function createWaitForActionMiddlewareForRecommendation<
+  TAction extends Action,
+>(
+  isDesiredAction: (action: unknown) => action is TAction,
+  memo: Set<string>
+): {promise: Promise<TAction>; middleware: Middleware} {
+  const {promise, resolve} = createDeferredPromise<TAction>();
+  let resolved = false;
+
+  const middleware: Middleware = () => (next) => (action) => {
+    next(action);
+    // [x]  Should not resolve the same action more than once
+    // [x]  Do not resolve a recommendation action if it is in the slot id
+    if (
+      isDesiredAction(action) &&
+      // TODO: merge these two conditions
+      !resolved &&
+      !memo.has(
+        (action as unknown as {meta: {arg: {slotId: string}}})?.meta?.arg
+          ?.slotId
+      ) //TODO:: this will not work for non recommendation action
+    ) {
+      resolved = true;
+      // TODO: fix this type casting
+      memo.add(
+        (action as unknown as {meta: {arg: {slotId: string}}})?.meta?.arg
+          ?.slotId
+      );
+      console.log(' --- isDesiredAction ---', action);
+      resolve(action);
+    }
+  };
+
+  return {promise, middleware};
+}

@@ -33,7 +33,7 @@ export default function SearchPage({
   useEffect(() => {
     searchEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

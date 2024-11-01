@@ -107,6 +107,10 @@ export default function ListingPage({
             staticState={staticState.controllers.popularBoughtRecs.state}
             controller={hydratedState?.controllers.popularBoughtRecs}
           />
+          <Recommendations
+            staticState={staticState.controllers.popularViewedRecs.state}
+            controller={hydratedState?.controllers.popularViewedRecs}
+          />
         </div>
       </div>
     </>

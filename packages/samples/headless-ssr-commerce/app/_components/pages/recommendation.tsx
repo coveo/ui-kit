@@ -28,7 +28,7 @@ export default function Recommendation({
   useEffect(() => {
     standaloneEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

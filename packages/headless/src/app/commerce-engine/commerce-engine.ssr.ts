@@ -6,7 +6,10 @@ import {stateKey} from '../../app/state-key.js';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
-import {createWaitForActionMiddleware} from '../../utils/utils.js';
+import {
+  createWaitForActionMiddleware,
+  createWaitForActionMiddlewareForRecommendation,
+} from '../../utils/utils.js';
 import {
   buildControllerDefinitions,
   buildRecommendationFilter,
@@ -95,9 +98,14 @@ function buildSSRCommerceEngine(
       );
   }
 
+  const memo: Set<string> = new Set();
   const recommendationActionMiddlewares = Array.from(
     {length: recommendationCount},
-    () => createWaitForActionMiddleware(isRecommendationCompletedAction)
+    () =>
+      createWaitForActionMiddlewareForRecommendation(
+        isRecommendationCompletedAction,
+        memo
+      )
   );
 
   const commerceEngine = buildCommerceEngine({
@@ -182,7 +190,7 @@ export function defineCommerceEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const recommendationHelper = buildRecommendationFilter(
+  const recommendationFilter = buildRecommendationFilter(
     controllerDefinitions ?? {}
   );
 
@@ -204,7 +212,7 @@ export function defineCommerceEngine<
         buildOptions?.extend
           ? await buildOptions.extend(getOptions())
           : getOptions(),
-        recommendationHelper.count
+        recommendationFilter.count
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -256,7 +264,7 @@ export function defineCommerceEngine<
             buildSearch(engine).executeFirstSearch();
           }
 
-          recommendationHelper.refresh(controllers);
+          recommendationFilter.refresh(controllers);
 
           const searchActions = await Promise.all(
             engine.waitForRequestCompletedAction()
