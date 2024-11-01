@@ -38,7 +38,7 @@ export default function Sort(props: ISortProps) {
         <select
           name="sorts"
           id="sorts-select"
-          value={JSON.stringify(state.appliedSort)}
+          defaultValue={JSON.stringify(state.appliedSort)}
           onChange={(e) => controller.sortBy(JSON.parse(e.target.value))}
         >
           {state.availableSorts.map((sort, index) => (

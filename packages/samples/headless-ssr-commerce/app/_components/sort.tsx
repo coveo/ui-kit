@@ -14,7 +14,7 @@ interface ISortProps {
 export default function Sort(props: ISortProps) {
   const {controller, staticState} = props;
 
-  const [state, setState] = useState({...staticState});
+  const [state, setState] = useState(staticState);
 
   useEffect(() => {
     controller?.subscribe(() => setState(controller.state));
@@ -39,16 +39,11 @@ export default function Sort(props: ISortProps) {
       <select
         name="sorts"
         id="sorts-select"
-        value={JSON.stringify(state.appliedSort)}
         onChange={(e) => controller?.sortBy(JSON.parse(e.target.value))}
-        disabled={!controller}
+        defaultValue={JSON.stringify(state.appliedSort)}
       >
         {state.availableSorts.map((sort, index) => (
-          <option
-            key={index}
-            value={JSON.stringify(sort)}
-            onSelect={() => controller?.sortBy(sort)}
-          >
+          <option key={index} value={JSON.stringify(sort)}>
             {getSortLabel(sort)}
           </option>
         ))}

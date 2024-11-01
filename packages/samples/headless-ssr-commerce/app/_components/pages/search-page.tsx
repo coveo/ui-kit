@@ -9,10 +9,12 @@ import {
 } from '../../_lib/commerce-engine';
 import BreadcrumbManager from '../breadcrumb-manager';
 import FacetGenerator from '../facets/facet-generator';
+import useSyncParameterManager from '../parameter-manager';
 import ProductList from '../product-list';
 import {Recommendations} from '../recommendation-list';
 import SearchBox from '../search-box';
 import ShowMore from '../show-more';
+import Sort from '../sort';
 import Summary from '../summary';
 import Triggers from '../triggers/triggers';
 
@@ -34,15 +36,25 @@ export default function SearchPage({
     searchEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          searchParameterManager: {
+            initialState: staticState.controllers.searchParameterManager.state,
+          },
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
 
-        // Refreshing recommendations in the browser after hydrating the state in the client-side
-        // Recommendation refresh in the server is not supported yet.
+        //Refreshing recommendations in the browser after hydrating the state in the client-side
+        //Recommendation refresh in the server is not supported yet.
         controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
+
+  useSyncParameterManager({
+    staticState: staticState.controllers.searchParameterManager.state,
+    controller: hydratedState?.controllers.searchParameterManager,
+  });
 
   return (
     <>
@@ -88,6 +100,10 @@ export default function SearchPage({
             staticState={staticState.controllers.summary.state}
             controller={hydratedState?.controllers.summary}
           />
+          <Sort
+            staticState={staticState.controllers.sort.state}
+            controller={hydratedState?.controllers.sort}
+          ></Sort>
           <ProductList
             staticState={staticState.controllers.productList.state}
             controller={hydratedState?.controllers.productList}

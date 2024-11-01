@@ -11,6 +11,7 @@ import BreadcrumbManager from '../breadcrumb-manager';
 import Cart from '../cart';
 import FacetGenerator from '../facets/facet-generator';
 import Pagination from '../pagination';
+import useSyncParameterManager from '../parameter-manager';
 import ProductList from '../product-list';
 import {Recommendations} from '../recommendation-list';
 import Sort from '../sort';
@@ -35,6 +36,11 @@ export default function ListingPage({
     listingEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          searchParameterManager: {
+            initialState: staticState.controllers.searchParameterManager.state,
+          },
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
@@ -43,6 +49,11 @@ export default function ListingPage({
         controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
+
+  useSyncParameterManager({
+    staticState: staticState.controllers.searchParameterManager.state,
+    controller: hydratedState?.controllers.searchParameterManager,
+  });
 
   return (
     <>
