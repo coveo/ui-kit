@@ -53,6 +53,14 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
+    // TODO: check for invalid slotId
+    // TODO: check for duplicate slotId
+    // TODO: encounter for multiple recommendations with same slot id
+    // popwularBoughtRecs: defineRecommendations({
+    //   options: {
+    //     slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30172',
+    //   },
+    // }),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),

@@ -1,4 +1,5 @@
-import {Middleware, Action} from '@reduxjs/toolkit';
+import {Middleware, Action, PayloadAction} from '@reduxjs/toolkit';
+import {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -158,35 +159,41 @@ export function createWaitForActionMiddleware<TAction extends Action>(
   return {promise, middleware};
 }
 
+function isRecommendationActionPayload<P = void, T extends string = string>(
+  action: unknown
+): action is PayloadAction<P, T, {arg: FetchRecommendationsPayload}> {
+  // TODO: clean that thing!!
+  if (typeof action === 'object' && action !== null && 'meta' in action) {
+    return (
+      (action as PayloadAction<P, T, {arg: FetchRecommendationsPayload}>).meta
+        ?.arg?.slotId !== undefined
+    );
+  }
+  return false;
+}
+
 export function createWaitForActionMiddlewareForRecommendation<
   TAction extends Action,
 >(
   isDesiredAction: (action: unknown) => action is TAction,
   memo: Set<string>
+  //TODO:: this will not work for non recommendation action
 ): {promise: Promise<TAction>; middleware: Middleware} {
   const {promise, resolve} = createDeferredPromise<TAction>();
-  let resolved = false;
+  let hasBeenResolved = false;
+  const hasSlotBeenProcessed = (slotId: string) => memo.has(slotId);
 
   const middleware: Middleware = () => (next) => (action) => {
     next(action);
-    // [x]  Should not resolve the same action more than once
-    // [x]  Do not resolve a recommendation action if it is in the slot id
+
     if (
       isDesiredAction(action) &&
-      // TODO: merge these two conditions
-      !resolved &&
-      !memo.has(
-        (action as unknown as {meta: {arg: {slotId: string}}})?.meta?.arg
-          ?.slotId
-      ) //TODO:: this will not work for non recommendation action
+      !hasBeenResolved &&
+      isRecommendationActionPayload(action) &&
+      !hasSlotBeenProcessed(action.meta.arg.slotId)
     ) {
-      resolved = true;
-      // TODO: fix this type casting
-      memo.add(
-        (action as unknown as {meta: {arg: {slotId: string}}})?.meta?.arg
-          ?.slotId
-      );
-      console.log(' --- isDesiredAction ---', action);
+      hasBeenResolved = true;
+      memo.add(action.meta.arg.slotId);
       resolve(action);
     }
   };
