@@ -1,4 +1,5 @@
 import {Recommendations} from '../../controllers/commerce/recommendations/headless-recommendations.js';
+import {RecommendationsDefinitionMeta} from '../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../controllers/controller/headless-controller.js';
 import {InvalidControllerDefinition} from '../../utils/errors.js';
 import {filterObject, mapObject} from '../../utils/utils.js';
@@ -104,31 +105,45 @@ export function ensureAtLeastOneSolutionType(
     throw new InvalidControllerDefinition();
   }
 }
+
 export function buildRecommendationFilter<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
 >(controllerDefinitions: TControllerDefinitions) {
-  const seenSlotIds = new Set<string>();
+  const slotIdSet = new Set<string>();
+
+  const isRecommendationDefinition = <
+    C extends ControllerDefinition<TEngine, Controller>,
+  >(
+    controller: C
+  ): controller is C & RecommendationsDefinitionMeta => {
+    return '_recommendationProps' in controller;
+  };
+
+  const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
+    console.warn(
+      'Multiple recommendation controllers found for the same slotId and productId',
+      {slotId, productId}
+    );
+  };
+
   const filtered = Object.entries(controllerDefinitions).filter(
     ([_, value]) => {
-      if ('isRecs' in value && value.isRecs) {
-        const slotId = (value as unknown as {slotId: string}).slotId; // TODO: fix type and CLEAN THAT!
-        // TODO: use a combination of slotId and productId name to identify the controller
-        if (seenSlotIds.has(slotId)) {
-          console.log(
-            'WARNING: Multiple recommendation controllers found for the same slotId',
-            slotId
-          );
-          return false;
-        } else {
-          seenSlotIds.add(slotId);
-          return true;
-        }
+      if (!isRecommendationDefinition(value)) {
+        return false;
       }
+      const {slotId, productId} = value._recommendationProps;
+      const key = `${slotId}${productId || ''}`;
+      if (slotIdSet.has(key)) {
+        warnDuplicateRecommendation(slotId, productId);
+        return false;
+      }
+      slotIdSet.add(key);
+      return true;
     }
   );
 
-  const keys = filtered.map(([key, _]) => key);
+  const name = filtered.map(([name, _]) => name);
 
   return {
     /**
@@ -137,7 +152,7 @@ export function buildRecommendationFilter<
      * @returns {number} The number of recommendation controllers in the controller definition map
      */
     get count() {
-      return keys.length;
+      return name.length;
     },
 
     /**
@@ -146,7 +161,7 @@ export function buildRecommendationFilter<
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      */
     refresh(controllers: Record<string, Controller>) {
-      const isRecommendationController = (key: string) => keys.includes(key);
+      const isRecommendationController = (key: string) => name.includes(key);
 
       Object.entries(controllers)
         .filter(([key, _]) => isRecommendationController(key))

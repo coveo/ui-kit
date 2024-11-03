@@ -8,6 +8,13 @@ import {
 
 export type {Recommendations, RecommendationsState};
 
+/**
+ * @internal
+ * */
+export type RecommendationsDefinitionMeta = {
+  _recommendationProps: {} & RecommendationsProps['options'];
+};
+
 export interface RecommendationsDefinition
   extends UniversalControllerDefinitionWithoutProps<Recommendations> {}
 /**
@@ -20,17 +27,14 @@ export interface RecommendationsDefinition
  * */
 export function defineRecommendations(
   props: RecommendationsProps
-): RecommendationsDefinition & {
-  isRecs: true;
-} & RecommendationsProps['options'] {
-  // TODO: have an extended recommendationDefinition that is not exposed
+): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
     search: true,
     listing: true,
     standalone: true,
-    // TODO: encapsulate into a single object called meta (e.g. meta: {isRecs: true, ...props.options})
-    isRecs: true, // TODO: mark internal
-    ...props.options, // TODO: mark internal
+    _recommendationProps: {
+      ...props.options,
+    },
     build: (engine) => buildRecommendations(engine, props),
   };
 }
