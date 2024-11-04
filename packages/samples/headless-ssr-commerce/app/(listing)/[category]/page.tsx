@@ -9,6 +9,7 @@ import Recommendations from '@/components/recommendation-list';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
+import getCart from '@/lib/cart';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';

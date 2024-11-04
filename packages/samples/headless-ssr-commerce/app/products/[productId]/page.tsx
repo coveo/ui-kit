@@ -1,5 +1,6 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ProductPage from '@/components/pages/product-page';
+import getCart from '@/lib/cart';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
