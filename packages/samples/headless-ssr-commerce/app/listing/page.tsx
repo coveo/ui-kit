@@ -8,6 +8,7 @@ import Recommendations from '@/components/recommendation-list';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
+import getCart from '@/lib/cart';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
@@ -22,8 +23,13 @@ export default async function Listing() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    controllers: {cart: {initialState: {items}}},
+  });
 
   //At this point in the app, this is the only part that is in the server side
 

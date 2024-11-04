@@ -1,4 +1,5 @@
 import ProductPage from '@/components/pages/product-page';
+import getCart from '@/lib/cart';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
@@ -13,8 +14,13 @@ export default async function ProductDescriptionPage({
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {cart: {initialState: {items}}},
+  });
   return (
     <>
       <h2>Product description page</h2>
