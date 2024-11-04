@@ -236,6 +236,25 @@ describe('search-slice', () => {
       expect(finalState.results[1].searchUid).toBe('a_new_id');
     });
 
+    it('when a fetchPage fulfilled is received, new results should contain the latest search #searchUid', () => {
+      state.results = state.results.map((result) => ({
+        ...result,
+        searchUid: 'an_initial_id',
+      }));
+      const response = buildMockSearchResponse({results: [newResult]});
+      response.searchUid = 'a_new_id';
+      const search = buildMockSearch({
+        response,
+      });
+
+      const finalState = searchReducer(
+        state,
+        fetchPage.fulfilled(search, '', {legacy: logPageNext()})
+      );
+
+      expect(finalState.results[0].searchUid).toBe('a_new_id');
+    });
+
     it('when a fetchMoreResults fulfilled is received, keeps the previous #questionAnswer', () => {
       const originalQuestionAnswers = buildMockQuestionsAnswers({
         question: 'Why?',
