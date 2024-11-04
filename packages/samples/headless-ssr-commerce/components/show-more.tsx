@@ -1,6 +1,6 @@
 'use client';
 
-import {usePagination, useSummary} from '../lib/commerce-engine';
+import {usePagination, useSummary} from '@/lib/commerce-engine';
 
 export default function ShowMore() {
   const {state, controller} = usePagination();

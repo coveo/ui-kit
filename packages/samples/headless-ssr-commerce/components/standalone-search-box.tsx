@@ -1,12 +1,12 @@
 'use client';
 
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
 import {
   useInstantProducts,
   useRecentQueriesList,
   useStandaloneSearchBox,
-} from '../lib/commerce-engine';
+} from '@/lib/commerce-engine';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 

@@ -1,11 +1,11 @@
 'use client';
 
-import {useState} from 'react';
 import {
   useInstantProducts,
   useRecentQueriesList,
   useSearchBox,
-} from '../lib/commerce-engine';
+} from '@/lib/commerce-engine';
+import {useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
