@@ -105,6 +105,7 @@ export const loadCollection = createAsyncThunk<
     return {
       collectionId,
       results: response.success.results,
+      searchUid: response.success.searchUid,
       rootResult: state.folding.collections[collectionId]!
         .result as ResultWithFolding,
     };

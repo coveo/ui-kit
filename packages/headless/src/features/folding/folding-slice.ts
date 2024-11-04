@@ -67,13 +67,17 @@ function resolveChildrenFromFields(
         getParentField(result, fields) === sourceChildValue;
       return isChildOfSource && !isSameResultAsSource;
     })
-    .map((result) => ({
-      result,
-      children: resolveChildrenFromFields(result, results, fields, [
-        ...resolvedAncestors,
-        sourceChildValue,
-      ]),
-    }));
+    .map((result) => {
+      // TODO: find a better name
+      const extendedResults = {...result, searchUid: parent.searchUid};
+      return {
+        result: extendedResults,
+        children: resolveChildrenFromFields(extendedResults, results, fields, [
+          ...resolvedAncestors,
+          sourceChildValue,
+        ]),
+      };
+    });
 }
 
 function resolveRootFromFields(
@@ -102,6 +106,7 @@ function resolveRootFromParentResult(
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
   fields: FoldingFields,
+  searchUid: string,
   rootResult?: ResultWithFolding
 ): FoldedCollection {
   const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
@@ -111,10 +116,12 @@ function createCollectionFromResult(
     resolveRootFromFields(resultsInCollection, fields) ??
     resolveRootFromParentResult(relevantResult);
 
+  const extendedResultToUseAsRoot = {...resultToUseAsRoot, searchUid};
+
   return {
-    result: resultToUseAsRoot,
+    result: extendedResultToUseAsRoot,
     children: resolveChildrenFromFields(
-      resultToUseAsRoot,
+      extendedResultToUseAsRoot,
       resultsInCollection,
       fields
     ),
@@ -127,6 +134,7 @@ function createCollectionFromResult(
 function createCollections(
   results: ResultWithFolding[],
   fields: FoldingFields,
+  searchUid: string,
   rootResult?: ResultWithFolding
 ) {
   const collections: Record<CollectionId, FoldedCollection> = {};
@@ -141,6 +149,7 @@ function createCollections(
     collections[collectionId] = createCollectionFromResult(
       result,
       fields,
+      searchUid,
       rootResult
     );
   });
@@ -170,7 +179,8 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields
+              state.fields,
+              payload.response.searchUid
             )
           : {};
       })
@@ -178,7 +188,8 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields
+              state.fields,
+              payload.response.searchUid
             )
           : {};
       })
@@ -188,7 +199,8 @@ export const foldingReducer = createReducer(
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
-                state.fields
+                state.fields,
+                payload.response.searchUid
               ),
             }
           : {};
@@ -224,10 +236,16 @@ export const foldingReducer = createReducer(
       })
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results, rootResult}}) => {
+        (state, {payload: {collectionId, results, rootResult, ..._rest}}) => {
+          // TODO: search searchUid from last search
+          console.log('*********************');
+          console.log(_rest);
+          console.log('*********************');
+
           const newCollections = createCollections(
             results as ResultWithFolding[],
             state.fields,
+            'TODO: search searchUid from last search',
             rootResult
           );
           if (!newCollections || !newCollections[collectionId]) {
