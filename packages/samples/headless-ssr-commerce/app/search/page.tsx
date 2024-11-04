@@ -1,3 +1,4 @@
+import {getCart} from '@/actions/cart';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ProductList from '@/components/product-list';
@@ -7,7 +8,6 @@ import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
-import getCart from '@/lib/cart';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
