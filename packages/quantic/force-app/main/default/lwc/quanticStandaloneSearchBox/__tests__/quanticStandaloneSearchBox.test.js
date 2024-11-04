@@ -114,38 +114,38 @@ describe('c-quantic-standalone-search-box', () => {
     expect(() => createTestComponent()).not.toThrow();
   });
 
-  describe('when the current page reference changes', () => {
-    beforeAll(() => {
-      Object.defineProperty(window, 'location', {
-        writable: true,
-        value: {href: nonStandaloneURL},
-      });
-    });
-
-    it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
-      const element = createTestComponent({
-        ...defaultOptions,
-        keepFiltersOnSearch: false,
-      });
-      // eslint-disable-next-line @lwc/lwc/no-unexpected-wire-adapter-usages
-      CurrentPageReference.emit({url: nonStandaloneURL});
-      await flushPromises();
-
-      const searchBox = element.shadowRoot.querySelector(
-        'c-quantic-search-box'
-      );
-
-      expect(searchBox).not.toBeNull();
-      expect(searchBox.keepFiltersOnSearch).toEqual(false);
-    });
-  });
-
   describe('controller initialization', () => {
     it('should subscribe to the headless state changes', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+    });
+
+    describe('when the current page reference changes', () => {
+      beforeAll(() => {
+        Object.defineProperty(window, 'location', {
+          writable: true,
+          value: {href: nonStandaloneURL},
+        });
+      });
+
+      it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          keepFiltersOnSearch: false,
+        });
+        // eslint-disable-next-line @lwc/lwc/no-unexpected-wire-adapter-usages
+        CurrentPageReference.emit({url: nonStandaloneURL});
+        await flushPromises();
+
+        const searchBox = element.shadowRoot.querySelector(
+          'c-quantic-search-box'
+        );
+
+        expect(searchBox).not.toBeNull();
+        expect(searchBox.keepFiltersOnSearch).toEqual(false);
+      });
     });
 
     describe('when keepFiltersOnSearch is false (default)', () => {
