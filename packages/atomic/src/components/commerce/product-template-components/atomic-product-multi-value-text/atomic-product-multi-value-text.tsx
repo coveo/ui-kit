@@ -116,7 +116,6 @@ export class AtomicProductMultiValueText {
     const firstValues = this.facetSelectedValues.filter((value) =>
       allValues.includes(value)
     );
-    );
     this.sortedValues = Array.from(new Set([...firstValues, ...allValues]));
   }
 
