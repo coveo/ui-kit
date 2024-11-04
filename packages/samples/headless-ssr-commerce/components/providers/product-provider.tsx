@@ -7,21 +7,23 @@ import {
 } from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
-import {useEffect, useState} from 'react';
-import {Recommendations} from '../recommendation-list';
+import {PropsWithChildren, useEffect, useState} from 'react';
 
-interface IProductPageProps {
+interface ProductProviderProps {
   staticState: StandaloneStaticState;
   navigatorContext: NavigatorContext;
   productId: string;
 }
 
-export default function ProductPage(props: IProductPageProps) {
+export default function ProductProvider({
+  staticState,
+  navigatorContext,
+  productId,
+  children,
+}: PropsWithChildren<ProductProviderProps>) {
   const [hydratedState, setHydratedState] = useState<
     StandaloneHydratedState | undefined
   >(undefined);
-
-  const {staticState, navigatorContext, productId} = props;
 
   const searchParams = useSearchParams();
 
@@ -58,13 +60,40 @@ export default function ProductPage(props: IProductPageProps) {
     viewController?.view({name, productId, price});
   }, [viewController, productId, name, price]);
 
-  return (
-    <>
+  const renderProductName = () => {
+    return (
       <p>
         {name} ({productId}) - ${price}
       </p>
-      <br />
-      <Recommendations />
-    </>
-  );
+    );
+  };
+
+  if (hydratedState) {
+    return (
+      <standaloneEngineDefinition.HydratedStateProvider
+        engine={hydratedState.engine}
+        controllers={hydratedState.controllers}
+      >
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>
+          {renderProductName()}
+          {children}
+        </>
+      </standaloneEngineDefinition.HydratedStateProvider>
+    );
+  } else {
+    return (
+      <standaloneEngineDefinition.StaticStateProvider
+        controllers={staticState.controllers}
+      >
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>
+          {renderProductName()}
+          {children}
+        </>
+      </standaloneEngineDefinition.StaticStateProvider>
+    );
+  }
 }
