@@ -77,7 +77,20 @@
                 <atomic-commerce-product-list display="grid" density="compact" image-size="small">
                   <atomic-product-template>
                     <template>
-                      <atomic-product-section-name>
+                      <atomic-product-section-name id="product-name-section">
+                        <style>
+                          /*
+                            Example on how to adjust product name truncation in grid display mode
+                            To disable truncation, set --product-name-line-clamp to 0
+                          */
+
+                          /* .display-grid #product-name-section {
+                            --product-name-line-clamp: 3;
+                            min-height: calc(var(--line-height) * var(--product-name-line-clamp));
+                            -webkit-line-clamp: var(--product-name-line-clamp);
+                            line-clamp: var(--product-name-line-clamp);
+                          } */
+                        </style>
                         <atomic-product-link class="font-bold"></atomic-product-link>
                       </atomic-product-section-name>
                       <atomic-product-section-visual>
