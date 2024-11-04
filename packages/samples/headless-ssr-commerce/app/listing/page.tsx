@@ -25,6 +25,13 @@ export default async function Listing() {
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState();
 
+  //At this point in the app, this is the only part that is in the server side
+
+  // I cant do this here, I need to define them in an API route.
+  // const listingDefinition = await getEngineDefinition('listing');
+
+  // const hooks = await getHooks();
+
   return (
     <ListingProvider
       staticState={staticState}
