@@ -113,8 +113,8 @@ importers:
         specifier: ^17.0.12
         version: 17.0.45
       '@types/uuid':
-        specifier: ^9.0.4
-        version: 9.0.8
+        specifier: ^10.0.0
+        version: 10.0.0
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@17.0.45)
@@ -1697,8 +1697,8 @@ packages:
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
     dev: true
 
-  /@types/uuid@9.0.8:
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+  /@types/uuid@10.0.0:
+    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
     dev: true
 
   /@types/yargs-parser@21.0.1:
