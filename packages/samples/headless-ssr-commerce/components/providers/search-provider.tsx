@@ -3,59 +3,62 @@
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {
-  listingEngineDefinition,
-  ListingHydratedState,
-  ListingStaticState,
-} from '../../_lib/commerce-engine';
+  SearchHydratedState,
+  SearchStaticState,
+  searchEngineDefinition,
+} from '../../lib/commerce-engine';
 
-interface ListingPageProps {
-  staticState: ListingStaticState;
+interface SearchPageProps {
+  staticState: SearchStaticState;
   navigatorContext: NavigatorContext;
 }
 
-export default function ListingPage({
+export default function SearchProvider({
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<ListingPageProps>) {
+}: PropsWithChildren<SearchPageProps>) {
   const [hydratedState, setHydratedState] = useState<
-    ListingHydratedState | undefined
+    SearchHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   useEffect(() => {
-    listingEngineDefinition
+    searchEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
+
         // Refreshing recommendations in the browser after hydrating the state in the client-side
         // Recommendation refresh in the server is not supported yet.
-        // controllers.popularBoughtRecs.refresh(); // FIXME: does not work
+        // controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
   if (hydratedState) {
     return (
-      <listingEngineDefinition.HydratedStateProvider
+      <searchEngineDefinition.HydratedStateProvider
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
         <>{children}</>
-      </listingEngineDefinition.HydratedStateProvider>
+      </searchEngineDefinition.HydratedStateProvider>
     );
   } else {
     return (
-      <listingEngineDefinition.StaticStateProvider
+      <searchEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {/* // TODO: FIXME:  Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
   Type 'bigint' is not assignable to type 'ReactNode'.*/}
         <>{children}</>
-      </listingEngineDefinition.StaticStateProvider>
+      </searchEngineDefinition.StaticStateProvider>
     );
   }
 }

@@ -5,7 +5,7 @@ import {
   useInstantProducts,
   useRecentQueriesList,
   useSearchBox,
-} from '../_lib/commerce-engine';
+} from '../lib/commerce-engine';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 

@@ -6,7 +6,7 @@ import {
   CategoryFacetValue,
   RegularFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
-import {useBreadcrumbManager} from '../_lib/commerce-engine';
+import {useBreadcrumbManager} from '../lib/commerce-engine';
 
 export default function BreadcrumbManager() {
   const {state, controller} = useBreadcrumbManager();

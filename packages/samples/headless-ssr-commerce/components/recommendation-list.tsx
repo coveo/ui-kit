@@ -3,7 +3,7 @@
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
 import {FunctionComponent} from 'react';
-import {usePopularBoughtRecs} from '../_lib/commerce-engine';
+import {usePopularBoughtRecs} from '../lib/commerce-engine';
 
 export const Recommendations: FunctionComponent = () => {
   // TODO: KIT-3503: refresh recs server side

@@ -4,7 +4,7 @@ import {
   standaloneEngineDefinition,
   StandaloneHydratedState,
   StandaloneStaticState,
-} from '@/app/_lib/commerce-engine';
+} from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';

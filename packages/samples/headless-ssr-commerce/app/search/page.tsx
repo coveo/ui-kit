@@ -1,15 +1,15 @@
+import BreadcrumbManager from '@/components/breadcrumb-manager';
+import FacetGenerator from '@/components/facets/facet-generator';
+import ProductList from '@/components/product-list';
+import SearchProvider from '@/components/providers/search-provider';
+import {Recommendations} from '@/components/recommendation-list';
+import SearchBox from '@/components/search-box';
+import ShowMore from '@/components/show-more';
+import Summary from '@/components/summary';
+import Triggers from '@/components/triggers/triggers';
+import {searchEngineDefinition} from '@/lib/commerce-engine';
+import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
-import BreadcrumbManager from '../_components/breadcrumb-manager';
-import FacetGenerator from '../_components/facets/facet-generator';
-import SearchPage from '../_components/pages/search-page';
-import ProductList from '../_components/product-list';
-import {Recommendations} from '../_components/recommendation-list';
-import SearchBox from '../_components/search-box';
-import ShowMore from '../_components/show-more';
-import Summary from '../_components/summary';
-import Triggers from '../_components/triggers/triggers';
-import {searchEngineDefinition} from '../_lib/commerce-engine';
-import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
 export default async function Search() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
@@ -19,16 +19,18 @@ export default async function Search() {
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await searchEngineDefinition.fetchStaticState();
   return (
-    <SearchPage
+    <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
+          <FacetGenerator />
+        </div>
+        <div style={{flex: 2}}>
           <Triggers />
           <SearchBox />
           <BreadcrumbManager />
-          <FacetGenerator />
           <Summary />
           <ProductList />
           {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
@@ -39,13 +41,13 @@ export default async function Search() {
           <ShowMore />
         </div>
 
-        <div style={{flex: 1}}>
+        <div style={{flex: 3}}>
           {/* popularBoughtRecs */}
           {/* TODO: KIT-3503: need to revisit the way recommendations are added*/}
           <Recommendations />
         </div>
       </div>
-    </SearchPage>
+    </SearchProvider>
   );
 }
 

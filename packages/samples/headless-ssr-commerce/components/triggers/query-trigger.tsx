@@ -1,6 +1,6 @@
 'use client';
 
-import {useQueryTrigger} from '@/app/_lib/commerce-engine';
+import {useQueryTrigger} from '@/lib/commerce-engine';
 
 // The query trigger query example in the searchuisamples org is 'query me'.
 export default function QueryTrigger() {

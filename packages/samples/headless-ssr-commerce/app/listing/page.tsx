@@ -1,16 +1,16 @@
+import BreadcrumbManager from '@/components/breadcrumb-manager';
+import Cart from '@/components/cart';
+import FacetGenerator from '@/components/facets/facet-generator';
+import Pagination from '@/components/pagination';
+import ProductList from '@/components/product-list';
+import ListingProvider from '@/components/providers/listing-provider';
+import {Recommendations} from '@/components/recommendation-list';
+import Sort from '@/components/sort';
+import StandaloneSearchBox from '@/components/standalone-search-box';
+import Summary from '@/components/summary';
+import {listingEngineDefinition} from '@/lib/commerce-engine';
+import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
-import BreadcrumbManager from '../_components/breadcrumb-manager';
-import Cart from '../_components/cart';
-import FacetGenerator from '../_components/facets/facet-generator';
-import ListingPage from '../_components/pages/listing-page';
-import Pagination from '../_components/pagination';
-import ProductList from '../_components/product-list';
-import {Recommendations} from '../_components/recommendation-list';
-import Sort from '../_components/sort';
-import StandaloneSearchBox from '../_components/standalone-search-box';
-import Summary from '../_components/summary';
-import {listingEngineDefinition} from '../_lib/commerce-engine';
-import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
@@ -26,15 +26,18 @@ export default async function Listing() {
   const staticState = await listingEngineDefinition.fetchStaticState();
 
   return (
-    <ListingPage
+    <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
+          <FacetGenerator />
+        </div>
+
+        <div style={{flex: 2}}>
           <StandaloneSearchBox />
           <BreadcrumbManager />
-          <FacetGenerator />
           <Summary />
           <Sort />
           <ProductList />
@@ -47,16 +50,16 @@ export default async function Listing() {
           /> */}
         </div>
 
-        <div style={{flex: 1}}>
+        <div style={{flex: 3}}>
           <h3>My Cart</h3>
           <Cart />
         </div>
 
-        <div style={{flex: 1}}>
+        <div style={{flex: 4}}>
           <Recommendations />
         </div>
       </div>
-    </ListingPage>
+    </ListingProvider>
   );
 }
 
