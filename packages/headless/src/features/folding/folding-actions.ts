@@ -47,6 +47,7 @@ export interface LoadCollectionFulfilledReturn {
   results: Result[];
   collectionId: CollectionId;
   rootResult: ResultWithFolding;
+  searchUid: string;
 }
 
 export const foldingOptionsSchemaDefinition: SchemaDefinition<

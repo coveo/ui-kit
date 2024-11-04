@@ -236,16 +236,11 @@ export const foldingReducer = createReducer(
       })
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results, rootResult, ..._rest}}) => {
-          // TODO: search searchUid from last search
-          console.log('*********************');
-          console.log(_rest);
-          console.log('*********************');
-
+        (state, {payload: {collectionId, results, rootResult, searchUid}}) => {
           const newCollections = createCollections(
             results as ResultWithFolding[],
             state.fields,
-            'TODO: search searchUid from last search',
+            searchUid,
             rootResult
           );
           if (!newCollections || !newCollections[collectionId]) {
