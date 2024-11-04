@@ -7,6 +7,7 @@ import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
+import getCart from '@/lib/cart';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
@@ -16,8 +17,13 @@ export default async function Search() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {cart: {initialState: {items}}},
+  });
   return (
     <SearchProvider
       staticState={staticState}
