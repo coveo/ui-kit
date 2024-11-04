@@ -1,30 +1,15 @@
 'use client';
 
 import {useCart, useContext} from '@/lib/commerce-engine';
+import {adjustQuantity, emptyCart, purchase} from '@/utils/cart';
 import {formatCurrency} from '@/utils/format-currency';
-import {CartItem} from '@coveo/headless-react/ssr-commerce';
 
 export default function Cart() {
   const {state, controller} = useCart();
   const {state: contextState} = useContext();
 
-  const adjustQuantity = (item: CartItem, delta: number) => {
-    controller?.updateItemQuantity({
-      ...item,
-      quantity: item.quantity + delta,
-    });
-  };
-
   const isCartEmpty = () => {
     return state.items.length === 0;
-  };
-
-  const purchase = () => {
-    controller?.purchase({id: crypto.randomUUID(), revenue: state.totalPrice});
-  };
-
-  const emptyCart = () => {
-    controller?.empty();
   };
 
   const language = () => contextState.language;
@@ -59,9 +44,15 @@ export default function Cart() {
               </span>
               <span>{item.price * item.quantity}</span>
             </p>
-            <button onClick={() => adjustQuantity(item, 1)}>Add one</button>
-            <button onClick={() => adjustQuantity(item, -1)}>Remove one</button>
-            <button onClick={() => adjustQuantity(item, -item.quantity)}>
+            <button onClick={() => adjustQuantity(controller!, item, 1)}>
+              Add one
+            </button>
+            <button onClick={() => adjustQuantity(controller!, item, -1)}>
+              Remove one
+            </button>
+            <button
+              onClick={() => adjustQuantity(controller!, item, -item.quantity)}
+            >
               Remove all
             </button>
           </li>
@@ -73,10 +64,13 @@ export default function Cart() {
         {state.totalPrice}
         <span></span>
       </p>
-      <button disabled={isCartEmpty()} onClick={purchase}>
+      <button
+        disabled={isCartEmpty()}
+        onClick={() => purchase(controller!, state.totalPrice)}
+      >
         Purchase
       </button>
-      <button disabled={isCartEmpty()} onClick={emptyCart}>
+      <button disabled={isCartEmpty()} onClick={() => emptyCart(controller!)}>
         Empty cart
       </button>
     </div>

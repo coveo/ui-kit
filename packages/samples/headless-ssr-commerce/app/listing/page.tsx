@@ -1,3 +1,4 @@
+import {getCart} from '@/actions/cart';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
 import FacetGenerator from '@/components/facets/facet-generator';
@@ -8,7 +9,6 @@ import {Recommendations} from '@/components/recommendation-list';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
-import getCart from '@/lib/cart';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
@@ -30,13 +30,6 @@ export default async function Listing() {
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {cart: {initialState: {items}}},
   });
-
-  //At this point in the app, this is the only part that is in the server side
-
-  // I cant do this here, I need to define them in an API route.
-  // const listingDefinition = await getEngineDefinition('listing');
-
-  // const hooks = await getHooks();
 
   return (
     <ListingProvider

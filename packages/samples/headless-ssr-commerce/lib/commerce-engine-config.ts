@@ -28,7 +28,6 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
   ControllerDefinitionsMap<CommerceEngine, Controller>
 >;
 
-// This must be a async function
 export default {
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
