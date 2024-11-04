@@ -64,6 +64,7 @@ export * from './features/commerce/triggers/triggers-actions-loader.js';
 export * from './features/commerce/instant-products/instant-products-actions-loader.js';
 export * from './features/commerce/recent-queries/recent-queries-actions-loader.js';
 export * from './features/commerce/standalone-search-box-set/standalone-search-box-set-actions-loader.js';
+export * from './features/commerce/did-you-mean/did-you-mean-actions-loader.js';
 
 // Selectors
 export {Selectors};
