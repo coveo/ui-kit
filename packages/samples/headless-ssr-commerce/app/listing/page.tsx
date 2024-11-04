@@ -2,6 +2,7 @@ import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
 import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
+import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import ListingProvider from '@/components/providers/listing-provider';
 import {Recommendations} from '@/components/recommendation-list';
@@ -10,6 +11,7 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {headers} from 'next/headers';
 
 /**
@@ -17,19 +19,30 @@ import {headers} from 'next/headers';
  *
  * The Listing function is the entry point for server-side rendering (SSR).
  */
-export default async function Listing() {
+export default async function Listing({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  const {toCommerceSearchParameters} =
+    buildSSRCommerceSearchParameterSerializer();
+  const parameters = toCommerceSearchParameters(searchParams);
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    controllers: {parameterManager: {initialState: {parameters}}},
+  });
 
   return (
     <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ParameterManager />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />

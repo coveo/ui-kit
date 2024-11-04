@@ -34,6 +34,7 @@ export const {
   useSummary,
   useFacetGenerator,
   useBreadcrumbManager,
+  useParameterManager,
 } = engineDefinition.controllers;
 
 export type ListingStaticState = InferStaticState<

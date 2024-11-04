@@ -14,7 +14,9 @@ export default async function ProductDescriptionPage({
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {parameterManager: {initialState: {parameters: {}}}},
+  });
   return (
     <>
       <h2>Product description page</h2>

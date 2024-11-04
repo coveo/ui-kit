@@ -29,6 +29,11 @@ export default function SearchProvider({
     searchEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          parameterManager: {
+            initialState: staticState.controllers.parameterManager.state,
+          },
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

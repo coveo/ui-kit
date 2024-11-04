@@ -1,5 +1,6 @@
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import FacetGenerator from '@/components/facets/facet-generator';
+import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import SearchProvider from '@/components/providers/search-provider';
 import {Recommendations} from '@/components/recommendation-list';
@@ -9,20 +10,32 @@ import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {headers} from 'next/headers';
 
-export default async function Search() {
+export default async function Search({
+  searchParams,
+}: {
+  searchParams: URLSearchParams;
+}) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  const {toCommerceSearchParameters} =
+    buildSSRCommerceSearchParameterSerializer();
+  const parameters = toCommerceSearchParameters(searchParams);
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {parameterManager: {initialState: {parameters}}},
+  });
   return (
     <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ParameterManager />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
