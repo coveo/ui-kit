@@ -68,11 +68,10 @@ function resolveChildrenFromFields(
       return isChildOfSource && !isSameResultAsSource;
     })
     .map((result) => {
-      // TODO: find a better name
-      const extendedResults = {...result, searchUid: parent.searchUid};
+      const extendedResult = {...result, searchUid: parent.searchUid};
       return {
-        result: extendedResults,
-        children: resolveChildrenFromFields(extendedResults, results, fields, [
+        result: extendedResult,
+        children: resolveChildrenFromFields(extendedResult, results, fields, [
           ...resolvedAncestors,
           sourceChildValue,
         ]),

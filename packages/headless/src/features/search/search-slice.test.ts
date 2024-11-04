@@ -106,7 +106,6 @@ describe('search-slice', () => {
       expect(finalState.isLoading).toBe(false);
       expect(finalState.searchResponseId).toBe('the_initial_id');
     });
-    // TODO: add test here
   });
 
   describe('with an existing result', () => {
