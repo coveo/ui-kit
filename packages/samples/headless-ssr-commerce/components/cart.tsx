@@ -46,7 +46,6 @@ export default function Cart() {
             <p>
               <span>Price: </span>
               <span>{formatCurrency(item.price, language(), currency())}</span>
-              <span>{item.price}</span>
             </p>
             <p>
               <span>Total: </span>
@@ -57,7 +56,6 @@ export default function Cart() {
                   currency()
                 )}
               </span>
-              <span>{item.price * item.quantity}</span>
             </p>
             <button onClick={() => adjustQuantity(item, 1)}>Add one</button>
             <button onClick={() => adjustQuantity(item, -1)}>Remove one</button>
@@ -70,7 +68,6 @@ export default function Cart() {
       <p>
         <span>Total: </span>
         {formatCurrency(state.totalPrice, language(), currency())}
-        {state.totalPrice}
         <span></span>
       </p>
       <button disabled={isCartEmpty()} onClick={purchase}>
