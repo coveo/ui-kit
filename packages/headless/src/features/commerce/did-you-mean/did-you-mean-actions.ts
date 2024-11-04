@@ -5,6 +5,6 @@ import {
 } from '../../../utils/validate-payload.js';
 
 export const applyCorrection = createAction(
-  'didYouMean/correction',
+  'commerce/didYouMean/applyCorrection',
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );

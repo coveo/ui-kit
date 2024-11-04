@@ -19,8 +19,9 @@ export type {QueryCorrection, WordCorrection, DidYouMeanState};
 
 export interface DidYouMean extends Controller {
   /**
-   * Applies query correction using the query correction, if any, currently present in the state.
-   * Also triggers a search with the corrected query.
+   * Executes a search using the suggested query correction.
+   *
+   * Typically, you should only call this method when `state.hasQueryCorrection` is `true` and `state.wasAutomaticallyCorrected` is `false`. When this is the case, you could call this method when the user clicks a link to search with the suggested query correction rather than with the query they originally submitted.
    */
   applyCorrection(): void;
   /**
