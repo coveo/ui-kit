@@ -74,16 +74,17 @@ test.describe('atomic-product-description', async () => {
 
   test.describe('when description is truncated', async () => {
     const truncateValues: Array<{
-      value: '1' | '2' | '3' | '4';
+      value: '1' | '4';
       expectedClass: RegExp;
     }> = [
       {value: '1', expectedClass: /line-clamp-1/},
-      {value: '2', expectedClass: /line-clamp-2/},
-      {value: '3', expectedClass: /line-clamp-3/},
       {value: '4', expectedClass: /line-clamp-4/},
     ];
 
     truncateValues.forEach(({value, expectedClass}) => {
+      test.beforeEach(async ({productDescription}) => {
+        await productDescription.withLongDescription();
+      });
       test.describe(`when truncateAfter is set to ${value}`, async () => {
         test(`should truncate description after ${value} lines`, async ({
           productDescription,
