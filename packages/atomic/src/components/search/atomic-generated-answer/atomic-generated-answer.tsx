@@ -109,7 +109,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() withToggle?: boolean;
 
   /**
-   * Whether to allow the answer to be collapsed when the text is taller than 250px.
+   * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
    * @default false
    */
   @Prop() collapsible?: boolean;
