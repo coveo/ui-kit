@@ -20,11 +20,19 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 
+export type {NumericFacetValue};
+
 export type NumericFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+/**
+ * The state of the `NumericFacet` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category NumericFacet
+ */
 export type NumericFacetState = Omit<
   CoreCommerceFacetState<NumericFacetValue>,
   'type'
@@ -55,6 +63,9 @@ type NumericFacetDomain = {
 /**
  * The `NumericFacet` sub-controller offers a high-level programming interface for implementing numeric commerce
  * facet UI component.
+ *
+ * @group Sub-controllers
+ * @category NumericFacet
  */
 export type NumericFacet = CoreCommerceFacet<
   NumericRangeRequest,

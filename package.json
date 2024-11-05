@@ -112,7 +112,6 @@
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
-    "packages/rollup-plugin-replace-with-ast",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "utils/*"
@@ -135,7 +134,7 @@
     ]
   },
   "engines": {
-    "node": "^20.9.0",
+    "node": "^20.9.0 || ^22.11.0",
     "npm": ">=8.6.0"
   },
   "dependencies": {

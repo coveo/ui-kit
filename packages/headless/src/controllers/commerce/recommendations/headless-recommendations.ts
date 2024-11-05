@@ -38,6 +38,9 @@ import {RecommendationsSummaryState} from './summary/headless-recommendations-su
 
 /**
  * The `Recommendations` controller exposes a method for retrieving recommendations content in a commerce interface.
+ *
+ * @group Buildable controllers
+ * @category Recommendations
  */
 export interface Recommendations
   extends Controller,
@@ -66,6 +69,9 @@ export interface Recommendations
 
   /**
    * A scoped and simplified part of the headless state that is relevant to the `Recommendations` controller.
+   *
+   * @group Buildable controllers
+   * @category Recommendations
    */
   state: RecommendationsState;
 }
@@ -102,6 +108,9 @@ export interface RecommendationsProps {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Recommendations` controller properties.
  * @returns A `Recommendations` controller instance.
+ *
+ * @group Buildable controllers
+ * @category Recommendations
  */
 export function buildRecommendations(
   engine: CommerceEngine,

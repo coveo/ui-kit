@@ -1,3 +1,51 @@
+/**
+ * The Coveo Headless SSR sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered search experience.
+ *
+ * @example
+ * ```typescript
+ *   import {
+ *     Controller,
+ *     ControllerDefinitionsMap,
+ *     defineSearchEngine,
+ *     InferStaticState,
+ *     InferHydratedState,
+ *     SearchEngine,
+ *     SearchEngineDefinitionOptions,
+ *     getSampleSearchEngineConfiguration,
+ *     defineResultList,
+ *     defineSearchBox,
+ *   } from '@coveo/headless/ssr';
+ *
+ *  const config = {
+ *     configuration: {
+ *       ...getSampleSearchEngineConfiguration(),
+ *       analytics: {
+ *         trackingId: 'sports-ui-samples',
+ *       },
+ *     },
+ *     controllers: {
+ *       searchBox: defineSearchBox(),
+ *       resultList: defineResultList(),
+ *     },
+ *   } satisfies SearchEngineDefinitionOptions<
+ *     ControllerDefinitionsMap<SearchEngine, Controller>
+ *   >;
+ *
+ * const engineDefinition = defineSearchEngine(config);
+ *
+ * export type SearchStaticState = InferStaticState<typeof engineDefinition>;
+ * export type SearchHydratedState = InferHydratedState<typeof engineDefinition>;
+ *
+ * export const {
+ *   fetchStaticState,
+ *   hydrateStaticState,
+ *   setNavigatorContextProvider,
+ * } = engineDefinition;
+
+ * ```
+ * @module SSR Search
+ */
+
 // 3rd Party Libraries
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {AnalyticsClientSendEventHook} from 'coveo.analytics';

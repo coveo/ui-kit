@@ -5,72 +5,72 @@ export interface Raw {
   [key: string]: unknown;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   urihash: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   clickableuri?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   collection?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   connectortype?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   documenttype?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   date?: number;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   filetype?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   language?: string[];
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   objecttype?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   parents?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   permanentid?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   size?: number;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   source?: string;
 
   /**
-   * @internal @preapproved
+   * @internal
    */
   sourcetype?: string;
 }

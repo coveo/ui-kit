@@ -44,9 +44,11 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
           return renderToString(templateResult.contentTemplate);
         } else {
           createRoot(root).render(templateResult);
-          createRoot(linkContainer!).render(
-            <AtomicProductLink></AtomicProductLink>
-          );
+          otherProps.display === 'grid'
+            ? createRoot(linkContainer!).render(
+                <AtomicProductLink></AtomicProductLink>
+              )
+            : createRoot(linkContainer!).render(<></>);
           return renderToString(templateResult);
         }
       }

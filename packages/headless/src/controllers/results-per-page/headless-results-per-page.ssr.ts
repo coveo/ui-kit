@@ -13,6 +13,7 @@ export interface ResultsPerPageDefinition
 
 /**
  * Defines a `ResultsPerPage` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `ResultsPerPage` properties.
  * @returns The `ResultsPerPage` controller definition.

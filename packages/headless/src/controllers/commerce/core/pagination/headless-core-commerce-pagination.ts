@@ -23,6 +23,9 @@ import {FetchProductsActionCreator} from '../common.js';
 
 /**
  * The `Pagination` sub-controller is responsible for navigating between pages of results in a commerce interface.
+ *
+ * @group Sub-controllers
+ * @category Pagination
  */
 export interface Pagination extends Controller {
   /**
@@ -60,6 +63,10 @@ export interface Pagination extends Controller {
   state: PaginationState;
 }
 
+/**
+ * @group Sub-controllers
+ * @category Pagination
+ */
 export interface PaginationState {
   page: number;
   pageSize: number;

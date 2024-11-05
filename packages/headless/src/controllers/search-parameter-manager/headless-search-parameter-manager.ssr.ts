@@ -37,6 +37,7 @@ export interface SearchParameterManagerDefinition
 
 /**
  * Defines a `SearchParameterManager` controller instance.
+ * @group Definers
  *
  * @returns The `SearchParameterManager` controller definition.
  * */

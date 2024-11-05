@@ -19,6 +19,9 @@ export interface NextStageOptions {
 
 /**
  * The Case Assist analytics action creators.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export interface CaseAssistAnalyticsActionCreators {
   /**
@@ -106,6 +109,9 @@ export interface CaseAssistAnalyticsActionCreators {
  * Loads the case assist analytics actions.
  * @param engine The case assist engine.
  * @returns The available analytics actions.
+ *
+ * @group Actions
+ * @category Analytics
  */
 export function loadCaseAssistAnalyticsActions(
   engine: CaseAssistEngine
