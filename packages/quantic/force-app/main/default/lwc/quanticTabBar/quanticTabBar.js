@@ -357,13 +357,16 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {Array<Element>}
    */
   getTabsFromSlot() {
-    const isTab = (element) =>
-      /-quantic-tab$/i.test(element.tagName) || element.dataset?.role === 'tab';
-
     return Array.from(this.querySelectorAll('*')).filter((element) =>
-      isTab(element)
+      this.isTab(element)
     );
   }
+
+  isTab = (element) => {
+    return (
+      /-quantic-tab$/i.test(element.tagName) || element.dataset?.role === 'tab'
+    );
+  };
 
   /**
    * Returns the tab bar dropdown container element.
