@@ -12,13 +12,31 @@ import Summary from '@/components/summary';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
+import {notFound} from 'next/navigation';
+
+//TODO: add comments
+const categoryMap: {[key: string]: string} = {
+  'surf-accessories': 'surf-accessories',
+  'accessories/towels': 'accessories-towels',
+  'clothing/pants': 'clothing-pants',
+};
 
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
  *
  * The Listing function is the entry point for server-side rendering (SSR).
  */
-export default async function Listing() {
+export default async function Listing({params}: {params: {category: string}}) {
+  const {category} = params;
+
+  const matchedCategory = Object.keys(categoryMap).find(
+    (key: string) => categoryMap[key] === category
+  );
+
+  if (!matchedCategory) {
+    notFound();
+  }
+
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
@@ -28,7 +46,17 @@ export default async function Listing() {
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState({
-    controllers: {cart: {initialState: {items}}},
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+        },
+      },
+    },
   });
 
   return (
