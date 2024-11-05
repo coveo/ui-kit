@@ -242,7 +242,7 @@ export function extendSearchParams(
     const add = addFacetValuesToSearchParams(facetId, paramKey);
 
     const range =
-      paramKey === 'nf'
+      paramKey === 'nf' || paramKey === 'mnf'
         ? buildNumericRanges(toArray(value))
         : paramKey === 'df'
           ? buildDateRanges(toArray(value))
@@ -299,7 +299,7 @@ export function isRangeFacetPair(
   pair: [CommerceSearchParametersKey, unknown]
 ): pair is CommerceSearchParamPair<RangeFacetValueSearchParam> {
   const [key, value] = pair;
-  const isValidKey = key === 'nf' || key === 'df';
+  const isValidKey = key === 'nf' || key === 'mnf' || key === 'df';
   const isValidValue = isRangeFacetObject(value);
   return isValidKey && isValidValue;
 }
