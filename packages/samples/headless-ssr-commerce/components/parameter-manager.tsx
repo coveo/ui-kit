@@ -11,15 +11,13 @@ export default function ParameterManager() {
   const {state, controller} = useParameterManager();
 
   useEffect(() => {
-    if (!controller || !historyRouter.url?.searchParams) {
-      return;
-    }
-    const {toCommerceSearchParameters} =
-      buildSSRCommerceSearchParameterSerializer();
-    const searchParameters = toCommerceSearchParameters(
-      historyRouter.url.searchParams
-    );
-    return controller.synchronize(searchParameters);
+    controller &&
+      historyRouter.url?.searchParams &&
+      controller.synchronize(
+        buildSSRCommerceSearchParameterSerializer().toCommerceSearchParameters(
+          historyRouter.url.searchParams
+        )
+      );
   }, [historyRouter.url?.searchParams, controller]);
 
   const correctedUrl = useMemo(() => {
@@ -30,7 +28,6 @@ export default function ParameterManager() {
     const {serialize} = buildSSRCommerceSearchParameterSerializer();
 
     return serialize(state.parameters, newURL);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.parameters]);
 
   useEffect(() => {
@@ -42,10 +39,10 @@ export default function ParameterManager() {
     if (pathname !== document.location.pathname) {
       return;
     }
+
     const isStaticState = controller === undefined;
 
     historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controller, correctedUrl]);
 
   return <></>;
