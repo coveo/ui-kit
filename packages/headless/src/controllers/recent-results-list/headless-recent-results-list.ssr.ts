@@ -13,6 +13,7 @@ export interface RecentResultsListDefinition
 
 /**
  * Defines a `RecentResultsList` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `RecentResultsList` properties.
  * @returns The `RecentResultsList` controller definition.

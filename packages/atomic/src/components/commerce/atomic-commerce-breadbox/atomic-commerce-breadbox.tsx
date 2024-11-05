@@ -15,6 +15,7 @@ import {
   Context,
   ContextState,
   buildContext,
+  LocationFacetValue,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Element, Prop} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
@@ -42,6 +43,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 
 type AnyFacetValue =
   | RegularFacetValue
+  | LocationFacetValue
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
@@ -288,7 +290,7 @@ export class AtomicCommerceBreadbox
           (pathValue: string) =>
             getFieldValueCaption(field, pathValue, this.bindings.i18n)
         );
-      default:
+      case 'regular':
         return [
           getFieldValueCaption(
             field,
@@ -296,6 +298,11 @@ export class AtomicCommerceBreadbox
             this.bindings.i18n
           ),
         ];
+      default: {
+        // TODO COMHUB-291 support location breadcrumb
+        this.bindings.engine.logger.warn('Unexpected breadcrumb type.');
+        return [];
+      }
     }
   };
 

@@ -61,65 +61,6 @@ describe('Color Facet Test Suites', () => {
       CommonFacetAssertions.assertDisplaySearchInput(ColorFacetSelectors, true);
     });
 
-    describe('when searching for a value that returns results', () => {
-      const query = 'html';
-      function setupSearchFor() {
-        typeFacetSearchQuery(ColorFacetSelectors, query, true);
-      }
-
-      beforeEach(setupSearchFor);
-      describe('verify rendering', () => {
-        CommonAssertions.assertAccessibility(colorFacetComponent);
-        ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
-        CommonFacetAssertions.assertDisplaySearchClearButton(
-          ColorFacetSelectors,
-          true
-        );
-        CommonFacetAssertions.assertHighlightsResults(
-          ColorFacetSelectors,
-          query
-        );
-      });
-
-      describe('when selecting a search result', () => {
-        function setupSelectSearchResult() {
-          AnalyticsTracker.reset();
-          selectIdleBoxValueAt(0);
-        }
-
-        beforeEach(setupSelectSearchResult);
-        describe('verify rendering', () => {
-          ColorFacetAssertions.assertNumberOfSelectedBoxValues(1);
-          ColorFacetAssertions.assertNumberOfIdleBoxValues(
-            colorFacetDefaultNumberOfValues - 1
-          );
-          CommonFacetAssertions.assertSearchInputEmpty(ColorFacetSelectors);
-        });
-
-        describe('verify analytics', () => {
-          it('should log the facet select results to UA ', () => {
-            cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
-              expect(analyticsBody.customData).to.have.property(
-                'facetField',
-                colorFacetField
-              );
-              expect(analyticsBody.facetState[0]).to.have.property(
-                'state',
-                'selected'
-              );
-              expect(analyticsBody.facetState[0]).to.have.property(
-                'field',
-                colorFacetField
-              );
-              expect(analyticsBody.customData).to.have.property(
-                'facetValue',
-                query
-              );
-            });
-          });
-        });
-      });
-    });
     describe('when selecting a value', () => {
       const selectionIndex = 1;
       function setupSelectBoxValue() {
@@ -194,6 +135,66 @@ describe('Color Facet Test Suites', () => {
           });
         });
       });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'doc';
+        function setupSearchFor() {
+          typeFacetSearchQuery(ColorFacetSelectors, query, true);
+        }
+
+        beforeEach(setupSearchFor);
+        describe('verify rendering', () => {
+          CommonAssertions.assertAccessibility(colorFacetComponent);
+          ColorFacetAssertions.assertNumberOfIdleBoxValues(1);
+          CommonFacetAssertions.assertDisplaySearchClearButton(
+            ColorFacetSelectors,
+            true
+          );
+          CommonFacetAssertions.assertHighlightsResults(
+            ColorFacetSelectors,
+            query
+          );
+        });
+
+        describe('when selecting a search result', () => {
+          function setupSelectSearchResult() {
+            AnalyticsTracker.reset();
+            selectIdleBoxValueAt(0);
+          }
+
+          beforeEach(setupSelectSearchResult);
+          describe('verify rendering', () => {
+            ColorFacetAssertions.assertNumberOfSelectedBoxValues(2);
+            ColorFacetAssertions.assertNumberOfIdleBoxValues(
+              colorFacetDefaultNumberOfValues - 2
+            );
+            CommonFacetAssertions.assertSearchInputEmpty(ColorFacetSelectors);
+          });
+
+          describe('verify analytics', () => {
+            it('should log the facet select results to UA ', () => {
+              cy.expectSearchEvent('facetSelect').then((analyticsBody) => {
+                expect(analyticsBody.customData).to.have.property(
+                  'facetField',
+                  colorFacetField
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'state',
+                  'selected'
+                );
+                expect(analyticsBody.facetState[0]).to.have.property(
+                  'field',
+                  colorFacetField
+                );
+                expect(analyticsBody.customData).to.have.property(
+                  'facetValue',
+                  query
+                );
+              });
+            });
+          });
+        });
+      });
     });
   });
 
@@ -222,7 +223,7 @@ describe('Color Facet Test Suites', () => {
         ColorFacetSelectors,
         true
       );
-      //   CommonAssertions.assertAccessibility(colorFacetComponent);
+      CommonAssertions.assertAccessibility(colorFacetComponent);
       ColorFacetAssertions.assertValuesSortedAlphanumerically();
       ColorFacetAssertions.assertNumberOfIdleBoxValues(
         colorFacetDefaultNumberOfValues * 2

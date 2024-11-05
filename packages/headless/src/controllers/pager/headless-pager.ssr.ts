@@ -9,6 +9,7 @@ export interface PagerDefinition
 
 /**
  * Defines a `Pager` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Pager` properties.
  * @returns The `Pager` controller definition.

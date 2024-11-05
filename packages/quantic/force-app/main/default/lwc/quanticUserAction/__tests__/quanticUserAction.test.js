@@ -49,6 +49,7 @@ const expectations = {
   viewAction: {
     iconName: 'utility:preview',
     iconClass: 'user-action__view-action-icon',
+    titleClass: 'user-action__title',
   },
 };
 
@@ -364,15 +365,49 @@ describe('c-quantic-user-action', () => {
       expect(icon.classList.contains(iconClass)).toBe(true);
     });
 
-    it('should properly display the action title', async () => {
-      const element = createTestComponent({action: exampleAction});
-      await flushPromises();
+    describe('when the contentIdKey of the action is clickable', () => {
+      it('should display the action title as a link', async () => {
+        const element = createTestComponent({
+          action: {
+            ...exampleAction,
+            document: {
+              ...exampleAction.document,
+              contentIdKey: '@clickableuri',
+            },
+          },
+        });
+        await flushPromises();
 
-      const link = element.shadowRoot.querySelector(selectors.link);
+        const link = element.shadowRoot.querySelector(selectors.link);
 
-      expect(link).not.toBeNull();
-      expect(link.textContent).toBe(expectedTitle);
-      expect(link.href).toBe(expectedUrl);
+        expect(link).not.toBeNull();
+        expect(link.textContent).toBe(expectedTitle);
+        expect(link.href).toBe(expectedUrl);
+      });
+    });
+
+    describe('when the contentIdKey of the action is not clickable', () => {
+      it('should display the action title as a text', async () => {
+        const element = createTestComponent({
+          action: {
+            ...exampleAction,
+            document: {
+              ...exampleAction.document,
+              contentIdKey: '@sfid',
+            },
+          },
+        });
+        await flushPromises();
+
+        const title = element.shadowRoot.querySelector(selectors.title);
+        const link = element.shadowRoot.querySelector(selectors.link);
+        const {titleClass} = expectations.viewAction;
+
+        expect(link).toBeNull();
+        expect(title).not.toBeNull();
+        expect(title.textContent).toBe(expectedTitle);
+        expect(title.classList.contains(titleClass)).toBe(true);
+      });
     });
 
     it('should properly display the action details', async () => {
