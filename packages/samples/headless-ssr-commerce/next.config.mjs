@@ -9,6 +9,9 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    domains: ['images.barca.group'],
+  },
 };
 
 export default nextConfig;
