@@ -10,19 +10,20 @@ test.describe('AtomicTabManager', () => {
     await expect(tabManager.tabArea).toBeVisible();
   });
 
-  test('should not display tabs dropdown', async ({tabManager}) => {
-    await expect(tabManager.tabDropdown).toBeHidden();
+  test('should not display tabs popover menu button', async ({tabManager}) => {
+    await expect(tabManager.tabPopoverMenuButton).toBeHidden();
   });
 
   test('should display tab buttons for each atomic-tab elements', async ({
     tabManager,
   }) => {
-    await expect(tabManager.tabDropdown).toBeHidden();
+    await expect(tabManager.tabPopoverMenuButton).toBeHidden();
 
     await expect(tabManager.tabButtons()).toHaveText([
       'All',
       'Articles',
       'Documentation',
+      'Parts and Accessories',
     ]);
   });
 
@@ -36,8 +37,10 @@ test.describe('AtomicTabManager', () => {
       await expect(tabManager.tabArea).toBeVisible();
     });
 
-    test('should not display tabs dropdown', async ({tabManager}) => {
-      await expect(tabManager.tabDropdown).toBeHidden();
+    test('should not display tabs popover menu button', async ({
+      tabManager,
+    }) => {
+      await expect(tabManager.tabPopoverMenuButton).toBeHidden();
     });
 
     test.describe('should change other component visibility', async () => {
@@ -89,12 +92,13 @@ test.describe('AtomicTabManager', () => {
     test('should display tab buttons for each atomic-tab elements', async ({
       tabManager,
     }) => {
-      await expect(tabManager.tabDropdown).toBeHidden();
+      await expect(tabManager.tabPopoverMenuButton).toBeHidden();
 
       await expect(tabManager.tabButtons()).toHaveText([
         'All',
         'Articles',
         'Documentation',
+        'Parts and Accessories',
       ]);
     });
 
@@ -208,18 +212,35 @@ test.describe('AtomicTabManager', () => {
           await page.setViewportSize({width: 300, height: 500});
         });
 
-        test('should display tabs dropdown', async ({tabManager}) => {
-          await expect(tabManager.tabDropdown).toBeVisible();
-        });
-
-        test('should hide tabs area', async ({tabManager}) => {
-          await expect(tabManager.tabArea).toBeHidden();
-        });
-
-        test('should have the active tab selected in the dropdown', async ({
+        test('should display tabs popover menu button', async ({
           tabManager,
         }) => {
-          await expect(tabManager.tabDropdown).toHaveValue('article');
+          await expect(tabManager.tabPopoverMenuButton).toBeVisible();
+        });
+
+        test('should move overflowed tabs to popover tabs', async ({
+          tabManager,
+        }) => {
+          await tabManager.tabPopoverMenuButton.click();
+          await expect(tabManager.popoverTabs()).toHaveText([
+            'All',
+            'Documentation',
+            'Parts and Accessories',
+          ]);
+        });
+
+        test('should not have the active tab in the popover tabs', async ({
+          tabManager,
+        }) => {
+          await tabManager.tabPopoverMenuButton.click();
+          const popoverTabs = tabManager.popoverTabs();
+          await expect(popoverTabs).toHaveCount(3);
+          for (const tab of await popoverTabs.all()) {
+            await expect(tab).not.toHaveText('Articles');
+          }
+          await expect(
+            tabManager.tabButtons().locator('visible=true')
+          ).toHaveText(['Articles']);
         });
       });
     });
@@ -235,31 +256,29 @@ test.describe('AtomicTabManager', () => {
       expect(accessibilityResults.violations).toEqual([]);
     });
 
-    test('should not display tabs area', async ({tabManager}) => {
-      await expect(tabManager.tabArea).toBeHidden();
+    test('should display tabs popover menu button', async ({tabManager}) => {
+      await expect(tabManager.tabPopoverMenuButton).toBeVisible();
     });
 
-    test('should display tabs dropdown', async ({tabManager}) => {
-      await expect(tabManager.tabDropdown).toBeVisible();
-    });
-
-    test('should display tab dropdown options for each atomic-tab elements', async ({
+    test('should move overflowed tabs to popover tabs', async ({
       tabManager,
     }) => {
-      await expect(tabManager.tabDropdownOptions()).toHaveText([
-        'All',
+      await tabManager.tabPopoverMenuButton.click();
+      await expect(tabManager.popoverTabs()).toHaveText([
         'Articles',
         'Documentation',
+        'Parts and Accessories',
       ]);
     });
 
-    test.describe('when selecting a dropdown option', () => {
+    test.describe('when selecting a tab popover button', () => {
       test.beforeEach(async ({tabManager}) => {
-        await tabManager.tabDropdown.selectOption('article');
+        await tabManager.tabPopoverMenuButton.click();
+        await tabManager.popoverTabs('Articles').click();
       });
 
       test('should change active tab', async ({tabManager}) => {
-        await expect(tabManager.tabDropdown).toHaveValue('article');
+        await expect(tabManager.activeTab).toHaveText('Articles');
       });
 
       test.describe('should change other component visibility', async () => {
@@ -311,9 +330,10 @@ test.describe('AtomicTabManager', () => {
         });
       });
 
-      test.describe('when selecting previous dropdown option', () => {
+      test.describe('when selecting previous tab in popover buttons', () => {
         test.beforeEach(async ({tabManager}) => {
-          await tabManager.tabDropdown.selectOption('all');
+          await tabManager.tabPopoverMenuButton.click();
+          await tabManager.popoverTabs('All').click();
         });
 
         test.describe('should change other component visibility', async () => {
@@ -369,18 +389,21 @@ test.describe('AtomicTabManager', () => {
           await page.setViewportSize({width: 1000, height: 500});
         });
 
-        test('should hide tabs dropdown', async ({tabManager}) => {
-          await expect(tabManager.tabDropdown).toBeHidden();
+        test('should hide tab popover menu button', async ({tabManager}) => {
+          await expect(tabManager.tabPopoverMenuButton).toBeHidden();
         });
 
-        test('should display tabs area', async ({tabManager}) => {
-          await expect(tabManager.tabArea).toBeVisible();
-        });
-
-        test('should have the active tab button selected', async ({
+        test('should display tab buttons for each atomic-tab elements', async ({
           tabManager,
         }) => {
-          await expect(tabManager.activeTab).toHaveText('Articles');
+          await expect(tabManager.tabPopoverMenuButton).toBeHidden();
+
+          await expect(tabManager.tabButtons()).toHaveText([
+            'All',
+            'Articles',
+            'Documentation',
+            'Parts and Accessories',
+          ]);
         });
       });
     });

@@ -53,6 +53,7 @@ const meta: Meta = {
       <atomic-tab name="all" label="All" tab></atomic-tab>
       <atomic-tab name="article" label="Articles"></atomic-tab>
       <atomic-tab name="documentation" label="Documentation"></atomic-tab>
+      <atomic-tab name="parts" label="Parts and Accessories"></atomic-tab>
     `,
   },
 };
