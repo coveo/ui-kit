@@ -8,12 +8,7 @@
   <template lwc:else>
     <slot name="sortOption"><!-- Custom sort options --></slot>
     <template if:true={hasResults}>
-      <div class="sort__container">
-        <lightning-layout-item class="sort__header slds-var-p-right_small">
-          <lightning-formatted-text
-            value={labels.sortBy}
-          ></lightning-formatted-text>
-        </lightning-layout-item>
+      <div class="sort__container slds-size_1-of-1">
         <lightning-layout-item>
           <lightning-combobox
             name="sort"
@@ -23,8 +18,10 @@
             placeholder={value}
             options={options}
             dropdown-alignment="auto"
+            style="border: 'none';"
             onchange={handleChange}
             data-cy="sort-dropdown"
+            class="slds-text-heading_small"
           >
           </lightning-combobox>
         </lightning-layout-item>

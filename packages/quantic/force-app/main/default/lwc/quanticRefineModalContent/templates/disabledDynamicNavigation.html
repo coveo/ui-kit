@@ -5,9 +5,16 @@
   </template>
   <template lwc:else>
     <template if:false={hideSort}>
-      <div class="slds-var-m-bottom_small slds-clearfix">
+      <template if:true={shouldDisplaySortByTitle}>
+        <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
+          <div data-cy="filters-title" class="slds-text-heading_small">
+            {labels.sortBy}
+          </div>
+        </div>
+      </template>
+      <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
-          <c-quantic-sort class="slds-float_left" engine-id={engineId}>
+          <c-quantic-sort class="quanticSort" engine-id={engineId}>
             <template for:each={sortOptions} for:item="sortOption">
               <c-quantic-sort-option
                 key={sortOption.value}

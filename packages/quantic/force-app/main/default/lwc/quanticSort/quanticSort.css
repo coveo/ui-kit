@@ -1,11 +1,3 @@
 .sort__container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
 
-.sort__header {
-    color: var(--lwc-colorTextActionLabel, darkslategray);
-    padding-top: 6px;
-    white-space: nowrap;
 }
