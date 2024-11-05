@@ -124,6 +124,8 @@ describe('c-quantic-standalone-search-box', () => {
 
     describe('when the current page reference changes', () => {
       beforeAll(() => {
+        // This is needed to mock the window.location.href property to test the keepFiltersOnSearch property in the quanticSearchBox.
+        // https://stackoverflow.com/questions/54021037/how-to-mock-window-location-href-with-jest-vuejs
         Object.defineProperty(window, 'location', {
           writable: true,
           value: {href: nonStandaloneURL},
