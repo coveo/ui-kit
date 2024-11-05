@@ -1,15 +1,8 @@
 import {Request} from '@playwright/test';
 
 export const searchRequestRegex = /\/rest\/search\/v2\?organizationId=.*/;
-export const insightSearchUrlRegex =
+export const insightSearchRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/search$/;
-
-export const getSearchRequestRegex = (
-  useCase: 'search' | 'insight' = 'search'
-) => {
-  if (useCase === 'insight') return insightSearchUrlRegex;
-  return searchRequestRegex;
-};
 
 export const analyticsSearchesUrlRegex =
   /\/rest(\/ua)?\/v15\/analytics\/search(es)?/;

@@ -18,6 +18,10 @@ export class PagerObject {
     return this.page.locator('c-quantic-number-button button');
   }
 
+  pageButton(pageNumber: number) {
+    return this.pageButtons.nth(pageNumber - 1);
+  }
+
   async goToLastPage() {
     await this.pageButtons.nth(-1).click();
   }
@@ -48,6 +52,21 @@ export class PagerObject {
       }
       return false;
     });
+    return uaRequest;
+  }
+
+  async waitForPagerNextUaAnalytics() {
+    const uaRequest = await this.waitForPagerUaAnalytics('pagerNext');
+    return uaRequest;
+  }
+
+  async waitForPagerPreviousUaAnalytics() {
+    const uaRequest = await this.waitForPagerUaAnalytics('pagerPrevious');
+    return uaRequest;
+  }
+
+  async waitForPagerNumberUaAnalytics() {
+    const uaRequest = await this.waitForPagerUaAnalytics('pagerNumber');
     return uaRequest;
   }
 }
