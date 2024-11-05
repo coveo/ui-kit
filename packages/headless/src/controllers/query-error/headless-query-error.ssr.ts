@@ -9,6 +9,7 @@ export interface QueryErrorDefinition
 
 /**
  * Defines a `QueryError` controller instance.
+ * @group Definers
  *
  * @returns The `QueryError` controller definition.
  * */

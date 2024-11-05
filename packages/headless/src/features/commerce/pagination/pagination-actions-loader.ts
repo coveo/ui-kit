@@ -24,6 +24,9 @@ export type {
 
 /**
  * The pagination action creators.
+ *
+ * @group Actions
+ * @category Pagination
  */
 export interface PaginationActionCreators {
   /**
@@ -78,6 +81,9 @@ export interface PaginationActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the pagination action creators.
+ *
+ * @group Actions
+ * @category Pagination
  */
 export function loadPaginationActions(
   engine: CommerceEngine

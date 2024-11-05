@@ -70,6 +70,14 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
       - run: npm test
+  package-compatibility:
+    name: 'Verify compatibility of packages'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run package-compatibility
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build
@@ -86,8 +94,8 @@ jobs:
       maximumShards: 24
     outputs:
       testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
-      shardIndex: ${{ steps.set-matrix.outputs.shardIndex }}
-      shardTotal: ${{ steps.set-matrix.outputs.shardTotal }}
+      shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
+      shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
@@ -96,16 +104,15 @@ jobs:
       - run: npm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
-        run: node ./scripts/ci/find-tests.mjs testsToRun
+        run: node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal
         env:
           projectRoot: ${{ github.workspace }}
-        shell: bash
-      - name: Determine Shard Values
-        id: set-matrix
-        run: node ./scripts/ci/determine-shard.mjs shardIndex shardTotal
-        env:
-          testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
           maximumShards: ${{ env.maximumShards }}
+        shell: bash
+      - name: Log Shard Values for Debugging
+        run: |
+          echo "Shard Index: ${{ steps.determine-tests.outputs.shardIndex }}"
+          echo "Shard Total: ${{ steps.determine-tests.outputs.shardTotal }}"
         shell: bash
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
@@ -115,8 +122,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: ${{fromJson(needs.prepare-playwright-atomic.outputs.shardIndex || '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]')}}
-        shardTotal: ${{fromJson(needs.prepare-playwright-atomic.outputs.shardTotal || '[24]')}}
+        shardIndex: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardIndex) }}
+        shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup

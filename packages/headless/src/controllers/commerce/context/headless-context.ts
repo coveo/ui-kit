@@ -3,6 +3,7 @@ import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {
   setContext,
+  setLocation,
   setView,
 } from '../../../features/commerce/context/context-actions.js';
 import {contextReducer as commerceContext} from '../../../features/commerce/context/context-slice.js';
@@ -19,10 +20,16 @@ export interface ContextOptions {
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
+  location?: UserLocation;
 }
 
 export interface View {
   url: string;
+}
+
+export interface UserLocation {
+  latitude: number;
+  longitude: number;
 }
 
 export interface ContextProps {
@@ -34,6 +41,9 @@ export interface ContextProps {
 
 /**
  * The `Context` controller exposes methods for managing the global context in a commerce interface.
+ *
+ * @group Buildable controllers
+ * @category Context
  */
 export interface Context extends Controller {
   /**
@@ -61,16 +71,29 @@ export interface Context extends Controller {
   setView(view: View): void;
 
   /**
+   * Sets the location.
+   * @param location - The new location.
+   */
+  setLocation(location: UserLocation): void;
+
+  /**
    * A scoped and simplified part of the headless state that is relevant to the `Context` controller.
    */
   state: ContextState;
 }
 
+/**
+ * The state of the `Context` controller.
+ *
+ * @group Buildable controllers
+ * @category Context
+ */
 export interface ContextState {
   language: string;
   country: string;
   currency: CurrencyCodeISO4217;
   view: View;
+  location?: UserLocation;
 }
 
 /**
@@ -79,6 +102,9 @@ export interface ContextState {
  * @param engine - The headless commerce engine.
  * @param props - The configurable `Context` properties.
  * @returns A `Context` controller instance.
+ *
+ * @group Buildable controllers
+ * @category Context
  */
 export function buildContext(
   engine: CommerceEngine,
@@ -129,6 +155,8 @@ export function buildContext(
       ),
 
     setView: (view: View) => dispatch(setView(view)),
+
+    setLocation: (location: UserLocation) => dispatch(setLocation(location)),
   };
 }
 

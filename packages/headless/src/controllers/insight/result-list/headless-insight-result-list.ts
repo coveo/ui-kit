@@ -15,6 +15,9 @@ export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
  * @param engine - The insight engine.
  * @param props - The `ResultList` controller properties.
  * @returns A `ResultList` controller instance.
+ *
+ * @group Controllers
+ * @category ResultList
  */
 export function buildResultList(
   engine: InsightEngine,

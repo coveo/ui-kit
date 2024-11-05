@@ -13,11 +13,17 @@ import {
   NumericFacetExtraProperties,
 } from './common.js';
 
+export type FreezableFacetRequestProperties = {
+  preventAutoSelect: boolean;
+  freezeCurrentValues?: boolean;
+};
+
 export type CategoryFacetRequest = BaseCommerceFacetRequest<
   CategoryFacetValueRequest,
   'hierarchical'
 > &
-  CategoryFacetDelimitingCharacter;
+  CategoryFacetDelimitingCharacter &
+  FreezableFacetRequestProperties;
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   children: CategoryFacetValueRequest[];
@@ -28,56 +34,56 @@ export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
 export type DateFacetRequest = BaseCommerceFacetRequest<
   DateRangeRequest,
   'dateRange'
->;
+> &
+  FreezableFacetRequestProperties;
 
 export type NumericFacetRequest = BaseCommerceFacetRequest<
   NumericRangeRequest,
   'numericalRange'
 > &
-  NumericFacetExtraProperties;
+  NumericFacetExtraProperties &
+  FreezableFacetRequestProperties;
 
 export type RegularFacetRequest = BaseCommerceFacetRequest<
   FacetValueRequest,
   'regular'
+> &
+  FreezableFacetRequestProperties;
+
+export type LocationFacetValueRequest = FacetValueRequest;
+
+export type LocationFacetRequest = BaseCommerceFacetRequest<
+  LocationFacetValueRequest,
+  'location'
 >;
 
 export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
-  | 'facetId'
-  | 'field'
-  | 'numberOfValues'
-  | 'isFieldExpanded'
-  | 'preventAutoSelect'
+  'facetId' | 'field' | 'isFieldExpanded'
 > & {
   displayName?: string;
   type: Type;
   values: Value[];
   initialNumberOfValues: number;
   numberOfValues?: number;
-  freezeCurrentValues?: boolean;
 };
 
 export type AnyFacetValueRequest =
   | FacetValueRequest
+  | LocationFacetValueRequest
   | CategoryFacetValueRequest
   | NumericRangeRequest
   | DateRangeRequest;
 
-export type AnyFacetRequest = Pick<
-  FacetRequest,
-  | 'facetId'
-  | 'field'
-  | 'numberOfValues'
-  | 'isFieldExpanded'
-  | 'preventAutoSelect'
-> & {
-  displayName?: string;
-  type: FacetType;
-  values: AnyFacetValueRequest[];
-  initialNumberOfValues: number;
-  numberOfValues?: number;
-  freezeCurrentValues?: boolean;
-} & Partial<CategoryFacetDelimitingCharacter & NumericFacetExtraProperties>;
+export type AnyFacetRequest = BaseCommerceFacetRequest<
+  AnyFacetValueRequest,
+  FacetType
+> &
+  Partial<
+    CategoryFacetDelimitingCharacter &
+      NumericFacetExtraProperties &
+      FreezableFacetRequestProperties
+  >;
 
 type MappedFacetRequest = {
   [T in FacetType]: T extends 'numericalRange'

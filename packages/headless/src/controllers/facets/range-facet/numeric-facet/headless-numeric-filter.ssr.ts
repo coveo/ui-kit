@@ -13,6 +13,7 @@ export interface NumericFilterDefinition
 
 /**
  * Defines a `NumericFilter` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `NumericFilter` properties.
  * @returns The `NumericFilter` controller definition.

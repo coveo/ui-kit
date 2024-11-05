@@ -27,6 +27,7 @@ import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
+const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf|lf)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -46,11 +47,15 @@ export const productListingSerializer = {
 } as Serializer<ProductListingParameters>;
 
 type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<Parameters, 'f' | 'cf' | 'nf' | 'df' | 'mnf'>;
+type FacetParameters = keyof Pick<
+  Parameters,
+  'f' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
+>;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
+  lf: true,
   cf: true,
   nf: true,
   df: true,
@@ -153,7 +158,7 @@ function deserialize<T extends Parameters>(fragment: string): T {
   const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map(splitOnFirstEqual)
-    .map(preprocessObjectPairs)
+    .map((parts) => preprocessObjectPairs(parts, commerceFacetsRegex))
     .filter(isValidPair)
     .map(cast);
 

@@ -13,6 +13,7 @@ export interface RecommendationsDefinition
 /**
  * @internal
  * Defines a `Recommendations` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Recommendations` properties.
  * @returns The `Recommendations` controller definition.

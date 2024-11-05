@@ -12,44 +12,55 @@ import {
   validatePayload,
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload.js';
-import {numericFacetValueDefinition} from '../../../facets/range-facets/generic/range-facet-validate-payload.js';
 import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {
-  ToggleSelectNumericFacetValueActionCreatorPayload,
-  UpdateNumericFacetValuesActionCreatorPayload,
-  validateManualNumericRanges,
-} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import {validateManualNumericRanges} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 
-export type ToggleSelectNumericFacetValuePayload =
-  ToggleSelectNumericFacetValueActionCreatorPayload;
+export interface ToggleSelectNumericFacetValuePayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+  /**
+   * The target numeric facet value.
+   */
+  selection: NumericRangeRequest;
+}
 
 export const toggleSelectNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleSelectValue',
   (payload: ToggleSelectNumericFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: numericFacetValueDefinition}),
+      selection: new RecordValue({
+        values: numericFacetValueDefinition,
+      }),
     })
 );
 
 export type ToggleExcludeNumericFacetValuePayload =
-  ToggleSelectNumericFacetValueActionCreatorPayload;
+  ToggleSelectNumericFacetValuePayload;
 
 export const toggleExcludeNumericFacetValue = createAction(
   'commerce/facets/numericFacet/toggleExcludeValue',
   (payload: ToggleExcludeNumericFacetValuePayload) =>
     validatePayload(payload, {
       facetId: requiredNonEmptyString,
-      selection: new RecordValue({values: numericFacetValueDefinition}),
+      selection: new RecordValue({
+        values: numericFacetValueDefinition,
+      }),
     })
 );
 
-export type UpdateNumericFacetValuesPayload =
-  UpdateNumericFacetValuesActionCreatorPayload;
-
-export type UpdateManualNumericFacetRangePayload = {
+export interface UpdateNumericFacetValuesPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
   facetId: string;
-} & NumericRangeRequest;
+  /**
+   * The numeric facet values.
+   */
+  values: NumericRangeRequest[];
+}
 
 export const updateNumericFacetValues = createAction(
   'commerce/facets/numericFacet/updateValues',
@@ -69,17 +80,28 @@ export const updateNumericFacetValues = createAction(
   }
 );
 
+export type UpdateManualNumericFacetRangePayload = {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+} & NumericRangeRequest;
+
 export const updateManualNumericFacetRange = createAction(
   'commerce/facets/numericFacet/updateManualRange',
   (payload: UpdateManualNumericFacetRangePayload) =>
     validatePayloadAndThrow(payload, {
       facetId: requiredNonEmptyString,
-      start: new NumberValue({required: true, min: 0}),
-      end: new NumberValue({required: true, min: 0}),
-      endInclusive: new BooleanValue({required: true}),
-      state: new StringValue<'idle' | 'selected' | 'excluded'>({
-        required: true,
-        constrainTo: ['idle', 'selected', 'excluded'],
-      }),
+      ...numericFacetValueDefinition,
     })
 );
+
+const numericFacetValueDefinition = {
+  state: new StringValue<'idle' | 'selected' | 'excluded'>({
+    required: true,
+    constrainTo: ['idle', 'selected', 'excluded'],
+  }),
+  start: new NumberValue({required: true}),
+  end: new NumberValue({required: true}),
+  endInclusive: new BooleanValue({required: true}),
+};

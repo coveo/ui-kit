@@ -9,6 +9,7 @@ export interface RedirectionTriggerDefinition
 
 /**
  * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @returns The `NotifyTrigger` controller definition.
  *

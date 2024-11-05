@@ -13,6 +13,9 @@ import {
 
 /**
  * The field action creators.
+ *
+ * @group Actions
+ * @category Field
  */
 export interface FieldActionCreators {
   /**
@@ -55,6 +58,9 @@ export interface FieldActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Field
  */
 export function loadFieldActions(engine: CoreEngine): FieldActionCreators {
   engine.addReducers({fields});

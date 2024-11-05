@@ -79,6 +79,7 @@ describe('searchSerializer', () => {
 
   it('can serialize and deserialize all search parameters', () => {
     const f = {author: ['a', 'b']};
+    const lf = {store: ['a']};
     const cf = {geography: ['a', 'b']};
     const nf = {
       size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
@@ -104,6 +105,7 @@ describe('searchSerializer', () => {
     const parameters: Required<CommerceSearchParameters> = {
       q: 'some query',
       f,
+      lf,
       cf,
       nf,
       mnf,

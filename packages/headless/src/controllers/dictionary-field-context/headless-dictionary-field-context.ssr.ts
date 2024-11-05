@@ -15,6 +15,7 @@ export interface DictionaryFieldContextDefinition
 
 /**
  * Defines a `DictionaryFieldContext` controller instance.
+ * @group Definers
  *
  * @returns The `DictionaryFieldContext` controller definition.
  * */

@@ -21,9 +21,11 @@ import {
   BaseFacetValue,
   CategoryFacetResponse,
   DateFacetResponse,
+  LocationFacetResponse,
   NumericFacetResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {toggleSelectLocationFacetValue} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -52,6 +54,9 @@ export type {BreadcrumbValue, DeselectableValue};
 
 /**
  * Represents a generic breadcrumb type.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface Breadcrumb<Value extends BaseFacetValue> {
   /**
@@ -83,6 +88,9 @@ export type CoreBreadcrumbManagerOptions = Pick<
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` sub-controller.
+ *
+ * @group Sub-controllers
+ * @category BreadcrumbManager
  */
 export interface BreadcrumbManagerState {
   /**
@@ -114,8 +122,6 @@ interface ActionCreators {
   toggleExcludeActionCreator?: ToggleActionCreator;
 }
 
-const facetTypeWithoutExcludeAction: FacetType = 'hierarchical';
-
 const actions: Record<FacetType, ActionCreators> = {
   regular: {
     toggleSelectActionCreator: toggleSelectFacetValue,
@@ -129,7 +135,10 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleSelectActionCreator: toggleSelectDateFacetValue,
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
-  [facetTypeWithoutExcludeAction]: {
+  location: {
+    toggleSelectActionCreator: toggleSelectLocationFacetValue,
+  },
+  hierarchical: {
     toggleSelectActionCreator: deselectAllValuesInCoreFacet,
   },
 };
@@ -165,7 +174,11 @@ export function buildCoreBreadcrumbManager(
   });
 
   const getValuesForNonCategoryFacet = (
-    facet: RegularFacetResponse | NumericFacetResponse | DateFacetResponse
+    facet:
+      | RegularFacetResponse
+      | NumericFacetResponse
+      | DateFacetResponse
+      | LocationFacetResponse
   ) => {
     return facet.values
       .filter((value) => value.state !== 'idle')
@@ -179,16 +192,19 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(
-              updateCoreFacetFreezeCurrentValues({
-                facetId: facet.facetId,
-                freezeCurrentValues: false,
-              })
-            );
+
+            if (facet.type !== 'location') {
+              dispatch(
+                updateCoreFacetFreezeCurrentValues({
+                  facetId: facet.facetId,
+                  freezeCurrentValues: false,
+                })
+              );
+            }
             dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
-            facet.type !== facetTypeWithoutExcludeAction
+            facet.type !== 'location'
           ) {
             dispatch(
               actions[facet.type].toggleExcludeActionCreator!({
@@ -253,6 +269,7 @@ export function buildCoreBreadcrumbManager(
     (facetOrder): BreadcrumbManagerState => {
       const breadcrumbs = facetOrder.flatMap((facetId) => {
         const facet = options.facetResponseSelector(engine[stateKey], facetId);
+
         if (hasActiveValue(facet)) {
           return [createBreadcrumb(facet)];
         }

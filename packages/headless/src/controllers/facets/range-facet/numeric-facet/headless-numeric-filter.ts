@@ -39,6 +39,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `NumericFilter` controller properties.
  * @returns A `NumericFilter` controller instance.
+ *
+ * @group Controllers
+ * @category NumericFilter
  */
 export function buildNumericFilter(
   engine: SearchEngine,
