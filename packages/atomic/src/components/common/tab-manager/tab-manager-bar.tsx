@@ -152,7 +152,6 @@ export class TabManagerBar {
         onClick={() => {
           tab.select();
           this.updatePopoverTabs();
-
           this.tabPopover?.togglePopover();
         }}
       >
@@ -165,13 +164,17 @@ export class TabManagerBar {
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
     this.updatePopoverPosition();
+    this.updatePopoverTabs();
     this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
   };
 
+  public componentWillUpdate() {
+    this.updateTabsDisplay();
+  }
+
   public componentDidLoad() {
     this.resizeObserver = new ResizeObserver(() => {
-      this.updatePopoverTabs();
-      this.render();
+      this.updateTabsDisplay();
     });
     this.resizeObserver.observe(this.host);
   }
@@ -181,7 +184,6 @@ export class TabManagerBar {
   }
 
   public render = () => {
-    this.updateTabsDisplay();
     return (
       <Host>
         <slot></slot>
