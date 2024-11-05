@@ -5,6 +5,8 @@ export const REPO_HOST = 'https://github.com';
 export const REPO_OWNER = 'coveo';
 export const REPO_NAME = 'ui-kit';
 export const REPO_MAIN_BRANCH = 'master';
+export const REPO_RELEASE_BRANCH = 'release/v3';
+
 export const REPO_FS_ROOT = resolve(
   dirname(fileURLToPath(import.meta.url)),
   '..',
@@ -18,3 +20,7 @@ export const RELEASER_AUTH_SECRETS = {
   clientSecret: process.env.RELEASER_CLIENT_SECRET,
   installationId: process.env.RELEASER_INSTALLATION_ID,
 };
+
+export const NPM_LATEST_TAG = 'latest';
+export const NPM_BETA_TAG = 'beta';
+export const NPM_ALPHA_TAG = 'alpha';

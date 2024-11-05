@@ -1,3 +1,16 @@
+## 3.2.0 (2024-10-30)
+
+- fix(atomic-react): remove traces of npm imports (#4581) ([599b36f](https://github.com/coveo/ui-kit/commits/599b36f)), closes [#4581](https://github.com/coveo/ui-kit/issues/4581) [/github.com/coveo/ui-kit/pull/4581/files#r1812922022](https://github.com//github.com/coveo/ui-kit/pull/4581/files/issues/r1812922022)
+- fix(atomic-react): render empty link container when display is other than grid (#4604) ([91a2538](https://github.com/coveo/ui-kit/commits/91a2538)), closes [#4604](https://github.com/coveo/ui-kit/issues/4604)
+- fix(atomic): allow atomic loader to be deployed to the CDN (#4568) ([b579cb0](https://github.com/coveo/ui-kit/commits/b579cb0)), closes [#4568](https://github.com/coveo/ui-kit/issues/4568)
+- feat(atomic): support highlights in atomic-product-description (#4541) ([5c235a8](https://github.com/coveo/ui-kit/commits/5c235a8)), closes [#4541](https://github.com/coveo/ui-kit/issues/4541)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+- chore: remove rollup-plugin-replace-with-ast package (#4591) ([34cd096](https://github.com/coveo/ui-kit/commits/34cd096)), closes [#4591](https://github.com/coveo/ui-kit/issues/4591)
+
+## <small>3.1.10 (2024-10-23)</small>
+
+- chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)
+
 ## <small>3.1.1 (2024-09-24)</small>
 
 - docs: document headless, atomic, and atomic-react entry points (#4455) ([3853bdc](https://github.com/coveo/ui-kit/commits/3853bdc)), closes [#4455](https://github.com/coveo/ui-kit/issues/4455)

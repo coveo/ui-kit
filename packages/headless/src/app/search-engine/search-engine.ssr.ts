@@ -29,6 +29,8 @@ import {
 
 /**
  * The SSR search engine.
+ *
+ * @group Engine
  */
 export interface SSRSearchEngine extends SearchEngine {
   /**
@@ -37,6 +39,11 @@ export interface SSRSearchEngine extends SearchEngine {
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
+/**
+ * The options to create a search engine definition in SSR.
+ *
+ * @group Engine
+ */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
@@ -82,9 +89,12 @@ export interface SearchEngineDefinition<
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
+ *
  * @param options - The search engine definition
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
+ *
+ * @group Engine
  */
 export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<

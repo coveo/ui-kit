@@ -5,13 +5,18 @@ import {
   SetViewPayload,
   setContext,
   setView,
+  SetLocationPayload,
+  setLocation,
 } from './context-actions.js';
 import {contextReducer as commerceContext} from './context-slice.js';
 
-export type {SetContextPayload, SetViewPayload};
+export type {SetContextPayload, SetViewPayload, SetLocationPayload};
 
 /**
  * The context action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export interface ContextActionCreators {
   /**
@@ -29,6 +34,14 @@ export interface ContextActionCreators {
    * @returns A dispatchable action.
    */
   setView(payload: SetViewPayload): PayloadAction<SetViewPayload>;
+
+  /**
+   * Sets the location context property without modifying any other context properties.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  setLocation(payload: SetLocationPayload): PayloadAction<SetLocationPayload>;
 }
 
 /**
@@ -36,6 +49,9 @@ export interface ContextActionCreators {
  *
  * @param engine - The commerce engine.
  * @returns An object holding the context action creators.
+ *
+ * @group Actions
+ * @category Context
  */
 export function loadContextActions(
   engine: CommerceEngine
@@ -44,5 +60,6 @@ export function loadContextActions(
   return {
     setContext,
     setView,
+    setLocation,
   };
 }

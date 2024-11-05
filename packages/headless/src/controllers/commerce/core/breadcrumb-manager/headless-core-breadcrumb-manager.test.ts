@@ -14,9 +14,11 @@ import {
   AnyFacetValueResponse,
   CategoryFacetValue,
   DateFacetValue,
+  LocationFacetValue,
   NumericFacetValue,
   RegularFacetValue,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
+import {toggleSelectLocationFacetValue} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -32,6 +34,7 @@ import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-face
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
+  buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response.js';
@@ -55,9 +58,11 @@ vi.mock(
   '../../../../features/commerce/facets/numeric-facet/numeric-facet-actions'
 );
 vi.mock('../../../../features/commerce/facets/date-facet/date-facet-actions');
-
 vi.mock(
   '../../../../features/commerce/facets/regular-facet/regular-facet-actions'
+);
+vi.mock(
+  '../../../../features/commerce/facets/location-facet/location-facet-actions'
 );
 
 describe('core breadcrumb manager', () => {
@@ -238,6 +243,47 @@ describe('core breadcrumb manager', () => {
       ['selected', toggleSelectFacetValue],
       ['excluded', toggleExcludeFacetValue],
     ])('#deselect when facet is %s', generateDeselectionTestCases(breadcrumb));
+  });
+
+  describe('location facet breadcrumbs', () => {
+    const breadcrumb = {
+      value: 'Corp Corp Quarters',
+      state: 'selected',
+    } as LocationFacetValue;
+
+    beforeEach(() => {
+      setFacetsState(
+        buildMockCommerceLocationFacetResponse({
+          facetId,
+          values: [
+            {value: 'Acme', state: 'idle'},
+            breadcrumb,
+          ] as LocationFacetValue[],
+        })
+      );
+    });
+
+    it('generates breadcrumbs', () => {
+      expectBreadcrumbToBePresentInState(breadcrumb);
+    });
+
+    describe('#deselect when facet is selected', () => {
+      beforeEach(() => {
+        breadcrumb.state = 'selected';
+        deselectBreadcrumb();
+      });
+
+      it('dispatches #toggleSelectActionCreator', () => {
+        expect(toggleSelectLocationFacetValue).toHaveBeenCalledWith({
+          facetId,
+          selection: breadcrumb,
+        });
+      });
+
+      it('dispatches #fetchProductsActionCreator', () => {
+        expect(fetchProductsActionCreator).toHaveBeenCalled();
+      });
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {

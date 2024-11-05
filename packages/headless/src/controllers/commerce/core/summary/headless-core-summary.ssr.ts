@@ -21,6 +21,7 @@ export type {
 
 /**
  * Defines a `Summary` controller instance.
+ * @group Definers
  *
  * @returns The `Summary` controller definition.
  *

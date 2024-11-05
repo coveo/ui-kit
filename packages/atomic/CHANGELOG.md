@@ -1,3 +1,28 @@
+## 3.7.0 (2024-10-30)
+
+- feat(atomic): support highlights in atomic-product-description (#4541) ([5c235a8](https://github.com/coveo/ui-kit/commits/5c235a8)), closes [#4541](https://github.com/coveo/ui-kit/issues/4541)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+- chore: remove rollup-plugin-replace-with-ast package (#4591) ([34cd096](https://github.com/coveo/ui-kit/commits/34cd096)), closes [#4591](https://github.com/coveo/ui-kit/issues/4591)
+- ci: reenable tests disabled in #4294 (#4306) ([ebf55db](https://github.com/coveo/ui-kit/commits/ebf55db)), closes [#4294](https://github.com/coveo/ui-kit/issues/4294) [#4306](https://github.com/coveo/ui-kit/issues/4306)
+- feat(atomic, headless): leverage totalNumberOfChildResults in folded results (#4513) ([9dc3af1](https://github.com/coveo/ui-kit/commits/9dc3af1)), closes [#4513](https://github.com/coveo/ui-kit/issues/4513)
+- feat(atomic,headless): add Quickview Support for Insight (#4479) ([95ac6a8](https://github.com/coveo/ui-kit/commits/95ac6a8)), closes [#4479](https://github.com/coveo/ui-kit/issues/4479)
+- fix(headless,commerce): clear manual ranges on clearAllCoreFacets (#4593) ([208cd63](https://github.com/coveo/ui-kit/commits/208cd63)), closes [#4593](https://github.com/coveo/ui-kit/issues/4593)
+- fix(atomic-angular): add @Prop decorator to @MapProp props so they are generated in the angular-outp ([dc2faaf](https://github.com/coveo/ui-kit/commits/dc2faaf)), closes [#4548](https://github.com/coveo/ui-kit/issues/4548)
+- fix(atomic-numeric-facet storybook): storybook bug fix for numeric facet (#4565) ([2dbad78](https://github.com/coveo/ui-kit/commits/2dbad78)), closes [#4565](https://github.com/coveo/ui-kit/issues/4565)
+- fix(atomic): allow atomic loader to be deployed to the CDN (#4568) ([b579cb0](https://github.com/coveo/ui-kit/commits/b579cb0)), closes [#4568](https://github.com/coveo/ui-kit/issues/4568)
+
+## <small>3.6.2 (2024-10-23)</small>
+
+- chore(deps): bump rollup (#4525) ([874286e](https://github.com/coveo/ui-kit/commits/874286e)), closes [#4525](https://github.com/coveo/ui-kit/issues/4525)
+- fix(atomic): broken HTML because of formatting in CRGA markdown heading (#4522) ([9e15c6c](https://github.com/coveo/ui-kit/commits/9e15c6c)), closes [#4522](https://github.com/coveo/ui-kit/issues/4522) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts#L50](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/generated-answer/generated-content/markdown-utils.ts/issues/L50)
+- fix(atomic): delete ./loader/package.json when building atomic (#4539) ([c39f716](https://github.com/coveo/ui-kit/commits/c39f716)), closes [#4539](https://github.com/coveo/ui-kit/issues/4539)
+- fix(atomic): fix layout issue on product variants with imageSize set to none (#4521) ([cbfca7f](https://github.com/coveo/ui-kit/commits/cbfca7f)), closes [#4521](https://github.com/coveo/ui-kit/issues/4521)
+- fix(atomic): prevent clicks on atomic-product-image indicators from opening the product page (#4534) ([4d53962](https://github.com/coveo/ui-kit/commits/4d53962)), closes [#4534](https://github.com/coveo/ui-kit/issues/4534)
+- fix(atomic): prevent touch events on atomic-product-children from opening the product page (#4533) ([7739951](https://github.com/coveo/ui-kit/commits/7739951)), closes [#4533](https://github.com/coveo/ui-kit/issues/4533)
+- fix(insight): error "getAllFacets is undefined" in insight panel interface (#4474) ([836ef3a](https://github.com/coveo/ui-kit/commits/836ef3a)), closes [#4474](https://github.com/coveo/ui-kit/issues/4474)
+- feat(atomic): remove imageAltField as an array option & use image alt field prior to image not found ([ee7e1d9](https://github.com/coveo/ui-kit/commits/ee7e1d9)), closes [#4511](https://github.com/coveo/ui-kit/issues/4511)
+- test(atomic): fix failing atomic-color-facet test because of source change (#4543) ([c423e15](https://github.com/coveo/ui-kit/commits/c423e15)), closes [#4543](https://github.com/coveo/ui-kit/issues/4543)
+
 ## 3.4.0 (2024-10-16)
 
 - fix(atomic): add hover effect for atomic-product clickable element in mobile/grid (#4519) ([0828b1f](https://github.com/coveo/ui-kit/commits/0828b1f)), closes [#4519](https://github.com/coveo/ui-kit/issues/4519)

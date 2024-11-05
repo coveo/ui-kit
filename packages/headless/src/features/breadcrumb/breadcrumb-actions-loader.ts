@@ -7,6 +7,9 @@ import {
 
 /**
  * The breadcrumb action creators.
+ *
+ * @group Actions
+ * @category Breadcrumb
  */
 export interface BreadcrumbActionCreators {
   /**
@@ -29,6 +32,9 @@ export interface BreadcrumbActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Breadcrumb
  */
 export function loadBreadcrumbActions(
   engine: SearchEngine

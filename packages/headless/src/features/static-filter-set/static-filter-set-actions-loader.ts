@@ -17,6 +17,9 @@ export type {
 
 /**
  * The static filter set action creators.
+ *
+ * @group Actions
+ * @category StaticFilterSet
  */
 export interface StaticFilterSetActionCreators {
   /**
@@ -63,6 +66,9 @@ export interface StaticFilterSetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category StaticFilterSet
  */
 export function loadStaticFilterSetActions(
   engine: SearchEngine

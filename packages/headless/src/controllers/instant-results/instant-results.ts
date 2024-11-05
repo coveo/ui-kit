@@ -31,6 +31,11 @@ export interface InstantResultProps {
 
 /**
  * The `InstantResults` controller allows the end user to manage instant results queries.
+ *
+ * Example: [instant-results.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/instant-results/instant-results.fn.tsx)
+ *
+ * @group Controllers
+ * @category InstantResults
  */
 export interface InstantResults extends Controller {
   /**
@@ -49,6 +54,12 @@ export interface InstantResults extends Controller {
   state: InstantResultsState;
 }
 
+/**
+ * A scoped and simplified part of the Headless state that is relevant to the `InstantResults` controller.
+ *
+ * @group Controllers
+ * @category InstantResults
+ */
 export interface InstantResultsState {
   /**
    * The current query for instant results.
@@ -74,6 +85,9 @@ export interface InstantResultsState {
  * @param engine - The Headless engine.
  * @param props - The configurable `InstantResults` properties.
  * @returns An `InstantResults` controller instance.
+ *
+ * @group Controllers
+ * @category InstantResults
  */
 export function buildInstantResults(
   engine: SearchEngine,

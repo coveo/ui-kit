@@ -1,4 +1,6 @@
 import {Config} from '@stencil/core';
+import {readFileSync} from 'fs';
+import {join} from 'path';
 import html from 'rollup-plugin-html';
 
 // https://stenciljs.com/docs/config
@@ -36,6 +38,36 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
+      resolveAtomicPaths(),
     ],
   },
 };
+
+function resolveAtomicPaths() {
+  return {
+    resolveId(source: string) {
+      if (source.startsWith('@coveo/atomic/')) {
+        const nodeModulesLocation = '../../../node_modules';
+
+        const packageJsonPath = join(
+          process.cwd(),
+          nodeModulesLocation,
+          '@coveo',
+          'atomic',
+          'package.json'
+        );
+
+        const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+
+        const subPath = './' + source.replace('@coveo/atomic/', '');
+        const subPathImport = packageJson.exports[subPath].import;
+
+        const id = `${nodeModulesLocation}/@coveo/atomic/${subPathImport}`;
+        return {
+          id,
+        };
+      }
+      return null;
+    },
+  };
+}

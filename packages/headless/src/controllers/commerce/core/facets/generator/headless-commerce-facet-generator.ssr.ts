@@ -11,6 +11,7 @@ import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
 import {
   AnyFacetResponse,
+  LocationFacetValue,
   RegularFacetValue,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/response.js';
 import {manualNumericFacetSelector} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-selectors.js';
@@ -37,6 +38,7 @@ import {
 import {
   DateFacet,
   DateFacetState,
+  DateFacetValue,
   getDateFacetState,
 } from '../date/headless-commerce-date-facet.js';
 import {
@@ -45,8 +47,14 @@ import {
   getCoreFacetState,
 } from '../headless-core-commerce-facet.js';
 import {
+  getLocationFacetState,
+  LocationFacet,
+  LocationFacetState,
+} from '../location/headless-commerce-location-facet.js';
+import {
   getNumericFacetState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
 } from '../numeric/headless-commerce-numeric-facet.js';
 import {
@@ -66,19 +74,27 @@ export type {
   CategoryFacetValue,
   CategoryFacetSearchResult,
   DateFacet,
+  DateFacetValue,
   DateFacetState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
   RegularFacet,
   RegularFacetState,
   RegularFacetValue,
+  LocationFacet,
+  LocationFacetState,
+  LocationFacetValue,
+  MappedGeneratedFacetController,
 };
 
 export type FacetGeneratorState = MappedFacetStates;
 
-type MappedFacetStates = Array<MappedFacetState[FacetType]>;
+export type MappedFacetStates = Array<MappedFacetState[FacetType]>;
 
-type MappedFacetState = {
+export type {FacetType};
+
+export type MappedFacetState = {
   [T in FacetType]: T extends 'numericalRange'
     ? NumericFacetState
     : T extends 'regular'
@@ -87,7 +103,9 @@ type MappedFacetState = {
         ? DateFacetState
         : T extends 'hierarchical'
           ? CategoryFacetState
-          : never;
+          : T extends 'location'
+            ? LocationFacetState
+            : never;
 };
 
 export function defineFacetGenerator<
@@ -234,6 +252,10 @@ export function buildFacetGenerator(
             return getRegularFacetState(
               createFacetState(facetResponseSelector) as RegularFacetState,
               specificFacetSearchStateSelector(getEngineState(), facetId)
+            );
+          case 'location':
+            return getLocationFacetState(
+              createFacetState(facetResponseSelector) as LocationFacetState
             );
         }
       });

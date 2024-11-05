@@ -1,0 +1,19 @@
+{
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Engine",
+    "Controllers",
+    "Buildable controllers",
+    "Sub-controllers",
+    "Actions",
+    "*"
+  ],
+  "entryPoints": ["../../src/commerce.index.ts"],
+  "gitRevision": "typedoc-POC",
+  "plugin": ["../../typedoc/dist/index.js"]
+}
