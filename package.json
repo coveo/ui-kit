@@ -19,8 +19,8 @@
   "devDependencies": {
     "@actions/github": "^6.0.0",
     "@coveo/semantic-monorepo-tools": "^2.1.9",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
-    "@typescript-eslint/parser": "^6.17.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
     "conventional-changelog-angular": "^8.0.0",
     "eslint": "^8.56.0",
     "pnpm": "8.15.9",

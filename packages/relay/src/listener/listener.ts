@@ -73,7 +73,11 @@ export function createListenerManager(): ListenerManager {
   }
 
   function remove(type: string, callback?: EventCallback) {
-    callback ? removeOne({ type, callback }) : removeMultiple(type);
+    if (callback) {
+      removeOne({ type, callback });
+    } else {
+      removeMultiple(type);
+    }
   }
 
   return {

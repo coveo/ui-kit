@@ -21,7 +21,7 @@ function buildEnvironment(configManager: ConfigManager) {
 function isBrowser() {
   try {
     return typeof window === "object";
-  } catch (e) {
+  } catch {
     return false;
   }
 }
