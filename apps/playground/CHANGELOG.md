@@ -1,3 +1,9 @@
+## 1.8.12 (2024-11-05)
+
+### Bug Fixes
+
+- **deps:** update dependency next to v15 (#128) ([f5161c6](/commits/f5161c6e001f43a59a15a43865eff996f23179eb)), closes [#128](/issues/128)
+
 ## 1.8.11 (2024-11-04)
 
 ## 1.8.10 (2024-11-04)
