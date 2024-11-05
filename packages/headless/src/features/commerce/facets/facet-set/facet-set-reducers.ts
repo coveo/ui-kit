@@ -124,7 +124,6 @@ function restoreFacet(facetId: string) {
   return {
     facetId,
     field: facetId,
-    numberOfValues: 10,
     isFieldExpanded: false,
     preventAutoSelect: false,
     initialNumberOfValues: 10,
