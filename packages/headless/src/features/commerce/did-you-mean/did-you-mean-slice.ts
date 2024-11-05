@@ -1,7 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state.js';
 import {executeSearch} from '../search/search-actions.js';
-import {applyCorrection} from './did-you-mean-actions.js';
 import {getDidYouMeanInitialState} from './did-you-mean-state.js';
 
 export const didYouMeanReducer = createReducer(
@@ -25,9 +24,6 @@ export const didYouMeanReducer = createReducer(
           wordCorrections:
             queryCorrection?.corrections[0]?.wordCorrections ?? [],
         };
-      })
-      .addCase(applyCorrection, (state, action) => {
-        state.wasCorrectedTo = action.payload;
       });
   }
 );
