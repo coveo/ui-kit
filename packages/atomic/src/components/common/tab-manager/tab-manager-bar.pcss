@@ -1,0 +1,18 @@
+@import '../../../global/global.pcss';
+
+:host {
+  white-space: nowrap;
+  width: 100%;
+  overflow-x: visible;
+  display: flex;
+  position: relative;
+
+  tab-popover::part(popover-button) {
+    @apply text-xl;
+    @apply px-6;
+    @apply pb-1;
+    @apply font-normal;
+    @apply m-0;
+    @apply text-black;
+  }
+}

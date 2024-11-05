@@ -5,14 +5,11 @@ import {
   Tab,
   buildTab,
 } from '@coveo/headless';
-import {Component, h, Element, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Host} from '@stencil/core';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {TabButton} from '../../../common/tab-manager/tab-button';
-import {TabDropdown} from '../../../common/tab-manager/tab-dropdown';
-import {TabDropdownOption} from '../../../common/tab-manager/tab-dropdown-option';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -46,9 +43,6 @@ export class AtomicTabManager {
   @Prop() clearFiltersOnTabChange?: boolean = false;
 
   @State() public error!: Error;
-
-  private tabAreaRef: HTMLUListElement | undefined;
-  private tabDropdownRef: HTMLDivElement | undefined;
 
   public initialize() {
     this.tabManager = buildTabManager(this.bindings.engine);
@@ -86,77 +80,30 @@ export class AtomicTabManager {
     });
   }
 
-  componentDidLoad() {
-    const tabArea = this.tabAreaRef;
-    const tabDropdown = this.tabDropdownRef;
-    if (tabArea && tabDropdown) {
-      const resizeObserver = new ResizeObserver(() => {
-        const tabAreaWidth = tabArea.offsetWidth;
-        const tabsWidth = Array.from(tabArea.children).reduce(
-          (totalWidth, tab) => totalWidth + (tab as HTMLElement).offsetWidth,
-          0
-        );
-
-        if (tabAreaWidth < tabsWidth) {
-          tabArea.classList.add('hide-tabs');
-          tabDropdown.classList.remove('hidden');
-        } else {
-          tabArea.classList.remove('hide-tabs');
-          tabDropdown.classList.add('hidden');
-        }
-      });
-
-      resizeObserver.observe(tabArea);
-
-      return () => resizeObserver.disconnect();
-    }
-  }
-
   render() {
     return (
-      <div class="mb-2 overflow-x-auto">
-        <ul
-          ref={(el) => (this.tabAreaRef = el as HTMLUListElement)}
-          role="list"
-          aria-label="tab-area"
-          part="tab-area"
-          class="tab-area mb-2 flex w-full flex-row border-b"
-        >
-          {this.tabs.map((tab) => (
-            <TabButton
-              isActive={tab.tabController.state.isActive}
-              label={tab.label}
-              handleClick={() => {
-                if (!tab.tabController.state.isActive) {
-                  tab.tabController.select();
-                }
-              }}
-            ></TabButton>
-          ))}
-        </ul>
-        <div ref={(el) => (this.tabDropdownRef = el as HTMLDivElement)}>
-          <TabDropdown
-            tabs={this.tabs}
-            activeTab={this.tabManagerState.activeTab}
-            onTabChange={(e) => {
-              const selectedTab = this.tabs.find(
-                (tab) => tab.name === (e as string)
-              );
-              if (selectedTab) {
-                selectedTab.tabController.select();
-              }
-            }}
+      <Host class="mb-2">
+        <tab-manager-bar>
+          <div
+            role="list"
+            aria-label="tab-area"
+            part="tab-area"
+            class="mb-2 flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
-              <TabDropdownOption
-                value={tab.name}
+              <Tab-Manager-Button
+                active={this.tabManagerState.activeTab === tab.name}
                 label={tab.label}
-                isSelected={tab.name === this.tabManagerState.activeTab}
-              />
+                select={() => {
+                  if (!tab.tabController.state.isActive) {
+                    tab.tabController.select();
+                  }
+                }}
+              ></Tab-Manager-Button>
             ))}
-          </TabDropdown>
-        </div>
-      </div>
+          </div>
+        </tab-manager-bar>
+      </Host>
     );
   }
 }
