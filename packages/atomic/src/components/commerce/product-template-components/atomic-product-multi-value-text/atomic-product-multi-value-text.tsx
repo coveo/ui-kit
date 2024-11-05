@@ -1,34 +1,39 @@
 import {
   BreadcrumbManager,
-  buildBreadcrumbManager,
-  Result,
-  ResultTemplatesHelpers,
-} from '@coveo/headless';
+  buildProductListing,
+  buildSearch,
+  Product,
+  ProductListing,
+  ProductTemplatesHelpers,
+  Search,
+  RegularFacetValue,
+} from '@coveo/headless/commerce';
 import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {titleToKebab} from '../../../../utils/utils';
-import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
-import {ResultContext} from '../result-template-decorators';
+import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {ProductContext} from '../product-template-decorators';
 
 /**
- * The `atomic-result-multi-value-text` component renders the values of a multi-value string field.
- * @part result-multi-value-text-list - The list of field values.
- * @part result-multi-value-text-separator - The separator to display between each of the field values.
- * @part result-multi-value-text-value - A field value.
- * @part result-multi-value-text-value-more - A label indicating some values were omitted.
- * @slot result-multi-value-text-value-* - A custom caption value that's specified for a given part of a multi-text field value. For example, if you want to use `Off-Campus Resident` as a caption value for `Off-campus apartment` in `Off-campus apartment;On-campus apartment`, you'd use `<span slot="result-multi-value-text-value-off-campus-apartment">Off-Campus Resident</span>`). The suffix of this slot corresponds with the field value, written in kebab case.
+ * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+ * @part product-multi-value-text-list - The list of field values.
+ * @part product-multi-value-text-separator - The separator to display between each of the field values.
+ * @part product-multi-value-text-value - A field value.
+ * @part product-multi-value-text-value-more - A label indicating some values were omitted.
+ * @slot product-multi-value-text-value-* - A custom caption value that's specified for a given part of a multi-text field value. For example, if you want to use `Off-Campus Resident` as a caption value for `Off-campus apartment` in `Off-campus apartment;On-campus apartment`, you'd use `<span slot="product-multi-value-text-value-off-campus-apartment">Off-Campus Resident</span>`). The suffix of this slot corresponds with the field value, written in kebab case.
  */
 @Component({
-  tag: 'atomic-result-multi-value-text',
-  styleUrl: 'atomic-result-multi-value-text.pcss',
+  tag: 'atomic-product-multi-value-text',
+  styleUrl: 'atomic-product-multi-value-text.pcss',
   shadow: true,
 })
-export class AtomicResultMultiText {
+export class AtomicProductMultiValueText {
   public breadcrumbManager!: BreadcrumbManager;
+  public searchOrListing!: Search | ProductListing;
 
-  @InitializeBindings() public bindings!: Bindings;
-  @ResultContext() private result!: Result;
+  @InitializeBindings() public bindings!: CommerceBindings;
+  @ProductContext() private product!: Product;
 
   @Element() host!: HTMLElement;
 
@@ -36,8 +41,8 @@ export class AtomicResultMultiText {
 
   /**
    * The field that the component should use.
-   * The component will try to find this field in the `Result.raw` object unless it finds it in the `Result` object first.
-   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-search-interface` component.
+   * The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first.
+   * Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
    */
   @Prop({reflect: true}) public field!: string;
 
@@ -55,12 +60,18 @@ export class AtomicResultMultiText {
   private sortedValues: string[] | null = null;
 
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
+    if (this.bindings.interfaceElement.type === 'product-listing') {
+      this.searchOrListing = buildProductListing(this.bindings.engine);
+    } else {
+      this.searchOrListing = buildSearch(this.bindings.engine);
+    }
+
+    this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
   }
 
-  private get resultValues() {
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
+  private get productValues() {
+    const value = ProductTemplatesHelpers.getProductProperty(
+      this.product,
       this.field
     );
 
@@ -90,25 +101,22 @@ export class AtomicResultMultiText {
       .reduce(
         (values, facet) => [
           ...values,
-          ...facet.values.map(({value}) => value.value),
+          ...facet.values.map(({value}) => (value as RegularFacetValue).value),
         ],
         [] as string[]
       );
   }
 
   private updateSortedValues() {
-    const allValues = this.resultValues;
+    const allValues = this.productValues;
     if (allValues === null) {
       this.sortedValues = null;
       return;
     }
-    const allValuesSet = new Set(allValues);
     const firstValues = this.facetSelectedValues.filter((value) =>
-      allValuesSet.has(value)
+      allValues.includes(value)
     );
-    this.sortedValues = Array.from(
-      allValues.reduce((set, value) => set.add(value), new Set(firstValues))
-    );
+    this.sortedValues = Array.from(new Set([...firstValues, ...allValues]));
   }
 
   private getShouldDisplayLabel(values: string[]) {
@@ -125,8 +133,8 @@ export class AtomicResultMultiText {
     const label = getFieldValueCaption(this.field, value, this.bindings.i18n);
     const kebabValue = titleToKebab(value);
     return (
-      <li key={value} part="result-multi-value-text-value">
-        <slot name={`result-multi-value-text-value-${kebabValue}`}>
+      <li key={value} part="product-multi-value-text-value">
+        <slot name={`product-multi-value-text-value-${kebabValue}`}>
           {label}
         </slot>
       </li>
@@ -137,7 +145,7 @@ export class AtomicResultMultiText {
     return (
       <li
         aria-hidden="true"
-        part="result-multi-value-text-separator"
+        part="product-multi-value-text-separator"
         key={`${beforeValue}~${afterValue}`}
         class="separator"
       ></li>
@@ -146,7 +154,7 @@ export class AtomicResultMultiText {
 
   private renderMoreLabel(value: number) {
     return (
-      <li key="more-field-values" part="result-multi-value-text-value-more">
+      <li key="more-field-values" part="product-multi-value-text-value-more">
         {this.bindings.i18n.t('n-more', {value})}
       </li>
     );
@@ -184,7 +192,7 @@ export class AtomicResultMultiText {
       return;
     }
     return (
-      <ul part="result-multi-value-text-list">
+      <ul part="product-multi-value-text-list">
         {...this.renderListItems(this.sortedValues)}
       </ul>
     );

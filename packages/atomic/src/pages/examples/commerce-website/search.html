@@ -47,6 +47,11 @@
                         <atomic-product-field-condition if-defined="ec_brand">
                           <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
                         </atomic-product-field-condition>
+                        <atomic-product-field-condition if-defined="cat_available_sizes">
+                          <atomic-product-multi-value-text
+                            field="cat_available_sizes"
+                          ></atomic-product-multi-value-text>
+                        </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
                           <atomic-product-rating field="ec_rating"></atomic-product-rating>
                         </atomic-product-field-condition>
@@ -102,8 +107,16 @@
                         <atomic-product-field-condition if-defined="ec_brand">
                           <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
                         </atomic-product-field-condition>
+                        <atomic-product-field-condition if-defined="cat_available_sizes">
+                          <atomic-product-multi-value-text
+                            field="cat_available_sizes"
+                          ></atomic-product-multi-value-text>
+                        </atomic-product-field-condition>
                         <atomic-product-field-condition if-defined="ec_rating">
                           <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                        </atomic-product-field-condition>
+                        <atomic-product-field-condition if-defined="concepts">
+                          <atomic-product-multi-value-text field="concepts"></atomic-product-multi-value-text>
                         </atomic-product-field-condition>
                       </atomic-product-section-metadata>
                       <atomic-product-section-emphasized>
