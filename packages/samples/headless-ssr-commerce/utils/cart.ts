@@ -1,11 +1,15 @@
-import {addItemToCart, clearCart, updateItemQuantity} from '@/actions/cart';
-import {Cart, CartItem, Product} from '@coveo/headless-react/ssr-commerce';
+import * as externalCartAPI from '@/actions/external-cart-api';
+import {
+  Cart as HeadlessCart,
+  CartItem as HeadlessCartItem,
+  Product as HeadlessProduct,
+} from '@coveo/headless-react/ssr-commerce';
 
-type SSRCart = Omit<Cart, 'state' | 'subscribe'>;
+type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
 
 export async function adjustQuantity(
-  cart: SSRCart,
-  item: CartItem,
+  headlessCart: HeadlessSSRCart,
+  item: HeadlessCartItem,
   delta: number
 ) {
   const updatedItem = {
@@ -13,11 +17,15 @@ export async function adjustQuantity(
     quantity: item.quantity + delta,
   };
 
-  cart.updateItemQuantity(updatedItem);
-  await updateItemQuantity(updatedItem);
+  headlessCart.updateItemQuantity(updatedItem);
+  // Update the item in the external service
+  await externalCartAPI.updateItemQuantity(updatedItem);
 }
 
-export async function addToCart(cart: SSRCart, product: Product) {
+export async function addToCart(
+  headlessCart: HeadlessSSRCart,
+  product: HeadlessProduct
+) {
   const item = {
     name: product.ec_name!,
     price: product.ec_price!,
@@ -25,16 +33,22 @@ export async function addToCart(cart: SSRCart, product: Product) {
     quantity: 1,
   };
 
-  cart.updateItemQuantity(item);
-  await addItemToCart(item);
+  headlessCart.updateItemQuantity(item);
+  // Add the item to the external service
+  await externalCartAPI.addItemToCart(item);
 }
 
-export async function purchase(cart: SSRCart, totalPrice: number) {
-  cart.purchase({id: crypto.randomUUID(), revenue: totalPrice});
-  await clearCart();
+export async function purchase(
+  headlessCart: HeadlessSSRCart,
+  totalPrice: number
+) {
+  headlessCart.purchase({id: crypto.randomUUID(), revenue: totalPrice});
+  // Clear the cart in the external service
+  await externalCartAPI.clearCart();
 }
 
-export async function emptyCart(cart: SSRCart) {
-  cart.empty();
-  await clearCart();
+export async function emptyCart(headlessCart: HeadlessSSRCart) {
+  headlessCart.empty();
+  // Clear the cart in the external service
+  await externalCartAPI.clearCart();
 }

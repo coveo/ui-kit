@@ -1,4 +1,4 @@
-import {getCart} from '@/actions/cart';
+import * as externalCartAPI from '@/actions/external-cart-api';
 import ProductPage from '@/components/pages/product-page';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
@@ -15,7 +15,7 @@ export default async function ProductDescriptionPage({
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   // Fetches the cart items from an external service
-  const items = await getCart();
+  const items = await externalCartAPI.getCart();
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await searchEngineDefinition.fetchStaticState({

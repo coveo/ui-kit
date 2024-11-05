@@ -15,6 +15,15 @@ function setCartInCookies(cart: CartItem[]) {
   });
 }
 
+/**
+ * IMPORTANT: The functions exported in this module are meant to simulate a programming interface that interacts
+ * with a cart managed through an external ecommerce system.
+ *
+ * For the sake of simplicity, we substitute the "ecommerce system" with a browser cookie in this
+ * example. This is obviously an abstraction. In a real-life scenario, you would interact with an
+ * external service to retrieve and update the cart state.
+ */
+
 export async function getCart(): Promise<CartItem[]> {
   return getCartFromCookies();
 }
