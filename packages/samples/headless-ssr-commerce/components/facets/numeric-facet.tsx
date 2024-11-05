@@ -20,12 +20,12 @@ export default function NumericFacet(props: INumericFacetProps) {
       controller?.state.manualRange?.start ??
       controller?.state.domain?.min ??
       controller?.state.values[0]?.start ??
-      0,
+      '',
     end:
       controller?.state.manualRange?.end ??
       controller?.state.domain?.max ??
       controller?.state.values[0]?.end ??
-      0,
+      '',
   });
 
   const manualRangeStartInputRef = useRef<HTMLInputElement>(null);
@@ -53,13 +53,16 @@ export default function NumericFacet(props: INumericFacetProps) {
   };
 
   const invalidRange =
-    currentManualRange.start >= currentManualRange.end ||
-    isNaN(currentManualRange.start) ||
-    isNaN(currentManualRange.end);
+    typeof currentManualRange.start === 'string' ||
+    typeof currentManualRange.end === 'string' ||
+    currentManualRange.start >= currentManualRange.end;
 
   const onChangeManualRangeStart = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentManualRange({
-      start: Number.parseInt(e.target.value),
+      start:
+        e.target.value === ''
+          ? e.target.value
+          : Number.parseInt(e.target.value),
       end: currentManualRange.end,
     });
   };
@@ -67,11 +70,24 @@ export default function NumericFacet(props: INumericFacetProps) {
   const onChangeManualRangeEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentManualRange({
       start: currentManualRange.start,
-      end: Number.parseInt(e.target.value),
+      end:
+        e.target.value === ''
+          ? e.target.value
+          : Number.parseInt(e.target.value),
     });
   };
 
+  function isNumber(value: unknown): value is number {
+    return typeof value === 'number';
+  }
+
   const onClickManualRangeSelect = () => {
+    if (
+      !isNumber(currentManualRange.start) ||
+      !isNumber(currentManualRange.end)
+    ) {
+      return;
+    }
     const start =
       state.domain && currentManualRange.start < state.domain.min
         ? state.domain.min
