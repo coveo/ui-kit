@@ -13,7 +13,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "files": [
     "dist/"
   ],
@@ -35,6 +35,6 @@
     "ts-jest": "29.2.3"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.9.0 || ^22.11.0"
   }
 }

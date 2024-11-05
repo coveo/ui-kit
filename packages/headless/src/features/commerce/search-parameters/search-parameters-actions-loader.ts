@@ -15,6 +15,9 @@ export type {RestoreSearchParametersPayload};
 
 /**
  * The search parameters action creators.
+ *
+ * @group Actions
+ * @category SearchParameters
  */
 export interface SearchParametersActionCreators {
   /**
@@ -33,6 +36,9 @@ export interface SearchParametersActionCreators {
  *
  * @param engine - The headless commerce engine.
  * @returns An object holding the search parameters action creators.
+ *
+ * @group Actions
+ * @category SearchParameters
  */
 export function loadSearchParametersActions(
   engine: CommerceEngine

@@ -14,6 +14,9 @@ export type {RegisterFoldingActionCreatorPayload};
 
 /**
  * The folding action creators.
+ *
+ * @group Actions
+ * @category Folding
  */
 export interface FoldingActionCreators {
   /**
@@ -46,6 +49,9 @@ export interface FoldingActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Folding
  */
 export function loadFoldingActions(
   engine: SearchEngine

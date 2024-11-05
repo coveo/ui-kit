@@ -1,3 +1,18 @@
+/**
+ * The Coveo Headless Recommendation sub-package exposes exposes the engine, controllers, actions, and utility functions to build a recommendation experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildRecommendationList, buildRecommendationEngine, getSampleRecommendationEngineConfiguration } from '@coveo/headless/recommendation';
+ *
+ * const engine = buildRecommendationEngine({
+ *    configuration: getSampleRecommendationEngineConfiguration()
+ * });
+ *
+ * const recommendationList = buildRecommendationList(engine);
+ * ```
+ * @module Recommendation
+ */
 import * as HighlightUtils from './utils/highlight.js';
 
 export {HighlightUtils};

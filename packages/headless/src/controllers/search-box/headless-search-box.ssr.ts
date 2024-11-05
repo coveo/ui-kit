@@ -13,6 +13,7 @@ export interface SearchBoxDefinition
 
 /**
  * Defines a `SearchBox` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `SearchBox` properties.
  * @returns The `SearchBox` controller definition.

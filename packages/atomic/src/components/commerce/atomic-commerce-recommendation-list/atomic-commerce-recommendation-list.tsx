@@ -322,10 +322,7 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
-      linkContent:
-        this.display === 'grid'
-          ? this.productTemplateProvider.getLinkTemplateContent(product)
-          : this.productTemplateProvider.getEmptyLinkTemplateContent(),
+      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
       store: this.bindings.store,
       density: this.density,
       display: this.display,

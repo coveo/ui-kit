@@ -15,6 +15,7 @@ export interface DateFacetDefinition
 
 /**
  * Defines a `DateFacet` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `DateFacet` properties.
  * @returns The `DateFacet` controller definition.

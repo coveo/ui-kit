@@ -1,3 +1,7 @@
+## <small>2.0.8 (2024-10-30)</small>
+
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+
 ## <small>2.0.4 (2024-09-25)</small>
 
 - chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)

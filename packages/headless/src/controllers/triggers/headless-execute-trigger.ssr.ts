@@ -12,6 +12,7 @@ export interface ExecuteTriggerDefinition
 
 /**
  * Defines an `ExecuteTrigger` controller instance.
+ * @group Definers
  *
  * @returns The `ExecuteTrigger` controller definition.
  * */

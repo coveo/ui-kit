@@ -133,7 +133,8 @@ function getCustomTagValue(comment: DocComment | undefined, customTag: string) {
 }
 
 function getParamDescription(param: Parameter) {
-  const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  let nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  nodes = removeBlockTagNodes(nodes);
   const description = emitAsTsDoc(nodes as unknown as readonly DocNode[]);
 
   if (!description) {

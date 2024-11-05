@@ -14,6 +14,7 @@ export interface StandaloneSearchBoxDefinition
 
 /**
  * Defines the `StandaloneSearchBox` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @param props - The configurable `StandaloneSearchBox` properties.
  * @returns The `StandaloneSearchBox` controller definition.
