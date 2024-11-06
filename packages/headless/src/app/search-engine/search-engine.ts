@@ -74,6 +74,8 @@ function getUpdateSearchConfigurationPayload(
 
 /**
  * The engine for powering search experiences.
+ *
+ * @group Engine
  */
 export interface SearchEngine<State extends object = {}>
   extends CoreEngine<
@@ -100,6 +102,8 @@ export interface SearchEngine<State extends object = {}>
 
 /**
  * The search engine options.
+ *
+ * @group Engine
  */
 export interface SearchEngineOptions
   extends ExternalEngineOptions<SearchEngineState> {
@@ -114,6 +118,8 @@ export interface SearchEngineOptions
  *
  * @param options - The search engine options.
  * @returns A search engine instance.
+ *
+ * @group Engine
  */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);

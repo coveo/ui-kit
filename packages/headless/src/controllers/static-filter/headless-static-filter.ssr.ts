@@ -15,6 +15,7 @@ export interface StaticFilterDefinition
 
 /**
  * Defines a `StaticFilter` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `StaticFilter` properties.
  * @returns The `StaticFilter` controller definition.

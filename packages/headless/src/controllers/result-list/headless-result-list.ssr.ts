@@ -13,6 +13,7 @@ export interface ResultListDefinition
 
 /**
  * Defines a `ResultList` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `ResultList` properties.
  * @returns The `ResultList` controller definition.

@@ -11,6 +11,9 @@ export type {QuerySummary, QuerySummaryState};
  *
  * @param engine - The insight engine.
  * @returns A `QuerySummary` controller instance.
+ *
+ * @group Controllers
+ * @category QuerySummary
  */
 export function buildQuerySummary(engine: InsightEngine): QuerySummary {
   return buildCoreQuerySummary(engine);

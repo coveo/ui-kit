@@ -51,6 +51,11 @@ type InsightEngineReducers = typeof insightEngineReducers;
 type InsightEngineState = StateFromReducersMapObject<InsightEngineReducers> &
   Partial<InsightAppState>;
 
+/**
+ * The engine for powering insight experiences.
+ *
+ * @group Engine
+ */
 export interface InsightEngine<State extends object = {}>
   extends CoreEngine<State & InsightEngineState, InsightThunkExtraArguments> {
   /**
@@ -63,6 +68,8 @@ export interface InsightEngine<State extends object = {}>
 
 /**
  * The insight engine options.
+ *
+ * @group Engine
  */
 export interface InsightEngineOptions
   extends ExternalEngineOptions<InsightEngineState> {
@@ -77,6 +84,8 @@ export interface InsightEngineOptions
  *
  * @param options - The insight engine options.
  * @returns An insight engine instance.
+ *
+ * @group Engine
  */
 export function buildInsightEngine(
   options: InsightEngineOptions

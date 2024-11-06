@@ -36,6 +36,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `SearchParameterManager` properties.
  * @returns A `SearchParameterManager` controller instance.
+ *
+ * @group Controllers
+ * @category SearchParameterManager
  */
 export function buildSearchParameterManager(
   engine: SearchEngine,

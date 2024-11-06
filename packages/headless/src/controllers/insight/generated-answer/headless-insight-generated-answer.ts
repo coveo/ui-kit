@@ -26,6 +26,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `GeneratedAnswer` properties.
  * @returns A `GeneratedAnswer` controller instance.
+ *
+ * @group Controllers
+ * @category GeneratedAnswer
  */
 export function buildGeneratedAnswer(
   engine: InsightEngine,

@@ -7,6 +7,7 @@ import {
   SearchStaticState,
   searchEngineDefinition,
 } from '../../_lib/commerce-engine';
+import BreadcrumbManager from '../breadcrumb-manager';
 import FacetGenerator from '../facets/facet-generator';
 import ProductList from '../product-list';
 import {Recommendations} from '../recommendation-list';
@@ -74,6 +75,10 @@ export default function SearchPage({
             instantProductsController={
               hydratedState?.controllers.instantProducts
             }
+          />
+          <BreadcrumbManager
+            staticState={staticState.controllers.breadcrumbManager.state}
+            controller={hydratedState?.controllers.breadcrumbManager}
           />
           <FacetGenerator
             staticState={staticState.controllers.facetGenerator.state}
