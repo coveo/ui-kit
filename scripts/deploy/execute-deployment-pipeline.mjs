@@ -5,6 +5,7 @@ import atomicReactJson from '../../packages/atomic-react/package.json' assert {t
 import atomicJson from '../../packages/atomic/package.json' assert {type: 'json'};
 import headlessJson from '../../packages/headless/package.json' assert {type: 'json'};
 import buenoJson from '../../packages/bueno/package.json' assert {type: 'json'};
+import rootJson from '../../package.json' assert {type: 'json'};
 
 const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
 
@@ -16,7 +17,7 @@ function getVersionComposants(version) {
     patch: parsedVersion?.patch,
   };
 }
-
+const root = getVersionComposants(rootJson.version);
 const bueno = getVersionComposants(buenoJson.version);
 const headless = getVersionComposants(headlessJson.version);
 const atomic = getVersionComposants(atomicJson.version);
@@ -24,6 +25,7 @@ const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
 console.log(execSync(`
   deployment-package package create --with-deploy \
+    --version ${root.major}.${root.minor}.${root.patch} \
     --resolve BUENO_MAJOR_VERSION=${bueno.major} \
     --resolve BUENO_MINOR_VERSION=${bueno.major}.${bueno.minor} \
     --resolve BUENO_PATCH_VERSION=${bueno.major}.${bueno.minor}.${bueno.patch} \
