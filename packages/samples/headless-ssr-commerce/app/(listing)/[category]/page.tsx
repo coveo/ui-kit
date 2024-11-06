@@ -14,7 +14,8 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 
-//TODO: add comments
+// This is a mapping of the Merchandising Hub urls to urls without slashes
+// In a real implementation, you would already have Merchandising Hub urls properly set up to match the website's structure
 const categoryMap: {[key: string]: string} = {
   'surf-accessories': 'surf-accessories',
   'accessories/towels': 'accessories-towels',
