@@ -31,6 +31,7 @@ export type ContextState<
 
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];
+  // TODO: KIT-3716 - Rename methods to controllers
   methods?: Omit<TController, 'state' | 'subscribe'>;
 };
 
