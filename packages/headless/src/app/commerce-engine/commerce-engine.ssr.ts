@@ -177,6 +177,12 @@ export function defineCommerceEngine<
   const buildFactory =
     <T extends SolutionType>(solutionType: T) =>
     async (...[buildOptions]: BuildParameters) => {
+      const logger = buildLogger(options.loggerOptions);
+      if (!getOptions().navigatorContextProvider) {
+        logger.warn(
+          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+        );
+      }
       const engine = buildSSRCommerceEngine(
         solutionType,
         buildOptions?.extend
@@ -203,12 +209,6 @@ export function defineCommerceEngine<
   ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: FetchStaticStateParameters) => {
-        const logger = buildLogger(options.loggerOptions);
-        if (!getOptions().navigatorContextProvider) {
-          logger.warn(
-            '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-          );
-        }
         const buildResult = await buildFactory(solutionType)(...params);
         const staticState = await fetchStaticStateFactory(
           solutionType
@@ -254,12 +254,6 @@ export function defineCommerceEngine<
   ) => HydrateStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: HydrateStaticStateParameters) => {
-        const logger = buildLogger(options.loggerOptions);
-        if (!getOptions().navigatorContextProvider) {
-          logger.warn(
-            '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
-          );
-        }
         const buildResult = await buildFactory(solutionType)(
           ...(params as BuildParameters)
         );
