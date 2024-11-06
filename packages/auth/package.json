@@ -1,6 +1,6 @@
 {
   "name": "@coveo/auth",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "description": "Functions to help authenticate with the Coveo platform.",
   "main": "./dist/auth.js",
   "module": "./dist/auth.esm.js",
@@ -21,7 +21,7 @@
     "clean": "rimraf -rf dist/*",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "e2e": "npm run e2e:saml",
     "e2e:saml": "vite manual-e2e/saml/"
   },
@@ -48,7 +48,7 @@
     "ts-jest": "29.2.3"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.9.0 || ^22.11.0"
   },
   "publishConfig": {
     "access": "public"

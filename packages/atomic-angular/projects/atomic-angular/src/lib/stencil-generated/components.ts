@@ -1389,6 +1389,28 @@ export declare interface AtomicProductLink extends Components.AtomicProductLink 
 
 
 @ProxyCmp({
+  inputs: ['delimiter', 'field', 'maxValuesToDisplay']
+})
+@Component({
+  selector: 'atomic-product-multi-value-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['delimiter', 'field', 'maxValuesToDisplay'],
+})
+export class AtomicProductMultiValueText {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicProductMultiValueText extends Components.AtomicProductMultiValueText {}
+
+
+@ProxyCmp({
   inputs: ['field']
 })
 @Component({
@@ -1893,14 +1915,14 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 
 @ProxyCmp({
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation']
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
 })
 @Component({
   selector: 'atomic-recs-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'result', 'stopPropagation'],
+  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation'],
 })
 export class AtomicRecsResult {
   protected el: HTMLElement;
