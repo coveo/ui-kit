@@ -1,3 +1,9 @@
+## 3.5.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
 ## 3.4.0 (2024-11-06)
 
 - feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
