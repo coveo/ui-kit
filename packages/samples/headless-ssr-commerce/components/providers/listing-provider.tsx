@@ -33,6 +33,14 @@ export default function ListingProvider({
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
           },
+          context: {
+            language: staticState.controllers.context.state.language,
+            country: staticState.controllers.context.state.country,
+            currency: staticState.controllers.context.state.currency,
+            view: {
+              url: staticState.controllers.context.state.view.url,
+            },
+          },
         },
       })
       .then(({engine, controllers}) => {
