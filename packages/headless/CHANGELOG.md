@@ -1,3 +1,7 @@
+## <small>3.8.1 (2024-11-06)</small>
+
+- chore(headless): move product-list ssr to its own directory (#4631) ([2eefb48](https://github.com/coveo/ui-kit/commits/2eefb48)), closes [#4631](https://github.com/coveo/ui-kit/issues/4631)
+
 ## 3.8.0 (2024-11-06)
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))

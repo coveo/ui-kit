@@ -1,3 +1,7 @@
+## 3.7.0 (2024-11-06)
+
+- feat(quantic): adjusted logic to support custom tabs in the quantic tab bar component (#4619) ([a395a3c](https://github.com/coveo/ui-kit/commits/a395a3c)), closes [#4619](https://github.com/coveo/ui-kit/issues/4619)
+
 ## 3.6.0 (2024-11-06)
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
