@@ -20,7 +20,7 @@ export default function Summary() {
       return null;
     }
 
-    // TODO: add query to summary state
+    // TODO: KIT-3719 - add query to summary state
     // return (
     //   <span>
     //     for <b>{state.query}</b>
