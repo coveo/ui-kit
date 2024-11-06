@@ -165,7 +165,7 @@ describe('AsyncInsightSearchThunkProcessor', () => {
     expect(processed.automaticallyCorrected).toBe(true);
   });
 
-  it('process properly when #queryCorrection is activated on the query˝', async () => {
+  it('process properly when #queryCorrection is activated on the query', async () => {
     const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
     const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
       request: buildMockInsightQueryRequest(),
