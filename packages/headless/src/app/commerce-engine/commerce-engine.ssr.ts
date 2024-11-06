@@ -17,6 +17,7 @@ import {
   EngineDefinition,
   EngineDefinitionOptions,
 } from '../commerce-ssr-engine/types/core-engine.js';
+import {buildLogger} from '../logger.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {composeFunction} from '../ssr-engine/common.js';
 import {createStaticState} from '../ssr-engine/common.js';
@@ -202,9 +203,9 @@ export function defineCommerceEngine<
   ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: FetchStaticStateParameters) => {
+        const logger = buildLogger(options.loggerOptions);
         if (!getOptions().navigatorContextProvider) {
-          // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-          console.warn(
+          logger.warn(
             '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
           );
         }
@@ -253,9 +254,9 @@ export function defineCommerceEngine<
   ) => HydrateStaticStateFunction = (solutionType: SolutionType) =>
     composeFunction(
       async (...params: HydrateStaticStateParameters) => {
+        const logger = buildLogger(options.loggerOptions);
         if (!getOptions().navigatorContextProvider) {
-          // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-          console.warn(
+          logger.warn(
             '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
           );
         }
