@@ -2,6 +2,7 @@ import invalidCustomSortConfig from '@salesforce/label/c.quantic_InvalidCustomSo
 import newest from '@salesforce/label/c.quantic_Newest';
 import oldest from '@salesforce/label/c.quantic_Oldest';
 import relevancy from '@salesforce/label/c.quantic_Relevancy';
+import sortBy from '@salesforce/label/c.quantic_SortBy';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -78,6 +79,7 @@ export default class QuanticSort extends LightningElement {
     newest,
     oldest,
     invalidCustomSortConfig,
+    sortBy,
   };
 
   connectedCallback() {
