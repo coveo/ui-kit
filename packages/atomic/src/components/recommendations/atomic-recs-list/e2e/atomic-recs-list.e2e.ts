@@ -85,6 +85,34 @@ test.describe('with a carousel', () => {
   });
 });
 
+// test.describe('with only one page of recommendations in the carousel', () => {
+//   test.beforeEach(async ({recsList}) => {
+//     await recsList.load({story: 'recs-as-carousel'});
+//     await recsList.hydrated.waitFor();
+//   });
+
+//   test('should not display forward and backward buttons', async ({
+//     recsList,
+//   }) => {
+//     await recsList.nextButton.click();
+
+//     await expect(recsList.indicators.nth(1)).toHaveAttribute(
+//       'part',
+//       'indicator active-indicator'
+//     );
+
+//     await expect(recsList.indicators.nth(2)).toHaveAttribute(
+//       'part',
+//       'indicator active-indicator'
+//     );
+
+//     await expect(recsList.indicators.nth(0)).toHaveAttribute(
+//       'part',
+//       'indicator active-indicator'
+//     );
+//   });
+// });
+
 test('with no recommendations returned by the API, should render placeholders', async ({
   recsList,
   page,
