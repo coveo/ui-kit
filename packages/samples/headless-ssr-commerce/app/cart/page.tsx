@@ -15,7 +15,17 @@ export default async function Search() {
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await searchEngineDefinition.fetchStaticState({
-    controllers: {cart: {initialState: {items}}},
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: 'https://sports.barca.group/cart',
+        },
+      },
+    },
   });
 
   return (
