@@ -361,6 +361,8 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(recommendation),
+      linkContent:
+        this.itemTemplateProvider.getLinkTemplateContent(recommendation),
       store: this.bindings.store,
       density: this.density,
       display: this.display,

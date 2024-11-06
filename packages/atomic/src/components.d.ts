@@ -2453,6 +2453,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8050,6 +8055,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
