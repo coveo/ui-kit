@@ -1,3 +1,20 @@
+## 3.10.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- feat(atomic,insight): update locales.json and insights.html to support viewed by customer (#4586) ([38fa9f7](https://github.com/coveo/ui-kit/commits/38fa9f7)), closes [#4586](https://github.com/coveo/ui-kit/issues/4586)
+- fix(atomic): add tooltip to insight tabs (#4596) ([2b7404f](https://github.com/coveo/ui-kit/commits/2b7404f)), closes [#4596](https://github.com/coveo/ui-kit/issues/4596)
+- fix(atomic): atomic-product layout in grid mode consistent on all screen sizes (#4527) ([94c445f](https://github.com/coveo/ui-kit/commits/94c445f)), closes [#4527](https://github.com/coveo/ui-kit/issues/4527)
+- fix(atomic): fix clicks for recommendation lists in grid display mode (#4623) ([38970c3](https://github.com/coveo/ui-kit/commits/38970c3)), closes [#4623](https://github.com/coveo/ui-kit/issues/4623)
+- fix(atomic): replace set polyfill in-house for size optimization (#4550) ([5d60308](https://github.com/coveo/ui-kit/commits/5d60308)), closes [#4550](https://github.com/coveo/ui-kit/issues/4550) [/#diff-6645f74803c2f8ab05a9005edf28232fd1942de4f1acc45c0d9f284f07f59833L7-R7](https://github.com///issues/diff-6645f74803c2f8ab05a9005edf28232fd1942de4f1acc45c0d9f284f07f59833L7-R7) [/#diff-6645f74803c2f8ab05a9005edf28232fd1942de4f1acc45c0d9f284f07f59833L182-R182](https://github.com///issues/diff-6645f74803c2f8ab05a9005edf28232fd1942de4f1acc45c0d9f284f07f59833L182-R182)
+- docs(atomic): generated answer update (#4632) ([9952c20](https://github.com/coveo/ui-kit/commits/9952c20)), closes [#4632](https://github.com/coveo/ui-kit/issues/4632) [/github.com/coveo/ui-kit/pull/4622/files#r1827700968](https://github.com//github.com/coveo/ui-kit/pull/4622/files/issues/r1827700968)
+- feat(atomic): add variable for collapsed rga height (#4622) ([5aa719f](https://github.com/coveo/ui-kit/commits/5aa719f)), closes [#4622](https://github.com/coveo/ui-kit/issues/4622)
+- feat(commerce): exclude unused location facets properties (#4574) ([0b25980](https://github.com/coveo/ui-kit/commits/0b25980)), closes [#4574](https://github.com/coveo/ui-kit/issues/4574)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(atomic): add tests + stories for atomic-commerce-product-list (#4486) ([49638b9](https://github.com/coveo/ui-kit/commits/49638b9)), closes [#4486](https://github.com/coveo/ui-kit/issues/4486)
+- test(atomic): atomic-commerce-search-box-instant-products (#4567) ([f222e89](https://github.com/coveo/ui-kit/commits/f222e89)), closes [#4567](https://github.com/coveo/ui-kit/issues/4567)
+
 ## 3.9.0 (2024-11-06)
 
 - [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
