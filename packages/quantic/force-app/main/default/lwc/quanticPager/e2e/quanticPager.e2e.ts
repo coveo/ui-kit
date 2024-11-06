@@ -13,10 +13,6 @@ useCaseTestCases.forEach((useCase) => {
 
   test.describe(`quantic pager ${useCase.label}`, () => {
     test.describe('when clicking the next page button', () => {
-      test.use({
-        options: {numberOfPages: 6},
-      });
-
       test('should trigger a new search and log analytics', async ({
         pager,
         search,

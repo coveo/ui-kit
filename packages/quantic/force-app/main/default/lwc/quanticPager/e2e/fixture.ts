@@ -1,6 +1,5 @@
 import {PagerObject} from './pagerObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
   searchRequestRegex,
@@ -8,6 +7,8 @@ import {
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
+
+const pagerUrl = 's/quantic-pager';
 
 interface PagerOptions {
   numberOfPages: number;
@@ -25,8 +26,6 @@ type QuanticPagerE2ESearchFixtures = QuanticPagerE2EFixtures & {
 type QuanticPagerE2EInsightFixtures = QuanticPagerE2ESearchFixtures & {
   insightSetup: InsightSetupObject;
 };
-
-const pagerUrl = 's/quantic-pager';
 
 export const testSearch = quanticBase.extend<QuanticPagerE2ESearchFixtures>({
   options: {},
