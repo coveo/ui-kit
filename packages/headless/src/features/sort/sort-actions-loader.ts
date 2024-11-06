@@ -6,6 +6,9 @@ import {SortCriterion} from './sort.js';
 
 /**
  * The sort action creators.
+ *
+ * @group Actions
+ * @category Sort
  */
 export interface SortActionCreators {
   /**
@@ -30,6 +33,9 @@ export interface SortActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category Sort
  */
 export function loadSortActions(engine: CoreEngine): SortActionCreators {
   engine.addReducers({sort});

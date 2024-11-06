@@ -21,6 +21,7 @@ export interface FieldSuggestionsGeneratorDefinition
 
 /**
  * Defines the `FieldSuggestionsGenerator` controller for the purpose of server-side rendering.
+ * @group Definers
  *
  * @returns The `FieldSuggestionsGenerator` controller definition.
  *

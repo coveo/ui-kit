@@ -51,6 +51,13 @@ export interface UpdateFetchOptions {
 
 /**
  * The `CaseInput` controller is responsible for setting and retrieving the value of a single field from the case creation form and optionally trigger Case Assist API requests.
+ *
+ * For example implementations, see the following [Coveo Quantic Case Assist components](https://docs.coveo.com/en/quantic/latest/reference/case-assist-components/):
+ * * [quanticCaseClassification.js](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticCaseClassification/quanticCaseClassification.js)
+ * * [quanticDocumentSuggestion](https://github.com/coveo/ui-kit/blob/master/packages/quantic/force-app/main/default/lwc/quanticDocumentSuggestion/quanticDocumentSuggestion.js)
+ *
+ * @group Controllers
+ * @category CaseInput
  */
 export interface CaseInput extends Controller {
   /**
@@ -66,6 +73,12 @@ export interface CaseInput extends Controller {
   state: CaseInputState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CaseInput` controller.
+ *
+ * @group Controllers
+ * @category CaseInput
+ */
 export interface CaseInputState {
   /**
    * The value of the case input.
@@ -79,6 +92,9 @@ export interface CaseInputState {
  * @param engine - The headless engine.
  * @param props - The configurable `CaseInput` controller properties.
  * @returns A `CaseInput` controller instance.
+ *
+ * @group Controllers
+ * @category CaseInput
  */
 export function buildCaseInput(
   engine: CaseAssistEngine,

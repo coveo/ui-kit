@@ -27,6 +27,9 @@ export type {
  * @param props - The configurable `Context` controller properties.
  *
  * @returns A `Context` controller instance.
+ *
+ * @object Controllers
+ * @category Context
  */
 export function buildContext(
   engine: CoreEngine,

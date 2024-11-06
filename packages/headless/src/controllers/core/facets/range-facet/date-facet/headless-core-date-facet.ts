@@ -62,6 +62,15 @@ export interface DateFacetProps {
 
 /**
  * The `DateFacet` controller makes it possible to create a facet with date ranges.
+ *
+ * Examples:
+ * - [date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/date-facet/date-facet.fn.tsx)
+ * - [relative-date-facet.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/relative-date-facet/relative-date-facet.fn.tsx)
+ *
+ * @document relative-date-format.md
+ *
+ * @group Controllers
+ * @category DateFacet
  * */
 export interface DateFacet extends Controller {
   /**
@@ -137,6 +146,9 @@ export interface DateFacet extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `DateFacet` controller.
+ *
+ * @group Controllers
+ * @category DateFacet
  */
 export interface DateFacetState {
   /**
@@ -176,6 +188,9 @@ export interface DateFacetState {
  * @param engine - The headless engine.
  * @param props - The configurable `DateFacet` controller properties.
  * @returns A `DateFacet` controller instance.
+ *
+ * @group Controllers
+ * @category DateFacet
  */
 export function buildCoreDateFacet(
   engine: CoreEngine,

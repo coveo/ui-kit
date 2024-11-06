@@ -12,6 +12,13 @@
       "groupSlug": "all"
     },
     {
+      "matchPackagePatterns": ["typedoc"],
+      "groupName": "typedoc",
+      "groupSlug": "typedoc",
+      "rangeStrategy": "replace",
+      "description": "Isolate typedoc updates to monitor for breaking changes"
+    },
+    {
       "matchPackagePatterns": [
         "^@angular/*",
         "^@angular-devkit/*",

@@ -30,6 +30,12 @@ export interface SearchBoxProps {
   options?: SearchBoxOptions;
 }
 
+/**
+ * The `SearchBox` controller allows users to enter a query and submit it to the Insight engine.
+ *
+ * @group Controllers
+ * @category SearchBox
+ */
 export interface SearchBox extends Controller {
   /**
    * Updates the search box text value and shows the suggestions for that value.
@@ -72,6 +78,9 @@ export interface SearchBox extends Controller {
  * @param engine - The insight engine.
  * @param props - The configurable `SearchBox` properties.
  * @returns A `SearchBox` controller instance.
+ *
+ * @group Controllers
+ * @category SearchBox
  */
 export function buildSearchBox(
   engine: InsightEngine,

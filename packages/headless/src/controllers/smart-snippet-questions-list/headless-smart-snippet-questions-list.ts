@@ -23,12 +23,20 @@ export type {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  */
 export interface SmartSnippetQuestionsListState
   extends CoreSmartSnippetQuestionsListState {}
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ *
+ * Example: [smart-snippet-questions-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/smart-snippet-questions-list/smart-snippet-questions-list.fn.tsx)
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  */
 export interface SmartSnippetQuestionsList
   extends CoreSmartSnippetQuestionsList {
@@ -103,6 +111,9 @@ export interface SmartSnippetQuestionsList
  * @param engine - The headless engine.
  * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns A `SmartSnippetQuestionsList` controller instance.
+ *
+ * @group Controllers
+ * @category SmartSnippetQuestionsList
  * */
 export function buildSmartSnippetQuestionsList(
   engine: SearchEngine,

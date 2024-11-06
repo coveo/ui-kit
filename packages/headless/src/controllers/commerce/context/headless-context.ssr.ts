@@ -16,6 +16,7 @@ export interface ContextDefinition
 
 /**
  * Defines a `Context` controller instance.
+ * @group Definers
  *
  * @returns The `Context` controller definition.
  *

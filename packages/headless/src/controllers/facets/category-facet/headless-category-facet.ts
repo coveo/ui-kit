@@ -71,6 +71,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
+ *
+ * @group Controllers
+ * @category CategoryFacet
  * */
 export function buildCategoryFacet(
   engine: SearchEngine,
