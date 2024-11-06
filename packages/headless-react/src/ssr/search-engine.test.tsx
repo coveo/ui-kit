@@ -20,7 +20,7 @@ import {
   MockInstance,
   afterEach,
 } from 'vitest';
-import {MissingEngineProviderError} from './common.js';
+import {MissingEngineProviderError} from '../errors.js';
 import {defineSearchEngine} from './search-engine.js';
 
 describe('Headless react SSR utils', () => {
