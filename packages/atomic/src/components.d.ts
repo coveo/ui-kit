@@ -1064,7 +1064,7 @@ export namespace Components {
          */
         "answerStyle": GeneratedAnswerStyle;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -6749,7 +6749,7 @@ declare namespace LocalJSX {
          */
         "answerStyle"?: GeneratedAnswerStyle;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
