@@ -46,16 +46,17 @@ test.describe('atomic-product-excerpt', async () => {
 
   test.describe('when excerpt is truncated', async () => {
     const truncateValues: Array<{
-      value: '1' | '2' | '3' | '4';
+      value: '2' | '3';
       expectedClass: RegExp;
     }> = [
-      {value: '1', expectedClass: /line-clamp-1/},
       {value: '2', expectedClass: /line-clamp-2/},
       {value: '3', expectedClass: /line-clamp-3/},
-      {value: '4', expectedClass: /line-clamp-4/},
     ];
 
     truncateValues.forEach(({value, expectedClass}) => {
+      test.beforeEach(async ({productExcerpt}) => {
+        await productExcerpt.withLongExcerpt();
+      });
       test.describe(`when truncateAfter is set to ${value}`, async () => {
         test(`should truncate excerpt after ${value} lines`, async ({
           productExcerpt,

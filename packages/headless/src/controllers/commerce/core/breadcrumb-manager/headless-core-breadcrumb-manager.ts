@@ -25,10 +25,7 @@ import {
   NumericFacetResponse,
   RegularFacetResponse,
 } from '../../../../features/commerce/facets/facet-set/interfaces/response.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -125,16 +122,10 @@ interface ActionCreators {
   toggleExcludeActionCreator?: ToggleActionCreator;
 }
 
-const facetTypeWithoutExcludeAction: FacetType = 'hierarchical';
-
 const actions: Record<FacetType, ActionCreators> = {
   regular: {
     toggleSelectActionCreator: toggleSelectFacetValue,
     toggleExcludeActionCreator: toggleExcludeFacetValue,
-  },
-  location: {
-    toggleSelectActionCreator: toggleSelectLocationFacetValue,
-    toggleExcludeActionCreator: toggleExcludeLocationFacetValue,
   },
   numericalRange: {
     toggleSelectActionCreator: toggleSelectNumericFacetValue,
@@ -144,7 +135,10 @@ const actions: Record<FacetType, ActionCreators> = {
     toggleSelectActionCreator: toggleSelectDateFacetValue,
     toggleExcludeActionCreator: toggleExcludeDateFacetValue,
   },
-  [facetTypeWithoutExcludeAction]: {
+  location: {
+    toggleSelectActionCreator: toggleSelectLocationFacetValue,
+  },
+  hierarchical: {
     toggleSelectActionCreator: deselectAllValuesInCoreFacet,
   },
 };
@@ -198,16 +192,19 @@ export function buildCoreBreadcrumbManager(
                 selection,
               })
             );
-            dispatch(
-              updateCoreFacetFreezeCurrentValues({
-                facetId: facet.facetId,
-                freezeCurrentValues: false,
-              })
-            );
+
+            if (facet.type !== 'location') {
+              dispatch(
+                updateCoreFacetFreezeCurrentValues({
+                  facetId: facet.facetId,
+                  freezeCurrentValues: false,
+                })
+              );
+            }
             dispatch(options.fetchProductsActionCreator());
           } else if (
             selection.state === 'excluded' &&
-            facet.type !== facetTypeWithoutExcludeAction
+            facet.type !== 'location'
           ) {
             dispatch(
               actions[facet.type].toggleExcludeActionCreator!({

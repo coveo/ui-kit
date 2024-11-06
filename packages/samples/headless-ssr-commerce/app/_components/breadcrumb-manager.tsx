@@ -5,6 +5,7 @@ import {
   DateFacetValue,
   CategoryFacetValue,
   RegularFacetValue,
+  LocationFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
 import {useBreadcrumbManager} from '../_lib/commerce-engine';
 
@@ -16,7 +17,8 @@ export default function BreadcrumbManager() {
       | CategoryFacetValue
       | RegularFacetValue
       | NumericFacetValue
-      | DateFacetValue,
+      | DateFacetValue
+      | LocationFacetValue,
     type: string
   ) => {
     switch (type) {
@@ -37,6 +39,7 @@ export default function BreadcrumbManager() {
           (value as DateFacetValue).end
         );
       default:
+        // TODO COMHUB-291 support location breadcrumb
         return null;
     }
   };
