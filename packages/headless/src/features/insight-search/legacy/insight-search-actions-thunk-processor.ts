@@ -180,6 +180,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       ...retried,
       response: {
         ...retried.response.success,
+        queryCorrections: originalSearchSuccessResponse.queryCorrections,
       },
       automaticallyCorrected: true,
       originalQuery,

@@ -164,4 +164,43 @@ describe('AsyncInsightSearchThunkProcessor', () => {
     });
     expect(processed.automaticallyCorrected).toBe(true);
   });
+
+  it('process properly when #queryCorrection is activated on the query˝', async () => {
+    const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
+    const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
+      request: buildMockInsightQueryRequest(),
+      mappings: initialSearchMappings(),
+    };
+
+    const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
+      results: [buildMockResult()],
+      queryCorrection: {
+        correctedQuery: 'bar',
+        originalQuery: 'foo',
+        corrections: [],
+      },
+    });
+
+    const fetched = {
+      response: {
+        success: originalResponseWithResultsAndChangedQuery,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: mappedRequest.request,
+    };
+
+    const processed = (await processor.process(
+      fetched
+    )) as ExecuteSearchThunkReturn;
+
+    expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
+    expect(config.extra.apiClient.query).not.toHaveBeenCalled();
+    expect(processed.response).toMatchObject(
+      originalResponseWithResultsAndChangedQuery
+    );
+    expect(processed.automaticallyCorrected).toBe(true);
+    expect(processed.originalQuery).toBe('foo');
+    expect(processed.queryExecuted).toBe('bar');
+  });
 });
