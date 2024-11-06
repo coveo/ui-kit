@@ -1,3 +1,8 @@
+## <small>2.0.2 (2024-11-06)</small>
+
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore: migrate auth as well (#4612) ([b9c70f3](https://github.com/coveo/ui-kit/commits/b9c70f3)), closes [#4612](https://github.com/coveo/ui-kit/issues/4612) [#4595](https://github.com/coveo/ui-kit/issues/4595)
+
 ## <small>2.0.1 (2024-09-24)</small>
 
 - chore(headless,atomic): add type "module" to atomic, atomic-react and headless (#4442) ([21896c3](https://github.com/coveo/ui-kit/commits/21896c3)), closes [#4442](https://github.com/coveo/ui-kit/issues/4442) [/github.com/coveo/ui-kit/pull/4449/files#diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87](https://github.com//github.com/coveo/ui-kit/pull/4449/files/issues/diff-75f80b97846615f5b074710648b8191f74aa4f00fd1536c45bc344b284ca8e87)

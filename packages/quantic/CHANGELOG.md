@@ -1,3 +1,8 @@
+## 3.4.0 (2024-11-06)
+
+- feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
 ## 3.3.0 (2024-10-30)
 
 - feat(quantic): added E2E and unit tests for insight notify trigger in quantic (#4528) ([a114213](https://github.com/coveo/ui-kit/commits/a114213)), closes [#4528](https://github.com/coveo/ui-kit/issues/4528)

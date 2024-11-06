@@ -1,3 +1,8 @@
+## <small>2.0.9 (2024-11-06)</small>
+
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
 ## <small>2.0.8 (2024-10-30)</small>
 
 - chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
