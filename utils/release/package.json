@@ -25,6 +25,7 @@
     "promote-npm-prod": "./promote-npm-tag-to-latest.mjs",
     "git-lock": "./git-lock.mjs",
     "bump": "./bump-package.mjs",
+    "bump:root": "./bump-root.mjs",
     "npm-publish": "./npm-publish-package.mjs",
     "git-publish-all": "./git-publish-all.mjs",
     "reify": "./reify.mjs",
