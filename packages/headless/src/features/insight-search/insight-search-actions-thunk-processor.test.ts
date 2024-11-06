@@ -203,4 +203,54 @@ describe('AsyncInsightSearchThunkProcessor', () => {
     expect(processed.originalQuery).toBe('foo');
     expect(processed.queryExecuted).toBe('bar');
   });
+
+  it('process properly when there are no results returned, there is a did you mean correction, and automatic correction is disabled', async () => {
+    const processor = new AsyncInsightSearchThunkProcessor<{}>({
+      ...config,
+      getState: vi.fn().mockReturnValue({
+        configuration: getConfigurationInitialState(),
+        search: buildMockSearchState({
+          results,
+          response: buildMockSearchResponse({results}),
+        }),
+        didYouMean: {
+          enableDidYouMean: true,
+          automaticallyCorrectQuery: false,
+        },
+      }),
+    });
+
+    const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
+      request: buildMockInsightQueryRequest(),
+      mappings: initialSearchMappings(),
+    };
+
+    const searchResponse = buildMockSearchResponse({
+      results: [],
+      queryCorrections: [
+        {
+          correctedQuery: 'bar',
+          wordCorrections: [
+            {correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'},
+          ],
+        },
+      ],
+    });
+
+    const fetched = {
+      response: {
+        success: searchResponse,
+      },
+      duration: 123,
+      queryExecuted: 'foo',
+      requestExecuted: mappedRequest.request,
+    };
+
+    const processed = (await processor.process(
+      fetched
+    )) as ExecuteSearchThunkReturn;
+
+    expect(processed.response).toMatchObject(searchResponse);
+    expect(config.extra.apiClient.query).not.toHaveBeenCalled();
+  });
 });
