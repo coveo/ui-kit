@@ -313,15 +313,12 @@ async function updateCommunityConfigFile(
 
 async function setCommunityBaseUrlAsEnvVariable(log, communityUrl) {
   const pathSegments = [__dirname, '..', '..', '.env'];
-
-  // Use path.join to create the full path without manually writing slashes
   const envFilePath = path.join(...pathSegments);
   const newEnvVariables = {
     BASE_URL: communityUrl,
   };
 
   updateEnvFile(envFilePath, newEnvVariables);
-  log('process env for base url for configuration file 2');
 }
 
 async function authorizeDevOrg(log: StepLogger, options: Options) {
