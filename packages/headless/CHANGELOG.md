@@ -1,3 +1,9 @@
+## 2.80.5 (2024-11-07)
+
+### Bug Fixes
+
+- **headless:** ensure each folded result keep a reference of its 'source' searchId V2 ([#4629](https://github.com/coveo/ui-kit/issues/4629)) ([97bd35c](https://github.com/coveo/ui-kit/commits/97bd35c816d59b88790fec1fa4859f4b4cc861ca)), closes [#4628](https://github.com/coveo/ui-kit/issues/4628)
+
 ## 2.80.4 (2024-10-23)
 
 ## 2.80.3 (2024-10-22)

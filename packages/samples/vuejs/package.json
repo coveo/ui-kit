@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "vue": "^3.4.15",
-    "@coveo/atomic": "2.78.4"
+    "@coveo/atomic": "2.79.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.3",

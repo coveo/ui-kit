@@ -1,3 +1,9 @@
+## 2.28.5 (2024-11-07)
+
+### Bug Fixes
+
+- **atomic:** fix clicks for recommendation lists in grid display mode ([#4634](https://github.com/coveo/ui-kit/issues/4634)) ([b65b5c7](https://github.com/coveo/ui-kit/commits/b65b5c729606797d5e8ffbca39266c929e2b94b5))
+
 ## 2.28.4 (2024-10-23)
 
 ## 2.28.3 (2024-10-22)

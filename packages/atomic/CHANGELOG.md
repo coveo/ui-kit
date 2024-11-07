@@ -1,3 +1,13 @@
+# 2.79.0 (2024-11-07)
+
+### Bug Fixes
+
+- **atomic:** fix clicks for recommendation lists in grid display mode ([#4634](https://github.com/coveo/ui-kit/issues/4634)) ([b65b5c7](https://github.com/coveo/ui-kit/commits/b65b5c729606797d5e8ffbca39266c929e2b94b5))
+
+### Features
+
+- **atomic:** add variable for collapsed rga height ([#4633](https://github.com/coveo/ui-kit/issues/4633)) ([5312b88](https://github.com/coveo/ui-kit/commits/5312b88f8e797a9864e9fc837aff35f3f751e13f))
+
 ## 2.78.4 (2024-10-23)
 
 ### Bug Fixes
