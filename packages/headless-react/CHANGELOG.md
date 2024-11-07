@@ -1,3 +1,7 @@
+## 2.1.0 (2024-11-06)
+
+- feat(headless SSR): add hooks for ssr react commerce (#4614) ([7936561](https://github.com/coveo/ui-kit/commits/7936561)), closes [#4614](https://github.com/coveo/ui-kit/issues/4614)
+
 ## <small>2.0.11 (2024-11-06)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
