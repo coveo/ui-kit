@@ -413,6 +413,7 @@ export class AtomicCommerceRecommendationList
     }
     return (
       <Fragment>
+        {this.renderHeading()}
         {this.shouldRenderPagination ? (
           <Carousel
             bindings={this.bindings}
