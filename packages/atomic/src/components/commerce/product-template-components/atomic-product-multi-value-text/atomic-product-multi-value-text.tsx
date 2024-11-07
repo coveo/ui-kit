@@ -16,6 +16,8 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
 import {ProductContext} from '../product-template-decorators';
 
 /**
+ * @alpha
+ *
  * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
  * @part product-multi-value-text-list - The list of field values.
  * @part product-multi-value-text-separator - The separator to display between each of the field values.
