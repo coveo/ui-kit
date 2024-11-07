@@ -1,5 +1,6 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
+import ContextDropdown from '@/components/context-dropdown';
 import SearchProvider from '@/components/providers/search-provider';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
@@ -34,6 +35,8 @@ export default async function Search() {
       navigatorContext={navigatorContext.marshal}
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
+        <ContextDropdown />
+
         <Cart />
       </div>
     </SearchProvider>

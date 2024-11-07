@@ -1,4 +1,5 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
+import ContextDropdown from '@/components/context-dropdown';
 import ProductPage from '@/components/pages/product-page';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
@@ -34,6 +35,7 @@ export default async function ProductDescriptionPage({
   return (
     <>
       <h2>Product description page</h2>
+      <ContextDropdown />
       <Suspense fallback={<p>Loading...</p>}>
         <ProductPage
           staticState={staticState}

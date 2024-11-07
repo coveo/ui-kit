@@ -1,6 +1,7 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
+import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ProductList from '@/components/product-list';
@@ -57,6 +58,7 @@ export default async function Listing({params}: {params: {category: string}}) {
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ContextDropdown />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
