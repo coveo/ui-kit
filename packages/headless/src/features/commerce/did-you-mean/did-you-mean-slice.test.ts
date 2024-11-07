@@ -1,7 +1,6 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {emptyNextCorrection} from '../../did-you-mean/did-you-mean-state.js';
 import {executeSearch} from '../search/search-actions.js';
-import {applyCorrection} from './did-you-mean-actions.js';
 import {didYouMeanReducer} from './did-you-mean-slice.js';
 import {
   getDidYouMeanInitialState,
@@ -150,16 +149,6 @@ describe('did you mean slice', () => {
           expect(newState.queryCorrection.wordCorrections).toEqual([]);
         });
       });
-    });
-  });
-
-  describe('on #applyCorrection', () => {
-    it('should set #state.wasCorrectedTo to the payload', () => {
-      const newState = didYouMeanReducer(state, {
-        type: applyCorrection.type,
-        payload: 'black camera',
-      });
-      expect(newState.wasCorrectedTo).toBe('black camera');
     });
   });
 });
