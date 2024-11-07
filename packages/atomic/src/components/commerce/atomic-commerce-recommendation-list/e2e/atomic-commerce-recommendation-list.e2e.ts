@@ -89,9 +89,8 @@ test.describe('with a carousel', () => {
 
 test.describe('when there are no enough recommendations for multiple pages', () => {
   test.beforeEach(async ({recommendationList, page}) => {
-    await recommendationList.nRecommendations(3);
-    await recommendationList.load({story: 'recs-as-carousel'});
-    await recommendationList.hydrated.waitFor();
+    await recommendationList.nRecommendations(1);
+    await recommendationList.load({story: 'as-carousel'});
     await page.waitForLoadState('networkidle');
   });
 
