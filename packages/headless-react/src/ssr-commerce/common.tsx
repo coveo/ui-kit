@@ -62,7 +62,7 @@ function buildControllerHook<
     );
     const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
-    const controller = useMemo(() => {
+    const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
@@ -75,7 +75,7 @@ function buildControllerHook<
         'state' | 'subscribe'
       >;
     }, [ctx, key]);
-    return {state, controller};
+    return {state, methods};
   };
 }
 

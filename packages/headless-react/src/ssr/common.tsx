@@ -66,7 +66,7 @@ function buildControllerHook<
         typeof member === 'function' ? member.bind(controller) : member
       ) as Omit<typeof controller, 'state' | 'subscribe'>;
     }, [ctx]);
-    return {state, methods}; // TODO: KIT-3716 - Rename methods to controllers
+    return {state, methods};
   };
 }
 
