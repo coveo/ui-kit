@@ -129,23 +129,23 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       return null;
     }
 
-    const shouldExecuteClassicDidYouMeanAutoCorrection =
+    const shouldExecuteLegacyDidYouMeanAutoCorrection =
       results.length === 0 && queryCorrections && queryCorrections.length !== 0;
 
-    const shouldExecuteModernDidYouMeanAutoCorrection =
+    const shouldExecuteNextDidYouMeanAutoCorrection =
       !isNullOrUndefined(queryCorrection) &&
       !isNullOrUndefined(queryCorrection.correctedQuery);
 
     const shouldExitWithNoAutoCorrection =
-      !shouldExecuteClassicDidYouMeanAutoCorrection &&
-      !shouldExecuteModernDidYouMeanAutoCorrection;
+      !shouldExecuteLegacyDidYouMeanAutoCorrection &&
+      !shouldExecuteNextDidYouMeanAutoCorrection;
 
     if (shouldExitWithNoAutoCorrection) {
       return null;
     }
-    const processedDidYouMean = shouldExecuteClassicDidYouMeanAutoCorrection
+    const processedDidYouMean = shouldExecuteLegacyDidYouMeanAutoCorrection
       ? await this.processLegacyDidYouMeanAutoCorrection(fetched)
-      : this.processModernDidYouMeanAutoCorrection(fetched);
+      : this.processNextDidYouMeanAutoCorrection(fetched);
 
     this.logOriginalAnalyticsQueryBeforeAutoCorrection(fetched, mappedRequest);
     this.dispatch(snapshot(extractHistory(this.getState())));
@@ -188,7 +188,7 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
     };
   }
 
-  private processModernDidYouMeanAutoCorrection(
+  private processNextDidYouMeanAutoCorrection(
     originalFetchedResponse: FetchedResponse
   ): ExecuteSearchThunkReturn {
     const successResponse = this.getSuccessResponse(originalFetchedResponse)!;

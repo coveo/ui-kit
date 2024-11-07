@@ -407,7 +407,7 @@ describe('insight search request', () => {
     ).toBe(true);
   });
 
-  it('should #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is true', async () => {
+  it('should enable #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is true', async () => {
     state.didYouMean.enableDidYouMean = true;
     state.didYouMean.queryCorrectionMode = 'next';
     state.didYouMean.automaticallyCorrectQuery = true;
