@@ -5,7 +5,7 @@
   </template>
   <template lwc:else>
     <template if:false={hideSort}>
-      <template if:true={shouldDisplaySortByTitle}>
+      <template lwc:if={shouldDisplaySortByTitle}>
         <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
           <div data-cy="filters-title" class="slds-text-heading_small">
             {labels.sortBy}
@@ -14,7 +14,7 @@
       </template>
       <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
-          <c-quantic-sort class="quanticSort" engine-id={engineId}>
+          <c-quantic-sort class="quanticSort" engine-id={engineId} variant="refineModal">
             <template for:each={sortOptions} for:item="sortOption">
               <c-quantic-sort-option
                 key={sortOption.value}

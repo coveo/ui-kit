@@ -41,6 +41,12 @@ import {LightningElement, track, api} from 'lwc';
 
 export default class QuanticSort extends LightningElement {
   /**
+   * The sort variant.
+   * @api
+   * @type {'default'|'refineModal'}
+   */
+  @api variant = 'default';
+  /**
    * The ID of the engine instance the component registers to.
    * @api
    * @type {string}
@@ -80,6 +86,17 @@ export default class QuanticSort extends LightningElement {
     oldest,
     invalidCustomSortConfig,
     sortBy,
+  };
+
+  variants = {
+    default: {
+      name: 'default',
+      label: sortBy,
+    },
+    refineModal: {
+      name: 'refineModal',
+      label: undefined,
+    },
   };
 
   connectedCallback() {
@@ -255,6 +272,16 @@ export default class QuanticSort extends LightningElement {
     return this.hasInitializationError || !!this.errorMessage;
   }
 
+  get sortContainerCSSClass() {
+    return this.variant === this.variants.refineModal.name
+      ? 'sort__container-refine'
+      : 'sort__container';
+  }
+
+  get isVariantRefineModal() {
+    return this.variant === this.variants.refineModal.name;
+  }
+
   /**
    * Returns an array of custom sort options passed via slots.
    * @returns {SortOption[]} The specified custom sort options.
@@ -265,5 +292,9 @@ export default class QuanticSort extends LightningElement {
       // @ts-ignore
       ({label, value, criterion}) => ({label, value, criterion})
     );
+  }
+
+  get label() {
+    return this.variants[this.variant].label;
   }
 }

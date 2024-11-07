@@ -282,7 +282,7 @@ export default class QuanticRefineModalContent extends LightningElement {
   }
 
   get shouldDisplaySortByTitle() {
-    return this.sortData.length > 0 && !this.hideSort;
+    return this.sortData && !this.hideSort;
   }
 
   /**
