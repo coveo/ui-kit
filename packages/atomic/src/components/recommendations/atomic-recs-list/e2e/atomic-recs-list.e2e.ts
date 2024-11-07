@@ -85,33 +85,22 @@ test.describe('with a carousel', () => {
   });
 });
 
-// test.describe('with only one page of recommendations in the carousel', () => {
-//   test.beforeEach(async ({recsList}) => {
-//     await recsList.load({story: 'recs-as-carousel'});
-//     await recsList.hydrated.waitFor();
-//   });
+test.describe('when there are no enough recommendations for multiple pages', () => {
+  test.beforeEach(async ({recsList, page}) => {
+    await recsList.nRecommendations(3);
+    await recsList.load({story: 'recs-as-carousel'});
+    await recsList.hydrated.waitFor();
+    await page.waitForLoadState('networkidle');
+  });
 
-//   test('should not display forward and backward buttons', async ({
-//     recsList,
-//   }) => {
-//     await recsList.nextButton.click();
-
-//     await expect(recsList.indicators.nth(1)).toHaveAttribute(
-//       'part',
-//       'indicator active-indicator'
-//     );
-
-//     await expect(recsList.indicators.nth(2)).toHaveAttribute(
-//       'part',
-//       'indicator active-indicator'
-//     );
-
-//     await expect(recsList.indicators.nth(0)).toHaveAttribute(
-//       'part',
-//       'indicator active-indicator'
-//     );
-//   });
-// });
+  test('should not display forward and backward buttons', async ({
+    recsList,
+  }) => {
+    await expect(recsList.nextButton).not.toBeVisible();
+    await expect(recsList.prevButton).not.toBeVisible();
+    await expect(recsList.indicators.first()).not.toBeVisible();
+  });
+});
 
 test('with no recommendations returned by the API, should render placeholders', async ({
   recsList,
