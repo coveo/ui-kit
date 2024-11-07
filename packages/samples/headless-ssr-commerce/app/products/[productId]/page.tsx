@@ -3,6 +3,7 @@ import ContextDropdown from '@/components/context-dropdown';
 import ProductPage from '@/components/pages/product-page';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 import {Suspense} from 'react';
 
@@ -23,9 +24,9 @@ export default async function ProductDescriptionPage({
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
         view: {
           url: `https://sports.barca.group/products/${params.productId}`,
         },

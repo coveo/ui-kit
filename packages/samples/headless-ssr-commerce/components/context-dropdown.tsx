@@ -1,8 +1,16 @@
 'use client';
 
-import {useContext} from '@/lib/commerce-engine';
-import {ContextOptions} from '@coveo/headless-react/ssr-commerce';
+import {useContext, useEngine} from '@/lib/commerce-engine';
+import {
+  CommerceEngine,
+  ContextOptions,
+  loadProductListingActions,
+  loadSearchActions,
+} from '@coveo/headless-react/ssr-commerce';
 
+// A hardcoded list of storefront associations for switching app context by language, country, and currency.
+// Found in the admin console under "Storefront Associations," this list is static for demonstration purposes.
+// In a real application, these values would likely come from sources like environment variables or an API.
 const storefrontAssociations = [
   'en-CA-CAD',
   'fr-CA-CAD',
@@ -10,21 +18,18 @@ const storefrontAssociations = [
   'en-US-USD',
 ];
 
-export default function ContextDropdown() {
+export default function ContextDropdown({
+  useCase,
+}: {
+  useCase?: 'listing' | 'search';
+}) {
   const {state, controller} = useContext();
-  // const engine = useEngine();
-  // const {executeSearch} = loadSearchActions(engine as CommerceEngine);
-  // const {fetchProductListing} = loadProductListingActions(
-  //   engine as CommerceEngine
-  // );
-  // const {fetchProductListing} = loadProductListingActions(
-  //   engine as CommerceEngine
-  // );
+  const engine = useEngine();
 
   return (
     <div>
-      <p>AAA</p>
-      Context slider {state.country} {state.currency} {state.language}
+      <p></p>
+      Context dropdown :
       <select
         value={`${state.language}-${state.country}-${state.currency}`}
         onChange={(e) => {
@@ -32,8 +37,17 @@ export default function ContextDropdown() {
           controller?.setLanguage(language);
           controller?.setCountry(country);
           controller?.setCurrency(currency as ContextOptions['currency']);
-          // engine?.dispatch(executeSearch());
-          // engine?.dispatch(fetchProductListing());
+
+          useCase === 'search'
+            ? engine?.dispatch(
+                loadSearchActions(engine as CommerceEngine).executeSearch()
+              )
+            : useCase === 'listing' &&
+              engine?.dispatch(
+                loadProductListingActions(
+                  engine as CommerceEngine
+                ).fetchProductListing()
+              );
         }}
       >
         {storefrontAssociations.map((association) => (
@@ -42,7 +56,7 @@ export default function ContextDropdown() {
           </option>
         ))}
       </select>
-      ;
+      <p></p>
     </div>
   );
 }

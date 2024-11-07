@@ -5,10 +5,7 @@ import {
   ListingHydratedState,
   ListingStaticState,
 } from '@/lib/commerce-engine';
-import {
-  loadSearchActions,
-  NavigatorContext,
-} from '@coveo/headless-react/ssr-commerce';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 
 interface ListingPageProps {
@@ -41,9 +38,6 @@ export default function ListingProvider({
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-        engine.addReducers({});
-        const {executeSearch} = loadSearchActions(engine);
-        engine.dispatch(executeSearch());
         // Refreshing recommendations in the browser after hydrating the state in the client-side
         // Recommendation refresh in the server is not supported yet.
         // controllers.popularBoughtRecs.refresh(); // FIXME: does not work

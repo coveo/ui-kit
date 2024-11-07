@@ -1,13 +1,11 @@
-'use server';
+import {ContextState} from '@coveo/headless-react/ssr-commerce';
 
-import {ContextOptions} from '@coveo/headless/ssr-commerce';
-import {cookies} from 'next/headers';
-
-export async function getContext() {
-  return {
-    language: cookies().get('language')?.value || 'en',
-    country: cookies().get('country')?.value || 'US',
-    currency:
-      (cookies().get('currency')?.value as ContextOptions['currency']) || 'USD',
-  };
-}
+export const defaultContext: {
+  language: string;
+  country: string;
+  currency: ContextState['currency'];
+} = {
+  language: 'en',
+  country: 'US',
+  currency: 'USD',
+};

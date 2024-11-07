@@ -12,6 +12,7 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 
@@ -43,9 +44,9 @@ export default async function Listing({params}: {params: {category: string}}) {
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
         view: {
           url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
         },
@@ -58,7 +59,7 @@ export default async function Listing({params}: {params: {category: string}}) {
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <ContextDropdown />
+      <ContextDropdown useCase="listing" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
