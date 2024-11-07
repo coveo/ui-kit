@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["ES2023"],
+    "lib": ["DOM", "ES2023"],
     "module": "node16",
     "target": "ES2022",
     "declaration": false,

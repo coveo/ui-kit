@@ -29,6 +29,8 @@ type CommerceEngineConfig = CommerceEngineDefinitionOptions<
 >;
 
 export default {
+  // By default, the logger level is set to 'warn'. This level may not provide enough information for some server-side errors. To get more detailed error messages, set the logger level to a more verbose level, such as 'debug'.
+  // loggerOptions: {level: 'debug'},
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
     context: {
