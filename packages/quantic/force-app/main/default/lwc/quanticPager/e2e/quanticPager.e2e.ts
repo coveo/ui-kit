@@ -20,7 +20,7 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickNextPageButton();
         const response = await search.waitForSearchResponse();
         const {firstResult} = await response.request().postDataJSON();
-        await expect(firstResult).toBe(numberOfResultsPerPage);
+        expect(firstResult).toBe(numberOfResultsPerPage);
         await pager.waitForPagerNextUaAnalytics();
       });
     });
@@ -36,7 +36,7 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickPreviousPageButton();
         const response = await search.waitForSearchResponse();
         const {firstResult} = await response.request().postDataJSON();
-        await expect(firstResult).toBe(0);
+        expect(firstResult).toBe(0);
         await pager.waitForPagerPreviousUaAnalytics();
       });
     });
@@ -50,9 +50,7 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickPageNumberButton(examplePage);
         const response = await search.waitForSearchResponse();
         const {firstResult} = await response.request().postDataJSON();
-        await expect(firstResult).toBe(
-          numberOfResultsPerPage * (examplePage - 1)
-        );
+        expect(firstResult).toBe(numberOfResultsPerPage * (examplePage - 1));
         await pager.waitForPagerNumberUaAnalytics();
       });
     });
