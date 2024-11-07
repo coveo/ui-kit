@@ -135,6 +135,7 @@ function ensureIsNotCoveoPackage(file) {
  * @throws {PackageJsonChangeError} If the file is 'package.json' or 'package-lock.json'.
  */
 function ensureIsNotPackageJsonOrPackageLockJson(file) {
+  console.log(file);
   if (file.includes('package.json') || file.includes('package-lock.json')) {
     throw new PackageJsonChangeError(file);
   }
@@ -176,14 +177,17 @@ const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputNameTestsToRun = process.argv[2];
 const outputNameShardIndex = process.argv[3];
 const outputNameShardTotal = process.argv[4];
+const runAllTests = process.argv[5] === 'true';
 const projectRoot = process.env.projectRoot;
 const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
 try {
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
-  const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
-  if (testsToRun === '') {
+  const testsToRun = runAllTests
+    ? testFiles.join(' ')
+    : determineTestFilesToRun(changedFiles, testDependencies);
+  if (testsToRun === '' && !runAllTests) {
     throw new NoRelevantChangesError();
   }
   const maximumShards = parseInt(process.env.maximumShards, 10);
