@@ -19,7 +19,6 @@ export default async function Search() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
-  const context = await getContext();
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
