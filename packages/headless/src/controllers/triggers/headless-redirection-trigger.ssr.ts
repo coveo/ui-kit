@@ -14,6 +14,7 @@ export interface RedirectionTriggerDefinition
 
 /**
  * Defines a `RedirectionTrigger` controller instance.
+ * @group Definers
  *
  * @returns The `RedirectionTrigger` controller definition.
  * */

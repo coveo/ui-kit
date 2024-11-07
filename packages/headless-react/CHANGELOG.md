@@ -1,3 +1,29 @@
+## 2.1.0 (2024-11-06)
+
+- feat(headless SSR): add hooks for ssr react commerce (#4614) ([7936561](https://github.com/coveo/ui-kit/commits/7936561)), closes [#4614](https://github.com/coveo/ui-kit/issues/4614)
+
+## <small>2.0.11 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
+## <small>2.0.10 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
+## <small>2.0.9 (2024-11-06)</small>
+
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
+## <small>2.0.8 (2024-10-30)</small>
+
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+
 ## <small>2.0.4 (2024-09-25)</small>
 
 - chore: eliminate network calls in npm test (#4453) ([c6393a9](https://github.com/coveo/ui-kit/commits/c6393a9)), closes [#4453](https://github.com/coveo/ui-kit/issues/4453)

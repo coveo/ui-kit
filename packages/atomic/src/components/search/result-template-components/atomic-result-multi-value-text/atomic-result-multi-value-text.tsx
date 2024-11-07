@@ -118,13 +118,7 @@ export class AtomicResultMultiText {
   }
 
   private getNumberOfValuesToDisplay(values: string[]) {
-    if (values.length <= this.maxValuesToDisplay) {
-      return values.length;
-    }
-    if (this.maxValuesToDisplay < 2) {
-      return this.maxValuesToDisplay;
-    }
-    return Math.min(values.length - 2, this.maxValuesToDisplay);
+    return Math.min(values.length, this.maxValuesToDisplay);
   }
 
   private renderValue(value: string) {

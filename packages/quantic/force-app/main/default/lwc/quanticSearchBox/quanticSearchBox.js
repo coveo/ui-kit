@@ -66,6 +66,13 @@ export default class QuanticSearchBox extends LightningElement {
    * @defaultValue false
    */
   @api disableRecentQueries = false;
+  /**
+   * Whether to keep all active query filters when the end user submits a new query from the search box.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api keepFiltersOnSearch = false;
 
   /** @type {SearchBoxState} */
   @track state;
@@ -100,6 +107,7 @@ export default class QuanticSearchBox extends LightningElement {
             close: '</b>',
           },
         },
+        clearFilters: !this.keepFiltersOnSearch,
       },
     });
 

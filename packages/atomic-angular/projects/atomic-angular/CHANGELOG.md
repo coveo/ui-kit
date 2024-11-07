@@ -1,3 +1,30 @@
+## <small>3.2.3 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- fix(atomic): fix clicks for recommendation lists in grid display mode (#4623) ([38970c3](https://github.com/coveo/ui-kit/commits/38970c3)), closes [#4623](https://github.com/coveo/ui-kit/issues/4623)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## <small>3.2.2 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- fix(atomic): fix clicks for recommendation lists in grid display mode (#4623) ([38970c3](https://github.com/coveo/ui-kit/commits/38970c3)), closes [#4623](https://github.com/coveo/ui-kit/issues/4623)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## <small>3.2.1 (2024-11-06)</small>
+
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- fix(atomic): fix clicks for recommendation lists in grid display mode (#4623) ([38970c3](https://github.com/coveo/ui-kit/commits/38970c3)), closes [#4623](https://github.com/coveo/ui-kit/issues/4623)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## 3.2.0 (2024-10-30)
+
+- feat(atomic): support highlights in atomic-product-description (#4541) ([5c235a8](https://github.com/coveo/ui-kit/commits/5c235a8)), closes [#4541](https://github.com/coveo/ui-kit/issues/4541)
+- fix(atomic-angular): add @Prop decorator to @MapProp props so they are generated in the angular-outp ([dc2faaf](https://github.com/coveo/ui-kit/commits/dc2faaf)), closes [#4548](https://github.com/coveo/ui-kit/issues/4548)
+- chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)
+
 ## 3.1.0 (2024-09-24)
 
 - feat(atomic): add tab support for atomic-generated-answer (#4285) ([744fb61](https://github.com/coveo/ui-kit/commits/744fb61)), closes [#4285](https://github.com/coveo/ui-kit/issues/4285)

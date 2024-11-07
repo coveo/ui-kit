@@ -9,6 +9,7 @@ export interface TabDefinition
 
 /**
  * Defines a `Tab` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Tab` properties.
  * @returns The `Tab` controller definition.

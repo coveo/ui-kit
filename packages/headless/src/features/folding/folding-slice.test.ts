@@ -167,6 +167,7 @@ describe('folding slice', () => {
         collectionId: results[0].raw.collection!,
         results,
         rootResult,
+        searchUid: 'some-search-uid',
       });
     }
 
@@ -206,6 +207,30 @@ describe('folding slice', () => {
           } as ClientThunkExtraArguments<SearchAPIClient>
         );
       };
+
+      it('when a fetchPage fulfilled is received, new results should contain the latest search #searchUid', () => {
+        const indexedResults = buildMockResultsFromHierarchy(
+          'thread',
+          testThreadHierarchy
+        );
+        const rootResult = emulateAPIFolding(indexedResults);
+        const response = {
+          ...buildMockSearchResponse({results: [rootResult]}),
+          searchUid: 'a_new_id',
+        };
+        const search = buildMockSearch({
+          response,
+        });
+
+        const finalState = foldingReducer(
+          state,
+          fetchMoreResults.fulfilled(search, '')
+        );
+
+        expect(finalState.collections.thread.children[0].result.searchUid).toBe(
+          'a_new_id'
+        );
+      });
 
       it('uses #cq with correct expression to obtain the full collection', async () => {
         await doLoadCollection();

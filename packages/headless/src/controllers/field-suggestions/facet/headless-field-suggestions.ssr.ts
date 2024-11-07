@@ -13,6 +13,7 @@ export interface FieldSuggestionsDefinition
 
 /**
  * Defines a `FieldSuggestions` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `FieldSuggestions` properties.
  * @returns The `FieldSuggestions` controller definition.

@@ -38,6 +38,9 @@ export type RegularFacetState = Omit<
 /**
  * The `RegularFacet` sub-controller offers a high-level programming interface for implementing a regular commerce
  * facet UI component.
+ *
+ * @group Sub-controllers
+ * @category RegularFacet
  */
 export type RegularFacet = CoreCommerceFacet<
   FacetValueRequest,

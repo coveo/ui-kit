@@ -56,6 +56,9 @@ export type {
  * @param engine - The insight engine.
  * @param props - The configurable `CategoryFacet` properties.
  * @returns A `CategoryFacet` controller instance.
+ *
+ * @group Controllers
+ * @category CategoryFacet
  * */
 export function buildCategoryFacet(
   engine: InsightEngine,

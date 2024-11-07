@@ -9,6 +9,7 @@ export interface DidYouMeanDefinition
 
 /**
  * Defines a `DidYouMean` controller instance.
+ * @group Definers
  *
  * @returns The `DidYouMean` controller definition.
  * */

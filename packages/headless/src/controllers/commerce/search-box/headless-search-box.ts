@@ -66,6 +66,9 @@ export interface SearchBoxProps {
 /**
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI component
  * with [highlighting for query suggestions](https://docs.coveo.com/en/headless/latest/usage/highlighting/).
+ *
+ * @group Buildable controllers
+ * @category SearchBox
  */
 export type SearchBox = Omit<CoreSearchBox, 'submit'> & {
   /**
@@ -80,6 +83,9 @@ export type SearchBox = Omit<CoreSearchBox, 'submit'> & {
  * @param engine - The commerce headless engine.
  * @param props - The configurable `SearchBox` properties.
  * @returns A `SearchBox` controller instance.
+ *
+ * @group Buildable controllers
+ * @category SearchBox
  */
 export function buildSearchBox(
   engine: CommerceEngine,

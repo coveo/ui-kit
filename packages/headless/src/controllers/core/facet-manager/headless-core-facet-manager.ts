@@ -26,6 +26,11 @@ export interface FacetManagerPayload<T> {
 
 /**
  * The `FacetManager` controller helps reorder facets to match the most recent search response.
+ *
+ * Example: [facet-manager.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx)
+ *
+ * @group Controllers
+ * @category FacetManager
  */
 export interface FacetManager extends Controller {
   /**
@@ -42,6 +47,12 @@ export interface FacetManager extends Controller {
   state: FacetManagerState;
 }
 
+/**
+ * A scoped and simplified part of the headless engine relevant to the `FacetManager` controller.
+ *
+ * @group Controllers
+ * @category FacetManager
+ */
 export interface FacetManagerState {
   /**
    * The facet ids sorted in the same order as the latest response.
@@ -54,6 +65,9 @@ export interface FacetManagerState {
  *
  * @param engine - The headless engine.
  * @returns The `FacetManager` controller instance.
+ *
+ * @group Controllers
+ * @category FacetManager
  */
 export function buildCoreFacetManager(engine: CoreEngine): FacetManager {
   if (!loadFacetManagerReducers(engine)) {

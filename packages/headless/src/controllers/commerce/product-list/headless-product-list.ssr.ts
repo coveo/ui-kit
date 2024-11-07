@@ -4,13 +4,13 @@ import {
   SolutionType,
   SubControllerDefinitionWithoutProps,
 } from '../../../app/commerce-ssr-engine/types/common.js';
-import {buildSearch, Search} from '../search/headless-search.js';
 import {
   ProductListing,
   buildProductListing,
-} from './headless-product-listing.js';
+} from '../product-listing/headless-product-listing.js';
+import {buildSearch, Search} from '../search/headless-search.js';
 
-export type {ProductListingState as ProductListState} from './headless-product-listing.js';
+export type {ProductListingState as ProductListState} from '../product-listing/headless-product-listing.js';
 export type ProductList = Pick<
   ProductListing | Search,
   'state' | 'subscribe' | 'interactiveProduct'
@@ -18,6 +18,7 @@ export type ProductList = Pick<
 
 /**
  * Defines a `ProductList` controller instance.
+ * @group Definers
  *
  * @returns The `ProductList` controller definition.
  *

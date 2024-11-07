@@ -10,6 +10,12 @@ export * from './headless-breadcrumb-manager.js';
 export interface BreadcrumbManagerDefinition
   extends ControllerDefinitionWithoutProps<SearchEngine, BreadcrumbManager> {}
 
+/**
+ * Defines a `BreadcrumbManager` controller instance.
+ * @group Definers
+ *
+ * @returns The `BreadcrumbManager` controller definition.
+ * */
 export function defineBreadcrumbManager(): BreadcrumbManagerDefinition {
   return {
     build: (engine) => buildBreadcrumbManager(engine),

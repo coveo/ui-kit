@@ -5,6 +5,7 @@ import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
+import {buildLogger} from '../logger.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {
   buildControllerDefinitions,
@@ -29,6 +30,8 @@ import {
 
 /**
  * The SSR search engine.
+ *
+ * @group Engine
  */
 export interface SSRSearchEngine extends SearchEngine {
   /**
@@ -37,6 +40,11 @@ export interface SSRSearchEngine extends SearchEngine {
   waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
+/**
+ * The options to create a search engine definition in SSR.
+ *
+ * @group Engine
+ */
 export type SearchEngineDefinitionOptions<
   TControllers extends ControllerDefinitionsMap<SSRSearchEngine, Controller>,
 > = EngineDefinitionOptions<SearchEngineOptions, TControllers>;
@@ -82,9 +90,12 @@ export interface SearchEngineDefinition<
 
 /**
  * Initializes a Search engine definition in SSR with given controllers definitions and search engine config.
+ *
  * @param options - The search engine definition
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
+ *
+ * @group Engine
  */
 export function defineSearchEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<
@@ -122,6 +133,12 @@ export function defineSearchEngine<
   };
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
+    const logger = buildLogger(options.loggerOptions);
+    if (!getOptions().navigatorContextProvider) {
+      logger.warn(
+        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+      );
+    }
     const engine = buildSSRSearchEngine(
       buildOptions?.extend
         ? await buildOptions.extend(getOptions())
@@ -142,12 +159,6 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-        );
-      }
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
@@ -178,12 +189,6 @@ export function defineSearchEngine<
 
   const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
     async (...params: HydrateStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
-        );
-      }
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,

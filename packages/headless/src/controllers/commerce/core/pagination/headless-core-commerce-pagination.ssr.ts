@@ -16,6 +16,7 @@ export type {Pagination, PaginationProps, PaginationState};
 
 /**
  * Defines a `Pagination` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Pagination` properties.
  * @returns The `Pagination` controller definition.

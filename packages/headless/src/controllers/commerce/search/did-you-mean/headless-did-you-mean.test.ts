@@ -1,6 +1,6 @@
 import {stateKey} from '../../../../app/state-key.js';
-import {applyCorrection} from '../../../../features/commerce/did-you-mean/did-you-mean-actions.js';
 import {didYouMeanReducer} from '../../../../features/commerce/did-you-mean/did-you-mean-slice.js';
+import {updateQuery} from '../../../../features/commerce/query/query-actions.js';
 import {executeSearch} from '../../../../features/commerce/search/search-actions.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../../../../test/mock-engine-v2.js';
 import {buildDidYouMean, DidYouMean} from './headless-did-you-mean.js';
 
-vi.mock('../../../../features/commerce/did-you-mean/did-you-mean-actions');
+vi.mock('../../../../features/commerce/query/query-actions');
 vi.mock('../../../../features/commerce/search/search-actions');
 
 describe('did you mean', () => {
@@ -153,7 +153,7 @@ describe('did you mean', () => {
   });
 
   describe('#applyCorrection', () => {
-    it('dispatches applyCorrection with the corrected query', () => {
+    it('dispatches updateQuery with the corrected query', () => {
       engine[stateKey].didYouMean = {
         originalQuery: '',
         wasCorrectedTo: '',
@@ -165,7 +165,7 @@ describe('did you mean', () => {
 
       didYouMean.applyCorrection();
 
-      expect(applyCorrection).toHaveBeenCalledWith('corrected query');
+      expect(updateQuery).toHaveBeenCalledWith({query: 'corrected query'});
     });
 
     it('dispatches executeSearch', () => {

@@ -12,6 +12,13 @@ import {
 
 /**
  * The `ExecuteTrigger` controller handles Execute triggers from the query response. An [Execute trigger](https://docs.coveo.com/en/3413#execute) query pipeline rule lets you define a custom JavaScript function to be executed in the frontend when a certain condition is met.
+ *
+ * Examples:
+ * - [execute-trigger.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/triggers/execute-trigger.tsx)
+ * - [execute-trigger.class.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/triggers/execute-trigger.class.tsx)
+ *
+ * @group Controllers
+ * @category ExecuteTrigger
  */
 export interface ExecuteTrigger extends Controller {
   /**
@@ -22,6 +29,9 @@ export interface ExecuteTrigger extends Controller {
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `ExecuteTrigger` controller.
+ *
+ * @group Controllers
+ * @category ExecuteTrigger
  */
 export interface ExecuteTriggerState {
   /**
@@ -37,6 +47,9 @@ export interface ExecuteTriggerState {
  *
  * @param engine - The headless engine.
  * @returns A `RedirectionTrigger` controller instance.
+ *
+ * @group Controllers
+ * @category ExecuteTrigger
  * */
 export function buildExecuteTrigger(engine: SearchEngine): ExecuteTrigger {
   if (!loadExecuteTriggerReducers(engine)) {

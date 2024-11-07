@@ -13,6 +13,7 @@ export interface DateFilterDefinition
 
 /**
  * Defines a `DateFilter` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `DateFilter` properties.
  * @returns The `DateFilter` controller definition.

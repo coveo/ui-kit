@@ -9,6 +9,7 @@ export interface QuerySummaryDefinition
 
 /**
  * Defines a `QuerySummary` controller instance.
+ * @group Definers
  *
  * @returns The `QuerySummary` controller definition.
  * */
