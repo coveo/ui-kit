@@ -153,7 +153,7 @@ describe('did you mean', () => {
   });
 
   describe('#applyCorrection', () => {
-    it('dispatches applyCorrection with the corrected query', () => {
+    it('dispatches updateQuery with the corrected query', () => {
       engine[stateKey].didYouMean = {
         originalQuery: '',
         wasCorrectedTo: '',
