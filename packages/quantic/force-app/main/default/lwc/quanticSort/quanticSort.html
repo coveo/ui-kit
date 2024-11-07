@@ -10,7 +10,7 @@
     <template lwc:if={hasResults}>
       <template lwc:if={isVariantRefineModal}>
         <div class="sort__container-refine">
-          <lightning-layout-item class="slds-size_1-of-1 item">
+          <lightning-layout-item class="slds-size_1-of-1">
             <lightning-combobox
               name="sort"
               value={value}
@@ -20,7 +20,7 @@
               options={options}
               dropdown-alignment="auto"
               onchange={handleChange}
-              class="slds-text_small"
+              class="slds-text-heading_small"
               data-cy="sort-dropdown"
             >
             </lightning-combobox>
