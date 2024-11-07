@@ -16,12 +16,7 @@ import {
 } from 'react';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
 import {useSyncMemoizedStore} from './client-utils.js';
-import {
-  ContextHydratedState,
-  ContextState,
-  ControllerHook,
-  InferControllerHooksMapFromDefinition,
-} from './types.js';
+import {ContextHydratedState, ContextState, ControllerHook} from './types.js';
 
 export class MissingEngineProviderError extends Error {
   static message =
@@ -44,7 +39,10 @@ function isHydratedStateContext<
 function buildControllerHook<
   TEngine extends CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TKey extends keyof TControllers,
+  TKey extends keyof InferControllersMapFromDefinition<
+    TControllers,
+    TSolutionType
+  >,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
@@ -58,12 +56,10 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
-    // Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
-    type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
     const subscribe = useCallback(
       (listener: () => void) =>
         isHydratedStateContext(ctx)
-          ? ctx.controllers[key as ControllerKey].subscribe(listener)
+          ? ctx.controllers[key].subscribe(listener)
           : () => {},
       [ctx]
     );
@@ -73,7 +69,7 @@ function buildControllerHook<
       if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
-      const controller = ctx.controllers[key as ControllerKey];
+      const controller = ctx.controllers[key];
       const {state: _, subscribe: __, ...remainder} = controller;
       return mapObject(remainder, (member) =>
         typeof member === 'function' ? member.bind(controller) : member
@@ -96,16 +92,20 @@ export function buildControllerHooks<
   >,
   controllersMap?: TControllers
 ) {
-  return (
-    controllersMap
-      ? Object.fromEntries(
-          Object.keys(controllersMap).map((key) => [
-            `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key),
-          ])
-        )
-      : {}
-  ) as InferControllerHooksMapFromDefinition<TControllers>;
+  return controllersMap
+    ? Object.fromEntries(
+        Object.keys(controllersMap).map((key) => [
+          `use${capitalize(key)}`,
+          buildControllerHook(
+            singletonContext,
+            key as keyof InferControllersMapFromDefinition<
+              TControllers,
+              TSolutionType
+            >
+          ),
+        ])
+      )
+    : {};
 }
 
 export function buildEngineHook<
