@@ -8,7 +8,7 @@
   <template lwc:else>
     <slot name="sortOption"><!-- Custom sort options --></slot>
     <template lwc:if={hasResults}>
-      <template lwc:if={isVariantRefineModal}>
+      <template lwc:if={isVariantWide}>
         <lightning-layout-item class="slds-size_1-of-1">
           <lightning-combobox
             name="sort"

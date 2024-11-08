@@ -41,9 +41,9 @@ import {LightningElement, track, api} from 'lwc';
 
 export default class QuanticSort extends LightningElement {
   /**
-   * The sort variant.
+   * The sort variant. Accepted variants include `default` and `wide`.
    * @api
-   * @type {'default'|'refineModal'}
+   * @type {'default'|'wide'}
    */
   @api variant = 'default';
   /**
@@ -93,8 +93,8 @@ export default class QuanticSort extends LightningElement {
       name: 'default',
       label: sortBy,
     },
-    refineModal: {
-      name: 'refineModal',
+    wide: {
+      name: 'wide',
       label: undefined,
     },
   };
@@ -273,13 +273,13 @@ export default class QuanticSort extends LightningElement {
   }
 
   get sortContainerCSSClass() {
-    return this.variant === this.variants.refineModal.name
-      ? 'sort__container-refine'
-      : 'sort__container';
+    return this.variant === this.variants.default.name
+      ? 'sort__container'
+      : undefined;
   }
 
-  get isVariantRefineModal() {
-    return this.variant === this.variants.refineModal.name;
+  get isVariantWide() {
+    return this.variant === this.variants.wide.name;
   }
 
   /**
