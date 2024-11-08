@@ -6,5 +6,6 @@ export default function middleware(request: NextRequest) {
   const uuid = crypto.randomUUID();
   requestHeaders.set('x-coveo-client-id', uuid);
   response.headers.set('x-coveo-client-id', uuid);
+  response.headers.set('x-href', request.nextUrl.href);
   return response;
 }
