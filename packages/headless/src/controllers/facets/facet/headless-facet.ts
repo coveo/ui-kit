@@ -91,6 +91,7 @@ export interface FacetProps {
  * @category Facet
  * */
 export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
+  console.log('a');
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
