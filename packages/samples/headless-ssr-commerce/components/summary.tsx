@@ -1,6 +1,6 @@
 'use client';
 
-import {useSummary} from '../_lib/commerce-engine';
+import {useSummary} from '@/lib/commerce-engine';
 
 export default function Summary() {
   const {state} = useSummary();

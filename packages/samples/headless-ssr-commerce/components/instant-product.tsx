@@ -1,6 +1,6 @@
+import {useInstantProducts} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useInstantProducts} from '../_lib/commerce-engine';
 
 export default function InstantProducts() {
   const router = useRouter();

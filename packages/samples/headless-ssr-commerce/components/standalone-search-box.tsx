@@ -1,22 +1,33 @@
 'use client';
 
-import {useState} from 'react';
 import {
   useInstantProducts,
   useRecentQueriesList,
-  useSearchBox,
-} from '../_lib/commerce-engine';
+  useStandaloneSearchBox,
+} from '@/lib/commerce-engine';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-export default function SearchBox() {
-  const {state, methods} = useSearchBox();
+export default function StandaloneSearchBox() {
+  const {state, methods} = useStandaloneSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.redirectTo === '/search') {
+      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
+      router.push(url, {scroll: false});
+      methods?.afterRedirection();
+    }
+  }, [state.redirectTo, state.value, router, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -47,7 +58,7 @@ export default function SearchBox() {
           <button onClick={methods?.clear}>X</button>
         </span>
       )}
-      <button onClick={methods?.submit}>Search</button>
+      <button onClick={() => methods?.submit()}>Search</button>
 
       {isInputFocused && (
         <>

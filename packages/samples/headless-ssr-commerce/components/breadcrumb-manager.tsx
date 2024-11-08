@@ -1,5 +1,6 @@
 'use client';
 
+import {useBreadcrumbManager} from '@/lib/commerce-engine';
 import {
   NumericFacetValue,
   DateFacetValue,
@@ -7,7 +8,6 @@ import {
   RegularFacetValue,
   LocationFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
-import {useBreadcrumbManager} from '../_lib/commerce-engine';
 
 export default function BreadcrumbManager() {
   const {state, methods} = useBreadcrumbManager();

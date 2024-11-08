@@ -1,6 +1,6 @@
 'use client';
 
-import {useNotifyTrigger} from '@/app/_lib/commerce-engine';
+import {useNotifyTrigger} from '@/lib/commerce-engine';
 import {useCallback, useEffect} from 'react';
 
 // The notify trigger query example in the searchuisamples org is 'notify me'.

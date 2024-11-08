@@ -1,7 +1,4 @@
-import {
-  useInstantProducts,
-  useRecentQueriesList,
-} from '../_lib/commerce-engine';
+import {useInstantProducts, useRecentQueriesList} from '@/lib/commerce-engine';
 
 export default function RecentQueries() {
   const {state, methods} = useRecentQueriesList();

@@ -1,6 +1,6 @@
 'use client';
 
-import {usePagination} from '../_lib/commerce-engine';
+import {usePagination} from '@/lib/commerce-engine';
 
 export default function Pagination() {
   const {state, methods} = usePagination();

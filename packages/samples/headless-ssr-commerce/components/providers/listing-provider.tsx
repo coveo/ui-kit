@@ -1,19 +1,19 @@
 'use client';
 
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
-import {PropsWithChildren, useEffect, useState} from 'react';
 import {
   listingEngineDefinition,
   ListingHydratedState,
   ListingStaticState,
-} from '../../_lib/commerce-engine';
+} from '@/lib/commerce-engine';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {PropsWithChildren, useEffect, useState} from 'react';
 
 interface ListingPageProps {
   staticState: ListingStaticState;
   navigatorContext: NavigatorContext;
 }
 
-export default function ListingPage({
+export default function ListingProvider({
   staticState,
   navigatorContext,
   children,

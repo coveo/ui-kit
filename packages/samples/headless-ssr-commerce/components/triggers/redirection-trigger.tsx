@@ -1,6 +1,6 @@
 'use client';
 
-import {useRedirectionTrigger} from '@/app/_lib/commerce-engine';
+import {useRedirectionTrigger} from '@/lib/commerce-engine';
 import {useCallback, useEffect} from 'react';
 
 // The redirection trigger query example in the searchuisamples org is 'redirect me'.

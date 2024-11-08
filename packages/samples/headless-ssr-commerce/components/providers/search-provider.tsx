@@ -1,19 +1,19 @@
 'use client';
 
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
-import {PropsWithChildren, useEffect, useState} from 'react';
 import {
   SearchHydratedState,
   SearchStaticState,
   searchEngineDefinition,
-} from '../../_lib/commerce-engine';
+} from '@/lib/commerce-engine';
+import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {PropsWithChildren, useEffect, useState} from 'react';
 
 interface SearchPageProps {
   staticState: SearchStaticState;
   navigatorContext: NavigatorContext;
 }
 
-export default function SearchPage({
+export default function SearchProvider({
   staticState,
   navigatorContext,
   children,

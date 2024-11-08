@@ -1,8 +1,8 @@
 'use client';
 
+import {useProductList} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useProductList} from '../_lib/commerce-engine';
 
 export default function ProductList() {
   const {state, methods} = useProductList();

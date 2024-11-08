@@ -1,6 +1,6 @@
 'use client';
 
-import {useFacetGenerator} from '@/app/_lib/commerce-engine';
+import {useFacetGenerator} from '@/lib/commerce-engine';
 import CategoryFacet from './category-facet';
 import DateFacet from './date-facet';
 import NumericFacet from './numeric-facet';

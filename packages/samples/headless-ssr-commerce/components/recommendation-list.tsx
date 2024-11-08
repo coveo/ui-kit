@@ -1,8 +1,8 @@
 'use client';
 
+import {usePopularBoughtRecs} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {usePopularBoughtRecs} from '../_lib/commerce-engine';
 
 export default function Recommendations() {
   // TODO: KIT-3503: refresh recs server side
