@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Headless SSR examples',
-  description: 'Examples of using framework @coveo/headless-react/ssr-commerce',
+  description: 'Examples of using @coveo/headless-react/ssr-commerce',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

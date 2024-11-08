@@ -8,7 +8,7 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import {Recommendations} from '../recommendation-list';
+import Recommendations from '../recommendation-list';
 
 interface IProductPageProps {
   staticState: StandaloneStaticState;

@@ -1,8 +1,5 @@
 import {LocationFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {
-  toggleExcludeLocationFacetValue,
-  toggleSelectLocationFacetValue,
-} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
+import {toggleSelectLocationFacetValue} from '../../../../../features/commerce/facets/location-facet/location-facet-actions.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceLocationFacetResponse} from '../../../../../test/mock-commerce-facet-response.js';
@@ -83,16 +80,6 @@ describe('LocationFacet', () => {
     facet.toggleSelect(facetValue);
 
     expect(toggleSelectLocationFacetValue).toHaveBeenCalledWith({
-      facetId,
-      selection: facetValue,
-    });
-  });
-
-  it('#toggleExclude dispatches #toggleExcludeLocationFacetValue with correct payload', () => {
-    const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
-    facet.toggleExclude(facetValue);
-
-    expect(toggleExcludeLocationFacetValue).toHaveBeenCalledWith({
       facetId,
       selection: facetValue,
     });

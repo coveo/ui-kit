@@ -4,7 +4,7 @@
 import {useSort} from '@/lib/commerce-engine';
 
 export default function Sort() {
-  const {state, controller} = useSort();
+  const {state, methods} = useSort();
 
   if (state.availableSorts.length === 0) {
     return null;
@@ -27,14 +27,14 @@ export default function Sort() {
         name="sorts"
         id="sorts-select"
         value={JSON.stringify(state.appliedSort)}
-        onChange={(e) => controller?.sortBy(JSON.parse(e.target.value))}
-        disabled={!controller}
+        onChange={(e) => methods?.sortBy(JSON.parse(e.target.value))}
+        disabled={!methods}
       >
         {state.availableSorts.map((sort, index) => (
           <option
             key={index}
             value={JSON.stringify(sort)}
-            onSelect={() => controller?.sortBy(sort)}
+            onSelect={() => methods?.sortBy(sort)}
           >
             {/* TODO:KIT-3700: there is a type mismatch with the sort criterion FIXME:!!*/}
             {/* {getSortLabel(sort)} */}

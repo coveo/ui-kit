@@ -1,5 +1,6 @@
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {RecsInteractiveResult, RecsResult} from '..';
+import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   InteractiveItemContextEvent,
@@ -29,6 +30,7 @@ import {AtomicRecsStore} from '../atomic-recs-interface/store';
 export class AtomicRecsResult {
   private layout!: ItemLayout;
   private resultRootRef?: HTMLElement;
+  private linkContainerRef?: HTMLElement;
   private executedRenderingFunctionOnce = false;
   @Element() host!: HTMLElement;
 
@@ -36,6 +38,13 @@ export class AtomicRecsResult {
    * Whether an atomic-result-link inside atomic-recs-result should stop click event propagation.
    */
   @Prop() stopPropagation?: boolean;
+
+  /**
+   * The result link to use when the result is clicked in a grid layout.
+   *
+   * @default - An `atomic-result-link` without any customization.
+   */
+  @Prop() linkContent: ParentNode = new DocumentFragment();
 
   /**
    * The result item.
@@ -94,6 +103,18 @@ export class AtomicRecsResult {
    */
   @Prop() renderingFunction: ItemRenderingFunction;
 
+  @Listen('click')
+  public handleClick(event: MouseEvent) {
+    if (this.stopPropagation) {
+      event.stopPropagation();
+    }
+    this.host
+      .shadowRoot!.querySelector<HTMLAnchorElement>(
+        '.link-container > atomic-result-link a:not([slot])'
+      )
+      ?.click();
+  }
+
   @Listen('atomic/resolveResult')
   public resolveResult(event: ItemContextEvent<RecsResult>) {
     event.preventDefault();
@@ -133,11 +154,12 @@ export class AtomicRecsResult {
   }
 
   private getContentHTML() {
-    return Array.from(this.content!.children)
-      .map((child) => child.outerHTML)
-      .join('');
+    return parentNodeToString(this.content!);
   }
 
+  private getLinkHTML() {
+    return parentNodeToString(this.linkContent);
+  }
   private get isCustomRenderFunctionMode() {
     return this.renderingFunction !== undefined;
   }
@@ -158,6 +180,10 @@ export class AtomicRecsResult {
             class="result-root"
             ref={(ref) => (this.resultRootRef = ref)}
           ></div>
+          <div
+            class="link-container"
+            ref={(ref) => (this.linkContainerRef = ref)}
+          ></div>
         </Host>
       );
     }
@@ -171,6 +197,7 @@ export class AtomicRecsResult {
             .join(' ')}`}
           innerHTML={this.getContentHTML()}
         ></div>
+        <div class="link-container" innerHTML={this.getLinkHTML()}></div>
       </Host>
     );
   }
@@ -186,7 +213,8 @@ export class AtomicRecsResult {
     if (this.shouldExecuteRenderFunction()) {
       const customRenderOutputAsString = this.renderingFunction!(
         this.result,
-        this.resultRootRef!
+        this.resultRootRef!,
+        this.linkContainerRef!
       );
 
       this.resultRootRef!.className += ` ${this.layout

@@ -10,9 +10,9 @@ import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
 export default function SearchBox() {
-  const {state, controller} = useSearchBox();
+  const {state, methods} = useSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
-  const {state: instantProductsState, controller: instantProductsController} =
+  const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -20,7 +20,7 @@ export default function SearchBox() {
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
-    controller?.updateText(e.target.value);
+    methods?.updateText(e.target.value);
     instantProductsController?.updateQuery(e.target.value);
   };
 
@@ -44,10 +44,10 @@ export default function SearchBox() {
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={controller?.clear}>X</button>
+          <button onClick={methods?.clear}>X</button>
         </span>
       )}
-      <button onClick={controller?.submit}>Search</button>
+      <button onClick={methods?.submit}>Search</button>
 
       {isInputFocused && (
         <>
@@ -64,7 +64,7 @@ export default function SearchBox() {
                       )
                     }
                     onClick={() =>
-                      controller?.selectSuggestion(suggestion.rawValue)
+                      methods?.selectSuggestion(suggestion.rawValue)
                     }
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,

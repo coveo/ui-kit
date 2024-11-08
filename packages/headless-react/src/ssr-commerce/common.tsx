@@ -14,22 +14,15 @@ import {
   Context,
   PropsWithChildren,
 } from 'react';
+import {useSyncMemoizedStore} from '../client-utils.js';
+import {MissingEngineProviderError} from '../errors.js';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
-import {useSyncMemoizedStore} from './client-utils.js';
 import {
   ContextHydratedState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
 } from './types.js';
-
-export class MissingEngineProviderError extends Error {
-  static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedStateProvider` component that can provide the required context.';
-  constructor() {
-    super(MissingEngineProviderError.message);
-  }
-}
 
 function isHydratedStateContext<
   TEngine extends CoreEngineNext,
@@ -58,7 +51,7 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
-    // Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
+    // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
     const subscribe = useCallback(
       (listener: () => void) =>
@@ -69,7 +62,7 @@ function buildControllerHook<
     );
     const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
-    const controller = useMemo(() => {
+    const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
@@ -82,7 +75,7 @@ function buildControllerHook<
         'state' | 'subscribe'
       >;
     }, [ctx, key]);
-    return {state, controller};
+    return {state, methods};
   };
 }
 

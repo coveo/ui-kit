@@ -6,17 +6,19 @@ import {
   DateFacetValue,
   CategoryFacetValue,
   RegularFacetValue,
+  LocationFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
 
 export default function BreadcrumbManager() {
-  const {state, controller} = useBreadcrumbManager();
+  const {state, methods} = useBreadcrumbManager();
 
   const renderBreadcrumbValue = (
     value:
       | CategoryFacetValue
       | RegularFacetValue
       | NumericFacetValue
-      | DateFacetValue,
+      | DateFacetValue
+      | LocationFacetValue,
     type: string
   ) => {
     switch (type) {
@@ -37,6 +39,7 @@ export default function BreadcrumbManager() {
           (value as DateFacetValue).end
         );
       default:
+        // TODO COMHUB-291 support location breadcrumb
         return null;
     }
   };
@@ -44,7 +47,7 @@ export default function BreadcrumbManager() {
   return (
     <div>
       <div>
-        <button onClick={controller?.deselectAll}>Clear all filters</button>
+        <button onClick={methods?.deselectAll}>Clear all filters</button>
       </div>
       <ul>
         {state.facetBreadcrumbs.map((facetBreadcrumb) => {
