@@ -165,92 +165,106 @@ describe('AsyncInsightSearchThunkProcessor', () => {
     expect(processed.automaticallyCorrected).toBe(true);
   });
 
-  it('process properly when #queryCorrection is activated on the query', async () => {
-    const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
-    const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
-      request: buildMockInsightQueryRequest(),
-      mappings: initialSearchMappings(),
-    };
+  describe('query correction processing', () => {
+    describe('legacy query correction processing', () => {
+      it('should correct the query the legacy way', async () => {
+        const processor = new AsyncInsightSearchThunkProcessor<{}>({
+          ...config,
+          getState: vi.fn().mockReturnValue({
+            configuration: getConfigurationInitialState(),
+            search: buildMockSearchState({
+              results,
+              response: buildMockSearchResponse({results}),
+            }),
+            didYouMean: {
+              enableDidYouMean: true,
+              automaticallyCorrectQuery: false,
+            },
+          }),
+        });
 
-    const originalResponseWithResultsAndChangedQuery = buildMockSearchResponse({
-      results: [buildMockResult()],
-      queryCorrection: {
-        correctedQuery: 'bar',
-        originalQuery: 'foo',
-        corrections: [],
-      },
-    });
+        const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
+          request: buildMockInsightQueryRequest(),
+          mappings: initialSearchMappings(),
+        };
 
-    const fetched = {
-      response: {
-        success: originalResponseWithResultsAndChangedQuery,
-      },
-      duration: 123,
-      queryExecuted: 'foo',
-      requestExecuted: mappedRequest.request,
-    };
-
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
-
-    expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
-    expect(config.extra.apiClient.query).not.toHaveBeenCalled();
-    expect(processed.response).toMatchObject(
-      originalResponseWithResultsAndChangedQuery
-    );
-    expect(processed.automaticallyCorrected).toBe(true);
-    expect(processed.originalQuery).toBe('foo');
-    expect(processed.queryExecuted).toBe('bar');
-  });
-
-  it('process properly when there are no results returned, there is a did you mean correction, and automatic correction is disabled', async () => {
-    const processor = new AsyncInsightSearchThunkProcessor<{}>({
-      ...config,
-      getState: vi.fn().mockReturnValue({
-        configuration: getConfigurationInitialState(),
-        search: buildMockSearchState({
-          results,
-          response: buildMockSearchResponse({results}),
-        }),
-        didYouMean: {
-          enableDidYouMean: true,
-          automaticallyCorrectQuery: false,
-        },
-      }),
-    });
-
-    const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
-      request: buildMockInsightQueryRequest(),
-      mappings: initialSearchMappings(),
-    };
-
-    const searchResponse = buildMockSearchResponse({
-      results: [],
-      queryCorrections: [
-        {
-          correctedQuery: 'bar',
-          wordCorrections: [
-            {correctedWord: 'foo', length: 3, offset: 0, originalWord: 'foo'},
+        const searchResponse = buildMockSearchResponse({
+          results: [],
+          queryCorrections: [
+            {
+              correctedQuery: 'bar',
+              wordCorrections: [
+                {
+                  correctedWord: 'foo',
+                  length: 3,
+                  offset: 0,
+                  originalWord: 'foo',
+                },
+              ],
+            },
           ],
-        },
-      ],
+        });
+
+        const fetched = {
+          response: {
+            success: searchResponse,
+          },
+          duration: 123,
+          queryExecuted: 'foo',
+          requestExecuted: mappedRequest.request,
+        };
+
+        const processed = (await processor.process(
+          fetched
+        )) as ExecuteSearchThunkReturn;
+
+        expect(processed.response).toMatchObject(searchResponse);
+        expect(processed.automaticallyCorrected).toBe(false);
+        expect(processed.queryExecuted).toBe('foo');
+        expect(config.extra.apiClient.query).not.toHaveBeenCalled();
+      });
     });
 
-    const fetched = {
-      response: {
-        success: searchResponse,
-      },
-      duration: 123,
-      queryExecuted: 'foo',
-      requestExecuted: mappedRequest.request,
-    };
+    describe('next query correction processing', () => {
+      it('should automatically correct the query without triggering a second search request', async () => {
+        const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
+        const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
+          request: buildMockInsightQueryRequest(),
+          mappings: initialSearchMappings(),
+        };
 
-    const processed = (await processor.process(
-      fetched
-    )) as ExecuteSearchThunkReturn;
+        const originalResponseWithResultsAndChangedQuery =
+          buildMockSearchResponse({
+            results: [buildMockResult()],
+            queryCorrection: {
+              correctedQuery: 'bar',
+              originalQuery: 'foo',
+              corrections: [],
+            },
+          });
 
-    expect(processed.response).toMatchObject(searchResponse);
-    expect(config.extra.apiClient.query).not.toHaveBeenCalled();
+        const fetched = {
+          response: {
+            success: originalResponseWithResultsAndChangedQuery,
+          },
+          duration: 123,
+          queryExecuted: 'foo',
+          requestExecuted: mappedRequest.request,
+        };
+
+        const processed = (await processor.process(
+          fetched
+        )) as ExecuteSearchThunkReturn;
+
+        expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
+        expect(config.extra.apiClient.query).not.toHaveBeenCalled();
+        expect(processed.response).toMatchObject(
+          originalResponseWithResultsAndChangedQuery
+        );
+        expect(processed.automaticallyCorrected).toBe(true);
+        expect(processed.originalQuery).toBe('foo');
+        expect(processed.queryExecuted).toBe('bar');
+      });
+    });
   });
 });

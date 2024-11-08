@@ -426,4 +426,12 @@ describe('insight search request', () => {
         ?.automaticallyCorrect
     ).toBe('never');
   });
+
+  it('should set #enableDidYouMean to true if did you mean is enabled and #queryCorrectionMode is `legacy`', async () => {
+    state.didYouMean.enableDidYouMean = true;
+    state.didYouMean.queryCorrectionMode = 'legacy';
+    expect(
+      (await buildInsightBaseRequest(state)).request.enableDidYouMean
+    ).toBe(true);
+  });
 });
