@@ -5,10 +5,10 @@ import {useInstantProducts} from '../_lib/commerce-engine';
 export default function InstantProducts() {
   const router = useRouter();
 
-  const {state, controller} = useInstantProducts();
+  const {state, methods} = useInstantProducts();
 
   const clickProduct = (product: Product) => {
-    controller?.interactiveProduct({options: {product}}).select();
+    methods?.interactiveProduct({options: {product}}).select();
     router.push(
       `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
     );

@@ -5,11 +5,11 @@ import {useCart, useContext} from '../_lib/commerce-engine';
 import {formatCurrency} from '../_utils/format-currency';
 
 export default function Cart() {
-  const {state, controller} = useCart();
+  const {state, methods} = useCart();
   const {state: contextState} = useContext();
 
   const adjustQuantity = (item: CartItem, delta: number) => {
-    controller?.updateItemQuantity({
+    methods?.updateItemQuantity({
       ...item,
       quantity: item.quantity + delta,
     });
@@ -20,11 +20,11 @@ export default function Cart() {
   };
 
   const purchase = () => {
-    controller?.purchase({id: crypto.randomUUID(), revenue: state.totalPrice});
+    methods?.purchase({id: crypto.randomUUID(), revenue: state.totalPrice});
   };
 
   const emptyCart = () => {
-    controller?.empty();
+    methods?.empty();
   };
 
   const language = () => contextState.language;

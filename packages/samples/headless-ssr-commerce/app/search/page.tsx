@@ -3,7 +3,7 @@ import BreadcrumbManager from '../_components/breadcrumb-manager';
 import FacetGenerator from '../_components/facets/facet-generator';
 import SearchPage from '../_components/pages/search-page';
 import ProductList from '../_components/product-list';
-import {Recommendations} from '../_components/recommendation-list';
+import Recommendations from '../_components/recommendation-list';
 import SearchBox from '../_components/search-box';
 import ShowMore from '../_components/show-more';
 import Summary from '../_components/summary';

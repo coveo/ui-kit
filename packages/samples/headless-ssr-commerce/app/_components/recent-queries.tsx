@@ -4,8 +4,8 @@ import {
 } from '../_lib/commerce-engine';
 
 export default function RecentQueries() {
-  const {state, controller} = useRecentQueriesList();
-  const {controller: instantProductsController} = useInstantProducts();
+  const {state, methods} = useRecentQueriesList();
+  const {methods: instantProductsController} = useInstantProducts();
 
   return (
     <div>
@@ -16,7 +16,7 @@ export default function RecentQueries() {
             {query}
             <button
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
-              onClick={() => controller?.executeRecentQuery(index)}
+              onClick={() => methods?.executeRecentQuery(index)}
               dangerouslySetInnerHTML={{__html: query}}
             ></button>
           </li>

@@ -7,7 +7,7 @@ import NumericFacet from './numeric-facet';
 import RegularFacet from './regular-facet';
 
 export default function FacetGenerator() {
-  const {state, controller} = useFacetGenerator();
+  const {state, methods} = useFacetGenerator();
 
   return (
     <nav className="Facets">
@@ -18,7 +18,7 @@ export default function FacetGenerator() {
             return (
               <RegularFacet
                 key={facetId}
-                controller={controller?.getFacetController(facetId, 'regular')}
+                controller={methods?.getFacetController(facetId, 'regular')}
                 staticState={facetState}
               />
             );
@@ -28,7 +28,7 @@ export default function FacetGenerator() {
             return (
               <NumericFacet
                 key={facetId}
-                controller={controller?.getFacetController(
+                controller={methods?.getFacetController(
                   facetId,
                   'numericalRange'
                 )}
@@ -39,10 +39,7 @@ export default function FacetGenerator() {
             return (
               <DateFacet
                 key={facetId}
-                controller={controller?.getFacetController(
-                  facetId,
-                  'dateRange'
-                )}
+                controller={methods?.getFacetController(facetId, 'dateRange')}
                 staticState={facetState}
               />
             );
@@ -50,7 +47,7 @@ export default function FacetGenerator() {
             return (
               <CategoryFacet
                 key={facetId}
-                controller={controller?.getFacetController(
+                controller={methods?.getFacetController(
                   facetId,
                   'hierarchical'
                 )}

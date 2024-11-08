@@ -5,7 +5,7 @@ import FacetGenerator from '../_components/facets/facet-generator';
 import ListingPage from '../_components/pages/listing-page';
 import Pagination from '../_components/pagination';
 import ProductList from '../_components/product-list';
-import {Recommendations} from '../_components/recommendation-list';
+import Recommendations from '../_components/recommendation-list';
 import Sort from '../_components/sort';
 import StandaloneSearchBox from '../_components/standalone-search-box';
 import Summary from '../_components/summary';
