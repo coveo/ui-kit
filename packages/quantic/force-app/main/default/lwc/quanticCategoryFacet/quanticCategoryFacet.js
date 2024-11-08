@@ -28,6 +28,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -37,12 +38,6 @@ import {api, LightningElement, track} from 'lwc';
  * @typedef CaptionProvider
  * @type {object}
  * @property {Record<string, string>} captions
- */
-
-/**
- * @typedef {Object} DependsOn
- * @property {string} parentFacetId - The unique identifier for the parent facet this facet depends on.
- * @property {string} expectedValue - The expected value that the parent facet must have for this facet to be displayed.
  */
 
 /**
