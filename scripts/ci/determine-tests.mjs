@@ -135,7 +135,6 @@ function ensureIsNotCoveoPackage(file) {
  * @throws {PackageJsonChangeError} If the file is 'package.json' or 'package-lock.json'.
  */
 function ensureIsNotPackageJsonOrPackageLockJson(file) {
-  console.log(file);
   if (file.includes('package.json') || file.includes('package-lock.json')) {
     throw new PackageJsonChangeError(file);
   }
