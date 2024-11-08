@@ -14,7 +14,7 @@
       </template>
       <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
-          <c-quantic-sort class="quanticSort" engine-id={engineId} variant="refineModal">
+          <c-quantic-sort engine-id={engineId} variant="refineModal">
             <template for:each={sortOptions} for:item="sortOption">
               <c-quantic-sort-option
                 key={sortOption.value}

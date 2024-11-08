@@ -9,23 +9,21 @@
     <slot name="sortOption"><!-- Custom sort options --></slot>
     <template lwc:if={hasResults}>
       <template lwc:if={isVariantRefineModal}>
-        <div class="sort__container-refine">
-          <lightning-layout-item class="slds-size_1-of-1">
-            <lightning-combobox
-              name="sort"
-              value={value}
-              variant="label-hidden"
-              label={label}
-              placeholder={value}
-              options={options}
-              dropdown-alignment="auto"
-              onchange={handleChange}
-              class="slds-text-heading_small"
-              data-cy="sort-dropdown"
-            >
-            </lightning-combobox>
-          </lightning-layout-item>
-        </div>
+        <lightning-layout-item class="slds-size_1-of-1">
+          <lightning-combobox
+            name="sort"
+            value={value}
+            variant="label-hidden"
+            label={label}
+            placeholder={value}
+            options={options}
+            dropdown-alignment="auto"
+            onchange={handleChange}
+            class="slds-text-heading_small"
+            data-cy="sort-dropdown"
+          >
+          </lightning-combobox>
+        </lightning-layout-item>
       </template>
       <template lwc:else>
         <div class="sort__container">

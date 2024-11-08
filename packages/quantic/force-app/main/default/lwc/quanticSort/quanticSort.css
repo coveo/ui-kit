@@ -4,11 +4,6 @@
     justify-content: flex-end;
 }
 
-.sort__container-refine {
-    display: flex;
-    flex-direction: row;
-}
-
 .sort__header {
     color: var(--lwc-colorTextActionLabel, darkslategray);
     padding-top: 6px;
