@@ -133,6 +133,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
                 ></atomic-commerce-category-facet>
               );
             default: {
+              // TODO COMHUB-291 support location facet
               this.bindings.engine.logger.warn('Unexpected facet type.');
               return;
             }

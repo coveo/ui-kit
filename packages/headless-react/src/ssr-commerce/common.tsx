@@ -51,7 +51,7 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
-    // Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
+    // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
     const subscribe = useCallback(
       (listener: () => void) =>
@@ -62,7 +62,7 @@ function buildControllerHook<
     );
     const getStaticState = useCallback(() => ctx.controllers[key].state, [ctx]);
     const state = useSyncMemoizedStore(subscribe, getStaticState);
-    const controller = useMemo(() => {
+    const methods = useMemo(() => {
       if (!isHydratedStateContext(ctx)) {
         return undefined;
       }
@@ -75,7 +75,7 @@ function buildControllerHook<
         'state' | 'subscribe'
       >;
     }, [ctx, key]);
-    return {state, controller};
+    return {state, methods};
   };
 }
 

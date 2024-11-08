@@ -4,7 +4,7 @@ import {
   Context,
   ContextState,
 } from '@coveo/headless/commerce';
-import {Component, h} from '@stencil/core';
+import {Component, h, Host} from '@stencil/core';
 import {
   BindStateToController,
   InitializableComponent,
@@ -21,6 +21,7 @@ import {parseValue} from '../product-utils';
  */
 @Component({
   tag: 'atomic-product-price',
+  styleUrl: 'atomic-product-price.pcss',
   shadow: false,
 })
 export class AtomicProductPrice
@@ -82,18 +83,22 @@ export class AtomicProductPrice
       : null;
 
     return (
-      <div class="flex flex-wrap">
+      <Host class="flex flex-wrap gap-1">
         <div
-          class={`mx-1 truncate break-keep ${this.hasPromotionalPrice && 'text-error'}`}
+          class={`truncate break-keep ${this.hasPromotionalPrice && 'text-error'}`}
         >
           {mainPrice}
         </div>
-        {originalPrice && (
-          <div class="mx-1 truncate break-keep text-xl line-through">
-            {originalPrice}
-          </div>
-        )}
-      </div>
+
+        <div
+          class={
+            'original-price truncate break-keep text-xl line-through ' +
+            (!originalPrice && ' invisible')
+          }
+        >
+          {originalPrice ?? '​'}
+        </div>
+      </Host>
     );
   }
 }

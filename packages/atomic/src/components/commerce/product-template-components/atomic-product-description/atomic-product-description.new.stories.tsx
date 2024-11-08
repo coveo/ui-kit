@@ -58,7 +58,7 @@ export const Default: Story = {
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
-    searchInterface?.engine?.dispatch(updateQuery({query: 'kayak'}));
+    searchInterface?.engine?.dispatch(updateQuery({query: 'boat'}));
 
     await searchInterface!.executeFirstRequest();
   },
