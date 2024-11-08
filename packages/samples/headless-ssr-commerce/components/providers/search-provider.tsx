@@ -51,9 +51,7 @@ export default function SearchProvider({
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
-        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.*/}
-        <>{children}</>
+        {children}
       </searchEngineDefinition.HydratedStateProvider>
     );
   } else {
@@ -61,9 +59,7 @@ export default function SearchProvider({
       <searchEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.*/}
-        <>{children}</>
+        {children}
       </searchEngineDefinition.StaticStateProvider>
     );
   }
