@@ -1081,7 +1081,7 @@ export namespace Components {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -2163,7 +2163,7 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicProductMultiValueText {
         /**
@@ -4990,7 +4990,7 @@ declare global {
         new (): HTMLAtomicProductLinkElement;
     };
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
     }
@@ -7188,7 +7188,7 @@ declare namespace LocalJSX {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -8217,7 +8217,7 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicProductMultiValueText {
         /**
@@ -10373,7 +10373,7 @@ declare module "@stencil/core" {
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
-             * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**

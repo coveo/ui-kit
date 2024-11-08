@@ -1,23 +1,43 @@
 /* eslint-disable no-import-assign */
-import QuanticSearchBox from 'c/quanticSearchBox';
+import QuanticStandaloneSearchBox from 'c/quanticStandaloneSearchBox';
 // @ts-ignore
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {CurrentPageReference} from 'lightning/navigation';
+import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+
+const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
+const defaultHeadlessConfiguration = JSON.stringify({
+  organization: 'testOrgId',
+  accessToken: 'testAccessToken',
+});
 
 jest.mock('c/quanticHeadlessLoader');
+
+jest.mock(
+  '@salesforce/apex/HeadlessController.getHeadlessConfiguration',
+  () => ({
+    default: jest.fn(),
+  }),
+  {virtual: true}
+);
+
+mockHeadlessLoader.loadDependencies = () =>
+  new Promise((resolve) => {
+    resolve();
+  });
 
 let isInitialized = false;
 
 const exampleEngine = {
-  id: 'dummy engine',
+  id: 'engineId',
 };
 
 const functionsMocks = {
-  buildSearchBox: jest.fn(() => ({
+  buildStandaloneSearchBox: jest.fn(() => ({
     state: {},
     subscribe: functionsMocks.subscribe,
   })),
-  loadQuerySuggestActions: jest.fn(() => {}),
   subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
@@ -33,13 +53,13 @@ const defaultOptions = {
   textarea: false,
   disableRecentQueries: false,
   keepFiltersOnSearch: false,
+  redirectUrl: '/global-search/%40uri',
 };
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
-
-  const element = createElement('c-quantic-search-box', {
-    is: QuanticSearchBox,
+  const element = createElement('c-quantic-standalone-search-box', {
+    is: QuanticStandaloneSearchBox,
   });
   for (const [key, value] of Object.entries(options)) {
     element[key] = value;
@@ -50,11 +70,8 @@ function createTestComponent(options = defaultOptions) {
 
 function prepareHeadlessState() {
   // @ts-ignore
-  mockHeadlessLoader.getHeadlessBundle = () => {
-    return {
-      buildSearchBox: functionsMocks.buildSearchBox,
-      loadQuerySuggestActions: functionsMocks.loadQuerySuggestActions,
-    };
+  global.CoveoHeadless = {
+    buildStandaloneSearchBox: functionsMocks.buildStandaloneSearchBox,
   };
 }
 
@@ -67,7 +84,7 @@ function flushPromises() {
 function mockSuccessfulHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
-    if (element instanceof QuanticSearchBox && !isInitialized) {
+    if (element instanceof QuanticStandaloneSearchBox && !isInitialized) {
       isInitialized = true;
       initialize(exampleEngine);
     }
@@ -83,8 +100,9 @@ function cleanup() {
   isInitialized = false;
 }
 
-describe('c-quantic-search-box', () => {
-  beforeAll(() => {
+describe('c-quantic-standalone-search-box', () => {
+  beforeEach(() => {
+    getHeadlessConfiguration.mockResolvedValue(defaultHeadlessConfiguration);
     mockSuccessfulHeadlessInitialization();
   });
 
@@ -93,9 +111,7 @@ describe('c-quantic-search-box', () => {
   });
 
   it('construct itself without throwing', () => {
-    expect(() =>
-      createElement('c-quantic-search-box', {is: QuanticSearchBox})
-    ).not.toThrow();
+    expect(() => createTestComponent()).not.toThrow();
   });
 
   describe('controller initialization', () => {
@@ -106,13 +122,43 @@ describe('c-quantic-search-box', () => {
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
 
+    describe('when the current page reference changes', () => {
+      beforeAll(() => {
+        // This is needed to mock the window.location.href property to test the keepFiltersOnSearch property in the quanticSearchBox.
+        // https://stackoverflow.com/questions/54021037/how-to-mock-window-location-href-with-jest-vuejs
+        Object.defineProperty(window, 'location', {
+          writable: true,
+          value: {href: nonStandaloneURL},
+        });
+      });
+
+      it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          keepFiltersOnSearch: false,
+        });
+        // eslint-disable-next-line @lwc/lwc/no-unexpected-wire-adapter-usages
+        CurrentPageReference.emit({url: nonStandaloneURL});
+        await flushPromises();
+
+        const searchBox = element.shadowRoot.querySelector(
+          'c-quantic-search-box'
+        );
+
+        expect(searchBox).not.toBeNull();
+        expect(searchBox.keepFiltersOnSearch).toEqual(false);
+      });
+    });
+
     describe('when keepFiltersOnSearch is false (default)', () => {
       it('should properly initialize the controller with clear filters enabled', async () => {
         createTestComponent();
         await flushPromises();
 
-        expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
-        expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
+        expect(functionsMocks.buildStandaloneSearchBox).toHaveBeenCalledTimes(
+          1
+        );
+        expect(functionsMocks.buildStandaloneSearchBox).toHaveBeenCalledWith(
           exampleEngine,
           expect.objectContaining({
             options: expect.objectContaining({clearFilters: true}),
@@ -129,8 +175,10 @@ describe('c-quantic-search-box', () => {
         });
         await flushPromises();
 
-        expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
-        expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
+        expect(functionsMocks.buildStandaloneSearchBox).toHaveBeenCalledTimes(
+          1
+        );
+        expect(functionsMocks.buildStandaloneSearchBox).toHaveBeenCalledWith(
           exampleEngine,
           expect.objectContaining({
             options: expect.objectContaining({clearFilters: false}),

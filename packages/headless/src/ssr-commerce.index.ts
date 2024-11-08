@@ -177,8 +177,8 @@ export {defineParameterManager} from './controllers/commerce/core/parameter-mana
 export type {
   ProductList,
   ProductListState,
-} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
-export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
+} from './controllers/commerce/product-list/headless-product-list.ssr.js';
+export {defineProductList} from './controllers/commerce/product-list/headless-product-list.ssr.js';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';

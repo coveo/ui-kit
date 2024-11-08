@@ -1,6 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
+  "version": "3.0.1",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -21,7 +22,7 @@
     "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3",
     "nx:graph": "nx graph --file=topology.json",
     "release:phase0": "npm run-script -w=@coveo/release git-lock",
-    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
+    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream; npm run-script -w=@coveo/release bump:root",
     "release:phase2": "npm run-script -w=@coveo/release reify",
     "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
     "release:phase4": "nx run-many --targets=release:phase4 --all"
@@ -140,6 +141,5 @@
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "version": "0.0.0",
   "packageManager": "npm@10.8.2"
 }
