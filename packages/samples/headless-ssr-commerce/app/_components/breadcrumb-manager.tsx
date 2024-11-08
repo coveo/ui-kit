@@ -10,7 +10,7 @@ import {
 import {useBreadcrumbManager} from '../_lib/commerce-engine';
 
 export default function BreadcrumbManager() {
-  const {state, controller} = useBreadcrumbManager();
+  const {state, methods} = useBreadcrumbManager();
 
   const renderBreadcrumbValue = (
     value:
@@ -47,7 +47,7 @@ export default function BreadcrumbManager() {
   return (
     <div>
       <div>
-        <button onClick={controller?.deselectAll}>Clear all filters</button>
+        <button onClick={methods?.deselectAll}>Clear all filters</button>
       </div>
       <ul>
         {state.facetBreadcrumbs.map((facetBreadcrumb) => {
