@@ -59,7 +59,7 @@ export type LocationFacetRequest = BaseCommerceFacetRequest<
 
 export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   FacetRequest,
-  'facetId' | 'field' | 'numberOfValues' | 'isFieldExpanded'
+  'facetId' | 'field' | 'isFieldExpanded'
 > & {
   displayName?: string;
   type: Type;

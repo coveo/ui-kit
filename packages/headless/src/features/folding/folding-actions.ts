@@ -47,6 +47,7 @@ export interface LoadCollectionFulfilledReturn {
   results: Result[];
   collectionId: CollectionId;
   rootResult: ResultWithFolding;
+  searchUid: string;
 }
 
 export const foldingOptionsSchemaDefinition: SchemaDefinition<
@@ -105,6 +106,7 @@ export const loadCollection = createAsyncThunk<
     return {
       collectionId,
       results: response.success.results,
+      searchUid: response.success.searchUid,
       rootResult: state.folding.collections[collectionId]!
         .result as ResultWithFolding,
     };

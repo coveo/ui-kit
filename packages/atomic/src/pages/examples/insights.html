@@ -327,6 +327,28 @@
                   .result-root.image-large atomic-result-section-visual {
                     border-radius: var(--atomic-border-radius-xl);
                   }
+
+                  div.result-root.with-sections.display-list.density-normal atomic-result-section-bottom-metadata {
+                    max-height: 4.5rem;
+                  }
+
+                  .viewed-by-customer {
+                    display: inline-flex;
+                    align-items: center;
+                    flex-basis: 100%;
+                    margin-top: 0.5rem;
+                  }
+                  .viewed-by-customer atomic-icon {
+                    background-color: var(--atomic-neutral-dark);
+                    border-radius: 1rem;
+                    width: 0.75rem;
+                    height: 0.75rem;
+                  }
+                  .viewed-by-customer atomic-text {
+                    font-weight: bold;
+                    color: var(--atomic-on-background);
+                    margin-left: 0.25rem;
+                  }
                 </style>
                 <atomic-insight-result-action-bar>
                   <atomic-insight-result-action
@@ -366,9 +388,9 @@
                     <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
                   </atomic-field-condition>
                 </atomic-result-section-title-metadata>
-                <atomic-result-section-excerpt
-                  ><atomic-result-text field="excerpt"></atomic-result-text
-                ></atomic-result-section-excerpt>
+                <atomic-result-section-excerpt>
+                  <atomic-result-text field="excerpt"></atomic-result-text>
+                </atomic-result-section-excerpt>
                 <atomic-result-section-bottom-metadata>
                   <atomic-result-fields-list>
                     <atomic-field-condition class="field" if-defined="author">
@@ -403,6 +425,11 @@
                         <span class="field-label">Date:</span>
                         <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
                       </span>
+                    </atomic-field-condition>
+
+                    <atomic-field-condition class="viewed-by-customer" must-match-is-user-action-view="true">
+                      <atomic-icon icon="assets://user.svg"></atomic-icon>
+                      <atomic-text value="viewed-by-customer"></atomic-text>
                     </atomic-field-condition>
                   </atomic-result-fields-list>
                 </atomic-result-section-bottom-metadata>
