@@ -15,7 +15,12 @@ import {
   registerToStore,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  generateFacetDependencyConditions,
+  regexEncode,
+  Store,
+} from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").CategoryFacet} CategoryFacet */
@@ -32,6 +37,12 @@ import {api, LightningElement, track} from 'lwc';
  * @typedef CaptionProvider
  * @type {object}
  * @property {Record<string, string>} captions
+ */
+
+/**
+ * @typedef {Object} DependsOn
+ * @property {string} parentFacetId - The unique identifier for the parent facet this facet depends on.
+ * @property {string} expectedValue - The expected value that the parent facet must have for this facet to be displayed.
  */
 
 /**
@@ -132,6 +143,21 @@ export default class QuanticCategoryFacet extends LightningElement {
    */
   @api withSearch = false;
   /**
+   * This property defines the relationship between this facet and a parent facet. It indicates
+   * which parent facet this facet relies on and what value from that facet is required in order to be displayed.
+   *
+   * Example:
+   * {
+   *   parentFacetId: 'filetype',
+   *   expectedValue: 'txt'
+   * }
+   * In this example, the component depends on the facet with ID 'filetype'
+   * and expects it to have 'txt' as a selected value in order to be displayed.
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -156,6 +182,7 @@ export default class QuanticCategoryFacet extends LightningElement {
     'numberOfValues',
     'sortCriteria',
     'withSearch',
+    'dependsOn',
   ];
   /** @type {CategoryFacetState} */
   @track state;
@@ -258,6 +285,9 @@ export default class QuanticCategoryFacet extends LightningElement {
         sortCriteria: this.sortCriteria,
       },
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     registerToStore(this.engineId, Store.facetTypes.CATEGORYFACETS, {
       label: this.label,
@@ -283,6 +313,18 @@ export default class QuanticCategoryFacet extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(renderFacetEvent);
+  }
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
   }
 
   get values() {
@@ -359,6 +401,10 @@ export default class QuanticCategoryFacet extends LightningElement {
 
   get hasParentsOrValues() {
     return this.hasParents || this.hasValues;
+  }
+
+  get enabled() {
+    return this.state?.enabled;
   }
 
   get showMoreFacetValuesLabel() {

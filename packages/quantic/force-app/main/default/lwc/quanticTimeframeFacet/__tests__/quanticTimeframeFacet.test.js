@@ -1,7 +1,7 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import {createElement} from 'lwc';
-import QuanticFacet from 'c/quanticFacet';
+import QuanticTimeframeFacet from 'c/quanticTimeframeFacet';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {generateFacetDependencyConditions} from 'c/quanticUtils';
 
@@ -9,7 +9,7 @@ jest.mock('c/quanticUtils', () => ({
   generateFacetDependencyConditions: jest.fn(),
   Store: {
     facetTypes: {
-      FACETS: 'facets',
+      DATEFACETS: 'dateFacets',
     },
   },
 }));
@@ -23,8 +23,8 @@ const defaultOptions = {
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
 
-  const element = createElement('c-quantic-facet', {
-    is: QuanticFacet,
+  const element = createElement('c-quantic-timeframe-facet', {
+    is: QuanticTimeframeFacet,
   });
   for (const [key, value] of Object.entries(options)) {
     element[key] = value;
@@ -35,12 +35,16 @@ function createTestComponent(options = defaultOptions) {
 }
 
 const functionsMocks = {
-  buildFacet: jest.fn(() => ({
+  buildDateFacet: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
     state: {
       facetId: exampleFacetId,
       values: [],
     },
+  })),
+  buildDateFilter: jest.fn(() => ({
+    subscribe: jest.fn((callback) => callback()),
+    state: {},
   })),
   buildFacetConditionsManager: jest.fn(),
   buildSearchStatus: jest.fn(() => ({
@@ -53,7 +57,8 @@ function prepareHeadlessState() {
   // @ts-ignore
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
-      buildFacet: functionsMocks.buildFacet,
+      buildDateFacet: functionsMocks.buildDateFacet,
+      buildDateFilter: functionsMocks.buildDateFilter,
       buildSearchStatus: functionsMocks.buildSearchStatus,
       buildFacetConditionsManager: functionsMocks.buildFacetConditionsManager,
     };
@@ -74,7 +79,7 @@ let isInitialized = false;
 function mockSuccessfulHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
-    if (element instanceof QuanticFacet && !isInitialized) {
+    if (element instanceof QuanticTimeframeFacet && !isInitialized) {
       isInitialized = true;
       initialize(exampleEngine);
     }
@@ -90,34 +95,13 @@ function cleanup() {
   isInitialized = false;
 }
 
-describe('c-quantic-facet', () => {
+describe('c-quantic-timeframe-facet', () => {
   beforeAll(() => {
     mockSuccessfulHeadlessInitialization();
   });
 
   afterEach(() => {
     cleanup();
-  });
-
-  describe('controller initialization', () => {
-    it('should initialize the controller with the correct customSort value', async () => {
-      const exampleCustomSortValues = ['test'];
-      createTestComponent({
-        ...defaultOptions,
-        customSort: exampleCustomSortValues,
-      });
-      await flushPromises();
-
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildFacet).toHaveBeenCalledWith(
-        exampleEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            customSort: exampleCustomSortValues,
-          }),
-        })
-      );
-    });
   });
 
   describe('the facet conditions manager', () => {
@@ -132,7 +116,7 @@ describe('c-quantic-facet', () => {
       });
       await flushPromises();
 
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
         1
       );
@@ -153,7 +137,7 @@ describe('c-quantic-facet', () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
         0
       );

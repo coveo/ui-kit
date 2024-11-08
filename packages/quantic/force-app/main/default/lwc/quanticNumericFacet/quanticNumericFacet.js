@@ -19,7 +19,11 @@ import {
   registerToStore,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, Store} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  Store,
+  generateFacetDependencyConditions,
+} from 'c/quanticUtils';
 import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").NumericFacetState} NumericFacetState */
@@ -29,6 +33,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -123,6 +128,21 @@ export default class QuanticNumericFacet extends LightningElement {
    * @type {'integer' | 'decimal'}
    */
   @api withInput;
+  /**
+   * This property defines the relationship between this facet and a parent facet. It indicates
+   * which parent facet this facet relies on and what value from that facet is required in order to be displayed.
+   *
+   * Example:
+   * {
+   *   parentFacetId: 'filetype',
+   *   expectedValue: 'txt'
+   * }
+   * In this example, the component depends on the facet with ID 'filetype'
+   * and expects it to have 'txt' as a selected value in order to be displayed.
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
   /*
    * Whether the facet is collapsed.
    * @api
@@ -147,6 +167,7 @@ export default class QuanticNumericFacet extends LightningElement {
     'sortCriteria',
     'rangeAlgorithm',
     'withInput',
+    'dependsOn',
   ];
 
   /** @type {NumericFacetState} */
@@ -244,6 +265,9 @@ export default class QuanticNumericFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
   };
 
   /**
@@ -261,6 +285,18 @@ export default class QuanticNumericFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+  }
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
   }
 
   /**
@@ -340,6 +376,10 @@ export default class QuanticNumericFacet extends LightningElement {
 
   get hasActiveValues() {
     return this.state?.hasActiveValues || this.filterState?.range;
+  }
+
+  get enabled() {
+    return this.state?.enabled;
   }
 
   get actionButtonIcon() {

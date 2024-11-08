@@ -19,6 +19,7 @@ import {
   I18nUtils,
   RelativeDateFormatter,
   Store,
+  generateFacetDependencyConditions,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -32,6 +33,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
 /** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef {Object} DatepickerElement
  * @property {string} min
@@ -133,6 +135,21 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @defaultValue `1000`
    */
   @api injectionDepth = 1000;
+  /**
+   * This property defines the relationship between this facet and a parent facet. It indicates
+   * which parent facet this facet relies on and what value from that facet is required in order to be displayed.
+   *
+   * Example:
+   * {
+   *   parentFacetId: 'filetype',
+   *   expectedValue: 'txt'
+   * }
+   * In this example, the component depends on the facet with ID 'filetype'
+   * and expects it to have 'txt' as a selected value in order to be displayed.
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
 
   static attributes = [
     'facetId',
@@ -141,6 +158,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     'withDatePicker',
     'noFilterFacetCount',
     'injectionDepth',
+    'dependsOn',
   ];
 
   /** @type {DateFacetState} */
@@ -205,6 +223,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeDateFilter?.();
+  }
+
+  get enabled() {
+    return this.facetState?.enabled;
   }
 
   /**
@@ -380,7 +402,22 @@ export default class QuanticTimeframeFacet extends LightningElement {
       element: this.template.host,
       metadata: {timeframes: this.timeframes},
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
   };
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
+  }
 
   /**
    * @param {SearchEngine} engine

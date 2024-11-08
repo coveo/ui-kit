@@ -16,7 +16,12 @@ import {
   registerToStore,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  regexEncode,
+  Store,
+  generateFacetDependencyConditions,
+} from 'c/quanticUtils';
 import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").FacetState} FacetState */
@@ -24,6 +29,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -140,6 +146,22 @@ export default class QuanticFacet extends LightningElement {
    */
   @api customSort;
   /**
+   * This property defines the relationship between this facet and a parent facet. It indicates
+   * which parent facet this facet relies on and what value from that facet is required in order to be displayed.
+   *
+   * Example:
+   * {
+   *   parentFacetId: 'filetype',
+   *   expectedValue: 'txt'
+   * }
+   * In this example, the component depends on the facet with ID 'filetype'
+   * and expects it to have 'txt' as a selected value in order to be displayed.
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
+
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -165,6 +187,7 @@ export default class QuanticFacet extends LightningElement {
     'noFilterFacetCount',
     'injectionDepth',
     'customSort',
+    'dependsOn',
   ];
 
   /** @type {FacetState} */
@@ -272,6 +295,9 @@ export default class QuanticFacet extends LightningElement {
       format: this.remoteGetValueCaption,
       element: this.template.host,
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
   };
 
   disconnectedCallback() {
@@ -295,6 +321,18 @@ export default class QuanticFacet extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(renderFacetEvent);
+  }
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
   }
 
   get values() {
@@ -333,6 +371,10 @@ export default class QuanticFacet extends LightningElement {
 
   get hasValues() {
     return this.values.length !== 0;
+  }
+
+  get enabled() {
+    return this.state?.enabled;
   }
 
   get hasActiveValues() {
