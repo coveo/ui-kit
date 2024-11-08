@@ -42,7 +42,7 @@ describe('Headless react SSR utils', () => {
     errorSpy.mockClear();
   });
 
-  test('defines react search engine', () => {
+  test('defines react commerce engine', () => {
     const {
       useEngine,
       controllers,
