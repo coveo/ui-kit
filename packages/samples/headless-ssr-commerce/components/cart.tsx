@@ -1,8 +1,8 @@
 'use client';
 
 import {useCart, useContext} from '@/lib/commerce-engine';
+import {formatCurrency} from '@/utils/format-currency';
 import {CartItem} from '@coveo/headless-react/ssr-commerce';
-import {formatCurrency} from '../utils/format-currency';
 
 export default function Cart() {
   const {state, methods} = useCart();
