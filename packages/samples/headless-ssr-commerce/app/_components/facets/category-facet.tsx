@@ -1,9 +1,11 @@
+'use client';
+
 import {
   CategoryFacetSearchResult,
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacet as HeadlessCategoryFacet,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useRef, useState} from 'react';
 
 interface ICategoryFacetProps {

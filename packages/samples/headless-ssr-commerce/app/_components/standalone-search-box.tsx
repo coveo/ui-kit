@@ -1,65 +1,37 @@
-import {
-  StandaloneSearchBoxState,
-  StandaloneSearchBox as StandaloneSearchBoxController,
-  RecentQueriesState,
-  InstantProductsState,
-  RecentQueriesList as RecentQueriesListController,
-  InstantProducts as InstantProductsController,
-} from '@coveo/headless/ssr-commerce';
+'use client';
+
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
+import {
+  useInstantProducts,
+  useRecentQueriesList,
+  useStandaloneSearchBox,
+} from '../_lib/commerce-engine';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-interface StandaloneSearchBoxProps {
-  staticState: StandaloneSearchBoxState;
-  controller?: StandaloneSearchBoxController;
-  staticStateRecentQueries: RecentQueriesState;
-  recentQueriesController?: RecentQueriesListController;
-  staticStateInstantProducts: InstantProductsState;
-  instantProductsController?: InstantProductsController;
-}
+export default function StandaloneSearchBox() {
+  const {state, methods} = useStandaloneSearchBox();
+  const {state: recentQueriesState} = useRecentQueriesList();
+  const {state: instantProductsState, methods: instantProductsController} =
+    useInstantProducts();
 
-export default function StandaloneSearchBox({
-  staticState,
-  controller,
-  staticStateRecentQueries,
-  recentQueriesController,
-  staticStateInstantProducts,
-  instantProductsController,
-}: StandaloneSearchBoxProps) {
-  const [state, setState] = useState(staticState);
-  const [recentQueriesState, setRecentQueriesState] = useState(
-    staticStateRecentQueries
-  );
-  const [instantProductsState, setInstantProductsState] = useState(
-    staticStateInstantProducts
-  );
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
 
-  useEffect(() => {
-    controller?.subscribe(() => setState({...controller.state}));
-    recentQueriesController?.subscribe(() =>
-      setRecentQueriesState({...recentQueriesController.state})
-    );
-    instantProductsController?.subscribe(() =>
-      setInstantProductsState({...instantProductsController.state})
-    );
-  }, [controller, instantProductsController, recentQueriesController]);
   const router = useRouter();
 
   useEffect(() => {
     if (state.redirectTo === '/search') {
       const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
       router.push(url, {scroll: false});
-      controller?.afterRedirection();
+      methods?.afterRedirection();
     }
-  }, [state.redirectTo, state.value, router, controller]);
+  }, [state.redirectTo, state.value, router, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
-    controller?.updateText(e.target.value);
+    methods?.updateText(e.target.value);
     instantProductsController?.updateQuery(e.target.value);
   };
 
@@ -83,20 +55,14 @@ export default function StandaloneSearchBox({
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={controller?.clear}>X</button>
+          <button onClick={methods?.clear}>X</button>
         </span>
       )}
-      <button onClick={() => controller?.submit()}>Search</button>
+      <button onClick={() => methods?.submit()}>Search</button>
 
       {isInputFocused && (
         <>
-          {recentQueriesState.queries.length > 0 && (
-            <RecentQueries
-              staticState={staticStateRecentQueries}
-              controller={recentQueriesController}
-              instantProductsController={instantProductsController}
-            />
-          )}
+          {recentQueriesState.queries.length > 0 && <RecentQueries />}
           {state.suggestions.length > 0 && (
             <ul>
               Suggestions :
@@ -109,7 +75,7 @@ export default function StandaloneSearchBox({
                       )
                     }
                     onClick={() =>
-                      controller?.selectSuggestion(suggestion.rawValue)
+                      methods?.selectSuggestion(suggestion.rawValue)
                     }
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,
@@ -119,12 +85,7 @@ export default function StandaloneSearchBox({
               ))}
             </ul>
           )}
-          {instantProductsState.products.length > 0 && (
-            <InstantProducts
-              staticState={staticStateInstantProducts}
-              controller={instantProductsController}
-            />
-          )}
+          {instantProductsState.products.length > 0 && <InstantProducts />}
         </>
       )}
     </div>

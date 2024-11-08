@@ -1,22 +1,9 @@
-import {
-  Pagination as HeadlessPagination,
-  PaginationState,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface IPaginationProps {
-  staticState: PaginationState;
-  controller?: HeadlessPagination;
-}
+import {usePagination} from '../_lib/commerce-engine';
 
-export default function Pagination(props: IPaginationProps) {
-  const {staticState, controller} = props;
-
-  const [state, setState] = useState(staticState);
-
-  useEffect(() => {
-    controller?.subscribe(() => setState(controller.state));
-  }, [controller]);
+export default function Pagination() {
+  const {state, methods} = usePagination();
 
   const renderPageRadioButtons = () => {
     return Array.from({length: state.totalPages}, (_, i) => {
@@ -28,7 +15,7 @@ export default function Pagination(props: IPaginationProps) {
             name="page"
             value={page - 1}
             checked={state.page === page - 1}
-            onChange={() => controller?.selectPage(page - 1)}
+            onChange={() => methods?.selectPage(page - 1)}
           />
           {page}
         </label>
@@ -44,7 +31,7 @@ export default function Pagination(props: IPaginationProps) {
       <button
         className="PreviousPage"
         disabled={state.page === 0}
-        onClick={controller?.previousPage}
+        onClick={methods?.previousPage}
       >
         {'<'}
       </button>
@@ -52,7 +39,7 @@ export default function Pagination(props: IPaginationProps) {
       <button
         className="NextPage"
         disabled={state.page === state.totalPages - 1}
-        onClick={controller?.nextPage}
+        onClick={methods?.nextPage}
       >
         {'>'}
       </button>

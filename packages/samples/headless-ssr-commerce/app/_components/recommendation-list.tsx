@@ -1,31 +1,17 @@
-import {
-  Product,
-  Recommendations as RecommendationsController,
-  RecommendationsState,
-} from '@coveo/headless/ssr-commerce';
+'use client';
+
+import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
-import {useEffect, useState, FunctionComponent} from 'react';
+import {usePopularBoughtRecs} from '../_lib/commerce-engine';
 
-interface RecommendationsProps {
-  staticState: RecommendationsState;
-  controller?: RecommendationsController;
-}
-
-export const Recommendations: FunctionComponent<RecommendationsProps> = ({
-  staticState,
-  controller,
-}) => {
-  const [state, setState] = useState(staticState);
+export default function Recommendations() {
+  // TODO: KIT-3503: refresh recs server side
+  const {state, methods} = usePopularBoughtRecs();
 
   const router = useRouter();
 
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
-
   const onProductClick = (product: Product) => {
-    controller?.interactiveProduct({options: {product}}).select();
+    methods?.interactiveProduct({options: {product}}).select();
     router.push(
       `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
     );
@@ -37,10 +23,7 @@ export const Recommendations: FunctionComponent<RecommendationsProps> = ({
         <h3>{state.headline}</h3>
         {state.products.map((product) => (
           <li key={product.ec_product_id}>
-            <button
-              disabled={!controller}
-              onClick={() => onProductClick(product)}
-            >
+            <button disabled={!methods} onClick={() => onProductClick(product)}>
               {product.ec_name}
             </button>
           </li>
@@ -48,4 +31,4 @@ export const Recommendations: FunctionComponent<RecommendationsProps> = ({
       </ul>
     </>
   );
-};
+}

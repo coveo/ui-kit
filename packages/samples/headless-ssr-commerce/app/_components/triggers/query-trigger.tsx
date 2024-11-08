@@ -1,25 +1,10 @@
-import {
-  QueryTrigger as QueryTriggerController,
-  QueryTriggerState,
-} from '@coveo/headless/commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface QueryTriggerProps {
-  controller?: QueryTriggerController;
-  staticState: QueryTriggerState;
-}
+import {useQueryTrigger} from '@/app/_lib/commerce-engine';
 
 // The query trigger query example in the searchuisamples org is 'query me'.
-export default function QueryTrigger({
-  controller,
-  staticState,
-}: QueryTriggerProps) {
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
+export default function QueryTrigger() {
+  const {state} = useQueryTrigger();
 
   if (state.wasQueryModified) {
     return (

@@ -1,42 +1,15 @@
-import {
-  Cart as CartController,
-  CartItem,
-  CartState,
-  ContextState,
-  Context as ContextController,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+'use client';
+
+import {CartItem} from '@coveo/headless-react/ssr-commerce';
+import {useCart, useContext} from '../_lib/commerce-engine';
 import {formatCurrency} from '../_utils/format-currency';
 
-interface CartProps {
-  staticState: CartState;
-  controller?: CartController;
-  staticContextState: ContextState;
-  contextController?: ContextController;
-}
-
-export default function Cart({
-  staticState,
-  controller,
-  staticContextState,
-  contextController,
-}: CartProps) {
-  const [state, setState] = useState(staticState);
-  useEffect(
-    () => controller?.subscribe(() => setState({...controller.state})),
-    [controller]
-  );
-  const [contextState, setContextState] = useState(staticContextState);
-  useEffect(
-    () =>
-      contextController?.subscribe(() =>
-        setContextState({...contextController.state})
-      ),
-    [contextController]
-  );
+export default function Cart() {
+  const {state, methods} = useCart();
+  const {state: contextState} = useContext();
 
   const adjustQuantity = (item: CartItem, delta: number) => {
-    controller?.updateItemQuantity({
+    methods?.updateItemQuantity({
       ...item,
       quantity: item.quantity + delta,
     });
@@ -47,11 +20,11 @@ export default function Cart({
   };
 
   const purchase = () => {
-    controller?.purchase({id: crypto.randomUUID(), revenue: state.totalPrice});
+    methods?.purchase({id: crypto.randomUUID(), revenue: state.totalPrice});
   };
 
   const emptyCart = () => {
-    controller?.empty();
+    methods?.empty();
   };
 
   const language = () => contextState.language;

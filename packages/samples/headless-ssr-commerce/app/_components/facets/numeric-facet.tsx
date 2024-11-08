@@ -1,7 +1,9 @@
+'use client';
+
 import {
   NumericFacet as HeadlessNumericFacet,
   NumericFacetState,
-} from '@coveo/headless/ssr-commerce';
+} from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useRef, useState} from 'react';
 
 interface INumericFacetProps {
