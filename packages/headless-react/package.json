@@ -56,8 +56,8 @@
     "@types/react-dom": "18.3.0"
   },
   "optionalDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
