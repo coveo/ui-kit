@@ -107,7 +107,6 @@ describe('Headless react SSR utils', () => {
     const numProducts = 10;
     const engineDefinition = defineCommerceEngine({
       configuration: sampleConfig,
-      // TODO: Generalize tests to test all defined controllers dynamically
       controllers: {
         productList: defineProductList(),
         searchBox: defineStandaloneSearchBox({
@@ -284,7 +283,6 @@ describe('Headless react SSR utils', () => {
       });
 
       describe('controller hooks', () => {
-        // TODO: Generalize to loop through all defined controllers dynamically
         const {useSearchBox} = engineDefinition.controllers;
         describe('with StaticStateProvider', () => {
           test('should define state but not controller', () => {
@@ -292,7 +290,7 @@ describe('Headless react SSR utils', () => {
               wrapper: staticStateProviderWrapper,
             });
             expect(result.current.state).toBeDefined();
-            expect(result.current?.controller).toBeUndefined();
+            expect(result.current?.methods).toBeUndefined();
           });
         });
 
@@ -302,11 +300,11 @@ describe('Headless react SSR utils', () => {
               wrapper: hydratedStateProviderWrapper,
             });
             expect(result.current.state).toBeDefined();
-            expect(result.current?.controller).toBeDefined();
+            expect(result.current?.methods).toBeDefined();
           });
 
           // TODO(DEBUG): hydratedState might need to be passed into the wrapper
-          test.skip('should update state when method is called', () => {
+          test('should update state when method is called', () => {
             const {result} = renderHook(() => useSearchBox(), {
               wrapper: hydratedStateProviderWrapper,
             });
@@ -316,7 +314,7 @@ describe('Headless react SSR utils', () => {
               'updateText'
             );
             act(() => {
-              result.current.controller?.updateText('foo');
+              result.current.methods?.updateText('foo');
             });
 
             expect(controllerSpy).toHaveBeenCalledWith('foo');
