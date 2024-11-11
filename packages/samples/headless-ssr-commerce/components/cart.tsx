@@ -31,7 +31,6 @@ export default function Cart() {
             <p>
               <span>Price: </span>
               <span>{formatCurrency(item.price, language(), currency())}</span>
-
               <span> {item.price}</span>
             </p>
             <p>
@@ -43,7 +42,6 @@ export default function Cart() {
                   currency()
                 )}
               </span>
-
               <span> {item.price * item.quantity}</span>
             </p>
             <button onClick={() => adjustQuantity(methods!, item, 1)}>
@@ -63,7 +61,6 @@ export default function Cart() {
       <p>
         <span>Total: </span>
         <span> {formatCurrency(state.totalPrice, language(), currency())}</span>
-
         <span> {state.totalPrice}</span>
       </p>
       <button
