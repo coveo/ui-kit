@@ -15,9 +15,20 @@ jest.mock('c/quanticUtils', () => ({
 }));
 jest.mock('c/quanticHeadlessLoader');
 
+const selectors = {
+  facetContent: '[data-test="facet-content"]',
+};
+
 const exampleFacetId = 'example facet id';
 const defaultOptions = {
   field: 'example field',
+};
+const numericFacetControllerMock = {
+  subscribe: jest.fn((callback) => callback()),
+  state: {
+    facetId: exampleFacetId,
+    values: [],
+  },
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -35,13 +46,7 @@ function createTestComponent(options = defaultOptions) {
 }
 
 const functionsMocks = {
-  buildNumericFacet: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
-    state: {
-      facetId: exampleFacetId,
-      values: [],
-    },
-  })),
+  buildNumericFacet: jest.fn(() => numericFacetControllerMock),
   buildFacetConditionsManager: jest.fn(),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
@@ -124,7 +129,8 @@ describe('c-quantic-numeric-facet', () => {
 
       expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(1);
       expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
-        filetype: 'txt',
+        [exampleFacetDependency.parentFacetId]:
+          exampleFacetDependency.expectedValue,
       });
     });
 
@@ -137,6 +143,52 @@ describe('c-quantic-numeric-facet', () => {
         0
       );
       expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('the facet enablement', () => {
+    describe('when the facet is enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildNumericFacet.mockReturnValue({
+          ...numericFacetControllerMock,
+          state: {...numericFacetControllerMock.state, enabled: true},
+        });
+      });
+
+      it('should display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).not.toBeNull();
+      });
+    });
+
+    describe('when the facet is not enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildNumericFacet.mockReturnValue({
+          ...numericFacetControllerMock,
+          state: {...numericFacetControllerMock.state, enabled: false},
+        });
+      });
+
+      it('should not display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    afterAll(() => {
+      functionsMocks.buildNumericFacet.mockReturnValue(
+        numericFacetControllerMock
+      );
     });
   });
 });

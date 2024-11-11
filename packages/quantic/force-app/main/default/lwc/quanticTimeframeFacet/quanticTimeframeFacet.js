@@ -136,18 +136,34 @@ export default class QuanticTimeframeFacet extends LightningElement {
    */
   @api injectionDepth = 1000;
   /**
-   * This property defines the relationship between this facet and a parent facet. It indicates
-   * which parent facet this facet relies on and what value from that facet is required in order to be displayed.
+   * This property defines the relationship between this facet and a parent facet, indicating
+   * the specific parent facet that this facet relies on and the selected value required
+   * from that parent facet for this facet to be displayed.
    *
-   * Example:
-   * {
-   *   parentFacetId: 'filetype',
-   *   expectedValue: 'txt'
-   * }
-   * In this example, the component depends on the facet with ID 'filetype'
-   * and expects it to have 'txt' as a selected value in order to be displayed.
+   * When this property is defined, the facet will only display if the specified `parentFacetId`
+   * has the `expectedValue` selected. If `expectedValue` is omitted or set to `undefined`,
+   * the facet will display as long as any value is selected in the parent facet.
+   *
+   * **Supported facets:** Dependencies can only be created on a basic or category facet.
+   * Dependencies on numeric, timeframe, or date facets are not supported.
+   *
+   * Example usage:
+   * - To show a facet when any value is selected in the parent facet:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype'
+   *   }
+   *   ```
+   * - To show a facet only when a specific value is selected:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype',
+   *     expectedValue: 'txt'
+   *   }
+   *   ```
+   *
    * @api
-   * @type {DependsOn}
+   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
    */
   @api dependsOn;
 
@@ -225,7 +241,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeDateFilter?.();
   }
 
-  get enabled() {
+  get isFacetEnabled() {
     return this.facetState?.enabled;
   }
 

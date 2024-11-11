@@ -15,9 +15,20 @@ jest.mock('c/quanticUtils', () => ({
 }));
 jest.mock('c/quanticHeadlessLoader');
 
+const selectors = {
+  facetContent: '[data-test="facet-content"]',
+};
+
 const exampleFacetId = 'example facet id';
 const defaultOptions = {
   field: 'example field',
+};
+const timeframeFacetControllerMock = {
+  subscribe: jest.fn((callback) => callback()),
+  state: {
+    facetId: exampleFacetId,
+    values: [],
+  },
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -35,13 +46,7 @@ function createTestComponent(options = defaultOptions) {
 }
 
 const functionsMocks = {
-  buildDateFacet: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
-    state: {
-      facetId: exampleFacetId,
-      values: [],
-    },
-  })),
+  buildDateFacet: jest.fn(() => timeframeFacetControllerMock),
   buildDateFilter: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
     state: {},
@@ -129,7 +134,8 @@ describe('c-quantic-timeframe-facet', () => {
 
       expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(1);
       expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
-        filetype: 'txt',
+        [exampleFacetDependency.parentFacetId]:
+          exampleFacetDependency.expectedValue,
       });
     });
 
@@ -142,6 +148,52 @@ describe('c-quantic-timeframe-facet', () => {
         0
       );
       expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('the facet enablement', () => {
+    describe('when the facet is enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildDateFacet.mockReturnValue({
+          ...timeframeFacetControllerMock,
+          state: {...timeframeFacetControllerMock.state, enabled: true},
+        });
+      });
+
+      it('should display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).not.toBeNull();
+      });
+    });
+
+    describe('when the facet is not enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildDateFacet.mockReturnValue({
+          ...timeframeFacetControllerMock,
+          state: {...timeframeFacetControllerMock.state, enabled: false},
+        });
+      });
+
+      it('should not display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    afterAll(() => {
+      functionsMocks.buildDateFacet.mockReturnValue(
+        timeframeFacetControllerMock
+      );
     });
   });
 });
