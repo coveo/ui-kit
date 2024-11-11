@@ -271,14 +271,16 @@
     },
     {
       "id": "production-release",
-      "team_jenkins": {
+      "github": {
         "disabled": true,
-        "job_name": "ui-kit-production-release",
+        "workflow_file": "prod.yml",
+        "workflow_reference": "main",
+        "workflow_repository": "coveo-platform/ui-kit-cd",
         "prd": {
           "disabled": $[IS_NIGHTLY]
         },
         "extra_parameters": {
-          "GITHUB_RUN_ID": "$[GITHUB_RUN_ID]"
+          "run-id": "$[GITHUB_RUN_ID]"
         }
       }
     }
