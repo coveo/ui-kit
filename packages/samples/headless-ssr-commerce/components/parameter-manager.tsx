@@ -1,49 +1,59 @@
 'use client';
 
 import {useParameterManager} from '@/lib/commerce-engine';
-import {useAppHistoryRouter} from '@coveo/headless-react/ssr-commerce';
-import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless/ssr-commerce';
-import {useEffect, useMemo} from 'react';
+import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
+import {useRouter} from 'next/navigation';
+import {useCallback, useEffect, useRef} from 'react';
 
-export default function ParameterManager() {
-  const historyRouter = useAppHistoryRouter();
+export default function ParameterManager({initialUrl}: {initialUrl: string}) {
+  const {state} = useParameterManager();
+  const router = useRouter();
 
-  const {state, controller} = useParameterManager();
+  const serializer = useCallback(() => {
+    return buildSSRCommerceSearchParameterSerializer();
+  }, []);
 
-  useEffect(() => {
-    controller &&
-      historyRouter.url?.searchParams &&
-      controller.synchronize(
-        buildSSRCommerceSearchParameterSerializer().toCommerceSearchParameters(
-          historyRouter.url.searchParams
-        )
+  const {serialize, removeCommerceParameters, toCommerceSearchParameters} =
+    serializer();
+
+  const resetUrl = useRef(removeCommerceParameters(initialUrl));
+
+  const hasCommerceParameters = useCallback(
+    (url: string) => {
+      return (
+        Object.keys(toCommerceSearchParameters(new URL(url).searchParams))
+          .length > 0
       );
-  }, [historyRouter.url?.searchParams, controller]);
-
-  const correctedUrl = useMemo(() => {
-    if (!historyRouter.url) {
-      return null;
-    }
-    const newURL = new URL(historyRouter.url);
-    const {serialize} = buildSSRCommerceSearchParameterSerializer();
-
-    return serialize(state.parameters, newURL);
-  }, [state.parameters]);
+    },
+    [toCommerceSearchParameters]
+  );
 
   useEffect(() => {
-    if (!correctedUrl || document.location.href === correctedUrl) {
-      return;
+    if (!hasCommerceParameters(initialUrl)) {
+      resetUrl.current = serialize(state.parameters, new URL(initialUrl));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    const {pathname} = new URL(correctedUrl);
-    if (pathname !== document.location.pathname) {
-      return;
+  useEffect(() => {
+    const newUrl = serialize(state.parameters, new URL(location.href));
+    if (
+      newUrl !== resetUrl.current &&
+      (hasCommerceParameters(resetUrl.current) ||
+        hasCommerceParameters(location.href))
+    ) {
+      router.push(newUrl);
+    } else {
+      router.push(removeCommerceParameters(resetUrl.current));
     }
-
-    const isStaticState = controller === undefined;
-
-    historyRouter[isStaticState ? 'replace' : 'push'](correctedUrl);
-  }, [controller, correctedUrl]);
+  }, [
+    hasCommerceParameters,
+    initialUrl,
+    removeCommerceParameters,
+    router,
+    serialize,
+    state.parameters,
+  ]);
 
   return <></>;
 }

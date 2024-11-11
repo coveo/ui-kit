@@ -30,12 +30,15 @@ export default async function Search({
   const staticState = await searchEngineDefinition.fetchStaticState({
     controllers: {parameterManager: {initialState: {parameters}}},
   });
+
+  const url = headers().get('x-coveo-href')!;
+
   return (
     <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <ParameterManager />
+      <ParameterManager initialUrl={url} />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
