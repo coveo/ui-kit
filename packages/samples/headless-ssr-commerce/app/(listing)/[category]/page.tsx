@@ -14,14 +14,8 @@ import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 
-// This is a mapping of the Merchandising Hub urls to urls without slashes
-// In a real implementation, you would already have Merchandising Hub urls properly set up to match the website's structure
-const categoryMap: {[key: string]: string} = {
-  'surf-accessories': 'surf-accessories',
-  'accessories/towels': 'accessories-towels',
-  'clothing/pants': 'clothing-pants',
-};
-
+// This is a hardcoded list of categories that are available in my coveo merchandising hub.
+const categoryList = ['surf-accessories', 'paddleboards', 'toys'];
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
  *
@@ -30,9 +24,7 @@ const categoryMap: {[key: string]: string} = {
 export default async function Listing({params}: {params: {category: string}}) {
   const {category} = params;
 
-  const matchedCategory = Object.keys(categoryMap).find(
-    (key: string) => categoryMap[key] === category
-  );
+  const matchedCategory = categoryList.find((c) => c === category);
 
   if (!matchedCategory) {
     notFound();
