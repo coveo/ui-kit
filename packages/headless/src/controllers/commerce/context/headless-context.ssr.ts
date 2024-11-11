@@ -1,8 +1,7 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {UniversalControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   Context,
   buildContext,
-  ContextProps,
   ContextOptions,
   View,
   UserLocation,
@@ -12,7 +11,7 @@ export type {ContextState, Context, ContextProps} from './headless-context.js';
 export type {View, UserLocation, ContextOptions};
 
 export interface ContextDefinition
-  extends UniversalControllerDefinitionWithoutProps<Context> {}
+  extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
 
 /**
  * Defines a `Context` controller instance.
@@ -22,11 +21,11 @@ export interface ContextDefinition
  *
  * @internal
  */
-export function defineContext(props: ContextProps = {}): ContextDefinition {
+export function defineContext(): ContextDefinition {
   return {
     listing: true,
     search: true,
     standalone: true,
-    build: (engine) => buildContext(engine, props),
+    buildWithProps: (engine, props) => buildContext(engine, {options: props}),
   };
 }

@@ -33,6 +33,7 @@ export default function ListingProvider({
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
           },
+          context: staticState.controllers.context.state,
         },
       })
       .then(({engine, controllers}) => {

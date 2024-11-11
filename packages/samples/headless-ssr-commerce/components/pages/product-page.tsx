@@ -41,6 +41,7 @@ export default function ProductPage(props: IProductPageProps) {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
           },
+          context: staticState.controllers.context.state,
         },
       })
       .then(({engine, controllers}) => {
