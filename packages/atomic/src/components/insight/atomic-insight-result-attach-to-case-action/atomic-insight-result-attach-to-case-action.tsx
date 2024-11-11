@@ -12,7 +12,7 @@ import {ResultContext} from '../../search/result-template-components/result-temp
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultAttachToCaseEvent {
-  callback: () => void);
+  callback: () => void;
   result: Result;
 }
 /**
