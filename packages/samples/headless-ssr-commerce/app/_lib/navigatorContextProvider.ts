@@ -32,11 +32,13 @@ export class NextJsNavigatorContext implements NavigatorContext {
   }
 
   /**
-   * Placeholder for the location property. Needs to be implemented based on the application's requirements.
-   * @returns Currently returns a 'TODO:' string.
+   * Retrieves the current page URL from the 'x-href' header, which can represent
+   * the application's active location or requested resource URL.
+   * This header may be set by middleware or server logic to reflect the active location.
+   * @returns The current location URL if available, otherwise undefined.
    */
   get location() {
-    return 'TODO:';
+    return this.headers.get('x-href');
   }
 
   /**
