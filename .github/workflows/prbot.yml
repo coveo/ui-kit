@@ -403,6 +403,20 @@ jobs:
       - uses: ./.github/actions/setup
       - run: npm run build
       - uses: ./.github/actions/playwright-atomic-hosted-pages
+  playwright-headless-ssr-commerce:
+    name: 'Run e2e tests for Headless Commerce SSR'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/setup
+      - run: npm run build
+      - uses: ./.github/actions/playwright-headless-ssr-commerce
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
     needs: build
@@ -503,6 +517,7 @@ jobs:
       - 'unit-test'
       - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
+      - 'playwright-headless-ssr-commerce'
       - 'e2e-atomic-test'
       - 'e2e-atomic-csp-test'
       - 'e2e-quantic'
@@ -543,6 +558,7 @@ jobs:
       - 'unit-test'
       - 'playwright-atomic'
       - 'playwright-atomic-hosted-page-test'
+      - 'playwright-headless-ssr-commerce'
       - 'e2e-atomic-test'
       - 'e2e-atomic-screenshots'
       - 'e2e-atomic-react-test'
