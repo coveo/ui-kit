@@ -29,7 +29,7 @@ export default async function Search() {
         country: 'US',
         currency: 'USD',
         view: {
-          url: 'https://sports.barca.group/browse/search',
+          url: 'https://sports.barca.group/search',
         },
       },
     },
