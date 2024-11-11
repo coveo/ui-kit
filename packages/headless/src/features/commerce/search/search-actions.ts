@@ -163,13 +163,8 @@ export const fetchInstantProducts = createAsyncThunk<
       return rejectWithValue(fetched.error);
     }
 
-    // TODO: Should ultimately rely on different config for product suggest endpoint which would support
-    // different config for pagination: Would not have to cull array of products client side.
-    // https://coveord.atlassian.net/browse/CAPI-682
-    const products = fetched.success.products.slice(0, 5);
-
     return {
-      response: {...fetched.success, products},
+      response: {...fetched.success, products: fetched.success.products},
     };
   }
 );
