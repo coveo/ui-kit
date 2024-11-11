@@ -1,15 +1,11 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
-import ProductPage from '@/components/pages/product-page';
+import Cart from '@/components/cart';
+import SearchProvider from '@/components/providers/search-provider';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
-import {Suspense} from 'react';
 
-export default async function ProductDescriptionPage({
-  params,
-}: {
-  params: {productId: string};
-}) {
+export default async function Search() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
@@ -21,17 +17,16 @@ export default async function ProductDescriptionPage({
   const staticState = await searchEngineDefinition.fetchStaticState({
     controllers: {cart: {initialState: {items}}},
   });
+
   return (
-    <>
-      <h2>Product description page</h2>
-      <Suspense fallback={<p>Loading...</p>}>
-        <ProductPage
-          staticState={staticState}
-          navigatorContext={navigatorContext.marshal}
-          productId={params.productId}
-        />
-      </Suspense>
-    </>
+    <SearchProvider
+      staticState={staticState}
+      navigatorContext={navigatorContext.marshal}
+    >
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <Cart />
+      </div>
+    </SearchProvider>
   );
 }
 

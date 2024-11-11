@@ -1,3 +1,4 @@
+import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
 import FacetGenerator from '@/components/facets/facet-generator';
@@ -22,8 +23,13 @@ export default async function Listing() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    controllers: {cart: {initialState: {items}}},
+  });
 
   return (
     <ListingProvider

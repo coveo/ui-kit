@@ -1,11 +1,13 @@
 'use client';
 
-import {useProductList} from '@/lib/commerce-engine';
+import {useCart, useProductList} from '@/lib/commerce-engine';
+import {addToCart} from '@/utils/cart';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useRouter} from 'next/navigation';
 
 export default function ProductList() {
   const {state, methods} = useProductList();
+  const {methods: cartMethods} = useCart();
 
   const router = useRouter();
 
@@ -22,6 +24,9 @@ export default function ProductList() {
         <li key={product.ec_product_id}>
           <button disabled={!methods} onClick={() => onProductClick(product)}>
             {product.ec_name}
+          </button>
+          <button onClick={() => addToCart(cartMethods!, product)}>
+            Add to cart
           </button>
         </li>
       ))}
