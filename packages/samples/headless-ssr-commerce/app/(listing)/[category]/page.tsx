@@ -1,3 +1,4 @@
+import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
 import FacetGenerator from '@/components/facets/facet-generator';
@@ -11,19 +12,45 @@ import Summary from '@/components/summary';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
+import {notFound} from 'next/navigation';
 
+// This is a hardcoded list of categories that are available in my coveo merchandising hub.
+const categoryList = ['surf-accessories', 'paddleboards', 'toys'];
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
  *
  * The Listing function is the entry point for server-side rendering (SSR).
  */
-export default async function Listing() {
+export default async function Listing({params}: {params: {category: string}}) {
+  const {category} = params;
+
+  const matchedCategory = categoryList.find((c) => c === category);
+
+  if (!matchedCategory) {
+    notFound();
+  }
+
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+        },
+      },
+    },
+  });
 
   return (
     <ListingProvider

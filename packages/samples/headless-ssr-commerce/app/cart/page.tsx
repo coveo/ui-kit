@@ -1,13 +1,6 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
-import BreadcrumbManager from '@/components/breadcrumb-manager';
-import FacetGenerator from '@/components/facets/facet-generator';
-import ProductList from '@/components/product-list';
+import Cart from '@/components/cart';
 import SearchProvider from '@/components/providers/search-provider';
-import Recommendations from '@/components/recommendation-list';
-import SearchBox from '@/components/search-box';
-import ShowMore from '@/components/show-more';
-import Summary from '@/components/summary';
-import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
@@ -29,7 +22,7 @@ export default async function Search() {
         country: 'US',
         currency: 'USD',
         view: {
-          url: 'https://sports.barca.group/search',
+          url: 'https://sports.barca.group/cart',
         },
       },
     },
@@ -41,28 +34,7 @@ export default async function Search() {
       navigatorContext={navigatorContext.marshal}
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div style={{flex: 1}}>
-          <FacetGenerator />
-        </div>
-        <div style={{flex: 2}}>
-          <Triggers />
-          <SearchBox />
-          <BreadcrumbManager />
-          <Summary />
-          <ProductList />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
-          {/* <Pagination
-          staticState={staticState.controllers.pagination.state}
-          controller={hydratedState?.controllers.pagination}
-        ></Pagination> */}
-          <ShowMore />
-        </div>
-
-        <div style={{flex: 3}}>
-          {/* popularBoughtRecs */}
-          {/* TODO: KIT-3503: need to revisit the way recommendations are added*/}
-          <Recommendations />
-        </div>
+        <Cart />
       </div>
     </SearchProvider>
   );

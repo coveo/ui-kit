@@ -29,6 +29,12 @@ export default function ListingProvider({
     listingEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
+          context: staticState.controllers.context.state,
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
