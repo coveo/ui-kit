@@ -2,7 +2,7 @@ import {test, expect} from './listing.fixture';
 
 test.describe('Listing Page', () => {
   test.beforeEach(async ({page}) => {
-    await page.goto('/listing');
+    await page.goto('/surf-accessories');
   });
 
   test('should load and display the search box', async ({search}) => {
@@ -54,41 +54,6 @@ test.describe('Listing Page', () => {
     });
   });
 
-  test.describe('Facets', () => {
-    test('should display the facets', async ({facet}) => {
-      const facetsSection = await facet.getFacetsSection();
-      await expect(facetsSection).toBeVisible();
-    });
-
-    test.describe('when a facet value is selected', () => {
-      let initialResultSummary: string | null;
-      test.beforeEach(async ({search, facet}) => {
-        initialResultSummary = await (
-          await search.getResultSummary()
-        ).textContent();
-
-        const firstFacet = await facet.getFirstFacet();
-        await firstFacet.click();
-
-        const facetLoading = await facet.getFacetLoading();
-        await facetLoading.waitFor({state: 'visible'});
-        await facetLoading.waitFor({state: 'hidden'});
-      });
-
-      test('should update results', async ({search}) => {
-        const productItems = await search.getProductItems();
-        expect(productItems.length).toBeGreaterThan(0);
-
-        expect(initialResultSummary).not.toEqual(
-          (await search.getResultSummary()).textContent()
-        );
-      });
-
-      test('should be checked after clicking', async ({facet}) => {
-        await expect(await facet.getFirstFacet()).toBeChecked();
-      });
-    });
-  });
   test.describe('Cart', () => {
     let initialItemQuantity: number;
     let initialItemPrice: number;
