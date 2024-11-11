@@ -8,7 +8,7 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import {Recommendations} from '../recommendation-list';
+import Recommendations from '../recommendation-list';
 
 interface IProductPageProps {
   staticState: StandaloneStaticState;
@@ -41,14 +41,7 @@ export default function ProductPage(props: IProductPageProps) {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
           },
-          context: {
-            language: staticState.controllers.context.state.language,
-            country: staticState.controllers.context.state.country,
-            currency: staticState.controllers.context.state.currency,
-            view: {
-              url: staticState.controllers.context.state.view.url,
-            },
-          },
+          context: staticState.controllers.context.state,
         },
       })
       .then(({engine, controllers}) => {

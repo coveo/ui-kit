@@ -3,16 +3,16 @@
 import {usePagination, useSummary} from '@/lib/commerce-engine';
 
 export default function ShowMore() {
-  const {state, controller} = usePagination();
+  const {state, methods} = usePagination();
   const {state: summaryState} = useSummary();
 
   const handleFetchMore = () => {
-    controller?.fetchMoreProducts();
+    methods?.fetchMoreProducts();
   };
 
   const isDisabled = () => {
     return (
-      !controller ||
+      !methods ||
       summaryState?.lastProduct === summaryState?.totalNumberOfProducts
     );
   };

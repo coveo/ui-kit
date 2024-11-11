@@ -10,7 +10,14 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['images.barca.group'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.barca.group',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

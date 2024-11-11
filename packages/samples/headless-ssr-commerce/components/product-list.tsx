@@ -4,29 +4,19 @@ import {useCart, useProductList} from '@/lib/commerce-engine';
 import {addToCart} from '@/utils/cart';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import Image from 'next/image';
-import {useRouter} from 'next/navigation';
 
 export default function ProductList() {
-  const {state, controller} = useProductList();
-  const {controller: cartController} = useCart();
-
-  const router = useRouter();
+  const {state, methods} = useProductList();
+  const {methods: cartMethods} = useCart();
 
   const onProductClick = (product: Product) => {
-    controller?.interactiveProduct({options: {product}}).select();
-    router.push(
-      `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
-    );
+    methods?.interactiveProduct({options: {product}}).select();
   };
-
   return (
     <ul>
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
-          <button
-            disabled={!controller}
-            onClick={() => onProductClick(product)}
-          >
+          <button disabled={!methods} onClick={() => onProductClick(product)}>
             {product.ec_name}
             <Image
               src={product.ec_images[0]}
@@ -35,7 +25,10 @@ export default function ProductList() {
               height={50}
             />
           </button>
-          <button onClick={() => addToCart(cartController!, product)}>
+          <button onClick={() => addToCart(cartMethods!, product)}>
+            Add to cart
+          </button>
+          <button onClick={() => addToCart(cartMethods!, product)}>
             Add to cart
           </button>
         </li>

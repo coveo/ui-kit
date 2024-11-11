@@ -5,7 +5,7 @@ import {adjustQuantity, emptyCart, purchase} from '@/utils/cart';
 import {formatCurrency} from '@/utils/format-currency';
 
 export default function Cart() {
-  const {state, controller} = useCart();
+  const {state, methods} = useCart();
   const {state: contextState} = useContext();
 
   const isCartEmpty = () => {
@@ -44,14 +44,14 @@ export default function Cart() {
               </span>
               <span>{item.price * item.quantity}</span>
             </p>
-            <button onClick={() => adjustQuantity(controller!, item, 1)}>
+            <button onClick={() => adjustQuantity(methods!, item, 1)}>
               Add one
             </button>
-            <button onClick={() => adjustQuantity(controller!, item, -1)}>
+            <button onClick={() => adjustQuantity(methods!, item, -1)}>
               Remove one
             </button>
             <button
-              onClick={() => adjustQuantity(controller!, item, -item.quantity)}
+              onClick={() => adjustQuantity(methods!, item, -item.quantity)}
             >
               Remove all
             </button>
@@ -66,11 +66,11 @@ export default function Cart() {
       </p>
       <button
         disabled={isCartEmpty()}
-        onClick={() => purchase(controller!, state.totalPrice)}
+        onClick={() => purchase(methods!, state.totalPrice)}
       >
         Purchase
       </button>
-      <button disabled={isCartEmpty()} onClick={() => emptyCart(controller!)}>
+      <button disabled={isCartEmpty()} onClick={() => emptyCart(methods!)}>
         Empty cart
       </button>
     </div>

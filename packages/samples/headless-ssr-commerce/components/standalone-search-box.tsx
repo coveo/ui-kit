@@ -11,9 +11,9 @@ import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
 export default function StandaloneSearchBox() {
-  const {state, controller} = useStandaloneSearchBox();
+  const {state, methods} = useStandaloneSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
-  const {state: instantProductsState, controller: instantProductsController} =
+  const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -25,13 +25,13 @@ export default function StandaloneSearchBox() {
     if (state.redirectTo === '/search') {
       const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
       router.push(url, {scroll: false});
-      controller?.afterRedirection();
+      methods?.afterRedirection();
     }
-  }, [state.redirectTo, state.value, router, controller]);
+  }, [state.redirectTo, state.value, router, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
-    controller?.updateText(e.target.value);
+    methods?.updateText(e.target.value);
     instantProductsController?.updateQuery(e.target.value);
   };
 
@@ -55,10 +55,10 @@ export default function StandaloneSearchBox() {
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={controller?.clear}>X</button>
+          <button onClick={methods?.clear}>X</button>
         </span>
       )}
-      <button onClick={() => controller?.submit()}>Search</button>
+      <button onClick={() => methods?.submit()}>Search</button>
 
       {isInputFocused && (
         <>
@@ -75,7 +75,7 @@ export default function StandaloneSearchBox() {
                       )
                     }
                     onClick={() =>
-                      controller?.selectSuggestion(suggestion.rawValue)
+                      methods?.selectSuggestion(suggestion.rawValue)
                     }
                     dangerouslySetInnerHTML={{
                       __html: suggestion.highlightedValue,

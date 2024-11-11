@@ -1,6 +1,6 @@
 # Server side rendering examples
 
-- Demonstrates usage of the framework `@coveo/headless-react/ssr-commerce` utils for Server-Side Rendering with headless using Next.js in a commerce app.
+Demonstrates usage of the framework `@coveo/headless-react/ssr-commerce` utils for Server-Side Rendering with headless using Next.js in a commerce app.
 
 ## Getting Started
 

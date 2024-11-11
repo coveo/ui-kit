@@ -21,4 +21,19 @@ export class ProductDescriptionPageObject extends BasePageObject<'atomic-product
   get showLessButton() {
     return this.page.getByRole('button', {name: 'Show less'});
   }
+
+  async withLongDescription() {
+    await this.page.route('**/commerce/v2/search', async (route) => {
+      const response = await route.fetch();
+      const body = await response.json();
+      body.products[0].ec_description =
+        'This is a long description that should be truncated'.repeat(10);
+      await route.fulfill({
+        response,
+        json: body,
+      });
+    });
+
+    return this;
+  }
 }
