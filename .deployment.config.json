@@ -18,6 +18,7 @@
     {
       "id": "deploy-headless-patch-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_PATCH_VERSION]",
         "source": "packages/headless/dist/browser",
@@ -29,6 +30,7 @@
     {
       "id": "deploy-headless-minor-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MINOR_VERSION]",
         "source": "packages/headless/dist/browser",
@@ -40,6 +42,7 @@
     {
       "id": "deploy-headless-major-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]",
         "source": "packages/headless/dist/browser",
@@ -49,8 +52,21 @@
       }
     },
     {
+      "id": "deploy-headless-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]-nightly",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-patch-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]",
         "source": "packages/atomic/dist/atomic",
@@ -62,6 +78,7 @@
     {
       "id": "deploy-atomic-minor-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
@@ -73,6 +90,7 @@
     {
       "id": "deploy-atomic-major-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
@@ -82,8 +100,21 @@
       }
     },
     {
+      "id": "deploy-atomic-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-headless-patch-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/headless",
         "source": "packages/headless/dist/browser",
@@ -95,6 +126,7 @@
     {
       "id": "deploy-atomic-headless-minor-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/headless",
         "source": "packages/headless/dist/browser",
@@ -106,6 +138,7 @@
     {
       "id": "deploy-atomic-headless-major-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/headless",
         "source": "packages/headless/dist/browser",
@@ -115,8 +148,21 @@
       }
     },
     {
+      "id": "deploy-atomic-headless-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly/headless",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
         "source": "packages/atomic/dist-storybook",
@@ -128,6 +174,7 @@
     {
       "id": "deploy-atomic-react-patch-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_PATCH_VERSION]",
         "source": "packages/atomic-react/dist",
@@ -139,6 +186,7 @@
     {
       "id": "deploy-atomic-react-minor-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MINOR_VERSION]",
         "source": "packages/atomic-react/dist",
@@ -150,6 +198,7 @@
     {
       "id": "deploy-atomic-react-major-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]",
         "source": "packages/atomic-react/dist",
@@ -161,6 +210,7 @@
     {
       "id": "deploy-atomic-hosted-page-patch-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]",
         "source": "packages/atomic-hosted-page/dist",
@@ -172,6 +222,7 @@
     {
       "id": "deploy-atomic-hosted-page-minor-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]",
         "source": "packages/atomic-hosted-page/dist",
@@ -183,8 +234,21 @@
     {
       "id": "deploy-atomic-hosted-page-major-to-s3-version",
       "s3": {
+        "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]-nightly",
         "source": "packages/atomic-hosted-page/dist",
         "parameters": {
           "acl": "public-read"
@@ -200,7 +264,8 @@
         "extra_parameters": {
           "atomic-major": "$[ATOMIC_MAJOR_VERSION]",
           "atomic-minor": "$[ATOMIC_MINOR_VERSION]",
-          "atomic-patch": "$[ATOMIC_PATCH_VERSION]"
+          "atomic-patch": "$[ATOMIC_PATCH_VERSION]",
+          "is-nightly": "$[IS_NIGHTLY]"
         }
       }
     },
@@ -210,7 +275,7 @@
         "disabled": true,
         "job_name": "ui-kit-production-release",
         "prd": {
-          "disabled": false
+          "disabled": $[IS_NIGHTLY]
         },
         "extra_parameters": {
           "GITHUB_RUN_ID": "$[GITHUB_RUN_ID]"
