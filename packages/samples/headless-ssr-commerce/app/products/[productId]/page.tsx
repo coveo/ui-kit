@@ -1,6 +1,6 @@
-import ProductPage from '@/app/_components/pages/product-page';
-import {searchEngineDefinition} from '@/app/_lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/app/_lib/navigatorContextProvider';
+import ProductPage from '@/components/pages/product-page';
+import {searchEngineDefinition} from '@/lib/commerce-engine';
+import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
 import {Suspense} from 'react';
 
