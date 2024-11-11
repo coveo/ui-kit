@@ -2169,7 +2169,7 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicProductMultiValueText {
         /**
@@ -5024,7 +5024,7 @@ declare global {
         new (): HTMLAtomicProductLinkElement;
     };
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
     }
@@ -8259,7 +8259,7 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
-     * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
      */
     interface AtomicProductMultiValueText {
         /**
@@ -10419,7 +10419,7 @@ declare module "@stencil/core" {
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
             /**
-             * The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
              */
             "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**

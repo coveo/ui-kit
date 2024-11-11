@@ -87,6 +87,7 @@ export class AtomicCommerceDidYouMean
         <Correction
           correctedQuery={this.didYouMeanState.queryCorrection.correctedQuery}
           i18n={this.bindings.i18n}
+          //TODO - https://coveord.atlassian.net/browse/KIT-3691 - implement applyCorrection here.
           onClick={() => {}}
         />
       );

@@ -2,8 +2,7 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Headless SSR examples',
-  description:
-    'Examples of using framework agnostic @coveo/headless/ssr-commerce',
+  description: 'Examples of using @coveo/headless-react/ssr-commerce',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
@@ -14,9 +13,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           <Link href={'/search'}>Search Page</Link>
           <Link href={'/listing'}>Listing Page</Link>
-          <Link href={'/recommendation'}>Recommendations</Link>
+          <Link href={'/cart'}>Cart Page</Link>
         </div>
-
         {children}
       </body>
     </html>

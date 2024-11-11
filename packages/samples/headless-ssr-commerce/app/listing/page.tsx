@@ -1,7 +1,17 @@
+import * as externalCartAPI from '@/actions/external-cart-api';
+import BreadcrumbManager from '@/components/breadcrumb-manager';
+import Cart from '@/components/cart';
+import FacetGenerator from '@/components/facets/facet-generator';
+import Pagination from '@/components/pagination';
+import ProductList from '@/components/product-list';
+import ListingProvider from '@/components/providers/listing-provider';
+import Recommendations from '@/components/recommendation-list';
+import Sort from '@/components/sort';
+import StandaloneSearchBox from '@/components/standalone-search-box';
+import Summary from '@/components/summary';
+import {listingEngineDefinition} from '@/lib/commerce-engine';
+import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {headers} from 'next/headers';
-import ListingPage from '../_components/pages/listing-page';
-import {listingEngineDefinition} from '../_lib/commerce-engine';
-import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
@@ -13,14 +23,49 @@ export default async function Listing() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState();
+  const staticState = await listingEngineDefinition.fetchStaticState({
+    controllers: {cart: {initialState: {items}}},
+  });
 
   return (
-    <ListingPage
+    <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
-    ></ListingPage>
+    >
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div style={{flex: 1}}>
+          <FacetGenerator />
+        </div>
+
+        <div style={{flex: 2}}>
+          <StandaloneSearchBox />
+          <BreadcrumbManager />
+          <Summary />
+          <Sort />
+          <ProductList />
+          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+          <Pagination />
+          {/* <ShowMore
+            staticState={staticState.controllers.pagination.state}
+            controller={hydratedState?.controllers.pagination}
+            summaryController={hydratedState?.controllers.summary}
+          /> */}
+        </div>
+
+        <div style={{flex: 3}}>
+          <h3>My Cart</h3>
+          <Cart />
+        </div>
+
+        <div style={{flex: 4}}>
+          <Recommendations />
+        </div>
+      </div>
+    </ListingProvider>
   );
 }
 
