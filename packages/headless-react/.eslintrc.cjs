@@ -5,12 +5,8 @@ const gtsPath = resolve(gtsPkgJsonPath, '..');
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'testing-library', 'jest-dom'],
-  extends: [
-    gtsPath,
-    'plugin:testing-library/react',
-    'plugin:jest-dom/recommended',
-  ],
+  plugins: ['@typescript-eslint', 'react', 'testing-library'],
+  extends: [gtsPath, 'plugin:testing-library/react'],
   rules: {
     'react/jsx-uses-vars': 'error',
     'react/jsx-uses-react': 'error',

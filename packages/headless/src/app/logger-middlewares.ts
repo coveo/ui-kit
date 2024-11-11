@@ -7,7 +7,7 @@ import {
 import {Logger} from 'pino';
 
 type UnknownActionWithPossibleErrorPayload = UnknownAction & {
-  payload?: {ignored?: boolean};
+  payload?: {ignored?: boolean; message?: string; errorCode?: string};
   error?: SerializedError;
 };
 
@@ -20,9 +20,20 @@ export const logActionErrorMiddleware: (logger: Logger) => Middleware =
 
     const error: SerializedError = unknownAction.error;
 
+    const errorPayloadMessage = [
+      unknownAction.payload?.errorCode,
+      unknownAction.payload?.message,
+    ]
+      .filter(Boolean)
+      .join(' - ');
+
     if (!unknownAction.payload?.ignored) {
       logger.error(
-        error.stack || error.message || error.name || 'Error',
+        errorPayloadMessage ||
+          error.stack ||
+          error.message ||
+          error.name ||
+          'Error',
         `Action dispatch error ${unknownAction.type}`,
         action
       );
