@@ -12,7 +12,7 @@ import {ResultContext} from '../../search/result-template-components/result-temp
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultAttachToCaseEvent {
-  controller: AttachToCase;
+  callback: () => void);
   result: Result;
 }
 /**
@@ -71,9 +71,9 @@ export class AtomicInsightResultAttachToCaseAction
 
   private onClick() {
     if (this.attachToCase.isAttached()) {
-      this.detach.emit({controller: this.attachToCase, result: this.result});
+      this.detach.emit({callback: this.attachToCase.detach, result: this.result});
     } else {
-      this.attach.emit({controller: this.attachToCase, result: this.result});
+      this.attach.emit({callback: this.attachToCase.attach, result: this.result});
     }
   }
 
