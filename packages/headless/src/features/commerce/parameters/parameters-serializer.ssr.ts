@@ -38,7 +38,7 @@ type RangeFacetValueSearchParam = Record<
 >;
 
 export function buildSSRCommerceSearchParameterSerializer() {
-  return {toCommerceSearchParameters, serialize};
+  return {toCommerceSearchParameters, removeCommerceParameters, serialize};
 }
 
 /**
@@ -65,6 +65,28 @@ function toCommerceSearchParameters(
   }
 
   return commerceSearchParameters;
+}
+
+/**
+ * Removes all commerce search parameters from the provided URL.
+ * @param href - The URL from which to remove the commerce search parameters.
+ * @returns The URL without the commerce search parameters.
+ */
+function removeCommerceParameters(href: string) {
+  const url = new URL(href);
+  const searchParams = url.searchParams;
+  const commerceParams = toCommerceSearchParameters(searchParams);
+  for (const [key, value] of Object.entries(commerceParams)) {
+    if (isFacetObject(value)) {
+      for (const facetKey of Object.keys(value)) {
+        searchParams.delete(`${key}-${facetKey}`);
+      }
+    } else {
+      searchParams.delete(key);
+    }
+  }
+  const queryString = searchParams.size > 0 ? `?${searchParams}` : '';
+  return `${url.origin}${url.pathname}${queryString}`;
 }
 
 /**
