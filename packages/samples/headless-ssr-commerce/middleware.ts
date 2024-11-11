@@ -1,10 +1,11 @@
 import {NextRequest, NextResponse} from 'next/server';
 
 export default function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const requestHeaders = new Headers(request.headers);
+  const headers = new Headers(request.headers);
   const uuid = crypto.randomUUID();
-  requestHeaders.set('x-coveo-client-id', uuid);
+  headers.set('x-coveo-client-id', uuid);
+  headers.set('x-coveo-href', request.nextUrl.href);
+  const response = NextResponse.next({headers});
   response.headers.set('x-coveo-client-id', uuid);
   return response;
 }
