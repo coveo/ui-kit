@@ -71,7 +71,10 @@ export class AtomicInsightResultAttachToCaseAction
 
   private onClick() {
     if (this.attachToCase.isAttached()) {
-      this.detach.emit({callback: this.attachToCase.detach, result: this.result});
+      this.detach.emit({
+        callback: this.attachToCase.detach,
+        result: this.result
+      });
     } else {
       this.attach.emit({callback: this.attachToCase.attach, result: this.result});
     }
