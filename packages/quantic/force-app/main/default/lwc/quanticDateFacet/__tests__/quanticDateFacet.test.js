@@ -1,7 +1,7 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import {createElement} from 'lwc';
-import QuanticFacet from 'c/quanticFacet';
+import QuanticDateFacet from 'c/quanticDateFacet';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {generateFacetDependencyConditions} from 'c/quanticUtils';
 
@@ -9,7 +9,7 @@ jest.mock('c/quanticUtils', () => ({
   generateFacetDependencyConditions: jest.fn(),
   Store: {
     facetTypes: {
-      FACETS: 'facets',
+      DATEFACETS: 'dateFacets',
     },
   },
 }));
@@ -23,7 +23,7 @@ const exampleFacetId = 'example facet id';
 const defaultOptions = {
   field: 'example field',
 };
-const facetControllerMock = {
+const dateFacetControllerMock = {
   subscribe: jest.fn((callback) => callback()),
   state: {
     facetId: exampleFacetId,
@@ -34,8 +34,8 @@ const facetControllerMock = {
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
 
-  const element = createElement('c-quantic-facet', {
-    is: QuanticFacet,
+  const element = createElement('c-quantic-date-facet', {
+    is: QuanticDateFacet,
   });
   for (const [key, value] of Object.entries(options)) {
     element[key] = value;
@@ -46,7 +46,7 @@ function createTestComponent(options = defaultOptions) {
 }
 
 const functionsMocks = {
-  buildFacet: jest.fn(() => facetControllerMock),
+  buildDateFacet: jest.fn(() => dateFacetControllerMock),
   buildFacetConditionsManager: jest.fn(),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
@@ -58,7 +58,7 @@ function prepareHeadlessState() {
   // @ts-ignore
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
-      buildFacet: functionsMocks.buildFacet,
+      buildDateFacet: functionsMocks.buildDateFacet,
       buildSearchStatus: functionsMocks.buildSearchStatus,
       buildFacetConditionsManager: functionsMocks.buildFacetConditionsManager,
     };
@@ -79,7 +79,7 @@ let isInitialized = false;
 function mockSuccessfulHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
-    if (element instanceof QuanticFacet && !isInitialized) {
+    if (element instanceof QuanticDateFacet && !isInitialized) {
       isInitialized = true;
       initialize(exampleEngine);
     }
@@ -95,34 +95,13 @@ function cleanup() {
   isInitialized = false;
 }
 
-describe('c-quantic-facet', () => {
+describe('c-quantic-date-facet', () => {
   beforeAll(() => {
     mockSuccessfulHeadlessInitialization();
   });
 
   afterEach(() => {
     cleanup();
-  });
-
-  describe('controller initialization', () => {
-    it('should initialize the controller with the correct customSort value', async () => {
-      const exampleCustomSortValues = ['test'];
-      createTestComponent({
-        ...defaultOptions,
-        customSort: exampleCustomSortValues,
-      });
-      await flushPromises();
-
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildFacet).toHaveBeenCalledWith(
-        exampleEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            customSort: exampleCustomSortValues,
-          }),
-        })
-      );
-    });
   });
 
   describe('the facet conditions manager', () => {
@@ -137,7 +116,7 @@ describe('c-quantic-facet', () => {
       });
       await flushPromises();
 
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
         1
       );
@@ -159,7 +138,7 @@ describe('c-quantic-facet', () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
         0
       );
@@ -170,9 +149,9 @@ describe('c-quantic-facet', () => {
   describe('the facet enablement', () => {
     describe('when the facet is enabled', () => {
       beforeAll(() => {
-        functionsMocks.buildFacet.mockReturnValue({
-          ...facetControllerMock,
-          state: {...facetControllerMock.state, enabled: true},
+        functionsMocks.buildDateFacet.mockReturnValue({
+          ...dateFacetControllerMock,
+          state: {...dateFacetControllerMock.state, enabled: true},
         });
       });
 
@@ -189,9 +168,9 @@ describe('c-quantic-facet', () => {
 
     describe('when the facet is not enabled', () => {
       beforeAll(() => {
-        functionsMocks.buildFacet.mockReturnValue({
-          ...facetControllerMock,
-          state: {...facetControllerMock.state, enabled: false},
+        functionsMocks.buildDateFacet.mockReturnValue({
+          ...dateFacetControllerMock,
+          state: {...dateFacetControllerMock.state, enabled: false},
         });
       });
 
@@ -207,7 +186,7 @@ describe('c-quantic-facet', () => {
     });
 
     afterAll(() => {
-      functionsMocks.buildFacet.mockReturnValue(facetControllerMock);
+      functionsMocks.buildDateFacet.mockReturnValue(dateFacetControllerMock);
     });
   });
 });
