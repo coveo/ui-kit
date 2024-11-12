@@ -42,7 +42,7 @@ Key points for Playwright E2E tests:
 
 **Example Playwright Test Scenarios**:
 
-- A user uses a Quantic component by interacting with its multiple buttons and triggering Coveo analytics.
+- A user uses a Quantic component by interacting with its multiple buttons and triggering Coveo analytics. We test that the expected analytics are sent, that the events are valid, and the response from the analytics API are correct.
 - A user navigates through a whole search workflow, interacting with multiple components.
 - Verifying that API requests made by the component are accurate and produce the expected results in the UI.
 
