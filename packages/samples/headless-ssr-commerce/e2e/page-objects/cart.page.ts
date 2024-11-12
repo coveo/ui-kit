@@ -8,7 +8,7 @@ export class CartPageObject {
   }
 
   async getCart() {
-    return this.page.locator('div:has(> h3:has-text("My Cart"))');
+    return this.page.locator('div:has(> button:has-text("Purchase"))');
   }
 
   async getItems() {
@@ -26,6 +26,10 @@ export class CartPageObject {
 
   async getItemTotalPrice(item: Locator) {
     return item.locator('p').nth(3).locator('span').nth(2);
+  }
+
+  async getAddToCartButton() {
+    return this.page.getByRole('button', {name: 'Add to cart'});
   }
 
   async getAddOneButton() {
