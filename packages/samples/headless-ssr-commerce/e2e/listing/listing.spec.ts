@@ -1,56 +1,54 @@
 import {test, expect} from './listing.fixture';
 
-test.describe('Listing Page', () => {
-  test.beforeEach(async ({page}) => {
-    await page.goto('/surf-accessories');
+test.beforeEach(async ({page}) => {
+  await page.goto('/surf-accessories');
+});
+
+test('should load and display the search box', async ({search}) => {
+  await expect(await search.searchBox()).toBeVisible();
+});
+
+test.describe('when entering a query', () => {
+  test.beforeEach(async ({search}) => {
+    const searchBox = await search.searchBox();
+    await searchBox.fill('shoes');
   });
 
-  test('should load and display the search box', async ({search}) => {
-    await expect(await search.searchBox()).toBeVisible();
+  test('should display suggestions', async ({search}) => {
+    const suggestionsContainer = await search.getSuggestionsContainer();
+    await expect(suggestionsContainer).toBeVisible();
+
+    const suggestions = await search.getSuggestions();
+    expect(await suggestions.count()).toBeGreaterThan(0);
   });
 
-  test.describe('when entering a query', () => {
+  test.describe('when clicking a suggestion', () => {
+    let suggestionValue: string;
     test.beforeEach(async ({search}) => {
-      const searchBox = await search.searchBox();
-      await searchBox.fill('shoes');
-    });
-
-    test('should display suggestions', async ({search}) => {
-      const suggestionsContainer = await search.getSuggestionsContainer();
-      await expect(suggestionsContainer).toBeVisible();
-
       const suggestions = await search.getSuggestions();
-      expect(await suggestions.count()).toBeGreaterThan(0);
+      suggestionValue =
+        (await suggestions.first().textContent()) || 'no value found';
+      await suggestions.first().click();
     });
 
-    test.describe('when clicking a suggestion', () => {
-      let suggestionValue: string;
-      test.beforeEach(async ({search}) => {
-        const suggestions = await search.getSuggestions();
-        suggestionValue =
-          (await suggestions.first().textContent()) || 'no value found';
-        await suggestions.first().click();
-      });
+    test('should go to search page', async ({page}) => {
+      await page.waitForURL('**/search#q=*');
 
-      test('should go to search page', async ({page}) => {
-        await page.waitForURL('**/search#q=*');
+      const currentUrl = page.url();
 
-        const currentUrl = page.url();
+      expect(currentUrl).toContain(suggestionValue);
+    });
+  });
 
-        expect(currentUrl).toContain(suggestionValue);
-      });
+  test.describe('when clicking search button', () => {
+    test.beforeEach(async ({search}) => {
+      (await search.getSearchButton()).click();
     });
 
-    test.describe('when clicking search button', () => {
-      test.beforeEach(async ({search}) => {
-        (await search.getSearchButton()).click();
-      });
-
-      test('should go to search page', async ({page}) => {
-        await page.waitForURL('**/search#q=*');
-        const currentUrl = page.url();
-        expect(currentUrl).toContain('shoes');
-      });
+    test('should go to search page', async ({page}) => {
+      await page.waitForURL('**/search#q=*');
+      const currentUrl = page.url();
+      expect(currentUrl).toContain('shoes');
     });
   });
 });
