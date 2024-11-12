@@ -55,3 +55,4 @@ Key points for Playwright E2E tests:
 
 - This approach balances efficient, reliable test coverage with manageable test maintenance. Jest allows us to cover specific logic and UI rendering in a lightweight manner, while Playwright provides confidence that the application works as expected for end-users.
 - By clearly separating Jest and Playwright responsibilities, we prevent redundancy and maintain test suite performance.
+- We are also taking the approach of relying more on the tests already done upstream in Headless for example where each component controller is already tested too, we choose not to re-test that once you trigger a Headless action correctly, we trust that it will have the correct result on the state so we don't need to re-test all of that with e2e tests.
