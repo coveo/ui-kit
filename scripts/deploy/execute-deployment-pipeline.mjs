@@ -29,7 +29,7 @@ console.log(execSync(`
   deployment-package package create --with-deploy \
     --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
-    --resolve IS_NOT_NIGHTLY=${IS_NIGHTLY} \
+    --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
     --resolve HEADLESS_MAJOR_VERSION=${headless.major} \
     --resolve HEADLESS_MINOR_VERSION=${headless.major}.${headless.minor} \
     --resolve HEADLESS_PATCH_VERSION=${headless.major}.${headless.minor}.${headless.patch} \
