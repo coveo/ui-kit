@@ -1,8 +1,10 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
+import ContextDropdown from '@/components/context-dropdown';
 import SearchProvider from '@/components/providers/search-provider';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 
 export default async function Search() {
@@ -18,9 +20,9 @@ export default async function Search() {
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
         view: {
           url: 'https://sports.barca.group/cart',
         },
@@ -34,6 +36,7 @@ export default async function Search() {
       navigatorContext={navigatorContext.marshal}
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
+        <ContextDropdown />
         <Cart />
       </div>
     </SearchProvider>
