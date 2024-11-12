@@ -38,7 +38,7 @@ Key points for Playwright E2E tests:
 
 - **User Workflow Testing**: Focus on the essential paths users take to accomplish their goals with a given component, this for all the different Quantic use cases: Search, Insight, Case assist and Recomendations.
 - **Simulate User Actions**: Test realistic user actions, such as clicking buttons, entering data, and navigating through the UI.
-- **External System Interactions**: Verify interactions with external systems, like Coveo APIs and analytics, to ensure components behave as expected in a real-world environment.
+- **External System Interactions**: Verify interactions with external systems, like Coveo APIs and analytics, to ensure components behave as expected in a real-world environment. This also acts as a double test because it will also notify us by failing the test if the external API contract is broken too because we test for the expected request body but also the expected response as much as possible.
 
 **Example Playwright Test Scenarios**:
 
