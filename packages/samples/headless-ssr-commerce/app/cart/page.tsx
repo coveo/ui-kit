@@ -37,7 +37,6 @@ export default async function Search() {
     >
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <ContextDropdown />
-
         <Cart />
       </div>
     </SearchProvider>

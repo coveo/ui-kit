@@ -38,7 +38,7 @@ export default function ProductList() {
           <button onClick={() => addToCart(cartMethods!, product)}>
             Add to cart
           </button>
-          <button onClick={() => addToCart(cartController!, product)}>
+          <button onClick={() => addToCart(cartMethods!, product)}>
             Add to cart
           </button>
         </li>

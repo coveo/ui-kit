@@ -43,7 +43,6 @@ export default async function Search() {
       navigatorContext={navigatorContext.marshal}
     >
       <ContextDropdown useCase="search" />
-
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
