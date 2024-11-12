@@ -1,34 +1,35 @@
 import {test, expect} from './cart.fixture';
 
-test.beforeEach(async ({page, context}) => {
-  await context.addCookies([
-    {
-      name: 'headless-cart',
-      value: JSON.stringify([
-        {
-          name: 'Waxique Epoxy Wax',
-          price: 33,
-          productId: 'SP03973_00001',
-          quantity: 1,
-        },
-        {
-          name: 'Khaki Bottle',
-          price: 16,
-          productId: 'SP03929_00012',
-          quantity: 2,
-        },
-        {
-          name: 'Waxum Wax Package',
-          price: 27,
-          productId: 'SP03972_00001',
-          quantity: 1,
-        },
-      ]),
-      path: '/',
-      domain: 'localhost',
-    },
-  ]);
+const cartCookie = [
+  {
+    name: 'headless-cart',
+    value: JSON.stringify([
+      {
+        name: 'Waxique Epoxy Wax',
+        price: 33,
+        productId: 'SP03973_00001',
+        quantity: 1,
+      },
+      {
+        name: 'Khaki Bottle',
+        price: 16,
+        productId: 'SP03929_00012',
+        quantity: 2,
+      },
+      {
+        name: 'Waxum Wax Package',
+        price: 27,
+        productId: 'SP03972_00001',
+        quantity: 1,
+      },
+    ]),
+    path: '/',
+    domain: 'localhost',
+  },
+];
 
+test.beforeEach(async ({page, context}) => {
+  await context.addCookies(cartCookie);
   await page.goto('/cart');
 });
 
