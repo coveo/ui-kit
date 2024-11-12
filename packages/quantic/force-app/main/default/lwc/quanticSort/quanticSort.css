@@ -10,6 +10,6 @@
     white-space: nowrap;
 }
 
-.filters-header {
+.sort__container--wide {
   justify-content: space-between;
 }

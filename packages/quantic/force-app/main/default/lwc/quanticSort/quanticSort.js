@@ -48,9 +48,9 @@ export default class QuanticSort extends LightningElement {
   /**
    * The sort variant. Accepted variants include `default` and `wide`.
    * @api
-   * @type {string} - default | wide
+   * @type {'default'|'wide'}
    */
-  @api variant = SORT_VARIANTS.DEFAULT;
+  @api variant = 'default';
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -96,7 +96,7 @@ export default class QuanticSort extends LightningElement {
   variants = {
     default: {
       name: SORT_VARIANTS.DEFAULT,
-      label: sortBy,
+      label: this.labels.sortBy,
     },
     wide: {
       name: SORT_VARIANTS.WIDE,
