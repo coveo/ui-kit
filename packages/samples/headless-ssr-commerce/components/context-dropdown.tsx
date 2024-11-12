@@ -23,7 +23,7 @@ export default function ContextDropdown({
 }: {
   useCase?: 'listing' | 'search';
 }) {
-  const {state, controller} = useContext();
+  const {state, methods} = useContext();
   const engine = useEngine();
 
   return (
@@ -34,9 +34,9 @@ export default function ContextDropdown({
         value={`${state.language}-${state.country}-${state.currency}`}
         onChange={(e) => {
           const [language, country, currency] = e.target.value.split('-');
-          controller?.setLanguage(language);
-          controller?.setCountry(country);
-          controller?.setCurrency(currency as ContextOptions['currency']);
+          methods?.setLanguage(language);
+          methods?.setCountry(country);
+          methods?.setCurrency(currency as ContextOptions['currency']);
 
           useCase === 'search'
             ? engine?.dispatch(
