@@ -25,7 +25,6 @@
           "npm run babel:headless && npm run build:staticresources",
           "npm run build:doc"
         ],
-        "parallel": true,
         "cwd": "packages/quantic"
       }
     },
