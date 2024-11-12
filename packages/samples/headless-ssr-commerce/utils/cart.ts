@@ -3,6 +3,7 @@ import {
   Cart as HeadlessCart,
   CartItem as HeadlessCartItem,
   Product as HeadlessProduct,
+  CartState as HeadlessCartState,
 } from '@coveo/headless-react/ssr-commerce';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
@@ -24,13 +25,18 @@ export async function adjustQuantity(
 
 export async function addToCart(
   headlessCart: HeadlessSSRCart,
+  headlessCartState: HeadlessCartState,
   product: HeadlessProduct
 ) {
+  const existingItem = headlessCartState.items.find(
+    (item) => item.productId === product.ec_product_id
+  );
+  const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const item = {
     name: product.ec_name!,
     price: product.ec_price!,
     productId: product.ec_product_id!,
-    quantity: 1,
+    quantity: quantity,
   };
 
   headlessCart.updateItemQuantity(item);
