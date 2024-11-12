@@ -33,14 +33,6 @@ export default {
   // loggerOptions: {level: 'debug'},
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
-    context: {
-      language: 'en',
-      country: 'US',
-      currency: 'USD',
-      view: {
-        url: 'https://sports.barca.group/browse/promotions/ui-kit-testing',
-      },
-    },
   },
   controllers: {
     summary: defineSummary(),
