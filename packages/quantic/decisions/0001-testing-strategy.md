@@ -19,7 +19,7 @@ Key points for Jest unit tests:
 
 - **Isolated Component Behavior**: Tests should verify the component's behavior in isolation, without dependency on external systems or other components.
 - **Mock External Dependencies**: Use mocks to simulate external dependencies, such as capabilities used from the Headless library, ensuring unit tests are fast and isolated.
-- **HTML Rendering**: Validate that the component renders the correct HTML based on its state and input properties.
+- **HTML Rendering**: Validate that the component renders the correct HTML based on its state (including but not limited to: internal state, mocked headless state) and input properties.
 - **Property Updates**: Ensure component properties update as expected in response to user interactions and lifecycle events.
 - **Edge Cases**: Cover edge cases to ensure the component handles unexpected or extreme inputs gracefully.
 
