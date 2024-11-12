@@ -27,7 +27,7 @@ Key points for Jest unit tests:
 
 - Mock a Headless controller call to test a specific component in isolation.
 - Mock a Headless state and ensure the component renders correctly by reflecting the state in the UI.
-- Verify that clicking a button updates a specific property and that the rendered HTML reflects this change.
+- Verify that clicking a button updates a specific property, that the rendered HTML reflects this change and the corresponding Headless component controller was called correctly and with the correct parameters.
 - Test a lifecycle event, such as `connectedCallback`, to confirm it initializes the component correctly.
 
 ### Playwright E2E Tests
