@@ -25,6 +25,12 @@ import {LightningElement, track, api} from 'lwc';
  * @example {label: 'Youtube views ascending', value: '@ytviewcount ascending', criterion: {by: 'field', field: '@ytviewcount', order: 'ascending'}
  */
 
+const SORT_VARIANTS = {
+  DEFAULT: 'default',
+  WIDE: 'wide',
+};
+Object.freeze(SORT_VARIANTS);
+
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
  * @category Search
@@ -38,14 +44,13 @@ import {LightningElement, track, api} from 'lwc';
       criterion={sortOptionCriterion}
     ></c-quantic-sort-option></c-quantic-sort>
  */
-
 export default class QuanticSort extends LightningElement {
   /**
    * The sort variant. Accepted variants include `default` and `wide`.
    * @api
-   * @type {'default'|'wide'}
+   * @type {string} - default | wide
    */
-  @api variant = 'default';
+  @api variant = SORT_VARIANTS.DEFAULT;
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -90,16 +95,21 @@ export default class QuanticSort extends LightningElement {
 
   variants = {
     default: {
-      name: 'default',
+      name: SORT_VARIANTS.DEFAULT,
       label: sortBy,
     },
     wide: {
-      name: 'wide',
-      label: undefined,
+      name: SORT_VARIANTS.WIDE,
+      label: '',
     },
   };
 
   connectedCallback() {
+    if (!Object.values(SORT_VARIANTS).includes(this.variant)) {
+      console.warn(
+        `Unsupported variant: ${this.variant} specified in the QuanticSort component, defaulting to the ${SORT_VARIANTS.DEFAULT} variant.`
+      );
+    }
     registerComponentForInit(this, this.engineId);
   }
 
@@ -273,13 +283,13 @@ export default class QuanticSort extends LightningElement {
   }
 
   get sortContainerCSSClass() {
-    return this.variant === this.variants.default.name
+    return this.variant === SORT_VARIANTS.DEFAULT
       ? 'sort__container'
       : undefined;
   }
 
   get isVariantWide() {
-    return this.variant === this.variants.wide.name;
+    return this.variant === SORT_VARIANTS.WIDE;
   }
 
   /**
@@ -295,6 +305,6 @@ export default class QuanticSort extends LightningElement {
   }
 
   get label() {
-    return this.variants[this.variant].label;
+    return this.variants[this.variant]?.label;
   }
 }

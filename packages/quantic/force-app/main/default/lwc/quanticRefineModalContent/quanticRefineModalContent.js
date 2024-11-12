@@ -1,6 +1,5 @@
 import clearAllFilters from '@salesforce/label/c.quantic_ClearAllFilters';
 import filters from '@salesforce/label/c.quantic_Filters';
-import sortBy from '@salesforce/label/c.quantic_SortBy';
 import QuanticCategoryFacet from 'c/quanticCategoryFacet';
 import QuanticDateFacet from 'c/quanticDateFacet';
 import QuanticFacet from 'c/quanticFacet';
@@ -52,7 +51,6 @@ export default class QuanticRefineModalContent extends LightningElement {
   labels = {
     filters,
     clearAllFilters,
-    sortBy,
   };
 
   /**
@@ -279,10 +277,6 @@ export default class QuanticRefineModalContent extends LightningElement {
 
   get shouldDisplayFiltersTitle() {
     return this.someFacetsRendered && !this.hideSort;
-  }
-
-  get shouldDisplaySortByTitle() {
-    return this.sortData && this.sortData.length > 0;
   }
 
   /**

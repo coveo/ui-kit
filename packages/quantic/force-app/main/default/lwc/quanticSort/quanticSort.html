@@ -9,6 +9,11 @@
     <slot name="sortOption"><!-- Custom sort options --></slot>
     <template lwc:if={hasResults}>
       <template lwc:if={isVariantWide}>
+        <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
+          <div data-cy="filters-title" class="slds-text-heading_small">
+            {labels.sortBy}
+          </div>
+        </div>
         <lightning-layout-item class="slds-size_1-of-1">
           <lightning-combobox
             name="sort"

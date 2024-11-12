@@ -5,13 +5,6 @@
   </template>
   <template lwc:else>
     <template if:false={hideSort}>
-      <template lwc:if={shouldDisplaySortByTitle}>
-        <div class="slds-align_absolute-center filters-header slds-var-m-bottom_small">
-          <div data-cy="filters-title" class="slds-text-heading_small">
-            {labels.sortBy}
-          </div>
-        </div>
-      </template>
       <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
           <c-quantic-sort engine-id={engineId} variant="wide">
