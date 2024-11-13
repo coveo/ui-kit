@@ -1,6 +1,8 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductPage from '@/components/pages/product-page';
+import StandaloneProvider from '@/components/providers/standalone-provider';
+import StandaloneSearchBox from '@/components/standalone-search-box';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
@@ -34,9 +36,13 @@ export default async function ProductDescriptionPage({
     },
   });
   return (
-    <>
+    <StandaloneProvider
+      staticState={staticState}
+      navigatorContext={navigatorContext.marshal}
+    >
       <h2>Product description page</h2>
       <ContextDropdown />
+      <StandaloneSearchBox />
       <Suspense fallback={<p>Loading...</p>}>
         <ProductPage
           staticState={staticState}
@@ -44,7 +50,7 @@ export default async function ProductDescriptionPage({
           productId={params.productId}
         />
       </Suspense>
-    </>
+    </StandaloneProvider>
   );
 }
 
