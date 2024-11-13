@@ -44,7 +44,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForRequestCompletedAction(): Promise<Action>[];
+  waitForRequestCompletedAction(): Promise<Action>;
 }
 
 export type CommerceEngineDefinitionOptions<
@@ -126,10 +126,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return [
-        actionCompletionMiddleware.promise,
-        ...recommendationActionMiddlewares.map(({promise}) => promise),
-      ];
+      return actionCompletionMiddleware.promise;
     },
   };
 }
@@ -169,6 +166,10 @@ export function defineCommerceEngine<
   standaloneEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.standalone
+  >;
+  recommendationDefinition: CommerceEngineDefinition<
+    TControllerDefinitions,
+    SolutionType.recommendation
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
@@ -263,16 +264,17 @@ export function defineCommerceEngine<
             buildProductListing(engine).executeFirstRequest();
           } else if (solutionType === SolutionType.search) {
             buildSearch(engine).executeFirstSearch();
+          } else if (solutionType === SolutionType.recommendation) {
+            // here build the filter and refresh them  all
+            // build every recommendation and refresh them all ?
+            // buildRecommendations(engine).refresh();
+            recommendationFilter.refresh(controllers);
           }
 
-          recommendationFilter.refresh(controllers);
-
-          const searchActions = await Promise.all(
-            engine.waitForRequestCompletedAction()
-          );
+          const searchAction = await engine.waitForRequestCompletedAction();
 
           return createStaticState({
-            searchActions,
+            searchAction,
             controllers,
           }) as EngineStaticState<
             UnknownAction,
@@ -297,7 +299,7 @@ export function defineCommerceEngine<
           solutionType
         ).fromBuildResult({
           buildResult,
-          searchActions: params[0]!.searchActions,
+          searchAction: params[0]!.searchAction,
         });
         return staticState;
       },
@@ -308,14 +310,12 @@ export function defineCommerceEngine<
           const [
             {
               buildResult: {engine, controllers},
-              searchActions,
+              searchAction,
             },
           ] = params;
 
-          searchActions.forEach((action) => {
-            engine.dispatch(action);
-          });
-          await engine.waitForRequestCompletedAction();
+          engine.dispatch(searchAction);
+          engine.waitForRequestCompletedAction();
           return {engine, controllers};
         },
       }
@@ -341,6 +341,16 @@ export function defineCommerceEngine<
     } as CommerceEngineDefinition<
       TControllerDefinitions,
       SolutionType.standalone
+    >,
+    recommendationDefinition: {
+      fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
+      hydrateStaticState: hydrateStaticStateFactory(
+        SolutionType.recommendation
+      ),
+      setNavigatorContextProvider,
+    } as CommerceEngineDefinition<
+      TControllerDefinitions,
+      SolutionType.recommendation
     >,
   };
 }

@@ -121,6 +121,7 @@ export function buildRecommendationFilter<
   };
 
   const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
+    // Use logger here
     console.warn(
       'Multiple recommendation controllers found for the same slotId and productId',
       {slotId, productId}
@@ -135,6 +136,7 @@ export function buildRecommendationFilter<
       const {slotId, productId} = value._recommendationProps;
       const key = `${slotId}${productId || ''}`;
       if (slotIdSet.has(key)) {
+        // We keep this warning it is good
         warnDuplicateRecommendation(slotId, productId);
         return false;
       }

@@ -54,6 +54,8 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
+  // const recStaticState = await recsDefinition.fetchStaticState()
+
   return (
     <ListingProvider
       staticState={staticState}
@@ -86,6 +88,11 @@ export default async function Listing({params}: {params: {category: string}}) {
         </div>
 
         <div style={{flex: 4}}>
+          {/* <RecommendationProvider
+          staticState={recStaticState}
+          navigatorContext={navigatorContext.marshal}>
+
+          </RecommendationProvider> */}
           <Recommendations />
         </div>
       </div>
