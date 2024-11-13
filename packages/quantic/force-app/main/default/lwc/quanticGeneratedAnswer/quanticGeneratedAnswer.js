@@ -402,7 +402,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get answerContentFormat() {
-    return this?.state?.responseFormat?.contentFormat[0];
+    return this?.state?.responseFormat?.contentFormat?.[0];
   }
 
   get shouldDisplayCitations() {
