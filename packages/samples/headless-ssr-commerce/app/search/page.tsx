@@ -2,7 +2,6 @@ import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
-import {HydrationMetadata} from '@/components/hydration-metadata';
 import ProductList from '@/components/product-list';
 import SearchProvider from '@/components/providers/search-provider';
 import Recommendations from '@/components/recommendation-list';
@@ -68,7 +67,6 @@ export default async function Search() {
           <Recommendations />
         </div>
       </div>
-      <HydrationMetadata staticState={staticState} />
     </SearchProvider>
   );
 }

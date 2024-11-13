@@ -1,37 +1,22 @@
 'use client';
 
 import {
-  searchEngineDefinition,
+  ListingHydratedState,
+  ListingStaticState,
   SearchHydratedState,
   SearchStaticState,
 } from '@/lib/commerce-engine';
-import {FunctionComponent, useEffect, useState} from 'react';
+import {FunctionComponent} from 'react';
 
 export interface HydrationMetadataProps {
-  staticState: SearchStaticState;
+  staticState: SearchStaticState | ListingStaticState;
+  hydratedState?: SearchHydratedState | ListingHydratedState;
 }
 
 export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
   staticState,
+  hydratedState,
 }) => {
-  const [hydratedState, setHydratedState] = useState<
-    SearchHydratedState | undefined
-  >(undefined);
-
-  useEffect(() => {
-    const {} = staticState.controllers;
-    searchEngineDefinition
-      .hydrateStaticState({
-        searchAction: staticState.searchAction,
-        controllers: {
-          context: staticState.controllers.context.state,
-          cart: {initialState: staticState.controllers.cart.state},
-        },
-      })
-      .then(({engine, controllers}) => {
-        setHydratedState({engine, controllers});
-      });
-  }, [staticState]);
   return (
     <>
       <div>
@@ -49,8 +34,12 @@ export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
           (hydratedState ?? staticState).controllers.productList.state.products
             .length
         }{' '}
-        results
+        products
       </span>
+      <div id="cart-msg">
+        Items in cart:{' '}
+        {(hydratedState ?? staticState).controllers.cart.state.items.length}
+      </div>
       <div>
         Rendered on{' '}
         <span id="timestamp" suppressHydrationWarning>
