@@ -5,22 +5,20 @@ import QuanticSort from 'c/quanticSort';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
-const sortVariants = [
-  {
+const sortVariants = {
+  default: {
     name: 'default',
-    label: 'Sort By',
     labelContainerSelector: '.sort__header',
-    dropdownSelector: 'lightning-combobox',
+    labelSelector: 'lightning-formatted-text',
     dropdownContainerSelector: '.sort__container',
   },
-  {
+  wide: {
     name: 'wide',
-    label: '',
     labelContainerSelector: '.sort__container',
-    dropdownSelector: 'lightning-combobox',
+    labelSelector: '[data-cy="filters-title"]',
     dropdownContainerSelector: 'lightning-layout-item',
   },
-];
+};
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('@salesforce/label/c.quantic_SortBy', () => ({default: 'Sort By'}), {
@@ -81,6 +79,8 @@ const defaultOptions = {
   engineId: exampleEngine.id,
   variant: 'default',
 };
+
+const expectedSortByLabel = 'Sort By';
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
@@ -156,62 +156,80 @@ describe('c-quantic-sort', () => {
     });
   });
 
-  sortVariants.forEach((variant) => {
-    describe(`when using the ${variant.name} variant`, () => {
-      it(`should render the component with the ${variant.name} width`, async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          variant: variant.name,
-        });
-        await flushPromises();
+  describe('when passing the "default" variant', () => {
+    const variant = sortVariants.default;
 
-        // If the variant is 'wide', the container should take the whole width.
-        if (variant.name === 'wide') {
-          const wideVariantLabelContainer = element.shadowRoot.querySelector(
-            variant.labelContainerSelector
-          );
-          const wideVariantDropdownContainer = element.shadowRoot.querySelector(
-            variant.dropdownContainerSelector
-          );
+    it('should render the component with the default width', async () => {
+      const element = createTestComponent();
+      await flushPromises();
 
-          expect(wideVariantLabelContainer.classList).toContain(
-            'sort__container--wide'
-          );
-          expect(wideVariantDropdownContainer.classList).toContain(
-            'slds-size_1-of-1'
-          );
-        }
+      const defaultLabelContainer = element.shadowRoot.querySelector(
+        variant.labelContainerSelector
+      );
+      const defaultVariantDropdownContainer = element.shadowRoot.querySelector(
+        variant.dropdownContainerSelector
+      );
 
-        // If the variant is 'default', the container should be aligned to the right.
-        if (variant.name === 'default') {
-          const defaultLabelContainer = element.shadowRoot.querySelector(
-            variant.labelContainerSelector
-          );
-          const defaultVariantDropdownContainer =
-            element.shadowRoot.querySelector(variant.dropdownContainerSelector);
+      expect(defaultLabelContainer.classList).toContain(
+        'slds-var-p-right_small'
+      );
+      expect(defaultVariantDropdownContainer.classList).not.toContain(
+        'slds-size_1-of-1'
+      );
+    });
 
-          expect(defaultLabelContainer.classList).toContain(
-            'slds-var-p-right_small'
-          );
-          expect(defaultVariantDropdownContainer.classList).not.toContain(
-            'slds-size_1-of-1'
-          );
-        }
+    it('should properly render the label', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        variant: variant.name,
       });
+      await flushPromises();
 
-      it('should render the correct label', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          variant: variant.name,
-        });
-        await flushPromises();
+      const sortLabel = element.shadowRoot.querySelector(variant.labelSelector);
 
-        const sortDropdown = element.shadowRoot.querySelector(
-          variant.dropdownSelector
-        );
+      expect(sortLabel.value).toBe(expectedSortByLabel);
+    });
+  });
 
-        expect(sortDropdown.label).toBe(variant.label);
+  describe('when passing the "wide" variant', () => {
+    const variant = sortVariants.wide;
+
+    it('should render the component with the wide width', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        variant: variant.name,
       });
+      await flushPromises();
+
+      const wideVariantLabelContainer = element.shadowRoot.querySelector(
+        variant.labelContainerSelector
+      );
+      const wideVariantDropdownContainer = element.shadowRoot.querySelector(
+        variant.dropdownContainerSelector
+      );
+
+      expect(wideVariantLabelContainer.classList).toContain(
+        'sort__container--wide'
+      );
+      expect(wideVariantDropdownContainer.classList).toContain(
+        'slds-size_1-of-1'
+      );
+      expect(wideVariantDropdownContainer.classList).not.toContain(
+        'slds-var-p-right_small'
+      );
+    });
+
+    it('should properly render the label', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        variant: variant.name,
+      });
+      await flushPromises();
+
+      const sortLabel = element.shadowRoot.querySelector(variant.labelSelector);
+
+      expect(sortLabel.textContent).toBe(expectedSortByLabel);
+      expect(sortLabel.classList).toContain('slds-text-heading_small');
     });
   });
 });
