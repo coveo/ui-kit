@@ -7,32 +7,32 @@ export class SearchPageObject {
     this.page = page;
   }
 
-  async searchBox() {
+  get searchBox() {
     return this.page.getByPlaceholder('search');
   }
 
-  async getSearchButton() {
+  get searchButton() {
     return this.page.getByRole('button', {name: 'Search', exact: true});
   }
 
-  async getSuggestionsContainer() {
+  get suggestionsContainer() {
     return this.page.getByText('Suggestions :');
   }
 
-  async getSuggestions() {
+  get suggestions() {
     return this.page.getByText('Suggestions :').locator('li >> button');
   }
 
-  async getProductList() {
+  get productList() {
     return this.page.getByLabel('Product List');
   }
 
-  async getProductItems() {
-    const productList = await this.getProductList();
+  get productItems() {
+    const productList = this.productList;
     return productList.getByRole('listitem').all();
   }
 
-  async getResultSummary() {
+  get resultSummary() {
     return this.page.getByText(/Showing results \d+ - \d+ of/);
   }
 }

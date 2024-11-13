@@ -5,54 +5,51 @@ test.beforeEach(async ({page}) => {
 });
 
 test('should load and display the search box', async ({search}) => {
-  await expect(await search.searchBox()).toBeVisible();
+  await expect(search.searchBox).toBeVisible();
 });
 
 test.describe('when entering a query', () => {
   let initialProducts: string = '';
 
   test.beforeEach(async ({search}) => {
-    initialProducts =
-      (await (await search.getProductList()).textContent()) || '';
+    initialProducts = (await search.productList.textContent()) || '';
 
-    const searchBox = await search.searchBox();
+    const searchBox = search.searchBox;
     await searchBox.fill('shoes');
   });
 
   test('should display suggestions', async ({search}) => {
-    const suggestionsContainer = await search.getSuggestionsContainer();
+    const suggestionsContainer = search.suggestionsContainer;
     await expect(suggestionsContainer).toBeVisible();
 
-    const suggestions = await search.getSuggestions();
+    const suggestions = search.suggestions;
     expect(await suggestions.count()).toBeGreaterThan(0);
   });
 
   test.describe('when clicking a suggestion', () => {
     let suggestionValue: string;
     test.beforeEach(async ({facet, search}) => {
-      const suggestions = await search.getSuggestions();
+      const suggestions = search.suggestions;
       suggestionValue =
         (await suggestions.first().textContent()) || 'no value found';
       await suggestions.first().click();
 
-      await (await facet.getFacetLoading()).waitFor({state: 'visible'});
-      await (await facet.getFacetLoading()).waitFor({state: 'hidden'});
+      await facet.facetLoading.waitFor({state: 'visible'});
+      await facet.facetLoading.waitFor({state: 'hidden'});
     });
 
     test('should update query', async ({search}) => {
-      const searchBox = await search.searchBox();
+      const searchBox = search.searchBox;
       await expect(searchBox).toHaveValue(suggestionValue);
     });
 
     test('should update the results summary', async ({search}) => {
-      const resultSummary = await search.getResultSummary();
+      const resultSummary = search.resultSummary;
       await expect(resultSummary).toBeVisible();
     });
 
     test('should update the result list', async ({search}) => {
-      const productListContents = await (
-        await search.getProductList()
-      ).textContent();
+      const productListContents = await search.productList.textContent();
 
       expect(productListContents).not.toEqual(initialProducts);
     });
@@ -60,22 +57,20 @@ test.describe('when entering a query', () => {
 
   test.describe('when clicking search button', () => {
     test.beforeEach(async ({facet, search}) => {
-      (await search.getSearchButton()).click();
+      search.searchButton.click();
 
-      await (await facet.getFacetLoading()).waitFor({state: 'visible'});
-      await (await facet.getFacetLoading()).waitFor({state: 'hidden'});
+      await facet.facetLoading.waitFor({state: 'visible'});
+      await facet.facetLoading.waitFor({state: 'hidden'});
     });
 
     test('should update product results', async ({search}) => {
-      const productListContents = await (
-        await search.getProductList()
-      ).textContent();
+      const productListContents = await search.productList.textContent();
 
       expect(productListContents).not.toEqual(initialProducts);
     });
 
     test('should update result summary', async ({search}) => {
-      const resultSummary = await search.getResultSummary();
+      const resultSummary = search.resultSummary;
       await expect(resultSummary).toBeVisible();
     });
   });
@@ -83,36 +78,34 @@ test.describe('when entering a query', () => {
 
 test.describe('Facets', () => {
   test('should display the facets', async ({facet}) => {
-    const facetsSection = await facet.getFacetsSection();
+    const facetsSection = facet.facetsSection;
     await expect(facetsSection).toBeVisible();
   });
 
   test.describe('when a facet value is selected', () => {
     let initialResultSummary: string | null;
     test.beforeEach(async ({search, facet}) => {
-      initialResultSummary = await (
-        await search.getResultSummary()
-      ).textContent();
+      initialResultSummary = await search.resultSummary.textContent();
 
-      const firstFacet = await facet.getFirstFacet();
+      const firstFacet = facet.firstFacet;
       await firstFacet.click();
 
-      const facetLoading = await facet.getFacetLoading();
+      const facetLoading = facet.facetLoading;
       await facetLoading.waitFor({state: 'visible'});
       await facetLoading.waitFor({state: 'hidden'});
     });
 
     test('should update results', async ({search}) => {
-      const productItems = await search.getProductItems();
+      const productItems = await search.productItems;
       expect(productItems.length).toBeGreaterThan(0);
 
       expect(initialResultSummary).not.toEqual(
-        (await search.getResultSummary()).textContent()
+        search.resultSummary.textContent()
       );
     });
 
     test('should be checked after clicking', async ({facet}) => {
-      await expect(await facet.getFirstFacet()).toBeChecked();
+      await expect(facet.firstFacet).toBeChecked();
     });
   });
 });

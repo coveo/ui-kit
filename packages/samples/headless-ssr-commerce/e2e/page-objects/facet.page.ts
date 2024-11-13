@@ -6,15 +6,15 @@ export class FacetPageObject {
   constructor(page: Page) {
     this.page = page;
   }
-  async getFacetsSection() {
+  get facetsSection() {
     return this.page.locator('.Facets');
   }
 
-  async getFirstFacet() {
+  get firstFacet() {
     return this.page.getByLabel(/(Select|Deselect) facet value.*/).first();
   }
 
-  async getFacetLoading() {
+  get facetLoading() {
     return this.page.locator('.FacetLoading').first();
   }
 

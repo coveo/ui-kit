@@ -7,12 +7,12 @@ export class CartPageObject {
     this.page = page;
   }
 
-  async getCart() {
+  get cart() {
     return this.page.locator('div:has(> button:has-text("Purchase"))');
   }
 
-  async getItems() {
-    const cart = await this.getCart();
+  get items() {
+    const cart = this.cart;
     return cart.locator('ul > li');
   }
 
@@ -28,31 +28,31 @@ export class CartPageObject {
     return item.locator('p').nth(3).locator('span').nth(2);
   }
 
-  async getAddToCartButton() {
+  get addToCartButton() {
     return this.page.getByRole('button', {name: 'Add to cart'});
   }
 
-  async getAddOneButton() {
+  get addOneButton() {
     return this.page.getByRole('button', {name: 'Add one'});
   }
 
-  async getRemoveOneButton() {
+  get removeOneButton() {
     return this.page.getByRole('button', {name: 'Remove one'});
   }
 
-  async getRemoveAllButton() {
+  get removeAllButton() {
     return this.page.getByRole('button', {name: 'Remove all'});
   }
 
-  async getPurchaseButton() {
+  get purchaseButton() {
     return this.page.getByRole('button', {name: 'Purchase'});
   }
 
-  async getEmptyCartButton() {
+  get emptyCartButton() {
     return this.page.getByRole('button', {name: 'Empty cart'});
   }
 
-  async getTotal() {
-    return (await this.getCart()).locator('p').last().locator('span').nth(2);
+  get total() {
+    return this.cart.locator('p').last().locator('span').nth(2);
   }
 }

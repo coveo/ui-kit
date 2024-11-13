@@ -38,7 +38,7 @@ let initialItemPrice: number;
 let initialCartTotal: number;
 
 test('should display the cart', async ({cart}) => {
-  const cartSection = await cart.getCart();
+  const cartSection = cart.cart;
   await expect(cartSection).toBeVisible();
 });
 
@@ -46,13 +46,13 @@ test.describe('when adding a new item to the cart', () => {
   test.beforeEach(async ({page, cart}) => {
     await page.goto('/toys');
 
-    await (await cart.getAddToCartButton()).first().click();
+    await cart.addToCartButton.first().click();
   });
 
   test('should add the item to the cart', async ({cart, page}) => {
     await page.goto('/cart');
 
-    const cartItemsCount = await (await cart.getItems()).count();
+    const cartItemsCount = await cart.items.count();
 
     expect(cartItemsCount).toBe(4);
   });
@@ -60,7 +60,7 @@ test.describe('when adding a new item to the cart', () => {
 
 test.describe('when increasing the quantity of an item', () => {
   test.beforeEach(async ({cart}) => {
-    const item = (await cart.getItems()).first();
+    const item = cart.items.first();
 
     initialItemQuantity = parseInt(
       (await (await cart.getItemQuantity(item)).textContent()) || ''
@@ -68,15 +68,13 @@ test.describe('when increasing the quantity of an item', () => {
     initialItemPrice = parseInt(
       (await (await cart.getItemPrice(item)).textContent()) || ''
     );
-    initialCartTotal = parseInt(
-      (await (await cart.getTotal()).textContent()) || ''
-    );
+    initialCartTotal = parseInt((await cart.total.textContent()) || '');
 
-    await (await cart.getAddOneButton()).first().click();
+    await cart.addOneButton.first().click();
   });
 
   test('should increase the quantity', async ({cart}) => {
-    const item = (await cart.getItems()).first();
+    const item = cart.items.first();
 
     const quantity = parseInt(
       (await (await cart.getItemQuantity(item)).textContent()) || ''
@@ -86,7 +84,7 @@ test.describe('when increasing the quantity of an item', () => {
   });
 
   test('should increase the total price', async ({cart}) => {
-    const item = (await cart.getItems()).first();
+    const item = cart.items.first();
 
     const totalPrice = parseInt(
       (await (await cart.getItemTotalPrice(item)).textContent()) || ''
@@ -96,7 +94,7 @@ test.describe('when increasing the quantity of an item', () => {
   });
 
   test('should increase the cart total', async ({cart}) => {
-    const total = parseInt((await (await cart.getTotal()).textContent()) || '');
+    const total = parseInt((await cart.total.textContent()) || '');
 
     expect(total).toBe(initialCartTotal + initialItemPrice);
   });
@@ -107,7 +105,7 @@ test.describe('when decreasing the quantity of an item', () => {
     let initialCartItemsCount: number;
 
     test.beforeEach(async ({cart}) => {
-      const item = (await cart.getItems()).nth(1);
+      const item = cart.items.nth(1);
 
       initialItemQuantity = parseInt(
         (await (await cart.getItemQuantity(item)).textContent()) || ''
@@ -115,17 +113,15 @@ test.describe('when decreasing the quantity of an item', () => {
       initialItemPrice = parseInt(
         (await (await cart.getItemPrice(item)).textContent()) || ''
       );
-      initialCartTotal = parseInt(
-        (await (await cart.getTotal()).textContent()) || ''
-      );
+      initialCartTotal = parseInt((await cart.total.textContent()) || '');
 
-      initialCartItemsCount = await (await cart.getItems()).count();
+      initialCartItemsCount = await cart.items.count();
 
-      await (await cart.getRemoveOneButton()).nth(1).click();
+      await cart.removeOneButton.nth(1).click();
     });
 
     test('should decrease the quantity', async ({cart}) => {
-      const item = (await cart.getItems()).nth(1);
+      const item = cart.items.nth(1);
 
       const quantity = parseInt(
         (await (await cart.getItemQuantity(item)).textContent()) || ''
@@ -135,7 +131,7 @@ test.describe('when decreasing the quantity of an item', () => {
     });
 
     test('should decrease the total price', async ({cart}) => {
-      const item = (await cart.getItems()).nth(1);
+      const item = cart.items.nth(1);
 
       const totalPrice = parseInt(
         (await (await cart.getItemTotalPrice(item)).textContent()) || ''
@@ -145,15 +141,13 @@ test.describe('when decreasing the quantity of an item', () => {
     });
 
     test('should decrease the cart total', async ({cart}) => {
-      const total = parseInt(
-        (await (await cart.getTotal()).textContent()) || ''
-      );
+      const total = parseInt((await cart.total.textContent()) || '');
 
       expect(total).toBe(initialCartTotal - initialItemPrice);
     });
 
     test('should not remove the item', async ({cart}) => {
-      const cartItemsCount = await (await cart.getItems()).count();
+      const cartItemsCount = await cart.items.count();
 
       expect(cartItemsCount).toBe(initialCartItemsCount);
     });
@@ -163,7 +157,7 @@ test.describe('when decreasing the quantity of an item', () => {
     let initialCartItemsCount: number;
 
     test.beforeEach(async ({cart}) => {
-      const item = (await cart.getItems()).first();
+      const item = cart.items.first();
 
       initialItemQuantity = parseInt(
         (await (await cart.getItemQuantity(item)).textContent()) || ''
@@ -171,25 +165,21 @@ test.describe('when decreasing the quantity of an item', () => {
       initialItemPrice = parseInt(
         (await (await cart.getItemPrice(item)).textContent()) || ''
       );
-      initialCartTotal = parseInt(
-        (await (await cart.getTotal()).textContent()) || ''
-      );
+      initialCartTotal = parseInt((await cart.total.textContent()) || '');
 
-      initialCartItemsCount = await (await cart.getItems()).count();
+      initialCartItemsCount = await cart.items.count();
 
-      await (await cart.getRemoveOneButton()).first().click();
+      await cart.removeOneButton.first().click();
     });
 
     test('should remove the item', async ({cart}) => {
-      const cartItemsCount = await (await cart.getItems()).count();
+      const cartItemsCount = await cart.items.count();
 
       expect(cartItemsCount).toBe(initialCartItemsCount - 1);
     });
 
     test('should decrease the cart total', async ({cart}) => {
-      const total = parseInt(
-        (await (await cart.getTotal()).textContent()) || ''
-      );
+      const total = parseInt((await cart.total.textContent()) || '');
 
       expect(total).toBe(initialCartTotal - initialItemPrice * 1);
     });
@@ -199,13 +189,13 @@ test.describe('when decreasing the quantity of an item', () => {
 test.describe('when clicking the remove all button on an item', () => {
   let initialCartItemsCount: number;
   test.beforeEach(async ({cart}) => {
-    initialCartItemsCount = await (await cart.getItems()).count();
+    initialCartItemsCount = await cart.items.count();
 
-    await (await cart.getRemoveAllButton()).first().click();
+    await cart.removeAllButton.first().click();
   });
 
   test('should remove the item', async ({cart}) => {
-    const cartItemsCount = await (await cart.getItems()).count();
+    const cartItemsCount = await cart.items.count();
 
     expect(cartItemsCount).toBe(initialCartItemsCount - 1);
   });
@@ -213,17 +203,17 @@ test.describe('when clicking the remove all button on an item', () => {
 
 test.describe('when clicking the empty cart button', () => {
   test.beforeEach(async ({cart}) => {
-    await (await cart.getEmptyCartButton()).click();
+    await cart.emptyCartButton.click();
   });
 
   test('should remove all items', async ({cart}) => {
-    const cartItemsCount = await (await cart.getItems()).count();
+    const cartItemsCount = await cart.items.count();
 
     expect(cartItemsCount).toBe(0);
   });
 
   test('should set the cart total to 0', async ({cart}) => {
-    const total = parseInt((await (await cart.getTotal()).textContent()) || '');
+    const total = parseInt((await cart.total.textContent()) || '');
 
     expect(total).toBe(0);
   });
