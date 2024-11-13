@@ -61,3 +61,5 @@ docs/out/*
 
 # Environment Variables
 .env
+
+.tmp

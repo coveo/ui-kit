@@ -13,22 +13,15 @@ import {
   Context,
   PropsWithChildren,
 } from 'react';
+import {useSyncMemoizedStore} from '../client-utils.js';
+import {MissingEngineProviderError} from '../errors.js';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
-import {useSyncMemoizedStore} from './client-utils.js';
 import {
   ContextHydratedState,
   ContextState,
   ControllerHook,
   InferControllerHooksMapFromDefinition,
 } from './types.js';
-
-export class MissingEngineProviderError extends Error {
-  static message =
-    'Unable to find Context. Please make sure you are wrapping your component with either `StaticStateProvider` or `HydratedStateProvider` component that can provide the required context.';
-  constructor() {
-    super(MissingEngineProviderError.message);
-  }
-}
 
 function isHydratedStateContext<
   TEngine extends CoreEngine,
