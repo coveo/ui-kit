@@ -210,6 +210,12 @@ export type UniversalControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
   UniversalController;
 
+export type UniversalControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  UniversalController;
+
 export type SearchAndListingControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
