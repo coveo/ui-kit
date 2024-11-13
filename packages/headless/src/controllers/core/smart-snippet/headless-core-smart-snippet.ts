@@ -115,6 +115,14 @@ export interface SmartSnippetCore extends Controller {
   cancelPendingSelectSource(): void;
 }
 
+/**
+ * The `SmartSnippet` controller lets you display the excerpt of a document that would be most likely to answer a particular query.
+ *
+ * Example: [smart-snippet.fn.tsx](https://github.com/coveo/ui-kit/blob/c090c1bd676792027815c52507e2aef8ccfaab91/packages/samples/headless-react/src/components/smart-snippet/smart-snippet.fn.tsx)
+ *
+ * @group Controllers
+ * @category SmartSnippet
+ */
 export interface SmartSnippet extends SmartSnippetCore {
   /**
    * Selects a link inside the answer, logging a UA event to the Coveo Platform if it was never selected before.
@@ -146,6 +154,12 @@ export interface SmartSnippet extends SmartSnippetCore {
   cancelPendingSelectInlineLink(link: InlineLink): void;
 }
 
+/**
+ * A scoped and simplified part of the headless engine that is relevant to the `SmartSnippet` controller.
+ *
+ * @group Controllers
+ * @category SmartSnippet
+ */
 export interface SmartSnippetState {
   /**
    * The question related to the smart snippet.

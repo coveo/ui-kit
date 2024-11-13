@@ -6,11 +6,13 @@ import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
+  InferControllerPropsMapFromDefinitions,
 } from '../../ssr-engine/types/common.js';
 
 export type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
+  InferControllerPropsMapFromDefinitions,
 };
 
 export enum SolutionType {
@@ -206,6 +208,12 @@ export type ListingOnlyControllerDefinitionWithProps<
 export type UniversalControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  UniversalController;
+
+export type UniversalControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
   UniversalController;
 
 export type SearchAndListingControllerDefinitionWithoutProps<

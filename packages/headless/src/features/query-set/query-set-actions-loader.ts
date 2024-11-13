@@ -15,6 +15,9 @@ export type {
 
 /**
  * The query set action creators.
+ *
+ * @group Actions
+ * @category QuerySet
  */
 export interface QuerySetActionCreators {
   /**
@@ -43,6 +46,9 @@ export interface QuerySetActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category QuerySet
  */
 export function loadQuerySetActions(
   engine: SearchEngine

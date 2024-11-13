@@ -13,6 +13,7 @@ export interface InstantResultsDefinition
 
 /**
  * Defines an `InstantResults` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `InstantResults` properties.
  * @returns The `InstantResults` controller definition.

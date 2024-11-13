@@ -42,9 +42,11 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
         return renderToString(templateResult.contentTemplate);
       } else {
         createRoot(root).render(templateResult);
-        createRoot(linkContainer!).render(
-          <AtomicResultLink></AtomicResultLink>
-        );
+        otherProps.display === 'grid'
+          ? createRoot(linkContainer!).render(
+              <AtomicResultLink></AtomicResultLink>
+            )
+          : createRoot(linkContainer!).render(<></>);
         return renderToString(templateResult);
       }
     });

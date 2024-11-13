@@ -29,6 +29,12 @@ import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regu
 
 export type {SpecificFacetSearchResult};
 
+/**
+ * The state of the `FieldSuggestions` controller.
+ *
+ * @group Buildable controllers
+ * @category FieldSuggestions
+ */
 export type FieldSuggestionsState = RegularFacetSearchState &
   Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
 
@@ -38,6 +44,9 @@ export type FieldSuggestionsState = RegularFacetSearchState &
  * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item title.
  *
  * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
+ *
+ * @group Buildable controllers
+ * @category FieldSuggestions
  */
 export interface FieldSuggestions
   extends Controller,
@@ -89,6 +98,9 @@ export interface FieldSuggestions
  * @param engine The headless engine.
  * @param options The `FieldSuggestions` options used internally.
  * @returns A `FieldSuggestions` controller instance.
+ *
+ * @group Buildable controllers
+ * @category FieldSuggestions
  */
 export function buildFieldSuggestions(
   engine: CommerceEngine,

@@ -13,6 +13,7 @@ export interface QuickviewDefinition
 
 /**
  * Defines a `Quickview` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Quickview` properties.
  * @returns The `Quickview` controller definition.

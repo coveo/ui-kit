@@ -16,6 +16,7 @@ export interface SmartSnippetQuestionsListDefinition
 
 /**
  * Defines a `SmartSnippetQuestionsList` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `SmartSnippetQuestionsList` properties.
  * @returns The `SmartSnippetQuestionsList` controller definition.

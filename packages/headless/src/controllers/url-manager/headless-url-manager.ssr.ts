@@ -17,6 +17,8 @@ export interface UrlManagerBuildProps {
 
 /**
  * @internal
+ * @group Definers
+ *
  */
 export const defineUrlManager = (): ControllerDefinitionWithProps<
   SearchEngine,

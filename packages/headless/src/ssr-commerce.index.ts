@@ -1,3 +1,72 @@
+/**
+ * The Coveo Headless SSR Commerce sub-package exposes exposes the engine, definers, controllers, actions, and utility functions to build a server side rendered commerce experience.
+ *
+ * @example
+ * ```typescript
+ * import {
+ *   Controller,
+ *   ControllerDefinitionsMap,
+ *   CommerceEngineDefinitionOptions,
+ *   CommerceEngine,
+ *   defineCommerceEngine,
+ *   InferStaticState,
+ *   InferHydratedState,
+ *   defineProductList,
+ *   getSampleCommerceEngineConfiguration,
+ * } from '@coveo/headless/ssr-commerce';
+ *
+ * type CommerceEngineConfig = CommerceEngineDefinitionOptions<
+ *   ControllerDefinitionsMap<CommerceEngine, Controller>
+ * >;
+ *
+ * const config = {
+ *   configuration: {
+ *     ...getSampleCommerceEngineConfiguration(),
+ *     context: {
+ *       language: 'en',
+ *       country: 'US',
+ *       currency: 'USD',
+ *       view: {
+ *         url: '...',
+ *       },
+ *     },
+ *   },
+ *   controllers: {
+ *     productList: defineProductList(),
+ *   },
+ * } satisfies CommerceEngineConfig;
+ *
+ * const engineDefinition = defineCommerceEngine(engineConfig);
+ *
+ * export const {
+ *   listingEngineDefinition,
+ *   searchEngineDefinition,
+ *   standaloneEngineDefinition,
+ * } = engineDefinition;
+ *
+ * export type ListingStaticState = InferStaticState<
+ *   typeof listingEngineDefinition
+ * >;
+ * export type ListingHydratedState = InferHydratedState<
+ *   typeof listingEngineDefinition
+ * >;
+ *
+ * export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
+ * export type SearchHydratedState = InferHydratedState<
+ *   typeof searchEngineDefinition
+ * >;
+ *
+ * export type StandaloneStaticState = InferStaticState<
+ *   typeof standaloneEngineDefinition
+ * >;
+ * export type StandaloneHydratedState = InferHydratedState<
+ *   typeof standaloneEngineDefinition
+ * >;
+ *
+ * ```
+ * @module SSR Commerce
+ */
+
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
@@ -19,6 +88,7 @@ export type {
   AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration.js';
+export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
 export type {
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
@@ -26,6 +96,7 @@ export type {
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  InferControllerPropsMapFromDefinitions,
 } from './app/commerce-ssr-engine/types/common.js';
 export type {Build} from './app/ssr-engine/types/build.js';
 export type {
@@ -33,9 +104,15 @@ export type {
   InferStaticState,
   InferHydratedState,
   InferBuildResult,
+  HydrateStaticState,
+  FetchStaticState,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {
+  NavigatorContext,
+  BrowserNavigatorContextProvider,
+  NavigatorContextProvider,
+} from './app/navigatorContextProvider.js';
 
 export type {LogLevel} from './app/logger.js';
 
@@ -65,10 +142,12 @@ export type {
   CategoryFacetValue,
   CategoryFacetSearchResult,
   DateFacet,
+  DateFacetValue,
   DateFacetState,
   FacetGenerator,
   FacetGeneratorState,
   NumericFacet,
+  NumericFacetValue,
   NumericFacetState,
   RegularFacet,
   RegularFacetState,
@@ -76,6 +155,9 @@ export type {
   MappedGeneratedFacetController,
   MappedFacetStates,
   MappedFacetState,
+  LocationFacetValue,
+  LocationFacetState,
+  FacetType,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 
@@ -99,8 +181,8 @@ export {defineParameterManager} from './controllers/commerce/core/parameter-mana
 export type {
   ProductList,
   ProductListState,
-} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
-export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
+} from './controllers/commerce/product-list/headless-product-list.ssr.js';
+export {defineProductList} from './controllers/commerce/product-list/headless-product-list.ssr.js';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
@@ -117,6 +199,7 @@ export type {
   CartItem,
   CartProps,
   CartState,
+  CartBuildProps,
   CartDefinition,
 } from './controllers/commerce/context/cart/headless-cart.ssr.js';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
@@ -148,6 +231,12 @@ export type {
   SortState,
 } from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
 export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
+
+export type {
+  BreadcrumbManager,
+  BreadcrumbManagerState,
+} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
+export {defineBreadcrumbManager} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
 
 export type {
   Summary,

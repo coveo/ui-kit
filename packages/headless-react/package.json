@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.0.7",
+  "version": "2.1.1",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -17,7 +17,8 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    "./ssr": "./dist/ssr/index.js"
+    "./ssr": "./dist/ssr/index.js",
+    "./ssr-commerce": "./dist/ssr-commerce/index.js"
   },
   "files": [
     "dist"
@@ -33,20 +34,15 @@
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/headless": "3.4.0"
+    "@coveo/headless": "3.9.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
     "@testing-library/react": "14.3.1",
-    "@types/jest": "29.5.12",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
     "@typescript-eslint/eslint-plugin": "7.17.0",
-    "eslint-plugin-jest-dom": "5.4.0",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-testing-library": "6.2.2",
     "gts": "5.3.1",
-    "jest-environment-jsdom": "29.7.0",
     "publint": "0.2.9",
     "rimraf": "5.0.9",
     "typescript": "5.4.5",
@@ -54,9 +50,15 @@
   },
   "peerDependencies": {
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
+  },
+  "optionalDependencies": {
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.9.0 || ^22.11.0"
   }
 }
