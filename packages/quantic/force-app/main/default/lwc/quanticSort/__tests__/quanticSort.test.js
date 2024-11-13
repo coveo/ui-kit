@@ -147,12 +147,6 @@ describe('c-quantic-sort', () => {
     cleanup();
   });
 
-  it('construct itself without throwing', () => {
-    expect(() =>
-      createElement('c-quantic-sort', {is: QuanticSort})
-    ).not.toThrow();
-  });
-
   describe('controller initialization', () => {
     it('should subscribe to the headless state changes', async () => {
       createTestComponent();

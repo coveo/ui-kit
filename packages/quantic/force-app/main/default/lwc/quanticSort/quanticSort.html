@@ -19,7 +19,7 @@
             name="sort"
             value={value}
             variant="label-hidden"
-            label={label}
+            label={labels.sortBy}
             placeholder={value}
             options={options}
             dropdown-alignment="auto"
@@ -34,7 +34,7 @@
         <div class="sort__container">
           <lightning-layout-item class="sort__header slds-var-p-right_small">
             <lightning-formatted-text
-              value={label}
+              value={labels.sortBy}
             ></lightning-formatted-text>
           </lightning-layout-item>
           <lightning-layout-item>
@@ -42,7 +42,7 @@
               name="sort"
               value={value}
               variant="label-hidden"
-              label={label}
+              label={labels.sortBy}
               placeholder={value}
               options={options}
               dropdown-alignment="auto"

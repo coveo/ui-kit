@@ -96,11 +96,9 @@ export default class QuanticSort extends LightningElement {
   variants = {
     default: {
       name: SORT_VARIANTS.DEFAULT,
-      label: this.labels.sortBy,
     },
     wide: {
       name: SORT_VARIANTS.WIDE,
-      label: '',
     },
   };
 
@@ -302,9 +300,5 @@ export default class QuanticSort extends LightningElement {
       // @ts-ignore
       ({label, value, criterion}) => ({label, value, criterion})
     );
-  }
-
-  get label() {
-    return this.variants[this.variant]?.label;
   }
 }
