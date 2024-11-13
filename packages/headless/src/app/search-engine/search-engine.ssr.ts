@@ -6,6 +6,7 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
 import {buildRecommendationFilter} from '../commerce-ssr-engine/common.js';
+import {buildLogger} from '../logger.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {
   buildControllerDefinitions,
@@ -161,6 +162,12 @@ export function defineSearchEngine<
   };
 
   const build: BuildFunction = async (...[buildOptions]: BuildParameters) => {
+    const logger = buildLogger(options.loggerOptions);
+    if (!getOptions().navigatorContextProvider) {
+      logger.warn(
+        '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+      );
+    }
     const engine = buildSSRSearchEngine(
       buildOptions?.extend
         ? await buildOptions.extend(getOptions())
@@ -182,12 +189,6 @@ export function defineSearchEngine<
 
   const fetchStaticState: FetchStaticStateFunction = composeFunction(
     async (...params: FetchStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-        );
-      }
       const buildResult = await build(...params);
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
@@ -224,12 +225,6 @@ export function defineSearchEngine<
 
   const hydrateStaticState: HydrateStaticStateFunction = composeFunction(
     async (...params: HydrateStaticStateParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-        console.warn(
-          '[WARNING] Missing navigator context in client-side code. Make sure to set it with `setNavigatorContextProvider` before calling hydrateStaticState()'
-        );
-      }
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,

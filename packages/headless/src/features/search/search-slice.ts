@@ -94,7 +94,12 @@ export const searchReducer = createReducer(
     });
     builder.addCase(fetchPage.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
-      state.results = action.payload.response.results;
+      state.results = [
+        ...action.payload.response.results.map((result) => ({
+          ...result,
+          searchUid: action.payload.response.searchUid,
+        })),
+      ];
     });
     builder.addCase(fetchFacetValues.fulfilled, (state, action) => {
       state.response.facets = action.payload.response.facets;

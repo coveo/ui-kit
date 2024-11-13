@@ -48,18 +48,31 @@ describe('string value', () => {
       expect(value.validate('')).toBeNull();
     });
 
-    it(`when url is true
-    when passing an invalid URL value
-    it returns an error description`, () => {
-      value = new StringValue({url: true});
-      expect(value.validate('hello')).not.toBeNull();
-    });
+    describe('when url is true', () => {
+      it.each(['hello', 'localhost', '127.0.0.1', '/relative/url'])(
+        `when passing an invalid URL value of '%s'
+      it returns an error description`,
+        (url) => {
+          value = new StringValue({url: true});
+          expect(value.validate(url)).not.toBeNull();
+        }
+      );
 
-    it(`when url is true
-    when passing a valid URL value
-    it returns null`, () => {
-      value = new StringValue({url: true});
-      expect(value.validate('https://www.coveo.com?test=allo')).toBeNull();
+      it.each([
+        'https://www.coveo.com?test=allo',
+        'https://www.example.org',
+        'http://www.example.org',
+        'http://localhost',
+        'http://127.0.0.1',
+        'localhost:1717',
+      ])(
+        `when passing a valid URL value of '%s'
+      it returns null`,
+        (url) => {
+          value = new StringValue({url: true});
+          expect(value.validate(url)).toBeNull();
+        }
+      );
     });
 
     it(`when constraining values are specified,
