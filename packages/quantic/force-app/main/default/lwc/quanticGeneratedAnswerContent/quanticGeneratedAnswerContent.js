@@ -79,6 +79,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
       const newHTMLContent =
         // @ts-ignore
         (window.marked &&
+          this.answer &&
           // @ts-ignore
           transformMarkdownToHtml(this.answer, window.marked)) ||
         '';
