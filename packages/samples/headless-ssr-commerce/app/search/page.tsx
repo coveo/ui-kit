@@ -1,5 +1,6 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
+import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ProductList from '@/components/product-list';
 import SearchProvider from '@/components/providers/search-provider';
@@ -10,6 +11,7 @@ import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 
 export default async function Search() {
@@ -25,9 +27,9 @@ export default async function Search() {
     controllers: {
       cart: {initialState: {items}},
       context: {
-        language: 'en',
-        country: 'US',
-        currency: 'USD',
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
         view: {
           url: 'https://sports.barca.group/search',
         },
@@ -40,6 +42,7 @@ export default async function Search() {
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ContextDropdown useCase="search" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
