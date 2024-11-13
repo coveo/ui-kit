@@ -1,54 +1,122 @@
+import {JSDOM} from 'jsdom';
 import {test, expect} from './listing.fixture';
 
-test.beforeEach(async ({page}) => {
-  await page.goto('/surf-accessories');
-});
-
-test('should load and display the search box', async ({search}) => {
-  await expect(search.searchBox).toBeVisible();
-});
-
-test.describe('when entering a query', () => {
-  test.beforeEach(async ({search}) => {
-    const searchBox = search.searchBox;
-    await searchBox.fill('shoes');
+test.describe('default', () => {
+  test.beforeEach(async ({page}) => {
+    await page.goto('/surf-accessories');
   });
 
-  test('should display suggestions', async ({search}) => {
-    const suggestionsContainer = search.suggestionsContainer;
-    await expect(suggestionsContainer).toBeVisible();
-
-    const suggestions = search.suggestions;
-    expect(await suggestions.count()).toBeGreaterThan(0);
+  test('should load and display the search box', async ({search}) => {
+    await expect(search.searchBox).toBeVisible();
   });
 
-  test.describe('when clicking a suggestion', () => {
-    let suggestionValue: string;
+  test.describe('when entering a query', () => {
     test.beforeEach(async ({search}) => {
+      const searchBox = search.searchBox;
+      await searchBox.fill('shoes');
+    });
+
+    test('should display suggestions', async ({search}) => {
+      const suggestionsContainer = search.suggestionsContainer;
+      await expect(suggestionsContainer).toBeVisible();
+
       const suggestions = search.suggestions;
-      suggestionValue =
-        (await suggestions.first().textContent()) || 'no value found';
-      await suggestions.first().click();
+      expect(await suggestions.count()).toBeGreaterThan(0);
     });
 
-    test('should go to search page', async ({page}) => {
-      await page.waitForURL('**/search#q=*');
+    test.describe('when clicking a suggestion', () => {
+      let suggestionValue: string;
+      test.beforeEach(async ({search}) => {
+        const suggestions = search.suggestions;
+        suggestionValue =
+          (await suggestions.first().textContent()) || 'no value found';
+        await suggestions.first().click();
+      });
 
-      const currentUrl = page.url();
+      test('should go to search page', async ({page}) => {
+        await page.waitForURL('**/search#q=*');
 
-      expect(currentUrl).toContain(suggestionValue);
+        const currentUrl = page.url();
+
+        expect(currentUrl).toContain(suggestionValue);
+      });
+    });
+
+    test.describe('when clicking search button', () => {
+      test.beforeEach(async ({search}) => {
+        search.searchButton.click();
+      });
+
+      test('should go to search page', async ({page}) => {
+        await page.waitForURL('**/search#q=*');
+        const currentUrl = page.url();
+        expect(currentUrl).toContain('shoes');
+      });
     });
   });
+});
+test.describe('ssr', () => {
+  const numResults = 9; // Define the numResults variable
+  const numResultsMsg = `Rendered page with ${numResults} products`;
 
-  test.describe('when clicking search button', () => {
-    test.beforeEach(async ({search}) => {
-      search.searchButton.click();
-    });
+  test(`renders page in SSR as expected`, async ({page}) => {
+    const responsePromise = page.waitForResponse('**/surf-accessories');
+    await page.goto('/surf-accessories');
 
-    test('should go to search page', async ({page}) => {
-      await page.waitForURL('**/search#q=*');
-      const currentUrl = page.url();
-      expect(currentUrl).toContain('shoes');
-    });
+    const response = await responsePromise;
+    const responseBody = await response.text();
+
+    const dom = new JSDOM(responseBody);
+
+    expect(
+      dom.window.document.querySelector('#hydrated-msg')?.textContent
+    ).toBe(numResultsMsg);
+
+    expect(
+      dom.window.document.querySelectorAll('[aria-label="Product List"] li')
+        .length
+    ).toBe(numResults);
+    expect(
+      (
+        dom.window.document.querySelector(
+          '#hydrated-indicator'
+        ) as HTMLInputElement
+      )?.checked
+    ).toBe(false);
+  });
+
+  test(`renders page in CSR as expected`, async ({page, search, hydrated}) => {
+    await page.goto('/surf-accessories');
+
+    await expect(hydrated.hydratedMessage).toHaveText(numResultsMsg);
+    expect(await search.productItems).toHaveLength(numResults);
+    expect(await hydrated.hydratedIndicator).toBe(true);
+  });
+
+  test('renders product list in SSR and then in CSR', async ({
+    page,
+    search,
+    hydrated,
+  }) => {
+    const responsePromise = page.waitForResponse('**/surf-accessories');
+    await page.goto('/surf-accessories');
+
+    const response = await responsePromise;
+    const responseBody = await response.text();
+
+    const dom = new JSDOM(responseBody);
+
+    const ssrTimestamp = Date.parse(
+      dom.window.document.querySelector('#timestamp')!.textContent || ''
+    );
+
+    const hydratedTimestamp = Date.parse(
+      (await hydrated.hydratedTimestamp.textContent()) || ''
+    );
+
+    expect(ssrTimestamp).not.toBeNaN();
+    await expect(hydrated.hydratedMessage).toHaveText(numResultsMsg);
+    expect(await search.productItems).toHaveLength(numResults);
+    expect(hydratedTimestamp).toBeGreaterThan(ssrTimestamp);
   });
 });
