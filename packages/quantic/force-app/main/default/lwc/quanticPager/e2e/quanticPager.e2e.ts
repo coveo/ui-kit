@@ -17,9 +17,10 @@ useCaseTestCases.forEach((useCase) => {
         pager,
         search,
       }) => {
+        const searchResponsePromise = search.waitForSearchResponse();
         await pager.clickNextPageButton();
-        const response = await search.waitForSearchResponse();
-        const {firstResult} = await response.request().postDataJSON();
+        const searchResponse = await searchResponsePromise;
+        const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(numberOfResultsPerPage);
         await pager.waitForPagerNextUaAnalytics();
       });
@@ -33,9 +34,10 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickNextPageButton();
         await search.waitForSearchResponse();
 
+        const searchResponsePromise = search.waitForSearchResponse();
         await pager.clickPreviousPageButton();
-        const response = await search.waitForSearchResponse();
-        const {firstResult} = await response.request().postDataJSON();
+        const searchResponse = await searchResponsePromise;
+        const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(0);
         await pager.waitForPagerPreviousUaAnalytics();
       });
@@ -47,9 +49,10 @@ useCaseTestCases.forEach((useCase) => {
         search,
       }) => {
         const examplePage = 3;
+        const searchResponsePromise = search.waitForSearchResponse();
         await pager.clickPageNumberButton(examplePage);
-        const response = await search.waitForSearchResponse();
-        const {firstResult} = await response.request().postDataJSON();
+        const searchResponse = await searchResponsePromise;
+        const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(numberOfResultsPerPage * (examplePage - 1));
         await pager.waitForPagerNumberUaAnalytics();
       });
@@ -61,9 +64,10 @@ useCaseTestCases.forEach((useCase) => {
         await search.waitForSearchResponse();
 
         await expect(pager.previousPageButton).not.toBeDisabled();
+        const searchResponsePromise = search.waitForSearchResponse();
         await search.performSearch();
-        const searchResponse = await search.waitForSearchResponse();
-        const {firstResult} = await searchResponse.request().postDataJSON();
+        const searchResponse = await searchResponsePromise;
+        const {firstResult} = searchResponse.request().postDataJSON();
 
         const expectedPage = 0;
         await expect(pager.pageButtons.nth(expectedPage)).toHaveAttribute(

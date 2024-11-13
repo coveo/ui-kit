@@ -44,7 +44,7 @@ Key points for Playwright E2E tests:
 
 - A user uses a Quantic component by interacting with its multiple buttons and triggering Coveo analytics. We test that the expected analytics are sent, that the events are valid, and the response from the analytics API are correct.
 - A user navigates through a whole search workflow, interacting with multiple components. We test the expected Search API calls and responses, the analytics calls and response, and also the reactivity of the full search experience.
-- Verifying that API requests made by the component are accurate and produce the expected results in the UI.
+- Verify the integration between the Quantic components and Salesforce. We test that modifying data through the Salesforce components has an impact and triggers the correct components reactions in a Quantic experience.
 
 ## Alternatives Considered
 

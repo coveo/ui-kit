@@ -1,19 +1,19 @@
-import {Page} from '@playwright/test';
+import {Page, Locator} from '@playwright/test';
 
 export class ConfigurationObject {
   constructor(private page: Page) {
     this.page = page;
   }
 
-  get tryButton() {
+  get tryButton(): Locator {
     return this.page.locator('lightning-button[data-cy="cfg-try"]');
   }
 
-  get resetButton() {
+  get resetButton(): Locator {
     return this.page.locator('lightning-button[data-cy="cfg-reset"]');
   }
 
-  get configurationForm() {
+  get configurationForm(): Locator {
     return this.page.locator('slot[name="configuration"]');
   }
 
@@ -21,11 +21,13 @@ export class ConfigurationObject {
     return `lightning-input[data-cy="cfg-${field}"] input`;
   }
 
-  async waitForConfigurationToLoad() {
+  async waitForConfigurationToLoad(): Promise<void> {
     await this.configurationForm.waitFor({state: 'visible'});
   }
 
-  async configure(options: Record<string, string | number | boolean> = {}) {
+  async configure(
+    options: Record<string, string | number | boolean> = {}
+  ): Promise<void> {
     await this.waitForConfigurationToLoad();
 
     for (const key of Object.keys(options)) {
@@ -39,7 +41,7 @@ export class ConfigurationObject {
     await this.tryButton.click();
   }
 
-  async reset() {
+  async reset(): Promise<void> {
     await this.resetButton.click();
   }
 }

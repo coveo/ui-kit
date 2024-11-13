@@ -1,4 +1,4 @@
-import {Page} from '@playwright/test';
+import {Page, Locator, Response} from '@playwright/test';
 
 export class SearchObject {
   constructor(
@@ -9,16 +9,16 @@ export class SearchObject {
     this.searchRequestRegex = searchRequestRegex;
   }
 
-  get performSearchButton() {
+  get performSearchButton(): Locator {
     return this.page.locator('c-action-perform-search button');
   }
 
-  async performSearch() {
+  async performSearch(): Promise<void> {
     await this.performSearchButton.click();
   }
 
-  async waitForSearchResponse() {
-    return await this.page.waitForResponse(this.searchRequestRegex);
+  async waitForSearchResponse(): Promise<Response> {
+    return this.page.waitForResponse(this.searchRequestRegex);
   }
 
   async interceptSearchIndefinitely(): Promise<() => void> {
