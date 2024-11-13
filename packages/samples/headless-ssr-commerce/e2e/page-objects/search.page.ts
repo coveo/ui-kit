@@ -35,16 +35,4 @@ export class SearchPageObject {
   get resultSummary() {
     return this.page.getByText(/Showing results \d+ - \d+ of/);
   }
-
-  get hydratedMessage() {
-    return this.page.getByText(/Rendered page with \d* results/);
-  }
-
-  get hydratedIndicator() {
-    return this.page.locator('#hydrated-indicator').isChecked();
-  }
-
-  get hydratedTimestamp() {
-    return this.page.locator('#timestamp');
-  }
 }
