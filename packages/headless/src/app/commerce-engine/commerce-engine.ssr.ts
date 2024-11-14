@@ -392,55 +392,143 @@ export function defineCommerceEngine<
       };
     };
 
-  const recommendationFetchStaticStateFactory: () => RecommendationFetchStaticStateFunction =
-    (solutionType: SolutionType) =>
-      composeFunction(
-        async (...params: RecommendationFetchStaticStateParameters) => {
-          const buildResult = await recommendationBuildFactory()(...params);
-          // I can't do it all, I need to split them all
-          //What the hell, this function calls itself ?
-          const staticState =
-            await recommendationFetchStaticStateFactory().fromBuildResult({
-              buildResult,
-            });
-          return staticState;
-        },
-        {
-          fromBuildResult: async (
-            ...params: RecommendationFetchStaticFromBuildResultsParameters
-          ) => {
-            const [
-              {
-                buildResult: {engine, controllers},
-              },
-            ] = params;
+  // const recommendationFetchStaticStateFactory: () => RecommendationFetchStaticStateFunction =
+  //   () =>
+  //     composeFunction(
+  //       async (...params: RecommendationFetchStaticStateParameters) => {
+  //         const buildResult = await recommendationBuildFactory()(...params);
+  //         // I can't do it all, I need to split them all
+  //         //What the hell, this function calls itself ?
+  //         const staticState =
+  //           await recommendationFetchStaticStateFactory().fromBuildResult({
+  //             buildResult,
+  //           });
+  //         return staticState;
+  //       },
+  //       {
+  //         fromBuildResult: async (
+  //           ...params: RecommendationFetchStaticFromBuildResultsParameters
+  //         ) => {
+  //           const [
+  //             {
+  //               buildResult: {engine, controllers},
+  //             },
+  //           ] = params;
 
-            if (solutionType === SolutionType.listing) {
-              buildProductListing(engine).executeFirstRequest();
-            } else if (solutionType === SolutionType.search) {
-              buildSearch(engine).executeFirstSearch();
-            } else if (solutionType === SolutionType.recommendation) {
-              // here build the filter and refresh them  all
-              // build every recommendation and refresh them all ?
-              // buildRecommendations(engine).refresh();
-              recommendationFilter.refresh(controllers);
-            }
+  //           // here build the filter and refresh them  all
+  //           // build every recommendation and refresh them all ?
+  //           // buildRecommendations(engine).refresh();
+  //           recommendationFilter.refresh(controllers);
 
-            const searchAction = await engine.waitForRequestCompletedAction();
+  //           const searchAction = await engine.waitForRequestCompletedAction();
 
-            return createStaticState({
-              searchAction,
-              controllers,
-            }) as EngineStaticState<
-              UnknownAction,
-              InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-                TControllerDefinitions,
-                SolutionType.recommendation
-              >
-            >;
-          },
-        }
-      );
+  //           return createStaticState({
+  //             searchAction,
+  //             controllers,
+  //           }) as EngineStaticState<
+  //             UnknownAction,
+  //             InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+  //               TControllerDefinitions,
+  //               SolutionType.recommendation
+  //             >
+  //           >;
+  //         },
+  //       }
+  //     );
+
+  const recommendationFetchStaticStateFactory3 = () => {
+    // Primary function logic
+    const fetchStaticState = async (
+      ...params: RecommendationFetchStaticStateParameters
+    ) => {
+      const buildResult = await recommendationBuildFactory()(...params);
+
+      const staticState = await fromBuildResult({
+        buildResult,
+      });
+      return staticState;
+    };
+
+    // Attach fromBuildResult as a property to match the expected type
+    fetchStaticState.fromBuildResult = fromBuildResult;
+
+    return fetchStaticState;
+  };
+
+  // Define fromBuildResult separately
+  const fromBuildResult = async (
+    ...params: RecommendationFetchStaticFromBuildResultsParameters
+  ) => {
+    const [
+      {
+        buildResult: {engine, controllers},
+      },
+    ] = params;
+
+    // Handle solutionType conditions and refresh logic
+
+    recommendationFilter.refresh(controllers);
+
+    const searchAction = await engine.waitForRequestCompletedAction();
+
+    return createStaticState({
+      searchAction,
+      controllers,
+    }) as EngineStaticState<
+      UnknownAction,
+      InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+        TControllerDefinitions,
+        SolutionType.recommendation
+      >
+    >;
+  };
+  // const recommendationFetchStaticStateFactory2: (
+  //   solutionType: SolutionType
+  // ) => RecommendationFetchStaticStateFunction = (solutionType) => () =>
+  //   composeFunction(
+  //     async (...params: RecommendationFetchStaticStateParameters) => {
+  //       const buildResult = await recommendationBuildFactory()(...params);
+
+  //       const staticState = await recommendationFetchStaticStateFactory(
+  //         solutionType
+  //       ).fromBuildResult({
+  //         buildResult,
+  //       });
+  //       return staticState;
+  //     },
+  //     {
+  //       fromBuildResult: async (
+  //         ...params: RecommendationFetchStaticFromBuildResultsParameters
+  //       ) => {
+  //         const [
+  //           {
+  //             buildResult: {engine, controllers},
+  //           },
+  //         ] = params;
+
+  //         if (solutionType === SolutionType.listing) {
+  //           buildProductListing(engine).executeFirstRequest();
+  //         } else if (solutionType === SolutionType.search) {
+  //           buildSearch(engine).executeFirstSearch();
+  //         } else if (solutionType === SolutionType.recommendation) {
+  //           recommendationFilter.refresh(controllers);
+  //         }
+
+  //         const searchAction = await engine.waitForRequestCompletedAction();
+
+  //         return createStaticState({
+  //           searchAction,
+  //           controllers,
+  //         }) as EngineStaticState<
+  //           UnknownAction,
+  //           InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+  //             TControllerDefinitions,
+  //             SolutionType.recommendation
+  //           >
+  //         >;
+  //       },
+  //     }
+  //   );
 
   return {
     listingEngineDefinition: {
@@ -466,7 +554,7 @@ export function defineCommerceEngine<
     >,
     recommendationEngineDefinition: {
       build: recommendationBuildFactory(),
-      fetchStaticState: recommendationFetchStaticStateFactory(),
+      fetchStaticState: recommendationFetchStaticStateFactory3(),
       hydrateStaticState: hydrateStaticStateFactory(
         SolutionType.recommendation
       ),
@@ -499,7 +587,7 @@ const {
 const r = await standaloneEngineDefinition.fetchStaticState();
 r.controllers.standaloneSearchBox;
 
-const b = await recommendationEngineDefinition.fetchStaticState(['popular']);
+const b = await recommendationEngineDefinition.fetchStaticState(['trending']);
 b.controllers.trending;
 
 const a = await searchEngineDefinition.fetchStaticState();
