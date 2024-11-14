@@ -40,27 +40,16 @@ export interface EngineDefinition<
   /**
    * Fetches the static state on the server side using your engine definition.
    */
-  fetchStaticState: TSolutionType extends SolutionType.recommendation
-    ? FetchStaticStateWithList<
-        TEngine,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllers,
-          TSolutionType
-        >,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >
-    : FetchStaticState<
-        TEngine,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllers,
-          TSolutionType
-        >,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >;
+  fetchStaticState: FetchStaticState<
+    TEngine,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
+    UnknownAction,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllers,
+      TSolutionType
+    >,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
   /**
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
@@ -73,19 +62,70 @@ export interface EngineDefinition<
   /**
    * Builds an engine and its controllers from an engine definition.
    */
-  build: TSolutionType extends SolutionType.recommendation
-    ? BuildWithList<
-        TEngine,
-        TEngineOptions,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >
-    : Build<
-        TEngine,
-        TEngineOptions,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >;
+  build: Build<
+    TEngine,
+    TEngineOptions,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+
+  /**
+   * Sets the navigator context provider.
+   * This provider is essential for retrieving navigation-related data such as referrer, userAgent, location, and clientId, which are crucial for handling both server-side and client-side API requests effectively.
+   *
+   * Note: The implementation specifics of the navigator context provider depend on the Node.js framework being utilized. It is the developer's responsibility to appropriately define and implement the navigator context provider to ensure accurate navigation context is available throughout the application. If the user fails to provide a navigator context provider, a warning will be logged either on the server or the browser console.
+   */
+  setNavigatorContextProvider: (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => void;
+}
+
+export interface RecommendationEngineDefinition<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TEngineOptions,
+> {
+  /**
+   * Fetches the static state on the server side using your engine definition.
+   */
+  fetchStaticState: FetchStaticStateWithList<
+    TEngine,
+    InferControllersMapFromDefinition<
+      TControllers,
+      SolutionType.recommendation
+    >,
+    UnknownAction,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllers,
+      SolutionType.recommendation
+    >,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+
+  /**
+   * Fetches the hydrated state on the client side using your engine definition and the static state.
+   */
+  hydrateStaticState: HydrateStaticState<
+    TEngine,
+    InferControllersMapFromDefinition<
+      TControllers,
+      SolutionType.recommendation
+    >,
+    UnknownAction,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
+  /**
+   * Builds an engine and its controllers from an engine definition.
+   */
+  build: BuildWithList<
+    TEngine,
+    TEngineOptions,
+    InferControllersMapFromDefinition<
+      TControllers,
+      SolutionType.recommendation
+    >,
+    InferControllerPropsMapFromDefinitions<TControllers>
+  >;
 
   /**
    * Sets the navigator context provider.
