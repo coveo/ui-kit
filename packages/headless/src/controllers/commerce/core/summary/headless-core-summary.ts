@@ -36,6 +36,7 @@ export interface SummaryState {
    * Whether the request has returned an error.
    */
   hasError: boolean;
+  searchuid: string;
 }
 
 /**
@@ -120,6 +121,7 @@ export const buildCoreSummary = <State extends SummaryState = SummaryState>(
         isLoading: isLoadingSelector(getState()),
         hasError: errorSelector(getState()) !== null,
         ...(enrichSummary ? enrichSummary(getState()) : {}),
+        searchuid: responseIdSelector(getState()),
       } as State;
     },
   };

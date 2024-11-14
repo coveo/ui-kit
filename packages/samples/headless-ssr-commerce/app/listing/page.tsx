@@ -22,30 +22,35 @@ import {headers} from 'next/headers';
 export default async function Listing({
   searchParams,
 }: {
-  searchParams: URLSearchParams;
+  searchParams: Promise<URLSearchParams>;
 }) {
+  const headersList = await headers();
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsNavigatorContext(headersList);
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {toCommerceSearchParameters} =
     buildSSRCommerceSearchParameterSerializer();
-  const parameters = toCommerceSearchParameters(searchParams);
+  const parameters = toCommerceSearchParameters(await searchParams);
 
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {parameterManager: {initialState: {parameters}}},
   });
 
-  const url = headers().get('x-coveo-href')!;
-  const referrer = headers().get('Referer');
+  console.log(
+    'FETCHED STATIC STATE',
+    staticState.controllers.summary.state.searchuid
+  );
+
+  const url = headersList.get('x-coveo-href')!;
 
   return (
     <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <ParameterManager initialUrl={url} referrer={referrer} />
+      <ParameterManager initialUrl={url} />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
@@ -79,5 +84,4 @@ export default async function Listing({
   );
 }
 
-export const fetchCache = 'force-no-store';
 export const dynamic = 'force-dynamic';

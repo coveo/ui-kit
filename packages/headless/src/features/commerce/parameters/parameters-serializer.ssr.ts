@@ -100,6 +100,7 @@ function serialize(
   commerceSearchParameters: CommerceSearchParameters,
   initialUrl: URL
 ) {
+  initialUrl = new URL(initialUrl);
   const {searchParams} = initialUrl;
   const previousState = wipeSearchParamsFromUrl(searchParams);
   Object.entries(commerceSearchParameters).forEach(

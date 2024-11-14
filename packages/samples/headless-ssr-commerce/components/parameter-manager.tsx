@@ -2,120 +2,176 @@
 
 import {useParameterManager} from '@/lib/commerce-engine';
 import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {useRouter} from 'next/navigation';
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useRef} from 'react';
 
-export default function ParameterManager({
-  initialUrl,
-  referrer,
-}: {
-  initialUrl: string;
-  referrer: string | null;
-}) {
+export default function ParameterManager({initialUrl}: {initialUrl: string}) {
   const {state, controller} = useParameterManager();
 
-  const serializer = useCallback(() => {
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+
+  const isHistoryNavigation = useRef(false);
+  const isSynchronizing = useRef(false);
+  const previousSearchParams = useRef('');
+  const taskQueue = useRef(Promise.resolve());
+  const didInit = useRef(false);
+  const lastPathName = useRef(pathName);
+
+  const counter = useRef(0);
+
+  const {serialize, toCommerceSearchParameters} = useCallback(() => {
     return buildSSRCommerceSearchParameterSerializer();
-  }, []);
+  }, [])();
 
   const router = useRouter();
-  const rendered = useRef(false);
-
-  const {serialize, toCommerceSearchParameters} = serializer();
-
-  const originalCommerceParams = useRef(
-    new Set(
-      new URL(
-        serialize(state.parameters, new URL(initialUrl.split('?')[0]))
-      ).search.split('&')
-    )
-  );
 
   useEffect(() => {
-    if (controller) {
-      return;
-    }
-    if (!rendered.current) {
-      rendered.current = true;
-      console.log('refresh');
-      router.refresh();
-    }
+    const popstateHandler = () => {
+      console.log('popstate');
+      console.log('pathName', pathName);
+      console.log('location.pathname', location.pathname);
+      console.log('lastPathName.current', lastPathName.current);
+      if (location.pathname !== pathName) {
+        console.log('refresh');
+        lastPathName.current = location.pathname;
+        router.replace(lastPathName.current);
+        isHistoryNavigation.current = true;
+      }
+    };
+
+    console.log('add popstate');
+    window.addEventListener('popstate', popstateHandler);
+    return () => {
+      console.log('remove popstate');
+      window.removeEventListener('popstate', popstateHandler);
+    };
   }, []);
+
+  useEffect(() => {
+    const copiedCounter = counter.current++;
+    taskQueue.current.then(() => {
+      console.log(copiedCounter);
+
+      const locationCommerceParams = toCommerceSearchParameters(searchParams);
+
+      const currentCommerceParamsInUrl = new Set(
+        new URL(
+          serialize(
+            locationCommerceParams,
+            new URL(`${location.origin}${location.pathname}`)
+          )
+        ).search.split('&')
+      );
+
+      const currentCommerceParamsInState = new Set(
+        new URL(
+          serialize(
+            state.parameters,
+            new URL(`${location.origin}${location.pathname}`)
+          )
+        ).search.split('&')
+      );
+
+      console.log('currentCommerceParamsInUrl', currentCommerceParamsInUrl);
+      console.log('currentCommerceParamsInState', currentCommerceParamsInState);
+
+      if (isHistoryNavigation.current) {
+        isHistoryNavigation.current = false;
+        return;
+      }
+
+      console.log('searchParams', searchParams.toString());
+      console.log('location.search', location.search);
+      if (
+        currentCommerceParamsInState.symmetricDifference(
+          currentCommerceParamsInUrl
+        ).size > 0 &&
+        didInit.current
+      ) {
+        console.log('synchronize');
+        controller?.synchronize(toCommerceSearchParameters(searchParams));
+      }
+      isSynchronizing.current = true;
+    });
+  }, [controller, searchParams, serialize, toCommerceSearchParameters]);
 
   const resetUrl = useRef(serialize(state.parameters, new URL(initialUrl)));
 
-  useEffect(() => {
-    if (!controller) {
-      return;
-    }
-    const popStateHandler = () => {
-      console.log('popstate');
-      const params = toCommerceSearchParameters(
-        new URL(location.href).searchParams
+  const initializeSearchParams = () => {
+    if (typeof window !== 'undefined') {
+      const locationCommerceParams = toCommerceSearchParameters(searchParams);
+
+      // TODO: create utils to create sets from search params
+
+      const originalCommerceParams = new Set(
+        new URL(
+          serialize(state.parameters, new URL(initialUrl.split('?')[0]))
+        ).search.split('&')
       );
-      controller.synchronize(params);
-      rendered.current = true;
-      console.log('synchronize', params);
-    };
-    window.addEventListener('popstate', popStateHandler);
-    return () => window.removeEventListener('popstate', popStateHandler);
-  }, [controller, toCommerceSearchParameters]);
 
-  useEffect(() => {
-    if (!controller) {
-      return;
-    }
-
-    const locationCommerceParams = toCommerceSearchParameters(
-      new URL(location.href).searchParams
-    );
-
-    const currentCommerceParams = new Set(
-      new URL(
-        serialize(
-          locationCommerceParams,
-          new URL(`${location.origin}${location.pathname}`)
-        )
-      ).search.split('&')
-    );
-
-    if (
-      originalCommerceParams.current.difference(currentCommerceParams).size >
-        0 &&
-      !rendered.current
-    ) {
-      console.log('replace state (a)', `${resetUrl.current}${location.hash}`);
-      history.replaceState(
-        {},
-        document.title,
-        `${resetUrl.current}${location.hash}`
+      const currentCommerceParams = new Set(
+        new URL(
+          serialize(
+            locationCommerceParams,
+            new URL(`${location.origin}${location.pathname}`)
+          )
+        ).search.split('&')
       );
-      rendered.current = true;
-    } else {
-      const newUrl = serialize(state.parameters, new URL(location.href));
 
-      if (newUrl !== location.href) {
-        if (newUrl !== resetUrl.current) {
-          console.log('push state', newUrl);
-
-          history.pushState({url: newUrl}, document.title, newUrl);
-        } else if (rendered.current) {
-          console.log('push state (b)', newUrl);
-          history.pushState({url: newUrl}, document.title, newUrl); //used to be replaceState but caused an issue
-        }
+      if (originalCommerceParams.difference(currentCommerceParams).size > 0) {
+        const replaceUrl = `${resetUrl.current}${location.hash}`;
+        previousSearchParams.current = new URL(replaceUrl).search.split('?')[1];
+        isHistoryNavigation.current = true;
+        console.log('replace state');
+        history.replaceState({}, document.title, replaceUrl);
       }
     }
-  }, [
-    controller,
-    initialUrl,
-    referrer,
-    serialize,
-    state.parameters,
-    toCommerceSearchParameters,
-  ]);
+  };
+
+  useEffect(() => {
+    if (!didInit.current) {
+      didInit.current = true;
+      const copiedCounter = counter.current++;
+      taskQueue.current.then(() => {
+        console.log(copiedCounter);
+        initializeSearchParams();
+      });
+    }
+  }, []);
+
+  const currentSearchParams = useRef('');
+
+  useEffect(() => {
+    console.log('document.referrer', document.referrer);
+    const copiedCounter = counter.current++;
+    taskQueue.current.then(() => {
+      console.log(copiedCounter);
+      currentSearchParams.current = searchParams.toString();
+      const currentUrl = new URL(pathName, initialUrl);
+      currentUrl.hash = location.hash;
+      currentUrl.search = searchParams.toString();
+
+      const newUrl = serialize(state.parameters, currentUrl);
+
+      if (
+        (currentSearchParams.current === searchParams.toString() &&
+          previousSearchParams.current ===
+            new URL(newUrl).search.split('?')[1]) ||
+        isSynchronizing.current
+      ) {
+        isSynchronizing.current = false;
+        return;
+      }
+
+      if (newUrl !== currentUrl.toString()) {
+        previousSearchParams.current = new URL(newUrl).search.split('?')[1];
+        console.log('push state');
+        history.pushState({}, document.title, newUrl);
+        isHistoryNavigation.current = true;
+      }
+    });
+  }, [initialUrl, pathName, searchParams, serialize, state.parameters]);
 
   return null;
 }
-
-// TODO fix issue with hash
-// TODO fix issue when
