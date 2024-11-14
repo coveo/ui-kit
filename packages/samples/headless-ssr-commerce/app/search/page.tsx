@@ -32,13 +32,14 @@ export default async function Search({
   });
 
   const url = headers().get('x-coveo-href')!;
+  const referrer = headers().get('Referer');
 
   return (
     <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <ParameterManager initialUrl={url} />
+      <ParameterManager initialUrl={url} referrer={referrer} />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
@@ -67,4 +68,5 @@ export default async function Search({
   );
 }
 
+export const fetchCache = 'force-no-store';
 export const dynamic = 'force-dynamic';

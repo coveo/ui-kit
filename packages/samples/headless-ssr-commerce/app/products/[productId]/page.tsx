@@ -36,4 +36,5 @@ export default async function ProductDescriptionPage({
   );
 }
 
+export const fetchCache = 'force-no-store';
 export const dynamic = 'force-dynamic';
