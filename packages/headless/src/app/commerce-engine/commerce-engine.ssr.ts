@@ -7,6 +7,12 @@ import {buildProductListing} from '../../controllers/commerce/product-listing/he
 import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {
+  defineFacetGenerator,
+  defineRecommendations,
+  defineStandaloneSearchBox,
+  getSampleCommerceEngineConfiguration,
+} from '../../ssr-commerce.index.js';
+import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
 } from '../../utils/utils.js';
@@ -356,3 +362,33 @@ export function defineCommerceEngine<
     >,
   };
 }
+/// Sandbox
+// const {
+//   recommendationEngineDefinition,
+//   searchEngineDefinition,
+//   standaloneEngineDefinition,
+// } = defineCommerceEngine({
+//   configuration: getSampleCommerceEngineConfiguration(),
+//   controllers: {
+//     standaloneSearchBox: defineStandaloneSearchBox({
+//       options: {redirectionUrl: 'rest'},
+//     }),
+//     facets: defineFacetGenerator(),
+//     trending: defineRecommendations({
+//       options: {slotId: 'ttt'},
+//     }),
+//     popular: defineRecommendations({
+//       options: {slotId: 'ppp'},
+//     }),
+//   },
+// });
+
+// // TODO: should have a way to select which recommendation to fetch
+// const r = await standaloneEngineDefinition.fetchStaticState();
+// r.controllers.standaloneSearchBox;
+
+// const b = await recommendationEngineDefinition.fetchStaticState(['trending']);
+// b.controllers.trending;
+
+// const a = await searchEngineDefinition.fetchStaticState();
+// a.controllers; // TODO: should throw an error since it's not defined in search
