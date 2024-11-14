@@ -6,7 +6,6 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ProductList from '@/components/product-list';
 import ListingProvider from '@/components/providers/listing-provider';
-import Recommendations from '@/components/recommendation-list';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
@@ -54,7 +53,9 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
-  // const recStaticState = await recsDefinition.fetchStaticState()
+  staticState.searchAction;
+
+  // const recsStaticState = await recsDefinition.fetchStaticState('recs1', 'recs2');
 
   return (
     <ListingProvider
@@ -89,11 +90,12 @@ export default async function Listing({params}: {params: {category: string}}) {
 
         <div style={{flex: 4}}>
           {/* <RecommendationProvider
-          staticState={recStaticState}
+          staticState={recsStaticState}
           navigatorContext={navigatorContext.marshal}>
 
-          </RecommendationProvider> */}
           <Recommendations />
+
+          </RecommendationProvider> */}
         </div>
       </div>
     </ListingProvider>

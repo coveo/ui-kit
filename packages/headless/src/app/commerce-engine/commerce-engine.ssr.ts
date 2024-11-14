@@ -167,7 +167,7 @@ export function defineCommerceEngine<
     TControllerDefinitions,
     SolutionType.standalone
   >;
-  recommendationDefinition: CommerceEngineDefinition<
+  recommendationEngineDefinition: CommerceEngineDefinition<
     TControllerDefinitions,
     SolutionType.recommendation
   >;
@@ -186,6 +186,7 @@ export function defineCommerceEngine<
     HydrateStaticStateFunction['fromBuildResult'];
   type BuildParameters = Parameters<BuildFunction>;
   type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
+
   type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
   type FetchStaticStateFromBuildResultParameters =
     Parameters<FetchStaticStateFromBuildResultFunction>;
@@ -342,7 +343,8 @@ export function defineCommerceEngine<
       TControllerDefinitions,
       SolutionType.standalone
     >,
-    recommendationDefinition: {
+    recommendationEngineDefinition: {
+      build: buildFactory(SolutionType.recommendation),
       fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
       hydrateStaticState: hydrateStaticStateFactory(
         SolutionType.recommendation

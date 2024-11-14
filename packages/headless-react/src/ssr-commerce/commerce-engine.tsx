@@ -65,6 +65,7 @@ export function defineCommerceEngine<
   const {
     listingEngineDefinition,
     searchEngineDefinition,
+    recommendationEngineDefinition,
     standaloneEngineDefinition,
   } = defineBaseCommerceEngine({...options});
   return {

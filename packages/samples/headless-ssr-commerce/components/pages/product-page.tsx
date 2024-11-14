@@ -49,7 +49,7 @@ export default function ProductPage(props: IProductPageProps) {
 
         // Refreshing recommendations in the browser after hydrating the state in the client-side
         // Recommendation refresh in the server is not supported yet.
-        controllers.popularBoughtRecs.refresh();
+        // controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
