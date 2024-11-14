@@ -1,4 +1,4 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {RecommendationOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {RecommendationsState} from '../recommendations/headless-recommendations.js';
 import {
   RecommendationsProps,
@@ -12,11 +12,11 @@ export type {Recommendations, RecommendationsState};
  * @internal
  * */
 export type RecommendationsDefinitionMeta = {
-  _recommendationProps: {} & RecommendationsProps['options'];
+  options: {} & RecommendationsProps['options'];
 };
 
 export interface RecommendationsDefinition
-  extends UniversalControllerDefinitionWithoutProps<Recommendations> {}
+  extends RecommendationOnlyControllerDefinitionWithoutProps<Recommendations> {}
 /**
  * @internal
  * Defines a `Recommendations` controller instance.
@@ -29,10 +29,8 @@ export function defineRecommendations(
   props: RecommendationsProps
 ): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
-    search: true,
-    listing: true,
-    standalone: true,
-    _recommendationProps: {
+    recommendation: true,
+    options: {
       ...props.options,
     },
     build: (engine) => buildRecommendations(engine, props),

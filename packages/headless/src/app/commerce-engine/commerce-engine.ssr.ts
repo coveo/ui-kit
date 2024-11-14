@@ -81,15 +81,30 @@ function buildSSRCommerceEngine(
     typeof createWaitForActionMiddleware
   >;
 
+  const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
+  const memo: Set<string> = new Set();
+
   switch (solutionType) {
     case SolutionType.listing:
       actionCompletionMiddleware = createWaitForActionMiddleware(
         isListingFetchCompletedAction
       );
+      middlewares.push(actionCompletionMiddleware);
       break;
     case SolutionType.search:
       actionCompletionMiddleware = createWaitForActionMiddleware(
         isSearchCompletedAction
+      );
+      middlewares.push(actionCompletionMiddleware);
+      break;
+    case SolutionType.recommendation:
+      middlewares.push(
+        ...Array.from({length: recommendationCount}, () =>
+          createWaitForActionMiddlewareForRecommendation(
+            isRecommendationCompletedAction,
+            memo
+          )
+        )
       );
       break;
     default:
@@ -98,22 +113,11 @@ function buildSSRCommerceEngine(
       );
   }
 
-  const memo: Set<string> = new Set();
-  const recommendationActionMiddlewares = Array.from(
-    {length: recommendationCount},
-    () =>
-      createWaitForActionMiddlewareForRecommendation(
-        isRecommendationCompletedAction,
-        memo
-      )
-  );
-
   const commerceEngine = buildCommerceEngine({
     ...options,
     middlewares: [
       ...(options.middlewares ?? []),
-      actionCompletionMiddleware.middleware,
-      ...recommendationActionMiddlewares.map(({middleware}) => middleware),
+      ...middlewares.map(({middleware}) => middleware),
     ],
   });
 
@@ -125,10 +129,7 @@ function buildSSRCommerceEngine(
     },
 
     waitForRequestCompletedAction() {
-      return [
-        actionCompletionMiddleware.promise,
-        ...recommendationActionMiddlewares.map(({promise}) => promise),
-      ];
+      return [...middlewares.map(({promise}) => promise)];
     },
   };
 }
@@ -169,6 +170,10 @@ export function defineCommerceEngine<
     TControllerDefinitions,
     SolutionType.standalone
   >;
+  recommendationEngineDefinition: CommerceEngineDefinition<
+    TControllerDefinitions,
+    SolutionType.recommendation
+  >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
   type Definition = CommerceEngineDefinition<
@@ -176,7 +181,7 @@ export function defineCommerceEngine<
     SolutionType
   >;
   type BuildFunction = Definition['build'];
-  type FetchStaticStateFunction = Definition['fetchStaticState'];
+  type FetchStaticStateFunction = Definition['fetchStaticState']; // TODO: avoir un fetch pour les recommendations
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
   type FetchStaticStateFromBuildResultFunction =
     FetchStaticStateFunction['fromBuildResult'];
@@ -190,9 +195,9 @@ export function defineCommerceEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const recommendationFilter = buildRecommendationFilter(
-    controllerDefinitions ?? {}
-  );
+  // TODO: ideally , we only want to execute that for recommendation stuff
+  const recommendationFilter = () =>
+    buildRecommendationFilter(controllerDefinitions ?? {});
 
   const getOptions = () => {
     return engineOptions;
@@ -203,7 +208,6 @@ export function defineCommerceEngine<
   ) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
-
   const buildFactory =
     <T extends SolutionType>(solutionType: T) =>
     async (...[buildOptions]: BuildParameters) => {
@@ -212,7 +216,10 @@ export function defineCommerceEngine<
         buildOptions?.extend
           ? await buildOptions.extend(getOptions())
           : getOptions(),
-        recommendationFilter.count
+        // TODO: clean that
+        solutionType === SolutionType.recommendation
+          ? recommendationFilter().count
+          : 0
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -258,14 +265,19 @@ export function defineCommerceEngine<
             },
           ] = params;
 
-          if (solutionType === SolutionType.listing) {
-            buildProductListing(engine).executeFirstRequest();
-          } else if (solutionType === SolutionType.search) {
-            buildSearch(engine).executeFirstSearch();
+          switch (solutionType) {
+            case SolutionType.listing:
+              buildProductListing(engine).executeFirstRequest();
+              break;
+            case SolutionType.search:
+              buildSearch(engine).executeFirstSearch();
+              break;
+            case SolutionType.recommendation:
+              recommendationFilter().refresh(controllers);
+              break;
           }
 
-          recommendationFilter.refresh(controllers);
-
+          // TODO: should be only one searchAction for search and listing
           const searchActions = await Promise.all(
             engine.waitForRequestCompletedAction()
           );
@@ -317,6 +329,7 @@ export function defineCommerceEngine<
             },
           ] = params;
 
+          // TODO: should be only one searchAction for search and listing
           searchActions.forEach((action) => {
             engine.dispatch(action);
           });
@@ -325,6 +338,7 @@ export function defineCommerceEngine<
         },
       }
     );
+
   return {
     listingEngineDefinition: {
       build: buildFactory(SolutionType.listing),
@@ -338,6 +352,18 @@ export function defineCommerceEngine<
       hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
+    recommendationEngineDefinition: {
+      build: buildFactory(SolutionType.recommendation),
+      fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
+      hydrateStaticState: hydrateStaticStateFactory(
+        SolutionType.recommendation
+      ),
+      setNavigatorContextProvider,
+    } as CommerceEngineDefinition<
+      TControllerDefinitions,
+      SolutionType.recommendation
+    >,
+    // TODO:  make the standaloneEngineDefinition not async since there are no search executed
     standaloneEngineDefinition: {
       build: buildFactory(SolutionType.standalone),
       fetchStaticState: fetchStaticStateFactory(SolutionType.standalone),
@@ -349,3 +375,34 @@ export function defineCommerceEngine<
     >,
   };
 }
+
+/// Sandbox
+// const {
+//   recommendationEngineDefinition,
+//   searchEngineDefinition,
+//   standaloneEngineDefinition,
+// } = defineCommerceEngine({
+//   configuration: getSampleCommerceEngineConfiguration(),
+//   controllers: {
+//     standaloneSearchBox: defineStandaloneSearchBox({
+//       options: {redirectionUrl: 'rest'},
+//     }),
+//     facets: defineFacetGenerator(),
+//     trending: defineRecommendations({
+//       options: {slotId: 'ttt'},
+//     }),
+//     popular: defineRecommendations({
+//       options: {slotId: 'ppp'},
+//     }),
+//   },
+// });
+
+// // TODO: should have a way to select which recommendation to fetch
+// const r = await standaloneEngineDefinition.fetchStaticState();
+// r.controllers.standaloneSearchBox;
+
+// const b = await recommendationEngineDefinition.fetchStaticState(['trending']);
+// b.controllers.trending;
+
+// const a = await searchEngineDefinition.fetchStaticState();
+// a.controllers; // TODO: should throw an error since it's not defined in search

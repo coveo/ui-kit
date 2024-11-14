@@ -117,7 +117,7 @@ export function buildRecommendationFilter<
   >(
     controller: C
   ): controller is C & RecommendationsDefinitionMeta => {
-    return '_recommendationProps' in controller;
+    return 'recommendation' in controller;
   };
 
   const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
@@ -132,7 +132,7 @@ export function buildRecommendationFilter<
       if (!isRecommendationDefinition(value)) {
         return false;
       }
-      const {slotId, productId} = value._recommendationProps;
+      const {slotId, productId} = value.options;
       const key = `${slotId}${productId || ''}`;
       if (slotIdSet.has(key)) {
         warnDuplicateRecommendation(slotId, productId);

@@ -19,6 +19,7 @@ export enum SolutionType {
   search = 'search',
   listing = 'listing',
   standalone = 'standalone',
+  recommendation = 'recommendation',
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -172,6 +173,13 @@ interface ListingOnlyController {
   [SolutionType.listing]: true;
 }
 
+interface RecommendationOnlyController {
+  /**
+   * @internal
+   */
+  [SolutionType.recommendation]: true;
+}
+
 interface SearchAndListingController {
   /**
    * @internal
@@ -205,6 +213,17 @@ export type ListingOnlyControllerDefinitionWithProps<
 > = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
   ListingOnlyController;
 
+export type RecommendationOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
+  RecommendationOnlyController;
+
+export type RecommendationOnlyControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<CommerceEngine, TController, TProps> &
+  RecommendationOnlyController;
+
 export type UniversalControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<CommerceEngine, TController> &
@@ -233,6 +252,7 @@ export type SubControllerDefinitionWithoutProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
+// TODO: add recommendation type here
 
 export type SubControllerDefinitionWithProps<
   TController extends Controller,
@@ -247,3 +267,4 @@ export type SubControllerDefinitionWithProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
+// TODO: add recommendation type here
