@@ -20,6 +20,7 @@ import {getAllIncludedResultsFrom} from './folding-utils.js';
 export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
   childResults: ResultWithFolding[];
+  totalNumberOfChildResults: number;
 }
 
 function getCollectionField(result: ResultWithFolding, fields: FoldingFields) {
@@ -66,13 +67,16 @@ function resolveChildrenFromFields(
         getParentField(result, fields) === sourceChildValue;
       return isChildOfSource && !isSameResultAsSource;
     })
-    .map((result) => ({
-      result,
-      children: resolveChildrenFromFields(result, results, fields, [
-        ...resolvedAncestors,
-        sourceChildValue,
-      ]),
-    }));
+    .map((result) => {
+      const extendedResult = {...result, searchUid: parent.searchUid};
+      return {
+        result: extendedResult,
+        children: resolveChildrenFromFields(extendedResult, results, fields, [
+          ...resolvedAncestors,
+          sourceChildValue,
+        ]),
+      };
+    });
 }
 
 function resolveRootFromFields(
@@ -101,6 +105,7 @@ function resolveRootFromParentResult(
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
   fields: FoldingFields,
+  searchUid: string,
   rootResult?: ResultWithFolding
 ): FoldedCollection {
   const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
@@ -110,14 +115,17 @@ function createCollectionFromResult(
     resolveRootFromFields(resultsInCollection, fields) ??
     resolveRootFromParentResult(relevantResult);
 
+  const extendedResultToUseAsRoot = {...resultToUseAsRoot, searchUid};
+
   return {
-    result: resultToUseAsRoot,
+    result: extendedResultToUseAsRoot,
     children: resolveChildrenFromFields(
-      resultToUseAsRoot,
+      extendedResultToUseAsRoot,
       resultsInCollection,
       fields
     ),
-    moreResultsAvailable: true,
+    // To understand why "1" instead of "0", see here : https://coveord.atlassian.net/browse/SEARCHAPI-11075. totalNumberOfChildResults is off by 1 by the index design.
+    moreResultsAvailable: relevantResult.totalNumberOfChildResults > 1,
     isLoadingMoreResults: false,
   };
 }
@@ -125,6 +133,7 @@ function createCollectionFromResult(
 function createCollections(
   results: ResultWithFolding[],
   fields: FoldingFields,
+  searchUid: string,
   rootResult?: ResultWithFolding
 ) {
   const collections: Record<CollectionId, FoldedCollection> = {};
@@ -139,6 +148,7 @@ function createCollections(
     collections[collectionId] = createCollectionFromResult(
       result,
       fields,
+      searchUid,
       rootResult
     );
   });
@@ -168,7 +178,8 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields
+              state.fields,
+              payload.response.searchUid
             )
           : {};
       })
@@ -176,7 +187,8 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields
+              state.fields,
+              payload.response.searchUid
             )
           : {};
       })
@@ -186,7 +198,8 @@ export const foldingReducer = createReducer(
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
-                state.fields
+                state.fields,
+                payload.response.searchUid
               ),
             }
           : {};
@@ -222,10 +235,11 @@ export const foldingReducer = createReducer(
       })
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results, rootResult}}) => {
+        (state, {payload: {collectionId, results, rootResult, searchUid}}) => {
           const newCollections = createCollections(
             results as ResultWithFolding[],
             state.fields,
+            searchUid,
             rootResult
           );
           if (!newCollections || !newCollections[collectionId]) {

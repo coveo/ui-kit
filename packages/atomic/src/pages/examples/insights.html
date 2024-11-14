@@ -9,6 +9,7 @@
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
+      import {loadCaseContextActions} from '/build/headless/insight/headless.esm.js';
       import {initializeBindings} from '/build/index.esm.js';
 
       async function main() {
@@ -20,6 +21,9 @@
           organizationId: 'searchuisamples',
         });
 
+        const engine = insightInterface.engine;
+        const {setCaseId} = loadCaseContextActions(engine);
+        engine.dispatch(setCaseId('1234'));
         insightInterface.executeFirstSearch();
 
         await customElements.whenDefined('atomic-insight-full-search-button');
@@ -125,13 +129,17 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+                  <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
                   <atomic-field-condition must-match-sourcetype="Salesforce">
                     <atomic-result-badge label="Salesforce" class="salesforce-badge"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt>
                   <atomic-result-text field="excerpt"></atomic-result-text>
@@ -198,7 +206,8 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+                  <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
                   <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -218,6 +227,9 @@
                     <atomic-result-badge label="Top Result"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-excerpt
                   ><atomic-result-text field="excerpt"></atomic-result-text
@@ -327,6 +339,28 @@
                   .result-root.image-large atomic-result-section-visual {
                     border-radius: var(--atomic-border-radius-xl);
                   }
+
+                  div.result-root.with-sections.display-list.density-normal atomic-result-section-bottom-metadata {
+                    max-height: 4.5rem;
+                  }
+
+                  .viewed-by-customer {
+                    display: inline-flex;
+                    align-items: center;
+                    flex-basis: 100%;
+                    margin-top: 0.5rem;
+                  }
+                  .viewed-by-customer atomic-icon {
+                    background-color: var(--atomic-neutral-dark);
+                    border-radius: 1rem;
+                    width: 0.75rem;
+                    height: 0.75rem;
+                  }
+                  .viewed-by-customer atomic-text {
+                    font-weight: bold;
+                    color: var(--atomic-on-background);
+                    margin-left: 0.25rem;
+                  }
                 </style>
                 <atomic-insight-result-action-bar>
                   <atomic-insight-result-action
@@ -337,7 +371,8 @@
                     tooltip="post to feed"
                     action="postToFeed"
                   ></atomic-insight-result-action>
-                  <atomic-insight-result-action tooltip="quickview" action="quickview"></atomic-insight-result-action>
+                  <atomic-insight-result-attach-to-case-action></atomic-insight-result-attach-to-case-action>
+                  <atomic-insight-result-quickview-action></atomic-insight-result-quickview-action>
                 </atomic-insight-result-action-bar>
                 <atomic-result-section-badges>
                   <atomic-field-condition must-match-sourcetype="Salesforce">
@@ -357,6 +392,9 @@
                     <atomic-result-badge label="Top Result"></atomic-result-badge>
                   </atomic-field-condition>
                 </atomic-result-section-badges>
+                <atomic-result-section-actions
+                  ><atomic-insight-result-attach-to-case-indicator></atomic-insight-result-attach-to-case-indicator
+                ></atomic-result-section-actions>
                 <atomic-result-section-title><atomic-result-link></atomic-result-link></atomic-result-section-title>
                 <atomic-result-section-title-metadata>
                   <atomic-field-condition class="field" if-defined="snrating">
@@ -366,9 +404,9 @@
                     <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
                   </atomic-field-condition>
                 </atomic-result-section-title-metadata>
-                <atomic-result-section-excerpt
-                  ><atomic-result-text field="excerpt"></atomic-result-text
-                ></atomic-result-section-excerpt>
+                <atomic-result-section-excerpt>
+                  <atomic-result-text field="excerpt"></atomic-result-text>
+                </atomic-result-section-excerpt>
                 <atomic-result-section-bottom-metadata>
                   <atomic-result-fields-list>
                     <atomic-field-condition class="field" if-defined="author">
@@ -404,6 +442,11 @@
                         <atomic-result-date format="ddd MMM D YYYY"></atomic-result-date>
                       </span>
                     </atomic-field-condition>
+
+                    <atomic-field-condition class="viewed-by-customer" must-match-is-user-action-view="true">
+                      <atomic-icon icon="assets://user.svg"></atomic-icon>
+                      <atomic-text value="viewed-by-customer"></atomic-text>
+                    </atomic-field-condition>
                   </atomic-result-fields-list>
                 </atomic-result-section-bottom-metadata>
               </template>
@@ -429,10 +472,10 @@
       updateWrapper(widgetView);
 
       async function updateWrapper(widgetView) {
-        const interface = 'atomic-insight-interface';
+        const insightInterface = 'atomic-insight-interface';
         const layout = 'atomic-insight-layout';
-        await Promise.all([customElements.whenDefined(interface), customElements.whenDefined(layout)]);
-        const insightElements = [document.querySelector(interface), document.querySelector(layout)];
+        await Promise.all([customElements.whenDefined(insightInterface), customElements.whenDefined(layout)]);
+        const insightElements = [document.querySelector(insightInterface), document.querySelector(layout)];
         if (widgetView) {
           insightElements.forEach((el) => el.setAttribute('widget', true));
         } else {
@@ -442,6 +485,18 @@
 
       document.addEventListener('atomicInsightResultActionClicked', (event) => {
         console.log('Result action clicked', event.detail);
+      });
+
+      document.addEventListener('atomic/insight/attachToCase/attach', (event) => {
+        console.log('attach', event.detail);
+        const {controller, result} = event.detail;
+        controller.attach();
+      });
+
+      document.addEventListener('atomic/insight/attachToCase/detach', (event) => {
+        console.log('detach', event.detail);
+        const {controller, result} = event.detail;
+        controller.detach();
       });
     </script>
   </body>

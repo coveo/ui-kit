@@ -32,6 +32,9 @@ export type {
  * @param engine - The headless engine.
  * @param props - The configurable `ResultsPerPage` properties.
  * @returns A `ResultsPerPage` controller instance.
+ *
+ * @group Controllers
+ * @category ResultsPerPage
  */
 export function buildResultsPerPage(
   engine: SearchEngine,

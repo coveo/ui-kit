@@ -25,9 +25,11 @@ import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -55,9 +57,11 @@ export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -946,6 +950,16 @@ export namespace Components {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<string, string[]>;
     }
     interface AtomicFocusTrap {
         "active": boolean;
@@ -1069,7 +1083,7 @@ export namespace Components {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -1413,6 +1427,10 @@ export namespace Components {
     }
     interface AtomicInsightResultActionBar {
     }
+    interface AtomicInsightResultAttachToCaseAction {
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
+    }
     interface AtomicInsightResultChildren {
         /**
           * The expected size of the image displayed in the children results.
@@ -1444,6 +1462,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightResultList {
         /**
@@ -1459,6 +1491,12 @@ export namespace Components {
           * @param resultRenderingFunction
          */
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
+    }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox": string;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -1477,6 +1515,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -2029,9 +2081,26 @@ export namespace Components {
          */
         "field": 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter": 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter": TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible": boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter": TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -2047,6 +2116,16 @@ export namespace Components {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -2088,6 +2167,23 @@ export namespace Components {
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
+    }
+    /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
     }
     /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
@@ -2579,6 +2675,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -2621,6 +2722,20 @@ export namespace Components {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -2781,6 +2896,22 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-date` component renders the value of a date result field.
@@ -2896,6 +3027,10 @@ export namespace Components {
      * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
      */
     interface AtomicResultLocalizedText {
+        /**
+          * The field value to dynamically evaluate.
+         */
+        "field": Record<string, string>;
         /**
           * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
@@ -3081,6 +3216,22 @@ export namespace Components {
           * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<DocumentFragment> | null>;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -3675,6 +3826,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
+}
+export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -4447,6 +4602,30 @@ declare global {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
     };
+    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
+        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
+        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
+    }
+    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicInsightResultAttachToCaseActionElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
+        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
+    };
+    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+    };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenElement: {
@@ -4464,6 +4643,12 @@ declare global {
     var HTMLAtomicInsightResultListElement: {
         prototype: HTMLAtomicInsightResultListElement;
         new (): HTMLAtomicInsightResultListElement;
+    };
+    interface HTMLAtomicInsightResultQuickviewActionElement extends Components.AtomicInsightResultQuickviewAction, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultQuickviewActionElement: {
+        prototype: HTMLAtomicInsightResultQuickviewActionElement;
+        new (): HTMLAtomicInsightResultQuickviewActionElement;
     };
     interface HTMLAtomicInsightResultTemplateElement extends Components.AtomicInsightResultTemplate, HTMLStencilElement {
     }
@@ -4800,6 +4985,15 @@ declare global {
         new (): HTMLAtomicProductDescriptionElement;
     };
     /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface HTMLAtomicProductExcerptElement extends Components.AtomicProductExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicProductExcerptElement: {
+        prototype: HTMLAtomicProductExcerptElement;
+        new (): HTMLAtomicProductExcerptElement;
+    };
+    /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
      * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
      * @alpha 
@@ -4828,6 +5022,15 @@ declare global {
     var HTMLAtomicProductLinkElement: {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
+    };
+    /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
+    }
+    var HTMLAtomicProductMultiValueTextElement: {
+        prototype: HTMLAtomicProductMultiValueTextElement;
+        new (): HTMLAtomicProductMultiValueTextElement;
     };
     /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
@@ -5913,9 +6116,12 @@ declare global {
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
+        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
+        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
+        "atomic-insight-result-quickview-action": HTMLAtomicInsightResultQuickviewActionElement;
         "atomic-insight-result-template": HTMLAtomicInsightResultTemplateElement;
         "atomic-insight-search-box": HTMLAtomicInsightSearchBoxElement;
         "atomic-insight-smart-snippet": HTMLAtomicInsightSmartSnippetElement;
@@ -5950,9 +6156,11 @@ declare global {
         "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
+        "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
@@ -6887,6 +7095,16 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<string, string[]>;
     }
     interface AtomicFocusTrap {
         "active"?: boolean;
@@ -7006,7 +7224,7 @@ declare namespace LocalJSX {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -7337,6 +7555,12 @@ declare namespace LocalJSX {
     }
     interface AtomicInsightResultActionBar {
     }
+    interface AtomicInsightResultAttachToCaseAction {
+        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
+    }
     interface AtomicInsightResultChildren {
         /**
           * The expected size of the image displayed in the children results.
@@ -7364,6 +7588,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightResultList {
         /**
@@ -7374,6 +7612,12 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the results.
          */
         "imageSize"?: ItemDisplayImageSize;
+    }
+    interface AtomicInsightResultQuickviewAction {
+        /**
+          * The `sandbox` attribute to apply to the quickview iframe.  The quickview is loaded inside an iframe with a [`sandbox`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe#attr-sandbox) attribute for security reasons.  This attribute exists primarily to protect against potential XSS attacks that could originate from the document being displayed.  By default, the sandbox attributes are: `allow-popups allow-top-navigation allow-same-origin`.  `allow-same-origin` is not optional, and must always be included in the list of allowed capabilities for the component to function properly.
+         */
+        "sandbox"?: string;
     }
     interface AtomicInsightResultTemplate {
         /**
@@ -7388,6 +7632,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     interface AtomicInsightSearchBox {
         /**
@@ -7926,9 +8184,26 @@ declare namespace LocalJSX {
          */
         "field"?: 'ec_description' | 'ec_shortdesc';
         /**
+          * Whether the description should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
           * The number of lines after which the product description should be truncated. A value of "none" will disable truncation.
          */
-        "truncateAfter"?: 'none' | '1' | '2' | '3' | '4';
+        "truncateAfter"?: TruncateAfter;
+    }
+    /**
+     * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+     */
+    interface AtomicProductExcerpt {
+        /**
+          * Whether the excerpt should be collapsible after being expanded.
+         */
+        "isCollapsible"?: boolean;
+        /**
+          * The number of lines after which the product excerpt should be truncated. A value of "none" will disable truncation.
+         */
+        "truncateAfter"?: TruncateAfter;
     }
     /**
      * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
@@ -7944,6 +8219,16 @@ declare namespace LocalJSX {
           * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<string, string[]>;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<string, string[]>;
     }
     /**
      * The `atomic-product-image` component renders an image from a product field.
@@ -7972,6 +8257,23 @@ declare namespace LocalJSX {
           * The [template literal](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals) from which to generate the `href` attribute value  The template literal can reference any number of product properties from the parent product. It can also reference the window object.  For example, the following markup generates an `href` value such as `http://uri.com?id=itemTitle`, using the product's `clickUri` and `itemtitle` fields. ```html <atomic-product-link href-template='${clickUri}?id=${permanentId}'></atomic-product-link> ```
          */
         "hrefTemplate"?: string;
+    }
+    /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
     }
     /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
@@ -8435,6 +8737,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -8473,6 +8780,20 @@ declare namespace LocalJSX {
           * The field that, when defined on a result item, would prevent the template from being applied.  For example, a template with the following attribute only applies to result items whose `filetype` and `sourcetype` fields are NOT defined: `if-not-defined="filetype,sourcetype"`
          */
         "ifNotDefined"?: string;
+        /**
+          * The field and values that define which result items the condition must be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to.  For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.
@@ -8630,6 +8951,22 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-date` component renders the value of a date result field.
@@ -8740,6 +9077,10 @@ declare namespace LocalJSX {
      * @MapProp name: field;attr: field;docs: The field from which to extract the target string and the variable used to map it to the target i18n parameter. For example, the following configuration extracts the value of `author` from a result, and assign it to the i18n parameter `name`: `field-author="name"`;type: Record<string, string> ;default: {}
      */
     interface AtomicResultLocalizedText {
+        /**
+          * The field value to dynamically evaluate.
+         */
+        "field"?: Record<string, string>;
         /**
           * The numerical field value used to determine whether to use the singular or plural value of a translation.
          */
@@ -8921,6 +9262,22 @@ declare namespace LocalJSX {
           * A function that must return true on results for the result template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to results whose `title` contains `singapore`: `document.querySelector('#target-template').conditions = [(result) => /singapore/i.test(result.title)];`
          */
         "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies whether the specified fields match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * Verifies whether the specified fields do not match the specified values.
+          * @type {Record<string, string[]>}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
     }
     /**
      * The `atomic-result-text` component renders the value of a string result field.
@@ -9548,9 +9905,12 @@ declare namespace LocalJSX {
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
+        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
+        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
+        "atomic-insight-result-quickview-action": AtomicInsightResultQuickviewAction;
         "atomic-insight-result-template": AtomicInsightResultTemplate;
         "atomic-insight-search-box": AtomicInsightSearchBox;
         "atomic-insight-smart-snippet": AtomicInsightSmartSnippet;
@@ -9585,9 +9945,11 @@ declare namespace LocalJSX {
         "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
+        "atomic-product-excerpt": AtomicProductExcerpt;
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-multi-value-text": AtomicProductMultiValueText;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
@@ -9944,9 +10306,12 @@ declare module "@stencil/core" {
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
+            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
+            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
+            "atomic-insight-result-quickview-action": LocalJSX.AtomicInsightResultQuickviewAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultQuickviewActionElement>;
             "atomic-insight-result-template": LocalJSX.AtomicInsightResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultTemplateElement>;
             "atomic-insight-search-box": LocalJSX.AtomicInsightSearchBox & JSXBase.HTMLAttributes<HTMLAtomicInsightSearchBoxElement>;
             "atomic-insight-smart-snippet": LocalJSX.AtomicInsightSmartSnippet & JSXBase.HTMLAttributes<HTMLAtomicInsightSmartSnippetElement>;
@@ -10035,6 +10400,10 @@ declare module "@stencil/core" {
              */
             "atomic-product-description": LocalJSX.AtomicProductDescription & JSXBase.HTMLAttributes<HTMLAtomicProductDescriptionElement>;
             /**
+             * @alpha The `atomic-product-excerpt` component renders the excerpt of a product generated at query time.
+             */
+            "atomic-product-excerpt": LocalJSX.AtomicProductExcerpt & JSXBase.HTMLAttributes<HTMLAtomicProductExcerptElement>;
+            /**
              * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
              * The condition properties can be based on any top-level product property of the `product` object, not restricted to fields (e.g., `ec_name`).
              * @alpha 
@@ -10049,6 +10418,10 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            /**
+             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+             */
+            "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**
              * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
              * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.

@@ -44,6 +44,11 @@ export interface RecommendationListProps {
 
 /**
  * The `RecommendationList` controller retrieves information about the current recommendations by the search API, if there are any.
+ *
+ * Example: [recommendation-list.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx)
+ *
+ * @group Controllers
+ * @category RecommendationList
  */
 export interface RecommendationList extends Controller {
   /**
@@ -57,6 +62,9 @@ export interface RecommendationList extends Controller {
   state: RecommendationListState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `RecommendationList` controller.
+ */
 export interface RecommendationListState {
   /**
    * The current error for the last executed query, or `null` if none is present.
@@ -85,6 +93,9 @@ export interface RecommendationListState {
  * @param engine - The headless engine.
  * @param props - The configurable `RecommendationList` properties.
  * @returns A `RecommendationList` controller instance.
+ *
+ * @group Controllers
+ * @category RecommendationList
  */
 export function buildRecommendationList(
   engine: RecommendationEngine,

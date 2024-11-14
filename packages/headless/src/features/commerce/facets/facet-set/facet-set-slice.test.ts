@@ -9,6 +9,7 @@ import {buildMockCommerceFacetRequest} from '../../../../test/mock-commerce-face
 import {
   buildMockCategoryFacetResponse,
   buildMockCommerceDateFacetResponse,
+  buildMockCommerceLocationFacetResponse,
   buildMockCommerceNumericFacetResponse,
   buildMockCommerceRegularFacetResponse,
 } from '../../../../test/mock-commerce-facet-response.js';
@@ -16,6 +17,7 @@ import {buildMockCommerceFacetSlice} from '../../../../test/mock-commerce-facet-
 import {
   buildMockCategoryFacetValue,
   buildMockCommerceDateFacetValue,
+  buildMockCommerceLocationFacetValue,
   buildMockCommerceNumericFacetValue,
   buildMockCommerceRegularFacetValue,
 } from '../../../../test/mock-commerce-facet-value.js';
@@ -65,6 +67,7 @@ import {
   updateDateFacetValues,
 } from '../date-facet/date-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../facet-search-set/commerce-facet-search-actions.js';
+import {toggleSelectLocationFacetValue} from '../location-facet/location-facet-actions.js';
 import {
   toggleExcludeNumericFacetValue,
   toggleSelectNumericFacetValue,
@@ -78,13 +81,17 @@ import * as CommerceFacetReducers from './facet-set-reducer-helpers.js';
 import {
   commerceFacetSetReducer,
   convertCategoryFacetValueToRequest,
+  convertLocationFacetValueToRequest,
 } from './facet-set-slice.js';
 import {
   CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state.js';
 import {FacetType} from './interfaces/common.js';
-import {CategoryFacetValueRequest} from './interfaces/request.js';
+import {
+  CategoryFacetValueRequest,
+  LocationFacetValueRequest,
+} from './interfaces/request.js';
 import {AnyFacetResponse, CategoryFacetValue} from './interfaces/response.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -558,6 +565,10 @@ describe('commerceFacetSetReducer', () => {
           facetResponseBuilder: buildMockCommerceRegularFacetResponse,
         },
         {
+          type: 'location' as FacetType,
+          facetResponseBuilder: buildMockCommerceLocationFacetResponse,
+        },
+        {
           type: 'numericalRange' as FacetType,
           facetResponseBuilder: buildMockCommerceNumericFacetResponse,
         },
@@ -975,6 +986,199 @@ describe('commerceFacetSetReducer', () => {
         request: facet,
       });
       const action = toggleExcludeFacetValue({
+        facetId: facet.facetId,
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+  });
+
+  describe('for location facets', () => {
+    describe.each([
+      {
+        title:
+          'dispatching #toggleSelectLocationFacetValue with a registered facet id',
+        facetValueState: 'selected' as FacetValueState,
+        toggleAction: toggleSelectLocationFacetValue,
+      },
+    ])(
+      '$title',
+      ({
+        facetValueState,
+        toggleAction,
+      }: {
+        facetValueState: FacetValueState;
+        toggleAction: Function;
+      }) => {
+        const facetId = '1';
+        const oppositeFacetValueState = facetValueStates.find(
+          (valueState) => ![facetValueState, 'idle'].includes(valueState)
+        );
+        describe('when the facet value exists', () => {
+          it(`sets the state of an idle value to ${facetValueState}`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe(facetValueState);
+          });
+
+          it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+              state: oppositeFacetValueState,
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe(facetValueState);
+          });
+
+          it(`sets the state of a ${facetValueState} value to idle`, () => {
+            const facetValue = buildMockCommerceLocationFacetValue({
+              value: 'TED',
+              state: facetValueState,
+            });
+            const facetValueRequest =
+              convertLocationFacetValueToRequest(facetValue);
+
+            state[facetId] = buildMockCommerceFacetSlice({
+              request: buildMockCommerceFacetRequest({
+                values: [facetValueRequest],
+                type: 'location',
+              }),
+            });
+
+            const action = toggleAction({
+              facetId,
+              selection: facetValue,
+            });
+            const finalState = commerceFacetSetReducer(state, action);
+
+            const targetValue = (
+              finalState[facetId]?.request.values as LocationFacetValueRequest[]
+            ).find((req) => req.value === facetValue.value);
+            expect(targetValue?.state).toBe('idle');
+          });
+        });
+
+        describe.each([
+          {
+            facetValueState: 'selected' as FacetValueState,
+            toggleAction: toggleSelectLocationFacetValue,
+          },
+        ])(
+          'when the facet value does not exist',
+          ({
+            facetValueState,
+            toggleAction,
+          }: {
+            facetValueState: FacetValueState;
+            toggleAction: Function;
+          }) => {
+            it('replaces the first idle value with the new value', () => {
+              const newFacetValue = buildMockCommerceLocationFacetValue({
+                value: 'TED',
+                state: facetValueState,
+              });
+
+              state[facetId] = buildMockCommerceFacetSlice({
+                request: buildMockCommerceFacetRequest({
+                  type: 'location',
+                  values: [
+                    buildMockCommerceLocationFacetValue({
+                      value: 'active1',
+                      state: facetValueState,
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'active2',
+                      state: facetValueState,
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'idle1',
+                      state: 'idle',
+                    }),
+                    buildMockCommerceLocationFacetValue({
+                      value: 'idle2',
+                      state: 'idle',
+                    }),
+                  ],
+                }),
+              });
+
+              const action = toggleAction({
+                facetId,
+                selection: newFacetValue,
+              });
+
+              const finalState = commerceFacetSetReducer(state, action);
+              expect(
+                (
+                  finalState[facetId]?.request
+                    .values as LocationFacetValueRequest[]
+                ).indexOf(newFacetValue)
+              ).toBe(2);
+              expect(finalState[facetId]?.request.values.length).toBe(4);
+            });
+          }
+        );
+      }
+    );
+    it('dispatching #toggleSelectLocationFacetValue with an invalid id does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const action = toggleSelectLocationFacetValue({
+        facetId: '1',
+        selection: facetValue,
+      });
+
+      expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
+    });
+
+    it('dispatching #toggleSelectLocationFacetValue with an invalid facet type does not throw', () => {
+      const facetValue = buildMockCommerceLocationFacetValue({value: 'TED'});
+      const facet = buildMockCommerceFacetRequest({
+        type: 'numericalRange',
+        values: [facetValue],
+      });
+      state[facet.facetId] = buildMockCommerceFacetSlice({
+        request: facet,
+      });
+      const action = toggleSelectLocationFacetValue({
         facetId: facet.facetId,
         selection: facetValue,
       });
@@ -2235,12 +2439,11 @@ describe('commerceFacetSetReducer', () => {
         buildMockCommerceNumericFacetValue({start: 0, end: 5}),
         buildMockCommerceNumericFacetValue({start: 6, end: 10}),
       ];
-      const valuesRequest = convertToNumericRangeRequests(values);
 
       state[facetId] = buildMockCommerceFacetSlice({
         request: buildMockCommerceFacetRequest({
           type: 'numericalRange',
-          values: valuesRequest,
+          values,
         }),
       });
 
@@ -2257,7 +2460,7 @@ describe('commerceFacetSetReducer', () => {
       const finalState = commerceFacetSetReducer(state, action);
 
       const targetValues = finalState[facetId]?.request.values;
-      expect(targetValues).toEqual(convertToNumericRangeRequests(newValues));
+      expect(targetValues).toEqual(newValues);
     });
   });
 
@@ -2365,6 +2568,7 @@ describe('commerceFacetSetReducer', () => {
   describe('#updateCoreFacetIsFieldExpanded', () => {
     describe.each([
       {type: 'regular' as FacetType},
+      {type: 'location' as FacetType},
       {type: 'numericalRange' as FacetType},
       {type: 'dateRange' as FacetType},
       {type: 'hierarchical' as FacetType},
@@ -2621,6 +2825,44 @@ describe('commerceFacetSetReducer', () => {
       );
     });
 
+    it('populates location facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          lf: {
+            location_facet_1: ['1a', '1b'],
+            location_facet_2: ['2a'],
+          },
+        })
+      );
+
+      const firstRequest = finalState['location_facet_1'].request;
+      expect(firstRequest.type).toEqual('location');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '1a',
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            value: '1b',
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['location_facet_2'].request;
+      expect(secondRequest.type).toEqual('location');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            value: '2a',
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
     it('populates numeric facet requests', () => {
       const finalState = commerceFacetSetReducer(
         state,
@@ -2669,6 +2911,67 @@ describe('commerceFacetSetReducer', () => {
       );
 
       const secondRequest = finalState['numeric_facet_2'].request;
+      expect(secondRequest.type).toEqual('numericalRange');
+      expect(secondRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 11,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+    });
+
+    it('populates manual numeric facet requests', () => {
+      const finalState = commerceFacetSetReducer(
+        state,
+        action({
+          mnf: {
+            manual_numeric_facet_1: [
+              {
+                start: 1,
+                end: 10,
+                endInclusive: false,
+              },
+              {
+                start: 15,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+            manual_numeric_facet_2: [
+              {
+                start: 11,
+                end: 20,
+                endInclusive: true,
+              },
+            ],
+          },
+        })
+      );
+
+      const firstRequest = finalState['manual_numeric_facet_1'].request;
+      expect(firstRequest.type).toEqual('numericalRange');
+      expect(firstRequest.values).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            start: 1,
+            end: 10,
+            endInclusive: false,
+            state: 'selected',
+          }),
+          expect.objectContaining({
+            start: 15,
+            end: 20,
+            endInclusive: true,
+            state: 'selected',
+          }),
+        ])
+      );
+
+      const secondRequest = finalState['manual_numeric_facet_2'].request;
       expect(secondRequest.type).toEqual('numericalRange');
       expect(secondRequest.values).toEqual(
         expect.arrayContaining([

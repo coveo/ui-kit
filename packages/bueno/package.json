@@ -13,7 +13,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "1.0.1",
+  "version": "1.0.6",
   "files": [
     "dist/"
   ],
@@ -27,7 +27,7 @@
     "test:watch": "jest --watch --colors --no-cache",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "node ../../scripts/deploy/update-npm-tag.mjs latest"
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
@@ -35,6 +35,6 @@
     "ts-jest": "29.2.3"
   },
   "engines": {
-    "node": "^20.9.0"
+    "node": "^20.9.0 || ^22.11.0"
   }
 }

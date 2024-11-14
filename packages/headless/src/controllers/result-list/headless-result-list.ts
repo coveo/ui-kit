@@ -16,6 +16,9 @@ export type {ResultListOptions, ResultListProps, ResultListState, ResultList};
  * @param engine - The headless engine.
  * @param props - The configurable `ResultList` properties.
  * @returns A `ResultList` controller instance.
+ *
+ * @group Controllers
+ * @category ResultList
  */
 export function buildResultList(
   engine: SearchEngine,

@@ -101,6 +101,12 @@ export interface NumericFilterProps {
   initialState?: NumericFilterInitialState;
 }
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `NumericFilter` controller.
+ *
+ * @group Controllers
+ * @category NumericFilter
+ */
 export interface NumericFilterState {
   /**
    * The facet ID.
@@ -125,6 +131,11 @@ export interface NumericFilterState {
 
 /**
  * The `NumericFilter` controller makes it possible to create a numeric filter.
+ *
+ * Example: [numeric-filter.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/numeric-filter/numeric-filter.fn.tsx)
+ *
+ * @group Controllers
+ * @category NumericFilter
  */
 export interface NumericFilter extends Controller {
   /**

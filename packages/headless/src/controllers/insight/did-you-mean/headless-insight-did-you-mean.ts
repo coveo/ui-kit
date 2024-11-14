@@ -30,6 +30,8 @@ export type {
  *
  * @param engine - The insight engine.
  * @param props - The configurable `DidYouMean` properties.
+ * @group Controllers
+ * @category DidYouMean
  */
 export function buildDidYouMean(
   engine: InsightEngine,

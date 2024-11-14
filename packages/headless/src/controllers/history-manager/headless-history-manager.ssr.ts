@@ -12,6 +12,7 @@ export interface HistoryManagerDefinition
 
 /**
  * Defines a `HistoryManager` controller instance.
+ * @group Definers
  *
  * @returns The `HistoryManager` controller definition.
  * */

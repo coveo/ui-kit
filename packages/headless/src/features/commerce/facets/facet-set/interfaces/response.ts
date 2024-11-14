@@ -11,11 +11,20 @@ export type CategoryFacetResponse = BaseFacetResponse<
 > &
   CategoryFacetDelimitingCharacter;
 
-export interface CategoryFacetValue extends BaseFacetValue {
+interface NonLocationFacetValue {
+  numberOfResults: number;
+  isAutoSelected: boolean;
+  isSuggested: boolean;
+}
+
+export interface CategoryFacetValue
+  extends BaseFacetValue,
+    NonLocationFacetValue {
   value: string;
   path: string[];
   isLeafValue: boolean;
   children: CategoryFacetValue[];
+  moreValuesAvailable: boolean;
 }
 
 export type DateFacetResponse = BaseFacetResponse<DateFacetValue, 'dateRange'>;
@@ -35,14 +44,35 @@ export type RegularFacetResponse = BaseFacetResponse<
   'regular'
 >;
 
-export interface RegularFacetValue extends BaseFacetValue {
+export interface RegularFacetValue
+  extends BaseFacetValue,
+    NonLocationFacetValue {
+  value: string;
+  /**
+   * @deprecated Use the facet's `moreValuesAvailable` property instead.
+   */
+  moreValuesAvailable: boolean;
+}
+
+export type LocationFacetResponse = BaseFacetResponse<
+  LocationFacetValue,
+  'location'
+>;
+
+export interface LocationFacetValue extends BaseFacetValue {
   value: string;
 }
 
-export interface RangeFacetValue<T> extends BaseFacetValue {
+export interface RangeFacetValue<T>
+  extends BaseFacetValue,
+    NonLocationFacetValue {
   start: T;
   end: T;
   endInclusive: boolean;
+  /**
+   * @deprecated Use the facet's `moreValuesAvailable` property instead.
+   */
+  moreValuesAvailable: boolean;
 }
 
 export interface BaseFacetResponse<
@@ -62,14 +92,11 @@ export interface BaseFacetResponse<
 
 export interface BaseFacetValue {
   state: FacetValueState;
-  numberOfResults: number;
-  isAutoSelected: boolean;
-  isSuggested: boolean;
-  moreValuesAvailable: boolean;
 }
 
 export type AnyFacetValueResponse =
   | RegularFacetValue
+  | LocationFacetValue
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
@@ -83,7 +110,9 @@ type MappedFacetResponse = {
         ? DateFacetResponse
         : T extends 'hierarchical'
           ? CategoryFacetResponse
-          : never;
+          : T extends 'location'
+            ? LocationFacetResponse
+            : never;
 };
 
 export type AnyFacetResponse = MappedFacetResponse[FacetType];

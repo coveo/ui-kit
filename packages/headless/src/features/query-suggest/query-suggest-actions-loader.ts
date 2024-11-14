@@ -25,6 +25,9 @@ export type {
 
 /**
  * The query suggest action creators.
+ *
+ * @group Actions
+ * @category QuerySuggest
  */
 export interface QuerySuggestActionCreators {
   /**
@@ -77,6 +80,9 @@ export interface QuerySuggestActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category QuerySuggest
  */
 export function loadQuerySuggestActions(
   engine: CoreEngine

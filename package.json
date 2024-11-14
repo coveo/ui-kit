@@ -1,6 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
+  "version": "3.0.2",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -11,6 +12,7 @@
     "e2e": "nx run-many --target=e2e",
     "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
     "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
+    "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
     "commit": "git-cz",
@@ -20,7 +22,7 @@
     "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3",
     "nx:graph": "nx graph --file=topology.json",
     "release:phase0": "npm run-script -w=@coveo/release git-lock",
-    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
+    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream; npm run-script -w=@coveo/release bump:root",
     "release:phase2": "npm run-script -w=@coveo/release reify",
     "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
     "release:phase4": "nx run-many --targets=release:phase4 --all"
@@ -83,6 +85,7 @@
     "patch-package": "8.0.0",
     "prettier": "3.3.3",
     "prettier-plugin-tailwindcss": "0.6.5",
+    "publint": "0.2.11",
     "react-syntax-highlighter": "15.5.0",
     "rimraf": "5.0.9",
     "semver": "7.6.3",
@@ -110,7 +113,6 @@
     "packages/atomic-react",
     "packages/atomic-angular",
     "packages/atomic-angular/projects/*",
-    "packages/rollup-plugin-replace-with-ast",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "utils/*"
@@ -133,12 +135,11 @@
     ]
   },
   "engines": {
-    "node": "^20.9.0",
+    "node": "^20.9.0 || ^22.11.0",
     "npm": ">=8.6.0"
   },
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "version": "0.0.0",
   "packageManager": "npm@10.8.2"
 }

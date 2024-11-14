@@ -5,6 +5,9 @@ import {setSearchHub} from './search-hub-actions.js';
 
 /**
  * The search hub action creators.
+ *
+ * @group Actions
+ * @category SearchHub
  */
 export interface SearchHubActionCreators {
   /**
@@ -21,6 +24,9 @@ export interface SearchHubActionCreators {
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
+ *
+ * @group Actions
+ * @category SearchHub
  */
 export function loadSearchHubActions(
   engine: CoreEngine

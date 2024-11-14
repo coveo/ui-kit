@@ -9,6 +9,7 @@ export interface FacetDefinition
 
 /**
  * Defines a `Facet` controller instance.
+ * @group Definers
  *
  * @param props - The configurable `Facet` properties.
  * @returns The `Facet` controller definition.

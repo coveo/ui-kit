@@ -1,3 +1,20 @@
+/**
+ * The Coveo Headless Commerce sub-package exposes exposes the engine, controllers, actions, and utility functions to build a commerce search experience.
+ *
+ * @example
+ * ```typescript
+ * import { buildCommerceEngine, getSampleCommerceEngineConfiguration, buildSearch } from '@coveo/headless/commerce';
+ *
+ * const engine = buildCommerceEngine({
+ *  configuration: getSampleCommerceEngineConfiguration(),
+ * });
+ *
+ * const search = buildSearch(engine);
+ * search.executeFirstSearch();
+ * ```
+ *
+ * @module Commerce
+ */
 import * as Selectors from './selectors/commerce-selectors.index.js';
 import * as HighlightUtils from './utils/highlight.js';
 
@@ -51,6 +68,7 @@ export * from './features/commerce/sort/sort-actions-loader.js';
 export * from './features/commerce/facets/core-facet/core-facet-actions-loader.js';
 export * from './features/commerce/facets/category-facet/category-facet-actions-loader.js';
 export * from './features/commerce/facets/regular-facet/regular-facet-actions-loader.js';
+export * from './features/commerce/facets/location-facet/location-facet-actions-loader.js';
 export * from './features/commerce/facets/date-facet/date-facet-actions-loader.js';
 export * from './features/commerce/facets/numeric-facet/numeric-facet-actions-loader.js';
 export * from './features/commerce/query-set/query-set-actions-loader.js';
@@ -77,6 +95,7 @@ export {buildController} from './controllers/controller/headless-controller.js';
 export type {
   ContextOptions,
   View,
+  UserLocation,
   ContextProps,
   Context,
   ContextState,
@@ -165,6 +184,10 @@ export type {
   RegularFacetState,
 } from './controllers/commerce/core/facets/regular/headless-commerce-regular-facet.js';
 export type {
+  LocationFacet,
+  LocationFacetState,
+} from './controllers/commerce/core/facets/location/headless-commerce-location-facet.js';
+export type {
   NumericFacet,
   NumericFacetState,
 } from './controllers/commerce/core/facets/numeric/headless-commerce-numeric-facet.js';
@@ -176,8 +199,11 @@ export type {
 export type {DateFilterRange} from './controllers/core/facets/range-facet/date-facet/headless-core-date-filter.js';
 export type {
   FacetType,
+  BaseFacetValue,
   FacetValueRequest,
   RegularFacetValue,
+  LocationFacetValueRequest,
+  LocationFacetValue,
   NumericRangeRequest,
   NumericFacetValue,
   DateRangeRequest,

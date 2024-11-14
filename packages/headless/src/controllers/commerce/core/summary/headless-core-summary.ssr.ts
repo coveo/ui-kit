@@ -21,6 +21,7 @@ export type {
 
 /**
  * Defines a `Summary` controller instance.
+ * @group Definers
  *
  * @returns The `Summary` controller definition.
  *
@@ -36,5 +37,12 @@ export function defineSummary<
       solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
-  } as SubControllerDefinitionWithoutProps<Summary, TOptions>;
+  } as SubControllerDefinitionWithoutProps<
+    Summary<
+      | ProductListingSummaryState
+      | SearchSummaryState
+      | RecommendationsSummaryState
+    >,
+    TOptions
+  >;
 }
