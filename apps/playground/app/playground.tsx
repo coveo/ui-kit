@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export function Playground(props: React.PropsWithChildren) {
   const { children } = props;
-  const navLinks = ["Sandbox", "CDN", "GTM"] as const;
+  const navLinks = ["Sandbox", "CDN", "GTM", "SSR"] as const;
   const pathName = usePathname();
   const [opened, { toggle }] = useDisclosure();
 
@@ -40,7 +40,12 @@ export function Playground(props: React.PropsWithChildren) {
         {navLinks.map((navLink, i) => {
           const isDev = process.env["NODE_ENV"] === "development";
           const slug = navLink.toLowerCase();
-          const href = isDev ? `/${slug}` : `/relay/playground/${slug}.html`;
+          const href =
+            navLink === "SSR"
+              ? "/api/ssr"
+              : isDev
+                ? `/${slug}`
+                : `/relay/playground/${slug}.html`;
 
           return (
             <NavLink
