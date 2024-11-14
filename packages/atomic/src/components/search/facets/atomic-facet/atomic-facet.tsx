@@ -334,13 +334,6 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   public render() {
-    console.log(
-      this.facetId,
-      this.facetState.enabled,
-      this.searchStatusState.hasError,
-      this.searchStatusState.firstSearchExecuted,
-      this.facetState.values.length
-    );
     return (
       <FacetGuard
         enabled={this.facetState.enabled}
