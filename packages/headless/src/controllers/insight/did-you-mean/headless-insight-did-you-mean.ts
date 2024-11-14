@@ -33,11 +33,13 @@ export type {
  */
 export function buildDidYouMean(
   engine: InsightEngine,
-  props: DidYouMeanProps = {}
+  props: DidYouMeanProps = {
+    options: {
+      queryCorrectionMode: 'legacy',
+    },
+  }
 ): DidYouMean {
-  const controller = buildCoreDidYouMean(engine, {
-    options: {...props, queryCorrectionMode: 'legacy'},
-  });
+  const controller = buildCoreDidYouMean(engine, props);
   const {dispatch} = engine;
 
   return {
