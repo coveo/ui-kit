@@ -93,19 +93,10 @@ export default class QuanticSort extends LightningElement {
     sortBy,
   };
 
-  variants = {
-    default: {
-      name: SORT_VARIANTS.DEFAULT,
-    },
-    wide: {
-      name: SORT_VARIANTS.WIDE,
-    },
-  };
-
   connectedCallback() {
     if (!Object.values(SORT_VARIANTS).includes(this.variant)) {
       console.warn(
-        `Unsupported variant: ${this.variant} specified in the QuanticSort component, defaulting to the ${SORT_VARIANTS.DEFAULT} variant.`
+        `Unsupported variant: ${this.variant} specified in the QuanticSort component, using the default variant.`
       );
     }
     registerComponentForInit(this, this.engineId);
@@ -278,12 +269,6 @@ export default class QuanticSort extends LightningElement {
 
   get hasError() {
     return this.hasInitializationError || !!this.errorMessage;
-  }
-
-  get sortContainerCSSClass() {
-    return this.variant === SORT_VARIANTS.DEFAULT
-      ? 'sort__container'
-      : undefined;
   }
 
   get isVariantWide() {
