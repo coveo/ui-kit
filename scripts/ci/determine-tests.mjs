@@ -189,7 +189,7 @@ const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
 try {
   if (runAllTests) {
-    throw new RunAllTestsInMergeQueue();
+    throw new RunAllTestsInMergeQueueError();
   }
 
   const testFiles = findAllTestFiles(atomicSourceComponents);
