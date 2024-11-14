@@ -14,12 +14,12 @@ test.describe('default', () => {
     test.beforeEach(async ({search}) => {
       const searchBox = search.searchBox;
       await searchBox.fill('shoes');
+
+      const suggestionsContainer = search.suggestionsContainer;
+      await expect(suggestionsContainer).toBeVisible();
     });
 
     test('should display suggestions', async ({search}) => {
-      const suggestionsContainer = search.suggestionsContainer;
-      await expect(suggestionsContainer).toBeVisible();
-
       const suggestions = search.suggestions;
       expect(await suggestions.count()).toBeGreaterThan(0);
     });
