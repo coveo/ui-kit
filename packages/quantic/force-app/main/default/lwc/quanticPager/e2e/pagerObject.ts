@@ -7,11 +7,11 @@ export class PagerObject {
   }
 
   get nextPageButton(): Locator {
-    return this.page.locator('button[title="Next Page"]');
+    return this.page.getByRole('button', {name: /Next Page/i});
   }
 
   get previousPageButton(): Locator {
-    return this.page.locator('button[title="Previous Page"]');
+    return this.page.getByRole('button', {name: /Previous Page/i});
   }
 
   get pageButtons(): Locator {

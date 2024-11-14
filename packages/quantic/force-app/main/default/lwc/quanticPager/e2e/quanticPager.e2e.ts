@@ -31,8 +31,9 @@ useCaseTestCases.forEach((useCase) => {
         pager,
         search,
       }) => {
+        const initialSearchResponsePromise = search.waitForSearchResponse();
         await pager.clickNextPageButton();
-        await search.waitForSearchResponse();
+        await initialSearchResponsePromise;
 
         const searchResponsePromise = search.waitForSearchResponse();
         await pager.clickPreviousPageButton();
@@ -60,8 +61,9 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when a new search is made', () => {
       test('should select the first page', async ({pager, search}) => {
+        const initialSearchResponsePromise = search.waitForSearchResponse();
         await pager.clickNextPageButton();
-        await search.waitForSearchResponse();
+        await initialSearchResponsePromise;
 
         await expect(pager.previousPageButton).not.toBeDisabled();
         const searchResponsePromise = search.waitForSearchResponse();
@@ -74,7 +76,7 @@ useCaseTestCases.forEach((useCase) => {
           'aria-pressed',
           'true'
         );
-        expect(firstResult).toBe(0);
+        expect(firstResult).toBe(expectedPage);
       });
     });
 
