@@ -322,6 +322,26 @@ export class TimeSpan {
     return hhmmss;
   }
 
+  getYoutubeFormatTimestamp() {
+    const hours = Math.floor(this.getHours());
+    const minutes = Math.floor(this.getMinutes()) % 60;
+    const seconds = Math.floor(this.getSeconds()) % 60;
+    let timestamp = '';
+
+    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+    if (hours > 0) {
+      const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+      timestamp += hours + ':' + formattedMinutes + ':' + formattedSeconds;
+    } else {
+      const formattedMinutes =
+        minutes === 0 ? '0' : minutes < 10 ? '0' + minutes : minutes;
+      timestamp += formattedMinutes + ':' + formattedSeconds;
+    }
+
+    return timestamp;
+  }
+
   getCleanHHMMSS() {
     return this.getHHMMSS().replace(/^0+/, '');
   }
