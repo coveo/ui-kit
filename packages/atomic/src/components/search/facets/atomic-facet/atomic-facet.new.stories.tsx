@@ -20,6 +20,10 @@ const meta: Meta = {
       name: 'number-of-values',
       control: {type: 'number', min: 1},
     },
+    'attributes-sort-criteria': {
+      name: 'sort-criteria',
+      type: 'string',
+    },
   },
   args: {
     'attributes-number-of-values': 8,
