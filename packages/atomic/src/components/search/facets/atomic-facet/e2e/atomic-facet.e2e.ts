@@ -169,12 +169,12 @@ const sortCriteriaTests: {
   {
     criteria: 'alphanumericNatural',
     sortFunction: (values: string[]) =>
-      orderBy(values, [(value) => value], 'asc'),
+      orderBy([...values], [(value) => value], 'asc'),
   },
   {
     criteria: 'alphanumericNaturalDescending',
     sortFunction: (values: string[]) =>
-      orderBy(values, [(value) => value], ['desc']),
+      orderBy([...values], [(value) => value], ['desc']),
   },
 ];
 
