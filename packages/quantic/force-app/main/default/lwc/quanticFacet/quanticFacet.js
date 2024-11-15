@@ -16,7 +16,12 @@ import {
   registerToStore,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, regexEncode, Store} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  regexEncode,
+  Store,
+  generateFacetDependencyConditions,
+} from 'c/quanticUtils';
 import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").FacetState} FacetState */
@@ -24,6 +29,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").FacetValue} FacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -140,6 +146,38 @@ export default class QuanticFacet extends LightningElement {
    */
   @api customSort;
   /**
+   * This property defines the relationship between this facet and a parent facet, indicating
+   * the specific parent facet that this facet relies on and the selected value required
+   * from that parent facet for this facet to be displayed.
+   *
+   * When this property is defined, the facet will only display if the specified `parentFacetId`
+   * has the `expectedValue` selected. If `expectedValue` is omitted or set to `undefined`,
+   * the facet will display as long as any value is selected in the parent facet.
+   *
+   * **Supported facets:** Dependencies can only be created on a basic or category facet.
+   * Dependencies on numeric, timeframe, or date facets are not supported.
+   *
+   * Example usage:
+   * - To show a facet when any value is selected in the parent facet:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype'
+   *   }
+   *   ```
+   * - To show a facet only when a specific value is selected:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype',
+   *     expectedValue: 'txt'
+   *   }
+   *   ```
+   *
+   * @api
+   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   */
+  @api dependsOn;
+
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -165,6 +203,7 @@ export default class QuanticFacet extends LightningElement {
     'noFilterFacetCount',
     'injectionDepth',
     'customSort',
+    'dependsOn',
   ];
 
   /** @type {FacetState} */
@@ -272,6 +311,9 @@ export default class QuanticFacet extends LightningElement {
       format: this.remoteGetValueCaption,
       element: this.template.host,
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
   };
 
   disconnectedCallback() {
@@ -295,6 +337,18 @@ export default class QuanticFacet extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(renderFacetEvent);
+  }
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
   }
 
   get values() {
@@ -333,6 +387,10 @@ export default class QuanticFacet extends LightningElement {
 
   get hasValues() {
     return this.values.length !== 0;
+  }
+
+  get isFacetEnabled() {
+    return this.state?.enabled;
   }
 
   get hasActiveValues() {

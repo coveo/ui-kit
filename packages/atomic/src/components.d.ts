@@ -25,6 +25,7 @@ import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -56,6 +57,7 @@ export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedR
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
 export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
@@ -1081,7 +1083,7 @@ export namespace Components {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -1424,6 +1426,10 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightResultActionBar {
+    }
+    interface AtomicInsightResultAttachToCaseAction {
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -2163,6 +2169,23 @@ export namespace Components {
         "hrefTemplate"?: string;
     }
     /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter": string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay": number;
+    }
+    /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
      * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
@@ -2652,6 +2675,11 @@ export namespace Components {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent": ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -3799,6 +3827,10 @@ export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> 
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
 }
+export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultAttachToCaseActionElement;
+}
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightSmartSnippetFeedbackModalElement;
@@ -4570,6 +4602,30 @@ declare global {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
     };
+    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
+        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
+        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
+    }
+    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicInsightResultAttachToCaseActionElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
+        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
+    };
+    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+    };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
     var HTMLAtomicInsightResultChildrenElement: {
@@ -4966,6 +5022,15 @@ declare global {
     var HTMLAtomicProductLinkElement: {
         prototype: HTMLAtomicProductLinkElement;
         new (): HTMLAtomicProductLinkElement;
+    };
+    /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface HTMLAtomicProductMultiValueTextElement extends Components.AtomicProductMultiValueText, HTMLStencilElement {
+    }
+    var HTMLAtomicProductMultiValueTextElement: {
+        prototype: HTMLAtomicProductMultiValueTextElement;
+        new (): HTMLAtomicProductMultiValueTextElement;
     };
     /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
@@ -6051,6 +6116,8 @@ declare global {
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
+        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
+        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -6093,6 +6160,7 @@ declare global {
         "atomic-product-field-condition": HTMLAtomicProductFieldConditionElement;
         "atomic-product-image": HTMLAtomicProductImageElement;
         "atomic-product-link": HTMLAtomicProductLinkElement;
+        "atomic-product-multi-value-text": HTMLAtomicProductMultiValueTextElement;
         "atomic-product-numeric-field-value": HTMLAtomicProductNumericFieldValueElement;
         "atomic-product-price": HTMLAtomicProductPriceElement;
         "atomic-product-rating": HTMLAtomicProductRatingElement;
@@ -7156,7 +7224,7 @@ declare namespace LocalJSX {
     interface AtomicGeneratedAnswer {
         "answerConfigurationId"?: string;
         /**
-          * Whether to allow the answer to be collapsed when the text is taller than 250px.
+          * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
           * @default false
          */
         "collapsible"?: boolean;
@@ -7486,6 +7554,12 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightResultActionBar {
+    }
+    interface AtomicInsightResultAttachToCaseAction {
+        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -8185,6 +8259,23 @@ declare namespace LocalJSX {
         "hrefTemplate"?: string;
     }
     /**
+     * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+     */
+    interface AtomicProductMultiValueText {
+        /**
+          * The delimiter used to separate values when the field isn't indexed as a multi value field.
+         */
+        "delimiter"?: string | null;
+        /**
+          * The field that the component should use. The component will try to find this field in the `Product.additionalFields` object unless it finds it in the `Product` object first. Make sure this field is present in the `fieldsToInclude` property of the `atomic-commerce-interface` component.
+         */
+        "field": string;
+        /**
+          * The maximum number of field values to display. If there are _n_ more values than the specified maximum, the last displayed value will be "_n_ more...".
+         */
+        "maxValuesToDisplay"?: number;
+    }
+    /**
      * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
      * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.
      */
@@ -8646,6 +8737,11 @@ declare namespace LocalJSX {
           * The InteractiveResult item.
          */
         "interactiveResult": RecsInteractiveResult;
+        /**
+          * The result link to use when the result is clicked in a grid layout.
+          * @default - An `atomic-result-link` without any customization.
+         */
+        "linkContent"?: ParentNode;
         "loadingFlag"?: string;
         /**
           * Internal function used by atomic-recs-list in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
@@ -9809,6 +9905,8 @@ declare namespace LocalJSX {
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
+        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
+        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -9851,6 +9949,7 @@ declare namespace LocalJSX {
         "atomic-product-field-condition": AtomicProductFieldCondition;
         "atomic-product-image": AtomicProductImage;
         "atomic-product-link": AtomicProductLink;
+        "atomic-product-multi-value-text": AtomicProductMultiValueText;
         "atomic-product-numeric-field-value": AtomicProductNumericFieldValue;
         "atomic-product-price": AtomicProductPrice;
         "atomic-product-rating": AtomicProductRating;
@@ -10207,6 +10306,8 @@ declare module "@stencil/core" {
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
+            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
+            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
@@ -10317,6 +10418,10 @@ declare module "@stencil/core" {
              * @alpha The `atomic-product-link` component automatically transforms a search product title into a clickable link that points to the original item.
              */
             "atomic-product-link": LocalJSX.AtomicProductLink & JSXBase.HTMLAttributes<HTMLAtomicProductLinkElement>;
+            /**
+             * @alpha The `atomic-product-multi-value-text` component renders the values of a multi-value string field.
+             */
+            "atomic-product-multi-value-text": LocalJSX.AtomicProductMultiValueText & JSXBase.HTMLAttributes<HTMLAtomicProductMultiValueTextElement>;
             /**
              * @alpha The `atomic-product-numeric-field-value` component renders the value of a number product field.
              * The number can be formatted by adding a `atomic-format-number`, `atomic-format-currency` or `atomic-format-unit` component into this component.

@@ -1,3 +1,51 @@
+## 3.9.0 (2024-11-13)
+
+- docs(headless): add multiple listing pages in headless-ssr-commerce (#4635) ([0ebf951](https://github.com/coveo/ui-kit/commits/0ebf951)), closes [#4635](https://github.com/coveo/ui-kit/issues/4635)
+- docs(headless): fix broken link in comment (#4663) ([c068cc6](https://github.com/coveo/ui-kit/commits/c068cc6)), closes [#4663](https://github.com/coveo/ui-kit/issues/4663)
+- docs(headless): implement a better cart in headless-ssr-commerce sample (#4627) ([d9ca686](https://github.com/coveo/ui-kit/commits/d9ca686)), closes [#4627](https://github.com/coveo/ui-kit/issues/4627)
+- chore(headless): add a wider range of types for the ssr-commerce summaryState (#4643) ([b52d936](https://github.com/coveo/ui-kit/commits/b52d936)), closes [#4643](https://github.com/coveo/ui-kit/issues/4643)
+- test(headles-react): add test for ssr-commerce (#4616) ([cdedb88](https://github.com/coveo/ui-kit/commits/cdedb88)), closes [#4616](https://github.com/coveo/ui-kit/issues/4616)
+- feat(headless ssr): Improve server-side error logging (#4639) ([ae95059](https://github.com/coveo/ui-kit/commits/ae95059)), closes [#4639](https://github.com/coveo/ui-kit/issues/4639)
+- feat(headless): add applyCorrection function in didYouMean (#4609) ([ac505ad](https://github.com/coveo/ui-kit/commits/ac505ad)), closes [#4609](https://github.com/coveo/ui-kit/issues/4609)
+- fix(headless): ensure each folded result keep a reference of its 'source' searchId (#4628) ([c8bb175](https://github.com/coveo/ui-kit/commits/c8bb175)), closes [#4628](https://github.com/coveo/ui-kit/issues/4628)
+
+## <small>3.8.1 (2024-11-06)</small>
+
+- chore(headless): move product-list ssr to its own directory (#4631) ([2eefb48](https://github.com/coveo/ui-kit/commits/2eefb48)), closes [#4631](https://github.com/coveo/ui-kit/issues/4631)
+
+## 3.8.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(answerAPI): insight generate endpoint (#4602) ([16f2e56](https://github.com/coveo/ui-kit/commits/16f2e56)), closes [#4602](https://github.com/coveo/ui-kit/issues/4602)
+- feat(commerce): exclude unused location facets properties (#4574) ([0b25980](https://github.com/coveo/ui-kit/commits/0b25980)), closes [#4574](https://github.com/coveo/ui-kit/issues/4574)
+- fix(commerce): do not set `numberOfValues` when restoring from url (#4618) ([eb70faf](https://github.com/coveo/ui-kit/commits/eb70faf)), closes [#4618](https://github.com/coveo/ui-kit/issues/4618)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless SSR): add missing exports (#4613) ([3b77b65](https://github.com/coveo/ui-kit/commits/3b77b65)), closes [#4613](https://github.com/coveo/ui-kit/issues/4613)
+- chore(headless ssr): add missing type export (#4607) ([9442b98](https://github.com/coveo/ui-kit/commits/9442b98)), closes [#4607](https://github.com/coveo/ui-kit/issues/4607)
+- docs(headless): typedoc website and annotations (#4517) ([d32ac42](https://github.com/coveo/ui-kit/commits/d32ac42)), closes [#4517](https://github.com/coveo/ui-kit/issues/4517)
+
+## 3.7.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(answerAPI): insight generate endpoint (#4602) ([16f2e56](https://github.com/coveo/ui-kit/commits/16f2e56)), closes [#4602](https://github.com/coveo/ui-kit/issues/4602)
+- feat(commerce): exclude unused location facets properties (#4574) ([0b25980](https://github.com/coveo/ui-kit/commits/0b25980)), closes [#4574](https://github.com/coveo/ui-kit/issues/4574)
+- fix(commerce): do not set `numberOfValues` when restoring from url (#4618) ([eb70faf](https://github.com/coveo/ui-kit/commits/eb70faf)), closes [#4618](https://github.com/coveo/ui-kit/issues/4618)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless SSR): add missing exports (#4613) ([3b77b65](https://github.com/coveo/ui-kit/commits/3b77b65)), closes [#4613](https://github.com/coveo/ui-kit/issues/4613)
+- chore(headless ssr): add missing type export (#4607) ([9442b98](https://github.com/coveo/ui-kit/commits/9442b98)), closes [#4607](https://github.com/coveo/ui-kit/issues/4607)
+- docs(headless): typedoc website and annotations (#4517) ([d32ac42](https://github.com/coveo/ui-kit/commits/d32ac42)), closes [#4517](https://github.com/coveo/ui-kit/issues/4517)
+
+## 3.6.0 (2024-11-06)
+
+- feat(answerAPI): insight generate endpoint (#4602) ([16f2e56](https://github.com/coveo/ui-kit/commits/16f2e56)), closes [#4602](https://github.com/coveo/ui-kit/issues/4602)
+- feat(commerce): exclude unused location facets properties (#4574) ([0b25980](https://github.com/coveo/ui-kit/commits/0b25980)), closes [#4574](https://github.com/coveo/ui-kit/issues/4574)
+- fix(commerce): do not set `numberOfValues` when restoring from url (#4618) ([eb70faf](https://github.com/coveo/ui-kit/commits/eb70faf)), closes [#4618](https://github.com/coveo/ui-kit/issues/4618)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless SSR): add missing exports (#4613) ([3b77b65](https://github.com/coveo/ui-kit/commits/3b77b65)), closes [#4613](https://github.com/coveo/ui-kit/issues/4613)
+- chore(headless ssr): add missing type export (#4607) ([9442b98](https://github.com/coveo/ui-kit/commits/9442b98)), closes [#4607](https://github.com/coveo/ui-kit/issues/4607)
+- docs(headless): typedoc website and annotations (#4517) ([d32ac42](https://github.com/coveo/ui-kit/commits/d32ac42)), closes [#4517](https://github.com/coveo/ui-kit/issues/4517)
+
 ## 3.5.0 (2024-10-30)
 
 - feat(commerce): add breadcrumbs and parameters support for location facets (#4571) ([47a9758](https://github.com/coveo/ui-kit/commits/47a9758)), closes [#4571](https://github.com/coveo/ui-kit/issues/4571)

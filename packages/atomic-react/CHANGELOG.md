@@ -1,3 +1,21 @@
+## <small>3.2.3 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## <small>3.2.2 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## <small>3.2.1 (2024-11-06)</small>
+
+- feat(atomic, commerce): create atomic-product-multi-value-text component (#4224) ([949d6ca](https://github.com/coveo/ui-kit/commits/949d6ca)), closes [#4224](https://github.com/coveo/ui-kit/issues/4224)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
 ## 3.2.0 (2024-10-30)
 
 - fix(atomic-react): remove traces of npm imports (#4581) ([599b36f](https://github.com/coveo/ui-kit/commits/599b36f)), closes [#4581](https://github.com/coveo/ui-kit/issues/4581) [/github.com/coveo/ui-kit/pull/4581/files#r1812922022](https://github.com//github.com/coveo/ui-kit/pull/4581/files/issues/r1812922022)

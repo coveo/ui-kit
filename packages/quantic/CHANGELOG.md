@@ -1,3 +1,31 @@
+## 3.8.0 (2024-11-13)
+
+- ci: fix .tmp quantic folder breaking commit generated files (#4671) ([bafea04](https://github.com/coveo/ui-kit/commits/bafea04)), closes [#4671](https://github.com/coveo/ui-kit/issues/4671)
+- feat(quantic): support of dependant facets added (#4656) ([16b32ee](https://github.com/coveo/ui-kit/commits/16b32ee)), closes [#4656](https://github.com/coveo/ui-kit/issues/4656)
+- fix(quantic): babel async await plugin setup added to fix quantic issue with firefox (#4620) ([ce8d7c8](https://github.com/coveo/ui-kit/commits/ce8d7c8)), closes [#4620](https://github.com/coveo/ui-kit/issues/4620)
+
+## 3.7.0 (2024-11-06)
+
+- feat(quantic): adjusted logic to support custom tabs in the quantic tab bar component (#4619) ([a395a3c](https://github.com/coveo/ui-kit/commits/a395a3c)), closes [#4619](https://github.com/coveo/ui-kit/issues/4619)
+
+## 3.6.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## 3.5.0 (2024-11-06)
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
+## 3.4.0 (2024-11-06)
+
+- feat(quantic): Exposed clearFilters option in quantic searchboxes (#4606) ([8b2b75d](https://github.com/coveo/ui-kit/commits/8b2b75d)), closes [#4606](https://github.com/coveo/ui-kit/issues/4606)
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+
 ## 3.3.0 (2024-10-30)
 
 - feat(quantic): added E2E and unit tests for insight notify trigger in quantic (#4528) ([a114213](https://github.com/coveo/ui-kit/commits/a114213)), closes [#4528](https://github.com/coveo/ui-kit/issues/4528)

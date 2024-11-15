@@ -1,6 +1,9 @@
-import ProductPage from '@/app/_components/pages/product-page';
-import {searchEngineDefinition} from '@/app/_lib/commerce-engine';
-import {NextJsNavigatorContext} from '@/app/_lib/navigatorContextProvider';
+import * as externalCartAPI from '@/actions/external-cart-api';
+import ContextDropdown from '@/components/context-dropdown';
+import ProductPage from '@/components/pages/product-page';
+import {searchEngineDefinition} from '@/lib/commerce-engine';
+import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 import {Suspense} from 'react';
 
@@ -13,11 +16,27 @@ export default async function ProductDescriptionPage({
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
+        view: {
+          url: `https://sports.barca.group/products/${params.productId}`,
+        },
+      },
+    },
+  });
   return (
     <>
       <h2>Product description page</h2>
+      <ContextDropdown />
       <Suspense fallback={<p>Loading...</p>}>
         <ProductPage
           staticState={staticState}

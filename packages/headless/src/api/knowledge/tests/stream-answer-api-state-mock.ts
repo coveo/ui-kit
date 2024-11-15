@@ -31,6 +31,9 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       answerConfigurationId: '',
     },
   },
+  insightConfiguration: {
+    insightId: 'insight-id',
+  },
   version: '2.77.0',
   debug: false,
   pipeline: '',

@@ -12,7 +12,7 @@ export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-export interface BuildWithForRecommendations<
+export interface BuildWithList<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllersMap extends ControllersMap,
 > {

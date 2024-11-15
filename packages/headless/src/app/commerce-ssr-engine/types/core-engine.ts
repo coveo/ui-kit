@@ -3,8 +3,7 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
-import {Build} from '../../ssr-engine/types/build';
-import {BuildWithForRecommendations} from './build.js';
+import {BuildWithList, Build} from './build.js';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
@@ -12,10 +11,13 @@ import {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllerPropsMapFromDefinitions,
 } from './common.js';
-import {FetchStaticState} from './fetch-static-state.js';
+import {
+  FetchStaticState,
+  FetchStaticStateOptions,
+} from './fetch-static-state.js';
 import {HydrateStaticState} from './hydrate-static-state.js';
 
-export type {HydrateStaticState, FetchStaticState};
+export type {HydrateStaticState, FetchStaticState, FetchStaticStateOptions};
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
   TControllers extends ControllerDefinitionsMap<
@@ -63,7 +65,7 @@ export interface EngineDefinition<
    */
   build: TSolutionType extends SolutionType.recommendation
     ? // TODO: THIS should not be a separate function, inside the build function instead
-      BuildWithForRecommendations<
+      BuildWithList<
         TEngine,
         InferControllersMapFromDefinition<
           TControllers,

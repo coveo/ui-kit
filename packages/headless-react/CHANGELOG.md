@@ -1,3 +1,32 @@
+## <small>2.1.1 (2024-11-13)</small>
+
+- chore: general improvements and refactors of headless-ssr-commerce (#4625) ([e7b8a48](https://github.com/coveo/ui-kit/commits/e7b8a48)), closes [#4625](https://github.com/coveo/ui-kit/issues/4625)
+- chore(headless): rename 'controllers' to 'methods' in ssr-commerce to stay consistent with ssr (#464 ([61ff4ea](https://github.com/coveo/ui-kit/commits/61ff4ea)), closes [#4642](https://github.com/coveo/ui-kit/issues/4642)
+- docs(headless commerce react samples): use react package (#4615) ([6f5ba55](https://github.com/coveo/ui-kit/commits/6f5ba55)), closes [#4615](https://github.com/coveo/ui-kit/issues/4615)
+- test(headles-react): add test for ssr-commerce (#4616) ([cdedb88](https://github.com/coveo/ui-kit/commits/cdedb88)), closes [#4616](https://github.com/coveo/ui-kit/issues/4616)
+
+## 2.1.0 (2024-11-06)
+
+- feat(headless SSR): add hooks for ssr react commerce (#4614) ([7936561](https://github.com/coveo/ui-kit/commits/7936561)), closes [#4614](https://github.com/coveo/ui-kit/issues/4614)
+
+## <small>2.0.11 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
+## <small>2.0.10 (2024-11-06)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4e3d244](https://github.com/coveo/ui-kit/commits/4e3d244))
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
+## <small>2.0.9 (2024-11-06)</small>
+
+- chore: allow running on node 22 (#4605) ([573b7f3](https://github.com/coveo/ui-kit/commits/573b7f3)), closes [#4605](https://github.com/coveo/ui-kit/issues/4605)
+- chore(headless-react): remove unused test dependencies (#4630) ([cc17db0](https://github.com/coveo/ui-kit/commits/cc17db0)), closes [#4630](https://github.com/coveo/ui-kit/issues/4630)
+
 ## <small>2.0.8 (2024-10-30)</small>
 
 - chore: promote the v3 branch when publishing on v3 (#4585) ([7b9144d](https://github.com/coveo/ui-kit/commits/7b9144d)), closes [#4585](https://github.com/coveo/ui-kit/issues/4585) [#4584](https://github.com/coveo/ui-kit/issues/4584)

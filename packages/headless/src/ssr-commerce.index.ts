@@ -97,8 +97,57 @@ export type {
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllerPropsMapFromDefinitions,
+  // TODO: check if need to export these types
+  RecommendationOnlyControllerDefinitionWithProps,
+  RecommendationOnlyControllerDefinitionWithoutProps,
+  UniversalControllerDefinitionWithProps,
+  ControllerDefinitionWithoutProps,
+  ControllerDefinitionWithProps,
+  ControllerDefinition,
+  ControllerDefinitionOption,
+  EngineStaticState,
+  InferControllerPropsFromDefinition,
+  ListingOnlyControllerDefinitionWithProps,
+  ListingOnlyControllerDefinitionWithoutProps,
+  SearchAndListingControllerDefinitionWithProps,
+  SearchAndListingControllerDefinitionWithoutProps,
+  SearchOnlyControllerDefinitionWithProps,
+  SearchOnlyControllerDefinitionWithoutProps,
+  SubControllerDefinitionWithProps,
+  SubControllerDefinitionWithoutProps,
+  UniversalControllerDefinitionWithoutProps,
 } from './app/commerce-ssr-engine/types/common.js';
-export type {Build} from './app/ssr-engine/types/build.js';
+// TODO: check if need to export these types
+export type {
+  // ControllerDefinition,
+  // ControllerDefinitionWithProps,
+  // ControllerDefinitionWithoutProps,
+  // ControllerDefinitionsMap,
+  ControllerStaticState,
+  ControllerStaticStateMap,
+  ControllersMap,
+  ControllersPropsMap,
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  // EngineStaticState,
+  ExtractRequiredOptions,
+  HasKey,
+  HasKeys,
+  HydratedState,
+  // InferControllerFromDefinition,
+  // InferControllerPropsFromDefinition,
+  // InferControllerPropsMapFromDefinitions,
+  // InferControllerStaticStateFromController,
+  // InferControllerStaticStateMapFromControllers,
+  InferControllerStaticStateMapFromDefinitions,
+  // InferControllersMapFromDefinition,
+  OptionsExtender,
+  OptionsTuple,
+} from './app/ssr-engine/types/common.js';
+export type {
+  Build,
+  BuildWithList, // TODO: get rid of that once condition is inside Build type
+} from './app/commerce-ssr-engine/types/build.js';
 export type {
   EngineDefinition,
   InferStaticState,
@@ -106,9 +155,24 @@ export type {
   InferBuildResult,
   HydrateStaticState,
   FetchStaticState,
+  FetchStaticStateOptions,
 } from './app/commerce-ssr-engine/types/core-engine.js';
+// export type {
+//   FromBuildResult,
+//   // TODO: check if need to export these types
+//   FromBuildResultOptions,
+// } from './app/commerce-ssr-engine/types/from-build-result.js';
+export type {
+  //   // TODO: check if need to export these types
+  FromBuildResult,
+  FromBuildResultOptions,
+} from './app/ssr-engine/types/from-build-result.js';
 export type {LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {
+  NavigatorContext,
+  BrowserNavigatorContextProvider,
+  NavigatorContextProvider,
+} from './app/navigatorContextProvider.js';
 
 export type {LogLevel} from './app/logger.js';
 
@@ -151,6 +215,8 @@ export type {
   MappedGeneratedFacetController,
   MappedFacetStates,
   MappedFacetState,
+  LocationFacetValue,
+  LocationFacetState,
   FacetType,
 } from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
 export {defineFacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.ssr.js';
@@ -175,8 +241,8 @@ export {defineParameterManager} from './controllers/commerce/core/parameter-mana
 export type {
   ProductList,
   ProductListState,
-} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
-export {defineProductList} from './controllers/commerce/product-listing/headless-product-listing.ssr.js';
+} from './controllers/commerce/product-list/headless-product-list.ssr.js';
+export {defineProductList} from './controllers/commerce/product-list/headless-product-list.ssr.js';
 
 export type {ProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
 export {defineProductView} from './controllers/commerce/product-view/headless-product-view.ssr.js';
@@ -193,6 +259,7 @@ export type {
   CartItem,
   CartProps,
   CartState,
+  CartBuildProps,
   CartDefinition,
 } from './controllers/commerce/context/cart/headless-cart.ssr.js';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
