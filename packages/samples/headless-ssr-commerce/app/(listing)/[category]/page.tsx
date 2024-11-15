@@ -60,7 +60,6 @@ export default async function Listing({params}: {params: {category: string}}) {
 
   const recStaticState = await recommendationEngineDefinition.fetchStaticState([
     'popularBoughtRecs',
-    'popularViewedRecs',
   ]);
 
   return (

@@ -23,12 +23,6 @@ export type FetchStaticState<
   TControllersStaticState extends ControllerStaticStateMap,
   TControllersProps extends ControllersPropsMap,
   TSolutionType extends SolutionType,
-  FromBuildResultFunction = FromBuildResult<
-    TEngine,
-    TControllers,
-    FetchStaticStateOptions,
-    EngineStaticState<TSearchAction, TControllersStaticState>
-  >,
 > = TSolutionType extends SolutionType.recommendation
   ? {
       /**
@@ -40,7 +34,12 @@ export type FetchStaticState<
         controllers: Array<keyof TControllers> // TODO:  make the array unique
       ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
-      fromBuildResult: FromBuildResultFunction;
+      fromBuildResult: FromBuildResult<
+        TEngine,
+        TControllers,
+        FetchStaticStateOptions,
+        EngineStaticState<TSearchAction, TControllersStaticState>
+      >;
     }
   : {
       /**
@@ -55,6 +54,11 @@ export type FetchStaticState<
         >
       ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
-      fromBuildResult: FromBuildResultFunction;
+      fromBuildResult: FromBuildResult<
+        TEngine,
+        TControllers,
+        FetchStaticStateOptions,
+        EngineStaticState<TSearchAction, TControllersStaticState>
+      >;
     };
 buildBaseCommerceAPIRequest;

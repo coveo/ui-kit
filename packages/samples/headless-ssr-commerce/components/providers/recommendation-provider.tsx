@@ -28,16 +28,13 @@ export default function RecommendationProvider({
   );
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (recommendationEngineDefinition.hydrateStaticState as any)({
-      searchActions: staticState.searchActions,
-      // controllers: { },
-    }).then(({engine, controllers}) => {
-      setHydratedState({engine, controllers});
-      // Refreshing recommendations in the browser after hydrating the state in the client-side
-      // Recommendation refresh in the server is not supported yet.
-      // controllers.popularBoughtRecs.refresh(); // FIXME: does not work
-    });
+    recommendationEngineDefinition
+      .hydrateStaticState({
+        searchActions: staticState.searchActions,
+      }) // TODO: need to pass the search actions!!!!
+      .then(({engine, controllers}) => {
+        setHydratedState({engine, controllers});
+      });
   }, [staticState]);
 
   if (hydratedState) {

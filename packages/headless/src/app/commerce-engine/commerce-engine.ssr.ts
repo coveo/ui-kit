@@ -201,6 +201,13 @@ export function defineCommerceEngine<
     Parameters<FetchStaticStateFromBuildResultFunction>;
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
+  type BuildResult = {
+    engine: SSRCommerceEngine;
+    controllers: InferControllersMapFromDefinition<
+      TControllerDefinitions,
+      SolutionType
+    >;
+  }; // TODO: check if can remove the cast
 
   // TODO: ideally , we only want to execute that for recommendation stuff
   // TODO: get rid of that here. need to be computed in the fetch static state now
@@ -323,13 +330,7 @@ export function defineCommerceEngine<
           const buildResult = (await buildFactory(
             SolutionType.recommendation,
             ((params || [])[0] as string[])?.length // TODO: fix that mess
-          )(...params)) as {
-            engine: SSRCommerceEngine;
-            controllers: InferControllersMapFromDefinition<
-              TControllerDefinitions,
-              SolutionType
-            >;
-          }; // TODO: check if can remove the cast
+          )(...params)) as BuildResult; // TODO: check if can remove the cast
           const staticState =
             await fetchStaticStateFactoryForRecommendation().fromBuildResult({
               buildResult,
@@ -407,6 +408,40 @@ export function defineCommerceEngine<
       }
     );
 
+  const hydrateStaticStateFactoryForRecommendation: () => HydrateStaticStateFunction =
+    () =>
+      composeFunction(
+        async (...params: HydrateStaticStateParameters) => {
+          const buildResult = (await buildFactory(SolutionType.recommendation)(
+            ...(params as BuildParameters)
+          )) as BuildResult; // TODO: check if can remove the cast
+          const staticState =
+            await hydrateStaticStateFactoryForRecommendation().fromBuildResult({
+              buildResult,
+              searchActions: params[0]!.searchActions,
+            });
+          return staticState;
+        },
+        {
+          fromBuildResult: async (
+            ...params: HydrateStaticStateFromBuildResultParameters
+          ) => {
+            const [
+              {
+                buildResult: {engine, controllers},
+                searchActions,
+              },
+            ] = params;
+
+            searchActions.forEach((action) => {
+              engine.dispatch(action);
+            });
+            await engine.waitForRequestCompletedAction();
+            return {engine, controllers};
+          },
+        }
+      );
+
   return {
     listingEngineDefinition: {
       build: buildFactory(SolutionType.listing),
@@ -423,9 +458,7 @@ export function defineCommerceEngine<
     recommendationEngineDefinition: {
       build: buildFactory(SolutionType.recommendation),
       fetchStaticState: fetchStaticStateFactoryForRecommendation(),
-      hydrateStaticState: hydrateStaticStateFactory(
-        SolutionType.recommendation
-      ),
+      hydrateStaticState: hydrateStaticStateFactoryForRecommendation(),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<
       TControllerDefinitions,

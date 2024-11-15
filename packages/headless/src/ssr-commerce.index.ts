@@ -156,6 +156,7 @@ export type {
   HydrateStaticState,
   FetchStaticState,
   FetchStaticStateOptions,
+  HydrateStaticStateOptions,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 // export type {
 //   FromBuildResult,

@@ -15,9 +15,17 @@ import {
   FetchStaticState,
   FetchStaticStateOptions,
 } from './fetch-static-state.js';
-import {HydrateStaticState} from './hydrate-static-state.js';
+import {
+  HydrateStaticState,
+  HydrateStaticStateOptions,
+} from './hydrate-static-state.js';
 
-export type {HydrateStaticState, FetchStaticState, FetchStaticStateOptions};
+export type {
+  HydrateStaticState,
+  HydrateStaticStateOptions,
+  FetchStaticState,
+  FetchStaticStateOptions,
+};
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
   TControllers extends ControllerDefinitionsMap<
@@ -58,7 +66,8 @@ export interface EngineDefinition<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>
+    InferControllerPropsMapFromDefinitions<TControllers>,
+    TSolutionType
   >;
   /**
    * Builds an engine and its controllers from an engine definition.
