@@ -1,19 +1,43 @@
+import {UnknownAction} from '@reduxjs/toolkit';
 import {Recommendations} from '../../controllers/commerce/recommendations/headless-recommendations.js';
 import {RecommendationsDefinitionMeta} from '../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../controllers/controller/headless-controller.js';
 import {InvalidControllerDefinition} from '../../utils/errors.js';
-import {filterObject, mapObject} from '../../utils/utils.js';
+import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {CoreEngine, CoreEngineNext} from '../engine.js';
-import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common.js';
+import {
+  ControllersMap,
+  InferControllerStaticStateMapFromControllers,
+} from '../ssr-engine/types/common.js';
 import {
   ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
+  EngineStaticState,
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
+  InferControllerPropsMapFromDefinitions,
   InferControllersMapFromDefinition,
   SolutionType,
 } from './types/common.js';
+
+export function createStaticState<TSearchAction extends UnknownAction>({
+  searchActions,
+  controllers,
+}: {
+  searchActions: TSearchAction[];
+  controllers: ControllersMap;
+}): EngineStaticState<
+  TSearchAction,
+  InferControllerStaticStateMapFromControllers<ControllersMap>
+> {
+  return {
+    controllers: mapObject(controllers, (controller) => ({
+      state: clone(controller.state),
+    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    searchActions: searchActions.map((action) => clone(action)),
+  };
+}
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<TEngine, Controller>,
@@ -159,9 +183,12 @@ export function buildRecommendationFilter<
      * Go through all the controllers passed in argument and only refresh recommendation controllers.
      *
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
+     * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh(controllers: Record<string, Controller>) {
-      const isRecommendationController = (key: string) => name.includes(key);
+    refresh(controllers: Record<string, Controller>, whitelist: string[]) {
+      // TODO: FIND a better way
+      const isRecommendationController = (key: string) =>
+        name.includes(key) && whitelist.includes(key);
 
       Object.entries(controllers)
         .filter(([key, _]) => isRecommendationController(key))

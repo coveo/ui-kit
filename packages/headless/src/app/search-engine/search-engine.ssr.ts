@@ -5,7 +5,6 @@ import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
-import {buildRecommendationFilter} from '../commerce-ssr-engine/common.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {
   buildControllerDefinitions,
@@ -37,7 +36,7 @@ export interface SSRSearchEngine extends SearchEngine {
   /**
    * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
    */
-  waitForSearchCompletedAction(): Promise<SearchCompletedAction>[];
+  waitForSearchCompletedAction(): Promise<SearchCompletedAction>;
 }
 
 /**
@@ -61,34 +60,13 @@ function isSearchCompletedAction(
   );
 }
 
-function isRecommendationCompletedAction(
-  action: unknown
-): action is SearchCompletedAction {
-  return /^recommendation\/get\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
-
-function buildSSRSearchEngine(
-  options: SearchEngineOptions,
-  recommendationCount: number
-): SSRSearchEngine {
+function buildSSRSearchEngine(options: SearchEngineOptions): SSRSearchEngine {
   const {middleware, promise} = createWaitForActionMiddleware(
     isSearchCompletedAction
   );
-
-  const recommendationActionMiddlewares = Array.from(
-    {length: recommendationCount},
-    () => createWaitForActionMiddleware(isRecommendationCompletedAction)
-  );
-
   const searchEngine = buildSearchEngine({
     ...options,
-    middlewares: [
-      ...(options.middlewares ?? []),
-      middleware,
-      ...recommendationActionMiddlewares.map(({middleware}) => middleware),
-    ],
+    middlewares: [...(options.middlewares ?? []), middleware],
   });
   return {
     ...searchEngine,
@@ -96,10 +74,7 @@ function buildSSRSearchEngine(
       return searchEngine.state;
     },
     waitForSearchCompletedAction() {
-      return [
-        promise,
-        ...recommendationActionMiddlewares.map(({promise}) => promise),
-      ];
+      return promise;
     },
   };
 }
@@ -146,10 +121,6 @@ export function defineSearchEngine<
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
-  const recommendationHelper = buildRecommendationFilter(
-    controllerDefinitions ?? {}
-  );
-
   const getOptions = () => {
     return engineOptions;
   };
@@ -164,8 +135,7 @@ export function defineSearchEngine<
     const engine = buildSSRSearchEngine(
       buildOptions?.extend
         ? await buildOptions.extend(getOptions())
-        : getOptions(),
-      recommendationHelper.count
+        : getOptions()
     );
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -205,14 +175,8 @@ export function defineSearchEngine<
         ] = params;
 
         engine.executeFirstSearch();
-        recommendationHelper.refresh(controllers);
-
-        const searchActions = await Promise.all(
-          engine.waitForSearchCompletedAction()
-        );
-
         return createStaticState({
-          searchActions,
+          searchAction: await engine.waitForSearchCompletedAction(),
           controllers,
         }) as EngineStaticState<
           UnknownAction,
@@ -233,7 +197,7 @@ export function defineSearchEngine<
       const buildResult = await build(...(params as BuildParameters));
       const staticState = await hydrateStaticState.fromBuildResult({
         buildResult,
-        searchActions: params[0]!.searchActions,
+        searchAction: params[0]!.searchAction,
       });
       return staticState;
     },
@@ -244,13 +208,10 @@ export function defineSearchEngine<
         const [
           {
             buildResult: {engine, controllers},
-            searchActions,
+            searchAction,
           },
         ] = params;
-
-        searchActions.forEach((action) => {
-          engine.dispatch(action);
-        });
+        engine.dispatch(searchAction);
         await engine.waitForSearchCompletedAction();
         return {engine, controllers};
       },

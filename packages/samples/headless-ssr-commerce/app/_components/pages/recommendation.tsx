@@ -3,9 +3,9 @@
 import {NavigatorContext} from '@coveo/headless/ssr-commerce';
 import {useEffect, useState} from 'react';
 import {
-  StandaloneStaticState,
-  StandaloneHydratedState,
-  standaloneEngineDefinition,
+  RecommendationStaticState,
+  RecommendationHydratedState,
+  recommendationEngineDefinition,
 } from '../../_lib/commerce-engine';
 import {Recommendations} from '../recommendation-list';
 
@@ -13,30 +13,25 @@ export default function Recommendation({
   staticState,
   navigatorContext,
 }: {
-  staticState: StandaloneStaticState;
+  staticState: RecommendationStaticState;
   navigatorContext: NavigatorContext;
 }) {
   const [hydratedState, setHydratedState] = useState<
-    StandaloneHydratedState | undefined
+    RecommendationHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  standaloneEngineDefinition.setNavigatorContextProvider(
+  recommendationEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
 
   useEffect(() => {
-    standaloneEngineDefinition
+    recommendationEngineDefinition
       .hydrateStaticState({
         searchActions: staticState.searchActions,
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-
-        // Refreshing recommendations in the browser after hydrating the state in the client-side
-        // Recommendation refresh in the server is not supported yet.
-        controllers.popularBoughtRecs.refresh();
-        controllers.popularViewedRecs.refresh();
       });
   }, [staticState]);
 

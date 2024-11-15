@@ -6,7 +6,7 @@ import {
   EngineDefinitionControllersPropsOption,
   OptionsExtender,
   OptionsTuple,
-} from './common.js';
+} from '../../ssr-engine/types/common.js';
 
 export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
@@ -20,7 +20,7 @@ export interface BuildWithForRecommendations<
    * Initializes an engine and controllers from the definition.
    */
   (
-    controllers: (keyof TControllersMap)[]
+    c: (keyof TControllersMap)[]
   ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
 }
 

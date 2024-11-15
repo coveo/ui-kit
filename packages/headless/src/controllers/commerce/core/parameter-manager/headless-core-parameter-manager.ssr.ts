@@ -46,6 +46,7 @@ export function defineParameterManager<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    // TODO: we do now want to have to set the props if we set standalone to false... same thing with other components like cart
     ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {

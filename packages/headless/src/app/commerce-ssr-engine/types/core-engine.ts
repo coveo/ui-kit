@@ -3,19 +3,17 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
-import {Build, BuildWithList} from '../../ssr-engine/types/build.js';
-import {InferControllerPropsMapFromDefinitions} from '../../ssr-engine/types/common.js';
-import {
-  FetchStaticState,
-  FetchStaticStateWithList,
-} from '../../ssr-engine/types/fetch-static-state.js';
-import {HydrateStaticState} from '../../ssr-engine/types/hydrate-static-state.js';
+import {Build} from '../../ssr-engine/types/build';
+import {BuildWithForRecommendations} from './build.js';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
   SolutionType,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  InferControllerPropsMapFromDefinitions,
 } from './common.js';
+import {FetchStaticState} from './fetch-static-state.js';
+import {HydrateStaticState} from './hydrate-static-state.js';
 
 export type {HydrateStaticState, FetchStaticState};
 export type EngineDefinitionOptions<
@@ -40,32 +38,20 @@ export interface EngineDefinition<
   /**
    * Fetches the static state on the server side using your engine definition.
    */
-  // TODO: simplify be removing code duplication
-  fetchStaticState: TSolutionType extends SolutionType.recommendation
-    ? FetchStaticStateWithList<
-        TEngine,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllers,
-          TSolutionType
-        >,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >
-    : FetchStaticState<
-        TEngine,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        UnknownAction,
-        InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          TControllers,
-          TSolutionType
-        >,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >;
+  fetchStaticState: FetchStaticState<
+    TEngine,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
+    UnknownAction,
+    InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+      TControllers,
+      TSolutionType
+    >,
+    InferControllerPropsMapFromDefinitions<TControllers>,
+    TSolutionType
+  >;
   /**
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
-  // TODO: Apply the same logic to recommendation hydration
   hydrateStaticState: HydrateStaticState<
     TEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
@@ -76,11 +62,13 @@ export interface EngineDefinition<
    * Builds an engine and its controllers from an engine definition.
    */
   build: TSolutionType extends SolutionType.recommendation
-    ? BuildWithList<
+    ? // TODO: THIS should not be a separate function, inside the build function instead
+      BuildWithForRecommendations<
         TEngine,
-        TEngineOptions,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        InferControllerPropsMapFromDefinitions<TControllers>
+        InferControllersMapFromDefinition<
+          TControllers,
+          SolutionType.recommendation
+        >
       >
     : Build<
         TEngine,

@@ -6,6 +6,13 @@ import {stateKey} from '../../app/state-key.js';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
+// import {
+//   defineContext,
+//   defineParameterManager,
+//   defineRecommendations,
+//   defineStandaloneSearchBox,
+//   getSampleCommerceEngineConfiguration,
+// } from '../../ssr-commerce.index.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -13,9 +20,13 @@ import {
 import {
   buildControllerDefinitions,
   buildRecommendationFilter,
+  createStaticState,
 } from '../commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionsMap,
+  EngineStaticState,
+  InferControllerPropsMapFromDefinitions,
+  InferControllersMapFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
 } from '../commerce-ssr-engine/types/common.js';
@@ -25,11 +36,6 @@ import {
 } from '../commerce-ssr-engine/types/core-engine.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {composeFunction} from '../ssr-engine/common.js';
-import {createStaticState} from '../ssr-engine/common.js';
-import {
-  EngineStaticState,
-  InferControllerPropsMapFromDefinitions,
-} from '../ssr-engine/types/common.js';
 import {
   CommerceEngine,
   CommerceEngineOptions,
@@ -196,6 +202,7 @@ export function defineCommerceEngine<
     Parameters<HydrateStaticStateFromBuildResultFunction>;
 
   // TODO: ideally , we only want to execute that for recommendation stuff
+  // TODO: get rid of that here. need to be computed in the fetch static state now
   const recommendationFilter = () =>
     buildRecommendationFilter(controllerDefinitions ?? {});
 
@@ -209,17 +216,15 @@ export function defineCommerceEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
   const buildFactory =
-    <T extends SolutionType>(solutionType: T) =>
+    <T extends SolutionType>(solutionType: T, count: number = 0) =>
     async (...[buildOptions]: BuildParameters) => {
       const engine = buildSSRCommerceEngine(
         solutionType,
-        buildOptions?.extend
+        buildOptions && 'extend' in buildOptions && buildOptions?.extend
           ? await buildOptions.extend(getOptions())
           : getOptions(),
         // TODO: clean that
-        solutionType === SolutionType.recommendation
-          ? recommendationFilter().count
-          : 0
+        solutionType === SolutionType.recommendation ? count : 0 // TODO: avoid this by creating a build factory for recs
       );
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
@@ -272,9 +277,6 @@ export function defineCommerceEngine<
             case SolutionType.search:
               buildSearch(engine).executeFirstSearch();
               break;
-            case SolutionType.recommendation:
-              recommendationFilter().refresh(controllers);
-              break;
           }
 
           // TODO: should be only one searchAction for search and listing
@@ -295,6 +297,77 @@ export function defineCommerceEngine<
         },
       }
     );
+
+  // TODO: enlever ce hack!
+  const controllerList: Set<string> = new Set();
+
+  // TODO: remove factory
+  const fetchStaticStateFactoryForRecommendation: () => FetchStaticStateFunction =
+    () =>
+      composeFunction(
+        async (...params: FetchStaticStateParameters) => {
+          // TODO: no need for ...params since it is a list of controllers
+          console.log(params, ((params || [])[0] as string[])?.length); // Something is wrong with the type here
+          // FIXME: just WOW
+          ((params || [])[0] as Array<string>).forEach((controller) => {
+            controllerList.add(controller);
+          });
+          if (!getOptions().navigatorContextProvider) {
+            // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
+            console.warn(
+              '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
+            );
+          }
+
+          const buildResult = (await buildFactory(
+            SolutionType.recommendation,
+            ((params || [])[0] as string[])?.length // TODO: fix that mess
+          )(...params)) as {
+            engine: SSRCommerceEngine;
+            controllers: InferControllersMapFromDefinition<
+              TControllerDefinitions,
+              SolutionType
+            >;
+          }; // TODO: check if can remove the cast
+          const staticState =
+            await fetchStaticStateFactoryForRecommendation().fromBuildResult({
+              buildResult,
+            });
+          return staticState;
+        },
+        {
+          fromBuildResult: async (
+            ...params: FetchStaticStateFromBuildResultParameters
+          ) => {
+            const [
+              {
+                buildResult: {engine, controllers},
+              },
+            ] = params;
+
+            recommendationFilter().refresh(
+              controllers,
+              Array.from(controllerList) // TODO: find the right type
+            ); // TODO: filter out the controllers to only include the one in the static state params
+
+            // TODO: should be only one searchAction for search and listing
+            const searchActions = await Promise.all(
+              engine.waitForRequestCompletedAction()
+            );
+
+            return createStaticState({
+              searchActions,
+              controllers,
+            }) as EngineStaticState<
+              UnknownAction,
+              InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+                TControllerDefinitions,
+                SolutionType
+              >
+            >;
+          },
+        }
+      );
 
   const hydrateStaticStateFactory: (
     solutionType: SolutionType
@@ -354,7 +427,7 @@ export function defineCommerceEngine<
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
     recommendationEngineDefinition: {
       build: buildFactory(SolutionType.recommendation),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.recommendation),
+      fetchStaticState: fetchStaticStateFactoryForRecommendation(),
       hydrateStaticState: hydrateStaticStateFactory(
         SolutionType.recommendation
       ),
@@ -376,7 +449,7 @@ export function defineCommerceEngine<
   };
 }
 
-/// Sandbox
+// // Sandbox
 // const {
 //   recommendationEngineDefinition,
 //   searchEngineDefinition,
@@ -387,7 +460,8 @@ export function defineCommerceEngine<
 //     standaloneSearchBox: defineStandaloneSearchBox({
 //       options: {redirectionUrl: 'rest'},
 //     }),
-//     facets: defineFacetGenerator(),
+//     facets: defineContext(),
+//     searchParam: defineParameterManager({search: false}),
 //     trending: defineRecommendations({
 //       options: {slotId: 'ttt'},
 //     }),
@@ -398,11 +472,15 @@ export function defineCommerceEngine<
 // });
 
 // // TODO: should have a way to select which recommendation to fetch
-// const r = await standaloneEngineDefinition.fetchStaticState();
-// r.controllers.standaloneSearchBox;
+// const r = await standaloneEngineDefinition.fetchStaticState({
+//   controllers: {searchParam: {initialState: {parameters: {q: 'test'}}}},
+// });
 
-// const b = await recommendationEngineDefinition.fetchStaticState(['trending']);
-// b.controllers.trending;
+// const b = await recommendationEngineDefinition.fetchStaticState([
+//   'trending',
+//   'popular',
+// ]);
+// // b.controllers.;
 
-// const a = await searchEngineDefinition.fetchStaticState();
-// a.controllers; // TODO: should throw an error since it's not defined in search
+// const a = await searchEngineDefinition.fetchStaticState(); // TODO: fix typing if controller is set to {search: false}
+// // a.controllers.; // TODO: should throw an error since it's not defined in search

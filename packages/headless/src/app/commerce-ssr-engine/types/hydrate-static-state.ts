@@ -6,13 +6,16 @@ import {
   EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
-} from './common.js';
-import {FromBuildResult} from './from-build-result.js';
+} from '../../ssr-engine/types/common.js';
+import {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
-  searchAction: TSearchAction;
+  searchActions: TSearchAction[];
 }
 
+// TODO: check if need to create one hydrate function specific for recommendations.
+// - If yes, then adjust this.
+// - If not, then remove and reuse the interface from ssr-engine
 export type HydrateStaticState<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,

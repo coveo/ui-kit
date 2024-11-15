@@ -1,3 +1,4 @@
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../../utils/errors.js';
 import type {CommerceEngine} from '../../commerce-engine/commerce-engine.js';
@@ -7,6 +8,7 @@ import type {
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
   InferControllerPropsMapFromDefinitions,
+  ControllerStaticStateMap,
 } from '../../ssr-engine/types/common.js';
 
 export type {
@@ -54,6 +56,14 @@ export interface ControllerDefinitionWithProps<
     props: TProps,
     solutionType?: SolutionType
   ): TController;
+}
+
+export interface EngineStaticState<
+  TSearchAction extends UnknownAction,
+  TControllers extends ControllerStaticStateMap,
+> {
+  searchActions: TSearchAction[];
+  controllers: TControllers;
 }
 
 export type ControllerDefinition<
@@ -252,7 +262,7 @@ export type SubControllerDefinitionWithoutProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
-// TODO: add recommendation type here
+// TODO: add recommendation type here!
 
 export type SubControllerDefinitionWithProps<
   TController extends Controller,
@@ -267,4 +277,4 @@ export type SubControllerDefinitionWithProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
-// TODO: add recommendation type here
+// TODO: add recommendation type here!

@@ -11,6 +11,7 @@ export const {
   listingEngineDefinition,
   searchEngineDefinition,
   standaloneEngineDefinition,
+  recommendationEngineDefinition,
 } = engineDefinition;
 
 export type ListingStaticState = InferStaticState<
@@ -30,4 +31,11 @@ export type StandaloneStaticState = InferStaticState<
 >;
 export type StandaloneHydratedState = InferHydratedState<
   typeof standaloneEngineDefinition
+>;
+
+export type RecommendationStaticState = InferStaticState<
+  typeof recommendationEngineDefinition
+>;
+export type RecommendationHydratedState = InferHydratedState<
+  typeof recommendationEngineDefinition
 >;

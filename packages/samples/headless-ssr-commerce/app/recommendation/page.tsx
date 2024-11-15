@@ -1,6 +1,6 @@
 import {headers} from 'next/headers';
 import Recommendation from '../_components/pages/recommendation';
-import {standaloneEngineDefinition} from '../_lib/commerce-engine';
+import {recommendationEngineDefinition} from '../_lib/commerce-engine';
 import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 
 /**
@@ -11,12 +11,16 @@ import {NextJsNavigatorContext} from '../_lib/navigatorContextProvider';
 export default async function RecommendationPage() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
-  standaloneEngineDefinition.setNavigatorContextProvider(
+  recommendationEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await standaloneEngineDefinition.fetchStaticState();
+  const staticState = await recommendationEngineDefinition.fetchStaticState([
+    'popularBoughtRecs',
+    'popularViewedRecs',
+  ]);
+  // TODO: cannot have the same controller twice
 
   return (
     <Recommendation
