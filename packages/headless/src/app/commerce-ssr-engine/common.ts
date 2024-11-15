@@ -73,10 +73,24 @@ export function buildControllerDefinitions<
         ? definition['standalone'] === false
         : false;
 
+    // const unavailableInRecommendationSolutionType =
+    //   solutionType === SolutionType['recommendation'] &&
+    //   'recommendation' in definition
+    //     ? definition['recommendation'] === false
+    //     : false;
+
+    const unavailableInRecommendationSolutionType =
+      (solutionType === SolutionType['recommendation'] &&
+        !('recommendation' in definition)) ||
+      ('recommendation' in definition &&
+        definition['recommendation'] === false &&
+        solutionType === SolutionType['recommendation']);
+
     if (
       unavailableInSearchSolutionType ||
       unavailableInListingSolutionType ||
-      unavailableInStandaloneSolutionType
+      unavailableInStandaloneSolutionType ||
+      unavailableInRecommendationSolutionType
     ) {
       return null;
     }
@@ -162,14 +176,17 @@ export function buildRecommendationFilter<
      *
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      */
-    refresh(controllers: Record<string, Controller>) {
+    refresh(controllers: Record<string, Controller>, whitelist: string[]) {
+      console.log(controllers);
+      console.log(whitelist);
       const isRecommendationController = (key: string) => name.includes(key);
 
       Object.entries(controllers)
         .filter(([key, _]) => isRecommendationController(key))
-        .forEach(([_, controller]) =>
-          (controller as Recommendations).refresh?.()
-        );
+        .forEach(([key, controller]) => {
+          console.log(`Refreshing recommendation controller: ${key}`);
+          (controller as Recommendations).refresh?.();
+        });
     },
   };
 }

@@ -83,7 +83,6 @@ export interface EngineDefinition<
 export interface RecommendationEngineDefinition<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
-  TEngineOptions,
 > {
   /**
    * Fetches the static state on the server side using your engine definition.
@@ -98,8 +97,7 @@ export interface RecommendationEngineDefinition<
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
       TControllers,
       SolutionType.recommendation
-    >,
-    InferControllerPropsMapFromDefinitions<TControllers>
+    >
   >;
 
   /**
@@ -119,12 +117,7 @@ export interface RecommendationEngineDefinition<
    */
   build: BuildWithList<
     TEngine,
-    TEngineOptions,
-    InferControllersMapFromDefinition<
-      TControllers,
-      SolutionType.recommendation
-    >,
-    InferControllerPropsMapFromDefinitions<TControllers>
+    InferControllersMapFromDefinition<TControllers, SolutionType.recommendation>
   >;
 
   /**

@@ -141,11 +141,7 @@ function buildSSRCommerceEngine(
 
 interface RecommendationCommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
-> extends RecommendationEngineDefinition<
-    SSRCommerceEngine,
-    TControllers,
-    CommerceEngineOptions
-  > {}
+> extends RecommendationEngineDefinition<SSRCommerceEngine, TControllers> {}
 
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
@@ -304,7 +300,7 @@ export function defineCommerceEngine<
             // here build the filter and refresh them  all
             // build every recommendation and refresh them all ?
             // buildRecommendations(engine).refresh();
-            recommendationFilter.refresh(controllers);
+            // recommendationFilter.refresh(controllers);
           }
 
           const searchAction = await engine.waitForRequestCompletedAction();
@@ -357,6 +353,7 @@ export function defineCommerceEngine<
       }
     );
 
+  // The fetch static state problem might come from here ?
   const recommendationBuildFactory =
     () =>
     async (...[buildOptions]: RecommendationBuildParameters) => {
@@ -382,6 +379,9 @@ export function defineCommerceEngine<
           : getOptions(),
         recommendationFilter.count
       );
+
+      // const recommendationControllerDefinitions = controllerDefinitions?.
+
       const controllers = buildControllerDefinitions({
         definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
         engine,
@@ -426,11 +426,16 @@ export function defineCommerceEngine<
       },
     ] = params;
 
-    console.log(c);
+    console.log('********');
+    console.log(controllers);
+    console.log('********');
 
-    recommendationFilter.refresh(controllers);
+    recommendationFilter.refresh(controllers, c);
 
     const searchAction = await engine.waitForRequestCompletedAction();
+
+    console.log('AFTER REFRESH');
+    console.log(controllers);
 
     return createStaticState({
       searchAction,

@@ -44,7 +44,6 @@ export type FetchStaticStateWithList<
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
-  TControllersProps extends ControllersPropsMap,
 > = {
   /**
    * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -52,11 +51,7 @@ export type FetchStaticStateWithList<
    * Useful for static generation and server-side rendering.
    */
   (
-    c: (keyof TControllers)[],
-    ...params: OptionsTuple<
-      FetchStaticStateOptions &
-        EngineDefinitionControllersPropsOption<TControllersProps>
-    >
+    c: (keyof TControllers)[]
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
   fromBuildResult: FromBuildResultWithList<
