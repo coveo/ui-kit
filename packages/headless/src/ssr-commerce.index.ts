@@ -144,10 +144,7 @@ export type {
   OptionsExtender,
   OptionsTuple,
 } from './app/ssr-engine/types/common.js';
-export type {
-  Build,
-  BuildWithList, // TODO: get rid of that once condition is inside Build type
-} from './app/commerce-ssr-engine/types/build.js';
+export type {Build} from './app/commerce-ssr-engine/types/build.js';
 export type {
   EngineDefinition,
   InferStaticState,

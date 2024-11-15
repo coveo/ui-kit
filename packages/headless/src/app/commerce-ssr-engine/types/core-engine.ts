@@ -3,7 +3,7 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
-import {BuildWithList, Build} from './build.js';
+import {Build} from './build.js';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
@@ -72,21 +72,13 @@ export interface EngineDefinition<
   /**
    * Builds an engine and its controllers from an engine definition.
    */
-  build: TSolutionType extends SolutionType.recommendation
-    ? // TODO: THIS should not be a separate function, inside the build function instead
-      BuildWithList<
-        TEngine,
-        InferControllersMapFromDefinition<
-          TControllers,
-          SolutionType.recommendation
-        >
-      >
-    : Build<
-        TEngine,
-        TEngineOptions,
-        InferControllersMapFromDefinition<TControllers, TSolutionType>,
-        InferControllerPropsMapFromDefinitions<TControllers>
-      >;
+  build: Build<
+    TEngine,
+    TEngineOptions,
+    InferControllersMapFromDefinition<TControllers, TSolutionType>,
+    InferControllerPropsMapFromDefinitions<TControllers>,
+    TSolutionType
+  >;
 
   /**
    * Sets the navigator context provider.

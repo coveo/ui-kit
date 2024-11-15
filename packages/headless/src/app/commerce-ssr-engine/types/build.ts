@@ -7,36 +7,35 @@ import {
   OptionsExtender,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
+import {SolutionType} from './common.js';
 
 export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
-export interface BuildWithList<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllersMap extends ControllersMap,
-> {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  (
-    c: (keyof TControllersMap)[]
-  ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
-}
-
-export interface Build<
+export type Build<
   TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
-> {
-  /**
-   * Initializes an engine and controllers from the definition.
-   */
-  (
-    ...params: OptionsTuple<
-      BuildOptions<TEngineOptions> &
-        EngineDefinitionControllersPropsOption<TControllersProps>
-    >
-  ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
-}
+  TSolutionType extends SolutionType,
+> = TSolutionType extends SolutionType.recommendation
+  ? {
+      /**
+       * Initializes an engine and controllers from the definition.
+       */
+      (
+        c: (keyof TControllersMap)[]
+      ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
+    }
+  : {
+      /**
+       * Initializes an engine and controllers from the definition.
+       */
+      (
+        ...params: OptionsTuple<
+          BuildOptions<TEngineOptions> &
+            EngineDefinitionControllersPropsOption<TControllersProps>
+        >
+      ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
+    };
