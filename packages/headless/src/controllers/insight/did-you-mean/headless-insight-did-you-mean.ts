@@ -28,8 +28,9 @@ export type {
  * When a query returns no result but finds a possible query correction, the controller either suggests the correction or
  * automatically triggers a new query with the suggested term.
  *
- * @param engine - The insight engine.
+ * @param engine - The headless engine.
  * @param props - The configurable `DidYouMean` properties.
+ *
  * @group Controllers
  * @category DidYouMean
  */
