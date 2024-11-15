@@ -9,9 +9,17 @@ import type {
   InferControllerStaticStateFromController,
   InferControllerPropsMapFromDefinitions,
   ControllerStaticStateMap,
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  OptionsTuple,
 } from '../../ssr-engine/types/common.js';
 
 export type {
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
   InferControllerPropsMapFromDefinitions,

@@ -97,54 +97,12 @@ export type {
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllerPropsMapFromDefinitions,
-  // TODO: check if need to export these types
-  RecommendationOnlyControllerDefinitionWithProps,
-  RecommendationOnlyControllerDefinitionWithoutProps,
-  UniversalControllerDefinitionWithProps,
-  ControllerDefinitionWithoutProps,
-  ControllerDefinitionWithProps,
-  ControllerDefinition,
-  ControllerDefinitionOption,
   EngineStaticState,
-  InferControllerPropsFromDefinition,
-  ListingOnlyControllerDefinitionWithProps,
-  ListingOnlyControllerDefinitionWithoutProps,
-  SearchAndListingControllerDefinitionWithProps,
-  SearchAndListingControllerDefinitionWithoutProps,
-  SearchOnlyControllerDefinitionWithProps,
-  SearchOnlyControllerDefinitionWithoutProps,
-  SubControllerDefinitionWithProps,
-  SubControllerDefinitionWithoutProps,
-  UniversalControllerDefinitionWithoutProps,
-} from './app/commerce-ssr-engine/types/common.js';
-// TODO: check if need to export these types
-export type {
-  // ControllerDefinition,
-  // ControllerDefinitionWithProps,
-  // ControllerDefinitionWithoutProps,
-  // ControllerDefinitionsMap,
-  ControllerStaticState,
-  ControllerStaticStateMap,
-  ControllersMap,
-  ControllersPropsMap,
   EngineDefinitionBuildResult,
   EngineDefinitionControllersPropsOption,
-  // EngineStaticState,
-  ExtractRequiredOptions,
-  HasKey,
-  HasKeys,
   HydratedState,
-  // InferControllerFromDefinition,
-  // InferControllerPropsFromDefinition,
-  // InferControllerPropsMapFromDefinitions,
-  // InferControllerStaticStateFromController,
-  // InferControllerStaticStateMapFromControllers,
-  InferControllerStaticStateMapFromDefinitions,
-  // InferControllersMapFromDefinition,
-  OptionsExtender,
   OptionsTuple,
-} from './app/ssr-engine/types/common.js';
-export type {Build} from './app/commerce-ssr-engine/types/build.js';
+} from './app/commerce-ssr-engine/types/common.js';
 export type {
   EngineDefinition,
   InferStaticState,
@@ -154,17 +112,11 @@ export type {
   FetchStaticState,
   FetchStaticStateOptions,
   HydrateStaticStateOptions,
-} from './app/commerce-ssr-engine/types/core-engine.js';
-// export type {
-//   FromBuildResult,
-//   // TODO: check if need to export these types
-//   FromBuildResultOptions,
-// } from './app/commerce-ssr-engine/types/from-build-result.js';
-export type {
-  //   // TODO: check if need to export these types
+  Build,
+  BuildOptions,
   FromBuildResult,
   FromBuildResultOptions,
-} from './app/ssr-engine/types/from-build-result.js';
+} from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
 export type {
   NavigatorContext,

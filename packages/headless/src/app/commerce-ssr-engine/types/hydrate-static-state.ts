@@ -1,13 +1,13 @@
-import {UnknownAction} from '@reduxjs/toolkit';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {
+import type {UnknownAction} from '@reduxjs/toolkit';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {
   ControllersMap,
   ControllersPropsMap,
   EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
+import type {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
 import {SolutionType} from './common.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {

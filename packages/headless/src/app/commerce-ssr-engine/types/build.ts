@@ -1,5 +1,5 @@
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {
   ControllersMap,
   ControllersPropsMap,
   EngineDefinitionBuildResult,

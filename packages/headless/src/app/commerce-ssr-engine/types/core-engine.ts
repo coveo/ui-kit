@@ -3,7 +3,11 @@ import type {Controller} from '../../../controllers/controller/headless-controll
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
-import {Build} from './build.js';
+import type {
+  FromBuildResult,
+  FromBuildResultOptions,
+} from '../../ssr-engine/types/from-build-result.js';
+import {Build, BuildOptions} from './build.js';
 import {
   ControllerDefinitionsMap,
   InferControllersMapFromDefinition,
@@ -20,11 +24,17 @@ import {
   HydrateStaticStateOptions,
 } from './hydrate-static-state.js';
 
+// TODO: why not use the one for commerce
+
 export type {
+  FromBuildResult,
+  FromBuildResultOptions,
   HydrateStaticState,
   HydrateStaticStateOptions,
   FetchStaticState,
   FetchStaticStateOptions,
+  Build,
+  BuildOptions,
 };
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},

@@ -1,18 +1,16 @@
-import {UnknownAction} from '@reduxjs/toolkit';
+import type {UnknownAction} from '@reduxjs/toolkit';
 import {buildBaseCommerceAPIRequest} from '../../../features/commerce/common/actions.js';
-import {
-  EngineStaticState,
-  SolutionType,
-} from '../../commerce-ssr-engine/types/common.js';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {
+import {SolutionType} from '../../commerce-ssr-engine/types/common.js';
+import type {EngineStaticState} from '../../commerce-ssr-engine/types/common.js';
+import type {CoreEngine, CoreEngineNext} from '../../engine.js';
+import type {
   ControllersMap,
   ControllersPropsMap,
   ControllerStaticStateMap,
   EngineDefinitionControllersPropsOption,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
+import type {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 
