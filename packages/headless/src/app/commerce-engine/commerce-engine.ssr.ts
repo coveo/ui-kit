@@ -6,12 +6,12 @@ import {stateKey} from '../../app/state-key.js';
 import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
 import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
-import {
-  defineFacetGenerator,
-  defineRecommendations,
-  defineStandaloneSearchBox,
-  getSampleCommerceEngineConfiguration,
-} from '../../ssr-commerce.index.js';
+// import {
+//   defineFacetGenerator,
+//   defineRecommendations,
+//   defineStandaloneSearchBox,
+//   getSampleCommerceEngineConfiguration,
+// } from '../../ssr-commerce.index.js';
 import {
   createWaitForActionMiddleware,
   createWaitForActionMiddlewareForRecommendation,
@@ -34,6 +34,7 @@ import {buildLogger} from '../logger.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {composeFunction} from '../ssr-engine/common.js';
 import {createStaticState} from '../ssr-engine/common.js';
+import {BuildOptions} from '../ssr-engine/types/build.js';
 import {
   EngineStaticState,
   InferControllerPropsMapFromDefinitions,
@@ -210,12 +211,12 @@ export function defineCommerceEngine<
   type RecommendationBuildFunction = RecommendationDefinition['build'];
   type RecommendationFetchStaticStateFunction =
     RecommendationDefinition['fetchStaticState'];
-  type RecommendationHydrateStaticStateFunction =
-    RecommendationDefinition['hydrateStaticState'];
+  // type RecommendationHydrateStaticStateFunction =
+  //   RecommendationDefinition['hydrateStaticState'];
   type RecommendationFetchStaticStateFromBuildResultFunction =
     RecommendationFetchStaticStateFunction['fromBuildResult'];
-  type RecommendationHydrateStaticStateFromBuildResultFunction =
-    RecommendationHydrateStaticStateFunction['fromBuildResult'];
+  // type RecommendationHydrateStaticStateFromBuildResultFunction =
+  //   RecommendationHydrateStaticStateFunction['fromBuildResult'];
   type RecommendationBuildParameters = Parameters<RecommendationBuildFunction>;
   type RecommendationFetchStaticStateParameters =
     Parameters<RecommendationFetchStaticStateFunction>;
@@ -370,10 +371,14 @@ export function defineCommerceEngine<
       // But why do I even need it in the build factory ?????
       // logger.warn(buildOptions?.c);
 
+      // This cast is no good. Or is it ?
+      const buildOptionsCasted =
+        buildOptions as BuildOptions<CommerceEngineOptions>;
+
       const engine = buildSSRCommerceEngine(
         SolutionType.recommendation,
-        buildOptions?.extend
-          ? await buildOptions.extend(getOptions())
+        buildOptionsCasted?.extend
+          ? await buildOptionsCasted.extend(getOptions())
           : getOptions(),
         recommendationFilter.count
       );
@@ -563,32 +568,51 @@ export function defineCommerceEngine<
   };
 }
 /// Sandbox
-const {
-  recommendationEngineDefinition,
-  searchEngineDefinition,
-  standaloneEngineDefinition,
-} = defineCommerceEngine({
-  configuration: getSampleCommerceEngineConfiguration(),
-  controllers: {
-    standaloneSearchBox: defineStandaloneSearchBox({
-      options: {redirectionUrl: 'rest'},
-    }),
-    facets: defineFacetGenerator(),
-    trending: defineRecommendations({
-      options: {slotId: 'ttt'},
-    }),
-    popular: defineRecommendations({
-      options: {slotId: 'ppp'},
-    }),
-  },
-});
+// const {
+//   recommendationEngineDefinition,
+//   searchEngineDefinition,
+//   standaloneEngineDefinition,
+// } = defineCommerceEngine({
+//   configuration: getSampleCommerceEngineConfiguration(),
+//   controllers: {
+//     standaloneSearchBox: defineStandaloneSearchBox({
+//       options: {redirectionUrl: 'rest'},
+//     }),
+//     facets: defineFacetGenerator(),
+//     trending: defineRecommendations({
+//       options: {slotId: 'ttt'},
+//     }),
+//     popular: defineRecommendations({
+//       options: {slotId: 'ppp'},
+//     }),
+//   },
+// });
 
 // TODO: should have a way to select which recommendation to fetch
-const r = await standaloneEngineDefinition.fetchStaticState();
-r.controllers.standaloneSearchBox;
+// const r = await standaloneEngineDefinition.fetchStaticState();
+// r.controllers.standaloneSearchBox;
 
-const b = await recommendationEngineDefinition.fetchStaticState(['trending']);
-b.controllers.trending;
+// IMPORTANT : instead of doing all that, maybe we could have this functional style thingy.
+// const b_1 = await recommendationEngineDefinition.fetchStaticState()([
+//   'popular',
+//   'trending',
+// ]);
 
-const a = await searchEngineDefinition.fetchStaticState();
-a.controllers; // TODO: should throw an error since it's not defined in search
+// const b = await recommendationEngineDefinition.fetchStaticState([
+//   'popular',
+//   'trending',
+// ]);
+
+// //This should not be allowed
+// const c = await recommendationEngineDefinition.fetchStaticState([
+//   'trending',
+//   'trending',
+// ]);
+
+// b.controllers.trending;
+
+// //This should not be allowed
+// c.controllers.popular;
+
+// const a = await searchEngineDefinition.fetchStaticState();
+// a.controllers; // TODO: should throw an error since it's not defined in search

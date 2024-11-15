@@ -9,9 +9,13 @@ import {
 } from './common.js';
 
 // can I build them like so ?
-export interface BuildOptions<TEngineOptions> {
+export interface ListBuildOptions<TEngineOptions> {
   // c: (keyof TControllersMap)[]; // list of controllers to build, but how did that work ??
   //Why is it optional ?????
+  extend?: OptionsExtender<TEngineOptions>;
+}
+
+export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
 }
 
