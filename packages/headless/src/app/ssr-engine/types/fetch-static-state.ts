@@ -8,7 +8,7 @@ import {
   EngineStaticState,
   OptionsTuple,
 } from './common.js';
-import {FromBuildResult} from './from-build-result.js';
+import {FromBuildResult, FromBuildResultWithList} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 
@@ -59,7 +59,7 @@ export type FetchStaticStateWithList<
     >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
-  fromBuildResult: FromBuildResult<
+  fromBuildResult: FromBuildResultWithList<
     TEngine,
     TControllers,
     FetchStaticStateOptions,

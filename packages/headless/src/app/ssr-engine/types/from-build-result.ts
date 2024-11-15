@@ -18,3 +18,15 @@ export interface FromBuildResult<
     options: FromBuildResultOptions<TEngine, TControllers> & TOptions
   ): Promise<TReturn>;
 }
+
+export interface FromBuildResultWithList<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllers extends ControllersMap,
+  TOptions,
+  TReturn,
+> {
+  (
+    c: (keyof TControllers)[],
+    options: FromBuildResultOptions<TEngine, TControllers> & TOptions
+  ): Promise<TReturn>;
+}

@@ -60,11 +60,13 @@ export function defineCommerceEngine<
   >;
   type ListingContext = ContextStateType<SolutionType.listing>;
   type SearchContext = ContextStateType<SolutionType.search>;
+  type RecommendationContext = ContextStateType<SolutionType.recommendation>;
   type StandaloneContext = ContextStateType<SolutionType.standalone>;
 
   const {
     listingEngineDefinition,
     searchEngineDefinition,
+    recommendationEngineDefinition,
     standaloneEngineDefinition,
   } = defineBaseCommerceEngine({...options});
   return {
@@ -87,6 +89,15 @@ export function defineCommerceEngine<
       ),
       HydratedStateProvider: buildHydratedStateProvider(
         singletonContext as SearchContext
+      ),
+    },
+    recommendationEngineDefinition: {
+      ...recommendationEngineDefinition,
+      StaticStateProvider: buildStaticStateProvider(
+        singletonContext as RecommendationContext
+      ),
+      HydratedStateProvider: buildHydratedStateProvider(
+        singletonContext as RecommendationContext
       ),
     },
     standaloneEngineDefinition: {

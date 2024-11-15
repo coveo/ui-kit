@@ -98,7 +98,7 @@ export type {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllerPropsMapFromDefinitions,
 } from './app/commerce-ssr-engine/types/common.js';
-export type {Build} from './app/ssr-engine/types/build.js';
+export type {Build, BuildWithList} from './app/ssr-engine/types/build.js';
 export type {
   EngineDefinition,
   InferStaticState,
@@ -106,6 +106,7 @@ export type {
   InferBuildResult,
   HydrateStaticState,
   FetchStaticState,
+  FetchStaticStateWithList,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
 export type {
