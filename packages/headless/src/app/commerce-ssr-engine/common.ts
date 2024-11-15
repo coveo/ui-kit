@@ -97,10 +97,19 @@ export function buildControllerDefinitions<
         ? definition['standalone'] === false
         : false;
 
+    const unavailabeInRecs =
+      // TODO: use this disjunction pattern for all other conditions
+      (solutionType === SolutionType['recommendation'] &&
+        !('recommendation' in definition)) ||
+      ('recommendation' in definition &&
+        definition['recommendation'] === false &&
+        solutionType === SolutionType['recommendation']);
+
     if (
       unavailableInSearchSolutionType ||
       unavailableInListingSolutionType ||
-      unavailableInStandaloneSolutionType
+      unavailableInStandaloneSolutionType ||
+      unavailabeInRecs
     ) {
       return null;
     }
