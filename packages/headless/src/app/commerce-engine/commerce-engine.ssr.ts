@@ -308,7 +308,7 @@ export function defineCommerceEngine<
         async (...params: FetchStaticStateParameters) => {
           // TODO: no need for ...params since it is a list of controllers
           console.log(params, ((params || [])[0] as string[])?.length); // Something is wrong with the type here
-          // FIXME: just WOW
+          // FIXME: just WOW!
           ((params || [])[0] as Array<string>).forEach((controller) => {
             controllerList.add(controller);
           });
