@@ -19,8 +19,8 @@ import {
 } from '../../utils/utils.js';
 import {
   buildControllerDefinitions,
-  buildRecommendationFilter,
   createStaticState,
+  filterRecommendationControllers,
 } from '../commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionsMap,
@@ -188,7 +188,7 @@ export function defineCommerceEngine<
     SolutionType
   >;
   type BuildFunction = Definition['build'];
-  type FetchStaticStateFunction = Definition['fetchStaticState']; // TODO: avoir un fetch pour les recommendations
+  type FetchStaticStateFunction = Definition['fetchStaticState'];
   type HydrateStaticStateFunction = Definition['hydrateStaticState'];
   type FetchStaticStateFromBuildResultFunction =
     FetchStaticStateFunction['fromBuildResult'];
@@ -201,18 +201,16 @@ export function defineCommerceEngine<
     Parameters<FetchStaticStateFromBuildResultFunction>;
   type HydrateStaticStateFromBuildResultParameters =
     Parameters<HydrateStaticStateFromBuildResultFunction>;
+  type Controllers = InferControllersMapFromDefinition<
+    TControllerDefinitions,
+    SolutionType
+  >;
+  type ControllerDefinitionKeys = keyof Controllers;
   type BuildResult = {
     engine: SSRCommerceEngine;
-    controllers: InferControllersMapFromDefinition<
-      TControllerDefinitions,
-      SolutionType
-    >;
-  }; // TODO: check if can remove the cast
-
-  // TODO: ideally , we only want to execute that for recommendation stuff
-  // TODO: get rid of that here. need to be computed in the fetch static state now
-  const recommendationFilter = () =>
-    buildRecommendationFilter(controllerDefinitions ?? {});
+    controllers: Controllers;
+  };
+  const logger = buildLogger(options.loggerOptions);
 
   const getOptions = () => {
     return engineOptions;
@@ -226,7 +224,6 @@ export function defineCommerceEngine<
   const buildFactory =
     <T extends SolutionType>(solutionType: T, count: number = 0) =>
     async (...[buildOptions]: BuildParameters) => {
-      const logger = buildLogger(options.loggerOptions);
       if (!getOptions().navigatorContextProvider) {
         logger.warn(
           '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
@@ -306,34 +303,40 @@ export function defineCommerceEngine<
       }
     );
 
-  // TODO: enlever ce hack!
-  const controllerList: Set<string> = new Set();
-
   // TODO: remove factory
   const fetchStaticStateFactoryForRecommendation: () => FetchStaticStateFunction =
     () =>
       composeFunction(
-        async (...params: FetchStaticStateParameters) => {
-          // TODO: no need for ...params since it is a list of controllers
-          console.log(params, ((params || [])[0] as string[])?.length); // Something is wrong with the type here
-          // FIXME: just WOW!
-          ((params || [])[0] as Array<string>).forEach((controller) => {
-            controllerList.add(controller);
-          });
+        async (
+          ...params: [controllerKeys: Array<ControllerDefinitionKeys>]
+        ) => {
+          const [controllerKeys] = params;
+          const uniqueControllerKeys = Array.from(new Set(controllerKeys));
+          if (uniqueControllerKeys.length !== controllerKeys.length) {
+            logger.warn(
+              '[WARNING] Duplicate controller keys detected in recommendation fetchStaticState call. Make sure to provide only unique controller keys.'
+            );
+          }
+
+          const validControllerNames = Object.keys(controllerDefinitions ?? {});
+          const allowedRecommendationKeys = uniqueControllerKeys.filter(
+            (key: string) => validControllerNames.includes(key)
+          );
+
           if (!getOptions().navigatorContextProvider) {
-            // TODO: KIT-3409 - implement a logger to log SSR warnings/errors
-            console.warn(
+            logger.warn(
               '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
             );
           }
 
           const buildResult = (await buildFactory(
             SolutionType.recommendation,
-            ((params || [])[0] as string[])?.length // TODO: fix that mess
+            allowedRecommendationKeys.length
           )(...params)) as BuildResult; // TODO: check if can remove the cast
           const staticState =
             await fetchStaticStateFactoryForRecommendation().fromBuildResult({
               buildResult,
+              recommendationControllerKeys: allowedRecommendationKeys,
             });
           return staticState;
         },
@@ -344,15 +347,15 @@ export function defineCommerceEngine<
             const [
               {
                 buildResult: {engine, controllers},
+                recommendationControllerKeys,
               },
             ] = params;
 
-            recommendationFilter().refresh(
+            filterRecommendationControllers(
               controllers,
-              Array.from(controllerList) // TODO: find the right type
-            ); // TODO: filter out the controllers to only include the one in the static state params
+              controllerDefinitions ?? {}
+            ).refresh(recommendationControllerKeys);
 
-            // TODO: should be only one searchAction for search and listing
             const searchActions = await Promise.all(
               engine.waitForRequestCompletedAction()
             );
@@ -477,7 +480,7 @@ export function defineCommerceEngine<
   };
 }
 
-// // Sandbox
+// Sandbox
 // const {
 //   recommendationEngineDefinition,
 //   searchEngineDefinition,
@@ -506,8 +509,8 @@ export function defineCommerceEngine<
 
 // const b = await recommendationEngineDefinition.fetchStaticState([
 //   'trending',
-//   'popular',
 // ]);
+// const b = await recommendationEngineDefinition.fetchStaticState.fromBuildResult({buildResult:{controllers:{}}})
 // // b.controllers.;
 
 // const a = await searchEngineDefinition.fetchStaticState(); // TODO: fix typing if controller is set to {search: false}

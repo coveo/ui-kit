@@ -139,18 +139,24 @@ export function ensureAtLeastOneSolutionType(
   }
 }
 
-export function buildRecommendationFilter<
+export function filterRecommendationControllers<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
->(controllerDefinitions: TControllerDefinitions) {
+>(
+  controllers: Record<string, Controller>, // TODO: or  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>
+  controllerDefinitions: TControllerDefinitions
+) {
   const slotIdSet = new Set<string>();
 
   const isRecommendationDefinition = <
     C extends ControllerDefinition<TEngine, Controller>,
   >(
-    controller: C
-  ): controller is C & RecommendationsDefinitionMeta => {
-    return 'recommendation' in controller;
+    controllerDefinition: C
+  ): controllerDefinition is C & RecommendationsDefinitionMeta => {
+    return (
+      'recommendation' in controllerDefinition &&
+      controllerDefinition.recommendation === true
+    );
   };
 
   const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
@@ -180,22 +186,17 @@ export function buildRecommendationFilter<
 
   return {
     /**
-     * Gets the number of recommendation controllers from the controller definitions map.
-     *
-     * @returns {number} The number of recommendation controllers in the controller definition map
-     */
-    get count() {
-      return name.length;
-    },
-
-    /**
      * Go through all the controllers passed in argument and only refresh recommendation controllers.
      *
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh(controllers: Record<string, Controller>, whitelist: string[]) {
+    refresh(whitelist?: string[]) {
+      if (whitelist === undefined) {
+        return;
+      }
       // TODO: FIND a better way
+      // TODO: do not refresh multiple recommendation controllers for the same slotId and productId
       const isRecommendationController = (key: string) =>
         name.includes(key) && whitelist.includes(key);
 
