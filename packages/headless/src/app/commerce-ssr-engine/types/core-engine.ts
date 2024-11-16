@@ -1,5 +1,6 @@
 import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {CommerceEngineDefinition} from '../../commerce-engine/commerce-engine.ssr.js';
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
@@ -7,6 +8,7 @@ import type {
   FromBuildResult,
   FromBuildResultOptions,
 } from '../../ssr-engine/types/from-build-result.js';
+import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {Build, BuildOptions} from './build.js';
 import {
   ControllerDefinitionsMap,
@@ -118,3 +120,61 @@ export type InferBuildResult<
     build(...args: unknown[]): Promise<unknown>;
   },
 > = Awaited<ReturnType<T['build']>>;
+
+type CustomMap = ControllerDefinitionsMap<SSRCommerceEngine, Controller>;
+
+export type CommerceControllerDefinitionsMap = ControllerDefinitionsMap<
+  SSRCommerceEngine,
+  Controller
+>;
+
+type Definition<
+  TControllerDefinitions extends CommerceControllerDefinitionsMap,
+> = CommerceEngineDefinition<TControllerDefinitions, SolutionType>;
+
+export type BuildFunction<TControllerDefinitions extends CustomMap> =
+  Definition<TControllerDefinitions>['build'];
+
+export type FetchStaticStateFunction<TControllerDefinitions extends CustomMap> =
+  Definition<TControllerDefinitions>['fetchStaticState'];
+
+export type HydrateStaticStateFunction<
+  TControllerDefinitions extends CustomMap,
+> = Definition<TControllerDefinitions>['hydrateStaticState'];
+
+export type FetchStaticStateFromBuildResultFunction<
+  TControllerDefinitions extends CustomMap,
+> = FetchStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
+
+export type HydrateStaticStateFromBuildResultFunction<
+  TControllerDefinitions extends CustomMap,
+> = HydrateStaticStateFunction<TControllerDefinitions>['fromBuildResult'];
+
+export type BuildParameters<TControllerDefinitions extends CustomMap> =
+  Parameters<BuildFunction<TControllerDefinitions>>;
+
+export type FetchStaticStateParameters<
+  TControllerDefinitions extends CustomMap,
+> = Parameters<FetchStaticStateFunction<TControllerDefinitions>>;
+
+export type HydrateStaticStateParameters<
+  TControllerDefinitions extends CustomMap,
+> = Parameters<HydrateStaticStateFunction<TControllerDefinitions>>;
+
+export type FetchStaticStateFromBuildResultParameters<
+  TControllerDefinitions extends CustomMap,
+> = Parameters<FetchStaticStateFromBuildResultFunction<TControllerDefinitions>>;
+
+export type HydrateStaticStateFromBuildResultParameters<
+  TControllerDefinitions extends CustomMap,
+> = Parameters<
+  HydrateStaticStateFromBuildResultFunction<TControllerDefinitions>
+>;
+
+export type Controllers<TControllerDefinitions extends CustomMap> =
+  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>;
+
+export type BuildResult<TControllerDefinitions extends CustomMap> = {
+  engine: SSRCommerceEngine;
+  controllers: Controllers<TControllerDefinitions>;
+};

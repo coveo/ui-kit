@@ -1,5 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {buildBaseCommerceAPIRequest} from '../../../features/commerce/common/actions.js';
 import {SolutionType} from '../../commerce-ssr-engine/types/common.js';
 import type {EngineStaticState} from '../../commerce-ssr-engine/types/common.js';
 import type {CoreEngine, CoreEngineNext} from '../../engine.js';
@@ -59,4 +58,3 @@ export type FetchStaticState<
         EngineStaticState<TSearchAction, TControllersStaticState>
       >;
     };
-buildBaseCommerceAPIRequest;

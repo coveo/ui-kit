@@ -1,10 +1,6 @@
 /**
  * Utility functions to be used for Commerce Server Side Rendering.
  */
-import {Action, UnknownAction} from '@reduxjs/toolkit';
-import {stateKey} from '../../app/state-key.js';
-import {buildProductListing} from '../../controllers/commerce/product-listing/headless-product-listing.js';
-import {buildSearch} from '../../controllers/commerce/search/headless-search.js';
 import type {Controller} from '../../controllers/controller/headless-controller.js';
 // import {
 //   defineContext,
@@ -14,132 +10,21 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 //   getSampleCommerceEngineConfiguration,
 // } from '../../ssr-commerce.index.js';
 import {
-  createWaitForActionMiddleware,
-  createWaitForActionMiddlewareForRecommendation,
-} from '../../utils/utils.js';
-import {
-  buildControllerDefinitions,
-  createStaticState,
-  filterRecommendationControllers,
-} from '../commerce-ssr-engine/common.js';
+  buildFactory,
+  CommerceEngineDefinitionOptions,
+  SSRCommerceEngine,
+} from '../commerce-ssr-engine/factories/build-factory.js';
+import {hydrateStaticStateFactory} from '../commerce-ssr-engine/factories/hydrate-state-factory.js';
+import {hydrateRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-hydrate-state-factory.js';
+import {fetchRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-static-state-factory.js';
+import {fetchStaticStateFactory} from '../commerce-ssr-engine/factories/static-state-factory.js';
 import {
   ControllerDefinitionsMap,
-  EngineStaticState,
-  InferControllerPropsMapFromDefinitions,
-  InferControllersMapFromDefinition,
-  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
 } from '../commerce-ssr-engine/types/common.js';
-import {
-  EngineDefinition,
-  EngineDefinitionOptions,
-} from '../commerce-ssr-engine/types/core-engine.js';
-import {buildLogger} from '../logger.js';
+import {EngineDefinition} from '../commerce-ssr-engine/types/core-engine.js';
 import {NavigatorContextProvider} from '../navigatorContextProvider.js';
-import {composeFunction} from '../ssr-engine/common.js';
-import {
-  CommerceEngine,
-  CommerceEngineOptions,
-  buildCommerceEngine,
-} from './commerce-engine.js';
-
-/**
- * The SSR commerce engine.
- */
-export interface SSRCommerceEngine extends CommerceEngine {
-  /**
-   * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
-   */
-  waitForRequestCompletedAction(): Promise<Action>[];
-}
-
-export type CommerceEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
-> = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
-
-function isListingFetchCompletedAction(action: unknown): action is Action {
-  return /^commerce\/productListing\/fetch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
-
-function isSearchCompletedAction(action: unknown): action is Action {
-  return /^commerce\/search\/executeSearch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
-
-function isRecommendationCompletedAction(action: unknown): action is Action {
-  return /^commerce\/recommendations\/fetch\/(fulfilled|rejected)$/.test(
-    (action as UnknownAction).type
-  );
-}
-
-function noSearchActionRequired(_action: unknown): _action is Action {
-  return true;
-}
-
-function buildSSRCommerceEngine(
-  solutionType: SolutionType,
-  options: CommerceEngineOptions,
-  recommendationCount: number
-): SSRCommerceEngine {
-  let actionCompletionMiddleware: ReturnType<
-    typeof createWaitForActionMiddleware
-  >;
-
-  const middlewares: ReturnType<typeof createWaitForActionMiddleware>[] = [];
-  const memo: Set<string> = new Set();
-
-  switch (solutionType) {
-    case SolutionType.listing:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isListingFetchCompletedAction
-      );
-      middlewares.push(actionCompletionMiddleware);
-      break;
-    case SolutionType.search:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        isSearchCompletedAction
-      );
-      middlewares.push(actionCompletionMiddleware);
-      break;
-    case SolutionType.recommendation:
-      middlewares.push(
-        ...Array.from({length: recommendationCount}, () =>
-          createWaitForActionMiddlewareForRecommendation(
-            isRecommendationCompletedAction,
-            memo
-          )
-        )
-      );
-      break;
-    default:
-      actionCompletionMiddleware = createWaitForActionMiddleware(
-        noSearchActionRequired
-      );
-  }
-
-  const commerceEngine = buildCommerceEngine({
-    ...options,
-    middlewares: [
-      ...(options.middlewares ?? []),
-      ...middlewares.map(({middleware}) => middleware),
-    ],
-  });
-
-  return {
-    ...commerceEngine,
-
-    get [stateKey]() {
-      return commerceEngine[stateKey];
-    },
-
-    waitForRequestCompletedAction() {
-      return [...middlewares.map(({promise}) => promise)];
-    },
-  };
-}
+import {CommerceEngineOptions} from './commerce-engine.js';
 
 export interface CommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
@@ -183,34 +68,6 @@ export function defineCommerceEngine<
   >;
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
-  type Definition = CommerceEngineDefinition<
-    TControllerDefinitions,
-    SolutionType
-  >;
-  type BuildFunction = Definition['build'];
-  type FetchStaticStateFunction = Definition['fetchStaticState'];
-  type HydrateStaticStateFunction = Definition['hydrateStaticState'];
-  type FetchStaticStateFromBuildResultFunction =
-    FetchStaticStateFunction['fromBuildResult'];
-  type HydrateStaticStateFromBuildResultFunction =
-    HydrateStaticStateFunction['fromBuildResult'];
-  type BuildParameters = Parameters<BuildFunction>;
-  type FetchStaticStateParameters = Parameters<FetchStaticStateFunction>;
-  type HydrateStaticStateParameters = Parameters<HydrateStaticStateFunction>;
-  type FetchStaticStateFromBuildResultParameters =
-    Parameters<FetchStaticStateFromBuildResultFunction>;
-  type HydrateStaticStateFromBuildResultParameters =
-    Parameters<HydrateStaticStateFromBuildResultFunction>;
-  type Controllers = InferControllersMapFromDefinition<
-    TControllerDefinitions,
-    SolutionType
-  >;
-  type ControllerDefinitionKeys = keyof Controllers;
-  type BuildResult = {
-    engine: SSRCommerceEngine;
-    controllers: Controllers;
-  };
-  const logger = buildLogger(options.loggerOptions);
 
   const getOptions = () => {
     return engineOptions;
@@ -221,247 +78,49 @@ export function defineCommerceEngine<
   ) => {
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
-  const buildFactory =
-    <T extends SolutionType>(solutionType: T, count: number = 0) =>
-    async (...[buildOptions]: BuildParameters) => {
-      if (!getOptions().navigatorContextProvider) {
-        logger.warn(
-          '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-        );
-      }
-      const engine = buildSSRCommerceEngine(
-        solutionType,
-        buildOptions && 'extend' in buildOptions && buildOptions?.extend
-          ? await buildOptions.extend(getOptions())
-          : getOptions(),
-        // TODO: clean that
-        solutionType === SolutionType.recommendation ? count : 0 // TODO: avoid this by creating a build factory for recs
-      );
-      const controllers = buildControllerDefinitions({
-        definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
-        engine,
-        solutionType,
-        propsMap: (buildOptions && 'controllers' in buildOptions
-          ? buildOptions.controllers
-          : {}) as InferControllerPropsMapFromDefinitions<TControllerDefinitions>,
-      });
 
-      return {
-        engine,
-        controllers,
-      };
-    };
+  const build = buildFactory<TControllerDefinitions>(
+    controllerDefinitions!, // TODO: find a way to get rid of the !
+    getOptions()
+  );
+  const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
+    controllerDefinitions!,
+    getOptions()
+  );
+  const hydrateStaticState = hydrateStaticStateFactory<TControllerDefinitions>(
+    controllerDefinitions!,
+    getOptions()
+  );
 
-  const fetchStaticStateFactory: (
-    solutionType: SolutionType
-  ) => FetchStaticStateFunction = (solutionType: SolutionType) =>
-    composeFunction(
-      async (...params: FetchStaticStateParameters) => {
-        const buildResult = await buildFactory(solutionType)(...params);
-        const staticState = await fetchStaticStateFactory(
-          solutionType
-        ).fromBuildResult({
-          buildResult,
-        });
-        return staticState;
-      },
-      {
-        fromBuildResult: async (
-          ...params: FetchStaticStateFromBuildResultParameters
-        ) => {
-          const [
-            {
-              buildResult: {engine, controllers},
-            },
-          ] = params;
-
-          switch (solutionType) {
-            case SolutionType.listing:
-              buildProductListing(engine).executeFirstRequest();
-              break;
-            case SolutionType.search:
-              buildSearch(engine).executeFirstSearch();
-              break;
-          }
-
-          // TODO: should be only one searchAction for search and listing
-          const searchActions = await Promise.all(
-            engine.waitForRequestCompletedAction()
-          );
-
-          return createStaticState({
-            searchActions,
-            controllers,
-          }) as EngineStaticState<
-            UnknownAction,
-            InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-              TControllerDefinitions,
-              SolutionType
-            >
-          >;
-        },
-      }
+  const fetchRecommendationStaticState =
+    fetchRecommendationStaticStateFactory<TControllerDefinitions>(
+      controllerDefinitions!,
+      getOptions() // TODO: add count here
     );
 
-  // TODO: remove factory
-  const fetchStaticStateFactoryForRecommendation: () => FetchStaticStateFunction =
-    () =>
-      composeFunction(
-        async (
-          ...params: [controllerKeys: Array<ControllerDefinitionKeys>]
-        ) => {
-          const [controllerKeys] = params;
-          const uniqueControllerKeys = Array.from(new Set(controllerKeys));
-          if (uniqueControllerKeys.length !== controllerKeys.length) {
-            logger.warn(
-              '[WARNING] Duplicate controller keys detected in recommendation fetchStaticState call. Make sure to provide only unique controller keys.'
-            );
-          }
-
-          const validControllerNames = Object.keys(controllerDefinitions ?? {});
-          const allowedRecommendationKeys = uniqueControllerKeys.filter(
-            (key: string) => validControllerNames.includes(key)
-          );
-
-          if (!getOptions().navigatorContextProvider) {
-            logger.warn(
-              '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
-            );
-          }
-
-          const buildResult = (await buildFactory(
-            SolutionType.recommendation,
-            allowedRecommendationKeys.length
-          )(...params)) as BuildResult; // TODO: check if can remove the cast
-          const staticState =
-            await fetchStaticStateFactoryForRecommendation().fromBuildResult({
-              buildResult,
-              recommendationControllerKeys: allowedRecommendationKeys,
-            });
-          return staticState;
-        },
-        {
-          fromBuildResult: async (
-            ...params: FetchStaticStateFromBuildResultParameters
-          ) => {
-            const [
-              {
-                buildResult: {engine, controllers},
-                recommendationControllerKeys,
-              },
-            ] = params;
-
-            filterRecommendationControllers(
-              controllers,
-              controllerDefinitions ?? {}
-            ).refresh(recommendationControllerKeys);
-
-            const searchActions = await Promise.all(
-              engine.waitForRequestCompletedAction()
-            );
-
-            return createStaticState({
-              searchActions,
-              controllers,
-            }) as EngineStaticState<
-              UnknownAction,
-              InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-                TControllerDefinitions,
-                SolutionType
-              >
-            >;
-          },
-        }
-      );
-
-  const hydrateStaticStateFactory: (
-    solutionType: SolutionType
-  ) => HydrateStaticStateFunction = (solutionType: SolutionType) =>
-    composeFunction(
-      async (...params: HydrateStaticStateParameters) => {
-        const buildResult = await buildFactory(solutionType)(
-          ...(params as BuildParameters)
-        );
-        const staticState = await hydrateStaticStateFactory(
-          solutionType
-        ).fromBuildResult({
-          buildResult,
-          searchActions: params[0]!.searchActions,
-        });
-        return staticState;
-      },
-      {
-        fromBuildResult: async (
-          ...params: HydrateStaticStateFromBuildResultParameters
-        ) => {
-          const [
-            {
-              buildResult: {engine, controllers},
-              searchActions,
-            },
-          ] = params;
-
-          // TODO: should be only one searchAction for search and listing
-          searchActions.forEach((action) => {
-            engine.dispatch(action);
-          });
-          await engine.waitForRequestCompletedAction();
-          return {engine, controllers};
-        },
-      }
+  const hydrateRecommendationStaticState =
+    hydrateRecommendationStaticStateFactory<TControllerDefinitions>(
+      controllerDefinitions!,
+      getOptions()
     );
-
-  const hydrateStaticStateFactoryForRecommendation: () => HydrateStaticStateFunction =
-    () =>
-      composeFunction(
-        async (...params: HydrateStaticStateParameters) => {
-          const buildResult = (await buildFactory(SolutionType.recommendation)(
-            ...(params as BuildParameters)
-          )) as BuildResult; // TODO: check if can remove the cast
-          const staticState =
-            await hydrateStaticStateFactoryForRecommendation().fromBuildResult({
-              buildResult,
-              searchActions: params[0]!.searchActions,
-            });
-          return staticState;
-        },
-        {
-          fromBuildResult: async (
-            ...params: HydrateStaticStateFromBuildResultParameters
-          ) => {
-            const [
-              {
-                buildResult: {engine, controllers},
-                searchActions,
-              },
-            ] = params;
-
-            searchActions.forEach((action) => {
-              engine.dispatch(action);
-            });
-            await engine.waitForRequestCompletedAction();
-            return {engine, controllers};
-          },
-        }
-      );
 
   return {
     listingEngineDefinition: {
-      build: buildFactory(SolutionType.listing),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.listing),
-      hydrateStaticState: hydrateStaticStateFactory(SolutionType.listing),
+      build: build(SolutionType.listing),
+      fetchStaticState: fetchStaticState(SolutionType.listing),
+      hydrateStaticState: hydrateStaticState(SolutionType.listing),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     searchEngineDefinition: {
-      build: buildFactory(SolutionType.search),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.search),
-      hydrateStaticState: hydrateStaticStateFactory(SolutionType.search),
+      build: build(SolutionType.search),
+      fetchStaticState: fetchStaticState(SolutionType.search),
+      hydrateStaticState: hydrateStaticState(SolutionType.search),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
     recommendationEngineDefinition: {
-      build: buildFactory(SolutionType.recommendation),
-      fetchStaticState: fetchStaticStateFactoryForRecommendation(),
-      hydrateStaticState: hydrateStaticStateFactoryForRecommendation(),
+      build: build(SolutionType.recommendation), // TODO: add count here
+      fetchStaticState: fetchRecommendationStaticState,
+      hydrateStaticState: hydrateRecommendationStaticState,
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<
       TControllerDefinitions,
@@ -469,9 +128,9 @@ export function defineCommerceEngine<
     >,
     // TODO:  make the standaloneEngineDefinition not async since there are no search executed
     standaloneEngineDefinition: {
-      build: buildFactory(SolutionType.standalone),
-      fetchStaticState: fetchStaticStateFactory(SolutionType.standalone),
-      hydrateStaticState: hydrateStaticStateFactory(SolutionType.standalone),
+      build: build(SolutionType.standalone),
+      fetchStaticState: fetchStaticState(SolutionType.standalone),
+      hydrateStaticState: hydrateStaticState(SolutionType.standalone),
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<
       TControllerDefinitions,

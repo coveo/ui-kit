@@ -67,17 +67,18 @@
  * @module SSR Commerce
  */
 
+export type {
+  CommerceEngineDefinitionOptions,
+  SSRCommerceEngine,
+} from './app/commerce-ssr-engine/factories/build-factory.js';
+
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-export type {
-  SSRCommerceEngine as CommerceEngine,
-  CommerceEngineDefinition,
-  CommerceEngineDefinitionOptions,
-} from './app/commerce-engine/commerce-engine.ssr.js';
+export type {CommerceEngineDefinition} from './app/commerce-engine/commerce-engine.ssr.js';
 export {defineCommerceEngine} from './app/commerce-engine/commerce-engine.ssr.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 
