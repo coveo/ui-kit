@@ -2,13 +2,6 @@
  * Utility functions to be used for Commerce Server Side Rendering.
  */
 import type {Controller} from '../../controllers/controller/headless-controller.js';
-// import {
-//   defineContext,
-//   defineParameterManager,
-//   defineRecommendations,
-//   defineStandaloneSearchBox,
-//   getSampleCommerceEngineConfiguration,
-// } from '../../ssr-commerce.index.js';
 import {
   buildFactory,
   CommerceEngineDefinitionOptions,
@@ -89,13 +82,11 @@ export function defineCommerceEngine<
     controllerDefinitions,
     getOptions()
   );
-
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
       getOptions()
     );
-
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions,
@@ -136,37 +127,3 @@ export function defineCommerceEngine<
     >,
   };
 }
-
-/* Sandbox */
-// const {
-//   recommendationEngineDefinition,
-//   searchEngineDefinition,
-//   standaloneEngineDefinition,
-//   listingEngineDefinition
-// } = defineCommerceEngine({
-//   configuration: getSampleCommerceEngineConfiguration(),
-//   controllers: {
-//     // standaloneSearchBox: defineStandaloneSearchBox({
-//     //   options: {redirectionUrl: 'rest'},
-//     // }),
-//     // context: defineContext(),
-//     searchParam: defineParameterManager({search: false}),
-//     trending: defineRecommendations({
-//       options: {slotId: 'ttt'},
-//     }),
-//     popular: defineRecommendations({
-//       options: {slotId: 'ppp'},
-//     }),
-//   },
-// });
-
-// // TODO: should have a way to select which recommendation to fetch
-// const r = await listingEngineDefinition.hydrateStaticState({}) // TODO: now do the same with hydration
-
-// const b = await standaloneEngineDefinition.fetchStaticState()
-
-// const b = await recommendationEngineDefinition.fetchStaticState(['popular'])
-// // b.controllers.;
-
-// const a = await searchEngineDefinition.fetchStaticState(); // TODO: fix typing if controller is set to {search: false}
-// // a.controllers.; // TODO: should throw an error since it's not defined in search
