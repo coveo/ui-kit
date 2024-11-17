@@ -78,27 +78,27 @@ export function defineCommerceEngine<
   };
 
   const build = buildFactory<TControllerDefinitions>(
-    controllerDefinitions!, // TODO: find a way to get rid of the !
+    controllerDefinitions,
     getOptions()
   );
   const fetchStaticState = fetchStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions!,
+    controllerDefinitions,
     getOptions()
   );
   const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
-    controllerDefinitions!,
+    controllerDefinitions,
     getOptions()
   );
 
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions!,
+      controllerDefinitions,
       getOptions()
     );
 
   const hydrateRecommendationStaticState =
     hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
-      controllerDefinitions!,
+      controllerDefinitions,
       getOptions()
     );
 

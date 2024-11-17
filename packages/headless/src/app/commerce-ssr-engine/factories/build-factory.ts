@@ -126,7 +126,7 @@ function buildSSRCommerceEngine(
 
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions,
+    controllerDefinitions: TControllerDefinitions | undefined,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   <T extends SolutionType>(solutionType: T) =>

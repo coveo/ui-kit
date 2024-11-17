@@ -15,13 +15,13 @@ import {
 export const hydratedStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) => (
   solutionType: SolutionType
 ) => HydrateStaticStateFunction<TControllerDefinitions> =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions,
+    controllerDefinitions: TControllerDefinitions | undefined,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   (solutionType: SolutionType) =>

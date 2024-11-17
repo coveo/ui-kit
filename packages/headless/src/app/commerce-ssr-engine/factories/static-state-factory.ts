@@ -22,13 +22,13 @@ import {
 export const fetchStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ) => (
   solutionType: SolutionType
 ) => FetchStaticStateFunction<TControllerDefinitions> =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
-    controllerDefinitions: TControllerDefinitions,
+    controllerDefinitions: TControllerDefinitions | undefined,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
   (solutionType: SolutionType) =>
@@ -64,6 +64,10 @@ export const fetchStaticStateFactory: <
             case SolutionType.search:
               buildSearch(engine).executeFirstSearch();
               break;
+            case SolutionType.recommendation:
+              throw new Error(
+                'You are using the wrong engine definition. For recommendations, use the recommendation engine definition instead'
+              );
           }
 
           const searchActions = await Promise.all(

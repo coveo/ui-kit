@@ -22,7 +22,7 @@ import {
 export function fetchRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
   type ControllerDefinitionKeys = keyof Controllers<TControllerDefinitions>;

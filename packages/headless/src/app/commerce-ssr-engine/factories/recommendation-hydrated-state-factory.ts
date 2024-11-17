@@ -16,7 +16,7 @@ import {
 export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
-  controllerDefinitions: TControllerDefinitions,
+  controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): HydrateStaticStateFunction<TControllerDefinitions> {
   return composeFunction(
