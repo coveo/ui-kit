@@ -69,7 +69,7 @@
 
 export type {
   CommerceEngineDefinitionOptions,
-  SSRCommerceEngine,
+  SSRCommerceEngine as CommerceEngine,
 } from './app/commerce-ssr-engine/factories/build-factory.js';
 
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
