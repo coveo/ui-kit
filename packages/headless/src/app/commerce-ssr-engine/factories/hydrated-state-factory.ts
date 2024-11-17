@@ -12,7 +12,7 @@ import {
   CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
-export const hydrateStaticStateFactory: <
+export const hydratedStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   controllerDefinitions: TControllerDefinitions,
@@ -36,7 +36,7 @@ export const hydrateStaticStateFactory: <
           ...(params as BuildParameters<TControllerDefinitions>)
         );
         const staticStateBuild =
-          await hydrateStaticStateFactory<TControllerDefinitions>(
+          await hydratedStaticStateFactory<TControllerDefinitions>(
             controllerDefinitions,
             options
           )(solutionType);
@@ -57,7 +57,6 @@ export const hydrateStaticStateFactory: <
             },
           ] = params;
 
-          // TODO: should be only one searchAction for search and listing
           searchActions.forEach((action) => {
             engine.dispatch(action);
           });

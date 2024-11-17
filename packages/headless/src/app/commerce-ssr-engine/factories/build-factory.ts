@@ -19,14 +19,9 @@ import {
 } from '../types/common.js';
 import {
   BuildParameters,
+  CommerceControllerDefinitionsMap,
   EngineDefinitionOptions,
 } from '../types/core-engine.js';
-
-// TODO: rename
-export interface RecommendationExtraOptions {
-  // TODO: rename
-  count: number;
-}
 
 /**
  * The SSR commerce engine.
@@ -130,19 +125,11 @@ function buildSSRCommerceEngine(
 }
 
 export const buildFactory =
-  <
-    TControllerDefinitions extends ControllerDefinitionsMap<
-      SSRCommerceEngine,
-      Controller
-    >,
-  >(
+  <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions,
     options: CommerceEngineDefinitionOptions<TControllerDefinitions>
   ) =>
-  <T extends SolutionType>(
-    solutionType: T,
-    solutionTypeOptions?: RecommendationExtraOptions
-  ) =>
+  <T extends SolutionType>(solutionType: T) =>
   async (...[buildOptions]: BuildParameters<TControllerDefinitions>) => {
     const logger = buildLogger(options.loggerOptions);
     if (!options.navigatorContextProvider) {
@@ -150,15 +137,18 @@ export const buildFactory =
         '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
       );
     }
+
     const engine = buildSSRCommerceEngine(
       solutionType,
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(options)
         : options,
-      solutionType === SolutionType.recommendation
-        ? solutionTypeOptions?.count || 0
+      solutionType === SolutionType.recommendation &&
+        Array.isArray(buildOptions)
+        ? buildOptions.length
         : 0
     );
+
     const controllers = buildControllerDefinitions({
       definitionsMap: (controllerDefinitions ?? {}) as TControllerDefinitions,
       engine,

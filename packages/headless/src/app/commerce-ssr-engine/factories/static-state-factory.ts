@@ -19,7 +19,6 @@ import {
   CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
-// TODO: this is not a factory. either make it a factory or rename it
 export const fetchStaticStateFactory: <
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
@@ -45,7 +44,6 @@ export const fetchStaticStateFactory: <
         )(solutionType);
         const staticState = await staticStateBuild.fromBuildResult({
           buildResult,
-          // recommendationControllerKeys // TODO: is missing
         });
         return staticState;
       },
@@ -68,7 +66,6 @@ export const fetchStaticStateFactory: <
               break;
           }
 
-          // TODO: should be only one searchAction for search and listing
           const searchActions = await Promise.all(
             engine.waitForRequestCompletedAction()
           );

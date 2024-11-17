@@ -53,18 +53,18 @@ export function fetchRecommendationStaticStateFactory<
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
-      )(SolutionType.recommendation, {count: 1111}); // TODO: FIXME:
+      )(SolutionType.recommendation);
 
       const buildResult = (await solutionTypeBuild(
-        ...params
-      )) as BuildResult<TControllerDefinitions>; // TODO: check if can remove the cast
+        allowedRecommendationKeys
+      )) as BuildResult<TControllerDefinitions>;
 
       const staticState = await fetchRecommendationStaticStateFactory(
         controllerDefinitions,
         options
       ).fromBuildResult({
         buildResult,
-        recommendationControllerKeys: allowedRecommendationKeys,
+        allowedRecommendationKeys,
       });
       return staticState;
     },
@@ -75,14 +75,14 @@ export function fetchRecommendationStaticStateFactory<
         const [
           {
             buildResult: {engine, controllers},
-            recommendationControllerKeys,
+            allowedRecommendationKeys,
           },
         ] = params;
 
         filterRecommendationControllers(
           controllers,
           controllerDefinitions ?? {}
-        ).refresh(recommendationControllerKeys);
+        ).refresh(allowedRecommendationKeys);
 
         const searchActions = await Promise.all(
           engine.waitForRequestCompletedAction()

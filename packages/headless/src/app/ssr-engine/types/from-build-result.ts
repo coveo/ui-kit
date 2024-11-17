@@ -11,10 +11,12 @@ export interface FromBuildResultOptions<
   buildResult: EngineDefinitionBuildResult<TEngine, TControllers>;
   /**
    * An optional array of keys representing the recommendation controllers to refresh.
-   * If a recommendation key defined in your engine definition is present in this list, a recommendation query will be triggered against the API.
+   * If a recommendation key defined in your engine definition is present in this list, the associate recommendation controller
+   * will query the API.
+   *
    * This is applicable only if the engine is a recommendation engine.
    */
-  recommendationControllerKeys?: (keyof TControllers)[];
+  allowedRecommendationKeys?: (keyof TControllers)[];
 }
 
 export interface FromBuildResult<

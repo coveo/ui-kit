@@ -13,7 +13,7 @@ import {
   CommerceEngineDefinitionOptions,
 } from './build-factory.js';
 
-export function hydrateRecommendationStaticStateFactory<
+export function hydratedRecommendationStaticStateFactory<
   TControllerDefinitions extends CommerceControllerDefinitionsMap,
 >(
   controllerDefinitions: TControllerDefinitions,
@@ -24,13 +24,13 @@ export function hydrateRecommendationStaticStateFactory<
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
-      )(SolutionType.recommendation, {count: 1111}); // TODO: FIXME:
+      )(SolutionType.recommendation);
 
       const buildResult = (await solutionTypeBuild(
         ...(params as BuildParameters<TControllerDefinitions>)
-      )) as BuildResult<TControllerDefinitions>; // TODO: check if can remove the cast
+      )) as BuildResult<TControllerDefinitions>;
 
-      const staticState = await hydrateRecommendationStaticStateFactory(
+      const staticState = await hydratedRecommendationStaticStateFactory(
         controllerDefinitions,
         options
       ).fromBuildResult({

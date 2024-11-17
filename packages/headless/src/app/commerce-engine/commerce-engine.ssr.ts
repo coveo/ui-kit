@@ -14,8 +14,8 @@ import {
   CommerceEngineDefinitionOptions,
   SSRCommerceEngine,
 } from '../commerce-ssr-engine/factories/build-factory.js';
-import {hydrateStaticStateFactory} from '../commerce-ssr-engine/factories/hydrate-state-factory.js';
-import {hydrateRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-hydrate-state-factory.js';
+import {hydratedStaticStateFactory} from '../commerce-ssr-engine/factories/hydrated-state-factory.js';
+import {hydratedRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-hydrated-state-factory.js';
 import {fetchRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-static-state-factory.js';
 import {fetchStaticStateFactory} from '../commerce-ssr-engine/factories/static-state-factory.js';
 import {
@@ -69,9 +69,7 @@ export function defineCommerceEngine<
 } {
   const {controllers: controllerDefinitions, ...engineOptions} = options;
 
-  const getOptions = () => {
-    return engineOptions;
-  };
+  const getOptions = () => engineOptions;
 
   const setNavigatorContextProvider = (
     navigatorContextProvider: NavigatorContextProvider
@@ -87,7 +85,7 @@ export function defineCommerceEngine<
     controllerDefinitions!,
     getOptions()
   );
-  const hydrateStaticState = hydrateStaticStateFactory<TControllerDefinitions>(
+  const hydrateStaticState = hydratedStaticStateFactory<TControllerDefinitions>(
     controllerDefinitions!,
     getOptions()
   );
@@ -95,11 +93,11 @@ export function defineCommerceEngine<
   const fetchRecommendationStaticState =
     fetchRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions!,
-      getOptions() // TODO: add count here
+      getOptions()
     );
 
   const hydrateRecommendationStaticState =
-    hydrateRecommendationStaticStateFactory<TControllerDefinitions>(
+    hydratedRecommendationStaticStateFactory<TControllerDefinitions>(
       controllerDefinitions!,
       getOptions()
     );
@@ -118,7 +116,7 @@ export function defineCommerceEngine<
       setNavigatorContextProvider,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
     recommendationEngineDefinition: {
-      build: build(SolutionType.recommendation), // TODO: add count here
+      build: build(SolutionType.recommendation),
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
       setNavigatorContextProvider,
@@ -126,7 +124,7 @@ export function defineCommerceEngine<
       TControllerDefinitions,
       SolutionType.recommendation
     >,
-    // TODO:  make the standaloneEngineDefinition not async since there are no search executed
+    // TODO:  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       build: build(SolutionType.standalone),
       fetchStaticState: fetchStaticState(SolutionType.standalone),
@@ -150,8 +148,8 @@ export function defineCommerceEngine<
 //     standaloneSearchBox: defineStandaloneSearchBox({
 //       options: {redirectionUrl: 'rest'},
 //     }),
-//     facets: defineContext(),
-//     searchParam: defineParameterManager({search: false}),
+//     // facets: defineContext(),
+//     // searchParam: defineParameterManager({search: false}),
 //     trending: defineRecommendations({
 //       options: {slotId: 'ttt'},
 //     }),
@@ -162,14 +160,11 @@ export function defineCommerceEngine<
 // });
 
 // // TODO: should have a way to select which recommendation to fetch
-// const r = await standaloneEngineDefinition.fetchStaticState({
-//   controllers: {searchParam: {initialState: {parameters: {q: 'test'}}}},
-// });
+// const r = await standaloneEngineDefinition.fetchStaticState()
 
-// const b = await recommendationEngineDefinition.fetchStaticState([
-//   'trending',
-// ]);
-// const b = await recommendationEngineDefinition.fetchStaticState.fromBuildResult({buildResult:{controllers:{}}})
+// const b = await recommendationEngineDefinition.build([''])
+
+// const b = await recommendationEngineDefinition.fetchStaticState.fromBuildResult({})
 // // b.controllers.;
 
 // const a = await searchEngineDefinition.fetchStaticState(); // TODO: fix typing if controller is set to {search: false}
