@@ -137,19 +137,20 @@ export function defineCommerceEngine<
   };
 }
 
-// Sandbox
+/* Sandbox */
 // const {
 //   recommendationEngineDefinition,
 //   searchEngineDefinition,
 //   standaloneEngineDefinition,
+//   listingEngineDefinition
 // } = defineCommerceEngine({
 //   configuration: getSampleCommerceEngineConfiguration(),
 //   controllers: {
-//     standaloneSearchBox: defineStandaloneSearchBox({
-//       options: {redirectionUrl: 'rest'},
-//     }),
-//     // facets: defineContext(),
-//     // searchParam: defineParameterManager({search: false}),
+//     // standaloneSearchBox: defineStandaloneSearchBox({
+//     //   options: {redirectionUrl: 'rest'},
+//     // }),
+//     // context: defineContext(),
+//     searchParam: defineParameterManager({search: false}),
 //     trending: defineRecommendations({
 //       options: {slotId: 'ttt'},
 //     }),
@@ -160,11 +161,11 @@ export function defineCommerceEngine<
 // });
 
 // // TODO: should have a way to select which recommendation to fetch
-// const r = await standaloneEngineDefinition.fetchStaticState()
+// const r = await listingEngineDefinition.hydrateStaticState({}) // TODO: now do the same with hydration
 
-// const b = await recommendationEngineDefinition.build([''])
+// const b = await standaloneEngineDefinition.fetchStaticState()
 
-// const b = await recommendationEngineDefinition.fetchStaticState.fromBuildResult({})
+// const b = await recommendationEngineDefinition.fetchStaticState(['popular'])
 // // b.controllers.;
 
 // const a = await searchEngineDefinition.fetchStaticState(); // TODO: fix typing if controller is set to {search: false}

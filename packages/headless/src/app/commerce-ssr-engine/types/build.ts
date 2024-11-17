@@ -1,13 +1,17 @@
+import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   OptionsExtender,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import {SolutionType} from './common.js';
+import {
+  ControllerDefinitionsMap,
+  EngineDefinitionControllersPropsOption,
+  SolutionType,
+} from './common.js';
 
 export interface BuildOptions<TEngineOptions> {
   extend?: OptionsExtender<TEngineOptions>;
@@ -18,6 +22,10 @@ export type Build<
   TEngineOptions,
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
+  TControllersDefinitionsMap extends ControllerDefinitionsMap<
+    TEngine,
+    Controller
+  >,
   TSolutionType extends SolutionType,
 > = TSolutionType extends SolutionType.recommendation
   ? {
@@ -25,7 +33,7 @@ export type Build<
        * Initializes an engine and controllers from the definition.
        */
       (
-        c: (keyof TControllersMap)[]
+        controllers: (keyof TControllersMap)[]
       ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
     }
   : {
@@ -35,7 +43,11 @@ export type Build<
       (
         ...params: OptionsTuple<
           BuildOptions<TEngineOptions> &
-            EngineDefinitionControllersPropsOption<TControllersProps>
+            EngineDefinitionControllersPropsOption<
+              TControllersDefinitionsMap,
+              TControllersProps,
+              TSolutionType
+            >
         >
       ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
     };

@@ -1,4 +1,5 @@
 import {UnknownAction} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
 import {Recommendations} from '../../controllers/commerce/recommendations/headless-recommendations.js';
 import {RecommendationsDefinitionMeta} from '../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../controllers/controller/headless-controller.js';
@@ -144,7 +145,8 @@ export function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
   controllers: Record<string, Controller>, // TODO: or  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>
-  controllerDefinitions: TControllerDefinitions
+  controllerDefinitions: TControllerDefinitions,
+  logger: Logger
 ) {
   const slotIdSet = new Set<string>();
 
@@ -160,7 +162,7 @@ export function filterRecommendationControllers<
   };
 
   const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
-    console.warn(
+    logger.warn(
       'Multiple recommendation controllers found for the same slotId and productId',
       {slotId, productId}
     );
@@ -195,8 +197,6 @@ export function filterRecommendationControllers<
       if (whitelist === undefined) {
         return;
       }
-      // TODO: FIND a better way
-      // TODO: do not refresh multiple recommendation controllers for the same slotId and productId
       const isRecommendationController = (key: string) =>
         name.includes(key) && whitelist.includes(key);
 

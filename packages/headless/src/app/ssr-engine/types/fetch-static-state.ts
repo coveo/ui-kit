@@ -53,7 +53,7 @@ export type FetchStaticStateWithList<
    * Useful for static generation and server-side rendering.
    */
   (
-    c: (keyof TControllers)[],
+    controllers: (keyof TControllers)[],
     ...params: OptionsTuple<
       FetchStaticStateOptions &
         EngineDefinitionControllersPropsOption<TControllersProps>

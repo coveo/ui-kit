@@ -81,7 +81,8 @@ export function fetchRecommendationStaticStateFactory<
 
         filterRecommendationControllers(
           controllers,
-          controllerDefinitions ?? {}
+          controllerDefinitions ?? {},
+          logger
         ).refresh(allowedRecommendationKeys);
 
         const searchActions = await Promise.all(

@@ -10,14 +10,14 @@ import type {
   InferControllerPropsMapFromDefinitions,
   ControllerStaticStateMap,
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
+  ControllersPropsMap,
+  HasKeys,
 } from '../../ssr-engine/types/common.js';
 
 export type {
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
@@ -147,6 +147,26 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
     : K]: InferControllerStaticStateFromController<
     InferControllerFromDefinition<TControllers[K]>
   >;
+};
+
+export type EngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<
+    CoreEngine | CoreEngineNext,
+    Controller
+  >,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : K]: HasKeys<TControllersPropsMap> extends false
+    ? {}
+    : {
+        controllers: TControllersPropsMap;
+      };
 };
 
 export interface ControllerDefinitionOption {
