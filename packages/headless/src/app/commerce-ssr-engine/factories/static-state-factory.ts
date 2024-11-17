@@ -66,7 +66,7 @@ export const fetchStaticStateFactory: <
               break;
             case SolutionType.recommendation:
               throw new Error(
-                'You are using the wrong engine definition. For recommendations, use the recommendation engine definition instead'
+                '[WARNING] Invalid engine definition. For recommendations, use the recommendation engine definition instead'
               );
           }
 
