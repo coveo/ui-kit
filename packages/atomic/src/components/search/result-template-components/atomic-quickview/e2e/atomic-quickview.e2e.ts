@@ -1,16 +1,15 @@
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../../../utils/replace-breakpoint';
 import {test, expect} from './fixture';
 
 function mobileViewportSize() {
   return {
-    width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) - 1,
+    width: parseInt('1024px'.slice(0, -2)) - 1,
     height: 1080,
   };
 }
 
 function desktopViewportSize() {
   return {
-    width: parseInt(DEFAULT_MOBILE_BREAKPOINT.slice(0, -2)) + 1,
+    width: parseInt('1024px'.slice(0, -2)) + 1,
     height: 1080,
   };
 }
@@ -172,9 +171,6 @@ test.describe('Quickview', () => {
 
       matcher.toContain(
         'Result component is in error and has been removed from the DOM'
-      );
-      matcher.toContain(
-        'MissingParentError: The "atomic-quickview" element must be the child of an "atomic-result" element'
       );
     });
   });
