@@ -1,7 +1,7 @@
 import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {SSRCommerceEngine} from '../../commerce-engine/commerce-engine.ssr.js';
 import {EngineConfiguration} from '../../engine-configuration.js';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
 import {Build} from '../../ssr-engine/types/build.js';
 import {InferControllerPropsMapFromDefinitions} from '../../ssr-engine/types/common.js';
@@ -17,10 +17,7 @@ import {
 export type {HydrateStaticState, FetchStaticState};
 export type EngineDefinitionOptions<
   TOptions extends {configuration: EngineConfiguration},
-  TControllers extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
+  TControllers extends ControllerDefinitionsMap<Controller>,
 > = TOptions & {
   /**
    * The controllers to initialize with the commerce engine.
@@ -29,8 +26,7 @@ export type EngineDefinitionOptions<
 };
 
 export interface EngineDefinition<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TEngineOptions,
   TSolutionType extends SolutionType,
 > {
@@ -38,7 +34,7 @@ export interface EngineDefinition<
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
-    TEngine,
+    SSRCommerceEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
@@ -51,7 +47,7 @@ export interface EngineDefinition<
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
-    TEngine,
+    SSRCommerceEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>
@@ -60,7 +56,7 @@ export interface EngineDefinition<
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
-    TEngine,
+    SSRCommerceEngine,
     TEngineOptions,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     InferControllerPropsMapFromDefinitions<TControllers>

@@ -1,3 +1,7 @@
+## <small>1.0.6 (2024-11-13)</small>
+
+- fix(bueno): use URL constructor to parse url (#4644) ([e48646b](https://github.com/coveo/ui-kit/commits/e48646b)), closes [#4644](https://github.com/coveo/ui-kit/issues/4644)
+
 ## <small>1.0.5 (2024-11-06)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))

@@ -42,7 +42,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 }
 
 export type CommerceEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
 > = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {
@@ -108,10 +108,9 @@ function buildSSRCommerceEngine(
 }
 
 export interface CommerceEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > extends EngineDefinition<
-    SSRCommerceEngine,
     TControllers,
     CommerceEngineOptions,
     TSolutionType
@@ -124,10 +123,7 @@ export interface CommerceEngineDefinition<
  *  and a build function that can be used for edge cases requiring more control.
  */
 export function defineCommerceEngine<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRCommerceEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): {
