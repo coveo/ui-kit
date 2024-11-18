@@ -116,62 +116,6 @@ describe('AsyncInsightSearchThunkProcessor', () => {
   });
 
   describe('query correction processing', () => {
-    it('process properly when there are no results returned and there is a did you mean correction', async () => {
-      const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
-      const mappedRequest: MappedSearchRequest<InsightQueryRequest> = {
-        request: buildMockInsightQueryRequest(),
-        mappings: initialSearchMappings(),
-      };
-
-      const originalResponseWithNoResultsAndCorrection =
-        buildMockSearchResponse({
-          results: [],
-          queryCorrections: [
-            {
-              correctedQuery: 'bar',
-              wordCorrections: [
-                {
-                  correctedWord: 'foo',
-                  length: 3,
-                  offset: 0,
-                  originalWord: 'foo',
-                },
-              ],
-            },
-          ],
-        });
-
-      const responseAfterCorrection = buildMockSearchResponse({
-        results: [buildMockResult({uniqueId: '123'})],
-      });
-
-      (config.extra.apiClient.query as Mock).mockReturnValue(
-        Promise.resolve({success: responseAfterCorrection})
-      );
-
-      const fetched = {
-        response: {
-          success: originalResponseWithNoResultsAndCorrection,
-        },
-        duration: 123,
-        queryExecuted: 'foo',
-        requestExecuted: mappedRequest.request,
-      };
-
-      const processed = (await processor.process(
-        fetched
-      )) as ExecuteSearchThunkReturn;
-
-      expect(config.dispatch).toHaveBeenCalledWith(updateQuery({q: 'bar'}));
-      expect(config.extra.apiClient.query).toHaveBeenCalled();
-      expect(processed.response).toEqual({
-        ...responseAfterCorrection,
-        queryCorrections:
-          originalResponseWithNoResultsAndCorrection.queryCorrections,
-      });
-      expect(processed.automaticallyCorrected).toBe(true);
-    });
-
     describe('legacy query correction processing', () => {
       it('should automatically correct the query by triggering a second search request', async () => {
         const processor = new AsyncInsightSearchThunkProcessor<{}>(config);
