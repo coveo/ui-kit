@@ -4,10 +4,7 @@ import {CommerceEngineDefinition} from '../../commerce-engine/commerce-engine.ss
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
-import type {
-  FromBuildResult,
-  FromBuildResultOptions,
-} from '../../ssr-engine/types/from-build-result.js';
+import type {FromBuildResultOptions} from '../../ssr-engine/types/from-build-result.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {Build, BuildOptions} from './build.js';
 import {
@@ -21,6 +18,7 @@ import {
   FetchStaticState,
   FetchStaticStateOptions,
 } from './fetch-static-state.js';
+import {FromBuildResult} from './from-build-result.js';
 import {
   HydrateStaticState,
   HydrateStaticStateOptions,

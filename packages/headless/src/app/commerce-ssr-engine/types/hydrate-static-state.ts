@@ -7,12 +7,12 @@ import type {
   HydratedState,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import type {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
 import {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   SolutionType,
 } from './common.js';
+import {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
   searchActions: TSearchAction[];

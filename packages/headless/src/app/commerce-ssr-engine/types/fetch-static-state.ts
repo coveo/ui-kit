@@ -13,7 +13,7 @@ import type {
   ControllerStaticStateMap,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
-import type {FromBuildResult} from '../../ssr-engine/types/from-build-result.js';
+import {FromBuildResult} from './from-build-result.js';
 
 export type FetchStaticStateOptions = {};
 
