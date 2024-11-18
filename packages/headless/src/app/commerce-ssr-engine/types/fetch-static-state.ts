@@ -4,7 +4,6 @@ import type {
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
 } from '../../commerce-ssr-engine/types/common.js';
-import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -16,7 +15,6 @@ import {FromBuildResult} from './from-build-result.js';
 export type FetchStaticStateOptions = {};
 
 export type FetchStaticState<
-  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
@@ -34,7 +32,6 @@ export type FetchStaticState<
       ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
       fromBuildResult: FromBuildResult<
-        TEngine,
         TControllers,
         FetchStaticStateOptions,
         EngineStaticState<TSearchAction, TControllersStaticState>
@@ -54,7 +51,6 @@ export type FetchStaticState<
       ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
       fromBuildResult: FromBuildResult<
-        TEngine,
         TControllers,
         FetchStaticStateOptions,
         EngineStaticState<TSearchAction, TControllersStaticState>

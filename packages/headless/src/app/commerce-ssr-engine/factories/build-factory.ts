@@ -34,7 +34,7 @@ export interface SSRCommerceEngine extends CommerceEngine {
 }
 
 export type CommerceEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
 > = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {

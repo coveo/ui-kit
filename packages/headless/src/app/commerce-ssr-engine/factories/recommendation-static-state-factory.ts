@@ -3,7 +3,6 @@ import {Logger} from 'pino';
 import {Recommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {RecommendationsDefinitionMeta} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../../controllers/controller/headless-controller.js';
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {buildLogger} from '../../logger.js';
 import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
@@ -112,8 +111,7 @@ export function fetchRecommendationStaticStateFactory<
 }
 
 function filterRecommendationControllers<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(
   controllers: Record<string, Controller>,
   controllerDefinitions: TControllerDefinitions,
@@ -122,7 +120,7 @@ function filterRecommendationControllers<
   const slotIdSet = new Set<string>();
 
   const isRecommendationDefinition = <
-    C extends ControllerDefinition<TEngine, Controller>,
+    C extends ControllerDefinition<Controller>,
   >(
     controllerDefinition: C
   ): controllerDefinition is C & RecommendationsDefinitionMeta => {

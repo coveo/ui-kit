@@ -1,4 +1,3 @@
-import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -6,6 +5,7 @@ import type {
   OptionsExtender,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {
   EngineDefinitionControllersPropsOption,
   SolutionType,
@@ -16,7 +16,6 @@ export interface BuildOptions<TEngineOptions> {
 }
 
 export type Build<
-  TEngine extends CoreEngine | CoreEngineNext,
   TEngineOptions,
   TControllersMap extends ControllersMap,
   TControllersProps extends ControllersPropsMap,
@@ -28,7 +27,9 @@ export type Build<
        */
       (
         controllers: (keyof TControllersMap)[]
-      ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
+      ): Promise<
+        EngineDefinitionBuildResult<SSRCommerceEngine, TControllersMap>
+      >;
     }
   : {
       /**
@@ -39,5 +40,7 @@ export type Build<
           BuildOptions<TEngineOptions> &
             EngineDefinitionControllersPropsOption<TControllersProps>
         >
-      ): Promise<EngineDefinitionBuildResult<TEngine, TControllersMap>>;
+      ): Promise<
+        EngineDefinitionBuildResult<SSRCommerceEngine, TControllersMap>
+      >;
     };

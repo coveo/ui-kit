@@ -1,11 +1,11 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import type {CoreEngine, CoreEngineNext} from '../../engine.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
   HydratedState,
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {
   EngineDefinitionControllersPropsOption,
   SolutionType,
@@ -17,7 +17,6 @@ export interface HydrateStaticStateOptions<TSearchAction> {
 }
 
 export type HydrateStaticState<
-  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
@@ -31,13 +30,12 @@ export type HydrateStaticState<
        */
       (
         ...params: OptionsTuple<HydrateStaticStateOptions<TSearchAction>>
-      ): Promise<HydratedState<TEngine, TControllers>>;
+      ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
       fromBuildResult: FromBuildResult<
-        TEngine,
         TControllers,
         HydrateStaticStateOptions<TSearchAction>,
-        HydratedState<TEngine, TControllers>
+        HydratedState<SSRCommerceEngine, TControllers>
       >;
     }
   : {
@@ -51,12 +49,11 @@ export type HydrateStaticState<
           HydrateStaticStateOptions<TSearchAction> &
             EngineDefinitionControllersPropsOption<TControllersProps>
         >
-      ): Promise<HydratedState<TEngine, TControllers>>;
+      ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
       fromBuildResult: FromBuildResult<
-        TEngine,
         TControllers,
         HydrateStaticStateOptions<TSearchAction>,
-        HydratedState<TEngine, TControllers>
+        HydratedState<SSRCommerceEngine, TControllers>
       >;
     };

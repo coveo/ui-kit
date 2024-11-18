@@ -52,7 +52,6 @@ export interface EngineDefinition<
    * Fetches the static state on the server side using your engine definition.
    */
   fetchStaticState: FetchStaticState<
-    SSRCommerceEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerStaticStateMapFromDefinitionsWithSolutionType<
@@ -66,7 +65,6 @@ export interface EngineDefinition<
    * Fetches the hydrated state on the client side using your engine definition and the static state.
    */
   hydrateStaticState: HydrateStaticState<
-    SSRCommerceEngine,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
     InferControllerPropsMapFromDefinitions<TControllers>,
@@ -76,7 +74,6 @@ export interface EngineDefinition<
    * Builds an engine and its controllers from an engine definition.
    */
   build: Build<
-    SSRCommerceEngine,
     TEngineOptions,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     InferControllerPropsMapFromDefinitions<TControllers>,

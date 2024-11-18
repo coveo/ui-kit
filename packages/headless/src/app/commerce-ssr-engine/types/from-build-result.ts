@@ -1,15 +1,12 @@
-import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {ControllersMap} from '../../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {EngineDefinitionBuildResult} from './common.js';
 
-export interface FromBuildResultOptions<
-  TEngine extends CoreEngine | CoreEngineNext,
-  TControllers extends ControllersMap,
-> {
+export interface FromBuildResultOptions<TControllers extends ControllersMap> {
   /**
    * The build result of the engine
    */
-  buildResult: EngineDefinitionBuildResult<TEngine, TControllers>;
+  buildResult: EngineDefinitionBuildResult<SSRCommerceEngine, TControllers>;
   /**
    * An optional array of keys representing the recommendation controllers to refresh.
    * If a recommendation key defined in your engine definition is present in this list, the associate recommendation controller
@@ -21,12 +18,9 @@ export interface FromBuildResultOptions<
 }
 
 export interface FromBuildResult<
-  TEngine extends CoreEngine | CoreEngineNext,
   TControllers extends ControllersMap,
   TOptions,
   TReturn,
 > {
-  (
-    options: FromBuildResultOptions<TEngine, TControllers> & TOptions
-  ): Promise<TReturn>;
+  (options: FromBuildResultOptions<TControllers> & TOptions): Promise<TReturn>;
 }
