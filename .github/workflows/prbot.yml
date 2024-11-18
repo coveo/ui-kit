@@ -149,7 +149,10 @@ jobs:
       - run: npm run build
       - name: Identify E2E Test Files to run
         id: determine-tests
-        run: node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal
+        run: |
+          runAllTests=$([ "${{ github.event_name }}" == "merge_group" ] && echo true || echo false)
+          node ./scripts/ci/determine-tests.mjs testsToRun shardIndex shardTotal $runAllTests
+
         env:
           projectRoot: ${{ github.workspace }}
           maximumShards: ${{ env.maximumShards }}
