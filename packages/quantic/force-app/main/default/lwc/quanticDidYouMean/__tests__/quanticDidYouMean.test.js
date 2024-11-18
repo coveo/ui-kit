@@ -12,10 +12,12 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 
+const defaultQueryCorrectionMode = 'legacy';
+
 const defaultOptions = {
   engineId: exampleEngine.id,
   disableAutomaticallyCorrectQuery: false,
-  queryCorrectionMode: 'legacy',
+  queryCorrectionMode: defaultQueryCorrectionMode,
 };
 
 const mockDidYouMeanState = {
@@ -129,7 +131,7 @@ describe('c-quantic-did-you-mean', () => {
             expect.objectContaining({
               options: expect.objectContaining({
                 automaticallyCorrectQuery: true,
-                queryCorrectionMode: 'legacy',
+                queryCorrectionMode: defaultQueryCorrectionMode,
               }),
             })
           );
@@ -150,7 +152,7 @@ describe('c-quantic-did-you-mean', () => {
             expect.objectContaining({
               options: expect.objectContaining({
                 automaticallyCorrectQuery: false,
-                queryCorrectionMode: 'legacy',
+                queryCorrectionMode: defaultQueryCorrectionMode,
               }),
             })
           );
@@ -170,7 +172,7 @@ describe('c-quantic-did-you-mean', () => {
             expect.objectContaining({
               options: expect.objectContaining({
                 automaticallyCorrectQuery: true,
-                queryCorrectionMode: 'legacy',
+                queryCorrectionMode: defaultQueryCorrectionMode,
               }),
             })
           );
