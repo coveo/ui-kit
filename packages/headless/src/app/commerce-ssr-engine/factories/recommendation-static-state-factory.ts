@@ -115,7 +115,7 @@ function filterRecommendationControllers<
   TEngine extends CoreEngine | CoreEngineNext,
   TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
 >(
-  controllers: Record<string, Controller>, // TODO: or  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>
+  controllers: Record<string, Controller>,
   controllerDefinitions: TControllerDefinitions,
   logger: Logger
 ) {

@@ -80,34 +80,17 @@ export function buildControllerDefinitions<
   TSolutionType
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    const unavailableInSearchSolutionType =
-      'search' in definition &&
-      definition['search'] === false &&
-      solutionType === SolutionType['search'];
-
-    const unavailableInListingSolutionType =
-      'listing' in definition &&
-      definition['listing'] === false &&
-      solutionType === SolutionType['listing'];
-
-    const unavailableInStandaloneSolutionType =
-      solutionType === SolutionType['standalone'] && 'standalone' in definition
-        ? definition['standalone'] === false
-        : false;
-
-    const unavailabeInRecs =
-      // TODO: use this disjunction pattern for all other conditions
-      (solutionType === SolutionType['recommendation'] &&
-        !('recommendation' in definition)) ||
-      ('recommendation' in definition &&
-        definition['recommendation'] === false &&
-        solutionType === SolutionType['recommendation']);
+    const unavailableInSolutionType = (type: SolutionType) =>
+      (!(type in definition) && solutionType === SolutionType[type]) ||
+      (type in definition &&
+        definition[type as keyof typeof definition] === false &&
+        solutionType === SolutionType[type]);
 
     if (
-      unavailableInSearchSolutionType ||
-      unavailableInListingSolutionType ||
-      unavailableInStandaloneSolutionType ||
-      unavailabeInRecs
+      unavailableInSolutionType(SolutionType.search) ||
+      unavailableInSolutionType(SolutionType.listing) ||
+      unavailableInSolutionType(SolutionType.standalone) ||
+      unavailableInSolutionType(SolutionType.recommendation)
     ) {
       return null;
     }
