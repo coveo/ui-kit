@@ -64,10 +64,6 @@ export const fetchStaticStateFactory: <
             case SolutionType.search:
               buildSearch(engine).executeFirstSearch();
               break;
-            case SolutionType.recommendation:
-              throw new Error(
-                '[WARNING] Invalid engine definition. For recommendations, use the recommendation engine definition instead'
-              );
           }
 
           const searchActions = await Promise.all(
