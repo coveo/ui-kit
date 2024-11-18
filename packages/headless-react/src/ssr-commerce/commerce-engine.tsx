@@ -1,6 +1,5 @@
 import {
   Controller,
-  CommerceEngine,
   ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   defineCommerceEngine as defineBaseCommerceEngine,
@@ -19,26 +18,17 @@ import {
 import {ContextState, ReactEngineDefinition} from './types.js';
 
 export type ReactCommerceEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<CommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = ReactEngineDefinition<
-  CommerceEngine,
-  TControllers,
-  CommerceEngineOptions,
-  TSolutionType
->;
+> = ReactEngineDefinition<TControllers, CommerceEngineOptions, TSolutionType>;
 
 // Wrapper to workaround the limitation that `createContext()` cannot be called directly during SSR in next.js
 export function createSingletonContext<
-  TControllers extends ControllerDefinitionsMap<CommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType = SolutionType,
 >() {
   return singleton(() =>
-    React.createContext<ContextState<
-      CommerceEngine,
-      TControllers,
-      TSolutionType
-    > | null>(null)
+    React.createContext<ContextState<TControllers, TSolutionType> | null>(null)
   );
 }
 
@@ -47,16 +37,12 @@ export function createSingletonContext<
  *  on the server and client side respectively.
  */
 export function defineCommerceEngine<
-  TControllers extends ControllerDefinitionsMap<CommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
 >(options: CommerceEngineDefinitionOptions<TControllers>) {
   const singletonContext = createSingletonContext<TControllers>();
 
   type ContextStateType<TSolutionType extends SolutionType> = SingletonGetter<
-    React.Context<ContextState<
-      CommerceEngine,
-      TControllers,
-      TSolutionType
-    > | null>
+    React.Context<ContextState<TControllers, TSolutionType> | null>
   >;
   type ListingContext = ContextStateType<SolutionType.listing>;
   type SearchContext = ContextStateType<SolutionType.search>;
