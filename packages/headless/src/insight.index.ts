@@ -76,6 +76,8 @@ export type {
   DidYouMeanState,
   QueryCorrection,
   WordCorrection,
+  DidYouMeanProps,
+  DidYouMeanOptions,
 } from './controllers/insight/did-you-mean/headless-insight-did-you-mean.js';
 export {buildDidYouMean} from './controllers/insight/did-you-mean/headless-insight-did-you-mean.js';
 
