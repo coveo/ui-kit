@@ -2,7 +2,6 @@ import {
   Controller,
   ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  CommerceEngine,
   defineProductList,
   defineCart,
   defineSearchBox,
@@ -25,7 +24,7 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
-  ControllerDefinitionsMap<CommerceEngine, Controller>
+  ControllerDefinitionsMap<Controller>
 >;
 
 export default {

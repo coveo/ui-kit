@@ -2,11 +2,11 @@ import {UnknownAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers/controller/headless-controller.js';
 import {InvalidControllerDefinition} from '../../utils/errors.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
-import {CoreEngine, CoreEngineNext} from '../engine.js';
 import {
   ControllersMap,
   InferControllerStaticStateMapFromControllers,
 } from '../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from './factories/build-factory.js';
 import {
   ControllerDefinition,
   ControllerDefinitionOption,
@@ -38,8 +38,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
 }
 
 function buildControllerFromDefinition<
-  TControllerDefinition extends ControllerDefinition<TEngine, Controller>,
-  TEngine extends CoreEngine | CoreEngineNext,
+  TControllerDefinition extends ControllerDefinition<Controller>,
 >({
   definition,
   engine,
@@ -47,7 +46,7 @@ function buildControllerFromDefinition<
   props,
 }: {
   definition: TControllerDefinition;
-  engine: TEngine;
+  engine: SSRCommerceEngine;
   solutionType: SolutionType;
   props?: InferControllerPropsFromDefinition<TControllerDefinition>;
 }): InferControllerFromDefinition<TControllerDefinition> {
@@ -59,11 +58,7 @@ function buildControllerFromDefinition<
 }
 
 export function buildControllerDefinitions<
-  TControllerDefinitionsMap extends ControllerDefinitionsMap<
-    CoreEngine | CoreEngineNext,
-    Controller
-  >,
-  TEngine extends CoreEngine | CoreEngineNext,
+  TControllerDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >({
   definitionsMap,
@@ -72,7 +67,7 @@ export function buildControllerDefinitions<
   propsMap,
 }: {
   definitionsMap: TControllerDefinitionsMap;
-  engine: TEngine;
+  engine: SSRCommerceEngine;
   solutionType: TSolutionType;
   propsMap: InferControllerPropsMapFromDefinitions<TControllerDefinitionsMap>;
 }): InferControllersMapFromDefinition<

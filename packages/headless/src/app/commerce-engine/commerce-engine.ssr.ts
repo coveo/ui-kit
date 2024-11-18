@@ -5,7 +5,6 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {
   buildFactory,
   CommerceEngineDefinitionOptions,
-  SSRCommerceEngine,
 } from '../commerce-ssr-engine/factories/build-factory.js';
 import {hydratedStaticStateFactory} from '../commerce-ssr-engine/factories/hydrated-state-factory.js';
 import {hydratedRecommendationStaticStateFactory} from '../commerce-ssr-engine/factories/recommendation-hydrated-state-factory.js';
@@ -20,10 +19,9 @@ import {NavigatorContextProvider} from '../navigatorContextProvider.js';
 import {CommerceEngineOptions} from './commerce-engine.js';
 
 export interface CommerceEngineDefinition<
-  TControllers extends ControllerDefinitionsMap<SSRCommerceEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > extends EngineDefinition<
-    SSRCommerceEngine,
     TControllers,
     CommerceEngineOptions,
     TSolutionType
@@ -36,10 +34,7 @@ export interface CommerceEngineDefinition<
  *  and a build function that can be used for edge cases requiring more control.
  */
 export function defineCommerceEngine<
-  TControllerDefinitions extends ControllerDefinitionsMap<
-    SSRCommerceEngine,
-    Controller
-  >,
+  TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): {
