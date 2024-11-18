@@ -1,12 +1,12 @@
 'use client';
 
-import {usePopularBoughtRecs} from '@/lib/commerce-engine';
+import {usePopularBought} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
+import Image from 'next/image';
 import {useRouter} from 'next/navigation';
 
-export default function Recommendations() {
-  // TODO: KIT-3503: refresh recs server side
-  const {state, methods} = usePopularBoughtRecs();
+export default function PopularBought() {
+  const {state, methods} = usePopularBought();
 
   const router = useRouter();
 
@@ -25,6 +25,12 @@ export default function Recommendations() {
           <li key={product.ec_product_id}>
             <button disabled={!methods} onClick={() => onProductClick(product)}>
               {product.ec_name}
+              <Image
+                src={product.ec_images[0]}
+                alt={product.ec_name!}
+                width={50}
+                height={50}
+              />
             </button>
           </li>
         ))}

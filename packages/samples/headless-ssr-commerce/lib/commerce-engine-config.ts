@@ -37,12 +37,12 @@ export default {
   controllers: {
     summary: defineSummary(),
     productList: defineProductList(),
-    popularViewedRecs: defineRecommendations({
+    popularViewed: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
       },
     }),
-    popularBoughtRecs: defineRecommendations({
+    popularBought: defineRecommendations({
       options: {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },

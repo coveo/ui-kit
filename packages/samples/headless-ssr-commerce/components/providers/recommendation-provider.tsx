@@ -1,40 +1,36 @@
 'use client';
 
 import {
-  listingEngineDefinition,
-  ListingHydratedState,
-  ListingStaticState,
+  recommendationEngineDefinition,
+  RecommendationHydratedState,
+  RecommendationStaticState,
 } from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 
-interface ListingPageProps {
-  staticState: ListingStaticState;
+interface RecommendationProviderProps {
+  staticState: RecommendationStaticState;
   navigatorContext: NavigatorContext;
 }
 
-export default function ListingProvider({
+export default function RecommendationProvider({
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<ListingPageProps>) {
+}: PropsWithChildren<RecommendationProviderProps>) {
   const [hydratedState, setHydratedState] = useState<
-    ListingHydratedState | undefined
+    RecommendationHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  recommendationEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   useEffect(() => {
-    listingEngineDefinition
+    recommendationEngineDefinition
       .hydrateStaticState({
         searchActions: staticState.searchActions,
-        controllers: {
-          cart: {
-            initialState: {items: staticState.controllers.cart.state.items},
-          },
-          context: staticState.controllers.context.state,
-        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
@@ -43,22 +39,22 @@ export default function ListingProvider({
 
   if (hydratedState) {
     return (
-      <listingEngineDefinition.HydratedStateProvider
+      <recommendationEngineDefinition.HydratedStateProvider
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
         <>{children}</>
-      </listingEngineDefinition.HydratedStateProvider>
+      </recommendationEngineDefinition.HydratedStateProvider>
     );
   } else {
     return (
-      <listingEngineDefinition.StaticStateProvider
+      <recommendationEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
         {/* // TODO: Add KIT-3701:  Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
   Type 'bigint' is not assignable to type 'ReactNode'.*/}
         <>{children}</>
-      </listingEngineDefinition.StaticStateProvider>
+      </recommendationEngineDefinition.StaticStateProvider>
     );
   }
 }

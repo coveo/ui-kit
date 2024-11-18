@@ -8,7 +8,6 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import Recommendations from '../recommendation-list';
 
 interface IProductPageProps {
   staticState: StandaloneStaticState;
@@ -46,8 +45,6 @@ export default function ProductPage(props: IProductPageProps) {
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-
-        // TODO: use recommendationEngineDefinition for engines controllers
       });
   }, [staticState]);
 
@@ -63,7 +60,6 @@ export default function ProductPage(props: IProductPageProps) {
         {name} ({productId}) - ${price}
       </p>
       <br />
-      <Recommendations />
     </>
   );
 }
