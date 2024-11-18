@@ -30,7 +30,7 @@ console.log(execSync(`
   deployment-package package create --with-deploy \
     --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
     --resolve IS_NIGHTLY=${IS_NIGHTLY} \
-    --resolve IS_NOT_NIGHTLY=${IS_NIGHTLY} \
+    --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
     --resolve BUENO_MAJOR_VERSION=${bueno.major} \
     --resolve BUENO_MINOR_VERSION=${bueno.major}.${bueno.minor} \
     --resolve BUENO_PATCH_VERSION=${bueno.major}.${bueno.minor}.${bueno.patch} \
