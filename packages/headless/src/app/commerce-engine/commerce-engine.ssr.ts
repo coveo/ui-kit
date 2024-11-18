@@ -110,7 +110,7 @@ export function defineCommerceEngine<
       TControllerDefinitions,
       SolutionType.recommendation
     >,
-    // TODO:  The standaloneEngineDefinition should not be async since no request is sent to the API
+    // TODO KIT-3738 :  The standaloneEngineDefinition should not be async since no request is sent to the API
     standaloneEngineDefinition: {
       build: build(SolutionType.standalone),
       fetchStaticState: fetchStaticState(SolutionType.standalone),
