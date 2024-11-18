@@ -6,42 +6,6 @@ import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
 jest.mock('c/quanticHeadlessLoader');
 
-jest.mock(
-  '@salesforce/label/c.quantic_DidYouMean',
-  () => ({default: 'Did you mean'}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_NoResultsFor',
-  () => ({default: 'No results for'}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_QueryCorrectedTo',
-  () => ({default: 'Query was automatically corrected to'}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_SearchInsteadFor',
-  () => ({default: 'Search instead for'}),
-  {
-    virtual: true,
-  }
-);
-jest.mock(
-  '@salesforce/label/c.quantic_ShowingResultsFor',
-  () => ({default: 'Showing results for'}),
-  {
-    virtual: true,
-  }
-);
-
 let isInitialized = false;
 
 const exampleEngine = {
@@ -51,7 +15,7 @@ const exampleEngine = {
 const defaultOptions = {
   engineId: exampleEngine.id,
   disableAutomaticallyCorrectQuery: false,
-  queryCorrectionMode: 'next',
+  queryCorrectionMode: 'legacy',
 };
 
 const mockDidYouMeanState = {
@@ -134,6 +98,7 @@ describe('c-quantic-did-you-mean', () => {
       document.body.removeChild(document.body.firstChild);
     }
     jest.clearAllMocks();
+    isInitialized = false;
   }
 
   beforeEach(() => {
@@ -162,7 +127,10 @@ describe('c-quantic-did-you-mean', () => {
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
             exampleEngine,
             expect.objectContaining({
-              options: {automaticallyCorrectQuery: true},
+              options: expect.objectContaining({
+                automaticallyCorrectQuery: true,
+                queryCorrectionMode: 'legacy',
+              }),
             })
           );
         });
@@ -180,7 +148,10 @@ describe('c-quantic-did-you-mean', () => {
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
             exampleEngine,
             expect.objectContaining({
-              options: {automaticallyCorrectQuery: false},
+              options: expect.objectContaining({
+                automaticallyCorrectQuery: false,
+                queryCorrectionMode: 'legacy',
+              }),
             })
           );
         });
@@ -188,31 +159,41 @@ describe('c-quantic-did-you-mean', () => {
     });
 
     describe('#queryCorrectionMode property', () => {
-      describe('when queryCorrectionMode is `next` (default)', () => {
-        it('should properly initialize the controller with the query correction mode set to `next`', async () => {
+      describe('when queryCorrectionMode is `legacy` (default)', () => {
+        it('should properly initialize the controller with the query correction mode set to `legacy`', async () => {
           createTestComponent();
           await flushPromises();
 
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
             exampleEngine,
-            expect.objectContaining({options: {queryCorrectionMode: 'next'}})
+            expect.objectContaining({
+              options: expect.objectContaining({
+                automaticallyCorrectQuery: true,
+                queryCorrectionMode: 'legacy',
+              }),
+            })
           );
         });
       });
 
-      describe('when queryCorrectionMode is `legacy`', () => {
-        it('should properly initialize the controller with the query correction mode set to `legacy`', async () => {
+      describe('when queryCorrectionMode is `next`', () => {
+        it('should properly initialize the controller with the query correction mode set to `next`', async () => {
           createTestComponent({
             ...defaultOptions,
-            queryCorrectionMode: 'legacy',
+            queryCorrectionMode: 'next',
           });
           await flushPromises();
 
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
           expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
             exampleEngine,
-            expect.objectContaining({options: {queryCorrectionMode: 'legacy'}})
+            expect.objectContaining({
+              options: expect.objectContaining({
+                automaticallyCorrectQuery: true,
+                queryCorrectionMode: 'next',
+              }),
+            })
           );
         });
       });

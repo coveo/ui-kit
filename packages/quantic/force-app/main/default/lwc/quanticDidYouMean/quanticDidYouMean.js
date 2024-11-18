@@ -54,7 +54,7 @@ export default class QuanticDidYouMean extends LightningElement {
    * @api
    * @type {string} Possible values are `legacy` and `next`.
    */
-  @api queryCorrectionMode = 'next';
+  @api queryCorrectionMode = 'legacy';
 
   /** @type {boolean}*/
   @track hasQueryCorrection;
