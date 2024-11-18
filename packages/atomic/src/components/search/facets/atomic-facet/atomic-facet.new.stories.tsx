@@ -3,6 +3,7 @@ import {facetDecorator} from '@coveo/atomic-storybook-utils/common/facets-decora
 import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {html} from 'lit-html';
 
 const {decorator, play} = wrapInSearchInterface();
 
@@ -57,4 +58,26 @@ export const monthFacet: Story = {
     'attributes-number-of-values': 2,
   },
   decorators: [facetDecorator],
+};
+
+export const CustomSort: Story = {
+  tags: ['test'],
+  args: {
+    'attributes-field': 'cat_available_sizes',
+    'attributes-custom-sort': '["XL", "L", "M", "S"]',
+    'attributes-sort-criteria': 'alphanumeric',
+    'attributes-number-of-values': 4,
+  },
+  decorators: [
+    facetDecorator,
+    (_Story, context) => {
+      console.log(context);
+      return html`<atomic-facet
+        field=${context.args['attributes-field']}
+        custom-sort=${context.args['attributes-custom-sort']}
+        sort-criteria=${context.args['attributes-sort-criteria']}
+        number-of-values=${context.args['attributes-number-of-values']}
+      ></atomic-facet>`;
+    },
+  ],
 };

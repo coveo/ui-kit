@@ -178,7 +178,7 @@ const sortCriteriaTests: {
   },
 ];
 
-test.describe('Sort Criteria', () => {
+test.describe.serial('Sort Criteria', () => {
   sortCriteriaTests.forEach(({criteria, sortFunction}) => {
     test.describe(`when sort criteria is set to "${criteria}"`, () => {
       test.beforeEach(async ({facet}) => {
@@ -200,6 +200,40 @@ test.describe('Sort Criteria', () => {
         const values = await facet.facetValueLabel.allTextContents();
         const sortedValues = sortFunction(values);
         expect(values).toEqual(sortedValues);
+      });
+
+      test.describe('when a custom sort order is set', () => {
+        test.beforeEach(async ({facet}) => {
+          await facet.load({
+            story: 'custom-sort',
+            args: {
+              sortCriteria: criteria,
+              field: 'cat_available_sizes',
+              numberOfValues: 30,
+            },
+          });
+          await facet.hydrated.waitFor();
+          await expect
+            .poll(async () => await facet.facetValue.count())
+            .toBe(30);
+        });
+
+        test('should have facet values sorted by custom order first, and then by ${criteria}', async ({
+          facet,
+        }) => {
+          const values = await facet.facetValueLabel.allTextContents();
+
+          const customSort = new Set(['XL', 'L', 'M', 'S']);
+
+          const customSortedValues = values.filter((value) =>
+            customSort.has(value)
+          );
+          const remainingValues = sortFunction(
+            values.filter((value) => !customSort.has(value))
+          );
+
+          expect(values).toEqual([...customSortedValues, ...remainingValues]);
+        });
       });
     });
   });
