@@ -8,7 +8,7 @@ import {useRouter} from 'next/navigation';
 
 export default function ProductList() {
   const {state, methods} = useProductList();
-  const {methods: cartMethods} = useCart();
+  const {state: cartState, methods: cartMethods} = useCart();
 
   const router = useRouter();
 
@@ -32,13 +32,7 @@ export default function ProductList() {
               height={50}
             />
           </button>
-          <button onClick={() => addToCart(cartMethods!, product)}>
-            Add to cart
-          </button>
-          <button onClick={() => addToCart(cartMethods!, product)}>
-            Add to cart
-          </button>
-          <button onClick={() => addToCart(cartMethods!, product)}>
+          <button onClick={() => addToCart(cartMethods!, cartState, product)}>
             Add to cart
           </button>
         </li>

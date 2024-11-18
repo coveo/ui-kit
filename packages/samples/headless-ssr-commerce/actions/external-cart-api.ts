@@ -30,7 +30,14 @@ export async function getCart(): Promise<CartItem[]> {
 
 export async function addItemToCart(newItem: CartItem): Promise<CartItem[]> {
   const cart = getCartFromCookies();
-  cart.push(newItem);
+  const existingItem = cart.find(
+    (item) => item.productId === newItem.productId
+  );
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push(newItem);
+  }
   setCartInCookies(cart);
   return cart;
 }
