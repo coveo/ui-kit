@@ -1,3 +1,9 @@
+## 3.11.0 (2024-11-13)
+
+- feat(atomic): Add insight result attach-to-case component (#4499) ([ea6085c](https://github.com/coveo/ui-kit/commits/ea6085c)), closes [#4499](https://github.com/coveo/ui-kit/issues/4499)
+- feat(headless): add applyCorrection function in didYouMean (#4609) ([ac505ad](https://github.com/coveo/ui-kit/commits/ac505ad)), closes [#4609](https://github.com/coveo/ui-kit/issues/4609)
+- docs(atomic): hide a component (#4648) ([d823590](https://github.com/coveo/ui-kit/commits/d823590)), closes [#4648](https://github.com/coveo/ui-kit/issues/4648)
+
 ## 3.10.0 (2024-11-06)
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))

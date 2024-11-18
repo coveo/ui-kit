@@ -1,3 +1,10 @@
+## <small>2.1.1 (2024-11-13)</small>
+
+- chore: general improvements and refactors of headless-ssr-commerce (#4625) ([e7b8a48](https://github.com/coveo/ui-kit/commits/e7b8a48)), closes [#4625](https://github.com/coveo/ui-kit/issues/4625)
+- chore(headless): rename 'controllers' to 'methods' in ssr-commerce to stay consistent with ssr (#464 ([61ff4ea](https://github.com/coveo/ui-kit/commits/61ff4ea)), closes [#4642](https://github.com/coveo/ui-kit/issues/4642)
+- docs(headless commerce react samples): use react package (#4615) ([6f5ba55](https://github.com/coveo/ui-kit/commits/6f5ba55)), closes [#4615](https://github.com/coveo/ui-kit/issues/4615)
+- test(headles-react): add test for ssr-commerce (#4616) ([cdedb88](https://github.com/coveo/ui-kit/commits/cdedb88)), closes [#4616](https://github.com/coveo/ui-kit/issues/4616)
+
 ## 2.1.0 (2024-11-06)
 
 - feat(headless SSR): add hooks for ssr react commerce (#4614) ([7936561](https://github.com/coveo/ui-kit/commits/7936561)), closes [#4614](https://github.com/coveo/ui-kit/issues/4614)
