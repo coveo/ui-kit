@@ -1,0 +1,221 @@
+/* eslint-disable no-import-assign */
+// @ts-ignore
+import {createElement} from 'lwc';
+import QuanticDidYouMean from '../quanticDidYouMean';
+import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+
+jest.mock('c/quanticHeadlessLoader');
+
+jest.mock(
+  '@salesforce/label/c.quantic_DidYouMean',
+  () => ({default: 'Did you mean'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_NoResultsFor',
+  () => ({default: 'No results for'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_QueryCorrectedTo',
+  () => ({default: 'Query was automatically corrected to'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_SearchInsteadFor',
+  () => ({default: 'Search instead for'}),
+  {
+    virtual: true,
+  }
+);
+jest.mock(
+  '@salesforce/label/c.quantic_ShowingResultsFor',
+  () => ({default: 'Showing results for'}),
+  {
+    virtual: true,
+  }
+);
+
+let isInitialized = false;
+
+const exampleEngine = {
+  id: 'exampleEngineId',
+};
+
+const defaultOptions = {
+  engineId: exampleEngine.id,
+  disableAutomaticallyCorrectQuery: false,
+  queryCorrectionMode: 'next',
+};
+
+const mockDidYouMeanState = {
+  wasCorrectedTo: 'example corrected query',
+  originalQuery: 'example original query',
+  wasAutomaticallyCorrected: true,
+  queryCorrection: {
+    correctedQuery: 'example corrected query',
+    wordCorrected: 'example',
+  },
+  hasQueryCorrection: true,
+};
+
+const mockQueryTriggerState = {
+  newQuery: 'example new query',
+  originalQuery: 'example original query',
+  wasQueryModified: true,
+};
+
+const functionsMocks = {
+  buildDidYouMean: jest.fn(() => ({
+    state: mockDidYouMeanState,
+    subscribe: functionsMocks.subscribe,
+  })),
+  buildQueryTrigger: jest.fn(() => ({
+    state: mockQueryTriggerState,
+    subscribe: functionsMocks.subscribe,
+  })),
+  applyCorrection: jest.fn(() => {}),
+  subscribe: jest.fn((cb) => {
+    cb();
+    return functionsMocks.unsubscribe;
+  }),
+  unsubscribe: jest.fn(() => {}),
+};
+
+function prepareHeadlessState() {
+  // @ts-ignore
+  mockHeadlessLoader.getHeadlessBundle = () => {
+    return {
+      buildDidYouMean: functionsMocks.buildDidYouMean,
+      buildQueryTrigger: functionsMocks.buildQueryTrigger,
+    };
+  };
+}
+
+function mockSuccessfulHeadlessInitialization() {
+  // @ts-ignore
+  mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
+    if (element instanceof QuanticDidYouMean && !isInitialized) {
+      isInitialized = true;
+      initialize(exampleEngine);
+    }
+  };
+}
+
+function createTestComponent(options = defaultOptions) {
+  prepareHeadlessState();
+  const element = createElement('c-quantic-did-you-mean', {
+    is: QuanticDidYouMean,
+  });
+
+  for (const [key, value] of Object.entries(options)) {
+    element[key] = value;
+  }
+
+  document.body.appendChild(element);
+  return element;
+}
+
+// Helper function to wait until the microtask queue is empty.
+async function flushPromises() {
+  return Promise.resolve();
+}
+
+describe('c-quantic-did-you-mean', () => {
+  function cleanup() {
+    // The jsdom instance is shared across test cases in a single file so reset the DOM
+    while (document.body.firstChild) {
+      document.body.removeChild(document.body.firstChild);
+    }
+    jest.clearAllMocks();
+  }
+
+  beforeEach(() => {
+    mockSuccessfulHeadlessInitialization();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe('controller initialization', () => {
+    it('should subscribe to the headless state changes', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildDidYouMean).toHaveBeenCalled();
+    });
+
+    describe('#disableAutomaticallyCorrectQuery property', () => {
+      describe('when disableAutomaticallyCorrectQuery is false (default)', () => {
+        it('should properly initialize the controller with automatic query correction enabled', async () => {
+          createTestComponent();
+          await flushPromises();
+
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+            exampleEngine,
+            expect.objectContaining({
+              options: {automaticallyCorrectQuery: true},
+            })
+          );
+        });
+      });
+
+      describe('when disableAutomaticallyCorrectQuery is true', () => {
+        it('should properly initialize the controller with automatic query correction disabled', async () => {
+          createTestComponent({
+            ...defaultOptions,
+            disableAutomaticallyCorrectQuery: true,
+          });
+          await flushPromises();
+
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+            exampleEngine,
+            expect.objectContaining({
+              options: {automaticallyCorrectQuery: false},
+            })
+          );
+        });
+      });
+    });
+
+    describe('#queryCorrectionMode property', () => {
+      describe('when queryCorrectionMode is `next` (default)', () => {
+        it('should properly initialize the controller with the query correction mode set to `next`', async () => {
+          createTestComponent();
+          await flushPromises();
+
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+            exampleEngine,
+            expect.objectContaining({options: {queryCorrectionMode: 'next'}})
+          );
+        });
+      });
+
+      describe('when queryCorrectionMode is `legacy`', () => {
+        it('should properly initialize the controller with the query correction mode set to `legacy`', async () => {
+          createTestComponent({
+            ...defaultOptions,
+            queryCorrectionMode: 'legacy',
+          });
+          await flushPromises();
+
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+          expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+            exampleEngine,
+            expect.objectContaining({options: {queryCorrectionMode: 'legacy'}})
+          );
+        });
+      });
+    });
+  });
+});
