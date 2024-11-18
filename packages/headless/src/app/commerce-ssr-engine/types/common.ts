@@ -296,7 +296,6 @@ export type SubControllerDefinitionWithoutProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
-// TODO: add recommendation type here!
 
 export type SubControllerDefinitionWithProps<
   TController extends Controller,
@@ -311,4 +310,3 @@ export type SubControllerDefinitionWithProps<
       : TDefinition extends {listing: false; search: false}
         ? InvalidControllerDefinition
         : never;
-// TODO: add recommendation type here!

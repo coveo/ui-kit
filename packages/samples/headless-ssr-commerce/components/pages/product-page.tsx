@@ -46,6 +46,8 @@ export default function ProductPage(props: IProductPageProps) {
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
+
+        // TODO: use recommendationEngineDefinition for engines controllers
       });
   }, [staticState]);
 

@@ -162,13 +162,17 @@ export function createWaitForActionMiddleware<TAction extends Action>(
 function isRecommendationActionPayload<P = void, T extends string = string>(
   action: unknown
 ): action is PayloadAction<P, T, {arg: FetchRecommendationsPayload}> {
-  // TODO: clean that thing!!
-  if (typeof action === 'object' && action !== null && 'meta' in action) {
+  if (action === null || action === undefined) {
+    return false;
+  }
+
+  if (typeof action === 'object' && 'meta' in action) {
     return (
       (action as PayloadAction<P, T, {arg: FetchRecommendationsPayload}>).meta
         ?.arg?.slotId !== undefined
     );
   }
+
   return false;
 }
 
@@ -177,7 +181,6 @@ export function createWaitForActionMiddlewareForRecommendation<
 >(
   isDesiredAction: (action: unknown) => action is TAction,
   memo: Set<string>
-  //TODO:: this will not work for non recommendation action
 ): {promise: Promise<TAction>; middleware: Middleware} {
   const {promise, resolve} = createDeferredPromise<TAction>();
   let hasBeenResolved = false;
@@ -186,22 +189,12 @@ export function createWaitForActionMiddlewareForRecommendation<
   const middleware: Middleware = () => (next) => (action) => {
     next(action);
 
-    // if (isDesiredAction(action) && isRecommendationActionPayload(action)) {
-    //   console.log('');
-    //   console.log('slotId:', action.meta.arg.slotId);
-    //   console.log(
-    //     'condition: ',
-    //     hasBeenResolved,
-    //     memo.has(action.meta.arg.slotId)
-    //   );
-    // }
     if (
       isDesiredAction(action) &&
       !hasBeenResolved &&
       isRecommendationActionPayload(action) &&
       !hasSlotBeenProcessed(action.meta.arg.slotId)
     ) {
-      // console.log(' --- RESOLVE ---');
       hasBeenResolved = true;
       memo.add(action.meta.arg.slotId);
       resolve(action);

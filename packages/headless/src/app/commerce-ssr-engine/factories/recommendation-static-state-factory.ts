@@ -1,8 +1,15 @@
 import {UnknownAction} from '@reduxjs/toolkit';
+import {Logger} from 'pino';
+import {Recommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
+import {RecommendationsDefinitionMeta} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
+import {Controller} from '../../../controllers/controller/headless-controller.js';
+import {CoreEngine, CoreEngineNext} from '../../engine.js';
 import {buildLogger} from '../../logger.js';
 import {composeFunction} from '../../ssr-engine/common.js';
-import {createStaticState, filterRecommendationControllers} from '../common.js';
+import {createStaticState} from '../common.js';
 import {
+  ControllerDefinition,
+  ControllerDefinitionsMap,
   EngineStaticState,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   SolutionType,
@@ -102,4 +109,73 @@ export function fetchRecommendationStaticStateFactory<
       },
     }
   );
+}
+
+function filterRecommendationControllers<
+  TEngine extends CoreEngine | CoreEngineNext,
+  TControllerDefinitions extends ControllerDefinitionsMap<TEngine, Controller>,
+>(
+  controllers: Record<string, Controller>, // TODO: or  InferControllersMapFromDefinition<TControllerDefinitions, SolutionType>
+  controllerDefinitions: TControllerDefinitions,
+  logger: Logger
+) {
+  const slotIdSet = new Set<string>();
+
+  const isRecommendationDefinition = <
+    C extends ControllerDefinition<TEngine, Controller>,
+  >(
+    controllerDefinition: C
+  ): controllerDefinition is C & RecommendationsDefinitionMeta => {
+    return (
+      'recommendation' in controllerDefinition &&
+      controllerDefinition.recommendation === true
+    );
+  };
+
+  const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
+    logger.warn(
+      'Multiple recommendation controllers found for the same slotId and productId',
+      {slotId, productId}
+    );
+  };
+
+  const filtered = Object.entries(controllerDefinitions).filter(
+    ([_, value]) => {
+      if (!isRecommendationDefinition(value)) {
+        return false;
+      }
+      const {slotId, productId} = value.options;
+      const key = `${slotId}${productId || ''}`;
+      if (slotIdSet.has(key)) {
+        warnDuplicateRecommendation(slotId, productId);
+        return false;
+      }
+      slotIdSet.add(key);
+      return true;
+    }
+  );
+
+  const name = filtered.map(([name, _]) => name);
+
+  return {
+    /**
+     * Go through all the controllers passed in argument and only refresh recommendation controllers.
+     *
+     * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
+     * @param controllerNames - A list of all recommendation controllers to refresh
+     */
+    refresh(whitelist?: string[]) {
+      if (whitelist === undefined) {
+        return;
+      }
+      const isRecommendationController = (key: string) =>
+        name.includes(key) && whitelist.includes(key);
+
+      Object.entries(controllers)
+        .filter(([key, _]) => isRecommendationController(key))
+        .forEach(([_, controller]) =>
+          (controller as Recommendations).refresh?.()
+        );
+    },
+  };
 }

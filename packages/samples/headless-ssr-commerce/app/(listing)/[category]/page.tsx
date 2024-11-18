@@ -6,15 +6,11 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ProductList from '@/components/product-list';
 import ListingProvider from '@/components/providers/listing-provider';
-import RecommendationProvider from '@/components/providers/recommendation-provider';
 import Recommendations from '@/components/recommendation-list';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
-import {
-  listingEngineDefinition,
-  recommendationEngineDefinition,
-} from '@/lib/commerce-engine';
+import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -58,10 +54,6 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
-  const recStaticState = await recommendationEngineDefinition.fetchStaticState([
-    'popularBoughtRecs',
-  ]);
-
   return (
     <ListingProvider
       staticState={staticState}
@@ -94,12 +86,7 @@ export default async function Listing({params}: {params: {category: string}}) {
         </div>
 
         <div style={{flex: 4}}>
-          <RecommendationProvider
-            staticState={recStaticState}
-            navigatorContext={navigatorContext.marshal}
-          >
-            <Recommendations />
-          </RecommendationProvider>
+          <Recommendations />
         </div>
       </div>
     </ListingProvider>
