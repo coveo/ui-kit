@@ -48,6 +48,8 @@ import {ProductListingSummaryState} from './summary/headless-product-listing-sum
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
  *
+ * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx)
+ *
  * @group Buildable controllers
  * @category ProductListing
  */
