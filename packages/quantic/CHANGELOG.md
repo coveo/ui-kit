@@ -1,3 +1,9 @@
+## 3.8.0 (2024-11-13)
+
+- ci: fix .tmp quantic folder breaking commit generated files (#4671) ([bafea04](https://github.com/coveo/ui-kit/commits/bafea04)), closes [#4671](https://github.com/coveo/ui-kit/issues/4671)
+- feat(quantic): support of dependant facets added (#4656) ([16b32ee](https://github.com/coveo/ui-kit/commits/16b32ee)), closes [#4656](https://github.com/coveo/ui-kit/issues/4656)
+- fix(quantic): babel async await plugin setup added to fix quantic issue with firefox (#4620) ([ce8d7c8](https://github.com/coveo/ui-kit/commits/ce8d7c8)), closes [#4620](https://github.com/coveo/ui-kit/issues/4620)
+
 ## 3.7.0 (2024-11-06)
 
 - feat(quantic): adjusted logic to support custom tabs in the quantic tab bar component (#4619) ([a395a3c](https://github.com/coveo/ui-kit/commits/a395a3c)), closes [#4619](https://github.com/coveo/ui-kit/issues/4619)

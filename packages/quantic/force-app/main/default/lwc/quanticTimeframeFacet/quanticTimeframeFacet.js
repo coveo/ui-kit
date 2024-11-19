@@ -19,6 +19,7 @@ import {
   I18nUtils,
   RelativeDateFormatter,
   Store,
+  generateFacetDependencyConditions,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -32,6 +33,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
 /** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef {Object} DatepickerElement
  * @property {string} min
@@ -133,6 +135,37 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @defaultValue `1000`
    */
   @api injectionDepth = 1000;
+  /**
+   * This property defines the relationship between this facet and a parent facet, indicating
+   * the specific parent facet that this facet relies on and the selected value required
+   * from that parent facet for this facet to be displayed.
+   *
+   * When this property is defined, the facet will only display if the specified `parentFacetId`
+   * has the `expectedValue` selected. If `expectedValue` is omitted or set to `undefined`,
+   * the facet will display as long as any value is selected in the parent facet.
+   *
+   * **Supported facets:** Dependencies can only be created on a basic or category facet.
+   * Dependencies on numeric, timeframe, or date facets are not supported.
+   *
+   * Example usage:
+   * - To show a facet when any value is selected in the parent facet:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype'
+   *   }
+   *   ```
+   * - To show a facet only when a specific value is selected:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype',
+   *     expectedValue: 'txt'
+   *   }
+   *   ```
+   *
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
 
   static attributes = [
     'facetId',
@@ -141,6 +174,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     'withDatePicker',
     'noFilterFacetCount',
     'injectionDepth',
+    'dependsOn',
   ];
 
   /** @type {DateFacetState} */
@@ -205,6 +239,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeDateFilter?.();
+  }
+
+  get isFacetEnabled() {
+    return this.facetState?.enabled;
   }
 
   /**
@@ -380,7 +418,22 @@ export default class QuanticTimeframeFacet extends LightningElement {
       element: this.template.host,
       metadata: {timeframes: this.timeframes},
     });
+    if (this.dependsOn) {
+      this.initFacetConditionManager(engine);
+    }
   };
+
+  initFacetConditionManager(engine) {
+    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
+  }
 
   /**
    * @param {SearchEngine} engine

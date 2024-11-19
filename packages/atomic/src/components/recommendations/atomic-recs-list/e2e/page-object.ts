@@ -28,13 +28,15 @@ export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-rec
     return this.page.getByLabel('Previous');
   }
 
-  async noRecommendations() {
+  async nRecommendations(numberOfRecommendations?: number) {
     await this.page.route(
       '**/search/v2?organizationId=searchuisamples',
       async (route) => {
         const response = await route.fetch();
         const body = await response.json();
-        body.results = [];
+        if (numberOfRecommendations !== undefined) {
+          body['results'] = body['results'].slice(0, numberOfRecommendations);
+        }
         await route.fulfill({
           response,
           json: body,
@@ -43,5 +45,9 @@ export class AtomicCommerceRecsListPageObject extends BasePageObject<'atomic-rec
     );
 
     return this;
+  }
+
+  async noRecommendations() {
+    return this.nRecommendations(0);
   }
 }

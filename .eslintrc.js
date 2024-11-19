@@ -11,6 +11,7 @@ module.exports = {
     '!.storybook',
     'scripts/deploy/execute-deployment-pipeline.mjs',
     'build',
+    '.deployment.config.json',
   ],
   env: {
     jest: true,

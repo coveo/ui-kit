@@ -37,6 +37,12 @@ export default function ProductPage(props: IProductPageProps) {
     standaloneEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
+        controllers: {
+          cart: {
+            initialState: {items: staticState.controllers.cart.state.items},
+          },
+          context: staticState.controllers.context.state,
+        },
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});

@@ -5,9 +5,9 @@
   </template>
   <template lwc:else>
     <template if:false={hideSort}>
-      <div class="slds-var-m-bottom_small slds-clearfix">
+      <div class="slds-var-m-bottom_large slds-clearfix">
         <template lwc:if={isSortComponentReady}>
-          <c-quantic-sort class="slds-float_left" engine-id={engineId}>
+          <c-quantic-sort engine-id={engineId} variant="wide">
             <template for:each={sortOptions} for:item="sortOption">
               <c-quantic-sort-option
                 key={sortOption.value}
@@ -52,6 +52,7 @@
             with-input={facet.withInput}
             formatting-function={facet.formattingFunction}
             key={facet.field}
+            depends-on={facet.dependsOn}
             is-collapsed
           ></c-quantic-numeric-facet>
         </template>
@@ -69,6 +70,7 @@
             sort-criteria={facet.sortCriteria}
             with-search={facet.withSearch}
             key={facet.field}
+            depends-on={facet.dependsOn}
             is-collapsed
           ></c-quantic-category-facet>
         </template>
@@ -82,6 +84,7 @@
             no-filter-facet-count={facet.noFilterFacetCount}
             injection-depth={facet.injectionDepth}
             key={facet.field}
+            depends-on={facet.dependsOn}
             is-collapsed
           >
             <template for:each={facet.timeframes} for:item="timeframe">
@@ -104,6 +107,7 @@
             number-of-values={facet.numberOfValues}
             formatting-function={facet.formattingFunction}
             key={facet.field}
+            depends-on={facet.dependsOn}
             is-collapsed
           ></c-quantic-date-facet>
         </template>
@@ -121,6 +125,7 @@
             injection-depth={facet.injectionDepth}
             key={facet.field}
             custom-sort={facet.customSort}
+            depends-on={facet.dependsOn}
             is-collapsed
           ></c-quantic-facet>
         </template>

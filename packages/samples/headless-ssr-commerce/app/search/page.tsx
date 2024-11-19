@@ -1,4 +1,6 @@
+import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
+import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ProductList from '@/components/product-list';
 import SearchProvider from '@/components/providers/search-provider';
@@ -9,6 +11,7 @@ import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
 
 export default async function Search() {
@@ -16,13 +19,30 @@ export default async function Search() {
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
+        view: {
+          url: 'https://sports.barca.group/search',
+        },
+      },
+    },
+  });
+
   return (
     <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ContextDropdown useCase="search" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />

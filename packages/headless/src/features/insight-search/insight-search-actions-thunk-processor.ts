@@ -1,3 +1,4 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 import {
   SearchOptions,
@@ -11,7 +12,6 @@ import {
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions.js';
-import {emptyLegacyCorrection} from '../did-you-mean/did-you-mean-state.js';
 import {snapshot} from '../history/history-actions.js';
 import {extractHistory} from '../history/history-state.js';
 import {updateQuery} from '../query/query-actions.js';
@@ -26,17 +26,6 @@ import {StateNeededByExecuteSearch} from './insight-search-actions.js';
 import {logQueryError} from './insight-search-analytics-actions.js';
 import {buildInsightSearchRequest} from './insight-search-request.js';
 
-export interface AsyncThunkConfig {
-  getState: () => StateNeededByExecuteSearch;
-  dispatch: ThunkDispatch<
-    StateNeededByExecuteSearch,
-    ClientThunkExtraArguments<InsightAPIClient>,
-    AnyAction
-  >;
-  rejectWithValue: (err: InsightAPIErrorStatusResponse) => unknown;
-  extra: ClientThunkExtraArguments<InsightAPIClient>;
-}
-
 interface FetchedResponse {
   response: SuccessResponse | ErrorResponse;
   duration: number;
@@ -48,8 +37,28 @@ type ValidReturnTypeFromProcessingStep<RejectionType> =
   | ExecuteSearchThunkReturn
   | RejectionType;
 
+export interface AsyncThunkConfig {
+  getState: () => StateNeededByExecuteSearch;
+  dispatch: ThunkDispatch<
+    StateNeededByExecuteSearch,
+    ClientThunkExtraArguments<InsightAPIClient>,
+    AnyAction
+  >;
+  rejectWithValue: (err: InsightAPIErrorStatusResponse) => unknown;
+  extra: ClientThunkExtraArguments<InsightAPIClient>;
+}
+
+type QueryCorrectionCallback = (modification: string) => void;
+
 export class AsyncInsightSearchThunkProcessor<RejectionType> {
-  constructor(private config: AsyncThunkConfig) {}
+  constructor(
+    private config: AsyncThunkConfig,
+    private onUpdateQueryForCorrection: QueryCorrectionCallback = (
+      modification
+    ) => {
+      this.dispatch(updateQuery({q: modification}));
+    }
+  ) {}
 
   public async fetchFromAPI(
     {request, mappings}: MappedSearchRequest<InsightQueryRequest>,
@@ -94,17 +103,56 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
   private async processQueryCorrectionsOrContinue(
     fetched: FetchedResponse
   ): Promise<ValidReturnTypeFromProcessingStep<RejectionType> | null> {
-    if (
-      !this.shouldReExecuteTheQueryWithCorrections(fetched) ||
-      isErrorResponse(fetched.response)
-    ) {
+    const state = this.getState();
+    const successResponse = this.getSuccessResponse(fetched);
+
+    if (!successResponse || !state.didYouMean) {
       return null;
     }
 
-    const {correctedQuery} = fetched.response.success.queryCorrections
-      ? fetched.response.success.queryCorrections[0]
-      : emptyLegacyCorrection();
+    const {enableDidYouMean, automaticallyCorrectQuery} = state.didYouMean;
+    const {results, queryCorrections, queryCorrection} = successResponse;
+
+    if (!enableDidYouMean || !automaticallyCorrectQuery) {
+      return null;
+    }
+
+    const shouldExecuteLegacyDidYouMeanAutoCorrection =
+      results.length === 0 && queryCorrections && queryCorrections.length !== 0;
+
+    const shouldExecuteNextDidYouMeanAutoCorrection =
+      !isNullOrUndefined(queryCorrection) &&
+      !isNullOrUndefined(queryCorrection.correctedQuery);
+
+    const shouldExitWithNoAutoCorrection =
+      !shouldExecuteLegacyDidYouMeanAutoCorrection &&
+      !shouldExecuteNextDidYouMeanAutoCorrection;
+
+    if (shouldExitWithNoAutoCorrection) {
+      return null;
+    }
+    const processedDidYouMean = shouldExecuteLegacyDidYouMeanAutoCorrection
+      ? await this.processLegacyDidYouMeanAutoCorrection(fetched)
+      : this.processNextDidYouMeanAutoCorrection(fetched);
+
+    this.dispatch(snapshot(extractHistory(this.getState())));
+
+    return processedDidYouMean;
+  }
+
+  private async processLegacyDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): Promise<ExecuteSearchThunkReturn | RejectionType | null> {
     const originalQuery = this.getCurrentQuery();
+    const originalSearchSuccessResponse = this.getSuccessResponse(
+      originalFetchedResponse
+    )!;
+
+    if (!originalSearchSuccessResponse.queryCorrections) {
+      return null;
+    }
+
+    const {correctedQuery} = originalSearchSuccessResponse.queryCorrections[0];
 
     const retried =
       await this.automaticallyRetryQueryWithCorrection(correctedQuery);
@@ -120,32 +168,34 @@ export class AsyncInsightSearchThunkProcessor<RejectionType> {
       ...retried,
       response: {
         ...retried.response.success,
-        queryCorrections: fetched.response.success.queryCorrections,
+        queryCorrections: originalSearchSuccessResponse.queryCorrections,
       },
       automaticallyCorrected: true,
       originalQuery,
     };
   }
 
-  private shouldReExecuteTheQueryWithCorrections(
-    fetched: FetchedResponse
-  ): boolean {
-    const state = this.getState();
-    const successResponse = this.getSuccessResponse(fetched);
+  private processNextDidYouMeanAutoCorrection(
+    originalFetchedResponse: FetchedResponse
+  ): ExecuteSearchThunkReturn {
+    const successResponse = this.getSuccessResponse(originalFetchedResponse)!;
+    const {correctedQuery, originalQuery} = successResponse.queryCorrection!;
 
-    if (
-      state.didYouMean?.enableDidYouMean === true &&
-      successResponse?.results.length === 0 &&
-      successResponse?.queryCorrections &&
-      successResponse?.queryCorrections.length !== 0
-    ) {
-      return true;
-    }
-    return false;
+    this.onUpdateQueryForCorrection(correctedQuery);
+
+    return {
+      ...originalFetchedResponse,
+      response: {
+        ...successResponse,
+      },
+      queryExecuted: correctedQuery,
+      automaticallyCorrected: true,
+      originalQuery,
+    };
   }
 
   private async automaticallyRetryQueryWithCorrection(correction: string) {
-    this.dispatch(updateQuery({q: correction}));
+    this.onUpdateQueryForCorrection(correction);
     const state = this.getState();
     const fetched = await this.fetchFromAPI(
       await buildInsightSearchRequest(state)
