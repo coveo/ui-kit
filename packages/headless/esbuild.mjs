@@ -17,8 +17,11 @@ const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isNightly = process.env.IS_NIGHTLY === 'true';
 
-const buenoVersion = 'v' + buenoJson.version;
+const buenoVersion = isNightly
+  ? `v${buenoJson.version.split('.').shift()}-nightly`
+  : 'v' + buenoJson.version;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
