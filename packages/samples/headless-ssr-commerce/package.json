@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@coveo/headless-react": "2.1.1",
-    "jsdom": "25.0.1",
     "next": "14.2.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -23,6 +22,7 @@
     "@types/react-dom": "^18.2.0",
     "eslint": "8.57",
     "eslint-config-next": "14.2.5",
+    "jsdom": "25.0.1",
     "typescript": "5.4.5"
   }
 }
