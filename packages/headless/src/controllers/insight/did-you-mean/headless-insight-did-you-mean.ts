@@ -10,24 +10,39 @@ import {
   buildCoreDidYouMean,
   DidYouMean,
   DidYouMeanState,
+  DidYouMeanProps,
+  DidYouMeanOptions,
 } from '../../core/did-you-mean/headless-core-did-you-mean.js';
 
-export type {QueryCorrection, WordCorrection, DidYouMean, DidYouMeanState};
+export type {
+  QueryCorrection,
+  WordCorrection,
+  DidYouMean,
+  DidYouMeanState,
+  DidYouMeanProps,
+  DidYouMeanOptions,
+};
 
 /**
  * The insight DidYouMean controller is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction, the controller either suggests the correction or
  * automatically triggers a new query with the suggested term.
  *
- * @param engine - The insight engine.
+ * @param engine - The headless engine.
+ * @param props - The configurable `DidYouMean` properties.
  *
  * @group Controllers
  * @category DidYouMean
  */
-export function buildDidYouMean(engine: InsightEngine): DidYouMean {
-  const controller = buildCoreDidYouMean(engine, {
-    options: {queryCorrectionMode: 'legacy'},
-  });
+export function buildDidYouMean(
+  engine: InsightEngine,
+  props: DidYouMeanProps = {
+    options: {
+      queryCorrectionMode: 'legacy',
+    },
+  }
+): DidYouMean {
+  const controller = buildCoreDidYouMean(engine, props);
   const {dispatch} = engine;
 
   return {

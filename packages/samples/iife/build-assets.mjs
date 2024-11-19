@@ -57,6 +57,8 @@ function getDeploymentPipelineAssets() {
       readFileSync(resolvePath(workspacesRoot, '.deployment.config.json'))
         .toString()
         .replace(': $[ENVIRONMENTS]', ': []')
+        .replaceAll(': $[IS_NIGHTLY]', ' : false')
+        .replaceAll(': $[IS_NOT_NIGHTLY]', ' : false')
     );
     return deploymentConfig;
   }
