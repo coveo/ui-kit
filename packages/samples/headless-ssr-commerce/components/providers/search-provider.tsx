@@ -7,6 +7,7 @@ import {
 } from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
+import {HydrationMetadata} from '../hydration-metadata';
 
 interface SearchPageProps {
   staticState: SearchStaticState;
@@ -52,6 +53,10 @@ export default function SearchProvider({
         controllers={hydratedState.controllers}
       >
         {children}
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
       </searchEngineDefinition.HydratedStateProvider>
     );
   } else {
@@ -60,6 +65,7 @@ export default function SearchProvider({
         controllers={staticState.controllers}
       >
         {children}
+        <HydrationMetadata staticState={staticState} />
       </searchEngineDefinition.StaticStateProvider>
     );
   }

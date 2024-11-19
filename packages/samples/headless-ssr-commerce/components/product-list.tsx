@@ -20,7 +20,7 @@ export default function ProductList() {
   };
 
   return (
-    <ul>
+    <ul aria-label="Product List">
       {state.products.map((product) => (
         <li key={product.ec_product_id}>
           <button disabled={!methods} onClick={() => onProductClick(product)}>
