@@ -362,6 +362,9 @@ export {
   buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria.js';
+export type {SortCriterion as SortSortCriterion} from './features/sort/sort.js';
+
+export {SortBy as SortSortBy} from './features/sort/sort.js';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser.js';
 export type {Template} from './features/templates/templates-manager.js';
 export type {

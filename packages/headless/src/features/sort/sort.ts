@@ -17,6 +17,7 @@ export type SortByRelevance = {
 export type SortByFieldsFields = {
   name: string;
   direction?: SortDirection;
+  displayName?: string;
 };
 
 export type SortByFields = {
