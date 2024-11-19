@@ -32,7 +32,11 @@ export default function ProductList() {
               height={50}
             />
           </button>
-          <button onClick={() => addToCart(cartMethods!, cartState, product)}>
+          <button
+            onClick={() =>
+              addToCart(cartMethods!, cartState, product, state.responseId)
+            }
+          >
             Add to cart
           </button>
         </li>

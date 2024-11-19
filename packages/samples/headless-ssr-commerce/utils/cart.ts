@@ -4,7 +4,9 @@ import {
   CartItem as HeadlessCartItem,
   Product as HeadlessProduct,
   CartState as HeadlessCartState,
+  getSampleCommerceEngineConfiguration,
 } from '@coveo/headless-react/ssr-commerce';
+import {createRelay} from '@coveo/relay';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
 
@@ -26,8 +28,16 @@ export async function adjustQuantity(
 export async function addToCart(
   headlessCart: HeadlessSSRCart,
   headlessCartState: HeadlessCartState,
-  product: HeadlessProduct
+  product: HeadlessProduct,
+  responseId: string
 ) {
+  const config = getSampleCommerceEngineConfiguration();
+  const relay = createRelay({
+    token: config.accessToken,
+    trackingId: config.analytics.trackingId ?? '',
+    url: `https://${config.organizationId}.analytics.org.coveo.com/rest/organizations/${config.organizationId}/events/v1`,
+  });
+
   const existingItem = headlessCartState.items.find(
     (item) => item.productId === product.ec_product_id
   );
@@ -42,6 +52,17 @@ export async function addToCart(
   headlessCart.updateItemQuantity(item);
   // Add the item to the external service
   await externalCartAPI.addItemToCart(item);
+
+  relay.emit('ec.productClick', {
+    position: product.position,
+    currency: 'USD',
+    product: {
+      productId: product.ec_product_id,
+      name: product.ec_name,
+      price: product.ec_price,
+    },
+    responseId: responseId,
+  });
 }
 
 export async function purchase(
