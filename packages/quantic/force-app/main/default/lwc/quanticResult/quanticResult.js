@@ -96,7 +96,7 @@ export default class QuanticResult extends LightningElement {
     return new TimeSpan(
       this.result.raw.ytvideoduration,
       false
-    ).getCleanHHMMSS();
+    ).getYoutubeFormatTimestamp();
   }
 
   onHasPreview = (evt) => {

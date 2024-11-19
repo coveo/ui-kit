@@ -165,7 +165,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /**
