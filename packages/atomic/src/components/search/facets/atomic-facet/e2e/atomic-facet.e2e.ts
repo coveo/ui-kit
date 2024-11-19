@@ -264,4 +264,47 @@ test.describe.serial('Sort Criteria', () => {
       expect(values).toEqual(sortedValues);
     });
   });
+  test.describe('when sort criteria is set to "automatic"', () => {
+    test.beforeEach(async ({facet}) => {
+      await facet.load({
+        args: {
+          sortCriteria: 'automatic',
+          field: 'ec_brand',
+          label: 'Brand',
+          numberOfValues: 10,
+        },
+      });
+      await facet.hydrated.waitFor();
+      await expect.poll(async () => await facet.facetValue.count()).toBe(10);
+    });
+
+    test('should have facet values sorted by occurrences when not expanded', async ({
+      facet,
+    }) => {
+      const values = await facet.facetValueOccurrences.allTextContents();
+      const sortedValues = [...values]
+        .sort((a, b) => {
+          const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
+          const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
+          return numA - numB;
+        })
+        .reverse();
+      expect(values).toEqual(sortedValues);
+    });
+
+    test.describe('when expanded', () => {
+      test.beforeEach(async ({facet}) => {
+        await facet.showMoreButton.click();
+        await expect.poll(async () => await facet.facetValue.count()).toBe(20);
+      });
+
+      test('should have facet values sorted alphanumerically when expanded', async ({
+        facet,
+      }) => {
+        const values = await facet.facetValueLabel.allTextContents();
+        const sortedValues = [...values].sort();
+        expect(values).toEqual(sortedValues);
+      });
+    });
+  });
 });
