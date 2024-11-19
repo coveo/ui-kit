@@ -148,6 +148,42 @@
       }
     },
     {
+      "id": "deploy-atomic-patch-loader-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]/loader",
+        "source": "packages/atomic/dist/loader",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-minor-loader-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/loader",
+        "source": "packages/atomic/dist/loader",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-major-loader-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/loader",
+        "source": "packages/atomic/dist/loader",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
