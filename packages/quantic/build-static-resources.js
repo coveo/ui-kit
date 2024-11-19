@@ -123,11 +123,8 @@ const copyBueno = async () => {
 const setupQuanticMetadata = async () => {
   try {
     console.info('Begin Quantic metadata creation');
-    const outputJsonPath = `${staticResourcesPath}/quanticMetadata/quanticMetadata.json`;
+    const outputJsonPath = `${staticResourcesPath}/quanticMetadata.json`;
 
-    await fs.mkdir(`${staticResourcesPath}/quanticMetadata`, {
-      recursive: true,
-    });
     const version = await getPackageVersion();
     const metadata = {
       version: version,
