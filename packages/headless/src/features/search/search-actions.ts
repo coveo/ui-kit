@@ -50,6 +50,10 @@ export interface SearchAction {
   actionCause: string;
 }
 
+export const nullActionCause = (): SearchAction => ({
+  actionCause: null as unknown as string,
+});
+
 export type {StateNeededByExecuteSearch} from './search-actions-thunk-processor.js';
 
 export interface ExecuteSearchThunkReturn {
