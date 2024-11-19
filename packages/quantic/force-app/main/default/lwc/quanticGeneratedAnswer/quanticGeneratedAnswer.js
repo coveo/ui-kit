@@ -429,12 +429,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get shouldDisplayGeneratedAnswer() {
     const hasCitations = !!this.citations?.length;
-    return (
-      !!this.answer ||
-      this.isStreaming ||
-      hasCitations ||
-      this.hasRetryableError
-    );
+    return !!this.answer || hasCitations || this.hasRetryableError;
   }
 
   get generatedAnswerClass() {
