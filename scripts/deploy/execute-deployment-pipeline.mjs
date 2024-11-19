@@ -15,6 +15,7 @@ function getVersionComposants(version) {
     major: parsedVersion?.major,
     minor: parsedVersion?.minor,
     patch: parsedVersion?.patch,
+    build: parsedVersion.prerelease[0]
   };
 }
 const root = getVersionComposants(rootJson.version);
@@ -23,9 +24,13 @@ const headless = getVersionComposants(headlessJson.version);
 const atomic = getVersionComposants(atomicJson.version);
 const atomicReact = getVersionComposants(atomicReactJson.version);
 const atomicHostedPage = getVersionComposants(atomicHostedPageJson.version);
+const IS_NIGHTLY = !!root.build;
+
 console.log(execSync(`
   deployment-package package create --with-deploy \
-    --version ${root.major}.${root.minor}.${root.patch} \
+    --version ${root.major}.${root.minor}.${root.patch}${root.build ? `.${root.build}` : ''} \
+    --resolve IS_NIGHTLY=${IS_NIGHTLY} \
+    --resolve IS_NOT_NIGHTLY=${!IS_NIGHTLY} \
     --resolve BUENO_MAJOR_VERSION=${bueno.major} \
     --resolve BUENO_MINOR_VERSION=${bueno.major}.${bueno.minor} \
     --resolve BUENO_PATCH_VERSION=${bueno.major}.${bueno.minor}.${bueno.patch} \

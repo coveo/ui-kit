@@ -1,3 +1,14 @@
+## 3.9.0 (2024-11-13)
+
+- docs(headless): add multiple listing pages in headless-ssr-commerce (#4635) ([0ebf951](https://github.com/coveo/ui-kit/commits/0ebf951)), closes [#4635](https://github.com/coveo/ui-kit/issues/4635)
+- docs(headless): fix broken link in comment (#4663) ([c068cc6](https://github.com/coveo/ui-kit/commits/c068cc6)), closes [#4663](https://github.com/coveo/ui-kit/issues/4663)
+- docs(headless): implement a better cart in headless-ssr-commerce sample (#4627) ([d9ca686](https://github.com/coveo/ui-kit/commits/d9ca686)), closes [#4627](https://github.com/coveo/ui-kit/issues/4627)
+- chore(headless): add a wider range of types for the ssr-commerce summaryState (#4643) ([b52d936](https://github.com/coveo/ui-kit/commits/b52d936)), closes [#4643](https://github.com/coveo/ui-kit/issues/4643)
+- test(headles-react): add test for ssr-commerce (#4616) ([cdedb88](https://github.com/coveo/ui-kit/commits/cdedb88)), closes [#4616](https://github.com/coveo/ui-kit/issues/4616)
+- feat(headless ssr): Improve server-side error logging (#4639) ([ae95059](https://github.com/coveo/ui-kit/commits/ae95059)), closes [#4639](https://github.com/coveo/ui-kit/issues/4639)
+- feat(headless): add applyCorrection function in didYouMean (#4609) ([ac505ad](https://github.com/coveo/ui-kit/commits/ac505ad)), closes [#4609](https://github.com/coveo/ui-kit/issues/4609)
+- fix(headless): ensure each folded result keep a reference of its 'source' searchId (#4628) ([c8bb175](https://github.com/coveo/ui-kit/commits/c8bb175)), closes [#4628](https://github.com/coveo/ui-kit/issues/4628)
+
 ## <small>3.8.1 (2024-11-06)</small>
 
 - chore(headless): move product-list ssr to its own directory (#4631) ([2eefb48](https://github.com/coveo/ui-kit/commits/2eefb48)), closes [#4631](https://github.com/coveo/ui-kit/issues/4631)
