@@ -50,7 +50,19 @@ export const buildInsightBaseRequest = async (
         fieldsToInclude: state.fields.fieldsToInclude,
       }),
     ...(state.didYouMean && {
-      enableDidYouMean: state.didYouMean.enableDidYouMean,
+      queryCorrection: {
+        enabled:
+          state.didYouMean.enableDidYouMean &&
+          state.didYouMean.queryCorrectionMode === 'next',
+        options: {
+          automaticallyCorrect: state.didYouMean.automaticallyCorrectQuery
+            ? ('whenNoResults' as const)
+            : ('never' as const),
+        },
+      },
+      enableDidYouMean:
+        state.didYouMean.enableDidYouMean &&
+        state.didYouMean.queryCorrectionMode === 'legacy',
     }),
     ...(state.sortCriteria && {
       sortCriteria: state.sortCriteria,

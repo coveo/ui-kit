@@ -1,11 +1,11 @@
 import {
   Controller,
   ControllerDefinitionsMap,
-  CoreEngineNext,
   InferControllerFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
   SolutionType,
+  CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 import {
   useContext,
@@ -25,23 +25,21 @@ import {
 } from './types.js';
 
 function isHydratedStateContext<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
-  ctx: ContextState<TEngine, TControllers, TSolutionType>
-): ctx is ContextHydratedState<TEngine, TControllers, TSolutionType> {
+  ctx: ContextState<TControllers, TSolutionType>
+): ctx is ContextHydratedState<TControllers, TSolutionType> {
   return 'engine' in ctx;
 }
 
 function buildControllerHook<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TKey extends keyof TControllers,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >,
   key: TKey
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
@@ -80,12 +78,11 @@ function buildControllerHook<
 }
 
 export function buildControllerHooks<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >,
   controllersMap?: TControllers
 ) {
@@ -102,12 +99,11 @@ export function buildControllerHooks<
 }
 
 export function buildEngineHook<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >
 ) {
   return () => {
@@ -120,12 +116,11 @@ export function buildEngineHook<
 }
 
 export function buildStaticStateProvider<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >
 ) {
   return ({
@@ -143,12 +138,11 @@ export function buildStaticStateProvider<
 }
 
 export function buildHydratedStateProvider<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >
 ) {
   return ({
@@ -156,7 +150,7 @@ export function buildHydratedStateProvider<
     controllers,
     children,
   }: PropsWithChildren<{
-    engine: TEngine;
+    engine: SSRCommerceEngine;
     controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
   }>) => {
     const {Provider} = singletonContext.get();

@@ -1,33 +1,34 @@
 'use client';
 
 import {
-  listingEngineDefinition,
-  ListingHydratedState,
-  ListingStaticState,
+  StandaloneHydratedState,
+  StandaloneStaticState,
+  standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
-import {HydrationMetadata} from '../hydration-metadata';
 
-interface ListingPageProps {
-  staticState: ListingStaticState;
+interface StandalonePageProps {
+  staticState: StandaloneStaticState;
   navigatorContext: NavigatorContext;
 }
 
-export default function ListingProvider({
+export default function StandaloneProvider({
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<ListingPageProps>) {
+}: PropsWithChildren<StandalonePageProps>) {
   const [hydratedState, setHydratedState] = useState<
-    ListingHydratedState | undefined
+    StandaloneHydratedState | undefined
   >(undefined);
 
   // Setting the navigator context provider also in client-side before hydrating the application
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  standaloneEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   useEffect(() => {
-    listingEngineDefinition
+    standaloneEngineDefinition
       .hydrateStaticState({
         searchAction: staticState.searchAction,
         controllers: {
@@ -39,32 +40,33 @@ export default function ListingProvider({
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
+
         // Refreshing recommendations in the browser after hydrating the state in the client-side
         // Recommendation refresh in the server is not supported yet.
-        // controllers.popularBoughtRecs.refresh(); // FIXME: does not work
+        // controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
   if (hydratedState) {
     return (
-      <listingEngineDefinition.HydratedStateProvider
+      <standaloneEngineDefinition.HydratedStateProvider
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
-        {children}
-        <HydrationMetadata
-          staticState={staticState}
-          hydratedState={hydratedState}
-        />
-      </listingEngineDefinition.HydratedStateProvider>
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>{children}</>
+      </standaloneEngineDefinition.HydratedStateProvider>
     );
   } else {
     return (
-      <listingEngineDefinition.StaticStateProvider
+      <standaloneEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {children} <HydrationMetadata staticState={staticState} />
-      </listingEngineDefinition.StaticStateProvider>
+        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
+  Type 'bigint' is not assignable to type 'ReactNode'.*/}
+        <>{children}</>
+      </standaloneEngineDefinition.StaticStateProvider>
     );
   }
 }
