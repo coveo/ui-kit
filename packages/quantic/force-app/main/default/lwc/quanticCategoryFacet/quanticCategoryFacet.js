@@ -331,7 +331,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   initFacetConditionManager(engine) {
-    this.categoryfacetConditionsManager =
+    this.categoryFacetConditionsManager =
       this.headless.buildFacetConditionsManager(engine, {
         facetId: this.facet.state.facetId,
         conditions: generateFacetDependencyConditions({
