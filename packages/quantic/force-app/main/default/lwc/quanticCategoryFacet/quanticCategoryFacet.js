@@ -259,7 +259,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
-    this.categoryfacetConditionsManager?.stopWatching();
+    this.categoryFacetConditionsManager?.stopWatching();
   }
 
   /**
