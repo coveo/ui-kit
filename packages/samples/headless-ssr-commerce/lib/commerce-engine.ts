@@ -2,6 +2,7 @@ import {
   defineCommerceEngine,
   InferStaticState,
   InferHydratedState,
+  CommerceSearchParameters,
 } from '@coveo/headless-react/ssr-commerce';
 import engineConfig from './commerce-engine-config';
 
@@ -13,6 +14,15 @@ export const {
   standaloneEngineDefinition,
   useEngine,
 } = engineDefinition;
+
+export const getSearchEngineDefinitionUncached = (
+  cachedParameters: CommerceSearchParameters
+) =>
+  searchEngineDefinition.fetchStaticState({
+    controllers: {
+      parameterManager: {initialState: {parameters: cachedParameters}},
+    },
+  });
 
 export const {
   useCart,

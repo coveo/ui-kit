@@ -12,7 +12,7 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
   const searchParams = useSearchParams();
   const pathName = usePathname();
 
-  const isHistoryNavigation = useRef(false);
+  // const isHistoryNavigation = useRef(false);
   const isSynchronizing = useRef(false);
   const previousSearchParams = useRef('');
   const taskQueue = useRef(Promise.resolve());
@@ -76,11 +76,6 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
       console.log('currentCommerceParamsInUrl', currentCommerceParamsInUrl);
       console.log('currentCommerceParamsInState', currentCommerceParamsInState);
 
-      if (isHistoryNavigation.current) {
-        isHistoryNavigation.current = false;
-        return;
-      }
-
       console.log('searchParams', searchParams.toString());
       console.log('location.search', location.search);
       if (
@@ -123,7 +118,6 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
       if (difference(originalCommerceParams, currentCommerceParams).size > 0) {
         const replaceUrl = `${resetUrl.current}${location.hash}`;
         previousSearchParams.current = new URL(replaceUrl).search.split('?')[1];
-        isHistoryNavigation.current = true;
         console.log('replace state');
 
         router.replace(replaceUrl);
@@ -170,7 +164,6 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
         previousSearchParams.current = new URL(newUrl).search.split('?')[1];
         console.log('push state');
         history.pushState(window.history.state, document.title, newUrl);
-        isHistoryNavigation.current = true;
       }
     });
   }, [initialUrl, pathName, searchParams, serialize, state.parameters]);

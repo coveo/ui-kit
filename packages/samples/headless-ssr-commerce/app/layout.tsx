@@ -11,12 +11,8 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body>
         <h1>Coveo Headless Commerce Next.js</h1>
         <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-          <Link href={'/search?perPage=9&sortCriteria=relevance'}>
-            Search Page
-          </Link>
-          <Link href={'/listing?perPage=9&sortCriteria=relevance'}>
-            Listing Page
-          </Link>
+          <Link href={'/search'}>Search Page</Link>
+          <Link href={'/listing'}>Listing Page</Link>
         </div>
 
         {children}

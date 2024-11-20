@@ -26,7 +26,7 @@ const getSearchEngineDefinition = unstable_cache(
       },
     }),
   undefined,
-  {revalidate: 1, tags: ['search']}
+  {revalidate: 5, tags: ['search']}
 );
 
 export default async function Search({

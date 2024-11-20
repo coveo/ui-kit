@@ -31,7 +31,7 @@ export default function SearchProvider({
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
   if (typeof window !== 'undefined') {
     console.log('I CAST COOKIE');
-    document.cookie = `searchParamCache=${btoa(JSON.stringify({state: staticState.controllers.parameterManager.state, cachedParams: searchParams, searchUid: staticState.controllers.summary.state.searchuid}))}; expires=${new Date(Date.now() + 1e3).toUTCString()}`;
+    document.cookie = `searchParamCache=${btoa(JSON.stringify({state: staticState.controllers.parameterManager.state, cachedParams: searchParams, searchUid: staticState.controllers.summary.state.searchuid}))}; expires=${new Date(Date.now() + 5e3).toUTCString()}`;
   }
   useEffect(() => {
     searchEngineDefinition

@@ -11,8 +11,24 @@ import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
 import {listingEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
-import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {headers} from 'next/headers';
+import {symmetricDifference} from '@/utils/set';
+import {
+  buildSSRCommerceSearchParameterSerializer,
+  CommerceSearchParameters,
+} from '@coveo/headless-react/ssr-commerce';
+import {revalidateTag, unstable_cache} from 'next/cache';
+import {cookies, headers} from 'next/headers';
+
+const getSearchEngineDefinition = unstable_cache(
+  (cachedParameters: CommerceSearchParameters) =>
+    listingEngineDefinition.fetchStaticState({
+      controllers: {
+        parameterManager: {initialState: {parameters: cachedParameters}},
+      },
+    }),
+  undefined,
+  {revalidate: 5, tags: ['listing']}
+);
 
 /**
  * This file defines a List component that uses the Coveo Headless SSR commerce library to manage its state.
@@ -24,19 +40,50 @@ export default async function Listing({
 }: {
   searchParams: Promise<URLSearchParams>;
 }) {
-  const headersList = await headers();
+  const headersList = headers();
+  const cookieStore = cookies();
+
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headersList);
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
-  const {toCommerceSearchParameters} =
+  const {serialize, toCommerceSearchParameters} =
     buildSSRCommerceSearchParameterSerializer();
   const parameters = toCommerceSearchParameters(await searchParams);
 
-  // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await listingEngineDefinition.fetchStaticState({
-    controllers: {parameterManager: {initialState: {parameters}}},
-  });
+  let cachedParameters = parameters;
+  let shouldInvalidate = false;
+  if (cookieStore.has('searchParamCache')) {
+    const cachedParams = cookieStore.get('searchParamCache')!.value;
+    const decryptedParams = JSON.parse(atob(cachedParams));
+    const decryptedSearchParams = (
+      decryptedParams.state as Awaited<
+        ReturnType<typeof listingEngineDefinition.fetchStaticState>
+      >['controllers']['parameterManager']['state']
+    ).parameters;
+    const cachedOriginalParams = decryptedParams.cachedParams;
+    const cachedParamsSet = new Set(
+      new URL(
+        serialize(decryptedSearchParams, new URL('https://www.example.com'))
+      ).search.split('&')
+    );
+    const currentParamsSet = new Set(
+      new URL(
+        serialize(parameters, new URL('https://www.example.com'))
+      ).search.split('&')
+    );
+    if (symmetricDifference(cachedParamsSet, currentParamsSet).size === 0) {
+      console.log('PARAMS MATCH');
+      cachedParameters = cachedOriginalParams;
+      shouldInvalidate = true;
+    } else {
+      console.log('PARAMS DONT MATCH');
+    }
+  }
+  const staticState = await getSearchEngineDefinition(cachedParameters);
+  if (shouldInvalidate) {
+    revalidateTag('listing');
+  }
 
   console.log(
     'FETCHED STATIC STATE',
@@ -48,6 +95,7 @@ export default async function Listing({
   return (
     <ListingProvider
       staticState={staticState}
+      searchParams={parameters}
       navigatorContext={navigatorContext.marshal}
     >
       <ParameterManager initialUrl={url} />
