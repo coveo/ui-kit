@@ -55,7 +55,7 @@ export async function addToCart(
   headlessCart: HeadlessSSRCart,
   headlessCartState: HeadlessCartState,
   product: HeadlessProduct,
-  responseId: string
+  responseId?: string
 ) {
   const existingItem = headlessCartState.items.find(
     (item) => item.productId === product.ec_product_id
@@ -72,8 +72,10 @@ export async function addToCart(
   // Add the item to the external service
   await externalCartAPI.addItemToCart(item);
 
-  // Send the product click event
-  sendProductClickEvent(product, responseId);
+  if (responseId) {
+    // Send the product click event
+    sendProductClickEvent(product, responseId);
+  }
 }
 
 export async function purchase(
