@@ -23,6 +23,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -160,6 +161,8 @@ export default class QuanticDateFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  dateFacetConditionsManager;
 
   labels = {
     clearFilter,
@@ -214,6 +217,7 @@ export default class QuanticDateFacet extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
+    this.dateFacetConditionsManager?.stopWatching();
   }
 
   updateState() {
@@ -235,7 +239,7 @@ export default class QuanticDateFacet extends LightningElement {
   }
 
   initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+    this.dateFacetConditionsManager = this.headless.buildFacetConditionsManager(
       engine,
       {
         facetId: this.facet.state.facetId,
