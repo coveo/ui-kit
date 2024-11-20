@@ -10,6 +10,8 @@ import {
   BindStateToController,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {TabDropdown} from '../../../common/tab-manager/tab-dropdown';
+import {TabDropdownOption} from '../../../common/tab-manager/tab-dropdown-option';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -88,7 +90,7 @@ export class AtomicTabManager {
             role="list"
             aria-label="tab-area"
             part="tab-area"
-            class="mb-2 flex w-full flex-row border-b"
+            class="mb-2 flex hidden w-full flex-row border-b sm:flex"
           >
             {this.tabs.map((tab) => (
               <Tab-Manager-Button
@@ -101,6 +103,28 @@ export class AtomicTabManager {
                 }}
               ></Tab-Manager-Button>
             ))}
+          </div>
+          <div class="w-full sm:hidden">
+            <TabDropdown
+              tabs={this.tabs}
+              activeTab={this.tabManagerState.activeTab}
+              onTabChange={(e) => {
+                const selectedTab = this.tabs.find(
+                  (tab) => tab.name === (e as string)
+                );
+                if (selectedTab) {
+                  selectedTab.tabController.select();
+                }
+              }}
+            >
+              {this.tabs.map((tab) => (
+                <TabDropdownOption
+                  value={tab.name}
+                  label={tab.label}
+                  isSelected={tab.name === this.tabManagerState.activeTab}
+                />
+              ))}
+            </TabDropdown>
           </div>
         </tab-manager-bar>
       </Host>
