@@ -1,6 +1,7 @@
 'use client';
 
 import {useParameterManager} from '@/lib/commerce-engine';
+import {difference, symmetricDifference} from '@/utils/set';
 import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
 import {useCallback, useEffect, useRef} from 'react';
@@ -84,7 +85,8 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
       console.log('searchParams', searchParams.toString());
       console.log('location.search', location.search);
       if (
-        currentCommerceParamsInState.symmetricDifference(
+        symmetricDifference(
+          currentCommerceParamsInState,
           currentCommerceParamsInUrl
         ).size > 0 &&
         didInit.current
@@ -119,7 +121,7 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
         ).search.split('&')
       );
 
-      if (originalCommerceParams.difference(currentCommerceParams).size > 0) {
+      if (difference(originalCommerceParams, currentCommerceParams).size > 0) {
         const replaceUrl = `${resetUrl.current}${location.hash}`;
         previousSearchParams.current = new URL(replaceUrl).search.split('?')[1];
         isHistoryNavigation.current = true;

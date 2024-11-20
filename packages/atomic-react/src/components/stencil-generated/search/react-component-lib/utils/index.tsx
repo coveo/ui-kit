@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { StyleReactProps } from '../interfaces.js';
+import type { StyleReactProps } from '../interfaces';
 
 export type StencilReactExternalProps<PropType, ElementType> = PropType &
   Omit<React.HTMLAttributes<ElementType>, 'style'> &
@@ -46,5 +46,5 @@ export const defineCustomElement = (tagName: string, customElement: any) => {
   }
 };
 
-export * from './attachProps.js';
-export * from './case.js';
+export * from './attachProps';
+export * from './case';
