@@ -5,7 +5,7 @@ runs:
   steps:
     - uses: actions/setup-python@39cd14951b08e74b54015e9e001cdefcf80e669f # v5
       with:
-        python-version: '3.8'
+        python-version: '3.12'
     - name: Install deployment package
       shell: bash
       run: pip install --index-url https://pypi.dev.cloud.coveo.com/simple 'deployment-package==7.*'
