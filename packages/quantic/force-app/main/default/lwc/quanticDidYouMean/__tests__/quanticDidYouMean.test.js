@@ -16,7 +16,7 @@ const defaultQueryCorrectionMode = 'legacy';
 
 const defaultOptions = {
   engineId: exampleEngine.id,
-  disableAutomaticallyCorrectQuery: false,
+  disableQueryAutoCorrection: false,
   queryCorrectionMode: defaultQueryCorrectionMode,
 };
 
@@ -119,8 +119,8 @@ describe('c-quantic-did-you-mean', () => {
       expect(functionsMocks.buildDidYouMean).toHaveBeenCalled();
     });
 
-    describe('#disableAutomaticallyCorrectQuery property', () => {
-      describe('when disableAutomaticallyCorrectQuery is false (default)', () => {
+    describe('#disableQueryAutoCorrection property', () => {
+      describe('when disableQueryAutoCorrection is false (default)', () => {
         it('should properly initialize the controller with automatic query correction enabled', async () => {
           createTestComponent();
           await flushPromises();
@@ -138,11 +138,11 @@ describe('c-quantic-did-you-mean', () => {
         });
       });
 
-      describe('when disableAutomaticallyCorrectQuery is true', () => {
+      describe('when disableQueryAutoCorrection is true', () => {
         it('should properly initialize the controller with automatic query correction disabled', async () => {
           createTestComponent({
             ...defaultOptions,
-            disableAutomaticallyCorrectQuery: true,
+            disableQueryAutoCorrection: true,
           });
           await flushPromises();
 
