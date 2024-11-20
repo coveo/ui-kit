@@ -221,7 +221,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   /** @type {boolean} */
   hasInitializationError = false;
   /** @type {FacetConditionsManager} */
-  categoryfacetConditionsManager;
+  categoryFacetConditionsManager;
 
   labels = {
     clear,
