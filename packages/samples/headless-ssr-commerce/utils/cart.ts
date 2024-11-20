@@ -7,6 +7,7 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless-react/ssr-commerce';
 import {createRelay} from '@coveo/relay';
+import {defaultContext} from './context';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
 
@@ -25,12 +26,12 @@ export async function adjustQuantity(
   await externalCartAPI.updateItemQuantity(updatedItem);
 }
 
-export async function addToCart(
-  headlessCart: HeadlessSSRCart,
-  headlessCartState: HeadlessCartState,
-  product: HeadlessProduct,
-  responseId: string
-) {
+// When sending cart events directly from the search result page, product listing pages, or from recommendation slots, you must send an additional click event along with the cart event.
+//
+// See https://docs.coveo.com/en/o1n93466/coveo-for-commerce/capture-cart-events#send-an-additional-click-event
+//
+// This is an example of how to send the product click event.
+function sendProductClickEvent(product: HeadlessProduct, responseId: string) {
   const config = getSampleCommerceEngineConfiguration();
   const relay = createRelay({
     token: config.accessToken,
@@ -38,6 +39,24 @@ export async function addToCart(
     url: `https://${config.organizationId}.analytics.org.coveo.com/rest/organizations/${config.organizationId}/events/v1`,
   });
 
+  relay.emit('ec.productClick', {
+    position: product.position,
+    currency: defaultContext.currency,
+    product: {
+      productId: product.ec_product_id,
+      name: product.ec_name,
+      price: product.ec_price,
+    },
+    responseId: responseId,
+  });
+}
+
+export async function addToCart(
+  headlessCart: HeadlessSSRCart,
+  headlessCartState: HeadlessCartState,
+  product: HeadlessProduct,
+  responseId: string
+) {
   const existingItem = headlessCartState.items.find(
     (item) => item.productId === product.ec_product_id
   );
@@ -53,16 +72,8 @@ export async function addToCart(
   // Add the item to the external service
   await externalCartAPI.addItemToCart(item);
 
-  relay.emit('ec.productClick', {
-    position: product.position,
-    currency: 'USD',
-    product: {
-      productId: product.ec_product_id,
-      name: product.ec_name,
-      price: product.ec_price,
-    },
-    responseId: responseId,
-  });
+  // Send the product click event
+  sendProductClickEvent(product, responseId);
 }
 
 export async function purchase(
