@@ -8,10 +8,10 @@ import {Suspense} from 'react';
 export default async function ProductDescriptionPage({
   params,
 }: {
-  params: {productId: string};
+  params: Promise<{productId: string}>;
 }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsNavigatorContext(await headers());
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
@@ -27,7 +27,7 @@ export default async function ProductDescriptionPage({
         <ProductProvider
           staticState={staticState}
           navigatorContext={navigatorContext.marshal}
-          productId={params.productId}
+          productId={(await params).productId}
         >
           <Recommendations />
         </ProductProvider>

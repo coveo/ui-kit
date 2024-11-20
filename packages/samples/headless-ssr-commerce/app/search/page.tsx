@@ -17,6 +17,7 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {revalidateTag, unstable_cache} from 'next/cache';
 import {headers, cookies} from 'next/headers';
+import {unstable_after} from 'next/server';
 
 const getSearchEngineDefinition = unstable_cache(
   (cachedParameters: CommerceSearchParameters) =>
@@ -34,8 +35,8 @@ export default async function Search({
 }: {
   searchParams: Promise<URLSearchParams>;
 }) {
-  const headersList = headers();
-  const cookieStore = cookies();
+  const headersList = await headers();
+  const cookieStore = await cookies();
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headersList);
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
@@ -74,7 +75,9 @@ export default async function Search({
   }
   const staticState = await getSearchEngineDefinition(cachedParameters);
   if (shouldInvalidate) {
-    revalidateTag('search');
+    unstable_after(() => {
+      revalidateTag('search');
+    });
   }
   console.log(
     'FETCHED STATIC STATE',
@@ -118,4 +121,4 @@ export default async function Search({
   );
 }
 
-// export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
