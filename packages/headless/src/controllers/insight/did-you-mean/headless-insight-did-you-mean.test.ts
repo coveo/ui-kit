@@ -8,17 +8,26 @@ import {
   MockedInsightEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockInsightState} from '../../../test/mock-insight-state.js';
-import {buildDidYouMean, DidYouMean} from './headless-insight-did-you-mean.js';
+import {
+  buildDidYouMean,
+  DidYouMean,
+  DidYouMeanOptions,
+} from './headless-insight-did-you-mean.js';
 
 vi.mock('../../../features/insight-search/insight-search-actions');
 vi.mock('../../../features/did-you-mean/did-you-mean-actions');
+
+const defaultDidYouMeanOptions: DidYouMeanOptions = {
+  automaticallyCorrectQuery: true,
+  queryCorrectionMode: 'legacy',
+};
 
 describe('did you mean', () => {
   let dym: DidYouMean;
   let engine: MockedInsightEngine;
 
   function initDidYouMean() {
-    dym = buildDidYouMean(engine);
+    dym = buildDidYouMean(engine, {options: defaultDidYouMeanOptions});
   }
 
   beforeEach(() => {
