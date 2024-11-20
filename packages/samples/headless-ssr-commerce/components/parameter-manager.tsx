@@ -17,7 +17,6 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
   const previousSearchParams = useRef('');
   const taskQueue = useRef(Promise.resolve());
   const didInit = useRef(false);
-  const lastPathName = useRef(pathName);
 
   const counter = useRef(0);
 
@@ -27,27 +26,27 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const popstateHandler = () => {
-      console.log('popstate');
-      console.log('pathName', pathName);
-      console.log('location.pathname', location.pathname);
-      console.log('lastPathName.current', lastPathName.current);
-      if (location.pathname !== pathName) {
-        console.log('refresh');
-        lastPathName.current = location.pathname;
-        router.replace(lastPathName.current);
-        isHistoryNavigation.current = true;
-      }
-    };
+  // useEffect(() => {
+  //   const popstateHandler = () => {
+  //     console.log('popstate');
+  //     console.log('pathName', pathName);
+  //     console.log('location.pathname', location.pathname);
+  //     console.log('lastPathName.current', lastPathName.current);
+  //     if (location.pathname !== pathName) {
+  //       console.log('refresh');
+  //       lastPathName.current = location.pathname;
+  //       router.replace(lastPathName.current);
+  //       isHistoryNavigation.current = true;
+  //     }
+  //   };
 
-    console.log('add popstate');
-    window.addEventListener('popstate', popstateHandler);
-    return () => {
-      console.log('remove popstate');
-      window.removeEventListener('popstate', popstateHandler);
-    };
-  }, []);
+  //   console.log('add popstate');
+  //   window.addEventListener('popstate', popstateHandler);
+  //   return () => {
+  //     console.log('remove popstate');
+  //     window.removeEventListener('popstate', popstateHandler);
+  //   };
+  // }, []);
 
   useEffect(() => {
     const copiedCounter = counter.current++;
@@ -126,7 +125,8 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
         previousSearchParams.current = new URL(replaceUrl).search.split('?')[1];
         isHistoryNavigation.current = true;
         console.log('replace state');
-        history.replaceState({}, document.title, replaceUrl);
+
+        router.replace(replaceUrl);
       }
     }
   };
@@ -169,7 +169,7 @@ export default function ParameterManager({initialUrl}: {initialUrl: string}) {
       if (newUrl !== currentUrl.toString()) {
         previousSearchParams.current = new URL(newUrl).search.split('?')[1];
         console.log('push state');
-        history.pushState({}, document.title, newUrl);
+        history.pushState(window.history.state, document.title, newUrl);
         isHistoryNavigation.current = true;
       }
     });

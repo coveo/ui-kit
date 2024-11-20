@@ -5,16 +5,21 @@ import {
   SearchStaticState,
   searchEngineDefinition,
 } from '@/lib/commerce-engine';
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {
+  CommerceSearchParameters,
+  NavigatorContext,
+} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 
 interface SearchPageProps {
   staticState: SearchStaticState;
+  searchParams: CommerceSearchParameters;
   navigatorContext: NavigatorContext;
 }
 
 export default function SearchProvider({
   staticState,
+  searchParams,
   navigatorContext,
   children,
 }: PropsWithChildren<SearchPageProps>) {
@@ -24,7 +29,10 @@ export default function SearchProvider({
 
   // Setting the navigator context provider also in client-side before hydrating the application
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
+  if (typeof window !== 'undefined') {
+    console.log('I CAST COOKIE');
+    document.cookie = `searchParamCache=${btoa(JSON.stringify({state: staticState.controllers.parameterManager.state, cachedParams: searchParams, searchUid: staticState.controllers.summary.state.searchuid}))}; expires=${new Date(Date.now() + 1e3).toUTCString()}`;
+  }
   useEffect(() => {
     searchEngineDefinition
       .hydrateStaticState({

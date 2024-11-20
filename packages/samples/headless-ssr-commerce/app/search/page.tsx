@@ -10,28 +10,72 @@ import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
-import {buildSSRCommerceSearchParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {headers} from 'next/headers';
+import {symmetricDifference} from '@/utils/set';
+import {
+  buildSSRCommerceSearchParameterSerializer,
+  CommerceSearchParameters,
+} from '@coveo/headless-react/ssr-commerce';
+import {revalidateTag, unstable_cache} from 'next/cache';
+import {headers, cookies} from 'next/headers';
+
+const getSearchEngineDefinition = unstable_cache(
+  (cachedParameters: CommerceSearchParameters) =>
+    searchEngineDefinition.fetchStaticState({
+      controllers: {
+        parameterManager: {initialState: {parameters: cachedParameters}},
+      },
+    }),
+  undefined,
+  {revalidate: 1, tags: ['search']}
+);
 
 export default async function Search({
   searchParams,
 }: {
   searchParams: Promise<URLSearchParams>;
 }) {
-  const headersList = await headers();
+  const headersList = headers();
+  const cookieStore = cookies();
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headersList);
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
-  const {toCommerceSearchParameters} =
+  const {serialize, toCommerceSearchParameters} =
     buildSSRCommerceSearchParameterSerializer();
   const parameters = toCommerceSearchParameters(await searchParams);
-
-  // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState({
-    controllers: {parameterManager: {initialState: {parameters}}},
-  });
-
+  let cachedParameters = parameters;
+  let shouldInvalidate = false;
+  if (cookieStore.has('searchParamCache')) {
+    const cachedParams = cookieStore.get('searchParamCache')!.value;
+    const decryptedParams = JSON.parse(atob(cachedParams));
+    const decryptedSearchParams = (
+      decryptedParams.state as Awaited<
+        ReturnType<typeof searchEngineDefinition.fetchStaticState>
+      >['controllers']['parameterManager']['state']
+    ).parameters;
+    const cachedOriginalParams = decryptedParams.cachedParams;
+    const cachedParamsSet = new Set(
+      new URL(
+        serialize(decryptedSearchParams, new URL('https://www.example.com'))
+      ).search.split('&')
+    );
+    const currentParamsSet = new Set(
+      new URL(
+        serialize(parameters, new URL('https://www.example.com'))
+      ).search.split('&')
+    );
+    if (symmetricDifference(cachedParamsSet, currentParamsSet).size === 0) {
+      console.log('PARAMS MATCH');
+      cachedParameters = cachedOriginalParams;
+      shouldInvalidate = true;
+    } else {
+      console.log('PARAMS DONT MATCH');
+    }
+  }
+  const staticState = await getSearchEngineDefinition(cachedParameters);
+  if (shouldInvalidate) {
+    revalidateTag('search');
+  }
   console.log(
     'FETCHED STATIC STATE',
     staticState.controllers.summary.state.searchuid
@@ -42,6 +86,7 @@ export default async function Search({
   return (
     <SearchProvider
       staticState={staticState}
+      searchParams={parameters}
       navigatorContext={navigatorContext.marshal}
     >
       <ParameterManager initialUrl={url} />
@@ -73,4 +118,4 @@ export default async function Search({
   );
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
