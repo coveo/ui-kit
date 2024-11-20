@@ -12,16 +12,21 @@ jest.mock('c/quanticUtils', () => ({
       DATEFACETS: 'dateFacets',
     },
   },
+  I18nUtils: {
+    format: jest.fn(),
+  },
 }));
 jest.mock('c/quanticHeadlessLoader');
 
 const selectors = {
   facetContent: '[data-test="facet-content"]',
+  componentError: 'c-quantic-component-error',
 };
 
 const exampleFacetId = 'example facet id';
+const exampleField = 'exampleField';
 const defaultOptions = {
-  field: 'example field',
+  field: exampleField,
 };
 const timeframeFacetControllerMock = {
   subscribe: jest.fn((callback) => callback()),
@@ -30,6 +35,8 @@ const timeframeFacetControllerMock = {
     values: [],
   },
 };
+const parentFacetIdError = `The ${exampleField} c-quantic-timeframe-facet requires depends.parentFacetId to be a valid string.`;
+const expectedValueError = `The ${exampleField} c-quantic-timeframe-facet requires depends.expectedValue to be a valid string.`;
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
@@ -81,6 +88,21 @@ const exampleEngine = {
 };
 let isInitialized = false;
 
+function mockBueno() {
+  // @ts-ignore
+  mockHeadlessLoader.getBueno = () => {
+    // @ts-ignore
+    global.Bueno = {
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+    };
+    return new Promise((resolve) => resolve());
+  };
+}
+
 function mockSuccessfulHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element, _, initialize) => {
@@ -101,8 +123,12 @@ function cleanup() {
 }
 
 describe('c-quantic-timeframe-facet', () => {
+  let consoleError;
+
   beforeAll(() => {
+    consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockSuccessfulHeadlessInitialization();
+    mockBueno();
   });
 
   afterEach(() => {
@@ -194,6 +220,85 @@ describe('c-quantic-timeframe-facet', () => {
       functionsMocks.buildDateFacet.mockReturnValue(
         timeframeFacetControllerMock
       );
+    });
+  });
+
+  describe('validation of the dependsOn property', () => {
+    describe('when depends.parentFacetId is not provided', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          expectedValue: 'txt',
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(parentFacetIdError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    describe('when depends.parentFacetId is not a string', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          parentFacetId: 1,
+          expectedValue: 'txt',
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(parentFacetIdError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    describe('when depends.expectedValue is not a string', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          parentFacetId: 'filetype',
+          expectedValue: 2,
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(expectedValueError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
     });
   });
 });

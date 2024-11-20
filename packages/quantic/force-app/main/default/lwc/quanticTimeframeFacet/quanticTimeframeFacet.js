@@ -12,6 +12,7 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
   registerToStore,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   DateUtils,
@@ -419,9 +420,30 @@ export default class QuanticTimeframeFacet extends LightningElement {
       metadata: {timeframes: this.timeframes},
     });
     if (this.dependsOn) {
+      this.validateDependsOnProperty();
       this.initFacetConditionManager(engine);
     }
   };
+
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!parentFacetId || !Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires depends.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires depends.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
 
   initFacetConditionManager(engine) {
     this.facetConditionsManager = this.headless.buildFacetConditionsManager(
