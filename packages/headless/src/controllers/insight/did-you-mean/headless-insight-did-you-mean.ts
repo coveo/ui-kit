@@ -23,6 +23,11 @@ export type {
   DidYouMeanOptions,
 };
 
+const defaultDidYouMeanOptions: DidYouMeanOptions = {
+  automaticallyCorrectQuery: true,
+  queryCorrectionMode: 'legacy',
+};
+
 /**
  * The insight DidYouMean controller is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction, the controller either suggests the correction or
@@ -36,13 +41,14 @@ export type {
  */
 export function buildDidYouMean(
   engine: InsightEngine,
-  props: DidYouMeanProps = {
-    options: {
-      queryCorrectionMode: 'legacy',
-    },
-  }
+  props: DidYouMeanProps
 ): DidYouMean {
-  const controller = buildCoreDidYouMean(engine, props);
+  const options = {
+    ...defaultDidYouMeanOptions,
+    ...props.options,
+  };
+
+  const controller = buildCoreDidYouMean(engine, {options});
   const {dispatch} = engine;
 
   return {
