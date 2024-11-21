@@ -36,7 +36,3 @@ export const historyForward = (): SearchAction => ({
 export const historyBackward = (): SearchAction => ({
   actionCause: SearchPageEvents.historyBackward,
 });
-
-export const noResultsBack = (): SearchAction => ({
-  actionCause: SearchPageEvents.noResultsBack,
-});
