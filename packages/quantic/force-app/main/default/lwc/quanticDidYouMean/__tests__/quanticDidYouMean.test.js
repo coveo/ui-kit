@@ -31,19 +31,13 @@ const mockDidYouMeanState = {
   hasQueryCorrection: true,
 };
 
-const mockQueryTriggerState = {
-  newQuery: 'example new query',
-  originalQuery: 'example original query',
-  wasQueryModified: true,
-};
-
 const functionsMocks = {
   buildDidYouMean: jest.fn(() => ({
     state: mockDidYouMeanState,
     subscribe: functionsMocks.subscribe,
   })),
   buildQueryTrigger: jest.fn(() => ({
-    state: mockQueryTriggerState,
+    state: {},
     subscribe: functionsMocks.subscribe,
   })),
   applyCorrection: jest.fn(() => {}),
@@ -117,6 +111,7 @@ describe('c-quantic-did-you-mean', () => {
       await flushPromises();
 
       expect(functionsMocks.buildDidYouMean).toHaveBeenCalled();
+      expect(functionsMocks.subscribe).toHaveBeenCalled();
     });
 
     describe('#disableQueryAutoCorrection property', () => {
