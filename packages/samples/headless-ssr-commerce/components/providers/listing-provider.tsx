@@ -7,6 +7,7 @@ import {
 } from '@/lib/commerce-engine';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
+import {HydrationMetadata} from '../hydration-metadata';
 
 interface ListingPageProps {
   staticState: ListingStaticState;
@@ -51,6 +52,10 @@ export default function ListingProvider({
         controllers={hydratedState.controllers}
       >
         {children}
+        <HydrationMetadata
+          staticState={staticState}
+          hydratedState={hydratedState}
+        />
       </listingEngineDefinition.HydratedStateProvider>
     );
   } else {
@@ -58,7 +63,7 @@ export default function ListingProvider({
       <listingEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {children}
+        {children} <HydrationMetadata staticState={staticState} />
       </listingEngineDefinition.StaticStateProvider>
     );
   }
