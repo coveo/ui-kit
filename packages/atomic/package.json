@@ -138,6 +138,7 @@
     "lit-html": "3.1.4",
     "local-web-server": "5.4.0",
     "lodash": "4.17.21",
+    "natural-orderby": "4.0.0",
     "ncp": "2.0.0",
     "postcss-focus-visible": "9.0.1",
     "postcss-import": "16.1.0",
