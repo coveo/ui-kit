@@ -265,9 +265,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    if (this.dependsOn) {
-      this.validateDependsOnProperty();
-    }
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>

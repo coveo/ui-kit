@@ -415,9 +415,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    if (this.dependsOn) {
-      this.validateDependsOnProperty();
-    }
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
