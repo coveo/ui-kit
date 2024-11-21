@@ -83,6 +83,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   /**
    * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
+   * @type {string}
    */
   @api answerConfigurationId;
 
