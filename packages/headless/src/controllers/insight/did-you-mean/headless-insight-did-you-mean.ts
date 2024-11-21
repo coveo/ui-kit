@@ -41,7 +41,9 @@ const defaultDidYouMeanOptions: DidYouMeanOptions = {
  */
 export function buildDidYouMean(
   engine: InsightEngine,
-  props: DidYouMeanProps
+  props: DidYouMeanProps = {
+    options: defaultDidYouMeanOptions,
+  }
 ): DidYouMean {
   const options = {
     ...defaultDidYouMeanOptions,

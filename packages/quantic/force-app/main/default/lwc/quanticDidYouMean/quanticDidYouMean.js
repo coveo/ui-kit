@@ -29,7 +29,7 @@ import queryTriggerTemplate from './templates/queryTrigger.html';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-did-you-mean engine-id={engineId} disable-query-auto-correction={disableQueryAutoCorrection} query-correction-mode={queryCorrectionMode}></c-quantic-did-you-mean>
+ * <c-quantic-did-you-mean engine-id={engineId} disable-query-auto-correction={disableQueryAutoCorrection} query-correction-mode="next"></c-quantic-did-you-mean>
  */
 export default class QuanticDidYouMean extends LightningElement {
   /**
