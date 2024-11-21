@@ -29,6 +29,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -166,7 +167,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /**
@@ -220,6 +221,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  categoryFacetConditionsManager;
 
   labels = {
     clear,
@@ -257,6 +260,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
+    this.categoryFacetConditionsManager?.stopWatching();
   }
 
   /**
@@ -349,15 +353,13 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
-      engine,
-      {
+    this.categoryFacetConditionsManager =
+      this.headless.buildFacetConditionsManager(engine, {
         facetId: this.facet.state.facetId,
         conditions: generateFacetDependencyConditions({
           [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
         }),
-      }
-    );
+      });
   }
 
   get values() {

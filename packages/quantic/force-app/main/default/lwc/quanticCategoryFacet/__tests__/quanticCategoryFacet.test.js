@@ -57,7 +57,10 @@ function createTestComponent(options = defaultOptions) {
 
 const functionsMocks = {
   buildCategoryFacet: jest.fn(() => categoryFacetControllerMock),
-  buildFacetConditionsManager: jest.fn(),
+  stopWatching: jest.fn(),
+  buildFacetConditionsManager: jest.fn(() => ({
+    stopWatching: functionsMocks.stopWatching,
+  })),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
     state: {},
@@ -297,6 +300,25 @@ describe('c-quantic-category-facet', () => {
         expect(componentError).not.toBeNull();
         expect(facetContent).toBeNull();
       });
+    });
+  });
+  describe('when the component is disconnected', () => {
+    it('should make the condition manager stop watching the facet', async () => {
+      const exampleFacetDependency = {
+        parentFacetId: 'filetype',
+        expectedValue: 'txt',
+      };
+      const element = createTestComponent({
+        ...defaultOptions,
+        dependsOn: exampleFacetDependency,
+      });
+      await flushPromises();
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        1
+      );
+
+      document.body.removeChild(element);
+      expect(functionsMocks.stopWatching).toHaveBeenCalledTimes(1);
     });
   });
 });

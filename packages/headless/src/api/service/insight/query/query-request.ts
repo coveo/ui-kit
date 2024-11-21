@@ -10,6 +10,7 @@ import {
   EnableDidYouMeanParam,
   FacetsParam,
   FieldsToIncludeParam,
+  QueryCorrectionParam,
   FirstResultParam,
   PipelineRuleParams,
   QueryParam,
@@ -33,6 +34,7 @@ export type InsightQueryRequest = InsightParam &
   SortCriteriaParam &
   FieldsToIncludeParam &
   EnableDidYouMeanParam &
+  QueryCorrectionParam &
   ConstantQueryParam &
   TabParam &
   FoldingParam &

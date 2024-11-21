@@ -29,26 +29,39 @@ const renderComponentInternal =
           break;
       }
     }
-    return html`
-  ${withCodeRoot ? html`<div id="code-root"></div>` : ''}
-    <style>
-        ${unsafeStatic(
-          shadowPartArgs
-            .map(
-              (arg) =>
-                `${context.componentId}::part(${unfurlArg(arg)}) {${Object.entries(
-                  args[arg]
-                )
-                  .map(([key, value]) => `${key}: ${value}`)
-                  .join(';')}}`
+    const styleContent = unsafeStatic(
+      shadowPartArgs
+        .map(
+          (arg) =>
+            `${context.componentId}::part(${unfurlArg(arg)}) {${Object.entries(
+              args[arg]
             )
-            .join('\n')
-        )}
-    </style>
-      <${unsafeStatic(context.componentId)}	${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
-        ${unsafeStatic(parseSlots(args, slotsControls))}
-      </${unsafeStatic(context.componentId)}>
-  ${withCodeRoot ? html`</div>` : ''}`;
+              .map(([key, value]) => `${key}: ${value}`)
+              .join(';')}}`
+        )
+        .join('\n')
+    );
+
+    if (withCodeRoot) {
+      return html`    
+      <div id='code-root'>
+        <style>
+            ${styleContent}
+        </style>
+          <${unsafeStatic(context.componentId)}	${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
+            ${unsafeStatic(parseSlots(args, slotsControls))}
+          </${unsafeStatic(context.componentId)}>
+      </div>`;
+    } else {
+      return html`    
+        <style>
+            ${styleContent}
+        </style>
+          <${unsafeStatic(context.componentId)}	${unsafeStatic(attributeControls.map((arg) => `${unfurlArg(arg)}="${args[arg]}"`).join('\n'))}>
+            ${unsafeStatic(parseSlots(args, slotsControls))}
+          </${unsafeStatic(context.componentId)}>
+      `;
+    }
   };
 
 export const renderComponent = renderComponentInternal(true);

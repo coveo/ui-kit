@@ -52,10 +52,16 @@ export class BasePageObject<
   }
 
   async noRecommendations() {
+    return this.nRecommendations(0);
+  }
+
+  async nRecommendations(numberOfRecommendations?: number) {
     await this.page.route('**/commerce/v2/recommendations', async (route) => {
       const response = await route.fetch();
       const body = await response.json();
-      body.products = [];
+      if (numberOfRecommendations !== undefined) {
+        body['products'] = body['products'].slice(0, numberOfRecommendations);
+      }
       await route.fulfill({
         response,
         json: body,

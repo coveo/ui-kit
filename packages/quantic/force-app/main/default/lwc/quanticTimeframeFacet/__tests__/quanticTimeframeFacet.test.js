@@ -25,6 +25,7 @@ const selectors = {
 
 const exampleFacetId = 'example facet id';
 const exampleField = 'exampleField';
+const exampleFilterId = `${exampleFacetId}_input`;
 const defaultOptions = {
   field: exampleField,
 };
@@ -56,9 +57,14 @@ const functionsMocks = {
   buildDateFacet: jest.fn(() => timeframeFacetControllerMock),
   buildDateFilter: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
-    state: {},
+    state: {
+      facetId: exampleFilterId,
+    },
   })),
-  buildFacetConditionsManager: jest.fn(),
+  stopWatching: jest.fn(),
+  buildFacetConditionsManager: jest.fn(() => ({
+    stopWatching: functionsMocks.stopWatching,
+  })),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
     state: {},
@@ -148,8 +154,9 @@ describe('c-quantic-timeframe-facet', () => {
       await flushPromises();
 
       expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
-        1
+        2
       );
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
         exampleEngine,
@@ -157,8 +164,14 @@ describe('c-quantic-timeframe-facet', () => {
           facetId: exampleFacetId,
         }
       );
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
+        exampleEngine,
+        {
+          facetId: exampleFilterId,
+        }
+      );
 
-      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(1);
+      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(2);
       expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
         [exampleFacetDependency.parentFacetId]:
           exampleFacetDependency.expectedValue,
@@ -170,6 +183,7 @@ describe('c-quantic-timeframe-facet', () => {
       await flushPromises();
 
       expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
         0
       );
@@ -299,6 +313,26 @@ describe('c-quantic-timeframe-facet', () => {
         expect(componentError).not.toBeNull();
         expect(facetContent).toBeNull();
       });
+    });
+  });
+
+  describe('when the component is disconnected', () => {
+    it('should make the condition manager stop watching the facet', async () => {
+      const exampleFacetDependency = {
+        parentFacetId: 'filetype',
+        expectedValue: 'txt',
+      };
+      const element = createTestComponent({
+        ...defaultOptions,
+        dependsOn: exampleFacetDependency,
+      });
+      await flushPromises();
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        2
+      );
+
+      document.body.removeChild(element);
+      expect(functionsMocks.stopWatching).toHaveBeenCalledTimes(2);
     });
   });
 });
