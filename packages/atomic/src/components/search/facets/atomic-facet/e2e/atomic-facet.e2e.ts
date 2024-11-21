@@ -169,17 +169,17 @@ const sortCriteriaTests: {
   {
     criteria: 'alphanumericNatural',
     sortFunction: (values: string[]) =>
-      orderBy([...values], [(value) => value], 'asc'),
+      orderBy([...values], [(value: string) => value], 'asc'),
   },
   {
     criteria: 'alphanumericNaturalDescending',
     sortFunction: (values: string[]) =>
-      orderBy([...values], [(value) => value], ['desc']),
+      orderBy([...values], [(value: string) => value], ['desc']),
   },
 ];
 
-test.describe.serial('Sort Criteria', () => {
-  sortCriteriaTests.forEach(({criteria, sortFunction}) => {
+test.describe('Sort Criteria', () => {
+  for (const {criteria, sortFunction} of sortCriteriaTests) {
     test.describe(`when sort criteria is set to "${criteria}"`, () => {
       test.beforeEach(async ({facet}) => {
         await facet.load({
@@ -236,7 +236,7 @@ test.describe.serial('Sort Criteria', () => {
         });
       });
     });
-  });
+  }
 
   test.describe('when sort criteria is set to "occurrences"', () => {
     test.beforeEach(async ({facet}) => {
