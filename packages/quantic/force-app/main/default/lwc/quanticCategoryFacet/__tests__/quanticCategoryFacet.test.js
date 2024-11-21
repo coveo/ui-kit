@@ -302,6 +302,7 @@ describe('c-quantic-category-facet', () => {
       });
     });
   });
+
   describe('when the component is disconnected', () => {
     it('should make the condition manager stop watching the facet', async () => {
       const exampleFacetDependency = {

@@ -327,6 +327,12 @@ export default class QuanticNumericFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+    if (this.dependsOn) {
+      this.numericFacetConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.facet.state?.facetId
+      );
+    }
   }
 
   /**
