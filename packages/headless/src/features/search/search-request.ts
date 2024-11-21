@@ -2,7 +2,7 @@ import {EventDescription} from 'coveo.analytics';
 import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {ConfigurationSection} from '../../state/state-sections.js';
-import {sortFacets} from '../../utils/facet-utils.js';
+import {sortCriteriaMap, sortFacets} from '../../utils/facet-utils.js';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request.js';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
 import {FacetSetState} from '../facets/facet-set/facet-set-state.js';
@@ -16,11 +16,6 @@ import {mapSearchRequest} from './search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
-
-type SortCriteria = {
-  type: string;
-  order: string;
-};
 
 export const buildSearchRequest = async (
   state: StateNeededBySearchRequest,
@@ -151,14 +146,6 @@ function getAllFacets(state: StateNeededBySearchRequest) {
     ...getFacetRequests(state.categoryFacetSet ?? {}),
   ];
 }
-
-const sortCriteriaMap: Record<string, SortCriteria> = {
-  alphanumericDescending: {type: 'alphanumeric', order: 'descending'},
-  alphanumericNaturalDescending: {
-    type: 'alphanumericNatural',
-    order: 'descending',
-  },
-};
 
 function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {

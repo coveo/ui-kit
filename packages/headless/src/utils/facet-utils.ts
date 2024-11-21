@@ -45,7 +45,7 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   });
 }
 
-const sortCriteriaMap: Record<string, SortCriteria> = {
+export const sortCriteriaMap: Record<string, SortCriteria> = {
   alphanumericDescending: {type: 'alphanumeric', order: 'descending'},
   alphanumericNaturalDescending: {
     type: 'alphanumericNatural',
