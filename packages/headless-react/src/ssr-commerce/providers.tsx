@@ -177,12 +177,16 @@ export function ProviderWithListing(listingEngineDefinition: unknown) {
   };
 }
 
-interface ProviderProps {
-  definition:
+interface ProviderProps<
+  T extends Omit<
     | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
     | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
     | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
+    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'],
+    'StaticStateProvider' // Omit 'StaticStateProvider' or any other properties you don't want
+  >,
+> {
+  definition: T;
   staticState: InferStaticState<
     ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
   >;
@@ -193,12 +197,20 @@ interface ProviderProps {
 // keep the same exact code except for the useEffect
 // figure out the useEffect in another function
 // this function will have to understand whether the engine is listing, recommendation, search or standalone.
-function Provider({
+function Provider<
+  T extends Omit<
+    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
+    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
+    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
+    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'],
+    'StaticStateProvider' // Omit 'StaticStateProvider' or any other properties you don't want
+  >,
+>({
   definition,
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<ProviderProps>) {
+}: PropsWithChildren<ProviderProps<T>>) {
   type RecommendationHydratedState = InferHydratedState<typeof definition>;
   const [hydratedState, setHydratedState] = useState<
     RecommendationHydratedState | undefined
@@ -228,21 +240,39 @@ function Provider({
       </definition.HydratedStateProvider>
     );
   } else {
+    const castedDefinition = definition as unknown aseitherDefinition;
+
     return (
-      <definition.StaticStateProvider controllers={staticState.controllers}>
+      <castedDefinition.StaticStateProvider
+        controllers={staticState.controllers}
+      >
         {children}
-      </definition.StaticStateProvider>
+      </castedDefinition.StaticStateProvider>
     );
   }
 }
 
-export function buildProviderWithDefinition(
-  definition:
+type eitherDefinition =
+  | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
+
+type HasStaticStateProvider<T> = T extends {
+  StaticStateProvider: React.FC<React.PropsWithChildren<any>>;
+}
+  ? T
+  : never;
+
+export function buildProviderWithDefinition<
+  T extends Omit<
     | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
     | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
     | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-) {
+    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'],
+    'StaticStateProvider' // Omit 'StaticStateProvider' or any other properties you don't want
+  >,
+>(definition: T) {
   return function WrappedProvider({
     staticState,
     navigatorContext,
