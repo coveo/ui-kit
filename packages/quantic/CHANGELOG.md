@@ -1,3 +1,11 @@
+## 3.9.0 (2024-11-20)
+
+- fix(quantic): fixed display of timestamps in youtube templates (#4676) ([b053628](https://github.com/coveo/ui-kit/commits/b053628)), closes [#4676](https://github.com/coveo/ui-kit/issues/4676)
+- fix(quantic): fs-extra set as a dependency instead of a dev dependency to fix library instalation (# ([9771d76](https://github.com/coveo/ui-kit/commits/9771d76)), closes [#4669](https://github.com/coveo/ui-kit/issues/4669)
+- fix(quantic): issue with date filter and numeric filters when used with dependant facets (#4680) ([a08e057](https://github.com/coveo/ui-kit/commits/a08e057)), closes [#4680](https://github.com/coveo/ui-kit/issues/4680)
+- test(quantic): first setup of playwright added in Quantic (#4597) ([6f21e25](https://github.com/coveo/ui-kit/commits/6f21e25)), closes [#4597](https://github.com/coveo/ui-kit/issues/4597)
+- feat(quantic): Fix the styling of the quantic sort component when inside refine modal (#4652) ([78cca9c](https://github.com/coveo/ui-kit/commits/78cca9c)), closes [#4652](https://github.com/coveo/ui-kit/issues/4652)
+
 ## 3.8.0 (2024-11-13)
 
 - ci: fix .tmp quantic folder breaking commit generated files (#4671) ([bafea04](https://github.com/coveo/ui-kit/commits/bafea04)), closes [#4671](https://github.com/coveo/ui-kit/issues/4671)

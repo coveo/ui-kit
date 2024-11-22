@@ -33,6 +33,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -156,7 +157,7 @@ export default class QuanticNumericFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /*
@@ -217,6 +218,10 @@ export default class QuanticNumericFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  numericFacetConditionsManager;
+  /** @type {FacetConditionsManager} */
+  numericFilterConditionsManager;
 
   /** @type {string} */
   start;
@@ -281,9 +286,6 @@ export default class QuanticNumericFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
-    if (this.dependsOn) {
-      this.initFacetConditionManager(engine);
-    }
   };
 
   /**
@@ -301,18 +303,12 @@ export default class QuanticNumericFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
-  initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
-      engine,
-      {
-        facetId: this.facet.state.facetId,
-        conditions: generateFacetDependencyConditions({
-          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
-        }),
-      }
-    );
+    if (this.dependsOn) {
+      this.numericFacetConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.facet.state?.facetId
+      );
+    }
   }
 
   /**
@@ -330,12 +326,29 @@ export default class QuanticNumericFacet extends LightningElement {
     this.unsubscribeFilter = this.numericFilter.subscribe(() =>
       this.updateFilterState()
     );
+    if (this.dependsOn) {
+      this.numericFilterConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.numericFilter.state?.facetId
+      );
+    }
+  }
+
+  initFacetConditionManager(engine, facetId) {
+    return this.headless.buildFacetConditionsManager(engine, {
+      facetId,
+      conditions: generateFacetDependencyConditions({
+        [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+      }),
+    });
   }
 
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeFilter?.();
     this.unsubscribeSearchStatus?.();
+    this.numericFacetConditionsManager?.stopWatching();
+    this.numericFilterConditionsManager?.stopWatching();
   }
 
   updateState() {

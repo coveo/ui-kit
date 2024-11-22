@@ -80,6 +80,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @default {false}
    */
   @api withToggle = false;
+  /**
+   * @internal
+   * The unique identifier of the answer configuration to use to generate the answer.
+   * @type {string}
+   */
+  @api answerConfigurationId;
 
   labels = {
     generatedAnswerForYou,
@@ -187,6 +193,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
           contentFormat: ['text/markdown', 'text/plain'],
         },
       },
+      ...(this.answerConfigurationId && {
+        answerConfigurationId: this.answerConfigurationId,
+      }),
       fieldsToIncludeInCitations: this.citationFields,
     });
   }
@@ -421,12 +430,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get shouldDisplayGeneratedAnswer() {
     const hasCitations = !!this.citations?.length;
-    return (
-      !!this.answer ||
-      this.isStreaming ||
-      hasCitations ||
-      this.hasRetryableError
-    );
+    return !!this.answer || hasCitations || this.hasRetryableError;
   }
 
   get generatedAnswerClass() {

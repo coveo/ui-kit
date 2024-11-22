@@ -7,9 +7,10 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 const {decorator: resultDecorator, engineConfig} = wrapInResult({
   search: {
     preprocessSearchResponseMiddleware: (res) => {
-      res.body.results.forEach(
-        (r) => (r.raw['randomimage'] = 'https://picsum.photos/200')
-      );
+      res.body.results.forEach((r) => {
+        r.raw['randomimage'] = 'https://picsum.photos/200';
+        r.raw['someAltField'] = 'Some alt value';
+      });
       return res;
     },
   },
@@ -32,6 +33,15 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-result-image',
   args: {
-    field: 'randomimage',
+    'attributes-field': 'randomimage',
+  },
+};
+
+export const withAnAltTextField: Story = {
+  name: 'With an alt text field',
+  args: {
+    'attributes-field': 'invalid',
+    'attributes-fallback': 'invalid',
+    'attributes-image-alt-field': 'someAltField',
   },
 };

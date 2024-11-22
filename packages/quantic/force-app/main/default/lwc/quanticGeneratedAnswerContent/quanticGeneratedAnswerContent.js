@@ -28,7 +28,19 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
    * @type {'text/plain' | 'text/markdown'}
    * @default {'text/plain'}
    */
-  @api answerContentFormat = 'text/plain';
+  @api
+  get answerContentFormat() {
+    return this._answerContentFormat;
+  }
+  set answerContentFormat(value) {
+    this._answerContentFormat = value;
+    if (
+      this._answerContentFormat === 'text/markdown' &&
+      !this._markdownDependenciesLoaded
+    ) {
+      this.loadMarkdownDependencies();
+    }
+  }
   /**
    * The answer content to display.
    * @api
@@ -42,30 +54,29 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     this._answer = value;
     if (
       this.answerContentFormat === 'text/markdown' &&
-      this._markedLoaded &&
-      this._domPurifyLoaded
+      this._markdownDependenciesLoaded
     ) {
       this.updateHtmlContent();
     }
   }
 
   _answer;
-  _markedLoaded = false;
-  _domPurifyLoaded = false;
+  /** @type {'text/plain' | 'text/markdown'} */
+  _answerContentFormat = 'text/plain';
+  _markdownDependenciesLoaded = false;
 
-  connectedCallback() {
-    if (this.answerContentFormat === 'text/markdown') {
+  loadMarkdownDependencies() {
+    if (
+      !this._markdownDependenciesLoaded &&
+      this.answerContentFormat === 'text/markdown'
+    ) {
       loadMarkdownDependencies(this)
         .then(() => {
-          // @ts-ignore
-          this._markedLoaded = true;
-          // @ts-ignore
-          this._domPurifyLoaded = true;
+          this._markdownDependenciesLoaded = true;
           this.updateHtmlContent();
         })
         .catch((error) => {
           console.error('Error loading the Marked library.', error);
-          this._markedLoadingError = true;
         });
     }
   }
@@ -74,11 +85,12 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     const answerContainer = this.template.querySelector(
       '.generated-answer-content__answer'
     );
-    if (this._markedLoaded && this._domPurifyLoaded) {
+    if (this._markdownDependenciesLoaded) {
       // Transform the markdown answer to HTML and update the innerHTML of the container
       const newHTMLContent =
         // @ts-ignore
         (window.marked &&
+          this.answer &&
           // @ts-ignore
           transformMarkdownToHtml(this.answer, window.marked)) ||
         '';
