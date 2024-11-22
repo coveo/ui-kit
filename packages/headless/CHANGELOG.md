@@ -1,3 +1,11 @@
+## 3.10.0 (2024-11-20)
+
+- chore: add build to deployment composante + nightly flag (#4655) ([587494d](https://github.com/coveo/ui-kit/commits/587494d)), closes [#4655](https://github.com/coveo/ui-kit/issues/4655)
+- feat(headless): Support the automatic query correction feature for the insight use case (#4598) ([fbd4835](https://github.com/coveo/ui-kit/commits/fbd4835)), closes [#4598](https://github.com/coveo/ui-kit/issues/4598)
+- fix(generatedAnswer): map state with answer api client (#4681) ([8344a9f](https://github.com/coveo/ui-kit/commits/8344a9f)), closes [#4681](https://github.com/coveo/ui-kit/issues/4681)
+- docs(headless): cover a few missing types for reference documentation (#4679) ([5de23b7](https://github.com/coveo/ui-kit/commits/5de23b7)), closes [#4679](https://github.com/coveo/ui-kit/issues/4679)
+- refactor(headless, headless-react): no more generic engine in ssr-commerce types (#4657) ([a60b308](https://github.com/coveo/ui-kit/commits/a60b308)), closes [#4657](https://github.com/coveo/ui-kit/issues/4657)
+
 ## 3.9.0 (2024-11-13)
 
 - docs(headless): add multiple listing pages in headless-ssr-commerce (#4635) ([0ebf951](https://github.com/coveo/ui-kit/commits/0ebf951)), closes [#4635](https://github.com/coveo/ui-kit/issues/4635)

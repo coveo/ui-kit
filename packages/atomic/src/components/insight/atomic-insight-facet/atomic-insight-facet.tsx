@@ -83,7 +83,7 @@ export class AtomicInsightFacet
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
     'automatic';

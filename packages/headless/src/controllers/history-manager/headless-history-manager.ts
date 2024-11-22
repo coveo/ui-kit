@@ -10,11 +10,13 @@ import {
   logNoResultsBack,
   historyBackward,
   historyForward,
-  noResultsBack,
 } from '../../features/history/history-analytics-actions.js';
 import {history} from '../../features/history/history-slice.js';
 import {HistoryState} from '../../features/history/history-state.js';
-import {executeSearch} from '../../features/search/search-actions.js';
+import {
+  executeSearch,
+  nullActionCause,
+} from '../../features/search/search-actions.js';
 import {
   ConfigurationSection,
   HistorySection,
@@ -146,7 +148,7 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNoResultsBack(),
-          next: noResultsBack(),
+          next: nullActionCause(),
         })
       );
     },

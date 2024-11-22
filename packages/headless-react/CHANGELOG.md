@@ -1,3 +1,7 @@
+## <small>2.1.2 (2024-11-20)</small>
+
+- refactor(headless, headless-react): no more generic engine in ssr-commerce types (#4657) ([a60b308](https://github.com/coveo/ui-kit/commits/a60b308)), closes [#4657](https://github.com/coveo/ui-kit/issues/4657)
+
 ## <small>2.1.1 (2024-11-13)</small>
 
 - chore: general improvements and refactors of headless-ssr-commerce (#4625) ([e7b8a48](https://github.com/coveo/ui-kit/commits/e7b8a48)), closes [#4625](https://github.com/coveo/ui-kit/issues/4625)

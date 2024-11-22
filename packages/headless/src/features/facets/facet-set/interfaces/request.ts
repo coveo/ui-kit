@@ -17,6 +17,8 @@ export const facetSortCriteria: FacetSortCriterion[] = [
   'alphanumericDescending',
   'occurrences',
   'automatic',
+  'alphanumericNatural',
+  'alphanumericNaturalDescending',
 ];
 
 export type FacetSortCriterion =
@@ -24,7 +26,9 @@ export type FacetSortCriterion =
   | 'alphanumeric'
   | 'alphanumericDescending'
   | 'occurrences'
-  | 'automatic';
+  | 'automatic'
+  | 'alphanumericNatural'
+  | 'alphanumericNaturalDescending';
 
 export type FacetSortOrder = 'ascending' | 'descending';
 

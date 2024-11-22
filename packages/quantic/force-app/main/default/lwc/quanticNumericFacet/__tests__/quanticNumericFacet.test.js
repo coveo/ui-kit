@@ -20,6 +20,7 @@ const selectors = {
 };
 
 const exampleFacetId = 'example facet id';
+const exampleFilterId = `${exampleFacetId}_input`;
 const defaultOptions = {
   field: 'example field',
 };
@@ -47,7 +48,16 @@ function createTestComponent(options = defaultOptions) {
 
 const functionsMocks = {
   buildNumericFacet: jest.fn(() => numericFacetControllerMock),
-  buildFacetConditionsManager: jest.fn(),
+  buildNumericFilter: jest.fn(() => ({
+    subscribe: jest.fn((callback) => callback()),
+    state: {
+      facetId: exampleFilterId,
+    },
+  })),
+  stopWatching: jest.fn(),
+  buildFacetConditionsManager: jest.fn(() => ({
+    stopWatching: functionsMocks.stopWatching,
+  })),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
     state: {},
@@ -59,6 +69,7 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildNumericFacet: functionsMocks.buildNumericFacet,
+      buildNumericFilter: functionsMocks.buildNumericFilter,
       buildSearchStatus: functionsMocks.buildSearchStatus,
       buildFacetConditionsManager: functionsMocks.buildFacetConditionsManager,
     };
@@ -113,12 +124,14 @@ describe('c-quantic-numeric-facet', () => {
       createTestComponent({
         ...defaultOptions,
         dependsOn: exampleFacetDependency,
+        withInput: true,
       });
       await flushPromises();
 
       expect(functionsMocks.buildNumericFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildNumericFilter).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
-        1
+        2
       );
       expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
         exampleEngine,
@@ -126,8 +139,14 @@ describe('c-quantic-numeric-facet', () => {
           facetId: exampleFacetId,
         }
       );
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
+        exampleEngine,
+        {
+          facetId: exampleFilterId,
+        }
+      );
 
-      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(1);
+      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(2);
       expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
         [exampleFacetDependency.parentFacetId]:
           exampleFacetDependency.expectedValue,
@@ -135,7 +154,10 @@ describe('c-quantic-numeric-facet', () => {
     });
 
     it('should not build the controller when the dependsOn property is not set', async () => {
-      createTestComponent();
+      createTestComponent({
+        ...defaultOptions,
+        withInput: true,
+      });
       await flushPromises();
 
       expect(functionsMocks.buildNumericFacet).toHaveBeenCalledTimes(1);
@@ -189,6 +211,27 @@ describe('c-quantic-numeric-facet', () => {
       functionsMocks.buildNumericFacet.mockReturnValue(
         numericFacetControllerMock
       );
+    });
+  });
+
+  describe('when the component is disconnected', () => {
+    it('should make the condition manager stop watching the facet', async () => {
+      const exampleFacetDependency = {
+        parentFacetId: 'filetype',
+        expectedValue: 'txt',
+      };
+      const element = createTestComponent({
+        ...defaultOptions,
+        dependsOn: exampleFacetDependency,
+        withInput: true,
+      });
+      await flushPromises();
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        2
+      );
+
+      document.body.removeChild(element);
+      expect(functionsMocks.stopWatching).toHaveBeenCalledTimes(2);
     });
   });
 });

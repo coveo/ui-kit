@@ -72,10 +72,6 @@ export enum SearchPageEvents {
    */
   triggerQuery = 'query',
   /**
-   * Identifies the custom event that gets logged when a user undoes a query set in the effective query pipeline on the search page.
-   */
-  undoTriggerQuery = 'undoQuery',
-  /**
    * Identifies the custom event that gets logged when a user action redirects them to a URL set in the effective query pipeline on the search page.
    */
   triggerRedirect = 'redirect',
@@ -232,10 +228,6 @@ export enum SearchPageEvents {
    * Identifies the custom event that gets logged when a recently clicked results list gets cleared.
    */
   clearRecentResults = 'clearRecentResults',
-  /**
-   * Identifies the search event that gets logged when a user clicks the Cancel last action link when no results are returned following their last action.
-   */
-  noResultsBack = 'noResultsBack',
   /**
    * Identifies the click event that gets logged when a user clicks the Show More link under a search result that support the folding component.
    */

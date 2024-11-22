@@ -287,7 +287,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private get hasPagination() {
-    return !!this.productsPerPage;
+    return this.numberOfPages > 1;
   }
 
   private get shouldRenderPagination() {
