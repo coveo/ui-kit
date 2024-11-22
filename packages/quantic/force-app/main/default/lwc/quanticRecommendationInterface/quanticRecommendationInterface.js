@@ -10,7 +10,6 @@ import {
   HeadlessBundleNames,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
-import quanticMetadata from '@salesforce/resourceUrl/quanticMetadata';
 
 /** @typedef {import("coveo").RecommendationEngine} RecommendationEngine */
 /** @typedef {import("coveo").RecommendationEngineOptions} RecommendationEngineOptions */
@@ -66,16 +65,9 @@ export default class QuanticRecommendationInterface extends LightningElement {
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.recommendation).then(() => {
       if (!getHeadlessBindings(this.engineId)?.engine) {
-        const beforeInitPromises = [
-          getHeadlessConfiguration(),
-          fetch(quanticMetadata).then((response) => response.json()),
-        ];
-
-        Promise.all(beforeInitPromises).then((data) => {
+        getHeadlessConfiguration().then((data) => {
           if (data) {
-            const {organizationId, accessToken, ...rest} = JSON.parse(data[0]);
-            const {version: quanticVersion} = data[1];
-
+            const {organizationId, accessToken, ...rest} = JSON.parse(data);
             this.engineOptions = {
               configuration: {
                 organizationId,
@@ -94,7 +86,8 @@ export default class QuanticRecommendationInterface extends LightningElement {
                     if (!payload.customData) {
                       payload.customData = {};
                     }
-                    payload.customData.coveoQuanticVersion = quanticVersion;
+                    payload.customData.coveoQuanticVersion =
+                      window.coveoQuanticVersion;
                     return payload;
                   },
                 },

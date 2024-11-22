@@ -25,7 +25,6 @@ const main = async () => {
   await copyBueno();
   await copyMarked();
   await copyDompurify();
-  await setupQuanticMetadata();
 };
 
 const copyDompurify = async () => {
@@ -73,20 +72,32 @@ const copyHeadless = async () => {
   await fs.mkdir(`${staticResourcesPath}/coveoheadless/definitions/`, {
     recursive: true,
   });
+
   await copy(
     '.tmp/quantic-compiled/headless.js',
     `${staticResourcesPath}/coveoheadless/headless.js`
   );
+  await writeQuanticVersion(`${staticResourcesPath}/coveoheadless/headless.js`);
   await copy(
     '.tmp/quantic-compiled/case-assist/headless.js',
     `${staticResourcesPath}/coveoheadless/case-assist/headless.js`
   );
+  await writeQuanticVersion(
+    `${staticResourcesPath}/coveoheadless/case-assist/headless.js`
+  );
+
   await copy(
     '.tmp/quantic-compiled/insight/headless.js',
     `${staticResourcesPath}/coveoheadless/insight/headless.js`
   );
+  await writeQuanticVersion(
+    `${staticResourcesPath}/coveoheadless/insight/headless.js`
+  );
   await copy(
     '.tmp/quantic-compiled/recommendation/headless.js',
+    `${staticResourcesPath}/coveoheadless/recommendation/headless.js`
+  );
+  await writeQuanticVersion(
     `${staticResourcesPath}/coveoheadless/recommendation/headless.js`
   );
   await copy(
@@ -120,19 +131,20 @@ const copyBueno = async () => {
   console.info('Bueno copied.');
 };
 
-const setupQuanticMetadata = async () => {
+const writeQuanticVersion = async (filePath) => {
   try {
-    console.info('Begin Quantic metadata creation');
-    const outputJsonPath = `${staticResourcesPath}/quanticMetadata.json`;
-
+    console.info('Begin Quantic version writing');
+    const existingContent = await fs.readFile(filePath, 'utf8');
     const version = await getPackageVersion();
-    const metadata = {
-      version: version,
-    };
-    fs.writeFile(outputJsonPath, JSON.stringify(metadata, null, 2), 'utf8');
-    console.info('Quantic metadata created.');
+    const contentToAppend = `\nwindow.quanticVersion = '${version}';`;
+    const endsWithNewline = existingContent.endsWith('\n');
+    const newContent = endsWithNewline
+      ? existingContent + contentToAppend
+      : existingContent + '\n' + contentToAppend;
+    await fs.writeFile(filePath, newContent, 'utf8');
+    console.info('Quantic version written.');
   } catch (error) {
-    console.error('Error occurred Quantic metadata creation: ', error);
+    console.error('Error occurred Quantic version writing: ', error);
   }
 };
 

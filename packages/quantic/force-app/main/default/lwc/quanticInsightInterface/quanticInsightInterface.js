@@ -10,7 +10,6 @@ import {
   setInitializedCallback,
 } from 'c/quanticHeadlessLoader';
 import {LightningElement, api} from 'lwc';
-import quanticMetadata from '@salesforce/resourceUrl/quanticMetadata';
 
 /** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").InsightEngineOptions} InsightEngineOptions */
@@ -64,19 +63,10 @@ export default class QuanticInsightInterface extends LightningElement {
     loadDependencies(this, HeadlessBundleNames.insight)
       .then(() => {
         if (!getHeadlessBindings(this.engineId)?.engine) {
-          const beforeInitPromises = [
-            getHeadlessConfiguration(),
-            fetch(quanticMetadata).then((response) => response.json()),
-          ];
-
-          Promise.all(beforeInitPromises)
+          getHeadlessConfiguration()
             .then((data) => {
               if (data) {
-                const {organizationId, accessToken, ...rest} = JSON.parse(
-                  data[0]
-                );
-                const {version: quanticVersion} = data[1];
-
+                const {organizationId, accessToken, ...rest} = JSON.parse(data);
                 this.engineOptions = {
                   configuration: {
                     organizationId,
@@ -94,7 +84,8 @@ export default class QuanticInsightInterface extends LightningElement {
                         if (!payload.customData) {
                           payload.customData = {};
                         }
-                        payload.customData.coveoQuanticVersion = quanticVersion;
+                        payload.customData.coveoQuanticVersion =
+                          window.coveoQuanticVersion;
                         return payload;
                       },
                     },
