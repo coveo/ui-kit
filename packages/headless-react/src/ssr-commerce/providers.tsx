@@ -1,9 +1,13 @@
 'use client';
 
 import {
+  CommerceEngineDefinition,
+  Controller,
+  ControllerDefinitionsMap,
   InferHydratedState,
   InferStaticState,
   NavigatorContext,
+  SolutionType,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {defineCommerceEngine} from './commerce-engine.js';
@@ -177,12 +181,29 @@ export function ProviderWithListing(listingEngineDefinition: unknown) {
   };
 }
 
-interface ProviderProps {
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
+interface ProviderProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+> {
+  definition: CommerceEngineDefinition<TControllers, TSolutionType> & {
+    StaticStateProvider: React.FC<
+      React.PropsWithChildren<{
+        controllers: import('@coveo/headless/ssr-commerce').InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+          TControllers,
+          TSolutionType
+        >;
+      }>
+    >;
+    HydratedStateProvider: React.FC<
+      React.PropsWithChildren<{
+        engine: import('@coveo/headless/ssr-commerce').CommerceEngine;
+        controllers: import('@coveo/headless/ssr-commerce').InferControllersMapFromDefinition<
+          TControllers,
+          TSolutionType
+        >;
+      }>
+    >;
+  };
   staticState: InferStaticState<
     ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
   >;
@@ -193,12 +214,15 @@ interface ProviderProps {
 // keep the same exact code except for the useEffect
 // figure out the useEffect in another function
 // this function will have to understand whether the engine is listing, recommendation, search or standalone.
-function Provider({
+function Provider<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+>({
   definition,
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<ProviderProps>) {
+}: PropsWithChildren<ProviderProps<TControllers, TSolutionType>>) {
   type RecommendationHydratedState = InferHydratedState<typeof definition>;
   const [hydratedState, setHydratedState] = useState<
     RecommendationHydratedState | undefined
@@ -236,12 +260,29 @@ function Provider({
   }
 }
 
-export function buildProviderWithDefinition(
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
+export function buildProviderWithDefinition<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+>(
+  definition: CommerceEngineDefinition<TControllers, TSolutionType> & {
+    StaticStateProvider: React.FC<
+      React.PropsWithChildren<{
+        controllers: import('@coveo/headless/ssr-commerce').InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+          TControllers,
+          TSolutionType
+        >;
+      }>
+    >;
+    HydratedStateProvider: React.FC<
+      React.PropsWithChildren<{
+        engine: import('@coveo/headless/ssr-commerce').CommerceEngine;
+        controllers: import('@coveo/headless/ssr-commerce').InferControllersMapFromDefinition<
+          TControllers,
+          TSolutionType
+        >;
+      }>
+    >;
+  }
 ) {
   return function WrappedProvider({
     staticState,
