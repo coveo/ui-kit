@@ -29,7 +29,7 @@ import queryTriggerTemplate from './templates/queryTrigger.html';
  * @category Search
  * @category Insight Panel
  * @example
- * <c-quantic-did-you-mean engine-id={engineId}></c-quantic-did-you-mean>
+ * <c-quantic-did-you-mean engine-id={engineId} disable-query-auto-correction={disableQueryAutoCorrection} query-correction-mode="next"></c-quantic-did-you-mean>
  */
 export default class QuanticDidYouMean extends LightningElement {
   /**
@@ -38,6 +38,25 @@ export default class QuanticDidYouMean extends LightningElement {
    * @type {string}
    */
   @api engineId;
+  /**
+   * Whether to disable automatically applying corrections for queries that would otherwise return no results.
+   * When `disableQueryAutoCorrection` is `false`, the component automatically triggers a new query using the suggested term.
+   * When `disableQueryAutoCorrection` is `true`, the component returns the suggested term without triggering a new query.
+   * @api
+   * @type {boolean}
+   * @defaultValue false
+   */
+  @api disableQueryAutoCorrection = false;
+  /**
+   * Defines which query correction system to use.
+   * `legacy`: Query correction is powered by the legacy index system. This system relies on an algorithm using solely the index content to compute the suggested terms.
+   * `next`: Query correction is powered by a machine learning system, requiring a valid query suggestion model configured in your Coveo environment to function properly. This system relies on machine learning algorithms to compute the suggested terms.
+   * The `legacy` system will send two requests to the API to get the suggestions, while the `next` system will send one request.
+   * @api
+   * @type {string}
+   * @defaultValue 'legacy'
+   */
+  @api queryCorrectionMode = 'legacy';
 
   /** @type {boolean}*/
   @track hasQueryCorrection;
@@ -85,7 +104,10 @@ export default class QuanticDidYouMean extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.didYouMean = this.headless.buildDidYouMean(engine, {
-      options: {queryCorrectionMode: 'legacy'},
+      options: {
+        queryCorrectionMode: this.queryCorrectionMode,
+        automaticallyCorrectQuery: !this.disableQueryAutoCorrection,
+      },
     });
     this.queryTrigger = this.headless?.buildQueryTrigger?.(engine);
     this.unsubscribeDidYouMean = this.didYouMean.subscribe(() =>
