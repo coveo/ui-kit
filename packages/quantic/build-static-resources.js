@@ -3,137 +3,105 @@ const ncp = promisify(require('ncp'));
 const fs = require('fs').promises;
 const path = require('path');
 
-const staticResourcesPath = './force-app/main/default/staticresources';
+const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
+const TEMP_DIR = '.tmp/quantic-compiled';
+const NODE_MODULES = '../../node_modules';
+
+const LIBRARY_CONFIG = {
+  dompurify: {
+    directories: [`${STATIC_RESOURCES_PATH}/dompurify`],
+    files: [
+      {
+        src: `${NODE_MODULES}/dompurify/dist/purify.min.js`,
+        dest: `${STATIC_RESOURCES_PATH}/dompurify/purify.min.js`,
+      },
+    ],
+  },
+  marked: {
+    directories: [`${STATIC_RESOURCES_PATH}/marked`],
+    files: [
+      {
+        src: `${NODE_MODULES}/marked/marked.min.js`,
+        dest: `${STATIC_RESOURCES_PATH}/marked/marked.min.js`,
+      },
+    ],
+  },
+  bueno: {
+    directories: [
+      `${STATIC_RESOURCES_PATH}/coveobueno/browser`,
+      `${STATIC_RESOURCES_PATH}/coveobueno/definitions`,
+    ],
+    files: [
+      {
+        src: `${NODE_MODULES}/@coveo/bueno/dist/browser/bueno.js`,
+        dest: `${STATIC_RESOURCES_PATH}/coveobueno/browser/bueno.js`,
+      },
+      {
+        src: `${NODE_MODULES}/@coveo/bueno/dist/definitions`,
+        dest: `${STATIC_RESOURCES_PATH}/coveobueno/definitions`,
+      },
+    ],
+  },
+  headless: {
+    directories: [
+      `${STATIC_RESOURCES_PATH}/coveoheadless/case-assist`,
+      `${STATIC_RESOURCES_PATH}/coveoheadless/insight`,
+      `${STATIC_RESOURCES_PATH}/coveoheadless/recommendation`,
+      `${STATIC_RESOURCES_PATH}/coveoheadless/definitions`,
+    ],
+    files: [
+      {
+        src: `${TEMP_DIR}/headless.js`,
+        dest: `${STATIC_RESOURCES_PATH}/coveoheadless/headless.js`,
+      },
+      {
+        src: `${TEMP_DIR}/case-assist/headless.js`,
+        dest: `${STATIC_RESOURCES_PATH}/coveoheadless/case-assist/headless.js`,
+      },
+      {
+        src: `${TEMP_DIR}/insight/headless.js`,
+        dest: `${STATIC_RESOURCES_PATH}/coveoheadless/insight/headless.js`,
+      },
+      {
+        src: `${TEMP_DIR}/recommendation/headless.js`,
+        dest: `${STATIC_RESOURCES_PATH}/coveoheadless/recommendation/headless.js`,
+      },
+      {
+        src: `${NODE_MODULES}/@coveo/headless/dist/definitions`,
+        dest: `${STATIC_RESOURCES_PATH}/coveoheadless/definitions`,
+      },
+    ],
+  },
+};
 
 async function getPackageVersion() {
   const packageJsonPath = path.join(__dirname, 'package.json');
-  return JSON.parse(await fs.readFile(packageJsonPath, 'utf8')).version;
+  const packageData = await fs.readFile(packageJsonPath, 'utf8');
+  return JSON.parse(packageData).version;
 }
 
-const copy = async (source, dest) => {
+async function copy(src, dest) {
   try {
-    return await ncp(source, dest);
-  } catch (e) {
-    console.log(`Failed to copy: ${source}\nDoes the resource exist?`);
+    await ncp(src, dest);
+  } catch (error) {
+    console.error(`Failed to copy: ${src}\nError: ${error.message}`);
     process.exit(1);
   }
-};
+}
 
-const main = async () => {
-  console.info('Begin building static resources');
-  await copyHeadless();
-  await copyBueno();
-  await copyMarked();
-  await copyDompurify();
-};
-
-const copyDompurify = async () => {
-  console.info('Begin copy DOMPurify.');
-
-  await fs.mkdir(`${staticResourcesPath}/dompurify`, {
-    recursive: true,
-  });
-
-  await copy(
-    '../../node_modules/dompurify/dist/purify.min.js',
-    `${staticResourcesPath}/dompurify/purify.min.js`
-  );
-
-  console.info('DOMPurify copied.');
-};
-
-const copyMarked = async () => {
-  console.info('Begin copy Marked.');
-
-  await fs.mkdir(`${staticResourcesPath}/marked`, {
-    recursive: true,
-  });
-
-  await copy(
-    '../../node_modules/marked/marked.min.js',
-    `${staticResourcesPath}/marked/marked.min.js`
-  );
-
-  console.info('Marked copied.');
-};
-
-const copyHeadless = async () => {
-  console.info('Begin copy Headless.');
-
-  await fs.mkdir(`${staticResourcesPath}/coveoheadless/case-assist`, {
-    recursive: true,
-  });
-  await fs.mkdir(`${staticResourcesPath}/coveoheadless/insight`, {
-    recursive: true,
-  });
-  await fs.mkdir(`${staticResourcesPath}/coveoheadless/recommendation`, {
-    recursive: true,
-  });
-  await fs.mkdir(`${staticResourcesPath}/coveoheadless/definitions/`, {
-    recursive: true,
-  });
-
-  await copy(
-    '.tmp/quantic-compiled/headless.js',
-    `${staticResourcesPath}/coveoheadless/headless.js`
-  );
-  await writeQuanticVersion(`${staticResourcesPath}/coveoheadless/headless.js`);
-  await copy(
-    '.tmp/quantic-compiled/case-assist/headless.js',
-    `${staticResourcesPath}/coveoheadless/case-assist/headless.js`
-  );
-  await writeQuanticVersion(
-    `${staticResourcesPath}/coveoheadless/case-assist/headless.js`
-  );
-
-  await copy(
-    '.tmp/quantic-compiled/insight/headless.js',
-    `${staticResourcesPath}/coveoheadless/insight/headless.js`
-  );
-  await writeQuanticVersion(
-    `${staticResourcesPath}/coveoheadless/insight/headless.js`
-  );
-  await copy(
-    '.tmp/quantic-compiled/recommendation/headless.js',
-    `${staticResourcesPath}/coveoheadless/recommendation/headless.js`
-  );
-  await writeQuanticVersion(
-    `${staticResourcesPath}/coveoheadless/recommendation/headless.js`
-  );
-  await copy(
-    '../../node_modules/@coveo/headless/dist/definitions',
-    `${staticResourcesPath}/coveoheadless/definitions`
-  );
-
-  await fs.rm('.tmp', {recursive: true});
-
-  console.info('Headless copied.');
-};
-
-const copyBueno = async () => {
-  console.info('Begin copy Bueno.');
-
-  await fs.mkdir(`${staticResourcesPath}/coveobueno/browser`, {
-    recursive: true,
-  });
-  await fs.mkdir(`${staticResourcesPath}/coveobueno/definitions`, {
-    recursive: true,
-  });
-  await copy(
-    '../../node_modules/@coveo/bueno/dist/browser/bueno.js',
-    `${staticResourcesPath}/coveobueno/browser/bueno.js`
-  );
-  await copy(
-    '../../node_modules/@coveo/bueno/dist/definitions',
-    `${staticResourcesPath}/coveobueno/definitions`
-  );
-
-  console.info('Bueno copied.');
-};
-
-const writeQuanticVersion = async (filePath) => {
+async function createDirectories(directories) {
   try {
-    console.info('Begin Quantic version writing');
+    for (const dir of directories) {
+      await fs.mkdir(dir, {recursive: true});
+    }
+  } catch (error) {
+    console.error(`Failed to create directories\nError: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+async function writeQuanticVersion(filePath) {
+  try {
     const existingContent = await fs.readFile(filePath, 'utf8');
     const version = await getPackageVersion();
     const contentToAppend = `\nwindow.quanticVersion = '${version}';`;
@@ -142,12 +110,46 @@ const writeQuanticVersion = async (filePath) => {
       ? existingContent + contentToAppend
       : existingContent + '\n' + contentToAppend;
     await fs.writeFile(filePath, newContent, 'utf8');
-    console.info('Quantic version written.');
+    console.info(`Quantic version written to ${filePath}`);
   } catch (error) {
-    console.error('Error occurred Quantic version writing: ', error);
+    console.error(
+      `Failed to write Quantic version in: ${filePath}\nError: ${error.message}`
+    );
+    process.exit(1);
   }
-};
+}
 
-main().then(() => {
-  console.info('Copy done!');
+async function copyLibrary(config) {
+  if (config.directories) {
+    await createDirectories(config.directories);
+  }
+  for (const {src, dest} of config.files) {
+    await copy(src, dest);
+    if (dest.includes('headless.js')) {
+      await writeQuanticVersion(dest);
+    }
+  }
+}
+
+async function main() {
+  console.info('Begin building static resources');
+
+  await copyLibrary(LIBRARY_CONFIG.dompurify);
+  console.info('DOMPurify copied.');
+
+  await copyLibrary(LIBRARY_CONFIG.marked);
+  console.info('Marked copied.');
+
+  await copyLibrary(LIBRARY_CONFIG.bueno);
+  console.info('Bueno copied.');
+
+  await copyLibrary(LIBRARY_CONFIG.headless);
+  await fs.rm(TEMP_DIR, {recursive: true});
+  console.info('Headless copied.');
+
+  console.info('All resources built successfully!');
+}
+
+main().catch((error) => {
+  console.error('An error occurred during the build process:', error);
 });
