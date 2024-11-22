@@ -30,7 +30,7 @@ export default function StandaloneProvider({
   useEffect(() => {
     standaloneEngineDefinition
       .hydrateStaticState({
-        searchActions: staticState.searchActions,
+        searchAction: staticState.searchAction,
         controllers: {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
