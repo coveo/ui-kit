@@ -37,6 +37,7 @@ import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interf
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { FollowUpQuestionCandidate, SelectFollowUpQuestionCandidatePayload } from "./components/common/follow-up-questions/follow-up-question-list-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
@@ -69,6 +70,7 @@ export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interf
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { FollowUpQuestionCandidate, SelectFollowUpQuestionCandidatePayload } from "./components/common/follow-up-questions/follow-up-question-list-common";
 export namespace Components {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -1025,6 +1027,11 @@ export namespace Components {
           * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
+    }
+    interface AtomicFollowUpQuestion {
+        "question": string;
+    }
+    interface AtomicFollowUpQuestionList {
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -3784,6 +3791,9 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    interface FollowUpQuestionListCommon {
+        "candidates": FollowUpQuestionCandidate[];
+    }
     interface TabBar {
     }
     interface TabPopover {
@@ -3814,6 +3824,10 @@ export interface AtomicFacetDateInputCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicFacetNumberInputElement;
+}
+export interface AtomicFollowUpQuestionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicFollowUpQuestionElement;
 }
 export interface AtomicGeneratedAnswerFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3890,6 +3904,10 @@ export interface AtomicSmartSnippetFeedbackModalCustomEvent<T> extends CustomEve
 export interface AtomicSmartSnippetSourceCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicSmartSnippetSourceElement;
+}
+export interface FollowUpQuestionListCommonCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLFollowUpQuestionListCommonElement;
 }
 declare global {
     /**
@@ -4393,6 +4411,29 @@ declare global {
     var HTMLAtomicFoldedResultListElement: {
         prototype: HTMLAtomicFoldedResultListElement;
         new (): HTMLAtomicFoldedResultListElement;
+    };
+    interface HTMLAtomicFollowUpQuestionElementEventMap {
+        "select": void;
+    }
+    interface HTMLAtomicFollowUpQuestionElement extends Components.AtomicFollowUpQuestion, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicFollowUpQuestionElementEventMap>(type: K, listener: (this: HTMLAtomicFollowUpQuestionElement, ev: AtomicFollowUpQuestionCustomEvent<HTMLAtomicFollowUpQuestionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicFollowUpQuestionElementEventMap>(type: K, listener: (this: HTMLAtomicFollowUpQuestionElement, ev: AtomicFollowUpQuestionCustomEvent<HTMLAtomicFollowUpQuestionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicFollowUpQuestionElement: {
+        prototype: HTMLAtomicFollowUpQuestionElement;
+        new (): HTMLAtomicFollowUpQuestionElement;
+    };
+    interface HTMLAtomicFollowUpQuestionListElement extends Components.AtomicFollowUpQuestionList, HTMLStencilElement {
+    }
+    var HTMLAtomicFollowUpQuestionListElement: {
+        prototype: HTMLAtomicFollowUpQuestionListElement;
+        new (): HTMLAtomicFollowUpQuestionListElement;
     };
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -6034,6 +6075,23 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    interface HTMLFollowUpQuestionListCommonElementEventMap {
+        "selectCandidate": SelectFollowUpQuestionCandidatePayload;
+    }
+    interface HTMLFollowUpQuestionListCommonElement extends Components.FollowUpQuestionListCommon, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLFollowUpQuestionListCommonElementEventMap>(type: K, listener: (this: HTMLFollowUpQuestionListCommonElement, ev: FollowUpQuestionListCommonCustomEvent<HTMLFollowUpQuestionListCommonElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLFollowUpQuestionListCommonElementEventMap>(type: K, listener: (this: HTMLFollowUpQuestionListCommonElement, ev: FollowUpQuestionListCommonCustomEvent<HTMLFollowUpQuestionListCommonElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLFollowUpQuestionListCommonElement: {
+        prototype: HTMLFollowUpQuestionListCommonElement;
+        new (): HTMLFollowUpQuestionListCommonElement;
+    };
     interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
     }
     var HTMLTabBarElement: {
@@ -6091,6 +6149,8 @@ declare global {
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-focus-trap": HTMLAtomicFocusTrapElement;
         "atomic-folded-result-list": HTMLAtomicFoldedResultListElement;
+        "atomic-follow-up-question": HTMLAtomicFollowUpQuestionElement;
+        "atomic-follow-up-question-list": HTMLAtomicFollowUpQuestionListElement;
         "atomic-format-currency": HTMLAtomicFormatCurrencyElement;
         "atomic-format-number": HTMLAtomicFormatNumberElement;
         "atomic-format-unit": HTMLAtomicFormatUnitElement;
@@ -6243,6 +6303,7 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "follow-up-question-list-common": HTMLFollowUpQuestionListCommonElement;
         "tab-bar": HTMLTabBarElement;
         "tab-popover": HTMLTabPopoverElement;
     }
@@ -7166,6 +7227,12 @@ declare namespace LocalJSX {
           * The tabs on which the folded result list can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-folded-result-list tabs-included='["tabIDA", "tabIDB"]'></atomic-folded-result-list snippet> ``` If you don't set this property, the folded result list can be displayed on any tab. Otherwise, the folded result list can only be displayed on the specified tabs.
          */
         "tabsIncluded"?: string[] | string;
+    }
+    interface AtomicFollowUpQuestion {
+        "onSelect"?: (event: AtomicFollowUpQuestionCustomEvent<void>) => void;
+        "question"?: string;
+    }
+    interface AtomicFollowUpQuestionList {
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -9831,6 +9898,10 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    interface FollowUpQuestionListCommon {
+        "candidates"?: FollowUpQuestionCandidate[];
+        "onSelectCandidate"?: (event: FollowUpQuestionListCommonCustomEvent<SelectFollowUpQuestionCandidatePayload>) => void;
+    }
     interface TabBar {
     }
     interface TabPopover {
@@ -9880,6 +9951,8 @@ declare namespace LocalJSX {
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-focus-trap": AtomicFocusTrap;
         "atomic-folded-result-list": AtomicFoldedResultList;
+        "atomic-follow-up-question": AtomicFollowUpQuestion;
+        "atomic-follow-up-question-list": AtomicFollowUpQuestionList;
         "atomic-format-currency": AtomicFormatCurrency;
         "atomic-format-number": AtomicFormatNumber;
         "atomic-format-unit": AtomicFormatUnit;
@@ -10032,6 +10105,7 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "follow-up-question-list-common": FollowUpQuestionListCommon;
         "tab-bar": TabBar;
         "tab-popover": TabPopover;
     }
@@ -10256,6 +10330,8 @@ declare module "@stencil/core" {
              * The `atomic-folded-result-list` component is responsible for displaying folded query results, by applying one or more result templates for up to three layers (i.e., to the result, child and grandchild).
              */
             "atomic-folded-result-list": LocalJSX.AtomicFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicFoldedResultListElement>;
+            "atomic-follow-up-question": LocalJSX.AtomicFollowUpQuestion & JSXBase.HTMLAttributes<HTMLAtomicFollowUpQuestionElement>;
+            "atomic-follow-up-question-list": LocalJSX.AtomicFollowUpQuestionList & JSXBase.HTMLAttributes<HTMLAtomicFollowUpQuestionListElement>;
             /**
              * The `atomic-format-currency` component is used for formatting currencies.
              * The numerical format of compatible parents will be set according to the currency property of this component.
@@ -10916,6 +10992,7 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            "follow-up-question-list-common": LocalJSX.FollowUpQuestionListCommon & JSXBase.HTMLAttributes<HTMLFollowUpQuestionListCommonElement>;
             "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
             "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }

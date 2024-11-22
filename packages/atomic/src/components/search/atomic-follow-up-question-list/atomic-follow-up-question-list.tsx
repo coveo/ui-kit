@@ -1,18 +1,14 @@
+import {buildSearchBox, SearchBox, SearchBoxState} from '@coveo/headless';
+import {Component, h, State} from '@stencil/core';
 import {
-  buildSearchBox,
-  buildSearchStatus,
-  SearchBox,
-  SearchBoxState,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
-import {Component, Element, State} from '@stencil/core';
+  FollowUpQuestionCandidate,
+  SelectFollowUpQuestionCandidatePayload,
+} from '../../../components/common/follow-up-questions/follow-up-question-list-common';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {FollowUpQuestionListCommon} from '../../common/follow-up-questions/follow-up-question-list-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -20,7 +16,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-follow-up-question-list',
-  styleUrl: 'atomic-follow-up-question-list.css',
+  styleUrl: 'atomic-follow-up-question-list.pcss',
   shadow: true,
 })
 export class AtomicFollowUpQuestionList implements InitializableComponent {
@@ -28,43 +24,76 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
   public bindings!: Bindings;
 
   private searchBox!: SearchBox;
-  private searchStatus!: SearchStatus;
 
-  @BindStateToController('searchBox')
+  private previousQuery: string = '';
+
+  @BindStateToController('searchBox', {
+    onUpdateCallbackMethod: 'onSearchBoxStateChange',
+  })
   @State()
   private searchBoxState!: SearchBoxState;
-
-  @BindStateToController('searchStatus')
-  @State()
-  private searchStatusState!: SearchStatusState;
 
   @State()
   public error!: Error;
 
-  @Element() private host!: HTMLElement;
+  private defaultCandidates: FollowUpQuestionCandidate[] = [
+    {
+      question: 'What is Coveo?',
+      score: 1.0,
+    },
+    {
+      question: 'What is Coveo RGA?',
+      score: 0.5,
+    },
+    {
+      question: 'What is Smart Snippets?',
+      score: 0.25,
+    },
+  ];
 
-  private followUpQuestionListCommon!: FollowUpQuestionListCommon;
+  @State()
+  private candidates: FollowUpQuestionCandidate[] = [];
 
   public initialize() {
-    this.followUpQuestionListCommon = new FollowUpQuestionListCommon({
-      host: this.host,
-      getBindings: () => this.bindings,
-      getSearchBox: () => this.searchBox,
-      getSearchBoxState: () => this.searchBoxState,
-      getSearchStatus: () => this.searchStatus,
-      getSearchStatusState: () => this.searchStatusState,
-      subscribeToQueryChange: (handler) =>
-        this.searchBox.subscribe(() => {
-          if (this.searchBox.state.value !== this.searchBoxState.value) {
-            handler(this.searchBox.state.value);
-          }
-        }),
-    });
     this.searchBox = buildSearchBox(this.bindings.engine);
-    this.searchStatus = buildSearchStatus(this.bindings.engine);
   }
 
   public render() {
-    return this.followUpQuestionListCommon.render();
+    return (
+      <follow-up-question-list-common
+        candidates={this.candidates}
+        onSelectCandidate={(
+          evt: CustomEvent<SelectFollowUpQuestionCandidatePayload>
+        ) => {
+          this.onCandidateSelected(evt.detail.candidate);
+        }}
+      ></follow-up-question-list-common>
+    );
+  }
+
+  private onCandidateSelected(candidate: FollowUpQuestionCandidate) {
+    this.searchBox.updateText(candidate.question);
+    this.searchBox.submit();
+  }
+
+  // @ts-expect-error: This function is used by BindStateToController.
+  private onSearchBoxStateChange() {
+    if (this.searchBoxState.value === this.previousQuery) {
+      return;
+    }
+
+    this.previousQuery = this.searchBoxState.value;
+
+    // The query has been updated.
+    // 1. clear the existing questions.
+    this.candidates = [];
+
+    // 2. make an API call to fetch new follow-up questions
+    // TODO: remove the mock and call the real API
+    if (this.searchBoxState.value) {
+      setTimeout(() => {
+        this.candidates = this.defaultCandidates;
+      }, 500);
+    }
   }
 }

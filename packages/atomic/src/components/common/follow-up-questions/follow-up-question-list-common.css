@@ -1,6 +1,0 @@
-div.question-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75em;
-  margin-bottom: 1em;
-}
