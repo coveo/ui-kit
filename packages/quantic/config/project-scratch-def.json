@@ -12,6 +12,11 @@
     "languageSettings": {
       "enableTranslationWorkbench": true,
       "enableEndUserLanguages": true
+    },
+    "securitySettings": {
+      "sessionSettings": {
+        "lockerServiceNext": false
+      }
     }
   }
 }
