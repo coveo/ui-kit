@@ -33,6 +33,7 @@ function isHydratedStateContext<
   return 'engine' in ctx;
 }
 
+// TODO: Make this error when the controller is not found and it becomes "empty"
 function buildControllerHook<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TKey extends keyof TControllers,

@@ -6,7 +6,7 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ProductList from '@/components/product-list';
 import ListingProvider from '@/components/providers/listing-provider';
-import RecommendationProvider from '@/components/providers/recommendation-provider';
+import {RecommendationProvider} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
