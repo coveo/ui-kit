@@ -1,0 +1,33 @@
+.question {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+
+  border-radius: var(--atomic-border-radius-md);
+  border: solid 1px var(--atomic-neutral);
+  padding: 1em;
+  background-color: var(--atomic-background);
+
+  font-family: var(--atomic-font-family);
+}
+
+.question:hover {
+  background-color: var(--atomic-neutral-light);
+  cursor: pointer;
+}
+
+.question atomic-icon svg {
+  height: 1.5em;
+  width: 1.5em;
+  fill: var(--atomic-primary-dark);
+}
+
+.question .question-text {
+  flex: auto;
+}
+
+.question .question-call-to-action {
+  font-size: var(--atomic-text-sm);
+  color: var(--atomic-primary);
+  white-space: nowrap;
+}
