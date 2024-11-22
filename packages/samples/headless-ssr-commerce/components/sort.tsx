@@ -11,17 +11,18 @@ export default function Sort() {
     return null;
   }
 
+  const formatSortFieldLabel = (field: {
+    name: string;
+    direction?: string;
+    displayName?: string;
+  }) => field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
+
   const getSortLabel = (criterion: SortCriterion) => {
     switch (criterion.by) {
       case SortBy.Relevance:
         return 'Relevance';
       case SortBy.Fields:
-        return criterion.fields.map((field) =>
-          field
-            ? (field.displayName ??
-              [field.name, field.direction].filter(Boolean).join(' '))
-            : ''
-        );
+        return criterion.fields.map(formatSortFieldLabel);
     }
   };
 
