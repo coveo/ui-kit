@@ -43,7 +43,7 @@ export default function RecommendationProvider({
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
-        <>{children}</>
+        {children}
       </recommendationEngineDefinition.HydratedStateProvider>
     );
   } else {
@@ -51,9 +51,7 @@ export default function RecommendationProvider({
       <recommendationEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {/* // TODO: Add KIT-3701:  Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.*/}
-        <>{children}</>
+        {children}
       </recommendationEngineDefinition.StaticStateProvider>
     );
   }
