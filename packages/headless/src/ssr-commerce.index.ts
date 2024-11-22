@@ -345,7 +345,6 @@ export type {
   ChildProduct,
 } from './api/commerce/common/product.js';
 export type {
-  SortCriterion,
   SortByDate,
   SortByField,
   SortByNoSort,
@@ -353,7 +352,6 @@ export type {
   SortByRelevancy,
 } from './features/sort-criteria/criteria.js';
 export {
-  SortBy,
   SortOrder,
   buildDateSortCriterion,
   buildCriterionExpression,
@@ -362,9 +360,9 @@ export {
   buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria.js';
-export type {SortCriterion as SortSortCriterion} from './features/sort/sort.js';
+export type {SortCriterion} from './features/commerce/sort/sort.js';
 
-export {SortBy as SortSortBy} from './features/sort/sort.js';
+export {SortBy} from './features/commerce/sort/sort.js';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser.js';
 export type {Template} from './features/templates/templates-manager.js';
 export type {
