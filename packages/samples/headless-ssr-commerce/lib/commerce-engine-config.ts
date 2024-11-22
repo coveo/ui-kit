@@ -1,6 +1,4 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   defineProductList,
   defineCart,
@@ -22,10 +20,6 @@ import {
   defineDidYouMean,
   defineRecommendations, //defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
-
-type CommerceEngineConfig = CommerceEngineDefinitionOptions<
-  ControllerDefinitionsMap<Controller>
->;
 
 export default {
   // By default, the logger level is set to 'warn'. This level may not provide enough information for some server-side errors. To get more detailed error messages, set the logger level to a more verbose level, such as 'debug'.
@@ -65,4 +59,4 @@ export default {
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
   },
-} satisfies CommerceEngineConfig;
+} satisfies CommerceEngineDefinitionOptions;
