@@ -3,7 +3,7 @@ import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ProductList from '@/components/product-list';
-import SearchProvider from '@/components/providers/search-provider';
+import {SearchProvider} from '@/components/providers/providers';
 import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';

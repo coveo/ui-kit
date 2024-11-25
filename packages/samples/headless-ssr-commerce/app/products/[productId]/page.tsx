@@ -1,7 +1,7 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import ProductPage from '@/components/pages/product-page';
-import StandaloneProvider from '@/components/providers/standalone-provider';
+import {StandaloneProvider} from '@/components/providers/providers';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';

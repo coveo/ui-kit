@@ -1,8 +1,10 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
-import RecommendationProvider from '@/components/providers/recommendation-provider';
-import SearchProvider from '@/components/providers/search-provider';
+import {
+  ListingProvider,
+  RecommendationProvider,
+} from '@/components/providers/providers';
 import PopularBought from '@/components/recommendations/popular-bought';
 import {
   recommendationEngineDefinition,
@@ -39,7 +41,7 @@ export default async function Search() {
     ['popularBought']
   );
   return (
-    <SearchProvider
+    <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
@@ -53,7 +55,7 @@ export default async function Search() {
           <PopularBought />
         </RecommendationProvider>
       </div>
-    </SearchProvider>
+    </ListingProvider>
   );
 }
 

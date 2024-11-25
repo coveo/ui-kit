@@ -3,6 +3,8 @@
 import {
   listingEngineDefinition,
   recommendationEngineDefinition,
+  searchEngineDefinition,
+  standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
 import {buildProviderWithDefinition} from '@coveo/headless-react/ssr-commerce';
 
@@ -11,7 +13,7 @@ export const ListingProvider = buildProviderWithDefinition(
 );
 
 export const SearchProvider = buildProviderWithDefinition(
-  listingEngineDefinition
+  searchEngineDefinition
 );
 
 export const RecommendationProvider = buildProviderWithDefinition(
@@ -19,5 +21,5 @@ export const RecommendationProvider = buildProviderWithDefinition(
 );
 
 export const StandaloneProvider = buildProviderWithDefinition(
-  listingEngineDefinition
+  standaloneEngineDefinition
 );

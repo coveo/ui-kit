@@ -8,266 +8,96 @@ import {
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {defineCommerceEngine} from './commerce-engine.js';
 
-// interface RecommendationProviderProps {
-//   recommendationEngineDefinition: ReturnType<
-//     typeof defineCommerceEngine
-//   >['recommendationEngineDefinition'];
-//   staticState: InferStaticState<
-//     ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-//   >;
-//   navigatorContext: NavigatorContext;
-// }
-
-// function RecommendationProvider({
-//   recommendationEngineDefinition,
-//   staticState,
-//   navigatorContext,
-//   children,
-// }: PropsWithChildren<RecommendationProviderProps>) {
-//   type RecommendationHydratedState = InferHydratedState<
-//     typeof recommendationEngineDefinition
-//   >;
-//   const [hydratedState, setHydratedState] = useState<
-//     RecommendationHydratedState | undefined
-//   >(undefined);
-
-//   recommendationEngineDefinition.setNavigatorContextProvider(
-//     () => navigatorContext
-//   );
-
-//   useEffect(() => {
-//     recommendationEngineDefinition
-//       .hydrateStaticState({
-//         searchActions: staticState.searchActions,
-//       })
-//       .then(({engine, controllers}) => {
-//         setHydratedState({engine, controllers});
-//       });
-//   }, [staticState]);
-
-//   if (hydratedState) {
-//     return (
-//       <recommendationEngineDefinition.HydratedStateProvider
-//         engine={hydratedState.engine}
-//         controllers={hydratedState.controllers}
-//       >
-//         {children}
-//       </recommendationEngineDefinition.HydratedStateProvider>
-//     );
-//   } else {
-//     return (
-//       <recommendationEngineDefinition.StaticStateProvider
-//         controllers={staticState.controllers}
-//       >
-//         {children}
-//       </recommendationEngineDefinition.StaticStateProvider>
-//     );
-//   }
-// }
-
-// interface WithRecommendationProps {
-//   staticState: InferStaticState<
-//     ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-//   >;
-//   navigatorContext: NavigatorContext;
-// }
-
-// interface WithListingProps {
-//   staticState: InferStaticState<
-//     ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-//   >;
-//   navigatorContext: NavigatorContext;
-// }
-
-// export function ProviderWithRecommendation(
-//   recommendationEngineDefinition: unknown
-// ) {
-//   return function WrappedRecommendationProvider({
-//     staticState,
-//     navigatorContext,
-//     children,
-//   }: PropsWithChildren<WithRecommendationProps>) {
-//     const castedDefinition = recommendationEngineDefinition as ReturnType<
-//       typeof defineCommerceEngine
-//     >['recommendationEngineDefinition'];
-
-//     return (
-//       <RecommendationProvider
-//         recommendationEngineDefinition={castedDefinition}
-//         staticState={staticState}
-//         navigatorContext={navigatorContext}
-//       >
-//         {children}
-//       </RecommendationProvider>
-//     );
-//   };
-// }
-
-// interface ListingProviderProps {
-//   listingEngineDefinition: unknown;
-//   staticState: InferStaticState<
-//     ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-//   >;
-//   navigatorContext: NavigatorContext;
-// }
-
-// function ListingProvider({
-//   listingEngineDefinition,
-//   staticState,
-//   navigatorContext,
-//   children,
-// }: PropsWithChildren<ListingProviderProps>) {
-//   const definition = listingEngineDefinition as good;
-
-//   type good = ReturnType<
-//     typeof defineCommerceEngine
-//   >['listingEngineDefinition'];
-
-//   type RecommendationHydratedState = InferHydratedState<typeof definition>;
-//   const [hydratedState, setHydratedState] = useState<
-//     RecommendationHydratedState | undefined
-//   >(undefined);
-
-//   definition.setNavigatorContextProvider(() => navigatorContext);
-
-//   useEffect(() => {
-//     definition
-//       .hydrateStaticState({
-//         searchActions: staticState.searchActions,
-//         controllers: staticState.controllers,
-//       })
-//       .then(({engine, controllers}) => {
-//         setHydratedState({engine, controllers});
-//       });
-//   }, [staticState]);
-
-//   if (hydratedState) {
-//     return (
-//       <definition.HydratedStateProvider
-//         engine={hydratedState.engine}
-//         controllers={hydratedState.controllers}
-//       >
-//         {children}
-//       </definition.HydratedStateProvider>
-//     );
-//   } else {
-//     return (
-//       <definition.StaticStateProvider controllers={staticState.controllers}>
-//         {children}
-//       </definition.StaticStateProvider>
-//     );
-//   }
-// }
-
-// export function ProviderWithListing(listingEngineDefinition: unknown) {
-//   return function WrappedRecommendationProvider({
-//     staticState,
-//     navigatorContext,
-//     children,
-//   }: PropsWithChildren<WithListingProps>) {
-//     return (
-//       <ListingProvider
-//         listingEngineDefinition={listingEngineDefinition}
-//         staticState={staticState}
-//         navigatorContext={navigatorContext}
-//       >
-//         {children}
-//       </ListingProvider>
-//     );
-//   };
-// }
-
-interface ProviderProps {
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
-  staticState: InferStaticState<
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-  >;
-  navigatorContext: NavigatorContext;
-}
-
-function Provider({
-  definition,
-  staticState,
-  navigatorContext,
-  children,
-}: PropsWithChildren<ProviderProps>) {
-  type RecommendationHydratedState = InferHydratedState<typeof definition>;
-  const [hydratedState, setHydratedState] = useState<
-    RecommendationHydratedState | undefined
-  >(undefined);
-
-  definition.setNavigatorContextProvider(() => navigatorContext);
-
-  useEffect(() => {
-    definition
-      .hydrateStaticState({
-        searchActions: staticState.searchActions,
-
-        controllers: staticState.controllers,
-      })
-      .then(({engine, controllers}) => {
-        setHydratedState({engine, controllers});
-      });
-  }, [staticState]);
-
-  if (hydratedState) {
-    return (
-      <definition.HydratedStateProvider
-        engine={hydratedState.engine}
-        controllers={hydratedState.controllers}
-      >
-        {children}
-      </definition.HydratedStateProvider>
-    );
-  } else {
-    return (
-      <definition.StaticStateProvider controllers={staticState.controllers}>
-        {children}
-      </definition.StaticStateProvider>
-    );
-  }
-}
-
 interface WithDefinitionProps {
-  staticState: InferStaticState<
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-  >;
+  staticState: InferStaticState<RealDefinition>;
   navigatorContext: NavigatorContext;
 }
 
-/**
- * TODO MONDAY WHAT I NEED TO DO HERE IS ADD A GENERIC THAT TAKES IN THE CONTROLLER AND MAKE IT AFFECT THE STATICSTATEPROVIDER TYPE OF THE DEFINITION TYPE
- */
-export function buildProviderWithDefinition(
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-) {
+type LooseDefinition = {
+  setNavigatorContextProvider: unknown;
+  build: unknown;
+  hydrateStaticState: unknown;
+  fetchStaticState: unknown;
+  HydratedStateProvider: unknown;
+  StaticStateProvider: unknown;
+};
+
+type RealDefinition =
+  | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
+  | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
+
+export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
   return function WrappedProvider({
     staticState,
     navigatorContext,
     children,
   }: PropsWithChildren<WithDefinitionProps>) {
+    const definition = looseDefinition as RealDefinition;
+    type RecommendationHydratedState = InferHydratedState<typeof definition>;
+    const [hydratedState, setHydratedState] = useState<
+      RecommendationHydratedState | undefined
+    >(undefined);
+
+    definition.setNavigatorContextProvider(() => navigatorContext);
+
+    useEffect(() => {
+      const {searchActions, controllers} = staticState;
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const hydrateControllers: Record<string, any> = {};
+
+      if ('cart' in controllers) {
+        hydrateControllers.cart = {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          initialState: {items: (controllers as any).cart.state.items},
+        };
+      }
+
+      if ('context' in controllers) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        hydrateControllers.context = (controllers as any).context.state;
+      }
+
+      definition
+        .hydrateStaticState({
+          searchActions,
+          controllers: {
+            ...controllers,
+            ...hydrateControllers,
+          },
+        })
+        .then(({engine, controllers}) => {
+          setHydratedState({engine, controllers});
+        });
+    }, [staticState]);
+
+    if (hydratedState) {
+      return (
+        <definition.HydratedStateProvider
+          engine={hydratedState.engine}
+          controllers={hydratedState.controllers}
+        >
+          {children}
+        </definition.HydratedStateProvider>
+      );
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const StaticStateProviderWithAnyControllers = (looseDefinition as any)
+      .StaticStateProvider as React.ComponentType<{
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      controllers: any;
+      children: React.ReactNode;
+    }>;
+
     return (
-      <Provider
-        definition={definition}
-        staticState={staticState}
-        navigatorContext={navigatorContext}
+      <StaticStateProviderWithAnyControllers
+        controllers={staticState.controllers}
       >
         {children}
-      </Provider>
+      </StaticStateProviderWithAnyControllers>
     );
   };
 }
