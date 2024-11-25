@@ -1,5 +1,5 @@
 import externalCartAPI from '@/client/external-cart-api';
-import {json, LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
+import {LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
 import {
   Links,
   Meta,
@@ -25,7 +25,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   if (!cookie) {
     const visitorId = randomUUID();
-    return json(
+    return Response.json(
       {totalItemsInCart},
       {
         headers: {
