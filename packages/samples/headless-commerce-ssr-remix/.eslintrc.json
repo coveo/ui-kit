@@ -1,7 +1,7 @@
 {
   "extends": ["plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
   "root": true,
   "rules": {
     "no-unused-vars": "off",
