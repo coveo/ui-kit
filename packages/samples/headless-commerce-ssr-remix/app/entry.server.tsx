@@ -1,4 +1,4 @@
-import type {AppLoadContext, EntryContext} from '@remix-run/node';
+import type {EntryContext} from '@remix-run/node';
 import {createReadableStreamFromReadable} from '@remix-run/node';
 import {RemixServer} from '@remix-run/react';
 import {PassThrough} from 'node:stream';
@@ -10,8 +10,7 @@ export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
-  remixContext: EntryContext,
-  _loadContext: AppLoadContext
+  remixContext: EntryContext
 ) {
   return new Promise((resolve, reject) => {
     let shellRendered = false;
