@@ -36,8 +36,8 @@ const timeframeFacetControllerMock = {
     values: [],
   },
 };
-const parentFacetIdError = `The ${exampleField} c-quantic-timeframe-facet requires depends.parentFacetId to be a valid string.`;
-const expectedValueError = `The ${exampleField} c-quantic-timeframe-facet requires depends.expectedValue to be a valid string.`;
+const parentFacetIdError = `The ${exampleField} c-quantic-timeframe-facet requires dependsOn.parentFacetId to be a valid string.`;
+const expectedValueError = `The ${exampleField} c-quantic-timeframe-facet requires dependsOn.expectedValue to be a valid string.`;
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
@@ -129,10 +129,7 @@ function cleanup() {
 }
 
 describe('c-quantic-timeframe-facet', () => {
-  let consoleError;
-
   beforeAll(() => {
-    consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockSuccessfulHeadlessInitialization();
     mockBueno();
   });
@@ -238,7 +235,11 @@ describe('c-quantic-timeframe-facet', () => {
   });
 
   describe('validation of the dependsOn property', () => {
-    describe('when depends.parentFacetId is not provided', () => {
+    let consoleError;
+    beforeAll(() => {
+      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+    describe('when dependsOn.parentFacetId is not provided', () => {
       it('should display the error component', async () => {
         const invalidFacetDependency = {
           expectedValue: 'txt',
@@ -263,7 +264,7 @@ describe('c-quantic-timeframe-facet', () => {
       });
     });
 
-    describe('when depends.parentFacetId is not a string', () => {
+    describe('when dependsOn.parentFacetId is not a string', () => {
       it('should display the error component', async () => {
         const invalidFacetDependency = {
           parentFacetId: 1,
@@ -289,7 +290,7 @@ describe('c-quantic-timeframe-facet', () => {
       });
     });
 
-    describe('when depends.expectedValue is not a string', () => {
+    describe('when dependsOn.expectedValue is not a string', () => {
       it('should display the error component', async () => {
         const invalidFacetDependency = {
           parentFacetId: 'filetype',

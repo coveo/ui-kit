@@ -336,15 +336,15 @@ export default class QuanticCategoryFacet extends LightningElement {
     if (this.dependsOn) {
       getBueno(this).then(() => {
         const {parentFacetId, expectedValue} = this.dependsOn;
-        if (!parentFacetId || !Bueno.isString(parentFacetId)) {
+        if (!Bueno.isString(parentFacetId)) {
           console.error(
-            `The ${this.field} ${this.template.host.localName} requires depends.parentFacetId to be a valid string.`
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
           );
           this.setInitializationError();
         }
         if (expectedValue && !Bueno.isString(expectedValue)) {
           console.error(
-            `The ${this.field} ${this.template.host.localName} requires depends.expectedValue to be a valid string.`
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
           );
           this.setInitializationError();
         }
