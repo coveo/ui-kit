@@ -24,14 +24,14 @@
       "groupSlug": "typescript",
       "rangeStrategy": "replace",
       "description": "Isolate typescript",
-      "matchPackagePatterns": ["typescript"]
+      "matchPackageNames": ["/typescript/"]
     },
     {
       "groupName": "dompurify",
       "groupSlug": "dompurify",
       "rangeStrategy": "replace",
       "description": "Isolate dompurify",
-      "matchPackagePatterns": ["dompurify"]
+      "matchPackageNames": ["/dompurify/"]
     },
     {
       "groupName": "Angular",
