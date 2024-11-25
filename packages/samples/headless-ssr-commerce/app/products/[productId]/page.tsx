@@ -1,18 +1,18 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
-import ProductPage from '@/components/pages/product-page';
 import {StandaloneProvider} from '@/components/providers/providers';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
-import {Suspense} from 'react';
 
 export default async function ProductDescriptionPage({
   params,
+  searchParams,
 }: {
   params: {productId: string};
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
@@ -35,6 +35,11 @@ export default async function ProductDescriptionPage({
       },
     },
   });
+
+  const resolvedSearchParams = await searchParams;
+  const price = Number(resolvedSearchParams.price) ?? NaN;
+  const name = resolvedSearchParams.name ?? params.productId;
+
   return (
     <StandaloneProvider
       staticState={staticState}
@@ -43,13 +48,10 @@ export default async function ProductDescriptionPage({
       <h2>Product description page</h2>
       <ContextDropdown />
       <StandaloneSearchBox />
-      <Suspense fallback={<p>Loading...</p>}>
-        <ProductPage
-          staticState={staticState}
-          navigatorContext={navigatorContext.marshal}
-          productId={params.productId}
-        />
-      </Suspense>
+      <p>
+        {name} ({params.productId}) - ${price}
+      </p>
+      <br />
     </StandaloneProvider>
   );
 }

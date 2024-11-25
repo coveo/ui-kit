@@ -1,4 +1,4 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   InstantProducts,
   InstantProductsProps,
@@ -12,7 +12,7 @@ export type {
 export type {InstantProducts, InstantProductsProps};
 
 export interface InstantProductsDefinition
-  extends SearchAndListingControllerDefinitionWithoutProps<InstantProducts> {}
+  extends UniversalControllerDefinitionWithoutProps<InstantProducts> {}
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.
@@ -28,6 +28,7 @@ export function defineInstantProducts(
   return {
     listing: true,
     search: true,
+    standalone: true,
     build: (engine) => buildInstantProducts(engine, props),
   };
 }
