@@ -223,7 +223,6 @@ export async function deleteOldScratchOrgs(
 
 export async function orgExists(alias: string): Promise<boolean> {
   const response = await sfdx<SfdxListOrgsResponse>('org list');
-
   const org = response.result.scratchOrgs.find((o) => o.alias === alias);
 
   const isOrgFound = !!org;
