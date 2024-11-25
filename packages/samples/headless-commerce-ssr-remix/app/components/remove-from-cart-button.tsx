@@ -25,11 +25,18 @@ export default function RemoveFromCartButton({
     if (fetcher.data === null) {
       methods.updateItemQuantity({productId, price, name, quantity: 0});
     } else {
+      const {
+        productName: name,
+        pricePerUnit: price,
+        uniqueId: productId,
+        totalQuantity: quantity,
+      } = fetcher.data;
+
       methods.updateItemQuantity({
-        name: fetcher.data.productName,
-        price: fetcher.data.pricePerUnit,
-        productId: fetcher.data.uniqueId,
-        quantity: fetcher.data.totalQuantity,
+        name,
+        price,
+        productId,
+        quantity,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

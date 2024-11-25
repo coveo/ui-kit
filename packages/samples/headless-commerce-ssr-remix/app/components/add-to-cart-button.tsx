@@ -22,11 +22,18 @@ export default function AddToCartButton({
       return;
     }
 
+    const {
+      productName: name,
+      pricePerUnit: price,
+      uniqueId: productId,
+      totalQuantity: quantity,
+    } = fetcher.data;
+
     methods.updateItemQuantity({
-      name: fetcher.data.productName,
-      price: fetcher.data.pricePerUnit,
-      productId: fetcher.data.uniqueId,
-      quantity: fetcher.data.totalQuantity,
+      name,
+      price,
+      productId,
+      quantity,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
