@@ -6,7 +6,7 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 
-interface SearchPageProps {
+interface SearchProviderProps {
   staticState: SearchStaticState;
   navigatorContext: NavigatorContext;
 }
@@ -15,7 +15,7 @@ export default function SearchProvider({
   staticState,
   navigatorContext,
   children,
-}: PropsWithChildren<SearchPageProps>) {
+}: PropsWithChildren<SearchProviderProps>) {
   const [hydratedState, setHydratedState] = useState<
     SearchHydratedState | undefined
   >(undefined);
