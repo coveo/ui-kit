@@ -1,10 +1,7 @@
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {updateQuery} from '../../features/query/query-actions.js';
 import {queryReducer as query} from '../../features/query/query-slice.js';
-import {
-  executeSearch,
-  nullActionCause,
-} from '../../features/search/search-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {logUndoTriggerQuery} from '../../features/triggers/trigger-analytics-actions.js';
 import {updateIgnoreQueryTrigger} from '../../features/triggers/triggers-actions.js';
 import {triggerReducer as triggers} from '../../features/triggers/triggers-slice.js';
@@ -55,7 +52,6 @@ export function buildQueryTrigger(engine: SearchEngine): QueryTrigger {
           legacy: logUndoTriggerQuery({
             undoneQuery: modification(),
           }),
-          next: nullActionCause(),
         })
       );
     },

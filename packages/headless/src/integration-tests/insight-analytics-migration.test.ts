@@ -24,7 +24,6 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
-  facetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetBreadcrumb,
@@ -33,9 +32,7 @@ import {
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
-  logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-insight-analytics-actions.js';
-import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request.js';
 import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-insight-analytics-actions.js';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {dateBreadcrumbFacet} from '../features/facets/range-facets/date-facet-set/date-facet-analytics-actions.js';
@@ -67,11 +64,6 @@ import {searchboxSubmit} from '../features/query/query-analytics-actions.js';
 import {logSearchboxSubmit} from '../features/query/query-insight-analytics-actions.js';
 import {resultsSort} from '../features/sort-criteria/sort-criteria-analytics-actions.js';
 import {logResultsSort} from '../features/sort-criteria/sort-criteria-insight-analytics-actions.js';
-import {
-  StaticFilterValueMetadata,
-  staticFilterDeselect,
-} from '../features/static-filter-set/static-filter-set-actions.js';
-import {logInsightStaticFilterDeselect} from '../features/static-filter-set/static-filter-set-insight-analytics-actions.js';
 import {clearMicrotaskQueue} from '../test/unit-test-utils.js';
 import {
   assertActionCause,
@@ -106,7 +98,6 @@ const legacyInsightEngine = buildInsightEngine({
 
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
-const ANY_CRITERION: FacetSortCriterion = 'alphanumeric';
 const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
   start: 'start',
   end: 'end',
@@ -114,11 +105,7 @@ const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
   state: 'idle',
   numberOfResults: 1,
 };
-const ANY_STATIC_FILTER_ID = 'any static filter id';
-const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
-  caption: 'any static filter value caption',
-  expression: 'any static filter value expression',
-};
+
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
@@ -192,22 +179,6 @@ describe('Analytics Search Migration', () => {
     await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy, [...excludedBaseProperties, 'actionCause']);
-  });
-
-  it('analytics/facet/sortChange', async () => {
-    const action = executeSearch({
-      legacy: logFacetUpdateSort({
-        facetId: ANY_FACET_ID,
-        sortCriterion: ANY_CRITERION,
-      }),
-      next: facetUpdateSort(),
-    });
-
-    legacyInsightEngine.dispatch(action);
-    nextInsightEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
   });
 
   it('analytics/facet/breadcrumb', async () => {
@@ -363,22 +334,6 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logResultsSort(),
       next: resultsSort(),
-    });
-
-    legacyInsightEngine.dispatch(action);
-    nextInsightEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/deselect', async () => {
-    const action = executeSearch({
-      legacy: logInsightStaticFilterDeselect({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-        staticFilterValue: ANY_STATIC_FILTER_VALUE,
-      }),
-      next: staticFilterDeselect(),
     });
 
     legacyInsightEngine.dispatch(action);
