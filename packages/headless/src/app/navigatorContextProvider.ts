@@ -1,3 +1,6 @@
+/**
+ * The `NavigatorContext` interface represents the context of the browser client.
+ */
 export interface NavigatorContext {
   /**
    * The URL of the page that referred the user to the current page.
