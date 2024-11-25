@@ -61,7 +61,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Run Playwright Tests
         run: |
-          npx playwright install-deps
+          npx playwright install --with-deps
           npx playwright test
         shell: bash
         working-directory: ./packages/quantic
