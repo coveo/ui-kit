@@ -571,10 +571,6 @@ jobs:
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
