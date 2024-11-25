@@ -1,0 +1,34 @@
+{
+  "name": "headless-commerce-ssr-remix",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
+    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "start": "remix-serve ./build/server/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remix-run/node": "^2.14.0",
+    "@remix-run/react": "^2.14.0",
+    "@remix-run/serve": "^2.14.0",
+    "isbot": "^4.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@coveo/relay-event-types": "12.4.2",
+    "@remix-run/dev": "^2.14.0",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "autoprefixer": "^10.4.19",
+    "eslint": "8.57.0",
+    "typescript": "5.4.5",
+    "vite-tsconfig-paths": "5.1.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
