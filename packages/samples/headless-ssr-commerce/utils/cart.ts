@@ -4,6 +4,8 @@ import {
   CartItem as HeadlessCartItem,
   Product as HeadlessProduct,
   CartState as HeadlessCartState,
+  InstantProducts,
+  ProductList,
 } from '@coveo/headless-react/ssr-commerce';
 
 type HeadlessSSRCart = Omit<HeadlessCart, 'state' | 'subscribe'>;
@@ -26,11 +28,15 @@ export async function adjustQuantity(
 export async function addToCart(
   headlessCart: HeadlessSSRCart,
   headlessCartState: HeadlessCartState,
-  product: HeadlessProduct
+  product: HeadlessProduct,
+  methods:
+    | Omit<InstantProducts | ProductList, 'state' | 'subscribe'>
+    | undefined
 ) {
   const existingItem = headlessCartState.items.find(
     (item) => item.productId === product.ec_product_id
   );
+
   const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const item = {
     name: product.ec_name!,
@@ -42,6 +48,11 @@ export async function addToCart(
   headlessCart.updateItemQuantity(item);
   // Add the item to the external service
   await externalCartAPI.addItemToCart(item);
+
+  // When sending cart events directly from the search result page, product listing pages, or from recommendation slots, you must send an additional click event along with the cart event.
+  //
+  // See https://docs.coveo.com/en/o1n93466/coveo-for-commerce/capture-cart-events#send-an-additional-click-event
+  methods?.interactiveProduct({options: {product}}).select();
 }
 
 export async function purchase(

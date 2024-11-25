@@ -24,7 +24,9 @@ export default function InstantProducts() {
           <button onClick={() => clickProduct(product)}>
             {product.ec_name} ({product.ec_product_id})
           </button>
-          <button onClick={() => addToCart(cartMethods!, cartState, product)}>
+          <button
+            onClick={() => addToCart(cartMethods!, cartState, product, methods)}
+          >
             Add to cart
           </button>
         </li>
