@@ -62,11 +62,12 @@ export function Layout({children}: {children: React.ReactNode}) {
         <h1>Coveo Commerce SSR + Remix</h1>
         <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
           {routes.map((route) => (
-            <NavLink key={route.to} to={route.to} prefetch="intent">
+            // Avoid prefetching Coveo-powered pages to prevent unnecessary queries and disjointed Coveo analytics data.
+            <NavLink key={route.to} to={route.to} prefetch="none">
               {route.name}
             </NavLink>
           ))}
-          <NavLink to="/cart" prefetch="intent">
+          <NavLink to="/cart" prefetch="none">
             Cart{totalItemsInCart ? ` (${totalItemsInCart})` : ''}
           </NavLink>
         </div>

@@ -61,17 +61,22 @@ export default function ListingRoute() {
     staticState: ListingStaticState;
     navigatorContext: NavigatorContext;
   }>();
+
+  const getTitle = () => {
+    return params.listingId
+      ?.split('-')
+      .map(
+        (subString) => subString.charAt(0).toUpperCase() + subString.slice(1)
+      )
+      .join(' ');
+  };
+
   return (
     <ListingProvider
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
-      <h2>
-        {params.listingId
-          ?.split('-')
-          .map((e) => e.charAt(0).toUpperCase() + e.slice(1))
-          .join(' ')}
-      </h2>
+      <h2>{getTitle()}</h2>
       <ProductList />
     </ListingProvider>
   );
