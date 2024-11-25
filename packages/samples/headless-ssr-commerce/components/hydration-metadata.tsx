@@ -1,18 +1,27 @@
 'use client';
 
 import {
-  ListingHydratedState,
-  ListingStaticState,
-  SearchHydratedState,
-  SearchStaticState,
+  listingEngineDefinition,
+  searchEngineDefinition,
 } from '@/lib/commerce-engine';
+import {
+  InferHydratedState,
+  InferStaticState,
+} from '@coveo/headless-react/ssr-commerce';
 import {FunctionComponent} from 'react';
 
 export interface HydrationMetadataProps {
-  staticState: SearchStaticState | ListingStaticState;
-  hydratedState?: SearchHydratedState | ListingHydratedState;
+  staticState:
+    | InferStaticState<typeof searchEngineDefinition>
+    | InferStaticState<typeof listingEngineDefinition>;
+  hydratedState?:
+    | InferHydratedState<typeof searchEngineDefinition>
+    | InferHydratedState<typeof listingEngineDefinition>;
 }
 
+// This component displays metadata about the hydration state of the page.
+// IMPORTANT: It was created for testing our package.
+// You should not use this component anywhere.
 export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
   staticState,
   hydratedState,
