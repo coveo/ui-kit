@@ -1,11 +1,19 @@
 'use client';
 
 import {
+  CommerceEngine,
+  Controller,
+  ControllerDefinitionsMap,
+  InferControllersMapFromDefinition,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferHydratedState,
   InferStaticState,
   NavigatorContext,
+  NavigatorContextProvider,
+  SolutionType,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
+import {SSRCommerceEngine} from '../../../headless/dist/definitions/app/commerce-ssr-engine/factories/build-factory.js';
 import {defineCommerceEngine} from './commerce-engine.js';
 
 // interface RecommendationProviderProps {
@@ -177,97 +185,145 @@ import {defineCommerceEngine} from './commerce-engine.js';
 //   };
 // }
 
-interface ProviderProps {
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
-  staticState: InferStaticState<
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-  >;
+// interface ProviderProps {
+//   definition: GenericDefinition;
+//   staticState: GenericStaticState;
+//   navigatorContext: NavigatorContext;
+// }
+
+// function Provider({
+//   definition,
+//   staticState,
+//   navigatorContext,
+//   children,
+// }: PropsWithChildren<ProviderProps>) {
+//   type RecommendationHydratedState = InferHydratedState<typeof definition>;
+//   const [hydratedState, setHydratedState] = useState<
+//     RecommendationHydratedState | undefined
+//   >(undefined);
+
+//   definition.setNavigatorContextProvider(() => navigatorContext);
+
+//   useEffect(() => {
+//     definition
+//       .hydrateStaticState({
+//         searchActions: staticState.searchActions,
+
+//         controllers: staticState.controllers,
+//       })
+//       .then(({engine, controllers}) => {
+//         setHydratedState({engine, controllers});
+//       });
+//   }, [staticState]);
+
+//   if (hydratedState) {
+//     return (
+//       <definition.HydratedStateProvider
+//         engine={hydratedState.engine}
+//         controllers={hydratedState.controllers}
+//       >
+//         {children}
+//       </definition.HydratedStateProvider>
+//     );
+//   } else {
+//     return (
+//       <definition.StaticStateProvider controllers={staticState.controllers}>
+//         {children}
+//       </definition.StaticStateProvider>
+//     );
+//   }
+// }
+
+interface WithDefinitionProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+> {
+  staticState: InferStaticState<GenericDefinition<TControllers, TSolutionType>>;
   navigatorContext: NavigatorContext;
 }
 
-function Provider({
-  definition,
-  staticState,
-  navigatorContext,
-  children,
-}: PropsWithChildren<ProviderProps>) {
-  type RecommendationHydratedState = InferHydratedState<typeof definition>;
-  const [hydratedState, setHydratedState] = useState<
-    RecommendationHydratedState | undefined
-  >(undefined);
+type GenericDefinition<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+> = {
+  StaticStateProvider: (
+    props: PropsWithChildren<{
+      controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+        TControllers,
+        TSolutionType
+      >;
+    }>
+  ) => JSX.Element;
 
-  definition.setNavigatorContextProvider(() => navigatorContext);
-
-  useEffect(() => {
-    definition
-      .hydrateStaticState({
-        searchActions: staticState.searchActions,
-
-        controllers: staticState.controllers,
-      })
-      .then(({engine, controllers}) => {
-        setHydratedState({engine, controllers});
-      });
-  }, [staticState]);
-
-  if (hydratedState) {
-    return (
-      <definition.HydratedStateProvider
-        engine={hydratedState.engine}
-        controllers={hydratedState.controllers}
-      >
-        {children}
-      </definition.HydratedStateProvider>
-    );
-  } else {
-    return (
-      <definition.StaticStateProvider controllers={staticState.controllers}>
-        {children}
-      </definition.StaticStateProvider>
-    );
-  }
-}
-
-interface WithDefinitionProps {
-  staticState: InferStaticState<
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-  >;
-  navigatorContext: NavigatorContext;
-}
+  HydratedStateProvider: (
+    props: PropsWithChildren<{
+      engine: CommerceEngine;
+      controllers: InferControllersMapFromDefinition<
+        TControllers,
+        TSolutionType
+      >;
+    }>
+  ) => JSX.Element;
+  setNavigatorContextProvider: (
+    navigatorContextProvider: NavigatorContextProvider
+  ) => void;
+  hydrateStaticState: (args: {
+    controllers: TControllers;
+    searchActions: unknown;
+  }) => Promise<{engine: SSRCommerceEngine; controllers: TControllers}>;
+};
+// Repeat for other definitions
 
 /**
  * TODO MONDAY WHAT I NEED TO DO HERE IS ADD A GENERIC THAT TAKES IN THE CONTROLLER AND MAKE IT AFFECT THE STATICSTATEPROVIDER TYPE OF THE DEFINITION TYPE
  */
-export function buildProviderWithDefinition(
-  definition:
-    | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-    | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition']
-) {
+export function buildProviderWithDefinition<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+>(definition: GenericDefinition<TControllers, TSolutionType>) {
   return function WrappedProvider({
     staticState,
     navigatorContext,
     children,
   }: PropsWithChildren<WithDefinitionProps>) {
+    type RecommendationHydratedState = InferHydratedState<typeof definition>;
+    const [hydratedState, setHydratedState] = useState<
+      RecommendationHydratedState | undefined
+    >(undefined);
+
+    // Set navigator context provider
+    useEffect(() => {
+      definition.setNavigatorContextProvider(() => navigatorContext);
+    }, [navigatorContext]);
+
+    // Hydrate static state
+    useEffect(() => {
+      definition
+        .hydrateStaticState({
+          searchActions: staticState.searchActions,
+          controllers: staticState.controllers,
+        })
+        .then(({engine, controllers}) => {
+          setHydratedState({engine, controllers});
+        });
+    }, [staticState]);
+
+    // Render based on hydrated state
+    if (hydratedState) {
+      return (
+        <definition.HydratedStateProvider
+          engine={hydratedState.engine}
+          controllers={hydratedState.controllers}
+        >
+          {children}
+        </definition.HydratedStateProvider>
+      );
+    }
+
     return (
-      <Provider
-        definition={definition}
-        staticState={staticState}
-        navigatorContext={navigatorContext}
-      >
+      <definition.StaticStateProvider controllers={staticState.controllers}>
         {children}
-      </Provider>
+      </definition.StaticStateProvider>
     );
   };
 }
