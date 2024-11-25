@@ -20,6 +20,20 @@
       "matchPackageNames": ["/typedoc/"]
     },
     {
+      "groupName": "typescript",
+      "groupSlug": "typescript",
+      "rangeStrategy": "replace",
+      "description": "Isolate typescript",
+      "matchPackagePatterns": ["typescript"]
+    },
+    {
+      "groupName": "dompurify",
+      "groupSlug": "dompurify",
+      "rangeStrategy": "replace",
+      "description": "Isolate dompurify",
+      "matchPackagePatterns": ["dompurify"]
+    },
+    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
@@ -162,5 +176,6 @@
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false
-  }
+  },
+  "ignoreDeps": ["eslint-plugin-canonical"]
 }
