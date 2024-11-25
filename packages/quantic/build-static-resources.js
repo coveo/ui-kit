@@ -125,9 +125,6 @@ async function copyLibrary(config) {
   }
   for (const {src, dest} of config.files) {
     await copy(src, dest);
-    if (dest.includes('headless.js')) {
-      await writeQuanticVersion(dest);
-    }
   }
 }
 
@@ -146,6 +143,13 @@ async function main() {
   await copyLibrary(LIBRARY_CONFIG.headless);
   await fs.rm(TEMP_DIR, {recursive: true});
   console.info('Headless copied.');
+
+  LIBRARY_CONFIG.headless.files.forEach(async ({dest}) => {
+    if (dest.includes('headless.js')) {
+      await writeQuanticVersion(dest);
+    }
+  });
+  console.info('Headless augmented with Quantic version.');
 
   console.info('All resources built successfully!');
 }
