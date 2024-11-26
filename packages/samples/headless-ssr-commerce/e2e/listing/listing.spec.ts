@@ -54,7 +54,29 @@ test.describe('default', () => {
       });
     });
   });
+
+  test.describe('when changing the sort order', () => {
+    let originalProductListContents: string;
+    test.beforeEach(async ({sort, search, facet}) => {
+      originalProductListContents =
+        (await search.productList.textContent()) || '';
+
+      await sort.sortSelect.waitFor({state: 'visible'});
+      await sort.sortSelect.isEnabled();
+
+      await sort.sortSelect.selectOption({index: 1});
+      await facet.facetLoading.waitFor({state: 'visible'});
+      await facet.facetLoading.waitFor({state: 'hidden'});
+    });
+
+    test('should update the result list', async ({search}) => {
+      const productListContents = await search.productList.textContent();
+
+      expect(productListContents).not.toEqual(originalProductListContents);
+    });
+  });
 });
+
 test.describe('ssr', () => {
   const numResults = 9; // Define the numResults variable
   const numResultsMsg = `Rendered page with ${numResults} products`;
@@ -76,6 +98,12 @@ test.describe('ssr', () => {
       dom.window.document.querySelectorAll('[aria-label="Product List"] li')
         .length
     ).toBe(numResults);
+
+    expect(
+      (dom.window.document.querySelector('#sorts-select') as HTMLSelectElement)
+        .selectedOptions[0]?.textContent
+    ).toBe('Relevance');
+
     expect(
       (
         dom.window.document.querySelector(
@@ -85,11 +113,17 @@ test.describe('ssr', () => {
     ).toBe(false);
   });
 
-  test(`renders page in CSR as expected`, async ({page, search, hydrated}) => {
+  test(`renders page in CSR as expected`, async ({
+    page,
+    search,
+    sort,
+    hydrated,
+  }) => {
     await page.goto('/surf-accessories');
 
     await expect(hydrated.hydratedMessage).toHaveText(numResultsMsg);
     expect(await search.productItems).toHaveLength(numResults);
+    expect(await sort.selectedOption.textContent()).toBe('Relevance');
     expect(await hydrated.hydratedIndicator).toBe(true);
   });
 

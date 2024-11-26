@@ -18,6 +18,7 @@ import {
   getHeadlessBindings,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -264,6 +265,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
@@ -287,6 +289,26 @@ export default class QuanticNumericFacet extends LightningElement {
       element: this.template.host,
     });
   };
+
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
 
   /**
    * @param {import("coveo").SearchEngine} engine

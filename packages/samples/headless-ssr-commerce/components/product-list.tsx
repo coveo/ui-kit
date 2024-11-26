@@ -14,7 +14,9 @@ export default function ProductList() {
         <li key={product.ec_product_id}>
           <ProductButtonWithImage methods={methods} product={product} />
 
-          <button onClick={() => addToCart(cartMethods!, cartState, product)}>
+          <button
+            onClick={() => addToCart(cartMethods!, cartState, product, methods)}
+          >
             Add to cart
           </button>
         </li>

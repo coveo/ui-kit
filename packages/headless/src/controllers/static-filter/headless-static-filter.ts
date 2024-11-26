@@ -1,18 +1,12 @@
 import {Schema} from '@coveo/bueno';
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
-import {
-  SearchAction,
-  executeSearch,
-} from '../../features/search/search-actions.js';
+import {executeSearch} from '../../features/search/search-actions.js';
 import {
   deselectAllStaticFilterValues,
   logStaticFilterClearAll,
   logStaticFilterDeselect,
   logStaticFilterSelect,
   registerStaticFilter,
-  staticFilterClearAll,
-  staticFilterDeselect,
-  staticFilterSelect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../features/static-filter-set/static-filter-set-actions.js';
@@ -190,7 +184,6 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -204,7 +197,6 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -214,7 +206,6 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -228,7 +219,6 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: getLegacyAnalyticsActionForToggledValue(id, value),
-          next: getAnalyticsActionForToggledValue(value),
         })
       );
     },
@@ -238,7 +228,6 @@ export function buildStaticFilter(
       dispatch(
         executeSearch({
           legacy: logStaticFilterClearAll({staticFilterId: id}),
-          next: staticFilterClearAll(),
         })
       );
     },
@@ -283,12 +272,4 @@ function getLegacyAnalyticsActionForToggledValue(
     staticFilterId: id,
     staticFilterValue: {caption, expression},
   });
-}
-
-function getAnalyticsActionForToggledValue(
-  value: StaticFilterValue
-): SearchAction {
-  const isSelected = value.state === 'selected';
-
-  return isSelected ? staticFilterSelect() : staticFilterDeselect();
 }
