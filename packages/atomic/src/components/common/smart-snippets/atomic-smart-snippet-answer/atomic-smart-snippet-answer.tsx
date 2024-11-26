@@ -8,7 +8,7 @@ import {
   Host,
   Element,
 } from '@stencil/core';
-import {sanitize} from 'dompurify';
+import DOMPurify from 'dompurify';
 import {sanitizeStyle} from '../../../../utils/utils';
 import {bindAnalyticsToLink} from '../../item-link/item-link';
 
@@ -125,7 +125,7 @@ export class AtomicSmartSnippetAnswer {
       >
         {/* deepcode ignore ReactSetInnerHtml: Sanitized by back-end + dompurify */}
         <div
-          innerHTML={sanitize(this.htmlContent, {
+          innerHTML={DOMPurify.sanitize(this.htmlContent, {
             USE_PROFILES: {html: true},
           })}
           ref={(element) => element && this.bindAnalyticsToLinks(element)}

@@ -154,6 +154,7 @@ export const config: Config = {
     },
     {
       type: 'dist',
+      esmLoaderPath: './atomic/loader',
       collectionDir: null,
       copy: [
         {src: 'themes'},

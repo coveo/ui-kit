@@ -56,7 +56,7 @@ test.describe('default', () => {
 
       const cartItemsCount = await cart.items.count();
 
-      expect(cartItemsCount).toBe(4);
+      expect(cartItemsCount).toBe(3);
     });
   });
 
@@ -221,6 +221,7 @@ test.describe('default', () => {
     });
   });
 });
+
 test.describe('ssr', () => {
   const numItemsInCart = 0; // Define the numResults variable
   const numItemsInCartMsg = `Items in cart: ${numItemsInCart}`;
@@ -238,7 +239,7 @@ test.describe('ssr', () => {
       numItemsInCartMsg
     );
 
-    expect(dom.window.document.querySelectorAll('ul li').length).toBe(
+    expect(dom.window.document.querySelectorAll('ul#cart li').length).toBe(
       numItemsInCart
     );
     expect(

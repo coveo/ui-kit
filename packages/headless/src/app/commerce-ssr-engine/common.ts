@@ -1,17 +1,41 @@
+import {UnknownAction} from '@reduxjs/toolkit';
 import {Controller} from '../../controllers/controller/headless-controller.js';
 import {InvalidControllerDefinition} from '../../utils/errors.js';
-import {filterObject, mapObject} from '../../utils/utils.js';
-import {SSRCommerceEngine} from '../commerce-engine/commerce-engine.ssr.js';
-import {InferControllerPropsMapFromDefinitions} from '../ssr-engine/types/common.js';
+import {clone, filterObject, mapObject} from '../../utils/utils.js';
+import {
+  ControllersMap,
+  InferControllerStaticStateMapFromControllers,
+} from '../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from './factories/build-factory.js';
 import {
   ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
+  EngineStaticState,
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
+  InferControllerPropsMapFromDefinitions,
   InferControllersMapFromDefinition,
   SolutionType,
 } from './types/common.js';
+
+export function createStaticState<TSearchAction extends UnknownAction>({
+  searchActions,
+  controllers,
+}: {
+  searchActions: TSearchAction[];
+  controllers: ControllersMap;
+}): EngineStaticState<
+  TSearchAction,
+  InferControllerStaticStateMapFromControllers<ControllersMap>
+> {
+  return {
+    controllers: mapObject(controllers, (controller) => ({
+      state: clone(controller.state),
+    })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
+    searchActions: searchActions.map((action) => clone(action)),
+  };
+}
 
 function buildControllerFromDefinition<
   TControllerDefinition extends ControllerDefinition<Controller>,
@@ -51,26 +75,12 @@ export function buildControllerDefinitions<
   TSolutionType
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    const unavailableInSearchSolutionType =
-      'search' in definition &&
-      definition['search'] === false &&
-      solutionType === SolutionType['search'];
+    const unavailableInSolutionType = () =>
+      !(solutionType in definition) ||
+      (solutionType in definition &&
+        definition[solutionType as keyof typeof definition] === false);
 
-    const unavailableInListingSolutionType =
-      'listing' in definition &&
-      definition['listing'] === false &&
-      solutionType === SolutionType['listing'];
-
-    const unavailableInStandaloneSolutionType =
-      solutionType === SolutionType['standalone'] && 'standalone' in definition
-        ? definition['standalone'] === false
-        : false;
-
-    if (
-      unavailableInSearchSolutionType ||
-      unavailableInListingSolutionType ||
-      unavailableInStandaloneSolutionType
-    ) {
+    if (unavailableInSolutionType()) {
       return null;
     }
 

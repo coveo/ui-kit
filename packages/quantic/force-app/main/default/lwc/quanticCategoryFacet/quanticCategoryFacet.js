@@ -14,6 +14,7 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -301,6 +302,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       },
     });
     if (this.dependsOn) {
+      this.validateDependsOnProperty();
       this.initFacetConditionManager(engine);
     }
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -328,6 +330,26 @@ export default class QuanticCategoryFacet extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(renderFacetEvent);
+  }
+
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
   }
 
   initFacetConditionManager(engine) {
