@@ -21,7 +21,7 @@ export interface HydrationMetadataProps {
 
 // This component displays metadata about the hydration state of the page.
 // IMPORTANT: It was created for testing our package.
-// You should not use this component anywhere.
+// You won't have to create this component yourself. This is just an internal tool.
 export const HydrationMetadata: FunctionComponent<HydrationMetadataProps> = ({
   staticState,
   hydratedState,
