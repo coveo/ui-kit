@@ -1,5 +1,10 @@
-import {buildSearchBox, SearchBox, SearchBoxState} from '@coveo/headless';
-import {Component, h, State} from '@stencil/core';
+import {
+  buildSearchBox,
+  getOrganizationEndpoint,
+  SearchBox,
+  SearchBoxState,
+} from '@coveo/headless';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   FollowUpQuestionCandidate,
   SelectFollowUpQuestionCandidatePayload,
@@ -27,6 +32,13 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
 
   private previousQuery: string = '';
 
+  /**
+   * @internal
+   * The unique identifier of the answer configuration to use to generate the answer.
+   */
+  @Prop()
+  public answerConfigurationId!: string;
+
   @BindStateToController('searchBox', {
     onUpdateCallbackMethod: 'onSearchBoxStateChange',
   })
@@ -35,21 +47,6 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
 
   @State()
   public error!: Error;
-
-  private defaultCandidates: FollowUpQuestionCandidate[] = [
-    {
-      question: 'What is Coveo?',
-      score: 1.0,
-    },
-    {
-      question: 'What is Coveo RGA?',
-      score: 0.5,
-    },
-    {
-      question: 'What is Smart Snippets?',
-      score: 0.25,
-    },
-  ];
 
   @State()
   private candidates: FollowUpQuestionCandidate[] = [];
@@ -78,22 +75,43 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
 
   // @ts-expect-error: This function is used by BindStateToController.
   private onSearchBoxStateChange() {
-    if (this.searchBoxState.value === this.previousQuery) {
+    const currentQuery = this.searchBoxState?.value ?? '';
+
+    if (currentQuery === this.previousQuery) {
       return;
     }
 
-    this.previousQuery = this.searchBoxState.value;
+    this.previousQuery = currentQuery;
 
-    // The query has been updated.
-    // 1. clear the existing questions.
+    // The query has been updated. Clear the existing questions.
     this.candidates = [];
 
-    // 2. make an API call to fetch new follow-up questions
-    // TODO: remove the mock and call the real API
-    if (this.searchBoxState.value) {
-      setTimeout(() => {
-        this.candidates = this.defaultCandidates;
-      }, 500);
+    if (this.answerConfigurationId && currentQuery) {
+      const {accessToken, organizationId, environment} =
+        this.bindings.engine.state.configuration;
+      const orgEndpoint = getOrganizationEndpoint(organizationId, environment);
+
+      fetch(
+        `${orgEndpoint}/rest/organizations/${organizationId}/answer/v1/configs/${encodeURIComponent(this.answerConfigurationId)}/followup`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            semanticQuery: currentQuery,
+            numberOfCandidates: 3,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .then(({candidates}: {candidates: FollowUpQuestionCandidate[]}) => {
+          this.candidates = candidates;
+        })
+        .catch((error) => {
+          console.warn('Failed to retrieve follow-up questions', error);
+        });
     }
   }
 }
