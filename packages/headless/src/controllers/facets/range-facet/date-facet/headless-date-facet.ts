@@ -1,7 +1,6 @@
 import {SearchEngine} from '../../../../app/search-engine/search-engine.js';
 import {
   facetClearAll,
-  facetUpdateSort,
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
@@ -72,7 +71,6 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(),
         })
       );
     },

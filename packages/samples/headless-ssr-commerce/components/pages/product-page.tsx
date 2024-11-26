@@ -8,7 +8,6 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from 'next/navigation';
 import {useEffect, useState} from 'react';
-import Recommendations from '../recommendation-list';
 
 interface IProductPageProps {
   staticState: StandaloneStaticState;
@@ -36,7 +35,7 @@ export default function ProductPage(props: IProductPageProps) {
   useEffect(() => {
     standaloneEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
         controllers: {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
@@ -46,10 +45,6 @@ export default function ProductPage(props: IProductPageProps) {
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-
-        // Refreshing recommendations in the browser after hydrating the state in the client-side
-        // Recommendation refresh in the server is not supported yet.
-        controllers.popularBoughtRecs.refresh();
       });
   }, [staticState]);
 
@@ -65,7 +60,6 @@ export default function ProductPage(props: IProductPageProps) {
         {name} ({productId}) - ${price}
       </p>
       <br />
-      <Recommendations />
     </>
   );
 }
