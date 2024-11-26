@@ -14,9 +14,9 @@
   "types": "dist/types/index.d.ts",
   "exports": {
     "./loader": {
-      "types": "./dist/loader/index.d.ts",
-      "import": "./dist/loader/index.js",
-      "require": "./dist/loader/index.cjs.js"
+      "types": "./dist/atomic/loader/index.d.ts",
+      "import": "./dist/atomic/loader/index.js",
+      "require": "./dist/atomic/loader/index.cjs.js"
     },
     ".": {
       "types": "./dist/types/index.d.ts",
@@ -42,7 +42,7 @@
     "licenses/"
   ],
   "scripts": {
-    "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* loader/* playwright-report/*",
+    "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build": "nx build",
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",
@@ -71,7 +71,7 @@
     "@salesforce-ux/design-system": "^2.16.1",
     "@stencil/store": "2.0.16",
     "dayjs": "1.11.12",
-    "dompurify": "3.1.6",
+    "dompurify": "3.2.0",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.0",
     "i18next": "23.12.2",
@@ -115,7 +115,6 @@
     "@swc/core": "~1.7.0",
     "@swc/helpers": "~0.5.2",
     "@types/core-js": "2.5.8",
-    "@types/dompurify": "3.0.5",
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
     "@types/lodash": "4.17.7",

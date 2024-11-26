@@ -1,8 +1,13 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
+import RecommendationProvider from '@/components/providers/recommendation-provider';
 import SearchProvider from '@/components/providers/search-provider';
-import {searchEngineDefinition} from '@/lib/commerce-engine';
+import PopularBought from '@/components/recommendations/popular-bought';
+import {
+  recommendationEngineDefinition,
+  searchEngineDefinition,
+} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -30,6 +35,9 @@ export default async function Search() {
     },
   });
 
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    ['popularBought']
+  );
   return (
     <SearchProvider
       staticState={staticState}
@@ -38,6 +46,12 @@ export default async function Search() {
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <ContextDropdown />
         <Cart />
+        <RecommendationProvider
+          staticState={recsStaticState}
+          navigatorContext={navigatorContext.marshal}
+        >
+          <PopularBought />
+        </RecommendationProvider>
       </div>
     </SearchProvider>
   );
