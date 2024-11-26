@@ -23,7 +23,7 @@ export interface InstantProductsDefinition
  * @internal
  */
 export function defineInstantProducts(
-  props: InstantProductsProps
+  props: InstantProductsProps = {options: {}}
 ): InstantProductsDefinition {
   return {
     listing: true,
