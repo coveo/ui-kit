@@ -6,11 +6,16 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ProductList from '@/components/product-list';
 import ListingProvider from '@/components/providers/listing-provider';
-import Recommendations from '@/components/recommendation-list';
+import RecommendationProvider from '@/components/providers/recommendation-provider';
+import PopularBought from '@/components/recommendations/popular-bought';
+import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
-import {listingEngineDefinition} from '@/lib/commerce-engine';
+import {
+  listingEngineDefinition,
+  recommendationEngineDefinition,
+} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -54,6 +59,10 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    ['popularBought', 'popularViewed']
+  );
+
   return (
     <ListingProvider
       staticState={staticState}
@@ -86,7 +95,13 @@ export default async function Listing({params}: {params: {category: string}}) {
         </div>
 
         <div style={{flex: 4}}>
-          <Recommendations />
+          <RecommendationProvider
+            staticState={recsStaticState}
+            navigatorContext={navigatorContext.marshal}
+          >
+            <PopularBought />
+            <PopularViewed />
+          </RecommendationProvider>
         </div>
       </div>
     </ListingProvider>

@@ -28,6 +28,8 @@ export function definePagination<
 >(props?: PaginationProps & TOptions) {
   ensureAtLeastOneSolutionType(props);
   return {
+    listing: true,
+    search: true,
     ...props,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing

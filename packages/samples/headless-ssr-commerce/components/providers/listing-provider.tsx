@@ -29,7 +29,7 @@ export default function ListingProvider({
   useEffect(() => {
     listingEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
         controllers: {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
@@ -39,9 +39,6 @@ export default function ListingProvider({
       })
       .then(({engine, controllers}) => {
         setHydratedState({engine, controllers});
-        // Refreshing recommendations in the browser after hydrating the state in the client-side
-        // Recommendation refresh in the server is not supported yet.
-        // controllers.popularBoughtRecs.refresh(); // FIXME: does not work
       });
   }, [staticState]);
 
