@@ -21,7 +21,7 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickNextPageButton();
         const searchResponse = await searchResponsePromise;
         const {firstResult} = searchResponse.request().postDataJSON();
-        expect(firstResult).toBe(numberOfResultsPerPage);
+        expect(firstResult).toBe('numberOfResultsPerPage');
         await pager.waitForPagerNextUaAnalytics();
       });
     });
