@@ -185,7 +185,7 @@ export class TabManagerBar {
 
   public render = () => {
     return (
-      <Host>
+      <Host class="overflow-x-clip overflow-y-visible">
         <slot></slot>
         <tab-popover>{this.popoverTabs}</tab-popover>
       </Host>

@@ -36,13 +36,13 @@ export class TabManagerButton {
     return (
       <Host
         role="listitem"
-        class={`${this.activeTabClass}`}
+        class={`${this.activeTabClass} max-w-[50%] sm:max-w-full`}
         aria-current={this.active ? 'true' : 'false'}
         aria-label={'tab for ' + this.label}
         part="button-container"
       >
         <button
-          class={`w-full px-6 pb-1 text-xl ${this.activeTabTextClass}`}
+          class={`w-full truncate px-2 pb-1 text-xl sm:px-6 ${this.activeTabTextClass}`}
           part="tab-button"
           onClick={this.select}
         >
