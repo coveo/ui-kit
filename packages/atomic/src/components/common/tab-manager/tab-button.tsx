@@ -4,9 +4,9 @@ import {Component, Host, Prop, h} from '@stencil/core';
  * @internal
  */
 @Component({
-  tag: 'tab-manager-button',
+  tag: 'tab-button',
 })
-export class TabManagerButton {
+export class TabButton {
   /**
    * The label to display on the tab button.
    */

@@ -19,7 +19,7 @@ export class TabManagerBar {
   private resizeObserver: ResizeObserver | undefined;
 
   private get tabsFromSlot(): TabCommonElement[] {
-    const isTab = (tagName: string) => /tab-manager-button$/i.test(tagName);
+    const isTab = (tagName: string) => /tab-button$/i.test(tagName);
     return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
       (element) => isTab(element.tagName)
     );

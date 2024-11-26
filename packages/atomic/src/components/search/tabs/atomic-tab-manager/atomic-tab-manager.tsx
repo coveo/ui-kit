@@ -91,7 +91,7 @@ export class AtomicTabManager {
             class="mb-2 flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
-              <tab-manager-button
+              <tab-button
                 active={this.tabManagerState.activeTab === tab.name}
                 label={tab.label}
                 select={() => {
@@ -99,7 +99,7 @@ export class AtomicTabManager {
                     tab.tabController.select();
                   }
                 }}
-              ></tab-manager-button>
+              ></tab-button>
             ))}
           </div>
         </tab-manager-bar>
