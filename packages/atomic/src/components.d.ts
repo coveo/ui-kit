@@ -1032,6 +1032,7 @@ export namespace Components {
         "question": string;
     }
     interface AtomicFollowUpQuestionList {
+        "answerConfigurationId": string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
@@ -7233,6 +7234,7 @@ declare namespace LocalJSX {
         "question"?: string;
     }
     interface AtomicFollowUpQuestionList {
+        "answerConfigurationId": string;
     }
     /**
      * The `atomic-format-currency` component is used for formatting currencies.
