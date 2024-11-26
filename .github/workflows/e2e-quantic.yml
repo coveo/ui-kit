@@ -74,7 +74,6 @@ jobs:
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-sfdx
       - run: |
-          echo "TEST" > server.key
           npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json
           npx --no-install ts-node scripts/build/delete-org.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json
           rm server.key
