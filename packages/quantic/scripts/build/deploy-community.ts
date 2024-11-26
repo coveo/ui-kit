@@ -163,7 +163,7 @@ async function buildOptions(scratchOrgDefPath): Promise<Options> {
       defFile: await prepareScratchOrgDefinitionFile(
         path.resolve(scratchOrgDefPath)
       ),
-      duration: ci ? 1 : 1,
+      duration: ci ? 1 : 7,
     },
     jwt: {
       clientId: process.env.SFDX_AUTH_CLIENT_ID,

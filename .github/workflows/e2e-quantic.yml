@@ -59,26 +59,7 @@ jobs:
 
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
       - uses: ./.github/actions/setup
-      - name: List
-        run: |
-          ls
-        shell: bash
-        working-directory: ./packages/quantic
-      - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
-        with:
-          path: packages/quantic/.env
-          key: quantic-playwright-env-${{ github.sha }}
-      - name: List
-        run: |
-          ls
-        shell: bash
-        working-directory: ./packages/quantic
-      - name: Run Playwright Tests
-        run: |
-          npx playwright install --with-deps
-          npx playwright test
-        shell: bash
-        working-directory: ./packages/quantic
+      - uses: ./.github/actions/e2e-quantic-playwright
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
     needs: e2e-quantic-playwright-test
