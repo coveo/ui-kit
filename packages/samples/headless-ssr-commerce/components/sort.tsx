@@ -2,6 +2,7 @@
 
 // import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 import {useSort} from '@/lib/commerce-engine';
+import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 
 export default function Sort() {
   const {state, methods} = useSort();
@@ -10,15 +11,20 @@ export default function Sort() {
     return null;
   }
 
-  // TODO: uncomment when KIT-3700: is fixed
-  // const getSortLabel = (criterion: SortCriterion) => {
-  //   switch (criterion.by) {
-  //     case SortBy.Relevancy:
-  //       return 'Relevance';
-  //     case SortBy.Field:
-  //       return criterion.field;
-  //   }
-  // };
+  const formatSortFieldLabel = (field: {
+    name: string;
+    direction?: string;
+    displayName?: string;
+  }) => field?.displayName ?? `${field.name} ${field.direction ?? ''}`.trim();
+
+  const getSortLabel = (criterion: SortCriterion) => {
+    switch (criterion.by) {
+      case SortBy.Relevance:
+        return 'Relevance';
+      case SortBy.Fields:
+        return criterion.fields.map(formatSortFieldLabel);
+    }
+  };
 
   return (
     <div className="Sort">
@@ -36,8 +42,7 @@ export default function Sort() {
             value={JSON.stringify(sort)}
             onSelect={() => methods?.sortBy(sort)}
           >
-            {/* TODO:KIT-3700: there is a type mismatch with the sort criterion FIXME:!!*/}
-            {/* {getSortLabel(sort)} */}
+            {getSortLabel(sort)}
           </option>
         ))}
       </select>

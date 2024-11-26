@@ -169,11 +169,11 @@ function filterRecommendationControllers<
       const isRecommendationController = (key: string) =>
         name.includes(key) && whitelist.includes(key);
 
-      Object.entries(controllers)
-        .filter(([key, _]) => isRecommendationController(key))
-        .forEach(([_, controller]) =>
-          (controller as Recommendations).refresh?.()
-        );
+      for (const [key, controller] of Object.entries(controllers)) {
+        if (isRecommendationController(key)) {
+          (controller as Recommendations).refresh?.();
+        }
+      }
     },
   };
 }

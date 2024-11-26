@@ -56,7 +56,7 @@ export default {
     standaloneSearchBox: defineStandaloneSearchBox({
       options: {redirectionUrl: '/search'},
     }),
-    instantProducts: defineInstantProducts({options: {}}),
+    instantProducts: defineInstantProducts(),
     pagination: definePagination({options: {pageSize: 9}}),
     sort: defineSort(),
     productView: defineProductView(),

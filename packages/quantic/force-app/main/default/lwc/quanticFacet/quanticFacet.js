@@ -15,6 +15,7 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -177,7 +178,6 @@ export default class QuanticFacet extends LightningElement {
    * @type {DependsOn}
    */
   @api dependsOn;
-
   /**
    * Whether the facet is collapsed.
    * @api
@@ -315,6 +315,7 @@ export default class QuanticFacet extends LightningElement {
       element: this.template.host,
     });
     if (this.dependsOn) {
+      this.validateDependsOnProperty();
       this.initFacetConditionManager(engine);
     }
   };
@@ -341,6 +342,25 @@ export default class QuanticFacet extends LightningElement {
       composed: true,
     });
     this.dispatchEvent(renderFacetEvent);
+  }
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
   }
 
   initFacetConditionManager(engine) {

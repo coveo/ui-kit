@@ -75,18 +75,12 @@ export function buildControllerDefinitions<
   TSolutionType
 > {
   const controllerMap = mapObject(definitionsMap, (definition, key) => {
-    const unavailableInSolutionType = (type: SolutionType) =>
-      (!(type in definition) && solutionType === SolutionType[type]) ||
-      (type in definition &&
-        definition[type as keyof typeof definition] === false &&
-        solutionType === SolutionType[type]);
+    const unavailableInSolutionType = () =>
+      !(solutionType in definition) ||
+      (solutionType in definition &&
+        definition[solutionType as keyof typeof definition] === false);
 
-    if (
-      unavailableInSolutionType(SolutionType.search) ||
-      unavailableInSolutionType(SolutionType.listing) ||
-      unavailableInSolutionType(SolutionType.standalone) ||
-      unavailableInSolutionType(SolutionType.recommendation)
-    ) {
+    if (unavailableInSolutionType()) {
       return null;
     }
 

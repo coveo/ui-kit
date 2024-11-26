@@ -4,7 +4,6 @@ import {
   facetClearAll,
   facetDeselect,
   facetSelect,
-  facetUpdateSort,
 } from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
@@ -128,7 +127,6 @@ export function buildCategoryFacet(
             facetId: getFacetId(),
             sortCriterion: criterion,
           }),
-          next: facetUpdateSort(),
         })
       );
     },
