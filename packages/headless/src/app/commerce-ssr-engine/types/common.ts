@@ -1,14 +1,24 @@
+import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {InvalidControllerDefinition} from '../../../utils/errors.js';
-import {SSRCommerceEngine} from '../../commerce-engine/commerce-engine.ssr.js';
 import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
   InferControllerPropsMapFromDefinitions,
+  ControllerStaticStateMap,
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  OptionsTuple,
 } from '../../ssr-engine/types/common.js';
+import {SSRCommerceEngine} from '../factories/build-factory.js';
 
 export type {
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
   InferControllerPropsMapFromDefinitions,
@@ -18,6 +28,7 @@ export enum SolutionType {
   search = 'search',
   listing = 'listing',
   standalone = 'standalone',
+  recommendation = 'recommendation',
 }
 
 export interface ControllerDefinitionWithoutProps<
@@ -50,6 +61,14 @@ export interface ControllerDefinitionWithProps<
     props: TProps,
     solutionType?: SolutionType
   ): TController;
+}
+
+export interface EngineStaticState<
+  TSearchAction extends UnknownAction,
+  TControllers extends ControllerStaticStateMap,
+> {
+  searchActions: TSearchAction[];
+  controllers: TControllers;
 }
 
 export type ControllerDefinition<TController extends Controller> =
@@ -144,6 +163,13 @@ interface ListingOnlyController {
   [SolutionType.listing]: true;
 }
 
+interface RecommendationOnlyController {
+  /**
+   * @internal
+   */
+  [SolutionType.recommendation]: true;
+}
+
 interface SearchAndListingController {
   /**
    * @internal
@@ -172,6 +198,17 @@ export type ListingOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & ListingOnlyController;
+
+export type RecommendationOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> &
+  RecommendationOnlyController;
+
+export type RecommendationOnlyControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> &
+  RecommendationOnlyController;
 
 export type UniversalControllerDefinitionWithoutProps<
   TController extends Controller,

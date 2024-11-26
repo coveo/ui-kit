@@ -6,6 +6,7 @@ export interface FromBuildResultOptions<
   TControllers extends ControllersMap,
 > {
   buildResult: EngineDefinitionBuildResult<TEngine, TControllers>;
+  allowedRecommendationKeys?: (keyof TControllers)[];
 }
 
 export interface FromBuildResult<

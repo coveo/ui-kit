@@ -30,7 +30,7 @@ export default function StandaloneProvider({
   useEffect(() => {
     standaloneEngineDefinition
       .hydrateStaticState({
-        searchAction: staticState.searchAction,
+        searchActions: staticState.searchActions,
         controllers: {
           cart: {
             initialState: {items: staticState.controllers.cart.state.items},
@@ -53,9 +53,7 @@ export default function StandaloneProvider({
         engine={hydratedState.engine}
         controllers={hydratedState.controllers}
       >
-        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.*/}
-        <>{children}</>
+        {children}
       </standaloneEngineDefinition.HydratedStateProvider>
     );
   } else {
@@ -63,9 +61,7 @@ export default function StandaloneProvider({
       <standaloneEngineDefinition.StaticStateProvider
         controllers={staticState.controllers}
       >
-        {/* // TODO: KIT-3701: Type 'React.ReactNode' is not assignable to type 'import(".../node_modules/@types/react/index").ReactNode'.
-  Type 'bigint' is not assignable to type 'ReactNode'.*/}
-        <>{children}</>
+        {children}
       </standaloneEngineDefinition.StaticStateProvider>
     );
   }

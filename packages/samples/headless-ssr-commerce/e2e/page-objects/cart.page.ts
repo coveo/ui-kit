@@ -13,7 +13,7 @@ export class CartPageObject {
 
   get items() {
     const cart = this.cart;
-    return cart.locator('ul > li');
+    return cart.locator('ul#cart > li');
   }
 
   async getItemQuantity(item: Locator) {
