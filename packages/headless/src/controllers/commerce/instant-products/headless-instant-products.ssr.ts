@@ -1,4 +1,4 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   InstantProducts,
   InstantProductsProps,
@@ -12,7 +12,7 @@ export type {
 export type {InstantProducts, InstantProductsProps};
 
 export interface InstantProductsDefinition
-  extends UniversalControllerDefinitionWithoutProps<InstantProducts> {}
+  extends NonRecommendationControllerDefinitionWithoutProps<InstantProducts> {}
 
 /**
  * Defines the `InstantProducts` controller for the purpose of server-side rendering.

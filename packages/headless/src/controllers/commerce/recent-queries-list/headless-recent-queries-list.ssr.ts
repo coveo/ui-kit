@@ -1,4 +1,4 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
@@ -13,7 +13,7 @@ export type {
 export type {RecentQueriesList, RecentQueriesListProps};
 
 export interface RecentQueriesListDefinition
-  extends UniversalControllerDefinitionWithoutProps<RecentQueriesList> {}
+  extends NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.
