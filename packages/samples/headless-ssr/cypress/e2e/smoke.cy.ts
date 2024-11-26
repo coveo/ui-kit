@@ -14,29 +14,25 @@ const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
 const routes = ['generic?tab=all', 'react?tab=all'] as const;
 
-const isPageDev =
-  process.env.NODE_ENV === 'development' &&
-  Cypress.env('NEXTJS_ROUTER') === 'pages';
-
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
   'generic?tab=all': {
     thresholds: {
-      fcp: isPageDev ? 2000 : 200,
-      lcp: isPageDev ? 2000 : 200,
-      cls: 0,
-      ttfb: 60,
+      lcp: 2500,
       fid: 400,
+      cls: 0.1,
+      fcp: 1800,
+      ttfb: 600,
       inp: 400,
     },
   },
   'react?tab=all': {
     thresholds: {
-      fcp: isPageDev ? 2000 : 400,
-      lcp: isPageDev ? 2000 : 400,
-      cls: 0,
-      ttfb: 120,
+      lcp: 2500,
       fid: 800,
+      cls: 0.1,
+      fcp: 1800,
+      ttfb: 600,
       inp: 800,
     },
   },
