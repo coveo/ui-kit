@@ -28,11 +28,11 @@ test.describe('with an automatic query correction', () => {
 });
 
 test.describe('with a manual query correction', () => {
-  const ORIGINAL_QUERY = 'ceveo';
+  const ORIGINAL_QUERY = 'coveoo';
   const CORRECTED_QUERY = 'coveo';
   test.beforeEach(async ({didYouMean}) => {
     await didYouMean.withoutAutomaticQueryCorrection();
-    await didYouMean.load({story: 'manual-correction'});
+    await didYouMean.load();
     await didYouMean.hydrated.waitFor();
   });
 
