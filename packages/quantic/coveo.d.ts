@@ -56,6 +56,7 @@ declare global {
         bundle: AnyHeadless;
       };
     };
+    coveoQuanticVersion: string
   }
 }
 
