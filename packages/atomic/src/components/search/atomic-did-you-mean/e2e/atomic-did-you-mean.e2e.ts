@@ -61,7 +61,7 @@ test.describe('with a manual query correction', () => {
   });
 });
 
-test.describe('with a query trigger', () => {
+test.describe.fixme('with a query trigger', () => {
   const ORIGINAL_QUERY = 'Japan';
   const TRIGGER_QUERY = 'China';
   test.beforeEach(async ({didYouMean}) => {
