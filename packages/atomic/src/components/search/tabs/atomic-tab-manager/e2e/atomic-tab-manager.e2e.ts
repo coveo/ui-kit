@@ -21,8 +21,8 @@ test.describe('AtomicTabManager', () => {
 
     await expect(tabManager.tabButtons()).toHaveText([
       'All',
-      'Articles',
       'Documentation',
+      'Articles',
       'Parts and Accessories',
     ]);
   });
@@ -96,8 +96,8 @@ test.describe('AtomicTabManager', () => {
 
       await expect(tabManager.tabButtons()).toHaveText([
         'All',
-        'Articles',
         'Documentation',
+        'Articles',
         'Parts and Accessories',
       ]);
     });
@@ -223,7 +223,6 @@ test.describe('AtomicTabManager', () => {
         }) => {
           await tabManager.tabPopoverMenuButton.click();
           await expect(tabManager.popoverTabs()).toHaveText([
-            'All',
             'Documentation',
             'Parts and Accessories',
           ]);
@@ -234,13 +233,13 @@ test.describe('AtomicTabManager', () => {
         }) => {
           await tabManager.tabPopoverMenuButton.click();
           const popoverTabs = tabManager.popoverTabs();
-          await expect(popoverTabs).toHaveCount(3);
+          await expect(popoverTabs).toHaveCount(2);
           for (const tab of await popoverTabs.all()) {
             await expect(tab).not.toHaveText('Articles');
           }
           await expect(
             tabManager.tabButtons().locator('visible=true')
-          ).toHaveText(['Articles']);
+          ).toHaveText(['All', 'Articles']);
         });
       });
     });
@@ -265,8 +264,8 @@ test.describe('AtomicTabManager', () => {
     }) => {
       await tabManager.tabPopoverMenuButton.click();
       await expect(tabManager.popoverTabs()).toHaveText([
-        'Articles',
         'Documentation',
+        'Articles',
         'Parts and Accessories',
       ]);
     });
@@ -330,10 +329,10 @@ test.describe('AtomicTabManager', () => {
         });
       });
 
-      test.describe('when selecting previous tab in popover buttons', () => {
+      test.describe('when selecting another tab in popover buttons', () => {
         test.beforeEach(async ({tabManager}) => {
           await tabManager.tabPopoverMenuButton.click();
-          await tabManager.popoverTabs('All').click();
+          await tabManager.popoverTabs('Parts and Accessories').click();
         });
 
         test.describe('should change other component visibility', async () => {
@@ -400,8 +399,8 @@ test.describe('AtomicTabManager', () => {
 
           await expect(tabManager.tabButtons()).toHaveText([
             'All',
-            'Articles',
             'Documentation',
+            'Articles',
             'Parts and Accessories',
           ]);
         });
