@@ -11,7 +11,7 @@
     "@coveo/atomic": "3.11.1",
     "@coveo/bueno": "1.0.6",
     "@coveo/headless": "3.10.0",
-    "@stencil/core": "4.20.0",
+    "@stencil/core": "4.22.2",
     "stencil-router-v2": "0.6.0"
   },
   "devDependencies": {
