@@ -40,7 +40,7 @@
     "@coveo/release": "1.0.0",
     "@testing-library/react": "14.3.1",
     "@typescript-eslint/eslint-plugin": "7.17.0",
-    "eslint-plugin-react": "7.35.0",
+    "eslint-plugin-react": "7.37.2",
     "eslint-plugin-testing-library": "6.2.2",
     "gts": "5.3.1",
     "publint": "0.2.9",
@@ -51,12 +51,12 @@
   "peerDependencies": {
     "react": "^18",
     "react-dom": "^18",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0"
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1"
   },
   "optionalDependencies": {
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0"
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
