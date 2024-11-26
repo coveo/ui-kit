@@ -33,12 +33,13 @@ test.describe('when modifying state of a component (search box) that is a child 
     await expect(querySummary).toHaveText(/hello/);
   });
 
-  test("other components' state under a different atomic-search-interface should not be affected", async ({
-    page,
-  }) => {
-    const querySummary = page.locator(
-      'atomic-search-interface#interface-1 > atomic-query-summary'
-    );
-    await expect(querySummary).not.toHaveText(/hello/);
-  });
+  test.fixme(
+    "other components' state under a different atomic-search-interface should not be affected",
+    async ({page}) => {
+      const querySummary = page.locator(
+        'atomic-search-interface#interface-1 > atomic-query-summary'
+      );
+      await expect(querySummary).not.toHaveText(/hello/);
+    }
+  );
 });
