@@ -28,7 +28,7 @@ import {
  */
 export interface SSRCommerceEngine extends CommerceEngine {
   /**
-   * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
+   * Waits for the request to be completed and returns a promise that resolves to an `Action`.
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
