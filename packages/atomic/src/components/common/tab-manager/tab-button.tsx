@@ -36,7 +36,7 @@ export class TabButton {
     return (
       <Host
         role="listitem"
-        class={`${this.activeTabClass} max-w-[50%] sm:max-w-full`}
+        class={`${this.activeTabClass}`}
         aria-current={this.active ? 'true' : 'false'}
         aria-label={'tab for ' + this.label}
         part="button-container"

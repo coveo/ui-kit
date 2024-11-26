@@ -160,9 +160,16 @@ export class TabManagerBar {
     ));
   };
 
+  private setTabButtonMaxWidth = () => {
+    this.displayedTabs.forEach((tab) => {
+      tab.style.setProperty('max-width', `calc(100% - ${this.popoverWidth}px)`);
+    });
+  };
+
   private updateTabsDisplay = () => {
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
+    this.setTabButtonMaxWidth();
     this.updatePopoverPosition();
     this.updatePopoverTabs();
     this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
