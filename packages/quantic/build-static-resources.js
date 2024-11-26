@@ -104,7 +104,7 @@ async function writeQuanticVersion(filePath) {
   try {
     const existingContent = await fs.readFile(filePath, 'utf8');
     const version = await getPackageVersion();
-    const contentToAppend = `\nwindow.quanticVersion = '${version}';`;
+    const contentToAppend = `\nwindow.coveoQuanticVersion = '${version}';`;
     const endsWithNewline = existingContent.endsWith('\n');
     const newContent = endsWithNewline
       ? existingContent + contentToAppend
