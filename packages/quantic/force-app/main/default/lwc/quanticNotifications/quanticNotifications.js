@@ -70,7 +70,7 @@ export default class QuanticNotifications extends LightningElement {
     );
   }
 
-  handleDismissNotification(event) {
+  handleNotificationClose(event) {
     const currentNotificationId = event.currentTarget.dataset.id;
     const filteredNotifications =
       this.notifyTriggerState?.notifications.filter((notification, index) => {
