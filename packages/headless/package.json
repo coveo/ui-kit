@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "files": [
     "dist/"
   ],
@@ -160,7 +160,7 @@
     "@coveo/relay": "0.7.10",
     "@coveo/relay-event-types": "12.0.1",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "2.2.7",
+    "@reduxjs/toolkit": "2.3.0",
     "abortcontroller-polyfill": "1.7.5",
     "coveo.analytics": "2.30.42",
     "dayjs": "1.11.12",
@@ -183,7 +183,7 @@
     "install": "0.13.0",
     "ts-node": "10.9.2",
     "vitest": "2.1.1",
-    "typedoc": "0.26.10"
+    "typedoc": "0.26.11"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

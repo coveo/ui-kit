@@ -7,14 +7,14 @@
   </template>
   <template lwc:else>
     <slot name="sortOption"><!-- Custom sort options --></slot>
-    <template if:true={hasResults}>
-      <div class="sort__container">
-        <lightning-layout-item class="sort__header slds-var-p-right_small">
-          <lightning-formatted-text
-            value={labels.sortBy}
-          ></lightning-formatted-text>
-        </lightning-layout-item>
-        <lightning-layout-item>
+    <template lwc:if={hasResults}>
+      <template lwc:if={isVariantWide}>
+        <div class="slds-align_absolute-center sort__container sort__container--wide slds-var-m-bottom_small">
+          <div data-cy="filters-title" class="slds-text-heading_small">
+            {labels.sortBy}
+          </div>
+        </div>
+        <lightning-layout-item class="slds-size_1-of-1">
           <lightning-combobox
             name="sort"
             value={value}
@@ -24,11 +24,35 @@
             options={options}
             dropdown-alignment="auto"
             onchange={handleChange}
+            class="slds-text-heading_small combobox--wide"
             data-cy="sort-dropdown"
           >
           </lightning-combobox>
         </lightning-layout-item>
-      </div>
+      </template>
+      <template lwc:else>
+        <div class="sort__container">
+          <lightning-layout-item class="sort__header slds-var-p-right_small">
+            <lightning-formatted-text
+              value={labels.sortBy}
+            ></lightning-formatted-text>
+          </lightning-layout-item>
+          <lightning-layout-item>
+            <lightning-combobox
+              name="sort"
+              value={value}
+              variant="label-hidden"
+              label={labels.sortBy}
+              placeholder={value}
+              options={options}
+              dropdown-alignment="auto"
+              onchange={handleChange}
+              data-cy="sort-dropdown"
+            >
+            </lightning-combobox>
+          </lightning-layout-item>
+        </div>
+      </template>
     </template>
   </template>
 </template>

@@ -18,6 +18,14 @@ export class AtomicFacetPageObject extends BasePageObject<'atomic-facet'> {
     return this.page.locator('ul[part="values"] > li');
   }
 
+  get facetValueLabel() {
+    return this.page.locator('ul[part="values"] > li span[part="value-label"]');
+  }
+
+  get facetValueOccurrences() {
+    return this.page.locator('ul[part="values"] > li span[part="value-count"]');
+  }
+
   get facetSearchMoreMatchesFor() {
     return this.page.getByRole('button', {name: 'More matches for p'});
   }

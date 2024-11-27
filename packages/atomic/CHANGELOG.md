@@ -1,3 +1,11 @@
+## <small>3.11.1 (2024-11-20)</small>
+
+- fix(atomic): add space after ':' in breadcrumb buttons (#4683) ([af13331](https://github.com/coveo/ui-kit/commits/af13331)), closes [#4683](https://github.com/coveo/ui-kit/issues/4683)
+- fix(atomic): remove carousel arrows when only one page of Recommendations exists (#4647) ([0554dd3](https://github.com/coveo/ui-kit/commits/0554dd3)), closes [#4647](https://github.com/coveo/ui-kit/issues/4647)
+- test(atomic): replace `atomic-quickview` Cypress tests with Playwright (#4549) ([fdf0616](https://github.com/coveo/ui-kit/commits/fdf0616)), closes [#4549](https://github.com/coveo/ui-kit/issues/4549)
+- test(commerce ssr): setup smoke tests on commerce SSR sample (#4665) ([6550a8e](https://github.com/coveo/ui-kit/commits/6550a8e)), closes [#4665](https://github.com/coveo/ui-kit/issues/4665)
+- chore: add build to deployment composante + nightly flag (#4655) ([587494d](https://github.com/coveo/ui-kit/commits/587494d)), closes [#4655](https://github.com/coveo/ui-kit/issues/4655)
+
 ## 3.11.0 (2024-11-13)
 
 - feat(atomic): Add insight result attach-to-case component (#4499) ([ea6085c](https://github.com/coveo/ui-kit/commits/ea6085c)), closes [#4499](https://github.com/coveo/ui-kit/issues/4499)

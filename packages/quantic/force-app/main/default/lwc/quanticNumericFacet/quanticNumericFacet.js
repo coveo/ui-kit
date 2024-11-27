@@ -18,6 +18,7 @@ import {
   getHeadlessBindings,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -33,6 +34,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -156,7 +158,7 @@ export default class QuanticNumericFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /*
@@ -217,6 +219,10 @@ export default class QuanticNumericFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  numericFacetConditionsManager;
+  /** @type {FacetConditionsManager} */
+  numericFilterConditionsManager;
 
   /** @type {string} */
   start;
@@ -259,6 +265,7 @@ export default class QuanticNumericFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
@@ -281,10 +288,27 @@ export default class QuanticNumericFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
-    if (this.dependsOn) {
-      this.initFacetConditionManager(engine);
-    }
   };
+
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
 
   /**
    * @param {import("coveo").SearchEngine} engine
@@ -301,18 +325,12 @@ export default class QuanticNumericFacet extends LightningElement {
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
-  initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
-      engine,
-      {
-        facetId: this.facet.state.facetId,
-        conditions: generateFacetDependencyConditions({
-          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
-        }),
-      }
-    );
+    if (this.dependsOn) {
+      this.numericFacetConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.facet.state?.facetId
+      );
+    }
   }
 
   /**
@@ -330,12 +348,29 @@ export default class QuanticNumericFacet extends LightningElement {
     this.unsubscribeFilter = this.numericFilter.subscribe(() =>
       this.updateFilterState()
     );
+    if (this.dependsOn) {
+      this.numericFilterConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.numericFilter.state?.facetId
+      );
+    }
+  }
+
+  initFacetConditionManager(engine, facetId) {
+    return this.headless.buildFacetConditionsManager(engine, {
+      facetId,
+      conditions: generateFacetDependencyConditions({
+        [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+      }),
+    });
   }
 
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeFilter?.();
     this.unsubscribeSearchStatus?.();
+    this.numericFacetConditionsManager?.stopWatching();
+    this.numericFilterConditionsManager?.stopWatching();
   }
 
   updateState() {

@@ -32,7 +32,7 @@ export interface InteractiveResultCoreProps {
  */
 export interface InteractiveResultCore {
   /**
-   * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
+   * Selects the result, logging an analytics event to the Coveo Platform if the result wasn't selected before.
    *
    * In a DOM context, it's recommended to call this method on all of the following events:
    *
@@ -44,7 +44,7 @@ export interface InteractiveResultCore {
   select(): void;
 
   /**
-   * Prepares to select the result after a certain delay, sending analytics if it was never selected before.
+   * Prepares to select the result after a certain delay, logging an analytics event if the result wasn't selected before.
    *
    * In a DOM context, it's recommended to call this method on the `touchstart` event.
    */

@@ -1,8 +1,5 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
-  CommerceEngine,
   defineProductList,
   defineCart,
   defineSearchBox,
@@ -24,10 +21,6 @@ import {
   defineRecommendations, //defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
 
-type CommerceEngineConfig = CommerceEngineDefinitionOptions<
-  ControllerDefinitionsMap<CommerceEngine, Controller>
->;
-
 export default {
   // By default, the logger level is set to 'warn'. This level may not provide enough information for some server-side errors. To get more detailed error messages, set the logger level to a more verbose level, such as 'debug'.
   // loggerOptions: {level: 'debug'},
@@ -37,12 +30,12 @@ export default {
   controllers: {
     summary: defineSummary(),
     productList: defineProductList(),
-    popularViewedRecs: defineRecommendations({
+    popularViewed: defineRecommendations({
       options: {
         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
       },
     }),
-    popularBoughtRecs: defineRecommendations({
+    popularBought: defineRecommendations({
       options: {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
@@ -57,7 +50,7 @@ export default {
     standaloneSearchBox: defineStandaloneSearchBox({
       options: {redirectionUrl: '/search'},
     }),
-    instantProducts: defineInstantProducts({options: {}}),
+    instantProducts: defineInstantProducts(),
     pagination: definePagination({options: {pageSize: 9}}),
     sort: defineSort(),
     productView: defineProductView(),
@@ -66,4 +59,4 @@ export default {
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
   },
-} satisfies CommerceEngineConfig;
+} satisfies CommerceEngineDefinitionOptions;

@@ -6,7 +6,6 @@
       "!{projectRoot}/dist",
       "!{projectRoot}/www",
       "!{projectRoot}/docs",
-      "!{projectRoot}/loader",
       "!{projectRoot}/src/components.d.ts"
     ],
     "buildInputs": [
@@ -28,7 +27,6 @@
         "{projectRoot}/dist",
         "{projectRoot}/www",
         "{projectRoot}/docs",
-        "{projectRoot}/loader",
         "{projectRoot}/src/components.d.ts"
       ],
       "executor": "nx:run-commands",
@@ -152,7 +150,7 @@
       "dependsOn": ["^build", "cached:build:stencil"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "rm ./dist/loader/package.json",
+        "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
       }
     }

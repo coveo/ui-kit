@@ -1,3 +1,7 @@
+## <small>3.2.6 (2024-11-20)</small>
+
+- chore: add build to deployment composante + nightly flag (#4655) ([587494d](https://github.com/coveo/ui-kit/commits/587494d)), closes [#4655](https://github.com/coveo/ui-kit/issues/4655)
+
 ## <small>3.2.3 (2024-11-06)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))

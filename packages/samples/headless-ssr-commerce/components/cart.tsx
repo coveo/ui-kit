@@ -17,7 +17,7 @@ export default function Cart() {
 
   return (
     <div>
-      <ul>
+      <ul id="cart">
         {state.items.map((item, index) => (
           <li key={index}>
             <p>
@@ -31,7 +31,7 @@ export default function Cart() {
             <p>
               <span>Price: </span>
               <span>{formatCurrency(item.price, language(), currency())}</span>
-              <span>{item.price}</span>
+              <span> {item.price}</span>
             </p>
             <p>
               <span>Total: </span>
@@ -42,7 +42,7 @@ export default function Cart() {
                   currency()
                 )}
               </span>
-              <span>{item.price * item.quantity}</span>
+              <span> {item.price * item.quantity}</span>
             </p>
             <button onClick={() => adjustQuantity(methods!, item, 1)}>
               Add one
@@ -60,9 +60,8 @@ export default function Cart() {
       </ul>
       <p>
         <span>Total: </span>
-        {formatCurrency(state.totalPrice, language(), currency())}
-        {state.totalPrice}
-        <span></span>
+        <span> {formatCurrency(state.totalPrice, language(), currency())}</span>
+        <span> {state.totalPrice}</span>
       </p>
       <button
         disabled={isCartEmpty()}

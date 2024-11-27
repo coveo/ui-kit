@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.2",
+  "version": "3.0.3",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -70,7 +70,7 @@
     "esbuild": "0.23.1",
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "2.0.3",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-cypress": "2.15.2",
     "eslint-plugin-package-lock": "1.0.0",

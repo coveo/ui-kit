@@ -9,6 +9,7 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -23,6 +24,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -113,7 +115,7 @@ export default class QuanticDateFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /**
@@ -160,6 +162,8 @@ export default class QuanticDateFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  dateFacetConditionsManager;
 
   labels = {
     clearFilter,
@@ -207,6 +211,7 @@ export default class QuanticDateFacet extends LightningElement {
       element: this.template.host,
     });
     if (this.dependsOn) {
+      this.validateDependsOnProperty();
       this.initFacetConditionManager(engine);
     }
   };
@@ -214,6 +219,7 @@ export default class QuanticDateFacet extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
+    this.dateFacetConditionsManager?.stopWatching();
   }
 
   updateState() {
@@ -234,8 +240,28 @@ export default class QuanticDateFacet extends LightningElement {
     this.dispatchEvent(renderFacetEvent);
   }
 
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
+
   initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
+    this.dateFacetConditionsManager = this.headless.buildFacetConditionsManager(
       engine,
       {
         facetId: this.facet.state.facetId,

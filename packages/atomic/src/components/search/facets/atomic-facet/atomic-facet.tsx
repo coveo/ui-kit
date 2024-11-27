@@ -174,7 +174,7 @@ export class AtomicFacet implements InitializableComponent {
   @Prop({reflect: true}) public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
   /**

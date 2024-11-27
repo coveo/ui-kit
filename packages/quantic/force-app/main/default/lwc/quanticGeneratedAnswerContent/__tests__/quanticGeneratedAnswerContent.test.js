@@ -1,6 +1,17 @@
 // @ts-ignore
 import QuanticGeneratedAnswerContent from 'c/quanticGeneratedAnswerContent';
 import {createElement} from 'lwc';
+import {loadMarkdownDependencies} from 'c/quanticUtils';
+
+jest.mock('c/quanticUtils', () => ({
+  loadMarkdownDependencies: jest.fn(
+    () =>
+      new Promise((resolve) => {
+        resolve();
+      })
+  ),
+  transformMarkdownToHtml: jest.fn((value) => value),
+}));
 
 const mockMarkedUse = jest.fn();
 const mockMarkedParse = jest.fn((text) => text);
@@ -120,6 +131,21 @@ describe('c-quantic-generated-answer-content', () => {
       expect(answerContent.className).toContain(
         'generated-answer-content__answer--streaming'
       );
+    });
+  });
+
+  describe('the reactivity of the answerContentFormat property', () => {
+    it('should load the markdown dependencies when the answerContentFormat property is changed to text/markdown', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        answerContentFormat: 'text/plain',
+      });
+      await flushPromises();
+      expect(loadMarkdownDependencies).not.toHaveBeenCalled();
+
+      element.answerContentFormat = 'text/markdown';
+      await flushPromises();
+      expect(loadMarkdownDependencies).toHaveBeenCalled();
     });
   });
 });

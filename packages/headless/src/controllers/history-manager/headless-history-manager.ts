@@ -8,9 +8,6 @@ import {
   logNavigateBackward,
   logNavigateForward,
   logNoResultsBack,
-  historyBackward,
-  historyForward,
-  noResultsBack,
 } from '../../features/history/history-analytics-actions.js';
 import {history} from '../../features/history/history-slice.js';
 import {HistoryState} from '../../features/history/history-state.js';
@@ -120,7 +117,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNavigateBackward(),
-          next: historyBackward(),
         })
       );
     },
@@ -133,7 +129,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNavigateForward(),
-          next: historyForward(),
         })
       );
     },
@@ -146,7 +141,6 @@ export function buildHistoryManager(engine: SearchEngine): HistoryManager {
       dispatch(
         executeSearch({
           legacy: logNoResultsBack(),
-          next: noResultsBack(),
         })
       );
     },

@@ -53,7 +53,7 @@ export class AtomicResultImage implements InitializableComponent {
     if (this.imageAltField) {
       const value = ResultTemplatesHelpers.getResultProperty(
         this.result,
-        this.field
+        this.imageAltField
       );
 
       if (Array.isArray(value) && typeof value[0] === 'string') {

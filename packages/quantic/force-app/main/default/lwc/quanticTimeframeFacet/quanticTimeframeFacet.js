@@ -12,6 +12,7 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
   registerToStore,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   DateUtils,
@@ -33,6 +34,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
 /** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef {Object} DatepickerElement
@@ -163,7 +165,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
 
@@ -208,6 +210,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  dateFacetConditionsManager;
+  /** @type {FacetConditionsManager} */
+  dateFilterConditionsManager;
 
   _isCollapsed = false;
   _showValues = true;
@@ -239,6 +245,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeDateFilter?.();
+    this.dateFacetConditionsManager?.stopWatching();
+    this.dateFilterConditionsManager?.stopWatching();
   }
 
   get isFacetEnabled() {
@@ -407,6 +415,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
@@ -418,21 +427,26 @@ export default class QuanticTimeframeFacet extends LightningElement {
       element: this.template.host,
       metadata: {timeframes: this.timeframes},
     });
-    if (this.dependsOn) {
-      this.initFacetConditionManager(engine);
-    }
   };
 
-  initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
-      engine,
-      {
-        facetId: this.facet.state.facetId,
-        conditions: generateFacetDependencyConditions({
-          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
-        }),
-      }
-    );
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
   }
 
   /**
@@ -461,6 +475,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
       },
     });
     this.unsubscribeFacet = this.facet.subscribe(() => this.updateFacetState());
+    if (this.dependsOn) {
+      this.dateFacetConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.facet.state?.facetId
+      );
+    }
   }
 
   /**
@@ -480,6 +500,21 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
       this.updateDateFilterState()
     );
+    if (this.dependsOn) {
+      this.dateFilterConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.dateFilter.state?.facetId
+      );
+    }
+  }
+
+  initFacetConditionManager(engine, facetId) {
+    return this.headless.buildFacetConditionsManager(engine, {
+      facetId,
+      conditions: generateFacetDependencyConditions({
+        [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+      }),
+    });
   }
 
   updateSearchStatusState() {

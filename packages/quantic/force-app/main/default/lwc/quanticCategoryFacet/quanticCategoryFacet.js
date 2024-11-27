@@ -14,6 +14,7 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -28,6 +29,7 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").CategoryFacetValue} CategoryFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
@@ -165,7 +167,7 @@ export default class QuanticCategoryFacet extends LightningElement {
    *   ```
    *
    * @api
-   * @type {DependsOn} - An object defining the `parentFacetId` and `expectedValue` properties.
+   * @type {DependsOn}
    */
   @api dependsOn;
   /**
@@ -219,6 +221,8 @@ export default class QuanticCategoryFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  categoryFacetConditionsManager;
 
   labels = {
     clear,
@@ -256,6 +260,7 @@ export default class QuanticCategoryFacet extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
+    this.categoryFacetConditionsManager?.stopWatching();
   }
 
   /**
@@ -297,6 +302,7 @@ export default class QuanticCategoryFacet extends LightningElement {
       },
     });
     if (this.dependsOn) {
+      this.validateDependsOnProperty();
       this.initFacetConditionManager(engine);
     }
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -326,16 +332,34 @@ export default class QuanticCategoryFacet extends LightningElement {
     this.dispatchEvent(renderFacetEvent);
   }
 
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
+
   initFacetConditionManager(engine) {
-    this.facetConditionsManager = this.headless.buildFacetConditionsManager(
-      engine,
-      {
+    this.categoryFacetConditionsManager =
+      this.headless.buildFacetConditionsManager(engine, {
         facetId: this.facet.state.facetId,
         conditions: generateFacetDependencyConditions({
           [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
         }),
-      }
-    );
+      });
   }
 
   get values() {

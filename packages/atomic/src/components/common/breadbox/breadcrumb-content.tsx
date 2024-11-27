@@ -27,11 +27,11 @@ export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
       </span>
       <span
         part="breadcrumb-value"
-        class={
+        class={`ml-1 ${
           props.breadcrumb.content
             ? ''
             : `max-w-snippet truncate ${props.breadcrumb.state}`
-        }
+        }`}
       >
         {props.breadcrumb.content ?? value}
       </span>

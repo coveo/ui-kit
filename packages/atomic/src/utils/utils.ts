@@ -1,6 +1,6 @@
 import {getAssetPath} from '@stencil/core';
 import {NODE_TYPES} from '@stencil/core/mock-doc';
-import {sanitize} from 'dompurify';
+import DOMPurify from 'dompurify';
 
 /**
  * Returns a function that can be executed only once
@@ -149,7 +149,7 @@ export const sortByDocumentPosition = (a: Node, b: Node): 1 | -1 =>
   a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
 
 export function sanitizeStyle(style: string) {
-  const purifiedOuterHTML = sanitize(`<style>${style}</style>`, {
+  const purifiedOuterHTML = DOMPurify.sanitize(`<style>${style}</style>`, {
     ALLOWED_TAGS: ['style'],
     ALLOWED_ATTR: [],
     FORCE_BODY: true,
