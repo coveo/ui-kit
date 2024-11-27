@@ -1,4 +1,5 @@
-import {Middleware, Action} from '@reduxjs/toolkit';
+import {Middleware, Action, PayloadAction} from '@reduxjs/toolkit';
+import {FetchRecommendationsPayload} from '../features/commerce/recommendations/recommendations-actions.js';
 
 export const randomID = (prepend?: string, length = 5) =>
   prepend +
@@ -151,6 +152,51 @@ export function createWaitForActionMiddleware<TAction extends Action>(
   const middleware: Middleware = () => (next) => (action) => {
     next(action);
     if (isDesiredAction(action)) {
+      resolve(action);
+    }
+  };
+
+  return {promise, middleware};
+}
+
+function isRecommendationActionPayload<P = void, T extends string = string>(
+  action: unknown
+): action is PayloadAction<P, T, {arg: FetchRecommendationsPayload}> {
+  if (action === null || action === undefined) {
+    return false;
+  }
+
+  if (typeof action === 'object' && 'meta' in action) {
+    return (
+      (action as PayloadAction<P, T, {arg: FetchRecommendationsPayload}>).meta
+        ?.arg?.slotId !== undefined
+    );
+  }
+
+  return false;
+}
+
+export function createWaitForActionMiddlewareForRecommendation<
+  TAction extends Action,
+>(
+  isDesiredAction: (action: unknown) => action is TAction,
+  memo: Set<string>
+): {promise: Promise<TAction>; middleware: Middleware} {
+  const {promise, resolve} = createDeferredPromise<TAction>();
+  let hasBeenResolved = false;
+  const hasSlotBeenProcessed = (slotId: string) => memo.has(slotId);
+
+  const middleware: Middleware = () => (next) => (action) => {
+    next(action);
+
+    if (
+      isDesiredAction(action) &&
+      !hasBeenResolved &&
+      isRecommendationActionPayload(action) &&
+      !hasSlotBeenProcessed(action.meta.arg.slotId)
+    ) {
+      hasBeenResolved = true;
+      memo.add(action.meta.arg.slotId);
       resolve(action);
     }
   };

@@ -29,6 +29,8 @@ export function defineProductList<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing

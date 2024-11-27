@@ -16,7 +16,7 @@
     "lint:fix": "npm run lint:fix:js",
     "lint:fix:js": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
     "lint:fix:apex": "prettier \"force-app/{,**}/*.{cls,trigger}\" --write",
-    "build:staticresources": "node copy-static-resources.js",
+    "build:staticresources": "node build-static-resources.js",
     "build": "nx build",
     "dev": "npx rimraf .localdevserver && npm run build:staticresources && npm run dev:sfdx",
     "dev:sfdx": "sf project deploy start --source-dir force-app/main && sfdx force:lightning:lwc:start --port 3334",
@@ -48,7 +48,7 @@
   "dependencies": {
     "@coveo/bueno": "1.0.6",
     "@coveo/headless": "3.10.0",
-    "dompurify": "3.1.6",
+    "dompurify": "3.2.0",
     "marked": "12.0.2",
     "fs-extra": "11.2.0"
   },

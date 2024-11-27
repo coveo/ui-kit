@@ -49,6 +49,7 @@ describe('Headless react SSR utils', () => {
       listingEngineDefinition,
       searchEngineDefinition,
       standaloneEngineDefinition,
+      recommendationEngineDefinition,
       ...rest
     } = defineCommerceEngine({configuration: sampleConfig});
     const {
