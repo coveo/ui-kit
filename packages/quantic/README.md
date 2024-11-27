@@ -135,6 +135,28 @@ To get the [detailed report](./docs/detailed-reporting.md), run:
 npm run e2e:detailed
 ```
 
+### Run Playwright for Quantic Components
+
+**Note** Before attempting to run [Playwright](https://playwright.dev/) tests, make sure the `Quantic Examples` community is deployed as described in the previous section in both orgs, the one where LWS is enabled and the one where it is disabled.
+
+To run Playwright tests, run:
+
+```bash
+npm run e2e:playwright:
+```
+
+To run Playwright tests only for the scratch org where LWS is enabled, run:
+
+```bash
+npm run e2e:playwright:lws-enabled
+```
+
+To run Playwright tests only for the scratch org where LWS is disabled, run:
+
+```bash
+npm run e2e:playwright:lws-disabled
+```
+
 ### Run LWC unit tests for Quantic Components
 
 To run LWC unit tests directly in your console, run:
