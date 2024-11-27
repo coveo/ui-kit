@@ -139,6 +139,8 @@ npm run e2e:detailed
 
 **Note** Before attempting to run [Playwright](https://playwright.dev/) tests, make sure the `Quantic Examples` community is deployed as described in the previous section in both orgs, the one where LWS is enabled and the one where it is disabled.
 
+**Note** For more information on how to add tests, please refer to our [Quantic Testing Strategy](https://github.com/coveo/ui-kit/blob/master/packages/quantic/decisions/0001-testing-strategy.md), which provides detailed guidelines on testing Quantic components.
+
 To run Playwright tests, run:
 
 ```bash
