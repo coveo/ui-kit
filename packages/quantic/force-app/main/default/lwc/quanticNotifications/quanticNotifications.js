@@ -56,8 +56,10 @@ export default class QuanticNotifications extends LightningElement {
     this.unsubscribe?.();
   }
 
-  updateState() {
-    this.notifyTriggerState = this.notifyTrigger.state;
+  updateState(updatedNotifications) {
+    this.notifyTriggerState = updatedNotifications
+      ? updatedNotifications
+      : this.notifyTrigger.state;
     this.ariaLiveNotificationsRegion.dispatchMessage(
       this.notifyTriggerState?.notifications.reduce(
         (value, notification, index) => {
@@ -66,6 +68,17 @@ export default class QuanticNotifications extends LightningElement {
         ''
       )
     );
+  }
+
+  handleDismissNotification(event) {
+    const currentNotificationId = event.currentTarget.dataset.id;
+    const filteredNotifications =
+      this.notifyTriggerState?.notifications.filter((notification, index) => {
+        return currentNotificationId !== index.toString();
+      }) ?? [];
+
+    this.notifyTriggerState.notifications = filteredNotifications;
+    this.updateState({notifications: filteredNotifications});
   }
 
   get notifications() {

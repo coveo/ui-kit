@@ -12,6 +12,20 @@
           <div class="slds-notify__content slds-var-m-left_small">
             {notification.value}
           </div>
+          <div class="slds-notify__close">
+            <button
+              class="slds-button slds-button_icon slds-button_icon-inverse"
+              title="Close"
+              onclick={handleDismissNotification}
+              data-id={notification.id}
+            >
+              <lightning-icon
+                icon-name="utility:close"
+                alternative-text="Close"
+                size="small"
+              ></lightning-icon>
+            </button>
+          </div>
         </div>
       </div>
     </template>
