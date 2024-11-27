@@ -1,4 +1,4 @@
-import {UniversalControllerDefinitionWithProps} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {NonRecommendationControllerDefinitionWithProps} from '../../../../app/commerce-ssr-engine/types/common.js';
 import {Cart, buildCart, CartInitialState} from './headless-cart.js';
 
 export type {CartState, CartItem, CartProps} from './headless-cart.js';
@@ -9,7 +9,10 @@ export interface CartBuildProps {
 }
 
 export interface CartDefinition
-  extends UniversalControllerDefinitionWithProps<Cart, CartBuildProps> {}
+  extends NonRecommendationControllerDefinitionWithProps<
+    Cart,
+    CartBuildProps
+  > {}
 
 /**
  * Defines a `Cart` controller instance.
