@@ -210,11 +210,11 @@ export type RecommendationOnlyControllerDefinitionWithProps<
 > = ControllerDefinitionWithProps<TController, TProps> &
   RecommendationOnlyController;
 
-export type UniversalControllerDefinitionWithoutProps<
+export type NonRecommendationControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & UniversalController;
 
-export type UniversalControllerDefinitionWithProps<
+export type NonRecommendationControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & UniversalController;
