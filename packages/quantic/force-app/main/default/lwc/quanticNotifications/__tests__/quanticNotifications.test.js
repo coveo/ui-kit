@@ -43,6 +43,7 @@ AriaLiveRegion.mockImplementation(() => {
 const selectors = {
   notifications: '[data-test="notification"]',
   initializationError: 'c-quantic-component-error',
+  notificationCloseButton: 'button',
 };
 
 const defaultOptions = {
@@ -242,7 +243,9 @@ describe('c-quantic-notifications', () => {
       });
 
       const firstNotificationCloseButton =
-        notificationsBeforeClose[0].querySelector('button');
+        notificationsBeforeClose[0].querySelector(
+          selectors.notificationCloseButton
+        );
       firstNotificationCloseButton.click();
       await flushPromises();
 
