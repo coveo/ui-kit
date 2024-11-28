@@ -12,8 +12,7 @@ import {
 } from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 
-export type StateNeededByAnswerSlice = ConfigurationSection &
-  GeneratedAnswerSection;
+type StateNeededByAnswerSlice = ConfigurationSection & GeneratedAnswerSection;
 
 /**
  * `dynamicBaseQuery` is passed to the baseQuery of the createApi,

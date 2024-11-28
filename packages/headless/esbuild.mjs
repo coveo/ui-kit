@@ -160,6 +160,24 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   );
 });
 
+const codeReplacerPlugin = (filePath, target, replacement) => ({
+  name: 'code-replacer-plugin',
+  setup(build) {
+    build.onLoad({filter: /\.ts$/}, async (args) => {
+      if (args.path.endsWith(filePath)) {
+        const fs = require('fs');
+        const source = await fs.promises.readFile(args.path, 'utf8');
+        const modifiedSource = source.replace(target, replacement);
+        return {
+          contents: modifiedSource,
+          loader: 'ts',
+        };
+      }
+      return undefined;
+    });
+  },
+});
+
 const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/quantic/', useCase);
@@ -181,7 +199,14 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         'ponyfills/abortable-fetch-shim.js',
         '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
       ],
-      plugins: [umdWrapper({libraryName: globalName})],
+      plugins: [
+        umdWrapper({libraryName: globalName}),
+        codeReplacerPlugin(
+          'src/api/knowledge/answer-slice.ts',
+          '(updatedArgs, api, extraOptions)',
+          '(updatedArgs,{...api, signal: null as unknown as AbortSignal},extraOptions)'
+        ),
+      ],
     },
     outDir
   );
