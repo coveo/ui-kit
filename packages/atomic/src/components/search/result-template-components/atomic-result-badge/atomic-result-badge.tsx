@@ -97,7 +97,7 @@ export class AtomicResultBadge {
     return (
       <div
         part="result-badge-element"
-        class="bg-neutral-light text-neutral-dark inline-flex h-full place-items-center space-x-1.5 rounded-full px-3 text-xs"
+        class="bg-neutral-light text-neutral-dark inline-flex h-full place-items-center space-x-1.5 rounded-full px-3"
       >
         {this.icon && this.renderIcon()}
         {this.renderText()}
