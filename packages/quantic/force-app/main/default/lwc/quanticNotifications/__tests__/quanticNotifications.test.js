@@ -225,8 +225,8 @@ describe('c-quantic-notifications', () => {
     });
   });
 
-  describe('when clicking on the notification close button', () => {
-    it('should properly close the notification and remove it from the state', async () => {
+  describe('when clicking on a notification close button', () => {
+    it('should properly dismiss that notification', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -237,16 +237,13 @@ describe('c-quantic-notifications', () => {
       expect(notificationsBeforeClose.length).toEqual(
         exampleNotifications.length
       );
-      expect(notificationsState.notifications.length).toEqual(
-        exampleNotifications.length
-      );
       notificationsBeforeClose.forEach((notification, index) => {
         expect(notification.textContent).toEqual(exampleNotifications[index]);
       });
 
-      const firstCloseButton =
+      const firstNotificationCloseButton =
         notificationsBeforeClose[0].querySelector('button');
-      firstCloseButton.click();
+      firstNotificationCloseButton.click();
       await flushPromises();
 
       const notificationsAfterClose = element.shadowRoot.querySelectorAll(
@@ -254,9 +251,6 @@ describe('c-quantic-notifications', () => {
       );
 
       expect(notificationsAfterClose.length).toEqual(
-        exampleNotifications.length - 1
-      );
-      expect(notificationsState.notifications.length).toEqual(
         exampleNotifications.length - 1
       );
       expect(notificationsAfterClose[0].textContent).toEqual(

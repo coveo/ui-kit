@@ -77,7 +77,6 @@ export default class QuanticNotifications extends LightningElement {
         return currentNotificationId !== index.toString();
       }) ?? [];
 
-    this.notifyTriggerState.notifications = filteredNotifications;
     this.updateState({notifications: filteredNotifications});
   }
 
