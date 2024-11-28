@@ -1029,6 +1029,7 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     interface AtomicFollowUpQuestion {
+        "i18n": i18n;
         "question": string;
     }
     interface AtomicFollowUpQuestionList {
@@ -3794,6 +3795,7 @@ export namespace Components {
     }
     interface FollowUpQuestionListCommon {
         "candidates": FollowUpQuestionCandidate[];
+        "i18n": i18n;
     }
     interface TabBar {
     }
@@ -7230,6 +7232,7 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     interface AtomicFollowUpQuestion {
+        "i18n": i18n;
         "onSelect"?: (event: AtomicFollowUpQuestionCustomEvent<void>) => void;
         "question"?: string;
     }
@@ -9902,6 +9905,7 @@ declare namespace LocalJSX {
     }
     interface FollowUpQuestionListCommon {
         "candidates"?: FollowUpQuestionCandidate[];
+        "i18n": i18n;
         "onSelectCandidate"?: (event: FollowUpQuestionListCommonCustomEvent<SelectFollowUpQuestionCandidatePayload>) => void;
     }
     interface TabBar {
