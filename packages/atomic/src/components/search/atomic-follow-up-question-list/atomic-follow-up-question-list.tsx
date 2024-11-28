@@ -58,6 +58,7 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
   public render() {
     return (
       <follow-up-question-list-common
+        i18n={this.bindings.i18n}
         candidates={this.candidates}
         onSelectCandidate={(
           evt: CustomEvent<SelectFollowUpQuestionCandidatePayload>

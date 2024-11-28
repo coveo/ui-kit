@@ -1,4 +1,5 @@
 import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
+import {i18n} from 'i18next';
 
 export interface FollowUpQuestionCandidate {
   question: string;
@@ -17,12 +18,13 @@ export interface SelectFollowUpQuestionCandidatePayload {
   styleUrl: 'follow-up-question-list-common.pcss',
 })
 export class FollowUpQuestionListCommon {
+  @Prop() public i18n!: i18n;
   @Prop() public candidates: FollowUpQuestionCandidate[] = [];
   @Event({eventName: 'selectCandidate'})
   public selectCandidate!: EventEmitter<SelectFollowUpQuestionCandidatePayload>;
 
   public render() {
-    if (this.candidates.length === 0) {
+    if (!this.candidates?.length) {
       return null;
     }
 
@@ -30,6 +32,7 @@ export class FollowUpQuestionListCommon {
       <div part="follow-up-question-list">
         {this.candidates.map((candidate) => (
           <atomic-follow-up-question
+            i18n={this.i18n}
             question={candidate.question}
             onSelect={() => this.selectCandidate.emit({candidate})}
           ></atomic-follow-up-question>
