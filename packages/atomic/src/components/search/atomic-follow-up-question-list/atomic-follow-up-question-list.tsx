@@ -30,7 +30,7 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
 
   private searchBox!: SearchBox;
 
-  private previousQuery: string = '';
+  private previousQuery: string | undefined;
 
   /**
    * @internal
@@ -75,7 +75,7 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
 
   // @ts-expect-error: This function is used by BindStateToController.
   private onSearchBoxStateChange() {
-    const currentQuery = this.searchBoxState?.value ?? '';
+    const currentQuery = this.searchBoxState?.value;
 
     if (currentQuery === this.previousQuery) {
       return;
@@ -86,7 +86,7 @@ export class AtomicFollowUpQuestionList implements InitializableComponent {
     // The query has been updated. Clear the existing questions.
     this.candidates = [];
 
-    if (this.answerConfigurationId && currentQuery) {
+    if (this.answerConfigurationId && currentQuery !== undefined) {
       const {accessToken, organizationId, environment} =
         this.bindings.engine.state.configuration;
       const orgEndpoint = getOrganizationEndpoint(organizationId, environment);
