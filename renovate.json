@@ -8,151 +8,222 @@
   "dependencyDashboard": true,
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
       "groupName": "all dependencies",
-      "groupSlug": "all"
+      "groupSlug": "all",
+      "matchPackageNames": ["*"]
     },
     {
-      "matchPackagePatterns": ["typedoc"],
       "groupName": "typedoc",
       "groupSlug": "typedoc",
       "rangeStrategy": "replace",
-      "description": "Isolate typedoc updates to monitor for breaking changes"
+      "description": "Isolate typedoc updates to monitor for breaking changes",
+      "matchPackageNames": ["/typedoc/"]
     },
     {
-      "matchPackagePatterns": [
-        "^@angular/*",
-        "^@angular-devkit/*",
-        "ng-packagr"
-      ],
+      "groupName": "typescript",
+      "groupSlug": "typescript",
+      "rangeStrategy": "replace",
+      "description": "Isolate typescript",
+      "matchPackageNames": ["/typescript/"]
+    },
+    {
+      "groupName": "dompurify",
+      "groupSlug": "dompurify",
+      "rangeStrategy": "replace",
+      "description": "Isolate dompurify",
+      "matchPackageNames": ["/dompurify/"]
+    },
+    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "17.x"
+      "allowedVersions": "17.x",
+      "matchPackageNames": [
+        "/^@angular/*/",
+        "/^@angular-devkit/*/",
+        "/ng-packagr/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "react",
-        "react-router-dom",
-        "react-dom",
-        "@types/react"
-      ],
       "groupName": "React",
       "groupSlug": "react",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": [
+        "/react/",
+        "/react-router-dom/",
+        "/react-dom/",
+        "/@types/react/"
+      ]
     },
     {
-      "matchPackagePatterns": ["^redux-*", "^@redux/*"],
       "groupName": "Redux",
       "groupSlug": "Redux",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^redux-*/", "/^@redux/*/"]
     },
     {
-      "matchPackagePatterns": ["^@storybook/*", "^storybook$"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@storybook/*/", "/^storybook$/"]
     },
     {
-      "matchPackagePatterns": ["^@stencil/*"],
       "groupName": "Stencil",
       "groupSlug": "stencil",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@stencil/*/"]
     },
     {
-      "matchPackagePatterns": ["^@lwc/compiler$"],
       "groupName": "LWC Compiler",
       "groupSlug": "lwc-compiler",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@lwc/compiler$/"]
     },
     {
       "matchFileNames": ["packages/atomic/package.json"],
-      "matchPackagePatterns": [
-        "^jest$",
-        "^jest-cli$",
-        "@types/jest",
-        "jest-environment-node"
-      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
-      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries"
+      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries",
+      "matchPackageNames": [
+        "/^jest$/",
+        "/^jest-cli$/",
+        "/@types/jest/",
+        "/jest-environment-node/"
+      ]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^chalk$"],
       "groupSlug": "quantic-chalk",
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
-      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only"
+      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only",
+      "matchPackageNames": ["/^chalk$/"]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^change-case$"],
       "groupSlug": "change-case",
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
-      "description": "Quantic uses JSDOC that does not support ESM modules for template"
+      "description": "Quantic uses JSDOC that does not support ESM modules for template",
+      "matchPackageNames": ["/^change-case$/"]
     },
     {
       "matchFileNames": ["packages/atomic-react/package.json"],
-      "matchPackagePatterns": ["^rollup$"],
       "groupSlug": "react-rollup",
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?"
+      "description": "TODO-V3: Remove Node stuff?",
+      "matchPackageNames": ["/^rollup$/"]
     },
     {
-      "matchPackagePatterns": ["^nx$"],
       "groupName": "nx",
       "groupSlug": "nx",
       "rangeStrategy": "replace",
-      "allowedVersions": "15.x"
+      "allowedVersions": "15.x",
+      "matchPackageNames": ["/^nx$/"]
     },
     {
-      "matchPackagePatterns": ["^@nrwl/devkit$"],
       "groupName": "nx-devkit",
       "groupSlug": "nx-devkit",
       "rangeStrategy": "replace",
-      "allowedVersions": "16.x"
+      "allowedVersions": "16.x",
+      "matchPackageNames": ["/^@nrwl/devkit$/"]
     },
     {
-      "matchPackagePatterns": ["^cypress-split$"],
       "groupName": "Cypress Split",
       "groupSlug": "cypress-split",
       "rangeStrategy": "replace",
       "allowedVersions": "1.5.0",
-      "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
+      "description": "Lock until bahmutov/cypress-repeat#52 is fixed",
+      "matchPackageNames": ["/^cypress-split$/"]
     },
     {
       "matchFileNames": ["packages/atomic-angular/package.json"],
-      "matchPackagePatterns": ["^typescript$"],
       "groupSlug": "angular-typescript",
       "rangeStrategy": "replace",
       "allowedVersions": "5.1.x",
-      "description": "@angular/compiler-cli choke with TS > 5.1"
+      "description": "@angular/compiler-cli choke with TS > 5.1",
+      "matchPackageNames": ["/^typescript$/"]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^@​salesforce/sfdx-lwc-jest$"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
-      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
+      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
+      "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "matchPackagePatterns": ["^actions/upload-artifact$"],
       "groupSlug": "actions-upload-artifact",
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4"
+      "description": "lock until ready to handle v4",
+      "matchPackageNames": ["/^actions/upload-artifact$/"]
     },
     {
-      "matchPackagePatterns": ["^eslint$"],
       "groupSlug": "eslint",
       "groupName": "eslint",
       "rangeStrategy": "replace",
-      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085"
+      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
+      "matchPackageNames": ["/^eslint$/"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "groupSlug": "github-actions",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for GitHub Actions",
+      "matchPackageNames": ["/^actions\\//"]
+    },
+    {
+      "groupName": "@coveo Packages",
+      "groupSlug": "coveo-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for @coveo dependencies",
+      "matchPackageNames": ["/^@coveo\\//"]
+    },
+    {
+      "groupName": "@nx Packages",
+      "groupSlug": "nx-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for @nx dependencies",
+      "matchPackageNames": ["/^@nx\\//"]
+    },
+    {
+      "groupName": "@babel Packages",
+      "groupSlug": "babel-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for @babel dependencies",
+      "matchPackageNames": ["/^@babel\\//"]
+    },
+    {
+      "groupName": "@commitlint Packages",
+      "groupSlug": "commitlint-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for @commitlint dependencies",
+      "matchPackageNames": ["/^@commitlint\\//"]
+    },
+    {
+      "groupName": "Playwright Packages",
+      "groupSlug": "playwright-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for Playwright dependencies",
+      "matchPackageNames": ["/^playwright/"]
+    },
+    {
+      "groupName": "Cypress Packages",
+      "groupSlug": "cypress-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all Cypress-related dependencies, excluding cypress-split",
+      "matchPackageNames": ["/cypress/", "/^@cypress\\//"],
+      "excludePackageNames": ["cypress-split"]
+    },
+    {
+      "groupName": "@microsoft Packages",
+      "groupSlug": "@microsoft-packages",
+      "rangeStrategy": "replace",
+      "description": "Group all @microsoft-related dependencies",
+      "matchPackageNames": ["/^@microsoft\\//"]
     }
   ],
   "rangeStrategy": "auto",
@@ -162,5 +233,6 @@
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false
-  }
+  },
+  "ignoreDeps": ["eslint-plugin-canonical"]
 }
