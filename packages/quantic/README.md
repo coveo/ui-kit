@@ -64,7 +64,7 @@ Or you can run the individual commands below.
 
 ## Testing
 
-### Deploy the Quantic Examples Community
+### Deploy the Quantic Examples Communities
 
 Example components are available as Salesforce communities (Digital Experiences), allowing you to experiment with Quantic components in two separate environments: one with Lightning Web Security (LWS) enabled and one with LWS disabled.
 
