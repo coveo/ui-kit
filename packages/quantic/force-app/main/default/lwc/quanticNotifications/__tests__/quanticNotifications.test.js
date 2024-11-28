@@ -224,4 +224,44 @@ describe('c-quantic-notifications', () => {
       });
     });
   });
+
+  describe('when clicking on the notification close button', () => {
+    it('should properly close the notification and remove it from the state', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
+        selectors.notifications
+      );
+
+      expect(notificationsBeforeClose.length).toEqual(
+        exampleNotifications.length
+      );
+      expect(notificationsState.notifications.length).toEqual(
+        exampleNotifications.length
+      );
+      notificationsBeforeClose.forEach((notification, index) => {
+        expect(notification.textContent).toEqual(exampleNotifications[index]);
+      });
+
+      const firstCloseButton =
+        notificationsBeforeClose[0].querySelector('button');
+      firstCloseButton.click();
+      await flushPromises();
+
+      const notificationsAfterClose = element.shadowRoot.querySelectorAll(
+        selectors.notifications
+      );
+
+      expect(notificationsAfterClose.length).toEqual(
+        exampleNotifications.length - 1
+      );
+      expect(notificationsState.notifications.length).toEqual(
+        exampleNotifications.length - 1
+      );
+      expect(notificationsAfterClose[0].textContent).toEqual(
+        exampleNotifications[1]
+      );
+    });
+  });
 });
