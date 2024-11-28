@@ -204,7 +204,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         codeReplacerPlugin(
           'src/api/knowledge/answer-slice.ts',
           '(updatedArgs, api, extraOptions)',
-          '(updatedArgs,{...api, signal: null as unknown as AbortSignal},extraOptions)'
+          '(updatedArgs,{...api, signal: null},extraOptions)'
         ),
       ],
     },
