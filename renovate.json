@@ -208,7 +208,7 @@
       "groupSlug": "playwright-packages",
       "rangeStrategy": "replace",
       "description": "Group all updates for Playwright dependencies",
-      "matchPackageNames": ["/^playwright/"]
+      "matchPackageNames": [".*playwright.*"]
     },
     {
       "groupName": "Cypress Packages",
@@ -224,6 +224,79 @@
       "rangeStrategy": "replace",
       "description": "Group all @microsoft-related dependencies",
       "matchPackageNames": ["/^@microsoft\\//"]
+    },
+    {
+      "groupName": "Day.js",
+      "groupSlug": "dayjs",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["dayjs"]
+    },
+    {
+      "groupName": "Focus Visible",
+      "groupSlug": "focus-visible",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["focus-visible"]
+    },
+    {
+      "groupName": "i18next Packages",
+      "groupSlug": "i18next",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["i18next", "i18next-http-backend"]
+    },
+    {
+      "groupName": "Rollup Packages",
+      "groupSlug": "rollup",
+      "rangeStrategy": "replace",
+      "description": "Group all updates for Rollup-related dependencies",
+      "matchPackageNames": [".*rollup.*"]
+    },
+    {
+      "groupName": "SWC Core",
+      "groupSlug": "swc-core",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["@swc/core"]
+    },
+    {
+      "groupName": "Autoprefixer",
+      "groupSlug": "autoprefixer",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["autoprefixer"]
+    },
+    {
+      "groupName": "axe-core",
+      "groupSlug": "axe-core",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["axe-core"]
+    },
+    {
+      "groupName": "Lit HTML",
+      "groupSlug": "lit-html",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["lit-html"]
+    },
+    {
+      "groupName": "Puppeteer",
+      "groupSlug": "puppeteer",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["puppeteer"]
+    },
+    {
+      "groupName": "Shadow DOM Testing Library",
+      "groupSlug": "shadow-dom-testing-library",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["shadow-dom-testing-library"]
+    },
+    {
+      "groupName": "Tailwind CSS",
+      "groupSlug": "tailwindcss",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["tailwindcss"]
+    },
+    {
+      "groupName": "Vite",
+      "groupSlug": "vite",
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["vite"]
     }
   ],
   "rangeStrategy": "auto",
