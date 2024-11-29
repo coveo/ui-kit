@@ -33,6 +33,8 @@ export default class QuanticNotifications extends LightningElement {
   hasInitializationError = false;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   ariaLiveNotificationsRegion;
+  /** @type {Array} */
+  notifications = [];
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -56,10 +58,16 @@ export default class QuanticNotifications extends LightningElement {
     this.unsubscribe?.();
   }
 
-  updateState(updatedNotifications) {
-    this.notifyTriggerState = updatedNotifications
-      ? updatedNotifications
-      : this.notifyTrigger.state;
+  updateState() {
+    console.log('updateState called');
+    this.notifications =
+      this.notifyTrigger?.state?.notifications.map((notification, index) => ({
+        value: notification,
+        id: index.toString(),
+        visible: true,
+      })) ?? [];
+
+    this.notifyTriggerState = this.notifyTrigger?.state;
     this.ariaLiveNotificationsRegion.dispatchMessage(
       this.notifyTriggerState?.notifications.reduce(
         (value, notification, index) => {
@@ -72,21 +80,12 @@ export default class QuanticNotifications extends LightningElement {
 
   handleNotificationClose(event) {
     const currentNotificationId = event.currentTarget.dataset.id;
-    const filteredNotifications =
-      this.notifyTriggerState?.notifications.filter((notification, index) => {
-        return currentNotificationId !== index.toString();
-      }) ?? [];
-
-    this.updateState({notifications: filteredNotifications});
-  }
-
-  get notifications() {
-    return (
-      this.notifyTriggerState?.notifications.map((notification, index) => ({
-        value: notification,
-        id: index,
-      })) ?? []
-    );
+    this.notifications = this.notifications.map((notification) => {
+      if (notification.id === currentNotificationId) {
+        return {...notification, visible: false};
+      }
+      return notification;
+    });
   }
 
   /**

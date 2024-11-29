@@ -5,29 +5,31 @@
   </template>
   <template lwc:else>
     <template for:each={notifications} for:item="notification">
-      <div key={notification.id} data-test="notification" class="slds-notify_container slds-is-relative">
-        <div data-cy="notification" class="slds-notify slds-notify_toast notification" role="status">
-          <lightning-icon icon-name="utility:info_alt" alternative-text="info" title="info"
-            size="small"></lightning-icon>
-          <div class="slds-notify__content slds-var-m-left_small">
-            {notification.value}
-          </div>
-          <div class="slds-notify__close">
-            <button
-              class="slds-button slds-button_icon slds-button_icon-inverse"
-              title="Close"
-              onclick={handleNotificationClose}
-              data-id={notification.id}
-            >
-              <lightning-icon
-                icon-name="utility:close"
-                alternative-text="Close"
-                size="x-small"
-              ></lightning-icon>
-            </button>
+      <template lwc:if={notification.visible}>
+        <div key={notification.id} data-test="notification" class="slds-notify_container slds-is-relative">
+          <div data-cy="notification" class="slds-notify slds-notify_toast notification" role="status">
+            <lightning-icon icon-name="utility:info_alt" alternative-text="info" title="info"
+              size="small"></lightning-icon>
+            <div class="slds-notify__content slds-var-m-left_small">
+              {notification.value}
+            </div>
+            <div class="slds-notify__close">
+              <button
+                class="slds-button slds-button_icon slds-button_icon-inverse"
+                title="Close notification"
+                onclick={handleNotificationClose}
+                data-id={notification.id}
+              >
+                <lightning-icon
+                  icon-name="utility:close"
+                  alternative-text="Close"
+                  size="x-small"
+                ></lightning-icon>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </template>
   </template>
 </template>
