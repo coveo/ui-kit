@@ -56,8 +56,8 @@
     "node": "^20.9.0 || ^22.11.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.25.6",
-    "@babel/plugin-transform-async-to-generator": "7.24.7",
+    "@babel/cli": "7.25.9",
+    "@babel/plugin-transform-async-to-generator": "7.25.9",
     "@ckeditor/jsdoc-plugins": "39.9.1",
     "@coveo/relay-event-types": "12.0.1",
     "@coveo/release": "1.0.0",
