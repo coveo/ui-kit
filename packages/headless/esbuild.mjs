@@ -41,6 +41,7 @@ const quanticUseCaseEntries = {
   recommendation: 'src/recommendation.index.ts',
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
+  commerce: 'src/commerce.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
