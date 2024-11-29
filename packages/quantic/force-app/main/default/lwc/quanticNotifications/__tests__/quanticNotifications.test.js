@@ -20,17 +20,31 @@ const exampleEngine = {
   id: 'mock engine',
 };
 
+const mockSearchStatusState = {
+  hasResults: true,
+};
+
+const mockSearchStatus = {
+  state: mockSearchStatusState,
+  subscribe: jest.fn((callback) => {
+    mockSearchStatus.callback = callback;
+    return jest.fn();
+  }),
+};
+
 const functionsMocks = {
   buildNotifyTrigger: jest.fn(() => ({
     state: notificationsState,
     subscribe: functionsMocks.subscribe,
   })),
   dispatchMessage: jest.fn(() => {}),
+  buildSearchStatus: jest.fn(() => mockSearchStatus),
   subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
   }),
   unsubscribe: jest.fn(() => {}),
+  unsubscribeSearchStatus: jest.fn(() => {}),
 };
 
 // @ts-ignore
@@ -69,6 +83,7 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
+      buildSearchStatus: functionsMocks.buildSearchStatus,
     };
   };
 }
@@ -259,6 +274,52 @@ describe('c-quantic-notifications', () => {
       expect(notificationsAfterClose[0].textContent).toEqual(
         exampleNotifications[1]
       );
+    });
+
+    describe('when triggering another search with the same query', () => {
+      it('should reset the visibility of the notifications', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsBeforeClose.length).toEqual(
+          exampleNotifications.length
+        );
+
+        const firstNotificationCloseButton =
+          notificationsBeforeClose[0].querySelector(
+            selectors.notificationCloseButton
+          );
+        firstNotificationCloseButton.click();
+        await flushPromises();
+
+        const notificationsAfterClose = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsAfterClose.length).toEqual(
+          exampleNotifications.length - 1
+        );
+
+        // Simulate a search status update
+        mockSearchStatus.state.hasResults = true;
+        mockSearchStatus.callback();
+        await flushPromises();
+
+        const notificationsAfterSearch = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsAfterSearch.length).toEqual(
+          exampleNotifications.length
+        );
+        notificationsAfterSearch.forEach((notification, index) => {
+          expect(notification.textContent).toEqual(exampleNotifications[index]);
+        });
+      });
     });
   });
 });
