@@ -59,7 +59,7 @@ export default class QuanticNotifications extends LightningElement {
     this.ariaLiveNotificationsRegion = AriaLiveRegion('notifications', this);
     this.unsubscribe = this.notifyTrigger.subscribe(() => this.updateState());
     this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
+      this.handleSearchStatusChange()
     );
   };
 
@@ -69,14 +69,8 @@ export default class QuanticNotifications extends LightningElement {
   }
 
   updateState() {
-    this.notifications =
-      this.notifyTrigger?.state?.notifications.map((notification, index) => ({
-        value: notification,
-        id: index.toString(),
-        visible: true,
-      })) ?? [];
-
     this.notifyTriggerState = this.notifyTrigger?.state;
+
     this.ariaLiveNotificationsRegion.dispatchMessage(
       this.notifyTriggerState?.notifications.reduce(
         (value, notification, index) => {
@@ -85,6 +79,17 @@ export default class QuanticNotifications extends LightningElement {
         ''
       )
     );
+  }
+
+  handleSearchStatusChange() {
+    if (!this.searchStatus.state.isLoading) {
+      this.notifications =
+        this.notifyTrigger?.state?.notifications.map((notification, index) => ({
+          value: notification,
+          id: index.toString(),
+          visible: true,
+        })) ?? [];
+    }
   }
 
   handleNotificationClose(event) {

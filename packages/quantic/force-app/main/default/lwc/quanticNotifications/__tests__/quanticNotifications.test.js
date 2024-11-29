@@ -113,6 +113,12 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
+// Simulates a search status update
+function mockSearchStatusUpdate() {
+  mockSearchStatus.state.hasResults = true;
+  mockSearchStatus.callback();
+}
+
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -194,6 +200,7 @@ describe('c-quantic-notifications', () => {
     describe('when some notifications are present in the state', () => {
       it('should render the notifications component', async () => {
         const element = createTestComponent();
+        mockSearchStatusUpdate();
         await flushPromises();
 
         const notifications = element.shadowRoot.querySelectorAll(
@@ -244,6 +251,7 @@ describe('c-quantic-notifications', () => {
   describe('when clicking on a notification close button', () => {
     it('should properly dismiss that notification', async () => {
       const element = createTestComponent();
+      mockSearchStatusUpdate();
       await flushPromises();
 
       const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
@@ -279,6 +287,7 @@ describe('c-quantic-notifications', () => {
     describe('when triggering another search with the same query', () => {
       it('should reset the visibility of the notifications', async () => {
         const element = createTestComponent();
+        mockSearchStatusUpdate();
         await flushPromises();
 
         const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
@@ -304,9 +313,7 @@ describe('c-quantic-notifications', () => {
           exampleNotifications.length - 1
         );
 
-        // Simulate a search status update
-        mockSearchStatus.state.hasResults = true;
-        mockSearchStatus.callback();
+        mockSearchStatusUpdate();
         await flushPromises();
 
         const notificationsAfterSearch = element.shadowRoot.querySelectorAll(
