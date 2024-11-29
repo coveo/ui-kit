@@ -21,8 +21,8 @@
     "eslint": "8.57.1",
     "eslint-config-react-app": "7.0.1",
     "typescript": "5.4.5",
-    "cypress": "13.13.1",
-    "cypress-repeat": "2.3.5",
+    "cypress": "13.16.0",
+    "cypress-repeat": "2.3.7",
     "cypress-web-vitals": "4.1.2"
   }
 }
