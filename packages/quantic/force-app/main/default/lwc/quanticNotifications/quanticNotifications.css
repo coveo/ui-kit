@@ -9,3 +9,7 @@
   margin-left: 0;
   width: 100%;
 }
+
+.notification-container {
+  z-index: 1;
+}
