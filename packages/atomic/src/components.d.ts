@@ -3786,6 +3786,22 @@ export namespace Components {
     }
     interface TabBar {
     }
+    interface TabButton {
+        /**
+          * Whether the tab button is active.
+         */
+        "active": boolean;
+        /**
+          * The label to display on the tab button.
+         */
+        "label": string;
+        /**
+          * Click handler for the tab button.
+         */
+        "select": () => void;
+    }
+    interface TabManagerBar {
+    }
     interface TabPopover {
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
         "togglePopover": () => Promise<void>;
@@ -6040,6 +6056,18 @@ declare global {
         prototype: HTMLTabBarElement;
         new (): HTMLTabBarElement;
     };
+    interface HTMLTabButtonElement extends Components.TabButton, HTMLStencilElement {
+    }
+    var HTMLTabButtonElement: {
+        prototype: HTMLTabButtonElement;
+        new (): HTMLTabButtonElement;
+    };
+    interface HTMLTabManagerBarElement extends Components.TabManagerBar, HTMLStencilElement {
+    }
+    var HTMLTabManagerBarElement: {
+        prototype: HTMLTabManagerBarElement;
+        new (): HTMLTabManagerBarElement;
+    };
     interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
     }
     var HTMLTabPopoverElement: {
@@ -6244,6 +6272,8 @@ declare global {
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
         "tab-bar": HTMLTabBarElement;
+        "tab-button": HTMLTabButtonElement;
+        "tab-manager-bar": HTMLTabManagerBarElement;
         "tab-popover": HTMLTabPopoverElement;
     }
 }
@@ -9833,6 +9863,22 @@ declare namespace LocalJSX {
     }
     interface TabBar {
     }
+    interface TabButton {
+        /**
+          * Whether the tab button is active.
+         */
+        "active"?: boolean;
+        /**
+          * The label to display on the tab button.
+         */
+        "label": string;
+        /**
+          * Click handler for the tab button.
+         */
+        "select": () => void;
+    }
+    interface TabManagerBar {
+    }
     interface TabPopover {
     }
     interface IntrinsicElements {
@@ -10033,6 +10079,8 @@ declare namespace LocalJSX {
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
         "tab-bar": TabBar;
+        "tab-button": TabButton;
+        "tab-manager-bar": TabManagerBar;
         "tab-popover": TabPopover;
     }
 }
@@ -10917,6 +10965,8 @@ declare module "@stencil/core" {
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
             "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
+            "tab-button": LocalJSX.TabButton & JSXBase.HTMLAttributes<HTMLTabButtonElement>;
+            "tab-manager-bar": LocalJSX.TabManagerBar & JSXBase.HTMLAttributes<HTMLTabManagerBarElement>;
             "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
