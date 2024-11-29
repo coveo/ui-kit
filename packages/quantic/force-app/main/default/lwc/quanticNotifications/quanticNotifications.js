@@ -59,7 +59,6 @@ export default class QuanticNotifications extends LightningElement {
   }
 
   updateState() {
-    console.log('updateState called');
     this.notifications =
       this.notifyTrigger?.state?.notifications.map((notification, index) => ({
         value: notification,
