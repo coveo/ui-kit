@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.9.1",
-    "@babel/core": "7.24.9",
+    "@babel/core": "7.26.0",
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.3",
