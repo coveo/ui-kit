@@ -41,7 +41,7 @@ export function getScratchOrgDefPath(args) {
  * Reads the orgName from a scratch org definition JSON file.
  * @param {string} filePath - Path to the JSON file.
  * @returns {string} - The orgName value.
- * @throws Will throw an error if the file doesn't exist or is invalid.
+ * @throws If the file doesn't exist or is invalid.
  */
 export function getOrgNameFromScratchDefFile(filePath) {
   try {
