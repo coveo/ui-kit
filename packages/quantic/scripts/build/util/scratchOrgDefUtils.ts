@@ -5,7 +5,7 @@ import * as path from 'path';
  * Validates and retrieves the scratch org definition file path from arguments.
  * @param {string[]} args - Command-line arguments.
  * @returns {string} - The resolved path to the scratch org definition file.
- * @throws {Error} - If the argument is missing, empty, or the file doesn't exist.
+ * @throws {Error} - If the argument is missing or empty, or if the file doesn't exist.
  */
 export function getScratchOrgDefPath(args) {
   const scratchOrgDefArg = args.find((arg) =>
