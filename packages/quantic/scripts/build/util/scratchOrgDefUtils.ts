@@ -60,7 +60,7 @@ export function getOrgNameFromScratchDefFile(filePath) {
  * Reads the lockerServiceNext value from a scratch org definition JSON file.
  * @param {string} filePath - Path to the JSON file.
  * @returns {boolean|null} - The lockerServiceNext value. Returns `null` if there's an error reading the file.
- * @throws {Error} Will throw an error if the file doesn't exist, is invalid, or if the lockerServiceNext property cannot be found.
+ * @throws {Error} If the file doesn't exist or is invalid, or if the lockerServiceNext property cannot be found.
  */
 export function getLockerServiceNext(filePath) {
   try {
