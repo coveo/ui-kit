@@ -36,6 +36,6 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-      - name: 'Print Commnuity URL'
+      - name: 'Print Community URL'
         run: |
           echo "Community URL: ${{ steps.setup.outputs.community-url }}"
