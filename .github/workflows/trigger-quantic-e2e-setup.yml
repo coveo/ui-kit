@@ -1,0 +1,30 @@
+name: Trigger Quantic E2E Setup
+
+on:
+  # Trigger manually.
+  workflow_dispatch:
+
+  workflow_call:
+    secrets:
+      SFDX_AUTH_CLIENT_ID:
+        required: true
+      SFDX_AUTH_JWT_KEY:
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  e2e-quantic-setup:
+    name: 'Set up e2e tests on Quantic'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Quantic E2E
+        uses: ./.github/actions/e2e-quantic-setup
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+      - name: 'Print Commnuity URL'
+        run: |
+          echo "Community URL: ${{ steps.setup.outputs.community-url }}"
