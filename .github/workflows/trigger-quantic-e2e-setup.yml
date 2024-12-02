@@ -3,6 +3,10 @@ name: Trigger Quantic E2E Setup
 on:
   # Trigger manually.
   workflow_dispatch:
+  # Trigger on PR
+  pull_request:
+    branches:
+      - master
 
   workflow_call:
     secrets:
