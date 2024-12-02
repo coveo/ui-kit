@@ -29,13 +29,21 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - uses: ./.github/actions/e2e-quantic-setup
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Setup SF CLI
+        uses: ./.github/actions/setup-sfdx
+
+      - name: Setup Quantic E2E
+        id: setup
+        uses: ./.github/actions/e2e-quantic-setup
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
       - name: 'Print Community URL'
         run: |
-          echo "Community URL: ${{ steps.setup.outputs }}"
+          echo "Community URL: ${{ steps.setup.outputs.community-url }}"
