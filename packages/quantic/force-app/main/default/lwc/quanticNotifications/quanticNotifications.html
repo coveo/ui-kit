@@ -14,18 +14,15 @@
               {notification.value}
             </div>
             <div class="slds-notify__close">
-              <button
-                class="slds-button slds-button_icon slds-button_icon-inverse"
+              <lightning-button-icon
+                icon-name="utility:close"
+                alternative-text="Close"
+                size="small"
+                variant="bare"
                 title="Close notification"
                 onclick={handleNotificationClose}
                 data-id={notification.id}
-              >
-                <lightning-icon
-                  icon-name="utility:close"
-                  alternative-text="Close"
-                  size="x-small"
-                ></lightning-icon>
-              </button>
+              ></lightning-button-icon>
             </div>
           </div>
         </div>

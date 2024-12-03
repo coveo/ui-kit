@@ -82,11 +82,13 @@ export default class QuanticNotifications extends LightningElement {
   }
 
   handleSearchStatusChange() {
-    if (!this.searchStatus.state.isLoading) {
+    if (this.searchStatus?.state?.isLoading) {
+      this.notifications = [];
+    } else {
       this.notifications =
         this.notifyTrigger?.state?.notifications.map((notification, index) => ({
           value: notification,
-          id: index.toString(),
+          id: index,
           visible: true,
         })) ?? [];
     }
@@ -95,7 +97,7 @@ export default class QuanticNotifications extends LightningElement {
   handleNotificationClose(event) {
     const currentNotificationId = event.currentTarget.dataset.id;
     this.notifications = this.notifications.map((notification) => {
-      if (notification.id === currentNotificationId) {
+      if (notification.id.toString() === currentNotificationId) {
         return {...notification, visible: false};
       }
       return notification;
