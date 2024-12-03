@@ -38,9 +38,13 @@ export function initialParametersSelector(
       getCommerceSortInitialState().appliedSort,
     cf: {},
     nf: {},
+    nfExcluded: {},
     mnf: {},
+    mnfExcluded: {},
     df: {},
+    dfExcluded: {},
     f: {},
+    fExcluded: {},
     lf: {},
   };
 }

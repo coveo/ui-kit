@@ -49,17 +49,30 @@ export const productListingSerializer = {
 type ParametersKey = keyof CommerceSearchParameters;
 type FacetParameters = keyof Pick<
   Parameters,
-  'f' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
+  | 'f'
+  | 'fExcluded'
+  | 'lf'
+  | 'cf'
+  | 'nf'
+  | 'nfExcluded'
+  | 'df'
+  | 'dfExcluded'
+  | 'mnf'
+  | 'mnfExcluded'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
+  fExcluded: true,
   lf: true,
   cf: true,
   nf: true,
+  nfExcluded: true,
   df: true,
+  dfExcluded: true,
   mnf: true,
+  mnfExcluded: true,
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
@@ -85,7 +98,11 @@ function serializePair(pair: [string, unknown]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
-  return serializeSpecialCharacters(key, val);
+  if (val !== undefined) {
+    return serializeSpecialCharacters(key, val);
+  }
+
+  return '';
 }
 
 function serializeSortCriteria(key: string, val: SortCriterion | undefined) {
