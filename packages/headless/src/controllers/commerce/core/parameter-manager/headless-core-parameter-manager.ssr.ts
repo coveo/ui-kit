@@ -47,6 +47,8 @@ export function defineParameterManager<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {

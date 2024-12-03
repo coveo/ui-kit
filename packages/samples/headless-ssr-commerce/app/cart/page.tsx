@@ -1,8 +1,16 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
-import SearchProvider from '@/components/providers/search-provider';
-import {searchEngineDefinition} from '@/lib/commerce-engine';
+import {
+  RecommendationProvider,
+  StandaloneProvider,
+} from '@/components/providers/providers';
+import PopularBought from '@/components/recommendations/popular-bought';
+import StandaloneSearchBox from '@/components/standalone-search-box';
+import {
+  recommendationEngineDefinition,
+  searchEngineDefinition,
+} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -30,16 +38,26 @@ export default async function Search() {
     },
   });
 
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    ['popularBought']
+  );
   return (
-    <SearchProvider
+    <StandaloneProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
-      <div style={{display: 'flex', flexDirection: 'row'}}>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
         <ContextDropdown />
+        <StandaloneSearchBox />
         <Cart />
+        <RecommendationProvider
+          staticState={recsStaticState}
+          navigatorContext={navigatorContext.marshal}
+        >
+          <PopularBought />
+        </RecommendationProvider>
       </div>
-    </SearchProvider>
+    </StandaloneProvider>
   );
 }
 

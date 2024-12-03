@@ -113,6 +113,8 @@ export function defineFacetGenerator<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),

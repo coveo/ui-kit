@@ -3,8 +3,7 @@ import BreadcrumbManager from '@/components/breadcrumb-manager';
 import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import ProductList from '@/components/product-list';
-import SearchProvider from '@/components/providers/search-provider';
-import Recommendations from '@/components/recommendation-list';
+import {SearchProvider} from '@/components/providers/providers';
 import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';
@@ -59,12 +58,6 @@ export default async function Search() {
           controller={hydratedState?.controllers.pagination}
         ></Pagination> */}
           <ShowMore />
-        </div>
-
-        <div style={{flex: 3}}>
-          {/* popularBoughtRecs */}
-          {/* TODO: KIT-3503: need to revisit the way recommendations are added*/}
-          <Recommendations />
         </div>
       </div>
     </SearchProvider>
