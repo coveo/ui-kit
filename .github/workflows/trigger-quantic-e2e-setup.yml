@@ -3,6 +3,10 @@ name: Trigger Quantic E2E Setup
 on:
   workflow_dispatch:
 
+  pull_request:
+    branches:
+      - master
+
   workflow_call:
     secrets:
       SFDX_AUTH_CLIENT_ID:
