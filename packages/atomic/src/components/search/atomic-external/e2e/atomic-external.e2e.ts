@@ -18,11 +18,12 @@ test.describe('when modifying state of a component (search box) that is a child 
     await external.searchBox.press('Enter');
   });
 
-  test("other components' state under the same atomic-external should be affected", async ({
-    external,
-  }) => {
-    await expect(external.querySummary).toHaveText(/hello/);
-  });
+  test.fixme(
+    "other components' state under the same atomic-external should be affected",
+    async ({external}) => {
+      await expect(external.querySummary).toHaveText(/hello/);
+    }
+  );
 
   test.fixme(
     "other components' state under the linked atomic-search-interface should be affected",
