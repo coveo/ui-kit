@@ -1,7 +1,6 @@
 name: Trigger Quantic E2E Setup
 
 on:
-  # Trigger manually.
   workflow_dispatch:
 
   workflow_call:
