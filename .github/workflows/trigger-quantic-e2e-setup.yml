@@ -3,10 +3,6 @@ name: Trigger Quantic E2E Setup
 on:
   workflow_dispatch:
 
-  pull_request:
-    branches:
-      - master
-
   workflow_call:
     secrets:
       SFDX_AUTH_CLIENT_ID:
@@ -42,18 +38,3 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-  e2e-quantic-cleanup:
-    if: cancelled() || failure() || success()
-    needs: e2e-quantic-setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/setup-sfdx
-      - run: npx --no-install ts-node packages/quantic/scripts/build/delete-org.ts
-        shell: bash
