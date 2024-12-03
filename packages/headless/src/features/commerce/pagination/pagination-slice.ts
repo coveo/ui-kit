@@ -85,6 +85,7 @@ export const paginationReducer = createReducer(
           return;
         }
 
+        slice.page = 0;
         slice.perPage = action.payload.pageSize;
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {

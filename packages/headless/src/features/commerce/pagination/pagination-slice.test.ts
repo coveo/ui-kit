@@ -182,6 +182,20 @@ describe('pagination slice', () => {
 
         expect(getSlice(finalState)!.perPage).toBe(pageSize);
       });
+
+      it('#setPageSize resets page to 0', () => {
+        const pageSize = 17;
+        const finalState = paginationReducer(
+          state,
+          setPageSize({
+            ...slotParams,
+            pageSize,
+          })
+        );
+
+        expect(getSlice(finalState)!.perPage).toBe(pageSize);
+        expect(getSlice(finalState)!.page).toBe(0);
+      });
     }
   );
 
