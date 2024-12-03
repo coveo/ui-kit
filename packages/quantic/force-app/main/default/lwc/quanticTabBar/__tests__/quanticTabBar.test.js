@@ -11,15 +11,23 @@ const defaultOptions = {
   lightTheme: false,
 };
 
-const exampleItemOne = document.createElement('c-quantic-tab');
-exampleItemOne.innerText = 'Item One';
-const exampleItemTwo = document.createElement('c-quantic-tab');
-exampleItemTwo.innerText = 'Item Two';
+// Creating the tab items to be assigned to the tab bar
+const exampleItemOne = document.createElement('c-quantic-tab', {
+  is: 'c-quantic-tab',
+});
+exampleItemOne.setAttribute('engine-id', '1');
+exampleItemOne.setAttribute('label', 'Item One');
+const exampleItemTwo = document.createElement('c-quantic-tab', {
+  is: 'c-quantic-tab',
+});
+exampleItemTwo.setAttribute('engine-id', '2');
+exampleItemTwo.setAttribute('label', 'Item Two');
+
 const exampleAssignedElements = [exampleItemOne, exampleItemTwo];
 
 const selectors = {
   tabBarContainer: '.tab-bar_container',
-  tab: 'c-quantic-tab',
+  tab: 'slot[name="tab-bar-item"]',
   dropdown: '.slds-dropdown',
 };
 
@@ -28,6 +36,7 @@ function createTestComponent(
   assignedElements = exampleAssignedElements
 ) {
   mockSlotAssignedNodes(assignedElements);
+
   const element = createElement('c-quantic-tab-bar', {
     is: QuanticTabBar,
   });
@@ -69,15 +78,15 @@ describe('c-quantic-tab-bar', () => {
   });
 
   it('should display all the tabs without displaying the dropdown list', async () => {
+    const expectedOpenDropdownClass = 'slds-is-open';
     const element = createTestComponent();
     await flushPromises();
 
     const tabs = element.shadowRoot.querySelectorAll(selectors.tab);
-    console.log(JSON.stringify(tabs.items(0)));
     expect(tabs.length).toBeGreaterThan(0);
 
-    // const dropdown = element.shadowRoot.querySelector(selectors.dropdown);
-    // expect(dropdown).toBeNull();
+    const dropdown = element.shadowRoot.querySelector(selectors.dropdown);
+    expect(dropdown.classList).not.toContain(expectedOpenDropdownClass);
   });
 
   describe('when the light theme property is set to true', () => {
@@ -86,8 +95,8 @@ describe('c-quantic-tab-bar', () => {
       const element = createTestComponent({lightTheme: true});
       await flushPromises();
 
-      // const tabs = element.shadowRoot.querySelectorAll(selectors.tabs);
-      // expect(tabs.length).toBeGreaterThan(0);
+      const tabs = element.shadowRoot.querySelectorAll(selectors.tab);
+      expect(tabs.length).toBeGreaterThan(0);
 
       const tabBarContainer = element.shadowRoot.querySelector(
         selectors.tabBarContainer
