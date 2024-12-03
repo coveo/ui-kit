@@ -1,9 +1,15 @@
 import {RecordValue, Schema, SchemaDefinition} from '@coveo/bueno';
-import {UnknownAction} from '@reduxjs/toolkit';
-import {CommerceEngine} from '../../../../app/commerce-engine/commerce-engine.js';
+import {createSelector, UnknownAction} from '@reduxjs/toolkit';
+import {
+  CommerceEngine,
+  CommerceEngineState,
+} from '../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../app/state-key.js';
 import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
+import {CommerceParametersSection} from '../../../../state/state-sections.js';
 import {deepEqualAnyOrder} from '../../../../utils/compare-utils.js';
+import {loadReducerError} from '../../../../utils/errors.js';
 import {validateInitialState} from '../../../../utils/validate-payload.js';
 import {
   Controller,
@@ -16,6 +22,14 @@ export interface ParameterManagerProps<T extends Parameters> {
    * The initial state that should be applied to the `ParameterManager` sub-controller.
    */
   initialState: ParameterManagerInitialState<T>;
+
+  /**
+   * Whether the controller's state should exclude the default parameters returned by the Commerce API, and only include
+   * the parameters that were set explicitly set through dispatched actions.
+   *
+   * Defaults to `false`.
+   */
+  excludeDefaultParameters?: boolean;
 }
 
 export interface CoreParameterManagerProps<T extends Parameters>
@@ -113,6 +127,15 @@ export function buildCoreParameterManager<T extends Parameters>(
   engine: CommerceEngine,
   props: CoreParameterManagerProps<T>
 ): ParameterManager<T> {
+  if (props.excludeDefaultParameters && !loadParameterManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
+  const parametersSelector = createSelector(
+    (state: CommerceEngineState) => state.commerceParameters,
+    (parameters) => parameters
+  );
+
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -132,7 +155,10 @@ export function buildCoreParameterManager<T extends Parameters>(
       const oldParams = props.enrichParameters(engine[stateKey], activeParams);
       const newParams = props.enrichParameters(engine[stateKey], parameters);
 
-      if (deepEqualAnyOrder(oldParams, newParams)) {
+      if (
+        Object.keys(parameters).length > 0 &&
+        deepEqualAnyOrder(oldParams, newParams)
+      ) {
         return;
       }
 
@@ -141,8 +167,20 @@ export function buildCoreParameterManager<T extends Parameters>(
     },
 
     get state() {
-      const parameters = props.activeParametersSelector(engine[stateKey]);
-      return {parameters};
+      return {
+        parameters: props.excludeDefaultParameters
+          ? (parametersSelector(engine[stateKey]) as T)
+          : props.activeParametersSelector(engine[stateKey]),
+      };
     },
   };
+}
+
+function loadParameterManagerReducers(
+  engine: CommerceEngine
+): engine is CommerceEngine<CommerceParametersSection> {
+  engine.addReducers({
+    commerceParameters,
+  });
+  return true;
 }

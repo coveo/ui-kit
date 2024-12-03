@@ -171,6 +171,7 @@ export {definePagination} from './controllers/commerce/core/pagination/headless-
 export type {
   ParameterManager,
   ParameterManagerProps,
+  SSRParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
