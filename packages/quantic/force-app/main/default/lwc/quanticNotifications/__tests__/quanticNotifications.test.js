@@ -57,7 +57,7 @@ AriaLiveRegion.mockImplementation(() => {
 const selectors = {
   notifications: '[data-test="notification"]',
   initializationError: 'c-quantic-component-error',
-  notificationCloseButton: 'button',
+  notificationCloseButton: 'lightning-button-icon',
 };
 
 const defaultOptions = {
