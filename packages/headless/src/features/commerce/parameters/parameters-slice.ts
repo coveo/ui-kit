@@ -201,7 +201,7 @@ const handleApplySort = (
   state: CommerceParametersState,
   payload: ApplySortPayload
 ) => {
-  state.page = undefined; // TODO: test
+  state.page = undefined;
   state.sortCriteria = payload;
 };
 
@@ -209,7 +209,7 @@ const handleUpdateQuery = (
   state: CommerceParametersState,
   payload: UpdateQueryPayload
 ) => {
-  state.page = undefined; // TODO: test
+  state.page = undefined;
 
   const {query} = payload;
   if (query === undefined || query.trim() === '') {
@@ -221,7 +221,7 @@ const handleUpdateQuery = (
 };
 
 const handleClearAllCoreFacets = (state: CommerceParametersState) => {
-  state.page = undefined; // TODO: test
+  state.page = undefined;
   state.cf = undefined;
   state.df = undefined;
   state.dfExcluded = undefined;
@@ -240,7 +240,7 @@ const handleDeselectAllValuesInCoreFacet = (
 ) => {
   const {facetId} = payload;
 
-  state.page = undefined; // TODO: test
+  state.page = undefined;
 
   if (state.cf) {
     delete state.cf[facetId];
@@ -297,7 +297,7 @@ const handleToggleCategoryFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectCategoryFacetValuePayload
 ) => {
-  state.page = undefined; // TODO: test
+  state.page = undefined;
 
   if (payload.selection.state === 'selected') {
     state.cf ??= {};
@@ -316,7 +316,7 @@ const handleToggleSelectFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectFacetValueActionCreatorPayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRegularValue(
     state,
@@ -351,7 +351,7 @@ const handleToggleExcludeFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectFacetValueActionCreatorPayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRegularValue(
     state,
@@ -386,7 +386,7 @@ const handleToggleSelectNumericFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectNumericFacetValuePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload.selection);
   unsetRangeValue(
@@ -431,7 +431,7 @@ const handleToggleExcludeNumericFacetValue = (
   state: CommerceParametersState,
   payload: ToggleExcludeNumericFacetValuePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRangeValue(state, 'mnf', state.mnf, payload.facetId, payload.selection);
   unsetRangeValue(
@@ -470,7 +470,7 @@ const handleUpdateManualNumericFacetRange = (
   state: CommerceParametersState,
   payload: UpdateManualNumericFacetRangePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRangeValue(state, 'nf', state.nf, payload.facetId, payload);
   unsetRangeValue(
@@ -519,7 +519,7 @@ const handleToggleSelectDateFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectDateFacetValuePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRangeValue(
     state,
@@ -558,7 +558,7 @@ const handleToggleExcludeDateFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectDateFacetValuePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   unsetRangeValue(state, 'df', state.df, payload.facetId, payload.selection);
 
@@ -591,7 +591,7 @@ const handleToggleSelectLocationFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectLocationFacetValuePayload
 ) => {
-  state.page = undefined; // TODO test
+  state.page = undefined;
 
   switch (payload.selection.state) {
     case 'selected':
