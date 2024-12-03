@@ -113,6 +113,24 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - run: npm run package-compatibility
+  typedoc:
+    name: 'Build typedoc'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: ./.github/actions/setup
+      - name: 'Build headless typedoc'
+        run: npm run build:typedoc
+        working-directory: packages/headless
+      # - name: 'Build headless-react typedoc'
+      #   run: npm run build:typedoc
+      #   working-directory: packages/headless-react
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build
