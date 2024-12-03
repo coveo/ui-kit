@@ -114,7 +114,7 @@ describe('product-listing-sort-slice', () => {
 
       const finalState = sortReducer(state, action(parameters));
 
-      expect(finalState.appliedSort).toBe(
+      expect(finalState.appliedSort).toEqual(
         getCommerceSortInitialState().appliedSort
       );
     });
