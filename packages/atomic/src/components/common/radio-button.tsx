@@ -9,6 +9,7 @@ import {
 
 export interface RadioButtonProps {
   groupName: string;
+  onKeyDown?(event: KeyboardEvent): void;
   onChecked?(): void;
   style?: ButtonStyle;
   key?: string | number;
@@ -53,6 +54,7 @@ export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
 
   return (
     <input
+      onKeyDown={props.onKeyDown}
       type="radio"
       onChange={(e) =>
         (e.currentTarget as HTMLInputElement).checked && props.onChecked?.()

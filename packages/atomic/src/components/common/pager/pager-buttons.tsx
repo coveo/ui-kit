@@ -66,9 +66,62 @@ export const PagerNextButton: FunctionalComponent<
 export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
   props
 ) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const {key} = event;
+    const radioGroup = (event.currentTarget as HTMLElement).parentNode;
+
+    if (!radioGroup || !isArrowKey(key)) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const buttons = getRadioButtons(radioGroup);
+    const currentIndex = getCurrentIndex(
+      buttons,
+      event.currentTarget as HTMLInputElement
+    );
+    const newIndex = getNewIndex(key, currentIndex, buttons.length);
+
+    if (buttons[newIndex]) {
+      buttons[newIndex].focus();
+    }
+  };
+
+  const isArrowKey = (key: string) => {
+    return ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(key);
+  };
+
+  const getRadioButtons = (radioGroup: ParentNode) => {
+    return Array.from(
+      radioGroup.querySelectorAll('[type="radio"]')
+    ) as HTMLInputElement[];
+  };
+
+  const getCurrentIndex = (
+    buttons: HTMLInputElement[],
+    currentButton: HTMLInputElement
+  ) => {
+    return buttons.findIndex((button) => button === currentButton);
+  };
+
+  const getNewIndex = (key: string, currentIndex: number, length: number) => {
+    switch (key) {
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        return (currentIndex - 1 + length) % length;
+      case 'ArrowRight':
+      case 'ArrowDown':
+        return (currentIndex + 1) % length;
+      default:
+        return currentIndex;
+    }
+  };
+
   return (
     <RadioButton
       {...props}
+      onKeyDown={handleKeyDown}
       key={props.page}
       style="outline-neutral"
       checked={props.isSelected}
