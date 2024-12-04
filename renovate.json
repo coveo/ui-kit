@@ -167,63 +167,6 @@
       "rangeStrategy": "replace",
       "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
       "matchPackageNames": ["/^eslint$/"]
-    },
-    {
-      "groupName": "GitHub Actions",
-      "groupSlug": "github-actions",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for GitHub Actions",
-      "matchPackageNames": ["/^actions\\//"]
-    },
-    {
-      "groupName": "@coveo Packages",
-      "groupSlug": "coveo-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for @coveo dependencies",
-      "matchPackageNames": ["/^@coveo\\//"]
-    },
-    {
-      "groupName": "@nx Packages",
-      "groupSlug": "nx-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for @nx dependencies",
-      "matchPackageNames": ["/^@nx\\//"]
-    },
-    {
-      "groupName": "@babel Packages",
-      "groupSlug": "babel-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for @babel dependencies",
-      "matchPackageNames": ["/^@babel\\//"]
-    },
-    {
-      "groupName": "@commitlint Packages",
-      "groupSlug": "commitlint-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for @commitlint dependencies",
-      "matchPackageNames": ["/^@commitlint\\//"]
-    },
-    {
-      "groupName": "Playwright Packages",
-      "groupSlug": "playwright-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all updates for Playwright dependencies",
-      "matchPackageNames": ["/^playwright/"]
-    },
-    {
-      "groupName": "Cypress Packages",
-      "groupSlug": "cypress-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all Cypress-related dependencies, excluding cypress-split",
-      "matchPackageNames": ["/cypress/", "/^@cypress\\//"],
-      "excludePackageNames": ["cypress-split"]
-    },
-    {
-      "groupName": "@microsoft Packages",
-      "groupSlug": "@microsoft-packages",
-      "rangeStrategy": "replace",
-      "description": "Group all @microsoft-related dependencies",
-      "matchPackageNames": ["/^@microsoft\\//"]
     }
   ],
   "rangeStrategy": "auto",

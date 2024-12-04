@@ -251,6 +251,9 @@
           "atomic-major": "$[ATOMIC_MAJOR_VERSION]",
           "atomic-minor": "$[ATOMIC_MINOR_VERSION]",
           "atomic-patch": "$[ATOMIC_PATCH_VERSION]",
+          "headless-major": "$[HEADLESS_MAJOR_VERSION]",
+          "headless-minor": "$[HEADLESS_MINOR_VERSION]",
+          "headless-patch": "$[HEADLESS_PATCH_VERSION]",
           "is-nightly": "$[IS_NIGHTLY]"
         }
       }
