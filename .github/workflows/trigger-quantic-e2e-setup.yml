@@ -3,6 +3,10 @@ name: Trigger Quantic E2E Setup
 on:
   workflow_dispatch:
 
+  pull_request:
+    branches:
+      - master
+
   workflow_call:
     secrets:
       SFDX_AUTH_CLIENT_ID:
@@ -38,3 +42,20 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+
+      - name: Read .env file
+        id: read-env
+        run: |
+          node packages/quantic/scripts/read-env.js > env-vars.txt
+          cat env-vars.txt
+        shell: bash
+
+      - name: Set environment variables
+        run: |
+          set -a
+          source env-vars.txt
+          set +a
+        shell: bash
+
+      - name: Print Community URL
+        run: echo "The Quantic Examples Community URL ==> $BASE_URL"
