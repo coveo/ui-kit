@@ -50,3 +50,6 @@ jobs:
 
       - name: Print Community URL
         run: echo "The Quantic Examples Community URL is ${{ steps.read-env.outputs.Quantic__LWS_disabled_URL }}"
+
+      - name: Output Github steps Summary
+        run: echo "### :rocket:Access Quantic Examples Community here => ${{ steps.read-env.outputs.Quantic__LWS_disabled_URL }}" >> $GITHUB_STEP_SUMMARY
