@@ -2,7 +2,7 @@ name: Trigger Quantic E2E Setup
 
 on:
   workflow_dispatch:
-
+  # trigger on pull request to master
   pull_request:
     branches:
       - master
