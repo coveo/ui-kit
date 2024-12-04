@@ -12,8 +12,8 @@ for (const key in envVariables) {
   // eslint-disable-next-line no-prototype-builtins
   if (envVariables.hasOwnProperty(key)) {
     console.log(`${key}=${envVariables[key]}`);
-    if (key === 'BASE_URL') {
-      core.setOutput('BASE_URL', envVariables[key]);
+    if (key === 'Quantic__LWS_disabled_URL') {
+      core.setOutput('Quantic__LWS_disabled_URL', envVariables[key]);
     }
   }
 }
