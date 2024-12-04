@@ -38,17 +38,23 @@ jobs:
         uses: ./.github/actions/setup-sfdx
 
       - name: Setup Quantic E2E
+        id: setup
         uses: ./.github/actions/e2e-quantic-setup
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
 
-      - name: Read .env file
-        run: source packages/quantic/.env
+      - name: Read .env file and set outputs
+        id: read-env
+        run: |
+          set -a
+          source packages/quantic/.env
+          set +a
+          echo "::set-output name=Quantic__LWS_disabled_URL::$Quantic__LWS_disabled_URL"
         shell: bash
 
       - name: Print Community URL
-        run: echo "The Quantic Examples Community URL is $Quantic__LWS_disabled_URL"
+        run: echo "The Quantic Examples Community URL is ${{ steps.read-env.outputs.Quantic__LWS_disabled_URL }}"
 
       - name: Output Github steps Summary
-        run: echo "### :rocket:Access Quantic Examples Community here => $Quantic__LWS_disabled_URL" >> $GITHUB_STEP_SUMMARY
+        run: echo "### :rocket:Access Quantic Examples Community here --> ${{ steps.read-env.outputs.Quantic__LWS_disabled_URL }}" >> $GITHUB_STEP_SUMMARY
