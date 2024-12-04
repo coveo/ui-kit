@@ -3,10 +3,6 @@ name: Trigger Quantic E2E Setup
 on:
   workflow_dispatch:
 
-  pull_request:
-    branches:
-      - master
-
   workflow_call:
     secrets:
       SFDX_AUTH_CLIENT_ID:
@@ -42,9 +38,3 @@ jobs:
         with:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
-
-      - name: Output Community Url
-        run: echo "The Quantic Examples Community URL ==> ${{ env.BASE_URL}}"
-
-      - name: Output Github steps Summary
-        run: echo "### Access Quantic Examples Community here ==> $BASE_URL" >> $GITHUB_STEP_SUMMARY
