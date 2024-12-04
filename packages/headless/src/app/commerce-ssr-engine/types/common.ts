@@ -154,8 +154,22 @@ export type EngineDefinitionControllersPropsOption<
     : 'controllers']: TSolutionType extends SolutionType.recommendation
     ? {
         [I in keyof TControllersPropsMap as I extends K
-          ? I
-          : never]?: TControllersPropsMap[I]; // TODO: make only recommendation options optional. other controller (e.g. cart and context) should be mandatory
+          ? HasKey<
+              TControllers[I],
+              typeof recommendationInternalOptionKey
+            > extends never
+            ? never
+            : I
+          : never]?: TControllersPropsMap[I];
+      } & {
+        [I in keyof TControllersPropsMap as I extends K
+          ? HasKey<
+              TControllers[I],
+              typeof recommendationInternalOptionKey
+            > extends never
+            ? I
+            : never
+          : never]: TControllersPropsMap[I];
       }
     : {
         [I in keyof TControllersPropsMap as I extends K
