@@ -2,7 +2,7 @@ name: Trigger Quantic E2E Setup
 
 on:
   workflow_dispatch:
-  # trigger on pull request to master
+
   pull_request:
     branches:
       - master
@@ -43,5 +43,8 @@ jobs:
           clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
           jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
 
-      - name: Set Community Url
-        run: echo "### :rocket:Access Quantic Examples Community here ---> $BASE_URL" >> $GITHUB_STEP_SUMMARY
+      - name: Output Community Url
+        run: echo "The Quantic Examples Community URL ==> $BASE_URL"
+
+      - name: Output Github steps Summary
+        run: echo "### Access Quantic Examples Community here ==> $BASE_URL" >> $GITHUB_STEP_SUMMARY
