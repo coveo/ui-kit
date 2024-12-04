@@ -1,8 +1,8 @@
 diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
-index 05c98c9..1ae35e5 100644
+index 4f3a6e3..487f815 100644
 --- a/node_modules/@stencil/core/compiler/stencil.js
 +++ b/node_modules/@stencil/core/compiler/stencil.js
-@@ -234904,8 +234904,8 @@ var getTsOptionsToExtend = (config) => {
+@@ -238083,8 +238083,8 @@ var getTsOptionsToExtend = (config) => {
      // if the `DIST_TYPES` output target is present then we'd like to emit
      // declaration files
      declaration: config.outputTargets.some(isOutputTargetDistTypes),
@@ -13,7 +13,7 @@ index 05c98c9..1ae35e5 100644
      noEmitOnError: false,
      outDir: config.cacheDir || config.sys.tmpDirSync(),
      sourceMap: config.sourceMap,
-@@ -259592,7 +259592,7 @@ var visitClassDeclaration = (config, diagnostics, typeChecker, program, classNod
+@@ -262850,7 +262850,7 @@ var visitClassDeclaration = (config, diagnostics, typeChecker, program, classNod
        importAliasMap.get("AttachInternals")
      );
    }
@@ -22,7 +22,7 @@ index 05c98c9..1ae35e5 100644
    validateMethods(diagnostics, classMembers);
    const currentDecorators = retrieveTsDecorators(classNode);
    return import_typescript54.default.factory.updateClassDeclaration(
-@@ -259632,9 +259632,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
+@@ -262890,9 +262890,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
            member2.body
          );
        } else if (import_typescript54.default.isPropertyDeclaration(member2)) {
@@ -32,15 +32,7 @@ index 05c98c9..1ae35e5 100644
            const modifiers = retrieveTsModifiers(member2);
            return import_typescript54.default.factory.updatePropertyDeclaration(
              member2,
-@@ -259644,7 +259641,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
-             member2.type,
-             member2.initializer
-           );
--        }
-       } else {
-         const err2 = buildError(diagnostics);
-         err2.messageText = "Unknown class member encountered!";
-@@ -259668,10 +259664,9 @@ var filterDecorators = (decorators, excludeList) => {
+@@ -262926,10 +262923,9 @@ var filterDecorators = (decorators, excludeList) => {
    }
    return decorators;
  };
@@ -52,7 +44,7 @@ index 05c98c9..1ae35e5 100644
    for (const member2 of classMembers) {
      if (shouldInitializeInConstructor(member2, importAliasMap) && import_typescript54.default.isPropertyDeclaration(member2)) {
        const memberName = tsPropDeclNameAsString(member2, typeChecker);
-@@ -259686,8 +259681,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+@@ -262944,8 +262940,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
            )
          )
        );
