@@ -79,18 +79,14 @@ export default async function Listing({params}: {params: {category: string}}) {
     await // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recommendationEngineDefinition.fetchStaticState({
       controllers: {
+        // TODO: does not support multiple recommendation with the same slotid
         popularBought: {
-          slotId: 'SHOULD NOT BE THERE',
-          productId: 'SHOULD NOT BE THEREX',
+          productId: 'ccc',
+          enabled: true,
         },
         popularViewed: {
-          slotId: 'SHOULD NOT BE THERE',
-          productId: 'SHOULD NOT BE THEREX',
-        },
-        popularBoughtDisabled: {
-          // TODO: should not be required if enabled set to false
-          slotId: 'SHOULD NOT BE THERE',
-          productId: 'SHOULD NOT BE THEREX',
+          productId: 'ddd',
+          enabled: true,
         },
         cart: {initialState: {items}},
         context: {

@@ -5,23 +5,21 @@ import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
-  InferControllerPropsMapFromDefinitions,
   ControllerStaticStateMap,
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
+  ControllersPropsMap,
+  HasKeys,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 
 export type {
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  InferControllerPropsMapFromDefinitions,
 };
 
 export enum SolutionType {
@@ -30,6 +28,11 @@ export enum SolutionType {
   standalone = 'standalone',
   recommendation = 'recommendation',
 }
+
+const recommendationOptionKey = 'recommendation-internal-options';
+export const recommendationInternalOptionKey = Symbol.for(
+  recommendationOptionKey
+);
 
 export interface ControllerDefinitionWithoutProps<
   TController extends Controller,
@@ -83,10 +86,27 @@ export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > =
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
-    ? Props
+    ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
+      ? Props
+      : Props & {enabled?: boolean}
     : TController extends ControllerDefinitionWithoutProps<Controller>
-      ? {}
+      ? HasKey<
+          TController,
+          typeof recommendationInternalOptionKey // TODO: not sure if this is correct. or if should use string
+        > extends never
+        ? {}
+        : {enabled?: boolean}
       : unknown;
+
+export type InferControllerPropsMapFromDefinitions<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+> = {
+  [K in keyof TControllers as HasKeys<
+    InferControllerPropsFromDefinition<TControllers[K]>
+  > extends false
+    ? never
+    : K]: InferControllerPropsFromDefinition<TControllers[K]>;
+};
 
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<Controller>,
@@ -121,6 +141,23 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
   >;
 };
 
+export type EngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : 'controllers']: {
+    [I in keyof TControllersPropsMap as I extends K
+      ? I
+      : never]: TControllersPropsMap[I];
+  };
+};
+
 export interface ControllerDefinitionOption {
   /**
    * Whether the controller will be used in a product listing context.
@@ -132,6 +169,21 @@ export interface ControllerDefinitionOption {
    * @defaultValue true
    */
   search?: boolean;
+}
+
+interface NonRecommendationController {
+  /**
+   * @internal
+   */
+  [SolutionType.search]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
 }
 
 interface UniversalController {
@@ -147,6 +199,10 @@ interface UniversalController {
    * @internal
    */
   [SolutionType.standalone]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.recommendation]: true;
 }
 
 interface SearchOnlyController {
@@ -212,9 +268,19 @@ export type RecommendationOnlyControllerDefinitionWithProps<
 
 export type NonRecommendationControllerDefinitionWithoutProps<
   TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & UniversalController;
+> = ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
 
 export type NonRecommendationControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> &
+  NonRecommendationController;
+
+export type UniversalControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> & UniversalController;
+
+export type UniversalControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & UniversalController;

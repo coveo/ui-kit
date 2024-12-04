@@ -11,6 +11,7 @@ import {
   CommerceEngineOptions,
 } from '../../commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../logger.js';
+import {ControllersPropsMap} from '../../ssr-engine/types/common.js';
 import {buildControllerDefinitions} from '../common.js';
 import {
   ControllerDefinitionsMap,
@@ -139,13 +140,13 @@ export const buildFactory =
       );
     }
 
-    const cleanedBuildOptions = Object.values(
+    const controllerProps =
       buildOptions && 'controllers' in buildOptions
-        ? buildOptions.controllers
-        : {}
-    ).filter(
+        ? (buildOptions.controllers as ControllersPropsMap)
+        : {};
+
+    const cleanedBuildOptions = Object.values(controllerProps).filter(
       (controller) =>
-        // TODO: simplify
         controller &&
         typeof controller === 'object' &&
         'enabled' in controller &&
