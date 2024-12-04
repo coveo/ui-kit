@@ -88,7 +88,7 @@ export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
     ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
       ? Props
-      : Props & {enabled?: boolean}
+      : Props & {enabled?: boolean} // TODO: document this enabled flag.
     : TController extends ControllerDefinitionWithoutProps<Controller>
       ? HasKey<
           TController,
@@ -151,11 +151,17 @@ export type EngineDefinitionControllersPropsOption<
     TSolutionType
   > extends never
     ? never
-    : 'controllers']: {
-    [I in keyof TControllersPropsMap as I extends K
-      ? I
-      : never]: TControllersPropsMap[I];
-  };
+    : 'controllers']: TSolutionType extends SolutionType.recommendation
+    ? {
+        [I in keyof TControllersPropsMap as I extends K
+          ? I
+          : never]?: TControllersPropsMap[I]; // TODO: make only recommendation options optional. other controller (e.g. cart and context) should be mandatory
+      }
+    : {
+        [I in keyof TControllersPropsMap as I extends K
+          ? I
+          : never]: TControllersPropsMap[I];
+      };
 };
 
 export interface ControllerDefinitionOption {

@@ -1,5 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers/controller/headless-controller';
+import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,

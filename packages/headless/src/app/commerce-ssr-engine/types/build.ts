@@ -1,4 +1,4 @@
-import {Controller} from '../../../controllers/controller/headless-controller';
+import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
