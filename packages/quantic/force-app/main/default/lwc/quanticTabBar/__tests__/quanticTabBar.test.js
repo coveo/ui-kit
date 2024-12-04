@@ -11,7 +11,6 @@ const defaultOptions = {
   lightTheme: false,
 };
 
-// Creating the tab items to be assigned to the tab bar
 const exampleItemOne = document.createElement('c-quantic-tab', {
   is: 'c-quantic-tab',
 });
@@ -50,7 +49,6 @@ function createTestComponent(
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 

@@ -44,6 +44,7 @@ const functionsMocks = {
   buildTab: jest.fn(() => ({
     state: mockBuildTabState,
     subscribe: functionsMocks.subscribe,
+    select: jest.fn(),
   })),
   buildSearchStatus: jest.fn(() => mockSearchStatus),
   subscribe: jest.fn((cb) => {
@@ -85,7 +86,6 @@ function simulateSearchStatusUpdate() {
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
@@ -156,9 +156,31 @@ describe('c-quantic-tab', () => {
     });
   });
 
+  describe('when the tab is not active', () => {
+    it('should render the tab without the active class', async () => {
+      const expectedActiveTabClass = 'slds-is-active';
+      const element = createTestComponent();
+      simulateSearchStatusUpdate();
+      await flushPromises();
+
+      const tab = element.shadowRoot.querySelector('button');
+      tab.click();
+      await flushPromises();
+
+      expect(tab.classList).not.toContain(expectedActiveTabClass);
+    });
+  });
+
   describe('when the tab is active', () => {
     it('should render the tab with the active class', async () => {
       const expectedActiveTabClass = 'slds-is-active';
+      functionsMocks.buildTab.mockImplementation(() => ({
+        state: {
+          isActive: true,
+        },
+        subscribe: functionsMocks.subscribe,
+        select: jest.fn(),
+      }));
       const element = createTestComponent();
       simulateSearchStatusUpdate();
       await flushPromises();
