@@ -1,5 +1,6 @@
 import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {SolutionType} from '../../commerce-ssr-engine/types/common';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 
 export type HasKey<T, K extends PropertyKey> = T extends unknown
@@ -125,12 +126,16 @@ export type InferControllerPropsFromDefinition<
     Controller,
     infer Props
   >
-    ? Props
+    ? HasKey<TController, SolutionType.recommendation> extends never
+      ? Props // TODO: not sure
+      : Props & {enabled?: boolean}
     : TController extends ControllerDefinitionWithoutProps<
           CoreEngine | CoreEngineNext,
           Controller
         >
-      ? {}
+      ? HasKey<TController, SolutionType.recommendation> extends never
+        ? {}
+        : {enabled?: boolean}
       : unknown;
 
 export type InferControllerPropsMapFromDefinitions<

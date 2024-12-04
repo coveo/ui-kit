@@ -14,11 +14,11 @@ import {
   SolutionType,
 } from '../types/common.js';
 import {
-  BuildResult,
-  Controllers,
+  BuildResult, // Controllers,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   CommerceControllerDefinitionsMap,
+  FetchStaticStateParameters,
 } from '../types/core-engine.js';
 import {
   buildFactory,
@@ -31,25 +31,10 @@ export function fetchRecommendationStaticStateFactory<
   controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
-  type ControllerDefinitionKeys = keyof Controllers<TControllerDefinitions>;
-
   const logger = buildLogger(options.loggerOptions);
 
   return composeFunction(
-    async (...params: [controllerKeys: Array<ControllerDefinitionKeys>]) => {
-      const [controllerKeys] = params;
-      const uniqueControllerKeys = Array.from(new Set(controllerKeys));
-      if (uniqueControllerKeys.length !== controllerKeys.length) {
-        logger.warn(
-          '[WARNING] Duplicate controller keys detected in recommendation fetchStaticState call. Make sure to provide only unique controller keys.'
-        );
-      }
-
-      const validControllerNames = Object.keys(controllerDefinitions ?? {});
-      const allowedRecommendationKeys = uniqueControllerKeys.filter(
-        (key: string) => validControllerNames.includes(key)
-      );
-
+    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
       if (!options.navigatorContextProvider) {
         logger.warn(
           '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
@@ -59,10 +44,10 @@ export function fetchRecommendationStaticStateFactory<
       const solutionTypeBuild = await buildFactory(
         controllerDefinitions,
         options
-      )(SolutionType.recommendation);
+      )(SolutionType.recommendation); // TODO: get rid of this
 
       const buildResult = (await solutionTypeBuild(
-        allowedRecommendationKeys
+        ...params
       )) as BuildResult<TControllerDefinitions>;
 
       const staticState = await fetchRecommendationStaticStateFactory(
@@ -70,7 +55,6 @@ export function fetchRecommendationStaticStateFactory<
         options
       ).fromBuildResult({
         buildResult,
-        allowedRecommendationKeys,
       });
       return staticState;
     },
@@ -81,7 +65,6 @@ export function fetchRecommendationStaticStateFactory<
         const [
           {
             buildResult: {engine, controllers},
-            allowedRecommendationKeys,
           },
         ] = params;
 
@@ -89,7 +72,7 @@ export function fetchRecommendationStaticStateFactory<
           controllers,
           controllerDefinitions ?? {},
           logger
-        ).refresh(allowedRecommendationKeys);
+        ).refresh();
 
         const searchActions = await Promise.all(
           engine.waitForRequestCompletedAction()
@@ -162,15 +145,12 @@ function filterRecommendationControllers<
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh(whitelist?: string[]) {
-      if (whitelist === undefined) {
-        return;
-      }
-      const isRecommendationController = (key: string) =>
-        name.includes(key) && whitelist.includes(key);
+    refresh() {
+      const isRecommendationController = (key: string) => name.includes(key);
 
       for (const [key, controller] of Object.entries(controllers)) {
         if (isRecommendationController(key)) {
+          console.log('refreshing recommendation', key);
           (controller as Recommendations).refresh?.();
         }
       }

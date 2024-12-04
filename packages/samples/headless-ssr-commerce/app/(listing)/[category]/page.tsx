@@ -50,6 +50,20 @@ export default async function Listing({params}: {params: {category: string}}) {
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
+      // TODO: should not require definition with recommendation = true
+      // popularBought: {
+      //   slotId: 'SHOULD NOT BE THERE',
+      //   productId: 'SHOULD NOT BE THEREX',
+      // },
+      // popularViewed: {
+      //   slotId: 'SHOULD NOT BE THERE',
+      //   productId: 'SHOULD NOT BE THEREX',
+      // },
+      // popularBoughtDisabled: {
+      //   // TODO: should not be required if enabled set to false
+      //   slotId: 'SHOULD NOT BE THERE',
+      //   productId: 'SHOULD NOT BE THEREX',
+      // },
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
@@ -61,9 +75,34 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBought', 'popularViewed']
-  );
+  const recsStaticState =
+    await // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recommendationEngineDefinition.fetchStaticState({
+      controllers: {
+        popularBought: {
+          slotId: 'SHOULD NOT BE THERE',
+          productId: 'SHOULD NOT BE THEREX',
+        },
+        popularViewed: {
+          slotId: 'SHOULD NOT BE THERE',
+          productId: 'SHOULD NOT BE THEREX',
+        },
+        popularBoughtDisabled: {
+          // TODO: should not be required if enabled set to false
+          slotId: 'SHOULD NOT BE THERE',
+          productId: 'SHOULD NOT BE THEREX',
+        },
+        cart: {initialState: {items}},
+        context: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+          },
+        },
+      },
+    });
 
   return (
     <ListingProvider

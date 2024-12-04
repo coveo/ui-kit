@@ -80,7 +80,13 @@ export function buildControllerDefinitions<
       (solutionType in definition &&
         definition[solutionType as keyof typeof definition] === false);
 
-    if (unavailableInSolutionType()) {
+    const props = propsMap?.[key as keyof typeof propsMap];
+    const isDisabled =
+      props && typeof props === 'object' && 'enabled' in props
+        ? props.enabled === false
+        : false; // TODO: check if this is correct
+
+    if (unavailableInSolutionType() || isDisabled) {
       return null;
     }
 
@@ -88,7 +94,7 @@ export function buildControllerDefinitions<
       definition,
       engine,
       solutionType,
-      props: propsMap?.[key as keyof typeof propsMap],
+      props,
     });
   });
 

@@ -29,7 +29,7 @@ export type HydrateStaticState<
        * Useful when hydrating a server-side-rendered engine.
        */
       (
-        ...params: OptionsTuple<HydrateStaticStateOptions<TSearchAction>>
+        ...params: OptionsTuple<HydrateStaticStateOptions<TSearchAction>> // TODO: validate
       ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
       fromBuildResult: FromBuildResult<

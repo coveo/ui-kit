@@ -5,6 +5,8 @@ import {
   defineCommerceEngine as defineBaseCommerceEngine,
   CommerceEngineOptions,
   SolutionType,
+  getSampleCommerceEngineConfiguration,
+  defineRecommendations,
 } from '@coveo/headless/ssr-commerce';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';

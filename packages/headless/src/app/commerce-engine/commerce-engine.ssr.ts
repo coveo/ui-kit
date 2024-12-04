@@ -122,3 +122,43 @@ export function defineCommerceEngine<
     >,
   };
 }
+
+// export const engineDefinition = defineCommerceEngine({
+//   // By default, the logger level is set to 'warn'. This level may not provide enough information for some server-side errors. To get more detailed error messages, set the logger level to a more verbose level, such as 'debug'.
+//   // loggerOptions: {level: 'debug'},
+//   configuration: {
+//     ...getSampleCommerceEngineConfiguration(),
+//   },
+//   controllers: {
+//     cart: defineCart(),
+//     popularViewed: defineRecommendations({
+//       options: {
+//         slotId: 'd73afbd2-8521-4ee6-a9b8-31f064721e73',
+//       },
+//     }),
+//     popularBought: defineRecommendations({
+//       options: {
+//         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+//       },
+//     }),
+//     popularBoughtDisabled: defineRecommendations({
+//       options: {
+//         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+//       },
+//     }),
+//   },
+// });
+
+// engineDefinition.listingEngineDefinition.fetchStaticState({
+//   controllers: {
+//     cart: {initialState: {items: []}},
+//   },
+// });
+// engineDefinition.recommendationEngineDefinition.fetchStaticState({
+//   controllers: {
+//     cart: {initialState: {items: []}},
+//     popularBought: {},
+//     popularBoughtDisabled: {},
+//     popularViewed: {},
+//   },
+// });
