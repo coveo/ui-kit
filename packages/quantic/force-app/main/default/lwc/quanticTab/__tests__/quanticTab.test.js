@@ -127,6 +127,26 @@ describe('c-quantic-tab', () => {
   });
 
   describe('controller initialization', () => {
+    it('should build the tab and searchStatus controllers with the proper parameters', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildTab).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
+        options: {
+          expression: defaultOptions.expression,
+          id: defaultOptions.label,
+        },
+        initialState: {
+          isActive: defaultOptions.isActive,
+        },
+      });
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
+    });
+
     it('should subscribe to the headless state changes', async () => {
       createTestComponent();
       await flushPromises();
