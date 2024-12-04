@@ -3,6 +3,7 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import closeNotification from '@salesforce/label/c.quantic_CloseNotification';
 import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
@@ -40,6 +41,12 @@ export default class QuanticNotifications extends LightningElement {
   unsubscribe;
   /** @type {Function} */
   unsubscribeSearchStatus;
+  /** @type {SearchStatus} */
+  searchStatus;
+
+  labels = {
+    closeNotification,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -82,7 +89,10 @@ export default class QuanticNotifications extends LightningElement {
   }
 
   handleSearchStatusChange() {
-    if (this.searchStatus?.state?.isLoading) {
+    if (
+      this.searchStatus?.state?.isLoading ||
+      this.searchStatus?.state?.hasError
+    ) {
       this.notifications = [];
     } else {
       this.notifications =

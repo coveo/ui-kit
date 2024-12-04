@@ -22,6 +22,7 @@ const exampleEngine = {
 
 const mockSearchStatusState = {
   hasResults: true,
+  hasError: false,
 };
 
 const mockSearchStatus = {
@@ -113,9 +114,9 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-// Simulates a search status update
-function mockSearchStatusHasResults() {
-  mockSearchStatus.state.hasResults = true;
+function simulateSearchStatusUpdate(hasError = false) {
+  mockSearchStatus.state.hasResults = !hasError;
+  mockSearchStatus.state.hasError = hasError;
   mockSearchStatus.callback();
 }
 
@@ -167,7 +168,7 @@ describe('c-quantic-notifications', () => {
   });
 
   describe('component initialization', () => {
-    it('should build the controller with the proper paramters', async () => {
+    it('should build the notifyTrigger and searchStatus controllers with the proper parameters', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -175,13 +176,18 @@ describe('c-quantic-notifications', () => {
       expect(functionsMocks.buildNotifyTrigger).toHaveBeenCalledWith(
         exampleEngine
       );
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
     });
 
-    it('should subscribe to the headless state changes', async () => {
+    it('should subscribe to the headless notify trigger and search status state changes', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+      expect(mockSearchStatus.subscribe).toHaveBeenCalledTimes(1);
     });
 
     it('should call AriaLiveRegion with the right parameters', async () => {
@@ -200,7 +206,7 @@ describe('c-quantic-notifications', () => {
     describe('when some notifications are present in the state', () => {
       it('should render the notifications component', async () => {
         const element = createTestComponent();
-        mockSearchStatusHasResults();
+        simulateSearchStatusUpdate();
         await flushPromises();
 
         const notifications = element.shadowRoot.querySelectorAll(
@@ -246,24 +252,31 @@ describe('c-quantic-notifications', () => {
         expect(notifications.length).toEqual(0);
       });
     });
+
+    describe('when there is an error following a search', () => {
+      it('should not render the notifications component', async () => {
+        const element = createTestComponent();
+        simulateSearchStatusUpdate(true);
+        await flushPromises();
+
+        const notifications = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notifications.length).toEqual(0);
+      });
+    });
   });
 
   describe('when clicking on a notification close button', () => {
     it('should properly dismiss that notification', async () => {
       const element = createTestComponent();
-      mockSearchStatusHasResults();
+      simulateSearchStatusUpdate();
       await flushPromises();
 
       const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
         selectors.notifications
       );
-
-      expect(notificationsBeforeClose.length).toEqual(
-        exampleNotifications.length
-      );
-      notificationsBeforeClose.forEach((notification, index) => {
-        expect(notification.textContent).toEqual(exampleNotifications[index]);
-      });
 
       const firstNotificationCloseButton =
         notificationsBeforeClose[0].querySelector(
@@ -287,7 +300,7 @@ describe('c-quantic-notifications', () => {
     describe('when triggering another search with the same query', () => {
       it('should reset the visibility of the notifications', async () => {
         const element = createTestComponent();
-        mockSearchStatusHasResults();
+        simulateSearchStatusUpdate();
         await flushPromises();
 
         const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
@@ -313,7 +326,7 @@ describe('c-quantic-notifications', () => {
           exampleNotifications.length - 1
         );
 
-        mockSearchStatusHasResults();
+        simulateSearchStatusUpdate();
         await flushPromises();
 
         const notificationsAfterSearch = element.shadowRoot.querySelectorAll(

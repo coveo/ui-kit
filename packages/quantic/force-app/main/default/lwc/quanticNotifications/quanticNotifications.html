@@ -16,10 +16,10 @@
             <div class="slds-notify__close">
               <lightning-button-icon
                 icon-name="utility:close"
-                alternative-text="Close"
+                alternative-text={labels.closeNotification}
                 size="small"
                 variant="bare"
-                title="Close notification"
+                title={labels.closeNotification}
                 onclick={handleNotificationClose}
                 data-id={notification.id}
               ></lightning-button-icon>
