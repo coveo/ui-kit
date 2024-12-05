@@ -70,7 +70,7 @@ describe('Commerce Engine SSR', () => {
     ).not.toThrow();
   });
 
-  it('should require optional recommendation controller options for recommendationEngineDefinition', () => {
+  it('should allow optional recommendation controller options for recommendationEngineDefinition', () => {
     expect(() =>
       recommendationEngineDefinition.fetchStaticState({
         controllers: {
