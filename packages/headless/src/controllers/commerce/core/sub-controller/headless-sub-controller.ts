@@ -120,7 +120,7 @@ export interface SearchAndListingSubControllers<
    * @param props - Properties for the `ParameterManager` sub-controller.
    * @returns A `ParameterManager` sub-controller.
    */
-  parameterManager(props: ParameterManagerProps<P>): ParameterManager<P>;
+  parameterManager(props?: ParameterManagerProps<P>): ParameterManager<P>;
 }
 
 export interface SearchSubControllers

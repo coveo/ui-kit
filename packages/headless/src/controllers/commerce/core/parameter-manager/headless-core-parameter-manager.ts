@@ -21,7 +21,7 @@ export interface ParameterManagerProps<T extends Parameters> {
   /**
    * The initial state that should be applied to the `ParameterManager` sub-controller.
    */
-  initialState: ParameterManagerInitialState<T>;
+  initialState?: ParameterManagerInitialState<T>;
 
   /**
    * Whether the controller's state should exclude the default parameters returned by the Commerce API, and only include
@@ -139,13 +139,15 @@ export function buildCoreParameterManager<T extends Parameters>(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  validateInitialState(
-    engine,
-    initialStateSchema(props.parametersDefinition),
-    props.initialState,
-    'buildCoreParameterManager'
-  );
-  dispatch(props.restoreActionCreator(props.initialState.parameters));
+  if (props.initialState) {
+    validateInitialState(
+      engine,
+      initialStateSchema(props.parametersDefinition),
+      props.initialState,
+      'buildCoreParameterManager'
+    );
+    dispatch(props.restoreActionCreator(props.initialState.parameters));
+  }
 
   return {
     ...controller,
