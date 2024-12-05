@@ -58,9 +58,7 @@ export interface EngineDefinition<
       TControllers,
       TSolutionType
     >,
-    InferControllerPropsMapFromDefinitions<TControllers>,
-    TControllers,
-    TSolutionType
+    InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
    * Fetches the hydrated state on the client side using your engine definition and the static state.
@@ -68,9 +66,7 @@ export interface EngineDefinition<
   hydrateStaticState: HydrateStaticState<
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
     UnknownAction,
-    InferControllerPropsMapFromDefinitions<TControllers>,
-    TControllers,
-    TSolutionType
+    InferControllerPropsMapFromDefinitions<TControllers>
   >;
   /**
    * Builds an engine and its controllers from an engine definition.
@@ -78,9 +74,7 @@ export interface EngineDefinition<
   build: Build<
     TEngineOptions,
     InferControllersMapFromDefinition<TControllers, TSolutionType>,
-    InferControllerPropsMapFromDefinitions<TControllers>,
-    TControllers,
-    TSolutionType
+    InferControllerPropsMapFromDefinitions<TControllers>
   >;
 
   /**

@@ -1,10 +1,7 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
-  ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
-  SolutionType,
 } from '../../commerce-ssr-engine/types/common.js';
 import type {
   ControllersMap,
@@ -21,8 +18,6 @@ export type FetchStaticState<
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
   TControllersProps extends ControllersPropsMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
 > = {
   /**
    * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
@@ -32,11 +27,7 @@ export type FetchStaticState<
   (
     ...params: OptionsTuple<
       FetchStaticStateOptions &
-        EngineDefinitionControllersPropsOption<
-          TControllersDefinitionsMap,
-          TControllersProps,
-          TSolutionType
-        >
+        EngineDefinitionControllersPropsOption<TControllersProps>
     >
   ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 

@@ -1,5 +1,4 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -7,11 +6,7 @@ import type {
   OptionsTuple,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
-import {
-  ControllerDefinitionsMap,
-  EngineDefinitionControllersPropsOption,
-  SolutionType,
-} from './common.js';
+import {EngineDefinitionControllersPropsOption} from './common.js';
 import {FromBuildResult} from './from-build-result.js';
 
 export interface HydrateStaticStateOptions<TSearchAction> {
@@ -22,8 +17,6 @@ export type HydrateStaticState<
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
-  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
-  TSolutionType extends SolutionType,
 > = {
   /**
    * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
@@ -33,11 +26,7 @@ export type HydrateStaticState<
   (
     ...params: OptionsTuple<
       HydrateStaticStateOptions<TSearchAction> &
-        EngineDefinitionControllersPropsOption<
-          TControllersDefinitionsMap,
-          TControllersProps,
-          TSolutionType
-        >
+        EngineDefinitionControllersPropsOption<TControllersProps>
     >
   ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
