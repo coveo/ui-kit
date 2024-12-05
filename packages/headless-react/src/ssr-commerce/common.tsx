@@ -15,7 +15,10 @@ import {
   PropsWithChildren,
 } from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
-import {MissingEngineProviderError} from '../errors.js';
+import {
+  MissingEngineProviderError,
+  UndefinedControllerError,
+} from '../errors.js';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
 import {
   ContextHydratedState,
@@ -51,6 +54,10 @@ function buildControllerHook<
 
     // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
+    if (ctx.controllers[key as ControllerKey] === undefined) {
+      throw new UndefinedControllerError(key.toString(), ctx.solutionType);
+    }
+
     const subscribe = useCallback(
       (listener: () => void) =>
         isHydratedStateContext(ctx)
@@ -121,7 +128,8 @@ export function buildStaticStateProvider<
 >(
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
-  >
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     controllers,
@@ -133,7 +141,7 @@ export function buildStaticStateProvider<
     >;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{controllers}}>{children}</Provider>;
+    return <Provider value={{controllers, solutionType}}>{children}</Provider>;
   };
 }
 
@@ -143,7 +151,8 @@ export function buildHydratedStateProvider<
 >(
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
-  >
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     engine,
@@ -154,6 +163,10 @@ export function buildHydratedStateProvider<
     controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{engine, controllers}}>{children}</Provider>;
+    return (
+      <Provider value={{engine, controllers, solutionType}}>
+        {children}
+      </Provider>
+    );
   };
 }
