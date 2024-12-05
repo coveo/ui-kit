@@ -147,6 +147,21 @@ export type EngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
+> = OptionalEngineDefinitionControllersPropsOption<
+  TControllers,
+  TControllersPropsMap,
+  TSolutionType
+> &
+  RequiredEngineDefinitionControllersPropsOption<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType
+  >;
+
+export type OptionalEngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
 > = {
   [K in keyof TControllers as HasKey<
     TControllers[K],
@@ -168,7 +183,13 @@ export type EngineDefinitionControllersPropsOption<
     TSolutionType,
     K
   >;
-} & {
+};
+
+export type RequiredEngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = {
   [K in keyof TControllers as HasKey<
     TControllers[K],
     TSolutionType
