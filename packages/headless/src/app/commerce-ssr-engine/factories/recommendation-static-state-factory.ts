@@ -158,7 +158,6 @@ function filterRecommendationControllers<
 
       for (const [key, controller] of Object.entries(controllers)) {
         if (isRecommendationController(key)) {
-          console.log('refreshing recommendation', key);
           (controller as Recommendations).refresh?.();
         }
       }

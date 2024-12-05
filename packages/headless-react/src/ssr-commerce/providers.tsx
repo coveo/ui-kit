@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  HydrateStaticStateOptions,
   InferHydratedState,
   InferStaticState,
   NavigatorContext,
@@ -68,8 +67,7 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
             ...controllers,
             ...hydrateControllers,
           },
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as unknown as HydrateStaticStateOptions<any>) // TODO: remove any
+        })
         .then(({engine, controllers}) => {
           setHydratedState({engine, controllers});
         });
