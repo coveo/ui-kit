@@ -36,7 +36,7 @@ export const recommendationInternalOptionKey = Symbol.for(
   recommendationOptionKey
 );
 
-type RecommendationControllerSettings = {
+export type RecommendationControllerSettings = {
   /**
    * Toggle to enable or disable the recommendation controller.
    * When set to `true`, the controller will be built and will perform a recommendation request server-side.
