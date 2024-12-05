@@ -24,7 +24,7 @@ export function defineCart(): CartDefinition {
     listing: true,
     search: true,
     standalone: true,
-    recommendation: true, // TODO: FIXME: this WILL break the recommendation filter
+    recommendation: true,
     buildWithProps: (engine, props) =>
       buildCart(engine, {initialState: props.initialState}),
   };

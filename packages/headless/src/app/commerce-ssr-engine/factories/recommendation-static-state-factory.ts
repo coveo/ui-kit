@@ -17,7 +17,7 @@ import {
   SolutionType,
 } from '../types/common.js';
 import {
-  BuildResult, // Controllers,
+  BuildResult,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   CommerceControllerDefinitionsMap,
@@ -122,7 +122,7 @@ function filterRecommendationControllers<
     return isControllerRecommendationEnabled && hasSlotId;
   };
 
-  const failDuplicateRecommendation = (slotId: string) => {
+  const ensureSingleRecommendationPerSlot = (slotId: string) => {
     throw new Error(
       `Multiple recommendation controllers found for the same slotId: ${slotId}. Only one recommendation controller per slotId is supported.`
     );
@@ -136,8 +136,7 @@ function filterRecommendationControllers<
       const {slotId} = value[recommendationInternalOptionKey];
       const key = slotId;
       if (slotIdSet.has(slotId)) {
-        // TODO: support controller definition with multiple recommendations with same slotIds
-        failDuplicateRecommendation(slotId);
+        ensureSingleRecommendationPerSlot(slotId);
         return false;
       }
       slotIdSet.add(key);

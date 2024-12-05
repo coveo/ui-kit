@@ -36,6 +36,17 @@ export const recommendationInternalOptionKey = Symbol.for(
   recommendationOptionKey
 );
 
+type RecommendationControllerSettings = {
+  /**
+   * Toggle to enable or disable the recommendation controller.
+   * When set to `true`, the controller will be built and will perform a recommendation request server-side.
+   * Otherwise, the controller will not be available in the client-side.
+   *
+   * @default false
+   */
+  enabled?: boolean;
+};
+
 export interface ControllerDefinitionWithoutProps<
   TController extends Controller,
 > {
@@ -90,14 +101,14 @@ export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
     ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
       ? Props
-      : Props & {enabled?: boolean} // TODO: document this enabled flag.
+      : Props & RecommendationControllerSettings
     : TController extends ControllerDefinitionWithoutProps<Controller>
       ? HasKey<
           TController,
-          typeof recommendationInternalOptionKey // TODO: not sure if this is correct. or if should use string
+          typeof recommendationInternalOptionKey
         > extends never
         ? {}
-        : {enabled?: boolean}
+        : RecommendationControllerSettings
       : unknown;
 
 export type InferControllerPropsMapFromDefinitions<
@@ -212,7 +223,6 @@ export type RequiredEngineDefinitionControllersPropsOption<
   >;
 };
 
-// TODO: add unit test to ensure the typing is correct
 type IsRecommendationController<
   TController extends ControllerDefinition<Controller>,
 > = HasKey<TController, typeof recommendationInternalOptionKey>;

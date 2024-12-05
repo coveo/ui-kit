@@ -84,7 +84,7 @@ export function buildControllerDefinitions<
     const isDisabled =
       props && typeof props === 'object' && 'enabled' in props
         ? props.enabled === false
-        : false; // TODO: check if this is correct
+        : false;
 
     if (unavailableInSolutionType() || isDisabled) {
       return null;

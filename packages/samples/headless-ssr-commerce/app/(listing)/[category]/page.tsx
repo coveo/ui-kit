@@ -50,20 +50,6 @@ export default async function Listing({params}: {params: {category: string}}) {
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
-      // TODO: should not require definition with recommendation = true
-      // popularBought: {
-      //   slotId: 'SHOULD NOT BE THERE',
-      //   productId: 'SHOULD NOT BE THEREX',
-      // },
-      // popularViewed: {
-      //   slotId: 'SHOULD NOT BE THERE',
-      //   productId: 'SHOULD NOT BE THEREX',
-      // },
-      // popularBoughtDisabled: {
-      //   // TODO: should not be required if enabled set to false
-      //   slotId: 'SHOULD NOT BE THERE',
-      //   productId: 'SHOULD NOT BE THEREX',
-      // },
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
@@ -79,13 +65,10 @@ export default async function Listing({params}: {params: {category: string}}) {
     await // eslint-disable-next-line @typescript-eslint/no-explicit-any
     recommendationEngineDefinition.fetchStaticState({
       controllers: {
-        // TODO: does not support multiple recommendation with the same slotid
         popularBought: {
-          productId: 'ccc',
           enabled: true,
         },
         popularViewed: {
-          productId: 'ddd',
           enabled: true,
         },
         cart: {initialState: {items}},
