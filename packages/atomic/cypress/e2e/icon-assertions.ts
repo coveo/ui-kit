@@ -1,4 +1,4 @@
-import {sanitize} from 'dompurify';
+import DOMPurify from 'dompurify';
 import {getSvg} from './icon-utils';
 
 function getSortedClone(element: Element) {
@@ -22,7 +22,7 @@ export function assertRendersIcon(
       selector().should(([actualSvgElement]) =>
         expect(getSortedClone(actualSvgElement).outerHTML).to.eq(
           getSortedClone(
-            sanitize(expectedSvg, {
+            DOMPurify.sanitize(expectedSvg, {
               USE_PROFILES: {svg: true, svgFilters: true},
               RETURN_DOM_FRAGMENT: true,
             }).querySelector('svg')!

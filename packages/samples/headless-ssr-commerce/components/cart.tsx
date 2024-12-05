@@ -17,7 +17,7 @@ export default function Cart() {
 
   return (
     <div>
-      <ul>
+      <ul id="cart">
         {state.items.map((item, index) => (
           <li key={index}>
             <p>

@@ -1,0 +1,33 @@
+@import '../../../../global/global.pcss';
+
+[part='follow-up-question'] {
+  @apply flex items-center gap-4 border border-solid p-4;
+
+  border-radius: var(--atomic-border-radius-md);
+  border-color: var(--atomic-neutral);
+  background-color: var(--atomic-background);
+  font-family: var(--atomic-font-family);
+}
+
+[part='follow-up-question']:hover {
+  @apply cursor-pointer;
+
+  background-color: var(--atomic-neutral-light);
+}
+
+[part='follow-up-question-icon'] svg {
+  @apply h-6 w-6;
+
+  fill: var(--atomic-primary);
+}
+
+[part='follow-up-question-text'] {
+  @apply flex-auto;
+}
+
+[part='follow-up-question-call-to-action'] {
+  @apply whitespace-nowrap;
+
+  font-size: var(--atomic-text-sm);
+  color: var(--atomic-primary);
+}

@@ -1,4 +1,3 @@
-import {JSDOM} from 'jsdom';
 import {test, expect} from './listing.fixture';
 
 test.describe('default', () => {
@@ -54,69 +53,25 @@ test.describe('default', () => {
       });
     });
   });
-});
-test.describe('ssr', () => {
-  const numResults = 9; // Define the numResults variable
-  const numResultsMsg = `Rendered page with ${numResults} products`;
 
-  test(`renders page in SSR as expected`, async ({page}) => {
-    const responsePromise = page.waitForResponse('**/surf-accessories');
-    await page.goto('/surf-accessories');
+  test.describe('when changing the sort order', () => {
+    let originalProductListContents: string;
+    test.beforeEach(async ({sort, search, facet}) => {
+      originalProductListContents =
+        (await search.productList.textContent()) || '';
 
-    const response = await responsePromise;
-    const responseBody = await response.text();
+      await sort.sortSelect.waitFor({state: 'visible'});
+      await sort.sortSelect.isEnabled();
 
-    const dom = new JSDOM(responseBody);
+      await sort.sortSelect.selectOption({index: 1});
+      await facet.facetLoading.waitFor({state: 'visible'});
+      await facet.facetLoading.waitFor({state: 'hidden'});
+    });
 
-    expect(
-      dom.window.document.querySelector('#hydrated-msg')?.textContent
-    ).toBe(numResultsMsg);
+    test('should update the result list', async ({search}) => {
+      const productListContents = await search.productList.textContent();
 
-    expect(
-      dom.window.document.querySelectorAll('[aria-label="Product List"] li')
-        .length
-    ).toBe(numResults);
-    expect(
-      (
-        dom.window.document.querySelector(
-          '#hydrated-indicator'
-        ) as HTMLInputElement
-      )?.checked
-    ).toBe(false);
-  });
-
-  test(`renders page in CSR as expected`, async ({page, search, hydrated}) => {
-    await page.goto('/surf-accessories');
-
-    await expect(hydrated.hydratedMessage).toHaveText(numResultsMsg);
-    expect(await search.productItems).toHaveLength(numResults);
-    expect(await hydrated.hydratedIndicator).toBe(true);
-  });
-
-  test('renders product list in SSR and then in CSR', async ({
-    page,
-    search,
-    hydrated,
-  }) => {
-    const responsePromise = page.waitForResponse('**/surf-accessories');
-    await page.goto('/surf-accessories');
-
-    const response = await responsePromise;
-    const responseBody = await response.text();
-
-    const dom = new JSDOM(responseBody);
-
-    const ssrTimestamp = Date.parse(
-      dom.window.document.querySelector('#timestamp')!.textContent || ''
-    );
-
-    const hydratedTimestamp = Date.parse(
-      (await hydrated.hydratedTimestamp.textContent()) || ''
-    );
-
-    expect(ssrTimestamp).not.toBeNaN();
-    await expect(hydrated.hydratedMessage).toHaveText(numResultsMsg);
-    expect(await search.productItems).toHaveLength(numResults);
-    expect(hydratedTimestamp).toBeGreaterThan(ssrTimestamp);
+      expect(productListContents).not.toEqual(originalProductListContents);
+    });
   });
 });

@@ -392,7 +392,7 @@ export class SuggestionManager<SearchBoxController> {
     if (query) {
       const escaped = DOMPurify.sanitize(query);
       return !!panel?.querySelector(
-        `[${this.queryDataAttribute}="${escaped}"]`
+        `[${this.queryDataAttribute}="${CSS.escape(escaped)}"]`
       );
     }
 

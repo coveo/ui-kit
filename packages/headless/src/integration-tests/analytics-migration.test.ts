@@ -41,7 +41,6 @@ import {
   facetDeselect,
   facetExclude,
   facetSelect,
-  facetUpdateSort,
   logFacetBreadcrumb,
   logFacetClearAll,
   logFacetDeselect,
@@ -49,9 +48,7 @@ import {
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
-  logFacetUpdateSort,
 } from '../features/facets/facet-set/facet-set-analytics-actions.js';
-import {FacetSortCriterion} from '../features/facets/facet-set/interfaces/request.js';
 import {logClearBreadcrumbs} from '../features/facets/generic/facet-generic-analytics-actions.js';
 import {registerDateFacet} from '../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {
@@ -67,14 +64,6 @@ import {
   numericBreadcrumbFacet,
 } from '../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions.js';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
-import {
-  logNavigateBackward,
-  logNavigateForward,
-  logNoResultsBack,
-  historyBackward,
-  historyForward,
-  noResultsBack,
-} from '../features/history/history-analytics-actions.js';
 import {
   logInstantResultsSearch,
   searchboxAsYouType,
@@ -98,19 +87,6 @@ import {
   logResultsSort,
   resultsSort,
 } from '../features/sort-criteria/sort-criteria-analytics-actions.js';
-import {
-  StaticFilterValueMetadata,
-  logStaticFilterClearAll,
-  logStaticFilterDeselect,
-  logStaticFilterSelect,
-  staticFilterClearAll,
-  staticFilterDeselect,
-  staticFilterSelect,
-} from '../features/static-filter-set/static-filter-set-actions.js';
-import {
-  logUndoTriggerQuery,
-  undoTriggerQuery,
-} from '../features/triggers/trigger-analytics-actions.js';
 import {clearMicrotaskQueue} from '../test/unit-test-utils.js';
 
 const nextSearchEngine = buildSearchEngine({
@@ -190,7 +166,6 @@ export const excludedBaseProperties = [
 
 const ANY_FACET_VALUE = 'any facet value';
 const ANY_FACET_ID = 'any facet id';
-const ANY_CRITERION: FacetSortCriterion = 'alphanumeric';
 const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
   start: 'start',
   end: 'end',
@@ -198,12 +173,7 @@ const ANY_RANGE_FACET_BREADCRUMB_VALUE: DateFacetValue = {
   state: 'idle',
   numberOfResults: 1,
 };
-const ANY_STATIC_FILTER_ID = 'any static filter id';
-const ANY_STATIC_FILTER_VALUE: StaticFilterValueMetadata = {
-  caption: 'any static filter value caption',
-  expression: 'any static filter value expression',
-};
-const ANY_QUERY = 'any query';
+
 const ANY_CATEGORY_FACET_PATH = ['any category facet path'];
 
 describe('Analytics Search Migration', () => {
@@ -307,35 +277,6 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
-  it('analytics/facet/sortChange', async () => {
-    const action = executeSearch({
-      legacy: logFacetUpdateSort({
-        facetId: ANY_FACET_ID,
-        criterion: ANY_CRITERION,
-      }),
-      next: facetUpdateSort(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('history/analytics/forward', async () => {
-    const action = executeSearch({
-      legacy: logNavigateForward(),
-      next: historyForward(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
   it('analytics/facet/breadcrumb', async () => {
     const action = executeSearch({
       legacy: logFacetBreadcrumb({
@@ -368,19 +309,6 @@ describe('Analytics Search Migration', () => {
     assertNextEqualsLegacy(callSpy);
   });
 
-  it('history/analytics/backward', async () => {
-    const action = executeSearch({
-      legacy: logNavigateBackward(),
-      next: historyBackward(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
   it('analytics/facet/reset', async () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
@@ -398,19 +326,6 @@ describe('Analytics Search Migration', () => {
     const action = executeSearch({
       legacy: logFacetClearAll(ANY_FACET_ID),
       next: facetClearAll(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('history/analytics/noresultsback', async () => {
-    const action = executeSearch({
-      legacy: logNoResultsBack(),
-      next: noResultsBack(),
     });
 
     legacySearchEngine.dispatch(action);
@@ -533,68 +448,6 @@ describe('Analytics Search Migration', () => {
     const value = 'i like this expression';
     nextSearchBox.selectSuggestion(value);
     legacySearchBox.selectSuggestion(value);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/select', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterSelect({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-        staticFilterValue: ANY_STATIC_FILTER_VALUE,
-      }),
-      next: staticFilterSelect(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/deselect', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterDeselect({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-        staticFilterValue: ANY_STATIC_FILTER_VALUE,
-      }),
-      next: staticFilterDeselect(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/clearAll', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterClearAll({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-      }),
-      next: staticFilterClearAll(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/trigger/query/undo', async () => {
-    const action = executeSearch({
-      legacy: logUndoTriggerQuery({
-        undoneQuery: ANY_QUERY,
-      }),
-      next: undoTriggerQuery(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);
@@ -747,68 +600,6 @@ describe('Analytics Search Migration', () => {
     const value = 'i like this expression';
     nextSearchBox.selectSuggestion(value);
     legacySearchBox.selectSuggestion(value);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/select', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterSelect({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-        staticFilterValue: ANY_STATIC_FILTER_VALUE,
-      }),
-      next: staticFilterSelect(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/deselect', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterDeselect({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-        staticFilterValue: ANY_STATIC_FILTER_VALUE,
-      }),
-      next: staticFilterDeselect(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/staticFilter/clearAll', async () => {
-    const action = executeSearch({
-      legacy: logStaticFilterClearAll({
-        staticFilterId: ANY_STATIC_FILTER_ID,
-      }),
-      next: staticFilterClearAll(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
-    await clearMicrotaskQueue();
-
-    assertNextEqualsLegacy(callSpy);
-  });
-
-  it('analytics/trigger/query/undo', async () => {
-    const action = executeSearch({
-      legacy: logUndoTriggerQuery({
-        undoneQuery: ANY_QUERY,
-      }),
-      next: undoTriggerQuery(),
-    });
-
-    legacySearchEngine.dispatch(action);
-    nextSearchEngine.dispatch(action);
     await clearMicrotaskQueue();
 
     assertNextEqualsLegacy(callSpy);

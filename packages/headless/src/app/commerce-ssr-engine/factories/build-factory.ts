@@ -28,13 +28,14 @@ import {
  */
 export interface SSRCommerceEngine extends CommerceEngine {
   /**
-   * Waits for the search to be completed and returns a promise that resolves to a `SearchCompletedAction`.
+   * Waits for the request to be completed and returns a promise that resolves to an `Action`.
    */
   waitForRequestCompletedAction(): Promise<Action>[];
 }
 
 export type CommerceEngineDefinitionOptions<
-  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllers extends
+    ControllerDefinitionsMap<Controller> = ControllerDefinitionsMap<Controller>,
 > = EngineDefinitionOptions<CommerceEngineOptions, TControllers>;
 
 function isListingFetchCompletedAction(action: unknown): action is Action {

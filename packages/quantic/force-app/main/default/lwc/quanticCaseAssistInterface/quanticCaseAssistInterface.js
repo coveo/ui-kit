@@ -64,6 +64,14 @@ export default class QuanticCaseAssistInterface extends LightningElement {
                       ...(document.referrer && {
                         originLevel3: document.referrer.substring(0, 256),
                       }),
+                      analyticsClientMiddleware: (_event, payload) => {
+                        if (!payload.customData) {
+                          payload.customData = {};
+                        }
+                        payload.customData.coveoQuanticVersion =
+                          window.coveoQuanticVersion;
+                        return payload;
+                      },
                     },
                     ...rest,
                   },
