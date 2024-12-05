@@ -143,20 +143,22 @@ export class TabManagerBar {
 
   private updatePopoverTabs = () => {
     this.popoverTabs = this.overflowingTabs.map((tab) => (
-      <Button
-        part="popover-tab"
-        style="text-transparent"
-        class="truncate rounded px-4 py-2"
-        ariaLabel={tab.label}
-        title={tab.label}
-        onClick={() => {
-          tab.select();
-          this.updatePopoverTabs();
-          this.tabPopover?.togglePopover();
-        }}
-      >
-        {tab.label}
-      </Button>
+      <li>
+        <Button
+          part="popover-tab"
+          style="text-transparent"
+          class="w-full truncate rounded px-4 py-2"
+          ariaLabel={tab.label}
+          title={tab.label}
+          onClick={() => {
+            tab.select();
+            this.updatePopoverTabs();
+            this.tabPopover?.togglePopover();
+          }}
+        >
+          {tab.label}
+        </Button>
+      </li>
     ));
   };
 

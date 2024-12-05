@@ -3816,6 +3816,7 @@ export namespace Components {
     interface TabManagerBar {
     }
     interface TabPopover {
+        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
         "togglePopover": () => Promise<void>;
     }
