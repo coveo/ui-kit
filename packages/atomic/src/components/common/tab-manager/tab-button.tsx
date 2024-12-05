@@ -5,9 +5,9 @@ import {Button} from '../button';
  * @internal
  */
 @Component({
-  tag: 'tab-button',
+  tag: 'atomic-tab-button',
 })
-export class TabButton {
+export class AtomicTabButton {
   /**
    * The label to display on the tab button.
    */

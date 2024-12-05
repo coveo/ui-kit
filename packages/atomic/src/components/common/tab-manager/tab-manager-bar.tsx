@@ -6,11 +6,11 @@ import {TabCommonElement} from '../tabs/tab-common';
  * @internal
  */
 @Component({
-  tag: 'tab-manager-bar',
+  tag: 'atomic-tab-manager-bar',
   shadow: true,
   styleUrl: 'tab-manager-bar.pcss',
 })
-export class TabManagerBar {
+export class AtomicTabManagerBar {
   @Element() private host!: HTMLElement;
 
   @State()
