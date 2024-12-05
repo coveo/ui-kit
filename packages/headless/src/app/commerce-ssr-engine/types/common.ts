@@ -191,36 +191,47 @@ export type EngineDefinitionControllersPropsOption<
   >;
 };
 
+// TODO: add unit test to ensure the typing is correct
+type IsRecommendationController<
+  TController extends ControllerDefinition<Controller>,
+> = HasKey<TController, typeof recommendationInternalOptionKey>;
+
+type RecommendationControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  K extends keyof TControllers,
+> = {
+  [I in keyof TControllersPropsMap as I extends K
+    ? IsRecommendationController<TControllers[I]> extends never
+      ? never
+      : I
+    : never]?: TControllersPropsMap[I];
+} & {
+  [I in keyof TControllersPropsMap as I extends K
+    ? IsRecommendationController<TControllers[I]> extends never
+      ? I
+      : never
+    : never]: TControllersPropsMap[I];
+};
+
+type DefaultControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  K extends keyof TControllers,
+> = {
+  [I in keyof TControllersPropsMap as I extends K
+    ? I
+    : never]: TControllersPropsMap[I];
+};
+
 type ConditionalControllerProps<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
   TSolutionType extends SolutionType,
   K extends keyof TControllers,
 > = TSolutionType extends SolutionType.recommendation
-  ? {
-      [I in keyof TControllersPropsMap as I extends K
-        ? HasKey<
-            TControllers[I],
-            typeof recommendationInternalOptionKey
-          > extends never
-          ? never
-          : I
-        : never]?: TControllersPropsMap[I];
-    } & {
-      [I in keyof TControllersPropsMap as I extends K
-        ? HasKey<
-            TControllers[I],
-            typeof recommendationInternalOptionKey
-          > extends never
-          ? I
-          : never
-        : never]: TControllersPropsMap[I];
-    }
-  : {
-      [I in keyof TControllersPropsMap as I extends K
-        ? I
-        : never]: TControllersPropsMap[I];
-    };
+  ? RecommendationControllerProps<TControllers, TControllersPropsMap, K>
+  : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
 
 export interface ControllerDefinitionOption {
   /**
