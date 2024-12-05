@@ -26,7 +26,7 @@ const exampleAssignedElements = [exampleItemOne, exampleItemTwo];
 
 const selectors = {
   tabBarContainer: '.tab-bar_container',
-  tab: 'slot[name="tab-bar-item"]',
+  tab: 'slot[name="tabBarItem"]',
   dropdown: '.slds-dropdown',
 };
 
