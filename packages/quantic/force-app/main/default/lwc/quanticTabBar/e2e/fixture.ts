@@ -10,7 +10,9 @@ import {
 
 const tabBarUrl = 's/quantic-tab-bar';
 
-interface TabBarOptions {}
+interface TabBarOptions {
+  lightTheme: boolean;
+}
 
 type QuanticTabBarE2EFixtures = {
   tabBar: TabBarObject;
