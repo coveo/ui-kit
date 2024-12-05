@@ -5,6 +5,7 @@ import {
 } from '../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {RecommendationsDefinitionMeta} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../../controllers/controller/headless-controller.js';
+import {filterObject} from '../../../utils/utils.js';
 import {buildLogger} from '../../logger.js';
 import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
@@ -13,6 +14,7 @@ import {
   ControllerDefinitionsMap,
   EngineStaticState,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  RecommendationControllerSettings,
   recommendationInternalOptionKey,
   SolutionType,
 } from '../types/common.js';
@@ -36,8 +38,24 @@ export function fetchRecommendationStaticStateFactory<
 ): FetchStaticStateFunction<TControllerDefinitions> {
   const logger = buildLogger(options.loggerOptions);
 
+  const getAllowedRecommendationKeys = (
+    props: FetchStaticStateParameters<TControllerDefinitions>[0]
+  ): string[] => {
+    if (props && 'controllers' in props) {
+      const enabledRecommendationControllers = filterObject(
+        props.controllers as Record<string, RecommendationControllerSettings>,
+        (value) => Boolean(value.enabled)
+      );
+      return Object.keys(enabledRecommendationControllers);
+    }
+    return [];
+  };
+
   return composeFunction(
     async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
+      const [props] = params;
+      const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
+
       if (!options.navigatorContextProvider) {
         logger.warn(
           '[WARNING] Missing navigator context in server-side code. Make sure to set it with `setNavigatorContextProvider` before calling fetchStaticState()'
@@ -58,6 +76,7 @@ export function fetchRecommendationStaticStateFactory<
         options
       ).fromBuildResult({
         buildResult,
+        allowedRecommendationKeys,
       });
       return staticState;
     },
@@ -68,13 +87,14 @@ export function fetchRecommendationStaticStateFactory<
         const [
           {
             buildResult: {engine, controllers},
+            allowedRecommendationKeys,
           },
         ] = params;
 
         filterRecommendationControllers(
           controllers,
           controllerDefinitions ?? {}
-        ).refresh();
+        ).refresh(allowedRecommendationKeys);
 
         const searchActions = await Promise.all(
           engine.waitForRequestCompletedAction()
@@ -108,7 +128,7 @@ function filterRecommendationControllers<
   >(
     controllerDefinition: C
   ): controllerDefinition is C & RecommendationsDefinitionMeta => {
-    const isControllerRecommendationEnabled =
+    const isControllerRecommendation =
       'recommendation' in controllerDefinition &&
       controllerDefinition.recommendation === true;
 
@@ -119,7 +139,7 @@ function filterRecommendationControllers<
           recommendationInternalOptionKey
         ] as RecommendationsOptions);
 
-    return isControllerRecommendationEnabled && hasSlotId;
+    return isControllerRecommendation && hasSlotId;
   };
 
   const ensureSingleRecommendationPerSlot = (slotId: string) => {
@@ -153,8 +173,12 @@ function filterRecommendationControllers<
      * @param controllers - A record of all controllers where the key is the controller name and the value is the controller instance.
      * @param controllerNames - A list of all recommendation controllers to refresh
      */
-    refresh() {
-      const isRecommendationController = (key: string) => name.includes(key);
+    refresh(whitelist?: string[]) {
+      if (whitelist === undefined) {
+        return;
+      }
+      const isRecommendationController = (key: string) =>
+        name.includes(key) && whitelist.includes(key);
 
       for (const [key, controller] of Object.entries(controllers)) {
         if (isRecommendationController(key)) {

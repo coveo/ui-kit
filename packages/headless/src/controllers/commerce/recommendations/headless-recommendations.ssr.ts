@@ -47,8 +47,9 @@ export function defineRecommendations(
       engine,
       options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
+      const staticOptions = props.options;
       return buildRecommendations(engine, {
-        options: {slotId: props.options.slotId, ...options},
+        options: {...staticOptions, ...options},
       });
     },
   };

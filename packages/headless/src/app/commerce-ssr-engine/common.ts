@@ -81,12 +81,8 @@ export function buildControllerDefinitions<
         definition[solutionType as keyof typeof definition] === false);
 
     const props = propsMap?.[key as keyof typeof propsMap];
-    const isDisabled =
-      props && typeof props === 'object' && 'enabled' in props
-        ? props.enabled === false
-        : false;
 
-    if (unavailableInSolutionType() || isDisabled) {
+    if (unavailableInSolutionType()) {
       return null;
     }
 
