@@ -61,9 +61,8 @@ export default async function Listing({params}: {params: {category: string}}) {
     },
   });
 
-  const recsStaticState =
-    await // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    recommendationEngineDefinition.fetchStaticState({
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    {
       controllers: {
         popularBought: {
           enabled: true,
@@ -81,7 +80,8 @@ export default async function Listing({params}: {params: {category: string}}) {
           },
         },
       },
-    });
+    }
+  );
 
   return (
     <ListingProvider
