@@ -181,6 +181,17 @@ interface SearchAndListingController {
   [SolutionType.listing]: true;
 }
 
+interface ListingAndStandaloneController {
+  /**
+   * @internal
+   */
+  [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}
+
 export type SearchOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
 > = ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
@@ -189,6 +200,11 @@ export type SearchOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
+
+export type ListingAndStandaloneControllerWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> &
+  ListingAndStandaloneController;
 
 export type ListingOnlyControllerDefinitionWithoutProps<
   TController extends Controller,
