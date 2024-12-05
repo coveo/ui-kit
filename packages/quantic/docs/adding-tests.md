@@ -10,6 +10,8 @@ Let's say you just finished coding a `quantic-greeting` component, which display
 <!-- Which outputs: Hello Alex! -->
 ```
 
+**Note**: The following example assumes all steps are performed on a scratch org aliased as `Quantic__LWS_enabled`.
+
 ## Update the Quantic Examples Community
 
 Now, say that you wish to make this component available in the `Quantic Examples` community. Further, say you want to add end to end tests to prevent any regression. To achieve that, you want a community page containing your example component, and a configuration panel allowing users to modify the component's options. In this case, you want to test the `name` option.
@@ -99,7 +101,7 @@ Next, execute the following steps:
 1. Deploy the example components to your org.
 
    ```bash
-   npm run deploy:examples
+   npm run deploy:examples --target-org Quantic__LWS_enabled
    ```
 
 2. Open the community builder, then create a `Quantic Greeting` page and drop your `exampleQuanticGreeting` component into it. Don't forget to also update the community home page to add a link to your page.
@@ -107,13 +109,13 @@ Next, execute the following steps:
 3. Publish your changes and validate that everything works as expected.
 
    ```
-   sf community publish --target-org LWC --name "Quantic Examples"
+    sf community publish --target-org Quantic__LWS_enabled --name "Quantic Examples"
    ```
 
 It is now time to backup the changes you made to the community. Run:
 
 ```bash
-sf project retrieve start --target-org LWC --manifest quantic-examples-community/package.xml --output-dir temp --wait 10
+  sf project retrieve start --target-org Quantic__LWS_enabled --manifest quantic-examples-community/package.xml --output-dir temp --wait 10
 ```
 
 Executing this command will download the community metadata from your org and save it as `temp/unpackaged.zip`.

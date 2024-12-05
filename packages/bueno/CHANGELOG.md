@@ -1,3 +1,7 @@
+## <small>1.0.7 (2024-12-04)</small>
+
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+
 ## <small>1.0.6 (2024-11-13)</small>
 
 - fix(bueno): use URL constructor to parse url (#4644) ([e48646b](https://github.com/coveo/ui-kit/commits/e48646b)), closes [#4644](https://github.com/coveo/ui-kit/issues/4644)
