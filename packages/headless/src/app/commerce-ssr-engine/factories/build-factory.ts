@@ -126,6 +126,21 @@ function buildSSRCommerceEngine(
   };
 }
 
+function fetchActiveRecommendationControllers(
+  controllerProps: ControllersPropsMap,
+  solutionType: SolutionType
+): number {
+  return solutionType === SolutionType.recommendation
+    ? Object.values(controllerProps).filter(
+        (controller) =>
+          controller &&
+          typeof controller === 'object' &&
+          'enabled' in controller &&
+          controller.enabled
+      ).length
+    : 0;
+}
+
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
@@ -145,22 +160,15 @@ export const buildFactory =
         ? (buildOptions.controllers as ControllersPropsMap)
         : {};
 
-    const cleanedBuildOptions = Object.values(controllerProps).filter(
-      (controller) =>
-        controller &&
-        typeof controller === 'object' &&
-        'enabled' in controller &&
-        controller.enabled
-    );
+    const enabledRecommendationControllers =
+      fetchActiveRecommendationControllers(controllerProps, solutionType);
 
     const engine = buildSSRCommerceEngine(
       solutionType,
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(options)
         : options,
-      solutionType === SolutionType.recommendation
-        ? cleanedBuildOptions.length
-        : 0
+      enabledRecommendationControllers
     );
 
     const controllers = buildControllerDefinitions({
