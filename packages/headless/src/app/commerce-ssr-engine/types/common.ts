@@ -11,6 +11,8 @@ import type {
   OptionsTuple,
   ControllersPropsMap,
   HasKeys,
+  HasRequiredKeys,
+  HasOptionalKeys,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 
@@ -151,32 +153,74 @@ export type EngineDefinitionControllersPropsOption<
     TSolutionType
   > extends never
     ? never
-    : 'controllers']: TSolutionType extends SolutionType.recommendation
-    ? {
-        [I in keyof TControllersPropsMap as I extends K
-          ? HasKey<
-              TControllers[I],
-              typeof recommendationInternalOptionKey
-            > extends never
-            ? never
-            : I
-          : never]?: TControllersPropsMap[I];
-      } & {
-        [I in keyof TControllersPropsMap as I extends K
-          ? HasKey<
-              TControllers[I],
-              typeof recommendationInternalOptionKey
-            > extends never
-            ? I
-            : never
-          : never]: TControllersPropsMap[I];
-      }
-    : {
-        [I in keyof TControllersPropsMap as I extends K
-          ? I
-          : never]: TControllersPropsMap[I];
-      };
+    : HasOptionalKeys<
+          ConditionalControllerProps<
+            TControllers,
+            TControllersPropsMap,
+            TSolutionType,
+            K
+          >
+        > extends false
+      ? never
+      : 'controllers']?: ConditionalControllerProps<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType,
+    K
+  >;
+} & {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : HasRequiredKeys<
+          ConditionalControllerProps<
+            TControllers,
+            TControllersPropsMap,
+            TSolutionType,
+            K
+          >
+        > extends false
+      ? never
+      : 'controllers']: ConditionalControllerProps<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType,
+    K
+  >;
 };
+
+type ConditionalControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+  K extends keyof TControllers,
+> = TSolutionType extends SolutionType.recommendation
+  ? {
+      [I in keyof TControllersPropsMap as I extends K
+        ? HasKey<
+            TControllers[I],
+            typeof recommendationInternalOptionKey
+          > extends never
+          ? never
+          : I
+        : never]?: TControllersPropsMap[I];
+    } & {
+      [I in keyof TControllersPropsMap as I extends K
+        ? HasKey<
+            TControllers[I],
+            typeof recommendationInternalOptionKey
+          > extends never
+          ? I
+          : never
+        : never]: TControllersPropsMap[I];
+    }
+  : {
+      [I in keyof TControllersPropsMap as I extends K
+        ? I
+        : never]: TControllersPropsMap[I];
+    };
 
 export interface ControllerDefinitionOption {
   /**
