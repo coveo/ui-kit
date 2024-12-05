@@ -50,6 +50,8 @@ export default async function Listing({params}: {params: {category: string}}) {
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
+      popularBought: {}, // TODO:: KIT-3782: should not be required on listing engine definition
+      popularViewed: {}, // TODO:: KIT-3782: should not be required on listing engine definition
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
@@ -64,12 +66,8 @@ export default async function Listing({params}: {params: {category: string}}) {
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       controllers: {
-        popularBought: {
-          enabled: true,
-        },
-        popularViewed: {
-          enabled: true,
-        },
+        popularBought: {}, // TODO: KIT-3782: should be optional
+        popularViewed: {}, // TODO: KIT-3782: should be optional
         cart: {initialState: {items}},
         context: {
           language: defaultContext.language,
