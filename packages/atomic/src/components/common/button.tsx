@@ -9,6 +9,7 @@ import {
 export interface ButtonProps {
   style: ButtonStyle;
   onClick?(event?: MouseEvent): void;
+  onKeyDown?(event?: KeyboardEvent): void;
   class?: string;
   text?: string;
   part?: string;
@@ -64,6 +65,7 @@ export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
   return (
     <button
       {...attributes}
+      onKeyDown={(e) => props.onKeyDown?.(e)}
       onMouseDown={(e) => createRipple(e, {color: rippleColor})}
     >
       {props.text ? <span class="truncate">{props.text}</span> : null}
