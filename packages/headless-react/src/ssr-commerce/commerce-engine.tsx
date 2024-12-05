@@ -61,38 +61,46 @@ export function defineCommerceEngine<
     listingEngineDefinition: {
       ...listingEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as ListingContext
+        singletonContext as ListingContext,
+        SolutionType.listing
       ),
 
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as ListingContext
+        singletonContext as ListingContext,
+        SolutionType.listing
       ),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as SearchContext
+        singletonContext as SearchContext,
+        SolutionType.search
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as SearchContext
+        singletonContext as SearchContext,
+        SolutionType.search
       ),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as StandaloneContext
+        singletonContext as StandaloneContext,
+        SolutionType.standalone
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as StandaloneContext
+        singletonContext as StandaloneContext,
+        SolutionType.standalone
       ),
     },
     recommendationEngineDefinition: {
       ...recommendationEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as RecommendationContext
+        singletonContext as RecommendationContext,
+        SolutionType.recommendation
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as RecommendationContext
+        singletonContext as RecommendationContext,
+        SolutionType.recommendation
       ),
     },
   };
