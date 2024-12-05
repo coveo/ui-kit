@@ -27,8 +27,6 @@ export default async function Search() {
   const staticState = await searchEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
-      popularBought: {}, // TODO:: KIT-3782: should not be required on listing engine definition
-      popularViewed: {}, // TODO:: KIT-3782: should not be required on listing engine definition
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
@@ -43,8 +41,8 @@ export default async function Search() {
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       controllers: {
-        popularBought: {}, // TODO: KIT-3782: should be optional
-        popularViewed: {}, // TODO: KIT-3782: should be optional
+        popularBought: {enabled: true},
+        popularViewed: {enabled: true},
         cart: {initialState: {items}},
         context: {
           language: defaultContext.language,
