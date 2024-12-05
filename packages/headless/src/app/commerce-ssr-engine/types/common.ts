@@ -9,19 +9,19 @@ import type {
   EngineDefinitionBuildResult,
   HydratedState,
   OptionsTuple,
-  EngineDefinitionControllersPropsOption,
-  InferControllerPropsMapFromDefinitions,
+  ControllersPropsMap,
+  HasKeys,
+  HasRequiredKeys,
+  HasOptionalKeys,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 
 export type {
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
   InferControllerStaticStateFromController,
   InferControllerStaticStateMapFromControllers,
-  InferControllerPropsMapFromDefinitions,
 };
 
 export enum SolutionType {
@@ -111,6 +111,16 @@ export type InferControllerPropsFromDefinition<
         : RecommendationControllerSettings
       : unknown;
 
+export type InferControllerPropsMapFromDefinitions<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+> = {
+  [K in keyof TControllers as HasKeys<
+    InferControllerPropsFromDefinition<TControllers[K]>
+  > extends false
+    ? never
+    : K]: InferControllerPropsFromDefinition<TControllers[K]>;
+};
+
 export type InferControllerFromDefinition<
   TDefinition extends ControllerDefinition<Controller>,
 > =
@@ -144,6 +154,116 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
   >;
 };
 
+export type EngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = OptionalEngineDefinitionControllersPropsOption<
+  TControllers,
+  TControllersPropsMap,
+  TSolutionType
+> &
+  RequiredEngineDefinitionControllersPropsOption<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType
+  >;
+
+export type OptionalEngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : HasOptionalKeys<
+          ConditionalControllerProps<
+            TControllers,
+            TControllersPropsMap,
+            TSolutionType,
+            K
+          >
+        > extends false
+      ? never
+      : 'controllers']?: ConditionalControllerProps<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType,
+    K
+  >;
+};
+
+export type RequiredEngineDefinitionControllersPropsOption<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+> = {
+  [K in keyof TControllers as HasKey<
+    TControllers[K],
+    TSolutionType
+  > extends never
+    ? never
+    : HasRequiredKeys<
+          ConditionalControllerProps<
+            TControllers,
+            TControllersPropsMap,
+            TSolutionType,
+            K
+          >
+        > extends false
+      ? never
+      : 'controllers']: ConditionalControllerProps<
+    TControllers,
+    TControllersPropsMap,
+    TSolutionType,
+    K
+  >;
+};
+
+type IsRecommendationController<
+  TController extends ControllerDefinition<Controller>,
+> = HasKey<TController, typeof recommendationInternalOptionKey>;
+
+type RecommendationControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  K extends keyof TControllers,
+> = {
+  [I in keyof TControllersPropsMap as I extends K
+    ? IsRecommendationController<TControllers[I]> extends never
+      ? never
+      : I
+    : never]?: TControllersPropsMap[I];
+} & {
+  [I in keyof TControllersPropsMap as I extends K
+    ? IsRecommendationController<TControllers[I]> extends never
+      ? I
+      : never
+    : never]: TControllersPropsMap[I];
+};
+
+type DefaultControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  K extends keyof TControllers,
+> = {
+  [I in keyof TControllersPropsMap as I extends K
+    ? I
+    : never]: TControllersPropsMap[I];
+};
+
+type ConditionalControllerProps<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TControllersPropsMap extends ControllersPropsMap,
+  TSolutionType extends SolutionType,
+  K extends keyof TControllers,
+> = TSolutionType extends SolutionType.recommendation
+  ? RecommendationControllerProps<TControllers, TControllersPropsMap, K>
+  : DefaultControllerProps<TControllers, TControllersPropsMap, K>;
+
 export interface ControllerDefinitionOption {
   /**
    * Whether the controller will be used in a product listing context.
@@ -155,6 +275,21 @@ export interface ControllerDefinitionOption {
    * @defaultValue true
    */
   search?: boolean;
+}
+
+interface NonRecommendationController {
+  /**
+   * @internal
+   */
+  [SolutionType.search]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.listing]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
 }
 
 interface UniversalController {
@@ -170,6 +305,10 @@ interface UniversalController {
    * @internal
    */
   [SolutionType.standalone]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.recommendation]: true;
 }
 
 interface SearchOnlyController {
@@ -235,9 +374,19 @@ export type RecommendationOnlyControllerDefinitionWithProps<
 
 export type NonRecommendationControllerDefinitionWithoutProps<
   TController extends Controller,
-> = ControllerDefinitionWithoutProps<TController> & UniversalController;
+> = ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
 
 export type NonRecommendationControllerDefinitionWithProps<
+  TController extends Controller,
+  TProps,
+> = ControllerDefinitionWithProps<TController, TProps> &
+  NonRecommendationController;
+
+export type UniversalControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> & UniversalController;
+
+export type UniversalControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & UniversalController;

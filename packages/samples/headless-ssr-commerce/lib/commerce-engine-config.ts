@@ -40,6 +40,11 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
+    // popularBoughtDisabled: defineRecommendations({
+    //   options: {
+    //     slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+    //   },
+    // }),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
