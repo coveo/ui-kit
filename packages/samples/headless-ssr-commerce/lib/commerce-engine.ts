@@ -21,6 +21,7 @@ export const {
   usePagination,
   usePopularBought,
   usePopularViewed,
+  usePurchasedTogether,
   useProductView,
   useQueryTrigger,
   useRecentQueriesList,
