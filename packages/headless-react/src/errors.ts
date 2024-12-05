@@ -1,3 +1,4 @@
+import type {SolutionType} from '@coveo/headless/ssr-commerce';
 import {capitalize} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
@@ -9,10 +10,19 @@ export class MissingEngineProviderError extends Error {
 }
 
 export class UndefinedControllerError extends Error {
-  constructor(controllerName: string, solutionType: string) {
+  static createEngineSupportMessage(solutionTypes: SolutionType[]) {
+    const supportedEngineDefinitionList = solutionTypes.map(
+      (solutionType) => `${solutionType}EngineDefinition`
+    );
+    return `This component is only available in these engine definitions:\n${supportedEngineDefinitionList.map((def) => ` • ${def}`).join('\n')}`;
+  }
+
+  constructor(controllerName: string, solutionTypes: SolutionType[]) {
     super(
       [
-        `You're importing a component (use${capitalize(controllerName)}) that is not defined in the current "${solutionType}EngineDefinition" context.`,
+        `You're importing a component (use${capitalize(controllerName)}) that is not defined in the current engine definition`,
+        UndefinedControllerError.createEngineSupportMessage(solutionTypes),
+        '',
         'Ensure that the component is wrapped in the appropriate State Provider.',
         // 'Learn more: TODO: Add link to documentation on how to use hooks with providers',
       ].join('\n')

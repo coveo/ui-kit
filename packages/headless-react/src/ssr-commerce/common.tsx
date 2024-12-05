@@ -1,6 +1,7 @@
 import {
   Controller,
   ControllerDefinitionsMap,
+  ControllerDefinition,
   InferControllerFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
@@ -44,7 +45,8 @@ function buildControllerHook<
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
   >,
-  key: TKey
+  key: TKey,
+  controllerDefinition: ControllerDefinition<Controller>
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
     const ctx = useContext(singletonContext.get());
@@ -52,10 +54,19 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
+    const allSolutionTypes = Object.values(SolutionType);
+
+    const supportedSolutionTypes = allSolutionTypes.filter(
+      (solutionType) => controllerDefinition[solutionType] === true
+    );
+
     // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
     if (ctx.controllers[key as ControllerKey] === undefined) {
-      throw new UndefinedControllerError(key.toString(), ctx.solutionType);
+      throw new UndefinedControllerError(
+        key.toString(),
+        supportedSolutionTypes
+      );
     }
 
     const subscribe = useCallback(
@@ -96,9 +107,9 @@ export function buildControllerHooks<
   return (
     controllersMap
       ? Object.fromEntries(
-          Object.keys(controllersMap).map((key) => [
+          Object.entries(controllersMap).map(([key, controllerDefinition]) => [
             `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key),
+            buildControllerHook(singletonContext, key, controllerDefinition),
           ])
         )
       : {}
