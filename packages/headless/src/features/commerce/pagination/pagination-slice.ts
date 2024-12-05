@@ -144,6 +144,8 @@ function handleRestoreParameters(
 ) {
   if (action.payload.page) {
     state.principal.page = action.payload.page;
+  } else {
+    state.principal.page = getCommercePaginationInitialSlice().page;
   }
 
   if (action.payload.perPage) {

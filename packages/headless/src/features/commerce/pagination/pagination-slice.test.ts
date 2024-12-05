@@ -255,7 +255,7 @@ describe('pagination slice', () => {
       expect(finalState.principal.perPage).toBe(parameters.perPage);
     });
 
-    it('does not restore principal pagination when parameters are not defined', () => {
+    it('restores principal pagination page to initial state when page parameter is undefined', () => {
       const parameters = {
         page: undefined,
         perPage: undefined,
@@ -263,7 +263,20 @@ describe('pagination slice', () => {
 
       const finalState = paginationReducer(state, action(parameters));
 
-      expect(finalState.principal).toBe(state.principal);
+      expect(finalState.principal.page).toEqual(
+        getCommercePaginationInitialState().principal.page
+      );
+    });
+
+    it('does not restores principal pagination perPage when perPage parameter is undefined', () => {
+      const parameters = {
+        page: undefined,
+        perPage: undefined,
+      };
+
+      const finalState = paginationReducer(state, action(parameters));
+
+      expect(finalState.principal.perPage).toEqual(state.principal.perPage);
     });
   });
 
