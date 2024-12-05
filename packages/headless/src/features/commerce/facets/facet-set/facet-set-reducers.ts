@@ -30,7 +30,7 @@ export function restoreFromParameters(
     restoreRangeFacets(state, action.payload.nf, 'numericalRange');
   }
   if (action.payload.mnf) {
-    restoreRangeFacets(state, action.payload.mnf, 'numericalRange');
+    restoreManualRangeFacets(state, action.payload.mnf);
   }
   if (action.payload.df) {
     restoreRangeFacets(state, action.payload.df, 'dateRange');
@@ -93,6 +93,31 @@ function restoreRangeFacets<T extends NumericFacetRequest | DateFacetRequest>(
               return rangeValue as NumericRangeRequest;
           }
         }),
+      },
+    };
+  }
+}
+
+function restoreManualRangeFacets<T extends NumericFacetRequest>(
+  state: CommerceFacetSetState,
+  parameterFacets: Record<string, T['values']>
+) {
+  const entries = Object.entries(parameterFacets);
+  for (const [facetId, values] of entries) {
+    state[facetId] = {
+      request: {
+        ...restoreFacet(facetId),
+        type: 'numericalRange',
+        interval: 'continuous',
+        values: values.map(
+          (value) =>
+            ({
+              start: value.start,
+              end: value.end,
+              endInclusive: value.endInclusive,
+              ...restoreFacetValue(),
+            }) as NumericRangeRequest
+        ),
       },
     };
   }
