@@ -1,6 +1,7 @@
 import {SchemaValidationError} from '@coveo/bueno';
 import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../../features/commerce/parameters/parameters-schema.js';
+import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
 import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {buildRelevanceSortCriterion} from '../../../../features/sort/sort.js';
 import {buildMockCommerceState} from '../../../../test/mock-commerce-state.js';
@@ -55,6 +56,26 @@ describe('parameter manager', () => {
       expect(parameterManager).toBeTruthy();
     });
 
+    it('by default, does not load the commerceParameters reducer', () => {
+      expect(engine.addReducers).not.toHaveBeenCalledWith({
+        commerceParameters,
+      });
+    });
+
+    it('when excludeDefaultParameters is set to false, does not load the commerceParameters reducer', () => {
+      initParameterManager({excludeDefaultParameters: false});
+      expect(engine.addReducers).not.toHaveBeenCalledWith({
+        commerceParameters,
+      });
+    });
+
+    it('when excludeDefaultParameters is set to true, loads the commerceParameters reducer', () => {
+      initParameterManager({excludeDefaultParameters: true});
+      expect(engine.addReducers).toHaveBeenCalledWith({
+        commerceParameters,
+      });
+    });
+
     it('validates initial state against schema', () => {
       expect(() =>
         initParameterManager({
@@ -107,8 +128,10 @@ describe('parameter manager', () => {
   });
 
   describe('#state', () => {
-    it('contains #parameters', () => {
-      const parameters = {
+    let parameters: Parameters;
+
+    beforeEach(() => {
+      parameters = parameters = {
         nf: {
           rating: [
             {
@@ -139,8 +162,30 @@ describe('parameter manager', () => {
           category: ['electronics'],
         },
       };
+    });
+    it('by default, #parameters is populated by the activeParametersSelector passed as a prop', () => {
+      mockActiveParametersSelector.mockReturnValue(parameters);
+
+      expect(parameterManager.state.parameters).toEqual(parameters);
+    });
+
+    it('when excludeDefaultParameters is set to false, #parameters is populated by the activeParametersSelector passed as a prop', () => {
+      initParameterManager({
+        excludeDefaultParameters: false,
+      });
 
       mockActiveParametersSelector.mockReturnValue(parameters);
+
+      expect(parameterManager.state.parameters).toEqual(parameters);
+    });
+
+    it('when excludeDefaultParameters is set to true, #parameters is populated by the commerceParameters slice', () => {
+      initEngine({...buildMockCommerceState(), commerceParameters: parameters});
+      initParameterManager({
+        excludeDefaultParameters: true,
+      });
+
+      mockActiveParametersSelector.mockReturnValue({});
 
       expect(parameterManager.state.parameters).toEqual(parameters);
     });

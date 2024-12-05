@@ -36,6 +36,7 @@ export default function Search(props: ISearchProps) {
     const fragment = () => window.location.hash.slice(1);
     const urlManager = searchController.urlManager({
       initialState: {fragment: fragment()},
+      excludeDefaultParameters: true,
     });
 
     const onHashChange = () => {
@@ -43,6 +44,7 @@ export default function Search(props: ISearchProps) {
     };
 
     window.addEventListener('hashchange', onHashChange);
+
     const unsubscribeManager = urlManager.subscribe(() => {
       const hash = `#${urlManager.state.fragment}`;
 
@@ -75,25 +77,16 @@ export default function Search(props: ISearchProps) {
     const unsubscribe = bindUrlManager();
 
     if (
-      !searchController.state.isLoading &&
-      !searchController.state.responseId
+      !searchController.state.responseId &&
+      !searchController.state.isLoading
     ) {
       searchController.executeFirstSearch();
-      return;
-    }
-
-    if (!searchController.state.isLoading) {
+    } else if (!searchController.state.isLoading) {
       searchBoxController.submit();
     }
 
     return unsubscribe;
-  }, [
-    contextController,
-    url,
-    searchController,
-    bindUrlManager,
-    searchBoxController,
-  ]);
+  }, []);
 
   return (
     <div className="SearchPage">

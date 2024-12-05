@@ -10,6 +10,7 @@ import {
 } from '../../api/search/date/relative-date.js';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import {FacetValueState} from '../../ssr.index.js';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
 import {SearchParameters} from './search-parameter-actions.js';
 
@@ -145,7 +146,7 @@ export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
-function allEntriesAreValid(
+export function allEntriesAreValid(
   obj: object,
   isValidValue: (v: unknown) => boolean
 ) {
@@ -246,7 +247,10 @@ function processObjectValues(key: string, values: string[]) {
   return values;
 }
 
-export function buildNumericRanges(ranges: string[]) {
+export function buildNumericRanges(
+  ranges: string[],
+  state: FacetValueState = 'selected'
+) {
   return ranges
     .map((str) => {
       const {startAsString, endAsString, isEndInclusive} =
@@ -260,7 +264,7 @@ export function buildNumericRanges(ranges: string[]) {
     })
     .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
     .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state: 'selected', endInclusive})
+      buildNumericRange({start, end, state, endInclusive})
     );
 }
 
@@ -281,7 +285,10 @@ function isValidDateRangeValue(date: string) {
   }
 }
 
-export function buildDateRanges(ranges: string[]) {
+export function buildDateRanges(
+  ranges: string[],
+  state: FacetValueState = 'selected'
+) {
   return ranges
     .map((str) => {
       const {isEndInclusive, startAsString, endAsString} =
@@ -298,7 +305,7 @@ export function buildDateRanges(ranges: string[]) {
         isValidDateRangeValue(start) && isValidDateRangeValue(end)
     )
     .map(({start, end, endInclusive}) =>
-      buildDateRange({start, end, state: 'selected', endInclusive})
+      buildDateRange({start, end, state, endInclusive})
     );
 }
 

@@ -9,7 +9,7 @@ import {
   initialStateSchema,
   UrlManager,
   UrlManagerInitialState,
-  type UrlManagerProps,
+  type UrlManagerProps as BaseUrlManagerProps,
   UrlManagerState,
 } from '../../../url-manager/headless-url-manager.js';
 import {
@@ -18,11 +18,21 @@ import {
 } from '../parameter-manager/headless-core-parameter-manager.js';
 
 export type {
-  UrlManagerProps,
   UrlManager,
   UrlManagerInitialState,
   UrlManagerState,
+  BaseUrlManagerProps,
 };
+
+export interface UrlManagerProps extends BaseUrlManagerProps {
+  /**
+   * Whether the controller's state should exclude the default parameters returned by the Commerce API, and only include
+   * the parameters that were set explicitly set through dispatched actions.
+   *
+   * Defaults to `false`.
+   */
+  excludeDefaultParameters?: boolean;
+}
 
 interface CoreUrlManagerProps<T extends Parameters> extends UrlManagerProps {
   requestIdSelector: (state: CommerceEngine[typeof stateKey]) => string;
@@ -70,6 +80,7 @@ export function buildCoreUrlManager<T extends Parameters>(
     initialState: {
       parameters: props.serializer.deserialize(previousFragment),
     },
+    excludeDefaultParameters: props.excludeDefaultParameters ?? false,
   });
 
   return {

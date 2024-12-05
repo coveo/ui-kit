@@ -31,27 +31,34 @@ export default function Sort(props: ISortProps) {
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    controller.sortBy(JSON.parse(e.target.value));
+  };
+
+  const getValues = () => {
+    return state.availableSorts.map((sort) => {
+      return JSON.stringify(sort);
+    });
+  };
+
   return (
     <div className="Sort">
-      <label>
-        Sort by:{' '}
-        <select
-          name="sorts"
-          id="sorts-select"
-          value={JSON.stringify(state.appliedSort)}
-          onChange={(e) => controller.sortBy(JSON.parse(e.target.value))}
-        >
-          {state.availableSorts.map((sort, index) => (
-            <option
-              key={index}
-              value={JSON.stringify(sort)}
-              onSelect={() => controller.sortBy(sort)}
-            >
-              {getSortLabel(sort)}
-            </option>
-          ))}
-        </select>
-      </label>
+      <label htmlFor="sport-select">Sort by: </label>
+      <select
+        name="sorts"
+        id="sorts-select"
+        onChange={handleChange}
+        value={
+          JSON.stringify(state.appliedSort) ??
+          JSON.stringify({by: SortBy.Relevance})
+        }
+      >
+        {getValues().map((sort, index) => (
+          <option id="0" key={index} value={sort}>
+            {getSortLabel(JSON.parse(sort))}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

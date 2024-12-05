@@ -6,14 +6,13 @@ import {
 import {useState, useEffect} from 'react';
 import BreadcrumbManager from '../../breadcrumb-manager/breadcrumb-manager.js';
 import FacetGenerator from '../../facets/facet-generator/facet-generator.js';
+import Pagination from '../../pagination/pagination.js';
 import ProductList from '../../product-list/product-list.js';
 import ProductsPerPage from '../../products-per-page/products-per-page.js';
-import ShowMore from '../../show-more/show-more.js';
+//import ShowMore from '../../show-more/show-more.js';
 import Sort from '../../sort/sort.js';
 import Summary from '../../summary/summary.js';
 import './search-and-listing-interface.css';
-
-//import Pagination from './pagination/pagination';
 
 interface ISearchAndListingInterface {
   searchOrListingController: HeadlessSearch | ProductListing;
@@ -36,11 +35,14 @@ export default function SearchAndListingInterface(
     );
   }, [searchOrListingController]);
 
+  const summaryController = searchOrListingController.summary();
+  const paginationController = searchOrListingController.pagination();
+
   return (
     <div className="SearchAndListingInterface row">
       <div className="row">
         <Sort controller={searchOrListingController.sort()} />
-        <Summary controller={searchOrListingController.summary()} />
+        <Summary controller={summaryController} />
       </div>
       <div className="column small">
         <FacetGenerator
@@ -58,9 +60,12 @@ export default function SearchAndListingInterface(
           cartController={cartController}
           navigate={navigate}
         ></ProductList>
-        <ProductsPerPage controller={searchOrListingController.pagination()} />
-        <ShowMore controller={searchOrListingController.pagination()} />
-        {/*<Pagination controller={controller.pagination()} />*/}
+        <ProductsPerPage controller={paginationController} />
+        {/* <ShowMore
+          controller={paginationController}
+          summaryController={summaryController}
+        /> */}
+        <Pagination controller={paginationController} />
       </div>
     </div>
   );

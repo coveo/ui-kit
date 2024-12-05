@@ -85,6 +85,7 @@ export const paginationReducer = createReducer(
           return;
         }
 
+        slice.page = 0;
         slice.perPage = action.payload.pageSize;
       })
       .addCase(fetchProductListing.fulfilled, (state, action) => {
@@ -143,6 +144,8 @@ function handleRestoreParameters(
 ) {
   if (action.payload.page) {
     state.principal.page = action.payload.page;
+  } else {
+    state.principal.page = getCommercePaginationInitialSlice().page;
   }
 
   if (action.payload.perPage) {
