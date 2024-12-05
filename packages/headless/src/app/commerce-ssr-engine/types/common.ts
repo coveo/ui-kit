@@ -5,12 +5,12 @@ import type {
   HasKey,
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateFromController,
-  InferControllerPropsMapFromDefinitions,
   ControllerStaticStateMap,
   EngineDefinitionBuildResult,
-  EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
+  EngineDefinitionControllersPropsOption,
+  InferControllerPropsMapFromDefinitions,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 
@@ -30,6 +30,22 @@ export enum SolutionType {
   standalone = 'standalone',
   recommendation = 'recommendation',
 }
+
+const recommendationOptionKey = 'recommendation-internal-options';
+export const recommendationInternalOptionKey = Symbol.for(
+  recommendationOptionKey
+);
+
+export type RecommendationControllerSettings = {
+  /**
+   * Toggle to enable or disable the recommendation controller.
+   * When set to `true`, the controller will be built and will perform a recommendation request server-side.
+   * Otherwise, the controller will not be available in the client-side.
+   *
+   * @default false
+   */
+  enabled?: boolean;
+};
 
 export interface ControllerDefinitionWithoutProps<
   TController extends Controller,
@@ -83,9 +99,16 @@ export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > =
   TController extends ControllerDefinitionWithProps<Controller, infer Props>
-    ? Props
+    ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
+      ? Props
+      : Props & RecommendationControllerSettings
     : TController extends ControllerDefinitionWithoutProps<Controller>
-      ? {}
+      ? HasKey<
+          TController,
+          typeof recommendationInternalOptionKey
+        > extends never
+        ? {}
+        : RecommendationControllerSettings
       : unknown;
 
 export type InferControllerFromDefinition<
