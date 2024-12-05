@@ -56,28 +56,30 @@ export function defineParameterManager<
           throw loadReducerError;
         }
         return buildProductListing(engine).parameterManager({
-          excludeDefaultParameters: false,
-          ...props,
+          initialState: props.state ? props.state : props.initialState,
+          excludeDefaultParameters: true,
         });
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
         return buildSearch(engine).parameterManager({
-          excludeDefaultParameters: false,
-          ...props,
+          initialState: props.state ? props.state : props.initialState,
+          excludeDefaultParameters: true,
         });
       }
     },
   } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<typeof options>>,
+    ParameterManager<MappedParameterTypes<TOptions>>,
     TOptions,
-    SSRParameterManagerProps<MappedParameterTypes<typeof options>>
+    SSRParameterManagerProps<MappedParameterTypes<TOptions>>
   >;
 }
 
 export interface SSRParameterManagerProps<T extends Parameters>
-  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
+  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {
+  state?: ParameterManagerState<T>;
+}
 
 type MappedParameterTypes<
   TOptions extends ControllerDefinitionOption | undefined,
