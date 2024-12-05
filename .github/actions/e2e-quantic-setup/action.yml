@@ -14,7 +14,8 @@ runs:
       shell: bash
     - run: |
         echo "${{ inputs.jwtkey }}" > server.key
-        npx --no-install ts-node scripts/build/deploy-community.ts --ci
+        npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-disabled-scratch-def.json
+        npx --no-install ts-node scripts/build/deploy-community.ts --ci --scratch-org-def-path=./config/lws-enabled-scratch-def.json
         rm server.key
       shell: bash
       working-directory: ./packages/quantic
@@ -28,3 +29,7 @@ runs:
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+      with:
+        path: packages/quantic/.env
+        key: quantic-playwright-env-${{ github.sha }}

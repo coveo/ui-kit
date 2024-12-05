@@ -1,0 +1,20 @@
+name: 'Quantic Playwright E2E tests'
+description: 'Runs Playwright tests for Quantic'
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+      with:
+        path: packages/quantic/.env
+        key: quantic-playwright-env-${{ github.sha }}
+    - name: Run Playwright Tests
+      run: |
+        npx playwright install --with-deps
+        npx playwright test
+      shell: bash
+      working-directory: ./packages/quantic
+    - uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874 # v4
+      with:
+        name: quantic-playwright-report
+        path: packages/quantic/playwright-report
+        retention-days: 5
