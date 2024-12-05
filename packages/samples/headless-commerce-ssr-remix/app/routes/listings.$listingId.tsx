@@ -14,7 +14,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ProductList from '../components/product-list';
-import ListingProvider from '../components/providers/listing-provider';
+import {ListingProvider} from '../components/providers/providers';
 import {coveo_visitorId} from '../cookies.server';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
@@ -42,7 +42,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/browse/promotions/${params.listingId}`,
         },
       },
-      parameterManager: {initialState: {parameters: {}}},
+      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 

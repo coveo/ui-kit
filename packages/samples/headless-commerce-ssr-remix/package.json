@@ -1,5 +1,5 @@
 {
-  "name": "headless-commerce-ssr-remix",
+  "name": "@coveo/headless-commerce-ssr-remix-samples",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -11,21 +11,20 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.1.2",
-    "@remix-run/node": "^2.14.0",
-    "@remix-run/react": "^2.14.0",
-    "@remix-run/serve": "^2.14.0",
-    "isbot": "^4.1.0",
+    "@coveo/headless-react": "2.2.0",
+    "@remix-run/node": "^2.15.0",
+    "@remix-run/react": "^2.15.0",
+    "@remix-run/serve": "^2.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@coveo/relay-event-types": "12.4.2",
-    "@remix-run/dev": "^2.14.0",
+    "@remix-run/dev": "^2.15.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "autoprefixer": "^10.4.19",
-    "eslint": "8.57.0",
+    "eslint": "8.57.1",
     "typescript": "5.4.5",
     "vite-tsconfig-paths": "5.1.3"
   }

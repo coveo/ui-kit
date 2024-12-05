@@ -17,7 +17,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ProductView from '../components/product-view';
-import StandaloneProvider from '../components/providers/standalone-provider';
+import {StandaloneProvider} from '../components/providers/providers';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;
@@ -50,7 +50,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/products/${productId}`,
         },
       },
-      parameterManager: {initialState: {parameters: {}}},
+      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 

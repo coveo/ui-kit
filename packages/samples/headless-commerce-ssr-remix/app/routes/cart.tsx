@@ -13,7 +13,7 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import Cart from '../components/cart';
-import StandaloneProvider from '../components/providers/standalone-provider';
+import {StandaloneProvider} from '../components/providers/providers';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -42,7 +42,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/cart`,
         },
       },
-      parameterManager: {initialState: {parameters: {}}},
+      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 
