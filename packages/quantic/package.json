@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.9.0",
+  "version": "3.10.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -28,11 +28,15 @@
     "e2e:watch": "cypress open --browser chrome --e2e",
     "e2e": "cypress run --browser chrome",
     "e2e:detailed": "cypress run --browser chrome --headless --reporter cypress/reporters/detailed-reporter.js",
-    "scratch:create": "sf org create scratch --set-default --definition-file config/project-scratch-def.json --alias \"LWC\"",
-    "setup:examples": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts",
-    "deploy:main": "sf project deploy start --target-org LWC --source-dir force-app/main",
-    "deploy:examples": "sf project deploy start --target-org LWC --source-dir force-app/examples",
-    "scratch:dev": "npm run scratch:create && npm run deploy:main && npm run setup:examples",
+    "e2e:playwright": "npx playwright test",
+    "e2e:playwright:lws-enabled": "npx playwright test --project=LWS-enabled",
+    "e2e:playwright:lws-disabled": "npx playwright test --project=LWS-disabled",
+    "scratch:create": "sf org create scratch --set-default --definition-file config/lws-enabled-scratch-def.json --alias Quantic__LWS_enabled",
+    "setup:examples": "npm run create:lws-enabled && npm run create:lws-disabled",
+    "create:lws-enabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-enabled-scratch-def.json",
+    "create:lws-disabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
+    "deploy:main": "sf project deploy start --source-dir force-app/main --target-org",
+    "deploy:examples": "sf project deploy start --source-dir force-app/examples --target-org",
     "prebuild:doc": "mkdirp docs/out",
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
@@ -46,8 +50,8 @@
     "babel:headless": "babel ../../node_modules/@coveo/headless/dist/quantic --out-dir .tmp/quantic-compiled --extensions .js --minified"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.6",
-    "@coveo/headless": "3.10.0",
+    "@coveo/bueno": "1.0.7",
+    "@coveo/headless": "3.11.0",
     "dompurify": "3.2.0",
     "marked": "12.0.2",
     "fs-extra": "11.2.0"
@@ -58,7 +62,7 @@
   "devDependencies": {
     "@babel/cli": "7.25.9",
     "@babel/plugin-transform-async-to-generator": "7.25.9",
-    "@ckeditor/jsdoc-plugins": "39.9.1",
+    "@ckeditor/jsdoc-plugins": "43.0.1",
     "@coveo/relay-event-types": "12.0.1",
     "@coveo/release": "1.0.0",
     "@lwc/compiler": "5.3.0",
@@ -69,7 +73,7 @@
     "@salesforce/eslint-config-lwc": "3.6.0",
     "@salesforce/eslint-plugin-lightning": "1.0.0",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
-    "@types/node": "20.17.6",
+    "@types/node": "22.9.1",
     "@types/strip-color": "0.1.2",
     "@types/wait-on": "5.3.4",
     "chalk": "4.1.2",
@@ -88,7 +92,7 @@
     "prettier-plugin-apex": "2.2.2",
     "strip-color": "0.1.0",
     "ts-node": "10.9.2",
-    "wait-on": "7.2.0",
+    "wait-on": "8.0.1",
     "xml2js": "0.6.2"
   },
   "files": [
