@@ -1,15 +1,8 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
-import {
-  RecommendationProvider,
-  StandaloneProvider,
-} from '@/components/providers/providers';
-import PurchasedTogether from '@/components/recommendations/purchased-together';
+import {StandaloneProvider} from '@/components/providers/providers';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {
-  recommendationEngineDefinition,
-  standaloneEngineDefinition,
-} from '@/lib/commerce-engine';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -47,23 +40,6 @@ export default async function ProductDescriptionPage({
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    {
-      controllers: {
-        cart: {initialState: {items}},
-        purchasedTogether: {enabled: true, productId: params.productId},
-        context: {
-          language: defaultContext.language,
-          country: defaultContext.country,
-          currency: defaultContext.currency,
-          view: {
-            url: `https://sports.barca.group/products/${params.productId}`,
-          },
-        },
-      },
-    }
-  );
-
   const resolvedSearchParams = await searchParams;
   const price = Number(resolvedSearchParams.price) ?? NaN;
   const name = resolvedSearchParams.name ?? params.productId;
@@ -80,14 +56,6 @@ export default async function ProductDescriptionPage({
         {name} ({params.productId}) - ${price}
       </p>
       <br />
-      <div style={{flex: 4}}>
-        <RecommendationProvider
-          staticState={recsStaticState}
-          navigatorContext={navigatorContext.marshal}
-        >
-          <PurchasedTogether />
-        </RecommendationProvider>
-      </div>
     </StandaloneProvider>
   );
 }

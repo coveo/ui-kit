@@ -40,11 +40,6 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
-    purchasedTogether: defineRecommendations({
-      options: {
-        slotId: 'd8118c04-ff59-4f03-baca-2fc5f3b81221',
-      },
-    }),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
