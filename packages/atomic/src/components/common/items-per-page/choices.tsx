@@ -60,6 +60,7 @@ export const Choices: FunctionalComponent<ChoicesProps> = ({
             class="btn-page focus-visible:bg-neutral-light"
             part={parts.join(' ')}
             text={text}
+            selectWhenFocused={false}
           ></RadioButton>
         );
       })}
