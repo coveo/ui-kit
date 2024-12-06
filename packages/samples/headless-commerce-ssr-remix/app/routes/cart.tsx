@@ -1,6 +1,15 @@
+import Cart from '@/app/components/cart';
+import ContextDropdown from '@/app/components/context-dropdown';
+import {
+  RecommendationProvider,
+  StandaloneProvider,
+} from '@/app/components/providers/providers';
+import PopularBought from '@/app/components/recommendations/popular-bought';
 import externalCartAPI, {ExternalCartItem} from '@/client/external-cart-api';
 import externalContextAPI from '@/client/external-context-api';
 import {
+  recommendationEngineDefinition,
+  RecommendationStaticState,
   standaloneEngineDefinition,
   StandaloneStaticState,
 } from '@/lib/commerce-engine';
@@ -12,8 +21,6 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
-import Cart from '../components/cart';
-import {StandaloneProvider} from '../components/providers/providers';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -46,31 +53,53 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     },
   });
 
-  return {staticState, items, totalPrice, language, currency};
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    ['popularBoughtRecs', 'popularViewedRecs']
+  );
+
+  return {staticState, items, totalPrice, language, currency, recsStaticState};
 };
 
 export default function CartRoute() {
-  const {staticState, navigatorContext, items, totalPrice, language, currency} =
-    useLoaderData<{
-      staticState: StandaloneStaticState;
-      navigatorContext: NavigatorContext;
-      items: ExternalCartItem[];
-      totalPrice: number;
-      language: string;
-      currency: string;
-    }>();
+  const {
+    staticState,
+    navigatorContext,
+    items,
+    totalPrice,
+    language,
+    currency,
+    recsStaticState,
+  } = useLoaderData<{
+    staticState: StandaloneStaticState;
+    navigatorContext: NavigatorContext;
+    items: ExternalCartItem[];
+    totalPrice: number;
+    language: string;
+    currency: string;
+    recsStaticState: RecommendationStaticState;
+  }>();
   return (
     <StandaloneProvider
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
       <h2>Cart</h2>
-      <Cart
-        items={items}
-        totalPrice={totalPrice}
-        language={language}
-        currency={currency}
-      />
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <ContextDropdown />
+        {/*    <StandaloneSearchBox /> */}
+        <Cart
+          items={items}
+          totalPrice={totalPrice}
+          language={language}
+          currency={currency}
+        />
+        <RecommendationProvider
+          staticState={recsStaticState}
+          navigatorContext={navigatorContext}
+        >
+          <PopularBought />
+        </RecommendationProvider>
+      </div>
     </StandaloneProvider>
   );
 }
