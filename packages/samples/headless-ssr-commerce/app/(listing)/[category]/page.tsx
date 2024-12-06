@@ -4,6 +4,7 @@ import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
+import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
 import {
   ListingProvider,
@@ -20,6 +21,7 @@ import {
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
+import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {headers} from 'next/headers';
 import {notFound} from 'next/navigation';
 
@@ -30,7 +32,13 @@ const categoryList = ['surf-accessories', 'paddleboards', 'toys'];
  *
  * The Listing function is the entry point for server-side rendering (SSR).
  */
-export default async function Listing({params}: {params: {category: string}}) {
+export default async function Listing({
+  params,
+  searchParams,
+}: {
+  params: {category: string};
+  searchParams: Promise<URLSearchParams>;
+}) {
   const {category} = params;
 
   const matchedCategory = categoryList.find((c) => c === category);
@@ -42,6 +50,9 @@ export default async function Listing({params}: {params: {category: string}}) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+
+  const {deserialize} = buildParameterSerializer();
+  const parameters = deserialize(await searchParams);
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
@@ -58,6 +69,7 @@ export default async function Listing({params}: {params: {category: string}}) {
           url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
         },
       },
+      parameterManager: {initialState: {parameters}},
     },
   });
 
@@ -70,6 +82,7 @@ export default async function Listing({params}: {params: {category: string}}) {
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ParameterManager url={navigatorContext.location} />
       <ContextDropdown useCase="listing" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>

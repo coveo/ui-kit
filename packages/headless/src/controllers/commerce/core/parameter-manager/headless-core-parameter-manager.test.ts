@@ -76,21 +76,32 @@ describe('parameter manager', () => {
       });
     });
 
-    it('validates initial state against schema', () => {
-      expect(() =>
-        initParameterManager({
-          initialState: {parameters: {page: -1}},
-          parametersDefinition,
-        })
-      ).toThrow(SchemaValidationError);
-    });
-
-    it('dispatches #restoreActionCreator with initial parameters', () => {
-      initParameterManager({initialState: {parameters: {page: 2}}});
-
-      expect(mockRestoreActionCreator).toHaveBeenCalledWith({
-        page: 2,
+    describe('when an initial state is provided', () => {
+      it('validates initial state against schema', () => {
+        expect(() =>
+          initParameterManager({
+            initialState: {parameters: {page: -1}},
+            parametersDefinition,
+          })
+        ).toThrow(SchemaValidationError);
       });
+
+      it('dispatches #restoreActionCreator with initial parameters', () => {
+        initParameterManager({initialState: {parameters: {page: 2}}});
+
+        expect(mockRestoreActionCreator).toHaveBeenCalledWith({
+          page: 2,
+        });
+      });
+    });
+  });
+
+  describe('when an initial state is not provided', () => {
+    it('does not dispatch #restoreActionCreator', () => {
+      mockRestoreActionCreator.mockReset();
+      initParameterManager({initialState: undefined});
+
+      expect(mockRestoreActionCreator).not.toHaveBeenCalled();
     });
   });
 
@@ -99,6 +110,7 @@ describe('parameter manager', () => {
       it('does not dispatch any action', () => {
         mockRestoreActionCreator.mockReset();
 
+        mockActiveParametersSelector.mockReturnValue({page: 2});
         const parameters = {page: 2};
         parameterManager.synchronize(parameters);
 

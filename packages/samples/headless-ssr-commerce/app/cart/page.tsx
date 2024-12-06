@@ -35,6 +35,7 @@ export default async function Search() {
           url: 'https://sports.barca.group/cart',
         },
       },
+      parameterManager: {},
     },
   });
 

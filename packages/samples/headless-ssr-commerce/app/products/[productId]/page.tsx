@@ -33,6 +33,7 @@ export default async function ProductDescriptionPage({
           url: `https://sports.barca.group/products/${params.productId}`,
         },
       },
+      parameterManager: {},
     },
   });
 
