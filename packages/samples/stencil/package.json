@@ -18,7 +18,7 @@
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "cypress": "13.13.1",
     "cypress-repeat": "2.3.5",
-    "gts": "5.3.1",
+    "gts": "6.0.2",
     "rollup-plugin-html": "0.2.1"
   }
 }

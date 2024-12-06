@@ -18,7 +18,7 @@
     "cypress": "13.13.1",
     "cypress-repeat": "2.3.5",
     "eslint-plugin-react": "7.35.0",
-    "gts": "5.3.1",
+    "gts": "6.0.2",
     "ncp": "2.0.0",
     "style-loader": "4.0.0",
     "ts-loader": "9.5.1",
