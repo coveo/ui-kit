@@ -14,12 +14,33 @@ export class TabObject {
     return this.tab.locator('button.slds-tabs_default__item.tab_button');
   }
 
-  get activeTabButton(): Locator {
-    return this.tab.locator('button.slds-tabs_default__item.slds-is-active');
+  get activeTabLabel(): Locator {
+    return this.tab
+      .locator('button.slds-tabs_default__item.slds-is-active')
+      .locator('span.slds-tabs_default__link');
+  }
+
+  tabLabel(tabIndex: number): Promise<String | null> {
+    return this.tab
+      .locator('span.slds-tabs_default__link')
+      .nth(tabIndex)
+      .textContent();
   }
 
   async clickTabButton(tabIndex: number): Promise<void> {
     await this.tabButton.nth(tabIndex).click();
+  }
+
+  async pressTabThenEnter(): Promise<void> {
+    await this.page.keyboard.press('Tab');
+    await this.page.keyboard.press('Enter');
+  }
+
+  async pressShiftTabThenSpace(): Promise<void> {
+    await this.page.keyboard.down('Shift');
+    await this.page.keyboard.press('Tab');
+    await this.page.keyboard.up('Shift');
+    await this.page.keyboard.press('Space');
   }
 
   async waitForTabUaAnalytics(actionCause): Promise<Request> {

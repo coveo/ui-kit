@@ -31,8 +31,11 @@ export const testSearch = quanticBase.extend<QuanticTabE2ESearchFixtures>({
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
   },
-  tab: async ({page}, use) => {
+  tab: async ({page, options, configuration, search}, use) => {
     await page.goto(tabUrl);
+    configuration.configure(options);
+    await search.waitForSearchResponse();
+
     await use(new TabObject(page));
   },
 });
