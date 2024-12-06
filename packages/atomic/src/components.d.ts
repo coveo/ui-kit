@@ -3697,19 +3697,6 @@ export namespace Components {
         "label": string;
     }
     /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface AtomicText {
-        /**
-          * The count value used for plurals.
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
-    }
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -6066,15 +6053,6 @@ declare global {
         new (): HTMLAtomicTableElementElement;
     };
     /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
-    }
-    var HTMLAtomicTextElement: {
-        prototype: HTMLAtomicTextElement;
-        new (): HTMLAtomicTextElement;
-    };
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -6331,7 +6309,6 @@ declare global {
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
-        "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
         "follow-up-question-list-common": HTMLFollowUpQuestionListCommonElement;
@@ -9837,19 +9814,6 @@ declare namespace LocalJSX {
         "label": string;
     }
     /**
-     * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-     */
-    interface AtomicText {
-        /**
-          * The count value used for plurals.
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
-    }
-    /**
      * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
      * A timeframe is a span of time from now to a specific time in the past.
      */
@@ -10154,7 +10118,6 @@ declare namespace LocalJSX {
         "atomic-tab": AtomicTab;
         "atomic-tab-manager": AtomicTabManager;
         "atomic-table-element": AtomicTableElement;
-        "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
         "follow-up-question-list-common": FollowUpQuestionListCommon;
@@ -11032,10 +10995,6 @@ declare module "@stencil/core" {
              * The `atomic-table-element` element defines a table column in a result list.
              */
             "atomic-table-element": LocalJSX.AtomicTableElement & JSXBase.HTMLAttributes<HTMLAtomicTableElementElement>;
-            /**
-             * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
-             */
-            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             /**
              * The `atomic-timeframe` component defines a timeframe of an `atomic-timeframe-facet`, and therefore must be defined within an `atomic-timeframe-facet` component.
              * A timeframe is a span of time from now to a specific time in the past.

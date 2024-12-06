@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
@@ -90,6 +90,5 @@ export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSo
 export const AtomicSortExpression = /*@__PURE__*/createReactComponent<JSX.AtomicSortExpression, HTMLAtomicSortExpressionElement>('atomic-sort-expression');
 export const AtomicTabManager = /*@__PURE__*/createReactComponent<JSX.AtomicTabManager, HTMLAtomicTabManagerElement>('atomic-tab-manager');
 export const AtomicTableElement = /*@__PURE__*/createReactComponent<JSX.AtomicTableElement, HTMLAtomicTableElementElement>('atomic-table-element');
-export const AtomicText = /*@__PURE__*/createReactComponent<JSX.AtomicText, HTMLAtomicTextElement>('atomic-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
 export const AtomicTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframeFacet, HTMLAtomicTimeframeFacetElement>('atomic-timeframe-facet');

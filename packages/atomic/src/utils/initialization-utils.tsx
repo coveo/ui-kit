@@ -10,6 +10,10 @@ import {Hidden} from '../components/common/hidden';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
+import {
+  MissingInterfaceParentError,
+  InitializeEventHandler,
+} from './initialization-lit-utils';
 import {closest} from './utils';
 
 declare global {
@@ -18,7 +22,6 @@ declare global {
   }
 }
 
-export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export const initializeEventName = 'atomic/initializeComponent';
 const initializableElements = [
@@ -52,15 +55,10 @@ export function initializeBindings<
   });
 }
 
-export class MissingInterfaceParentError extends Error {
-  constructor(elementName: string) {
-    super(
-      `The "${elementName}" element must be the child of the following elements: ${initializableElements.join(
-        ', '
-      )}`
-    );
-  }
-}
+export {
+  MissingInterfaceParentError,
+  InitializeEventHandler,
+} from './initialization-lit-utils';
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.

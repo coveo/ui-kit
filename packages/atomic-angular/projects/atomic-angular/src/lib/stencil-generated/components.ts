@@ -3019,28 +3019,6 @@ export declare interface AtomicTableElement extends Components.AtomicTableElemen
 
 
 @ProxyCmp({
-  inputs: ['count', 'value']
-})
-@Component({
-  selector: 'atomic-text',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'value'],
-})
-export class AtomicText {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicText extends Components.AtomicText {}
-
-
-@ProxyCmp({
   inputs: ['amount', 'label', 'period', 'unit']
 })
 @Component({
