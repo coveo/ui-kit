@@ -3,10 +3,12 @@ import {
   initializeWithHeadless,
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
+import closeNotification from '@salesforce/label/c.quantic_CloseNotification';
 import {AriaLiveRegion} from 'c/quanticUtils';
 import {LightningElement, api} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").NotifyTrigger} NotifyTrigger */
 /** @typedef {import("coveo").NotifyTriggerState} NotifyTriggerState */
 
@@ -33,6 +35,18 @@ export default class QuanticNotifications extends LightningElement {
   hasInitializationError = false;
   /** @type {import('c/quanticUtils').AriaLiveUtils} */
   ariaLiveNotificationsRegion;
+  /** @type {Array} */
+  notifications = [];
+  /** @type {Function} */
+  unsubscribe;
+  /** @type {Function} */
+  unsubscribeSearchStatus;
+  /** @type {SearchStatus} */
+  searchStatus;
+
+  labels = {
+    closeNotification,
+  };
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -48,16 +62,22 @@ export default class QuanticNotifications extends LightningElement {
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
     this.notifyTrigger = this.headless.buildNotifyTrigger(engine);
+    this.searchStatus = this.headless.buildSearchStatus(engine);
     this.ariaLiveNotificationsRegion = AriaLiveRegion('notifications', this);
     this.unsubscribe = this.notifyTrigger.subscribe(() => this.updateState());
+    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+      this.handleSearchStatusChange()
+    );
   };
 
   disconnectedCallback() {
     this.unsubscribe?.();
+    this.unsubscribeSearchStatus?.();
   }
 
   updateState() {
-    this.notifyTriggerState = this.notifyTrigger.state;
+    this.notifyTriggerState = this.notifyTrigger?.state;
+
     this.ariaLiveNotificationsRegion.dispatchMessage(
       this.notifyTriggerState?.notifications.reduce(
         (value, notification, index) => {
@@ -68,13 +88,30 @@ export default class QuanticNotifications extends LightningElement {
     );
   }
 
-  get notifications() {
-    return (
-      this.notifyTriggerState?.notifications.map((notification, index) => ({
-        value: notification,
-        id: index,
-      })) ?? []
-    );
+  handleSearchStatusChange() {
+    if (
+      this.searchStatus?.state?.isLoading ||
+      this.searchStatus?.state?.hasError
+    ) {
+      this.notifications = [];
+    } else {
+      this.notifications =
+        this.notifyTrigger?.state?.notifications.map((notification, index) => ({
+          value: notification,
+          id: index,
+          visible: true,
+        })) ?? [];
+    }
+  }
+
+  handleNotificationClose(event) {
+    const currentNotificationId = event.currentTarget.dataset.id;
+    this.notifications = this.notifications.map((notification) => {
+      if (notification.id.toString() === currentNotificationId) {
+        return {...notification, visible: false};
+      }
+      return notification;
+    });
   }
 
   /**
