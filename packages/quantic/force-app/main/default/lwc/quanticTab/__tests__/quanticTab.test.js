@@ -22,6 +22,7 @@ const defaultOptions = {
 
 const selectors = {
   initializationError: 'c-quantic-component-error',
+  tabButton: 'button',
 };
 
 const mockSearchStatusState = {
@@ -183,7 +184,7 @@ describe('c-quantic-tab', () => {
       simulateSearchStatusUpdate();
       await flushPromises();
 
-      const tab = element.shadowRoot.querySelector('button');
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
       tab.click();
       await flushPromises();
 
@@ -205,7 +206,7 @@ describe('c-quantic-tab', () => {
       simulateSearchStatusUpdate();
       await flushPromises();
 
-      const tab = element.shadowRoot.querySelector('button');
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
       tab.click();
       await flushPromises();
 
