@@ -21,11 +21,10 @@ export default function StandaloneSearchBox() {
 
   const navigate = useNavigate();
 
-  // Update the navigation in useEffect
   useEffect(() => {
     if (state.redirectTo === '/search') {
       const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
-      navigate(url, {preventScrollReset: true}); // equivalent to Next.js's scroll: false
+      navigate(url, {preventScrollReset: true});
       methods?.afterRedirection();
     }
   }, [state.redirectTo, state.value, navigate, methods]);
