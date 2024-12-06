@@ -5,6 +5,7 @@ import {
   StandaloneProvider,
 } from '@/app/components/providers/providers';
 import PopularBought from '@/app/components/recommendations/popular-bought';
+import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
@@ -87,7 +88,7 @@ export default function CartRoute() {
       <h2>Cart</h2>
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <ContextDropdown />
-        {/*    <StandaloneSearchBox /> */}
+        <StandaloneSearchBox />
         <Cart
           items={items}
           totalPrice={totalPrice}
