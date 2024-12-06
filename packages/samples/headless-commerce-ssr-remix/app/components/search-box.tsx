@@ -3,32 +3,20 @@
 import {
   useInstantProducts,
   useRecentQueriesList,
-  useStandaloneSearchBox,
+  useSearchBox,
 } from '@/lib/commerce-engine';
-import {useNavigate} from '@remix-run/react';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-export default function StandaloneSearchBox() {
-  const {state, methods} = useStandaloneSearchBox();
+export default function SearchBox() {
+  const {state, methods} = useSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
-
-  const navigate = useNavigate();
-
-  // Update the navigation in useEffect
-  useEffect(() => {
-    if (state.redirectTo === '/search') {
-      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
-      navigate(url, {preventScrollReset: true}); // equivalent to Next.js's scroll: false
-      methods?.afterRedirection();
-    }
-  }, [state.redirectTo, state.value, navigate, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -62,7 +50,7 @@ export default function StandaloneSearchBox() {
           <button onClick={methods?.clear}>X</button>
         </span>
       )}
-      <button onClick={() => methods?.submit()}>Search</button>
+      <button onClick={methods?.submit}>Search</button>
 
       {isInputFocused && (
         <>
