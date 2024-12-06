@@ -1,3 +1,12 @@
+import BreadcrumbManager from '@/app/components/breadcrumb-manager';
+import ContextDropdown from '@/app/components/context-dropdown';
+import FacetGenerator from '@/app/components/facets/facet-generator';
+import ProductList from '@/app/components/product-list';
+import {SearchProvider} from '@/app/components/providers/providers';
+import SearchBox from '@/app/components/search-box';
+import ShowMore from '@/app/components/show-more';
+import Summary from '@/app/components/summary';
+import Triggers from '@/app/components/triggers/triggers';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
 import {searchEngineDefinition, SearchStaticState} from '@/lib/commerce-engine';
@@ -9,8 +18,6 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
-import ProductList from '../components/product-list';
-import {SearchProvider} from '../components/providers/providers';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -52,7 +59,25 @@ export default function SearchRoute() {
       navigatorContext={navigatorContext}
     >
       <h2>Search</h2>
-      <ProductList />
+      <ContextDropdown useCase="search" />
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div style={{flex: 1}}>
+          <FacetGenerator />
+        </div>
+        <div style={{flex: 2}}>
+          <Triggers />
+          <SearchBox />
+          <BreadcrumbManager />
+          <Summary />
+          <ProductList />
+          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+          {/* <Pagination
+          staticState={staticState.controllers.pagination.state}
+          controller={hydratedState?.controllers.pagination}
+        ></Pagination> */}
+          <ShowMore />
+        </div>
+      </div>
     </SearchProvider>
   );
 }
