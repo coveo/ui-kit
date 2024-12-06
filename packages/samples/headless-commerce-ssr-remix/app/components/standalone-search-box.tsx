@@ -20,7 +20,7 @@ export default function StandaloneSearchBox() {
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
 
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (state.redirectTo === '/search') {
       const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;

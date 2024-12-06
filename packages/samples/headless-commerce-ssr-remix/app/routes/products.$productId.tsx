@@ -1,3 +1,7 @@
+import ContextDropdown from '@/app/components/context-dropdown';
+import ProductView from '@/app/components/product-view';
+import {StandaloneProvider} from '@/app/components/providers/providers';
+import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartAPI, {ExternalCartItem} from '@/client/external-cart-api';
 import externalCatalogAPI, {
   ExternalCatalogItem,
@@ -16,8 +20,6 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import ProductView from '../components/product-view';
-import {StandaloneProvider} from '../components/providers/providers';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;
@@ -89,6 +91,8 @@ export default function ProductRoute() {
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
+      <ContextDropdown />
+      <StandaloneSearchBox />
       <ProductView
         catalogItem={catalogItem}
         cartItem={cartItem}
