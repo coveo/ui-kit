@@ -150,3 +150,9 @@ function SetRenderedAttribute<Component extends LitElementWithBindings>(): (
     return descriptor;
   };
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-text': AtomicText;
+  }
+}
