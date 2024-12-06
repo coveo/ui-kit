@@ -1,12 +1,12 @@
 import {TabBarObject} from './tabBarObject';
-import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
-import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
+import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
+import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
+import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
 const tabBarUrl = 's/quantic-tab-bar';
 
@@ -24,7 +24,7 @@ type QuanticTabBarE2ESearchFixtures = QuanticTabBarE2EFixtures & {
   urlHash: string;
 };
 
-type QuanticTabBarE2EInsightFixtures = QuanticTabBarE2EFixtures & {
+type QuanticTabBarE2EInsightFixtures = QuanticTabBarE2ESearchFixtures & {
   insightSetup: InsightSetupObject;
 };
 

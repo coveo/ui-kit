@@ -22,7 +22,7 @@ type QuanticTabE2ESearchFixtures = QuanticTabE2EFixtures & {
   urlHash: string;
 };
 
-type QuanticTabE2EInsightFixtures = QuanticTabE2EFixtures & {
+type QuanticTabE2EInsightFixtures = QuanticTabE2ESearchFixtures & {
   insightSetup: InsightSetupObject;
 };
 
