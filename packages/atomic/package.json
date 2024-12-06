@@ -38,7 +38,8 @@
     "./components/atomic-text": {
       "types": "./dist/components/components/search/atomic-text/atomic-text.d.ts",
       "import": "./dist/components/components/search/atomic-text/atomic-text.js"
-    }
+    },
+    "./custom-elements-manifest": "./custom-elements.json"
   },
   "files": [
     "dist/",

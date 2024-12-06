@@ -1,0 +1,57 @@
+import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
+import { createWriteStream, readFileSync, writeFileSync } from 'fs';
+
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
+
+const atomicAngularModuleFilePath ='projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
+const atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
+const atomicAngularComponentFileStream = createWriteStream('projects/atomic-angular/src/lib/stencil-generated/components.ts', {flags: 'a'});
+const litDeclarations = [];
+
+
+const declarationToProxyCmp = (declaration) =>
+`
+@ProxyCmp({
+  inputs: [${declaration.attributes.map(attr => `'${attr.name}'`).join(', ')}]
+})
+@Component({
+  selector: '${declaration.tagName}',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [${declaration.attributes.map(attr => `'${attr.name}'`).join(', ')}]
+})
+export class ${declaration.name} {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+  }
+}
+
+import {${declaration.name} as Lit${declaration.name}} from '@coveo/atomic/components/${declaration.tagName}';
+
+export declare interface ${declaration.name} extends Lit${declaration.name} {}
+`
+
+
+for (const module of cem.modules) {
+  for (const declaration of module.declarations) {
+    console.log(`Declaration: ${declaration.name}`);
+    if (isLitDeclaration(declaration)) {
+      console.log(`Found LitElement: ${declaration.name}`);
+      atomicAngularComponentFileStream.write(declarationToProxyCmp(declaration));
+      litDeclarations.push(`${declaration.name}`);
+    }
+  }
+}
+atomicAngularComponentFileStream.end();
+
+
+
+writeFileSync(
+  atomicAngularModuleFilePath,
+  atomicAngularModuleFileContent
+    .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${litDeclarations.join(',\n')},\n`)
+    .replace(/^import \{$/m, `import {\n${litDeclarations.join(',\n')},`)
+);

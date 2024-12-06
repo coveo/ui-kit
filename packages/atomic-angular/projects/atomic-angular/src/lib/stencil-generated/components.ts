@@ -3062,3 +3062,25 @@ export class AtomicTimeframeFacet {
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
 
+
+@ProxyCmp({
+  inputs: ['value', 'count']
+})
+@Component({
+  selector: 'atomic-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['value', 'count']
+})
+export class AtomicText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+  }
+}
+
+import {AtomicText as LitAtomicText} from '@coveo/atomic/components/atomic-text';
+
+export declare interface AtomicText extends LitAtomicText {}
