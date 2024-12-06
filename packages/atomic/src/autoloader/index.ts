@@ -1,12 +1,3 @@
-const observer = new MutationObserver((mutations) => {
-  for (const {addedNodes} of mutations) {
-    for (const node of addedNodes) {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        discover(node as Element);
-      }
-    }
-  }
-});
 /**
  * Checks a node for undefined elements and attempts to register them.
  */
@@ -25,6 +16,7 @@ export async function discover(root: Element | ShadowRoot) {
   await Promise.allSettled(tagsToRegister.map((tagName) => register(tagName)));
   customElements.upgrade(root);
 }
+
 /**
  * Registers an element by tag name.
  */
@@ -56,8 +48,20 @@ function register(tagName: string) {
       })
   );
 }
-// Initial discovery
-discover(document.body);
-// Listen for new undefined elements
-observer.observe(document.documentElement, {subtree: true, childList: true});
-//# sourceMappingURL=index.js.map
+
+if (typeof window !== 'undefined') {
+  const observer = new MutationObserver((mutations) => {
+    for (const {addedNodes} of mutations) {
+      for (const node of addedNodes) {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          discover(node as Element);
+        }
+      }
+    }
+  });
+  // Initial discovery
+  discover(document.body);
+  // Listen for new undefined elements
+  observer.observe(document.documentElement, {subtree: true, childList: true});
+  //# sourceMappingURL=index.js.map
+}
