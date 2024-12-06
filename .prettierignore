@@ -25,3 +25,4 @@ packages/samples/headless-react/build/**/*
 packages/samples/angular/src/lang/*.json
 packages/samples/vuejs/public/lang/*.json
 .deployment.config.json
+packages/atomic-angular/scripts/build-lit.mjs
