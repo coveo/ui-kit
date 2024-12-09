@@ -78,29 +78,28 @@ export default class QuanticNotifications extends LightningElement {
   updateState() {
     this.notifyTriggerState = this.notifyTrigger?.state;
 
-    this.ariaLiveNotificationsRegion.dispatchMessage(
-      this.notifyTriggerState?.notifications.reduce(
-        (value, notification, index) => {
-          return `${value} Notification ${index + 1}: ${notification}`;
-        },
-        ''
-      )
-    );
+    this.notifications =
+      this.notifyTrigger?.state?.notifications.map((notification, index) => ({
+        value: notification,
+        id: index,
+        visible: true,
+      })) ?? [];
+
+    this.dispatchAriaLiveNotificationsRegionMessage();
   }
 
   handleSearchStatusChange() {
-    if (
-      this.searchStatus?.state?.isLoading ||
-      this.searchStatus?.state?.hasError
-    ) {
-      this.notifications = [];
-    } else {
-      this.notifications =
-        this.notifyTrigger?.state?.notifications.map((notification, index) => ({
-          value: notification,
-          id: index,
-          visible: true,
-        })) ?? [];
+    if (!this.searchStatus?.state.isLoading) {
+      if (this.searchStatus?.state?.hasError) {
+        this.notifications = [];
+      } else {
+        this.notifications =
+          this.notifications?.map((notification) => ({
+            ...notification,
+            visible: true,
+          })) ?? [];
+        this.dispatchAriaLiveNotificationsRegionMessage();
+      }
     }
   }
 
@@ -112,6 +111,17 @@ export default class QuanticNotifications extends LightningElement {
       }
       return notification;
     });
+  }
+
+  dispatchAriaLiveNotificationsRegionMessage() {
+    this.ariaLiveNotificationsRegion.dispatchMessage(
+      this.notifyTriggerState?.notifications.reduce(
+        (value, notification, index) => {
+          return `${value} Notification ${index + 1}: ${notification}`;
+        },
+        ''
+      )
+    );
   }
 
   /**

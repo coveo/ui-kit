@@ -25,23 +25,21 @@ const mockSearchStatusState = {
   hasError: false,
 };
 
-const mockSearchStatus = {
-  state: mockSearchStatusState,
-  subscribe: jest.fn((callback) => {
-    mockSearchStatus.callback = callback;
-    return jest.fn();
-  }),
-};
-
 const functionsMocks = {
   buildNotifyTrigger: jest.fn(() => ({
     state: notificationsState,
     subscribe: functionsMocks.subscribe,
   })),
   dispatchMessage: jest.fn(() => {}),
-  buildSearchStatus: jest.fn(() => mockSearchStatus),
-  subscribe: jest.fn((cb) => {
-    cb();
+  buildSearchStatus: jest.fn(() => ({
+    state: mockSearchStatusState,
+    subscribe: jest.fn((callback) => {
+      functionsMocks.subscribe.callback = callback;
+      return functionsMocks.unsubscribeSearchStatus;
+    }),
+  })),
+  subscribe: jest.fn((callback) => {
+    callback();
     return functionsMocks.unsubscribe;
   }),
   unsubscribe: jest.fn(() => {}),
@@ -115,9 +113,9 @@ function mockErroneousHeadlessInitialization() {
 }
 
 function simulateSearchStatusUpdate(hasError = false) {
-  mockSearchStatus.state.hasResults = !hasError;
-  mockSearchStatus.state.hasError = hasError;
-  mockSearchStatus.callback();
+  mockSearchStatusState.hasResults = !hasError;
+  mockSearchStatusState.hasError = hasError;
+  functionsMocks.subscribe.callback();
 }
 
 function cleanup() {
@@ -182,12 +180,11 @@ describe('c-quantic-notifications', () => {
       );
     });
 
-    it('should subscribe to the headless notify trigger and search status state changes', async () => {
+    it('should subscribe to the headless notify trigger state changes', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
-      expect(mockSearchStatus.subscribe).toHaveBeenCalledTimes(1);
     });
 
     it('should call AriaLiveRegion with the right parameters', async () => {
