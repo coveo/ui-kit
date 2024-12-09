@@ -112,12 +112,6 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-function simulateSearchStatusUpdate(hasError = false) {
-  mockSearchStatusState.hasResults = !hasError;
-  mockSearchStatusState.hasError = hasError;
-  functionsMocks.subscribe.callback();
-}
-
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -203,7 +197,6 @@ describe('c-quantic-notifications', () => {
     describe('when some notifications are present in the state', () => {
       it('should render the notifications component', async () => {
         const element = createTestComponent();
-        simulateSearchStatusUpdate();
         await flushPromises();
 
         const notifications = element.shadowRoot.querySelectorAll(
@@ -253,7 +246,8 @@ describe('c-quantic-notifications', () => {
     describe('when there is an error following a search', () => {
       it('should not render the notifications component', async () => {
         const element = createTestComponent();
-        simulateSearchStatusUpdate(true);
+        mockSearchStatusState.hasError = true;
+        functionsMocks.subscribe.callback();
         await flushPromises();
 
         const notifications = element.shadowRoot.querySelectorAll(
@@ -268,7 +262,6 @@ describe('c-quantic-notifications', () => {
   describe('when clicking on a notification close button', () => {
     it('should properly dismiss that notification', async () => {
       const element = createTestComponent();
-      simulateSearchStatusUpdate();
       await flushPromises();
 
       const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
@@ -297,7 +290,6 @@ describe('c-quantic-notifications', () => {
     describe('when triggering another search with the same query', () => {
       it('should reset the visibility of the notifications', async () => {
         const element = createTestComponent();
-        simulateSearchStatusUpdate();
         await flushPromises();
 
         const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
@@ -323,7 +315,8 @@ describe('c-quantic-notifications', () => {
           exampleNotifications.length - 1
         );
 
-        simulateSearchStatusUpdate();
+        mockSearchStatusState.hasError = false;
+        functionsMocks.subscribe.callback();
         await flushPromises();
 
         const notificationsAfterSearch = element.shadowRoot.querySelectorAll(
