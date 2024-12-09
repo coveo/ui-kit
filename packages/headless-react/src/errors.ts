@@ -3,7 +3,7 @@ import {capitalize} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Please make sure you are wrapping your controller with either `StaticStateProvider` or `HydratedStateProvider` controller that can provide the required context.';
+    'Unable to find Context. Make sure your component using a controller is wrapped in one of the following providers: `RecommendationProvider`, `ListingProvider`, `SearchProvider`, or `StandaloneProvider`;
   constructor() {
     super(MissingEngineProviderError.message);
   }
@@ -23,7 +23,7 @@ export class UndefinedControllerError extends Error {
         `You're importing a controller (use${capitalize(controllerName)}) that is not defined in the current engine definition`,
         UndefinedControllerError.createEngineSupportMessage(solutionTypes),
         '',
-        'Ensure that the controller is wrapped in the appropriate State Provider.',
+        'Ensure that the component using the controller is wrapped in the appropriate State Provider.',
         // 'Learn more: TODO: Add link to documentation on how to use hooks with providers',
       ].join('\n')
     );
