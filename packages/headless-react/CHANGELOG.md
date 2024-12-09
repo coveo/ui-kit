@@ -1,3 +1,11 @@
+## 2.2.0 (2024-12-04)
+
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+- chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
+- feat(headless-react): create providers with definition (#4709) ([dfba10c](https://github.com/coveo/ui-kit/commits/dfba10c)), closes [#4709](https://github.com/coveo/ui-kit/issues/4709)
+- feat(headless): refresh commerce recommendations server-side (#4617) ([51708a0](https://github.com/coveo/ui-kit/commits/51708a0)), closes [#4617](https://github.com/coveo/ui-kit/issues/4617)
+- feat(ssr): reorder headless react exports (#4714) ([d66d49e](https://github.com/coveo/ui-kit/commits/d66d49e)), closes [#4714](https://github.com/coveo/ui-kit/issues/4714)
+
 ## <small>2.1.2 (2024-11-20)</small>
 
 - refactor(headless, headless-react): no more generic engine in ssr-commerce types (#4657) ([a60b308](https://github.com/coveo/ui-kit/commits/a60b308)), closes [#4657](https://github.com/coveo/ui-kit/issues/4657)
