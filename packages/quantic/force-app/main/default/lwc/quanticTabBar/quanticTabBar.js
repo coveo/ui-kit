@@ -12,9 +12,9 @@ import {LightningElement, api} from 'lwc';
  *         Custom tab elements must include the attribute `data-role="tab"` to be recognized by `QuanticTabBar`.
  * @example
  * <c-quantic-tab-bar light-theme>
- *   <c-quantic-tab engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
- *   <c-quantic-tab engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
- *   <c-quantic-tab engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
+ *   <c-quantic-tab slot="tabBarItem" engine-id={engineId} label="Tab 1" expression={expressionOne} is-active></c-quantic-tab>
+ *   <c-quantic-tab slot="tabBarItem" engine-id={engineId} label="Tab 2" expression={expressionTwo}></c-quantic-tab>
+ *   <c-quantic-tab slot="tabBarItem" engine-id={engineId} label="Tab 3" expression={expressionThree}></c-quantic-tab>
  * </c-quantic-tab-bar>
  */
 export default class QuanticTabBar extends LightningElement {
