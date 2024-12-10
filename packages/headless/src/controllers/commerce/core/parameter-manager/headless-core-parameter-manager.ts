@@ -146,7 +146,8 @@ export function buildCoreParameterManager<T extends Parameters>(
       props.initialState,
       'buildCoreParameterManager'
     );
-    dispatch(props.restoreActionCreator(props.initialState.parameters));
+
+    dispatch(props.restoreActionCreator(props.initialState?.parameters));
   }
 
   return {
@@ -154,8 +155,8 @@ export function buildCoreParameterManager<T extends Parameters>(
 
     synchronize(parameters: T) {
       const activeParams = props.activeParametersSelector(engine[stateKey]);
-      const oldParams = props.enrichParameters(engine[stateKey], activeParams);
-      const newParams = props.enrichParameters(engine[stateKey], parameters);
+      const oldParams = activeParams;
+      const newParams = parameters;
 
       if (
         Object.keys(parameters).length > 0 &&

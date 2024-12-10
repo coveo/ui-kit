@@ -150,5 +150,7 @@ function handleRestoreParameters(
 
   if (action.payload.perPage) {
     state.principal.perPage = action.payload.perPage;
+  } else {
+    state.principal.perPage = getCommercePaginationInitialSlice().perPage;
   }
 }
