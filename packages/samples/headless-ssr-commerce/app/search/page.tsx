@@ -25,8 +25,6 @@ export default async function Search() {
   const staticState = await searchEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
-      popularBought: {}, // TODO:: KIT-3782: should not be required on listing engine definition
-      popularViewed: {}, // TODO:: KIT-3782: should not be required on listing engine definition
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
