@@ -240,20 +240,17 @@ export function preprocessObjectPairs(
 
 function processObjectValues(key: string, values: string[]) {
   if (key === 'nf' || key === 'mnf') {
-    return buildNumericRanges(values);
+    return buildNumericRanges(values, 'selected');
   }
 
   if (key === 'df') {
-    return buildDateRanges(values);
+    return buildDateRanges(values, 'selected');
   }
 
   return values;
 }
 
-export function buildNumericRanges(
-  ranges: string[],
-  state: FacetValueState = 'selected'
-) {
+export function buildNumericRanges(ranges: string[], state: FacetValueState) {
   const numericRanges = [];
 
   for (const range of ranges) {
@@ -292,10 +289,7 @@ function isValidDateRangeValue(date: string) {
   }
 }
 
-export function buildDateRanges(
-  ranges: string[],
-  state: FacetValueState = 'selected'
-) {
+export function buildDateRanges(ranges: string[], state: FacetValueState) {
   const dateRanges: DateRangeRequest[] = [];
 
   for (const range of ranges) {
