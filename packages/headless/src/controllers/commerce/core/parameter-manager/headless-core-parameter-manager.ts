@@ -53,16 +53,6 @@ export interface CoreParameterManagerProps<T extends Parameters>
    * The action to dispatch to fetch more results.
    */
   fetchProductsActionCreator: FetchProductsActionCreator;
-
-  /**
-   * Enriches the parameters with the active parameters.
-   * @param state
-   * @param activeParams
-   */
-  enrichParameters(
-    state: CommerceEngine[typeof stateKey],
-    activeParams: T
-  ): Required<T>;
 }
 
 export interface ParameterManagerInitialState<T> {
@@ -154,12 +144,10 @@ export function buildCoreParameterManager<T extends Parameters>(
 
     synchronize(parameters: T) {
       const activeParams = props.activeParametersSelector(engine[stateKey]);
-      const oldParams = props.enrichParameters(engine[stateKey], activeParams);
-      const newParams = props.enrichParameters(engine[stateKey], parameters);
 
       if (
         Object.keys(parameters).length > 0 &&
-        deepEqualAnyOrder(oldParams, newParams)
+        deepEqualAnyOrder(activeParams, parameters)
       ) {
         return;
       }
