@@ -139,12 +139,12 @@ jobs:
       - name: Read version from package.json
         id: read_version
         run: |
-          VERSION=$(jq -r '.version' package/headless/package.json)
+          VERSION=$(jq -r '.version' packages/headless/package.json)
           echo "Extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
       - name: Zip documentation folder
         run: |
-          DOCS_DIR="package/headless/docs"
+          DOCS_DIR="packages/headless/docs"
           if [ ! -d "$DOCS_DIR" ]; then
             echo "Documentation folder $DOCS_DIR not found."
             exit 1

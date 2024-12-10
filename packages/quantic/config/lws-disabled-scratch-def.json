@@ -1,0 +1,22 @@
+{
+  "orgName": "Quantic__LWS_disabled",
+  "edition": "Developer",
+  "features": ["Communities"],
+  "settings": {
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    },
+    "languageSettings": {
+      "enableTranslationWorkbench": true,
+      "enableEndUserLanguages": true
+    },
+    "securitySettings": {
+      "sessionSettings": {
+        "lockerServiceNext": false
+      }
+    }
+  }
+}
