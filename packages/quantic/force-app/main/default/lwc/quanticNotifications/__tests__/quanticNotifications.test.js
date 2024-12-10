@@ -20,17 +20,30 @@ const exampleEngine = {
   id: 'mock engine',
 };
 
+const mockSearchStatusState = {
+  hasResults: true,
+  hasError: false,
+};
+
 const functionsMocks = {
   buildNotifyTrigger: jest.fn(() => ({
     state: notificationsState,
     subscribe: functionsMocks.subscribe,
   })),
   dispatchMessage: jest.fn(() => {}),
-  subscribe: jest.fn((cb) => {
-    cb();
+  buildSearchStatus: jest.fn(() => ({
+    state: mockSearchStatusState,
+    subscribe: jest.fn((callback) => {
+      functionsMocks.subscribe.callback = callback;
+      return functionsMocks.unsubscribeSearchStatus;
+    }),
+  })),
+  subscribe: jest.fn((callback) => {
+    callback();
     return functionsMocks.unsubscribe;
   }),
   unsubscribe: jest.fn(() => {}),
+  unsubscribeSearchStatus: jest.fn(() => {}),
 };
 
 // @ts-ignore
@@ -43,6 +56,7 @@ AriaLiveRegion.mockImplementation(() => {
 const selectors = {
   notifications: '[data-test="notification"]',
   initializationError: 'c-quantic-component-error',
+  notificationCloseButton: 'lightning-button-icon',
 };
 
 const defaultOptions = {
@@ -68,6 +82,7 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildNotifyTrigger: functionsMocks.buildNotifyTrigger,
+      buildSearchStatus: functionsMocks.buildSearchStatus,
     };
   };
 }
@@ -145,7 +160,7 @@ describe('c-quantic-notifications', () => {
   });
 
   describe('component initialization', () => {
-    it('should build the controller with the proper paramters', async () => {
+    it('should build the notifyTrigger and searchStatus controllers with the proper parameters', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -153,9 +168,13 @@ describe('c-quantic-notifications', () => {
       expect(functionsMocks.buildNotifyTrigger).toHaveBeenCalledWith(
         exampleEngine
       );
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
     });
 
-    it('should subscribe to the headless state changes', async () => {
+    it('should subscribe to the headless notify trigger state changes', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -221,6 +240,95 @@ describe('c-quantic-notifications', () => {
         );
 
         expect(notifications.length).toEqual(0);
+      });
+    });
+
+    describe('when there is an error following a search', () => {
+      it('should not render the notifications component', async () => {
+        const element = createTestComponent();
+        mockSearchStatusState.hasError = true;
+        functionsMocks.subscribe.callback();
+        await flushPromises();
+
+        const notifications = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notifications.length).toEqual(0);
+      });
+    });
+  });
+
+  describe('when clicking on a notification close button', () => {
+    it('should properly dismiss that notification', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
+        selectors.notifications
+      );
+
+      const firstNotificationCloseButton =
+        notificationsBeforeClose[0].querySelector(
+          selectors.notificationCloseButton
+        );
+      firstNotificationCloseButton.click();
+      await flushPromises();
+
+      const notificationsAfterClose = element.shadowRoot.querySelectorAll(
+        selectors.notifications
+      );
+
+      expect(notificationsAfterClose.length).toEqual(
+        exampleNotifications.length - 1
+      );
+      expect(notificationsAfterClose[0].textContent).toEqual(
+        exampleNotifications[1]
+      );
+    });
+
+    describe('when triggering another search with the same query', () => {
+      it('should reset the visibility of the notifications', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const notificationsBeforeClose = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsBeforeClose.length).toEqual(
+          exampleNotifications.length
+        );
+
+        const firstNotificationCloseButton =
+          notificationsBeforeClose[0].querySelector(
+            selectors.notificationCloseButton
+          );
+        firstNotificationCloseButton.click();
+        await flushPromises();
+
+        const notificationsAfterClose = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsAfterClose.length).toEqual(
+          exampleNotifications.length - 1
+        );
+
+        mockSearchStatusState.hasError = false;
+        functionsMocks.subscribe.callback();
+        await flushPromises();
+
+        const notificationsAfterSearch = element.shadowRoot.querySelectorAll(
+          selectors.notifications
+        );
+
+        expect(notificationsAfterSearch.length).toEqual(
+          exampleNotifications.length
+        );
+        notificationsAfterSearch.forEach((notification, index) => {
+          expect(notification.textContent).toEqual(exampleNotifications[index]);
+        });
       });
     });
   });
