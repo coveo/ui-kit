@@ -1,0 +1,11 @@
+{
+  "activeViewId": "5f71a149-8177-4097-8c70-fd34c6b83912",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "047ef1ed-8f06-4f45-9612-1f4e06d8d324",
+  "label": "Quantic User Actions Toggle",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-user-actions-toggle",
+  "type": "route",
+  "urlPrefix": "quantic-user-actions-toggle"
+}
