@@ -151,6 +151,36 @@ describe('parameter manager', () => {
             },
           ],
         },
+        nfExcluded: {
+          price: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
+        mnf: {
+          weight: [
+            {
+              state: 'selected' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
+        mnfExcluded: {
+          height: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
         page: 1,
         perPage: 2,
         df: {
@@ -163,8 +193,21 @@ describe('parameter manager', () => {
             },
           ],
         },
+        dfExcluded: {
+          expires: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: '2010/01/01',
+              end: '2011/01/01',
+              endInclusive: false,
+            },
+          ],
+        },
         f: {
           size: ['small', 'medium'],
+        },
+        fExcluded: {
+          color: ['red'],
         },
         sortCriteria: buildRelevanceSortCriterion(),
         cf: {
