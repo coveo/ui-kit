@@ -1,0 +1,92 @@
+:root {
+  --light-color-background: #fff;
+  --light-color-background-secondary: #333357;
+  --light-color-text: #282829;
+  --light-color-text-aside: #399ffe;
+  --dark-color-background: #3f3f71;
+  --dark-color-background-secondary: #333357;
+  --dark-color-text: #f1f2ff;
+  --dark-color-text-aside: #399ffe;
+  --header-height: 5.5rem;
+}
+
+body {
+  font:
+    100 1em/1.625 'canada-type-gibson',
+    sans-serif;
+}
+
+.tsd-breadcrumb a {
+  font-weight: 400;
+}
+
+.tsd-accordion-summary h3 {
+  display: flex;
+  align-items: center;
+}
+
+#tsd-search {
+  width: 27rem;
+}
+
+[data-theme='light'] .tsd-typography thead,
+[data-theme='light'] .tsd-typography tr:nth-child(even) {
+  background-color: var(--light-color-background);
+}
+
+.tsd-page-toolbar {
+  height: var(--header-height);
+  border-bottom: none;
+}
+.tsd-page-toolbar .tsd-toolbar-contents {
+  padding: 1.25rem;
+}
+.tsd-page-toolbar .table-cell:first-child {
+  width: inherit;
+  min-width: 11rem;
+}
+.tsd-page-toolbar .tsd-toolbar-icon {
+  box-sizing: border-box;
+  line-height: 0;
+  padding: 12px 0;
+}
+
+#icon-menu rect {
+  fill: white;
+}
+
+#tsd-widgets {
+  padding-left: 0.5rem;
+  padding-top: 0.25rem;
+}
+#tsd-widgets .feedback a {
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+@media (max-width: 769px) {
+  .feedback {
+    display: none;
+  }
+  .has-menu .overlay {
+    top: var(--header-height);
+  }
+  html .col-sidebar {
+    display: none;
+    top: var(--header-height) !important;
+  }
+  #tsd-search {
+    display: none;
+  }
+  .has-menu #tsd-search {
+    display: block;
+    width: 90%;
+  }
+  .has-menu .coveo-logo-cell {
+    display: none;
+  }
+  .tsd-widget.active {
+    background-color: inherit;
+  }
+}
