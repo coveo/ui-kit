@@ -1,8 +1,11 @@
 import {UnknownAction} from '@reduxjs/toolkit';
-import {Logger} from 'pino';
-import {Recommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
+import {
+  Recommendations,
+  RecommendationsOptions,
+} from '../../../controllers/commerce/recommendations/headless-recommendations.js';
 import {RecommendationsDefinitionMeta} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
 import {Controller} from '../../../controllers/controller/headless-controller.js';
+import {filterObject} from '../../../utils/utils.js';
 import {buildLogger} from '../../logger.js';
 import {composeFunction} from '../../ssr-engine/common.js';
 import {createStaticState} from '../common.js';
@@ -11,14 +14,16 @@ import {
   ControllerDefinitionsMap,
   EngineStaticState,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
+  RecommendationControllerSettings,
+  recommendationInternalOptionKey,
   SolutionType,
 } from '../types/common.js';
 import {
   BuildResult,
-  Controllers,
   FetchStaticStateFromBuildResultParameters,
   FetchStaticStateFunction,
   CommerceControllerDefinitionsMap,
+  FetchStaticStateParameters,
 } from '../types/core-engine.js';
 import {
   buildFactory,
@@ -31,24 +36,25 @@ export function fetchRecommendationStaticStateFactory<
   controllerDefinitions: TControllerDefinitions | undefined,
   options: CommerceEngineDefinitionOptions<TControllerDefinitions>
 ): FetchStaticStateFunction<TControllerDefinitions> {
-  type ControllerDefinitionKeys = keyof Controllers<TControllerDefinitions>;
-
   const logger = buildLogger(options.loggerOptions);
 
-  return composeFunction(
-    async (...params: [controllerKeys: Array<ControllerDefinitionKeys>]) => {
-      const [controllerKeys] = params;
-      const uniqueControllerKeys = Array.from(new Set(controllerKeys));
-      if (uniqueControllerKeys.length !== controllerKeys.length) {
-        logger.warn(
-          '[WARNING] Duplicate controller keys detected in recommendation fetchStaticState call. Make sure to provide only unique controller keys.'
-        );
-      }
-
-      const validControllerNames = Object.keys(controllerDefinitions ?? {});
-      const allowedRecommendationKeys = uniqueControllerKeys.filter(
-        (key: string) => validControllerNames.includes(key)
+  const getAllowedRecommendationKeys = (
+    props: FetchStaticStateParameters<TControllerDefinitions>[0]
+  ): string[] => {
+    if (props && 'controllers' in props) {
+      const enabledRecommendationControllers = filterObject(
+        props.controllers as Record<string, RecommendationControllerSettings>,
+        (value) => Boolean(value.enabled)
       );
+      return Object.keys(enabledRecommendationControllers);
+    }
+    return [];
+  };
+
+  return composeFunction(
+    async (...params: FetchStaticStateParameters<TControllerDefinitions>) => {
+      const [props] = params;
+      const allowedRecommendationKeys = getAllowedRecommendationKeys(props);
 
       if (!options.navigatorContextProvider) {
         logger.warn(
@@ -62,7 +68,7 @@ export function fetchRecommendationStaticStateFactory<
       )(SolutionType.recommendation);
 
       const buildResult = (await solutionTypeBuild(
-        allowedRecommendationKeys
+        ...params
       )) as BuildResult<TControllerDefinitions>;
 
       const staticState = await fetchRecommendationStaticStateFactory(
@@ -87,8 +93,7 @@ export function fetchRecommendationStaticStateFactory<
 
         filterRecommendationControllers(
           controllers,
-          controllerDefinitions ?? {},
-          logger
+          controllerDefinitions ?? {}
         ).refresh(allowedRecommendationKeys);
 
         const searchActions = await Promise.all(
@@ -114,8 +119,7 @@ function filterRecommendationControllers<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,
 >(
   controllers: Record<string, Controller>,
-  controllerDefinitions: TControllerDefinitions,
-  logger: Logger
+  controllerDefinitions: TControllerDefinitions
 ) {
   const slotIdSet = new Set<string>();
 
@@ -124,16 +128,23 @@ function filterRecommendationControllers<
   >(
     controllerDefinition: C
   ): controllerDefinition is C & RecommendationsDefinitionMeta => {
-    return (
+    const isControllerRecommendation =
       'recommendation' in controllerDefinition &&
-      controllerDefinition.recommendation === true
-    );
+      controllerDefinition.recommendation === true;
+
+    const hasSlotId =
+      recommendationInternalOptionKey in controllerDefinition &&
+      'slotId' in
+        (controllerDefinition[
+          recommendationInternalOptionKey
+        ] as RecommendationsOptions);
+
+    return isControllerRecommendation && hasSlotId;
   };
 
-  const warnDuplicateRecommendation = (slotId: string, productId?: string) => {
-    logger.warn(
-      'Multiple recommendation controllers found for the same slotId and productId',
-      {slotId, productId}
+  const ensureSingleRecommendationPerSlot = (slotId: string) => {
+    throw new Error(
+      `Multiple recommendation controllers found for the same slotId: ${slotId}. Only one recommendation controller per slotId is supported.`
     );
   };
 
@@ -142,10 +153,10 @@ function filterRecommendationControllers<
       if (!isRecommendationDefinition(value)) {
         return false;
       }
-      const {slotId, productId} = value.options;
-      const key = `${slotId}${productId || ''}`;
-      if (slotIdSet.has(key)) {
-        warnDuplicateRecommendation(slotId, productId);
+      const {slotId} = value[recommendationInternalOptionKey];
+      const key = slotId;
+      if (slotIdSet.has(slotId)) {
+        ensureSingleRecommendationPerSlot(slotId);
         return false;
       }
       slotIdSet.add(key);

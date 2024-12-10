@@ -27,6 +27,8 @@ export default async function ProductDescriptionPage({
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
+      popularBought: {}, // TODO:: KIT-3782: should not be required on listing engine definition
+      popularViewed: {}, // TODO:: KIT-3782: should not be required on listing engine definition
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
