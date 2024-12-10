@@ -1,7 +1,7 @@
 {
   "type": "commonjs",
   "dependencies": {
-    "@microsoft/api-extractor-model": "7.29.3",
-    "@microsoft/tsdoc": "0.15.0"
+    "@microsoft/api-extractor-model": "7.30.0",
+    "@microsoft/tsdoc": "0.15.1"
   }
 }
