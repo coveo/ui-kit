@@ -83,7 +83,7 @@ export class AtomicTabManager {
   render() {
     return (
       <Host class="mb-2">
-        <tab-manager-bar>
+        <atomic-tab-manager-bar>
           <div
             role="list"
             aria-label="tab-area"
@@ -91,7 +91,7 @@ export class AtomicTabManager {
             class="mb-2 flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
-              <tab-button
+              <atomic-tab-button
                 active={this.tabManagerState.activeTab === tab.name}
                 label={tab.label}
                 select={() => {
@@ -99,10 +99,10 @@ export class AtomicTabManager {
                     tab.tabController.select();
                   }
                 }}
-              ></tab-button>
+              ></atomic-tab-button>
             ))}
           </div>
-        </tab-manager-bar>
+        </atomic-tab-manager-bar>
       </Host>
     );
   }
