@@ -145,6 +145,8 @@ export function buildCoreParameterManager<T extends Parameters>(
     synchronize(parameters: T) {
       const activeParams = props.activeParametersSelector(engine[stateKey]);
 
+      // Always restore empty parameters or parameters that are different from the active ones.
+      // We always restore empty parameters in commerce because they may correspond to navigation to a new page.
       if (
         Object.keys(parameters).length > 0 &&
         deepEqualAnyOrder(activeParams, parameters)
