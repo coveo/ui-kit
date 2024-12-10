@@ -10,8 +10,10 @@ export class TabBarObject {
     return this.page.locator('c-quantic-tab-bar');
   }
 
-  get allTabs(): Locator {
-    return this.tabBar.locator('c-quantic-tab');
+  get allVisibleTabs(): Locator {
+    return this.tabBar.locator('button.slds-tabs_default__item').filter({
+      has: this.page.locator(':visible'),
+    });
   }
 
   get activeTab(): Locator {
@@ -30,12 +32,8 @@ export class TabBarObject {
     return this.moreButton.locator('lightning-icon');
   }
 
-  get dropdownTrigger(): Locator {
-    return this.page.locator('.slds-dropdown-trigger');
-  }
-
   get dropdown(): Locator {
-    return this.page.locator('.slds-dropdown');
+    return this.page.locator('.slds-dropdown-trigger');
   }
 
   get allDropdownOptions(): Locator {
@@ -47,19 +45,19 @@ export class TabBarObject {
   }
 
   async clickTab(tabIndex: number): Promise<void> {
-    await this.allTabs.nth(tabIndex).click();
+    await this.allVisibleTabs.nth(tabIndex).click();
   }
 
   async clickMoreButton(): Promise<void> {
     await this.moreButton.click();
   }
 
-  async clickDropdownTrigger(): Promise<void> {
-    await this.dropdownTrigger.click();
-  }
-
   async clickDropdownOption(optionIndex: number): Promise<void> {
     await this.allDropdownOptions.nth(optionIndex).click();
+  }
+
+  async clickComponentContainer(): Promise<void> {
+    await this.tabBarContainer.click();
   }
 
   async waitForTabUaAnalytics(actionCause): Promise<Request> {
