@@ -2,7 +2,7 @@ import * as externalCartAPI from '@/actions/external-cart-api';
 import ContextDropdown from '@/components/context-dropdown';
 import {StandaloneProvider} from '@/components/providers/providers';
 import StandaloneSearchBox from '@/components/standalone-search-box';
-import {searchEngineDefinition} from '@/lib/commerce-engine';
+import {standaloneEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
 import {headers} from 'next/headers';
@@ -16,15 +16,19 @@ export default async function ProductDescriptionPage({
 }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
-  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  standaloneEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState({
+  const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
+      popularBought: {}, // TODO:: KIT-3782: should not be required on listing engine definition
+      popularViewed: {}, // TODO:: KIT-3782: should not be required on listing engine definition
       context: {
         language: defaultContext.language,
         country: defaultContext.country,

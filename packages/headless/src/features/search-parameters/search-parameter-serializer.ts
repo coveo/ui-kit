@@ -8,7 +8,10 @@ import {
   isRelativeDateFormat,
   validateRelativeDate,
 } from '../../api/search/date/relative-date.js';
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
+import {
+  buildDateRange,
+  DateRangeRequest,
+} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
 import {FacetValueState} from '../../ssr.index.js';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
@@ -251,21 +254,25 @@ export function buildNumericRanges(
   ranges: string[],
   state: FacetValueState = 'selected'
 ) {
-  return ranges
-    .map((str) => {
-      const {startAsString, endAsString, isEndInclusive} =
-        splitRangeValueAsStringByDelimiter(str);
+  const numericRanges = [];
 
-      return {
-        start: parseFloat(startAsString),
-        end: parseFloat(endAsString),
-        endInclusive: isEndInclusive,
-      };
-    })
-    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
-    .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state, endInclusive})
+  for (const range of ranges) {
+    const {startAsString, endAsString, isEndInclusive} =
+      splitRangeValueAsStringByDelimiter(range);
+
+    const start = parseFloat(startAsString);
+    const end = parseFloat(endAsString);
+
+    if (!Number.isFinite(start) || !Number.isFinite(end)) {
+      continue;
+    }
+
+    numericRanges.push(
+      buildNumericRange({start, end, state, endInclusive: isEndInclusive})
     );
+  }
+
+  return numericRanges;
 }
 
 function isValidDateRangeValue(date: string) {
@@ -289,24 +296,29 @@ export function buildDateRanges(
   ranges: string[],
   state: FacetValueState = 'selected'
 ) {
-  return ranges
-    .map((str) => {
-      const {isEndInclusive, startAsString, endAsString} =
-        splitRangeValueAsStringByDelimiter(str);
+  const dateRanges: DateRangeRequest[] = [];
 
-      return {
+  for (const range of ranges) {
+    const {isEndInclusive, startAsString, endAsString} =
+      splitRangeValueAsStringByDelimiter(range);
+    if (
+      !isValidDateRangeValue(startAsString) ||
+      !isValidDateRangeValue(endAsString)
+    ) {
+      continue;
+    }
+
+    dateRanges.push(
+      buildDateRange({
         start: startAsString,
         end: endAsString,
+        state,
         endInclusive: isEndInclusive,
-      };
-    })
-    .filter(
-      ({start, end}) =>
-        isValidDateRangeValue(start) && isValidDateRangeValue(end)
-    )
-    .map(({start, end, endInclusive}) =>
-      buildDateRange({start, end, state, endInclusive})
+      })
     );
+  }
+
+  return dateRanges;
 }
 
 function isValidPair<K extends SearchParameterKey>(

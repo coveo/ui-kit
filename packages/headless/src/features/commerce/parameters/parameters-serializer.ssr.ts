@@ -311,17 +311,20 @@ export function isFacetPair(
   return isValidKey && isValidValue;
 }
 
+const validRangeFacetKeys = [
+  'nf',
+  'nfExcluded',
+  'mnf',
+  'mnfExcluded',
+  'df',
+  'dfExcluded',
+];
+
 export function isRangeFacetPair(
   pair: [CommerceSearchParametersKey, unknown]
 ): pair is CommerceSearchParamPair<RangeFacetValueSearchParam> {
   const [key, value] = pair;
-  const isValidKey =
-    key === 'nf' ||
-    key === 'nfExcluded' ||
-    key === 'mnf' ||
-    key === 'mnfExcluded' ||
-    key === 'df' ||
-    key === 'dfExcluded';
+  const isValidKey = validRangeFacetKeys.includes(key);
   const isValidValue = isRangeFacetObject(value);
   return isValidKey && isValidValue;
 }
