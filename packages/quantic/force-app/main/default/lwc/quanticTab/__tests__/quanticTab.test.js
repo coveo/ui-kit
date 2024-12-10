@@ -79,9 +79,12 @@ function prepareHeadlessState() {
   };
 }
 
-function simulateSearchStatusUpdate() {
-  mockSearchStatus.state.hasResults = true;
-  mockSearchStatus.state.firstSearchExecuted = true;
+function simulateSearchStatusUpdate(
+  hasResults = true,
+  firstSearchExecuted = true
+) {
+  mockSearchStatus.state.hasResults = hasResults;
+  mockSearchStatus.state.firstSearchExecuted = firstSearchExecuted;
   mockSearchStatus.callback();
 }
 
@@ -174,6 +177,28 @@ describe('c-quantic-tab', () => {
       );
 
       expect(initializationError).not.toBeNull();
+    });
+  });
+
+  describe('when the component renders', () => {
+    it('should not show the tab before the initial search completes (when shouldDisplay is false)', async () => {
+      const element = createTestComponent();
+      simulateSearchStatusUpdate(true, false);
+      await flushPromises();
+
+      const tab = element.shadowRoot.querySelectorAll(selectors.tabButton);
+
+      expect(tab.length).toEqual(0);
+    });
+
+    it('should show the tab after the initial search completes (when shouldDisplay is true)', async () => {
+      const element = createTestComponent();
+      simulateSearchStatusUpdate();
+      await flushPromises();
+
+      const tab = element.shadowRoot.querySelectorAll(selectors.tabButton);
+
+      expect(tab.length).toEqual(1);
     });
   });
 

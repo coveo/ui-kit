@@ -17,18 +17,6 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic tab ${useCase.label}`, () => {
-    test.skip('should not show tabs before the initial search completes', async ({
-      tab,
-      search,
-    }) => {
-      const searchResponsePromise = search.waitForSearchResponse();
-      const searchResponse = await searchResponsePromise;
-      const searchResponseBody = searchResponse.request().postDataJSON();
-      console.log('searchResponseBody: ', JSON.stringify(searchResponseBody));
-      // TODO: Implement test logic
-      expect(tab.tab).toBeDefined();
-    });
-
     test.describe('when clicking on a tab', () => {
       test('should trigger a new search and log analytics', async ({
         tab,
