@@ -20,18 +20,18 @@
     "@angular/platform-browser": "17.3.12",
     "@angular/platform-browser-dynamic": "17.3.12",
     "@angular/router": "17.3.12",
-    "@coveo/atomic": "3.11.1",
+    "@coveo/atomic": "3.12.0",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.10.0"
+    "@coveo/headless": "3.11.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.3.11",
     "@angular/cli": "17.3.11",
     "@angular/compiler-cli": "17.3.12",
-    "@coveo/headless": "3.10.0",
-    "@types/node": "20.17.6",
+    "@coveo/headless": "3.11.0",
+    "@types/node": "22.9.1",
     "jasmine-core": "5.4.0",
     "karma": "6.4.4",
     "karma-chrome-launcher": "3.2.0",
