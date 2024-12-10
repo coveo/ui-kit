@@ -9,6 +9,7 @@ import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
 import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
 import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {queryReducer as query} from '../../../../features/commerce/query/query-slice.js';
 import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
@@ -54,19 +55,30 @@ export function defineParameterManager<
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildProductListing(engine).parameterManager(props);
+        return buildProductListing(engine).parameterManager({
+          initialState: props.state ? props.state : props.initialState,
+          excludeDefaultParameters: true,
+        });
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildSearch(engine).parameterManager(props);
+        return buildSearch(engine).parameterManager({
+          initialState: props.state ? props.state : props.initialState,
+          excludeDefaultParameters: true,
+        });
       }
     },
   } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<typeof options>>,
+    ParameterManager<MappedParameterTypes<TOptions>>,
     TOptions,
-    ParameterManagerProps<MappedParameterTypes<typeof options>>
+    SSRParameterManagerProps<MappedParameterTypes<TOptions>>
   >;
+}
+
+export interface SSRParameterManagerProps<T extends Parameters>
+  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {
+  state?: ParameterManagerState<T>;
 }
 
 type MappedParameterTypes<
@@ -83,6 +95,7 @@ function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext
 ): engine is CoreEngineNext<ParameterManager<Parameters>> {
   engine.addReducers({
+    commerceParameters,
     commerceFacetSet,
     commerceSort,
     commercePagination,

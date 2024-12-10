@@ -107,14 +107,16 @@ describe('product-listing-sort-slice', () => {
       expect(finalState.appliedSort).toEqual(parameters.sortCriteria);
     });
 
-    it('does not restore appliedSort when parameters are not defined', () => {
+    it('restores initial appliedSort when parameters are not defined', () => {
       const parameters = {
         sortCriteria: undefined,
       };
 
       const finalState = sortReducer(state, action(parameters));
 
-      expect(finalState.appliedSort).toBe(state.appliedSort);
+      expect(finalState.appliedSort).toEqual(
+        getCommerceSortInitialState().appliedSort
+      );
     });
   });
 

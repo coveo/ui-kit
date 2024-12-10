@@ -11,10 +11,7 @@ import {
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {Parameters} from '../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
-import {
-  activeParametersSelector,
-  enrichedParametersSelector,
-} from '../../../features/commerce/parameters/parameters-selectors.js';
+import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {
@@ -130,7 +127,6 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     parametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
-    enrichParameters: enrichedParametersSelector,
     isLoadingSelector,
     errorSelector,
     pageSelector: pagePrincipalSelector,

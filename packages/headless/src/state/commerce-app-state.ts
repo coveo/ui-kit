@@ -22,6 +22,7 @@ import {
   TriggerSection,
   ManualRangeSection,
   CommerceConfigurationSection,
+  CommerceParametersSection,
 } from './state-sections.js';
 
 export type CommerceProductListingParametersState = CommerceFacetSetSection &
@@ -43,6 +44,7 @@ export type CommerceAppState = CommerceConfigurationSection &
   CommercePaginationSection &
   CommerceSortSection &
   CommerceContextSection &
+  CommerceParametersSection &
   CartSection &
   RecentQueriesSection &
   QuerySuggestionSection &

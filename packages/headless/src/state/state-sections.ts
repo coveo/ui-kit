@@ -14,6 +14,7 @@ import {FieldSuggestionsOrderState} from '../features/commerce/facets/field-sugg
 import {ManualNumericFacetSetState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state.js';
 import {InstantProductsState} from '../features/commerce/instant-products/instant-products-state.js';
 import {CommercePaginationState} from '../features/commerce/pagination/pagination-state.js';
+import {CommerceParametersState} from '../features/commerce/parameters/parameters-state.js';
 import {ProductListingState} from '../features/commerce/product-listing/product-listing-state.js';
 import {CommerceQueryState} from '../features/commerce/query/query-state.js';
 import {RecommendationsState as CommerceRecommendationsState} from '../features/commerce/recommendations/recommendations-state.js';
@@ -72,6 +73,10 @@ export interface AdvancedSearchQueriesSection {
    * The current advanced search parameters (e.g: aq and cq)
    */
   advancedSearchQueries: AdvancedSearchQueriesState;
+}
+
+export interface CommerceParametersSection {
+  commerceParameters: CommerceParametersState;
 }
 
 export interface StaticFilterSection {

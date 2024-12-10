@@ -192,7 +192,8 @@ export function buildCurrentValuesFromPath(
   const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
   let curr = root;
 
-  for (const segment of path.splice(1)) {
+  const [_first, ...rest] = path;
+  for (const segment of rest) {
     const next = buildCategoryFacetValueRequest(segment, retrieveCount);
     curr.children.push(next);
     curr = next;
