@@ -29,7 +29,7 @@ describe('Commerce Engine SSR', () => {
     },
   });
 
-  it('should only require recommendation options for standaloneEngineDefinition', () => {
+  it('should only require cart options for standaloneEngineDefinition', () => {
     expect(() =>
       standaloneEngineDefinition.fetchStaticState({
         controllers: {
@@ -39,7 +39,7 @@ describe('Commerce Engine SSR', () => {
     ).not.toThrow();
   });
 
-  it('should only require recommendation options for listingEngineDefinition', () => {
+  it('should only require cart options for listingEngineDefinition', () => {
     expect(() =>
       listingEngineDefinition.fetchStaticState({
         controllers: {
@@ -49,7 +49,7 @@ describe('Commerce Engine SSR', () => {
     ).not.toThrow();
   });
 
-  it('should require paramManager options for searchEngineDefinition', () => {
+  it('should only require cart and paramManager options for searchEngineDefinition', () => {
     expect(() =>
       searchEngineDefinition.fetchStaticState({
         controllers: {
@@ -60,7 +60,7 @@ describe('Commerce Engine SSR', () => {
     ).not.toThrow();
   });
 
-  it('should require cart options for recommendationEngineDefinition', () => {
+  it('should only require cart options for recommendationEngineDefinition', () => {
     expect(() =>
       recommendationEngineDefinition.fetchStaticState({
         controllers: {
