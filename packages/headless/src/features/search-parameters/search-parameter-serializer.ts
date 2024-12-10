@@ -271,6 +271,8 @@ export function buildNumericRanges(
       buildNumericRange({start, end, state, endInclusive: isEndInclusive})
     );
   }
+
+  return numericRanges;
 }
 
 function isValidDateRangeValue(date: string) {
