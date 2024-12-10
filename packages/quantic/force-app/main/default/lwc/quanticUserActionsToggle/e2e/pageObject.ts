@@ -20,9 +20,9 @@ export class UserActionsToggleObject {
   }
 
   get userActionsModalCloseButton(): Locator {
-    return this.page.locator(
-      'c-quantic-user-actions-toggle > c-quantic-modal button[title="Close"]'
-    );
+    return this.page
+      .locator('c-quantic-user-actions-toggle > c-quantic-modal')
+      .getByRole('button', {name: 'Close'});
   }
 
   async mockUserActions(
