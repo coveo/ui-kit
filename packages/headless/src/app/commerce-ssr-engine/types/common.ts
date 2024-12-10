@@ -39,8 +39,7 @@ export const recommendationInternalOptionKey = Symbol.for(
 export type RecommendationControllerSettings = {
   /**
    * Toggle to enable or disable the recommendation controller.
-   * When set to `true`, the controller will be built and will perform a recommendation request server-side.
-   * Otherwise, the controller will not be available in the client-side.
+   * When set to `true`, the controller will perform a recommendation request server-side.
    *
    * @default false
    */
@@ -154,6 +153,9 @@ export type InferControllerStaticStateMapFromDefinitionsWithSolutionType<
   >;
 };
 
+/**
+ * This type defines the required and optional controller props for the engine definition.
+ */
 export type EngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
@@ -169,6 +171,46 @@ export type EngineDefinitionControllersPropsOption<
     TSolutionType
   >;
 
+/**
+ * Represents an optional engine definition for controller properties.
+ *
+ * This type is used to define a map of optional controller properties based on the provided
+ * controller definitions, controller properties map, and solution type.
+ *
+ * @template TControllers - A map of controller definitions.
+ * @template TControllersPropsMap - A map of controller properties.
+ * @template TSolutionType - The type of solution.
+ *
+ * The type iterates over the controller keys (defined in the engine definition) and includes only those keys where:
+ * 1. The controller can be used for a specific solution type (HasKey<TControllers[K], TSolutionType> is not 'never').
+ * 2. The controller properties have optional options (HasOptionalKeys<ConditionalControllerProps<...>> is true).
+ *
+ * @example
+ * Given the following controller definitions:
+ * ```
+ * const {recommendationEngineDefinition} = defineCommerceEngine({
+ *  controllers: {
+ *    popularViewed: defineRecommendations({
+ *      options: {slotId: 'slot-id'}
+ *    })
+ *  }
+ * });
+ * ```
+ *
+ * The following code will not throw an error since the 'popularViewed' controller props are optional
+ * ```
+ * recommendationEngineDefinition.fetchStaticState({
+ *  controllers: {
+ *    popularViewed: {enabled: true, productId: 'some-product-id'} // This is optional
+ *  }
+ * })
+ * ```
+ *
+ * The following code (with no arguments) is also valid because the 'popularViewed' controller props are optional, and there are no other required controller props in the engine definition.
+ * ```
+ * recommendationEngineDefinition.fetchStaticState()
+ * ```
+ */
 export type OptionalEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
@@ -196,6 +238,37 @@ export type OptionalEngineDefinitionControllersPropsOption<
   >;
 };
 
+/**
+ * Represents a type that defines the required controller properties for engine definition controllers.
+ *
+ * @template TControllers - A map of controller definitions.
+ * @template TControllersPropsMap - A map of controller properties.
+ * @template TSolutionType - The type of solution being used.
+ *
+ * The type iterates over the controller keys (defined in the engine definition) and includes only those keys where:
+ * 1. The controller can be used for a specific solution type (HasKey<TControllers[K], TSolutionType> is not 'never').
+ * 2. The controller properties have required options (HasRequiredKeys<ConditionalControllerProps<...>> is true).
+ *
+ * The resulting type maps the valid keys to their corresponding conditional controller properties.
+ *
+ * @example
+ * Given the following controller definitions:
+ * ```
+ * const {standaloneEngineDefinition} = defineCommerceEngine({
+ *  controllers: {cart: defineCart()},
+ * });
+ * ```
+ *
+ * The following code will not throw an error since the 'cart' controller props are required for the standalone engine definition:
+ * ```
+ * standaloneEngineDefinition.fetchStaticState({
+ *   controllers: {
+ *     cart: {initialState: {items: []}},
+ *   },
+ * })
+ * ```
+ *
+ */
 export type RequiredEngineDefinitionControllersPropsOption<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
@@ -227,6 +300,32 @@ type IsRecommendationController<
   TController extends ControllerDefinition<Controller>,
 > = HasKey<TController, typeof recommendationInternalOptionKey>;
 
+/**
+ * This type ensures that recommendation controller props are optional, while other controller props remain required.
+ *
+ * It works by checking if the controller definition includes the `recommendationInternalOptionKey`.
+ *
+ * - If the key is present, the controller props are made optional.
+ * - If the key is absent, the controller props are required.
+ *
+ * Example:
+ *
+ * ```typescript
+ * type ControllerProps = InferControllerPropsFromDefinition<{
+ *   recommendation: defineRecommendation({}),
+ *   cart: defineCart(),
+ * }>;
+ *
+ * // In this example:
+ * // - The `recommendation` controller props are optional.
+ * // - The `cart` controller props are required.
+ *
+ * const props: ControllerProps = {
+ *   cart: {initialState: {items: []}},
+ *   // recommendation props can be omitted
+ * };
+ * ```
+ */
 type RecommendationControllerProps<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TControllersPropsMap extends ControllersPropsMap,
