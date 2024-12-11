@@ -1,19 +1,17 @@
-import {ExternalCartItem} from '@/client/external-cart-api';
+import {ExternalCartItem} from '@/external-services/external-cart-service';
 import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';
-
-type RemoveFromCartButtonProps = {
-  productId: string;
-  price: number;
-  name: string;
-};
 
 export default function RemoveFromCartButton({
   productId,
   price,
   name,
-}: RemoveFromCartButtonProps) {
+}: {
+  productId: string;
+  price: number;
+  name: string;
+}) {
   const fetcher = useFetcher<ExternalCartItem | null>();
   const {methods} = useCart();
 

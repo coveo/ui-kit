@@ -1,4 +1,4 @@
-import externalCartAPI from '@/client/external-cart-api';
+import externalCartService from '@/external-services/external-cart-service';
 import {ActionFunctionArgs} from '@remix-run/node';
 
 export const action = async ({request}: ActionFunctionArgs) => {
@@ -9,7 +9,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
     formData.get('pricePerUnit')!.toString()
   );
 
-  return await externalCartAPI.addItem({
+  return await externalCartService.addItem({
     uniqueId,
     productName,
     pricePerUnit,

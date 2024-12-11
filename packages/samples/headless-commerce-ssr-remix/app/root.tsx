@@ -1,4 +1,4 @@
-import externalCartAPI from '@/client/external-cart-api';
+import externalCartService from '@/external-services/external-cart-service';
 import {LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
 import {
   Links,
@@ -20,7 +20,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const totalItemsInCart = await externalCartAPI.getTotalCount();
+  const totalItemsInCart = await externalCartService.getTotalCount();
   const cookie = await coveo_visitorId.parse(request.headers.get('Cookie'));
 
   if (!cookie) {

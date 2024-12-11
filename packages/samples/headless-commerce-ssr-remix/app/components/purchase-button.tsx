@@ -1,4 +1,4 @@
-import {ExternalCartPurchaseResponse} from '@/client/external-cart-api';
+import {ExternalCartPurchaseResponse} from '@/external-services/external-cart-service';
 import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';

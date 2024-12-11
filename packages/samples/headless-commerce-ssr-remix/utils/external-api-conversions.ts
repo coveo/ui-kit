@@ -1,4 +1,4 @@
-import {ExternalCartItem} from '@/client/external-cart-api';
+import {ExternalCartItem} from '@/external-services/external-cart-service';
 import {CartItem} from '@coveo/headless-react/ssr-commerce';
 import {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 

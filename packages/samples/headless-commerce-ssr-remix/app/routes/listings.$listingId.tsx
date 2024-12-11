@@ -1,5 +1,5 @@
-import externalCartAPI from '@/client/external-cart-api';
-import externalContextAPI from '@/client/external-context-api';
+import externalCartService from '@/external-services/external-cart-service';
+import externalContextService from '@/external-services/external-context-service';
 import {
   listingEngineDefinition,
   ListingStaticState,
@@ -25,13 +25,13 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {country, currency, language} =
-    await externalContextAPI.getContextInformation();
+    await externalContextService.getContextInformation();
 
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {
         initialState: {
-          items: toCoveoCartItems(await externalCartAPI.getItems()),
+          items: toCoveoCartItems(await externalCartService.getItems()),
         },
       },
       context: {
@@ -42,7 +42,6 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/browse/promotions/${params.listingId}`,
         },
       },
-      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 

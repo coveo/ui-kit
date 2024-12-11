@@ -1,5 +1,7 @@
-import externalCartAPI, {ExternalCartItem} from '@/client/external-cart-api';
-import externalContextAPI from '@/client/external-context-api';
+import externalCartService, {
+  ExternalCartItem,
+} from '@/external-services/external-cart-service';
+import externalContextService from '@/external-services/external-context-service';
 import {
   standaloneEngineDefinition,
   StandaloneStaticState,
@@ -22,10 +24,10 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     () => navigatorContext
   );
 
-  const items = await externalCartAPI.getItems();
-  const totalPrice = await externalCartAPI.getTotalPrice();
+  const items = await externalCartService.getItems();
+  const totalPrice = await externalCartService.getTotalPrice();
   const {country, currency, language} =
-    await externalContextAPI.getContextInformation();
+    await externalContextService.getContextInformation();
 
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
@@ -42,7 +44,6 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/cart`,
         },
       },
-      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 

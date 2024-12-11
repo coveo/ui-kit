@@ -1,3 +1,10 @@
+/**
+ * This module is meant to simulate an API that interacts with a cart managed through an external system.
+ *
+ * For the sake of simplicity, the simulated API is implemented as a singleton class instance whose methods allow
+ * interactions with a fake database represented as a private property.
+ */
+
 export type ExternalCartItem = {
   uniqueId: string;
   productName: string;
@@ -22,62 +29,62 @@ export type ExternalCartRemoveItemResponse =
     })
   | null;
 
-class ExternalCartAPI {
-  private cart: Record<string, ExternalCartItem | undefined> = {};
+class ExternalCartService {
+  private cartDB: Record<string, ExternalCartItem | undefined> = {};
 
   private constructor() {}
 
-  public static getInstance(): ExternalCartAPI {
-    if (!globalThis.__externalCartInstance) {
-      globalThis.__externalCartInstance = new ExternalCartAPI();
+  public static getInstance(): ExternalCartService {
+    if (!globalThis.__externalCartServiceInstance) {
+      globalThis.__externalCartServiceInstance = new ExternalCartService();
     }
-    return globalThis.__externalCartInstance as ExternalCartAPI;
+    return globalThis.__externalCartServiceInstance as ExternalCartService;
   }
 
   public async addItem(
     item: Omit<ExternalCartItem, 'totalQuantity'>
   ): Promise<ExternalCartAddItemResponse> {
-    const existingItem = this.cart[item.uniqueId];
+    const existingItem = this.cartDB[item.uniqueId];
 
     if (existingItem) {
-      this.cart[item.uniqueId] = {
+      this.cartDB[item.uniqueId] = {
         ...existingItem,
         totalQuantity: existingItem.totalQuantity + 1,
       };
     } else {
-      this.cart[item.uniqueId] = {...item, totalQuantity: 1};
+      this.cartDB[item.uniqueId] = {...item, totalQuantity: 1};
     }
 
-    return this.cart[item.uniqueId]!;
+    return this.cartDB[item.uniqueId]!;
   }
 
   public async removeItem(
     item: Omit<ExternalCartItem, 'totalQuantity'>
   ): Promise<ExternalCartRemoveItemResponse> {
-    const existingItem = this.cart[item.uniqueId];
+    const existingItem = this.cartDB[item.uniqueId];
 
     if (!existingItem) {
       throw new Error('Item not found');
     }
 
     if (existingItem.totalQuantity <= 1) {
-      delete this.cart[item.uniqueId];
+      delete this.cartDB[item.uniqueId];
     } else {
-      this.cart[item.uniqueId] = {
+      this.cartDB[item.uniqueId] = {
         ...existingItem,
         totalQuantity: existingItem.totalQuantity - 1,
       };
     }
 
-    return this.cart[item.uniqueId] ?? null;
+    return this.cartDB[item.uniqueId] ?? null;
   }
 
   public async getItems(): Promise<ExternalCartItem[]> {
-    return Object.values(this.cart).filter((item) => item !== undefined);
+    return Object.values(this.cartDB).filter((item) => item !== undefined);
   }
 
   public async getItem(uniqueId: string): Promise<ExternalCartItem | null> {
-    return this.cart[uniqueId] ?? null;
+    return this.cartDB[uniqueId] ?? null;
   }
 
   public async getTotalPrice(): Promise<number> {
@@ -94,7 +101,7 @@ class ExternalCartAPI {
 
   public async purchase(): Promise<ExternalCartPurchaseResponse> {
     const transactionId = Math.random().toString(36).substring(7);
-    this.cart = {};
+    this.cartDB = {};
 
     return {
       transactionId,
@@ -105,8 +112,8 @@ class ExternalCartAPI {
 
 declare global {
   // eslint-disable-next-line no-var
-  var __externalCartInstance: ExternalCartAPI | undefined;
+  var __externalCartServiceInstance: ExternalCartService | undefined;
 }
 
-const externalCartAPI = ExternalCartAPI.getInstance();
-export default externalCartAPI;
+const externalCartService = ExternalCartService.getInstance();
+export default externalCartService;

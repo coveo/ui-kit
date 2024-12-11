@@ -1,24 +1,22 @@
-import {ExternalCartItem} from '@/client/external-cart-api';
-import {ExternalCatalogItem} from '@/client/external-catalog-api';
+import {ExternalCartItem} from '@/external-services/external-cart-service';
+import {ExternalCatalogItem} from '@/external-services/external-catalog-service';
 import {useProductView} from '@/lib/commerce-engine';
 import {formatCurrency} from '@/utils/format-currency';
 import {useEffect, useRef} from 'react';
 import AddToCartButton from './add-to-cart-button';
 import RemoveFromCartButton from './remove-from-cart-button';
 
-interface ProductViewProps {
-  catalogItem: ExternalCatalogItem;
-  cartItem: ExternalCartItem | null;
-  language: string;
-  currency: string;
-}
-
 export default function ProductView({
   catalogItem,
   cartItem,
   language,
   currency,
-}: ProductViewProps) {
+}: {
+  catalogItem: ExternalCatalogItem;
+  cartItem: ExternalCartItem | null;
+  language: string;
+  currency: string;
+}) {
   const {methods} = useProductView();
 
   const {

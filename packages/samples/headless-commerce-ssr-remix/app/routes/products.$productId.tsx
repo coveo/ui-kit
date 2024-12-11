@@ -1,8 +1,10 @@
-import externalCartAPI, {ExternalCartItem} from '@/client/external-cart-api';
-import externalCatalogAPI, {
+import externalCartService, {
+  ExternalCartItem,
+} from '@/external-services/external-cart-service';
+import externalCatalogService, {
   ExternalCatalogItem,
-} from '@/client/external-catalog-api';
-import externalContextAPI from '@/client/external-context-api';
+} from '@/external-services/external-catalog-service';
+import externalContextService from '@/external-services/external-context-service';
 import {
   standaloneEngineDefinition,
   StandaloneStaticState,
@@ -24,10 +26,10 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   invariant(productId, 'Missing productId parameter');
 
-  const catalogItem = await externalCatalogAPI.getItem(request.url);
+  const catalogItem = await externalCatalogService.getItem(request.url);
 
   const {country, currency, language} =
-    await externalContextAPI.getContextInformation();
+    await externalContextService.getContextInformation();
 
   const navigatorContext = await getNavigatorContext(request);
 
@@ -39,7 +41,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     controllers: {
       cart: {
         initialState: {
-          items: toCoveoCartItems(await externalCartAPI.getItems()),
+          items: toCoveoCartItems(await externalCartService.getItems()),
         },
       },
       context: {
@@ -50,11 +52,10 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
           url: `https://sports.barca.group/products/${productId}`,
         },
       },
-      //parameterManager: {initialState: {parameters: {}}},
     },
   });
 
-  const cartItem = await externalCartAPI.getItem(productId);
+  const cartItem = await externalCartService.getItem(productId);
 
   return {
     staticState,

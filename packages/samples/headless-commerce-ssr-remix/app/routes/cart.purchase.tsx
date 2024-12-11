@@ -1,5 +1,5 @@
-import externalCartAPI from '@/client/external-cart-api';
+import externalCartService from '@/external-services/external-cart-service';
 
 export const action = async () => {
-  return await externalCartAPI.purchase();
+  return await externalCartService.purchase();
 };

@@ -1,22 +1,20 @@
-import {ExternalCartItem} from '@/client/external-cart-api';
+import {ExternalCartItem} from '@/external-services/external-cart-service';
 import {formatCurrency} from '@/utils/format-currency';
 import AddToCartButton from './add-to-cart-button';
 import PurchaseButton from './purchase-button';
 import RemoveFromCartButton from './remove-from-cart-button';
-
-interface CartProps {
-  items: ExternalCartItem[];
-  totalPrice: number;
-  language: string;
-  currency: string;
-}
 
 export default function Cart({
   items,
   totalPrice,
   language,
   currency,
-}: CartProps) {
+}: {
+  items: ExternalCartItem[];
+  totalPrice: number;
+  language: string;
+  currency: string;
+}) {
   return (
     <>
       {items === undefined || items.length === 0 ? (

@@ -1,19 +1,17 @@
-import {ExternalCartItem} from '@/client/external-cart-api';
+import {ExternalCartItem} from '@/external-services/external-cart-service';
 import {useCart} from '@/lib/commerce-engine';
 import {useFetcher} from '@remix-run/react';
 import {useEffect} from 'react';
-
-type AddToCartButtonProps = {
-  productId: string;
-  price: number;
-  name: string;
-};
 
 export default function AddToCartButton({
   productId,
   price,
   name,
-}: AddToCartButtonProps) {
+}: {
+  productId: string;
+  price: number;
+  name: string;
+}) {
   const fetcher = useFetcher<ExternalCartItem>();
   const {methods} = useCart();
 
@@ -35,6 +33,7 @@ export default function AddToCartButton({
       productId,
       quantity,
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
