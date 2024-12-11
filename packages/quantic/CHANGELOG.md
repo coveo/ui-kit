@@ -1,3 +1,10 @@
+## 3.11.0 (2024-12-11)
+
+- feat(quantic): make quantic notifications component dismissible (#4733) ([96cc465](https://github.com/coveo/ui-kit/commits/96cc465)), closes [#4733](https://github.com/coveo/ui-kit/issues/4733)
+- test(quantic): playwright tests added for user actions feature (#4758) ([53c1c10](https://github.com/coveo/ui-kit/commits/53c1c10)), closes [#4758](https://github.com/coveo/ui-kit/issues/4758)
+- test(quantic): support e2e testing with LWS and with Locker Service with Playwright (#4711) ([4368ee0](https://github.com/coveo/ui-kit/commits/4368ee0)), closes [#4711](https://github.com/coveo/ui-kit/issues/4711)
+- fix(headless): update the rga events to send the searchId instead of the streamId as response id (#4 ([d95ed0a](https://github.com/coveo/ui-kit/commits/d95ed0a)), closes [#4766](https://github.com/coveo/ui-kit/issues/4766)
+
 ## 3.10.0 (2024-12-04)
 
 - fix(deps): update dependency dompurify to v3.2.0 j:kit-282 (#4724) ([290a8b6](https://github.com/coveo/ui-kit/commits/290a8b6)), closes [#4724](https://github.com/coveo/ui-kit/issues/4724)
