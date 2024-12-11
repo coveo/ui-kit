@@ -1,4 +1,4 @@
-import {Locator, Page, Request} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
 
 export class PagerObject {
