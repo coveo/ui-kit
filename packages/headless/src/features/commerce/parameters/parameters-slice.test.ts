@@ -1,4 +1,9 @@
 import {FacetValueState} from '../../facets/facet-api/value.js';
+import {selectCategoryFacetSearchResult} from '../../facets/facet-search-set/category/category-facet-search-actions.js';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {setView} from '../context/context-actions.js';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions.js';
 import {
@@ -567,6 +572,56 @@ describe('commerceParameters slice', () => {
     });
   });
 
+  describe('when #selectCategoryFacetSearchResult is dispatched', () => {
+    let state: CommerceParametersState;
+
+    beforeEach(() => {
+      state = {
+        ...initialState,
+        cf: {facetId1: ['f1v1']},
+      };
+    });
+
+    it('sets state.page to undefined', () => {
+      const state = {
+        ...initialState,
+        page: 5,
+      };
+      const finalState = parametersReducer(
+        state,
+        selectCategoryFacetSearchResult({
+          facetId: 'facetId2',
+          value: {
+            path: ['f2v1', 'f2v2'],
+            count: 1,
+            displayValue: 'f2v2',
+            rawValue: 'f2v2',
+          },
+        })
+      );
+      expect(finalState.page).toBeUndefined();
+    });
+    it('sets state.cf[payload.facetId] to payload.value.path', () => {
+      const finalState = parametersReducer(
+        state,
+        selectCategoryFacetSearchResult({
+          facetId: 'facetId2',
+          value: {
+            path: ['f2v1', 'f2v2'],
+            count: 1,
+            displayValue: 'f2v2',
+            rawValue: 'f2v2',
+          },
+        })
+      );
+
+      expect(finalState).toEqual({
+        ...state,
+        cf: {facetId1: ['f1v1'], facetId2: ['f2v1', 'f2v2']},
+      });
+    });
+  });
+
   const testUnsetValueAfterRegularFacetToggle = (
     stateKey: keyof CommerceParametersState,
     payloadValueState: FacetValueState,
@@ -804,6 +859,152 @@ describe('commerceParameters slice', () => {
         });
       }
     );
+  });
+
+  const testUnsetValueAfterFacetSearch = (
+    key: 'f' | 'fExcluded',
+    action: typeof selectFacetSearchResult | typeof excludeFacetSearchResult
+  ) => {
+    describe(`when state.${key}[payload.facetId] is defined`, () => {
+      let state: CommerceParametersState;
+      beforeEach(() => {
+        state = {
+          ...initialState,
+          [key]: {
+            facetId1: ['f1v1raw'],
+            facetId2: ['f2v1raw', 'f2v2raw'],
+          },
+        };
+      });
+
+      it(`deletes payload.value.rawValue from state.${key}[payload.facetId]`, () => {
+        const finalState = parametersReducer(
+          state,
+          action({
+            facetId: 'facetId2',
+            value: {
+              count: 1,
+              displayValue: 'f2v2',
+              rawValue: 'f2v2raw',
+            },
+          })
+        );
+        expect(finalState[key]).toEqual({
+          facetId1: ['f1v1raw'],
+          facetId2: ['f2v1raw'],
+        });
+      });
+
+      it(`when state.${key}[payload.facetId] is empty, sets state.${key}[payload.facetId] to undefined`, () => {
+        const finalState = parametersReducer(
+          state,
+          action({
+            facetId: 'facetId1',
+            value: {
+              count: 1,
+              displayValue: 'f1v1',
+              rawValue: 'f1v1raw',
+            },
+          })
+        );
+        expect(finalState[key]).toEqual({facetId2: ['f2v1raw', 'f2v2raw']});
+      });
+
+      it(`when state.${key} has no keys, sets state.${key} to undefined`, () => {
+        state = {
+          ...state,
+          [key]: {facetId1: ['f1v1raw']},
+        };
+
+        const finalState = parametersReducer(
+          state,
+          action({
+            facetId: 'facetId1',
+            value: {
+              count: 1,
+              displayValue: 'f1v1',
+              rawValue: 'f1v1raw',
+            },
+          })
+        );
+        expect(finalState[key]).toBeUndefined();
+      });
+    });
+  };
+
+  describe('when #selectFacetSearchResult is dispatched', () => {
+    it('sets state.page to undefined', () => {
+      const state = {
+        ...initialState,
+        page: 5,
+      };
+      const finalState = parametersReducer(
+        state,
+        selectFacetSearchResult({
+          facetId: 'facetId',
+          value: {
+            count: 1,
+            displayValue: 'displayValue',
+            rawValue: 'rawValue',
+          },
+        })
+      );
+      expect(finalState.page).toBeUndefined();
+    });
+    testUnsetValueAfterFacetSearch('fExcluded', selectFacetSearchResult);
+    it('sets state.f[payload.facetId] to payload.value.rawValue', () => {
+      const finalState = parametersReducer(
+        initialState,
+        selectFacetSearchResult({
+          facetId: 'facetId',
+          value: {
+            count: 1,
+            displayValue: 'displayValue',
+            rawValue: 'rawValue',
+          },
+        })
+      );
+      expect(finalState).toEqual({...initialState, f: {facetId: ['rawValue']}});
+    });
+  });
+
+  describe('when #excludeFacetSearchResult is dispatched', () => {
+    it('sets state.page to undefined', () => {
+      const state = {
+        ...initialState,
+        page: 5,
+      };
+      const finalState = parametersReducer(
+        state,
+        excludeFacetSearchResult({
+          facetId: 'facetId',
+          value: {
+            count: 1,
+            displayValue: 'displayValue',
+            rawValue: 'rawValue',
+          },
+        })
+      );
+      expect(finalState.page).toBeUndefined();
+    });
+    testUnsetValueAfterFacetSearch('f', excludeFacetSearchResult);
+    it('sets state.fExcluded[payload.facetId] to payload.value.rawValue', () => {
+      const finalState = parametersReducer(
+        initialState,
+        excludeFacetSearchResult({
+          facetId: 'facetId',
+          value: {
+            count: 1,
+            displayValue: 'displayValue',
+            rawValue: 'rawValue',
+          },
+        })
+      );
+      expect(finalState).toEqual({
+        ...initialState,
+        fExcluded: {facetId: ['rawValue']},
+      });
+    });
   });
 
   const testUnsetValueAfterNumericRangeToggle = (

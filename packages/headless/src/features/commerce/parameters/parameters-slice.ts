@@ -1,4 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {selectCategoryFacetSearchResult} from '../../facets/facet-search-set/category/category-facet-search-actions.js';
+import {
+  excludeFacetSearchResult,
+  selectFacetSearchResult,
+} from '../../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {ToggleSelectFacetValueActionCreatorPayload} from '../../facets/facet-set/facet-set-actions.js';
 import {DateRangeRequest} from '../../facets/range-facets/date-facet-set/interfaces/request.js';
 import {NumericRangeRequest} from '../../facets/range-facets/numeric-facet-set/interfaces/request.js';
@@ -90,12 +95,24 @@ export const parametersReducer = createReducer(
         handleToggleCategoryFacetValue(state, action.payload)
       )
 
+      .addCase(selectCategoryFacetSearchResult, (state, action) =>
+        handleSelectCategoryFacetSearchResult(state, action)
+      )
+
       .addCase(toggleSelectFacetValue, (state, action) =>
         handleToggleSelectFacetValue(state, action.payload)
       )
 
       .addCase(toggleExcludeFacetValue, (state, action) =>
         handleToggleExcludeFacetValue(state, action.payload)
+      )
+
+      .addCase(selectFacetSearchResult, (state, action) =>
+        handleSelectFacetSearchResult(state, action)
+      )
+
+      .addCase(excludeFacetSearchResult, (state, action) =>
+        handleExcludeFacetSearchResult(state, action)
       )
 
       .addCase(toggleSelectNumericFacetValue, (state, action) =>
@@ -312,6 +329,17 @@ const handleToggleCategoryFacetValue = (
   state.cf[payload.facetId] = payload.selection.path;
 };
 
+const handleSelectCategoryFacetSearchResult = (
+  state: CommerceParametersState,
+  action: ReturnType<typeof selectCategoryFacetSearchResult>
+) => {
+  const payload = action.payload;
+  state.page = undefined;
+
+  state.cf ??= {};
+  state.cf[payload.facetId] = payload.value.path;
+};
+
 const handleToggleSelectFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectFacetValueActionCreatorPayload
@@ -347,6 +375,25 @@ const handleToggleSelectFacetValue = (
   }
 };
 
+const handleSelectFacetSearchResult = (
+  state: CommerceParametersState,
+  action: ReturnType<typeof selectFacetSearchResult>
+) => {
+  const payload = action.payload;
+  state.page = undefined;
+
+  unsetRegularValue(
+    state,
+    'fExcluded',
+    state.fExcluded,
+    payload.facetId,
+    payload.value.rawValue
+  );
+
+  state.f ??= {};
+  state.f[payload.facetId] = [payload.value.rawValue];
+};
+
 const handleToggleExcludeFacetValue = (
   state: CommerceParametersState,
   payload: ToggleSelectFacetValueActionCreatorPayload
@@ -380,6 +427,25 @@ const handleToggleExcludeFacetValue = (
       ];
       break;
   }
+};
+
+const handleExcludeFacetSearchResult = (
+  state: CommerceParametersState,
+  action: ReturnType<typeof excludeFacetSearchResult>
+) => {
+  const payload = action.payload;
+  state.page = undefined;
+
+  unsetRegularValue(
+    state,
+    'f',
+    state.f,
+    payload.facetId,
+    payload.value.rawValue
+  );
+
+  state.fExcluded ??= {};
+  state.fExcluded[payload.facetId] = [payload.value.rawValue];
 };
 
 const handleToggleSelectNumericFacetValue = (
