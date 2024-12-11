@@ -280,8 +280,10 @@ export default class QuanticSort extends LightningElement {
    * @returns {SortOption[]} The specified custom sort options.
    */
   get customSortOptions() {
+    /** @type {HTMLSlotElement} */
+    const slot = this.template.querySelector('slot[name="sortOption"]');
     /** @type {SortOption[]} */
-    return Array.from(this.querySelectorAll('c-quantic-sort-option')).map(
+    return Array.from(Array.from(slot?.assignedNodes())).map(
       // @ts-ignore
       ({label, value, criterion}) => ({label, value, criterion})
     );
