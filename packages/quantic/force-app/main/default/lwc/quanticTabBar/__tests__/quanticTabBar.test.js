@@ -11,33 +11,22 @@ const defaultOptions = {
   lightTheme: false,
 };
 
-const exampleItemOne = document.createElement('c-quantic-tab', {
-  is: 'c-quantic-tab',
-});
-exampleItemOne.innerText = 'Item One';
-exampleItemOne.setAttribute('engine-id', '1');
-exampleItemOne.setAttribute('label', 'Item One');
-
-const exampleItemTwo = document.createElement('c-quantic-tab', {
-  is: 'c-quantic-tab',
-});
-exampleItemTwo.innerText = 'Item Two';
-exampleItemTwo.setAttribute('engine-id', '2');
-exampleItemTwo.setAttribute('label', 'Item Two');
-
-const exampleAssignedElements = [exampleItemOne, exampleItemTwo];
-
-const tabBarItemDisplayedStyles = '';
-
 const selectors = {
   tabBarContainer: '.tab-bar_container',
   dropdown: '.slds-dropdown',
 };
 
-function createTestComponent(
-  options = defaultOptions,
-  assignedElements = exampleAssignedElements
-) {
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
+
+function createTestComponent(options = defaultOptions, assignedElements = []) {
   mockSlotAssignedNodes(assignedElements);
 
   const element = createElement('c-quantic-tab-bar', {
@@ -56,16 +45,6 @@ function flushPromises() {
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-/**
- * Mocks the return value of the assignedNodes method.
- * @param {Array<Element>} assignedElements
- */
-function mockSlotAssignedNodes(assignedElements) {
-  HTMLSlotElement.prototype.assignedNodes = function () {
-    return assignedElements;
-  };
-}
-
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -79,16 +58,37 @@ describe('c-quantic-tab-bar', () => {
     cleanup();
   });
 
+  const exampleSlots = [
+    {
+      engineId: 'example engine id',
+      label: 'Item One',
+      expression: 'example expression',
+      isActive: true,
+    },
+    {
+      engineId: 'example engine id',
+      label: 'Item Two',
+      expression: 'example expression',
+      isActive: false,
+    },
+  ];
+
+  const exampleAssignedElements = exampleSlots;
+
   it('should display all the tabs without displaying the dropdown list', async () => {
     const expectedOpenDropdownClass = 'slds-is-open';
-    const expectedInnerText = ['Item One', 'Item Two'];
 
-    const element = createTestComponent();
+    const element = createTestComponent(
+      defaultOptions,
+      exampleAssignedElements
+    );
     await flushPromises();
 
-    [exampleItemOne, exampleItemTwo].forEach((tabItem, index) => {
-      expect(tabItem.style.display).toEqual(tabBarItemDisplayedStyles);
-      expect(tabItem.innerText).toEqual(expectedInnerText[index]);
+    exampleSlots.forEach((tabItem, index) => {
+      expect(tabItem.label).toEqual(exampleSlots[index].label);
+      expect(tabItem.engineId).toEqual(exampleSlots[index].engineId);
+      expect(tabItem.expression).toEqual(exampleSlots[index].expression);
+      expect(tabItem.isActive).toEqual(exampleSlots[index].isActive);
     });
 
     const dropdown = element.shadowRoot.querySelector(selectors.dropdown);
