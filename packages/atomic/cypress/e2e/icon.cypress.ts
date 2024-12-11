@@ -70,7 +70,7 @@ describe('Icon Test Suites', () => {
 
     describe('with an asset path', () => {
       const asset = 'assets://some-icon-that-does-not-exist';
-      const url = asset.replace('assets://', '/build/assets/') + '.svg';
+      const url = asset.replace('assets://', '/assets/') + '.svg';
 
       describe('with an asset path that returns a 404', () => {
         beforeEach(() => {
