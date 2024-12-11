@@ -3,13 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Coveo Atomic</title>
-    <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="/themes/coveo.css" />
-    <script type="module" nonce="1234567890">
-      import {setNonce} from '/build/atomic.esm.js';
+    <title>Coveo Atomic With Generative Question Answering</title>
 
-      setNonce('1234567890');
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+
+      defineCustomElements();
+    </script>
+
+    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
+    <script type="module">
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
 
@@ -17,104 +21,15 @@
       await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
+        search: {
+          pipeline: 'genqatest',
+        },
       });
 
       // Trigger a first search
       searchInterface.executeFirstSearch();
-
-      // Add/modify a translation
-      // searchInterface.i18n.addResourceBundle('en', 'translation', {
-      //   search: 'Make me feel lucky!'
-      // });
-
-      // Change the language of the interface dynamically
-      // searchInterface.language = 'fr';
-
-      // Interact with the engine
-      // searchInterface.engine.dispatch(...);
-
-      // Get all translated strings for a language/namespace
-      // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
-
-      // Add field value captions, using caption-[field]
-      // searchInterface.i18n.addResourceBundle('en', 'caption-author', {
-      //   'BBC News': 'The BBC',
-      //   amoreau: 'Alexandre Moreau',
-      // });
-
-      searchInterface.i18n.addResourceBundle('en', 'caption-filetype', {
-        '.html': 'html',
-      });
     </script>
-    <style nonce="1234567890">
-      /* Example on how to customize CSS variables */
-      /* :root {
-        --atomic-primary: red;
-        --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
-      } */
-
-      /* Example on how to customize result templates CSS parts */
-      /* atomic-result::part(result-link):hover {
-        color: orange;
-      } */
-
-      /* Example on how to customize the color facet */
-      atomic-color-facet::part(default-color-value) {
-        background-image: url('/build/assets/document.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(144, 144, 144);
-      }
-
-      atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/email.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(149, 174, 197);
-      }
-
-      atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('/build/assets/folder.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(139, 154, 227);
-      }
-
-      atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('/build/assets/video.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(176, 112, 230);
-      }
-
-      atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('/build/assets/knowledge.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(236, 148, 237);
-      }
-
-      atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('/build/assets/post.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: rgb(101, 202, 228);
-      }
-
-      atomic-color-facet::part(value-html) {
-        background-image: url('/build/assets/html.svg');
-        background-position: center;
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-color: transparent;
-      }
-
+    <style>
       body {
         margin: 0;
       }
@@ -131,15 +46,14 @@
   </head>
 
   <body>
-    <atomic-search-interface csp-nonce="1234567890" fields-to-include='["snrating", "sncost"]'>
+    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
-        <atomic-layout-section section="search">
+        <atomic-layout-section section="search" expanding>
           <atomic-search-box></atomic-search-box>
         </atomic-layout-section>
         <atomic-layout-section section="facets">
           <atomic-facet-manager>
-            <atomic-automatic-facet-generator desired-count="3"></atomic-automatic-facet-generator>
             <atomic-category-facet field="geographicalhierarchy" label="World Atlas" with-search>
             </atomic-category-facet>
             <atomic-facet field="author" label="Authors"></atomic-facet>
@@ -191,17 +105,8 @@
           </atomic-facet-manager>
         </atomic-layout-section>
         <atomic-layout-section section="main">
-          <atomic-layout-section section="horizontal-facets">
-            <atomic-segmented-facet-scrollable>
-              <atomic-segmented-facet field="inat_kingdom" label="Kingdom"></atomic-segmented-facet>
-            </atomic-segmented-facet-scrollable>
-            <atomic-popover>
-              <atomic-facet field="inat_family" label="Family" sort-criteria="alphanumericDescending"></atomic-facet>
-            </atomic-popover>
-            <atomic-popover>
-              <atomic-facet field="inat_class" label="Class"></atomic-facet>
-            </atomic-popover>
-          </atomic-layout-section>
+          <atomic-generated-answer></atomic-generated-answer>
+          <atomic-follow-up-question-list></atomic-follow-up-question-list>
           <atomic-layout-section section="status">
             <atomic-breadbox></atomic-breadbox>
             <atomic-query-summary></atomic-query-summary>
@@ -214,8 +119,6 @@
             <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
-            <atomic-smart-snippet></atomic-smart-snippet>
-            <atomic-smart-snippet-suggestions></atomic-smart-snippet-suggestions>
             <atomic-result-list>
               <atomic-result-template must-match-sourcetype="YouTube">
                 <template>
@@ -232,7 +135,7 @@
 
               <atomic-result-template>
                 <template>
-                  <style nonce="1234567890">
+                  <style>
                     .field {
                       display: inline-flex;
                       align-items: center;
@@ -309,7 +212,7 @@
                     <atomic-result-fields-list>
                       <atomic-field-condition class="field" if-defined="author">
                         <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
-                        <atomic-result-multi-value-text field="author"></atomic-result-multi-value-text>
+                        <atomic-result-text field="author"></atomic-result-text>
                       </atomic-field-condition>
 
                       <atomic-field-condition class="field" if-defined="source">
@@ -355,7 +258,7 @@
                     </atomic-result-section-excerpt>
                   </atomic-table-element>
                   <atomic-table-element label="author">
-                    <atomic-result-multi-value-text field="author"></atomic-result-multi-value-text>
+                    <atomic-result-text field="author"></atomic-result-text>
                   </atomic-table-element>
                   <atomic-table-element label="source">
                     <atomic-result-text field="source"></atomic-result-text>
@@ -373,11 +276,8 @@
             <atomic-no-results></atomic-no-results>
           </atomic-layout-section>
           <atomic-layout-section section="pagination">
-            <atomic-load-more-results></atomic-load-more-results>
-            <!-- Alternative pagination
-              <atomic-pager></atomic-pager>
-              <atomic-results-per-page></atomic-results-per-page>
-              -->
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
           </atomic-layout-section>
         </atomic-layout-section>
       </atomic-search-layout>

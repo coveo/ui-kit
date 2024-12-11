@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic With Tabs</title>
 
-    <script type="module" src="/build/atomic.esm.js"></script>
-    <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+
+      defineCustomElements();
+    </script>
+
+    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -64,7 +69,7 @@
 
       /* Example on how to customize the color facet */
       atomic-color-facet::part(default-color-value) {
-        background-image: url('/build/assets/document.svg');
+        background-image: url('@coveo/atomic/assets/document.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -72,7 +77,7 @@
       }
 
       atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/email.svg');
+        background-image: url('@coveo/atomic/assets/email.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -80,7 +85,7 @@
       }
 
       atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('/build/assets/folder.svg');
+        background-image: url('@coveo/atomic/assets/folder.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;

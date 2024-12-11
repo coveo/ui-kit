@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic for Slack</title>
 
-    <script type="module" src="/build/atomic.esm.js"></script>
-    <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+
+      defineCustomElements();
+    </script>
+
+    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
     <script type="module">
       import {loadAdvancedSearchQueryActions} from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
 

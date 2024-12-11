@@ -91,8 +91,23 @@
       }
     },
     "dev": {
-      "dependsOn": ["storybook", "stencil:dev", "cem:dev"],
+      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
       "executor": "nx:noop"
+    },
+    "build:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/watch.mjs",
+        "cwd": "{projectRoot}",
+        "waitUntilTargets": ["^dev"]
+      }
+    },
+    "web:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite serve dev",
+        "cwd": "{projectRoot}"
+      }
     },
     "stencil:dev": {
       "dependsOn": ["^build", "build:locales"],
@@ -132,7 +147,6 @@
     },
     "storybook": {
       "executor": "nx:run-commands",
-      "dependsOn": ["wait-on:stencil-ping"],
       "options": {
         "cwd": "{projectRoot}",
         "command": "npx storybook dev -p 4400"

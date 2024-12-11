@@ -125,7 +125,7 @@ function BindingGuard<Component extends LitElementWithBindings>(): (
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
       this.classList.toggle('atomic-hidden', !this.bindings);
-      return originalMethod?.call(this);
+      return this.bindings ? originalMethod?.call(this) : null;
     };
     return descriptor;
   };

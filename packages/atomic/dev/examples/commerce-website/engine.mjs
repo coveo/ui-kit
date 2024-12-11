@@ -1,8 +1,8 @@
-import {navContent} from './commerce-nav.mjs';
 import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
-} from '/build/headless/commerce/headless.esm.js';
+} from '@coveo/headless/commerce';
+import {navContent} from './commerce-nav.mjs';
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();

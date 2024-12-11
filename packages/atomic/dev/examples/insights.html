@@ -5,12 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic: Insight Panel example</title>
 
-    <script type="module" src="/build/atomic.esm.js"></script>
-    <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/themes/coveo.css" />
     <script type="module">
-      import {loadCaseContextActions} from '/build/headless/insight/headless.esm.js';
-      import {initializeBindings} from '/build/index.esm.js';
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/coveo.css';
+
+      defineCustomElements();
+    </script>
+
+    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
+    <script type="module">
+      import {initializeBindings} from '@coveo/atomic';
+      import {loadCaseContextActions} from '@coveo/headless/insight';
 
       async function main() {
         await customElements.whenDefined('atomic-insight-interface');

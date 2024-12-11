@@ -4,12 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic</title>
-
-    <script type="module" src="/build/atomic.esm.js"></script>
-    <script nomodule src="/build/atomic.js"></script>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="/themes/coveo.css" />
-    <script type="module">
+    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
+    <script type="module" nonce="1234567890">
+      import {setNonce} from '@coveo/atomic/loader';
+
+      setNonce('1234567890');
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
 
@@ -46,7 +46,7 @@
         '.html': 'html',
       });
     </script>
-    <style>
+    <style nonce="1234567890">
       /* Example on how to customize CSS variables */
       /* :root {
         --atomic-primary: red;
@@ -60,7 +60,7 @@
 
       /* Example on how to customize the color facet */
       atomic-color-facet::part(default-color-value) {
-        background-image: url('/build/assets/document.svg');
+        background-image: url('@coveo/atomic/assets/document.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -68,7 +68,7 @@
       }
 
       atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('/build/assets/email.svg');
+        background-image: url('@coveo/atomic/assets/email.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -76,7 +76,7 @@
       }
 
       atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('/build/assets/folder.svg');
+        background-image: url('@coveo/atomic/assets/folder.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -84,7 +84,7 @@
       }
 
       atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('/build/assets/video.svg');
+        background-image: url('@coveo/atomic/assets/video.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -92,7 +92,7 @@
       }
 
       atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('/build/assets/knowledge.svg');
+        background-image: url('@coveo/atomic/assets/knowledge.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -100,7 +100,7 @@
       }
 
       atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('/build/assets/post.svg');
+        background-image: url('@coveo/atomic/assets/post.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -108,7 +108,7 @@
       }
 
       atomic-color-facet::part(value-html) {
-        background-image: url('/build/assets/html.svg');
+        background-image: url('@coveo/atomic/assets/html.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -131,7 +131,7 @@
   </head>
 
   <body>
-    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
+    <atomic-search-interface csp-nonce="1234567890" fields-to-include='["snrating", "sncost"]'>
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -208,8 +208,9 @@
             <atomic-refine-toggle></atomic-refine-toggle>
             <atomic-sort-dropdown>
               <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
             </atomic-sort-dropdown>
-            <atomic-did-you-mean query-correction-mode="next"></atomic-did-you-mean>
+            <atomic-did-you-mean></atomic-did-you-mean>
             <atomic-notifications></atomic-notifications>
           </atomic-layout-section>
           <atomic-layout-section section="results">
@@ -231,7 +232,7 @@
 
               <atomic-result-template>
                 <template>
-                  <style>
+                  <style nonce="1234567890">
                     .field {
                       display: inline-flex;
                       align-items: center;
@@ -381,6 +382,6 @@
         </atomic-layout-section>
       </atomic-search-layout>
     </atomic-search-interface>
-    <script src="./header.js" type="text/javascript"></script>
+    <script src="../header.js" type="text/javascript"></script>
   </body>
 </html>
