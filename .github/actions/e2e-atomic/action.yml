@@ -25,7 +25,7 @@ runs:
         browser: chrome
         command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         spec: ${{ inputs.spec }}
-        start: npx nx atomic:web:dev
+        start: npx nx web:dev atomic
         wait-on: 'http://localhost:3333'
         wait-on-timeout: 600000
         install: false
