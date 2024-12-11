@@ -18,7 +18,7 @@ useCaseTestCases.forEach((useCase) => {
 
   test.describe(`quantic tab ${useCase.label}`, () => {
     test.describe('when clicking on a tab', () => {
-      test('should trigger a new search and log analytics', async ({
+      test('should trigger a new search and send the correct UA analytics event', async ({
         tab,
         search,
       }) => {
@@ -69,18 +69,15 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when testing accessibility', () => {
       test('should be accessible to keyboard', async ({tab}) => {
-        // Selecting the first tab
         await tab.clickTabButton(0);
 
         let activeTabLabel = await tab.activeTabLabel.textContent();
         expect(activeTabLabel).toEqual(expectedTabsLabels[0]);
 
-        // Selecting the next tab using the TAB, then ENTER key
         await tab.pressTabThenEnter();
         activeTabLabel = await tab.activeTabLabel.textContent();
         expect(activeTabLabel).toEqual(expectedTabsLabels[1]);
 
-        // Selecting the previous tab using the SHIFT + TAB, then SPACE key
         await tab.pressShiftTabThenSpace();
         activeTabLabel = await tab.activeTabLabel.textContent();
         expect(activeTabLabel).toEqual(expectedTabsLabels[0]);

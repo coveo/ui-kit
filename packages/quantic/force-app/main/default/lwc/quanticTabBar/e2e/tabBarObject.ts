@@ -24,16 +24,12 @@ export class TabBarObject {
     return this.tabBar.locator('.tab-bar_more-button');
   }
 
-  get moreButtonLabel(): Locator {
-    return this.moreButton.locator('button').first();
-  }
-
-  get moreButtonIcon(): Locator {
-    return this.moreButton.locator('lightning-icon');
-  }
-
   get dropdown(): Locator {
     return this.page.locator('.slds-dropdown-trigger');
+  }
+
+  get moreButtonLabel(): Locator {
+    return this.moreButton.locator('button').first();
   }
 
   get allDropdownOptions(): Locator {
@@ -42,10 +38,6 @@ export class TabBarObject {
 
   get tabBarContainer(): Locator {
     return this.page.locator('.tab-bar_container');
-  }
-
-  async clickTab(tabIndex: number): Promise<void> {
-    await this.allVisibleTabs.nth(tabIndex).click();
   }
 
   async clickMoreButton(): Promise<void> {
