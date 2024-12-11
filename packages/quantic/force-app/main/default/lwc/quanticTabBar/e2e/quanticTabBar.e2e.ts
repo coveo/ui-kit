@@ -164,7 +164,7 @@ useCaseTestCases.forEach((useCase) => {
           );
 
           const uaRequest =
-            await tabBar.waitForTabUaAnalytics(expectedActionCause);
+            await tabBar.waitForDropdownOptionSelectUaAnalytics();
           const requestBody = uaRequest.postDataJSON?.();
 
           expect(requestBody).not.toBeNull();

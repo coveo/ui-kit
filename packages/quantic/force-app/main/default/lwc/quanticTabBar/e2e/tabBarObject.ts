@@ -68,7 +68,7 @@ export class TabBarObject {
     return uaRequest;
   }
 
-  async waitForTabSelectUaAnalytics(): Promise<Request> {
+  async waitForDropdownOptionSelectUaAnalytics(): Promise<Request> {
     return this.waitForTabUaAnalytics('interfaceChange');
   }
 }
