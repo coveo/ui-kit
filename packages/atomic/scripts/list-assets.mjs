@@ -1,5 +1,5 @@
 import {copyFileSync, mkdirSync, readdirSync, writeFileSync} from 'node:fs';
-import {dirname} from 'node:path';
+import {dirname, extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const salesforceDesignSystem = dirname(
@@ -33,7 +33,7 @@ for (const [icons, subpath] of [
   [salesforceStandardIcons, 'standard'],
 ]) {
   for (const icon of icons) {
-    if (icon.isFile()) {
+    if (icon.isFile() && extname(icon.name) === '.svg') {
       copyFileSync(
         `${salesforceDesignSystem}/assets/icons/${subpath}/${icon.name}`,
         `dist/atomic/assets/${icon.name}`
