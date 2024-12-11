@@ -22,6 +22,14 @@ export class InvalidControllerDefinition extends Error {
   }
 }
 
+export class MultipleRecommendationError extends Error {
+  constructor(slotId: string) {
+    super();
+    this.name = 'MultipleRecommendationError';
+    this.message = `Multiple recommendation controllers found for the same slotId: ${slotId}. Only one recommendation controller per slotId is supported.`;
+  }
+}
+
 export class DisconnectedError extends Error {
   public statusCode: number;
   constructor(url: string, statusCode?: number) {
