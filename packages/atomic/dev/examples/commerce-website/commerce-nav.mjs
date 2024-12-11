@@ -117,7 +117,7 @@ if (!isOnSearchPage()) {
     }
   } else {
     standaloneSearchBox.innerHTML = `
-      <atomic-commerce-interface type="search">
+      <atomic-commerce-interface type="search" language-assets-path="/lang" icon-assets-path="/assets">
         ${standaloneSearchBoxHTML}
       </atomic-commerce-interface>`;
 

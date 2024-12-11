@@ -202,7 +202,11 @@
         <option value="target-selector">Target Selector</option>
       </select>
     </div>
-    <atomic-search-interface fields-to-include='["snrating","sncost"]'>
+    <atomic-search-interface
+      fields-to-include='["snrating","sncost"]'
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
       <atomic-ipx-modal is-open="true">
         <div slot="header">
           <atomic-layout-section class="search-section" section="search">
@@ -371,7 +375,7 @@
           <atomic-layout-section section="pagination">
             <atomic-load-more-results class="pagination-more-result"></atomic-load-more-results>
           </atomic-layout-section>
-          <atomic-recs-interface fields-to-include="">
+          <atomic-recs-interface fields-to-include="" language-assets-path="/lang" icon-assets-path="/assets">
             <atomic-ipx-recs-list label="Recommended articles" number-of-recommendations="10">
               <atomic-recs-result-template>
                 <template>
@@ -478,7 +482,11 @@
       <atomic-ipx-button is-modal-open="true" label="Help"></atomic-ipx-button>
     </atomic-search-interface>
     <div id="host-div">
-      <atomic-search-interface fields-to-include='["snrating","sncost"]'>
+      <atomic-search-interface
+        fields-to-include='["snrating","sncost"]'
+        language-assets-path="/lang"
+        icon-assets-path="/assets"
+      >
         <atomic-ipx-embedded></atomic-ipx-embedded>
       </atomic-search-interface>
     </div>

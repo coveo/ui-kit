@@ -73,6 +73,8 @@
           pipeline="UI_KIT_E2E"
           search-hub="UI_KIT_E2E"
           reflect-state-in-url="false"
+          language-assets-path="/lang"
+          icon-assets-path="/assets"
         >
           <atomic-query-summary></atomic-query-summary>
           <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
@@ -84,7 +86,7 @@
       </div>
       <div>
         <h1>Interface #2, linked to url</h1>
-        <atomic-search-interface id="interface-2">
+        <atomic-search-interface id="interface-2" language-assets-path="/lang" icon-assets-path="/assets">
           <atomic-query-summary></atomic-query-summary>
           <atomic-result-list></atomic-result-list>
         </atomic-search-interface>

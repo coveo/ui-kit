@@ -12,7 +12,6 @@
       defineCustomElements();
     </script>
 
-    <link rel="stylesheet" href="@coveo/atomic/themes/coveo.css" />
     <script type="module">
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
@@ -46,7 +45,11 @@
   </head>
 
   <body>
-    <atomic-search-interface fields-to-include='["snrating", "sncost"]'>
+    <atomic-search-interface
+      fields-to-include='["snrating", "sncost"]'
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search" expanding>

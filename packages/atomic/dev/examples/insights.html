@@ -53,7 +53,11 @@
   </head>
   <body>
     <button id="widget-view">Toggle widget view</button>
-    <atomic-insight-interface fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'>
+    <atomic-insight-interface
+      fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'
+      language-assets-path="/lang"
+      icon-assets-path="/assets"
+    >
       <atomic-insight-full-search-button
         slot="full-search"
         tooltip="Full Search Button Tooltip"
