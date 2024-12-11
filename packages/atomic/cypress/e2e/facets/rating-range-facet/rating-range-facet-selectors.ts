@@ -1,5 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
-
 export const ratingRangeFacetComponent = 'atomic-rating-range-facet';
 export const RatingRangeFacetSelectors = {
   withId(id: string) {
@@ -63,8 +61,6 @@ export const RatingRangeFacetSelectors = {
     return this.valueLabel().eq(index);
   },
   starsIconAtIndex(index: number) {
-    return cy
-      .wait(TestFixture.interceptAliases.Build)
-      .then(() => this.facetValueAtIndex(index).find('atomic-icon'));
+    return this.facetValueAtIndex(index).find('atomic-icon');
   },
 };

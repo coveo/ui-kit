@@ -28,7 +28,6 @@ export const RouteAlias = {
   Quickview: '@coveoQuickview',
   Locale: '@locale',
   GenQAStream: '@genQAStream',
-  Build: '@build',
 };
 
 export const ConsoleAliases = {
@@ -80,12 +79,7 @@ export function setupIntercept() {
 
   cy.intercept({
     method: 'GET',
-    url: /.*\/build\/[\w|-]+-[\d|\w]+\.js/,
-  }).as(RouteAlias.Build.substring(1));
-
-  cy.intercept({
-    method: 'GET',
-    path: '/build/lang/**.json',
+    path: '/lang/**.json',
   }).as(RouteAlias.Locale.substring(1));
 }
 

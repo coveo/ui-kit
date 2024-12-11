@@ -1,5 +1,3 @@
-import {TestFixture} from '../../../fixtures/test-fixture';
-
 export const ratingFacetComponent = 'atomic-rating-facet';
 export const RatingFacetSelectors = {
   withId(id: string) {
@@ -78,8 +76,6 @@ export const RatingFacetSelectors = {
     return this.valueRating().eq(index);
   },
   starsIconAtIndex(index: number) {
-    return cy
-      .wait(TestFixture.interceptAliases.Build)
-      .then(() => this.facetValueAtIndex(index).find('atomic-icon'));
+    return this.facetValueAtIndex(index).find('atomic-icon');
   },
 };
