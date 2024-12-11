@@ -944,27 +944,34 @@ describe('commerceParameters slice', () => {
           facetId: 'facetId',
           value: {
             count: 1,
-            displayValue: 'displayValue',
-            rawValue: 'rawValue',
+            displayValue: 'displayValue2',
+            rawValue: 'rawValue2',
           },
         })
       );
       expect(finalState.page).toBeUndefined();
     });
     testUnsetValueAfterFacetSearch('fExcluded', selectFacetSearchResult);
-    it('sets state.f[payload.facetId] to payload.value.rawValue', () => {
+    it('appends payload.value.rawValue to state.f[payload.facetId]', () => {
+      const state = {
+        ...initialState,
+        f: {
+          facetId: ['rawValue1'],
+        },
+      };
+
       const finalState = parametersReducer(
-        initialState,
+        state,
         selectFacetSearchResult({
           facetId: 'facetId',
           value: {
             count: 1,
-            displayValue: 'displayValue',
-            rawValue: 'rawValue',
+            displayValue: 'displayValue2',
+            rawValue: 'rawValue2',
           },
         })
       );
-      expect(finalState).toEqual({...initialState, f: {facetId: ['rawValue']}});
+      expect(finalState.f).toEqual({facetId: ['rawValue1', 'rawValue2']});
     });
   });
 
@@ -980,29 +987,35 @@ describe('commerceParameters slice', () => {
           facetId: 'facetId',
           value: {
             count: 1,
-            displayValue: 'displayValue',
-            rawValue: 'rawValue',
+            displayValue: 'displayValue2',
+            rawValue: 'rawValue2',
           },
         })
       );
       expect(finalState.page).toBeUndefined();
     });
     testUnsetValueAfterFacetSearch('f', excludeFacetSearchResult);
-    it('sets state.fExcluded[payload.facetId] to payload.value.rawValue', () => {
+    it('appends payload.value.rawValue to state.fExcluded[payload.facetId]', () => {
+      const state = {
+        ...initialState,
+        fExcluded: {
+          facetId: ['rawValue1'],
+        },
+      };
+
       const finalState = parametersReducer(
-        initialState,
+        state,
         excludeFacetSearchResult({
           facetId: 'facetId',
           value: {
             count: 1,
-            displayValue: 'displayValue',
-            rawValue: 'rawValue',
+            displayValue: 'displayValue2',
+            rawValue: 'rawValue2',
           },
         })
       );
-      expect(finalState).toEqual({
-        ...initialState,
-        fExcluded: {facetId: ['rawValue']},
+      expect(finalState.fExcluded).toEqual({
+        facetId: ['rawValue1', 'rawValue2'],
       });
     });
   });
