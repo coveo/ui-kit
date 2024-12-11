@@ -1,6 +1,16 @@
 'use client';
 
 import {
+  ArrayValue,
+  NumberValue,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
+import {
+  CartItem,
+  CartState,
+  ContextState,
   HydrateStaticStateOptions,
   InferHydratedState,
   InferStaticState,
@@ -46,19 +56,21 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
     useEffect(() => {
       const {searchActions, controllers} = staticState;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const hydrateControllers: Record<string, any> = {};
+      const hydrateControllers: Record<string, object> = {};
 
-      if ('cart' in controllers) {
-        hydrateControllers.cart = {
+      const cartKey = findCartKey(controllers);
+
+      if (cartKey) {
+        hydrateControllers[cartKey] = {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          initialState: {items: (controllers as any).cart.state.items},
+          initialState: {items: (controllers as any)[cartKey].state.items},
         };
       }
 
-      if ('context' in controllers) {
+      const contextKey = findContextKey(controllers);
+      if (contextKey) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        hydrateControllers.context = (controllers as any).context.state;
+        hydrateControllers[contextKey] = (controllers as any)[contextKey].state;
       }
 
       definition
@@ -101,4 +113,61 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
       </StaticStateProviderWithAnyControllers>
     );
   };
+}
+
+function findCartKey(controllers: {}) {
+  const cartStateSchema = new Schema<CartState>({
+    items: new ArrayValue<CartItem>({
+      required: true,
+      each: new RecordValue({
+        values: {
+          productId: new StringValue({required: true}),
+          name: new StringValue({required: true}),
+          price: new NumberValue({required: true}),
+          quantity: new NumberValue({required: true}),
+        },
+      }),
+    }),
+    totalQuantity: new NumberValue({required: true}),
+    totalPrice: new NumberValue({required: true}),
+  });
+
+  return findKeyBySchema(controllers, cartStateSchema);
+}
+
+function findContextKey(controllers: {}) {
+  const contextStateSchema = new Schema<ContextState>({
+    language: new StringValue({required: true}),
+    country: new StringValue({required: true}),
+    currency: new StringValue({required: true}),
+    location: new RecordValue({
+      values: {
+        latitude: new NumberValue({required: true}),
+        longitude: new NumberValue({required: true}),
+      },
+    }),
+    view: new RecordValue({
+      values: {
+        url: new StringValue({required: true}),
+      },
+    }),
+  });
+
+  return findKeyBySchema(controllers, contextStateSchema);
+}
+
+function findKeyBySchema<T extends object>(
+  controllers: {},
+  schema: Schema<T>
+): string | undefined {
+  return Object.keys(controllers).find((key) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const controller = (controllers as any)[key];
+    try {
+      schema.validate(controller?.state);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  });
 }
