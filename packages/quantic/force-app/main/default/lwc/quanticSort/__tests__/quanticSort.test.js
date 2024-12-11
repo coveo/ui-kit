@@ -319,7 +319,7 @@ describe('c-quantic-sort', () => {
     };
     const exampleAssignedElements = [invalidExampleSlot];
 
-    it('should build the controller with the correct default sort option and display the custom sort options', async () => {
+    it('should display the component error', async () => {
       const element = createTestComponent(
         defaultOptions,
         exampleAssignedElements
