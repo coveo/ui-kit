@@ -391,7 +391,10 @@ const handleSelectFacetSearchResult = (
   );
 
   state.f ??= {};
-  state.f[payload.facetId] = [payload.value.rawValue];
+  state.f[payload.facetId] = [
+    ...(state.f[payload.facetId] ?? []),
+    payload.value.rawValue,
+  ];
 };
 
 const handleToggleExcludeFacetValue = (
@@ -445,7 +448,10 @@ const handleExcludeFacetSearchResult = (
   );
 
   state.fExcluded ??= {};
-  state.fExcluded[payload.facetId] = [payload.value.rawValue];
+  state.fExcluded[payload.facetId] = [
+    ...(state.fExcluded[payload.facetId] ?? []),
+    payload.value.rawValue,
+  ];
 };
 
 const handleToggleSelectNumericFacetValue = (
