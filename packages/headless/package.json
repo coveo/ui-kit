@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.10.0",
+  "version": "3.11.0",
   "files": [
     "dist/"
   ],
@@ -153,10 +153,10 @@
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0"
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.6",
+    "@coveo/bueno": "1.0.7",
     "@coveo/relay": "0.7.10",
     "@coveo/relay-event-types": "12.0.1",
     "@microsoft/fetch-event-source": "2.0.1",
@@ -168,7 +168,7 @@
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
-    "pino": "8.21.0",
+    "pino": "9.5.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
@@ -179,10 +179,10 @@
     "@microsoft/tsdoc": "0.15.0",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
-    "execa": "8.0.1",
+    "execa": "9.5.1",
     "install": "0.13.0",
     "ts-node": "10.9.2",
-    "vitest": "2.1.1",
+    "vitest": "2.1.5",
     "typedoc": "0.26.11"
   },
   "engines": {
