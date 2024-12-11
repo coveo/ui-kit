@@ -77,9 +77,6 @@
       "dependsOn": ["^build"],
       "cache": true
     },
-    "dev": {
-      "dependsOn": ["^build"]
-    },
     "prod": {
       "dependsOn": ["build"]
     },
