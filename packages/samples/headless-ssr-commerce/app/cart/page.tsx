@@ -41,7 +41,21 @@ export default async function Search() {
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBought']
+    {
+      controllers: {
+        popularBought: {enabled: true},
+        popularViewed: {enabled: true},
+        cart: {initialState: {items}},
+        context: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: 'https://sports.barca.group/cart',
+          },
+        },
+      },
+    }
   );
   return (
     <StandaloneProvider

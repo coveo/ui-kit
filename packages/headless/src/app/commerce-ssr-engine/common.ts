@@ -80,6 +80,8 @@ export function buildControllerDefinitions<
       (solutionType in definition &&
         definition[solutionType as keyof typeof definition] === false);
 
+    const props = propsMap?.[key as keyof typeof propsMap];
+
     if (unavailableInSolutionType()) {
       return null;
     }
@@ -88,7 +90,7 @@ export function buildControllerDefinitions<
       definition,
       engine,
       solutionType,
-      props: propsMap?.[key as keyof typeof propsMap],
+      props,
     });
   });
 

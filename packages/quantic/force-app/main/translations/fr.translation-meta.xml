@@ -880,4 +880,8 @@
     <label>Actions de l'utilisateur</label>
     <name>quantic_UserActions</name>
   </customLabels>
+  <customLabels>
+    <label>Fermer la notification</label>
+    <name>quantic_CloseNotification</name>
+  </customLabels>
 </Translations>
