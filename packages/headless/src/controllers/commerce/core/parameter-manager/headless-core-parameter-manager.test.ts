@@ -21,7 +21,6 @@ describe('parameter manager', () => {
   const mockActiveParametersSelector = vi.fn();
   const mockRestoreActionCreator = vi.fn();
   const mockFetchProductsActionCreator = vi.fn();
-  const mockEnrichParameters = vi.fn();
 
   function initEngine(preloadedState = buildMockCommerceState()) {
     engine = buildMockCommerceEngine(preloadedState);
@@ -36,7 +35,6 @@ describe('parameter manager', () => {
       activeParametersSelector: mockActiveParametersSelector,
       restoreActionCreator: mockRestoreActionCreator,
       fetchProductsActionCreator: mockFetchProductsActionCreator,
-      enrichParameters: mockEnrichParameters,
       ...props,
     });
   }
@@ -106,36 +104,35 @@ describe('parameter manager', () => {
   });
 
   describe('#synchronize', () => {
-    describe('when new parameters are the same as the old ones', () => {
-      it('does not dispatch any action', () => {
-        mockRestoreActionCreator.mockReset();
+    beforeEach(() => {
+      mockRestoreActionCreator.mockReset();
+      mockFetchProductsActionCreator.mockReset();
+    });
+    it('when the new parameters are the same as the previous ones, does not dispatch any action', () => {
+      mockRestoreActionCreator.mockReset();
+      mockFetchProductsActionCreator.mockReset();
 
-        mockActiveParametersSelector.mockReturnValue({page: 2});
-        const parameters = {page: 2};
-        parameterManager.synchronize(parameters);
+      mockActiveParametersSelector.mockReturnValue({page: 2});
+      parameterManager.synchronize({page: 2});
 
-        expect(mockRestoreActionCreator).not.toHaveBeenCalled();
-      });
+      expect(mockRestoreActionCreator).not.toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).not.toHaveBeenCalled();
     });
 
-    describe('when there is a difference in parameters', () => {
-      beforeEach(() => {
-        mockActiveParametersSelector.mockReturnValue({page: 1});
-        mockEnrichParameters.mockImplementation((_, params) => params);
-      });
+    it('when there are no new and no active parameters, dispatches #restoreActionCreator and #fetchProductsActionCreator', () => {
+      mockActiveParametersSelector.mockReturnValue({});
+      parameterManager.synchronize({});
 
-      it('dispatches #restoreActionCreator', () => {
-        const parameters = {
-          page: 2,
-        };
-        parameterManager.synchronize(parameters);
-        expect(mockRestoreActionCreator).toHaveBeenCalledWith(parameters);
-      });
+      expect(mockRestoreActionCreator).toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).toHaveBeenCalled();
+    });
 
-      it('dispatches #fetchProductsActionCreator', () => {
-        parameterManager.synchronize({page: 2});
-        expect(mockFetchProductsActionCreator).toHaveBeenCalled();
-      });
+    it('when there the new parameters are different from the previous ones, dispatches #restoreActionCreator and #fetchProductsActionCreator', () => {
+      mockActiveParametersSelector.mockReturnValue({page: 2});
+      parameterManager.synchronize({perPage: 5});
+
+      expect(mockRestoreActionCreator).toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).toHaveBeenCalled();
     });
   });
 
@@ -154,6 +151,36 @@ describe('parameter manager', () => {
             },
           ],
         },
+        nfExcluded: {
+          price: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
+        mnf: {
+          weight: [
+            {
+              state: 'selected' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
+        mnfExcluded: {
+          height: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: 10,
+              end: 20,
+              endInclusive: false,
+            },
+          ],
+        },
         page: 1,
         perPage: 2,
         df: {
@@ -166,8 +193,21 @@ describe('parameter manager', () => {
             },
           ],
         },
+        dfExcluded: {
+          expires: [
+            {
+              state: 'excluded' as FacetValueState,
+              start: '2010/01/01',
+              end: '2011/01/01',
+              endInclusive: false,
+            },
+          ],
+        },
         f: {
           size: ['small', 'medium'],
+        },
+        fExcluded: {
+          color: ['red'],
         },
         sortCriteria: buildRelevanceSortCriterion(),
         cf: {

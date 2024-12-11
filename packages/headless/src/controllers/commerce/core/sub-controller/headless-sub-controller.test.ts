@@ -43,7 +43,6 @@ describe('sub-controllers', () => {
   const mockParametersDefinition = {};
   const mockActiveParametersSelector = vi.fn();
   const mockRestoreActionCreator = vi.fn();
-  const mockEnrichParameters = vi.fn();
   const mockSerializer = {
     serialize: vi.fn(),
     deserialize: vi.fn(),
@@ -81,7 +80,6 @@ describe('sub-controllers', () => {
         >,
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
-        enrichParameters: mockEnrichParameters,
       });
     });
 
@@ -135,7 +133,6 @@ describe('sub-controllers', () => {
         >,
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
-        enrichParameters: mockEnrichParameters,
         facetSearchType: 'LISTING',
       });
     });
@@ -223,7 +220,6 @@ describe('sub-controllers', () => {
         activeParametersSelector: mockActiveParametersSelector,
         restoreActionCreator: mockRestoreActionCreator,
         fetchProductsActionCreator: mockFetchProductsActionCreator,
-        enrichParameters: mockEnrichParameters,
       });
     });
   });

@@ -122,16 +122,6 @@ export function activeParametersSelector(
   };
 }
 
-export function enrichedParametersSelector(
-  state: CommerceEngine[typeof stateKey],
-  activeParams: ManagedParameters
-) {
-  return {
-    ...initialParametersSelector(state),
-    ...activeParams,
-  };
-}
-
 function getPage(
   section: CommercePaginationState | undefined,
   pageSelector: (section: CommercePaginationState) => number,

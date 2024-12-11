@@ -247,14 +247,14 @@ export function extendSearchParams(
     switch (paramKey) {
       case 'nf':
       case 'mnf':
-        range = buildNumericRanges(toArray(value));
+        range = buildNumericRanges(toArray(value), 'selected');
         break;
       case 'nfExcluded':
       case 'mnfExcluded':
         range = buildNumericRanges(toArray(value), 'excluded');
         break;
       case 'df':
-        range = buildDateRanges(toArray(value));
+        range = buildDateRanges(toArray(value), 'selected');
         break;
       case 'dfExcluded':
         range = buildDateRanges(toArray(value), 'excluded');
