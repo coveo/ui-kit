@@ -56,11 +56,7 @@ export function defineParameterManager<
           throw loadReducerError;
         }
         return buildProductListing(engine).parameterManager({
-          initialState: {
-            parameters: props.initialState
-              ? props.initialState.parameters
-              : (props.state?.parameters ?? {}),
-          },
+          ...props,
           excludeDefaultParameters: true,
         });
       } else {
@@ -68,11 +64,7 @@ export function defineParameterManager<
           throw loadReducerError;
         }
         return buildSearch(engine).parameterManager({
-          initialState: {
-            parameters: props.initialState
-              ? props.initialState.parameters
-              : (props.state?.parameters ?? {}),
-          },
+          ...props,
           excludeDefaultParameters: true,
         });
       }
@@ -85,9 +77,7 @@ export function defineParameterManager<
 }
 
 export interface SSRParameterManagerProps<T extends Parameters>
-  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {
-  state?: {parameters: T};
-}
+  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
 
 type MappedParameterTypes<
   TOptions extends ControllerDefinitionOption | undefined,
