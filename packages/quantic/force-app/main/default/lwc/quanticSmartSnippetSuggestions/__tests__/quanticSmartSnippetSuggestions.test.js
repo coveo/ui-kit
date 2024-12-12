@@ -18,12 +18,45 @@ const defaultOptions = {
 };
 
 const selectors = {
-  initializationError: 'c-initialization-error',
+  initializationError: 'c-quantic-component-error',
+};
+
+const mockResult = {
+  title: 'Title',
+  uri: 'https://www.example.com',
+  clickUri: 'https://www.example.com',
+};
+
+const mockSmartSnippetQuestionsListState = {
+  questions: [
+    {
+      question: 'What is the capital of Gondor?',
+      answer: 'Minas Tirith',
+      documentId: {
+        contentIdKey: 'contentIdKey1',
+        contentIdValue: 'contentIdValue1',
+      },
+      questionAnswerId: 'questionAnswerId1',
+      expanded: false,
+      source: mockResult,
+    },
+    {
+      question: 'What is the capital of Rohan?',
+      answer: 'Edoras',
+      documentId: {
+        contentIdKey: 'contentIdKey2',
+        contentIdValue: 'contentIdValue2',
+      },
+      questionAnswerId: 'questionAnswerId2',
+      expanded: false,
+      source: mockResult,
+    },
+  ],
 };
 
 const functionsMocks = {
   buildSmartSnippetQuestionsList: jest.fn(() => ({
-    state: {}, // Todo: add state
+    state: mockSmartSnippetQuestionsListState,
     subscribe: functionsMocks.subscribe,
     select: jest.fn(),
   })),
@@ -51,8 +84,8 @@ function prepareHeadlessState() {
   // @ts-ignore
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
-      buildSmartSnippet: functionsMocks.buildSmartSnippet,
-      buildSearchStatus: functionsMocks.buildSearchStatus,
+      buildSmartSnippetQuestionsList:
+        functionsMocks.buildSmartSnippetQuestionsList,
     };
   };
 }
@@ -76,6 +109,7 @@ function mockErroneousHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element) => {
     if (element instanceof QuanticSmartSnippetSuggestions) {
+      isInitialized = false;
       element.setInitializationError();
     }
   };
@@ -99,24 +133,26 @@ describe('c-quantic-smart-snippet-suggestions', () => {
     cleanup();
   });
 
-  // describe('controller initialization', () => {
-  //   it('should build the smart snippet and searchStatus controllers with proper parameters', async () => {
-  //     createTestComponent();
-  //     await flushPromises();
+  describe('controller initialization', () => {
+    it('should build the smart snippet questions list controller with proper parameters', async () => {
+      createTestComponent();
+      await flushPromises();
 
-  //     expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledTimes(1);
-  //     expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledWith(exampleEngine.id);
-  //     expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
-  //     expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(exampleEngine.id);
-  //   });
+      expect(
+        functionsMocks.buildSmartSnippetQuestionsList
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        functionsMocks.buildSmartSnippetQuestionsList
+      ).toHaveBeenCalledWith(exampleEngine);
+    });
 
-  //   it('should subscribe to the headless state changes', async () => {
-  //     createTestComponent();
-  //     await flushPromises();
+    it('should subscribe to the headless state changes', async () => {
+      createTestComponent();
+      await flushPromises();
 
-  //     expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
-  //   });
-  // });
+      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+    });
+  });
 
   describe('when an initialization error occurs', () => {
     beforeEach(() => {
