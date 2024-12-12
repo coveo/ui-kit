@@ -1,4 +1,4 @@
-import {PagerObject} from './pagerObject';
+import {PagerObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
@@ -8,7 +8,7 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
-const pagerUrl = 's/quantic-pager';
+const pageUrl = 's/quantic-pager';
 
 interface PagerOptions {
   numberOfPages: number;
@@ -34,7 +34,7 @@ export const testSearch = quanticBase.extend<QuanticPagerE2ESearchFixtures>({
     await use(new SearchObject(page, searchRequestRegex));
   },
   pager: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pagerUrl}#${urlHash}` : pagerUrl);
+    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
 
@@ -51,7 +51,7 @@ export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
     await use(new InsightSetupObject(page));
   },
   pager: async ({page, options, search, configuration, insightSetup}, use) => {
-    await page.goto(pagerUrl);
+    await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.performSearch();

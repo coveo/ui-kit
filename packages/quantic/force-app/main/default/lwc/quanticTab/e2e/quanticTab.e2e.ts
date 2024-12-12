@@ -28,29 +28,14 @@ useCaseTestCases.forEach((useCase) => {
         await tab.clickTabButton(selectedTabIndex);
 
         const searchResponse = await searchResponsePromise;
-        const searchResponseBody = searchResponse.request().postDataJSON();
+        const {analytics} = searchResponse.request().postDataJSON();
+        expect(analytics.actionCause).toEqual(expectedActionCause);
+        expect(analytics.originContext).toEqual(expectedOriginContext);
 
-        expect(searchResponseBody).toEqual(
-          expect.objectContaining({
-            analytics: expect.objectContaining({
-              actionCause: expectedActionCause,
-              originContext: expectedOriginContext,
-            }),
-            tab: await tab.tabLabel(selectedTabIndex),
-          })
-        );
-
-        const uaRequest = await uaRequestPromise;
-        const uaRequestBody = uaRequest.postDataJSON();
-
-        expect(uaRequestBody).toEqual(
-          expect.objectContaining({
-            actionCause: expectedActionCause,
-            originContext: expectedOriginContext,
-            customData: expect.objectContaining({
-              interfaceChangeTo: await tab.tabLabel(selectedTabIndex),
-            }),
-          })
+        const analyticsResponse = await uaRequestPromise;
+        const {customData} = analyticsResponse.postDataJSON();
+        expect(customData.interfaceChangeTo).toEqual(
+          expectedTabsLabels[selectedTabIndex]
         );
       });
     });

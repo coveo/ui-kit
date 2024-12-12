@@ -1,4 +1,4 @@
-import {TabBarObject} from './tabBarObject';
+import {TabBarObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
@@ -8,7 +8,7 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
-const tabBarUrl = 's/quantic-tab-bar';
+const pageUrl = 's/quantic-tab-bar';
 
 interface TabBarOptions {
   lightTheme: boolean;
@@ -34,7 +34,7 @@ export const testSearch = quanticBase.extend<QuanticTabBarE2ESearchFixtures>({
     await use(new SearchObject(page, searchRequestRegex));
   },
   tabBar: async ({page, options, configuration, search}, use) => {
-    await page.goto(tabBarUrl);
+    await page.goto(pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
 
@@ -51,7 +51,7 @@ export const testInsight = quanticBase.extend<QuanticTabBarE2EInsightFixtures>({
     await use(new InsightSetupObject(page));
   },
   tabBar: async ({page, options, search, configuration, insightSetup}, use) => {
-    await page.goto(tabBarUrl);
+    await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.performSearch();

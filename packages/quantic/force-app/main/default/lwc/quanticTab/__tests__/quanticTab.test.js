@@ -131,7 +131,7 @@ describe('c-quantic-tab', () => {
   });
 
   describe('controller initialization', () => {
-    it('should build the tab and searchStatus controllers with the proper parameters', async () => {
+    it('should build the tab and search status controllers with the proper parameters', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -151,11 +151,12 @@ describe('c-quantic-tab', () => {
       );
     });
 
-    it('should subscribe to the headless state changes', async () => {
+    it('should subscribe to the headless tab and search status state changes', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+      expect(mockSearchStatus.subscribe).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -186,9 +187,9 @@ describe('c-quantic-tab', () => {
       simulateSearchStatusUpdate(true, false);
       await flushPromises();
 
-      const tab = element.shadowRoot.querySelectorAll(selectors.tabButton);
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
 
-      expect(tab.length).toEqual(0);
+      expect(tab).toBeNull();
     });
 
     it('should show the tab after the initial search completes', async () => {

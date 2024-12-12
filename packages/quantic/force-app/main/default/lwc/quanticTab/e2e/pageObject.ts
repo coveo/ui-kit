@@ -49,6 +49,7 @@ export class TabObject {
         const requestBody = request.postDataJSON?.();
         const expectedFields = {
           actionCause: actionCause,
+          originContext: 'Search',
         };
         return Object.keys(expectedFields).every(
           (key) => requestBody?.[key] === expectedFields[key]
