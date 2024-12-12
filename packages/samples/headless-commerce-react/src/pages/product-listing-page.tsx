@@ -27,6 +27,7 @@ export default function ProductListingPage(props: IProductListingPageProps) {
     const fragment = () => window.location.hash.slice(1);
     const urlManager = productListingController.urlManager({
       initialState: {fragment: fragment()},
+      excludeDefaultParameters: true,
     });
 
     const onHashChange = () => {
@@ -34,6 +35,7 @@ export default function ProductListingPage(props: IProductListingPageProps) {
     };
 
     window.addEventListener('hashchange', onHashChange);
+
     const unsubscribeManager = urlManager.subscribe(() => {
       const hash = `#${urlManager.state.fragment}`;
 

@@ -266,6 +266,7 @@ export type {
 } from './controllers/standalone-search-box/headless-standalone-search-box.ts';
 
 export type {
+  BaseUrlManagerProps,
   UrlManagerProps,
   UrlManagerInitialState,
   UrlManagerState,
