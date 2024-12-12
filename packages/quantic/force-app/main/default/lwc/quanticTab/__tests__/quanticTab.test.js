@@ -45,7 +45,7 @@ const functionsMocks = {
   buildTab: jest.fn(() => ({
     state: mockBuildTabState,
     subscribe: functionsMocks.subscribe,
-    select: jest.fn(),
+    select: functionsMocks.select,
   })),
   buildSearchStatus: jest.fn(() => mockSearchStatus),
   subscribe: jest.fn((cb) => {
@@ -54,7 +54,11 @@ const functionsMocks = {
   }),
   unsubscribe: jest.fn(() => {}),
   unsubscribeSearchStatus: jest.fn(() => {}),
+  exampleTabRendered: jest.fn(),
+  select: jest.fn(),
 };
+
+const expectedActiveTabClass = 'slds-is-active';
 
 function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
@@ -110,6 +114,13 @@ function mockErroneousHeadlessInitialization() {
       element.setInitializationError();
     }
   };
+}
+
+function setupEventListeners(element) {
+  element.addEventListener(
+    'quantic__tabrendered',
+    functionsMocks.exampleTabRendered
+  );
 }
 
 function cleanup() {
@@ -197,17 +208,27 @@ describe('c-quantic-tab', () => {
       simulateSearchStatusUpdate();
       await flushPromises();
 
-      const tab = element.shadowRoot.querySelectorAll(selectors.tabButton);
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
 
-      expect(tab.length).toEqual(1);
+      expect(tab).not.toBeNull();
+      expect(tab.textContent).toBe(defaultOptions.label);
+      expect(tab.title).toEqual(defaultOptions.label);
+      expect(tab.getAttribute('aria-pressed')).toBe('false');
+      expect(tab.getAttribute('aria-label')).toBe(defaultOptions.label);
+    });
+
+    it('should dispatch the quantic__tabrendered event', async () => {
+      const element = createTestComponent();
+      setupEventListeners(element);
+      await flushPromises();
+
+      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('when the tab is not active', () => {
     it('should render the tab without the active class', async () => {
-      const expectedActiveTabClass = 'slds-is-active';
       const element = createTestComponent();
-      simulateSearchStatusUpdate();
       await flushPromises();
 
       const tab = element.shadowRoot.querySelector(selectors.tabButton);
@@ -215,21 +236,20 @@ describe('c-quantic-tab', () => {
       await flushPromises();
 
       expect(tab.classList).not.toContain(expectedActiveTabClass);
+      expect(element.isActive).toBe(false);
     });
   });
 
   describe('when the tab is active', () => {
     it('should render the tab with the active class', async () => {
-      const expectedActiveTabClass = 'slds-is-active';
       functionsMocks.buildTab.mockImplementation(() => ({
         state: {
           isActive: true,
         },
         subscribe: functionsMocks.subscribe,
-        select: jest.fn(),
+        select: functionsMocks.select,
       }));
       const element = createTestComponent();
-      simulateSearchStatusUpdate();
       await flushPromises();
 
       const tab = element.shadowRoot.querySelector(selectors.tabButton);
@@ -237,6 +257,49 @@ describe('c-quantic-tab', () => {
       await flushPromises();
 
       expect(tab.classList).toContain(expectedActiveTabClass);
+      expect(element.isActive).toBe(true);
+    });
+  });
+
+  describe('when the tab is clicked', () => {
+    it('should trigger the select method', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
+      expect(tab).not.toBeNull();
+
+      await tab.click();
+      await flushPromises();
+
+      expect(functionsMocks.select).toHaveBeenCalled();
+    });
+
+    it('should select the tab and make it active', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const tab = element.shadowRoot.querySelector(selectors.tabButton);
+      expect(tab).not.toBeNull();
+
+      await tab.click();
+      await flushPromises();
+
+      expect(element.isActive).toBe(true);
+      expect(tab.getAttribute('aria-pressed')).toBe('true');
+      expect(tab.classList).toContain('slds-is-active');
+    });
+  });
+
+  describe('when calling the select method', () => {
+    it('should select the tab', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      await element.select();
+      await flushPromises();
+
+      expect(functionsMocks.select).toHaveBeenCalled();
     });
   });
 });
