@@ -182,7 +182,7 @@ const handlePreviousPage = (
     return;
   }
 
-  state.page = 0;
+  state.page = undefined;
 };
 
 const handleSelectPage = (
@@ -193,7 +193,7 @@ const handleSelectPage = (
     return;
   }
 
-  state.page = payload.page;
+  state.page = payload.page > 0 ? payload.page : undefined;
 };
 
 const handleSetPageSize = (
