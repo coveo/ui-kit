@@ -11,6 +11,7 @@ import {
   CommerceEngineOptions,
 } from '../../commerce-engine/commerce-engine.js';
 import {buildLogger} from '../../logger.js';
+import {ControllersPropsMap} from '../../ssr-engine/types/common.js';
 import {buildControllerDefinitions} from '../common.js';
 import {
   ControllerDefinitionsMap,
@@ -125,6 +126,21 @@ function buildSSRCommerceEngine(
   };
 }
 
+function fetchActiveRecommendationControllers(
+  controllerProps: ControllersPropsMap,
+  solutionType: SolutionType
+): number {
+  return solutionType === SolutionType.recommendation
+    ? Object.values(controllerProps).filter(
+        (controller) =>
+          controller &&
+          typeof controller === 'object' &&
+          'enabled' in controller &&
+          controller.enabled
+      ).length
+    : 0;
+}
+
 export const buildFactory =
   <TControllerDefinitions extends CommerceControllerDefinitionsMap>(
     controllerDefinitions: TControllerDefinitions | undefined,
@@ -139,15 +155,20 @@ export const buildFactory =
       );
     }
 
+    const controllerProps =
+      buildOptions && 'controllers' in buildOptions
+        ? (buildOptions.controllers as ControllersPropsMap)
+        : {};
+
+    const enabledRecommendationControllers =
+      fetchActiveRecommendationControllers(controllerProps, solutionType);
+
     const engine = buildSSRCommerceEngine(
       solutionType,
       buildOptions && 'extend' in buildOptions && buildOptions?.extend
         ? await buildOptions.extend(options)
         : options,
-      solutionType === SolutionType.recommendation &&
-        Array.isArray(buildOptions)
-        ? buildOptions.length
-        : 0
+      enabledRecommendationControllers
     );
 
     const controllers = buildControllerDefinitions({

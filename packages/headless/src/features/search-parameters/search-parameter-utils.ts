@@ -100,9 +100,9 @@ export function extendSearchParameters(
 
     const range =
       paramKey === 'nf'
-        ? buildNumericRanges(toArray(value))
+        ? buildNumericRanges(toArray(value), 'selected')
         : paramKey === 'df'
-          ? buildDateRanges(toArray(value))
+          ? buildDateRanges(toArray(value), 'selected')
           : toArray(value);
 
     add(searchParams, range);

@@ -266,6 +266,7 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
     {
       entryPoints: [entryPoint],
       outfile,
+      sourcemap: true,
       format: 'esm',
       external: ['pino'],
       mainFields: ['module', 'main'],

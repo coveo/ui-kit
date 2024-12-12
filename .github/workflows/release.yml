@@ -139,12 +139,12 @@ jobs:
       - name: Read version from package.json
         id: read_version
         run: |
-          VERSION=$(jq -r '.version' package/headless/package.json)
+          VERSION=$(jq -r '.version' packages/headless/package.json)
           echo "Extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
       - name: Zip documentation folder
         run: |
-          DOCS_DIR="package/headless/docs"
+          DOCS_DIR="packages/headless/docs"
           if [ ! -d "$DOCS_DIR" ]; then
             echo "Documentation folder $DOCS_DIR not found."
             exit 1
@@ -154,7 +154,7 @@ jobs:
           zip -r "$ZIP_NAME" "$DOCS_DIR"
           echo "Created zip file: $ZIP_NAME"
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         with:
           name: headless-docs-${{ env.version }}
           path: headless-docs-${{ env.version }}.zip

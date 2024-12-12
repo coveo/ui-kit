@@ -9,7 +9,7 @@ import PopularBought from '@/components/recommendations/popular-bought';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import {
   recommendationEngineDefinition,
-  searchEngineDefinition,
+  standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
@@ -18,13 +18,15 @@ import {headers} from 'next/headers';
 export default async function Search() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
-  searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
+  standaloneEngineDefinition.setNavigatorContextProvider(
+    () => navigatorContext
+  );
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState({
+  const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
       context: {
@@ -39,7 +41,21 @@ export default async function Search() {
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBought']
+    {
+      controllers: {
+        popularBought: {enabled: true},
+        popularViewed: {enabled: true},
+        cart: {initialState: {items}},
+        context: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: 'https://sports.barca.group/cart',
+          },
+        },
+      },
+    }
   );
   return (
     <StandaloneProvider

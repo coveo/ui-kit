@@ -4,9 +4,7 @@ import {fileURLToPath} from 'node:url';
 
 const salesforceDesignSystem = dirname(
   fileURLToPath(
-    import.meta.resolve(
-      '../../../node_modules/@salesforce-ux/design-system/package.json'
-    )
+    import.meta.resolve('@salesforce-ux/design-system/package.json')
   )
 );
 
