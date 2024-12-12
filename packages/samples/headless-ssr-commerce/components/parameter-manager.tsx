@@ -2,23 +2,21 @@
 
 import {useParameterManager} from '@/lib/commerce-engine';
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {usePathname, useSearchParams} from 'next/navigation';
-import {useEffect, useRef} from 'react';
+import {useSearchParams} from 'next/navigation';
+import {useEffect, useMemo, useRef} from 'react';
 
 export default function ParameterManager({url}: {url: string | null}) {
   const {state, methods} = useParameterManager();
 
   const searchParams = useSearchParams();
-  const pathName = usePathname();
 
   const {serialize, deserialize} = buildParameterSerializer();
 
-  const baseUrl = new URL(url ?? location.href);
+  const baseUrl = useMemo(() => new URL(url ?? location.href), [url]);
 
   const previousUrl = useRef(baseUrl.href);
 
-  const flag = useRef(false);
-  const fullyRendered = useRef(false);
+  const flag = useRef(true);
 
   useEffect(() => {
     if (methods === undefined) {
@@ -32,25 +30,14 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     const newCommerceParams = deserialize(searchParams);
 
-    const newUrl = serialize(
-      newCommerceParams,
-      new URL(`${baseUrl.origin}${pathName}${baseUrl.search}`)
-    );
+    const newUrl = serialize(newCommerceParams, new URL(previousUrl.current));
 
     if (newUrl !== previousUrl.current) {
       flag.current = true;
       previousUrl.current = newUrl;
       methods.synchronize(newCommerceParams);
     }
-  }, [
-    baseUrl.origin,
-    baseUrl.search,
-    methods,
-    pathName,
-    searchParams,
-    serialize,
-    deserialize,
-  ]);
+  }, [deserialize, methods, searchParams, serialize]);
 
   useEffect(() => {
     if (methods === undefined) {
@@ -62,32 +49,14 @@ export default function ParameterManager({url}: {url: string | null}) {
       return;
     }
 
-    if (!fullyRendered.current) {
-      fullyRendered.current = true;
-      return;
-    }
+    const newUrl = serialize(state.parameters, new URL(previousUrl.current));
 
-    const newUrl = serialize(
-      state.parameters,
-      new URL(`${baseUrl.origin}${pathName}${baseUrl.search}`)
-    );
-
-    if (
-      previousUrl.current !== newUrl &&
-      (new URL(newUrl).searchParams.size > 0 || fullyRendered.current)
-    ) {
+    if (previousUrl.current !== newUrl) {
       flag.current = true;
       previousUrl.current = newUrl;
       history.pushState(null, document.title, newUrl);
     }
-  }, [
-    baseUrl.origin,
-    baseUrl.search,
-    methods,
-    pathName,
-    serialize,
-    state.parameters,
-  ]);
+  }, [methods, serialize, state.parameters]);
 
   return null;
 }
