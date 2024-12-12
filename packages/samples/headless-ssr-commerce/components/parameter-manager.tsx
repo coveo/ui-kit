@@ -12,9 +12,9 @@ export default function ParameterManager({url}: {url: string | null}) {
 
   const {serialize, deserialize} = buildParameterSerializer();
 
-  const baseUrl = useMemo(() => new URL(url ?? location.href), [url]);
+  const initialUrl = useMemo(() => new URL(url ?? location.href), [url]);
 
-  const previousUrl = useRef(baseUrl.href);
+  const previousUrl = useRef(initialUrl.href);
 
   const flag = useRef(true);
 
