@@ -1603,4 +1603,11 @@
     <protected>false</protected>
     <shortDescription>User actions</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_CloseNotification</fullName>
+    <value>Close notification</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Close notification</shortDescription>
+  </labels>
 </CustomLabels>
