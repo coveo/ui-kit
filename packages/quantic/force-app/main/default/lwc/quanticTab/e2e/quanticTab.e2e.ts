@@ -42,11 +42,11 @@ useCaseTestCases.forEach((useCase) => {
 
     if (useCase.value === useCaseEnum.search) {
       test.describe('when loading selected tab from URL', () => {
+        test.use({
+          urlHash: 'tab=Knowledge',
+        });
         test('should make the right tab active', async ({tab}) => {
-          const desiredTabIndex = 1;
-          const desiredTabLabel = await tab.tabLabel(desiredTabIndex);
-          await tab.page.goto(tab.page.url() + `#tab=${desiredTabLabel}`);
-
+          const desiredTabLabel = expectedTabsLabels[2];
           expect(await tab.activeTabLabel.textContent()).toBe(desiredTabLabel);
         });
       });

@@ -28,11 +28,12 @@ type QuanticTabE2EInsightFixtures = QuanticTabE2ESearchFixtures & {
 
 export const testSearch = quanticBase.extend<QuanticTabE2ESearchFixtures>({
   options: {},
+  urlHash: '',
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
   },
-  tab: async ({page, options, configuration, search}, use) => {
-    await page.goto(pageUrl);
+  tab: async ({page, options, configuration, search, urlHash}, use) => {
+    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
 
