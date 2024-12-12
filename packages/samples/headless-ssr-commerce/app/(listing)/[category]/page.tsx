@@ -88,7 +88,6 @@ export default async function Listing({
             url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
           },
         },
-        parameterManager: {},
       },
     }
   );
