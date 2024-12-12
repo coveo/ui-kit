@@ -21,7 +21,7 @@ const PATH = ".";
 const REPO_OWNER = "coveo";
 const REPO_NAME = "relay";
 
-const convention = await angularChangelogConvention;
+const convention = await angularChangelogConvention();
 const packages = [
   { name: "playground", path: `${PATH}/apps/playground` },
   { name: "@coveo/relay", path: `${PATH}/packages/relay` },
@@ -69,13 +69,13 @@ const updateChangelog = async ({
     newVersion,
     {
       owner: REPO_OWNER,
-      repo: REPO_NAME,
+      repository: REPO_NAME,
       host: "https://github.com",
       linkReferences: true,
       currentTag: newVersionTag,
       previousTag: lastTag,
     },
-    convention.writerOpts,
+    convention.writer,
   );
   await writeChangelog(path, changelog);
 };
@@ -95,7 +95,7 @@ const bumpVersion = async ({ newVersion, name, lastTag }) => {
 const runPackageBump = async (pkg) => {
   const { name, path } = pkg;
   const versionPrefix = getVersionPrefix(name);
-  const lastTag = await getLastTag(versionPrefix);
+  const lastTag = await getLastTag({ prefix: versionPrefix });
   console.info(`\x1b[35m last tag of ${name}: ${lastTag} \n`);
 
   const changedPackages = await pnpmGetChangedPackages(lastTag);
@@ -107,9 +107,9 @@ const runPackageBump = async (pkg) => {
   }
 
   const commits = await getCommits(PATH, lastTag);
-  const parsedCommits = parseCommits(commits, convention.parserOpts);
+  const parsedCommits = parseCommits(commits, convention.parser);
 
-  const bumpInfo = convention.recommendedBumpOpts.whatBump(parsedCommits);
+  const bumpInfo = convention.whatBump(parsedCommits);
 
   const currentVersion = lastTag.replace(versionPrefix, "");
   const newVersion = getNextVersion(currentVersion, bumpInfo);
