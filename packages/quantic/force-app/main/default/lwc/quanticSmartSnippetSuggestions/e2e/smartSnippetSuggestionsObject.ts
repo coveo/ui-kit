@@ -1,16 +1,18 @@
 import {Locator, Page, Request} from '@playwright/test';
 import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
 
-export class SmartSnippetObject {
+export class SmartSnippetSuggestionsObject {
   constructor(public page: Page) {
     this.page = page;
   }
 
-  get smartSnippet(): Locator {
-    return this.page.locator('c-quantic-smart-snippet');
+  get smartSnippetSuggestions(): Locator {
+    return this.page.locator('c-quantic-smart-snippet-suggestions');
   }
 
-  async waitForSmartSnippetUaAnalytics(eventValue): Promise<Request> {
+  async waitForSmartSnippetSuggestionsUaAnalytics(
+    eventValue
+  ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {
         const requestBody = request.postDataJSON?.();
