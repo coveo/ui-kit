@@ -6,6 +6,7 @@ import FacetGenerator from '@/components/facets/facet-generator';
 import Pagination from '@/components/pagination';
 import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
+import ProductsPerPage from '@/components/products-per-page';
 import {
   ListingProvider,
   RecommendationProvider,
@@ -114,6 +115,7 @@ export default async function Listing({
           <ProductList />
           {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
           <Pagination />
+          <ProductsPerPage />
           {/* <ShowMore
             staticState={staticState.controllers.pagination.state}
             controller={hydratedState?.controllers.pagination}
