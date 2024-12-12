@@ -109,7 +109,6 @@ function mockErroneousHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element) => {
     if (element instanceof QuanticSmartSnippetSuggestions) {
-      isInitialized = false;
       element.setInitializationError();
     }
   };

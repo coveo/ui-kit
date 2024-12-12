@@ -18,7 +18,7 @@ const defaultOptions = {
 };
 
 const selectors = {
-  initializationError: 'c-initialization-error',
+  initializationError: 'c-quantic-component-error',
 };
 
 const mockSearchStatusState = {
@@ -113,24 +113,28 @@ describe('c-quantic-smart-snippet', () => {
     cleanup();
   });
 
-  // describe('controller initialization', () => {
-  //   it('should build the smart snippet and searchStatus controllers with proper parameters', async () => {
-  //     createTestComponent();
-  //     await flushPromises();
+  describe('controller initialization', () => {
+    it('should build the smart snippet and searchStatus controllers with proper parameters', async () => {
+      createTestComponent();
+      await flushPromises();
 
-  //     expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledTimes(1);
-  //     expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledWith(exampleEngine.id);
-  //     expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
-  //     expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(exampleEngine.id);
-  //   });
+      expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledWith(
+        exampleEngine
+      );
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
+    });
 
-  //   it('should subscribe to the headless state changes', async () => {
-  //     createTestComponent();
-  //     await flushPromises();
+    it('should subscribe to the headless state changes', async () => {
+      createTestComponent();
+      await flushPromises();
 
-  //     expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
-  //   });
-  // });
+      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+    });
+  });
 
   describe('when an initialization error occurs', () => {
     beforeEach(() => {
