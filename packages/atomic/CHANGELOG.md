@@ -1,3 +1,10 @@
+## <small>3.12.1 (2024-12-11)</small>
+
+- fix(atomic): accessibility issues on "More" tab list (#4774) ([212b46e](https://github.com/coveo/ui-kit/commits/212b46e)), closes [#4774](https://github.com/coveo/ui-kit/issues/4774)
+- fix(atomic): disable next and previous quickview button at edges (#4762) ([4812865](https://github.com/coveo/ui-kit/commits/4812865)), closes [#4762](https://github.com/coveo/ui-kit/issues/4762)
+- fix(atomic): fix error when hovering recent result containing double quotes (#4760) ([0e89ee9](https://github.com/coveo/ui-kit/commits/0e89ee9)), closes [#4760](https://github.com/coveo/ui-kit/issues/4760)
+- fix(atomic): fix missing hover effect on more tab button (#4772) ([d6dc16d](https://github.com/coveo/ui-kit/commits/d6dc16d)), closes [#4772](https://github.com/coveo/ui-kit/issues/4772)
+
 ## 3.12.0 (2024-12-04)
 
 - chore: add atomic loader to CDN deployment config (#4686) ([7a7e0ba](https://github.com/coveo/ui-kit/commits/7a7e0ba)), closes [#4686](https://github.com/coveo/ui-kit/issues/4686)
