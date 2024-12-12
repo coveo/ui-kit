@@ -136,8 +136,7 @@ export function buildCoreParameterManager<T extends Parameters>(
       props.initialState,
       'buildCoreParameterManager'
     );
-
-    dispatch(props.restoreActionCreator(props.initialState?.parameters));
+    dispatch(props.restoreActionCreator(props.initialState.parameters));
   }
 
   return {
