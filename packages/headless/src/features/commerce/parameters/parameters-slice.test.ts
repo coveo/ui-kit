@@ -106,9 +106,9 @@ describe('commerceParameters slice', () => {
         expect(finalState).toEqual({...state, page: 1});
       });
 
-      it('when state.page is undefined, set state.page to 0', () => {
+      it('when state.page is undefined, set state.page to undefined', () => {
         const finalState = parametersReducer(initialState, previousPage());
-        expect(finalState).toEqual({...initialState, page: 0});
+        expect(finalState).toEqual({...initialState, page: undefined});
       });
     });
   });
@@ -126,13 +126,24 @@ describe('commerceParameters slice', () => {
       expect(finalState).toEqual(state);
     });
 
-    it('when payload.slotId is not defined, sets state.page to payload.page', () => {
-      const state = {
-        ...initialState,
-        page: 1,
-      };
-      const finalState = parametersReducer(state, selectPage({page: 5}));
-      expect(finalState).toEqual({...state, page: 5});
+    describe('when payload.slotId is not defined', () => {
+      it('when state.page is greater than 0, sets state.page to payload.page', () => {
+        const state = {
+          ...initialState,
+          page: 1,
+        };
+        const finalState = parametersReducer(state, selectPage({page: 5}));
+        expect(finalState).toEqual({...state, page: 5});
+      });
+
+      it('when state.page is not greater than 0, sets state.page to undefined', () => {
+        const state = {
+          ...initialState,
+          page: 1,
+        };
+        const finalState = parametersReducer(state, selectPage({page: 0}));
+        expect(finalState).toEqual({...state, page: undefined});
+      });
     });
   });
 
