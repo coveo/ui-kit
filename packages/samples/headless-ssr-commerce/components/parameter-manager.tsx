@@ -22,7 +22,7 @@ export default function ParameterManager({url}: {url: string | null}) {
    * we serialize the state parameters and push them to the browser history when navigating back to a page, any commerce
    * parameters in the URL that were not part of the controller's initial state will be lost.
    *
-   * By having a "guard" that prevent effect execution when the flag is set to true and sets the flag back to false,
+   * By having a "guard" that prevents effect execution when the flag is set to true and sets the flag back to false,
    * we are able to prevent this.
    *
    * For instance, suppose that a user initially navigates to /search?q=test. They then select the next page of results
