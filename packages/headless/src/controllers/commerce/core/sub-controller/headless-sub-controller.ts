@@ -120,7 +120,7 @@ export interface SearchAndListingSubControllers<
    * @param props - Properties for the `ParameterManager` sub-controller.
    * @returns A `ParameterManager` sub-controller.
    */
-  parameterManager(props: ParameterManagerProps<P>): ParameterManager<P>;
+  parameterManager(props?: ParameterManagerProps<P>): ParameterManager<P>;
 }
 
 export interface SearchSubControllers
@@ -167,10 +167,6 @@ export interface SearchAndListingSubControllerProps<
   parametersDefinition: SchemaDefinition<Required<P>>;
   activeParametersSelector: (state: CommerceEngine[typeof stateKey]) => P;
   restoreActionCreator: (parameters: P) => UnknownAction;
-  enrichParameters: (
-    state: CommerceEngine[typeof stateKey],
-    activeParams: P
-  ) => Required<P>;
   facetSearchType: FacetSearchType;
 }
 
@@ -251,7 +247,6 @@ export function buildSearchAndListingsSubControllers<
     parametersDefinition,
     activeParametersSelector,
     restoreActionCreator,
-    enrichParameters,
     facetSearchType,
   } = subControllerProps;
   return {
@@ -305,7 +300,6 @@ export function buildSearchAndListingsSubControllers<
         activeParametersSelector,
         restoreActionCreator,
         fetchProductsActionCreator,
-        enrichParameters,
       });
     },
   };

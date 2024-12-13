@@ -14,7 +14,7 @@ export interface FromBuildResultOptions<TControllers extends ControllersMap> {
    *
    * This is applicable only if the engine is a recommendation engine.
    */
-  allowedRecommendationKeys?: (keyof TControllers)[];
+  allowedRecommendationKeys?: string[];
 }
 
 export interface FromBuildResult<

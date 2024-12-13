@@ -6,11 +6,11 @@ import {TabCommonElement} from '../tabs/tab-common';
  * @internal
  */
 @Component({
-  tag: 'tab-manager-bar',
+  tag: 'atomic-tab-manager-bar',
   shadow: true,
   styleUrl: 'tab-manager-bar.pcss',
 })
-export class TabManagerBar {
+export class AtomicTabManagerBar {
   @Element() private host!: HTMLElement;
 
   @State()
@@ -143,20 +143,22 @@ export class TabManagerBar {
 
   private updatePopoverTabs = () => {
     this.popoverTabs = this.overflowingTabs.map((tab) => (
-      <Button
-        part="popover-tab"
-        style="text-transparent"
-        class="truncate rounded px-4 py-2"
-        ariaLabel={tab.label}
-        title={tab.label}
-        onClick={() => {
-          tab.select();
-          this.updatePopoverTabs();
-          this.tabPopover?.togglePopover();
-        }}
-      >
-        {tab.label}
-      </Button>
+      <li>
+        <Button
+          part="popover-tab"
+          style="text-transparent"
+          class="w-full truncate rounded px-4 py-2"
+          ariaLabel={tab.label}
+          title={tab.label}
+          onClick={() => {
+            tab.select();
+            this.updatePopoverTabs();
+            this.tabPopover?.togglePopover();
+          }}
+        >
+          {tab.label}
+        </Button>
+      </li>
     ));
   };
 

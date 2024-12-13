@@ -7,10 +7,7 @@ import {
   totalEntriesPrincipalSelector,
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
-import {
-  activeParametersSelector,
-  enrichedParametersSelector,
-} from '../../../features/commerce/parameters/parameters-selectors.js';
+import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import * as ProductListingActions from '../../../features/commerce/product-listing/product-listing-actions.js';
@@ -69,7 +66,6 @@ describe('headless product-listing', () => {
       parametersDefinition,
       activeParametersSelector,
       restoreActionCreator: restoreProductListingParameters,
-      enrichParameters: enrichedParametersSelector,
       isLoadingSelector,
       errorSelector,
       pageSelector: pagePrincipalSelector,

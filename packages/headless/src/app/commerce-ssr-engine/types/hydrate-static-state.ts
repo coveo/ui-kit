@@ -1,4 +1,5 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
+import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
   ControllersMap,
   ControllersPropsMap,
@@ -7,6 +8,7 @@ import type {
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
 import {
+  ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   SolutionType,
 } from './common.js';
@@ -20,40 +22,28 @@ export type HydrateStaticState<
   TControllers extends ControllersMap,
   TSearchAction extends UnknownAction,
   TControllersProps extends ControllersPropsMap,
+  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = TSolutionType extends SolutionType.recommendation
-  ? {
-      /**
-       * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
-       *
-       * Useful when hydrating a server-side-rendered engine.
-       */
-      (
-        ...params: OptionsTuple<HydrateStaticStateOptions<TSearchAction>>
-      ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
-
-      fromBuildResult: FromBuildResult<
-        TControllers,
-        HydrateStaticStateOptions<TSearchAction>,
-        HydratedState<SSRCommerceEngine, TControllers>
-      >;
-    }
-  : {
-      /**
-       * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
-       *
-       * Useful when hydrating a server-side-rendered engine.
-       */
-      (
-        ...params: OptionsTuple<
-          HydrateStaticStateOptions<TSearchAction> &
-            EngineDefinitionControllersPropsOption<TControllersProps>
+> = {
+  /**
+   * Creates a new engine from the snapshot of the engine created in SSR with fetchStaticState.
+   *
+   * Useful when hydrating a server-side-rendered engine.
+   */
+  (
+    ...params: OptionsTuple<
+      HydrateStaticStateOptions<TSearchAction> &
+        EngineDefinitionControllersPropsOption<
+          TControllersDefinitionsMap,
+          TControllersProps,
+          TSolutionType
         >
-      ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
+    >
+  ): Promise<HydratedState<SSRCommerceEngine, TControllers>>;
 
-      fromBuildResult: FromBuildResult<
-        TControllers,
-        HydrateStaticStateOptions<TSearchAction>,
-        HydratedState<SSRCommerceEngine, TControllers>
-      >;
-    };
+  fromBuildResult: FromBuildResult<
+    TControllers,
+    HydrateStaticStateOptions<TSearchAction>,
+    HydratedState<SSRCommerceEngine, TControllers>
+  >;
+};

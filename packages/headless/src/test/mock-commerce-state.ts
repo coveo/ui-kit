@@ -6,6 +6,7 @@ import {getFieldSuggestionsOrderInitialState} from '../features/commerce/facets/
 import {getManualNumericFacetInitialState} from '../features/commerce/facets/numeric-facet/manual-numeric-facet-state.js';
 import {getInstantProductsInitialState} from '../features/commerce/instant-products/instant-products-state.js';
 import {getCommercePaginationInitialState} from '../features/commerce/pagination/pagination-state.js';
+import {getCommerceParametersInitialState} from '../features/commerce/parameters/parameters-state.js';
 import {getProductListingInitialState} from '../features/commerce/product-listing/product-listing-state.js';
 import {getCommerceQueryInitialState} from '../features/commerce/query/query-state.js';
 import {getRecommendationsInitialState} from '../features/commerce/recommendations/recommendations-state.js';
@@ -38,6 +39,7 @@ export function buildMockCommerceState(
     commercePagination: getCommercePaginationInitialState(),
     commerceSort: getCommerceSortInitialState(),
     commerceContext: getContextInitialState(),
+    commerceParameters: getCommerceParametersInitialState(),
     recentQueries: getRecentQueriesInitialState(),
     querySuggest: getQuerySuggestSetInitialState(),
     querySet: getQuerySetInitialState(),

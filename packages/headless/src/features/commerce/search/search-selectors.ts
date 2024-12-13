@@ -13,10 +13,7 @@ import {
 } from '../../../state/state-sections.js';
 import {getQ} from '../../parameter-manager/parameter-manager-selectors.js';
 import {totalEntriesPrincipalSelector} from '../pagination/pagination-selectors.js';
-import {
-  activeParametersSelector as coreActiveParametersSelector,
-  enrichedParametersSelector as coreEnrichedParametersSelector,
-} from '../parameters/parameters-selectors.js';
+import {activeParametersSelector as coreActiveParametersSelector} from '../parameters/parameters-selectors.js';
 import {getCommerceQueryInitialState} from '../query/query-state.js';
 import {CommerceSearchParameters} from '../search-parameters/search-parameters-actions.js';
 
@@ -96,16 +93,6 @@ export const activeParametersSelector = (
     ...coreActiveParametersSelector(state),
   };
 };
-
-export function enrichedParametersSelector(
-  state: CommerceEngine[typeof stateKey],
-  activeParams: CommerceSearchParameters
-) {
-  return {
-    q: getCommerceQueryInitialState().query!,
-    ...coreEnrichedParametersSelector(state, activeParams),
-  };
-}
 
 export function enrichedSummarySelector(state: CommerceEngineState) {
   return {

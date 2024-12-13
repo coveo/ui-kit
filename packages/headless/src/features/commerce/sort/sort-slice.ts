@@ -64,5 +64,8 @@ function handleRestoreParameters(
 ) {
   if (action.payload.sortCriteria) {
     state.appliedSort = action.payload.sortCriteria;
+    return;
   }
+
+  state.appliedSort = getCommerceSortInitialState().appliedSort;
 }

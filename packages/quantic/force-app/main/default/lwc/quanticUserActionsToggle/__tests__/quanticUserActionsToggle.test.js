@@ -119,6 +119,24 @@ describe('c-quantic-user-actions-toggle', () => {
     cleanup();
   });
 
+  describe('controller initialization', () => {
+    it('should build the controller with the right parameters', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildUserActions).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildUserActions).toHaveBeenCalledWith(
+        exampleEngine,
+        {
+          options: {
+            ticketCreationDate: exampleTicketCreationDateTime,
+            excludedCustomActions: exampleExcludedCustomActions,
+          },
+        }
+      );
+    });
+  });
+
   it('should display the user actions toggle button', async () => {
     const element = createTestComponent();
     await flushPromises();

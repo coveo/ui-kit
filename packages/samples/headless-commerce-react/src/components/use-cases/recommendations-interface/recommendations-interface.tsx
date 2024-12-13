@@ -4,7 +4,7 @@ import ProductList from '../../product-list/product-list.js';
 import ShowMore from '../../show-more/show-more.js';
 import Summary from '../../summary/summary.js';
 
-//import Pagination from '../pagination/pagination';
+//import Pagination from '../../pagination/pagination.js';
 
 interface IRecommendationsInterfaceProps {
   recommendationsController: Recommendations;
@@ -21,6 +21,9 @@ export default function RecommendationsInterface(
     recommendationsController.state
   );
 
+  const summaryController = recommendationsController.summary();
+  const paginationController = recommendationsController.pagination();
+
   useEffect(() => {
     recommendationsController.subscribe(() => {
       setRecommendationsState(recommendationsController.state);
@@ -32,15 +35,18 @@ export default function RecommendationsInterface(
       <h3 className="RecommendationsHeadline">
         {recommendationsState.headline}
       </h3>
-      <Summary controller={recommendationsController.summary()} />
+      <Summary controller={summaryController} />
       <ProductList
         products={recommendationsState.products}
         cartController={cartController}
         controllerBuilder={recommendationsController.interactiveProduct}
         navigate={navigate}
       />
-      <ShowMore controller={recommendationsController.pagination()} />
-      {/*<Pagination controller={recommendationsController.pagination()} />*/}
+      <ShowMore
+        controller={paginationController}
+        summaryController={summaryController}
+      />
+      {/*<Pagination controller={paginationController} />*/}
     </div>
   );
 }

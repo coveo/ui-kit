@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  HydrateStaticStateOptions,
   InferHydratedState,
   InferStaticState,
   NavigatorContext,
@@ -67,7 +68,7 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
             ...controllers,
             ...hydrateControllers,
           },
-        })
+        } as HydrateStaticStateOptions<{type: string}>)
         .then(({engine, controllers}) => {
           setHydratedState({engine, controllers});
         });

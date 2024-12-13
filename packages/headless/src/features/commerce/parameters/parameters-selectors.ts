@@ -1,5 +1,6 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {FacetValueState} from '../../../ssr.index.js';
 import {CommerceFacetSetSection} from '../../../state/state-sections.js';
 import {findActiveValueAncestry} from '../../facets/category-facet-set/category-facet-utils.js';
 import {
@@ -38,9 +39,13 @@ export function initialParametersSelector(
       getCommerceSortInitialState().appliedSort,
     cf: {},
     nf: {},
+    nfExcluded: {},
     mnf: {},
+    mnfExcluded: {},
     df: {},
+    dfExcluded: {},
     f: {},
+    fExcluded: {},
     lf: {},
   };
 }
@@ -72,6 +77,12 @@ export function activeParametersSelector(
     ),
     ...getFacets(
       state.commerceFacetSet,
+      facetIsOfType(state, 'regular'),
+      getExcludedValues,
+      'fExcluded'
+    ),
+    ...getFacets(
+      state.commerceFacetSet,
       facetIsOfType(state, 'location'),
       getSelectedLocationValues,
       'lf'
@@ -90,21 +101,24 @@ export function activeParametersSelector(
     ),
     ...getFacets(
       state.commerceFacetSet,
+      facetIsOfType(state, 'dateRange'),
+      getExcludedRangeValues,
+      'dfExcluded'
+    ),
+    ...getFacets(
+      state.commerceFacetSet,
       facetIsOfType(state, 'numericalRange'),
       getSelectedRangeValues,
       'nf'
     ),
-    ...getManualNumericFacet(state.manualNumericFacetSet),
-  };
-}
-
-export function enrichedParametersSelector(
-  state: CommerceEngine[typeof stateKey],
-  activeParams: ManagedParameters
-) {
-  return {
-    ...initialParametersSelector(state),
-    ...activeParams,
+    ...getFacets(
+      state.commerceFacetSet,
+      facetIsOfType(state, 'numericalRange'),
+      getExcludedRangeValues,
+      'nfExcluded'
+    ),
+    ...getManualNumericFacet('selected', state.manualNumericFacetSet),
+    ...getManualNumericFacet('excluded', state.manualNumericFacetSet),
   };
 }
 
@@ -142,6 +156,12 @@ function getSelectedValues(request: AnyFacetRequest) {
     .map((fv) => fv.value);
 }
 
+function getExcludedValues(request: AnyFacetRequest) {
+  return (request as RegularFacetRequest).values
+    .filter((fv) => fv.state === 'excluded')
+    .map((fv) => fv.value);
+}
+
 function getSelectedLocationValues(request: AnyFacetRequest) {
   return (request as LocationFacetRequest).values
     .filter((fv) => fv.state === 'selected')
@@ -154,8 +174,17 @@ function getSelectedRangeValues(request: AnyFacetRequest) {
   );
 }
 
-function getManualNumericFacet(section?: ManualNumericFacetSetState) {
-  if (!section) {
+function getExcludedRangeValues(request: AnyFacetRequest) {
+  return (request as NumericFacetRequest | DateFacetRequest).values.filter(
+    (fv) => fv.state === 'excluded'
+  );
+}
+
+function getManualNumericFacet(
+  state: FacetValueState,
+  section?: ManualNumericFacetSetState
+) {
+  if (!section || state === 'idle') {
     return {};
   }
 
@@ -163,7 +192,7 @@ function getManualNumericFacet(section?: ManualNumericFacetSetState) {
     .map(([facetId, manualFacetRange]) => {
       if (
         manualFacetRange.manualRange === undefined ||
-        manualFacetRange.manualRange.state === 'idle'
+        manualFacetRange.manualRange.state !== state
       ) {
         return;
       }
@@ -172,7 +201,9 @@ function getManualNumericFacet(section?: ManualNumericFacetSetState) {
     .filter((manualRange) => manualRange !== undefined)
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
-  return {mnf: manualNumericFacets};
+  return state === 'selected'
+    ? {mnf: manualNumericFacets}
+    : {mnfExcluded: manualNumericFacets};
 }
 
 function getSelectedCategoryValues(request: AnyFacetRequest): string[] {
@@ -187,12 +218,6 @@ function facetIsOfType(
   type: FacetType
 ) {
   return (facetId: string) => {
-    if (
-      type === 'numericalRange' &&
-      state.commerceFacetSet![facetId].request.interval === 'continuous'
-    ) {
-      return false;
-    }
     return state.commerceFacetSet![facetId].request.type === type;
   };
 }
