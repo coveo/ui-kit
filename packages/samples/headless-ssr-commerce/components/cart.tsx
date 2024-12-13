@@ -31,6 +31,7 @@ export default function Cart() {
             <p>
               <span>Price: </span>
               <span>{formatCurrency(item.price, language(), currency())}</span>
+              <span> {item.price}</span>
             </p>
             <p>
               <span>Total: </span>
