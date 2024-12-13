@@ -3,7 +3,7 @@ import {capitalize} from './utils.js';
 
 export class MissingEngineProviderError extends Error {
   static message =
-    'Unable to find Context. Make sure your component using a controller is wrapped in one of the following providers: `RecommendationProvider`, `ListingProvider`, `SearchProvider`, or `StandaloneProvider`;
+    'Unable to find Context. Make sure your component using a controller is wrapped in one of the following providers: `RecommendationProvider`, `ListingProvider`, `SearchProvider`, or `StandaloneProvider`';
   constructor() {
     super(MissingEngineProviderError.message);
   }
