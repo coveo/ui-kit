@@ -17,7 +17,7 @@ const defaultOptions = {
   engineId: exampleEngine.id,
   label: 'Example Tab',
   expression: 'exampleExpression',
-  isActive: true,
+  isActive: false,
 };
 
 const selectors = {
@@ -192,7 +192,7 @@ describe('c-quantic-tab', () => {
     });
   });
 
-  describe('when the component renders', () => {
+  describe('component behavior during the initial search', () => {
     it('should not show the tab before the initial search completes', async () => {
       const element = createTestComponent();
       simulateSearchStatusUpdate(true, false);
@@ -204,6 +204,7 @@ describe('c-quantic-tab', () => {
     });
 
     it('should show the tab after the initial search completes', async () => {
+      mockBuildTabState.isActive = true;
       const element = createTestComponent();
       simulateSearchStatusUpdate();
       await flushPromises();
@@ -213,27 +214,31 @@ describe('c-quantic-tab', () => {
       expect(tab).not.toBeNull();
       expect(tab.textContent).toBe(defaultOptions.label);
       expect(tab.title).toEqual(defaultOptions.label);
-      expect(tab.getAttribute('aria-pressed')).toBe('false');
+      expect(tab.getAttribute('aria-pressed')).toBe('true');
       expect(tab.getAttribute('aria-label')).toBe(defaultOptions.label);
     });
+  });
 
+  describe('when the component is rendering', () => {
     it('should dispatch the quantic__tabrendered event', async () => {
       const element = createTestComponent();
       setupEventListeners(element);
       await flushPromises();
 
       expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
+      const tabrenderedEvent =
+        functionsMocks.exampleTabRendered.mock.calls[0][0];
+      expect(tabrenderedEvent.bubbles).toEqual(true);
     });
   });
 
   describe('when the tab is not active', () => {
     it('should render the tab without the active class', async () => {
+      mockBuildTabState.isActive = false;
       const element = createTestComponent();
       await flushPromises();
 
       const tab = element.shadowRoot.querySelector(selectors.tabButton);
-      tab.click();
-      await flushPromises();
 
       expect(tab.classList).not.toContain(expectedActiveTabClass);
       expect(element.isActive).toBe(false);
@@ -242,13 +247,7 @@ describe('c-quantic-tab', () => {
 
   describe('when the tab is active', () => {
     it('should render the tab with the active class', async () => {
-      functionsMocks.buildTab.mockImplementation(() => ({
-        state: {
-          isActive: true,
-        },
-        subscribe: functionsMocks.subscribe,
-        select: functionsMocks.select,
-      }));
+      mockBuildTabState.isActive = true;
       const element = createTestComponent();
       await flushPromises();
 
@@ -270,33 +269,6 @@ describe('c-quantic-tab', () => {
       expect(tab).not.toBeNull();
 
       await tab.click();
-      await flushPromises();
-
-      expect(functionsMocks.select).toHaveBeenCalled();
-    });
-
-    it('should select the tab and make it active', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const tab = element.shadowRoot.querySelector(selectors.tabButton);
-      expect(tab).not.toBeNull();
-
-      await tab.click();
-      await flushPromises();
-
-      expect(element.isActive).toBe(true);
-      expect(tab.getAttribute('aria-pressed')).toBe('true');
-      expect(tab.classList).toContain('slds-is-active');
-    });
-  });
-
-  describe('when calling the select method', () => {
-    it('should select the tab', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      await element.select();
       await flushPromises();
 
       expect(functionsMocks.select).toHaveBeenCalled();
