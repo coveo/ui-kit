@@ -11,5 +11,9 @@
     "useDefineForClassFields": false,
     "outDir": "dist/components"
   },
-  "files": ["src/components/search/index.ts", "src/components.d.ts"]
+  "files": [
+    "src/components/index.ts",
+    "src/components/lazy-index.ts",
+    "src/components.d.ts"
+  ]
 }

@@ -101,7 +101,7 @@ const commonExternal = [
   '@lit/react',
   '@coveo/atomic',
   '@coveo/atomic/loader',
-  '@coveo/atomic/components/atomic-text',
+  '@coveo/atomic/components',
   '@coveo/headless',
   '@coveo/headless/recommendation',
   '@coveo/headless/commerce',

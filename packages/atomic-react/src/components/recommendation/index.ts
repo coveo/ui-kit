@@ -1,4 +1,4 @@
-import {AtomicText as LitAtomicText} from '@coveo/atomic/components/atomic-text';
+import {AtomicText as LitAtomicText} from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
 

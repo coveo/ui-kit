@@ -1,5 +1,7 @@
 const exportModule = require('./_loader.cjs.js');
-const searchComponents = import('../components/components/search/index.js');
+const searchComponents = import(
+  '../components/components/search/lazy-index.js'
+);
 
 const originalDefineCustomElements = exportModule.defineCustomElements;
 exportModule.defineCustomElements = function (...args) {

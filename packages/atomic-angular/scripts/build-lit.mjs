@@ -29,11 +29,12 @@ export class ${declaration.name} {
   }
 }
 
-import {${declaration.name} as Lit${declaration.name}} from '@coveo/atomic/components/${declaration.tagName}';
-
 export declare interface ${declaration.name} extends Lit${declaration.name} {}
 `
 
+const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
+
+const litImports = []
 
 for (const module of cem.modules) {
   for (const declaration of module.declarations) {
@@ -41,10 +42,12 @@ for (const module of cem.modules) {
     if (isLitDeclaration(declaration)) {
       console.log(`Found LitElement: ${declaration.name}`);
       atomicAngularComponentFileStream.write(declarationToProxyCmp(declaration));
+      litImports.push(declarationToLitImport(declaration));
       litDeclarations.push(`${declaration.name}`);
     }
   }
 }
+atomicAngularComponentFileStream.write(`\nimport type {${litImports.join(',')}} from '@coveo/atomic/components';`);
 atomicAngularComponentFileStream.end();
 
 

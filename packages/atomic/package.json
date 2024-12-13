@@ -35,9 +35,9 @@
       "import": "./dist/atomic/lang/*",
       "require": "./dist/atomic/lang/*"
     },
-    "./components/atomic-text": {
-      "types": "./dist/components/components/search/atomic-text/atomic-text.d.ts",
-      "import": "./dist/components/components/search/atomic-text/atomic-text.js"
+    "./components": {
+      "types": "./dist/components/components/index.d.ts",
+      "import": "./dist/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },

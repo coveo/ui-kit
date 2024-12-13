@@ -3081,6 +3081,6 @@ export class AtomicText {
   }
 }
 
-import {AtomicText as LitAtomicText} from '@coveo/atomic/components/atomic-text';
-
 export declare interface AtomicText extends LitAtomicText {}
+
+import type {AtomicText as LitAtomicText} from '@coveo/atomic/components';
