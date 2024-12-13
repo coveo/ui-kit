@@ -177,7 +177,7 @@ const handlePreviousPage = (
     return;
   }
 
-  if (state.page !== undefined) {
+  if (state.page !== undefined && state.page > 1) {
     state.page--;
     return;
   }

@@ -97,13 +97,31 @@ describe('commerceParameters slice', () => {
     });
 
     describe('when payload.slotId is undefined', () => {
-      it('when state.page is defined, decrements state.page', () => {
+      it('when state.page is greater than 1, decrements state.page', () => {
         const state = {
           ...initialState,
           page: 2,
         };
         const finalState = parametersReducer(state, previousPage());
         expect(finalState).toEqual({...state, page: 1});
+      });
+
+      it('when state.page is 1, sets state.page to undefined', () => {
+        const state = {
+          ...initialState,
+          page: 1,
+        };
+        const finalState = parametersReducer(state, previousPage());
+        expect(finalState).toEqual({...state, page: undefined});
+      });
+
+      it('when state.page is 0, sets state.page to undefined', () => {
+        const state = {
+          ...initialState,
+          page: 0,
+        };
+        const finalState = parametersReducer(state, previousPage());
+        expect(finalState).toEqual({...state, page: undefined});
       });
 
       it('when state.page is undefined, set state.page to undefined', () => {
