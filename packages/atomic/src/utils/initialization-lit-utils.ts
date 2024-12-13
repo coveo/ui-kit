@@ -1,7 +1,7 @@
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import {buildCustomEvent} from './event-utils';
-import {closest} from './utils';
+import {closest} from './dom-utils.js';
+import {buildCustomEvent} from './event-utils.js';
 
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export const initializeEventName = 'atomic/initializeComponent';
