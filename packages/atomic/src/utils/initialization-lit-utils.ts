@@ -1,19 +1,19 @@
 import type {AnyBindings} from '../components/common/interface/bindings';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import {closest} from './dom-utils';
-import {buildCustomEvent} from './event-utils';
+import {closest} from './dom-utils.js';
+import {buildCustomEvent} from './event-utils.js';
+import {
+  initializeEventName,
+  initializableElements,
+  InitializeEventHandler,
+  MissingInterfaceParentError,
+} from './initialization-lit-stencil-common-utils.js';
 
-export type InitializeEventHandler = (bindings: AnyBindings) => void;
-export const initializeEventName = 'atomic/initializeComponent';
-export const initializableElements = [
-  'atomic-recs-interface',
-  'atomic-search-interface',
-  'atomic-commerce-interface',
-  'atomic-commerce-recommendation-interface',
-  'atomic-relevance-inspector',
-  'atomic-insight-interface',
-  'atomic-external',
-];
+export {
+  initializableElements,
+  InitializeEventHandler,
+  MissingInterfaceParentError,
+} from './initialization-lit-stencil-common-utils.js';
 
 /**
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
@@ -34,14 +34,4 @@ export function initializeBindings<
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
     }
   });
-}
-
-export class MissingInterfaceParentError extends Error {
-  constructor(elementName: string) {
-    super(
-      `The "${elementName}" element must be the child of the following elements: ${initializableElements.join(
-        ', '
-      )}`
-    );
-  }
 }

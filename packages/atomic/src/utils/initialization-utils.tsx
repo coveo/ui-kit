@@ -13,7 +13,9 @@ import {buildCustomEvent} from './event-utils';
 import {
   MissingInterfaceParentError,
   InitializeEventHandler,
-} from './initialization-lit-utils';
+  initializableElements,
+  initializeEventName,
+} from './initialization-lit-stencil-common-utils';
 import {closest} from './utils';
 
 declare global {
@@ -23,42 +25,12 @@ declare global {
 }
 
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
-export const initializeEventName = 'atomic/initializeComponent';
-const initializableElements = [
-  'atomic-recs-interface',
-  'atomic-search-interface',
-  'atomic-commerce-interface',
-  'atomic-commerce-recommendation-interface',
-  'atomic-relevance-inspector',
-  'atomic-insight-interface',
-  'atomic-external',
-];
-
-/**
- * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
- * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
- * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
- */
-export function initializeBindings<
-  SpecificBindings extends AnyBindings = Bindings,
->(element: Element) {
-  return new Promise<SpecificBindings>((resolve, reject) => {
-    const event = buildCustomEvent<InitializeEventHandler>(
-      initializeEventName,
-      (bindings) => resolve(bindings as SpecificBindings)
-    );
-    element.dispatchEvent(event);
-
-    if (!closest(element, initializableElements.join(', '))) {
-      reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
-    }
-  });
-}
 
 export {
   MissingInterfaceParentError,
   InitializeEventHandler,
-} from './initialization-lit-utils';
+  initializeEventName,
+} from './initialization-lit-stencil-common-utils';
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
