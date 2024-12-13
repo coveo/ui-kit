@@ -16,7 +16,6 @@ export default function PurchaseButton() {
       id: fetcher.data.transactionId,
       revenue: fetcher.data.transactionRevenue,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
   return (

@@ -33,8 +33,6 @@ export default function AddToCartButton({
       productId,
       quantity,
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
   return (

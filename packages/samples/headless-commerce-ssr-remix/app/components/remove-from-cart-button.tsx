@@ -37,7 +37,6 @@ export default function RemoveFromCartButton({
         quantity,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetcher.data]);
 
   return (
