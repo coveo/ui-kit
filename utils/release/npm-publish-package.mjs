@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import {describeNpmTag, npmPublish} from '@coveo/semantic-monorepo-tools';
-import retry from 'async-retry';
 import {readFileSync} from 'node:fs';
 
 if (!process.env.INIT_CWD) {
@@ -43,14 +42,6 @@ if (!(await isPublished(name, version))) {
     tag: tagToPublish,
     provenance: shouldProvideProvenance,
   });
-  await retry(
-    async () => {
-      if (!(await isPublished(name, version, tagToPublish))) {
-        throw new Error('Version not available');
-      }
-    },
-    {retries: 30}
-  );
 } else {
   console.log(`Version ${version} is already published.`);
 }
