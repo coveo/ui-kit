@@ -27,7 +27,7 @@ const mockResult = {
   clickUri: 'https://www.example.com',
 };
 
-const mockSmartSnippetQuestionsListState = {
+const defaultSmartSnippetQuestionsListState = {
   questions: [
     {
       question: 'What is the capital of Gondor?',
@@ -54,17 +54,19 @@ const mockSmartSnippetQuestionsListState = {
   ],
 };
 
+let smartSnippetQuestionsListState = defaultSmartSnippetQuestionsListState;
+
 const functionsMocks = {
   buildSmartSnippetQuestionsList: jest.fn(() => ({
-    state: mockSmartSnippetQuestionsListState,
-    subscribe: functionsMocks.subscribe,
+    state: smartSnippetQuestionsListState,
+    subscribe: functionsMocks.smartSnippetQuestionsListStateSubscriber,
     select: jest.fn(),
   })),
-  subscribe: jest.fn((cb) => {
+  smartSnippetQuestionsListStateSubscriber: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
   }),
-  unsubscribe: jest.fn(() => {}),
+  smartSnippetQuestionsListStateUnsubscriber: jest.fn(() => {}),
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -129,6 +131,7 @@ describe('c-quantic-smart-snippet-suggestions', () => {
   });
 
   afterEach(() => {
+    smartSnippetQuestionsListState = defaultSmartSnippetQuestionsListState;
     cleanup();
   });
 
@@ -149,7 +152,9 @@ describe('c-quantic-smart-snippet-suggestions', () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+      expect(
+        functionsMocks.smartSnippetQuestionsListStateSubscriber
+      ).toHaveBeenCalledTimes(1);
     });
   });
 

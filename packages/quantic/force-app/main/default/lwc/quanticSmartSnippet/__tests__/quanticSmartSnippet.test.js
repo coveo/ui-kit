@@ -21,31 +21,38 @@ const selectors = {
   initializationError: 'c-quantic-component-error',
 };
 
-const mockSearchStatusState = {
+const defaultSearchStatusState = {
   hasResults: true,
+  firstSearchExecuted: true,
 };
 
-const mockSearchStatus = {
-  state: mockSearchStatusState,
-  subscribe: jest.fn((callback) => {
-    mockSearchStatus.callback = callback;
-    return jest.fn();
-  }),
+let searchStatusState = defaultSearchStatusState;
+
+const defaultSmartSnippetState = {
+  isActive: false,
 };
+let smartSnippetState = defaultSmartSnippetState;
 
 const functionsMocks = {
   buildSmartSnippet: jest.fn(() => ({
-    state: {}, // Todo: add state
-    subscribe: functionsMocks.subscribe,
+    state: smartSnippetState,
+    subscribe: functionsMocks.smartSnippetStateSubscriber,
     select: jest.fn(),
   })),
-  buildSearchStatus: jest.fn(() => mockSearchStatus),
-  subscribe: jest.fn((cb) => {
+  buildSearchStatus: jest.fn(() => ({
+    state: searchStatusState,
+    subscribe: functionsMocks.searchStatusStateSubscriber,
+  })),
+  smartSnippetStateSubscriber: jest.fn((cb) => {
     cb();
-    return functionsMocks.unsubscribe;
+    return functionsMocks.smartSnippetStateUnsubscriber;
   }),
-  unsubscribe: jest.fn(() => {}),
-  unsubscribeSearchStatus: jest.fn(() => {}),
+  searchStatusStateSubscriber: jest.fn((cb) => {
+    cb();
+    return functionsMocks.searchStatusStateUnsubscriber;
+  }),
+  smartSnippetStateUnsubscriber: jest.fn(),
+  searchStatusStateUnsubscriber: jest.fn(),
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -110,6 +117,8 @@ describe('c-quantic-smart-snippet', () => {
   });
 
   afterEach(() => {
+    smartSnippetState = defaultSmartSnippetState;
+    searchStatusState = defaultSearchStatusState;
     cleanup();
   });
 
@@ -128,11 +137,16 @@ describe('c-quantic-smart-snippet', () => {
       );
     });
 
-    it('should subscribe to the headless state changes', async () => {
+    it('should subscribe to the headless smart snippet and search status state changes', async () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.smartSnippetStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
     });
   });
 
