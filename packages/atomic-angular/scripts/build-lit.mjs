@@ -38,9 +38,7 @@ const litImports = []
 
 for (const module of cem.modules) {
   for (const declaration of module.declarations) {
-    console.log(`Declaration: ${declaration.name}`);
     if (isLitDeclaration(declaration)) {
-      console.log(`Found LitElement: ${declaration.name}`);
       atomicAngularComponentFileStream.write(declarationToProxyCmp(declaration));
       litImports.push(declarationToLitImport(declaration));
       litDeclarations.push(`${declaration.name}`);

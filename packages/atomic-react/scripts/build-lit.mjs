@@ -1,12 +1,14 @@
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
-import {createWriteStream} from 'fs';
+import {writeFileSync} from 'node:fs';
+import * as prettier from 'prettier';
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
 
 const entries = [
   {
-    file: createWriteStream('src/components/search/components.ts'),
+    path: 'src/components/search/components.ts',
+    content: '',
     excludedComponents: [
       'atomic-result-template',
       'atomic-recs-result-template',
@@ -16,7 +18,8 @@ const entries = [
     computedComponentImports: [],
   },
   {
-    file: createWriteStream('src/components/commerce/components.ts'),
+    path: 'src/components/commerce/components.ts',
+    content: '',
     excludedComponents: [
       'atomic-product-template',
       'atomic-recs-result-template',
@@ -44,7 +47,6 @@ export const ${declaration.name} = createComponent({
 
 for (const module of cem.modules) {
   for (const declaration of module.declarations) {
-    console.log(`Declaration: ${declaration.name}`);
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {
         if (
@@ -58,19 +60,31 @@ for (const module of cem.modules) {
         entry.computedComponentImports.push(
           declarationToLitImport(declaration)
         );
-        entry.file.write(declarationToComponent(declaration));
+        entry.content+=(declarationToComponent(declaration));
       }
     }
   }
 }
 
 for (const entry of entries) {
-  entry.file.write(
-    `
-import {createComponent} from '@lit/react';
-import React from 'react';
-import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';
-`
-  );
-  entry.file.end();
+  const prettierConfig = {
+    ...(await prettier.resolveConfig(entry.path)),
+    parser: 'typescript'
+  };
+  if(entry.computedComponentImports.length===0) {
+    writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
+    continue;
+  }
+  writeFileSync(
+    entry.path,
+    await prettier.format(
+      [
+        `import {createComponent} from '@lit/react';`,
+        `import React from 'react';`,
+        `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
+        entry.content
+      ].join('\n'),
+      prettierConfig
+    )
+  )
 }
