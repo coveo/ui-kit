@@ -16,6 +16,25 @@ const selectors = {
   dropdown: '.slds-dropdown',
 };
 
+const expectedDarkThemeClass = 'slds-theme_shade';
+
+const exampleSlots = [
+  {
+    engineId: 'example engine id',
+    label: 'Item One',
+    expression: 'example expression',
+    isActive: true,
+  },
+  {
+    engineId: 'example engine id',
+    label: 'Item Two',
+    expression: 'example expression',
+    isActive: false,
+  },
+];
+
+const exampleAssignedElements = exampleSlots;
+
 /**
  * Mocks the return value of the assignedNodes method.
  * @param {Array<Element>} assignedElements
@@ -58,23 +77,6 @@ describe('c-quantic-tab-bar', () => {
     cleanup();
   });
 
-  const exampleSlots = [
-    {
-      engineId: 'example engine id',
-      label: 'Item One',
-      expression: 'example expression',
-      isActive: true,
-    },
-    {
-      engineId: 'example engine id',
-      label: 'Item Two',
-      expression: 'example expression',
-      isActive: false,
-    },
-  ];
-
-  const exampleAssignedElements = exampleSlots;
-
   it('should display all the tabs without displaying the dropdown list', async () => {
     const expectedOpenDropdownClass = 'slds-is-open';
 
@@ -97,7 +99,6 @@ describe('c-quantic-tab-bar', () => {
 
   describe('when the light theme property is set to true', () => {
     it('should display the component with the light theme styles', async () => {
-      const expectedDarkThemeClass = 'slds-theme_shade';
       const element = createTestComponent({lightTheme: true});
       await flushPromises();
 
@@ -110,7 +111,6 @@ describe('c-quantic-tab-bar', () => {
 
   describe('when the light theme property is set to false', () => {
     it('should display the component with the light theme styles', async () => {
-      const expectedDarkThemeClass = 'slds-theme_shade';
       const element = createTestComponent({lightTheme: false});
       await flushPromises();
 
