@@ -53,8 +53,6 @@ export type ReactEngineDefinition<
   TEngineOptions,
   TSolutionType extends SolutionType,
 > = EngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
-  controllers: InferControllerHooksMapFromDefinition<TControllers>;
-  useEngine(): SSRCommerceEngine | undefined;
   StaticStateProvider: FunctionComponent<
     PropsWithChildren<{
       controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
