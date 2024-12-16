@@ -4,7 +4,9 @@ import {
   SolutionType,
   SubControllerDefinitionWithProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
+import {Kind} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {CoreEngineNext} from '../../../../app/engine.js';
+import {ControllerWithKind} from '../../../../app/ssr-engine/types/common.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
@@ -32,6 +34,14 @@ export type {
   ProductListingParameters,
   CommerceSearchParameters,
 };
+
+//TODO: implement _kind in define function
+interface InternalParameterManager<T extends Parameters>
+  extends ParameterManager<T>,
+    ControllerWithKind {
+  _kind: Kind.ParameterManager;
+  state: ParameterManager<T>['state'];
+}
 
 /**
  * Defines a `ParameterManager` controller instance.
@@ -63,7 +73,7 @@ export function defineParameterManager<
       }
     },
   } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<typeof options>>,
+    InternalParameterManager<MappedParameterTypes<typeof options>>,
     TOptions,
     ParameterManagerProps<MappedParameterTypes<typeof options>>
   >;

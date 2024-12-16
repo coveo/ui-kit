@@ -84,6 +84,7 @@ export interface RecommendationsState {
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
+  // productId: string;
 }
 
 export interface RecommendationsOptions {
@@ -133,6 +134,7 @@ export function buildRecommendations(
   const {dispatch} = engine;
 
   const {slotId, productId} = props.options;
+  //Send productId here
   dispatch(registerRecommendationsSlot({slotId}));
 
   const recommendationStateSelector = createSelector(

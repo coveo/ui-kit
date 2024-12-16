@@ -4,6 +4,7 @@ import {InvalidControllerDefinition} from '../../utils/errors.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {
   ControllersMap,
+  ControllerWithKind,
   InferControllerStaticStateMapFromControllers,
 } from '../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from './factories/build-factory.js';
@@ -19,6 +20,12 @@ import {
   SolutionType,
 } from './types/common.js';
 
+function hasKindProperty(
+  controller: Controller | ControllerWithKind
+): controller is ControllerWithKind {
+  return '_kind' in controller;
+}
+
 export function createStaticState<TSearchAction extends UnknownAction>({
   searchActions,
   controllers,
@@ -32,7 +39,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
-      _kind: controller._kind,
+      ...(hasKindProperty(controller) && {_kind: controller._kind}),
     })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
     searchActions: searchActions.map((action) => clone(action)),
   };

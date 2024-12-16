@@ -2,6 +2,10 @@ import {
   recommendationInternalOptionKey,
   RecommendationOnlyControllerDefinitionWithProps,
 } from '../../../app/commerce-ssr-engine/types/common.js';
+import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
+import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
+// import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
+// import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
 import {
   RecommendationsOptions,
   RecommendationsState,
@@ -21,9 +25,14 @@ export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
+interface InternalRecommendations extends Recommendations, ControllerWithKind {
+  _kind: Kind.Recommendations;
+  state: Recommendations['state'];
+}
+
 export interface RecommendationsDefinition
   extends RecommendationOnlyControllerDefinitionWithProps<
-    Recommendations,
+    InternalRecommendations,
     Partial<RecommendationsOptions>
   > {}
 
@@ -48,9 +57,12 @@ export function defineRecommendations(
       options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
       const staticOptions = props.options;
-      return buildRecommendations(engine, {
-        options: {...staticOptions, ...options},
-      });
+      return {
+        ...buildRecommendations(engine, {
+          options: {...staticOptions, ...options},
+        }),
+        _kind: Kind.Recommendations,
+      };
     },
   };
 }

@@ -57,11 +57,11 @@ export interface ControllersPropsMap {
 }
 
 export interface ControllersMap {
-  [customName: string]: ControllerWithKind;
+  [customName: string]: Controller | ControllerWithKind;
 }
 
 export interface ControllerWithKind extends Controller {
-  _kind?: Kind;
+  _kind: Kind;
 }
 
 export interface ControllerStaticState<TState> {

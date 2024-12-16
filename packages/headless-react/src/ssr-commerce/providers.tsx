@@ -71,6 +71,23 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
             // TODO
             break;
 
+          case Kind.Recommendations:
+            // if (
+            //   //@ts-expect-error normal
+            //   controller.state.productId &&
+            //   //@ts-expect-error normal
+            //   controller.state.productId !== ''
+            // ) {
+            //   console.log('controller', controller);
+            // }
+            // hydrateControllers[key] = {
+            //   options: {
+            //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            //     productId: (controllers as any)[key].state.productId,
+            //   },
+            // };
+            break;
+
           default:
         }
       }

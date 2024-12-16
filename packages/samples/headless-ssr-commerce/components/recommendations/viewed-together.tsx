@@ -1,21 +1,21 @@
 'use client';
 
-import {usePopularViewed} from '@/lib/commerce-engine';
+import {useViewedTogether} from '@/lib/commerce-engine';
 import ProductButtonWithImage from '../product-button-with-image';
 
-export default function PopularViewed() {
-  const {state, methods} = usePopularViewed();
+export default function ViewedTogether() {
+  const {state, methods} = useViewedTogether();
 
   return (
     <>
       <ul>
-        This is a recommendation
         <h3>{state.headline}</h3>
         {state.products.map((product) => (
           <li key={product.ec_product_id}>
             <ProductButtonWithImage methods={methods} product={product} />
           </li>
         ))}
+        <button onClick={() => methods?.refresh()}>Refresh</button>
       </ul>
     </>
   );
