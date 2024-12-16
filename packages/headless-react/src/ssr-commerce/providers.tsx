@@ -65,7 +65,7 @@ export function buildProviderWithDefinition<
         args.controllers = hydrateArguments;
       }
 
-      // @ts-expect-error Casting to loose definition to access since we don't need the inferred controllers here
+      // @ts-expect-error Casting to loose definition since we don't need the inferred controllers here
       const looseDefinition = definition as ReactCommerceEngineDefinition<
         ControllerDefinitionsMap<Controller>,
         SolutionType
