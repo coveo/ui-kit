@@ -268,7 +268,7 @@ describe('pagination slice', () => {
       );
     });
 
-    it('does not restores principal pagination perPage when perPage parameter is undefined', () => {
+    it('does not restore principal pagination perPage when perPage parameter is undefined', () => {
       const parameters = {
         page: undefined,
         perPage: undefined,

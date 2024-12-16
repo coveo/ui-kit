@@ -1,20 +1,11 @@
-import {Pagination} from '@coveo/headless/commerce';
-import {useEffect, useState} from 'react';
+'use client';
 
-interface IProductsPerPageProps {
-  controller: Pagination;
-}
+import {usePagination} from '@/lib/commerce-engine';
 
-export default function ProductsPerPage(props: IProductsPerPageProps) {
-  const {controller} = props;
-
-  const [state, setState] = useState(controller.state);
+export default function ProductsPerPage() {
+  const {state, methods} = usePagination();
 
   const options = [5, 10, 20, 50, 0];
-
-  useEffect(() => {
-    controller.subscribe(() => setState(controller.state));
-  }, [controller]);
 
   return (
     <span className="ProductsPerPage">
@@ -30,9 +21,10 @@ export default function ProductsPerPage(props: IProductsPerPageProps) {
               }
               id={id}
               name={`pageSize-${pageSize}`}
-              onChange={() => controller.setPageSize(pageSize)}
+              onChange={() => methods?.setPageSize(pageSize)}
               type="radio"
               value={pageSize}
+              disabled={methods === undefined}
             />
             <label className="ProductsPerPageOption" htmlFor={id}>
               {pageSize === 0 ? 'Default' : pageSize}
