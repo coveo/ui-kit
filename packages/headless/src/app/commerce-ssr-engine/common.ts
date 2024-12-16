@@ -32,6 +32,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
+      _kind: controller._kind,
     })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
     searchActions: searchActions.map((action) => clone(action)),
   };

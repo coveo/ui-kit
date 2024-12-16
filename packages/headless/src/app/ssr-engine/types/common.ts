@@ -1,5 +1,6 @@
 import {UnknownAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
+import {Kind} from '../../commerce-ssr-engine/types/kind.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
 
 export type HasKey<T, K extends PropertyKey> = T extends unknown
@@ -56,7 +57,11 @@ export interface ControllersPropsMap {
 }
 
 export interface ControllersMap {
-  [customName: string]: Controller;
+  [customName: string]: ControllerWithKind;
+}
+
+export interface ControllerWithKind extends Controller {
+  _kind?: Kind;
 }
 
 export interface ControllerStaticState<TState> {

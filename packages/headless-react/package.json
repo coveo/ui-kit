@@ -34,8 +34,7 @@
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/headless": "3.12.0",
-    "@coveo/bueno": "1.0.7"
+    "@coveo/headless": "3.12.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
