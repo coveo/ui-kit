@@ -1,5 +1,3 @@
-'use client';
-
 import {
   DateFacetState,
   DateFacet as HeadlessDateFacet,

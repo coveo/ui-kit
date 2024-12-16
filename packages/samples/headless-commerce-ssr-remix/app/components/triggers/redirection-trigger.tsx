@@ -1,5 +1,3 @@
-'use client';
-
 import {useRedirectionTrigger} from '@/lib/commerce-engine';
 import {useCallback, useEffect} from 'react';
 

@@ -1,5 +1,3 @@
-'use client';
-
 import {useBreadcrumbManager} from '@/lib/commerce-engine';
 import {
   NumericFacetValue,

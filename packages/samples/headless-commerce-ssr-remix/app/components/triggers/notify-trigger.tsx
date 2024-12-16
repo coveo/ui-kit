@@ -1,5 +1,3 @@
-'use client';
-
 import {useNotifyTrigger} from '@/lib/commerce-engine';
 import {useCallback, useEffect} from 'react';
 

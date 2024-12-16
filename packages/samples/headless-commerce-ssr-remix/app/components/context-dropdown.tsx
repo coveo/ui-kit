@@ -1,5 +1,3 @@
-'use client';
-
 import {useContext, useEngine} from '@/lib/commerce-engine';
 import {
   CommerceEngine,

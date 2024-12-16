@@ -1,5 +1,3 @@
-'use client';
-
 import {useSummary} from '@/lib/commerce-engine';
 
 export default function Summary() {

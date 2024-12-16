@@ -1,5 +1,3 @@
-'use client';
-
 import {usePopularBoughtRecs} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useNavigate} from '@remix-run/react';

@@ -1,5 +1,3 @@
-'use client';
-
 // import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 import {useSort} from '@/lib/commerce-engine';
 import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';

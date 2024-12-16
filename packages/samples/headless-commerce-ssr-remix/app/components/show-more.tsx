@@ -1,5 +1,3 @@
-'use client';
-
 import {usePagination, useSummary} from '@/lib/commerce-engine';
 
 export default function ShowMore() {
