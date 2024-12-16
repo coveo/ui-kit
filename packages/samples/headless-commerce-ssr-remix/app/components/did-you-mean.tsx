@@ -1,23 +1,7 @@
-import {
-  DidYouMeanState,
-  DidYouMean as DidYouMeanController,
-} from '@coveo/headless/ssr-commerce';
-import {useEffect, useState} from 'react';
+import {useDidYouMean} from '@/lib/commerce-engine';
 
-interface DidYouMeanProps {
-  staticState: DidYouMeanState;
-  controller?: DidYouMeanController;
-}
-export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
-  const [state, setState] = useState(staticState);
-
-  useEffect(
-    () =>
-      controller?.subscribe(() => {
-        setState({...controller.state});
-      }),
-    [controller]
-  );
+export default function DidYouMean() {
+  const {state, methods} = useDidYouMean();
 
   if (!state.hasQueryCorrection) {
     return null;
@@ -40,7 +24,7 @@ export default function DidYouMean({staticState, controller}: DidYouMeanProps) {
     <div>
       <p>
         Search for
-        <span onClick={() => controller?.applyCorrection()}>
+        <span onClick={() => methods?.applyCorrection()}>
           <b>{state.queryCorrection.correctedQuery}</b>
         </span>
         instead?

@@ -1,5 +1,6 @@
 import BreadcrumbManager from '@/app/components/breadcrumb-manager';
 import ContextDropdown from '@/app/components/context-dropdown';
+import DidYouMean from '@/app/components/did-you-mean';
 import FacetGenerator from '@/app/components/facets/facet-generator';
 import ProductList from '@/app/components/product-list';
 import {SearchProvider} from '@/app/components/providers/providers';
@@ -67,6 +68,7 @@ export default function SearchRoute() {
         <div style={{flex: 2}}>
           <Triggers />
           <SearchBox />
+          <DidYouMean />
           <BreadcrumbManager />
           <Summary />
           <ProductList />
