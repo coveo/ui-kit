@@ -1,3 +1,4 @@
+import externalContextService from '@/external-services/external-context-service';
 import {useContext, useEngine} from '@/lib/commerce-engine';
 import {
   CommerceEngine,
@@ -5,16 +6,14 @@ import {
   loadProductListingActions,
   loadSearchActions,
 } from '@coveo/headless-react/ssr-commerce';
+import {LoaderFunctionArgs} from '@remix-run/node';
+import {Form, useFetcher, useLoaderData} from '@remix-run/react';
+import {useState} from 'react';
 
-// A hardcoded list of storefront associations for switching app context by language, country, and currency.
-// Found in the admin console under "Storefront Associations," this list is static for demonstration purposes.
-// In a real application, these values would likely come from sources like environment variables or an API.
-const storefrontAssociations = [
-  'en-CA-CAD',
-  'fr-CA-CAD',
-  'en-GB-GBP',
-  'en-US-USD',
-];
+export const loader = async ({}: LoaderFunctionArgs) => {
+  const contextInfo = await externalContextService.getContextInformation();
+  return contextInfo;
+};
 
 export default function ContextDropdown({
   useCase,
@@ -23,38 +22,55 @@ export default function ContextDropdown({
 }) {
   const {state, methods} = useContext();
   const engine = useEngine();
+  const fetcher = useFetcher();
+  const serverContext = useLoaderData<typeof loader>();
+  const [, setContext] = useState<{
+    language: string;
+    country: string;
+    currency: string;
+  }>(serverContext);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [language, country, currency] = e.target.value.split('-');
+    const newContext = {language, country, currency};
+    setContext(newContext);
+    methods?.setLanguage(language);
+    methods?.setCountry(country);
+    methods?.setCurrency(currency as ContextOptions['currency']);
+
+    fetcher.submit(
+      {language, country, currency},
+      {method: 'post', action: '/context/update'}
+    );
+
+    if (useCase === 'search') {
+      engine?.dispatch(
+        loadSearchActions(engine as CommerceEngine).executeSearch()
+      );
+    } else if (useCase === 'listing') {
+      engine?.dispatch(
+        loadProductListingActions(
+          engine as CommerceEngine
+        ).fetchProductListing()
+      );
+    }
+  };
 
   return (
     <div>
-      <p></p>
-      Context dropdown :
-      <select
-        value={`${state.language}-${state.country}-${state.currency}`}
-        onChange={(e) => {
-          const [language, country, currency] = e.target.value.split('-');
-          methods?.setLanguage(language);
-          methods?.setCountry(country);
-          methods?.setCurrency(currency as ContextOptions['currency']);
-
-          useCase === 'search'
-            ? engine?.dispatch(
-                loadSearchActions(engine as CommerceEngine).executeSearch()
-              )
-            : useCase === 'listing' &&
-              engine?.dispatch(
-                loadProductListingActions(
-                  engine as CommerceEngine
-                ).fetchProductListing()
-              );
-        }}
-      >
-        {storefrontAssociations.map((association) => (
-          <option key={association} value={association}>
-            {association}
-          </option>
-        ))}
-      </select>
-      <p></p>
+      Context dropdown:
+      <Form method="post" action="/context/update">
+        <select
+          value={`${state.language}-${state.country}-${state.currency}`}
+          onChange={handleChange}
+        >
+          {externalContextService.getContextOptions().map((association) => (
+            <option key={association} value={association}>
+              {association}
+            </option>
+          ))}
+        </select>
+      </Form>
     </div>
   );
 }
