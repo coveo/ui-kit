@@ -6,6 +6,7 @@ import ProductList from '@/app/components/product-list';
 import {SearchProvider} from '@/app/components/providers/providers';
 import SearchBox from '@/app/components/search-box';
 import ShowMore from '@/app/components/show-more';
+import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
 import Triggers from '@/app/components/triggers/triggers';
 import externalCartService from '@/external-services/external-cart-service';
@@ -71,6 +72,7 @@ export default function SearchRoute() {
           <DidYouMean />
           <BreadcrumbManager />
           <Summary />
+          <Sort />
           <ProductList />
           {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
           {/* <Pagination
