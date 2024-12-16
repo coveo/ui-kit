@@ -7,15 +7,13 @@ export default function RecentQueries() {
   return (
     <div>
       <ul>
-        Recent Queries :
+        Recent queries:
         {state.queries.map((query, index) => (
           <li key={index}>
-            {query}
             <button
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
-              dangerouslySetInnerHTML={{__html: query}}
-            ></button>
+            >{query}</button>
           </li>
         ))}
       </ul>

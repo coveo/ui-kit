@@ -24,7 +24,7 @@ export default function RegularFacet(props: IRegularFacetProps) {
   }, [controller]);
 
   const focusFacetSearchInput = (): void => {
-    facetSearchInputRef.current!.focus();
+    facetSearchInputRef.current?.focus();
   };
 
   const onChangeFacetSearchInput = (

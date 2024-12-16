@@ -47,7 +47,7 @@ export default function NumericFacet(props: INumericFacetProps) {
   }, [controller]);
 
   const focusManualRangeStartInput = (): void => {
-    manualRangeStartInputRef.current!.focus();
+    manualRangeStartInputRef.current?.focus();
   };
 
   const invalidRange =

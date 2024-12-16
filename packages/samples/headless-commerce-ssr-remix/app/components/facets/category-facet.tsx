@@ -24,7 +24,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   }, [controller]);
 
   const focusFacetSearchInput = (): void => {
-    facetSearchInputRef.current!.focus();
+    facetSearchInputRef.current?.focus();
   };
 
   const onChangeFacetSearchInput = (

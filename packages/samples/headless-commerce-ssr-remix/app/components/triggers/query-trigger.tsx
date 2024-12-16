@@ -7,7 +7,7 @@ export default function QueryTrigger() {
   if (state.wasQueryModified) {
     return (
       <div>
-        The query changed from {state.originalQuery} to {state.newQuery}
+        The query changed from <b>{state.originalQuery}</b> to <b>{state.newQuery}</b>
       </div>
     );
   }
