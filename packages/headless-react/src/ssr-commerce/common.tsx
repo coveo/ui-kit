@@ -1,6 +1,7 @@
 import {
   Controller,
   ControllerDefinitionsMap,
+  ControllerDefinition,
   InferControllerFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
@@ -15,7 +16,10 @@ import {
   PropsWithChildren,
 } from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
-import {MissingEngineProviderError} from '../errors.js';
+import {
+  MissingEngineProviderError,
+  UndefinedControllerError,
+} from '../errors.js';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
 import {
   ContextHydratedState,
@@ -41,7 +45,8 @@ function buildControllerHook<
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
   >,
-  key: TKey
+  key: TKey,
+  controllerDefinition: ControllerDefinition<Controller>
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
     const ctx = useContext(singletonContext.get());
@@ -49,8 +54,21 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
+    const allSolutionTypes = Object.values(SolutionType);
+
+    const supportedSolutionTypes = allSolutionTypes.filter(
+      (solutionType) => controllerDefinition[solutionType] === true
+    );
+
     // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
+    if (ctx.controllers[key as ControllerKey] === undefined) {
+      throw new UndefinedControllerError(
+        key.toString(),
+        supportedSolutionTypes
+      );
+    }
+
     const subscribe = useCallback(
       (listener: () => void) =>
         isHydratedStateContext(ctx)
@@ -89,9 +107,9 @@ export function buildControllerHooks<
   return (
     controllersMap
       ? Object.fromEntries(
-          Object.keys(controllersMap).map((key) => [
+          Object.entries(controllersMap).map(([key, controllerDefinition]) => [
             `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key),
+            buildControllerHook(singletonContext, key, controllerDefinition),
           ])
         )
       : {}
@@ -121,7 +139,8 @@ export function buildStaticStateProvider<
 >(
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
-  >
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     controllers,
@@ -133,7 +152,7 @@ export function buildStaticStateProvider<
     >;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{controllers}}>{children}</Provider>;
+    return <Provider value={{controllers, solutionType}}>{children}</Provider>;
   };
 }
 
@@ -143,7 +162,8 @@ export function buildHydratedStateProvider<
 >(
   singletonContext: SingletonGetter<
     Context<ContextState<TControllers, TSolutionType> | null>
-  >
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     engine,
@@ -154,6 +174,10 @@ export function buildHydratedStateProvider<
     controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{engine, controllers}}>{children}</Provider>;
+    return (
+      <Provider value={{engine, controllers, solutionType}}>
+        {children}
+      </Provider>
+    );
   };
 }

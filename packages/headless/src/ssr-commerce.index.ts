@@ -91,6 +91,7 @@ export type {
 } from './app/engine-configuration.js';
 export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
 export type {
+  ControllerDefinition,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
