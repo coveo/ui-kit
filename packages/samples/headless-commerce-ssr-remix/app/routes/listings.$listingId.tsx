@@ -3,8 +3,6 @@ import ContextDropdown from '@/app/components/context-dropdown';
 import FacetGenerator from '@/app/components/facets/facet-generator';
 import Pagination from '@/app/components/pagination';
 import ProductList from '@/app/components/product-list';
-import PopularBought from '@/app/components/recommendations/popular-bought';
-import PopularViewed from '@/app/components/recommendations/popular-viewed';
 import Sort from '@/app/components/sort';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
@@ -14,7 +12,6 @@ import {
   listingEngineDefinition,
   ListingStaticState,
   recommendationEngineDefinition,
-  RecommendationStaticState,
 } from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
@@ -25,10 +22,7 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {
-  ListingProvider,
-  RecommendationProvider,
-} from '../components/providers/providers';
+import {ListingProvider} from '../components/providers/providers';
 //import StandaloneSearchBox from '../components/standalone-search-box';
 import {coveo_visitorId} from '../cookies.server';
 
@@ -64,14 +58,14 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+  /*  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     ['popularBoughtRecs', 'popularViewedRecs']
-  );
+  ); */
 
   return {
     staticState,
     navigatorContext,
-    recsStaticState,
+
     headers: {
       'Set-Cookie': await coveo_visitorId.serialize(navigatorContext.clientId),
     },
@@ -80,10 +74,9 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
 export default function ListingRoute() {
   const params = useParams();
-  const {staticState, navigatorContext, recsStaticState} = useLoaderData<{
+  const {staticState, navigatorContext} = useLoaderData<{
     staticState: ListingStaticState;
     navigatorContext: NavigatorContext;
-    recsStaticState: RecommendationStaticState;
   }>();
 
   const getTitle = () => {
@@ -122,7 +115,7 @@ export default function ListingRoute() {
           /> */}
         </div>
 
-        <div style={{flex: 4}}>
+        {/*     <div style={{flex: 4}}>
           <RecommendationProvider
             staticState={recsStaticState}
             navigatorContext={navigatorContext}
@@ -130,7 +123,7 @@ export default function ListingRoute() {
             <PopularBought />
             <PopularViewed />
           </RecommendationProvider>
-        </div>
+        </div> */}
       </div>
     </ListingProvider>
   );

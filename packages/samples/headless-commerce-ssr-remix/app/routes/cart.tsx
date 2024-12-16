@@ -1,18 +1,12 @@
 import Cart from '@/app/components/cart';
 import ContextDropdown from '@/app/components/context-dropdown';
-import {
-  RecommendationProvider,
-  StandaloneProvider,
-} from '@/app/components/providers/providers';
-import PopularBought from '@/app/components/recommendations/popular-bought';
+import {StandaloneProvider} from '@/app/components/providers/providers';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
 import {
-  recommendationEngineDefinition,
-  RecommendationStaticState,
   standaloneEngineDefinition,
   StandaloneStaticState,
 } from '@/lib/commerce-engine';
@@ -55,31 +49,23 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     },
   });
 
-  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+  /* const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     ['popularBoughtRecs', 'popularViewedRecs']
   );
-
-  return {staticState, items, totalPrice, language, currency, recsStaticState};
+   */
+  return {staticState, items, totalPrice, language, currency};
 };
 
 export default function CartRoute() {
-  const {
-    staticState,
-    navigatorContext,
-    items,
-    totalPrice,
-    language,
-    currency,
-    recsStaticState,
-  } = useLoaderData<{
-    staticState: StandaloneStaticState;
-    navigatorContext: NavigatorContext;
-    items: ExternalCartItem[];
-    totalPrice: number;
-    language: string;
-    currency: string;
-    recsStaticState: RecommendationStaticState;
-  }>();
+  const {staticState, navigatorContext, items, totalPrice, language, currency} =
+    useLoaderData<{
+      staticState: StandaloneStaticState;
+      navigatorContext: NavigatorContext;
+      items: ExternalCartItem[];
+      totalPrice: number;
+      language: string;
+      currency: string;
+    }>();
   return (
     <StandaloneProvider
       staticState={staticState}
@@ -95,12 +81,12 @@ export default function CartRoute() {
           language={language}
           currency={currency}
         />
-        <RecommendationProvider
+        {/*         <RecommendationProvider
           staticState={recsStaticState}
           navigatorContext={navigatorContext}
         >
           <PopularBought />
-        </RecommendationProvider>
+        </RecommendationProvider> */}
       </div>
     </StandaloneProvider>
   );
