@@ -1,4 +1,5 @@
 export * from '../stencil-generated/search/index.js';
+export * from './components.js';
 export {Bindings, i18n} from '@coveo/atomic';
 
 // Important: Re-exporting under the same name (eg: "AtomicSearchInterface") shadows the original component

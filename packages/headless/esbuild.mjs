@@ -88,35 +88,6 @@ const base = {
   banner: {js: apacheLicense()},
 };
 
-const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
-  (entry) => {
-    const [useCase, entryPoint] = entry;
-    const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
-    const outfile = `${outDir}/headless.esm.js`;
-
-    return buildBrowserConfig(
-      {
-        entryPoints: [entryPoint],
-        outfile,
-        format: 'esm',
-        watch: devMode,
-        minify: false,
-        plugins: [
-          aliasPath({
-            alias: {
-              '@coveo/bueno': path.resolve(
-                __dirname,
-                './src/external-builds/bueno.esm.js'
-              ),
-            },
-          }),
-        ],
-      },
-      outDir
-    );
-  }
-);
-
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser', useCase);
@@ -337,7 +308,6 @@ async function main() {
   await Promise.all([
     ...browserEsm,
     ...browserUmd,
-    ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
     ...quanticUmd,

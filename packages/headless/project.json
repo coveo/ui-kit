@@ -26,6 +26,13 @@
     "build": {
       "dependsOn": ["cached:build"],
       "executor": "nx:noop"
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run dev"],
+        "cwd": "packages/headless"
+      }
     }
   }
 }

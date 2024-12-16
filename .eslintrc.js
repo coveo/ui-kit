@@ -12,6 +12,8 @@ module.exports = {
     'scripts/deploy/execute-deployment-pipeline.mjs',
     'build',
     '.deployment.config.json',
+    'packages/atomic-angular/scripts/build-lit.mjs',
+    'packages/atomic-react/scripts/build-lit.mjs',
   ],
   env: {
     jest: true,

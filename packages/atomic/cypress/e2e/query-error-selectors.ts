@@ -1,4 +1,3 @@
-import {TestFixture} from '../fixtures/test-fixture';
 import {AriaLiveSelectors} from './aria-live-selectors';
 
 export const queryErrorComponent = 'atomic-query-error';
@@ -8,10 +7,7 @@ export const QueryErrorSelectors = {
     QueryErrorSelectors.shadow().find('[part="more-info-btn"]'),
   moreInfoMessage: () =>
     QueryErrorSelectors.shadow().find('[part="error-info"]'),
-  icon: () =>
-    cy
-      .wait(TestFixture.interceptAliases.Build)
-      .then(() => QueryErrorSelectors.shadow().find('atomic-icon')),
+  icon: () => QueryErrorSelectors.shadow().find('atomic-icon'),
   errorTitle: () => QueryErrorSelectors.shadow().find('[part="title"]'),
   errorDescription: () =>
     QueryErrorSelectors.shadow().find('[part="description"]'),

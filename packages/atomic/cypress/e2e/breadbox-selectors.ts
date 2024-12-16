@@ -1,5 +1,3 @@
-import {TestFixture} from '../fixtures/test-fixture';
-
 export const breadboxComponent = 'atomic-breadbox';
 export const BreadboxSelectors = {
   shadow: () => cy.get(breadboxComponent).shadow(),
@@ -14,9 +12,7 @@ export const BreadboxSelectors = {
   breadcrumbValueAtIndex: (index: number) =>
     BreadboxSelectors.breadcrumbButtonValue().eq(index),
   breadcrumbClearFacetValueButton: () =>
-    cy
-      .wait(TestFixture.interceptAliases.Build)
-      .then(() => BreadboxSelectors.breadcrumbButton().find('atomic-icon')),
+    BreadboxSelectors.breadcrumbButton().find('atomic-icon'),
   breadcrumbClearFacetValueButtonAtIndex: (index: number) =>
     BreadboxSelectors.breadcrumbClearFacetValueButton().eq(index),
   clearAllButton: () => BreadboxSelectors.shadow().find('[part="clear"]'),

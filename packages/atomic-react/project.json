@@ -8,6 +8,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
+          "node ./scripts/build-lit.mjs",
           "npm run build:fixLoaderImportPaths",
           "npm run build:fixGeneratedImportPaths",
           "npm run build:bundles",

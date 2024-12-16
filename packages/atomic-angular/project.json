@@ -11,7 +11,11 @@
       "dependsOn": ["^build"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": ["npm run build:bundles", "npm run build:assets"],
+        "commands": [
+          "node ./scripts/build-lit.mjs",
+          "npm run build:bundles",
+          "npm run build:assets"
+        ],
         "parallel": false,
         "cwd": "packages/atomic-angular"
       }

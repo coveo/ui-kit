@@ -38,13 +38,17 @@ describe('Search Interface Component', () => {
 
   describe('before being initialized', () => {
     beforeEach(() => {
-      new TestFixture().withoutInterfaceInitialization().init();
+      new TestFixture()
+        .withoutInterfaceInitialization()
+        .init()
+        .waitForComponentHydration('atomic-search-interface');
     });
 
     describe('when calling "executeFirstSearch"', () => {
       beforeEach(() => {
         execSearch();
       });
+
       assertConsoleErrorMessage(engineError);
     });
 
