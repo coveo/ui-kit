@@ -6,20 +6,7 @@
     "includeFolders": true
   },
   "categorizeByGroup": true,
-  "groupOrder": [
-    "Engine",
-    "Controllers",
-    "Search controllers",
-    "Buildable controllers",
-    "Sub-controllers",
-    "Core controllers",
-    "Actions",
-    "*"
-  ],
-  "entryPoints": [
-    "./temp/ssr.json",
-    "./temp/ssr-commerce.json" //TODO - KIT-3690 : Uncomment when the SSR Commerce is ready for GA
-  ],
+  "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "typedoc-POC",
   "plugin": ["./typedoc/dist/index.js"]
 }

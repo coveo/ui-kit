@@ -6,6 +6,7 @@
   },
   "categorizeByGroup": true,
   "groupOrder": [
+    "React",
     "Engine",
     "Definers",
     "Controllers",
@@ -16,5 +17,6 @@
   ],
   "entryPoints": ["../../src/ssr-commerce/index.ts"],
   "gitRevision": "typedoc-POC",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["../../typedoc/dist/index.js"],
+  "projectDocuments": ["../documents/*.md"]
 }
