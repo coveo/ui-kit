@@ -14,13 +14,14 @@ export default function Summary() {
   };
 
   const renderQuerySummary = () => {
-    if (!('query' in state || query.trim() === '')) {
+    if (!('query' in state) || state.query.trim() === '') {
       return null;
     }
 
     return (
       <span>
-        {' '}for <b>{state.query}</b>
+        {' '}
+        for <b>{state.query}</b>
       </span>
     );
   };
