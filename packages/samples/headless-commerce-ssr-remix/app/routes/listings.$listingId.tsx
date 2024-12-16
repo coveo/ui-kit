@@ -3,6 +3,7 @@ import ContextDropdown from '@/app/components/context-dropdown';
 import FacetGenerator from '@/app/components/facets/facet-generator';
 import Pagination from '@/app/components/pagination';
 import ProductList from '@/app/components/product-list';
+import {ListingProvider} from '@/app/components/providers/providers';
 import Sort from '@/app/components/sort';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
@@ -18,18 +19,24 @@ import {
   toCoveoCartItems,
   toCoveoCurrency,
 } from '@/utils/external-api-conversions';
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {
+  buildParameterSerializer,
+  NavigatorContext,
+} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {ListingProvider} from '../components/providers/providers';
-//import StandaloneSearchBox from '../components/standalone-search-box';
 import {coveo_visitorId} from '../cookies.server';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
   const navigatorContext = await getNavigatorContext(request);
+
+  const url = new URL(request.url);
+
+  const {deserialize} = buildParameterSerializer();
+  const parameters = deserialize(url.searchParams);
 
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
@@ -45,6 +52,11 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
       cart: {
         initialState: {
           items: toCoveoCartItems(await externalCartService.getItems()),
+        },
+      },
+      parameterManager: {
+        initialState: {
+          parameters: parameters,
         },
       },
       context: {

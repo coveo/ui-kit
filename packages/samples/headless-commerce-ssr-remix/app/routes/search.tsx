@@ -2,6 +2,7 @@ import BreadcrumbManager from '@/app/components/breadcrumb-manager';
 import ContextDropdown from '@/app/components/context-dropdown';
 import DidYouMean from '@/app/components/did-you-mean';
 import FacetGenerator from '@/app/components/facets/facet-generator';
+import ParameterManager from '@/app/components/parameter-manager';
 import ProductList from '@/app/components/product-list';
 import {SearchProvider} from '@/app/components/providers/providers';
 import SearchBox from '@/app/components/search-box';
@@ -17,12 +18,20 @@ import {
   toCoveoCartItems,
   toCoveoCurrency,
 } from '@/utils/external-api-conversions';
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+import {
+  buildParameterSerializer,
+  NavigatorContext,
+} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
+
+  const url = new URL(request.url);
+
+  const {deserialize} = buildParameterSerializer();
+  const parameters = deserialize(await url.searchParams);
 
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
@@ -34,6 +43,11 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       cart: {
         initialState: {
           items: toCoveoCartItems(await externalCartService.getItems()),
+        },
+      },
+      parameterManager: {
+        initialState: {
+          parameters: parameters,
         },
       },
       context: {
@@ -55,6 +69,7 @@ export default function SearchRoute() {
     staticState: SearchStaticState;
     navigatorContext: NavigatorContext;
   }>();
+
   return (
     <SearchProvider
       staticState={staticState}
@@ -74,6 +89,7 @@ export default function SearchRoute() {
           <Summary />
           <Sort />
           <ProductList />
+          <ParameterManager url={navigatorContext.location} />
           {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
           {/* <Pagination
           staticState={staticState.controllers.pagination.state}

@@ -21,7 +21,7 @@ export default function StandaloneSearchBox() {
 
   useEffect(() => {
     if (state.redirectTo === '/search') {
-      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
+      const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
       navigate(url, {preventScrollReset: true});
       methods?.afterRedirection();
     }
