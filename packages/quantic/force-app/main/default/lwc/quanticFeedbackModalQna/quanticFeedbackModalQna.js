@@ -168,7 +168,7 @@ export default class QuanticFeedbackModalQna extends LightningModal {
       return;
     }
     this.handleSubmit({
-      correctTopicValue: this.correctTopicValue,
+      correctTopic: this.correctTopicValue,
       hallucinationFree: this.hallucinationFreeValue,
       documented: this.documentedValue,
       readable: this.readableValue,

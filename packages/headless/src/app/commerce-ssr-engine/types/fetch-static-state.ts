@@ -1,8 +1,10 @@
 import type {UnknownAction} from '@reduxjs/toolkit';
-import {SolutionType} from '../../commerce-ssr-engine/types/common.js';
+import {Controller} from '../../../controllers/controller/headless-controller.js';
 import type {
+  ControllerDefinitionsMap,
   EngineDefinitionControllersPropsOption,
   EngineStaticState,
+  SolutionType,
 } from '../../commerce-ssr-engine/types/common.js';
 import type {
   ControllersMap,
@@ -19,40 +21,28 @@ export type FetchStaticState<
   TSearchAction extends UnknownAction,
   TControllersStaticState extends ControllerStaticStateMap,
   TControllersProps extends ControllersPropsMap,
+  TControllersDefinitionsMap extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> = TSolutionType extends SolutionType.recommendation
-  ? {
-      /**
-       * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
-       *
-       * Useful for static generation and server-side rendering.
-       */
-      (
-        controllers: Array<keyof TControllers>
-      ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
-
-      fromBuildResult: FromBuildResult<
-        TControllers,
-        FetchStaticStateOptions,
-        EngineStaticState<TSearchAction, TControllersStaticState>
-      >;
-    }
-  : {
-      /**
-       * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
-       *
-       * Useful for static generation and server-side rendering.
-       */
-      (
-        ...params: OptionsTuple<
-          FetchStaticStateOptions &
-            EngineDefinitionControllersPropsOption<TControllersProps>
+> = {
+  /**
+   * Executes only the initial search for a given configuration, then returns a resumable snapshot of engine state along with the state of the controllers.
+   *
+   * Useful for static generation and server-side rendering.
+   */
+  (
+    ...params: OptionsTuple<
+      FetchStaticStateOptions &
+        EngineDefinitionControllersPropsOption<
+          TControllersDefinitionsMap,
+          TControllersProps,
+          TSolutionType
         >
-      ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
+    >
+  ): Promise<EngineStaticState<TSearchAction, TControllersStaticState>>;
 
-      fromBuildResult: FromBuildResult<
-        TControllers,
-        FetchStaticStateOptions,
-        EngineStaticState<TSearchAction, TControllersStaticState>
-      >;
-    };
+  fromBuildResult: FromBuildResult<
+    TControllers,
+    FetchStaticStateOptions,
+    EngineStaticState<TSearchAction, TControllersStaticState>
+  >;
+};

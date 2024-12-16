@@ -6,8 +6,8 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     super(page, 'atomic-tab-manager');
   }
 
-  get tabDropdown() {
-    return this.page.getByLabel('tab-dropdown-area').getByRole('combobox');
+  get tabPopoverMenuButton() {
+    return this.page.getByLabel('Popover menu for more tabs');
   }
 
   get tabArea() {
@@ -90,10 +90,10 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 
-  tabDropdownOptions(value?: string) {
+  popoverTabs(value?: string) {
     const baseLocator = this.page
-      .getByLabel('tab-dropdown-area')
-      .getByRole('option');
+      .locator('tab-popover')
+      .locator('button[part="popover-tab"]');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }
 

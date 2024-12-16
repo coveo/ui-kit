@@ -1,0 +1,49 @@
+name: Setup Quantic Examples Community
+
+on:
+  workflow_dispatch:
+
+  workflow_call:
+    secrets:
+      SFDX_AUTH_CLIENT_ID:
+        required: true
+      SFDX_AUTH_JWT_KEY:
+        required: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  e2e-quantic-setup:
+    name: 'Setup Quantic Examples Community'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+
+      - name: Project setup
+        uses: ./.github/actions/setup
+
+      - name: Setup Salesforce CLI
+        uses: ./.github/actions/setup-sfdx
+
+      - name: Setup Quantic E2E
+        id: setup
+        uses: ./.github/actions/e2e-quantic-setup
+        with:
+          clientid: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          jwtkey: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+
+      - name: Read .env file and print Community URL
+        run: |
+          source packages/quantic/.env
+          echo "The Quantic Examples Community URL (LWS enabled) is $Quantic__LWS_enabled_URL"
+          echo "The Quantic Examples Community URL (LWS disabled) is $Quantic__LWS_disabled_URL"
+          echo "### :rocket:Access Quantic Examples Community (LWS enabled) here --> $Quantic__LWS_enabled_URL" >> $GITHUB_STEP_SUMMARY
+          echo "### :rocket:Access Quantic Examples Community (LWS disabled) here --> $Quantic__LWS_disabled_URL" >> $GITHUB_STEP_SUMMARY

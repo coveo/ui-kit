@@ -69,6 +69,7 @@ export const PagerPageButton: FunctionalComponent<PagerPageButtonProps> = (
   return (
     <RadioButton
       {...props}
+      selectWhenFocused={false}
       key={props.page}
       style="outline-neutral"
       checked={props.isSelected}

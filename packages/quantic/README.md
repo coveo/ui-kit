@@ -55,8 +55,8 @@ Or you can run the individual commands below.
 - Make sure you are in the `packages/quantic` root folder.
 - Run this command to create the default scratch org. `npm run scratch:create`.
 - In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create a Default Scratch Org.
-- You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/project-scratch-def.json --alias "LWC"`
-- `LWC` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
+- You can also run this command from the command line. `sf org create scratch --set-default --definition-file config/lws-enabled-scratch-def.json --alias Quantic__LWS_enabled`
+- `Quantic__LWS_enabled` is an alias for the scratch org that you can use in other Salesforce CLI commands. You can create any alias that you like.
 
 #### Deploy the Quantic code
 
@@ -64,38 +64,54 @@ Or you can run the individual commands below.
 
 ## Testing
 
-### Deploy the Quantic Examples Community
+### Deploy the Quantic Examples Communities
 
-Example components are available as a Salesforce community (Digital Experience) allowing you to experiment with Quantic components.
+Example components are available as Salesforce communities (Digital Experiences), allowing you to experiment with Quantic components in two separate environments: one with Lightning Web Security (LWS) enabled and one with LWS disabled.
 
-To setup the community in the `LWC` scratch org, run:
+To set up both communities in scratch orgs, run:
 
 ```bash
 npm run setup:examples
 ```
 
-This script creates, configures, and deploys everything required to have fully working examples. The community URL is provided at the end of the script output, as in the following example:
+This script creates, configures, and deploys everything required to have fully working examples in **two scratch orgs**:
+
+- An org with **LWS enabled**.
+- An org with **LWS disabled**.
+
+At the end of the script, the URLs for the two communities are provided, as in the following example:
 
 ```
-...
 
-The 'Quantic Examples' community is ready, you can access it at the following URL:
-https://your-salesforce-scratch-org-instance.force.com/examples
+The 'Quantic Examples' community (LWS enabled) is ready, you can access it at the following URL:
+https://your-salesforce-lws-enabled-scratch-org-instance.force.com/examples
+
+The 'Quantic Examples' community (LWS disabled) is ready, you can access it at the following URL:
+https://your-salesforce-lws-disabled-scratch-org-instance.force.com/examples
 
 To open Cypress, run:
 npm run e2e:watch
 ```
 
-Once the community has been deployed, you can deploy the `main` or `example` components only when needed. To do so, run:
+Once the community has been deployed, you can deploy the `main` or `example` components to a specific org only when needed by running the corresponding commands:
 
 ```bash
-npm run deploy:main
-npm run deploy:examples
+npm run deploy:main --target-org Quantic__LWS_enabled
+npm run deploy:examples --target-org Quantic__LWS_enabled
+```
+
+You can replace Quantic\_\_LWS_enabled with your target org alias. For example:
+
+```bash
+npm run deploy:main --target-org MyCustomOrg
+npm run deploy:examples --target-org MyCustomOrg
 ```
 
 ### Run Cypress for Quantic Components
 
 **Note** Before attempting to run [Cypress](https://docs.cypress.io) tests, make sure the `Quantic Examples` community is deployed as described in the previous section.
+
+**Note** Cypress tests run on the org with **LWS enabled**, aliased as `Quantic__LWS_enabled`.
 
 To learn how to add tests, see [adding tests](./docs/adding-tests.md).
 
@@ -117,6 +133,30 @@ To get the [detailed report](./docs/detailed-reporting.md), run:
 
 ```bash
 npm run e2e:detailed
+```
+
+### Run Playwright for Quantic Components
+
+**Note** Before attempting to run [Playwright](https://playwright.dev/) tests, make sure the `Quantic Examples` community is deployed as described in the previous section in both orgs, the one where LWS is enabled and the one where it is disabled.
+
+**Note** For more information on how to add tests, please refer to our [Quantic Testing Strategy](https://github.com/coveo/ui-kit/blob/master/packages/quantic/decisions/0001-testing-strategy.md), which provides detailed guidelines on testing Quantic components.
+
+To run Playwright tests, run:
+
+```bash
+npm run e2e:playwright:
+```
+
+To run Playwright tests only for the scratch org where LWS is enabled, run:
+
+```bash
+npm run e2e:playwright:lws-enabled
+```
+
+To run Playwright tests only for the scratch org where LWS is disabled, run:
+
+```bash
+npm run e2e:playwright:lws-disabled
 ```
 
 ### Run LWC unit tests for Quantic Components

@@ -100,6 +100,7 @@ blockquote {
 }
 
 .scrollable-table {
+  margin-top: var(--lwc-spacingLarge, 1.5rem);
   margin-bottom: var(--lwc-spacingLarge, 1.5rem);
   display: inline-block;
   border: 1px solid;

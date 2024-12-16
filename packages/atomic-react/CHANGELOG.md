@@ -1,3 +1,9 @@
+## <small>3.2.7 (2024-12-04)</small>
+
+- chore: add atomic loader to CDN deployment config (#4686) ([7a7e0ba](https://github.com/coveo/ui-kit/commits/7a7e0ba)), closes [#4686](https://github.com/coveo/ui-kit/issues/4686)
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+- chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
+
 ## <small>3.2.6 (2024-11-20)</small>
 
 - chore: add build to deployment composante + nightly flag (#4655) ([587494d](https://github.com/coveo/ui-kit/commits/587494d)), closes [#4655](https://github.com/coveo/ui-kit/issues/4655)

@@ -1,25 +1,26 @@
-import {Pagination} from '@coveo/headless/commerce';
+import {Pagination, Summary} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 
 interface IShowMoreProps {
   controller: Pagination;
+  summaryController: Summary;
 }
 
 export default function ShowMore(props: IShowMoreProps) {
-  const {controller} = props;
+  const {controller, summaryController} = props;
 
-  const [state, setState] = useState(controller.state);
+  const [summaryState, setSummaryState] = useState(summaryController.state);
 
   useEffect(() => {
-    controller.subscribe(() => setState(controller.state));
-  }, [controller]);
+    summaryController.subscribe(() => setSummaryState(summaryController.state));
+  }, [summaryController]);
 
   const handleFetchMore = () => {
     controller.fetchMoreProducts();
   };
 
   const isDisabled = () => {
-    return state.page + 1 >= state.totalPages;
+    return summaryState.lastProduct === summaryState.totalNumberOfProducts;
   };
 
   return (
