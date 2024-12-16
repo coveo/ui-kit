@@ -35,8 +35,8 @@
     "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
-    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr.typedoc.json --name \"SSR Search\" --readme none",
-    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr-commerce.typedoc.json --name \"SSR Commerce\" --readme none",
+    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr.typedoc.json",
+    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "dependencies": {
