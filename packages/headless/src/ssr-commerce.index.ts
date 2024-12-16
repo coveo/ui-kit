@@ -183,6 +183,7 @@ export {definePagination} from './controllers/commerce/core/pagination/headless-
 export type {
   ParameterManager,
   ParameterManagerProps,
+  SSRParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
@@ -386,7 +387,7 @@ export {ProductTemplatesHelpers} from './features/commerce/product-templates/pro
 
 export type {PlatformEnvironment} from './utils/url-utils.js';
 
-export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.js';
+export {buildParameterSerializer} from './features/commerce/parameters/parameters-serializer.ssr.js';
 export type {HighlightKeyword} from './utils/highlight.js';
 export {VERSION} from './utils/version.js';
 export type {

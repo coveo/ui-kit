@@ -1,3 +1,7 @@
+## 2.3.0 (2024-12-11)
+
+- feat(headless SSR): fetchStaticState should only accept solutiontype-specific controllers (#4769) ([f961cb2](https://github.com/coveo/ui-kit/commits/f961cb2)), closes [#4769](https://github.com/coveo/ui-kit/issues/4769)
+
 ## 2.2.0 (2024-12-04)
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
