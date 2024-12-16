@@ -7,7 +7,7 @@ export interface RecommendationsSlice {
   isLoading: boolean;
   responseId: string;
   products: Product[];
-  // productId: string;
+  productId: string;
 }
 
 /**
@@ -26,5 +26,5 @@ export const getRecommendationsSliceInitialState =
     isLoading: false,
     responseId: '',
     products: [],
-    // productId: '',
+    productId: '',
   });

@@ -9,7 +9,6 @@ export default function PopularViewed() {
   return (
     <>
       <ul>
-        This is a recommendation
         <h3>{state.headline}</h3>
         {state.products.map((product) => (
           <li key={product.ec_product_id}>

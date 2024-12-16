@@ -4,8 +4,6 @@ import {
 } from '../../../app/commerce-ssr-engine/types/common.js';
 import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
 import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
-// import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
-// import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
 import {
   RecommendationsOptions,
   RecommendationsState,
@@ -57,12 +55,19 @@ export function defineRecommendations(
       options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
       const staticOptions = props.options;
-      return {
-        ...buildRecommendations(engine, {
-          options: {...staticOptions, ...options},
-        }),
-        _kind: Kind.Recommendations,
-      };
+      const controller = buildRecommendations(engine, {
+        options: {...staticOptions, ...options},
+      });
+      const copy = Object.defineProperties(
+        {},
+        Object.getOwnPropertyDescriptors(controller)
+      );
+
+      Object.defineProperty(copy, '_kind', {
+        value: Kind.Recommendations,
+      });
+
+      return copy as typeof controller & {_kind: Kind.Recommendations};
     },
   };
 }
