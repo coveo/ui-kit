@@ -166,6 +166,7 @@
     "dayjs": "1.11.13",
     "exponential-backoff": "3.1.0",
     "fast-equals": "5.0.1",
+    "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
     "pino": "9.5.0",
@@ -182,8 +183,8 @@
     "execa": "9.5.1",
     "install": "0.13.0",
     "ts-node": "10.9.2",
-    "vitest": "2.1.5",
-    "typedoc": "0.26.11"
+    "typedoc": "0.26.11",
+    "vitest": "2.1.5"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
