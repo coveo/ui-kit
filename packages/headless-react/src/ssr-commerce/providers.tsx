@@ -16,7 +16,7 @@ import {
   HydrateStaticStateOptions,
   ParameterManager,
   Parameters,
-  Recommendations, // Recommendations,
+  Recommendations,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {ReactCommerceEngineDefinition} from './commerce-engine.js';
