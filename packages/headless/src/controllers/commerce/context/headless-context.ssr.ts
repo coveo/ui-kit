@@ -1,6 +1,5 @@
 import {UniversalControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
-import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
 import {
   Context,
   buildContext,
@@ -12,16 +11,8 @@ import {
 export type {ContextState, Context, ContextProps} from './headless-context.js';
 export type {View, UserLocation, ContextOptions};
 
-interface InternalContext extends Context, ControllerWithKind {
-  _kind: Kind.Context;
-  state: Context['state'];
-}
-
 export interface ContextDefinition
-  extends UniversalControllerDefinitionWithProps<
-    InternalContext,
-    ContextOptions
-  > {}
+  extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
 
 /**
  * Defines a `Context` controller instance.

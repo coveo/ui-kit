@@ -4,7 +4,6 @@ import {InvalidControllerDefinition} from '../../utils/errors.js';
 import {clone, filterObject, mapObject} from '../../utils/utils.js';
 import {
   ControllersMap,
-  ControllerWithKind,
   InferControllerStaticStateMapFromControllers,
 } from '../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from './factories/build-factory.js';
@@ -12,6 +11,7 @@ import {
   ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
+  ControllerWithKind,
   EngineStaticState,
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,

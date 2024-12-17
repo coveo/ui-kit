@@ -3,7 +3,6 @@ import {
   RecommendationOnlyControllerDefinitionWithProps,
 } from '../../../app/commerce-ssr-engine/types/common.js';
 import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
-import {ControllerWithKind} from '../../../app/ssr-engine/types/common.js';
 import {
   RecommendationsOptions,
   RecommendationsState,
@@ -23,14 +22,9 @@ export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
 
-interface InternalRecommendations extends Recommendations, ControllerWithKind {
-  _kind: Kind.Recommendations;
-  state: Recommendations['state'];
-}
-
 export interface RecommendationsDefinition
   extends RecommendationOnlyControllerDefinitionWithProps<
-    InternalRecommendations,
+    Recommendations,
     Partial<RecommendationsOptions>
   > {}
 

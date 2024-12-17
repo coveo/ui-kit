@@ -13,9 +13,9 @@ import type {
   HasKeys,
   HasRequiredKeys,
   HasOptionalKeys,
-  ControllerWithKind,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
+import {Kind} from './kind.js';
 
 export type {
   EngineDefinitionBuildResult,
@@ -60,8 +60,12 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
+export interface ControllerWithKind extends Controller {
+  _kind: Kind;
+}
+
 export interface ControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > {
   /**
@@ -76,7 +80,7 @@ export interface ControllerDefinitionWithProps<
     engine: SSRCommerceEngine,
     props: TProps,
     solutionType?: SolutionType
-  ): TController;
+  ): TController & ControllerWithKind;
 }
 
 export interface EngineStaticState<
@@ -89,7 +93,7 @@ export interface EngineStaticState<
 
 export type ControllerDefinition<TController extends Controller> =
   | ControllerDefinitionWithoutProps<TController>
-  | ControllerDefinitionWithProps<ControllerWithKind, unknown>;
+  | ControllerDefinitionWithProps<TController, unknown>;
 
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;
@@ -98,10 +102,7 @@ export interface ControllerDefinitionsMap<TController extends Controller> {
 export type InferControllerPropsFromDefinition<
   TController extends ControllerDefinition<Controller>,
 > =
-  TController extends ControllerDefinitionWithProps<
-    ControllerWithKind,
-    infer Props
-  >
+  TController extends ControllerDefinitionWithProps<Controller, infer Props>
     ? HasKey<TController, typeof recommendationInternalOptionKey> extends never
       ? Props
       : Props & RecommendationControllerSettings
@@ -462,7 +463,7 @@ export type SearchOnlyControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> & SearchOnlyController;
 
 export type SearchOnlyControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
 
@@ -476,7 +477,7 @@ export type ListingOnlyControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> & ListingOnlyController;
 
 export type ListingOnlyControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & ListingOnlyController;
 
@@ -486,7 +487,7 @@ export type RecommendationOnlyControllerDefinitionWithoutProps<
   RecommendationOnlyController;
 
 export type RecommendationOnlyControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   RecommendationOnlyController;
@@ -496,7 +497,7 @@ export type NonRecommendationControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> & NonRecommendationController;
 
 export type NonRecommendationControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   NonRecommendationController;
@@ -506,7 +507,7 @@ export type UniversalControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> & UniversalController;
 
 export type UniversalControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & UniversalController;
 
@@ -515,7 +516,7 @@ export type SearchAndListingControllerDefinitionWithoutProps<
 > = ControllerDefinitionWithoutProps<TController> & SearchAndListingController;
 
 export type SearchAndListingControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> &
   SearchAndListingController;
@@ -534,7 +535,7 @@ export type SubControllerDefinitionWithoutProps<
         : never;
 
 export type SubControllerDefinitionWithProps<
-  TController extends ControllerWithKind,
+  TController extends Controller,
   TDefinition extends ControllerDefinitionOption | undefined,
   TProps,
 > = TDefinition extends {listing?: true; search?: true} | undefined
