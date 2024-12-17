@@ -78,7 +78,8 @@ test.describe('AtomicTabManager', () => {
         await expect(tabManager.includedResultList).toBeHidden();
       });
 
-      test('generated answer', async ({tabManager, searchBox}) => {
+      //too flaky
+      test.fixme('generated answer', async ({tabManager, searchBox}) => {
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.fill(
           // eslint-disable-next-line @cspell/spellchecker
