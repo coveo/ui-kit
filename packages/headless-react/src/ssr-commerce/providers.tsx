@@ -12,6 +12,8 @@ import {
   SolutionType,
   Context,
   HydrateStaticStateOptions,
+  ParameterManager,
+  Parameters,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {ReactCommerceEngineDefinition} from './commerce-engine.js';
@@ -47,10 +49,11 @@ export function buildProviderWithDefinition<
       const hydrateArguments: ControllerPropsMap = {};
 
       if ('parameterManager' in controllers) {
-        hydrateControllers.parameterManager = {
+        hydrateArguments.parameterManager = {
           initialState: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            parameters: (controllers as any).parameterManager.state.parameters,
+            parameters: (
+              controllers.parameterManager as ParameterManager<Parameters>
+            ).state.parameters,
           },
         };
       }
