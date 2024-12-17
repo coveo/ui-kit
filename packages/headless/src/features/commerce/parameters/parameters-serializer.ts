@@ -27,7 +27,8 @@ import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
-const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|sf|af|mnf|lf)-(.+)$/;
+export const commerceFacetsRegex =
+  /^(f|fExcluded|cf|nf|nfExcluded|df|dfExcluded|mnf|mnfExcluded|lf)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -39,27 +40,38 @@ export const searchSerializer: Serializer<CommerceSearchParameters> = {
   deserialize,
 };
 
-// TODO KIT-3462: add/export commerce SSR parameter serializer
-
 export const productListingSerializer = {
   serialize,
   deserialize,
 } as Serializer<ProductListingParameters>;
 
-type ParametersKey = keyof CommerceSearchParameters;
-type FacetParameters = keyof Pick<
+export type ParametersKey = keyof CommerceSearchParameters;
+export type FacetParameters = keyof Pick<
   Parameters,
-  'f' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
+  | 'f'
+  | 'fExcluded'
+  | 'lf'
+  | 'cf'
+  | 'nf'
+  | 'nfExcluded'
+  | 'df'
+  | 'dfExcluded'
+  | 'mnf'
+  | 'mnfExcluded'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
 const supportedFacetParameters: Record<FacetParameters, boolean> = {
   f: true,
+  fExcluded: true,
   lf: true,
   cf: true,
   nf: true,
+  nfExcluded: true,
   df: true,
+  dfExcluded: true,
   mnf: true,
+  mnfExcluded: true,
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
@@ -85,14 +97,18 @@ function serializePair(pair: [string, unknown]) {
     return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
-  return serializeSpecialCharacters(key, val);
+  if (val !== undefined) {
+    return serializeSpecialCharacters(key, val);
+  }
+
+  return '';
 }
 
 function serializeSortCriteria(key: string, val: SortCriterion | undefined) {
   return serializeSpecialCharacters(key, buildCriterionExpression(val));
 }
 
-function buildCriterionExpression(criterion: SortCriterion | undefined) {
+export function buildCriterionExpression(criterion: SortCriterion | undefined) {
   if (!criterion) {
     return '';
   }
@@ -205,7 +221,9 @@ function cast<K extends keyof Parameters>(pair: [K, string]): [K, unknown] {
   return [key, decodeURIComponent(value)];
 }
 
-function deserializeSortCriteria(value: string): SortCriterion | undefined {
+export function deserializeSortCriteria(
+  value: string
+): SortCriterion | undefined {
   if (value === 'relevance') {
     return buildRelevanceSortCriterion();
   }

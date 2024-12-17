@@ -91,9 +91,19 @@ export interface EngineStaticState<
   controllers: TControllers;
 }
 
+export interface SolutionTypeAvailability {
+  [SolutionType.search]?: boolean;
+  [SolutionType.listing]?: boolean;
+  [SolutionType.standalone]?: boolean;
+  [SolutionType.recommendation]?: boolean;
+}
+
 export type ControllerDefinition<TController extends Controller> =
-  | ControllerDefinitionWithoutProps<TController>
-  | ControllerDefinitionWithProps<TController, unknown>;
+  SolutionTypeAvailability &
+    (
+      | ControllerDefinitionWithoutProps<TController>
+      | ControllerDefinitionWithProps<TController, unknown>
+    );
 
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;

@@ -20,7 +20,6 @@ import {
 } from '../../../features/commerce/search/search-actions.js';
 import {
   activeParametersSelector,
-  enrichedParametersSelector,
   enrichedSummarySelector,
   errorSelector,
   isLoadingSelector,
@@ -118,7 +117,6 @@ export function buildSearch(engine: CommerceEngine): Search {
     parametersDefinition: searchParametersDefinition,
     restoreActionCreator: restoreSearchParameters,
     activeParametersSelector,
-    enrichParameters: enrichedParametersSelector,
     isLoadingSelector,
     errorSelector,
     pageSelector: pagePrincipalSelector,
