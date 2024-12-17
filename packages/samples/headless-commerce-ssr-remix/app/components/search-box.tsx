@@ -39,13 +39,25 @@ export default function SearchBox() {
         aria-label="searchbox"
         placeholder="search"
         value={state.value}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            methods?.submit();
+          }
+        }}
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}
         onBlur={handleBlur}
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={methods?.clear}>X</button>
+          <button
+            onClick={() => {
+              methods?.clear();
+              methods?.submit();
+            }}
+          >
+            X
+          </button>
         </span>
       )}
       <button onClick={methods?.submit}>Search</button>
