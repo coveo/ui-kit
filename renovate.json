@@ -27,6 +27,13 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
+      "groupName": "gts",
+      "groupSlug": "gts",
+      "rangeStrategy": "replace",
+      "description": "Isolate gts since it is causing memory issues when running the lint:check",
+      "matchPackageNames": ["gts"]
+    },
+    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
