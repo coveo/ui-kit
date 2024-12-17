@@ -1,12 +1,17 @@
 import Cart from '@/app/components/cart';
 import ContextDropdown from '@/app/components/context-dropdown';
-import {StandaloneProvider} from '@/app/components/providers/providers';
+import {
+  RecommendationProvider,
+  StandaloneProvider,
+} from '@/app/components/providers/providers';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
 import {
+  recommendationEngineDefinition,
+  RecommendationStaticState,
   standaloneEngineDefinition,
   StandaloneStaticState,
 } from '@/lib/commerce-engine';
@@ -18,6 +23,7 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import PopularBought from '../components/recommendations/popular-bought';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -49,23 +55,49 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     },
   });
 
-  /* const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBoughtRecs', 'popularViewedRecs']
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    {
+      controllers: {
+        popularViewedRecs: {enabled: true},
+        popularBoughtRecs: {enabled: true},
+        cart: {
+          initialState: {
+            items: toCoveoCartItems(items),
+          },
+        },
+        context: {
+          language,
+          country,
+          currency: toCoveoCurrency(currency),
+          view: {
+            url: 'https://sports.barca.group/cart',
+          },
+        },
+      },
+    }
   );
-   */
-  return {staticState, items, totalPrice, language, currency};
+
+  return {staticState, items, totalPrice, language, currency, recsStaticState};
 };
 
 export default function CartRoute() {
-  const {staticState, navigatorContext, items, totalPrice, language, currency} =
-    useLoaderData<{
-      staticState: StandaloneStaticState;
-      navigatorContext: NavigatorContext;
-      items: ExternalCartItem[];
-      totalPrice: number;
-      language: string;
-      currency: string;
-    }>();
+  const {
+    staticState,
+    navigatorContext,
+    items,
+    totalPrice,
+    language,
+    currency,
+    recsStaticState,
+  } = useLoaderData<{
+    staticState: StandaloneStaticState;
+    navigatorContext: NavigatorContext;
+    items: ExternalCartItem[];
+    totalPrice: number;
+    language: string;
+    currency: string;
+    recsStaticState: RecommendationStaticState;
+  }>();
   return (
     <StandaloneProvider
       staticState={staticState}
@@ -81,12 +113,12 @@ export default function CartRoute() {
           language={language}
           currency={currency}
         />
-        {/*         <RecommendationProvider
+        <RecommendationProvider
           staticState={recsStaticState}
           navigatorContext={navigatorContext}
         >
           <PopularBought />
-        </RecommendationProvider> */}
+        </RecommendationProvider>
       </div>
     </StandaloneProvider>
   );

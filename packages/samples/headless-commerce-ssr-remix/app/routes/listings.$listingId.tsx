@@ -3,7 +3,12 @@ import ContextDropdown from '@/app/components/context-dropdown';
 import FacetGenerator from '@/app/components/facets/facet-generator';
 import Pagination from '@/app/components/pagination';
 import ProductList from '@/app/components/product-list';
-import {ListingProvider} from '@/app/components/providers/providers';
+import {
+  ListingProvider,
+  RecommendationProvider,
+} from '@/app/components/providers/providers';
+import PopularBought from '@/app/components/recommendations/popular-bought';
+import PopularViewed from '@/app/components/recommendations/popular-viewed';
 import Sort from '@/app/components/sort';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
@@ -13,6 +18,7 @@ import {
   listingEngineDefinition,
   ListingStaticState,
   recommendationEngineDefinition,
+  RecommendationStaticState,
 } from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
@@ -47,11 +53,13 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const {country, currency, language} =
     await externalContextService.getContextInformation();
 
+  const items = await externalCartService.getItems();
+
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {
         initialState: {
-          items: toCoveoCartItems(await externalCartService.getItems()),
+          items: toCoveoCartItems(items),
         },
       },
       parameterManager: {
@@ -70,14 +78,32 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     },
   });
 
-  /*  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBoughtRecs', 'popularViewedRecs']
-  ); */
+  const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
+    {
+      controllers: {
+        popularViewedRecs: {enabled: true},
+        popularBoughtRecs: {enabled: true},
+        cart: {
+          initialState: {
+            items: toCoveoCartItems(items),
+          },
+        },
+        context: {
+          language,
+          country,
+          currency: toCoveoCurrency(currency),
+          view: {
+            url: 'https://sports.barca.group/cart',
+          },
+        },
+      },
+    }
+  );
 
   return {
     staticState,
     navigatorContext,
-
+    recsStaticState,
     headers: {
       'Set-Cookie': await coveo_visitorId.serialize(navigatorContext.clientId),
     },
@@ -86,9 +112,10 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
 export default function ListingRoute() {
   const params = useParams();
-  const {staticState, navigatorContext} = useLoaderData<{
+  const {staticState, navigatorContext, recsStaticState} = useLoaderData<{
     staticState: ListingStaticState;
     navigatorContext: NavigatorContext;
+    recsStaticState: RecommendationStaticState;
   }>();
 
   const getTitle = () => {
@@ -127,7 +154,7 @@ export default function ListingRoute() {
           /> */}
         </div>
 
-        {/*     <div style={{flex: 4}}>
+        <div style={{flex: 4}}>
           <RecommendationProvider
             staticState={recsStaticState}
             navigatorContext={navigatorContext}
@@ -135,7 +162,7 @@ export default function ListingRoute() {
             <PopularBought />
             <PopularViewed />
           </RecommendationProvider>
-        </div> */}
+        </div>
       </div>
     </ListingProvider>
   );
