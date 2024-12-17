@@ -23,6 +23,7 @@ export type RecommendationsDefinitionMeta = {
 
 export interface RecommendationsDefinition
   extends RecommendationOnlyControllerDefinitionWithProps<
+    // @ts-expect-error handle in recommendations
     Recommendations,
     Partial<RecommendationsOptions>
   > {}

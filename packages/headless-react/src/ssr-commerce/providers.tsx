@@ -71,6 +71,13 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
             // TODO
             break;
 
+          case Kind.Recommendations:
+            hydrateControllers[key] = {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              productId: (controllers as any)[key].state.productId,
+            };
+            break;
+
           default:
         }
       }
