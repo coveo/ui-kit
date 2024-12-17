@@ -61,7 +61,7 @@ export interface ControllerDefinitionWithoutProps<
 }
 
 export interface ControllerWithKind extends Controller {
-  _kind?: Kind;
+  _kind: Kind;
 }
 
 export interface ControllerDefinitionWithProps<
