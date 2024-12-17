@@ -1,3 +1,24 @@
+## 3.11.0 (2024-12-11)
+
+- feat(quantic): make quantic notifications component dismissible (#4733) ([96cc465](https://github.com/coveo/ui-kit/commits/96cc465)), closes [#4733](https://github.com/coveo/ui-kit/issues/4733)
+- test(quantic): playwright tests added for user actions feature (#4758) ([53c1c10](https://github.com/coveo/ui-kit/commits/53c1c10)), closes [#4758](https://github.com/coveo/ui-kit/issues/4758)
+- test(quantic): support e2e testing with LWS and with Locker Service with Playwright (#4711) ([4368ee0](https://github.com/coveo/ui-kit/commits/4368ee0)), closes [#4711](https://github.com/coveo/ui-kit/issues/4711)
+- fix(headless): update the rga events to send the searchId instead of the streamId as response id (#4 ([d95ed0a](https://github.com/coveo/ui-kit/commits/d95ed0a)), closes [#4766](https://github.com/coveo/ui-kit/issues/4766)
+
+## 3.10.0 (2024-12-04)
+
+- fix(deps): update dependency dompurify to v3.2.0 j:kit-282 (#4724) ([290a8b6](https://github.com/coveo/ui-kit/commits/290a8b6)), closes [#4724](https://github.com/coveo/ui-kit/issues/4724)
+- fix(quantic): es build plugin added to allow rtk query to work inside salesforce (#4731) ([c80badf](https://github.com/coveo/ui-kit/commits/c80badf)), closes [#4731](https://github.com/coveo/ui-kit/issues/4731)
+- fix(quantic): ignored e2e tests folder when building npm quantic package (#4730) ([09d465e](https://github.com/coveo/ui-kit/commits/09d465e)), closes [#4730](https://github.com/coveo/ui-kit/issues/4730)
+- fix(quantic): property validation added with dependent facets (#4697) ([110d834](https://github.com/coveo/ui-kit/commits/110d834)), closes [#4697](https://github.com/coveo/ui-kit/issues/4697)
+- fix(quantic): weird height issue in generated answers containing lists (#4728) ([a3b8f8d](https://github.com/coveo/ui-kit/commits/a3b8f8d)), closes [#4728](https://github.com/coveo/ui-kit/issues/4728)
+- chore(deps): update @babel packages j:kit-282 (#4739) ([1e348ba](https://github.com/coveo/ui-kit/commits/1e348ba)), closes [#4739](https://github.com/coveo/ui-kit/issues/4739)
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+- chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
+- feat(quantic): added logic to include quantic version in analytic payloads (#4685) ([db71478](https://github.com/coveo/ui-kit/commits/db71478)), closes [#4685](https://github.com/coveo/ui-kit/issues/4685)
+- feat(quantic): answer config id property added in quantic generated answer component (#4660) ([275265c](https://github.com/coveo/ui-kit/commits/275265c)), closes [#4660](https://github.com/coveo/ui-kit/issues/4660)
+- feat(quantic): Exposed the options to be be passed in Did You Mean controller in the QuanticDidYouMe ([4ccf316](https://github.com/coveo/ui-kit/commits/4ccf316)), closes [#4682](https://github.com/coveo/ui-kit/issues/4682)
+
 ## 3.9.0 (2024-11-20)
 
 - fix(quantic): fixed display of timestamps in youtube templates (#4676) ([b053628](https://github.com/coveo/ui-kit/commits/b053628)), closes [#4676](https://github.com/coveo/ui-kit/issues/4676)

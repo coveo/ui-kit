@@ -62,7 +62,21 @@ export default async function Listing({params}: {params: {category: string}}) {
   });
 
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
-    ['popularBought', 'popularViewed']
+    {
+      controllers: {
+        popularBought: {enabled: true},
+        popularViewed: {enabled: true},
+        cart: {initialState: {items}},
+        context: {
+          language: defaultContext.language,
+          country: defaultContext.country,
+          currency: defaultContext.currency,
+          view: {
+            url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+          },
+        },
+      },
+    }
   );
 
   return (
