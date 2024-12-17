@@ -27,13 +27,6 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
-      "groupName": "dompurify",
-      "groupSlug": "dompurify",
-      "rangeStrategy": "replace",
-      "description": "Isolate dompurify",
-      "matchPackageNames": ["/dompurify/"]
-    },
-    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
@@ -123,6 +116,13 @@
       "rangeStrategy": "replace",
       "allowedVersions": "15.x",
       "matchPackageNames": ["/^nx$/"]
+    },
+    {
+      "groupName": "marked",
+      "groupSlug": "marked",
+      "rangeStrategy": "replace",
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
     },
     {
       "groupName": "nx-devkit",
