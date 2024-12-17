@@ -4,14 +4,13 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useRef, useState} from 'react';
 
-interface INumericFacetProps {
+export default function NumericFacet({
+  controller,
+  staticState,
+}: {
   controller?: HeadlessNumericFacet;
   staticState: NumericFacetState;
-}
-
-export default function NumericFacet(props: INumericFacetProps) {
-  const {controller, staticState} = props;
-
+}) {
   const [state, setState] = useState(staticState);
   const [currentManualRange, setCurrentManualRange] = useState({
     start:

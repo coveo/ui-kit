@@ -6,14 +6,13 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useRef, useState} from 'react';
 
-interface IRegularFacetProps {
+export default function RegularFacet({
+  controller,
+  staticState,
+}: {
   controller?: HeadlessRegularFacet;
   staticState: RegularFacetState;
-}
-
-export default function RegularFacet(props: IRegularFacetProps) {
-  const {controller, staticState} = props;
-
+}) {
   const [state, setState] = useState(staticState);
   const [showFacetSearchResults, setShowFacetSearchResults] = useState(false);
 

@@ -4,14 +4,13 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {useEffect, useState} from 'react';
 
-interface IDateFacetProps {
+export default function DateFacet({
+  controller,
+  staticState,
+}: {
   controller?: HeadlessDateFacet;
   staticState: DateFacetState;
-}
-
-export default function DateFacet(props: IDateFacetProps) {
-  const {controller, staticState} = props;
-
+}) {
   const [state, setState] = useState(staticState);
 
   useEffect(() => {
