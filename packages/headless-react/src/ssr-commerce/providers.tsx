@@ -46,6 +46,15 @@ export function buildProviderWithDefinition<
       const {searchActions, controllers} = staticState;
       const hydrateArguments: ControllerPropsMap = {};
 
+      if ('parameterManager' in controllers) {
+        hydrateControllers.parameterManager = {
+          initialState: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parameters: (controllers as any).parameterManager.state.parameters,
+          },
+        };
+      }
+
       if ('cart' in controllers) {
         hydrateArguments.cart = {
           initialState: {items: (controllers.cart as Cart).state.items},
