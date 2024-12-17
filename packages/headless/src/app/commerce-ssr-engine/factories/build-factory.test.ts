@@ -34,6 +34,15 @@ describe('buildFactory', () => {
     vi.clearAllMocks();
   });
 
+  it('should not warn if navigatorContextProvider is present', async () => {
+    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+    const build = factory(SolutionType.listing);
+
+    await build();
+
+    expect(mockLogger.warn).not.toHaveBeenCalled();
+  });
+
   it('should warn if navigatorContextProvider is missing', async () => {
     const factory = buildFactory(mockEmptyDefinition, {
       configuration: getSampleCommerceEngineConfiguration(),
@@ -108,7 +117,7 @@ describe('buildFactory', () => {
       expect(result.controllers).toBeDefined();
     });
 
-    it('should return static state from build result with listing controllers only', async () => {
+    it('should return static state from build result with product and searchbox controllers', async () => {
       const factory = buildFactory(
         {
           products: defineProductList(),
@@ -132,7 +141,7 @@ describe('buildFactory', () => {
       expect(controllers.searchBox).toBeUndefined();
     });
 
-    it('should return static state from build result with listing controllers only', async () => {
+    it('should return static state from build result without the listing controller', async () => {
       const factory = buildFactory(
         {
           products: defineProductList({listing: false}),

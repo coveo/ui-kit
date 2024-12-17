@@ -12,7 +12,6 @@ import {
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
-import {buildLogger} from '../../logger.js';
 import {
   InferControllersMapFromDefinition,
   SolutionType,
@@ -21,7 +20,6 @@ import {CommerceControllerDefinitionsMap} from '../types/core-engine.js';
 import * as buildFactory from './build-factory.js';
 import {fetchStaticStateFactory} from './static-state-factory.js';
 
-vi.mock('../../logger.js');
 vi.mock(
   '../../../controllers/commerce/product-listing/headless-product-listing.js'
 );
@@ -33,15 +31,9 @@ describe('fetchStaticStateFactory', () => {
   const mockBuildSearch = vi.mocked(buildSearch);
   const mockExecuteFirstRequest = vi.fn();
   const mockedExecuteFirstSearch = vi.fn();
-  const mockLogger = {
-    warn: vi.fn(),
-    debug: vi.fn(),
-    error: vi.fn(),
-  };
   const mockEngine = buildMockSSRCommerceEngine(buildMockCommerceState());
   const mockEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
-    navigatorContextProvider: vi.fn(),
   };
 
   const definition = {
@@ -50,8 +42,6 @@ describe('fetchStaticStateFactory', () => {
   };
 
   beforeEach(() => {
-    (buildLogger as Mock).mockReturnValue(mockLogger);
-
     mockBuildProductListing.mockImplementation(
       () =>
         ({
