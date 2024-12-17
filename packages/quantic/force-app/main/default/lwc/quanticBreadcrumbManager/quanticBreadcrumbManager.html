@@ -30,7 +30,7 @@
                 <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
-                    <li  key={breadcrumbValue.value} class="breadcrumb__container">
+                    <li key={breadcrumbValue.value} class="breadcrumb__container">
                       <c-quantic-pill data-test="numeric-facet-breadcrumb-value" label={breadcrumbValue.formattedValue} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
                     </li>
                   </template>
