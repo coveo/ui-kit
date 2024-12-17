@@ -15,8 +15,7 @@ import {
   Context,
   HydrateStaticStateOptions,
   ParameterManager,
-  Parameters,
-  Recommendations,
+  Parameters, // Recommendations,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {ReactCommerceEngineDefinition} from './commerce-engine.js';
@@ -51,32 +50,30 @@ export function buildProviderWithDefinition<
       const {searchActions, controllers} = staticState;
       const hydrateArguments: ControllerPropsMap = {};
 
-      for (const controller of Object.values(controllers)) {
+      for (const [key, controller] of Object.entries(controllers)) {
         const typedController = controller as ControllerWithKind;
 
         switch (typedController._kind) {
           case Kind.Cart:
-            hydrateArguments.cart = {
+            hydrateArguments[key] = {
               initialState: {
-                items: (controllers as {cart: Cart}).cart.state.items,
+                items: (controllers as Record<string, Cart>)[key].state.items,
               },
             };
             break;
 
           case Kind.Context:
-            hydrateArguments.context = (
-              controllers as {context: Context}
-            ).context.state;
+            hydrateArguments[key] = (controllers as Record<string, Context>)[
+              key
+            ].state;
             break;
 
           case Kind.ParameterManager:
-            hydrateArguments.parameterManager = {
+            hydrateArguments[key] = {
               initialState: {
                 parameters: (
-                  controllers as {
-                    parameterManager: ParameterManager<Parameters>;
-                  }
-                ).parameterManager.state.parameters,
+                  controllers as Record<string, ParameterManager<Parameters>>
+                )[key].state.parameters,
               },
             };
             break;
