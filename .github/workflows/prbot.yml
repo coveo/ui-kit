@@ -128,9 +128,9 @@ jobs:
       - name: 'Build headless typedoc'
         run: npm run build:typedoc
         working-directory: packages/headless
-      # - name: 'Build headless-react typedoc'
-      #   run: npm run build:typedoc
-      #   working-directory: packages/headless-react
+      - name: 'Build headless-react typedoc'
+        run: npm run build:typedoc
+        working-directory: packages/headless-react
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
     needs: build

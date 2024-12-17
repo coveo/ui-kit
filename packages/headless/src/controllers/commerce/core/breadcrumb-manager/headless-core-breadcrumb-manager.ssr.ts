@@ -15,6 +15,7 @@ export type {BreadcrumbManager, BreadcrumbManagerState};
 
 /**
  * Defines a `BreadcrumbManager` controller instance.
+ * @group Definers
  *
  * @returns The `BreadcrumbManager` controller definition.
  *

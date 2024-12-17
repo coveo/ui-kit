@@ -32,6 +32,8 @@ export interface CommerceEngineDefinition<
  * @param options - The commerce engine definition
  * @returns Three utility functions to fetch the initial state of the engine in SSR, hydrate the state in CSR,
  *  and a build function that can be used for edge cases requiring more control.
+ *
+ * @group Engine
  */
 export function defineCommerceEngine<
   TControllerDefinitions extends ControllerDefinitionsMap<Controller>,

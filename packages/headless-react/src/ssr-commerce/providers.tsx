@@ -29,6 +29,10 @@ type RealDefinition =
   | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
   | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
 
+/**
+ * @group React
+ */
+
 export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
   return function WrappedProvider({
     staticState,

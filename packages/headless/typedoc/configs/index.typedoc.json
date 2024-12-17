@@ -13,6 +13,8 @@
     "Actions",
     "*"
   ],
+  "name": "Search",
+  "readme": "none",
   "entryPoints": ["../../src/index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]

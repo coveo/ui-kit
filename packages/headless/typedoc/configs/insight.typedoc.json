@@ -13,6 +13,8 @@
     "Actions",
     "*"
   ],
+  "name": "Insight",
+  "readme": "none",
   "entryPoints": ["../../src/insight.index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]
