@@ -37,7 +37,7 @@
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "17.x",
+      "allowedVersions": "18.x",
       "matchPackageNames": [
         "/^@angular/*/",
         "/^@angular-devkit/*/",
