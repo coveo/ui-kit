@@ -32,4 +32,5 @@ export const {
   useSummary,
   useFacetGenerator,
   useBreadcrumbManager,
+  useParameterManager,
 } = engineDefinition.controllers;

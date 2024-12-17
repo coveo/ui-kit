@@ -5,6 +5,7 @@ import {
   defineCommerceEngine as defineBaseCommerceEngine,
   CommerceEngineOptions,
   SolutionType,
+  CommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 // Workaround to prevent Next.js erroring about importing CSR only hooks
 import React from 'react';
@@ -15,7 +16,11 @@ import {
   buildHydratedStateProvider,
   buildStaticStateProvider,
 } from './common.js';
-import {ContextState, ReactEngineDefinition} from './types.js';
+import {
+  ContextState,
+  InferControllerHooksMapFromDefinition,
+  ReactEngineDefinition,
+} from './types.js';
 
 export type ReactCommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -38,7 +43,28 @@ export function createSingletonContext<
  */
 export function defineCommerceEngine<
   TControllers extends ControllerDefinitionsMap<Controller>,
->(options: CommerceEngineDefinitionOptions<TControllers>) {
+>(
+  options: CommerceEngineDefinitionOptions<TControllers>
+): {
+  useEngine: () => CommerceEngine | undefined;
+  controllers: InferControllerHooksMapFromDefinition<TControllers>;
+  listingEngineDefinition: ReactCommerceEngineDefinition<
+    TControllers,
+    SolutionType.listing
+  >;
+  searchEngineDefinition: ReactCommerceEngineDefinition<
+    TControllers,
+    SolutionType.search
+  >;
+  standaloneEngineDefinition: ReactCommerceEngineDefinition<
+    TControllers,
+    SolutionType.standalone
+  >;
+  recommendationEngineDefinition: ReactCommerceEngineDefinition<
+    TControllers,
+    SolutionType.recommendation
+  >;
+} {
   const singletonContext = createSingletonContext<TControllers>();
 
   type ContextStateType<TSolutionType extends SolutionType> = SingletonGetter<
@@ -61,38 +87,46 @@ export function defineCommerceEngine<
     listingEngineDefinition: {
       ...listingEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as ListingContext
+        singletonContext as ListingContext,
+        SolutionType.listing
       ),
 
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as ListingContext
+        singletonContext as ListingContext,
+        SolutionType.listing
       ),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as SearchContext
+        singletonContext as SearchContext,
+        SolutionType.search
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as SearchContext
+        singletonContext as SearchContext,
+        SolutionType.search
       ),
     },
     standaloneEngineDefinition: {
       ...standaloneEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as StandaloneContext
+        singletonContext as StandaloneContext,
+        SolutionType.standalone
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as StandaloneContext
+        singletonContext as StandaloneContext,
+        SolutionType.standalone
       ),
     },
     recommendationEngineDefinition: {
       ...recommendationEngineDefinition,
       StaticStateProvider: buildStaticStateProvider(
-        singletonContext as RecommendationContext
+        singletonContext as RecommendationContext,
+        SolutionType.recommendation
       ),
       HydratedStateProvider: buildHydratedStateProvider(
-        singletonContext as RecommendationContext
+        singletonContext as RecommendationContext,
+        SolutionType.recommendation
       ),
     },
   };
