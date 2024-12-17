@@ -13,9 +13,9 @@ import type {
   HasKeys,
   HasRequiredKeys,
   HasOptionalKeys,
-  ControllerWithKind,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
+import {Kind} from './kind.js';
 
 export type {
   EngineDefinitionBuildResult,
@@ -58,6 +58,10 @@ export interface ControllerDefinitionWithoutProps<
    * @returns The created controller instance.
    */
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
+}
+
+export interface ControllerWithKind extends Controller {
+  _kind?: Kind;
 }
 
 export interface ControllerDefinitionWithProps<
