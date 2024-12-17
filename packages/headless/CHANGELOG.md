@@ -1,3 +1,12 @@
+## 3.12.0 (2024-12-11)
+
+- feat(headless SSR): fetch recommendations with a productId (#4768) ([6d53c57](https://github.com/coveo/ui-kit/commits/6d53c57)), closes [#4768](https://github.com/coveo/ui-kit/issues/4768)
+- feat(headless SSR): fetchStaticState should only accept solutiontype-specific controllers (#4769) ([f961cb2](https://github.com/coveo/ui-kit/commits/f961cb2)), closes [#4769](https://github.com/coveo/ui-kit/issues/4769)
+- fix(headless commerce): make parameter manager prop.initialState optional (#4776) ([79433ed](https://github.com/coveo/ui-kit/commits/79433ed)), closes [#4776](https://github.com/coveo/ui-kit/issues/4776)
+- fix(headless): update the rga events to send the searchId instead of the streamId as response id (#4 ([d95ed0a](https://github.com/coveo/ui-kit/commits/d95ed0a)), closes [#4766](https://github.com/coveo/ui-kit/issues/4766)
+- fix(headless/ssr-commerce): standalone search box only for listing & standalone (#4735) ([605156c](https://github.com/coveo/ui-kit/commits/605156c)), closes [#4735](https://github.com/coveo/ui-kit/issues/4735)
+- chore(headless): add sourcemaps for nodejs esm build (#4749) ([74cb96a](https://github.com/coveo/ui-kit/commits/74cb96a)), closes [#4749](https://github.com/coveo/ui-kit/issues/4749)
+
 ## 3.11.0 (2024-12-04)
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)

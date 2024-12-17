@@ -18,21 +18,40 @@ interface IRouterProps {
 export default function Router(props: IRouterProps) {
   const {engine} = props;
   const [page, setPage] = useState('/');
+  const [previousPage, setPreviousPage] = useState('/');
   const [isPending, startTransition] = useTransition();
 
   const cartController = buildCart(engine);
   const contextController = buildContext(engine);
 
   useEffect(() => {
+    setPreviousPage(window.location.pathname);
     setPage(window.location.pathname);
   }, []);
 
   function navigate(pathName: string) {
+    window.history.pushState(null, '', pathName);
     startTransition(() => {
-      window.history.pushState(null, '', pathName);
+      setPreviousPage(window.location.pathname);
       setPage(pathName);
     });
   }
+
+  useEffect(() => {
+    const handlePopState = () => {
+      if (previousPage !== window.location.pathname) {
+        startTransition(() => {
+          setPage(window.location.pathname);
+          setPreviousPage(window.location.pathname);
+        });
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [previousPage]);
 
   let content;
   if (/\/listing\/surf-accessories/.test(page)) {

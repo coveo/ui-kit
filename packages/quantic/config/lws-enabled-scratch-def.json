@@ -1,5 +1,5 @@
 {
-  "orgName": "quantic local",
+  "orgName": "Quantic__LWS_enabled",
   "edition": "Developer",
   "features": ["Communities"],
   "settings": {
@@ -12,6 +12,11 @@
     "languageSettings": {
       "enableTranslationWorkbench": true,
       "enableEndUserLanguages": true
+    },
+    "securitySettings": {
+      "sessionSettings": {
+        "lockerServiceNext": true
+      }
     }
   }
 }

@@ -1,4 +1,4 @@
-name: 'Quantic E2E tests'
+name: 'Quantic Cypress E2E tests'
 description: 'Runs Cypress tests for Quantic'
 inputs:
   github-token:
