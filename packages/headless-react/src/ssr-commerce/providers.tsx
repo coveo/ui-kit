@@ -51,12 +51,12 @@ export function buildProviderWithDefinition<
       const {searchActions, controllers} = staticState;
       const hydrateArguments: ControllerPropsMap = {};
 
-      for (const [key, controller] of Object.entries(controllers)) {
+      for (const controller of Object.values(controllers)) {
         const typedController = controller as ControllerWithKind;
 
         switch (typedController._kind) {
           case Kind.Cart:
-            hydrateArguments[key] = {
+            hydrateArguments.cart = {
               initialState: {
                 items: (controllers as {cart: Cart}).cart.state.items,
               },
@@ -64,13 +64,13 @@ export function buildProviderWithDefinition<
             break;
 
           case Kind.Context:
-            hydrateArguments[key] = (
+            hydrateArguments.context = (
               controllers as {context: Context}
             ).context.state;
             break;
 
           case Kind.ParameterManager:
-            hydrateArguments[key] = {
+            hydrateArguments.parameterManager = {
               initialState: {
                 parameters: (
                   controllers as {
@@ -82,10 +82,7 @@ export function buildProviderWithDefinition<
             break;
 
           case Kind.Recommendations:
-            hydrateArguments[key] = {
-              productId: (controllers as {recommendations: Recommendations})
-                .recommendations.state.productId,
-            };
+            //KIT-3801: Done here
             break;
         }
       }
