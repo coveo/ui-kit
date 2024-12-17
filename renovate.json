@@ -52,7 +52,8 @@
         "/react/",
         "/react-router-dom/",
         "/react-dom/",
-        "/@types/react/"
+        "/@types/react/",
+        "next"
       ]
     },
     {
