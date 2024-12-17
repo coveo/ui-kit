@@ -82,15 +82,7 @@ export function buildProviderWithDefinition<
             break;
 
           case Kind.Recommendations:
-            // hydrateArguments.recommendations = {
-            //   initialState: {
-            //     recommendations: (
-            //       controllers as {
-            //         recommendations: Recommendations;
-            //       }
-            //     ).recommendations.state.recommendations,
-            //   },
-            // };
+            //KIT-3801: Done here
             break;
         }
       }
