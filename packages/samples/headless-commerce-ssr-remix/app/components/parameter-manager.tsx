@@ -1,6 +1,6 @@
 import {useParameterManager} from '@/lib/commerce-engine';
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
-import {useSearchParams, useLocation} from '@remix-run/react';
+import {useLocation} from '@remix-run/react';
 import {useEffect, useMemo, useRef} from 'react';
 
 export default function ParameterManager({url}: {url: string | null}) {
@@ -12,7 +12,6 @@ export default function ParameterManager({url}: {url: string | null}) {
 
   const initialUrl = useMemo(() => new URL(url ?? location.pathname), [url]);
   const previousUrl = useRef(initialUrl.href);
-  const [searchParams] = useSearchParams();
 
   /**
    * This flag serves to ensure that history navigation between pages does not clear commerce parameters and result in
@@ -35,7 +34,7 @@ export default function ParameterManager({url}: {url: string | null}) {
   const flag = useRef(true);
 
   /**
-   * When the URL search parameters change, this effect deserializes them and synchronizes them into the
+   * When the URL fragment changes, this effect deserializes it and synchronizes it into the
    * ParameterManager controller's state.
    */
   useEffect(() => {
@@ -48,7 +47,8 @@ export default function ParameterManager({url}: {url: string | null}) {
       return;
     }
 
-    const newCommerceParams = deserialize(searchParams);
+    const fragment = location.hash.substring(1); // Remove the leading '#'
+    const newCommerceParams = deserialize(new URLSearchParams(fragment));
 
     const newUrl = serialize(newCommerceParams, new URL(previousUrl.current));
 
@@ -59,10 +59,10 @@ export default function ParameterManager({url}: {url: string | null}) {
     flag.current = true;
     previousUrl.current = newUrl;
     methods.synchronize(newCommerceParams);
-  }, [deserialize, methods, searchParams, serialize]);
+  }, [deserialize, location.hash, methods, serialize]);
 
   /**
-   * When the ParameterManager controller's state changes, this effect serializes it into the URL and pushes the new URL
+   * When the ParameterManager controller's state changes, this effect serializes it into the URL fragment and pushes the new URL
    * to the browser history.
    * */
   useEffect(() => {
@@ -77,6 +77,7 @@ export default function ParameterManager({url}: {url: string | null}) {
     }
 
     const newUrl = serialize(state.parameters, new URL(previousUrl.current));
+    const newFragment = `#${new URL(newUrl).searchParams.toString()}`;
 
     if (previousUrl.current === newUrl) {
       return;
@@ -84,7 +85,7 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     flag.current = true;
     previousUrl.current = newUrl;
-    history.pushState(null, document.title, newUrl);
+    history.pushState(null, document.title, newFragment);
   }, [methods, serialize, state.parameters]);
 
   return null;

@@ -31,7 +31,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   const {deserialize} = buildParameterSerializer();
-  const parameters = deserialize(await url.searchParams);
+  const parameters = deserialize(url.searchParams);
 
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
