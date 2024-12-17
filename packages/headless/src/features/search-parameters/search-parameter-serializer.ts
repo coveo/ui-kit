@@ -8,8 +8,12 @@ import {
   isRelativeDateFormat,
   validateRelativeDate,
 } from '../../api/search/date/relative-date.js';
-import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
+import {
+  buildDateRange,
+  DateRangeRequest,
+} from '../../controllers/facets/range-facet/date-facet/headless-date-facet.js';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet.js';
+import {FacetValueState} from '../../ssr.index.js';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet.js';
 import {SearchParameters} from './search-parameter-actions.js';
 
@@ -145,7 +149,7 @@ export function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
 }
 
-function allEntriesAreValid(
+export function allEntriesAreValid(
   obj: object,
   isValidValue: (v: unknown) => boolean
 ) {
@@ -236,32 +240,36 @@ export function preprocessObjectPairs(
 
 function processObjectValues(key: string, values: string[]) {
   if (key === 'nf' || key === 'mnf') {
-    return buildNumericRanges(values);
+    return buildNumericRanges(values, 'selected');
   }
 
   if (key === 'df') {
-    return buildDateRanges(values);
+    return buildDateRanges(values, 'selected');
   }
 
   return values;
 }
 
-export function buildNumericRanges(ranges: string[]) {
-  return ranges
-    .map((str) => {
-      const {startAsString, endAsString, isEndInclusive} =
-        splitRangeValueAsStringByDelimiter(str);
+export function buildNumericRanges(ranges: string[], state: FacetValueState) {
+  const numericRanges = [];
 
-      return {
-        start: parseFloat(startAsString),
-        end: parseFloat(endAsString),
-        endInclusive: isEndInclusive,
-      };
-    })
-    .filter(({start, end}) => Number.isFinite(start) && Number.isFinite(end))
-    .map(({start, end, endInclusive}) =>
-      buildNumericRange({start, end, state: 'selected', endInclusive})
+  for (const range of ranges) {
+    const {startAsString, endAsString, isEndInclusive} =
+      splitRangeValueAsStringByDelimiter(range);
+
+    const start = parseFloat(startAsString);
+    const end = parseFloat(endAsString);
+
+    if (!Number.isFinite(start) || !Number.isFinite(end)) {
+      continue;
+    }
+
+    numericRanges.push(
+      buildNumericRange({start, end, state, endInclusive: isEndInclusive})
     );
+  }
+
+  return numericRanges;
 }
 
 function isValidDateRangeValue(date: string) {
@@ -281,25 +289,30 @@ function isValidDateRangeValue(date: string) {
   }
 }
 
-export function buildDateRanges(ranges: string[]) {
-  return ranges
-    .map((str) => {
-      const {isEndInclusive, startAsString, endAsString} =
-        splitRangeValueAsStringByDelimiter(str);
+export function buildDateRanges(ranges: string[], state: FacetValueState) {
+  const dateRanges: DateRangeRequest[] = [];
 
-      return {
+  for (const range of ranges) {
+    const {isEndInclusive, startAsString, endAsString} =
+      splitRangeValueAsStringByDelimiter(range);
+    if (
+      !isValidDateRangeValue(startAsString) ||
+      !isValidDateRangeValue(endAsString)
+    ) {
+      continue;
+    }
+
+    dateRanges.push(
+      buildDateRange({
         start: startAsString,
         end: endAsString,
+        state,
         endInclusive: isEndInclusive,
-      };
-    })
-    .filter(
-      ({start, end}) =>
-        isValidDateRangeValue(start) && isValidDateRangeValue(end)
-    )
-    .map(({start, end, endInclusive}) =>
-      buildDateRange({start, end, state: 'selected', endInclusive})
+      })
     );
+  }
+
+  return dateRanges;
 }
 
 function isValidPair<K extends SearchParameterKey>(

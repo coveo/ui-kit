@@ -49,6 +49,15 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const hydrateControllers: Record<string, any> = {};
 
+      if ('parameterManager' in controllers) {
+        hydrateControllers.parameterManager = {
+          initialState: {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parameters: (controllers as any).parameterManager.state.parameters,
+          },
+        };
+      }
+
       if ('cart' in controllers) {
         hydrateControllers.cart = {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
