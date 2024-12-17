@@ -1,15 +1,27 @@
-import {usePopularBoughtRecs} from '@/lib/commerce-engine';
+import {
+  usePopularBoughtRecs,
+  usePopularViewedRecs,
+} from '@/lib/commerce-engine';
 import {Product} from '@coveo/headless-react/ssr-commerce';
 import {useNavigate} from '@remix-run/react';
 
-export default function PopularBought() {
-  const {state, methods} = usePopularBoughtRecs();
+type RecommendationType = 'bought' | 'viewed';
+
+interface PopularRecommendationsProps {
+  type: RecommendationType;
+}
+
+export default function PopularRecommendations({
+  type,
+}: PopularRecommendationsProps) {
+  const {state, methods} =
+    type === 'bought' ? usePopularBoughtRecs() : usePopularViewedRecs();
   const navigate = useNavigate();
 
   const onProductClick = (product: Product) => {
     methods?.interactiveProduct({options: {product}}).select();
     navigate(
-      `/products/${product.ec_product_id || ''}?name=${product.ec_name}&price=${product.ec_price}`
+      `/products/${product.ec_product_id}?name=${product.ec_name}&price=${product.ec_price}`
     );
   };
 

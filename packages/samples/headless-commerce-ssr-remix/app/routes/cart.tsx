@@ -4,6 +4,7 @@ import {
   RecommendationProvider,
   StandaloneProvider,
 } from '@/app/components/providers/providers';
+import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
@@ -23,7 +24,6 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
-import PopularBought from '../components/recommendations/popular-bought';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -117,7 +117,7 @@ export default function CartRoute() {
           staticState={recsStaticState}
           navigatorContext={navigatorContext}
         >
-          <PopularBought />
+          <PopularRecommendations type="bought" />
         </RecommendationProvider>
       </div>
     </StandaloneProvider>

@@ -7,8 +7,7 @@ import {
   ListingProvider,
   RecommendationProvider,
 } from '@/app/components/providers/providers';
-import PopularBought from '@/app/components/recommendations/popular-bought';
-import PopularViewed from '@/app/components/recommendations/popular-viewed';
+import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import Sort from '@/app/components/sort';
 import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
@@ -159,8 +158,8 @@ export default function ListingRoute() {
             staticState={recsStaticState}
             navigatorContext={navigatorContext}
           >
-            <PopularBought />
-            <PopularViewed />
+            <PopularRecommendations type="bought" />
+            <PopularRecommendations type="viewed" />
           </RecommendationProvider>
         </div>
       </div>
