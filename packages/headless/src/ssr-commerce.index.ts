@@ -104,7 +104,9 @@ export type {
   EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
+  ControllerWithKind,
 } from './app/commerce-ssr-engine/types/common.js';
+export {Kind} from './app/commerce-ssr-engine/types/kind.js';
 export type {
   EngineDefinition,
   InferStaticState,

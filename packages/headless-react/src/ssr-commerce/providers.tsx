@@ -9,17 +9,29 @@ import {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferHydratedState,
   NavigatorContext,
+  ControllerWithKind,
+  Kind,
   SolutionType,
   Context,
   HydrateStaticStateOptions,
   ParameterManager,
-  Parameters,
+  Parameters, // Recommendations,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {ReactCommerceEngineDefinition} from './commerce-engine.js';
 
 type ControllerPropsMap = {[customName: string]: unknown};
 type UnknownAction = {type: string};
+
+function getController<T extends Controller>(
+  controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    ControllerDefinitionsMap<Controller>,
+    SolutionType
+  >,
+  key: string
+) {
+  return controllers[key] as T;
+}
 
 export function buildProviderWithDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
@@ -48,24 +60,40 @@ export function buildProviderWithDefinition<
       const {searchActions, controllers} = staticState;
       const hydrateArguments: ControllerPropsMap = {};
 
-      if ('parameterManager' in controllers) {
-        hydrateArguments.parameterManager = {
-          initialState: {
-            parameters: (
-              controllers.parameterManager as ParameterManager<Parameters>
-            ).state.parameters,
-          },
-        };
-      }
+      for (const [key, controller] of Object.entries(controllers)) {
+        const typedController = controller as ControllerWithKind;
 
-      if ('cart' in controllers) {
-        hydrateArguments.cart = {
-          initialState: {items: (controllers.cart as Cart).state.items},
-        };
-      }
+        switch (typedController._kind) {
+          case Kind.Cart: {
+            const cart = getController<Cart>(controllers, key);
+            hydrateArguments[key] = {
+              initialState: {
+                items: cart.state.items,
+              },
+            };
+            break;
+          }
+          case Kind.Context: {
+            const context = getController<Context>(controllers, key);
+            hydrateArguments[key] = context.state;
+            break;
+          }
 
-      if ('context' in controllers) {
-        hydrateArguments.context = (controllers.context as Context).state;
+          case Kind.ParameterManager: {
+            const parameterManager = getController<
+              ParameterManager<Parameters>
+            >(controllers, key);
+            hydrateArguments[key] = {
+              initialState: {
+                parameters: parameterManager.state.parameters,
+              },
+            };
+            break;
+          }
+          case Kind.Recommendations:
+            //KIT-3801: Done here
+            break;
+        }
       }
 
       const args: HydrateStaticStateOptions<UnknownAction> &

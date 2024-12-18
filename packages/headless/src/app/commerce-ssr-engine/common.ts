@@ -11,6 +11,7 @@ import {
   ControllerDefinition,
   ControllerDefinitionOption,
   ControllerDefinitionsMap,
+  ControllerWithKind,
   EngineStaticState,
   InferControllerFromDefinition,
   InferControllerPropsFromDefinition,
@@ -18,6 +19,12 @@ import {
   InferControllersMapFromDefinition,
   SolutionType,
 } from './types/common.js';
+
+function hasKindProperty(
+  controller: Controller | ControllerWithKind
+): controller is ControllerWithKind {
+  return '_kind' in controller;
+}
 
 export function createStaticState<TSearchAction extends UnknownAction>({
   searchActions,
@@ -32,6 +39,7 @@ export function createStaticState<TSearchAction extends UnknownAction>({
   return {
     controllers: mapObject(controllers, (controller) => ({
       state: clone(controller.state),
+      ...(hasKindProperty(controller) && {_kind: controller._kind}),
     })) as InferControllerStaticStateMapFromControllers<ControllersMap>,
     searchActions: searchActions.map((action) => clone(action)),
   };
