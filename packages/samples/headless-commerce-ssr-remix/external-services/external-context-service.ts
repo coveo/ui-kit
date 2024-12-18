@@ -11,6 +11,29 @@ export type ExternalContextInformation = {
   language: string;
 };
 
+const contextOptions = [
+  {
+    country: 'US',
+    currency: 'USD',
+    language: 'en',
+  },
+  {
+    country: 'CA',
+    currency: 'CAD',
+    language: 'en',
+  },
+  {
+    country: 'CA',
+    currency: 'CAD',
+    language: 'fr',
+  },
+  {
+    country: 'GB',
+    currency: 'GBP',
+    language: 'en',
+  },
+];
+
 class ExternalContextService {
   private contextDB: {country: string; currency: string; language: string} = {
     country: 'US',
@@ -36,6 +59,12 @@ class ExternalContextService {
     localeInformation: ExternalContextInformation
   ): Promise<void> {
     this.contextDB = localeInformation;
+  }
+
+  public getContextOptions(): string[] {
+    return contextOptions.map(
+      (option) => `${option.language}-${option.country}-${option.currency}`
+    );
   }
 }
 
