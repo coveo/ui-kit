@@ -23,6 +23,16 @@ import {ReactCommerceEngineDefinition} from './commerce-engine.js';
 type ControllerPropsMap = {[customName: string]: unknown};
 type UnknownAction = {type: string};
 
+function getController<T extends Controller>(
+  controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    ControllerDefinitionsMap<Controller>,
+    SolutionType
+  >,
+  key: string
+) {
+  return controllers[key] as T;
+}
+
 export function buildProviderWithDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
@@ -54,30 +64,32 @@ export function buildProviderWithDefinition<
         const typedController = controller as ControllerWithKind;
 
         switch (typedController._kind) {
-          case Kind.Cart:
+          case Kind.Cart: {
+            const cart = getController<Cart>(controllers, key);
             hydrateArguments[key] = {
               initialState: {
-                items: (controllers as Record<string, Cart>)[key].state.items,
+                items: cart.state.items,
               },
             };
             break;
-
-          case Kind.Context:
-            hydrateArguments[key] = (controllers as Record<string, Context>)[
-              key
-            ].state;
+          }
+          case Kind.Context: {
+            const context = getController<Context>(controllers, key);
+            hydrateArguments[key] = context.state;
             break;
+          }
 
-          case Kind.ParameterManager:
+          case Kind.ParameterManager: {
+            const parameterManager = getController<
+              ParameterManager<Parameters>
+            >(controllers, key);
             hydrateArguments[key] = {
               initialState: {
-                parameters: (
-                  controllers as Record<string, ParameterManager<Parameters>>
-                )[key].state.parameters,
+                parameters: parameterManager.state.parameters,
               },
             };
             break;
-
+          }
           case Kind.Recommendations:
             //KIT-3801: Done here
             break;
