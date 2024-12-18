@@ -92,7 +92,7 @@ export interface ControllerDefinitionWithProps<
    * @param props - The controller properties.
    * @returns The controller.
    */
-  buildWithProps(engine: TEngine, props: TProps): TController;
+  buildWithProps(engine: TEngine, props?: TProps): TController;
 }
 
 export type ControllerDefinition<
