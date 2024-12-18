@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@playwright/test": "1.49.0",
-    "@types/node": "22.9.1"
+    "@playwright/test": "1.49.1",
+    "@types/node": "22.10.2"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
