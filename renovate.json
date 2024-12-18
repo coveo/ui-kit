@@ -110,21 +110,6 @@
       "matchPackageNames": ["/^change-case$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-react/package.json"],
-      "groupSlug": "react-rollup",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?",
-      "matchPackageNames": ["/^rollup$/"]
-    },
-    {
-      "groupName": "nx",
-      "groupSlug": "nx",
-      "rangeStrategy": "replace",
-      "allowedVersions": "15.x",
-      "matchPackageNames": ["/^nx$/"]
-    },
-    {
       "groupName": "marked",
       "groupSlug": "marked",
       "rangeStrategy": "replace",
@@ -132,11 +117,11 @@
       "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "nx-devkit",
-      "groupSlug": "nx-devkit",
+      "groupName": "relay",
+      "groupSlug": "relay",
       "rangeStrategy": "replace",
-      "allowedVersions": "16.x",
-      "matchPackageNames": ["/^@nrwl/devkit$/"]
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
     },
     {
       "groupName": "Cypress Split",
@@ -163,18 +148,11 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4",
-      "matchPackageNames": ["/^actions/upload-artifact$/"]
-    },
-    {
       "groupSlug": "eslint",
       "groupName": "eslint",
       "rangeStrategy": "replace",
       "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": ["/^eslint$/"]
+      "matchPackageNames": ["/^eslint$/", "eslint-config-next"]
     }
   ],
   "rangeStrategy": "auto",
