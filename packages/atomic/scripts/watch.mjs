@@ -6,6 +6,7 @@ function rebuild() {
     'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build',
     'node ./scripts/stencil-proxy.mjs',
     'tsc -p tsconfig.lit.json',
+    'node process-css.mjs',
     'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js',
     'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js',
   ];
