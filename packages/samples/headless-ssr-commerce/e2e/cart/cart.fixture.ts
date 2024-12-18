@@ -9,11 +9,9 @@ type MyFixtures = {
 
 export const test = base.extend<MyFixtures>({
   cart: async ({page}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Cart(page));
   },
   hydrated: async ({page}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Hydrated(page));
   },
 });

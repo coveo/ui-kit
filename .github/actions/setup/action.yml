@@ -22,23 +22,23 @@ runs:
     - name: Install npm
       run: npm i -g npm@10
       shell: bash
-    - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       id: npm-cache
       with:
         path: |
           **/node_modules/
           !.nx/cache/
         key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
-    - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
         key: quantic-${{ hashFiles('package-lock.json') }}}}
-    - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('package-lock.json') }}
     - if: inputs.load-cache == 'true'
-      uses: actions/cache/restore@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+      uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       id: nx-cache
       with:
         path: .nx/cache
