@@ -13,7 +13,9 @@ export default function RecentQueries() {
             <button
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
-            >{query}</button>
+            >
+              {query}
+            </button>
           </li>
         ))}
       </ul>
