@@ -27,11 +27,11 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
-      "groupName": "dompurify",
-      "groupSlug": "dompurify",
+      "groupName": "gts",
+      "groupSlug": "gts",
       "rangeStrategy": "replace",
-      "description": "Isolate dompurify",
-      "matchPackageNames": ["/dompurify/"]
+      "description": "Isolate gts since it is causing memory issues when running the lint:check",
+      "matchPackageNames": ["gts"]
     },
     {
       "groupName": "Angular",
@@ -52,7 +52,8 @@
         "/react/",
         "/react-router-dom/",
         "/react-dom/",
-        "/@types/react/"
+        "/@types/react/",
+        "next"
       ]
     },
     {
@@ -122,6 +123,13 @@
       "rangeStrategy": "replace",
       "allowedVersions": "15.x",
       "matchPackageNames": ["/^nx$/"]
+    },
+    {
+      "groupName": "marked",
+      "groupSlug": "marked",
+      "rangeStrategy": "replace",
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
     },
     {
       "groupName": "nx-devkit",

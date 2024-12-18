@@ -1,5 +1,6 @@
 import {
-  listingEngineDefinition, //recommendationEngineDefinition,
+  listingEngineDefinition,
+  //recommendationEngineDefinition,
   searchEngineDefinition,
   standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
