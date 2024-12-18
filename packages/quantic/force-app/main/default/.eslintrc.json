@@ -25,7 +25,8 @@
       "files": ["**/e2e/*.ts"],
       "parser": "@typescript-eslint/parser",
       "rules": {
-        "no-redeclare": ["error", {"builtinGlobals": false}]
+        "no-redeclare": ["error", {"builtinGlobals": false}],
+        "import/named": "off"
       }
     }
   ]
