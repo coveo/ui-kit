@@ -152,7 +152,7 @@
       "groupName": "eslint",
       "rangeStrategy": "replace",
       "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": ["/^eslint$/", "eslint-config-next"]
+      "matchPackageNames": ["/^eslint$/"]
     }
   ],
   "rangeStrategy": "auto",
