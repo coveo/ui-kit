@@ -27,12 +27,13 @@ export const recommendationsReducer = createReducer(
     builder
       .addCase(registerRecommendationsSlot, (state, action) => {
         const slotId = action.payload.slotId;
+        const productId = action.payload.productId;
 
         if (slotId in state) {
           return;
         }
 
-        state[slotId] = buildRecommendationsSlice();
+        state[slotId] = buildRecommendationsSlice({productId});
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
         handleError(state, action.meta.arg.slotId, action.payload);
