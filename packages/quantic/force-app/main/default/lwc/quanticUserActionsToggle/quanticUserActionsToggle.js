@@ -35,17 +35,21 @@ export default class QuanticUserActionsToggle extends LightningElement {
   @api engineId;
   /**
    * The ID of the user whose actions are being displayed. For example in email format "someone@company.com".
+   * @api
    * @type {string}
    */
   @api userId;
   /**
    * The date and time when the ticket was created. For example "2024-01-01T00:00:00Z"
+   * @api
    * @type {string}
    */
   @api ticketCreationDateTime;
   /**
    * The names of custom events to exclude.
+   * @api
    * @type {Array<string>}
+   * @default []
    */
   @api excludedCustomActions = [];
 
