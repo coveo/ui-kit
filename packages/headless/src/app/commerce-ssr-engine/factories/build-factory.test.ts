@@ -1,5 +1,8 @@
 import {Mock, describe, it, expect, vi} from 'vitest';
+import {defineCart} from '../../../controllers/commerce/context/cart/headless-cart.ssr.js';
+import {defineProductList} from '../../../controllers/commerce/product-list/headless-product-list.ssr.js';
 import {defineRecommendations} from '../../../controllers/commerce/recommendations/headless-recommendations.ssr.js';
+import {defineSearchBox} from '../../../controllers/commerce/search-box/headless-search-box.ssr.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
 import * as commerceEngine from '../../commerce-engine/commerce-engine.js';
 import {CommerceEngineOptions} from '../../commerce-engine/commerce-engine.js';
@@ -15,18 +18,15 @@ describe('buildFactory', () => {
     debug: vi.fn(),
   };
 
-  const engineOptions: CommerceEngineOptions = {
+  const mockEngineOptions: CommerceEngineOptions = {
     configuration: getSampleCommerceEngineConfiguration(),
     navigatorContextProvider: vi.fn(),
   };
 
-  const mockControllerDefinitions = {};
+  const mockEmptyDefinition = {};
 
   beforeEach(() => {
-    const actualImplementation = commerceEngine.buildCommerceEngine;
-    vi.spyOn(commerceEngine, 'buildCommerceEngine').mockImplementation(
-      actualImplementation
-    );
+    vi.spyOn(commerceEngine, 'buildCommerceEngine');
     (buildLogger as Mock).mockReturnValue(mockLogger);
   });
 
@@ -34,8 +34,17 @@ describe('buildFactory', () => {
     vi.clearAllMocks();
   });
 
+  it('should not warn if navigatorContextProvider is present', async () => {
+    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
+    const build = factory(SolutionType.listing);
+
+    await build();
+
+    expect(mockLogger.warn).not.toHaveBeenCalled();
+  });
+
   it('should warn if navigatorContextProvider is missing', async () => {
-    const factory = buildFactory(mockControllerDefinitions, {
+    const factory = buildFactory(mockEmptyDefinition, {
       configuration: getSampleCommerceEngineConfiguration(),
     });
     const build = factory(SolutionType.listing);
@@ -48,18 +57,18 @@ describe('buildFactory', () => {
   });
 
   it('should throw an error for unsupported solution type', async () => {
-    const factory = buildFactory(mockControllerDefinitions, engineOptions);
+    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory('unsupported' as SolutionType);
 
     await expect(build()).rejects.toThrow('Unsupported solution type');
   });
 
   describe('when building for standalone', () => {
-    const factory = buildFactory(mockControllerDefinitions, engineOptions);
+    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.standalone);
 
     it('should build SSRCommerceEngine with standalone solution type', async () => {
-      const factory = buildFactory(mockControllerDefinitions, engineOptions);
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.standalone);
       const result = await build();
 
@@ -77,11 +86,11 @@ describe('buildFactory', () => {
   });
 
   describe('when building for search', () => {
-    const factory = buildFactory(mockControllerDefinitions, engineOptions);
+    const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
     const build = factory(SolutionType.search);
 
     it('should build SSRCommerceEngine with search solution type', async () => {
-      const factory = buildFactory(mockControllerDefinitions, engineOptions);
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.search);
       const result = await build();
 
@@ -99,11 +108,8 @@ describe('buildFactory', () => {
   });
 
   describe('when building for listing', () => {
-    const factory = buildFactory(mockControllerDefinitions, engineOptions);
-    const build = factory(SolutionType.listing);
-
     it('should build SSRCommerceEngine with listing solution type', async () => {
-      const factory = buildFactory(mockControllerDefinitions, engineOptions);
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.listing);
       const result = await build();
 
@@ -111,8 +117,65 @@ describe('buildFactory', () => {
       expect(result.controllers).toBeDefined();
     });
 
+    it('should return static state from build result with product and searchbox controllers', async () => {
+      const factory = buildFactory(
+        {
+          products: defineProductList(),
+          searchBox: defineSearchBox(),
+          cart: defineCart(),
+        },
+        mockEngineOptions
+      );
+      await factory(SolutionType.listing)({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+
+      const {controllers} = await factory(SolutionType.listing)({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+
+      expect(Object.keys(controllers)).toHaveLength(2);
+      expect(controllers.cart).not.toBeUndefined();
+      expect(controllers.products).not.toBeUndefined();
+      // @ts-expect-error SearchBox is not a listing controller
+      expect(controllers.searchBox).toBeUndefined();
+    });
+
+    it('should return static state from build result without the listing controller', async () => {
+      const factory = buildFactory(
+        {
+          products: defineProductList({listing: false}),
+          searchBox: defineSearchBox(),
+          cart: defineCart(),
+        },
+        mockEngineOptions
+      );
+      await factory(SolutionType.listing)({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+
+      const {controllers} = await factory(SolutionType.listing)({
+        controllers: {cart: {initialState: {items: []}}},
+      });
+
+      expect(Object.keys(controllers)).toHaveLength(1);
+      expect(controllers.cart).not.toBeUndefined();
+      // @ts-expect-error Products is disabled for listing
+      expect(controllers.products).toBeUndefined();
+      // @ts-expect-error SearchBox is not a listing controller
+      expect(controllers.searchBox).toBeUndefined();
+    });
+
     it('should always add a single middleware', async () => {
-      await build();
+      const factory = buildFactory(
+        {
+          products: defineProductList(),
+          searchBox: defineSearchBox(),
+        },
+        mockEngineOptions
+      );
+      await factory(SolutionType.listing)();
+
       expect(
         (commerceEngine.buildCommerceEngine as Mock).mock.calls[0][0]
           .middlewares
@@ -134,11 +197,11 @@ describe('buildFactory', () => {
       }),
     };
 
-    const factory = buildFactory(controllerDefinition, engineOptions);
+    const factory = buildFactory(controllerDefinition, mockEngineOptions);
     const build = factory(SolutionType.recommendation);
 
     it('should build SSRCommerceEngine with recommendation solution type', async () => {
-      const factory = buildFactory(mockControllerDefinitions, engineOptions);
+      const factory = buildFactory(mockEmptyDefinition, mockEngineOptions);
       const build = factory(SolutionType.recommendation);
       const result = await build();
 

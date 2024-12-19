@@ -1,4 +1,5 @@
 import {UniversalControllerDefinitionWithProps} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {Kind} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {Cart, buildCart, CartInitialState} from './headless-cart.js';
 
 export type {CartState, CartItem, CartProps} from './headless-cart.js';
@@ -25,7 +26,11 @@ export function defineCart(): CartDefinition {
     search: true,
     standalone: true,
     recommendation: true,
-    buildWithProps: (engine, props) =>
-      buildCart(engine, {initialState: props.initialState}),
+    buildWithProps: (engine, props) => {
+      return {
+        ...buildCart(engine, {initialState: props.initialState}),
+        _kind: Kind.Cart,
+      };
+    },
   };
 }
