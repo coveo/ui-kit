@@ -1,6 +1,6 @@
 div {
   transition: background-color 0.3s;
-  @apply rounded;
+
   @apply text-white;
 }
 
