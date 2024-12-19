@@ -88,5 +88,5 @@ for (const entry of entries) {
       ].join('\n'),
       prettierConfig
     )
-  );
+  )
 }
