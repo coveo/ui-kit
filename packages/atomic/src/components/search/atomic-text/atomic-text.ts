@@ -1,7 +1,17 @@
-import {html, LitElement, PropertyValues, TemplateResult} from 'lit';
+import {
+  css,
+  CSSResultGroup,
+  html,
+  LitElement,
+  PropertyValues,
+  TemplateResult,
+  unsafeCSS,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {initializeBindings} from '../../../utils/initialization-lit-utils.js';
+import {TailwindLitElement} from '../../../utils/tailwind.element.js';
 import type {Bindings} from '../atomic-search-interface/interfaces.js';
+import styles from './atomic-text.styles.tw.css';
 
 type GenericRender = string | TemplateResult | undefined | null;
 
@@ -9,10 +19,13 @@ type GenericRender = string | TemplateResult | undefined | null;
  * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
  */
 @customElement('atomic-text')
-export class AtomicText extends LitElement {
+export class AtomicText extends TailwindLitElement {
   @state() public bindings!: Bindings;
   @state() public error!: Error;
   protected firstUpdated(_changedProperties: PropertyValues): void {
+    if (!this.value) {
+      this.error = new Error('The "value" attribute must be defined.');
+    }
     this.setAttribute(renderedAttribute, 'false');
     this.setAttribute(loadedAttribute, 'false');
   }
@@ -22,6 +35,17 @@ export class AtomicText extends LitElement {
         count: this.count,
       }),
   };
+
+  static styles: CSSResultGroup = [
+    TailwindLitElement.styles,
+    css`
+      div {
+        border: 1px solid red;
+        border-radius: var(--atomic-border-radius-xl);
+      }
+    `,
+    unsafeCSS(styles),
+  ];
 
   #unsubscribeLanguageChanged = () => {};
 
@@ -54,9 +78,7 @@ export class AtomicText extends LitElement {
 
   public connectedCallback() {
     super.connectedCallback();
-    if (!this.value) {
-      this.error = new Error('The "value" attribute must be defined.');
-    }
+
     initializeBindings(this)
       .then((bindings) => {
         this.bindings = bindings;
@@ -70,7 +92,9 @@ export class AtomicText extends LitElement {
   @BindingGuard()
   @SetRenderedAttribute()
   public render(): GenericRender {
-    return this.#strings.value();
+    return html`<div class="bg-primary border p-2 text-xs">
+      ${this.#strings.value()}
+    </div>`;
   }
 }
 

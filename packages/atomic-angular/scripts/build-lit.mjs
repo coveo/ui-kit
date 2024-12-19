@@ -1,7 +1,7 @@
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 import { createWriteStream, readFileSync, writeFileSync } from 'fs';
 
-const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
 
 const atomicAngularModuleFilePath ='projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
 const atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');

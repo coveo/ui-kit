@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/App.tsx',
@@ -18,6 +19,13 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.css'],
   },
+  plugins: [
+    new webpack.NormalModuleReplacementPlugin(/\.tw\.css$/, function (
+      resource
+    ) {
+      resource.request = resource.request + '.js';
+    }),
+  ],
   output: {
     filename: 'app.js',
     path: path.resolve(__dirname, 'public/dist'),
