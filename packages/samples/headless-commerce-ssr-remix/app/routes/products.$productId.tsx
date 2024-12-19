@@ -1,7 +1,11 @@
+import ContextDropdown from '@/app/components/context-dropdown';
+import ProductView from '@/app/components/product-view';
+import {StandaloneProvider} from '@/app/components/providers/providers';
+import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
-import externalCatalogService, {
+import externalCatalogAPI, {
   ExternalCatalogItem,
 } from '@/external-services/external-catalog-service';
 import externalContextService from '@/external-services/external-context-service';
@@ -18,15 +22,13 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import ProductView from '../components/product-view';
-import {StandaloneProvider} from '../components/providers/providers';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;
 
   invariant(productId, 'Missing productId parameter');
 
-  const catalogItem = await externalCatalogService.getItem(request.url);
+  const catalogItem = await externalCatalogAPI.getItem(request.url);
 
   const {country, currency, language} =
     await externalContextService.getContextInformation();
@@ -90,6 +92,8 @@ export default function ProductRoute() {
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
+      <ContextDropdown />
+      <StandaloneSearchBox />
       <ProductView
         catalogItem={catalogItem}
         cartItem={cartItem}
