@@ -1,0 +1,57 @@
+/* eslint-disable @cspell/spellchecker */
+import {css} from 'lit';
+
+export default css`
+  * {
+    /* Primary colors */
+    --atomic-primary: #1372ec;
+    --atomic-primary-light: #399ffe;
+    --atomic-primary-dark: #1a50ad;
+    --atomic-on-primary: #ffffff;
+    --atomic-ring-primary: rgba(19, 114, 236, 0.5);
+
+    /* Neutral colors */
+    --atomic-neutral-dark: #626971;
+    --atomic-neutral-dim: #bfc4c8;
+    --atomic-neutral: #e5e8e8;
+    --atomic-neutral-light: #f6f7f9;
+    --atomic-neutral-lighter: #f2f2f2;
+
+    /* Semantic colors */
+    --atomic-background: #ffffff;
+    --atomic-on-background: #282829;
+    --atomic-success: #12a244;
+    --atomic-error: #ce3f00;
+    --atomic-visited: #752e9c;
+    --atomic-disabled: #c5cacf;
+    --atomic-success-background: #d4fcf0;
+    --atomic-error-background: #fcbdc0;
+    --atomic-primary-background: #edf6ff;
+    --atomic-inline-code: #cd2113;
+
+    /* Border radius */
+    --atomic-border-radius: 0.25rem;
+    --atomic-border-radius-md: 0.5rem;
+    --atomic-border-radius-lg: 0.75rem;
+    --atomic-border-radius-xl: 1rem;
+
+    /* Font */
+    --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+      segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial,
+      sans-serif; /* Following https://systemfontstack.com/ */
+    --atomic-font-normal: 400;
+    --atomic-font-bold: 700;
+
+    /* Text size */
+    --atomic-text-base: 0.875rem; /* 14px */
+    --atomic-text-sm: 0.75rem; /* 12px */
+    --atomic-text-lg: 1rem; /* 16px */
+    --atomic-text-xl: 1.125rem; /* 18px */
+    --atomic-text-2xl: 1.5rem; /* 24px */
+    --atomic-line-height-ratio: 1.5;
+
+    /* Layout */
+    --atomic-layout-spacing-x: 1.5rem;
+    --atomic-layout-spacing-y: 1rem;
+  }
+`;
