@@ -6,8 +6,8 @@
     "url": "https://github.com/coveo/ui-kit"
   },
   "peerDependencies": {
-    "@angular/common": "14 - 17",
-    "@angular/core": "14 - 17",
+    "@angular/common": "14 - 18",
+    "@angular/core": "14 - 18",
     "@coveo/headless": "3.12.0"
   },
   "dependencies": {
