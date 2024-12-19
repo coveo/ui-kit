@@ -2,8 +2,10 @@ import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 import {writeFileSync} from 'node:fs';
 import * as prettier from 'prettier';
 
+
+
 const isLitDeclaration = (declaration) =>
-  declaration?.superclass?.name === 'LitElement';
+  declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
 
 const entries = [
   {
@@ -46,8 +48,10 @@ export const ${declaration.name} = createComponent({
 `;
 
 for (const module of cem.modules) {
+  console.log(`Processing module: ${module.path}`);
   for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
+      console.log(`Found LitElement declaration: ${declaration.name}`);
       for (const entry of entries) {
         if (
           entry.excludedComponentDirectories.some((directory) =>
@@ -55,8 +59,10 @@ for (const module of cem.modules) {
           ) ||
           entry.excludedComponents.includes(declaration.tagName)
         ) {
+          console.log(`Skipping excluded component: ${declaration.tagName}`);
           continue;
         }
+        console.log(`Adding component: ${declaration.name} to ${entry.path}`);
         entry.computedComponentImports.push(
           declarationToLitImport(declaration)
         );
@@ -67,11 +73,15 @@ for (const module of cem.modules) {
 }
 
 for (const entry of entries) {
+  console.log(`Writing file: ${entry.path}`);
+  console.log(`Components to import: ${entry.computedComponentImports.length}`);
+  
   const prettierConfig = {
     ...(await prettier.resolveConfig(entry.path)),
     parser: 'typescript'
   };
   if(entry.computedComponentImports.length===0) {
+    console.log(`No components for ${entry.path}, writing empty export`);
     writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
     continue;
   }
@@ -86,5 +96,8 @@ for (const entry of entries) {
       ].join('\n'),
       prettierConfig
     )
-  )
+  );
+  console.log(`Successfully wrote ${entry.path}`);
 }
+
+console.log('Build complete!');
