@@ -17,12 +17,11 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/node": "22.9.1",
+    "@types/node": "22.10.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@playwright/test": "1.49.0",
+    "@playwright/test": "1.49.1",
     "eslint": "8.57",
-    "eslint-config-next": "15.0.4",
     "typescript": "5.4.5"
   }
 }
