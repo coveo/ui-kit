@@ -1,4 +1,4 @@
-import {h, Component, Element, Host, Listen, State} from '@stencil/core';
+import {h, Component, Element, Host, State, Listen} from '@stencil/core';
 import {Button} from '../button';
 import {TabCommonElement} from './tab-common';
 
@@ -152,6 +152,7 @@ export class TabBar {
           title={tab.label}
           onClick={() => {
             tab.select();
+            this.updatePopoverTabs();
             this.tabPopover?.togglePopover();
           }}
         >
@@ -161,10 +162,18 @@ export class TabBar {
     ));
   };
 
+  private setTabButtonMaxWidth = () => {
+    this.displayedTabs.forEach((tab) => {
+      tab.style.setProperty('max-width', `calc(100% - ${this.popoverWidth}px)`);
+    });
+  };
+
   private updateTabsDisplay = () => {
     this.updateTabVisibility(this.overflowingTabs, false);
     this.updateTabVisibility(this.displayedTabs, true);
+    this.setTabButtonMaxWidth();
     this.updatePopoverPosition();
+    this.updatePopoverTabs();
     this.tabPopover?.setButtonVisibility(!!this.overflowingTabs.length);
   };
 
@@ -173,9 +182,14 @@ export class TabBar {
     event.stopPropagation();
     this.updatePopoverTabs();
   }
+  public componentWillUpdate() {
+    this.updateTabsDisplay();
+  }
 
   public componentDidLoad() {
-    this.resizeObserver = new ResizeObserver(this.render);
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateTabsDisplay();
+    });
     this.resizeObserver.observe(this.host);
   }
 
@@ -184,9 +198,8 @@ export class TabBar {
   }
 
   public render = () => {
-    this.updateTabsDisplay();
     return (
-      <Host>
+      <Host class="overflow-x-clip overflow-y-visible">
         <slot></slot>
         <tab-popover>{this.popoverTabs}</tab-popover>
       </Host>
