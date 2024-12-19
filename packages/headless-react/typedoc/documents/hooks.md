@@ -1,5 +1,5 @@
 ---
-title: Hooks
+title: Controller hooks
 ---
 
 # Hooks
