@@ -8,9 +8,9 @@ This package provides React hooks for controllers defined in the Engine Definiti
 
 ## Usage
 
-1. Configure the Engine
+1. Create an engine configuration
 
-Define the controllers you need in the engine configuration. This example includes `Summary` and `ProductList` controllers:
+Define the controllers you need in your engine configuration. This example includes `Summary` and `ProductList` controllers:
 
 ```
 const config : CommerceEngineDefinitionOptions {
@@ -24,17 +24,17 @@ const config : CommerceEngineDefinitionOptions {
 }
 ```
 
-2. Create the Engine definition
+2. Define the engine
 
-Use `defineCommerceEngine` to initialize the engine with your configuration:
+Use `defineCommerceEngine` to define the engine with your configuration:
 
 ```
 export const engineDefinition = defineCommerceEngine(engineConfig);
 ```
 
-3. Export Hooks
+3. Export hooks
 
-Extract hooks for each controller from the engine definition. These hooks expose state and methods:
+Extract hooks for each controller from the engine definition.
 
 ```
 export const {
@@ -45,7 +45,9 @@ export const {
 
 4. Use Hooks in Components
 
-Access controller state and methods in your components and render UI accordingly:
+Access controller methods and state in your components through the hooks.
+The controller methods and state attributes exposed through controller hooks are the same as the ones exposed by the controllers.
+For details, see the relevant controller [reference documentation](../../modules/SSR_Commerce.index.html).
 
 ```
 export default function ProductList() {
