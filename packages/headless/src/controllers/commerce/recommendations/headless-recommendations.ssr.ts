@@ -43,6 +43,7 @@ export function defineRecommendations(
     [recommendationInternalOptionKey]: {
       ...props.options,
     },
+    //@ts-expect-error fixed in KIT-3801
     buildWithProps: (
       engine,
       options: Omit<RecommendationsOptions, 'slotId'>
