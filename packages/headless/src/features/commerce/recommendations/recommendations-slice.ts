@@ -33,7 +33,14 @@ export const recommendationsReducer = createReducer(
           return;
         }
 
-        state[slotId] = buildRecommendationsSlice({productId});
+        if (!productId) {
+          state[slotId] = buildRecommendationsSlice();
+          return;
+        }
+
+        state[slotId] = buildRecommendationsSlice(
+          productId ? {productId} : undefined
+        );
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
         handleError(state, action.meta.arg.slotId, action.payload);

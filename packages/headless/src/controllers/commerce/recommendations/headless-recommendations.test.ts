@@ -2,6 +2,7 @@ import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {
   fetchRecommendations,
   promoteChildToParent,
+  registerRecommendationsSlot,
 } from '../../../features/commerce/recommendations/recommendations-actions.js';
 import {recommendationsReducer} from '../../../features/commerce/recommendations/recommendations-slice.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
@@ -23,7 +24,7 @@ describe('headless recommendations', () => {
   beforeEach(() => {
     engine = buildMockCommerceEngine(buildMockCommerceState());
     recommendations = buildRecommendations(engine, {
-      options: {slotId: 'slot-id'},
+      options: {slotId: 'slot-id', productId: 'product-id'},
     });
   });
 
@@ -47,5 +48,12 @@ describe('headless recommendations', () => {
   it('refresh dispatches #fetchRecommendations', () => {
     recommendations.refresh();
     expect(fetchRecommendations).toHaveBeenCalled();
+  });
+
+  it('dispatches #registerRecommendationsSlot with the correct arguments', () => {
+    expect(registerRecommendationsSlot).toHaveBeenCalledWith({
+      slotId: 'slot-id',
+      productId: 'product-id',
+    });
   });
 });
