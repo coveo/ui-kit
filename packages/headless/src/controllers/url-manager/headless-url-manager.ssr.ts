@@ -1,5 +1,6 @@
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {ControllerDefinitionWithProps} from '../../app/ssr-engine/types/common.js';
+import {MissingControllerProps} from '../../utils/errors.js';
 import {
   UrlManager,
   UrlManagerInitialState,
@@ -25,6 +26,10 @@ export const defineUrlManager = (): ControllerDefinitionWithProps<
   UrlManager,
   UrlManagerBuildProps
 > => ({
-  buildWithProps: (engine, props) =>
-    buildUrlManager(engine, {initialState: props.initialState}),
+  buildWithProps: (engine, props) => {
+    if (props === undefined) {
+      throw new MissingControllerProps('UrlManager');
+    }
+    return buildUrlManager(engine, {initialState: props.initialState});
+  },
 });

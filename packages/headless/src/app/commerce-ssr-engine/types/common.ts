@@ -73,7 +73,7 @@ export interface ControllerDefinitionWithProps<
    */
   buildWithProps(
     engine: SSRCommerceEngine,
-    props: TProps,
+    props?: TProps,
     solutionType?: SolutionType
   ): TController;
 }

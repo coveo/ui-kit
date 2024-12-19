@@ -14,7 +14,7 @@ import {queryReducer as query} from '../../features/query/query-slice.js';
 import {sortCriteriaReducer as sortCriteria} from '../../features/sort-criteria/sort-criteria-slice.js';
 import {staticFilterSetReducer as staticFilterSet} from '../../features/static-filter-set/static-filter-set-slice.js';
 import {tabSetReducer as tabSet} from '../../features/tab-set/tab-set-slice.js';
-import {loadReducerError} from '../../utils/errors.js';
+import {loadReducerError, MissingControllerProps} from '../../utils/errors.js';
 import {advancedSearchQueriesReducer as advancedSearchQueries} from './../../features/advanced-search-queries/advanced-search-queries-slice.js';
 import {
   SearchParameterManager,
@@ -44,6 +44,9 @@ export interface SearchParameterManagerDefinition
 export function defineSearchParameterManager(): SearchParameterManagerDefinition {
   return {
     buildWithProps: (engine, props) => {
+      if (props === undefined) {
+        throw new MissingControllerProps('SearchParameterManager');
+      }
       if (!loadSearchParameterManagerReducers(engine)) {
         throw loadReducerError;
       }
