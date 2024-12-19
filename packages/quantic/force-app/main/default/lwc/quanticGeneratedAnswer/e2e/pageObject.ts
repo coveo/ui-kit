@@ -47,6 +47,12 @@ export class GeneratedAnswerObject {
     });
   }
 
+  answerOption(questionText: string, answerValue: string): Locator {
+    return this.questionContainer(questionText).locator('.slds-radio_button', {
+      hasText: new RegExp(`^${answerValue}$`),
+    });
+  }
+
   get feedbackDocumentUrlInput(): Locator {
     return this.page.locator(
       '.feedback-modal-qna__body input[name="documentUrl"]'
@@ -94,12 +100,6 @@ export class GeneratedAnswerObject {
     await this.submitFeedbackButton.click();
   }
 
-  answerOption(questionText: string, answerValue: string): Locator {
-    return this.questionContainer(questionText).locator('.slds-radio_button', {
-      hasText: new RegExp(`^${answerValue}$`),
-    });
-  }
-
   async fillFeedbackForm(answers: Record<string, string>): Promise<void> {
     for (const [questionText, answerValue] of Object.entries(answers)) {
       const option = this.answerOption(questionText, answerValue);
@@ -128,90 +128,44 @@ export class GeneratedAnswerObject {
     await this.feedbackOption(value, index).click();
   }
 
-  async mockStreamResponse(
-    body: Array<{payloadType: string; payload: string; finishReason?: string}>
-  ) {
-    await this.page.route(
-      `**/machinelearning/streaming/${this.streamId}`,
-      (route) => {
-        let bodyText = '';
-        body.forEach((data) => {
-          bodyText += `data: ${JSON.stringify(data)} \n\n`;
-        });
-
-        route.fulfill({
-          status: 200,
-          body: bodyText,
-          headers: {
-            'content-type': 'text/event-stream',
-          },
-        });
-      }
+  async waitForStreamEndUaAnalytics(): Promise<Request> {
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
+      'generatedAnswerStreamEnd'
     );
   }
 
-  async waitForGeneratedAnswerUaAnalytics(
-    eventValue,
-    customChecker?: Function
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaCustomEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-        const expectedFields = {
-          eventType: 'generatedAnswer',
-          eventValue: eventValue,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
-
-        const customData = requestBody?.customData;
-
-        const matchesGenerativeId =
-          customData?.generativeQuestionAnsweringId === this.streamId;
-
-        return (
-          matchesExpectedFields &&
-          matchesGenerativeId &&
-          (customChecker ? customChecker(customData) : true)
-        );
-      }
-      return false;
-    });
-    return uaRequest;
-  }
-
-  async waitForStreamEndUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics('generatedAnswerStreamEnd');
-  }
-
   async waitForLikeGeneratedAnswerUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics('likeGeneratedAnswer');
+    return this.waitForGeneratedAnswerCustomUaAnalytics('likeGeneratedAnswer');
   }
 
   async waitForDislikeGeneratedAnswerUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics('dislikeGeneratedAnswer');
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
+      'dislikeGeneratedAnswer'
+    );
   }
 
   async waitForCopyToClipboardUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics(
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
       'generatedAnswerCopyToClipboard'
     );
   }
 
   async waitForShowAnswersUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics('generatedAnswerShowAnswers');
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
+      'generatedAnswerShowAnswers'
+    );
   }
 
   async waitForHideAnswersUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics('generatedAnswerHideAnswers');
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
+      'generatedAnswerHideAnswers'
+    );
   }
 
   async waitForSourceHoverUaAnalytics(
     expectedFields: object
   ): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics(
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
       'generatedAnswerSourceHover',
       (customData: object) => {
         return Object.keys(expectedFields).every(
@@ -224,7 +178,7 @@ export class GeneratedAnswerObject {
   async waitForFeedbackSubmitUaAnalytics(
     expectedFields: object
   ): Promise<Request> {
-    return this.waitForGeneratedAnswerUaAnalytics(
+    return this.waitForGeneratedAnswerCustomUaAnalytics(
       'generatedAnswerFeedbackSubmitV2',
       (customData: object) => {
         return Object.keys(expectedFields).every(
@@ -283,5 +237,59 @@ export class GeneratedAnswerObject {
       return false;
     });
     return uaRequest;
+  }
+
+  async waitForGeneratedAnswerCustomUaAnalytics(
+    eventValue,
+    customChecker?: Function
+  ): Promise<Request> {
+    const uaRequest = this.page.waitForRequest((request) => {
+      if (isUaCustomEvent(request)) {
+        const requestBody = request.postDataJSON?.();
+        const expectedFields = {
+          eventType: 'generatedAnswer',
+          eventValue: eventValue,
+        };
+
+        const matchesExpectedFields = Object.keys(expectedFields).every(
+          (key) => requestBody?.[key] === expectedFields[key]
+        );
+
+        const customData = requestBody?.customData;
+
+        const matchesGenerativeId =
+          customData?.generativeQuestionAnsweringId === this.streamId;
+
+        return (
+          matchesExpectedFields &&
+          matchesGenerativeId &&
+          (customChecker ? customChecker(customData) : true)
+        );
+      }
+      return false;
+    });
+    return uaRequest;
+  }
+
+  async mockStreamResponse(
+    body: Array<{payloadType: string; payload: string; finishReason?: string}>
+  ) {
+    await this.page.route(
+      `**/machinelearning/streaming/${this.streamId}`,
+      (route) => {
+        let bodyText = '';
+        body.forEach((data) => {
+          bodyText += `data: ${JSON.stringify(data)} \n\n`;
+        });
+
+        route.fulfill({
+          status: 200,
+          body: bodyText,
+          headers: {
+            'content-type': 'text/event-stream',
+          },
+        });
+      }
+    );
   }
 }

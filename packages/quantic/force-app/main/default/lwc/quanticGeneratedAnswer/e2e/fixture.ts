@@ -49,7 +49,6 @@ export const testSearch =
       await page.goto(pageUrl);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await generatedAnswerObject.mockStreamResponse(data.streams);
-
       await configuration.configure(options);
       await search.waitForSearchResponse();
       await use(generatedAnswerObject);
@@ -76,7 +75,6 @@ export const testInsight =
       );
       await page.goto(pageUrl);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-
       await generatedAnswerObject.mockStreamResponse(data.streams);
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
