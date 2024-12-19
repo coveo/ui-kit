@@ -2,6 +2,7 @@ import {
   recommendationInternalOptionKey,
   RecommendationOnlyControllerDefinitionWithProps,
 } from '../../../app/commerce-ssr-engine/types/common.js';
+import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
 import {
   RecommendationsOptions,
   RecommendationsState,
@@ -43,15 +44,24 @@ export function defineRecommendations(
     [recommendationInternalOptionKey]: {
       ...props.options,
     },
-    //@ts-expect-error fixed in KIT-3801
     buildWithProps: (
       engine,
       options: Omit<RecommendationsOptions, 'slotId'>
     ) => {
       const staticOptions = props.options;
-      return buildRecommendations(engine, {
+      const controller = buildRecommendations(engine, {
         options: {...staticOptions, ...options},
       });
+      const copy = Object.defineProperties(
+        {},
+        Object.getOwnPropertyDescriptors(controller)
+      );
+
+      Object.defineProperty(copy, '_kind', {
+        value: Kind.Recommendations,
+      });
+
+      return copy as typeof controller & {_kind: Kind.Recommendations};
     },
   };
 }

@@ -53,6 +53,15 @@ describe('recommendation-slice', () => {
       );
       expect(finalState[slotId]).toEqual(buildMockRecommendationsSlice());
     });
+
+    it('when slot does not exists, sets the #productId to the one provided', () => {
+      const productId = 'some-product-id';
+      const finalState = recommendationsReducer(
+        state,
+        registerRecommendationsSlot({slotId, productId})
+      );
+      expect(finalState[slotId]!.productId).toEqual(productId);
+    });
   });
 
   describe('on #fetchRecommendations.fulfilled', () => {

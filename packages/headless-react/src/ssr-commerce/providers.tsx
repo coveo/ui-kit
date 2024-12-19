@@ -15,7 +15,8 @@ import {
   Context,
   HydrateStaticStateOptions,
   ParameterManager,
-  Parameters, // Recommendations,
+  Parameters,
+  Recommendations,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
 import {ReactCommerceEngineDefinition} from './commerce-engine.js';
@@ -90,9 +91,17 @@ export function buildProviderWithDefinition<
             };
             break;
           }
-          case Kind.Recommendations:
-            //KIT-3801: Done here
+          case Kind.Recommendations: {
+            const recommendations = getController<Recommendations>(
+              controllers,
+              key
+            );
+
+            hydrateArguments[key] = {
+              productId: recommendations.state.productId,
+            };
             break;
+          }
         }
       }
 
