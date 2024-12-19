@@ -38,9 +38,7 @@ export const recommendationsReducer = createReducer(
           return;
         }
 
-        state[slotId] = buildRecommendationsSlice(
-          productId ? {productId} : undefined
-        );
+        state[slotId] = buildRecommendationsSlice({productId});
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
         handleError(state, action.meta.arg.slotId, action.payload);

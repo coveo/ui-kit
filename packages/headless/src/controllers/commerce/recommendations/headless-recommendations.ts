@@ -84,7 +84,7 @@ export interface RecommendationsState {
   error: CommerceAPIErrorStatusResponse | null;
   isLoading: boolean;
   responseId: string;
-  productId: string;
+  productId?: string;
 }
 
 export interface RecommendationsOptions {
