@@ -23,14 +23,14 @@ import {
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
 import {
-  AtomicCommerceRecommendationStore,
-  createAtomicCommerceRecommendationStore,
+  CommerceRecommendationStore,
+  createCommerceRecommendationStore,
 } from './store';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
-  AtomicCommerceRecommendationStore,
+  CommerceRecommendationStore,
   HTMLAtomicCommerceInterfaceElement
 > &
   NonceBindings;
@@ -48,7 +48,7 @@ export type CommerceBindings = CommonBindings<
 export class AtomicCommerceRecommendationInterface
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private store = createAtomicCommerceRecommendationStore();
+  private store = createCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;

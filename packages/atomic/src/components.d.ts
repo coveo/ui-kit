@@ -28,6 +28,8 @@ import { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
@@ -60,6 +62,8 @@ export { InsightResultActionClickedEvent } from "./components/insight/atomic-ins
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
@@ -2052,7 +2056,9 @@ export namespace Components {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: | AtomicCommonStore<AtomicCommonStoreData>
+    | CommerceStore
+    | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
@@ -8185,7 +8191,9 @@ declare namespace LocalJSX {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: | AtomicCommonStore<AtomicCommonStoreData>
+    | CommerceStore
+    | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).

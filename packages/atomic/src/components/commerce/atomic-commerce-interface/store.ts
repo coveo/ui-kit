@@ -9,6 +9,7 @@ import {CommonStore, ResultListInfo} from '../../common/interface/store';
 import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
 
 interface Data {
+  //IMPORTANT does mobileBreakpoint work in commerce-layout ?? it does not get updated...
   mobileBreakpoint: string;
   activeProductChild: ChildProduct | undefined;
   // why is this undefined I don't like

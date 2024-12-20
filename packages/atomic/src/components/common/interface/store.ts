@@ -39,7 +39,7 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
   fieldsToInclude: string[];
   facetElements: HTMLElement[];
-  resultList: ResultListInfo;
+  resultList?: ResultListInfo;
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>

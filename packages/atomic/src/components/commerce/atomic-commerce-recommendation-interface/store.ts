@@ -1,45 +1,46 @@
-import {ChildProduct} from '@coveo/headless/commerce';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
-} from '../../common/interface/store';
-import {makeDesktopQuery} from '../atomic-commerce-layout/commerce-layout';
+import {createStore} from '@stencil/store';
+import {CommonStore, ResultListInfo} from '../../common/interface/store';
 
-export interface AtomicStoreData extends AtomicCommonStoreData {
-  mobileBreakpoint: string;
-  currentQuickviewPosition: number;
-  activeProductChild: ChildProduct | undefined;
+interface Data {
+  iconAssetsPath: string;
+  loadingFlags: string[];
+  resultList?: ResultListInfo;
 }
 
-export interface AtomicCommerceRecommendationStore
-  extends AtomicCommonStore<AtomicStoreData> {
-  isMobile(): boolean;
-}
+export type CommerceRecommendationStore = CommonStore<Data> & {
+  isAppLoaded(): boolean;
+  unsetLoadingFlag(loadingFlag: string): void;
+  setLoadingFlag(flag: string): void;
+  registerResultList(data: ResultListInfo): void;
+};
 
-export function createAtomicCommerceRecommendationStore(): AtomicCommerceRecommendationStore {
-  const commonStore = createAtomicCommonStore<AtomicStoreData>({
+export function createCommerceRecommendationStore(): CommerceRecommendationStore {
+  const store = createStore({
     loadingFlags: [],
-    facets: {},
-    numericFacets: {},
-    dateFacets: {},
-    categoryFacets: {},
-    facetElements: [],
     iconAssetsPath: '',
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
-    fieldsToInclude: [],
-    currentQuickviewPosition: -1,
-    activeProductChild: undefined,
-  });
+  }) as CommonStore<Data>;
 
   return {
-    ...commonStore,
+    ...store,
 
-    isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
+    isAppLoaded() {
+      return !store.state.loadingFlags.length;
+    },
+
+    unsetLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+    },
+
+    setLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.concat(loadingFlag);
+    },
+
+    // This is not necessary, we could just do store.state.resultList = data;
+
+    registerResultList(data: ResultListInfo) {
+      store.state.resultList = data;
     },
   };
 }

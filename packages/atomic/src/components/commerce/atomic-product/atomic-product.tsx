@@ -17,6 +17,8 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '../../common/layout/display-options';
+import {CommerceStore} from '../atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import {
   InteractiveProductContextEvent,
   ProductContextEvent,
@@ -56,7 +58,10 @@ export class AtomicProduct {
    * Global Atomic state.
    * @alpha
    */
-  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
+  @Prop() store?:
+    | AtomicCommonStore<AtomicCommonStoreData>
+    | CommerceStore
+    | CommerceRecommendationStore;
 
   /**
    * The product content to display.

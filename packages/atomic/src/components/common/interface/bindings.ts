@@ -4,10 +4,11 @@ import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import {InsightEngine} from '../../insight';
 import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 
-type AnyStore = CommerceStore;
+type AnyStore = CommerceStore | CommerceRecommendationStore;
 /**
  * Bindings passed from an interface to its children components.
  */
@@ -52,7 +53,7 @@ export interface NonceBindings {
 export type AnyBindings = CommonBindings<
   AnyEngineType,
   // Instead of AtomicCommonStoreData, it should follow AnyengineType and to CommerceStore| SearchStore | ...
-  AtomicCommonStore<AtomicCommonStoreData> | CommerceStore,
+  AtomicCommonStore<AtomicCommonStoreData> | AnyStore,
   HTMLStencilElement
 >;
 
