@@ -220,7 +220,7 @@ export class AtomicCommerceInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {

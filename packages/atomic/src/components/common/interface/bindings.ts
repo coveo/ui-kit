@@ -6,24 +6,6 @@ import {i18n} from 'i18next';
 import {InsightEngine} from '../../insight';
 import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 
-export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
-  state: StoreData;
-
-  get: <PropName extends keyof StoreData>(
-    propName: PropName
-  ) => StoreData[PropName];
-
-  set: <PropName extends keyof StoreData>(
-    propName: PropName,
-    value: StoreData[PropName]
-  ) => void;
-
-  onChange: <PropName extends keyof StoreData>(
-    propName: PropName,
-    cb: (newValue: StoreData[PropName]) => void
-  ) => () => void;
-}
-
 /**
  * Bindings passed from an interface to its children components.
  */

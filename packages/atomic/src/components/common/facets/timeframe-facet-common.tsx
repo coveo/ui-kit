@@ -106,7 +106,7 @@ export class TimeframeFacetCommon {
       return this.props.facetId;
     }
 
-    if (this.props.bindings.store.get('dateFacets')[this.props.field]) {
+    if (this.props.bindings.store.state.dateFacets[this.props.field]) {
       return randomID(`${this.props.field}_`);
     }
 

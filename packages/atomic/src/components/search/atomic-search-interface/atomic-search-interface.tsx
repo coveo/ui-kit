@@ -286,7 +286,7 @@ export class AtomicSearchInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {
@@ -420,7 +420,7 @@ export class AtomicSearchInterface
       'atomic-search-layout'
     )?.mobileBreakpoint;
     if (breakpoint) {
-      this.store.set('mobileBreakpoint', breakpoint);
+      this.store.state.mobileBreakpoint = breakpoint;
     }
   }
 

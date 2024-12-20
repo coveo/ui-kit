@@ -7,7 +7,15 @@ import {
   FacetValueFormat,
 } from '../facets/facet-common-store';
 import {DateFacetValue, NumericFacetValue} from '../types';
-import {AnyEngineType, CommonStencilStore} from './bindings';
+import {AnyEngineType} from './bindings';
+
+interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
+  state: StoreData;
+  onChange: <PropName extends keyof StoreData>(
+    propName: PropName,
+    cb: (newValue: StoreData[PropName]) => void
+  ) => () => void;
+}
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
@@ -79,39 +87,36 @@ export function createAtomicCommonStore<
     },
 
     getIconAssetsPath() {
-      return stencilStore.get('iconAssetsPath');
+      return stencilStore.state.iconAssetsPath;
     },
 
     setLoadingFlag(loadingFlag: string) {
-      const flags = stencilStore.get('loadingFlags');
-      stencilStore.set('loadingFlags', flags.concat(loadingFlag));
+      const flags = stencilStore.state.loadingFlags;
+      stencilStore.state.loadingFlags = flags.concat(loadingFlag);
     },
 
     unsetLoadingFlag(loadingFlag: string) {
-      const flags = stencilStore.get('loadingFlags');
-      stencilStore.set(
-        'loadingFlags',
-        flags.filter((value) => value !== loadingFlag)
+      const flags = stencilStore.state.loadingFlags;
+      stencilStore.state.loadingFlags = flags.filter(
+        (value) => value !== loadingFlag
       );
     },
 
     hasLoadingFlag(loadingFlag: string) {
-      return stencilStore.get('loadingFlags').indexOf(loadingFlag) !== -1;
+      return stencilStore.state.loadingFlags.indexOf(loadingFlag) !== -1;
     },
 
     registerResultList(data: ResultListInfo) {
-      stencilStore.set('resultList', data);
+      stencilStore.state.resultList = data;
     },
 
     addFieldsToInclude(fields) {
-      stencilStore.set('fieldsToInclude', [
-        ...stencilStore.get('fieldsToInclude'),
-        ...fields,
-      ]);
+      const currentFields = stencilStore.state.fieldsToInclude;
+      stencilStore.state.fieldsToInclude = [...currentFields, ...fields];
     },
 
     waitUntilAppLoaded(callback: () => void) {
-      if (!stencilStore.get('loadingFlags').length) {
+      if (!stencilStore.state.loadingFlags.length) {
         callback();
       } else {
         stencilStore.onChange('loadingFlags', (flags) => {
@@ -123,10 +128,9 @@ export function createAtomicCommonStore<
     },
 
     isAppLoaded() {
-      return !stencilStore.get('loadingFlags').length;
+      return !stencilStore.state.loadingFlags.length;
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     getUniqueIDFromEngine(_engine: AnyEngineType): string {
       throw new Error(
         'getUniqueIDFromEngine not implemented at the common store level.'
@@ -134,9 +138,9 @@ export function createAtomicCommonStore<
     },
 
     getFacetElements() {
-      return stencilStore
-        .get('facetElements')
-        .filter((element) => isInDocument(element));
+      return stencilStore.state.facetElements.filter((element) =>
+        isInDocument(element)
+      );
     },
   };
 }
