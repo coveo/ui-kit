@@ -36,7 +36,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   get: () => cy.get(generatedAnswerComponent),
 
   generatedAnswerCard: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__card"]'),
+    GeneratedAnswerSelectors.get().find('[data-test="generated-answer__card"]'),
   generatedAnswer: () =>
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
   likeButton: () =>
@@ -49,23 +49,23 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   citations: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__citations"]'
+      '[data-test="generated-answer__citations"]'
     ),
   citationTitle: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__title')
+      .find('[data-test="generated-answer__citations"] .citation__title')
       .eq(index),
   citationLink: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] .citation__link')
+      .find('[data-test="generated-answer__citations"] .citation__link')
       .eq(index),
   retryButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__retry-button"]'
+      '[data-test="generated-answer__retry-button"]'
     ),
   toggleGeneratedAnswerButton: () =>
     GeneratedAnswerSelectors.get().find(
-      'c-quantic-generated-answer-toggle [data-cy="generated-answer__toggle-button"]'
+      'c-quantic-generated-answer-toggle [data-test="generated-answer__toggle-button"]'
     ),
   generatedAnswerContent: () =>
     GeneratedAnswerSelectors.get().find(
@@ -96,38 +96,38 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   copyToClipboardButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__copy-to-clipboard"]'
+      '[data-test="generated-answer__copy-to-clipboard"]'
     ),
   citationTooltip: (index: number) =>
     GeneratedAnswerSelectors.get()
-      .find('[data-cy="generated-answer__citations"] [data-cy="tooltip"]')
+      .find('[data-test="generated-answer__citations"] [data-cy="tooltip"]')
       .eq(index),
   citationTooltipUri: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-uri"]'
+        '[data-test="generated-answer__citations"] [data-cy="citation__tooltip-uri"]'
       )
       .eq(index),
   citationTooltipTitle: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-title"]'
+        '[data-test="generated-answer__citations"] [data-cy="citation__tooltip-title"]'
       )
       .eq(index),
 
   citationTooltipText: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-cy="generated-answer__citations"] [data-cy="citation__tooltip-text"]'
+        '[data-test="generated-answer__citations"] [data-cy="citation__tooltip-text"]'
       )
       .eq(index),
   disclaimer: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__disclaimer"]'
+      '[data-test="generated-answer__disclaimer"]'
     ),
   toggleCollapseButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__answer-toggle"]'
+      '[data-test="generated-answer__answer-toggle"]'
     ),
   generatingMessage: () =>
     GeneratedAnswerSelectors.get().find(
