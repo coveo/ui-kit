@@ -1,4 +1,4 @@
-import {Locator, Page, Request} from '@playwright/test';
+import type {Locator, Page, Request, Response} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class TabObject {
@@ -10,25 +10,16 @@ export class TabObject {
     return this.page.locator('c-quantic-tab');
   }
 
-  get tabButton(): Locator {
-    return this.tab.locator('button.slds-tabs_default__item.tab_button');
+  tabButton(tabLabel): Locator {
+    return this.tab.getByRole('button', {name: new RegExp(`^${tabLabel}$`)});
   }
 
-  get activeTabLabel(): Locator {
-    return this.tab
-      .locator('button.slds-tabs_default__item.slds-is-active')
-      .locator('span.slds-tabs_default__link');
+  get activeTabLabel(): Promise<string | null> {
+    return this.tab.locator('button.slds-is-active').textContent();
   }
 
-  tabLabel(tabIndex: number): Promise<String | null> {
-    return this.tab
-      .locator('span.slds-tabs_default__link')
-      .nth(tabIndex)
-      .textContent();
-  }
-
-  async clickTabButton(tabIndex: number): Promise<void> {
-    await this.tabButton.nth(tabIndex).click();
+  async clickTabButton(tabLabel: string): Promise<void> {
+    await this.tabButton(tabLabel).click();
   }
 
   async pressTabThenEnter(): Promise<void> {
@@ -43,16 +34,26 @@ export class TabObject {
     await this.page.keyboard.press('Space');
   }
 
-  async waitForTabUaAnalytics(actionCause): Promise<Request> {
+  async waitForTabSearchUaAnalytics(
+    actionCause,
+    customChecker?: Function
+  ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaSearchEvent(request)) {
         const requestBody = request.postDataJSON?.();
+        const {customData} = requestBody;
+
         const expectedFields = {
           actionCause: actionCause,
           originContext: 'Search',
         };
-        return Object.keys(expectedFields).every(
+        const matchesExpectedFields = Object.keys(expectedFields).every(
           (key) => requestBody?.[key] === expectedFields[key]
+        );
+
+        return (
+          matchesExpectedFields &&
+          (customChecker ? customChecker(customData) : true)
         );
       }
       return false;
@@ -60,7 +61,19 @@ export class TabObject {
     return uaRequest;
   }
 
-  async waitForTabSelectUaAnalytics(): Promise<Request> {
-    return this.waitForTabUaAnalytics('interfaceChange');
+  async waitForTabSelectUaAnalytics(expectedFields: object): Promise<Request> {
+    return this.waitForTabSearchUaAnalytics(
+      'interfaceChange',
+      (customData: object) => {
+        return Object.keys(expectedFields).every(
+          (key) => customData?.[key] === expectedFields[key]
+        );
+      }
+    );
+  }
+
+  extractActionCauseFromSearchResponse(response: Response) {
+    const {analytics} = response.request().postDataJSON();
+    return analytics.actionCause;
   }
 }
