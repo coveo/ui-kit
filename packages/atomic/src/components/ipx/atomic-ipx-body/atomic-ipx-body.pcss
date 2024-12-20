@@ -4,6 +4,7 @@
   position: relative;
   overflow: hidden;
   height: inherit;
+  max-height: calc(100vh - 4.25rem);
 
   &::part(container) {
     @apply rounded;
@@ -11,6 +12,7 @@
     grid-area: modal;
     height: inherit;
     box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+    max-height: calc(100vh - 4.25rem);
   }
 
   &::part(header-wrapper) {
