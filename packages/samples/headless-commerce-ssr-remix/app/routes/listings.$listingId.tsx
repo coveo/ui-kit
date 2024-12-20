@@ -31,6 +31,7 @@ import {
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
+import ParameterManager from '../components/parameter-manager';
 import {coveo_visitorId} from '../cookies.server';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
@@ -131,6 +132,7 @@ export default function ListingRoute() {
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
+      <ParameterManager url={navigatorContext.location} />
       <h2>{getTitle()}</h2>
       <ContextDropdown useCase="listing" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
