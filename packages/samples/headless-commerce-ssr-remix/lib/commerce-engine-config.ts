@@ -20,7 +20,8 @@ import {
   defineProductView,
   getSampleCommerceEngineConfiguration,
   defineDidYouMean,
-  defineRecommendations, //defineParameterManager,
+  defineRecommendations,
+  defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
 
 type CommerceEngineConfig = CommerceEngineDefinitionOptions<
@@ -64,7 +65,7 @@ export default {
     sort: defineSort(),
     productView: defineProductView(),
     didYouMean: defineDidYouMean(),
-    //parameterManager: defineParameterManager(),
+    parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
   },
