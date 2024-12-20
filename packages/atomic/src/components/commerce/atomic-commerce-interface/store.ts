@@ -1,78 +1,66 @@
 import {
   CommerceEngine,
   Selectors,
-  NumericFacetValue,
-  DateFacetValue,
-  SortCriterion,
   ChildProduct,
 } from '@coveo/headless/commerce';
+import {createStore} from '@stencil/store';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {
-  FacetInfo,
-  FacetStore,
-  FacetValueFormat,
-} from '../../common/facets/facet-common-store';
-import {
-  createAtomicCommonStore,
-  AtomicCommonStoreData,
-  AtomicCommonStore,
-} from '../../common/interface/store';
+import {CommonStore, ResultListInfo} from '../../common/interface/store';
 import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
 
-export interface SortDropdownOption {
-  expression: string;
-  criteria: SortCriterion[];
-  label: string;
-}
-
-export interface AtomicStoreData extends AtomicCommonStoreData {
-  facets: FacetStore<FacetInfo>;
-  numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
-  dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
-  categoryFacets: FacetStore<FacetInfo>;
-  sortOptions: SortDropdownOption[];
+interface Data {
   mobileBreakpoint: string;
-  currentQuickviewPosition: number;
   activeProductChild: ChildProduct | undefined;
+  // why is this undefined I don't like
+  resultList?: ResultListInfo;
+  iconAssetsPath: string;
+  loadingFlags: string[];
 }
 
-export interface AtomicCommerceStore
-  extends AtomicCommonStore<AtomicStoreData> {
+export type CommerceStore = CommonStore<Data> & {
+  hasLoadingFlag(loadingFlag: string): boolean;
+  unsetLoadingFlag(loadingFlag: string): void;
+  setLoadingFlag(flag: string): void;
+  isAppLoaded(): boolean;
   isMobile(): boolean;
-}
+  getUniqueIDFromEngine(engine: CommerceEngine): string;
+  registerResultList(data: ResultListInfo): void;
+};
 
-export interface FacetInfoMap {
-  [facetId: string]:
-    | FacetInfo
-    | (FacetInfo & FacetValueFormat<NumericFacetValue>)
-    | (FacetInfo & FacetValueFormat<DateFacetValue>);
-}
-
-export function createAtomicCommerceStore(
+export function createCommerceStore(
   type: 'search' | 'product-listing'
-): AtomicCommerceStore {
-  const commonStore = createAtomicCommonStore<AtomicStoreData>({
+): CommerceStore {
+  const store = createStore({
     loadingFlags: [],
-    facets: {},
-    numericFacets: {},
-    dateFacets: {},
-    categoryFacets: {},
-    facetElements: [],
-    sortOptions: [],
-    iconAssetsPath: '',
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
-    fieldsToInclude: [],
-    currentQuickviewPosition: -1,
     activeProductChild: undefined,
-  });
+    iconAssetsPath: '',
+  }) as CommonStore<Data>;
 
   return {
-    ...commonStore,
+    ...store,
+
+    hasLoadingFlag(loadingFlag: string) {
+      return store.state.loadingFlags.indexOf(loadingFlag) !== -1;
+    },
+
+    unsetLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+    },
+
+    setLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.concat(loadingFlag);
+    },
+
+    isAppLoaded() {
+      return !store.state.loadingFlags.length;
+    },
 
     isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
+      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint))
+        .matches;
     },
 
     getUniqueIDFromEngine(engine: CommerceEngine): string {
@@ -86,6 +74,11 @@ export function createAtomicCommerceStore(
             `getUniqueIDFromEngine not implemented for this interface type, ${type}`
           );
       }
+    },
+
+    // This is not necessary, we could just do store.state.resultList = data;
+    registerResultList(data: ResultListInfo) {
+      store.state.resultList = data;
     },
   };
 }

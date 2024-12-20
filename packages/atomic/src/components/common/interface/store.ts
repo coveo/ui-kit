@@ -9,7 +9,15 @@ import {
 import {DateFacetValue, NumericFacetValue} from '../types';
 import {AnyEngineType} from './bindings';
 
-interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
+export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
+  state: StoreData;
+  onChange: <PropName extends keyof StoreData>(
+    propName: PropName,
+    cb: (newValue: StoreData[PropName]) => void
+  ) => () => void;
+}
+
+export interface CommonStore<StoreData> {
   state: StoreData;
   onChange: <PropName extends keyof StoreData>(
     propName: PropName,
@@ -31,7 +39,7 @@ export type AtomicCommonStoreData = {
   iconAssetsPath: string;
   fieldsToInclude: string[];
   facetElements: HTMLElement[];
-  resultList?: ResultListInfo;
+  resultList: ResultListInfo;
 };
 
 export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
