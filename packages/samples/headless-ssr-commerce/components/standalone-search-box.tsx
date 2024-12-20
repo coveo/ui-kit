@@ -5,7 +5,7 @@ import {
   useRecentQueriesList,
   useStandaloneSearchBox,
 } from '@/lib/commerce-engine';
-import {useNavigate} from '@remix-run/react';
+import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
@@ -19,15 +19,15 @@ export default function StandaloneSearchBox() {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
 
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     if (state.redirectTo === '/search') {
-      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
-      navigate(url, {preventScrollReset: true});
+      const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
+      router.push(url, {scroll: false});
       methods?.afterRedirection();
     }
-  }, [state.redirectTo, state.value, navigate, methods]);
+  }, [state.redirectTo, state.value, router, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
