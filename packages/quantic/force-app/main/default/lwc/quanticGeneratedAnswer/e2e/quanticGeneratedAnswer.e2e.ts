@@ -58,8 +58,6 @@ useCaseTestCases.forEach((useCase) => {
           });
         await generatedAnswer.clickSubmitFeedbackButton();
         await feedbackAnalyticRequestPromise;
-
-        await page.waitForTimeout(2000);
       });
     });
 
