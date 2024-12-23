@@ -16,7 +16,6 @@ import {
 import {CommonStore, ResultListInfo} from '../../common/interface/store';
 import {makeDesktopQuery} from '../atomic-layout/search-layout';
 
-// what does this have to do with store...
 export interface SortDropdownOption {
   tabs: {included: string[] | string; excluded: string[] | string};
   expression: string;

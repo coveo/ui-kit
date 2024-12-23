@@ -9,23 +9,19 @@ import {CommonStore, ResultListInfo} from '../../common/interface/store';
 import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
 
 interface Data {
-  //IMPORTANT does mobileBreakpoint work in commerce-layout ?? it does not get updated...
   mobileBreakpoint: string;
   activeProductChild: ChildProduct | undefined;
-  // why is this undefined I don't like
   resultList?: ResultListInfo;
   iconAssetsPath: string;
   loadingFlags: string[];
 }
 
 export type CommerceStore = CommonStore<Data> & {
-  hasLoadingFlag(loadingFlag: string): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   isAppLoaded(): boolean;
   isMobile(): boolean;
   getUniqueIDFromEngine(engine: CommerceEngine): string;
-  registerResultList(data: ResultListInfo): void;
 };
 
 export function createCommerceStore(
@@ -40,10 +36,6 @@ export function createCommerceStore(
 
   return {
     ...store,
-
-    hasLoadingFlag(loadingFlag: string) {
-      return store.state.loadingFlags.indexOf(loadingFlag) !== -1;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       const flags = store.state.loadingFlags;
@@ -75,11 +67,6 @@ export function createCommerceStore(
             `getUniqueIDFromEngine not implemented for this interface type, ${type}`
           );
       }
-    },
-
-    // This is not necessary, we could just do store.state.resultList = data;
-    registerResultList(data: ResultListInfo) {
-      store.state.resultList = data;
     },
   };
 }

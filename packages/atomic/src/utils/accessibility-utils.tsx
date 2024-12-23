@@ -91,7 +91,7 @@ export class FocusTargetController {
 
   public disableForCurrentSearch() {
     if (
-      //@ts-expect-error normal for now, should go away
+      //@ts-expect-error to fix
       this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
       this.lastSearchId
     ) {
@@ -110,7 +110,7 @@ export class FocusTargetController {
       }
       if (
         this.doFocusAfterSearch &&
-        //@ts-expect-error normal for now, should go away
+        //@ts-expect-error to fix
         this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
           this.lastSearchId
       ) {

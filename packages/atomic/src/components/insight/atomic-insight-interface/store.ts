@@ -34,7 +34,6 @@ export type InsightStore = CommonStore<Data> & {
   isAppLoaded(): boolean;
   getFacetElements(): HTMLElement[];
   waitUntilAppLoaded(callback: () => void): void;
-  registerResultList(data: ResultListInfo): void;
   getUniqueIDFromEngine(engine: InsightEngine): string;
 };
 
@@ -107,10 +106,6 @@ export function createInsightStore(): InsightStore {
           }
         });
       }
-    },
-
-    registerResultList(data: ResultListInfo) {
-      store.state.resultList = data;
     },
 
     getUniqueIDFromEngine(engine: InsightEngine): string {

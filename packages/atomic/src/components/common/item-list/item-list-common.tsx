@@ -47,7 +47,7 @@ export class ItemListCommon {
 
   constructor(private props: ItemListCommonProps) {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
-    this.props.store.registerResultList(this);
+    this.props.store.state.resultList = this;
     this.updateBreakpointsOnce = once(() => updateBreakpoints(this.props.host));
   }
 

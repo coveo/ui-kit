@@ -11,7 +11,6 @@ export type CommerceRecommendationStore = CommonStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
-  registerResultList(data: ResultListInfo): void;
   // getUniqueIDFromEngine(engine: CommerceEngine): string;
 };
 
@@ -36,11 +35,6 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
     setLoadingFlag(loadingFlag: string) {
       const flags = store.state.loadingFlags;
       store.state.loadingFlags = flags.concat(loadingFlag);
-    },
-
-    // This is not necessary, we could just do store.state.resultList = data;
-    registerResultList(data: ResultListInfo) {
-      store.state.resultList = data;
     },
 
     // getUniqueIDFromEngine(engine: CommerceEngine): string {
