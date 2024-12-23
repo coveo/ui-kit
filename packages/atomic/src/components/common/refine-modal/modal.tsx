@@ -1,10 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
-import {isRefineModalFacet} from '../../search/atomic-search-interface/store';
 import {Button} from '../button';
 import {BaseFacetElement} from '../facets/facet-common';
 import {popoverClass} from '../facets/popover/popover-type';
+import {isRefineModalFacet} from '../interface/store';
 
 interface RefineModalProps {
   host: HTMLElement;

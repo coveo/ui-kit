@@ -1,42 +1,43 @@
 import {createStore} from '@stencil/store';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {CommonStore, ResultListInfo} from '../../common/interface/store';
+import {
+  CommonStore,
+  ResultListInfo,
+  setLoadingFlag,
+  unsetLoadingFlag,
+} from '../../common/interface/store';
 
 interface Data {
-  mobileBreakpoint: string;
   loadingFlags: string[];
   iconAssetsPath: string;
-  resultList?: ResultListInfo;
+  resultList: ResultListInfo | undefined;
 }
 
 export type RecsStore = CommonStore<Data> & {
+  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
-  isAppLoaded(): boolean;
 };
 
 export function createRecsStore(): RecsStore {
   const store = createStore({
     loadingFlags: [],
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     iconAssetsPath: '',
+    resultList: undefined,
   }) as CommonStore<Data>;
 
   return {
     ...store,
 
+    isAppLoaded() {
+      return !store.state.loadingFlags.length;
+    },
+
     unsetLoadingFlag(loadingFlag: string) {
-      const flags = store.state.loadingFlags;
-      store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+      unsetLoadingFlag(store, loadingFlag);
     },
 
     setLoadingFlag(loadingFlag: string) {
-      const flags = store.state.loadingFlags;
-      store.state.loadingFlags = flags.concat(loadingFlag);
-    },
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
+      setLoadingFlag(store, loadingFlag);
     },
   };
 }

@@ -1,10 +1,15 @@
 import {createStore} from '@stencil/store';
-import {CommonStore, ResultListInfo} from '../../common/interface/store';
+import {
+  CommonStore,
+  ResultListInfo,
+  setLoadingFlag,
+  unsetLoadingFlag,
+} from '../../common/interface/store';
 
 interface Data {
-  iconAssetsPath: string;
   loadingFlags: string[];
-  resultList?: ResultListInfo;
+  iconAssetsPath: string;
+  resultList: ResultListInfo | undefined;
 }
 
 export type CommerceRecommendationStore = CommonStore<Data> & {
@@ -18,6 +23,7 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
   const store = createStore({
     loadingFlags: [],
     iconAssetsPath: '',
+    resultList: undefined,
   }) as CommonStore<Data>;
 
   return {
@@ -28,13 +34,11 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
     },
 
     unsetLoadingFlag(loadingFlag: string) {
-      const flags = store.state.loadingFlags;
-      store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+      unsetLoadingFlag(store, loadingFlag);
     },
 
     setLoadingFlag(loadingFlag: string) {
-      const flags = store.state.loadingFlags;
-      store.state.loadingFlags = flags.concat(loadingFlag);
+      setLoadingFlag(store, loadingFlag);
     },
 
     // getUniqueIDFromEngine(engine: CommerceEngine): string {

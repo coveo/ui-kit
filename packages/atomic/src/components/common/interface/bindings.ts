@@ -53,7 +53,6 @@ export interface NonceBindings {
 
 export type AnyBindings = CommonBindings<
   AnyEngineType,
-  // Instead of AtomicCommonStoreData, it should follow AnyengineType and to CommerceStore| SearchStore | ...
   AnyStore,
   HTMLStencilElement
 >;
