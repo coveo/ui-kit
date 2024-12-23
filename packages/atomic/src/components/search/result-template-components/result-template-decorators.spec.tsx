@@ -8,7 +8,7 @@ import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {MissingParentError} from '../../common/item-list/item-decorators';
 import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
-import {createAtomicStore} from '../atomic-search-interface/store';
+import {createSearchStore} from '../atomic-search-interface/store';
 import {AtomicResultFieldsList} from './atomic-result-fields-list/atomic-result-fields-list';
 import {resultContext} from './result-template-decorators';
 
@@ -75,7 +75,7 @@ describe('resultContext method', () => {
           interactiveResult={buildInteractiveResult(engine, {
             options: {result: mockResult},
           })}
-          store={createAtomicStore()}
+          store={createSearchStore()}
         ></atomic-result>
       ),
     });

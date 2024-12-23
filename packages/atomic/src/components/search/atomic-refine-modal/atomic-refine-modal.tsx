@@ -34,7 +34,6 @@ import {
   collapseFacetsAfter,
 } from '../../common/facets/facet-common';
 import {popoverClass} from '../../common/facets/popover/popover-type';
-import {isRefineModalFacet} from '../../common/interface/store';
 import {RefineModalBody} from '../../common/refine-modal/body';
 import {
   RefineModalFiltersClearButton,
@@ -43,7 +42,10 @@ import {
 import {RefineModal} from '../../common/refine-modal/modal';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {SortDropdownOption} from '../atomic-search-interface/store';
+import {
+  isRefineModalFacet,
+  SortDropdownOption,
+} from '../atomic-search-interface/store';
 
 /**
  * The `atomic-refine-modal` is automatically created as a child of the `atomic-search-interface` when the `atomic-refine-toggle` is initialized.

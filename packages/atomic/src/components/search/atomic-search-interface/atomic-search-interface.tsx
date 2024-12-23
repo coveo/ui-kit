@@ -44,13 +44,13 @@ import {
   noResultsSelector,
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicStore, createAtomicStore} from './store';
+import {createSearchStore, SearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
 export type Bindings = CommonBindings<
   SearchEngine,
-  AtomicStore,
+  SearchStore,
   HTMLAtomicSearchInterfaceElement
 > &
   NonceBindings;
@@ -72,7 +72,7 @@ export class AtomicSearchInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createAtomicStore();
+  private store = createSearchStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
 
   @Element() public host!: HTMLAtomicSearchInterfaceElement;

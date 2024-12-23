@@ -64,6 +64,7 @@ export class AtomicFacetManager implements InitializableComponent {
 
     const {visibleFacets, invisibleFacets} = sortFacetVisibility(
       sortedFacets,
+      //Is this needed for insight ???
       this.bindings.store.getAllFacets()
     );
 

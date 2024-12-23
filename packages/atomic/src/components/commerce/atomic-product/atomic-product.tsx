@@ -2,10 +2,6 @@ import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-} from '../../common/interface/store';
 import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
@@ -58,10 +54,7 @@ export class AtomicProduct {
    * Global Atomic state.
    * @alpha
    */
-  @Prop() store?:
-    | AtomicCommonStore<AtomicCommonStoreData>
-    | CommerceStore
-    | CommerceRecommendationStore;
+  @Prop() store?: CommerceStore | CommerceRecommendationStore;
 
   /**
    * The product content to display.

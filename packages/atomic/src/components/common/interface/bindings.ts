@@ -8,14 +8,14 @@ import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recomm
 import {InsightEngine} from '../../insight';
 import {InsightStore} from '../../insight/atomic-insight-interface/store';
 import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
-import {AtomicCommonStore, AtomicCommonStoreData} from './store';
+import {SearchStore} from '../../search/atomic-search-interface/store';
 
 /**
  * Bindings passed from an interface to its children components.
  */
 export interface CommonBindings<
   Engine extends AnyEngineType,
-  Store extends AtomicCommonStore<AtomicCommonStoreData> | AnyStore,
+  Store extends AnyStore,
   InterfaceElement extends HTMLStencilElement,
 > {
   /**
@@ -54,7 +54,7 @@ export interface NonceBindings {
 export type AnyBindings = CommonBindings<
   AnyEngineType,
   // Instead of AtomicCommonStoreData, it should follow AnyengineType and to CommerceStore| SearchStore | ...
-  AtomicCommonStore<AtomicCommonStoreData> | AnyStore,
+  AnyStore,
   HTMLStencilElement
 >;
 
@@ -68,4 +68,5 @@ type AnyStore =
   | CommerceStore
   | CommerceRecommendationStore
   | RecsStore
-  | InsightStore;
+  | InsightStore
+  | SearchStore;

@@ -2,10 +2,6 @@ import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-} from '../../common/interface/store';
 import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
@@ -17,6 +13,7 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '../../common/layout/display-options';
+import {SearchStore} from '../atomic-search-interface/store';
 import {
   InteractiveResultContextEvent,
   ResultContextEvent,
@@ -55,7 +52,7 @@ export class AtomicResult {
    * Global Atomic state.
    * @internal
    */
-  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
+  @Prop() store?: SearchStore;
 
   /**
    * The result content to display.
