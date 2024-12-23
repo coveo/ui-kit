@@ -6,9 +6,9 @@ import {i18n} from 'i18next';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import {InsightEngine} from '../../insight';
+import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 
-type AnyStore = CommerceStore | CommerceRecommendationStore;
 /**
  * Bindings passed from an interface to its children components.
  */
@@ -62,3 +62,5 @@ export type AnyEngineType =
   | RecommendationEngine
   | InsightEngine
   | CommerceEngine;
+
+type AnyStore = CommerceStore | CommerceRecommendationStore | RecsStore;

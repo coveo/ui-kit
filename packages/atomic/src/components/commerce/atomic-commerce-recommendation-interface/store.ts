@@ -12,6 +12,7 @@ export type CommerceRecommendationStore = CommonStore<Data> & {
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   registerResultList(data: ResultListInfo): void;
+  // getUniqueIDFromEngine(engine: CommerceEngine): string;
 };
 
 export function createCommerceRecommendationStore(): CommerceRecommendationStore {
@@ -38,9 +39,12 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
     },
 
     // This is not necessary, we could just do store.state.resultList = data;
-
     registerResultList(data: ResultListInfo) {
       store.state.resultList = data;
     },
+
+    // getUniqueIDFromEngine(engine: CommerceEngine): string {
+    //   return null;
+    // },
   };
 }

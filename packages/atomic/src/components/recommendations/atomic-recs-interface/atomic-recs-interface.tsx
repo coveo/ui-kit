@@ -29,13 +29,13 @@ import {
   mismatchedInterfaceAndEnginePropError,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
-import {createAtomicRecsStore, AtomicRecsStore} from './store';
+import {createRecsStore, RecsStore} from './store';
 
 const FirstRecommendationExecutedFlag = 'firstRecommendationExecuted';
 export type RecsInitializationOptions = RecommendationEngineConfiguration;
 export type RecsBindings = CommonBindings<
   RecommendationEngine,
-  AtomicRecsStore,
+  RecsStore,
   HTMLAtomicRecsInterfaceElement
 >;
 
@@ -51,7 +51,7 @@ export type RecsBindings = CommonBindings<
 export class AtomicRecsInterface
   implements BaseAtomicInterface<RecommendationEngine>
 {
-  private store = createAtomicRecsStore();
+  private store = createRecsStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
   private initialized = false;
 
