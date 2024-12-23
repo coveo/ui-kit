@@ -1,75 +1,116 @@
-import {
-  InsightDateFacetValue,
-  InsightEngine,
-  InsightNumericFacetValue,
-} from '..';
+import {InsightEngine} from '@coveo/headless/insight';
+import {createStore} from '@stencil/store';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
   FacetStore,
+  FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
-} from '../../common/interface/store';
-import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
+import {CommonStore, ResultListInfo} from '../../common/interface/store';
+import {DateFacetValue, NumericFacetValue} from '../../common/types';
 
-export interface AtomicInsightStoreData extends AtomicCommonStoreData {
-  fieldsToInclude: string[];
-  facets: FacetStore<FacetInfo>;
-  numericFacets: FacetStore<
-    FacetInfo & FacetValueFormat<InsightNumericFacetValue>
-  >;
-  dateFacets: FacetStore<FacetInfo & FacetValueFormat<InsightDateFacetValue>>;
-  categoryFacets: FacetStore<FacetInfo>;
+interface Data {
   mobileBreakpoint: string;
-  currentQuickviewPosition: number;
+  loadingFlags: string[];
+  facets: FacetStore<FacetInfo>;
+  numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
+  dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
+  categoryFacets: FacetStore<FacetInfo>;
+  iconAssetsPath: string;
+  facetElements: HTMLElement[];
+  resultList?: ResultListInfo;
+  fieldsToInclude: string[];
 }
 
-export interface FacetInfoMap {
-  [facetId: string]:
-    | FacetInfo
-    | (FacetInfo & FacetValueFormat<InsightNumericFacetValue>)
-    | (FacetInfo & FacetValueFormat<InsightDateFacetValue>);
-}
+export type InsightStore = CommonStore<Data> & {
+  registerFacet<T extends FacetType, U extends string>(
+    facetType: T,
+    data: Data[T][U] & {facetId: U; element: HTMLElement}
+  ): void;
+  setLoadingFlag(flag: string): void;
+  unsetLoadingFlag(loadingFlag: string): void;
+  isAppLoaded(): boolean;
+  getFacetElements(): HTMLElement[];
+  waitUntilAppLoaded(callback: () => void): void;
+  registerResultList(data: ResultListInfo): void;
+  getUniqueIDFromEngine(engine: InsightEngine): string;
+};
 
-export interface AtomicInsightStore
-  extends AtomicCommonStore<AtomicInsightStoreData> {
-  getAllFacets(): FacetInfoMap;
-  isMobile(): boolean;
-}
+export const isRefineModalFacet = 'is-refine-modal';
 
-export function createAtomicInsightStore(): AtomicInsightStore {
-  const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
+export function createInsightStore(): InsightStore {
+  const store = createStore({
+    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
+    loadingFlags: [],
+    iconAssetsPath: '',
     facets: {},
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
-    loadingFlags: [],
-    iconAssetsPath: '',
-    fieldsToInclude: [],
     facetElements: [],
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
-    currentQuickviewPosition: -1,
-  });
-  return {
-    ...commonStore,
+    fieldsToInclude: [],
+  }) as CommonStore<Data>;
 
-    getAllFacets() {
-      return {
-        ...commonStore.state.facets,
-        ...commonStore.state.dateFacets,
-        ...commonStore.state.categoryFacets,
-        ...commonStore.state.numericFacets,
-      };
+  const clearExistingFacetElement = (facetType: FacetType, facetId: string) => {
+    if (store.state[facetType][facetId]) {
+      store.state.facetElements = store.state.facetElements.filter(
+        (facetElement) => facetElement.getAttribute('facet-id') !== facetId
+      );
+    }
+  };
+
+  return {
+    ...store,
+
+    registerFacet<T extends FacetType, U extends string>(
+      facetType: T,
+      data: Data[T][U] & {facetId: U; element: HTMLElement}
+    ) {
+      if (data.element.getAttribute(isRefineModalFacet) !== null) {
+        return;
+      }
+
+      clearExistingFacetElement(facetType, data.facetId);
+      store.state.facetElements.push(data.element);
+      store.state[facetType][data.facetId] = data;
     },
 
-    isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
+    setLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.concat(loadingFlag);
+    },
+
+    unsetLoadingFlag(loadingFlag: string) {
+      const flags = store.state.loadingFlags;
+      store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+    },
+
+    isAppLoaded() {
+      return !store.state.loadingFlags.length;
+    },
+
+    getFacetElements() {
+      return store.state.facetElements.filter((element) =>
+        isInDocument(element)
+      );
+    },
+
+    waitUntilAppLoaded(callback: () => void) {
+      if (!store.state.loadingFlags.length) {
+        callback();
+      } else {
+        store.onChange('loadingFlags', (flags) => {
+          if (!flags.length) {
+            callback();
+          }
+        });
+      }
+    },
+
+    registerResultList(data: ResultListInfo) {
+      store.state.resultList = data;
     },
 
     getUniqueIDFromEngine(engine: InsightEngine): string {

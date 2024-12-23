@@ -6,6 +6,7 @@ import {i18n} from 'i18next';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import {InsightEngine} from '../../insight';
+import {InsightStore} from '../../insight/atomic-insight-interface/store';
 import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {AtomicCommonStore, AtomicCommonStoreData} from './store';
 
@@ -63,4 +64,8 @@ export type AnyEngineType =
   | InsightEngine
   | CommerceEngine;
 
-type AnyStore = CommerceStore | CommerceRecommendationStore | RecsStore;
+type AnyStore =
+  | CommerceStore
+  | CommerceRecommendationStore
+  | RecsStore
+  | InsightStore;

@@ -6,6 +6,7 @@ import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {defer, once} from '../../../utils/utils';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
+import {InsightStore} from '../../insight/atomic-insight-interface/store';
 import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
 import {AnyItem} from '../interface/item';
 import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
@@ -29,7 +30,8 @@ export interface ItemListCommonProps {
     | AtomicCommonStore<AtomicCommonStoreData>
     | CommerceStore
     | CommerceRecommendationStore
-    | RecsStore;
+    | RecsStore
+    | InsightStore;
   loadingFlag: string;
   host: HTMLElement;
   nextNewItemTarget: FocusTargetController;

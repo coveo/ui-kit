@@ -76,8 +76,8 @@ export class FocusTargetController {
   }
 
   public focusAfterSearch() {
+    //@ts-expect-error normal for now, should go away
     this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
-      //@ts-expect-error normal for now, should go away
       this.bindings.engine
     );
     this.doFocusAfterSearch = true;
