@@ -101,7 +101,6 @@ const exampleEngine = {
   id: 'dummy engine',
 };
 let isInitialized = false;
-// let mockAnswerHeight = 300;
 const maximumAnswerHeight = 250;
 
 function prepareHeadlessState() {

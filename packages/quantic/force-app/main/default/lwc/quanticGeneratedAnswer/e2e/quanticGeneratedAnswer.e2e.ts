@@ -36,10 +36,10 @@ useCaseTestCases.forEach((useCase) => {
         const exampleDocumentUrl = 'https://www.coveo.com/';
         const exampleDetails = 'example details...';
         await generatedAnswer.fillFeedbackForm({
-          'Is the answer about the right topic?': 'Yes',
-          'Is the answer free of hallucinated content?': 'Yes',
-          'Can the question be answered by the documentation?': 'Not sure',
-          'Is the answer readable?': 'Yes',
+          correctTopic: 'Yes',
+          hallucinationFree: 'Yes',
+          documented: 'Not sure',
+          readable: 'Yes',
         });
         await generatedAnswer.typeInFeedbackDocumentUrlInput(
           exampleDocumentUrl
@@ -75,10 +75,10 @@ useCaseTestCases.forEach((useCase) => {
         const exampleDocumentUrl = 'https://www.coveo.com/';
         const exampleDetails = 'example details...';
         await generatedAnswer.fillFeedbackForm({
-          'Is the answer about the right topic?': 'No',
-          'Is the answer free of hallucinated content?': 'Not sure',
-          'Can the question be answered by the documentation?': 'No',
-          'Is the answer readable?': 'No',
+          correctTopic: 'No',
+          hallucinationFree: 'Not sure',
+          documented: 'No',
+          readable: 'No',
         });
         await generatedAnswer.typeInFeedbackDocumentUrlInput(
           exampleDocumentUrl

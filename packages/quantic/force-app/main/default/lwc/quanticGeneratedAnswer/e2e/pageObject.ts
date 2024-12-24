@@ -41,14 +41,12 @@ export class GeneratedAnswerObject {
       .nth(index);
   }
 
-  questionContainer(questionText: string): Locator {
-    return this.page.locator('.feedback-modal-qna__question', {
-      hasText: questionText,
-    });
+  questionContainer(questionId: string): Locator {
+    return this.page.getByTestId(questionId);
   }
 
-  answerOption(questionText: string, answerValue: string): Locator {
-    return this.questionContainer(questionText).locator('.slds-radio_button', {
+  answerOption(questionId: string, answerValue: string): Locator {
+    return this.questionContainer(questionId).locator('.slds-radio_button', {
       hasText: new RegExp(`^${answerValue}$`),
     });
   }
@@ -78,7 +76,6 @@ export class GeneratedAnswerObject {
   async hoverOverCitation(index: number): Promise<void> {
     // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
     await this.page.waitForTimeout(500);
-    await this.citationLink.waitFor({state: 'visible'});
     await this.citationLink.nth(index).hover();
     await this.page.waitForTimeout(minimumCitationTooltipDisplayDurationMs);
     await this.page.mouse.move(0, 0);
@@ -101,8 +98,8 @@ export class GeneratedAnswerObject {
   }
 
   async fillFeedbackForm(answers: Record<string, string>): Promise<void> {
-    for (const [questionText, answerValue] of Object.entries(answers)) {
-      const option = this.answerOption(questionText, answerValue);
+    for (const [questionId, answerValue] of Object.entries(answers)) {
+      const option = this.answerOption(questionId, answerValue);
       // eslint-disable-next-line no-await-in-loop
       await option.click();
     }
@@ -163,11 +160,11 @@ export class GeneratedAnswerObject {
   }
 
   async waitForSourceHoverUaAnalytics(
-    expectedFields: object
+    expectedFields: Record<string, any>
   ): Promise<Request> {
     return this.waitForGeneratedAnswerCustomUaAnalytics(
       'generatedAnswerSourceHover',
-      (customData: object) => {
+      (customData: Record<string, any>) => {
         return Object.keys(expectedFields).every(
           (key) => customData?.[key] === expectedFields[key]
         );
@@ -176,11 +173,11 @@ export class GeneratedAnswerObject {
   }
 
   async waitForFeedbackSubmitUaAnalytics(
-    expectedFields: object
+    expectedFields: Record<string, any>
   ): Promise<Request> {
     return this.waitForGeneratedAnswerCustomUaAnalytics(
       'generatedAnswerFeedbackSubmitV2',
-      (customData: object) => {
+      (customData: Record<string, any>) => {
         return Object.keys(expectedFields).every(
           (key) => customData?.[key] === expectedFields[key]
         );
@@ -189,12 +186,12 @@ export class GeneratedAnswerObject {
   }
 
   async waitForCitationClickUaAnalytics(
-    expectedFields: object,
-    expectedCustomFields: object
+    expectedFields: Record<string, any>,
+    expectedCustomFields: Record<string, any>
   ): Promise<Request> {
     return this.waitForGeneratedAnswerClickUaAnalytics(
       'generatedAnswerCitationClick',
-      (data: object, customData: object) => {
+      (data: Record<string, any>, customData: Record<string, any>) => {
         return (
           Object.keys(expectedFields).every(
             (key) => data?.[key] === expectedFields[key]
@@ -215,7 +212,8 @@ export class GeneratedAnswerObject {
       if (isUaClickEvent(request)) {
         const requestBody = request.postDataJSON?.();
         const requestData = JSON.parse(requestBody.clickEvent);
-        const expectedFields = {
+
+        const expectedFields: Record<string, any> = {
           actionCause,
         };
 
@@ -240,13 +238,13 @@ export class GeneratedAnswerObject {
   }
 
   async waitForGeneratedAnswerCustomUaAnalytics(
-    eventValue,
+    eventValue: string,
     customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {
         const requestBody = request.postDataJSON?.();
-        const expectedFields = {
+        const expectedFields: Record<string, any> = {
           eventType: 'generatedAnswer',
           eventValue: eventValue,
         };
