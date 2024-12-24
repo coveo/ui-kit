@@ -16,29 +16,19 @@ export class GeneratedAnswerObject {
   }
 
   get likeButton(): Locator {
-    return this.page.locator('[data-cy="feedback__like-button"]');
+    return this.page.getByRole('button', {name: 'This answer was helpful'});
   }
 
   get dislikeButton(): Locator {
-    return this.page.locator('[data-cy="feedback__dislike-button"]');
+    return this.page.getByRole('button', {name: 'This answer was not helpful'});
   }
 
   get copyToClipboardButton(): Locator {
-    return this.page.locator(
-      '[data-test="generated-answer__copy-to-clipboard"]'
-    );
+    return this.page.getByRole('button', {name: 'Copy'});
   }
 
   get toggleButton(): Locator {
     return this.page.locator('[data-test="generated-answer__toggle-button"]');
-  }
-
-  feedbackOption(value: string, index: number): Locator {
-    return this.page
-      .locator('.feedback-modal-qna__question input', {
-        has: this.page.locator(`[value="${value}"]`),
-      })
-      .nth(index);
   }
 
   questionContainer(questionId: string): Locator {
@@ -119,10 +109,6 @@ export class GeneratedAnswerObject {
 
   async clickToggleButton(): Promise<void> {
     await this.toggleButton.click();
-  }
-
-  async clickFeedbackOption(value: string, index: number): Promise<void> {
-    await this.feedbackOption(value, index).click();
   }
 
   async waitForStreamEndUaAnalytics(): Promise<Request> {
