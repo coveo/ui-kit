@@ -26,7 +26,6 @@ useCaseTestCases.forEach((useCase) => {
     test.describe('when providing positive feedback', () => {
       test('should send positive feedback analytics containing all details', async ({
         generatedAnswer,
-        page,
       }) => {
         const likeAnalyticRequestPromise =
           generatedAnswer.waitForLikeGeneratedAnswerUaAnalytics();
