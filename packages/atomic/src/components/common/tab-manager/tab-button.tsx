@@ -1,12 +1,13 @@
 import {Component, Host, Prop, h} from '@stencil/core';
+import {Button} from '../button';
 
 /**
  * @internal
  */
 @Component({
-  tag: 'tab-button',
+  tag: 'atomic-tab-button',
 })
-export class TabButton {
+export class AtomicTabButton {
   /**
    * The label to display on the tab button.
    */
@@ -41,13 +42,14 @@ export class TabButton {
         aria-label={'tab for ' + this.label}
         part="button-container"
       >
-        <button
+        <Button
           class={`w-full truncate px-2 pb-1 text-xl sm:px-6 ${this.activeTabTextClass}`}
           part="tab-button"
           onClick={this.select}
+          style="text-transparent"
         >
           {this.label}
-        </button>
+        </Button>
       </Host>
     );
   }

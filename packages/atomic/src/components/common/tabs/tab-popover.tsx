@@ -78,10 +78,41 @@ export class TabPopover implements InitializableComponent {
     this.show = isVisible;
   }
 
+  @Method()
+  public async closePopoverOnFocusOut(event: FocusEvent) {
+    const slot = this.popupRef.children[0] as HTMLSlotElement;
+    const assignedElements = slot.assignedElements() as HTMLElement[];
+
+    const isMovingToSlottedElement = assignedElements.some(
+      (element) =>
+        element === event.relatedTarget ||
+        element.contains(event.relatedTarget as Node)
+    );
+
+    if (isMovingToSlottedElement) {
+      return;
+    }
+
+    if (!this.popupRef.contains(event.relatedTarget as Node)) {
+      this.closePopover();
+    }
+  }
+
+  private closePopover() {
+    this.isOpen = false;
+  }
+
   private renderDropdownButton() {
     const label = this.bindings?.i18n.t('more');
     const ariaLabel = this.bindings?.i18n.t('tab-popover', {label});
-    const buttonClasses = ['relative', 'pb-1', 'mt-1', 'mr-6', 'font-semibold'];
+    const buttonClasses = [
+      'relative',
+      'pb-1',
+      'mt-1',
+      'group',
+      'mr-6',
+      'font-semibold',
+    ];
 
     return (
       <Button
@@ -128,7 +159,7 @@ export class TabPopover implements InitializableComponent {
     return (
       <div class={`relative ${this.isOpen ? 'z-[9999]' : ''}`}>
         {this.renderDropdownButton()}
-        <div
+        <ul
           id={this.popoverId}
           ref={(el) => (this.popupRef = el!)}
           part="overflow-tabs"
@@ -137,7 +168,7 @@ export class TabPopover implements InitializableComponent {
           }`}
         >
           <slot></slot>
-        </div>
+        </ul>
       </div>
     );
   }
@@ -161,18 +192,11 @@ export class TabPopover implements InitializableComponent {
   public render() {
     return (
       <Host
+        onFocusout={(event: FocusEvent) => this.closePopoverOnFocusOut(event)}
         class={this.show ? '' : 'visibility-hidden'}
         aria-hidden={!this.show}
       >
-        <atomic-focus-trap
-          source={this.buttonRef}
-          container={this.popupRef}
-          active={this.isOpen}
-          shouldHideSelf={false}
-          scope={this.bindings?.interfaceElement}
-        >
-          {this.renderPopover()}
-        </atomic-focus-trap>
+        {this.renderPopover()}
         {this.isOpen && this.renderBackdrop()}
       </Host>
     );
