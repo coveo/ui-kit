@@ -1,6 +1,6 @@
-import {createStore} from '@stencil/store';
 import {
-  CommonStore,
+  BaseStore,
+  createBaseStore,
   ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
@@ -12,19 +12,18 @@ interface Data {
   resultList: ResultListInfo | undefined;
 }
 
-export type CommerceRecommendationStore = CommonStore<Data> & {
+export type CommerceRecommendationStore = BaseStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
-  // getUniqueIDFromEngine(engine: CommerceEngine): string;
 };
 
 export function createCommerceRecommendationStore(): CommerceRecommendationStore {
-  const store = createStore({
+  const store = createBaseStore<Data>({
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
-  }) as CommonStore<Data>;
+  });
 
   return {
     ...store,
@@ -40,9 +39,5 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
     setLoadingFlag(loadingFlag: string) {
       setLoadingFlag(store, loadingFlag);
     },
-
-    // getUniqueIDFromEngine(engine: CommerceEngine): string {
-    //   return null;
-    // },
   };
 }

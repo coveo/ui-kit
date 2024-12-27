@@ -1,4 +1,5 @@
 import {DateFacetValue, NumericFacetValue} from '@coveo/headless';
+import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
@@ -6,6 +7,7 @@ import {
   FacetType,
   FacetValueFormat,
 } from '../facets/facet-common-store';
+import {AnyEngineType} from './bindings';
 
 export interface CommonStore<StoreData> {
   state: StoreData;
@@ -13,6 +15,24 @@ export interface CommonStore<StoreData> {
     propName: PropName,
     cb: (newValue: StoreData[PropName]) => void
   ) => () => void;
+}
+
+export type BaseStore<T> = CommonStore<T> & {
+  getUniqueIDFromEngine(engine: unknown): string | undefined;
+};
+
+export function createBaseStore<T extends {}>(initialState: T): BaseStore<T> {
+  const store = createStore(initialState) as CommonStore<T>;
+
+  return {
+    ...store,
+
+    getUniqueIDFromEngine(_engine: AnyEngineType) {
+      throw new Error(
+        'getUniqueIDFromEngine not implemented at the base store level.'
+      );
+    },
+  };
 }
 
 export interface ResultListInfo {

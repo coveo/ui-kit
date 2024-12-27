@@ -3,10 +3,10 @@ import {
   Selectors,
   ChildProduct,
 } from '@coveo/headless/commerce';
-import {createStore} from '@stencil/store';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
-  CommonStore,
+  BaseStore,
+  createBaseStore,
   ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
@@ -21,7 +21,7 @@ interface Data {
   activeProductChild: ChildProduct | undefined;
 }
 
-export type CommerceStore = CommonStore<Data> & {
+export type CommerceStore = BaseStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
@@ -32,13 +32,13 @@ export type CommerceStore = CommonStore<Data> & {
 export function createCommerceStore(
   type: 'search' | 'product-listing'
 ): CommerceStore {
-  const store = createStore({
+  const store = createBaseStore({
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
     mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     activeProductChild: undefined,
-  }) as CommonStore<Data>;
+  });
 
   return {
     ...store,

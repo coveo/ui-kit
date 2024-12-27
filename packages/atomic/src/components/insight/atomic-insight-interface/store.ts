@@ -1,5 +1,4 @@
 import {InsightEngine} from '@coveo/headless/insight';
-import {createStore} from '@stencil/store';
 import {
   FacetInfo,
   FacetStore,
@@ -7,7 +6,8 @@ import {
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 import {
-  CommonStore,
+  BaseStore,
+  createBaseStore,
   getFacetElements,
   registerFacet,
   ResultListInfo,
@@ -29,7 +29,7 @@ interface Data {
   fieldsToInclude: string[];
 }
 
-export type InsightStore = CommonStore<Data> & {
+export type InsightStore = BaseStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
@@ -43,7 +43,7 @@ export type InsightStore = CommonStore<Data> & {
 };
 
 export function createInsightStore(): InsightStore {
-  const store = createStore({
+  const store = createBaseStore<Data>({
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
@@ -53,7 +53,7 @@ export function createInsightStore(): InsightStore {
     categoryFacets: {},
     facetElements: [],
     fieldsToInclude: [],
-  }) as CommonStore<Data>;
+  });
 
   return {
     ...store,

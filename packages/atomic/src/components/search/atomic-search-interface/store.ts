@@ -4,7 +4,6 @@ import {
   SortCriterion,
   SearchEngine,
 } from '@coveo/headless';
-import {createStore} from '@stencil/store';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
   FacetInfo,
@@ -13,7 +12,9 @@ import {
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 import {
+  BaseStore,
   CommonStore,
+  createBaseStore,
   getFacetElements,
   registerFacet,
   ResultListInfo,
@@ -51,7 +52,7 @@ interface Data {
   sortOptions: SortDropdownOption[];
 }
 
-export type SearchStore = CommonStore<Data> & {
+export type SearchStore = BaseStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
@@ -69,7 +70,7 @@ export type SearchStore = CommonStore<Data> & {
 };
 
 export function createSearchStore(): SearchStore {
-  const store = createStore({
+  const store = createBaseStore<Data>({
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
@@ -118,7 +119,6 @@ export function createSearchStore(): SearchStore {
       waitUntilAppLoaded(store, callback);
     },
 
-    //This does not makes sense in the store... should just be regular functions
     getUniqueIDFromEngine(engine: SearchEngine): string {
       return engine.state.search.response.searchUid;
     },

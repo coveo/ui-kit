@@ -1,6 +1,6 @@
-import {createStore} from '@stencil/store';
 import {
-  CommonStore,
+  BaseStore,
+  createBaseStore,
   ResultListInfo,
   setLoadingFlag,
   unsetLoadingFlag,
@@ -12,18 +12,18 @@ interface Data {
   resultList: ResultListInfo | undefined;
 }
 
-export type RecsStore = CommonStore<Data> & {
+export type RecsStore = BaseStore<Data> & {
   isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
 };
 
 export function createRecsStore(): RecsStore {
-  const store = createStore({
+  const store = createBaseStore<Data>({
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
-  }) as CommonStore<Data>;
+  });
 
   return {
     ...store,
