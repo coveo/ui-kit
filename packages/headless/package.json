@@ -174,8 +174,8 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@microsoft/api-extractor": "7.48.0",
-    "@microsoft/api-extractor-model": "7.30.0",
+    "@microsoft/api-extractor": "7.48.1",
+    "@microsoft/api-extractor-model": "7.30.1",
     "@microsoft/tsdoc": "0.15.1",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
