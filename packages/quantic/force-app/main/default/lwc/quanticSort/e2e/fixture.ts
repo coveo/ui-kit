@@ -8,14 +8,12 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
-const pagerUrl = 's/quantic-sort';
+const pageUrl = 's/quantic-sort';
 
 interface SortOptions {}
 
 type QuanticSortE2EFixtures = {
   sort: SortObject;
-  sortCustom: SortObject;
-  sortInvalid: SortObject;
   search: SearchObject;
   options: Partial<SortOptions>;
 };
@@ -24,7 +22,7 @@ type QuanticSortE2ESearchFixtures = QuanticSortE2EFixtures & {
   urlHash: string;
 };
 
-type QuanticSortE2EInsightFixtures = QuanticSortE2ESearchFixtures & {
+type QuanticSortE2EInsightFixtures = QuanticSortE2EFixtures & {
   insightSetup: InsightSetupObject;
 };
 
@@ -36,25 +34,7 @@ export const testSearch = quanticBase.extend<QuanticSortE2ESearchFixtures>({
   },
 
   sort: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pagerUrl}#${urlHash}` : pagerUrl);
-    configuration.configure(options);
-    await search.waitForSearchResponse();
-    await use(new SortObject(page));
-  },
-
-  sortCustom: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pagerUrl}#${urlHash}` : pagerUrl);
-    await page.getByRole('button', {name: 'Add Custom Sort Options'}).click();
-    configuration.configure(options);
-    await search.waitForSearchResponse();
-    await use(new SortObject(page));
-  },
-
-  sortInvalid: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pagerUrl}#${urlHash}` : pagerUrl);
-    await page
-      .getByRole('button', {name: 'Add Invalid Custom Sort Options'})
-      .click();
+    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
     await use(new SortObject(page));
@@ -72,35 +52,7 @@ export const testInsight = quanticBase.extend<QuanticSortE2EInsightFixtures>({
   },
 
   sort: async ({page, options, search, configuration, insightSetup}, use) => {
-    await page.goto(pagerUrl);
-    configuration.configure({...options, useCase: useCaseEnum.insight});
-    await insightSetup.waitForInsightInterfaceInitialization();
-    await search.performSearch();
-    await search.waitForSearchResponse();
-    await use(new SortObject(page));
-  },
-
-  sortCustom: async (
-    {page, options, search, configuration, insightSetup},
-    use
-  ) => {
-    await page.goto(pagerUrl);
-    await page.getByRole('button', {name: 'Add Custom Sort Options'}).click();
-    configuration.configure({...options, useCase: useCaseEnum.insight});
-    await insightSetup.waitForInsightInterfaceInitialization();
-    await search.performSearch();
-    await search.waitForSearchResponse();
-    await use(new SortObject(page));
-  },
-
-  sortInvalid: async (
-    {page, options, search, configuration, insightSetup},
-    use
-  ) => {
-    await page.goto(pagerUrl);
-    await page
-      .getByRole('button', {name: 'Add Invalid Custom Sort Options'})
-      .click();
+    await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.performSearch();
