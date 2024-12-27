@@ -10,7 +10,7 @@ export class SortObject {
     return this.page.getByRole('combobox', {name: 'Sort by'});
   }
 
-  get sortPreviewHeader(): Locator {
+  get sortPreviewButton(): Locator {
     return this.page.getByRole('button', {name: 'Preview'});
   }
 
@@ -23,7 +23,7 @@ export class SortObject {
   }
 
   async focusSortDropDown(): Promise<void> {
-    await this.sortPreviewHeader.click();
+    await this.sortPreviewButton.click();
     await this.page.keyboard.press('Tab');
   }
 
