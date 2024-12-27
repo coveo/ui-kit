@@ -1,90 +1,136 @@
 'use client';
 
 import {
-  HydrateStaticStateOptions,
+  Cart,
+  Controller,
+  InferControllersMapFromDefinition,
+  ControllerDefinitionsMap,
+  EngineStaticState,
+  InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferHydratedState,
-  InferStaticState,
   NavigatorContext,
+  ControllerWithKind,
+  Kind,
+  SolutionType,
+  Context,
+  HydrateStaticStateOptions,
+  ParameterManager,
+  Parameters,
+  Recommendations,
 } from '@coveo/headless/ssr-commerce';
 import {PropsWithChildren, useEffect, useState} from 'react';
-import {defineCommerceEngine} from './commerce-engine.js';
+import {ReactCommerceEngineDefinition} from './commerce-engine.js';
 
-interface WithDefinitionProps {
-  staticState: InferStaticState<RealDefinition>;
-  navigatorContext: NavigatorContext;
+type ControllerPropsMap = {[customName: string]: unknown};
+type UnknownAction = {type: string};
+
+function getController<T extends Controller>(
+  controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+    ControllerDefinitionsMap<Controller>,
+    SolutionType
+  >,
+  key: string
+) {
+  return controllers[key] as T;
 }
-
-type LooseDefinition = {
-  setNavigatorContextProvider: unknown;
-  build: unknown;
-  hydrateStaticState: unknown;
-  fetchStaticState: unknown;
-  HydratedStateProvider: unknown;
-  StaticStateProvider: unknown;
-};
-
-type RealDefinition =
-  | ReturnType<typeof defineCommerceEngine>['recommendationEngineDefinition']
-  | ReturnType<typeof defineCommerceEngine>['listingEngineDefinition']
-  | ReturnType<typeof defineCommerceEngine>['searchEngineDefinition']
-  | ReturnType<typeof defineCommerceEngine>['standaloneEngineDefinition'];
 
 /**
  * @group React
  */
-
-export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
+export function buildProviderWithDefinition<
+  TControllers extends ControllerDefinitionsMap<Controller>,
+  TSolutionType extends SolutionType,
+>(definition: ReactCommerceEngineDefinition<TControllers, TSolutionType>) {
   return function WrappedProvider({
     staticState,
     navigatorContext,
     children,
-  }: PropsWithChildren<WithDefinitionProps>) {
-    const definition = looseDefinition as RealDefinition;
-    type RecommendationHydratedState = InferHydratedState<typeof definition>;
+  }: PropsWithChildren<{
+    staticState: EngineStaticState<
+      UnknownAction,
+      InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+        TControllers,
+        TSolutionType
+      >
+    >;
+    navigatorContext: NavigatorContext;
+  }>) {
     const [hydratedState, setHydratedState] = useState<
-      RecommendationHydratedState | undefined
+      InferHydratedState<typeof definition> | undefined
     >(undefined);
-
     definition.setNavigatorContextProvider(() => navigatorContext);
 
     useEffect(() => {
       const {searchActions, controllers} = staticState;
+      const hydrateArguments: ControllerPropsMap = {};
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const hydrateControllers: Record<string, any> = {};
+      for (const [key, controller] of Object.entries(controllers)) {
+        const typedController = controller as ControllerWithKind;
 
-      if ('parameterManager' in controllers) {
-        hydrateControllers.parameterManager = {
-          initialState: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            parameters: (controllers as any).parameterManager.state.parameters,
-          },
-        };
+        switch (typedController._kind) {
+          case Kind.Cart: {
+            const cart = getController<Cart>(controllers, key);
+            hydrateArguments[key] = {
+              initialState: {
+                items: cart.state.items,
+              },
+            };
+            break;
+          }
+          case Kind.Context: {
+            const context = getController<Context>(controllers, key);
+            hydrateArguments[key] = context.state;
+            break;
+          }
+
+          case Kind.ParameterManager: {
+            const parameterManager = getController<
+              ParameterManager<Parameters>
+            >(controllers, key);
+            hydrateArguments[key] = {
+              initialState: {
+                parameters: parameterManager.state.parameters,
+              },
+            };
+            break;
+          }
+          case Kind.Recommendations: {
+            const recommendations = getController<Recommendations>(
+              controllers,
+              key
+            );
+
+            hydrateArguments[key] = {
+              productId: recommendations.state.productId,
+            };
+            break;
+          }
+        }
       }
 
-      if ('cart' in controllers) {
-        hydrateControllers.cart = {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          initialState: {items: (controllers as any).cart.state.items},
-        };
+      const args: HydrateStaticStateOptions<UnknownAction> &
+        ControllerPropsMap = {
+        searchActions,
+      };
+
+      if (hydrateArguments) {
+        args.controllers = hydrateArguments;
       }
 
-      if ('context' in controllers) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        hydrateControllers.context = (controllers as any).context.state;
-      }
-
-      definition
-        .hydrateStaticState({
-          searchActions,
-          controllers: {
-            ...controllers,
-            ...hydrateControllers,
-          },
-        } as HydrateStaticStateOptions<{type: string}>)
-        .then(({engine, controllers}) => {
-          setHydratedState({engine, controllers});
+      // @ts-expect-error Casting to loose definition since we don't need the inferred controllers here
+      const looseDefinition = definition as ReactCommerceEngineDefinition<
+        ControllerDefinitionsMap<Controller>,
+        SolutionType
+      >;
+      looseDefinition.hydrateStaticState(args).then(({engine, controllers}) => {
+        setHydratedState({
+          engine,
+          controllers: controllers as InferControllersMapFromDefinition<
+            TControllers,
+            TSolutionType
+          >,
         });
+      });
     }, [staticState]);
 
     if (hydratedState) {
@@ -98,13 +144,14 @@ export function buildProviderWithDefinition(looseDefinition: LooseDefinition) {
       );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const StaticStateProviderWithAnyControllers = (looseDefinition as any)
-      .StaticStateProvider as React.ComponentType<{
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      controllers: any;
-      children: React.ReactNode;
-    }>;
+    const StaticStateProviderWithAnyControllers =
+      definition.StaticStateProvider as React.ComponentType<{
+        controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+          ControllerDefinitionsMap<Controller>,
+          SolutionType
+        >;
+        children: React.ReactNode;
+      }>;
 
     return (
       <StaticStateProviderWithAnyControllers

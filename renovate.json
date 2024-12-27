@@ -27,11 +27,11 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
-      "groupName": "dompurify",
-      "groupSlug": "dompurify",
+      "groupName": "gts",
+      "groupSlug": "gts",
       "rangeStrategy": "replace",
-      "description": "Isolate dompurify",
-      "matchPackageNames": ["/dompurify/"]
+      "description": "Isolate gts since it is causing memory issues when running the lint:check",
+      "matchPackageNames": ["gts"]
     },
     {
       "groupName": "Angular",
@@ -52,7 +52,8 @@
         "/react/",
         "/react-router-dom/",
         "/react-dom/",
-        "/@types/react/"
+        "/@types/react/",
+        "next"
       ]
     },
     {
@@ -109,26 +110,18 @@
       "matchPackageNames": ["/^change-case$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-react/package.json"],
-      "groupSlug": "react-rollup",
+      "groupName": "marked",
+      "groupSlug": "marked",
       "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?",
-      "matchPackageNames": ["/^rollup$/"]
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "nx",
-      "groupSlug": "nx",
+      "groupName": "relay",
+      "groupSlug": "relay",
       "rangeStrategy": "replace",
-      "allowedVersions": "15.x",
-      "matchPackageNames": ["/^nx$/"]
-    },
-    {
-      "groupName": "nx-devkit",
-      "groupSlug": "nx-devkit",
-      "rangeStrategy": "replace",
-      "allowedVersions": "16.x",
-      "matchPackageNames": ["/^@nrwl/devkit$/"]
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
     },
     {
       "groupName": "Cypress Split",
@@ -153,13 +146,6 @@
       "allowedVersions": "3.x",
       "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
-    },
-    {
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4",
-      "matchPackageNames": ["/^actions/upload-artifact$/"]
     },
     {
       "groupSlug": "eslint",

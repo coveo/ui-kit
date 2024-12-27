@@ -120,18 +120,18 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
     return {
       ...breadcrumb,
-      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
+      label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
       values: breadcrumb.values.map((range) => ({
         ...range,
         value: `${range.value.start} - ${range.value.end}`,
-        formattedValue: data[breadcrumb.field]?.format(range.value),
+        formattedValue: data[breadcrumb.facetId]?.format(range.value),
       })),
     };
   }
 
   formatCategoryBreadcrumbValue(breadcrumb) {
     const data = getFromStore(this.engineId, Store.facetTypes.CATEGORYFACETS);
-    const format = data[breadcrumb.field]?.format ?? ((item) => item.value);
+    const format = data[breadcrumb.facetId]?.format ?? ((item) => item.value);
 
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumbValue) => format(breadcrumbValue));
@@ -175,10 +175,10 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
     return {
       ...breadcrumb,
-      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
+      label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
       values: breadcrumb.values.map((range) => ({
         ...range,
-        value: data[breadcrumb.field]?.format(range.value),
+        value: data[breadcrumb.facetId]?.format(range.value),
       })),
     };
   }
@@ -187,10 +187,10 @@ export default class QuanticBreadcrumbManager extends LightningElement {
     const data = getFromStore(this.engineId, Store.facetTypes.FACETS);
     return {
       ...breadcrumb,
-      label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
+      label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
       values: breadcrumb.values.map((item) => ({
         ...item,
-        formattedValue: data[breadcrumb.field]?.format(item.value),
+        formattedValue: data[breadcrumb.facetId]?.format(item.value),
       })),
     };
   }
@@ -266,7 +266,7 @@ export default class QuanticBreadcrumbManager extends LightningElement {
         return {
           facetId: breadcrumb.facetId,
           field: breadcrumb.field,
-          label: data ? data[breadcrumb.field]?.label : breadcrumb.field,
+          label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
           deselect: breadcrumb.deselect,
           value: breadcrumbValues.join(` ${this.categoryDivider} `),
         };
