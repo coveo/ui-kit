@@ -5,14 +5,23 @@ title: Controller hooks
 # Hooks
 
 This package provides React hooks for controllers defined in the Engine Definition. Hooks allow you to access controller state and methods easily within your React components.
+Without these hooks, you would need to manually pass down props through every component or implement your own provider solution, which can be cumbersome and error-prone.
 
 ## Usage
 
 1. Create an engine configuration
 
-Define the controllers you need in your engine configuration. This example includes `Summary` and `ProductList` controllers:
+Define the controllers you need in your engine configuration. This example includes `Summary`, `ProductList` and `Cart` controllers:
 
 ```
+import {
+  CommerceEngineDefinitionOptions,
+  defineSummary,
+  defineProductList,
+  defineCart,
+  getSampleCommerceEngineConfiguration,
+} from '@coveo/headless-react/ssr-commerce';
+
 const config : CommerceEngineDefinitionOptions {
     configuration: {
     ...getSampleCommerceEngineConfiguration(),
@@ -20,6 +29,7 @@ const config : CommerceEngineDefinitionOptions {
   controllers: {
     summary: defineSummary(),
     productList: defineProductList(),
+    cart: defineCart(),
   }
 }
 ```
@@ -40,6 +50,7 @@ Extract hooks for each controller from the engine definition.
 export const {
   useSummary,
   useProductList,
+  useCart
 } = engineDefinition.controllers;
 ```
 
