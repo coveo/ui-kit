@@ -1,4 +1,4 @@
-import {SortObject} from './sortObject';
+import {SortObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
