@@ -38,8 +38,11 @@ export function createSingletonContext<
 }
 
 /**
+ *
  * Returns controller hooks as well as SSR and CSR context providers that can be used to interact with a Commerce engine
  *  on the server and client side respectively.
+ *
+ * @group React
  */
 export function defineCommerceEngine<
   TControllers extends ControllerDefinitionsMap<Controller>,

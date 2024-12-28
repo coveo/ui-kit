@@ -34,6 +34,9 @@ function getController<T extends Controller>(
   return controllers[key] as T;
 }
 
+/**
+ * @group React
+ */
 export function buildProviderWithDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
