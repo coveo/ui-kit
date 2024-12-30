@@ -24,7 +24,7 @@ const expectedAriaLiveMessage = (suggestionsCount: number) => {
   return `${suggestionsCount} search suggestions found, to navigate use up and down arrows.`;
 };
 
-function setRecentQueriesInLocalStorage(recentQueries: String[]) {
+function setRecentQueriesInLocalStorage(recentQueries: string[]) {
   window.localStorage.setItem(
     recentQueriesLSKey,
     JSON.stringify(recentQueries)

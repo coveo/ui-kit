@@ -231,9 +231,12 @@ describe('Headless react SSR utils', () => {
     });
 
     describe('hooks', () => {
-      const {listingEngineDefinition} = engineDefinition;
-      let staticState: InferStaticState<typeof listingEngineDefinition>;
-      let hydratedState: InferHydratedState<typeof listingEngineDefinition>;
+      let staticState: InferStaticState<
+        typeof engineDefinition.listingEngineDefinition
+      >;
+      let hydratedState: InferHydratedState<
+        typeof engineDefinition.listingEngineDefinition
+      >;
 
       beforeEach(async () => {
         setNavigatorContextProvider(mockedNavigatorContextProvider);

@@ -24,7 +24,7 @@ interface Bindings {
     | HeadlessCaseAssistTypes<CoreEngine>
     | HeadlessInsightTypes<CoreEngine>
     | HeadlessRecommendationTypes<CoreEngine>;
-  store?: Record<String, unknown>;
+  store?: Record<string, unknown>;
 }
 
 declare global {

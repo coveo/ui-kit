@@ -23,7 +23,7 @@ export function parseClickEventRequest(
     return JSON.parse(
       decodeURIComponent(request).replace('clickEvent=', '')
     ) as ClickEventRequest;
-  } catch (e) {
+  } catch {
     return null;
   }
 }

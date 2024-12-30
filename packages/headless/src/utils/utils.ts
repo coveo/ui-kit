@@ -125,7 +125,7 @@ export function clone<T>(value: T): T {
   // add defensive code to prevent the whole app from crashing
   try {
     return JSON.parse(JSON.stringify(value));
-  } catch (e) {
+  } catch {
     return value;
   }
 }

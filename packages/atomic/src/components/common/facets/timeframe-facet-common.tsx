@@ -258,7 +258,7 @@ export class TimeframeFacetCommon {
           count: relativeDate.amount,
         }
       );
-    } catch (error) {
+    } catch {
       return this.props.bindings.i18n.t('to', {
         start: parseDate(facetValue.start).format('YYYY-MM-DD'),
         end: parseDate(facetValue.end).format('YYYY-MM-DD'),

@@ -6,7 +6,7 @@ export function loadFocusVisiblePolyfill() {
 
   try {
     document.body.querySelector(':focus-visible');
-  } catch (error) {
+  } catch {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     import('focus-visible/dist/focus-visible.min.js');

@@ -284,7 +284,7 @@ function isValidDateRangeValue(date: string) {
     }
 
     return false;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
