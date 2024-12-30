@@ -45,13 +45,13 @@
   "devDependencies": {
     "@coveo/release": "1.0.0",
     "@testing-library/react": "14.3.1",
-    "@typescript-eslint/eslint-plugin": "7.17.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-testing-library": "7.1.1",
     "gts": "5.3.1",
     "publint": "0.2.12",
     "rimraf": "6.0.1",
-    "typescript": "5.4.5",
+    "typescript": "5.7.2",
     "typedoc": "0.27.6",
     "vitest": "2.1.8"
   },
