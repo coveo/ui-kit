@@ -13,7 +13,7 @@ function searchBoxExpectations(selector: SearchBoxSelector) {
           `${should(display)} display the 'clear recent queries' button`
         );
     },
-    querySuggestionsEquals: (querySuggestions: String[]) => {
+    querySuggestionsEquals: (querySuggestions: string[]) => {
       querySuggestions.forEach((querySuggestion, index) => {
         selector
           .querySuggestionContentByIndex(index)

@@ -95,7 +95,7 @@ export const mapAndSortActionsByMostRecent = (
       try {
         const userAction: UserAction = mapRawActionToUserAction(rawAction);
         acc.push(userAction);
-      } catch (error) {
+      } catch {
         parsingError = true;
       }
       return acc;

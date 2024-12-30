@@ -59,7 +59,7 @@ function isExpiredTokenError(action: any) {
 async function attempt(fn: () => Promise<string>) {
   try {
     return await fn();
-  } catch (e) {
+  } catch {
     return '';
   }
 }
