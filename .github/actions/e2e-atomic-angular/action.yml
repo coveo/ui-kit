@@ -14,7 +14,7 @@ runs:
       name: Run Cypress
       with:
         browser: chrome
-        command-prefix: 'npx playwright dev'
+        command-prefix: 'npx playwright test'
         working-directory: packages/samples/angular
         start: npx nx run atomic-angular-samples:dev
         wait-on: 'http://localhost:4200'
