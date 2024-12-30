@@ -29,7 +29,8 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "browser": "src/main.ts"
+            "browser": "src/main.ts",
+            "preserveSymlinks": true
           },
           "configurations": {
             "production": {
