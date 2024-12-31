@@ -56,17 +56,19 @@ useCaseTestCases.forEach((useCase) => {
     }
 
     test.describe('when testing accessibility', () => {
-      test('should be accessible to keyboard', async ({tab}) => {
+      test('should be accessible to keyboard', async ({tab, page}) => {
         await tab.clickTabButton(exampleTabs[0]);
 
         let activeTabLabel = await tab.activeTabLabel;
         expect(activeTabLabel).toEqual(exampleTabs[0]);
 
-        await tab.pressTabThenEnter();
+        await page.keyboard.press('Tab');
+        await page.keyboard.press('Enter');
         activeTabLabel = await tab.activeTabLabel;
         expect(activeTabLabel).toEqual(exampleTabs[1]);
 
-        await tab.pressShiftTabThenSpace();
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('Shift+Space');
         activeTabLabel = await tab.activeTabLabel;
         expect(activeTabLabel).toEqual(exampleTabs[0]);
       });

@@ -21,7 +21,8 @@ export const TabBarSelectors: TabBarSelector = {
   allTabs: () => TabBarSelectors.get().find(tabComponent),
   activeTab: () =>
     TabBarSelectors.get().find('button.slds-tabs_default__item.slds-is-active'),
-  moreButton: () => TabBarSelectors.get().find('.tab-bar_more-button'),
+  moreButton: () =>
+    TabBarSelectors.get().find('[data-testid="tab-bar_more-button"]'),
   moreButtonLabel: () =>
     TabBarSelectors.moreButton().find('button').first().invoke('text'),
   moreButtonIcon: () => TabBarSelectors.moreButton().find('lightning-icon'),

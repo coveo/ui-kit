@@ -10,34 +10,32 @@ const extraSmallViewportWidth = 200;
 const smallViewportWidth = 260;
 const mediumViewportWidth = 300;
 const standardViewportHeight = 1080;
+const expectedNumberOfTabs = 4;
 
-const viewportWidths = [
+const viewportTests = [
   {
-    label: 'extra small',
-    width: extraSmallViewportWidth,
-    primaryExpectation: 'the selected tab ',
-    secondaryExpectation: 'and the more button should be shrunk',
-    numberOfTabsDisplayed: 1,
-    numberOfOptionsInDropdown: 3,
-    moreButtonLabel: '',
+    testDescribe: 'when the viewport is resized to a extra small width',
+    viewportWidth: extraSmallViewportWidth,
+    testLabel:
+      'should display only the selected tab and the more button without a label, the other tabs are in the dropdown',
+    expectedNumberOfTabsDisplayed: 1,
+    expectedMoreButtonLabel: '',
   },
   {
-    label: 'small',
-    width: smallViewportWidth,
-    primaryExpectation: 'the selected tab',
-    secondaryExpectation: '',
-    numberOfTabsDisplayed: 1,
-    numberOfOptionsInDropdown: 3,
-    moreButtonLabel: 'More',
+    testDescribe: 'when the viewport is resized to a small width',
+    viewportWidth: smallViewportWidth,
+    testLabel:
+      'should display only the selected tab and the more button with a label, the other tabs are in the dropdown',
+    expectedNumberOfTabsDisplayed: 1,
+    expectedMoreButtonLabel: 'More',
   },
   {
-    label: 'medium',
-    width: mediumViewportWidth,
-    primaryExpectation: 'the first two tabs',
-    secondaryExpectation: '',
-    numberOfTabsDisplayed: 2,
-    numberOfOptionsInDropdown: 2,
-    moreButtonLabel: 'More',
+    testDescribe: 'when the viewport is resized to a medium width',
+    viewportWidth: mediumViewportWidth,
+    testLabel:
+      'should display only the first two tabs and the more button with a label, the other tabs are in the dropdown',
+    expectedNumberOfTabsDisplayed: 2,
+    expectedMoreButtonLabel: 'More',
   },
 ];
 
@@ -48,52 +46,50 @@ useCaseTestCases.forEach((useCase) => {
       test('should display all the tabs without displaying the dropdown list', async ({
         tabBar,
       }) => {
-        const expectedNumberOfTabs = 4;
         const tabs = tabBar.allVisibleTabs;
 
         expect(tabs).not.toBeNull();
         expect(await tabs.count()).toEqual(expectedNumberOfTabs);
 
-        const isMoreDropdownVisible = await tabBar.dropdown.isVisible();
+        const isMoreDropdownVisible =
+          await tabBar.dropdownContainer.isVisible();
         expect(isMoreDropdownVisible).toBe(false);
       });
     });
 
-    viewportWidths.forEach(
+    // Test different behaviors based on the viewport width.
+    viewportTests.forEach(
       ({
-        label,
-        width,
-        primaryExpectation,
-        secondaryExpectation,
-        numberOfTabsDisplayed,
-        numberOfOptionsInDropdown,
-        moreButtonLabel,
+        testDescribe,
+        viewportWidth,
+        testLabel,
+        expectedNumberOfTabsDisplayed,
+        expectedMoreButtonLabel,
       }) => {
-        test.describe(`when the viewport is resized to a ${label} width`, () => {
+        test.describe(testDescribe, () => {
           test.use({
-            viewport: {width: width, height: standardViewportHeight},
+            viewport: {width: viewportWidth, height: standardViewportHeight},
           });
-          test(`should display only ${primaryExpectation}, the other tabs should be displayed in the dropdown list ${secondaryExpectation}`, async ({
-            tabBar,
-          }) => {
+          test(testLabel, async ({tabBar}) => {
             const displayedTabs = tabBar.allVisibleTabs;
-
             expect(displayedTabs).not.toBeNull();
-            expect(await displayedTabs.count()).toEqual(numberOfTabsDisplayed);
+            expect(await displayedTabs.count()).toEqual(
+              expectedNumberOfTabsDisplayed
+            );
 
-            const isMoreDropdownVisible = await tabBar.dropdown.isVisible();
-            expect(isMoreDropdownVisible).toBe(true);
+            expect(await tabBar.dropdownContainer.isVisible()).toBe(true);
 
             await tabBar.clickMoreButton();
 
-            const dropdownOptions = tabBar.allDropdownOptions;
-            expect(dropdownOptions).not.toBeNull();
-            expect(await dropdownOptions.count()).toEqual(
-              numberOfOptionsInDropdown
+            const tabsInDropdown = tabBar.allDropdownOptions;
+            expect(tabsInDropdown).not.toBeNull();
+            expect(await tabsInDropdown.count()).toEqual(
+              expectedNumberOfTabs - expectedNumberOfTabsDisplayed
             );
 
-            const dropdownLabel = await tabBar.moreButtonLabel.textContent();
-            expect(dropdownLabel).toEqual(moreButtonLabel);
+            expect(await tabBar.moreButton.textContent()).toEqual(
+              expectedMoreButtonLabel
+            );
           });
         });
       }
@@ -103,18 +99,6 @@ useCaseTestCases.forEach((useCase) => {
       // Using medium width (300px), 2 tabs should be displayed and 2 should be in the dropdown.
       test.use({
         viewport: {width: mediumViewportWidth, height: standardViewportHeight},
-      });
-      test('should open the dropdown and display the options', async ({
-        tabBar,
-      }) => {
-        const expectedNumberOfDropdownOptions = 2;
-        await tabBar.clickMoreButton();
-
-        const dropdownOptions = tabBar.allDropdownOptions;
-        expect(dropdownOptions).not.toBeNull();
-        expect(await dropdownOptions.count()).toEqual(
-          expectedNumberOfDropdownOptions
-        );
       });
 
       test.describe('when a tab is selected from the dropdown list', () => {
@@ -177,22 +161,17 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when the dropdown loses focus', () => {
-      // Using medium width (300px), 2 tabs should be displayed and 2 should be in the dropdown.
       test.use({
         viewport: {width: mediumViewportWidth, height: standardViewportHeight},
       });
       test('should automatically close the dropdown list', async ({tabBar}) => {
-        const sldsOpenClass = 'slds-is-open';
         await tabBar.clickMoreButton();
 
-        const dropdownClasses = await tabBar.dropdown.getAttribute('class');
-        expect(dropdownClasses).toContain(sldsOpenClass);
+        expect(await tabBar.tabBarDropdown.isVisible()).toBe(true);
 
         await tabBar.clickComponentContainer();
 
-        const dropdownClassesAfterClose =
-          await tabBar.dropdown.getAttribute('class');
-        expect(dropdownClassesAfterClose).not.toContain(sldsOpenClass);
+        expect(await tabBar.tabBarDropdown.isVisible()).toBe(false);
       });
     });
   });

@@ -16,7 +16,7 @@ jest.mock('c/quanticUtils', () => ({
   getAbsoluteWidth: jest.fn((element) => {
     if (element?.tagName === 'C-QUANTIC-TAB') {
       return tabSlotWidth;
-    } else if (element?.dataset?.test === 'tab-bar_more-section') {
+    } else if (element?.dataset?.testid === 'tab-bar_more-section') {
       return moreButtonWidth;
     }
     return mockContainerWidth;
@@ -29,8 +29,8 @@ const defaultOptions = {
 
 const selectors = {
   tabBarContainer: '.tab-bar_container',
-  moreTabsSection: '[data-test="tab-bar_more-section"]',
-  moreTabsButton: '[data-test="tab-bar_more-button"]',
+  moreTabsSection: '[data-testid="tab-bar_more-section"]',
+  moreTabsButton: '[data-testid="tab-bar_more-button"]',
   tabsDropdown: '.slds-dropdown-trigger',
   tabItemsInDropdown: '.slds-dropdown__list li button',
 };
@@ -194,20 +194,16 @@ describe('c-quantic-tab-bar', () => {
       expect(moreTabsSectionIsVisible).toBe(true);
 
       const expectedNumberOfTabsToBeVisible = 1;
-      for (let i = 0; i < expectedNumberOfTabsToBeVisible - 1; i++) {
-        const tabIsVisible = exampleTabSlots[i].style.visibility === 'visible';
-        expect(tabIsVisible).toBe(true);
-      }
+      const visibleTabs = exampleTabSlots.filter(
+        (tab) => tab.style.visibility === 'visible'
+      );
+      expect(visibleTabs.length).toBe(expectedNumberOfTabsToBeVisible);
 
       const expectedNumberOfTabsToBeHidden = 2;
-      for (
-        let i = expectedNumberOfTabsToBeVisible;
-        i <= expectedNumberOfTabsToBeHidden;
-        i++
-      ) {
-        const tabIsHidden = exampleTabSlots[i].style.visibility === 'hidden';
-        expect(tabIsHidden).toBe(true);
-      }
+      const hiddenTabs = exampleTabSlots.filter(
+        (tab) => tab.style.visibility === 'hidden'
+      );
+      expect(hiddenTabs.length).toBe(expectedNumberOfTabsToBeHidden);
     });
 
     it('should display the correct tabs in the tabs dropdown list', async () => {
@@ -222,15 +218,13 @@ describe('c-quantic-tab-bar', () => {
       const expectedNumberOfTabsToBeHidden = 2;
 
       expect(tabItemsInDropdown.length).toBe(expectedNumberOfTabsToBeHidden);
-      for (
-        let i = expectedNumberOfTabsToBeVisible;
-        i <= expectedNumberOfTabsToBeHidden;
-        i++
-      ) {
-        expect(
-          tabItemsInDropdown[i - expectedNumberOfTabsToBeVisible].textContent
-        ).toBe(exampleTabSlots[i].label);
-      }
+      const tabsInDropdownLabels = Array.from(tabItemsInDropdown).map(
+        (tab) => tab.textContent
+      );
+      const expectedTabsInDropdownLabels = exampleTabSlots
+        .slice(expectedNumberOfTabsToBeVisible)
+        .map((tab) => tab.label);
+      expect(tabsInDropdownLabels).toEqual(expectedTabsInDropdownLabels);
     });
 
     it('should open and close the tabs dropdown list after clicking the more tabs button', async () => {

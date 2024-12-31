@@ -22,18 +22,6 @@ export class TabObject {
     await this.tabButton(tabLabel).click();
   }
 
-  async pressTabThenEnter(): Promise<void> {
-    await this.page.keyboard.press('Tab');
-    await this.page.keyboard.press('Enter');
-  }
-
-  async pressShiftTabThenSpace(): Promise<void> {
-    await this.page.keyboard.down('Shift');
-    await this.page.keyboard.press('Tab');
-    await this.page.keyboard.up('Shift');
-    await this.page.keyboard.press('Space');
-  }
-
   async waitForTabSearchUaAnalytics(
     actionCause,
     customChecker?: Function
