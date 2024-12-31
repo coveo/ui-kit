@@ -28,7 +28,7 @@ export class GeneratedAnswerObject {
   }
 
   get toggleButton(): Locator {
-    return this.page.locator('[data-test="generated-answer__toggle-button"]');
+    return this.page.getByTestId('generated-answer__toggle-button');
   }
 
   questionContainer(questionId: string): Locator {
@@ -48,9 +48,9 @@ export class GeneratedAnswerObject {
   }
 
   get feedbackDetailsInput(): Locator {
-    return this.page.locator(
-      '.feedback-modal-qna__body [data-name="details"] textarea'
-    );
+    return this.page
+      .locator('.feedback-modal-qna__body [data-name="details"]')
+      .getByRole('textbox');
   }
 
   get submitFeedbackButton(): Locator {
@@ -58,9 +58,9 @@ export class GeneratedAnswerObject {
   }
 
   get citationLink(): Locator {
-    return this.page.locator(
-      '[data-test="generated-answer__citations"] .citation__link'
-    );
+    return this.page
+      .getByTestId('generated-answer__citations')
+      .locator('.citation__link');
   }
 
   async hoverOverCitation(index: number): Promise<void> {

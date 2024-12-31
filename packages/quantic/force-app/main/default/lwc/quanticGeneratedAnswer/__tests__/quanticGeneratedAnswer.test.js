@@ -47,17 +47,17 @@ function createTestComponent(options = defaultOptions) {
 
 const selectors = {
   initializationError: 'c-quantic-component-error',
-  generatedAnswerCard: '[data-test="generated-answer__card"]',
-  generatedAnswerBadge: '[data-test="generated-answer__badge"]',
-  generatedAnswerRetryButton: '[data-test="generated-answer__retry-button"]',
-  generatedAnswerActions: '[data-test="generated-answer__actions"]',
+  generatedAnswerCard: '[data-testid="generated-answer__card"]',
+  generatedAnswerBadge: '[data-testid="generated-answer__badge"]',
+  generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
+  generatedAnswerActions: '[data-testid="generated-answer__actions"]',
   generatedAnswerToggleButton: 'c-quantic-generated-answer-toggle',
   generatedAnswerContent: 'c-quantic-generated-answer-content',
   generatingMessageWhenAnswerCollapsed:
-    '[data-test="generated-answer__collapse-generating-message"]',
+    '[data-testid="generated-answer__collapse-generating-message"]',
   generatedAnswerCollapseToggle:
-    '[data-test="generated-answer__answer-toggle"]',
-  generatedAnswerDisclaimer: '[data-test="generated-answer__disclaimer"]',
+    '[data-testid="generated-answer__answer-toggle"]',
+  generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
 };
 
 const initialSearchStatusState = {
