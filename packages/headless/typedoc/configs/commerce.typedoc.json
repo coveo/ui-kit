@@ -13,6 +13,8 @@
     "Actions",
     "*"
   ],
+  "name": "Commerce",
+  "readme": "none",
   "entryPoints": ["../../src/commerce.index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]
