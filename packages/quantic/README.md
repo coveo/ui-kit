@@ -144,7 +144,7 @@ npm run e2e:detailed
 To run Playwright tests, run:
 
 ```bash
-npm run e2e:playwright:
+npm run e2e:playwright
 ```
 
 To run Playwright tests only for the scratch org where LWS is enabled, run:

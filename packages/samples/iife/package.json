@@ -20,10 +20,10 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "cypress": "13.16.1",
+    "cypress": "13.17.0",
     "cypress-repeat": "2.3.8",
     "ncp": "2.0.0",
-    "resolve": "1.22.8",
+    "resolve": "1.22.10",
     "rimraf": "6.0.1",
     "serve": "14.2.4"
   }
