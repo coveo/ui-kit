@@ -22,6 +22,6 @@
     "@types/react-dom": "18.3.0",
     "@playwright/test": "1.49.1",
     "eslint": "8.57",
-    "typescript": "5.4.5"
+    "typescript": "5.5.4"
   }
 }

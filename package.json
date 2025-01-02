@@ -57,8 +57,8 @@
     "@types/execa": "^2.0.0",
     "@types/jest": "29.5.14",
     "@types/node": "22.10.2",
-    "@typescript-eslint/eslint-plugin": "7.17.0",
-    "@typescript-eslint/parser": "7.17.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
     "@whitespace/storybook-addon-html": "6.1.1",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
@@ -91,7 +91,7 @@
     "semver": "7.6.3",
     "ts-node": "10.9.2",
     "tslib": "^2.3.0",
-    "typescript": "5.4.5",
+    "typescript": "5.5.4",
     "vite": "5.4.11"
   },
   "overrides": {

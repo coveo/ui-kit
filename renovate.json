@@ -53,7 +53,8 @@
         "/react-router-dom/",
         "/react-dom/",
         "/@types/react/",
-        "next"
+        "next",
+        "/@remix-run/.*/"
       ]
     },
     {
