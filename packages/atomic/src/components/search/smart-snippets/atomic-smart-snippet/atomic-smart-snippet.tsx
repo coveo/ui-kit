@@ -17,6 +17,7 @@ import {ArrayProp} from '../../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {Hidden} from '../../../common/hidden';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
@@ -76,6 +77,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State()
   public tabManagerState!: TabManagerState;
   public error!: Error;
+  @State() private isAppLoaded = false;
+
   @Element() public host!: HTMLElement;
   private id = randomID();
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
@@ -187,6 +190,9 @@ export class AtomicSmartSnippet implements InitializableComponent {
       this.smartSnippetCommon.hideDuringRender(false)
     );
     this.tabManager = buildTabManager(this.bindings.engine);
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private setModalRef(ref: HTMLElement) {
@@ -204,7 +210,7 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   public componentDidRender() {
-    if (this.bindings.store.isAppLoaded()) {
+    if (this.isAppLoaded) {
       this.smartSnippetCommon.hideDuringRender(false);
     }
   }

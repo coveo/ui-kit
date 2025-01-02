@@ -69,7 +69,6 @@
     "@coveo/headless": "3.12.0",
     "@popperjs/core": "^2.11.6",
     "@salesforce-ux/design-system": "^2.16.1",
-    "@stencil/store": "2.0.16",
     "dayjs": "1.11.13",
     "dompurify": "3.2.3",
     "escape-html": "1.0.3",
