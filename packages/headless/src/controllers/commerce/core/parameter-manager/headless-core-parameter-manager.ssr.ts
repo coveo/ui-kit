@@ -4,6 +4,7 @@ import {
   SolutionType,
   SubControllerDefinitionWithProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
+import {Kind} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {CoreEngineNext} from '../../../../app/engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
@@ -55,18 +56,24 @@ export function defineParameterManager<
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildProductListing(engine).parameterManager({
-          ...props,
-          excludeDefaultParameters: true,
-        });
+        return {
+          ...buildProductListing(engine).parameterManager({
+            ...props,
+            excludeDefaultParameters: true,
+          }),
+          _kind: Kind.ParameterManager,
+        };
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildSearch(engine).parameterManager({
-          ...props,
-          excludeDefaultParameters: true,
-        });
+        return {
+          ...buildSearch(engine).parameterManager({
+            ...props,
+            excludeDefaultParameters: true,
+          }),
+          _kind: Kind.ParameterManager,
+        };
       }
     },
   } as SubControllerDefinitionWithProps<
