@@ -14,14 +14,14 @@
   },
   "dependencies": {
     "@coveo/headless-ssr-samples-common": "0.0.0",
-    "next": "14.2.20",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "next": "15.1.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
     "eslint": "8.57.1",
     "typescript": "5.4.5"
   }
