@@ -168,7 +168,7 @@
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "^3.0.0",
-    "pino": "9.5.0",
+    "pino": "9.6.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
