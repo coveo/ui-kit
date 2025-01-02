@@ -1,5 +1,5 @@
-name: 'Atomic Angular E2E tests'
-description: 'Runs Cypress tests for Atomic Angular'
+name: 'Playwright Atomic Angular'
+description: 'Run Playwright tests for Atomic Angular'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -8,21 +8,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx cypress install
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: packages/samples/angular
       shell: bash
-    - uses: cypress-io/github-action@v5
-      name: Run Cypress
-      with:
-        browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-angular-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npx nx run atomic-angular-samples:dev
-        wait-on: 'http://localhost:4200'
-        # Wait up to 10min for the Angular Server to spool up.
-        wait-on-timeout: 600000
-        install: false
-        record: false
-    - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: packages/samples/angular
+      shell: bash
+    - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
       if: failure()
       with:
         name: angular-screenshots
-        path: packages/samples/angular/cypress/screenshots
+        path: packages/samples/angular/playwright-report/

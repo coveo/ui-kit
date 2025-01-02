@@ -154,10 +154,49 @@ jobs:
           zip -r "$ZIP_NAME" "$DOCS_DIR"
           echo "Created zip file: $ZIP_NAME"
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
         with:
           name: headless-docs-${{ env.version }}
           path: headless-docs-${{ env.version }}.zip
+  typedoc-headless-react:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - name: Build typedoc site
+        run: npm run build:typedoc
+        working-directory: packages/headless-react
+        shell: bash
+      - name: Read version from package.json
+        id: read_version
+        run: |
+          VERSION=$(jq -r '.version' packages/headless-react/package.json)
+          echo "Extracted version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
+      - name: Zip documentation folder
+        run: |
+          DOCS_DIR="packages/headless/docs"
+          if [ ! -d "$DOCS_DIR" ]; then
+            echo "Documentation folder $DOCS_DIR not found."
+            exit 1
+          fi
+
+          ZIP_NAME="headless-react-docs-${{ env.version }}.zip"
+          zip -r "$ZIP_NAME" "$DOCS_DIR"
+          echo "Created zip file: $ZIP_NAME"
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        with:
+          name: headless-react-docs-${{ env.version }}
+          path: headless-react-docs-${{ env.version }}.zip
 
   # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
   # github-prod:

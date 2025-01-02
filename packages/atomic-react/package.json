@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@rollup/plugin-commonjs": "28.0.1",
+    "@rollup/plugin-commonjs": "28.0.2",
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "^11.0.0",
@@ -45,7 +45,7 @@
     "ncp": "2.0.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "rollup": "4.24.0",
+    "rollup": "4.29.0",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {

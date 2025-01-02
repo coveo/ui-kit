@@ -13,6 +13,8 @@
     "Actions",
     "*"
   ],
+  "name": "Case Assist",
+  "readme": "none",
   "entryPoints": ["../../src/case-assist.index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]

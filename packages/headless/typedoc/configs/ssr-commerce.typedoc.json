@@ -14,6 +14,8 @@
     "Actions",
     "*"
   ],
+  "name": "SSR Commerce",
+  "readme": "none",
   "entryPoints": ["../../src/ssr-commerce.index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]
