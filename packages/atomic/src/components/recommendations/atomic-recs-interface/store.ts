@@ -1,3 +1,4 @@
+import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
   BaseStore,
   createBaseStore,
@@ -33,6 +34,10 @@ export function createRecsStore(): RecsStore {
 
     setLoadingFlag(loadingFlag: string) {
       setLoadingFlag(store, loadingFlag);
+    },
+
+    getUniqueIDFromEngine(engine: RecommendationEngine): string {
+      return engine.state.recommendation.searchUid;
     },
   };
 }
