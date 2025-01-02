@@ -72,7 +72,7 @@
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "eslint": "8.57.1",
     "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-cypress": "2.15.2",
+    "eslint-plugin-cypress": "4.1.0",
     "eslint-plugin-package-lock": "1.0.0",
     "execa": "9.5.2",
     "exponential-backoff": "^3.1.0",
@@ -81,7 +81,7 @@
     "husky": "9.1.7",
     "lint-staged": "15.2.11",
     "lit": "3.2.1",
-    "nx": "19.8.14",
+    "nx": "20.3.0",
     "patch-package": "8.0.0",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "0.6.9",
@@ -92,7 +92,7 @@
     "ts-node": "10.9.2",
     "tslib": "^2.3.0",
     "typescript": "5.5.4",
-    "vite": "5.4.11"
+    "vite": "6.0.6"
   },
   "overrides": {
     "@coveo/release": {
@@ -141,5 +141,5 @@
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "packageManager": "npm@10.9.2"
+  "packageManager": "npm@11.0.0"
 }
