@@ -6,6 +6,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Button} from '../../common/button';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {dispatchTabLoaded} from '../../common/tabs/tab-common';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
@@ -25,6 +26,7 @@ export class AtomicIPXTab implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   @BindStateToController('tab')
   @State()
@@ -64,6 +66,9 @@ export class AtomicIPXTab implements InitializableComponent {
     this.unsubscribe = this.tab.subscribe(
       () => (this.active = this.tab.state.isActive)
     );
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   public componentDidRender() {
@@ -75,7 +80,7 @@ export class AtomicIPXTab implements InitializableComponent {
   }
 
   public render() {
-    if (!this.bindings.store.isAppLoaded()) {
+    if (!this.isAppLoaded) {
       return;
     }
 

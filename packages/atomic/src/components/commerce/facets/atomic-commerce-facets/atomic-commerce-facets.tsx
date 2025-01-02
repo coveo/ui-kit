@@ -19,6 +19,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -52,6 +53,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   public facetGeneratorState!: FacetGeneratorState;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   public initialize() {
     this.validateProps();
@@ -59,6 +61,9 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
     const controller = this.controllerBuilder(engine);
     this.facetGenerator = controller.facetGenerator();
     this.summary = controller.summary();
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private isProductListing() {
@@ -87,7 +92,7 @@ export class AtomicCommerceFacets implements InitializableComponent<Bindings> {
   }
 
   public render() {
-    if (!this.bindings.store.isAppLoaded()) {
+    if (!this.isAppLoaded) {
       return [...Array.from({length: this.collapseFacetsAfter})].map(() => (
         <FacetPlaceholder isCollapsed={false} numberOfValues={8} />
       ));

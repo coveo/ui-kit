@@ -22,7 +22,6 @@ interface Data {
 }
 
 export type CommerceStore = BaseStore<Data> & {
-  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   isMobile(): boolean;
@@ -42,10 +41,6 @@ export function createCommerceStore(
 
   return {
     ...store,
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       unsetLoadingFlag(store, loadingFlag);

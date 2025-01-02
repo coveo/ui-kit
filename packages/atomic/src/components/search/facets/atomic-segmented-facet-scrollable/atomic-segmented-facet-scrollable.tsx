@@ -120,9 +120,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       (direction === 'left' && this.hideLeftArrow) ||
       (direction === 'right' && this.hideRightArrow);
     const hiddenClass = hide ? 'invisible opacity-0' : '';
-    const transitionClass = this.bindings.store.isAppLoaded()
-      ? 'transition-visi-opacity ease-in-out duration-300'
-      : '';
+    const transitionClass = 'transition-visi-opacity ease-in-out duration-300';
 
     return (
       <div

@@ -30,7 +30,6 @@ interface Data {
 }
 
 export type InsightStore = BaseStore<Data> & {
-  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   registerFacet<T extends FacetType, U extends string>(
@@ -57,10 +56,6 @@ export function createInsightStore(): InsightStore {
 
   return {
     ...store,
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       unsetLoadingFlag(store, loadingFlag);

@@ -89,6 +89,7 @@ export class AtomicCommerceProductList
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
+  @State() private isAppLoaded = false;
 
   /**
    * The desired number of placeholders to display while the product list is loading.
@@ -164,6 +165,10 @@ export class AtomicCommerceProductList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+    this.isAppLoaded = this.bindings.store.state.loadingFlags.length === 0;
+    this.bindings.store.onChange('loadingFlags', () => {
+      this.isAppLoaded = this.bindings.store.state.loadingFlags.length === 0;
+    });
   }
 
   @Listen('atomic/selectChildProduct')
@@ -201,7 +206,7 @@ export class AtomicCommerceProductList
             density={this.density}
             display={this.display}
             imageSize={this.imageSize}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            displayPlaceholders={!this.isAppLoaded}
             numberOfPlaceholders={this.numberOfPlaceholders}
           ></ResultsPlaceholdersGuard>
           {this.display === 'table'
@@ -215,7 +220,7 @@ export class AtomicCommerceProductList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       this.display,

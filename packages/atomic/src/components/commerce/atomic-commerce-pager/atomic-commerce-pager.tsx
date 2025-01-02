@@ -17,6 +17,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {
   PagerNextButton,
   PagerPageButton,
@@ -59,6 +60,7 @@ export class AtomicCommercePager
   public pagerState!: PaginationState;
 
   @State() error!: Error;
+  @State() private isAppLoaded = false;
 
   @Event({
     eventName: 'atomic/scrollToTop',
@@ -99,6 +101,9 @@ export class AtomicCommercePager
       this.listingOrSearch = buildSearch(this.bindings.engine);
     }
     this.pager = this.listingOrSearch.pagination();
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private validateProps() {
@@ -120,7 +125,7 @@ export class AtomicCommercePager
       <PagerGuard
         hasError={false}
         hasItems={this.pagerState.totalPages > 1}
-        isAppLoaded={this.bindings.store.isAppLoaded()}
+        isAppLoaded={this.isAppLoaded}
       >
         <PagerNavigation i18n={this.bindings.i18n}>
           <PagerPreviousButton

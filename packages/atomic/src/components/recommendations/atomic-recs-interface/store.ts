@@ -14,7 +14,6 @@ interface Data {
 }
 
 export type RecsStore = BaseStore<Data> & {
-  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
 };
@@ -28,10 +27,6 @@ export function createRecsStore(): RecsStore {
 
   return {
     ...store,
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       unsetLoadingFlag(store, loadingFlag);

@@ -34,6 +34,7 @@ import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
 import {Hidden} from '../../../common/hidden';
 import {extractUnfoldedItem} from '../../../common/interface/item';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {
@@ -88,6 +89,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
+  @State() private isAppLoaded = false;
 
   /**
    * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
@@ -219,6 +221,10 @@ export class AtomicFoldedResultList implements InitializableComponent {
       store: this.bindings.store,
     });
     this.tabManager = buildTabManager(this.bindings.engine);
+
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private initFolding(
@@ -273,7 +279,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
             density={this.density}
             imageSize={this.imageSize}
             display={this.display}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            displayPlaceholders={!this.isAppLoaded}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
           ></ResultsPlaceholdersGuard>
           <ItemDisplayGuard
@@ -302,7 +308,7 @@ export class AtomicFoldedResultList implements InitializableComponent {
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       this.display,
