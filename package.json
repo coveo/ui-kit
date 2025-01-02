@@ -91,7 +91,7 @@
     "semver": "7.6.3",
     "ts-node": "10.9.2",
     "tslib": "^2.3.0",
-    "typescript": "5.7.2",
+    "typescript": "5.5.4",
     "vite": "5.4.11"
   },
   "overrides": {
