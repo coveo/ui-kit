@@ -1,5 +1,8 @@
 import {UniversalControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../app/commerce-ssr-engine/types/kind.js';
 import {
   Context,
   buildContext,
@@ -29,10 +32,8 @@ export function defineContext(): ContextDefinition {
     standalone: true,
     recommendation: true,
     buildWithProps: (engine, props) => {
-      return {
-        ...buildContext(engine, {options: props}),
-        _kind: Kind.Context,
-      };
+      const controller = buildContext(engine, {options: props});
+      return createControllerWithKind(controller, Kind.Cart);
     },
   };
 }

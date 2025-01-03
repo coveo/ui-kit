@@ -1,6 +1,4 @@
 import {
-  Controller,
-  ControllerDefinitionsMap,
   CommerceEngineDefinitionOptions,
   defineProductList,
   defineCart,
@@ -23,10 +21,6 @@ import {
   defineRecommendations,
   defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
-
-type CommerceEngineConfig = CommerceEngineDefinitionOptions<
-  ControllerDefinitionsMap<Controller>
->;
 
 export default {
   /**
@@ -69,4 +63,4 @@ export default {
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
   },
-} satisfies CommerceEngineConfig;
+} satisfies CommerceEngineDefinitionOptions;
