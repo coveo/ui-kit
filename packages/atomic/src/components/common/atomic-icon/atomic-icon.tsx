@@ -94,7 +94,7 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
-      this.bindings.store.getIconAssetsPath()
+      this.bindings.store.state.iconAssetsPath
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
 

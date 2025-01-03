@@ -1,75 +1,88 @@
-import {
-  InsightDateFacetValue,
-  InsightEngine,
-  InsightNumericFacetValue,
-} from '..';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
+import {InsightEngine} from '@coveo/headless/insight';
 import {
   FacetInfo,
   FacetStore,
+  FacetType,
   FacetValueFormat,
 } from '../../common/facets/facet-common-store';
 import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
+  BaseStore,
+  createBaseStore,
+  getFacetElements,
+  registerFacet,
+  ResultListInfo,
+  setLoadingFlag,
+  unsetLoadingFlag,
+  waitUntilAppLoaded,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../../search/atomic-layout/search-layout';
+import {DateFacetValue, NumericFacetValue} from '../../common/types';
 
-export interface AtomicInsightStoreData extends AtomicCommonStoreData {
-  fieldsToInclude: string[];
+interface Data {
+  loadingFlags: string[];
+  iconAssetsPath: string;
+  resultList: ResultListInfo | undefined;
   facets: FacetStore<FacetInfo>;
-  numericFacets: FacetStore<
-    FacetInfo & FacetValueFormat<InsightNumericFacetValue>
-  >;
-  dateFacets: FacetStore<FacetInfo & FacetValueFormat<InsightDateFacetValue>>;
+  numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
+  dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  mobileBreakpoint: string;
-  currentQuickviewPosition: number;
+  facetElements: HTMLElement[];
+  fieldsToInclude: string[];
 }
 
-export interface FacetInfoMap {
-  [facetId: string]:
-    | FacetInfo
-    | (FacetInfo & FacetValueFormat<InsightNumericFacetValue>)
-    | (FacetInfo & FacetValueFormat<InsightDateFacetValue>);
-}
+export type InsightStore = BaseStore<Data> & {
+  isAppLoaded(): boolean;
+  unsetLoadingFlag(loadingFlag: string): void;
+  setLoadingFlag(flag: string): void;
+  registerFacet<T extends FacetType, U extends string>(
+    facetType: T,
+    data: Data[T][U] & {facetId: U; element: HTMLElement}
+  ): void;
+  getFacetElements(): HTMLElement[];
+  waitUntilAppLoaded(callback: () => void): void;
+  getUniqueIDFromEngine(engine: InsightEngine): string;
+};
 
-export interface AtomicInsightStore
-  extends AtomicCommonStore<AtomicInsightStoreData> {
-  getAllFacets(): FacetInfoMap;
-  isMobile(): boolean;
-}
-
-export function createAtomicInsightStore(): AtomicInsightStore {
-  const commonStore = createAtomicCommonStore<AtomicInsightStoreData>({
+export function createInsightStore(): InsightStore {
+  const store = createBaseStore<Data>({
+    loadingFlags: [],
+    iconAssetsPath: '',
+    resultList: undefined,
     facets: {},
     numericFacets: {},
     dateFacets: {},
     categoryFacets: {},
-    loadingFlags: [],
-    iconAssetsPath: '',
-    fieldsToInclude: [],
     facetElements: [],
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
-    currentQuickviewPosition: -1,
+    fieldsToInclude: [],
   });
-  return {
-    ...commonStore,
 
-    getAllFacets() {
-      return {
-        ...commonStore.state.facets,
-        ...commonStore.state.dateFacets,
-        ...commonStore.state.categoryFacets,
-        ...commonStore.state.numericFacets,
-      };
+  return {
+    ...store,
+
+    isAppLoaded() {
+      return !store.state.loadingFlags.length;
     },
 
-    isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
+    unsetLoadingFlag(loadingFlag: string) {
+      unsetLoadingFlag(store, loadingFlag);
+    },
+
+    setLoadingFlag(loadingFlag: string) {
+      setLoadingFlag(store, loadingFlag);
+    },
+
+    registerFacet<T extends FacetType, U extends string>(
+      facetType: T,
+      data: Data[T][U] & {facetId: U; element: HTMLElement}
+    ) {
+      registerFacet(store, facetType, data);
+    },
+
+    getFacetElements() {
+      return getFacetElements(store);
+    },
+
+    waitUntilAppLoaded(callback: () => void) {
+      waitUntilAppLoaded(store, callback);
     },
 
     getUniqueIDFromEngine(engine: InsightEngine): string {

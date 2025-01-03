@@ -10,12 +10,12 @@ import {
   augmentAnalyticsConfigWithAtomicVersion,
   getNextAnalyticsConfig,
 } from '../../common/interface/analytics-config';
-import {createAtomicStore} from './store';
+import {createSearchStore} from './store';
 
 export function getAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
   enabled: boolean,
-  store: ReturnType<typeof createAtomicStore>
+  store: ReturnType<typeof createSearchStore>
 ): AnalyticsConfiguration {
   switch (searchEngineConfig.analytics?.analyticsMode) {
     case 'next':
@@ -29,7 +29,7 @@ export function getAnalyticsConfig(
 function getLegacyAnalyticsConfig(
   searchEngineConfig: SearchEngineConfiguration,
   enabled: boolean,
-  store: ReturnType<typeof createAtomicStore>
+  store: ReturnType<typeof createSearchStore>
 ): AnalyticsConfiguration {
   const analyticsClientMiddleware = (
     event: string,
@@ -64,7 +64,7 @@ function getLegacyAnalyticsConfig(
 function augmentAnalytics(
   event: string,
   payload: AnalyticsPayload,
-  store: ReturnType<typeof createAtomicStore>,
+  store: ReturnType<typeof createSearchStore>,
   config: SearchEngineConfiguration
 ) {
   let result = augmentWithExternalMiddleware(event, payload, config);
@@ -75,7 +75,7 @@ function augmentAnalytics(
 
 function augmentAnalyticsWithFacetTitles(
   payload: AnalyticsPayload,
-  store: ReturnType<typeof createAtomicStore>
+  store: ReturnType<typeof createSearchStore>
 ) {
   const allFacets = store.getAllFacets();
   const getAtomicFacetLabelOrOriginalTitle = (

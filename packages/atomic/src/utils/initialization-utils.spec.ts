@@ -6,7 +6,7 @@ import {
   AtomicSearchInterface,
   Bindings,
 } from '../components/search/atomic-search-interface/atomic-search-interface';
-import {createAtomicStore} from '../components/search/atomic-search-interface/store';
+import {createSearchStore} from '../components/search/atomic-search-interface/store';
 import {
   BindStateToController,
   InitializableComponent,
@@ -112,7 +112,7 @@ describe('InitializeBindings decorator', () => {
           },
         }),
         i18n: i18next,
-        store: createAtomicStore(),
+        store: createSearchStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
         createScriptElement: jest.fn(),
         createStyleElement: jest.fn(),
@@ -139,7 +139,7 @@ describe('BindStateToController decorator', () => {
           },
         }),
         i18n: i18next,
-        store: createAtomicStore(),
+        store: createSearchStore(),
         interfaceElement: document.createElement('atomic-search-interface'),
         createScriptElement: jest.fn(),
         createStyleElement: jest.fn(),

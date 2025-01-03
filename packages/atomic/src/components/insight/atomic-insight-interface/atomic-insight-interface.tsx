@@ -26,13 +26,13 @@ import {
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicInsightStore, createAtomicInsightStore} from './store';
+import {createInsightStore, InsightStore} from './store';
 
 const FirstInsightRequestExecutedFlag = 'firstInsightRequestExecuted';
 export type InsightInitializationOptions = InsightEngineConfiguration;
 export type InsightBindings = CommonBindings<
   InsightEngine,
-  AtomicInsightStore,
+  InsightStore,
   HTMLAtomicInsightInterfaceElement
 > &
   NonceBindings;
@@ -128,7 +128,7 @@ export class AtomicInsightInterface
 
   @Element() public host!: HTMLAtomicInsightInterfaceElement;
 
-  private store = createAtomicInsightStore();
+  private store = createInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
 
   public constructor() {
@@ -202,7 +202,7 @@ export class AtomicInsightInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   @Listen('atomic/initializeComponent')

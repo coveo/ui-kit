@@ -4,13 +4,13 @@ import {
   SearchEngineConfiguration,
 } from '@coveo/headless';
 import {getAnalyticsConfig} from './analytics-config';
-import {createAtomicStore} from './store';
+import {createSearchStore} from './store';
 
 jest.mock('../../../global/environment');
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
-  let store: ReturnType<typeof createAtomicStore>;
+  let store: ReturnType<typeof createSearchStore>;
   const originalReferrer = document.referrer;
   const setReferrer = (value: string) => {
     Object.defineProperty(document, 'referrer', {value, configurable: true});
@@ -42,7 +42,7 @@ describe('analyticsConfig', () => {
   ])('$describeName', ({getSearchEngineConfig}) => {
     beforeEach(() => {
       config = getSearchEngineConfig();
-      store = createAtomicStore();
+      store = createSearchStore();
     });
 
     afterEach(() => {

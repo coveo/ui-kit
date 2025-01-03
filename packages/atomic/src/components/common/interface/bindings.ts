@@ -3,33 +3,19 @@ import {CommerceEngine} from '@coveo/headless/commerce';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
+import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import {InsightEngine} from '../../insight';
-import {AtomicCommonStore, AtomicCommonStoreData} from './store';
-
-export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
-  state: StoreData;
-
-  get: <PropName extends keyof StoreData>(
-    propName: PropName
-  ) => StoreData[PropName];
-
-  set: <PropName extends keyof StoreData>(
-    propName: PropName,
-    value: StoreData[PropName]
-  ) => void;
-
-  onChange: <PropName extends keyof StoreData>(
-    propName: PropName,
-    cb: (newValue: StoreData[PropName]) => void
-  ) => () => void;
-}
+import {InsightStore} from '../../insight/atomic-insight-interface/store';
+import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
+import {SearchStore} from '../../search/atomic-search-interface/store';
 
 /**
  * Bindings passed from an interface to its children components.
  */
 export interface CommonBindings<
   Engine extends AnyEngineType,
-  Store extends AtomicCommonStore<AtomicCommonStoreData>,
+  Store extends AnyStore,
   InterfaceElement extends HTMLStencilElement,
 > {
   /**
@@ -67,7 +53,7 @@ export interface NonceBindings {
 
 export type AnyBindings = CommonBindings<
   AnyEngineType,
-  AtomicCommonStore<AtomicCommonStoreData>,
+  AnyStore,
   HTMLStencilElement
 >;
 
@@ -76,3 +62,10 @@ export type AnyEngineType =
   | RecommendationEngine
   | InsightEngine
   | CommerceEngine;
+
+type AnyStore =
+  | CommerceStore
+  | CommerceRecommendationStore
+  | RecsStore
+  | InsightStore
+  | SearchStore;

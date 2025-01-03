@@ -45,14 +45,14 @@ import {
   noProductsSelector,
 } from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicCommerceStore, createAtomicCommerceStore} from './store';
+import {CommerceStore, createCommerceStore} from './store';
 
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
-  AtomicCommerceStore,
+  CommerceStore,
   HTMLAtomicCommerceInterfaceElement
 > &
   NonceBindings;
@@ -81,7 +81,7 @@ export class AtomicCommerceInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
-  private store: AtomicCommerceStore;
+  private store: CommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @Element() public host!: HTMLAtomicCommerceInterfaceElement;
@@ -178,7 +178,7 @@ export class AtomicCommerceInterface
       this,
       'CoveoAtomic'
     );
-    this.store = createAtomicCommerceStore(this.type);
+    this.store = createCommerceStore(this.type);
   }
 
   public connectedCallback() {
@@ -220,7 +220,7 @@ export class AtomicCommerceInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {

@@ -17,7 +17,7 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '../../common/layout/display-options';
-import {AtomicRecsStore} from '../atomic-recs-interface/store';
+import {RecsStore} from '../atomic-recs-interface/store';
 
 /**
  * The `atomic-recs-result` component is used internally by the `atomic-recs-list` component.
@@ -61,7 +61,7 @@ export class AtomicRecsResult {
    * Global Atomic state.
    * @internal
    */
-  @Prop() store?: AtomicRecsStore;
+  @Prop() store?: RecsStore;
 
   /**
    * The result content to display.

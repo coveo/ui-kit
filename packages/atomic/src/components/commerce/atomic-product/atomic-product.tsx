@@ -2,10 +2,6 @@ import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
-import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-} from '../../common/interface/store';
 import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
@@ -17,6 +13,8 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '../../common/layout/display-options';
+import {CommerceStore} from '../atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
 import {
   InteractiveProductContextEvent,
   ProductContextEvent,
@@ -56,7 +54,7 @@ export class AtomicProduct {
    * Global Atomic state.
    * @alpha
    */
-  @Prop() store?: AtomicCommonStore<AtomicCommonStoreData>;
+  @Prop() store?: CommerceStore | CommerceRecommendationStore;
 
   /**
    * The product content to display.

@@ -3,8 +3,9 @@ import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
+import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../hidden';
-import {AnyBindings} from '../interface/bindings';
 import {
   DateFacet,
   DateFacetValue,
@@ -38,7 +39,7 @@ export interface Timeframe {
 interface TimeframeFacetCommonOptions {
   facetId?: string;
   host: HTMLElement;
-  bindings: AnyBindings;
+  bindings: SearchBindings | InsightBindings;
   label: string;
   field: string;
   headingLevel: number;
@@ -106,7 +107,7 @@ export class TimeframeFacetCommon {
       return this.props.facetId;
     }
 
-    if (this.props.bindings.store.get('dateFacets')[this.props.field]) {
+    if (this.props.bindings.store.state.dateFacets[this.props.field]) {
       return randomID(`${this.props.field}_`);
     }
 

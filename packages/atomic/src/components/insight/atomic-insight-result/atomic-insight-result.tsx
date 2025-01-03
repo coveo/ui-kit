@@ -12,7 +12,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../../common/layout/display-options';
-import {AtomicInsightStore} from '../atomic-insight-interface/store';
+import {InsightStore} from '../atomic-insight-interface/store';
 
 /**
  * @internal
@@ -46,7 +46,7 @@ export class AtomicInsightResult {
    * Global Atomic state.
    * @internal
    */
-  @Prop() store?: AtomicInsightStore;
+  @Prop() store?: InsightStore;
 
   /**
    * The result content to display.
