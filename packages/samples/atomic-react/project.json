@@ -2,11 +2,11 @@
   "name": "atomic-react-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "namedInputs": {
-    "negativeBuildOutputs": ["!{projectRoot}/public/dist"]
+    "negativeBuildOutputs": ["!{projectRoot}/dist"]
   },
   "targets": {
     "cached:build": {
-      "outputs": ["{projectRoot}/public/dist"],
+      "outputs": ["{projectRoot}/dist"],
       "executor": "nx:run-commands",
       "options": {
         "commands": [
