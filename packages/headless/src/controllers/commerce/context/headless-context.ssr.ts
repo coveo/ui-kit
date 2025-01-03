@@ -33,7 +33,7 @@ export function defineContext(): ContextDefinition {
     recommendation: true,
     buildWithProps: (engine, props) => {
       const controller = buildContext(engine, {options: props});
-      return createControllerWithKind(controller, Kind.Cart);
+      return createControllerWithKind(controller, Kind.Context);
     },
   };
 }

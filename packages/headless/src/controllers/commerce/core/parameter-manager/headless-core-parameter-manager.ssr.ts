@@ -8,7 +8,6 @@ import {
   createControllerWithKind,
   Kind,
 } from '../../../../app/commerce-ssr-engine/types/kind.js';
-// import {Kind} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {CoreEngineNext} from '../../../../app/engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
