@@ -15,7 +15,7 @@
     "stencil-router-v2": "0.6.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
     "cypress": "13.17.0",
     "cypress-repeat": "2.3.8",
     "gts": "5.3.1",
