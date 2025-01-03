@@ -1,33 +1,20 @@
-'use client';
-
 import {
   useInstantProducts,
   useRecentQueriesList,
-  useStandaloneSearchBox,
+  useSearchBox,
 } from '@/lib/commerce-engine';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import InstantProducts from './instant-product';
 import RecentQueries from './recent-queries';
 
-export default function StandaloneSearchBox() {
-  const {state, methods} = useStandaloneSearchBox();
+export default function SearchBox() {
+  const {state, methods} = useSearchBox();
   const {state: recentQueriesState} = useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    if (state.redirectTo === '/search') {
-      const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
-      router.push(url, {scroll: false});
-      methods?.afterRedirection();
-    }
-  }, [state.redirectTo, state.value, router, methods]);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);
@@ -52,16 +39,28 @@ export default function StandaloneSearchBox() {
         aria-label="searchbox"
         placeholder="search"
         value={state.value}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            methods?.submit();
+          }
+        }}
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}
         onBlur={handleBlur}
       ></input>
       {state.value !== '' && (
         <span>
-          <button onClick={methods?.clear}>X</button>
+          <button
+            onClick={() => {
+              methods?.clear();
+              methods?.submit();
+            }}
+          >
+            X
+          </button>
         </span>
       )}
-      <button onClick={() => methods?.submit()}>Search</button>
+      <button onClick={methods?.submit}>Search</button>
 
       {isInputFocused && (
         <>
