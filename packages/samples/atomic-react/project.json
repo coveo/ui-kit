@@ -13,7 +13,7 @@
           "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc -b; fi",
           "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then vite build; fi"
         ],
-        "cwd": "packages/samples/atomic-react-2"
+        "cwd": "packages/samples/atomic-react"
       }
     },
     "build": {
