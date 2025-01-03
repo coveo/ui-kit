@@ -1,5 +1,5 @@
-name: 'Atomic React E2E tests'
-description: 'Runs Cypress tests for Atomic React'
+name: 'Playwright Atomic React'
+description: 'Runs Playwright tests for Atomic React'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -8,20 +8,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: npx cypress install
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: packages/samples/angular
       shell: bash
-    - uses: cypress-io/github-action@v5
-      name: Run Cypress
-      with:
-        browser: chrome
-        command-prefix: 'npx -w @coveo/atomic-react-samples cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
-        start: npx nx run atomic-react-samples:dev
-        wait-on: 'http://localhost:3000'
-        wait-on-timeout: 600000
-        install: false
-        record: false
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: packages/samples/atomic-react
+      shell: bash
     - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
       if: failure()
       with:
         name: react-screenshots
-        path: packages/samples/atomic-react/cypress/screenshots
+        path: packages/samples/atomic-react/playwright-report/
