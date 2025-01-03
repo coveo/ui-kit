@@ -10,7 +10,7 @@
     "build": "nx run-many --target=build",
     "test": "nx run-many --target=test",
     "e2e": "nx run-many --target=e2e",
-    "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}' --log-level=error",
+    "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}' --log-level=debug",
     "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
     "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
     "pr:report": "node ./scripts/reports/pr-report.mjs",
