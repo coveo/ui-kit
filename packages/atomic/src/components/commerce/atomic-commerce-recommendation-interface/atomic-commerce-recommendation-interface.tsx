@@ -18,6 +18,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {InterfaceErrorGuard} from '../../common/interface/guard';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -263,6 +264,10 @@ export class AtomicCommerceRecommendationInterface
   }
 
   public render() {
-    return [<slot></slot>];
+    return (
+      <InterfaceErrorGuard host={this.host} error={this.error}>
+        {[<slot></slot>]}
+      </InterfaceErrorGuard>
+    );
   }
 }

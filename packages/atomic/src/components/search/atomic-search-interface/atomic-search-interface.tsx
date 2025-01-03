@@ -33,6 +33,7 @@ import {
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {InterfaceErrorGuard} from '../../common/interface/guard';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -583,14 +584,18 @@ export class AtomicSearchInterface
   }
 
   public render() {
-    return [
-      this.engine && this.enableRelevanceInspector && (
-        <atomic-relevance-inspector
-          open={this.relevanceInspectorIsOpen}
-          bindings={this.bindings}
-        ></atomic-relevance-inspector>
-      ),
-      <slot></slot>,
-    ];
+    return (
+      <InterfaceErrorGuard host={this.host} error={this.error}>
+        {[
+          this.engine && this.enableRelevanceInspector && (
+            <atomic-relevance-inspector
+              open={this.relevanceInspectorIsOpen}
+              bindings={this.bindings}
+            ></atomic-relevance-inspector>
+          ),
+          <slot></slot>,
+        ]}
+      </InterfaceErrorGuard>
+    );
   }
 }

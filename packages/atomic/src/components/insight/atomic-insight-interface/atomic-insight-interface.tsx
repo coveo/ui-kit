@@ -21,6 +21,7 @@ import {
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {InterfaceErrorGuard} from '../../common/interface/guard';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -270,12 +271,14 @@ export class AtomicInsightInterface
 
   render() {
     return (
-      this.engine && (
-        <host>
-          <slot name="full-search"></slot>
-          <slot></slot>
-        </host>
-      )
+      <InterfaceErrorGuard host={this.host} error={this.error}>
+        {this.engine && (
+          <host>
+            <slot name="full-search"></slot>
+            <slot></slot>
+          </host>
+        )}
+      </InterfaceErrorGuard>
     );
   }
 }

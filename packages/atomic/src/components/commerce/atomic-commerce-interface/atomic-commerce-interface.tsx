@@ -35,6 +35,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {InterfaceErrorGuard} from '../../common/interface/guard';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -465,6 +466,10 @@ export class AtomicCommerceInterface
   }
 
   public render() {
-    return [<slot></slot>];
+    return (
+      <InterfaceErrorGuard host={this.host} error={this.error}>
+        {[<slot></slot>]}
+      </InterfaceErrorGuard>
+    );
   }
 }

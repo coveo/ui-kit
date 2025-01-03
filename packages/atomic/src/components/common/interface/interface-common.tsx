@@ -1,5 +1,5 @@
 import {LogLevel} from '@coveo/headless';
-import {ComponentInterface, h} from '@stencil/core';
+import {ComponentInterface} from '@stencil/core';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
@@ -26,9 +26,8 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   host: HTMLStencilElement;
   bindings: AnyBindings;
   error?: Error;
-
   updateIconAssetsPath(): void;
-  registerFieldsToInclude?: () => void; // Fix: Removed the question mark and added a semicolon.
+  registerFieldsToInclude?: () => void;
 }
 
 export const mismatchedInterfaceAndEnginePropError = (
@@ -48,10 +47,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     setCoveoGlobal(globalVariableName);
     loadFocusVisiblePolyfill();
 
-    const {
-      connectedCallback: originalConnectedCallback,
-      render: originalRender,
-    } = atomicInterface;
+    const {connectedCallback: originalConnectedCallback} = atomicInterface;
 
     atomicInterface.connectedCallback = () => {
       this.i18nPromise = init18n(atomicInterface);
@@ -60,19 +56,6 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
         originalConnectedCallback &&
         originalConnectedCallback.call(atomicInterface)
       );
-    };
-
-    atomicInterface.render = () => {
-      if (atomicInterface.error) {
-        return (
-          <atomic-component-error
-            element={atomicInterface.host}
-            error={atomicInterface.error}
-          ></atomic-component-error>
-        );
-      }
-
-      return originalRender && originalRender.call(atomicInterface);
     };
   }
 

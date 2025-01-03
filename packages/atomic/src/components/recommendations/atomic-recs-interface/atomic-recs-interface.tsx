@@ -23,6 +23,7 @@ import {RecsLogLevel} from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
+import {InterfaceErrorGuard} from '../../common/interface/guard';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -306,6 +307,10 @@ export class AtomicRecsInterface
   }
 
   public render() {
-    return this.engine && <slot></slot>;
+    return (
+      <InterfaceErrorGuard host={this.host} error={this.error}>
+        {this.engine && <slot></slot>}
+      </InterfaceErrorGuard>
+    );
   }
 }
