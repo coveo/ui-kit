@@ -5,6 +5,13 @@ import QuanticSort from 'c/quanticSort';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+const selectors = {
+  lightningCombobox: 'lightning-combobox',
+  componentError: 'c-quantic-component-error',
+  sortDropdown: '[data-cy="sort-dropdown"]',
+  initializationError: 'c-quantic-component-error',
+};
+
 const sortVariants = {
   default: {
     name: 'default',
@@ -20,25 +27,47 @@ const sortVariants = {
   },
 };
 
+const sortByLabel = 'Sort By';
+
 jest.mock('c/quanticHeadlessLoader');
-jest.mock('@salesforce/label/c.quantic_SortBy', () => ({default: 'Sort By'}), {
-  virtual: true,
-});
+jest.mock(
+  '@salesforce/label/c.quantic_SortBy',
+  () => ({default: sortByLabel}),
+  {
+    virtual: true,
+  }
+);
+
+let buenoMock = {
+  isString: jest
+    .fn()
+    .mockImplementation(
+      (value) => Object.prototype.toString.call(value) === '[object String]'
+    ),
+  StringValue: jest.fn(),
+  RecordValue: jest.fn(),
+  Schema: jest.fn(() => ({
+    validate: jest.fn(),
+  })),
+};
+
+const successfulBuenoValidationMock = buenoMock;
+const unsuccessfulBuenoValidationMock = {
+  ...buenoMock,
+  Schema: jest.fn(() => ({
+    validate: () => {
+      throw new Error();
+    },
+  })),
+};
 
 function mockBueno() {
-  jest.spyOn(mockHeadlessLoader, 'getBueno').mockReturnValue(
-    new Promise(() => {
-      // @ts-ignore
-      global.Bueno = {
-        isString: jest
-          .fn()
-          .mockImplementation(
-            (value) =>
-              Object.prototype.toString.call(value) === '[object String]'
-          ),
-      };
-    })
-  );
+  // @ts-ignore
+  mockHeadlessLoader.getBueno = () => {
+    // @ts-ignore
+    global.Bueno = buenoMock;
+    return new Promise((resolve) => resolve());
+  };
 }
 
 let isInitialized = false;
@@ -47,32 +76,35 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 
-const mockSearchStatusState = {
+const defaultSearchStatusState = {
   hasResults: true,
 };
-
-const mockSearchStatus = {
-  state: mockSearchStatusState,
-  subscribe: jest.fn((callback) => {
-    callback();
-    return jest.fn();
-  }),
-};
+let searchStatusState = defaultSearchStatusState;
 
 const functionsMocks = {
   buildSort: jest.fn(() => ({
     state: {},
-    subscribe: functionsMocks.subscribe,
+    subscribe: functionsMocks.sortStateSubscriber,
+    sortBy: functionsMocks.sortBy,
+  })),
+  buildSearchStatus: jest.fn(() => ({
+    state: searchStatusState,
+    subscribe: functionsMocks.searchStatusStateSubscriber,
   })),
   buildCriterionExpression: jest.fn((criterion) => criterion),
   buildRelevanceSortCriterion: jest.fn(() => 'relevance'),
   buildDateSortCriterion: jest.fn(() => 'date'),
-  buildSearchStatus: jest.fn(() => mockSearchStatus),
-  subscribe: jest.fn((cb) => {
+  sortStateSubscriber: jest.fn((cb) => {
     cb();
-    return functionsMocks.unsubscribe;
+    return functionsMocks.sortStateUnsubscriber;
   }),
-  unsubscribe: jest.fn(() => {}),
+  searchStatusStateSubscriber: jest.fn((cb) => {
+    cb();
+    return functionsMocks.searchStatusStateUnsubscriber;
+  }),
+  sortStateUnsubscriber: jest.fn(),
+  searchStatusStateUnsubscriber: jest.fn(),
+  sortBy: jest.fn(),
 };
 
 const defaultOptions = {
@@ -80,10 +112,19 @@ const defaultOptions = {
   variant: 'default',
 };
 
-const expectedSortByLabel = 'Sort By';
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
 
-function createTestComponent(options = defaultOptions) {
+function createTestComponent(options = defaultOptions, assignedElements = []) {
   prepareHeadlessState();
+  mockSlotAssignedNodes(assignedElements);
 
   const element = createElement('c-quantic-sort', {
     is: QuanticSort,
@@ -128,6 +169,15 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
+function mockErroneousHeadlessInitialization() {
+  // @ts-ignore
+  mockHeadlessLoader.initializeWithHeadless = (element) => {
+    if (element instanceof QuanticSort) {
+      element.setInitializationError();
+    }
+  };
+}
+
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -145,14 +195,158 @@ describe('c-quantic-sort', () => {
 
   afterEach(() => {
     cleanup();
+    searchStatusState = defaultSearchStatusState;
+  });
+
+  describe('when an initialization error occurs', () => {
+    beforeEach(() => {
+      mockErroneousHeadlessInitialization();
+    });
+
+    afterAll(() => {
+      mockSuccessfulHeadlessInitialization();
+    });
+
+    it('should display the initialization error component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const initializationError = element.shadowRoot.querySelector(
+        selectors.initializationError
+      );
+
+      expect(initializationError).not.toBeNull();
+    });
   });
 
   describe('controller initialization', () => {
-    it('should subscribe to the headless state changes', async () => {
+    it('should subscribe to the headless sort and search status state changes', async () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.sortStateSubscriber).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
+    });
+  });
+
+  describe('when no results are found', () => {
+    beforeAll(() => {
+      searchStatusState = {...defaultSearchStatusState, hasResults: false};
+    });
+
+    it('should not display the sort dropdown', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const sortDropdown = element.shadowRoot.querySelector(
+        selectors.sortDropdown
+      );
+
+      expect(sortDropdown).toBeNull();
+    });
+  });
+
+  describe('when a sort option is selected', () => {
+    it('should call the sortBy method of the sort controller', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const lightningCombobox = element.shadowRoot.querySelector(
+        selectors.lightningCombobox
+      );
+      const exampleDefaultSortOptionValue = 'relevance';
+      expect(lightningCombobox).not.toBeNull();
+
+      lightningCombobox.dispatchEvent(
+        new CustomEvent('change', {
+          detail: {value: exampleDefaultSortOptionValue},
+        })
+      );
+
+      expect(functionsMocks.sortBy).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.sortBy).toHaveBeenCalledWith(
+        exampleDefaultSortOptionValue
+      );
+    });
+  });
+
+  describe('when custom sort options are passed', () => {
+    const exampleSlot = {
+      value: 'example value',
+      label: 'example label',
+      criterion: {
+        by: 'example field',
+        order: 'example order',
+      },
+    };
+    const exampleAssignedElements = [exampleSlot];
+
+    it('should build the controller with the correct sort option and display the custom sort options', async () => {
+      const element = createTestComponent(
+        defaultOptions,
+        exampleAssignedElements
+      );
+      await flushPromises();
+
+      expect(functionsMocks.buildSort).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSort).toHaveBeenCalledWith(exampleEngine, {
+        initialState: {
+          criterion: {
+            by: 'example field',
+            order: 'example order',
+          },
+        },
+      });
+      const lightningCombobox = element.shadowRoot.querySelector(
+        selectors.lightningCombobox
+      );
+
+      expect(lightningCombobox.options).toEqual([exampleSlot]);
+    });
+  });
+
+  describe('when invalid sort options are passed', () => {
+    beforeEach(() => {
+      // @ts-ignore
+      buenoMock = unsuccessfulBuenoValidationMock;
+    });
+
+    afterAll(() => {
+      buenoMock = successfulBuenoValidationMock;
+    });
+    const invalidExampleSlot = {
+      value: 'example value',
+      label: '',
+      criterion: {
+        by: 'example field',
+        order: 'example order',
+      },
+    };
+    const exampleAssignedElements = [invalidExampleSlot];
+
+    it('should display the component error', async () => {
+      const element = createTestComponent(
+        defaultOptions,
+        exampleAssignedElements
+      );
+      await flushPromises();
+
+      expect(functionsMocks.buildSort).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSort).toHaveBeenCalledWith(exampleEngine, {
+        initialState: {
+          criterion: {
+            by: 'example field',
+            order: 'example order',
+          },
+        },
+      });
+      const componentError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+
+      expect(componentError).not.toBeNull();
     });
   });
 
@@ -187,7 +381,7 @@ describe('c-quantic-sort', () => {
 
       const sortLabel = element.shadowRoot.querySelector(variant.labelSelector);
 
-      expect(sortLabel.value).toBe(expectedSortByLabel);
+      expect(sortLabel.value).toBe(sortByLabel);
     });
   });
 
@@ -228,7 +422,7 @@ describe('c-quantic-sort', () => {
 
       const sortLabel = element.shadowRoot.querySelector(variant.labelSelector);
 
-      expect(sortLabel.textContent).toBe(expectedSortByLabel);
+      expect(sortLabel.textContent).toBe(sortByLabel);
       expect(sortLabel.classList).toContain('slds-text-heading_small');
     });
   });
