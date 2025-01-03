@@ -36,12 +36,13 @@ const selectors = {
     '[data-testid="breadcrumb-manager__clear-button"]',
   facetBreadcrumb: '[data-testid="facet-breadcrumb"]',
   facetBreadcrumbValue: '[data-testid="facet-breadcrumb-value"]',
-  categoryFacetBreadcrumb: '[data-test="category-facet-breadcrumb"]',
-  categoryFacetBreadcrumbValue: '[data-test="category-facet-breadcrumb-value"]',
-  numericFacetBreadcrumb: '[data-test="numeric-facet-breadcrumb"]',
-  numericFacetBreadcrumbValue: '[data-test="numeric-facet-breadcrumb-value"]',
-  dateFacetBreadcrumb: '[data-test="date-facet-breadcrumb"]',
-  dateFacetBreadcrumbValue: '[data-test="date-facet-breadcrumb-value"]',
+  categoryFacetBreadcrumb: '[data-testid="category-facet-breadcrumb"]',
+  categoryFacetBreadcrumbValue:
+    '[data-testid="category-facet-breadcrumb-value"]',
+  numericFacetBreadcrumb: '[data-testid="numeric-facet-breadcrumb"]',
+  numericFacetBreadcrumbValue: '[data-testid="numeric-facet-breadcrumb-value"]',
+  dateFacetBreadcrumb: '[data-testid="date-facet-breadcrumb"]',
+  dateFacetBreadcrumbValue: '[data-testid="date-facet-breadcrumb-value"]',
 };
 
 const exampleEngine = {
