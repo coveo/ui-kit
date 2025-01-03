@@ -108,6 +108,9 @@ export type MappedFacetState = {
             : never;
 };
 
+/**
+ * @group Definers
+ */
 export function defineFacetGenerator<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {

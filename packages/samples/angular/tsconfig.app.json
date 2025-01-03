@@ -13,5 +13,8 @@
     "preserveSymlinks": true
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
-  "include": ["src/**/*.d.ts"]
+  "include": ["src/**/*.d.ts"],
+  "angularCompilerOptions": {
+    "enableIvy": true
+  }
 }
