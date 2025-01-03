@@ -30,7 +30,7 @@
   "scripts": {
     "build": "nx build",
     "dev": "npm run build:assets && npm run dev:webpack",
-    "dev:webpack": "webpack serve",
+    "dev:webpack": "npx webpack serve",
     "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
     "e2e:watch": "cypress open --browser chrome --e2e"
   }
