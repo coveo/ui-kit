@@ -10,11 +10,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --noEmit; fi",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc --module es2022 --noEmit; fi"
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc -b; fi",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then vite build; fi"
         ],
-        "parallel": true,
-        "cwd": "packages/samples/atomic-react"
+        "cwd": "packages/samples/atomic-react-2"
       }
     },
     "build": {
