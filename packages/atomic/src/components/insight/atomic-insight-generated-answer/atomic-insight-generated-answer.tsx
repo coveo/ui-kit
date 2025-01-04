@@ -68,6 +68,10 @@ export class AtomicInsightGeneratedAnswer
   public searchStatus!: InsightSearchStatus;
   private resizeObserver?: ResizeObserver;
 
+  private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
+  private readonly MAX_COLLAPSED_HEIGHT = 32;
+  private readonly MIN_COLLAPSED_HEIGHT = 9;
+
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
   })
@@ -102,6 +106,12 @@ export class AtomicInsightGeneratedAnswer
   @Prop() collapsible?: boolean;
 
   /**
+   * The specified height in rem to allow the answer to show before collapsing.
+   *
+   */
+  @Prop() maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
+
+  /**
    * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
@@ -112,7 +122,6 @@ export class AtomicInsightGeneratedAnswer
 
   private generatedAnswerCommon!: GeneratedAnswerCommon;
   private fullAnswerHeight?: number;
-  private maxCollapsedHeight = 250;
 
   public initialize() {
     this.generatedAnswerCommon = new GeneratedAnswerCommon({
@@ -229,15 +238,32 @@ export class AtomicInsightGeneratedAnswer
     );
   }
 
+  private validateMaxCollapsedHeight(): number {
+    const isValid =
+      this.maxCollapsedHeight >= this.MIN_COLLAPSED_HEIGHT &&
+      this.maxCollapsedHeight <= this.MAX_COLLAPSED_HEIGHT;
+
+    return isValid ? this.maxCollapsedHeight : this.DEFAULT_COLLAPSED_HEIGHT;
+  }
+
+  private setCSSVariable(variableName: string, value: string) {
+    const container = this.getAnswerContainer();
+    if (container) {
+      (container as HTMLElement).style.setProperty(variableName, value);
+    }
+  }
+
   private updateAnswerHeight() {
     const container = this.getAnswerContainer();
     const footer = this.getAnswerFooter();
+    const maxHeight = this.validateMaxCollapsedHeight();
 
     if (!container || !footer) {
       return;
     }
 
-    if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
+    if (this.fullAnswerHeight! > maxHeight) {
+      this.setCSSVariable('--atomic-crga-collapsed-height', `${maxHeight}rem`);
       this.toggleClass(
         container,
         'answer-collapsed',
