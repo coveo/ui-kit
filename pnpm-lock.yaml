@@ -95,8 +95,8 @@ importers:
         specifier: ^21.0.0
         version: 21.0.2
       '@rollup/plugin-node-resolve':
-        specifier: ^15.2.1
-        version: 15.3.1(rollup@4.29.1)
+        specifier: ^16.0.0
+        version: 16.0.0(rollup@4.29.1)
       '@rollup/plugin-replace':
         specifier: ^6.0.0
         version: 6.0.2(rollup@4.29.1)
@@ -803,8 +803,8 @@ packages:
   '@octokit/types@13.6.0':
     resolution: {integrity: sha512-CrooV/vKCXqwLa+osmHLIMUb87brpgUqlqkPGc6iE2wCkUvTrHiXFMhAKoDDaAAYJrtKtrFTgSQTg5nObBEaew==}
 
-  '@rollup/plugin-node-resolve@15.3.1':
-    resolution: {integrity: sha512-tgg6b91pAybXHJQMAAwW9VuWBO6Thi+q7BCNARLwSqlmsHz0XYURtGvh/AuwSADXSI4h/2uHbs7s4FzlZDGSGA==}
+  '@rollup/plugin-node-resolve@16.0.0':
+    resolution: {integrity: sha512-0FPvAeVUT/zdWoO0jnb/V5BlBsUSNfkIOtFHzMO4H9MOklrmQFY6FduVHKucNb/aTFxvnGhj4MNj/T1oNdDfNg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.78.0||^3.0.0||^4.0.0
@@ -3887,7 +3887,7 @@ snapshots:
     dependencies:
       '@octokit/openapi-types': 22.2.0
 
-  '@rollup/plugin-node-resolve@15.3.1(rollup@4.29.1)':
+  '@rollup/plugin-node-resolve@16.0.0(rollup@4.29.1)':
     dependencies:
       '@rollup/pluginutils': 5.1.4(rollup@4.29.1)
       '@types/resolve': 1.20.2
