@@ -127,7 +127,7 @@ const handleError = (
   console.error(`${message.errorMessage} - code ${message.code}`);
 };
 
-const updateCacheWithEvent = (
+export const updateCacheWithEvent = (
   event: EventSourceMessage,
   draft: GeneratedAnswerStream,
   dispatch: ThunkDispatch<StateNeededByAnswerAPI, unknown, UnknownAction>
@@ -161,12 +161,10 @@ const updateCacheWithEvent = (
       }
       break;
     case 'genqa.endOfStreamType':
-      if (draft.answer?.length || parsedPayload.answerGenerated) {
-        handleEndOfStream(draft, parsedPayload);
-        dispatch(
-          logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
-        );
-      }
+      handleEndOfStream(draft, parsedPayload);
+      dispatch(
+        logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+      );
       break;
   }
 };
