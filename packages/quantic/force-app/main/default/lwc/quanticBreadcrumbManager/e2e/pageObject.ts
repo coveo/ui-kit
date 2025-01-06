@@ -33,6 +33,15 @@ export class BreadcrumbManagerObject {
     this.page = page;
   }
 
+  async countAllFacetsBreadcrumb() {
+    return (
+      (await this.allRegularFacetBreadcrumb.count()) +
+      (await this.allNumericFacetBreadcrumb.count()) +
+      (await this.allCategoryFacetBreadcrumb.count()) +
+      (await this.allTimeframeFacetBreadcrumb.count())
+    );
+  }
+
   /** REGULAR FACET */
   get allRegularFacetBreadcrumb(): Locator {
     return this.page.getByTestId(
@@ -138,10 +147,84 @@ export class BreadcrumbManagerObject {
     await this.clickFirstFacetLink(this.firstNumericFacet);
   }
 
+  /** DATE|TIMEFRAME FACET */
+  get allTimeframeFacetBreadcrumb(): Locator {
+    return this.page.getByTestId(
+      breadcrumbElementsSelectors.timeframeFacet.breadcrumbElementTestId
+    );
+  }
+
+  getAllTimeframeFacetBreadcrumbValuesForFacet(
+    timeframeFacetBreadcrumb: Locator
+  ): Locator {
+    return timeframeFacetBreadcrumb.getByTestId(
+      breadcrumbElementsSelectors.timeframeFacet.breadcrumbValueElementTestId
+    );
+  }
+
+  get firstTimeframeFacetBreadcrumb(): Locator {
+    return this.page
+      .getByTestId(
+        breadcrumbElementsSelectors.timeframeFacet.breadcrumbElementTestId
+      )
+      .first();
+  }
+
+  async clickFirstTimeframeFacetBreadcrumbValue(): Promise<void> {
+    await this.firstTimeframeFacetBreadcrumb
+      .getByTestId(
+        breadcrumbElementsSelectors.timeframeFacet.breadcrumbValueElementTestId
+      )
+      .click();
+  }
+
   get firstTimeframeFacet(): Locator {
     return this.page
       .locator(breadcrumbElementsSelectors.timeframeFacet.component)
       .first();
+  }
+
+  get firstTimeframeFacetValue(): Promise<string | null> {
+    return this.firstTimeframeFacet
+      .locator(breadcrumbElementsSelectors.timeframeFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-text')
+      .textContent();
+  }
+
+  async clickFirstTimeframeFacetLink(): Promise<void> {
+    await this.clickFirstFacetLink(this.firstTimeframeFacet);
+  }
+
+  /** CATEGORY FACET */
+  get allCategoryFacetBreadcrumb(): Locator {
+    return this.page.getByTestId(
+      breadcrumbElementsSelectors.categoryFacet.breadcrumbElementTestId
+    );
+  }
+
+  getAllCategoryFacetBreadcrumbValuesForFacet(
+    categoryFacetBreadcrumb: Locator
+  ): Locator {
+    return categoryFacetBreadcrumb.getByTestId(
+      breadcrumbElementsSelectors.categoryFacet.breadcrumbValueElementTestId
+    );
+  }
+
+  get firstCategoryFacetBreadcrumb(): Locator {
+    return this.page
+      .getByTestId(
+        breadcrumbElementsSelectors.categoryFacet.breadcrumbElementTestId
+      )
+      .first();
+  }
+
+  async clickFirstCategoryFacetBreadcrumbValue(): Promise<void> {
+    await this.firstCategoryFacetBreadcrumb
+      .getByTestId(
+        breadcrumbElementsSelectors.categoryFacet.breadcrumbValueElementTestId
+      )
+      .click();
   }
 
   get firstCategoryFacet(): Locator {
@@ -150,11 +233,32 @@ export class BreadcrumbManagerObject {
       .first();
   }
 
-  async selectFirstCategoryFacetValue(facetLocator: Locator): Promise<void> {
+  get firstCategoryFacetValue(): Promise<string | null> {
+    return this.firstCategoryFacet
+      .locator(breadcrumbElementsSelectors.categoryFacet.facetValueComponent)
+      .first()
+      .locator('.facet__value-option')
+      .locator('span:not(.facet__number-of-results)')
+      .textContent();
+  }
+
+  async clickFirstCategoryFacetLink(): Promise<void> {
+    await this.clickFirstCategoryFacetValue(this.firstCategoryFacet);
+  }
+
+  async clickFirstCategoryFacetValue(facetLocator: Locator): Promise<void> {
     await facetLocator
       .locator(breadcrumbElementsSelectors.categoryFacet.facetValueComponent)
       .first()
       .click();
+  }
+
+  get clearAllButton(): Locator {
+    return this.page.getByRole('button', {name: /Clear All Filters/i});
+  }
+
+  async clickClearAllButton(): Promise<void> {
+    await this.clearAllButton.click();
   }
 
   async waitForBreadcrumbSearchUaAnalytics(
@@ -189,10 +293,11 @@ export class BreadcrumbManagerObject {
     return this.waitForBreadcrumbSearchUaAnalytics(
       'breadcrumbFacet',
       (customData: Record<string, any>) => {
-        console.log('customData', customData);
-        console.log('expectedCustomFields', expectedCustomFields);
-        return Object.keys(expectedCustomFields).every(
-          (key) => customData?.[key] === expectedCustomFields[key]
+        return Object.keys(expectedCustomFields).every((key) =>
+          typeof expectedCustomFields[key] === 'object'
+            ? JSON.stringify(customData?.[key]) ===
+              JSON.stringify(expectedCustomFields[key])
+            : customData?.[key] === expectedCustomFields[key]
         );
       }
     );

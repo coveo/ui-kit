@@ -1,9 +1,20 @@
 import {testSearch, testInsight} from './fixture';
-import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
+import {
+  useCaseEnum,
+  useCaseTestCases,
+} from '../../../../../../playwright/utils/useCase';
 
 const fixtures = {
   search: testSearch,
   insight: testInsight,
+};
+
+const datetimeFacetLabelToValue = {
+  'Past week': 'past-1-week..now',
+  'Past month': 'past-1-month..now',
+  'Past 6 months': 'past-6-month..now',
+  'Past year': 'past-1-year..now',
+  'Past decade': 'past-10-year..now',
 };
 
 useCaseTestCases.forEach((useCase) => {
@@ -57,9 +68,100 @@ useCaseTestCases.forEach((useCase) => {
           await breadcrumbAnalyticsPromise;
         });
       });
+
+      test.describe('with timefrate|date facet values', () => {
+        test('should trigger a new search and log analytics', async ({
+          breadcrumbManager,
+          search,
+        }) => {
+          const facetValue = await breadcrumbManager.firstTimeframeFacetValue;
+          test.expect(facetValue).not.toBeNull();
+          const searchResponsePromise = search.waitForSearchResponse();
+          await breadcrumbManager.clickFirstTimeframeFacetLink();
+          await searchResponsePromise;
+
+          const secondSearchResponsePromise = search.waitForSearchResponse();
+          // We use the facet display value to compare, but the display value is prettified and is transformed to be human readable, while the analytics request isn't.
+          const [expectedFacetRangeStart, expectedFacetRangeEnd] =
+            datetimeFacetLabelToValue[facetValue!].split('..');
+          const breadcrumbAnalyticsPromise =
+            breadcrumbManager.waitForBreadcrumbFacetUaAnalytics({
+              facetRangeStart: expectedFacetRangeStart,
+              facetRangeEnd: expectedFacetRangeEnd,
+            });
+          await breadcrumbManager.clickFirstTimeframeFacetBreadcrumbValue();
+          await secondSearchResponsePromise;
+          await breadcrumbAnalyticsPromise;
+        });
+      });
+
+      test.describe('with category facet values', () => {
+        test('should trigger a new search and log analytics', async ({
+          breadcrumbManager,
+          search,
+        }) => {
+          const facetValue = await breadcrumbManager.firstCategoryFacetValue;
+          test.expect(facetValue).not.toBeNull();
+          const searchResponsePromise = search.waitForSearchResponse();
+          await breadcrumbManager.clickFirstCategoryFacetLink();
+          await searchResponsePromise;
+
+          const secondSearchResponsePromise = search.waitForSearchResponse();
+          const expectedFacetValue = facetValue!;
+          const breadcrumbAnalyticsPromise =
+            breadcrumbManager.waitForBreadcrumbFacetUaAnalytics({
+              categoryFacetPath: [expectedFacetValue],
+            });
+          await breadcrumbManager.clickFirstCategoryFacetBreadcrumbValue();
+          await secondSearchResponsePromise;
+          await breadcrumbAnalyticsPromise;
+        });
+      });
     });
-    // test.describe('the clear all filters button', () => {
-    //   test('should send a clear all filters analytics event and clear all selected facets values', async ({}) => {});
-    // });
+
+    test.describe('the clear all filters button', () => {
+      test('should send a clear all filters analytics event and clear all selected facets values', async ({
+        breadcrumbManager,
+        search,
+      }) => {
+        const searchResponsePromise = search.waitForSearchResponse();
+        await breadcrumbManager.clickFirstRegularFacetLink();
+        await searchResponsePromise;
+
+        const searchResponsePromiseTwo = search.waitForSearchResponse();
+        await breadcrumbManager.clickFirstTimeframeFacetLink();
+        await searchResponsePromiseTwo;
+
+        test.expect(breadcrumbManager.clearAllButton).toBeVisible();
+        const clearAllSearchResponsePromise = search.waitForSearchResponse();
+        const clearAllAnalyticsPromise =
+          breadcrumbManager.waitForBreadcrumbResetAllUaAnalytics();
+        await breadcrumbManager.clickClearAllButton();
+        await clearAllAnalyticsPromise;
+        const clearAllSearchResponse = await clearAllSearchResponsePromise;
+        const {facets} = await clearAllSearchResponse.json();
+        const activeFacets = facets.filter((facet: any) =>
+          facet.values.some((value: any) => value.state !== 'idle')
+        );
+        test.expect(activeFacets).toHaveLength(0);
+      });
+    });
+
+    if (useCase.value === useCaseEnum.search) {
+      test.describe('when loading with a facet already selected', () => {
+        const facetSelectedHash = 'f-filetype=YouTubeVideo';
+        test.use({
+          urlHash: facetSelectedHash,
+        });
+
+        test('should have a facet selected in the breadcrumb manager', async ({
+          breadcrumbManager,
+        }) => {
+          test
+            .expect(await breadcrumbManager.countAllFacetsBreadcrumb())
+            .toBe(1);
+        });
+      });
+    }
   });
 });
