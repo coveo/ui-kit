@@ -27,6 +27,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {
   DisplayTable,
@@ -165,9 +166,8 @@ export class AtomicCommerceProductList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
-    this.isAppLoaded = this.bindings.store.state.loadingFlags.length === 0;
-    this.bindings.store.onChange('loadingFlags', () => {
-      this.isAppLoaded = this.bindings.store.state.loadingFlags.length === 0;
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
     });
   }
 
