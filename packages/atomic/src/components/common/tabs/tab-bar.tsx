@@ -6,7 +6,7 @@ import {TabCommonElement} from './tab-common';
  * @internal
  */
 @Component({
-  tag: 'tab-bar',
+  tag: 'atomic-tab-bar',
   shadow: true,
   styleUrl: 'tab-bar.pcss',
 })
@@ -49,7 +49,7 @@ export class TabBar {
   }
 
   private get tabPopover() {
-    return this.host.shadowRoot?.querySelector('tab-popover');
+    return this.host.shadowRoot?.querySelector('atomic-tab-popover');
   }
 
   private get popoverWidth() {
@@ -188,7 +188,7 @@ export class TabBar {
     return (
       <Host>
         <slot></slot>
-        <tab-popover>{this.popoverTabs}</tab-popover>
+        <atomic-tab-popover>{this.popoverTabs}</atomic-tab-popover>
       </Host>
     );
   };

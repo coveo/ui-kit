@@ -3669,6 +3669,8 @@ export namespace Components {
          */
         "name": string;
     }
+    interface AtomicTabBar {
+    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -3693,6 +3695,11 @@ export namespace Components {
         "clearFiltersOnTabChange"?: boolean;
     }
     interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
+        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
+        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
+        "togglePopover": () => Promise<void>;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -3799,13 +3806,6 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
-    }
-    interface TabBar {
-    }
-    interface TabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "togglePopover": () => Promise<void>;
     }
 }
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
@@ -6004,6 +6004,12 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
+    }
+    var HTMLAtomicTabBarElement: {
+        prototype: HTMLAtomicTabBarElement;
+        new (): HTMLAtomicTabBarElement;
+    };
     interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
     }
     var HTMLAtomicTabButtonElement: {
@@ -6024,6 +6030,12 @@ declare global {
     var HTMLAtomicTabManagerBarElement: {
         prototype: HTMLAtomicTabManagerBarElement;
         new (): HTMLAtomicTabManagerBarElement;
+    };
+    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicTabPopoverElement: {
+        prototype: HTMLAtomicTabPopoverElement;
+        new (): HTMLAtomicTabPopoverElement;
     };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -6062,18 +6074,6 @@ declare global {
     var HTMLAtomicTimeframeFacetElement: {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
-    };
-    interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
-    }
-    var HTMLTabBarElement: {
-        prototype: HTMLTabBarElement;
-        new (): HTMLTabBarElement;
-    };
-    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
-    }
-    var HTMLTabPopoverElement: {
-        prototype: HTMLTabPopoverElement;
-        new (): HTMLTabPopoverElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
@@ -6267,15 +6267,15 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-tab-manager-bar": HTMLAtomicTabManagerBarElement;
+        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
-        "tab-bar": HTMLTabBarElement;
-        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -9747,6 +9747,8 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
+    interface AtomicTabBar {
+    }
     interface AtomicTabButton {
         /**
           * Whether the tab button is active.
@@ -9771,6 +9773,8 @@ declare namespace LocalJSX {
         "clearFiltersOnTabChange"?: boolean;
     }
     interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -9877,10 +9881,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
-    }
-    interface TabBar {
-    }
-    interface TabPopover {
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
@@ -10074,15 +10074,15 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
+        "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
         "atomic-tab-manager-bar": AtomicTabManagerBar;
+        "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
-        "tab-bar": TabBar;
-        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -10943,12 +10943,14 @@ declare module "@stencil/core" {
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
              * @alpha 
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
+            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
@@ -10967,8 +10969,6 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
-            "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
-            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }

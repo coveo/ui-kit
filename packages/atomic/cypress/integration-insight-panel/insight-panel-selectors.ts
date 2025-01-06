@@ -37,9 +37,9 @@ export const InsightPanelsSelectors = {
       'atomic-insight-full-search-button'
     ),
   tabs: () => InsightPanelsSelectors.interface().find('atomic-insight-tabs'),
-  tabBar: () => InsightPanelsSelectors.tabs().find('tab-bar').shadow(),
+  tabBar: () => InsightPanelsSelectors.tabs().find('atomic-tab-bar').shadow(),
   tabPopover: () =>
-    InsightPanelsSelectors.tabBar().find('tab-popover').shadow(),
+    InsightPanelsSelectors.tabBar().find('atomic-tab-popover').shadow(),
   tabPopoverButton: () =>
     InsightPanelsSelectors.tabPopover().find('[part="popover-button"]'),
   layoutStyleTags: () =>

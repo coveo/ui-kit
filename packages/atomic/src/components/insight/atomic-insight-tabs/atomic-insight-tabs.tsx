@@ -20,9 +20,9 @@ export class AtomicInsightTabs
 
   public render() {
     return (
-      <tab-bar>
+      <atomic-tab-bar>
         <slot></slot>
-      </tab-bar>
+      </atomic-tab-bar>
     );
   }
 }
