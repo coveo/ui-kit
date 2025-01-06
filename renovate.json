@@ -8,9 +8,18 @@
   "dependencyDashboard": true,
   "packageRules": [
     {
-      "groupName": "all dependencies",
-      "groupSlug": "all",
-      "matchPackageNames": ["*"]
+      "groupName": "all dependencies (safe updates)",
+      "groupSlug": "all-safe",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "all dependencies (major updates)",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
       "groupName": "typedoc",
