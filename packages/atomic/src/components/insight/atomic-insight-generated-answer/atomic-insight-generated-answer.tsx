@@ -222,10 +222,19 @@ export class AtomicInsightGeneratedAnswer
   }
 
   private adaptAnswerHeight() {
-    this.fullAnswerHeight = this.host?.shadowRoot
+    const answerHeight = this.host?.shadowRoot
       ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
-    this.updateAnswerHeight();
+
+    if (answerHeight) {
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+
+      this.fullAnswerHeight = answerHeight / rootFontSize;
+
+      this.updateAnswerHeight();
+    }
   }
 
   private getAnswerContainer() {
