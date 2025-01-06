@@ -8,14 +8,14 @@
   "dependencyDashboard": true,
   "packageRules": [
     {
-      "groupName": "all dependencies (safe updates)",
+      "groupName": "all dependencies",
       "groupSlug": "all-safe",
       "matchPackageNames": ["*"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
     },
     {
-      "groupName": "all dependencies (major updates)",
+      "groupName": "all dependencies (major)",
       "groupSlug": "all-major",
       "matchPackageNames": ["*"],
       "matchUpdateTypes": ["major"],
