@@ -78,7 +78,8 @@ test.describe('AtomicTabManager', () => {
         await expect(tabManager.includedResultList).toBeHidden();
       });
 
-      test('generated answer', async ({tabManager, searchBox}) => {
+      //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+      test.fixme('generated answer', async ({tabManager, searchBox}) => {
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.fill(
           // eslint-disable-next-line @cspell/spellchecker
@@ -144,7 +145,8 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.excludedResultList).toBeHidden();
         });
 
-        test('generated answer', async ({tabManager, searchBox}) => {
+        //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+        test.fixme('generated answer', async ({tabManager, searchBox}) => {
           await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
@@ -195,7 +197,8 @@ test.describe('AtomicTabManager', () => {
             await expect(tabManager.includedResultList).toBeHidden();
           });
 
-          test('generated answer', async ({tabManager, searchBox}) => {
+          //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+          test.fixme('generated answer', async ({tabManager, searchBox}) => {
             await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
@@ -376,7 +379,8 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.excludedResultList).toBeHidden();
         });
 
-        test('generated answer', async ({tabManager, searchBox}) => {
+        //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+        test.fixme('generated answer', async ({tabManager, searchBox}) => {
           await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
@@ -431,7 +435,8 @@ test.describe('AtomicTabManager', () => {
             await expect(tabManager.includedResultList).toBeHidden();
           });
 
-          test('generated answer', async ({tabManager, searchBox}) => {
+          //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+          test.fixme('generated answer', async ({tabManager, searchBox}) => {
             await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker

@@ -11,15 +11,12 @@ type MyFixtures = {
 
 export const test = base.extend<MyFixtures>({
   facet: async ({page}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Facet(page));
   },
   search: async ({page}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Search(page));
   },
   hydrated: async ({page}, use) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(new Hydrated(page));
   },
 });

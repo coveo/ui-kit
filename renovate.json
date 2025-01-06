@@ -37,7 +37,7 @@
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "17.x",
+      "allowedVersions": "18.x",
       "matchPackageNames": [
         "/^@angular/*/",
         "/^@angular-devkit/*/",
@@ -53,7 +53,8 @@
         "/react-router-dom/",
         "/react-dom/",
         "/@types/react/",
-        "next"
+        "next",
+        "/@remix-run/.*/"
       ]
     },
     {
@@ -110,21 +111,6 @@
       "matchPackageNames": ["/^change-case$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-react/package.json"],
-      "groupSlug": "react-rollup",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?",
-      "matchPackageNames": ["/^rollup$/"]
-    },
-    {
-      "groupName": "nx",
-      "groupSlug": "nx",
-      "rangeStrategy": "replace",
-      "allowedVersions": "15.x",
-      "matchPackageNames": ["/^nx$/"]
-    },
-    {
       "groupName": "marked",
       "groupSlug": "marked",
       "rangeStrategy": "replace",
@@ -132,11 +118,11 @@
       "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "nx-devkit",
-      "groupSlug": "nx-devkit",
+      "groupName": "relay",
+      "groupSlug": "relay",
       "rangeStrategy": "replace",
-      "allowedVersions": "16.x",
-      "matchPackageNames": ["/^@nrwl/devkit$/"]
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
     },
     {
       "groupName": "Cypress Split",
@@ -147,14 +133,6 @@
       "matchPackageNames": ["/^cypress-split$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-angular/package.json"],
-      "groupSlug": "angular-typescript",
-      "rangeStrategy": "replace",
-      "allowedVersions": "5.1.x",
-      "description": "@angular/compiler-cli choke with TS > 5.1",
-      "matchPackageNames": ["/^typescript$/"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
@@ -163,18 +141,15 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4",
-      "matchPackageNames": ["/^actions/upload-artifact$/"]
-    },
-    {
       "groupSlug": "eslint",
       "groupName": "eslint",
       "rangeStrategy": "replace",
       "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": ["/^eslint$/"]
+      "matchPackageNames": [
+        "/^eslint$/",
+        "/^eslint-plugin-.*/",
+        "/@typescript-eslint/.*/"
+      ]
     }
   ],
   "rangeStrategy": "auto",
