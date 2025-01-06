@@ -27,6 +27,13 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
+      "groupName": "vite",
+      "groupSlug": "vite",
+      "rangeStrategy": "replace",
+      "description": "Isolate vite until green with @nx/vite",
+      "matchPackageNames": ["vite"]
+    },
+    {
       "groupName": "gts",
       "groupSlug": "gts",
       "rangeStrategy": "replace",
