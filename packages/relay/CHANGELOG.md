@@ -1,3 +1,11 @@
+## 0.8.14 (2025-01-06)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#137](https://github.com/coveo/relay/issues/137)) ([3b8a29c](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#141](https://github.com/coveo/relay/issues/141)) ([c6b1a77](https://github.com/coveo/relay/commits/))
+- **deps:** update react monorepo to v19 (major) ([#140](https://github.com/coveo/relay/issues/140)) ([8109bbc](https://github.com/coveo/relay/commits/))
+
 ## 0.8.13 (2024-12-12)
 
 ## 0.8.12 (2024-11-05)
