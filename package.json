@@ -41,7 +41,7 @@
     "@nx/vite": "20.3.0",
     "@nx/web": "20.3.0",
     "@octokit/rest": "21.0.2",
-    "@rollup/plugin-typescript": "11.1.6",
+    "@rollup/plugin-typescript": "12.1.2",
     "@storybook/addon-essentials": "8.1.11",
     "@storybook/addon-interactions": "8.1.11",
     "@storybook/core-server": "8.1.11",
