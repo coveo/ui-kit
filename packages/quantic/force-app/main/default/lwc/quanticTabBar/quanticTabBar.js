@@ -360,9 +360,7 @@ export default class QuanticTabBar extends LightningElement {
     /** @type {HTMLSlotElement} */
     const slot = this.template.querySelector('slot');
 
-    return Array.from(slot.assignedElements()).filter((element) =>
-      this.isTab(element)
-    );
+    return slot.assignedElements().filter((element) => this.isTab(element));
   }
 
   isTab = (element) => {

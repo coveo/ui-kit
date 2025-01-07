@@ -68,7 +68,7 @@ useCaseTestCases.forEach((useCase) => {
         expect(activeTabLabel).toEqual(exampleTabs[1]);
 
         await page.keyboard.press('Shift+Tab');
-        await page.keyboard.press('Shift+Space');
+        await page.keyboard.press('Space');
         activeTabLabel = await tab.activeTabLabel;
         expect(activeTabLabel).toEqual(exampleTabs[0]);
       });

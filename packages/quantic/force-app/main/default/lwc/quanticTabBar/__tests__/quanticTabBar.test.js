@@ -311,8 +311,8 @@ describe('c-quantic-tab-bar', () => {
     });
   });
 
-  describe('when the light theme property is set to true', () => {
-    it('should display the component with the light theme styles', async () => {
+  describe('the lightTheme property', () => {
+    it('should display the component with the light theme styles when lightTheme is true', async () => {
       const expectedDarkThemeClass = 'slds-theme_shade';
       const element = createTestComponent({lightTheme: true});
       await flushPromises();
@@ -322,10 +322,8 @@ describe('c-quantic-tab-bar', () => {
       );
       expect(tabBarContainer.classList).not.toContain(expectedDarkThemeClass);
     });
-  });
 
-  describe('when the light theme property is set to false', () => {
-    it('should display the component with the light theme styles', async () => {
+    it('should display the component with the dark theme styles when lightTheme is false', async () => {
       const expectedDarkThemeClass = 'slds-theme_shade';
       const element = createTestComponent({lightTheme: false});
       await flushPromises();

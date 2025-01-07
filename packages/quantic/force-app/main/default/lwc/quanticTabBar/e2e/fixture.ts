@@ -20,9 +20,7 @@ type QuanticTabBarE2EFixtures = {
   options: Partial<TabBarOptions>;
 };
 
-type QuanticTabBarE2ESearchFixtures = QuanticTabBarE2EFixtures & {
-  urlHash: string;
-};
+type QuanticTabBarE2ESearchFixtures = QuanticTabBarE2EFixtures;
 
 type QuanticTabBarE2EInsightFixtures = QuanticTabBarE2ESearchFixtures & {
   insightSetup: InsightSetupObject;

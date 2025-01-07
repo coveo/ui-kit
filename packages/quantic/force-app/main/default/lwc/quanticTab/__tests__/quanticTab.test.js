@@ -265,7 +265,7 @@ describe('c-quantic-tab', () => {
     });
   });
 
-  describe('when the tab is clicked', () => {
+  describe('when the tab is clicked or the select method is called', () => {
     it('should call the select method of the tab controller', async () => {
       const element = createTestComponent();
       await flushPromises();
@@ -277,18 +277,11 @@ describe('c-quantic-tab', () => {
       await flushPromises();
 
       expect(functionsMocks.select).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('when calling the public select method of the component', () => {
-    it('should call the select method of the tab controller', async () => {
-      const element = createTestComponent();
-      await flushPromises();
 
       await element.select();
       await flushPromises();
 
-      expect(functionsMocks.select).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.select).toHaveBeenCalledTimes(2);
     });
   });
 });
