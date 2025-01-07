@@ -49,10 +49,11 @@ atomicAngularComponentFileStream.write(`\nimport type {${litImports.join(',')}} 
 atomicAngularComponentFileStream.end();
 
 
-
-writeFileSync(
-  atomicAngularModuleFilePath,
-  atomicAngularModuleFileContent
-    .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${litDeclarations.join(',\n')},\n`)
-    .replace(/^import \{$/m, `import {\n${litDeclarations.join(',\n')},`)
-);
+if(litDeclarations.length > 0) {
+  writeFileSync(
+    atomicAngularModuleFilePath,
+    atomicAngularModuleFileContent
+      .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${litDeclarations.join(',\n')},\n`)
+      .replace(/^import \{$/m, `import {\n${litDeclarations.join(',\n')},`)
+  );
+}
