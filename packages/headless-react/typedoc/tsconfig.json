@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.typedoc.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "lib",
+    "jsx": "react"
+  },
+  "include": ["lib/**/*"]
+}

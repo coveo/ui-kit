@@ -15,6 +15,7 @@ import type {
   HasOptionalKeys,
 } from '../../ssr-engine/types/common.js';
 import {SSRCommerceEngine} from '../factories/build-factory.js';
+import {Kind} from './kind.js';
 
 export type {
   EngineDefinitionBuildResult,
@@ -59,6 +60,10 @@ export interface ControllerDefinitionWithoutProps<
   build(engine: SSRCommerceEngine, solutionType?: SolutionType): TController;
 }
 
+export interface ControllerWithKind extends Controller {
+  _kind: Kind;
+}
+
 export interface ControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
@@ -75,7 +80,7 @@ export interface ControllerDefinitionWithProps<
     engine: SSRCommerceEngine,
     props: TProps,
     solutionType?: SolutionType
-  ): TController;
+  ): TController & ControllerWithKind;
 }
 
 export interface EngineStaticState<
@@ -86,9 +91,19 @@ export interface EngineStaticState<
   controllers: TControllers;
 }
 
+export interface SolutionTypeAvailability {
+  [SolutionType.search]?: boolean;
+  [SolutionType.listing]?: boolean;
+  [SolutionType.standalone]?: boolean;
+  [SolutionType.recommendation]?: boolean;
+}
+
 export type ControllerDefinition<TController extends Controller> =
-  | ControllerDefinitionWithoutProps<TController>
-  | ControllerDefinitionWithProps<TController, unknown>;
+  SolutionTypeAvailability &
+    (
+      | ControllerDefinitionWithoutProps<TController>
+      | ControllerDefinitionWithProps<TController, unknown>
+    );
 
 export interface ControllerDefinitionsMap<TController extends Controller> {
   [customName: string]: ControllerDefinition<TController>;

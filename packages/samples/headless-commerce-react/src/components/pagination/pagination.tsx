@@ -14,12 +14,16 @@ export default function Pagination(props: IPaginationProps) {
     controller.subscribe(() => setState(controller.state));
   }, [controller]);
 
+  if (state.totalPages <= 1) {
+    return null;
+  }
+
   const renderPageRadioButtons = () => {
     return Array.from({length: state.totalPages}, (_, i) => {
       const page = i + 1;
       const id = `page-${page}`;
       return (
-        <div className="PageRadioButton">
+        <span className="PageRadioButton" key={id}>
           <input
             id={id}
             type="radio"
@@ -31,7 +35,7 @@ export default function Pagination(props: IPaginationProps) {
           <label className="SelectPage" htmlFor={id} key={page}>
             {page}
           </label>
-        </div>
+        </span>
       );
     });
   };

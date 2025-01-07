@@ -5,6 +5,7 @@
     "lib": ["DOM", "ES2023"],
     "module": "ES2022",
     "moduleResolution": "Bundler",
+    "esModuleInterop": true,
     "target": "ES2022",
     "paths": {
       "atomic-angular": [
@@ -22,7 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
     "importHelpers": true,
     "skipLibCheck": true

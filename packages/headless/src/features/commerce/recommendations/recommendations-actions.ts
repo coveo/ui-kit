@@ -133,6 +133,7 @@ export const fetchMoreRecommendations = createAsyncThunk<
 
 export interface SlotIdPayload {
   slotId: string;
+  productId?: string;
 }
 
 export type RegisterRecommendationsSlotPayload = SlotIdPayload;
