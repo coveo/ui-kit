@@ -25,7 +25,7 @@ import {
   buildRecommendationEngine,
   Result,
 } from '@coveo/headless/recommendation';
-import React, {FunctionComponent, useMemo} from 'react';
+import {FunctionComponent, useMemo} from 'react';
 
 export const RecsPage: FunctionComponent = () => {
   const organizationId = 'electronicscoveodemocomo0n2fu8v';

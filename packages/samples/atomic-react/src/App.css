@@ -1,3 +1,31 @@
+header {
+  padding: 10px 20px;
+}
+
+header ul li {
+  display: inline-block;
+  list-decoration: none;
+  cursor: pointer;
+  color: var(--atomic-primary);
+  margin-right: 24px;
+}
+
+header ul {
+  display: inline-block;
+  font-size: var(--atomic-text-sm);
+  font-family: var(--atomic-font-family);
+}
+
+.pageTitle {
+  font-weight: var(--atomic-font-bold);
+  font-family: var(--atomic-font-family);
+}
+
+atomic-recs-list {
+  margin: 24px;
+  --atomic-recs-number-of-columns: 3;
+}
+
 atomic-color-facet[field='cat_color']::part(value-Black) {
   background-color: #222222;
 }
