@@ -115,7 +115,7 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() collapsible?: boolean;
 
   /**
-   * The specified height in rem to allow the answer to show before collapsing.
+   * The maximum height (in rem units) of the answer when collapsed.
    *
    */
   @Prop() maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
@@ -295,6 +295,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     const isValid =
       this.maxCollapsedHeight >= this.MIN_COLLAPSED_HEIGHT &&
       this.maxCollapsedHeight <= this.MAX_COLLAPSED_HEIGHT;
+
+    if (!isValid) {
+      console.warn(
+        `max-collapsed-height (${this.maxCollapsedHeight}rem) is out of the valid range (${this.MIN_COLLAPSED_HEIGHT}rem - ${this.MAX_COLLAPSED_HEIGHT}rem). Falling back to default value (${this.DEFAULT_COLLAPSED_HEIGHT}rem).`
+      );
+    }
 
     return isValid ? this.maxCollapsedHeight : this.DEFAULT_COLLAPSED_HEIGHT;
   }

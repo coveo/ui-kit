@@ -1088,7 +1088,7 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
-          * The specified height in rem to allow the answer to show before collapsing.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight": number;
         /**
@@ -1238,7 +1238,7 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
-          * The specified height in rem to allow the answer to show before collapsing.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight": number;
         /**
@@ -7268,7 +7268,7 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
-          * The specified height in rem to allow the answer to show before collapsing.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight"?: number;
         /**
@@ -7415,7 +7415,7 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
-          * The specified height in rem to allow the answer to show before collapsing.
+          * The maximum height (in rem units) of the answer when collapsed.
          */
         "maxCollapsedHeight"?: number;
         /**
