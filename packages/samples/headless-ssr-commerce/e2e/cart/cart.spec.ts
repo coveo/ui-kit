@@ -77,27 +77,34 @@ test.describe('default', () => {
     test('should increase the quantity', async ({cart}) => {
       const item = cart.items.first();
 
-      const quantity = parseInt(
-        (await (await cart.getItemQuantity(item)).textContent()) || ''
-      );
-
-      expect(quantity).toBe(initialItemQuantity + 1);
+      await expect
+        .poll(async () => {
+          return parseInt(
+            (await (await cart.getItemQuantity(item)).textContent()) || ''
+          );
+        })
+        .toBe(initialItemQuantity + 1);
     });
 
     test('should increase the total price', async ({cart}) => {
       const item = cart.items.first();
 
-      const totalPrice = parseInt(
-        (await (await cart.getItemTotalPrice(item)).textContent()) || ''
-      );
-
-      expect(totalPrice).toBe(initialItemPrice * (initialItemQuantity + 1));
+      await expect
+        .poll(async () => {
+          return parseInt(
+            (await (await cart.getItemTotalPrice(item)).textContent()) || ''
+          );
+        })
+        .toBe(initialItemPrice * (initialItemQuantity + 1));
     });
 
     test('should increase the cart total', async ({cart}) => {
-      const total = parseInt((await cart.total.textContent()) || '');
-
-      expect(total).toBe(initialCartTotal + initialItemPrice);
+      await expect
+        .poll(async () => {
+          const total = parseInt((await cart.total.textContent()) || '');
+          return total;
+        })
+        .toBe(initialCartTotal + initialItemPrice);
     });
   });
 
@@ -124,27 +131,36 @@ test.describe('default', () => {
       test('should decrease the quantity', async ({cart}) => {
         const item = cart.items.nth(1);
 
-        const quantity = parseInt(
-          (await (await cart.getItemQuantity(item)).textContent()) || ''
-        );
-
-        expect(quantity).toBe(initialItemQuantity - 1);
+        await expect
+          .poll(async () => {
+            const quantity = parseInt(
+              (await (await cart.getItemQuantity(item)).textContent()) || ''
+            );
+            return quantity;
+          })
+          .toBe(initialItemQuantity - 1);
       });
 
       test('should decrease the total price', async ({cart}) => {
         const item = cart.items.nth(1);
 
-        const totalPrice = parseInt(
-          (await (await cart.getItemTotalPrice(item)).textContent()) || ''
-        );
-
-        expect(totalPrice).toBe(initialItemPrice * (initialItemQuantity - 1));
+        await expect
+          .poll(async () => {
+            const totalPrice = parseInt(
+              (await (await cart.getItemTotalPrice(item)).textContent()) || ''
+            );
+            return totalPrice;
+          })
+          .toBe(initialItemPrice * (initialItemQuantity - 1));
       });
 
       test('should decrease the cart total', async ({cart}) => {
-        const total = parseInt((await cart.total.textContent()) || '');
-
-        expect(total).toBe(initialCartTotal - initialItemPrice);
+        await expect
+          .poll(async () => {
+            const total = parseInt((await cart.total.textContent()) || '');
+            return total;
+          })
+          .toBe(initialCartTotal - initialItemPrice);
       });
 
       test('should not remove the item', async ({cart}) => {
@@ -174,15 +190,21 @@ test.describe('default', () => {
       });
 
       test('should remove the item', async ({cart}) => {
-        const cartItemsCount = await cart.items.count();
-
-        expect(cartItemsCount).toBe(initialCartItemsCount - 1);
+        await expect
+          .poll(async () => {
+            const cartItemsCount = await cart.items.count();
+            return cartItemsCount;
+          })
+          .toBe(initialCartItemsCount - 1);
       });
 
       test('should decrease the cart total', async ({cart}) => {
-        const total = parseInt((await cart.total.textContent()) || '');
-
-        expect(total).toBe(initialCartTotal - initialItemPrice * 1);
+        await expect
+          .poll(async () => {
+            const total = parseInt((await cart.total.textContent()) || '');
+            return total;
+          })
+          .toBe(initialCartTotal - initialItemPrice * 1);
       });
     });
   });
@@ -196,9 +218,11 @@ test.describe('default', () => {
     });
 
     test('should remove the item', async ({cart}) => {
-      const cartItemsCount = await cart.items.count();
-
-      expect(cartItemsCount).toBe(initialCartItemsCount - 1);
+      await expect
+        .poll(async () => {
+          return await cart.items.count();
+        })
+        .toBe(initialCartItemsCount - 1);
     });
   });
 
@@ -208,15 +232,20 @@ test.describe('default', () => {
     });
 
     test('should remove all items', async ({cart}) => {
-      const cartItemsCount = await cart.items.count();
-
-      expect(cartItemsCount).toBe(0);
+      await expect
+        .poll(async () => {
+          return await cart.items.count();
+        })
+        .toBe(0);
     });
 
     test('should set the cart total to 0', async ({cart}) => {
-      const total = parseInt((await cart.total.textContent()) || '');
-
-      expect(total).toBe(0);
+      await expect
+        .poll(async () => {
+          const total = parseInt((await cart.total.textContent()) || '');
+          return total;
+        })
+        .toBe(0);
     });
   });
 });

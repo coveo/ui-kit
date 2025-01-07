@@ -1,7 +1,7 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
     <div
-      data-cy="generated-answer__card"
+      data-testid="generated-answer__card"
       class="slds-box"
     >
       <div
@@ -15,7 +15,7 @@
       <div>{labels.couldNotGenerateAnAnswer}</div>
       <div class="slds-var-m-top_small">
         <lightning-button
-          data-cy="generated-answer__retry-button"
+          data-testid="generated-answer__retry-button"
           variant="brand-outline"
           label={labels.tryAgain}
           title={labels.tryAgain}

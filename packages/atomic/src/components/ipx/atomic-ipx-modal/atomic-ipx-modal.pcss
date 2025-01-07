@@ -8,6 +8,8 @@ atomic-focus-trap {
 :host {
   width: var(--atomic-ipx-width, 31.25rem);
   height: var(--atomic-ipx-height, 43.75rem);
+  max-width: calc(100vw - 3rem);
+  max-height: calc(100vh - 4.25rem);
   box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
   inset: auto 3rem 4.25rem auto;
   position: fixed;
@@ -20,6 +22,7 @@ atomic-focus-trap {
   &::part(backdrop) {
     @apply pointer-events-auto;
     height: inherit;
+    max-height: calc(100vh - 4.25rem);
   }
 }
 

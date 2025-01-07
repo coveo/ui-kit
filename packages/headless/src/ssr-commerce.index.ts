@@ -91,6 +91,7 @@ export type {
 } from './app/engine-configuration.js';
 export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
 export type {
+  ControllerDefinition,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
@@ -103,7 +104,9 @@ export type {
   EngineDefinitionControllersPropsOption,
   HydratedState,
   OptionsTuple,
+  ControllerWithKind,
 } from './app/commerce-ssr-engine/types/common.js';
+export {Kind} from './app/commerce-ssr-engine/types/kind.js';
 export type {
   EngineDefinition,
   InferStaticState,
