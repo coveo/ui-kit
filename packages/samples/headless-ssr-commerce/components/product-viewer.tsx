@@ -3,28 +3,26 @@
 import {useProductView} from '@/lib/commerce-engine';
 import {useEffect, useRef} from 'react';
 
-export default function ProductViewer({
-  productId,
-  name,
-  price,
-}: {
+interface Product {
   productId: string;
   name: string;
   price: number;
-}) {
+}
+
+export default function ProductViewer({productId, name, price}: Product) {
   const product = {productId, name, price};
 
-  const productView = useProductView();
+  const {methods: productViewMethods} = useProductView();
   const productViewEventEmitted = useRef(false);
 
   useEffect(() => {
-    if (productViewEventEmitted.current || !product) {
+    if (productViewEventEmitted.current || !product || !productViewMethods) {
       return;
     }
 
-    productView.methods?.view(product);
+    productViewMethods?.view(product);
     productViewEventEmitted.current = true;
-  }, [productView, product]);
+  }, [productViewMethods, product]);
 
   return null;
 }
