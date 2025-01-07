@@ -258,7 +258,7 @@ export default class QuanticTabBar extends LightningElement {
    * @returns {HTMLElement}
    */
   get moreButton() {
-    return this.template.querySelector('.tab-bar_more-button');
+    return this.template.querySelector('.tab-bar_more-section');
   }
 
   /**
@@ -360,7 +360,7 @@ export default class QuanticTabBar extends LightningElement {
     /** @type {HTMLSlotElement} */
     const slot = this.template.querySelector('slot');
 
-    return Array.from(Array.from(slot.assignedElements())).filter((element) =>
+    return Array.from(slot.assignedElements()).filter((element) =>
       this.isTab(element)
     );
   }

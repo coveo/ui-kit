@@ -63,8 +63,6 @@ const functionsMocks = {
 const expectedActiveTabClass = 'slds-is-active';
 
 function createTestComponent(options = defaultOptions) {
-  prepareHeadlessState();
-
   const element = createElement('c-quantic-tab', {
     is: QuanticTab,
   });
@@ -128,6 +126,7 @@ function cleanup() {
 describe('c-quantic-tab', () => {
   beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
+    prepareHeadlessState();
   });
 
   afterEach(() => {
@@ -136,7 +135,7 @@ describe('c-quantic-tab', () => {
     cleanup();
   });
 
-  describe('controller initialization', () => {
+  describe('component initialization', () => {
     it('should build the tab and search status controllers with the proper parameters', async () => {
       createTestComponent();
       await flushPromises();
@@ -165,6 +164,14 @@ describe('c-quantic-tab', () => {
       expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
         1
       );
+    });
+
+    it('should dispatch the quantic__tabrendered event', async () => {
+      const element = createTestComponent();
+      setupEventListeners(element);
+      await flushPromises();
+
+      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -209,6 +216,7 @@ describe('c-quantic-tab', () => {
       beforeAll(() => {
         searchStatusState = {...searchStatusState, firstSearchExecuted: true};
       });
+
       it('should show the tab after the initial search completes', async () => {
         const element = createTestComponent();
         await flushPromises();
@@ -224,28 +232,17 @@ describe('c-quantic-tab', () => {
     });
   });
 
-  describe('when the component is rendering', () => {
-    it('should dispatch the quantic__tabrendered event', async () => {
-      const element = createTestComponent();
-      setupEventListeners(element);
-      await flushPromises();
-
-      expect(functionsMocks.exampleTabRendered).toHaveBeenCalledTimes(1);
-      const tabrenderedEvent =
-        functionsMocks.exampleTabRendered.mock.calls[0][0];
-      expect(tabrenderedEvent.bubbles).toEqual(true);
-    });
-  });
-
   describe('when the tab is not active', () => {
     beforeAll(() => {
       tabState = {...tabState, isActive: false};
     });
+
     it('should not display the tab as an active tab', async () => {
       const element = createTestComponent();
       await flushPromises();
 
       const tab = element.shadowRoot.querySelector(selectors.tabButton);
+      expect(tab).not.toBeNull();
 
       expect(tab.classList).not.toContain(expectedActiveTabClass);
       expect(element.isActive).toBe(false);
@@ -256,6 +253,7 @@ describe('c-quantic-tab', () => {
     beforeAll(() => {
       tabState = {...tabState, isActive: true};
     });
+
     it('should display the tab as an active tab', async () => {
       const element = createTestComponent();
       await flushPromises();
@@ -268,7 +266,7 @@ describe('c-quantic-tab', () => {
   });
 
   describe('when the tab is clicked', () => {
-    it('should trigger the select method', async () => {
+    it('should call the select method of the tab controller', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -278,7 +276,19 @@ describe('c-quantic-tab', () => {
       await tab.click();
       await flushPromises();
 
-      expect(functionsMocks.select).toHaveBeenCalled();
+      expect(functionsMocks.select).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('when calling the public select method of the component', () => {
+    it('should call the select method of the tab controller', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      await element.select();
+      await flushPromises();
+
+      expect(functionsMocks.select).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -5,7 +5,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "copyToClipboard",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -15,7 +15,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "dislike",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -25,7 +25,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "collapse",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -35,7 +35,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "expand",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -53,7 +53,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
       "readable": true,
     },
     "helpful": true,
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -63,7 +63,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "hide",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -73,7 +73,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "show",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -90,7 +90,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
       "uniqueFieldValue": "citation-permanent-id",
       "url": "http://localhost/citations/some-citation-id",
     },
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -100,7 +100,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
   "Rga.AnswerAction",
   {
     "action": "like",
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;
@@ -116,7 +116,7 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
       "uniqueFieldValue": "citation-permanent-id",
       "url": "http://localhost/citations/some-citation-id",
     },
-    "responseId": "123",
+    "responseId": "456",
   },
 ]
 `;

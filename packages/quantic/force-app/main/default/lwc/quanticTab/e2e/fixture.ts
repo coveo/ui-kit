@@ -10,19 +10,19 @@ import {
 
 const pageUrl = 's/quantic-tab';
 
-interface TabBarOptions {}
+interface TabOptions {}
 
 type QuanticTabE2EFixtures = {
   tab: TabObject;
   search: SearchObject;
-  options: Partial<TabBarOptions>;
+  options: Partial<TabOptions>;
 };
 
 type QuanticTabE2ESearchFixtures = QuanticTabE2EFixtures & {
   urlHash: string;
 };
 
-type QuanticTabE2EInsightFixtures = QuanticTabE2ESearchFixtures & {
+type QuanticTabE2EInsightFixtures = QuanticTabE2EFixtures & {
   insightSetup: InsightSetupObject;
 };
 

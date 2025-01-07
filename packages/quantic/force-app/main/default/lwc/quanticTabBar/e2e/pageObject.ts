@@ -1,4 +1,4 @@
-import {Locator, Page, Request} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class TabBarObject {
@@ -11,33 +11,35 @@ export class TabBarObject {
   }
 
   get allVisibleTabs(): Locator {
-    return this.tabBar.locator('button.slds-tabs_default__item').filter({
+    return this.tabBar.locator('c-quantic-tab').filter({
       has: this.page.locator(':visible'),
     });
   }
 
   get activeTab(): Locator {
-    return this.tabBar.locator('button.slds-tabs_default__item.slds-is-active');
+    return this.tabBar.locator('c-quantic-tab').filter({
+      has: this.page.locator('.slds-is-active'),
+    });
   }
 
   get moreButton(): Locator {
-    return this.tabBar.locator('.tab-bar_more-button');
+    return this.tabBar.getByTestId('tab-bar_more-button');
   }
 
-  get dropdown(): Locator {
-    return this.page.locator('.slds-dropdown-trigger');
-  }
-
-  get moreButtonLabel(): Locator {
-    return this.moreButton.locator('button').first();
+  get dropdownContainer(): Locator {
+    return this.page.getByTestId('tab-bar_dropdown-container');
   }
 
   get allDropdownOptions(): Locator {
-    return this.page.locator('.slds-dropdown__item');
+    return this.page.getByTestId('tab-bar_dropdown-item');
   }
 
   get tabBarContainer(): Locator {
     return this.page.locator('.tab-bar_container');
+  }
+
+  get tabBarDropdown(): Locator {
+    return this.tabBar.locator('.tab-bar_dropdown');
   }
 
   async clickMoreButton(): Promise<void> {
