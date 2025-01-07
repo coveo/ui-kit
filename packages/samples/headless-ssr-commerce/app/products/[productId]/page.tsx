@@ -66,7 +66,7 @@ export default async function ProductDescriptionPage({
   const resolvedSearchParams = await searchParams;
   const price = Number(resolvedSearchParams.price) ?? NaN;
   const name = Array.isArray(resolvedSearchParams.name)
-    ? resolvedSearchParams.name[0]
+    ? params.productId
     : (resolvedSearchParams.name ?? params.productId);
 
   return (
