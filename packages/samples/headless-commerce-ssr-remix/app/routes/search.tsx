@@ -75,6 +75,7 @@ export default function SearchRoute() {
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
+      <ParameterManager url={navigatorContext.location} />
       <h2>Search</h2>
       <ContextDropdown useCase="search" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
@@ -89,7 +90,7 @@ export default function SearchRoute() {
           <Summary />
           <Sort />
           <ProductList />
-          <ParameterManager url={navigatorContext.location} />
+
           {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
           {/* <Pagination
           staticState={staticState.controllers.pagination.state}
