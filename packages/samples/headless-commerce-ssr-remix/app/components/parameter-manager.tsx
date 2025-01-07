@@ -10,7 +10,7 @@ export default function ParameterManager({url}: {url: string | null}) {
 
   const initialUrl = useMemo(() => new URL(url ?? ''), [url]);
   const previousUrl = useRef(initialUrl.href);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   /**
    * When the URL fragment changes, this effect deserializes it and synchronizes it into the
@@ -25,7 +25,7 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     const newUrl = serialize(newCommerceParams, new URL(previousUrl.current));
 
-    if (newUrl === previousUrl.current) {
+    if (newUrl === previousUrl.current || newUrl === initialUrl.href) {
       return;
     }
 
@@ -44,28 +44,12 @@ export default function ParameterManager({url}: {url: string | null}) {
 
     const newUrl = serialize(state.parameters, new URL(previousUrl.current));
 
-    if (previousUrl.current === newUrl) {
+    if (previousUrl.current === newUrl || newUrl === initialUrl.href) {
       return;
     }
 
     previousUrl.current = newUrl;
-
-    setSearchParams((params) => {
-      const updatedParams = new URL(newUrl).searchParams;
-      params.keys().forEach((key) => {
-        if (!updatedParams.has(key)) {
-          params.delete(key);
-        }
-      });
-      updatedParams.keys().forEach((key) => {
-        const values = updatedParams.getAll(key);
-        params.set(key, values[0]);
-        for (let i = 1; i < values.length; i++) {
-          params.append(key, values[i]);
-        }
-      });
-      return params;
-    });
+    history.pushState(null, '', newUrl);
   }, [state.parameters]);
 
   return null;
