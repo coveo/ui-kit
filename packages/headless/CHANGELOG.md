@@ -1,3 +1,10 @@
+## 2.80.6 (2025-01-07)
+
+### Bug Fixes
+
+- **generatedAnswer:** map state with answerAPI ([#4684](https://github.com/coveo/ui-kit/issues/4684)) ([d0efeb8](https://github.com/coveo/ui-kit/commits/d0efeb8b5099a21443ba2299252493de9f1dd5fe))
+- **headless:** send end of stream event even when no answer is generated ([#4801](https://github.com/coveo/ui-kit/issues/4801)) ([c3aa7c6](https://github.com/coveo/ui-kit/commits/c3aa7c6e0a52d4f4d18c1a14b720c0dd80b0228f))
+
 ## 2.80.5 (2024-11-07)
 
 ### Bug Fixes
