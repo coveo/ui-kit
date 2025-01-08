@@ -1,4 +1,4 @@
-import {Locator, Page, Request} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
 
 export class SmartSnippetSuggestionsObject {
@@ -11,7 +11,7 @@ export class SmartSnippetSuggestionsObject {
   }
 
   async waitForSmartSnippetSuggestionsUaAnalytics(
-    eventValue
+    eventValue: any
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {

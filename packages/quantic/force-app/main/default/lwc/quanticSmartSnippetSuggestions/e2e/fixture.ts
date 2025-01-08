@@ -1,4 +1,4 @@
-import {SmartSnippetSuggestionsObject} from './smartSnippetSuggestionsObject';
+import {SmartSnippetSuggestionsObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
