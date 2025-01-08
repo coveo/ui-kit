@@ -183,7 +183,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
       - name: Zip documentation folder
         run: |
-          DOCS_DIR="packages/headless/docs"
+          DOCS_DIR="packages/headless-react/docs"
           if [ ! -d "$DOCS_DIR" ]; then
             echo "Documentation folder $DOCS_DIR not found."
             exit 1
