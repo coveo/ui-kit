@@ -13,7 +13,6 @@ import {
 } from '../../common/facets/facet-common-store';
 import {
   BaseStore,
-  CommonStore,
   createBaseStore,
   getFacetElements,
   registerFacet,
@@ -82,7 +81,7 @@ export function createSearchStore(): SearchStore {
     facetElements: [],
     fieldsToInclude: [],
     sortOptions: [],
-  }) as CommonStore<Data>;
+  });
 
   return {
     ...store,

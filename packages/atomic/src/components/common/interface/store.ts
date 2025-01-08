@@ -11,6 +11,13 @@ import {AnyEngineType} from './bindings';
 
 export interface CommonStore<StoreData> {
   state: StoreData;
+  get: <PropName extends keyof StoreData>(
+    propName: PropName
+  ) => StoreData[PropName];
+  set: <PropName extends keyof StoreData>(
+    propName: PropName,
+    value: StoreData[PropName]
+  ) => void;
   onChange: <PropName extends keyof StoreData>(
     propName: PropName,
     cb: (newValue: StoreData[PropName]) => void
