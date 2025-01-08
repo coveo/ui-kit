@@ -1,5 +1,5 @@
-import React, {FunctionComponent, useState} from 'react';
-import {createRoot} from 'react-dom/client';
+import {useState} from 'react';
+import './App.css';
 import {HeaderLink} from './components/HeaderLink';
 import {CommerceSearchPage} from './pages/CommerceSearchPage';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
@@ -7,7 +7,6 @@ import {InstantResultsPage} from './pages/InstantResultsPage';
 import {RecsPage} from './pages/RecsPage';
 import {ResultListPage} from './pages/ResultListPage';
 import {TableResultListPage} from './pages/TableResultListPage';
-import './style.css';
 
 const LIST_PAGE = 'Result list';
 const FOLDED_LIST_PAGE = 'Folded result list';
@@ -24,7 +23,8 @@ const pages = [
   RECS_PAGE,
   COMMERCE_SEARCH_PAGE,
 ];
-const App: FunctionComponent = () => {
+
+function App() {
   const initialPage = pages.find((page) =>
     decodeURIComponent(window.location.search).includes(`page=${page}`)
   );
@@ -66,7 +66,6 @@ const App: FunctionComponent = () => {
       {page === COMMERCE_SEARCH_PAGE && <CommerceSearchPage />}
     </>
   );
-};
+}
 
-const root = createRoot(document.getElementById('root')!);
-root.render(<App />);
+export default App;

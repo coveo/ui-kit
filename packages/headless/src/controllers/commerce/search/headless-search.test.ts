@@ -13,7 +13,6 @@ import {searchParametersDefinition} from '../../../features/commerce/search-para
 import * as SearchActions from '../../../features/commerce/search/search-actions.js';
 import {
   activeParametersSelector,
-  enrichedParametersSelector,
   enrichedSummarySelector,
   errorSelector,
   isLoadingSelector,
@@ -75,7 +74,6 @@ describe('headless search', () => {
       parametersDefinition: searchParametersDefinition,
       restoreActionCreator: restoreSearchParameters,
       activeParametersSelector,
-      enrichParameters: enrichedParametersSelector,
       isLoadingSelector,
       errorSelector,
       pageSelector: pagePrincipalSelector,

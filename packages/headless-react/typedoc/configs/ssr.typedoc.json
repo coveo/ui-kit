@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Engine",
+    "Definers",
+    "Controllers",
+    "Buildable controllers",
+    "Sub-controllers",
+    "Actions",
+    "*"
+  ],
+  "name": "SSR Search",
+  "readme": "none",
+  "entryPoints": ["../../src/ssr/index.ts"],
+  "gitRevision": "typedoc-POC",
+  "plugin": ["../../typedoc/dist/index.js"]
+}

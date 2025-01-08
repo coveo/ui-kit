@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
@@ -28,7 +28,7 @@ runs:
         config: reporter=cypress/reporters/detailed-reporter.js
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-    - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+    - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
       if: failure()
       with:
         name: quantic-screenshots-${{ inputs.spec}}

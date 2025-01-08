@@ -1,3 +1,15 @@
+## 2.4.0 (2025-01-08)
+
+- chore(deps): update dependency eslint-plugin-react to v7.37.3 j:kit-282 (#4819) ([b51ea24](https://github.com/coveo/ui-kit/commits/b51ea24)), closes [#4819](https://github.com/coveo/ui-kit/issues/4819)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update typescript j:kit-282 (#4721) ([4ee6eba](https://github.com/coveo/ui-kit/commits/4ee6eba)), closes [#4721](https://github.com/coveo/ui-kit/issues/4721)
+- fix(headless commerce SSR): fix react provider hydration logic (#4792) ([69efd25](https://github.com/coveo/ui-kit/commits/69efd25)), closes [#4792](https://github.com/coveo/ui-kit/issues/4792)
+- fix(headless-react): fix error when using keys other than their name for WithProps controllers (#478 ([56a5d92](https://github.com/coveo/ui-kit/commits/56a5d92)), closes [#4783](https://github.com/coveo/ui-kit/issues/4783)
+- fix(headless-ssr-commerce): fix client side recommendation refresh with a productId (#4793) ([454178b](https://github.com/coveo/ui-kit/commits/454178b)), closes [#4793](https://github.com/coveo/ui-kit/issues/4793)
+- docs(headless commerce SSR): add parameter manager in SSR + nextjs sample (#4770) ([208e054](https://github.com/coveo/ui-kit/commits/208e054)), closes [#4770](https://github.com/coveo/ui-kit/issues/4770)
+- docs(headless-react): create typedoc site & publish it as an artifact (#4747) ([3f2b6fa](https://github.com/coveo/ui-kit/commits/3f2b6fa)), closes [#4747](https://github.com/coveo/ui-kit/issues/4747)
+- feat(headless SSR): improved error messaging for hook misuse (#4771) ([915daa1](https://github.com/coveo/ui-kit/commits/915daa1)), closes [#4771](https://github.com/coveo/ui-kit/issues/4771)
+
 ## 2.3.0 (2024-12-11)
 
 - feat(headless SSR): fetchStaticState should only accept solutiontype-specific controllers (#4769) ([f961cb2](https://github.com/coveo/ui-kit/commits/f961cb2)), closes [#4769](https://github.com/coveo/ui-kit/issues/4769)
