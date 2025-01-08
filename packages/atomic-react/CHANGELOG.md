@@ -1,3 +1,10 @@
+## <small>3.2.9 (2025-01-08)</small>
+
+- chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+
 ## <small>3.2.7 (2024-12-04)</small>
 
 - chore: add atomic loader to CDN deployment config (#4686) ([7a7e0ba](https://github.com/coveo/ui-kit/commits/7a7e0ba)), closes [#4686](https://github.com/coveo/ui-kit/issues/4686)

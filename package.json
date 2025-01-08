@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.5",
+  "version": "3.0.6",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
