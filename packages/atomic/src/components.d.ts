@@ -3655,6 +3655,10 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -3686,7 +3690,9 @@ export namespace Components {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -5998,6 +6004,10 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
     var HTMLAtomicTabElement: {
@@ -6017,7 +6027,9 @@ declare global {
         new (): HTMLAtomicTabButtonElement;
     };
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
@@ -9733,6 +9745,10 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -9764,7 +9780,9 @@ declare namespace LocalJSX {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -10942,11 +10960,17 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+             * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+             */
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
-             * @alpha 
+             * The `atomic-tab-manager` component manages a collection of tabs,
+             * allowing users to switch between them. Each child `atomic-tab` represents an
+             * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
