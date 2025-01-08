@@ -123,6 +123,7 @@
     "jest-localstorage-mock": "2.4.26",
     "lit": "3.2.1",
     "lit-html": "3.2.1",
+    "local-web-server": "5.4.0",
     "natural-orderby": "5.0.0",
     "postcss-focus-visible": "10.0.1",
     "postcss-import": "16.1.0",
