@@ -2,6 +2,10 @@ import React, { createElement } from 'react';
 
 import { attachProps, camelToDashCase, createForwardRef, dashToPascalCase, isCoveredByReact, mergeRefs } from './utils/index.js';
 
+export interface HTMLStencilElement extends HTMLElement {
+  componentOnReady(): Promise<this>;
+}
+
 interface StencilReactInternalProps<ElementType> extends React.HTMLAttributes<ElementType> {
   forwardedRef: React.RefObject<ElementType>;
   ref?: React.Ref<any>;
@@ -9,7 +13,7 @@ interface StencilReactInternalProps<ElementType> extends React.HTMLAttributes<El
 
 export const createReactComponent = <
   PropType,
-  ElementType extends HTMLElement,
+  ElementType extends HTMLStencilElement,
   ContextStateType = {},
   ExpandedPropsTypes = {}
 >(
