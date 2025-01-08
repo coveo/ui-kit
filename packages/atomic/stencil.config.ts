@@ -144,21 +144,6 @@ export const config: Config = {
       type: 'docs-json',
       file: './docs/atomic-docs.json',
     },
-    // {
-    //   type: 'www',
-    //   serviceWorker: null, // disable service worker
-    //   copy: [
-    //     {src: 'pages', keepDirStructure: false},
-    //     {src: 'themes'},
-    //     isDevWatch
-    //       ? {src: 'external-builds', dest: 'build/headless'}
-    //       : {src: ''},
-    //     {
-    //       src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
-    //       dest: 'build/assets',
-    //     },
-    //   ].filter((n) => n.src),
-    // },
   ].filter(Boolean),
   testing: {
     browserArgs: ['--no-sandbox'],

@@ -50,7 +50,7 @@
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build": "nx build",
     "build:locales": "npx nx build:locales atomic",
-    "start": "nx dev atomic --parallel=10",
+    "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
     "test": "npm run build:locales && stencil test --spec",
     "test:watch": "stencil test --spec --watchAll",
