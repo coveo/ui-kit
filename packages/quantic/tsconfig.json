@@ -7,8 +7,7 @@
     "allowJs": true,
     "baseUrl": "force-app/main/default/lwc",
     "target": "es2016",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "ESNext",
     "lib": ["es2019", "dom", "ES2018.Intl", "dom.Iterable", "ES2021.String"],
     "paths": {
       "c/exampleSearch": ["exampleSearch/exampleSearch"],
