@@ -6,7 +6,7 @@ import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import autoprefixer from 'autoprefixer';
 import {readFileSync, readdirSync} from 'fs';
-import {dirname} from 'node:path';
+import {dirname, relative} from 'node:path';
 import focusVisible from 'postcss-focus-visible';
 import atImport from 'postcss-import';
 import postcssMap from 'postcss-map';
@@ -23,8 +23,9 @@ import {generateAngularModuleDefinition as angularModule} from './stencil-plugin
 const isProduction = process.env.BUILD === 'production';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
-const sldsBasePath = dirname(
-  require.resolve('@salesforce-ux/design-system/package.json')
+const sldsBasePath = relative(
+  __dirname,
+  dirname(require.resolve('@salesforce-ux/design-system/package.json'))
 );
 
 const packageMappings = generateExternalPackageMappings(__dirname);
