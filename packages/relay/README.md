@@ -13,7 +13,7 @@ const config = {...};
 const relay = createRelay(config);
 
 const payload = {...};
-relay.emit('itemView', payload);
+relay.emit('itemClick', payload);
 ```
 
 ## Official documentation
