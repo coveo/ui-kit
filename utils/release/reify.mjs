@@ -35,10 +35,14 @@ function buildDependencyGraph(rootNode) {
         : node.edgesOut;
     const workspaces = edgesOut.filter(
       (edge) =>
-        edge.to.package.name && rootNode.workspaces?.has(edge.to.package.name)
+        edge.to?.package.name && rootNode.workspaces?.has(edge.to.package.name)
     );
-    return workspaces.map((edge) =>
-      edge.to instanceof Arborist.Link ? edge.to.target : edge.to
+    return workspaces.flatMap((edge) =>
+      edge.to === null
+        ? []
+        : edge.to instanceof Arborist.Link
+          ? [edge.to.target]
+          : [edge.to]
     );
   }
 
@@ -48,7 +52,7 @@ function buildDependencyGraph(rootNode) {
   function addWorkspaceDependencies(node) {
     const dependencies = getWorkspaceDependencies(node);
     for (const dependency of dependencies) {
-      if (!node.package.name || !dependency.package.name) {
+      if (!node.package.name || !dependency?.package.name) {
         throw 'Workspaces must all have a name.';
       }
       if (node.package.name === dependency.package.name) {
@@ -61,12 +65,18 @@ function buildDependencyGraph(rootNode) {
 
   const workspaces = getWorkspaceDependencies(rootNode);
   for (const workspace of workspaces) {
-    if (!workspace.package.name) {
+    if (!workspace) {
+      continue;
+    }
+    if (!workspace?.package.name) {
       throw 'Workspaces must all have a name.';
     }
-    graph.addNode(workspace.package.name, workspace);
+    graph.addNode(workspace?.package.name, workspace);
   }
   for (const workspace of workspaces) {
+    if (!workspace) {
+      continue;
+    }
     addWorkspaceDependencies(workspace);
   }
   return graph;
