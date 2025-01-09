@@ -1,3 +1,4 @@
+import {TestFixture} from '../fixtures/test-fixture';
 import {deselectBreadcrumbAtIndex} from './breadbox-actions';
 import {BreadboxSelectors} from './breadbox-selectors';
 import {should} from './common-assertions';
@@ -69,15 +70,17 @@ export function assertRemoveBreadcrumbShowMoreInDOM() {
 
 export function assertDisplayBreadcrumbClearIcon() {
   it('should display a "Clear" icon next to each facetValue', () => {
-    BreadboxSelectors.breadcrumbClearFacetValueButton()
-      .its('length')
-      .then((count) => {
-        for (let i = 0; i < count; i++) {
-          BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(i).should(
-            'be.visible'
-          );
-        }
-      });
+    cy.wait(TestFixture.interceptAliases.Build).then(() =>
+      BreadboxSelectors.breadcrumbClearFacetValueButton()
+        .its('length')
+        .then((count) => {
+          for (let i = 0; i < count; i++) {
+            BreadboxSelectors.breadcrumbClearFacetValueButtonAtIndex(i).should(
+              'be.visible'
+            );
+          }
+        })
+    );
   });
 }
 

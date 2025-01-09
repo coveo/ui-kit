@@ -1,4 +1,4 @@
 export function getSvg(fileName: string) {
-  const file = cy.readFile(`./dist/atomic/assets/${fileName}.svg`);
+  const file = cy.readFile(`./www/build/assets/${fileName}.svg`);
   return file;
 }
