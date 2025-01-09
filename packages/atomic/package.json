@@ -119,7 +119,7 @@
     "@whitespace/storybook-addon-html": "6.1.1",
     "autoprefixer": "10.4.20",
     "axe-core": "4.10.2",
-    "cypress": "13.17.0",
+    "cypress": "13.6.6",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.8",
     "cypress-split": "1.5.0",
