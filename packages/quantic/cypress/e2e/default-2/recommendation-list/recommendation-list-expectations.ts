@@ -1,4 +1,4 @@
-import {Interception} from '../../../../../../node_modules/cypress/types/net-stubbing';
+import {Interception} from 'cypress/types/net-stubbing';
 import {InterceptAliases} from '../../../page-objects/search';
 import {
   ComponentErrorExpectations,
