@@ -21,6 +21,7 @@ export const {
   usePagination,
   usePopularBought,
   usePopularViewed,
+  useViewedTogether,
   useProductView,
   useQueryTrigger,
   useRecentQueriesList,
@@ -31,4 +32,5 @@ export const {
   useSummary,
   useFacetGenerator,
   useBreadcrumbManager,
+  useParameterManager,
 } = engineDefinition.controllers;

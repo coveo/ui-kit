@@ -18,7 +18,8 @@ import {
   defineProductView,
   getSampleCommerceEngineConfiguration,
   defineDidYouMean,
-  defineRecommendations, //defineParameterManager,
+  defineRecommendations,
+  defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
 
 export default {
@@ -40,6 +41,11 @@ export default {
         slotId: 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
       },
     }),
+    viewedTogether: defineRecommendations({
+      options: {
+        slotId: 'ff5d8804-d398-4dd5-b68c-6a729c66454b',
+      },
+    }),
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
@@ -55,7 +61,7 @@ export default {
     sort: defineSort(),
     productView: defineProductView(),
     didYouMean: defineDidYouMean(),
-    //parameterManager: defineParameterManager(), // TODO KIT-3462: implement parameter manager in sample
+    parameterManager: defineParameterManager(),
     facetGenerator: defineFacetGenerator(),
     breadcrumbManager: defineBreadcrumbManager(),
   },
