@@ -5,7 +5,36 @@ import QuanticSmartSnippet from '../quanticSmartSnippet';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+let mockAnswerHeight = 300;
+
 jest.mock('c/quanticHeadlessLoader');
+jest.mock('c/quanticUtils', () => ({
+  getAbsoluteHeight: jest.fn(() => {
+    return mockAnswerHeight;
+  }),
+  I18nUtils: {
+    format: jest.fn(),
+  },
+  LinkUtils: {
+    bindAnalyticsToLink: jest.fn(),
+  },
+}));
+
+jest.mock(
+  '@salesforce/label/c.quantic_SmartSnippetShowMore',
+  () => ({default: 'Show more'}),
+  {
+    virtual: true,
+  }
+);
+
+jest.mock(
+  '@salesforce/label/c.quantic_SmartSnippetShowLess',
+  () => ({default: 'Show less'}),
+  {
+    virtual: true,
+  }
+);
 
 let isInitialized = false;
 
@@ -17,16 +46,11 @@ const defaultOptions = {
   engineId: exampleEngine.id,
 };
 
-const showMoreLabel = 'Show more';
-const showLessLabel = 'Show less';
-const showMoreIcon = 'utility:chevrondown';
-const showLessIcon = 'utility:chevronup';
-
 const selectors = {
   initializationError: 'c-quantic-component-error',
   smartSnippet: 'c-quantic-smart-snippet',
   smartSnippetAnswer: 'c-quantic-smart-snippet-answer',
-  smartSnippetToggleButton: '[data-id="smart-snippet-answer-toggle"]',
+  smartSnippetToggleButton: '[data-id="smart-snippet-toggle-button"]',
   smartSnippetSource: 'c-quantic-smart-snippet-source',
   smartSnippetFeedback: 'c-quantic-feedback',
 };
@@ -38,6 +62,11 @@ const defaultSearchStatusState = {
 
 let searchStatusState = defaultSearchStatusState;
 
+const mockSmartSnippetSource = {
+  title: 'The Lord of the Rings',
+  uri: 'https://en.wikipedia.org/wiki/The_Lord_of_the_Rings',
+};
+
 const defaultSmartSnippetState = {
   question: 'Where was Gondor when Westfold fell?',
   answer: 'Gondor was obviously busy with other things.',
@@ -47,16 +76,17 @@ const defaultSmartSnippetState = {
   liked: false,
   disliked: false,
   feedbackModalOpen: false,
-  source: null, // TODO: add a source (Type Result)
+  source: mockSmartSnippetSource,
 };
+
 let smartSnippetState = defaultSmartSnippetState;
 
 const functionsMocks = {
   buildSmartSnippet: jest.fn(() => ({
     state: smartSnippetState,
     subscribe: functionsMocks.smartSnippetStateSubscriber,
-    expand: jest.fn(),
-    collapse: jest.fn(),
+    expand: functionsMocks.expand,
+    collapse: functionsMocks.collapse,
   })),
   buildSearchStatus: jest.fn(() => ({
     state: searchStatusState,
@@ -72,11 +102,11 @@ const functionsMocks = {
   }),
   smartSnippetStateUnsubscriber: jest.fn(),
   searchStatusStateUnsubscriber: jest.fn(),
+  expand: jest.fn(),
+  collapse: jest.fn(),
 };
 
 function createTestComponent(options = defaultOptions) {
-  prepareHeadlessState();
-
   const element = createElement('c-quantic-smart-snippet', {
     is: QuanticSmartSnippet,
   });
@@ -87,6 +117,11 @@ function createTestComponent(options = defaultOptions) {
   return element;
 }
 
+// Helper function to wait until the microtask queue is empty.
+function flushPromises() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
 function prepareHeadlessState() {
   // @ts-ignore
   mockHeadlessLoader.getHeadlessBundle = () => {
@@ -95,11 +130,6 @@ function prepareHeadlessState() {
       buildSearchStatus: functionsMocks.buildSearchStatus,
     };
   };
-}
-
-// Helper function to wait until the microtask queue is empty.
-function flushPromises() {
-  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function mockSuccessfulHeadlessInitialization() {
@@ -131,10 +161,6 @@ function cleanup() {
 }
 
 describe('c-quantic-smart-snippet', () => {
-  beforeEach(() => {
-    mockSuccessfulHeadlessInitialization();
-  });
-
   afterEach(() => {
     smartSnippetState = defaultSmartSnippetState;
     searchStatusState = defaultSearchStatusState;
@@ -142,7 +168,12 @@ describe('c-quantic-smart-snippet', () => {
   });
 
   describe('controller initialization', () => {
-    it('should build the smart snippet and searchStatus controllers with proper parameters', async () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
+    it('should build the smart snippet controller with the proper parameters and subscribe to its state change', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -150,18 +181,18 @@ describe('c-quantic-smart-snippet', () => {
       expect(functionsMocks.buildSmartSnippet).toHaveBeenCalledWith(
         exampleEngine
       );
-      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
-        exampleEngine
+      expect(functionsMocks.smartSnippetStateSubscriber).toHaveBeenCalledTimes(
+        1
       );
     });
 
-    it('should subscribe to the headless smart snippet and search status state changes', async () => {
+    it('should build the search status controller with the proper parameters and subscribe to its state change', async () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.smartSnippetStateSubscriber).toHaveBeenCalledTimes(
-        1
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
       );
       expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
         1
@@ -172,10 +203,6 @@ describe('c-quantic-smart-snippet', () => {
   describe('when an initialization error occurs', () => {
     beforeEach(() => {
       mockErroneousHeadlessInitialization();
-    });
-
-    afterAll(() => {
-      mockSuccessfulHeadlessInitialization();
     });
 
     it('should display the initialization error component', async () => {
@@ -205,92 +232,45 @@ describe('c-quantic-smart-snippet', () => {
     });
   });
 
-  describe('when the query does return a smart snippet', () => {
-    describe('when the smart snippet is collapsed', () => {
-      beforeAll(() => {
-        smartSnippetState = {...defaultSmartSnippetState, expanded: false};
-      });
-
-      it('should properly display the smart snippet component', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const smartSnippetAnswer = element.shadowRoot.querySelector(
-          selectors.smartSnippetAnswer
-        );
-        // smartSnippetAnswer.height = 500;
-        expect(smartSnippetAnswer).not.toBeNull();
-
-        const smartSnippetToggleButton = element.shadowRoot.querySelector(
-          selectors.smartSnippetToggleButton
-        );
-        expect(smartSnippetToggleButton).not.toBeNull();
-        expect(smartSnippetToggleButton.label).toBe(showMoreLabel);
-        expect(smartSnippetToggleButton.iconName).toBe(showMoreIcon);
-
-        const smartSnippetSource = element.shadowRoot.querySelector(
-          selectors.smartSnippetSource
-        );
-        expect(smartSnippetSource).not.toBeNull();
-
-        const smartSnippetFeedback = element.shadowRoot.querySelector(
-          selectors.smartSnippetFeedback
-        );
-        expect(smartSnippetFeedback).not.toBeNull();
-      });
-
-      describe('when clicking on the smart snippet toggle button', () => {
-        it('should call the expand method from the smartSnippet controller', async () => {
-          const element = createTestComponent();
-          await flushPromises();
-
-          const smartSnippetToggleButton = element.shadowRoot.querySelector(
-            selectors.smartSnippetToggleButton
-          );
-
-          await smartSnippetToggleButton.click();
-          await flushPromises();
-
-          expect(functionsMocks.buildSmartSnippet.expand).toHaveBeenCalledTimes(
-            1
-          );
-        });
-      });
+  describe('when the query returns a smart snippet', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+      smartSnippetState = defaultSmartSnippetState;
     });
 
-    describe('when the smart snippet is expanded', () => {
-      beforeAll(() => {
-        smartSnippetState = {...defaultSmartSnippetState, expanded: true};
-      });
-      it('should properly display the smart snippet component', async () => {
-        const element = createTestComponent();
-        await flushPromises();
+    afterEach(() => {
+      smartSnippetState = defaultSmartSnippetState;
+    });
 
-        const smartSnippetAnswer = element.shadowRoot.querySelector(
-          selectors.smartSnippetAnswer
-        );
-        expect(smartSnippetAnswer).not.toBeNull();
+    it('should properly display the smart snippet', async () => {
+      const element = createTestComponent();
+      await flushPromises();
 
-        const smartSnippetToggleButton = element.shadowRoot.querySelector(
-          selectors.smartSnippetToggleButton
-        );
-        expect(smartSnippetToggleButton).not.toBeNull();
-        expect(smartSnippetToggleButton.label).toBe(showLessLabel);
-        expect(smartSnippetToggleButton.iconName).toBe(showLessIcon);
+      const smartSnippetAnswer = element.shadowRoot.querySelector(
+        selectors.smartSnippetAnswer
+      );
 
-        const smartSnippetSource = element.shadowRoot.querySelector(
-          selectors.smartSnippetSource
-        );
-        expect(smartSnippetSource).not.toBeNull();
+      expect(smartSnippetAnswer).not.toBeNull();
+      expect(smartSnippetAnswer.answer).toEqual(smartSnippetState.answer);
 
-        const smartSnippetFeedback = element.shadowRoot.querySelector(
-          selectors.smartSnippetFeedback
-        );
-        expect(smartSnippetFeedback).not.toBeNull();
-      });
+      const smartSnippetSource = element.shadowRoot.querySelector(
+        selectors.smartSnippetSource
+      );
+      expect(smartSnippetSource).not.toBeNull();
+      expect(smartSnippetSource.source).toEqual(smartSnippetState.source);
 
-      describe('when clicking on the smart snippet toggle button', () => {
-        it('should call the collapse method from the smartSnippet controller', async () => {
+      const smartSnippetFeedback = element.shadowRoot.querySelector(
+        selectors.smartSnippetFeedback
+      );
+      expect(smartSnippetFeedback).not.toBeNull();
+    });
+
+    describe('when the smart snippet exceeds the maximum height', () => {
+      describe('when the smart snippet is collapsed', () => {
+        it('should properly display the toggle button of the smart snippet component', async () => {
+          const expectedShowMoreLabel = 'Show more';
+          const expectedShowMoreIcon = 'utility:chevrondown';
           const element = createTestComponent();
           await flushPromises();
 
@@ -298,12 +278,62 @@ describe('c-quantic-smart-snippet', () => {
             selectors.smartSnippetToggleButton
           );
 
-          await smartSnippetToggleButton.click();
+          expect(smartSnippetToggleButton).not.toBeNull();
+          expect(smartSnippetToggleButton.label).toBe(expectedShowMoreLabel);
+          expect(smartSnippetToggleButton.iconName).toBe(expectedShowMoreIcon);
+        });
+
+        describe('when clicking on the smart snippet toggle button', () => {
+          it('should call the expand method from the smartSnippet controller', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const smartSnippetToggleButton = element.shadowRoot.querySelector(
+              selectors.smartSnippetToggleButton
+            );
+            expect(smartSnippetToggleButton).not.toBeNull();
+
+            await smartSnippetToggleButton.click();
+            await flushPromises();
+
+            expect(functionsMocks.expand).toHaveBeenCalledTimes(1);
+          });
+        });
+      });
+
+      describe('when the smart snippet is expanded', () => {
+        beforeEach(() => {
+          smartSnippetState = {...defaultSmartSnippetState, expanded: true};
+        });
+
+        it('should properly display the smart snippet component', async () => {
+          const expectedShowLessLabel = 'Show less';
+          const expectedShowLessIcon = 'utility:chevronup';
+          const element = createTestComponent();
           await flushPromises();
 
-          expect(
-            functionsMocks.buildSmartSnippet.collapse
-          ).toHaveBeenCalledTimes(1);
+          const smartSnippetToggleButton = element.shadowRoot.querySelector(
+            selectors.smartSnippetToggleButton
+          );
+          expect(smartSnippetToggleButton).not.toBeNull();
+          expect(smartSnippetToggleButton.label).toBe(expectedShowLessLabel);
+          expect(smartSnippetToggleButton.iconName).toBe(expectedShowLessIcon);
+        });
+
+        describe('when clicking on the smart snippet toggle button', () => {
+          it('should call the collapse method from the smartSnippet controller', async () => {
+            const element = createTestComponent();
+            await flushPromises();
+
+            const smartSnippetToggleButton = element.shadowRoot.querySelector(
+              selectors.smartSnippetToggleButton
+            );
+
+            await smartSnippetToggleButton.click();
+            await flushPromises();
+
+            expect(functionsMocks.collapse).toHaveBeenCalledTimes(1);
+          });
         });
       });
     });
