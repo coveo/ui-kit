@@ -95,7 +95,7 @@
       "groupName": "LWC Compiler",
       "groupSlug": "lwc-compiler",
       "rangeStrategy": "replace",
-      "matchPackageNames": ["/^@lwc/compiler$/", "@salesforce/sfdx-lwc-jest"]
+      "matchPackageNames": ["/^@lwc/compiler$/"]
     },
     {
       "matchFileNames": ["packages/atomic/package.json"],
@@ -176,5 +176,5 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["eslint-plugin-canonical"]
+  "ignoreDeps": ["eslint-plugin-canonical", "@salesforce/sfdx-lwc-jest"]
 }
