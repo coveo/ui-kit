@@ -95,7 +95,7 @@
       "groupName": "LWC Compiler",
       "groupSlug": "lwc-compiler",
       "rangeStrategy": "replace",
-      "matchPackageNames": ["/^@lwc/compiler$/"]
+      "matchPackageNames": ["/^@lwc/compiler$/", "@salesforce/sfdx-lwc-jest"]
     },
     {
       "matchFileNames": ["packages/atomic/package.json"],
