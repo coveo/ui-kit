@@ -7,7 +7,7 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/headless.esm.js",
+  "module": "./dist/browser/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
