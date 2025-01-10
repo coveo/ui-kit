@@ -6,7 +6,10 @@
   @apply relative;
 
   .with-sections:not(.child-result) {
-    @apply p-6;
+    padding-top: var(--atomic-layout-spacing-y);
+    padding-bottom: var(--atomic-layout-spacing-y);
+    padding-right: var(--atomic-layout-spacing-x);
+    padding-left: var(--atomic-layout-spacing-x);
   }
 
   &(:hover) {
