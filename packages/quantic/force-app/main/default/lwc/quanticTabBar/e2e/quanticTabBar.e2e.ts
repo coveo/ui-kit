@@ -102,29 +102,12 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('when a tab is selected from the dropdown list', () => {
-        test('should correctly select the tab and make it active', async ({
-          tabBar,
-        }) => {
-          const expectedSelectedTabLabel = 'Tab 4';
-          const expectedNumberOfDropdownOptions = 2;
-          await tabBar.clickMoreButton();
-
-          const dropdownOptionsCount = await tabBar.allDropdownOptions.count();
-          expect(dropdownOptionsCount).not.toBeNull();
-          expect(dropdownOptionsCount).toEqual(expectedNumberOfDropdownOptions);
-
-          await tabBar.clickDropdownOption(1);
-
-          const activeTab = await tabBar.activeTab.textContent();
-
-          expect(activeTab).not.toBeNull();
-          expect(activeTab).toEqual(expectedSelectedTabLabel);
-        });
-
-        test('should trigger a new search send the correct UA analytics event', async ({
+        test('should make the tab active, trigger a new search and send the correct analytics event', async ({
           tabBar,
           search,
         }) => {
+          const expectedSelectedTabLabel = 'Tab 4';
+          const expectedNumberOfDropdownOptions = 2;
           const expectedActionCause = 'interfaceChange';
           const expectedTabValue = 'Tab 4';
           const expectedOriginContext = 'Search';
@@ -132,7 +115,15 @@ useCaseTestCases.forEach((useCase) => {
           const searchResponsePromise = search.waitForSearchResponse();
 
           await tabBar.clickMoreButton();
+          const dropdownOptionsCount = await tabBar.allDropdownOptions.count();
+          expect(dropdownOptionsCount).not.toBeNull();
+          expect(dropdownOptionsCount).toEqual(expectedNumberOfDropdownOptions);
           await tabBar.clickDropdownOption(1);
+
+          const activeTab = await tabBar.activeTab.textContent();
+
+          expect(activeTab).not.toBeNull();
+          expect(activeTab).toEqual(expectedSelectedTabLabel);
 
           const searchResponse = await searchResponsePromise;
           const searchResponseBody = searchResponse.request().postDataJSON();

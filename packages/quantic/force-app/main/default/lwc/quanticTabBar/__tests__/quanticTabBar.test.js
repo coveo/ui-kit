@@ -172,6 +172,34 @@ describe('c-quantic-tab-bar', () => {
           moreTabsSection.style.display === 'block';
         expect(moreTabsSectionIsVisible).toBe(true);
       });
+
+      it('should hide the more tab section when the window is resized to a bigger width', async () => {
+        const element = createTestComponent(defaultOptions, exampleTabSlots);
+        await flushPromises();
+
+        const moreTabsSection = element.shadowRoot.querySelector(
+          selectors.moreTabsSection
+        );
+        expect(moreTabsSection).not.toBeNull();
+        const moreTabsSectionIsVisible =
+          moreTabsSection.style.display === 'block';
+        expect(moreTabsSectionIsVisible).toBe(true);
+
+        mockContainerWidth = 300;
+        // mocking the positioning of the tab bar container.
+        const tabBarContainer = element.shadowRoot.querySelector(
+          selectors.tabBarContainer
+        );
+        tabBarContainer.getBoundingClientRect = () => ({
+          right: mockContainerWidth,
+        });
+        window.dispatchEvent(new CustomEvent('resize'));
+        await flushPromises();
+
+        const moreTabsSectionIsHidden =
+          moreTabsSection.style.display === 'none';
+        expect(moreTabsSectionIsHidden).toBe(true);
+      });
     });
   });
 
@@ -274,40 +302,6 @@ describe('c-quantic-tab-bar', () => {
       expect(functionMocks.select).toHaveBeenCalledWith(
         expectedNumberOfTabsToBeVisible + exampleIndex
       );
-    });
-
-    describe('reactivity to window resize', () => {
-      afterAll(() => {
-        mockContainerWidth = 200;
-      });
-
-      it('should hide the more tab section when the window is resized to a bigger width', async () => {
-        const element = createTestComponent(defaultOptions, exampleTabSlots);
-        await flushPromises();
-
-        const moreTabsSection = element.shadowRoot.querySelector(
-          selectors.moreTabsSection
-        );
-        expect(moreTabsSection).not.toBeNull();
-        const moreTabsSectionIsVisible =
-          moreTabsSection.style.display === 'block';
-        expect(moreTabsSectionIsVisible).toBe(true);
-
-        mockContainerWidth = 300;
-        // mocking the positioning of the tab bar container.
-        const tabBarContainer = element.shadowRoot.querySelector(
-          selectors.tabBarContainer
-        );
-        tabBarContainer.getBoundingClientRect = () => ({
-          right: mockContainerWidth,
-        });
-        window.dispatchEvent(new CustomEvent('resize'));
-        await flushPromises();
-
-        const moreTabsSectionIsHidden =
-          moreTabsSection.style.display === 'none';
-        expect(moreTabsSectionIsHidden).toBe(true);
-      });
     });
   });
 
