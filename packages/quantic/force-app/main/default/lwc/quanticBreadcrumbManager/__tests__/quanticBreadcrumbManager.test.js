@@ -30,21 +30,25 @@ const functionsMocks = {
 };
 
 const selectors = {
-  facetBreadcrumb: '[data-test="facet-breadcrumb"]',
-  facetBreadcrumbValue: '[data-test="facet-breadcrumb-value"]',
-  categoryFacetBreadcrumb: '[data-test="category-facet-breadcrumb"]',
-  categoryFacetBreadcrumbValue: '[data-test="category-facet-breadcrumb-value"]',
-  numericFacetBreadcrumb: '[data-test="numeric-facet-breadcrumb"]',
-  numericFacetBreadcrumbValue: '[data-test="numeric-facet-breadcrumb-value"]',
-  dateFacetBreadcrumb: '[data-test="date-facet-breadcrumb"]',
-  dateFacetBreadcrumbValue: '[data-test="date-facet-breadcrumb-value"]',
+  initializationError: 'c-quantic-component-error',
+  breadcrumbShowMoreButton: '[data-testid="breadcrumb-manager__more-button"]',
+  breadcrumbClearAllFiltersButton:
+    '[data-testid="breadcrumb-manager__clear-button"]',
+  facetBreadcrumb: '[data-testid="facet-breadcrumb"]',
+  facetBreadcrumbValue: '[data-testid="facet-breadcrumb-value"]',
+  categoryFacetBreadcrumb: '[data-testid="category-facet-breadcrumb"]',
+  categoryFacetBreadcrumbValue:
+    '[data-testid="category-facet-breadcrumb-value"]',
+  numericFacetBreadcrumb: '[data-testid="numeric-facet-breadcrumb"]',
+  numericFacetBreadcrumbValue: '[data-testid="numeric-facet-breadcrumb-value"]',
+  dateFacetBreadcrumb: '[data-testid="date-facet-breadcrumb"]',
+  dateFacetBreadcrumbValue: '[data-testid="date-facet-breadcrumb-value"]',
 };
 
 const exampleEngine = {
   id: 'dummy engine',
 };
-const exampleFacetId = 'idOne';
-
+const defaultCollapseThreshold = 5;
 let isInitialized = false;
 
 function createTestComponent(options = {}) {
@@ -91,6 +95,15 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
+function mockErroneousHeadlessInitialization() {
+  // @ts-ignore
+  mockHeadlessLoader.initializeWithHeadless = (element) => {
+    if (element instanceof QuanticBreadcrumbManager) {
+      element.setInitializationError();
+    }
+  };
+}
+
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -101,6 +114,47 @@ function cleanup() {
 }
 
 describe('c-quantic-breadcrumb-manager', () => {
+  afterEach(() => {
+    breadcrumbManagerState = initialBreadcrumbManagerState;
+    storeState = initialStoreState;
+    cleanup();
+  });
+
+  describe('when an initialization error occurs', () => {
+    beforeEach(() => {
+      mockErroneousHeadlessInitialization();
+    });
+
+    it('should display the initialization error component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const errorComponent = element.shadowRoot.querySelector(
+        selectors.initializationError
+      );
+
+      expect(errorComponent).not.toBeNull();
+    });
+  });
+
+  describe('controller initialization', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
+    it('should build the breadcrumb manager and subscribe to state', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildBreadcrumbManager).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildBreadcrumbManager).toHaveBeenCalledWith(
+        exampleEngine
+      );
+      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
+    });
+  });
+
   beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
     prepareHeadlessState();
@@ -113,28 +167,33 @@ describe('c-quantic-breadcrumb-manager', () => {
     cleanup();
   });
 
-  describe('facet breadcrumbs', () => {
+  describe('facet breadcrumbs rendering', () => {
     const exampleFacetBreadcrumbs = [
       {
         field: 'fieldOne',
-        facetId: exampleFacetId,
-        values: [{value: 'one'}, {value: 'two'}],
+        facetId: 'facetIdOne',
+        values: [{value: {value: 'one'}}, {value: {value: 'two'}}],
+      },
+      {
+        field: 'fieldTwo',
+        facetId: 'facetIdTwo',
+        values: [{value: {value: 'three'}}, {value: {value: 'four'}}],
       },
     ];
 
-    beforeAll(() => {
+    beforeEach(() => {
       breadcrumbManagerState = {
         ...breadcrumbManagerState,
         facetBreadcrumbs: exampleFacetBreadcrumbs,
         hasBreadcrumbs: true,
       };
-
-      storeState = {
-        [exampleFacetId]: {
-          facetId: exampleFacetId,
+      storeState = exampleFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+        acc[breadcrumb.facetId] = {
+          facetId: breadcrumb.facetId,
           format: (value) => value,
-        },
-      };
+        };
+        return acc;
+      }, {});
     });
 
     it('should properly display the breadcrumb values', async () => {
@@ -161,32 +220,196 @@ describe('c-quantic-breadcrumb-manager', () => {
         );
         const values = exampleFacetBreadcrumb.values.map((item) => item.value);
         expect(labels).toEqual(values);
+
+        const breadcrumbClearAllFiltersButton =
+          element.shadowRoot.querySelector(
+            selectors.breadcrumbClearAllFiltersButton
+          );
+        expect(breadcrumbClearAllFiltersButton).not.toBeNull();
+      });
+    });
+
+    describe('when the number of selected values for one facet exceeds the collapse threshold', () => {
+      const testManyFacetBreadcrumbs = [
+        {
+          field: 'fieldOne',
+          facetId: 'facetIdOne',
+          values: [
+            {value: {value: 'one'}},
+            {value: {value: 'two'}},
+            {value: {value: 'three'}},
+            {value: {value: 'four'}},
+            {value: {value: 'five'}},
+            {value: {value: 'six'}},
+          ],
+        },
+      ];
+
+      beforeEach(() => {
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          facetBreadcrumbs: testManyFacetBreadcrumbs,
+          hasBreadcrumbs: true,
+        };
+        storeState = testManyFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+          acc[breadcrumb.facetId] = {
+            facetId: breadcrumb.facetId,
+            format: (value) => value,
+          };
+          return acc;
+        }, {});
+      });
+
+      it('should collapse the values and display a show more button', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.facetBreadcrumb
+        );
+        expect(facetBreadcrumbs.length).toBe(testManyFacetBreadcrumbs.length);
+
+        const firstFacetBreadcrumb = facetBreadcrumbs[0];
+        const facetBreadcrumbValues = Array.from(
+          firstFacetBreadcrumb.querySelectorAll(selectors.facetBreadcrumbValue)
+        );
+        expect(facetBreadcrumbValues.length).toBe(defaultCollapseThreshold);
+        facetBreadcrumbValues.forEach((facetBreadcrumbValue, index) => {
+          const facetValueLabel = facetBreadcrumbValue.label.value;
+          expect(facetValueLabel).toBe(
+            testManyFacetBreadcrumbs[0].values[index].value.value
+          );
+        });
+
+        const breadcrumbShowMoreButton = element.shadowRoot.querySelector(
+          selectors.breadcrumbShowMoreButton
+        );
+        expect(breadcrumbShowMoreButton).not.toBeNull();
+      });
+
+      it('should expand the values when the show more button is clicked', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.facetBreadcrumb
+        );
+        const firstFacetBreadcrumb = facetBreadcrumbs[0];
+
+        const facetBreadcrumbValues = Array.from(
+          firstFacetBreadcrumb.querySelectorAll(selectors.facetBreadcrumbValue)
+        );
+        expect(facetBreadcrumbValues.length).toBe(defaultCollapseThreshold);
+
+        const breadcrumbShowMoreButton = element.shadowRoot.querySelector(
+          selectors.breadcrumbShowMoreButton
+        );
+        expect(breadcrumbShowMoreButton).not.toBeNull();
+
+        breadcrumbShowMoreButton.click();
+        await flushPromises();
+
+        const facetBreadcrumbValuesAfterClick = Array.from(
+          firstFacetBreadcrumb.querySelectorAll(selectors.facetBreadcrumbValue)
+        );
+        expect(facetBreadcrumbValuesAfterClick.length).toBe(
+          testManyFacetBreadcrumbs[0].values.length
+        );
+        const breadcrumbShowMoreButtonAfterClick =
+          element.shadowRoot.querySelector(selectors.breadcrumbShowMoreButton);
+        expect(breadcrumbShowMoreButtonAfterClick).toBeNull();
+      });
+    });
+
+    describe('with a custom collapse threshold', () => {
+      const customCollapseThreshold = 3;
+      const testManyFacetBreadcrumbs = [
+        {
+          field: 'fieldOne',
+          facetId: 'facetIdOne',
+          values: [
+            {value: {value: 'one'}},
+            {value: {value: 'two'}},
+            {value: {value: 'three'}},
+            {value: {value: 'four'}},
+            {value: {value: 'five'}},
+            {value: {value: 'six'}},
+          ],
+        },
+      ];
+
+      beforeEach(() => {
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          facetBreadcrumbs: testManyFacetBreadcrumbs,
+          hasBreadcrumbs: true,
+        };
+        storeState = testManyFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+          acc[breadcrumb.facetId] = {
+            facetId: breadcrumb.facetId,
+            format: (value) => value,
+          };
+          return acc;
+        }, {});
+      });
+      it('should collapse the values over the custom collapse threshold and display a show more button', async () => {
+        const element = createTestComponent({
+          collapseThreshold: customCollapseThreshold,
+        });
+        await flushPromises();
+
+        const facetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.facetBreadcrumb
+        );
+        expect(facetBreadcrumbs.length).toBe(testManyFacetBreadcrumbs.length);
+
+        const firstFacetBreadcrumb = facetBreadcrumbs[0];
+        const facetBreadcrumbValues = Array.from(
+          firstFacetBreadcrumb.querySelectorAll(selectors.facetBreadcrumbValue)
+        );
+        expect(facetBreadcrumbValues.length).toBe(customCollapseThreshold);
+        facetBreadcrumbValues.forEach((facetBreadcrumbValue, index) => {
+          const facetValueLabel = facetBreadcrumbValue.label.value;
+          expect(facetValueLabel).toBe(
+            testManyFacetBreadcrumbs[0].values[index].value.value
+          );
+        });
+
+        const breadcrumbShowMoreButton = element.shadowRoot.querySelector(
+          selectors.breadcrumbShowMoreButton
+        );
+        expect(breadcrumbShowMoreButton).not.toBeNull();
       });
     });
   });
 
   describe('category facet breadcrumbs', () => {
-    const exampleCategoryFacetBreadcrumbs = [
+    const testCategoryFacetBreadcrumbs = [
       {
-        field: exampleFacetId,
-        facetId: exampleFacetId,
+        field: 'fieldOne',
+        facetId: 'facetIdOne',
         path: [{value: 'one'}, {value: 'two'}],
+      },
+      {
+        field: 'fieldTwo',
+        facetId: 'facetIdTwo',
+        path: [{value: 'three'}, {value: 'four'}],
       },
     ];
 
-    beforeAll(() => {
+    beforeEach(() => {
       breadcrumbManagerState = {
         ...breadcrumbManagerState,
-        categoryFacetBreadcrumbs: exampleCategoryFacetBreadcrumbs,
+        categoryFacetBreadcrumbs: testCategoryFacetBreadcrumbs,
         hasBreadcrumbs: true,
       };
-
-      storeState = {
-        [exampleFacetId]: {
-          facetId: exampleFacetId,
+      storeState = testCategoryFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+        acc[breadcrumb.facetId] = {
+          facetId: breadcrumb.facetId,
           format: (item) => item.value,
-        },
-      };
+        };
+        return acc;
+      }, {});
     });
 
     it('should properly display the breadcrumb values', async () => {
@@ -198,10 +421,10 @@ describe('c-quantic-breadcrumb-manager', () => {
       );
 
       expect(categoryFacetBreadcrumbs.length).toBe(
-        exampleCategoryFacetBreadcrumbs.length
+        testCategoryFacetBreadcrumbs.length
       );
       categoryFacetBreadcrumbs.forEach((categoryFacetBreadcrumb, index) => {
-        const exampleFacetBreadcrumb = exampleCategoryFacetBreadcrumbs[index];
+        const exampleFacetBreadcrumb = testCategoryFacetBreadcrumbs[index];
         const categoryFacetBreadcrumbValues = Array.from(
           categoryFacetBreadcrumb.querySelectorAll(
             selectors.categoryFacetBreadcrumbValue
@@ -217,30 +440,70 @@ describe('c-quantic-breadcrumb-manager', () => {
         expect(labels).toEqual([values.join(' / ')]);
       });
     });
+
+    describe('with a custom category divider', () => {
+      it('should display the breadcrumb values with the custom divider', async () => {
+        const customCategoryDivider = '*';
+        const element = createTestComponent({
+          categoryDivider: customCategoryDivider,
+        });
+        await flushPromises();
+
+        const categoryFacetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.categoryFacetBreadcrumb
+        );
+
+        expect(categoryFacetBreadcrumbs.length).toBe(
+          testCategoryFacetBreadcrumbs.length
+        );
+
+        categoryFacetBreadcrumbs.forEach((categoryFacetBreadcrumb, index) => {
+          const exampleFacetBreadcrumb = testCategoryFacetBreadcrumbs[index];
+          const categoryFacetBreadcrumbValues = Array.from(
+            categoryFacetBreadcrumb.querySelectorAll(
+              selectors.categoryFacetBreadcrumbValue
+            )
+          );
+
+          expect(categoryFacetBreadcrumbValues.length).toBe(1);
+
+          const labels = categoryFacetBreadcrumbValues.map(
+            (facetBreadcrumbValue) => facetBreadcrumbValue.label
+          );
+          const values = exampleFacetBreadcrumb.path.map((item) => item.value);
+          expect(labels).toEqual([values.join(` ${customCategoryDivider} `)]);
+        });
+      });
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {
-    const exampleNumericFacetBreadcrumbs = [
+    const testNumericFacetBreadcrumbs = [
       {
         field: 'fieldOne',
-        facetId: exampleFacetId,
+        facetId: 'facetIdOne',
         values: [{value: {start: 0, end: 1}}, {value: {start: 1, end: 2}}],
+      },
+      {
+        field: 'fieldTwo',
+        facetId: 'facetIdTwo',
+        values: [{value: {start: 10, end: 11}}, {value: {start: 20, end: 21}}],
       },
     ];
 
     beforeAll(() => {
       breadcrumbManagerState = {
         ...breadcrumbManagerState,
-        numericFacetBreadcrumbs: exampleNumericFacetBreadcrumbs,
+        numericFacetBreadcrumbs: testNumericFacetBreadcrumbs,
         hasBreadcrumbs: true,
       };
-
-      storeState = {
-        [exampleFacetId]: {
-          facetId: exampleFacetId,
+      storeState = testNumericFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+        acc[breadcrumb.facetId] = {
+          facetId: breadcrumb.facetId,
           format: (item) => `${item.start} - ${item.end}`,
-        },
-      };
+        };
+        return acc;
+      }, {});
     });
 
     it('should properly display the breadcrumb values', async () => {
@@ -252,10 +515,10 @@ describe('c-quantic-breadcrumb-manager', () => {
       );
 
       expect(numericFacetBreadcrumbs.length).toBe(
-        exampleNumericFacetBreadcrumbs.length
+        testNumericFacetBreadcrumbs.length
       );
       numericFacetBreadcrumbs.forEach((numericFacetBreadcrumb, index) => {
-        const exampleFacetBreadcrumb = exampleNumericFacetBreadcrumbs[index];
+        const exampleFacetBreadcrumb = testNumericFacetBreadcrumbs[index];
         const facetBreadcrumbValues = Array.from(
           numericFacetBreadcrumb.querySelectorAll(
             selectors.numericFacetBreadcrumbValue
@@ -278,13 +541,21 @@ describe('c-quantic-breadcrumb-manager', () => {
   });
 
   describe('date facet breadcrumbs', () => {
-    const exampleDateFacetBreadcrumbs = [
+    const testDateFacetBreadcrumbs = [
       {
         field: 'fieldOne',
-        facetId: exampleFacetId,
+        facetId: 'facetIdOne',
         values: [
           {value: {start: 'yesterday', end: 'today'}},
           {value: {start: 'today', end: 'tomorrow'}},
+        ],
+      },
+      {
+        field: 'fieldTwo',
+        facetId: 'facetIdTwo',
+        values: [
+          {value: {start: 'last week', end: 'today'}},
+          {value: {start: 'tomorrow', end: 'next week'}},
         ],
       },
     ];
@@ -292,16 +563,16 @@ describe('c-quantic-breadcrumb-manager', () => {
     beforeAll(() => {
       breadcrumbManagerState = {
         ...breadcrumbManagerState,
-        dateFacetBreadcrumbs: exampleDateFacetBreadcrumbs,
+        dateFacetBreadcrumbs: testDateFacetBreadcrumbs,
         hasBreadcrumbs: true,
       };
-
-      storeState = {
-        [exampleFacetId]: {
-          facetId: exampleFacetId,
+      storeState = testDateFacetBreadcrumbs.reduce((acc, breadcrumb) => {
+        acc[breadcrumb.facetId] = {
+          facetId: breadcrumb.facetId,
           format: (item) => `${item.start} - ${item.end}`,
-        },
-      };
+        };
+        return acc;
+      }, {});
     });
 
     it('should properly display the breadcrumb values', async () => {
@@ -312,12 +583,10 @@ describe('c-quantic-breadcrumb-manager', () => {
         selectors.dateFacetBreadcrumb
       );
 
-      expect(dateFacetBreadcrumbs.length).toBe(
-        exampleDateFacetBreadcrumbs.length
-      );
+      expect(dateFacetBreadcrumbs.length).toBe(testDateFacetBreadcrumbs.length);
 
       dateFacetBreadcrumbs.forEach((dateFacetBreadcrumb, index) => {
-        const exampleFacetBreadcrumb = exampleDateFacetBreadcrumbs[index];
+        const exampleFacetBreadcrumb = testDateFacetBreadcrumbs[index];
         const facetBreadcrumbValues = Array.from(
           dateFacetBreadcrumb.querySelectorAll(
             selectors.dateFacetBreadcrumbValue
