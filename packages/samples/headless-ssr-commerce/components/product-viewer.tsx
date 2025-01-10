@@ -10,19 +10,15 @@ interface Product {
 }
 
 export default function ProductViewer({productId, name, price}: Product) {
-  const product = {productId, name, price};
-
-  const {methods: productViewMethods} = useProductView();
+  const {methods} = useProductView();
   const productViewEventEmitted = useRef(false);
 
   useEffect(() => {
-    if (productViewEventEmitted.current || !product || !productViewMethods) {
-      return;
+    if (methods && !productViewEventEmitted.current) {
+      methods?.view({productId, name, price});
+      productViewEventEmitted.current = true;
     }
-
-    productViewMethods?.view(product);
-    productViewEventEmitted.current = true;
-  }, [productViewMethods, product]);
+  }, []);
 
   return null;
 }
