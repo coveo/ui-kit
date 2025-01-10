@@ -246,7 +246,7 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.tabPopoverButton().click();
       InsightPanelsSelectors.tabBar()
-        .find('tab-popover')
+        .find('atomic-tab-popover')
         .find('[part="popover-tab"]')
         .eq(1)
         .should('have.text', 'Salesforce')
