@@ -1,3 +1,19 @@
+## 3.13.0 (2025-01-08)
+
+- chore: remove experimental FollowQ component (#4788) ([03ae25c](https://github.com/coveo/ui-kit/commits/03ae25c)), closes [#4788](https://github.com/coveo/ui-kit/issues/4788)
+- chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
+- fix(atomic): fix accessibility issues with pager/results per page buttons (#4761) ([4c50969](https://github.com/coveo/ui-kit/commits/4c50969)), closes [#4761](https://github.com/coveo/ui-kit/issues/4761)
+- fix(atomic): fix IPX with high zoom levels (#4805) ([13eba4e](https://github.com/coveo/ui-kit/commits/13eba4e)), closes [#4805](https://github.com/coveo/ui-kit/issues/4805)
+- fix(atomic): make all components start with `atomic-` (#4823) ([0f33d58](https://github.com/coveo/ui-kit/commits/0f33d58)), closes [#4823](https://github.com/coveo/ui-kit/issues/4823)
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (#4810) ([fb2c7c6](https://github.com/coveo/ui-kit/commits/fb2c7c6)), closes [#4810](https://github.com/coveo/ui-kit/issues/4810)
+- fix(deps): update all dependencies j:kit-282 (#4818) ([dac0953](https://github.com/coveo/ui-kit/commits/dac0953)), closes [#4818](https://github.com/coveo/ui-kit/issues/4818)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+- feat(atomic): add arrow key navigation to atomic-tab/atomic-insight-tab (#4799) ([5e7b15f](https://github.com/coveo/ui-kit/commits/5e7b15f)), closes [#4799](https://github.com/coveo/ui-kit/issues/4799)
+- test(atomic): add tests for atomic-product-numeric-field-value (#4779) ([5411883](https://github.com/coveo/ui-kit/commits/5411883)), closes [#4779](https://github.com/coveo/ui-kit/issues/4779)
+
 ## <small>3.12.1 (2024-12-11)</small>
 
 - fix(atomic): accessibility issues on "More" tab list (#4774) ([212b46e](https://github.com/coveo/ui-kit/commits/212b46e)), closes [#4774](https://github.com/coveo/ui-kit/issues/4774)

@@ -92,7 +92,7 @@ export class TabManagerPageObject extends BasePageObject<'atomic-tab-manager'> {
 
   popoverTabs(value?: string) {
     const baseLocator = this.page
-      .locator('tab-popover')
+      .locator('atomic-tab-popover')
       .locator('button[part="popover-tab"]');
     return value ? baseLocator.filter({hasText: value}) : baseLocator;
   }

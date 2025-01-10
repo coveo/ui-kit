@@ -9,8 +9,17 @@
   "packageRules": [
     {
       "groupName": "all dependencies",
-      "groupSlug": "all",
-      "matchPackageNames": ["*"]
+      "groupSlug": "all-safe",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "all dependencies (major)",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
       "groupName": "typedoc",
