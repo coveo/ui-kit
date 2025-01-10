@@ -69,7 +69,7 @@ useCaseTestCases.forEach((useCase) => {
         });
       });
 
-      test.describe('with timefrate|date facet values', () => {
+      test.describe('with timeframe|date facet values', () => {
         test('should trigger a new search and log analytics', async ({
           breadcrumbManager,
           search,
@@ -119,7 +119,7 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe('the clear all filters button', () => {
+    test.describe('when clicking on the clear all filters button', () => {
       test('should send a clear all filters analytics event and clear all selected facets values', async ({
         breadcrumbManager,
         search,

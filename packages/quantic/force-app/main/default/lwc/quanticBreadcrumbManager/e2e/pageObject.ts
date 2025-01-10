@@ -49,14 +49,6 @@ export class BreadcrumbManagerObject {
     );
   }
 
-  getAllRegularFacetBreadcrumbValuesForFacet(
-    regularFacetBreadcrumb: Locator
-  ): Locator {
-    return regularFacetBreadcrumb.getByTestId(
-      breadcrumbElementsSelectors.regularFacet.breadcrumbValueElementTestId
-    );
-  }
-
   get firstRegularFacetBreadcrumb(): Locator {
     return this.page
       .getByTestId(
@@ -105,14 +97,6 @@ export class BreadcrumbManagerObject {
     );
   }
 
-  getAllNumericFacetBreadcrumbValuesForFacet(
-    numericFacetBreadcrumb: Locator
-  ): Locator {
-    return numericFacetBreadcrumb.getByTestId(
-      breadcrumbElementsSelectors.numericFacet.breadcrumbValueElementTestId
-    );
-  }
-
   get firstNumericFacetBreadcrumb(): Locator {
     return this.page
       .getByTestId(
@@ -154,14 +138,6 @@ export class BreadcrumbManagerObject {
     );
   }
 
-  getAllTimeframeFacetBreadcrumbValuesForFacet(
-    timeframeFacetBreadcrumb: Locator
-  ): Locator {
-    return timeframeFacetBreadcrumb.getByTestId(
-      breadcrumbElementsSelectors.timeframeFacet.breadcrumbValueElementTestId
-    );
-  }
-
   get firstTimeframeFacetBreadcrumb(): Locator {
     return this.page
       .getByTestId(
@@ -200,14 +176,6 @@ export class BreadcrumbManagerObject {
   get allCategoryFacetBreadcrumb(): Locator {
     return this.page.getByTestId(
       breadcrumbElementsSelectors.categoryFacet.breadcrumbElementTestId
-    );
-  }
-
-  getAllCategoryFacetBreadcrumbValuesForFacet(
-    categoryFacetBreadcrumb: Locator
-  ): Locator {
-    return categoryFacetBreadcrumb.getByTestId(
-      breadcrumbElementsSelectors.categoryFacet.breadcrumbValueElementTestId
     );
   }
 

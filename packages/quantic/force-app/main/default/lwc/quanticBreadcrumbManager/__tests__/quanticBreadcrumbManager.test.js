@@ -229,7 +229,7 @@ describe('c-quantic-breadcrumb-manager', () => {
       });
     });
 
-    describe('when the number of values exceeds the collapse threshold', () => {
+    describe('when the number of selected values for one facet exceeds the collapse threshold', () => {
       const testManyFacetBreadcrumbs = [
         {
           field: 'fieldOne',
@@ -259,6 +259,7 @@ describe('c-quantic-breadcrumb-manager', () => {
           return acc;
         }, {});
       });
+
       it('should collapse the values and display a show more button', async () => {
         const element = createTestComponent();
         await flushPromises();
