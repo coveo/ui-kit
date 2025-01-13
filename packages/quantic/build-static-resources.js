@@ -5,14 +5,17 @@ const path = require('path');
 
 const STATIC_RESOURCES_PATH = './force-app/main/default/staticresources';
 const TEMP_DIR = '.tmp/quantic-compiled';
-const NODE_MODULES = '../../node_modules';
+
+function resolveLibraryPath(packageName, relativePath) {
+  return path.resolve(path.dirname(require.resolve(packageName)), relativePath);
+}
 
 const LIBRARY_CONFIG = {
   dompurify: {
     directories: [`${STATIC_RESOURCES_PATH}/dompurify`],
     files: [
       {
-        src: `${NODE_MODULES}/dompurify/dist/purify.min.js`,
+        src: resolveLibraryPath('dompurify', '../dist/purify.min.js'),
         dest: `${STATIC_RESOURCES_PATH}/dompurify/purify.min.js`,
       },
     ],
@@ -21,7 +24,7 @@ const LIBRARY_CONFIG = {
     directories: [`${STATIC_RESOURCES_PATH}/marked`],
     files: [
       {
-        src: `${NODE_MODULES}/marked/marked.min.js`,
+        src: resolveLibraryPath('marked', '../marked.min.js'),
         dest: `${STATIC_RESOURCES_PATH}/marked/marked.min.js`,
       },
     ],
@@ -33,11 +36,11 @@ const LIBRARY_CONFIG = {
     ],
     files: [
       {
-        src: `${NODE_MODULES}/@coveo/bueno/dist/browser/bueno.js`,
+        src: resolveLibraryPath('@coveo/bueno', '../dist/browser/bueno.js'),
         dest: `${STATIC_RESOURCES_PATH}/coveobueno/browser/bueno.js`,
       },
       {
-        src: `${NODE_MODULES}/@coveo/bueno/dist/definitions`,
+        src: resolveLibraryPath('@coveo/bueno', '../dist/definitions'),
         dest: `${STATIC_RESOURCES_PATH}/coveobueno/definitions`,
       },
     ],
@@ -67,7 +70,7 @@ const LIBRARY_CONFIG = {
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/recommendation/headless.js`,
       },
       {
-        src: `${NODE_MODULES}/@coveo/headless/dist/definitions`,
+        src: resolveLibraryPath('@coveo/headless', '../dist/definitions'),
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/definitions`,
       },
     ],

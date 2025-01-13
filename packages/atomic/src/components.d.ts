@@ -1088,6 +1088,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
@@ -1233,6 +1237,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -3655,6 +3663,10 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -3686,7 +3698,9 @@ export namespace Components {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -5998,6 +6012,10 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
     var HTMLAtomicTabElement: {
@@ -6017,7 +6035,9 @@ declare global {
         new (): HTMLAtomicTabButtonElement;
     };
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
@@ -7260,6 +7280,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
@@ -7402,6 +7426,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -9733,6 +9761,10 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -9764,7 +9796,9 @@ declare namespace LocalJSX {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -10942,11 +10976,17 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+             * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+             */
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
-             * @alpha 
+             * The `atomic-tab-manager` component manages a collection of tabs,
+             * allowing users to switch between them. Each child `atomic-tab` represents an
+             * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
