@@ -135,7 +135,7 @@ export const config: Config = {
       copy: [
         {src: 'themes'},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
         },
       ],

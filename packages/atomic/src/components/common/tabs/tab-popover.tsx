@@ -24,7 +24,7 @@ import {Button} from '../button';
  * @internal
  */
 @Component({
-  tag: 'tab-popover',
+  tag: 'atomic-tab-popover',
   shadow: true,
   styleUrl: 'tab-popover.pcss',
 })
@@ -45,7 +45,7 @@ export class TabPopover implements InitializableComponent {
   private buttonRef!: HTMLElement;
   private popupRef!: HTMLElement;
   private popperInstance?: PopperInstance;
-  public popoverId = 'tab-popover';
+  public popoverId = 'atomic-tab-popover';
 
   public initialize() {}
 
