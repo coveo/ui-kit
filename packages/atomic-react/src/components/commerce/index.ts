@@ -1,3 +1,4 @@
+export * from './components.js';
 export * from '../stencil-generated/commerce/index.js';
 export {CommerceBindings, i18n} from '@coveo/atomic';
 

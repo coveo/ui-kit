@@ -1088,6 +1088,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
@@ -1233,6 +1237,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -3655,6 +3663,10 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -3668,6 +3680,8 @@ export namespace Components {
           * The internal name of the atomic tab.
          */
         "name": string;
+    }
+    interface AtomicTabBar {
     }
     interface AtomicTabButton {
         /**
@@ -3684,7 +3698,9 @@ export namespace Components {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -3693,6 +3709,11 @@ export namespace Components {
         "clearFiltersOnTabChange"?: boolean;
     }
     interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
+        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
+        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
+        "togglePopover": () => Promise<void>;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -3799,13 +3820,6 @@ export namespace Components {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker": boolean;
-    }
-    interface TabBar {
-    }
-    interface TabPopover {
-        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "togglePopover": () => Promise<void>;
     }
 }
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
@@ -5998,11 +6012,21 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
     var HTMLAtomicTabElement: {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
+    };
+    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
+    }
+    var HTMLAtomicTabBarElement: {
+        prototype: HTMLAtomicTabBarElement;
+        new (): HTMLAtomicTabBarElement;
     };
     interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
     }
@@ -6011,7 +6035,9 @@ declare global {
         new (): HTMLAtomicTabButtonElement;
     };
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
@@ -6024,6 +6050,12 @@ declare global {
     var HTMLAtomicTabManagerBarElement: {
         prototype: HTMLAtomicTabManagerBarElement;
         new (): HTMLAtomicTabManagerBarElement;
+    };
+    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicTabPopoverElement: {
+        prototype: HTMLAtomicTabPopoverElement;
+        new (): HTMLAtomicTabPopoverElement;
     };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -6062,18 +6094,6 @@ declare global {
     var HTMLAtomicTimeframeFacetElement: {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
-    };
-    interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
-    }
-    var HTMLTabBarElement: {
-        prototype: HTMLTabBarElement;
-        new (): HTMLTabBarElement;
-    };
-    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
-    }
-    var HTMLTabPopoverElement: {
-        prototype: HTMLTabPopoverElement;
-        new (): HTMLTabPopoverElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
@@ -6267,15 +6287,15 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
         "atomic-tab-manager-bar": HTMLAtomicTabManagerBarElement;
+        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
-        "tab-bar": HTMLTabBarElement;
-        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -7260,6 +7280,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
@@ -7402,6 +7426,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -9733,6 +9761,10 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -9746,6 +9778,8 @@ declare namespace LocalJSX {
           * The internal name of the atomic tab.
          */
         "name": string;
+    }
+    interface AtomicTabBar {
     }
     interface AtomicTabButton {
         /**
@@ -9762,7 +9796,9 @@ declare namespace LocalJSX {
         "select": () => void;
     }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
@@ -9771,6 +9807,8 @@ declare namespace LocalJSX {
         "clearFiltersOnTabChange"?: boolean;
     }
     interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -9877,10 +9915,6 @@ declare namespace LocalJSX {
           * Whether this facet should contain an datepicker allowing users to set custom ranges.
          */
         "withDatePicker"?: boolean;
-    }
-    interface TabBar {
-    }
-    interface TabPopover {
     }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
@@ -10074,15 +10108,15 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
+        "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
         "atomic-tab-manager-bar": AtomicTabManagerBar;
+        "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
-        "tab-bar": TabBar;
-        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -10942,13 +10976,21 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+             * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+             */
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
             "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
             /**
-             * @alpha 
+             * The `atomic-tab-manager` component manages a collection of tabs,
+             * allowing users to switch between them. Each child `atomic-tab` represents an
+             * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
             "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
+            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
@@ -10967,8 +11009,6 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
-            "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
-            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }
