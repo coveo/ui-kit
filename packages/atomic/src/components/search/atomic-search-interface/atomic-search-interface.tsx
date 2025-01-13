@@ -44,7 +44,7 @@ import {
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import type {Bindings as _Bindings} from './interfaces';
-import {createSearchStore} from './store';
+import {createSearchStore, SearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -67,7 +67,7 @@ export class AtomicSearchInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createSearchStore();
+  private store: SearchStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
 
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
@@ -198,6 +198,7 @@ export class AtomicSearchInterface
       this,
       'CoveoAtomic'
     );
+    this.store = createSearchStore();
   }
 
   public connectedCallback() {
