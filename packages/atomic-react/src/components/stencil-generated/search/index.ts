@@ -90,6 +90,5 @@ export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSo
 export const AtomicSortExpression = /*@__PURE__*/createReactComponent<JSX.AtomicSortExpression, HTMLAtomicSortExpressionElement>('atomic-sort-expression');
 export const AtomicTabManager = /*@__PURE__*/createReactComponent<JSX.AtomicTabManager, HTMLAtomicTabManagerElement>('atomic-tab-manager');
 export const AtomicTableElement = /*@__PURE__*/createReactComponent<JSX.AtomicTableElement, HTMLAtomicTableElementElement>('atomic-table-element');
-export const AtomicText = /*@__PURE__*/createReactComponent<JSX.AtomicText, HTMLAtomicTextElement>('atomic-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
 export const AtomicTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframeFacet, HTMLAtomicTimeframeFacetElement>('atomic-timeframe-facet');

@@ -67,7 +67,8 @@
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "test:browser": "vitest"
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
@@ -122,6 +123,8 @@
     "@types/node": "22.10.2",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
+    "@vitest/browser": "2.1.7",
+    "vitest": "2.1.7",
     "@whitespace/storybook-addon-html": "6.1.1",
     "autoprefixer": "10.4.20",
     "axe-core": "4.10.2",
@@ -139,6 +142,7 @@
     "lodash": "4.17.21",
     "natural-orderby": "5.0.0",
     "ncp": "2.0.0",
+    "playwright": "1.49.1",
     "postcss-focus-visible": "10.0.1",
     "postcss-import": "16.1.0",
     "postcss-map": "0.11.0",
