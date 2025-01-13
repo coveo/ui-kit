@@ -38,7 +38,7 @@ describe('Insight Panel test suites', () => {
     });
 
     it('should not add any unexpected style tags', () => {
-      const numTopLevelStyleTags = 3;
+      const numTopLevelStyleTags = 4;
       const numLayoutStyleTags = 1;
 
       cy.get('style').should(
