@@ -1088,6 +1088,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
@@ -1233,6 +1237,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -7272,6 +7280,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
@@ -7414,6 +7426,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false

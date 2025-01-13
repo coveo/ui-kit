@@ -11,8 +11,7 @@
     "@coveo/headless": "3.13.0"
   },
   "dependencies": {
-    "@coveo/atomic": "3.13.0",
-    "tslib": "2.8.1"
+    "@coveo/atomic": "3.13.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
