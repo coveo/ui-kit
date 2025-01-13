@@ -1,4 +1,6 @@
 export * from '../stencil-generated/search/index.js';
+export * from '../search/components.js';
+
 export {RecsBindings, i18n} from '@coveo/atomic';
 
 // Important: Re-exporting under the same name (eg: "AtomicRecsInterface") shadows the original component
