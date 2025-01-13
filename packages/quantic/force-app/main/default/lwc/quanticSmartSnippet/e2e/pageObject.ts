@@ -18,41 +18,58 @@ export class SmartSnippetObject {
     return this.page.getByTestId('smart-snippet__source-title');
   }
 
+  get smartSnippetSourceUri(): Locator {
+    return this.page.getByTestId('smart-snippet__source-uri');
+  }
+
+  get smartSnippetAnwerInlineLink(): Locator {
+    return this.page.locator('.smart-snippet-answer a');
+  }
+
   get smartSnippetToggleButton(): Locator {
     return this.page.getByTestId('smart-snippet__toggle-button');
   }
 
   get likeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was helpful'});
+    return this.page.getByTestId('feedback__like-button');
   }
 
   get dislikeButton(): Locator {
-    return this.page.getByRole('button', {name: 'This answer was not helpful'});
+    return this.page.getByTestId('feedback__dislike-button');
   }
 
   get explainWhyButton(): Locator {
-    return this.page.getByRole('button', {name: 'Explain why'});
+    return this.page.getByTestId('feedback__explain-why-button');
   }
 
   get feedbackModalCancelButton(): Locator {
-    return this.page.getByRole('button', {name: 'Cancel'});
+    return this.page.getByTestId('feedback-modal-footer__cancel');
   }
 
-  get firstFeedbackOption(): Locator {
-    return this.page.getByRole('radio', {name: 'feedback'}).first();
+  get firstFeedbackOptionLabel(): Locator {
+    const labelFirstOption = "Didn't answer my question at all";
+    return this.page.getByText(labelFirstOption);
   }
 
   get feedbackSubmitButton(): Locator {
     return this.page.getByTestId('feedback-modal-footer__submit');
   }
 
-  get feedbackCancelButton(): Locator {
-    return this.page.getByTestId('feedback-modal-footer__cancel');
-  }
-
   // ACTIONS
   async clickToggleButton(): Promise<void> {
     await this.smartSnippetToggleButton.click();
+  }
+
+  async clickOnSourceTitle(): Promise<void> {
+    await this.smartSnippetSourceTitle.click();
+  }
+
+  async clickOnSourceUri(): Promise<void> {
+    await this.smartSnippetSourceUri.click();
+  }
+
+  async clickOnFirstInlineLink(): Promise<void> {
+    await this.smartSnippetAnwerInlineLink.first().click();
   }
 
   async clickLikeButton(): Promise<void> {
@@ -71,16 +88,12 @@ export class SmartSnippetObject {
     await this.feedbackModalCancelButton.click();
   }
 
-  async selectFirstFeedbackOption(): Promise<void> {
-    await this.firstFeedbackOption.click();
+  async selectFirstFeedbackOptionLabel(): Promise<void> {
+    await this.firstFeedbackOptionLabel.click({force: true});
   }
 
   async clickFeedbackSubmitButton(): Promise<void> {
     await this.feedbackSubmitButton.click();
-  }
-
-  async clickFeedbackCancelButton(): Promise<void> {
-    await this.feedbackCancelButton.click();
   }
 
   // ANALYTICS
@@ -112,22 +125,38 @@ export class SmartSnippetObject {
     );
   }
 
-  async waitForFeedbackSubmitUaAnalytics(): Promise<Request> {
-    return this.waitForSmartSnippetCustomUaAnalytics('sendSmartSnippetReason');
+  async waitForFeedbackSubmitUaAnalytics(
+    expectedReason: string
+  ): Promise<Request> {
+    return this.waitForSmartSnippetCustomUaAnalytics(
+      'sendSmartSnippetReason',
+      expectedReason
+    );
+  }
+
+  async waitForSmartSnippetSourceClickUaAnalytics(): Promise<Request> {
+    return this.waitForSmartSnippetClickUaAnalytics('openSmartSnippetSource');
+  }
+
+  async waitForSmartSnippetInlineLinkClickUaAnalytics(): Promise<Request> {
+    return this.waitForSmartSnippetClickUaAnalytics(
+      'openSmartSnippetInlineLink'
+    );
   }
 
   async waitForSmartSnippetClickUaAnalytics(
-    actionCause: any
+    actionCause: string
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaClickEvent(request)) {
         const requestBody = request.postDataJSON?.();
-        const expectedFields = {
-          eventValue: actionCause,
+        const requestData = JSON.parse(requestBody.clickEvent);
+
+        const expectedFields: Record<string, any> = {
+          actionCause,
         };
-        return Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
+
+        return requestData?.actionCause === expectedFields.actionCause;
       }
       return false;
     });
@@ -135,18 +164,25 @@ export class SmartSnippetObject {
   }
 
   async waitForSmartSnippetCustomUaAnalytics(
-    eventValue: any
+    eventValue: any,
+    reason?: string
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {
         const requestBody = request.postDataJSON?.();
-        const expectedFields = {
+        const expectedFields: Record<string, any> = {
           eventType: 'smartSnippet',
           eventValue: eventValue,
         };
-        return Object.keys(expectedFields).every(
+
+        const matchesExpectedFields = Object.keys(expectedFields).every(
           (key) => requestBody?.[key] === expectedFields[key]
         );
+
+        const customData = requestBody?.customData;
+        const matchesReason = customData?.reason === reason;
+
+        return matchesExpectedFields && matchesReason;
       }
       return false;
     });

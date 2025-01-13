@@ -54,7 +54,15 @@ export class SearchObject {
     await this.page.route(this.searchRequestRegex, async (route) => {
       const apiResponse = await this.page.request.fetch(route.request());
       const originalBody = await apiResponse.json();
-      originalBody.questionAnswer = questionAnswerDataObject;
+      const [firstResult] = originalBody.results;
+      firstResult.clickUri = '#';
+      originalBody.questionAnswer = {
+        ...questionAnswerDataObject,
+        documentId: {
+          ...questionAnswerDataObject.documentId,
+          contentIdValue: firstResult.raw.permanentid,
+        },
+      };
 
       await route.fulfill({
         body: JSON.stringify(originalBody),
