@@ -1,7 +1,3 @@
-import type {AnyBindings} from '../components/common/interface/bindings';
-
-export type InitializeEventHandler = (bindings: AnyBindings) => void;
-
 export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
     super(

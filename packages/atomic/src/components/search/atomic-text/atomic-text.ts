@@ -2,7 +2,10 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {html, LitElement, PropertyValues, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {initializeBindings} from '../../../utils/initialization-lit-utils.js';
-import type {Bindings} from '../atomic-search-interface/interfaces.js';
+import {Bindings} from '../atomic-search-interface/interfaces.js';
+import {returnBoot} from './boot.js';
+
+// import type {Bindings} from '../atomic-search-interface/interfaces.js';
 
 type GenericRender = string | TemplateResult | undefined | null;
 
@@ -73,8 +76,11 @@ export class AtomicText extends LitElement {
   public render(): GenericRender {
     console.log('my atomic-text component');
     const thingy = getSampleSearchEngineConfiguration();
+    const boot = returnBoot();
     console.log(thingy);
-    return html`<span>${this.#strings.value()}${thingy.organizationId}</span>`;
+    return html`<span
+      >${this.#strings.value()}${thingy.organizationId}${boot}</span
+    >`;
   }
 }
 
@@ -88,7 +94,9 @@ const loadedAttribute = 'data-atomic-loaded';
 function ErrorGuard<Component extends LitElementWithError>(): (
   target: Component,
   propertyKey: 'render',
+  //@ts-expect-error bla
   descriptor: TypedPropertyDescriptor
+  //@ts-expect-error bla
 ) => void | TypedPropertyDescriptor {
   return (_target, _propertyKey, descriptor) => {
     const originalMethod = descriptor.value;
@@ -115,7 +123,9 @@ interface LitElementWithBindings extends LitElement {
 function BindingGuard<Component extends LitElementWithBindings>(): (
   target: Component,
   propertyKey: 'render',
+  //@ts-expect-error bla
   descriptor: TypedPropertyDescriptor
+  //@ts-expect-error bla
 ) => void | TypedPropertyDescriptor {
   return (_target, _propertyKey, descriptor) => {
     const originalMethod = descriptor.value;
@@ -130,7 +140,9 @@ function BindingGuard<Component extends LitElementWithBindings>(): (
 function SetRenderedAttribute<Component extends LitElementWithBindings>(): (
   target: Component,
   propertyKey: 'render',
+  //@ts-expect-error bla
   descriptor: TypedPropertyDescriptor
+  //@ts-expect-error bla
 ) => void | TypedPropertyDescriptor {
   return (_target, _propertyKey, descriptor) => {
     const originalMethod = descriptor.value;

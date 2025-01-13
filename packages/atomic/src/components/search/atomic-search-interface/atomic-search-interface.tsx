@@ -578,6 +578,7 @@ export class AtomicSearchInterface
   }
 
   public render() {
+    console.log('search-interface initialized');
     return [
       this.engine && this.enableRelevanceInspector && (
         <atomic-relevance-inspector

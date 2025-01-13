@@ -5,15 +5,15 @@ import {buildCustomEvent} from './event-utils.js';
 import {
   initializeEventName,
   initializableElements,
-  InitializeEventHandler,
   MissingInterfaceParentError,
 } from './initialization-lit-stencil-common-utils.js';
 
 export {
   initializableElements,
-  InitializeEventHandler,
   MissingInterfaceParentError,
 } from './initialization-lit-stencil-common-utils.js';
+
+export type InitializeEventHandler = (bindings: AnyBindings) => void;
 
 /**
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
