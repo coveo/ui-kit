@@ -32,7 +32,6 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -44,16 +43,12 @@ import {
   noResultsSelector,
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import {createSearchStore, SearchStore} from './store';
+import type {Bindings as _Bindings} from './interfaces';
+import {createSearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
-export type Bindings = CommonBindings<
-  SearchEngine,
-  SearchStore,
-  HTMLAtomicSearchInterfaceElement
-> &
-  NonceBindings;
+export type Bindings = _Bindings;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.

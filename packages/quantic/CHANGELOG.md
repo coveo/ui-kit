@@ -1,3 +1,13 @@
+## <small>3.11.1 (2025-01-08)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+- fix(quantic): fixed issue with breadcrumb component when facet ids are used (#4791) ([87491c6](https://github.com/coveo/ui-kit/commits/87491c6)), closes [#4791](https://github.com/coveo/ui-kit/issues/4791)
+- docs(quantic): user actions toggle missing props (#4797) ([6d0c097](https://github.com/coveo/ui-kit/commits/6d0c097)), closes [#4797](https://github.com/coveo/ui-kit/issues/4797)
+- test(quantic): added playwright tests and unit test for quantic generated answer component (#4803) ([99ed76a](https://github.com/coveo/ui-kit/commits/99ed76a)), closes [#4803](https://github.com/coveo/ui-kit/issues/4803)
+
 ## 3.11.0 (2024-12-11)
 
 - feat(quantic): make quantic notifications component dismissible (#4733) ([96cc465](https://github.com/coveo/ui-kit/commits/96cc465)), closes [#4733](https://github.com/coveo/ui-kit/issues/4733)
