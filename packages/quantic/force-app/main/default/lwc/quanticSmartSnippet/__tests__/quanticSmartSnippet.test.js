@@ -50,7 +50,7 @@ const selectors = {
   initializationError: 'c-quantic-component-error',
   smartSnippet: 'c-quantic-smart-snippet',
   smartSnippetAnswer: 'c-quantic-smart-snippet-answer',
-  smartSnippetToggleButton: '[data-id="smart-snippet-toggle-button"]',
+  smartSnippetToggleButton: '[data-testid="smart-snippet__toggle-button"]',
   smartSnippetSource: 'c-quantic-smart-snippet-source',
   smartSnippetFeedback: 'c-quantic-feedback',
 };

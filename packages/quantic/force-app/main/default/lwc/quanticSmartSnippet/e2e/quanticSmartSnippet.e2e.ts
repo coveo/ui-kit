@@ -89,31 +89,23 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('when opening the feedback modal and providing feedback', () => {
-        test('should send the correct open feedback modal UA analytics event', async ({
+        test('should send the correct UA analytics events', async ({
           smartSnippet,
         }) => {
+          const expectedReason = 'does_not_answer';
+
           const openFeedbackModalAnalyticsPromise =
             smartSnippet.waitForOpenFeedbackModalUaAnalytics();
           await smartSnippet.clickDislikeButton();
           await smartSnippet.clickExplainWhyButton();
           await openFeedbackModalAnalyticsPromise;
-        });
 
-        test.describe('when selecting and submitting a feedback option', () => {
-          test('should send the correct UA analytics event', async ({
-            smartSnippet,
-          }) => {
-            const expectedReason = 'does_not_answer';
-            await smartSnippet.clickDislikeButton();
-            await smartSnippet.clickExplainWhyButton();
+          const submitFeedbackAnalyticsPromise =
+            smartSnippet.waitForFeedbackSubmitUaAnalytics(expectedReason);
 
-            const submitFeedbackAnalyticsPromise =
-              smartSnippet.waitForFeedbackSubmitUaAnalytics(expectedReason);
-
-            await smartSnippet.selectFirstFeedbackOptionLabel();
-            await smartSnippet.clickFeedbackSubmitButton();
-            await submitFeedbackAnalyticsPromise;
-          });
+          await smartSnippet.selectFirstFeedbackOptionLabel();
+          await smartSnippet.clickFeedbackSubmitButton();
+          await submitFeedbackAnalyticsPromise;
         });
       });
 
