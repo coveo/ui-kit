@@ -340,13 +340,13 @@ describe('c-quantic-smart-snippet', () => {
 
     describe('when interacting with the feedback modal', () => {
       describe('when trying to open the feedback modal after executing the same query', () => {
-        it('should not open the feedback modal', async () => {
+        it.skip('should not open the feedback modal', async () => {
           // TODO: Implement this test
         });
       });
 
       describe('when trying to open the feedback modal after executing a query that gave a new answer', () => {
-        it('should open the feedback modal', async () => {
+        it.skip('should open the feedback modal', async () => {
           // TODO: Implement this test
         });
       });
