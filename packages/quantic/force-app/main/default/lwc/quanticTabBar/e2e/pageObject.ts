@@ -10,6 +10,10 @@ export class TabBarObject {
     return this.page.locator('c-quantic-tab-bar');
   }
 
+  get allTabs(): Locator {
+    return this.tabBar.locator('c-quantic-tab');
+  }
+
   get allVisibleTabs(): Locator {
     return this.tabBar.locator('c-quantic-tab').filter({
       has: this.page.locator(':visible'),

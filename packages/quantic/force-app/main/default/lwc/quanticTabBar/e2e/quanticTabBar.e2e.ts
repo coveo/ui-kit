@@ -46,8 +46,9 @@ useCaseTestCases.forEach((useCase) => {
       test('should display all the tabs without displaying the dropdown list', async ({
         tabBar,
       }) => {
+        const tabBarElement = tabBar.tabBar;
+        await tabBarElement.scrollIntoViewIfNeeded();
         const tabs = tabBar.allVisibleTabs;
-
         expect(tabs).not.toBeNull();
         expect(await tabs.count()).toEqual(expectedNumberOfTabs);
 
@@ -71,13 +72,16 @@ useCaseTestCases.forEach((useCase) => {
             viewport: {width: viewportWidth, height: standardViewportHeight},
           });
           test(testLabel, async ({tabBar}) => {
+            const dropdownContainer = tabBar.dropdownContainer;
+            await dropdownContainer.scrollIntoViewIfNeeded();
+
             const displayedTabs = tabBar.allVisibleTabs;
             expect(displayedTabs).not.toBeNull();
             expect(await displayedTabs.count()).toEqual(
               expectedNumberOfTabsDisplayed
             );
 
-            expect(await tabBar.dropdownContainer.isVisible()).toBe(true);
+            expect(await dropdownContainer.isVisible()).toBe(true);
 
             await tabBar.clickMoreButton();
 
