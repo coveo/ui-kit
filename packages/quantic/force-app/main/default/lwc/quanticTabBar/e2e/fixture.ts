@@ -1,4 +1,4 @@
-import {PagerObject} from './pageObject';
+import {TabBarObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {
@@ -8,41 +8,39 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
-const pageUrl = 's/quantic-pager';
+const pageUrl = 's/quantic-tab-bar';
 
-interface PagerOptions {
-  numberOfPages: number;
+interface TabBarOptions {
+  lightTheme: boolean;
 }
-type QuanticPagerE2EFixtures = {
-  pager: PagerObject;
+
+type QuanticTabBarE2EFixtures = {
+  tabBar: TabBarObject;
   search: SearchObject;
-  options: Partial<PagerOptions>;
+  options: Partial<TabBarOptions>;
 };
 
-type QuanticPagerE2ESearchFixtures = QuanticPagerE2EFixtures & {
-  urlHash: string;
-};
+type QuanticTabBarE2ESearchFixtures = QuanticTabBarE2EFixtures;
 
-type QuanticPagerE2EInsightFixtures = QuanticPagerE2ESearchFixtures & {
+type QuanticTabBarE2EInsightFixtures = QuanticTabBarE2ESearchFixtures & {
   insightSetup: InsightSetupObject;
 };
 
-export const testSearch = quanticBase.extend<QuanticPagerE2ESearchFixtures>({
+export const testSearch = quanticBase.extend<QuanticTabBarE2ESearchFixtures>({
   options: {},
-  urlHash: '',
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
   },
-  pager: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
+  tabBar: async ({page, options, configuration, search}, use) => {
+    await page.goto(pageUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
 
-    await use(new PagerObject(page));
+    await use(new TabBarObject(page));
   },
 });
 
-export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
+export const testInsight = quanticBase.extend<QuanticTabBarE2EInsightFixtures>({
   options: {},
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
@@ -50,13 +48,13 @@ export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
   insightSetup: async ({page}, use) => {
     await use(new InsightSetupObject(page));
   },
-  pager: async ({page, options, search, configuration, insightSetup}, use) => {
+  tabBar: async ({page, options, search, configuration, insightSetup}, use) => {
     await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.performSearch();
     await search.waitForSearchResponse();
-    await use(new PagerObject(page));
+    await use(new TabBarObject(page));
   },
 });
 
