@@ -18,7 +18,7 @@ export const recentQueriesReducer = createReducer(
       .addCase(registerRecentQueries, handleRegisterQueries)
       .addCase(clearRecentQueries, handleClearRecentQueries)
       .addCase(commerceExecuteSearch.fulfilled, (state, action) => {
-        const query = action.payload.queryExecuted?.trim() || '';
+        const query = action.payload.queryExecuted;
         const products = action.payload.response.products;
         if (!query.length || !products.length) {
           return;
