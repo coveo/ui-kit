@@ -7,7 +7,7 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/headless.esm.js",
+  "module": "./dist/browser/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
@@ -157,7 +157,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/relay": "0.7.10",
+    "@coveo/relay": "0.8.1",
     "@coveo/relay-event-types": "13.0.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.5.0",
