@@ -7,7 +7,7 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/headless.esm.js",
+  "module": "./dist/browser/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
@@ -164,7 +164,7 @@
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.42",
     "dayjs": "1.11.13",
-    "exponential-backoff": "3.1.0",
+    "exponential-backoff": "3.1.1",
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "3.1.1",
@@ -180,7 +180,6 @@
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
     "execa": "9.5.2",
-    "install": "0.13.0",
     "ts-node": "10.9.2",
     "typedoc": "0.27.6",
     "vitest": "2.1.8"

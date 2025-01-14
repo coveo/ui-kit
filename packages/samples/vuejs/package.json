@@ -19,8 +19,7 @@
     "@vitejs/plugin-vue": "5.2.1",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "vue-tsc": "2.2.0",
-    "cypress": "13.17.0",
+    "cypress": "13.6.6",
     "cypress-repeat": "2.3.8",
     "ncp": "2.0.0"
   }

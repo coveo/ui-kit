@@ -71,6 +71,10 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   public searchStatus!: SearchStatus;
   private resizeObserver?: ResizeObserver;
 
+  private readonly DEFAULT_COLLAPSED_HEIGHT = 16;
+  private readonly MAX_COLLAPSED_HEIGHT = 32;
+  private readonly MIN_COLLAPSED_HEIGHT = 9;
+
   @BindStateToController('generatedAnswer', {
     onUpdateCallbackMethod: 'onGeneratedAnswerStateUpdate',
   })
@@ -111,6 +115,12 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() collapsible?: boolean;
 
   /**
+   * The maximum height (in rem units) of the answer when collapsed.
+   *
+   */
+  @Prop() maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
+
+  /**
    * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
@@ -147,7 +157,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
 
   private generatedAnswerCommon!: GeneratedAnswerCommon;
   private fullAnswerHeight?: number;
-  private maxCollapsedHeight = 250;
 
   public initialize() {
     if (
@@ -257,10 +266,19 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   }
 
   private adaptAnswerHeight() {
-    this.fullAnswerHeight = this.host?.shadowRoot
+    const answerHeight = this.host?.shadowRoot
       ?.querySelector('[part="generated-text"]')
       ?.getBoundingClientRect().height;
-    this.updateAnswerHeight();
+
+    if (answerHeight) {
+      const rootFontSize = parseFloat(
+        getComputedStyle(document.documentElement).fontSize
+      );
+
+      this.fullAnswerHeight = answerHeight / rootFontSize;
+
+      this.updateAnswerHeight();
+    }
   }
 
   private getAnswerContainer() {
@@ -273,15 +291,38 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
     );
   }
 
-  private updateAnswerHeight() {
+  private validateMaxCollapsedHeight(): number {
+    const isValid =
+      this.maxCollapsedHeight >= this.MIN_COLLAPSED_HEIGHT &&
+      this.maxCollapsedHeight <= this.MAX_COLLAPSED_HEIGHT;
+
+    if (!isValid) {
+      console.warn(
+        `max-collapsed-height (${this.maxCollapsedHeight}rem) is out of the valid range (${this.MIN_COLLAPSED_HEIGHT}rem - ${this.MAX_COLLAPSED_HEIGHT}rem). Falling back to default value (${this.DEFAULT_COLLAPSED_HEIGHT}rem).`
+      );
+    }
+
+    return isValid ? this.maxCollapsedHeight : this.DEFAULT_COLLAPSED_HEIGHT;
+  }
+
+  private setCSSVariable(variableName: string, value: string) {
     const container = this.getAnswerContainer();
+    if (container) {
+      (container as HTMLElement).style.setProperty(variableName, value);
+    }
+  }
+
+  private updateAnswerHeight() {
+    const container = this.getAnswerContainer() as HTMLElement;
     const footer = this.getAnswerFooter();
+    const maxHeight = this.validateMaxCollapsedHeight();
 
     if (!container || !footer) {
       return;
     }
 
-    if (this.fullAnswerHeight! > this.maxCollapsedHeight) {
+    if (this.fullAnswerHeight! > maxHeight) {
+      this.setCSSVariable('--atomic-crga-collapsed-height', `${maxHeight}rem`);
       this.toggleClass(
         container,
         'answer-collapsed',

@@ -25,8 +25,8 @@ runs:
         browser: chrome
         command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
         spec: ${{ inputs.spec }}
-        start: npm start -w @coveo/atomic
-        wait-on: 'http://localhost:3333/ping'
+        start: npx nx web:dev atomic
+        wait-on: 'http://localhost:3333'
         wait-on-timeout: 600000
         install: false
         record: false
@@ -34,7 +34,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         SPLIT: ${{ inputs.SPLIT }}
         SPLIT_INDEX: ${{ inputs.SPLIT_INDEX }}
-    - uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
       if: failure()
       with:
         name: atomic-e2e-screenshots-${{ inputs.spec }}

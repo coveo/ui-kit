@@ -984,14 +984,14 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
 @ProxyCmp({
-  inputs: ['collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle']
+  inputs: ['collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
+  inputs: ['collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -3106,3 +3106,5 @@ export class AtomicTimeframeFacet {
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
 
+
+import type {} from '@coveo/atomic/components';
