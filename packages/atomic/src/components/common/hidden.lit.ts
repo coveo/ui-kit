@@ -12,7 +12,7 @@ class DisplayIfDirective extends Directive {
   update<T>(part: Part, [displayCondition, children]: [boolean, T]) {
     if (part.type !== PartType.CHILD) {
       throw new Error(
-        `"displayIf" can only be used in child bindings. Expected PartType ${PartType.CHILD}, but received PartType ${part.type}.`
+        `"displayIf" can only be used in child bindings. Expected PartType "${PartType.CHILD}", but received PartType "${part.type}".`
       );
     }
 
