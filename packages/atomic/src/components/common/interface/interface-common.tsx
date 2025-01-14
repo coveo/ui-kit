@@ -1,6 +1,5 @@
 import {LogLevel} from '@coveo/headless';
 import {ComponentInterface, h} from '@stencil/core';
-import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {setCoveoGlobal} from '../../../global/environment';
@@ -23,7 +22,7 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   iconAssetsPath: string;
   logLevel?: LogLevel;
   language?: string;
-  host: HTMLStencilElement;
+  host: HTMLElement;
   bindings: AnyBindings;
   error?: Error;
 
