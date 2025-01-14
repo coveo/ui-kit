@@ -46,7 +46,7 @@ interface TimeframeFacetCommonOptions {
   withDatePicker: boolean;
   setFacetId(id: string): string;
   getSearchStatusState(): SearchStatusState;
-  buildDependenciesManager(): FacetConditionsManager;
+  buildDependenciesManager(facetId: string): FacetConditionsManager;
   deserializeRelativeDate(date: string): RelativeDate;
   buildDateRange(config: DateRangeOptions): DateRangeRequest;
   initializeFacetForDatePicker(): DateFacet;
@@ -71,7 +71,9 @@ export class TimeframeFacetCommon {
   private facetForDateRange?: DateFacet;
   private filter?: DateFilter;
   private manualTimeframes: Timeframe[] = [];
-  private dependenciesManager?: FacetConditionsManager;
+  private facetForDateRangeDependenciesManager?: FacetConditionsManager;
+  private facetForDatePickerDependenciesManager?: FacetConditionsManager;
+  private filterDependenciesManager?: FacetConditionsManager;
 
   constructor(private props: TimeframeFacetCommonOptions) {
     this.facetId = this.determineFacetId;
@@ -92,12 +94,26 @@ export class TimeframeFacetCommon {
 
     if (this.props.withDatePicker) {
       this.facetForDatePicker = this.props.initializeFacetForDatePicker();
+      this.facetForDatePickerDependenciesManager =
+        this.props.buildDependenciesManager(
+          this.facetForDatePicker.state.facetId
+        );
       this.filter = this.props.initializeFilter();
     }
 
-    if (this.facetForDateRange || this.filter) {
-      this.dependenciesManager = this.props.buildDependenciesManager();
+    if (this.facetForDateRange) {
+      this.facetForDateRangeDependenciesManager =
+        this.props.buildDependenciesManager(
+          this.facetForDateRange?.state.facetId
+        );
     }
+
+    if (this.filter) {
+      this.filterDependenciesManager = this.props.buildDependenciesManager(
+        this.filter?.state.facetId
+      );
+    }
+
     this.registerFacetToStore();
   }
 
@@ -188,7 +204,9 @@ export class TimeframeFacetCommon {
     if (this.props.host.isConnected) {
       return;
     }
-    this.dependenciesManager?.stopWatching();
+    this.facetForDateRangeDependenciesManager?.stopWatching();
+    this.facetForDatePickerDependenciesManager?.stopWatching();
+    this.filterDependenciesManager?.stopWatching();
   }
 
   private get isHidden() {
