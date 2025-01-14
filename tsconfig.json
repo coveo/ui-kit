@@ -3,10 +3,5 @@
   "extends": "@tsconfig/node20/tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
   }
 }

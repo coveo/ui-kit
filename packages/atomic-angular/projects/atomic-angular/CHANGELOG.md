@@ -1,3 +1,8 @@
+## <small>3.2.9 (2025-01-08)</small>
+
+- chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
+- chore(deps): update angular to 18 (#4795) ([425a5fa](https://github.com/coveo/ui-kit/commits/425a5fa)), closes [#4795](https://github.com/coveo/ui-kit/issues/4795)
+
 ## <small>3.2.7 (2024-12-04)</small>
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
