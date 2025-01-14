@@ -30,7 +30,9 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.13.0"
+    "@coveo/atomic": "3.13.0",
+    "@lit/react": "1.0.6",
+    "lit": "3.2.1"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",

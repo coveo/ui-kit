@@ -117,33 +117,7 @@ export function elementHasAncestorTag(
   return elementHasAncestorTag(parentElement, tagName);
 }
 
-export function closest<K extends keyof HTMLElementTagNameMap>(
-  element: Element | null,
-  selector: K
-): HTMLElementTagNameMap[K] | null;
-export function closest<K extends keyof SVGElementTagNameMap>(
-  element: Element | null,
-  selector: K
-): SVGElementTagNameMap[K] | null;
-export function closest<E extends Element = Element>(
-  element: Element | null,
-  selector: string
-): E | null;
-export function closest(
-  element: Element | null,
-  selector: string
-): HTMLElement | null {
-  if (!element) {
-    return null;
-  }
-  if (element.matches(selector)) {
-    return element as HTMLElement;
-  }
-  if (element.parentNode instanceof ShadowRoot) {
-    return closest(element.parentNode.host, selector);
-  }
-  return closest(element.parentElement, selector);
-}
+export {closest} from './dom-utils';
 
 export const sortByDocumentPosition = (a: Node, b: Node): 1 | -1 =>
   a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
