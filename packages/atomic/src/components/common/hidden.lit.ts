@@ -3,8 +3,6 @@ import {directive, Directive, Part, PartType} from 'lit-html/directive.js';
 
 // TODO: KIT-3822: Add unit tests for this directive.
 class DisplayIfDirective extends Directive {
-  private hostElement?: LitElement;
-
   render<T>(_condition: boolean, _children: T) {
     return noChange;
   }
@@ -16,15 +14,11 @@ class DisplayIfDirective extends Directive {
       );
     }
 
-    if (!this.hostElement) {
-      this.hostElement = part.options?.host as LitElement;
-    }
-
-    if (!this.hostElement || !(this.hostElement instanceof LitElement)) {
+    if (!(part.options?.host instanceof LitElement)) {
       throw new Error('The directive must be applied to a host element.');
     }
 
-    this.hostElement.classList.toggle('atomic-hidden', displayCondition);
+    part.options.host.classList.toggle('atomic-hidden', displayCondition);
     if (displayCondition) {
       return;
     }
