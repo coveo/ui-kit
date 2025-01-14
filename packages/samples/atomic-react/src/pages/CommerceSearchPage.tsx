@@ -25,7 +25,7 @@ import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import React, {useMemo} from 'react';
+import {useMemo} from 'react';
 
 export const CommerceSearchPage = () => {
   const engine = useMemo(

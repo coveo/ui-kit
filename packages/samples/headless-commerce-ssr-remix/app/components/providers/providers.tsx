@@ -1,6 +1,6 @@
 import {
   listingEngineDefinition,
-  //recommendationEngineDefinition,
+  recommendationEngineDefinition,
   searchEngineDefinition,
   standaloneEngineDefinition,
 } from '@/lib/commerce-engine';
@@ -17,9 +17,9 @@ export const SearchProvider = buildProviderWithDefinition(
 );
 
 // Wraps recommendations, whether in a standalone, search, or listing page
-// export const RecommendationProvider = buildProviderWithDefinition(
-//   recommendationEngineDefinition
-// );
+export const RecommendationProvider = buildProviderWithDefinition(
+  recommendationEngineDefinition
+);
 
 // Used for components that don’t require triggering a search or product fetch (e.g., cart pages, standalone search box)
 export const StandaloneProvider = buildProviderWithDefinition(

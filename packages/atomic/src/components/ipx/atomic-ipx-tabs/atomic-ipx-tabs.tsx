@@ -18,9 +18,9 @@ export class AtomicIPXTabs implements InitializableComponent {
 
   public render() {
     return (
-      <tab-bar>
+      <atomic-tab-bar>
         <slot></slot>
-      </tab-bar>
+      </atomic-tab-bar>
     );
   }
 }

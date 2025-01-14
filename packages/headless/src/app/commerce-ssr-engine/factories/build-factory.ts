@@ -26,6 +26,8 @@ import {
 
 /**
  * The SSR commerce engine.
+ *
+ * @group Engine
  */
 export interface SSRCommerceEngine extends CommerceEngine {
   /**

@@ -38,7 +38,7 @@ describe('Insight Panel test suites', () => {
     });
 
     it('should not add any unexpected style tags', () => {
-      const numTopLevelStyleTags = 3;
+      const numTopLevelStyleTags = 4;
       const numLayoutStyleTags = 1;
 
       cy.get('style').should(
@@ -246,7 +246,7 @@ describe('Insight Panel test suites', () => {
 
       InsightPanelsSelectors.tabPopoverButton().click();
       InsightPanelsSelectors.tabBar()
-        .find('tab-popover')
+        .find('atomic-tab-popover')
         .find('[part="popover-tab"]')
         .eq(1)
         .should('have.text', 'Salesforce')
