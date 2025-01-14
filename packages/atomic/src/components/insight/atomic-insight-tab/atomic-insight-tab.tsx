@@ -7,7 +7,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {Button} from '../../common/button';
+import {Button} from '../../common/stencil-button';
 import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tab-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 

@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import ClearIcon from '../../../images/clear.svg';
-import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
+import {Button, ButtonProps} from '../stencil-button';
 
 interface Props extends Partial<ButtonProps> {
   bindings: AnyBindings;

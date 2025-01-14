@@ -6,7 +6,7 @@ import {
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {AnyBindings} from '../../../../components';
 import {parseDate} from '../../../../utils/date-utils';
-import {Button} from '../../../common/button';
+import {Button} from '../../stencil-button';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.

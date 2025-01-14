@@ -1,5 +1,5 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
-import {Button, ButtonProps} from './button';
+import {Button, ButtonProps} from './stencil-button';
 
 export interface IconButtonProps extends ButtonProps {
   badge?: VNode;

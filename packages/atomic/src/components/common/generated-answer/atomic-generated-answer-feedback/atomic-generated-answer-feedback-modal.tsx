@@ -22,10 +22,10 @@ import {
 } from '../../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
-import {Button} from '../../button';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
 import {RadioButton} from '../../radio-button';
+import {Button} from '../../stencil-button';
 
 /**
  * @internal
