@@ -34,7 +34,7 @@ describe('define commerce context', () => {
     });
   });
 
-  it("buildWithProps should pass its parameters to the buildContext", () => {
+  it('buildWithProps should pass its parameters to the buildContext', () => {
     const engine: SSRCommerceEngine = buildMockSSRCommerceEngine({
       ...buildMockCommerceState(),
       commerceContext: {...options},
