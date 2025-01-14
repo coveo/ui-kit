@@ -1,7 +1,6 @@
 import type {SearchEngine} from '@coveo/headless';
 import {CommerceEngine} from '@coveo/headless/commerce';
 import type {RecommendationEngine} from '@coveo/headless/recommendation';
-import {HTMLStencilElement} from '@stencil/core/internal';
 import {i18n} from 'i18next';
 import {InsightEngine} from '../../insight';
 import {AtomicCommonStore, AtomicCommonStoreData} from './store';
@@ -30,7 +29,7 @@ export interface CommonStencilStore<StoreData extends AtomicCommonStoreData> {
 export interface CommonBindings<
   Engine extends AnyEngineType,
   Store extends AtomicCommonStore<AtomicCommonStoreData>,
-  InterfaceElement extends HTMLStencilElement,
+  InterfaceElement extends HTMLElement,
 > {
   /**
    * A headless engine instance.
@@ -68,7 +67,7 @@ export interface NonceBindings {
 export type AnyBindings = CommonBindings<
   AnyEngineType,
   AtomicCommonStore<AtomicCommonStoreData>,
-  HTMLStencilElement
+  HTMLElement
 >;
 
 export type AnyEngineType =
