@@ -49,7 +49,7 @@ export class AtomicTabManagerBar {
   }
 
   private get tabPopover() {
-    return this.host.shadowRoot?.querySelector('tab-popover');
+    return this.host.shadowRoot?.querySelector('atomic-tab-popover');
   }
 
   private get popoverWidth() {
@@ -196,7 +196,7 @@ export class AtomicTabManagerBar {
     return (
       <Host class="overflow-x-clip overflow-y-visible">
         <slot></slot>
-        <tab-popover>{this.popoverTabs}</tab-popover>
+        <atomic-tab-popover>{this.popoverTabs}</atomic-tab-popover>
       </Host>
     );
   };
