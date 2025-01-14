@@ -26,7 +26,7 @@ describe('define context', () => {
     });
   });
 
-  it("buildWithProps should pass it's parameters to the buildContext", () => {
+  it('buildWithProps should pass its parameters to the buildContext', () => {
     const engine: SSRSearchEngine = buildMockSSRSearchEngine(createMockState());
     const props: ContextProps = {} as unknown as ContextProps;
 
