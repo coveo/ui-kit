@@ -9,7 +9,7 @@ interface MapPropOptions {
 }
 
 export function mapProperty<Element extends ReactiveElement>(
-  options: MapPropOptions
+  options?: MapPropOptions
 ) {
   return <
     Instance extends Element & Record<string, unknown>,
@@ -22,13 +22,13 @@ export function mapProperty<Element extends ReactiveElement>(
     ctor.addInitializer((instance) => {
       const props = {};
       const prefix =
-        options.attributePrefix || camelToKebab(propertyKey as string);
+        options?.attributePrefix || camelToKebab(propertyKey as string);
 
       mapAttributesToProp(
         prefix,
         props,
         Array.from(instance.attributes),
-        options.splitValues ?? false
+        options?.splitValues ?? false
       );
 
       (instance as Instance)[propertyKey] = props as Instance[K];
