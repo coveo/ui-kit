@@ -58,6 +58,7 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
 
     ${sectionSelector('search')} ${searchBoxSelector} {
       flex-grow: 1;
+      height: 2.6rem;
     }
 
     ${toggleSelectors.map(
