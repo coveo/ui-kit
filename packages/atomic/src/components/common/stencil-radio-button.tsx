@@ -7,6 +7,9 @@ import {
 } from './button-style';
 import {RadioButtonProps} from './radio-button';
 
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the radioButton function instead
+ */
 export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
   const classNames = ['btn-radio'];
   let onMouseDown:
