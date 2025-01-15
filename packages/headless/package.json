@@ -7,7 +7,7 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/headless.esm.js",
+  "module": "./dist/browser/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.13.0",
+  "version": "3.13.2",
   "files": [
     "dist/"
   ],
@@ -157,14 +157,14 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/relay": "0.7.10",
+    "@coveo/relay": "0.8.1",
     "@coveo/relay-event-types": "13.0.0",
     "@microsoft/fetch-event-source": "2.0.1",
     "@reduxjs/toolkit": "2.5.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.42",
     "dayjs": "1.11.13",
-    "exponential-backoff": "3.1.0",
+    "exponential-backoff": "3.1.1",
     "fast-equals": "5.0.1",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "3.1.1",
