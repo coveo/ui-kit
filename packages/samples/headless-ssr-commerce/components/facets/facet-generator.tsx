@@ -54,6 +54,7 @@ export default function FacetGenerator() {
                 staticState={facetState}
               />
             );
+          //TODO: add location facet support https://coveord.atlassian.net/browse/KIT-3808
           default:
             return null;
         }
