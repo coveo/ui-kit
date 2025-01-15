@@ -1,7 +1,7 @@
 'use client';
 
 import {useProductView} from '@/lib/commerce-engine';
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 
 interface Product {
   productId: string;
@@ -11,12 +11,12 @@ interface Product {
 
 export default function ProductViewer({productId, name, price}: Product) {
   const {methods} = useProductView();
-  const productViewEventEmitted = useRef(false);
+  let productViewEventEmitted = false;
 
   useEffect(() => {
-    if (methods && !productViewEventEmitted.current) {
+    if (methods && !productViewEventEmitted) {
       methods?.view({productId, name, price});
-      productViewEventEmitted.current = true;
+      productViewEventEmitted = true;
     }
   }, []);
 
