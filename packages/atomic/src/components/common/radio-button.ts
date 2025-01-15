@@ -1,7 +1,7 @@
 import {html, TemplateResult} from 'lit';
 import {ifDefined} from 'lit-html/directives/if-defined.js';
 import {classMap} from 'lit/directives/class-map.js';
-import {ref} from 'lit/directives/ref.js';
+import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import {createRipple} from '../../utils/ripple';
 import {
   ButtonStyle,
@@ -28,7 +28,7 @@ export interface RadioButtonProps {
     | 'time'
     | 'true'
     | 'false';
-  ref?(element?: Element): void;
+  ref?: RefOrCallback;
 }
 
 // TODO: KIT-3822: add unit tests to this function
@@ -115,11 +115,11 @@ export const radioButton = (props: RadioButtonProps): TemplateResult => {
       name=${props.groupName}
       class=${classMap(classNames)}
       value=${ifDefined(props.text)}
-      key=${ifDefined(props.key)}
       part=${ifDefined(props.part)}
       aria-label=${ifDefined(props.ariaLabel ?? props.text)}
       aria-current=${ifDefined(props.ariaCurrent)}
       ?checked=${Boolean(props.checked)}
+      .key=${props.key}
       @change=${onChange}
       @keydown=${handleKeyDown}
       @mousedown=${onMouseDown}
