@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -40,7 +40,7 @@
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "dependencies": {
-    "@coveo/headless": "3.12.0"
+    "@coveo/headless": "3.13.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
@@ -49,7 +49,7 @@
     "eslint-plugin-react": "7.37.3",
     "eslint-plugin-testing-library": "7.1.1",
     "gts": "5.3.1",
-    "publint": "0.2.12",
+    "publint": "0.3.0",
     "rimraf": "6.0.1",
     "typescript": "5.5.4",
     "typedoc": "0.27.6",

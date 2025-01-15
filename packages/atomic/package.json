@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.12.1",
+  "version": "3.13.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -34,7 +34,12 @@
     "./lang/*": {
       "import": "./dist/atomic/lang/*",
       "require": "./dist/atomic/lang/*"
-    }
+    },
+    "./components": {
+      "types": "./dist/components/components/index.d.ts",
+      "import": "./dist/components/components/index.js"
+    },
+    "./custom-elements-manifest": "./custom-elements.json"
   },
   "files": [
     "dist/",
@@ -66,7 +71,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.12.0",
+    "@coveo/headless": "3.13.0",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.25.6",
     "@stencil/store": "2.0.16",
@@ -74,22 +79,19 @@
     "dompurify": "3.2.3",
     "escape-html": "1.0.3",
     "focus-visible": "5.2.1",
-    "i18next": "24.2.0",
+    "i18next": "24.2.1",
     "i18next-http-backend": "3.0.1",
+    "lit": "3.2.1",
     "marked": "12.0.2",
     "stencil-inline-svg": "1.1.0",
     "ts-debounce": "4.0.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.1",
-    "@babel/core": "7.26.0",
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
-    "@nx/js": "20.3.0",
-    "@nx/storybook": "20.3.0",
     "@nx/vite": "20.3.0",
-    "@nx/web": "20.3.0",
     "@playwright/test": "1.49.1",
     "@rollup/plugin-alias": "5.1.1",
     "@rollup/plugin-replace": "6.0.2",
@@ -101,25 +103,22 @@
     "@storybook/addon-essentials": "8.1.11",
     "@storybook/addon-interactions": "8.1.11",
     "@storybook/core-events": "8.1.11",
-    "@storybook/core-server": "8.1.11",
     "@storybook/manager-api": "8.1.11",
     "@storybook/router": "8.1.11",
     "@storybook/test": "8.1.11",
-    "@storybook/test-runner": "0.19.0",
-    "@storybook/testing-library": "0.2.2",
     "@storybook/web-components": "8.1.11",
     "@storybook/web-components-vite": "8.1.11",
     "@types/core-js": "2.5.8",
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
-    "@types/lodash": "4.17.13",
-    "@types/node": "22.10.2",
+    "@types/lodash": "4.17.14",
+    "@types/node": "22.10.5",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
     "@whitespace/storybook-addon-html": "6.1.1",
     "autoprefixer": "10.4.20",
     "axe-core": "4.10.2",
-    "cypress": "13.17.0",
+    "cypress": "13.6.6",
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.8",
     "cypress-split": "1.5.0",
@@ -128,12 +127,9 @@
     "jest-cli": "29.7.0",
     "jest-environment-node": "29.7.0",
     "jest-localstorage-mock": "2.4.26",
-    "lit": "3.2.1",
     "lit-html": "3.2.1",
     "local-web-server": "5.4.0",
-    "lodash": "4.17.21",
     "natural-orderby": "5.0.0",
-    "ncp": "2.0.0",
     "postcss-focus-visible": "10.0.1",
     "postcss-import": "16.1.0",
     "postcss-map": "0.11.0",
@@ -141,21 +137,19 @@
     "postcss-nested": "7.0.2",
     "puppeteer": "23.11.1",
     "react": "18.3.1",
-    "rollup": "4.29.0",
+    "rollup": "4.30.1",
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.11.3",
     "storybook": "8.1.2",
     "tailwindcss": "3.4.17",
     "ts-node": "10.9.2",
-    "tslib": "2.8.1",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "vite-plugin-cem": "0.8.1",
     "wait-on": "8.0.1"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.12.0"
+    "@coveo/headless": "3.13.0"
   },
   "license": "Apache-2.0",
   "engines": {

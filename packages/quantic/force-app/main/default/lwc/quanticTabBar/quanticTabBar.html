@@ -1,21 +1,41 @@
 <template>
   <div class={tabBarContainerClasses}>
-    <div class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative">
+    <div
+      class="tab-bar_list-container slds-tabs_default slds-tabs_default__nav slds-is-relative"
+    >
       <slot></slot>
       <div
-        class="tab-bar_more-button slds-tabs_default__item slds-tabs_default__overflow-button slds-is-absolute slds-p-right_none slds-p-left_none"
+        class="tab-bar_more-section slds-tabs_default__item slds-tabs_default__overflow-button slds-is-absolute slds-p-right_none slds-p-left_none"
         title={labels.moreTabs}
         role="presentation"
+        data-testid="tab-bar_more-section"
       >
-        <div class={dropdownClasses}>
-          <button class="slds-button slds-var-p-horizontal_small" aria-haspopup="true" onclick={toggleDropdown}>
+        <div class={dropdownClasses} data-testid="tab-bar_dropdown-container">
+          <button
+            data-testid="tab-bar_more-button"
+            class="slds-button slds-var-p-horizontal_small"
+            aria-haspopup="true"
+            onclick={toggleDropdown}
+            name={labels.more}
+          >
             {moreButtonLabel}
-            <lightning-icon class={moreButtonIconClasses} icon-name={arrowIconName} size="xx-small" aria-hidden="true"> </lightning-icon>
+            <lightning-icon
+              class={moreButtonIconClasses}
+              icon-name={arrowIconName}
+              size="xx-small"
+              aria-hidden="true"
+            >
+            </lightning-icon>
           </button>
           <div class="tab-bar_dropdown slds-dropdown slds-dropdown_right">
             <ul class="slds-dropdown__list" role="menu">
               <template for:each={tabsInDropdown} for:item="tab">
-                <li class="slds-dropdown__item" role="presentation" key={tab.id}>
+                <li
+                  data-testid="tab-bar_dropdown-item"
+                  class="slds-dropdown__item"
+                  role="presentation"
+                  key={tab.id}
+                >
                   <button
                     class="slds-size_1-of-1 slds-button slds-tabs_default__item"
                     role="menuitem"
@@ -25,8 +45,10 @@
                     data-label={tab.label}
                     onblur={onBlur}
                   >
-                    <span class="slds-tabs_default__link" title={tab.label}>{tab.label}</span>
-                </button>
+                    <span class="slds-tabs_default__link" title={tab.label}
+                      >{tab.label}</span
+                    >
+                  </button>
                 </li>
               </template>
             </ul>

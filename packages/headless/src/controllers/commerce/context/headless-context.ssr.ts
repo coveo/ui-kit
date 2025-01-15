@@ -1,5 +1,8 @@
 import {UniversalControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {Kind} from '../../../app/commerce-ssr-engine/types/kind.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../app/commerce-ssr-engine/types/kind.js';
 import {MissingControllerProps} from '../../../utils/errors.js';
 import {
   Context,
@@ -33,10 +36,8 @@ export function defineContext(): ContextDefinition {
       if (props === undefined) {
         throw new MissingControllerProps('Context');
       }
-      return {
-        ...buildContext(engine, {options: props}),
-        _kind: Kind.Context,
-      };
+      const controller = buildContext(engine, {options: props});
+      return createControllerWithKind(controller, Kind.Context);
     },
   };
 }

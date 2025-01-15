@@ -1,5 +1,8 @@
 import {UniversalControllerDefinitionWithProps} from '../../../../app/commerce-ssr-engine/types/common.js';
-import {Kind} from '../../../../app/commerce-ssr-engine/types/kind.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {MissingControllerProps} from '../../../../utils/errors.js';
 import {Cart, buildCart, CartInitialState} from './headless-cart.js';
 
@@ -29,12 +32,10 @@ export function defineCart(): CartDefinition {
     recommendation: true,
     buildWithProps: (engine, props) => {
       if (props === undefined) {
-        throw new MissingControllerProps('Cart');
+        throw new MissingControllerProps(Kind.Cart);
       }
-      return {
-        ...buildCart(engine, {initialState: props.initialState}),
-        _kind: Kind.Cart,
-      };
+      const controller = buildCart(engine, {initialState: props.initialState});
+      return createControllerWithKind(controller, Kind.Cart);
     },
   };
 }
