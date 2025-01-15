@@ -1,5 +1,7 @@
-import {FunctionalComponent, h} from '@stencil/core';
-import {JSXBase} from '@stencil/core/internal';
+import {html, TemplateResult} from 'lit';
+import {ifDefined} from 'lit-html/directives/if-defined.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {ref} from 'lit/directives/ref.js';
 import {createRipple} from '../../utils/ripple';
 import {
   ButtonStyle,
@@ -18,27 +20,31 @@ export interface RadioButtonProps {
   text?: string;
   part?: string;
   ariaLabel?: string;
-  ariaCurrent?: string;
-  ref?(element?: HTMLInputElement): void;
+  ariaCurrent?:
+    | 'page'
+    | 'step'
+    | 'location'
+    | 'date'
+    | 'time'
+    | 'true'
+    | 'false';
+  ref?(element?: Element): void;
 }
 
-export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
-  const classNames = ['btn-radio'];
-  let onMouseDown:
-    | JSXBase.DOMAttributes<HTMLInputElement>['onMouseDown']
-    | undefined;
-  if (props.style) {
-    const rippleColor = getRippleColorForButtonStyle(props.style);
-    classNames.push(getClassNameForButtonStyle(props.style));
+export const radioButton = (props: RadioButtonProps): TemplateResult => {
+  const classNames = {
+    'btn-radio': true,
+    selected: Boolean(props.checked),
+    ...(props.class && {[props.class]: true}),
+    ...(props.style && {[getClassNameForButtonStyle(props.style)]: true}),
+  };
 
-    onMouseDown = (e) => createRipple(e, {color: rippleColor});
-  }
-  if (props.checked) {
-    classNames.push('selected');
-  }
-  if (props.class) {
-    classNames.push(props.class);
-  }
+  const onMouseDown = (e: MouseEvent) => {
+    if (props.style) {
+      const rippleColor = getRippleColorForButtonStyle(props.style);
+      createRipple(e, {color: rippleColor});
+    }
+  };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (props.selectWhenFocused !== false) {
@@ -95,27 +101,28 @@ export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
     }
   };
 
-  const attributes = {
-    name: props.groupName,
-    key: props.key,
-    checked: props.checked,
-    class: classNames.join(' '),
-    part: props.part,
-    'aria-label': props.ariaLabel ?? props.text,
-    'aria-current': props.ariaCurrent,
-    value: props.text,
-    ref: props.ref,
+  const onChange = (e: Event) => {
+    const input = e.currentTarget as HTMLInputElement;
+    if (input.checked && props.onChecked) {
+      props.onChecked();
+    }
   };
 
-  return (
+  return html`
     <input
-      onKeyDown={handleKeyDown}
       type="radio"
-      onChange={(e) =>
-        (e.currentTarget as HTMLInputElement).checked && props.onChecked?.()
-      }
-      onMouseDown={onMouseDown}
-      {...attributes}
+      name=${props.groupName}
+      class=${classMap(classNames)}
+      value=${ifDefined(props.text)}
+      key=${ifDefined(props.key)}
+      part=${ifDefined(props.part)}
+      aria-label=${ifDefined(props.ariaLabel ?? props.text)}
+      aria-current=${ifDefined(props.ariaCurrent)}
+      ?checked=${Boolean(props.checked)}
+      @change=${onChange}
+      @keydown=${handleKeyDown}
+      @mousedown=${onMouseDown}
+      ${ref(props.ref)}
     />
-  );
+  `;
 };
