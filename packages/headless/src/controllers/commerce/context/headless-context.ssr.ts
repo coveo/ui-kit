@@ -34,7 +34,7 @@ export function defineContext(): ContextDefinition {
     recommendation: true,
     buildWithProps: (engine, props) => {
       if (props === undefined) {
-        throw new MissingControllerProps('Context');
+        throw new MissingControllerProps(Kind.Context);
       }
       const controller = buildContext(engine, {options: props});
       return createControllerWithKind(controller, Kind.Context);
