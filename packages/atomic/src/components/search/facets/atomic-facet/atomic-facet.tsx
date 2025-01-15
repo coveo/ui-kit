@@ -299,6 +299,13 @@ export class AtomicFacet implements InitializableComponent {
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
     }
+
+    if (this.displayValuesAs !== 'checkbox' && this.enableExclusion) {
+      console.warn(
+        'The "enableExclusion" property is only available when "displayValuesAs" is set to "checkbox".'
+      );
+    }
+
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);
