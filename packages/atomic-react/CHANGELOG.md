@@ -1,3 +1,9 @@
+## <small>3.2.10 (2025-01-15)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+
 ## <small>3.2.9 (2025-01-08)</small>
 
 - chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)

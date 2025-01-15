@@ -1,3 +1,11 @@
+## 3.12.0 (2025-01-15)
+
+- test(quantic): Tabs E2E Cypress to Playwright + unit tests Migration (#4802) ([99ce0d0](https://github.com/coveo/ui-kit/commits/99ce0d0)), closes [#4802](https://github.com/coveo/ui-kit/issues/4802)
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- feat(SFINT-5848): Playwright migration for QuanticBreadcrumbManager tests (#4826) ([cf8bb89](https://github.com/coveo/ui-kit/commits/cf8bb89)), closes [#4826](https://github.com/coveo/ui-kit/issues/4826)
+- chore: fix desynced package-lock (#4842) ([7ae9c0f](https://github.com/coveo/ui-kit/commits/7ae9c0f)), closes [#4842](https://github.com/coveo/ui-kit/issues/4842)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+
 ## <small>3.11.1 (2025-01-08)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
