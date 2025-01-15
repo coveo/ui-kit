@@ -32,6 +32,19 @@ export function createStore<StoreData extends Record<string, unknown>>(
     },
   });
 
+  const get = <PropName extends keyof StoreData>(
+    propName: PropName
+  ): StoreData[PropName] => {
+    return state[propName];
+  };
+
+  const set = <PropName extends keyof StoreData>(
+    propName: PropName,
+    value: StoreData[PropName]
+  ): void => {
+    state[propName] = value;
+  };
+
   const onChange = <PropName extends keyof StoreData>(
     propName: PropName,
     callback: (newValue: StoreData[PropName]) => void
@@ -51,6 +64,8 @@ export function createStore<StoreData extends Record<string, unknown>>(
 
   return {
     state,
+    get,
+    set,
     onChange,
   };
 }
