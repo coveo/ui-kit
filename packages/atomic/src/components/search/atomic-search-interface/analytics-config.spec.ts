@@ -7,7 +7,12 @@ import {vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicStore} from './store';
 
-vi.mock('../../../global/environment');
+vi.mock('../../../global/environment', () => ({
+  getAtomicEnvironment: vi.fn(() => ({
+    version: '0.0.0',
+    headlessVersion: '0.0.0',
+  })),
+}));
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;
