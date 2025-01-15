@@ -33,7 +33,7 @@ test.describe('default', () => {
       });
 
       test('should go to search page', async ({page}) => {
-        await page.waitForURL('**/search#q=*');
+        await page.waitForURL('**/search?q=*');
 
         const currentUrl = page.url();
 
@@ -47,7 +47,7 @@ test.describe('default', () => {
       });
 
       test('should go to search page', async ({page}) => {
-        await page.waitForURL('**/search#q=*');
+        await page.waitForURL('**/search?q=*');
         const currentUrl = page.url();
         expect(currentUrl).toContain('shoes');
       });

@@ -90,7 +90,7 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('tabManager')
   @State()
   public tabManagerState!: TabManagerState;
-  @State() private resultTemplateRegistered = true;
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private isAppLoaded = false;
 

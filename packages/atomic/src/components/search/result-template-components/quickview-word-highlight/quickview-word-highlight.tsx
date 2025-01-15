@@ -23,7 +23,7 @@ export class QuickviewWordHighlight {
     }
 
     this.text = this.getText(keywordElementInIframe);
-    this.indexIdentifier = `${parsed.keywordIdentifier}-${this.text}`;
+    this.indexIdentifier = `${parsed.keywordIdentifier}`;
     this.color = keywordElementInIframe.style.backgroundColor;
     this.focusedColor = this.computeInvertedColor();
     this.previewBorderColor = this.computeSaturatedColor();

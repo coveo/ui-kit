@@ -154,7 +154,7 @@ jobs:
           zip -r "$ZIP_NAME" "$DOCS_DIR"
           echo "Created zip file: $ZIP_NAME"
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: headless-docs-${{ env.version }}
           path: headless-docs-${{ env.version }}.zip
@@ -183,7 +183,7 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_ENV
       - name: Zip documentation folder
         run: |
-          DOCS_DIR="packages/headless/docs"
+          DOCS_DIR="packages/headless-react/docs"
           if [ ! -d "$DOCS_DIR" ]; then
             echo "Documentation folder $DOCS_DIR not found."
             exit 1
@@ -193,7 +193,7 @@ jobs:
           zip -r "$ZIP_NAME" "$DOCS_DIR"
           echo "Created zip file: $ZIP_NAME"
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: headless-react-docs-${{ env.version }}
           path: headless-react-docs-${{ env.version }}.zip
