@@ -1,3 +1,9 @@
+## 3.15.0 (2025-01-15)
+
+- chore: relocate dist/components to dist/atomic/components (#4859) ([d854df2](https://github.com/coveo/ui-kit/commits/d854df2)), closes [#4859](https://github.com/coveo/ui-kit/issues/4859)
+- fix(atomic): show warning when facet displayValuesAs is not checkbox and enableExclusion is set to t ([eec0326](https://github.com/coveo/ui-kit/commits/eec0326)), closes [#4855](https://github.com/coveo/ui-kit/issues/4855)
+- feat(atomic): replace getAssetPath (#4844) ([4aa0206](https://github.com/coveo/ui-kit/commits/4aa0206)), closes [#4844](https://github.com/coveo/ui-kit/issues/4844)
+
 ## 3.14.0 (2025-01-15)
 
 - fix(atomic): make toggling highlight of individual keywords work again in quickview modal (#4838) ([df0db66](https://github.com/coveo/ui-kit/commits/df0db66)), closes [#4838](https://github.com/coveo/ui-kit/issues/4838)
