@@ -67,7 +67,8 @@
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "test:browser": "vitest"
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
@@ -145,11 +146,14 @@
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "wait-on": "8.0.1"
+    "wait-on": "8.0.1",
+    "playwright": "1.49.1",
+    "@vitest/browser": "2.1.7",
+    "vitest": "2.1.7"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.1"
+    "@coveo/headless": "3.13.0"
   },
   "license": "Apache-2.0",
   "engines": {
