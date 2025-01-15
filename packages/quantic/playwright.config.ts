@@ -30,6 +30,10 @@ export default defineConfig({
   use: {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    // Capture screenshot after each test failure when not on CI.
+    screenshot: process.env.CI ? 'off' : 'only-on-failure',
+    // Record video on failure when not on CI.
+    video: process.env.CI ? 'off' : 'retain-on-failure',
   },
 
   projects: [
