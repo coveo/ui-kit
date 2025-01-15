@@ -31,6 +31,7 @@ export interface RadioButtonProps {
   ref?(element?: Element): void;
 }
 
+// TODO: KIT-3822: add unit tests to this function
 export const radioButton = (props: RadioButtonProps): TemplateResult => {
   const classNames = {
     'btn-radio': true,
