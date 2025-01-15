@@ -63,6 +63,10 @@ export class GeneratedAnswerObject {
       .locator('.citation__link');
   }
 
+  get showMoreButton(): Locator {
+    return this.page.getByTestId('generated-answer__answer-toggle');
+  }
+
   async hoverOverCitation(index: number): Promise<void> {
     // waiting 500ms to allow the component to render completely, cause any re-rendering abort the hover action.
     await this.page.waitForTimeout(500);
@@ -221,6 +225,10 @@ export class GeneratedAnswerObject {
       return false;
     });
     return uaRequest;
+  }
+
+  async waitForFewSeconds() {
+    await this.page.waitForTimeout(3000);
   }
 
   async waitForGeneratedAnswerCustomUaAnalytics(
