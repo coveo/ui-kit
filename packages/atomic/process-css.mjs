@@ -71,7 +71,7 @@ function processCssFiles(srcDir, distDir) {
         const relPath = relative(srcDir, srcPath);
         const distPath = join(distDir, relPath);
         const targetDir = dirname(distPath);
-        console.log(`Processing ${srcPath}`);
+        console.log(`Processing CSS for ${srcPath}`);
 
         mkdir(targetDir, {recursive: true}, (err) => {
           if (err) {
