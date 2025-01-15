@@ -2,7 +2,7 @@ import {defineConfig} from 'vitest/config';
 
 export default defineConfig({
   test: {
-    include: ['src/**/atomic-text.test.ts'],
+    include: ['src/**/*.spec.ts'],
     globals: true,
     browser: {
       enabled: true,

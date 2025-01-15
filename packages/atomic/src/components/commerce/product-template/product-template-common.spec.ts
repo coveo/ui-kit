@@ -1,14 +1,15 @@
+import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import {makeMatchConditions} from './product-template-common';
 
 describe('makeMatchConditions', () => {
-  let consoleErrorSpy: jest.SpyInstance;
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    vi.restoreAllMocks();
   });
 
   it('should log a warning and return an always-false callback', () => {

@@ -3,10 +3,11 @@ import {
   getSampleSearchEngineConfiguration,
   SearchEngineConfiguration,
 } from '@coveo/headless';
+import {vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createAtomicStore} from './store';
 
-jest.mock('../../../global/environment');
+vi.mock('../../../global/environment');
 
 describe('analyticsConfig', () => {
   let config: SearchEngineConfiguration;

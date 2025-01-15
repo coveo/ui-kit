@@ -1,3 +1,4 @@
+import {describe, it, expect, vi} from 'vitest';
 import {
   once,
   camelToKebab,
@@ -7,9 +8,15 @@ import {
   aggregate,
 } from './utils';
 
+vi.mock('@stencil/core', () => ({
+  getAssetPath: vi.fn((path: string) => {
+    return `${path}`;
+  }),
+}));
+
 describe('once', () => {
   it('should call the function only once', () => {
-    const myFunction = jest.fn();
+    const myFunction = vi.fn();
     const executeOnce = once(myFunction);
     executeOnce();
     executeOnce();

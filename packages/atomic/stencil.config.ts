@@ -145,17 +145,6 @@ export const config: Config = {
       file: './docs/atomic-docs.json',
     },
   ].filter(Boolean),
-  testing: {
-    browserArgs: ['--no-sandbox'],
-    transform: {
-      '^.+\\.html?$': 'html-loader-jest',
-      '^.+\\.svg$': './svg.transform.cjs',
-    },
-    transformIgnorePatterns: [],
-    testPathIgnorePatterns: ['.snap'],
-    setupFiles: ['./jest/setup.cjs', 'jest-localstorage-mock'],
-    resetMocks: false,
-  },
   devServer: {
     reloadStrategy: 'pageReload',
   },
