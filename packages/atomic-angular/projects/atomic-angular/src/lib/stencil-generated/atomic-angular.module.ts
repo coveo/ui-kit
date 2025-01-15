@@ -141,7 +141,6 @@ AtomicSortExpression,
 AtomicTab,
 AtomicTabManager,
 AtomicTableElement,
-AtomicText,
 AtomicTimeframe,
 AtomicTimeframeFacet
 } from './components';
@@ -288,7 +287,6 @@ AtomicSortExpression,
 AtomicTab,
 AtomicTabManager,
 AtomicTableElement,
-AtomicText,
 AtomicTimeframe,
 AtomicTimeframeFacet
 ]
