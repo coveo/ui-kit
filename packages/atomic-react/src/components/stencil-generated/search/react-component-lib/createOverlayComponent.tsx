@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { OverlayEventDetail } from './interfaces';
-import { StencilReactForwardedRef, attachProps, dashToPascalCase, defineCustomElement, setRef } from './utils';
+import { OverlayEventDetail } from './interfaces.js';
+import { StencilReactForwardedRef, attachProps, dashToPascalCase, defineCustomElement, setRef } from './utils/index.js';
 
 interface OverlayElement extends HTMLElement {
   present: () => Promise<void>;
