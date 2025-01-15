@@ -190,7 +190,7 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
         trackingId: new StringValue({
           required: false,
           emptyAllowed: false,
-          regex: /^[a-zA-Z0-9_\\-\\.]{1,100}$/,
+          regex: /^[a-zA-Z0-9_\-\\.]{1,100}$/,
         }),
       },
     }),
