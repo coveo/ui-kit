@@ -1,3 +1,9 @@
+## 3.3.0 (2025-01-15)
+
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+- feat(genqa): add collapsible height option to the component (#4817) ([db77dd0](https://github.com/coveo/ui-kit/commits/db77dd0)), closes [#4817](https://github.com/coveo/ui-kit/issues/4817)
+
 ## <small>3.2.9 (2025-01-08)</small>
 
 - chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
