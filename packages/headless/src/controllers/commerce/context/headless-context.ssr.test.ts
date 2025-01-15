@@ -2,7 +2,7 @@ import {SSRCommerceEngine} from '../../../app/commerce-ssr-engine/factories/buil
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {MissingControllerProps} from '../../../utils/errors.js';
-import {buildContext, ContextOptions} from './headless-context.js';
+import {buildContext, ContextOptions, Context} from './headless-context.js';
 import {ContextDefinition, defineContext} from './headless-context.ssr.js';
 
 vi.mock('./headless-context');
@@ -20,7 +20,11 @@ describe('define commerce context', () => {
   let contextDefinition: ContextDefinition;
 
   beforeEach(() => {
+    buildContextMock.mockReturnValue({} as Context);
     contextDefinition = defineContext();
+  });
+
+  afterEach(() => {
     buildContextMock.mockClear();
   });
 
