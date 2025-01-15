@@ -21,7 +21,7 @@ import {
   PopoverChildFacet,
   popoverClass,
 } from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

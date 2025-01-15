@@ -3,8 +3,8 @@ import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
-import {Hidden} from '../hidden';
 import {AnyBindings} from '../interface/bindings';
+import {Hidden} from '../stencil-hidden';
 import {
   DateFacet,
   DateFacetValue,

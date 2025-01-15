@@ -1,6 +1,6 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
-import {Hidden} from '../hidden';
+import {Hidden} from '../stencil-hidden';
 
 interface TabGuardProps {
   tabsIncluded: string | string[];
