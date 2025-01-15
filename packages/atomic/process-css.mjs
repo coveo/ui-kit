@@ -34,6 +34,10 @@ function minifyCss(result, filename) {
     .code.toString();
 }
 
+function escapeString(str) {
+  return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+}
+
 function convertCssToJs(srcPath, distPath, file) {
   readFile(srcPath, 'utf8', async (err, data) => {
     if (err) {
@@ -41,10 +45,7 @@ function convertCssToJs(srcPath, distPath, file) {
     }
 
     const processedCss = await processAndMinifyCss(data, srcPath);
-    const jsContent = `export default \`${processedCss.replace(
-      /`/g,
-      '\\`'
-    )}\`;`;
+    const jsContent = `export default \`${escapeString(processedCss)}\`;`;
     const jsPath = distPath + '.js';
 
     writeFile(jsPath, jsContent, (err) => {
