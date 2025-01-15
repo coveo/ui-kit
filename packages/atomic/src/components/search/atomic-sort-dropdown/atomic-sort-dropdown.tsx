@@ -84,25 +84,22 @@ export class AtomicSortDropdown implements InitializableComponent {
       return;
     }
 
-    this.bindings.store.set(
-      'sortOptions',
-      sortExpressionElements.map(
-        ({expression, label, tabsIncluded, tabsExcluded}) => {
-          new Schema({
-            label: new StringValue({emptyAllowed: false, required: true}),
-          }).validate({label});
+    this.bindings.store.state.sortOptions = sortExpressionElements.map(
+      ({expression, label, tabsIncluded, tabsExcluded}) => {
+        new Schema({
+          label: new StringValue({emptyAllowed: false, required: true}),
+        }).validate({label});
 
-          return {
-            tabs: {
-              included: tabsIncluded,
-              excluded: tabsExcluded,
-            },
-            criteria: parseCriterionExpression(expression),
-            expression,
-            label,
-          };
-        }
-      )
+        return {
+          tabs: {
+            included: tabsIncluded,
+            excluded: tabsExcluded,
+          },
+          criteria: parseCriterionExpression(expression),
+          expression,
+          label,
+        };
+      }
     );
   }
 
