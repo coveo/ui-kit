@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { StyleReactProps } from '../interfaces';
+import type { StyleReactProps } from '../interfaces.js';
 
 export type StencilReactExternalProps<PropType, ElementType> = PropType &
   Omit<React.HTMLAttributes<ElementType>, 'style'> &
