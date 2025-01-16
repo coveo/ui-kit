@@ -1,5 +1,4 @@
 import {DateFacetValue, NumericFacetValue} from '@coveo/headless';
-import {createStore} from '@stencil/store';
 import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
@@ -8,6 +7,68 @@ import {
   FacetValueFormat,
 } from '../facets/facet-common-store';
 import {AnyEngineType} from './bindings';
+
+export function createStore<StoreData extends Record<string, unknown>>(
+  initialState: StoreData
+): CommonStore<StoreData> {
+  const listeners = new Map<
+    keyof StoreData,
+    Set<(newValue: unknown) => void>
+  >();
+
+  const state = new Proxy(initialState, {
+    set(target, prop: string, value) {
+      const oldValue = target[prop];
+      if (oldValue !== value) {
+        (target as Record<string, unknown>)[prop] = value;
+
+        if (listeners.has(prop)) {
+          for (const cb of listeners.get(prop)!) {
+            cb(value);
+          }
+        }
+      }
+      return true;
+    },
+  });
+
+  const get = <PropName extends keyof StoreData>(
+    propName: PropName
+  ): StoreData[PropName] => {
+    return state[propName];
+  };
+
+  const set = <PropName extends keyof StoreData>(
+    propName: PropName,
+    value: StoreData[PropName]
+  ): void => {
+    state[propName] = value;
+  };
+
+  const onChange = <PropName extends keyof StoreData>(
+    propName: PropName,
+    callback: (newValue: StoreData[PropName]) => void
+  ): (() => void) => {
+    if (!listeners.has(propName)) {
+      listeners.set(propName, new Set());
+    }
+    listeners.get(propName)!.add(callback as (newValue: unknown) => void);
+
+    return () => {
+      listeners.get(propName)!.delete(callback as (newValue: unknown) => void);
+      if (listeners.get(propName)!.size === 0) {
+        listeners.delete(propName);
+      }
+    };
+  };
+
+  return {
+    state,
+    get,
+    set,
+    onChange,
+  };
+}
 
 export interface CommonStore<StoreData> {
   state: StoreData;
@@ -112,4 +173,17 @@ export function waitUntilAppLoaded(
       }
     });
   }
+}
+
+export function createAppLoadedListener(
+  store: CommonStore<{loadingFlags: string[]}>,
+  callback: (isAppLoaded: boolean) => void
+) {
+  const updateIsAppLoaded = () => {
+    const isAppLoaded = store.state.loadingFlags.length === 0;
+    callback(isAppLoaded);
+  };
+
+  store.onChange('loadingFlags', updateIsAppLoaded);
+  updateIsAppLoaded();
 }
