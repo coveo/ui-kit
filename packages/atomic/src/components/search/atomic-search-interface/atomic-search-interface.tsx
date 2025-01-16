@@ -32,7 +32,6 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -44,16 +43,12 @@ import {
   noResultsSelector,
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import {AtomicStore, createAtomicStore} from './store';
+import type {Bindings as _Bindings} from './interfaces';
+import {createSearchStore, SearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
-export type Bindings = CommonBindings<
-  SearchEngine,
-  AtomicStore,
-  HTMLAtomicSearchInterfaceElement
-> &
-  NonceBindings;
+export type Bindings = _Bindings;
 
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
@@ -72,7 +67,7 @@ export class AtomicSearchInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createAtomicStore();
+  private store: SearchStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
 
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
@@ -203,6 +198,7 @@ export class AtomicSearchInterface
       this,
       'CoveoAtomic'
     );
+    this.store = createSearchStore();
   }
 
   public connectedCallback() {
@@ -286,7 +282,7 @@ export class AtomicSearchInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {
@@ -420,7 +416,7 @@ export class AtomicSearchInterface
       'atomic-search-layout'
     )?.mobileBreakpoint;
     if (breakpoint) {
-      this.store.set('mobileBreakpoint', breakpoint);
+      this.store.state.mobileBreakpoint = breakpoint;
     }
   }
 

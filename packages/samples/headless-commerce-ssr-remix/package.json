@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.2.0",
+    "@coveo/headless-react": "2.4.2",
     "@remix-run/node": "2.15.2",
     "@remix-run/react": "2.15.2",
     "@remix-run/serve": "2.15.2",
@@ -22,8 +22,8 @@
     "@remix-run/dev": "2.15.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "autoprefixer": "10.4.20",
     "typescript": "5.5.4",
+    "vite": "5.4.11",
     "vite-tsconfig-paths": "5.1.4"
   }
 }

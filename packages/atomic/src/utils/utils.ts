@@ -1,5 +1,3 @@
-import {getAssetPath} from '@stencil/core';
-import {NODE_TYPES} from '@stencil/core/mock-doc';
 import DOMPurify from 'dompurify';
 
 /**
@@ -57,11 +55,11 @@ export function parseHTML(string: string) {
 }
 
 export function isElementNode(node: Node): node is Element {
-  return node.nodeType === NODE_TYPES.ELEMENT_NODE;
+  return node.nodeType === Node.ELEMENT_NODE;
 }
 
 export function isTextNode(node: Node): node is Text {
-  return node.nodeType === NODE_TYPES.TEXT_NODE;
+  return node.nodeType === Node.TEXT_NODE;
 }
 
 export function isVisualNode(node: Node) {
@@ -82,6 +80,12 @@ export function containsVisualElement(node: Node) {
     }
   }
   return false;
+}
+
+export function getAssetPath(path: string): string {
+  const baseUrl = window.location.origin;
+  const assetUrl = new URL(path, baseUrl);
+  return assetUrl.origin !== baseUrl ? assetUrl.href : assetUrl.pathname;
 }
 
 export function parseAssetURL(url: string, assetPath = './assets') {
@@ -117,33 +121,7 @@ export function elementHasAncestorTag(
   return elementHasAncestorTag(parentElement, tagName);
 }
 
-export function closest<K extends keyof HTMLElementTagNameMap>(
-  element: Element | null,
-  selector: K
-): HTMLElementTagNameMap[K] | null;
-export function closest<K extends keyof SVGElementTagNameMap>(
-  element: Element | null,
-  selector: K
-): SVGElementTagNameMap[K] | null;
-export function closest<E extends Element = Element>(
-  element: Element | null,
-  selector: string
-): E | null;
-export function closest(
-  element: Element | null,
-  selector: string
-): HTMLElement | null {
-  if (!element) {
-    return null;
-  }
-  if (element.matches(selector)) {
-    return element as HTMLElement;
-  }
-  if (element.parentNode instanceof ShadowRoot) {
-    return closest(element.parentNode.host, selector);
-  }
-  return closest(element.parentElement, selector);
-}
+export {closest} from './dom-utils';
 
 export const sortByDocumentPosition = (a: Node, b: Node): 1 | -1 =>
   a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;

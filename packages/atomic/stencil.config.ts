@@ -1,4 +1,3 @@
-import alias from '@rollup/plugin-alias';
 import replacePlugin from '@rollup/plugin-replace';
 import {postcss} from '@stencil-community/postcss';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
@@ -24,13 +23,6 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const packageMappings = generateExternalPackageMappings(__dirname);
 
-function generateAliasEntries() {
-  return Object.entries(packageMappings).map(([find, paths]) => ({
-    find,
-    replacement: paths.devWatch,
-  }));
-}
-
 function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
     recursive: true,
@@ -41,26 +33,6 @@ function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
 }
 function getPackageVersion(): string {
   return JSON.parse(readFileSync('package.json', 'utf-8')).version;
-}
-
-function replaceHeadlessMap() {
-  return {
-    name: 'replace-map-for-headless-dev',
-    generateBundle: (options, bundle) => {
-      const headlessBundle = Object.keys(bundle).find(
-        (bundle) => bundle.indexOf('headless.esm') !== -1
-      );
-      if (!headlessBundle) {
-        return;
-      }
-
-      bundle[headlessBundle].map = null;
-
-      bundle[headlessBundle].code +=
-        '//# sourceMappingURL=./headless/headless.esm.js.map';
-      return bundle;
-    },
-  };
 }
 
 function replace() {
@@ -100,7 +72,8 @@ const externalizeDependenciesPlugin: PluginImpl = () => {
 const isDevWatch: boolean =
   process.argv &&
   process.argv.indexOf('--dev') > -1 &&
-  process.argv.indexOf('--watch') > -1;
+  process.argv.indexOf('--watch') > -1 &&
+  process.env.IS_DEV === 'true';
 
 export const config: Config = {
   tsconfig: 'tsconfig.stencil.json',
@@ -139,18 +112,22 @@ export const config: Config = {
           )
         ),
       }),
-    angular({
-      componentCorePackage: '@coveo/atomic',
-      directivesProxyFile:
-        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
-    }),
-    angularModule({
-      moduleFile:
-        '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
-    }),
+    !isDevWatch &&
+      angular({
+        componentCorePackage: '@coveo/atomic',
+        directivesProxyFile:
+          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/components.ts',
+      }),
+    !isDevWatch &&
+      angularModule({
+        moduleFile:
+          '../atomic-angular/projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts',
+      }),
     {
       type: 'dist-custom-elements',
       generateTypeDeclarations: false,
+      dir: 'dist/atomic/components',
+      customElementsExportBehavior: 'single-export-module',
     },
     {
       type: 'dist',
@@ -159,7 +136,7 @@ export const config: Config = {
       copy: [
         {src: 'themes'},
         {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
+          src: '../../../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
           dest: 'assets',
         },
       ],
@@ -167,21 +144,6 @@ export const config: Config = {
     {
       type: 'docs-json',
       file: './docs/atomic-docs.json',
-    },
-    {
-      type: 'www',
-      serviceWorker: null, // disable service worker
-      copy: [
-        {src: 'pages', keepDirStructure: false},
-        {src: 'themes'},
-        isDevWatch
-          ? {src: 'external-builds', dest: 'build/headless'}
-          : {src: ''},
-        {
-          src: '../node_modules/@salesforce-ux/design-system/assets/icons/{doctype,standard}/*.svg',
-          dest: 'build/assets',
-        },
-      ].filter((n) => n.src),
     },
   ].filter(Boolean),
   testing: {
@@ -221,14 +183,9 @@ export const config: Config = {
   ],
   rollupPlugins: {
     before: [
-      isDevWatch &&
-        alias({
-          entries: generateAliasEntries(),
-        }),
       html({
         include: 'src/templates/**/*.html',
       }),
-      isDevWatch && replaceHeadlessMap(),
       externalizeDependenciesPlugin(),
     ],
   },

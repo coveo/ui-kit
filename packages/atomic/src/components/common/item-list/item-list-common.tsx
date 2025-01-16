@@ -4,8 +4,12 @@ import {
 } from '../../../utils/accessibility-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
 import {defer, once} from '../../../utils/utils';
+import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
+import {InsightStore} from '../../insight/atomic-insight-interface/store';
+import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
+import {SearchStore} from '../../search/atomic-search-interface/store';
 import {AnyItem} from '../interface/item';
-import {AtomicCommonStore, AtomicCommonStoreData} from '../interface/store';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -22,7 +26,12 @@ export type ItemRenderingFunction<SpecificResult extends AnyItem = AnyItem> =
   | undefined;
 
 export interface ItemListCommonProps {
-  store: AtomicCommonStore<AtomicCommonStoreData>;
+  store:
+    | CommerceStore
+    | CommerceRecommendationStore
+    | RecsStore
+    | InsightStore
+    | SearchStore;
   loadingFlag: string;
   host: HTMLElement;
   nextNewItemTarget: FocusTargetController;
@@ -38,7 +47,7 @@ export class ItemListCommon {
 
   constructor(private props: ItemListCommonProps) {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
-    this.props.store.registerResultList(this);
+    this.props.store.state.resultList = this;
     this.updateBreakpointsOnce = once(() => updateBreakpoints(this.props.host));
   }
 
