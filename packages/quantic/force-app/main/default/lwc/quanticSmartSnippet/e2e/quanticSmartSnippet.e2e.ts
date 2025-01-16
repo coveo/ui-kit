@@ -17,42 +17,34 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when the smart snippet is expanded', () => {
-      test.describe('when the source title is clicked', () => {
-        test('should send the correct UA analytics event', async ({
-          smartSnippet,
-        }) => {
-          const smartSnippetTitleClickPromise =
-            smartSnippet.waitForSmartSnippetSourceClickUaAnalytics();
-          await smartSnippet.clickOnSourceTitle();
-          await smartSnippetTitleClickPromise;
-        });
+      test('should send the source title analytics event when the title is clicked', async ({
+        smartSnippet,
+      }) => {
+        const smartSnippetTitleClickPromise =
+          smartSnippet.waitForSmartSnippetSourceClickUaAnalytics();
+        await smartSnippet.clickOnSourceTitle();
+        await smartSnippetTitleClickPromise;
       });
 
-      test.describe('when the source uri is clicked', () => {
-        test('should send the correct UA analytics event', async ({
-          smartSnippet,
-        }) => {
-          const smartSnippetUriClickPromise =
-            smartSnippet.waitForSmartSnippetSourceClickUaAnalytics();
-          await smartSnippet.clickOnSourceUri();
-          await smartSnippetUriClickPromise;
-        });
+      test('should send the source uri analytics event when the source uri is clicked', async ({
+        smartSnippet,
+      }) => {
+        const smartSnippetUriClickPromise =
+          smartSnippet.waitForSmartSnippetSourceClickUaAnalytics();
+        await smartSnippet.clickOnSourceUri();
+        await smartSnippetUriClickPromise;
       });
 
-      test.describe('when an inline link within the smart snippet answer is clicked', () => {
-        test('should send the correct UA analytics event', async ({
-          smartSnippet,
-        }) => {
-          const smartSnippetUriClickPromise =
-            smartSnippet.waitForSmartSnippetInlineLinkClickUaAnalytics();
-          await smartSnippet.clickOnFirstInlineLink();
-          await smartSnippetUriClickPromise;
-        });
+      test('should send the inline link analytics event when the inline link is clicked', async ({
+        smartSnippet,
+      }) => {
+        const smartSnippetUriClickPromise =
+          smartSnippet.waitForSmartSnippetInlineLinkClickUaAnalytics();
+        await smartSnippet.clickOnFirstInlineLink();
+        await smartSnippetUriClickPromise;
       });
-    });
 
-    test.describe('when expanding and collapsing the smart snippet', () => {
-      test('should send the correct UA analytics events', async ({
+      test('should send the expand and collapse analytics events', async ({
         smartSnippet,
       }) => {
         const expandSmartSnippetAnalyticsPromise =
@@ -67,58 +59,58 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe('when clicking on the feedback like button', () => {
-      test('should send the correct UA analytics event', async ({
-        smartSnippet,
-      }) => {
-        const likeAnalyticsPromise =
-          smartSnippet.waitForLikeSmartSnippetUaAnalytics();
-        await smartSnippet.clickLikeButton();
-        await likeAnalyticsPromise;
-      });
-    });
-
-    test.describe('when clicking on the feedback dislike button', () => {
-      test('should send the correct UA analytics event', async ({
-        smartSnippet,
-      }) => {
-        const dislikeAnalyticsPromise =
-          smartSnippet.waitForDislikeSmartSnippetUaAnalytics();
-        await smartSnippet.clickDislikeButton();
-        await dislikeAnalyticsPromise;
-      });
-
-      test.describe('when opening the feedback modal and providing feedback', () => {
-        test('should send the correct UA analytics events', async ({
-          smartSnippet,
-        }) => {
-          const expectedReason = 'does_not_answer';
-
-          const openFeedbackModalAnalyticsPromise =
-            smartSnippet.waitForOpenFeedbackModalUaAnalytics();
-          await smartSnippet.clickDislikeButton();
-          await smartSnippet.clickExplainWhyButton();
-          await openFeedbackModalAnalyticsPromise;
-
-          const submitFeedbackAnalyticsPromise =
-            smartSnippet.waitForFeedbackSubmitUaAnalytics(expectedReason);
-
-          await smartSnippet.selectFirstFeedbackOptionLabel();
-          await smartSnippet.clickFeedbackSubmitButton();
-          await submitFeedbackAnalyticsPromise;
+    test.describe('feedback modal interactions', () => {
+      test.describe('when clicking on the feedback like button', () => {
+        test('should send the like analytics event', async ({smartSnippet}) => {
+          const likeAnalyticsPromise =
+            smartSnippet.waitForLikeSmartSnippetUaAnalytics();
+          await smartSnippet.clickLikeButton();
+          await likeAnalyticsPromise;
         });
       });
 
-      test.describe('when closing the feedback modal', () => {
-        test('should send the correct close feedback modal UA analytics event', async ({
+      test.describe('when clicking on the feedback dislike button', () => {
+        test('should send the dislike analytics event', async ({
           smartSnippet,
         }) => {
+          const dislikeAnalyticsPromise =
+            smartSnippet.waitForDislikeSmartSnippetUaAnalytics();
           await smartSnippet.clickDislikeButton();
-          await smartSnippet.clickExplainWhyButton();
-          const closeFeedbackModalAnalyticsPromise =
-            smartSnippet.waitForCloseFeedbackModalUaAnalytics();
-          await smartSnippet.clickFeedbackModalCancelButton();
-          await closeFeedbackModalAnalyticsPromise;
+          await dislikeAnalyticsPromise;
+        });
+
+        test.describe('when opening the feedback modal and providing feedback', () => {
+          test('should send the smart snippet reason analytics events', async ({
+            smartSnippet,
+          }) => {
+            const expectedReason = 'does_not_answer';
+
+            const openFeedbackModalAnalyticsPromise =
+              smartSnippet.waitForOpenFeedbackModalUaAnalytics();
+            await smartSnippet.clickDislikeButton();
+            await smartSnippet.clickExplainWhyButton();
+            await openFeedbackModalAnalyticsPromise;
+
+            const submitFeedbackAnalyticsPromise =
+              smartSnippet.waitForFeedbackSubmitUaAnalytics(expectedReason);
+
+            await smartSnippet.selectFirstFeedbackOptionLabel();
+            await smartSnippet.clickFeedbackSubmitButton();
+            await submitFeedbackAnalyticsPromise;
+          });
+        });
+
+        test.describe('when closing the feedback modal', () => {
+          test('should send the correct close feedback modal analytics event', async ({
+            smartSnippet,
+          }) => {
+            await smartSnippet.clickDislikeButton();
+            await smartSnippet.clickExplainWhyButton();
+            const closeFeedbackModalAnalyticsPromise =
+              smartSnippet.waitForCloseFeedbackModalUaAnalytics();
+            await smartSnippet.clickFeedbackModalCancelButton();
+            await closeFeedbackModalAnalyticsPromise;
+          });
         });
       });
     });
