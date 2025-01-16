@@ -8,8 +8,6 @@
 .generated-answer__answer {
   overflow: hidden;
   position: relative;
-  max-height: var(--maxHeight, 250px);
-  content: '';
 }
 
 .generated-answer__footer {
