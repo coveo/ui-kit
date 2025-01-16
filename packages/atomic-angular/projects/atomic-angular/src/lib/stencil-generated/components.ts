@@ -3108,4 +3108,3 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 
 import type {} from '@coveo/atomic/components';
-import type {} from '@coveo/atomic/components';
