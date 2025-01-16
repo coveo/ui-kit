@@ -67,17 +67,18 @@
  * @module SSR Commerce
  */
 
+export type {
+  CommerceEngineDefinitionOptions,
+  SSRCommerceEngine as CommerceEngine,
+} from './app/commerce-ssr-engine/factories/build-factory.js';
+
 export type {Unsubscribe, Middleware} from '@reduxjs/toolkit';
 export type {Relay} from '@coveo/relay';
 
 // Main App
 export type {CommerceEngineOptions} from './app/commerce-engine/commerce-engine.js';
 export type {CommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
-export type {
-  SSRCommerceEngine as CommerceEngine,
-  CommerceEngineDefinition,
-  CommerceEngineDefinitionOptions,
-} from './app/commerce-engine/commerce-engine.ssr.js';
+export type {CommerceEngineDefinition} from './app/commerce-engine/commerce-engine.ssr.js';
 export {defineCommerceEngine} from './app/commerce-engine/commerce-engine.ssr.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 
@@ -90,6 +91,7 @@ export type {
 } from './app/engine-configuration.js';
 export {SolutionType} from './app/commerce-ssr-engine/types/common.js';
 export type {
+  ControllerDefinition,
   ControllerDefinitionsMap,
   InferControllerFromDefinition,
   InferControllersMapFromDefinition,
@@ -97,8 +99,14 @@ export type {
   InferControllerStaticStateMapFromControllers,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllerPropsMapFromDefinitions,
+  EngineStaticState,
+  EngineDefinitionBuildResult,
+  EngineDefinitionControllersPropsOption,
+  HydratedState,
+  OptionsTuple,
+  ControllerWithKind,
 } from './app/commerce-ssr-engine/types/common.js';
-export type {Build} from './app/ssr-engine/types/build.js';
+export {Kind} from './app/commerce-ssr-engine/types/kind.js';
 export type {
   EngineDefinition,
   InferStaticState,
@@ -106,6 +114,12 @@ export type {
   InferBuildResult,
   HydrateStaticState,
   FetchStaticState,
+  FetchStaticStateOptions,
+  HydrateStaticStateOptions,
+  Build,
+  BuildOptions,
+  FromBuildResult,
+  FromBuildResultOptions,
 } from './app/commerce-ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
 export type {
@@ -171,6 +185,7 @@ export {definePagination} from './controllers/commerce/core/pagination/headless-
 export type {
   ParameterManager,
   ParameterManagerProps,
+  SSRParameterManagerProps,
   ParameterManagerState,
   Parameters,
   ProductListingParameters,
@@ -199,6 +214,7 @@ export type {
   CartItem,
   CartProps,
   CartState,
+  CartBuildProps,
   CartDefinition,
 } from './controllers/commerce/context/cart/headless-cart.ssr.js';
 export {defineCart} from './controllers/commerce/context/cart/headless-cart.ssr.js';
@@ -344,7 +360,6 @@ export type {
   ChildProduct,
 } from './api/commerce/common/product.js';
 export type {
-  SortCriterion,
   SortByDate,
   SortByField,
   SortByNoSort,
@@ -352,7 +367,6 @@ export type {
   SortByRelevancy,
 } from './features/sort-criteria/criteria.js';
 export {
-  SortBy,
   SortOrder,
   buildDateSortCriterion,
   buildCriterionExpression,
@@ -361,6 +375,9 @@ export {
   buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
 } from './features/sort-criteria/criteria.js';
+export type {SortCriterion} from './features/commerce/sort/sort.js';
+
+export {SortBy} from './features/commerce/sort/sort.js';
 export {parseCriterionExpression} from './features/sort-criteria/criteria-parser.js';
 export type {Template} from './features/templates/templates-manager.js';
 export type {
@@ -372,7 +389,7 @@ export {ProductTemplatesHelpers} from './features/commerce/product-templates/pro
 
 export type {PlatformEnvironment} from './utils/url-utils.js';
 
-export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer.js';
+export {buildParameterSerializer} from './features/commerce/parameters/parameters-serializer.ssr.js';
 export type {HighlightKeyword} from './utils/highlight.js';
 export {VERSION} from './utils/version.js';
 export type {

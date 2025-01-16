@@ -11,10 +11,7 @@ import {
 } from '../../../features/commerce/pagination/pagination-selectors.js';
 import {Parameters} from '../../../features/commerce/parameters/parameters-actions.js';
 import {parametersDefinition} from '../../../features/commerce/parameters/parameters-schema.js';
-import {
-  activeParametersSelector,
-  enrichedParametersSelector,
-} from '../../../features/commerce/parameters/parameters-selectors.js';
+import {activeParametersSelector} from '../../../features/commerce/parameters/parameters-selectors.js';
 import {productListingSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
 import {restoreProductListingParameters} from '../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {
@@ -47,6 +44,8 @@ import {ProductListingSummaryState} from './summary/headless-product-listing-sum
 
 /**
  * The `ProductListing` controller exposes a method for retrieving product listing content in a commerce interface.
+ *
+ * Example: [product-listing.fn.tsx](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/commerce/product-listing.fn.tsx)
  *
  * @group Buildable controllers
  * @category ProductListing
@@ -128,7 +127,6 @@ export function buildProductListing(engine: CommerceEngine): ProductListing {
     parametersDefinition,
     activeParametersSelector,
     restoreActionCreator: restoreProductListingParameters,
-    enrichParameters: enrichedParametersSelector,
     isLoadingSelector,
     errorSelector,
     pageSelector: pagePrincipalSelector,

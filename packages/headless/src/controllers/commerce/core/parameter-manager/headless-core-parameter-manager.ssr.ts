@@ -4,11 +4,16 @@ import {
   SolutionType,
   SubControllerDefinitionWithProps,
 } from '../../../../app/commerce-ssr-engine/types/common.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../../app/commerce-ssr-engine/types/kind.js';
 import {CoreEngineNext} from '../../../../app/engine.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {paginationReducer as commercePagination} from '../../../../features/commerce/pagination/pagination-slice.js';
 import {Parameters} from '../../../../features/commerce/parameters/parameters-actions.js';
+import {parametersReducer as commerceParameters} from '../../../../features/commerce/parameters/parameters-slice.js';
 import {ProductListingParameters} from '../../../../features/commerce/product-listing-parameters/product-listing-parameters-actions.js';
 import {queryReducer as query} from '../../../../features/commerce/query/query-slice.js';
 import {CommerceSearchParameters} from '../../../../features/commerce/search-parameters/search-parameters-actions.js';
@@ -46,26 +51,42 @@ export function defineParameterManager<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     buildWithProps: (engine, props, solutionType) => {
       if (solutionType === SolutionType.listing) {
         if (!loadCommerceProductListingParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildProductListing(engine).parameterManager(props);
+        const controller = buildProductListing(engine).parameterManager({
+          ...props,
+          excludeDefaultParameters: true,
+        });
+
+        return createControllerWithKind(controller, Kind.ParameterManager);
       } else {
         if (!loadCommerceSearchParameterReducers(engine)) {
           throw loadReducerError;
         }
-        return buildSearch(engine).parameterManager(props);
+
+        const controller = buildSearch(engine).parameterManager({
+          ...props,
+          excludeDefaultParameters: true,
+        });
+
+        return createControllerWithKind(controller, Kind.ParameterManager);
       }
     },
   } as SubControllerDefinitionWithProps<
-    ParameterManager<MappedParameterTypes<typeof options>>,
+    ParameterManager<MappedParameterTypes<TOptions>>,
     TOptions,
-    ParameterManagerProps<MappedParameterTypes<typeof options>>
+    SSRParameterManagerProps<MappedParameterTypes<TOptions>>
   >;
 }
+
+export interface SSRParameterManagerProps<T extends Parameters>
+  extends Omit<ParameterManagerProps<T>, 'excludeDefaultParameters'> {}
 
 type MappedParameterTypes<
   TOptions extends ControllerDefinitionOption | undefined,
@@ -81,6 +102,7 @@ function loadCommerceCommonParameterReducers(
   engine: CoreEngineNext
 ): engine is CoreEngineNext<ParameterManager<Parameters>> {
   engine.addReducers({
+    commerceParameters,
     commerceFacetSet,
     commerceSort,
     commercePagination,

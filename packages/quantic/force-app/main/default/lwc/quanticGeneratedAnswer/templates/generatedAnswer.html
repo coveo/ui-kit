@@ -1,14 +1,18 @@
 <template>
   <template lwc:if={shouldDisplayGeneratedAnswer}>
-    <div data-cy="generated-answer__card" class="slds-box">
+    <div data-testid="generated-answer__card" class="slds-box">
       <div class="generated-answer__card-header slds-grid">
         <span
+          data-testid="generated-answer__badge"
           class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
           >{labels.generatedAnswerForYou}</span
         >
         <div class="generated-answer__header-actions slds-grid">
           <template lwc:if={shouldDisplayActions}>
-            <div class="slds-grid flex-one slds-grid_align-end">
+            <div
+              data-testid="generated-answer__actions"
+              class="slds-grid flex-one slds-grid_align-end"
+            >
               <c-quantic-feedback
                 state={feedbackState}
                 onquantic__like={handleLike}
@@ -24,7 +28,7 @@
                 data-cy="generated-answer__feedback"
               ></c-quantic-feedback>
               <c-quantic-generated-answer-copy-to-clipboard
-                data-cy="generated-answer__copy-to-clipboard"
+                data-testid="generated-answer__copy-to-clipboard"
                 answer={answer}
                 class="slds-var-m-horizontal_xx-small"
               ></c-quantic-generated-answer-copy-to-clipboard>
@@ -49,34 +53,44 @@
               answer-content-format={answerContentFormat}
               answer={answer}
               is-streaming={isStreaming}
-              data-cy="generated-answer__content">
+              data-cy="generated-answer__content"
+            >
             </c-quantic-generated-answer-content>
           </div>
           <div
             data-cy="generated-answer__footer"
             class={generatedAnswerFooterCssClass}
           >
-            <div class={generatedAnswerFooterRowClass} data-cy="generated-answer__footer-row">
+            <div
+              class={generatedAnswerFooterRowClass}
+              data-cy="generated-answer__footer-row"
+            >
               <template lwc:if={shouldDisplayCitations}>
                 <div class="slds-var-m-top_small">
                   <c-quantic-source-citations
                     engine-id={engineId}
-                    data-cy="generated-answer__citations"
+                    data-testid="generated-answer__citations"
                     citations={citations}
                     citation-hover-handler={handleCitationHover}
                   ></c-quantic-source-citations>
                 </div>
               </template>
             </div>
-            <div class={generatedAnswerFooterRowClass} data-cy="generated-answer__footer-row">
+            <div
+              class={generatedAnswerFooterRowClass}
+              data-cy="generated-answer__footer-row"
+            >
               <template lwc:if={shouldShowCollapseGeneratingMessage}>
-                <div class="generated-answer__collapse-generating-message">
+                <div
+                  data-testid="generated-answer__collapse-generating-message"
+                  class="generated-answer__collapse-generating-message"
+                >
                   {labels.generatingAnswer}...
                 </div>
               </template>
               <template lwc:if={shouldShowToggleCollapseAnswer}>
                 <lightning-button
-                  data-cy="generated-answer__answer-toggle"
+                  data-testid="generated-answer__answer-toggle"
                   icon-name={toggleCollapseAnswerIcon}
                   variant="base"
                   label={toggleCollapseAnswerLabel}
@@ -89,7 +103,7 @@
               <template lwc:if={shouldShowDisclaimer}>
                 <div
                   class="generated-answer__disclaimer slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small"
-                  data-cy="generated-answer__disclaimer"
+                  data-testid="generated-answer__disclaimer"
                 >
                   <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>
                 </div>

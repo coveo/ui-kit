@@ -4,152 +4,156 @@
     </c-quantic-component-error>
   </template>
   <template lwc:else>
-    <template if:true={showPlaceholder}>
-      <c-quantic-placeholder
-        variant="card"
-        number-of-rows={numberOfValues}
-      ></c-quantic-placeholder>
-    </template>
-    <template if:true={hasValues}>
-      <div class="slds-size_1-of-1 slds-var-m-bottom_large">
-        <c-quantic-card-container
-          title={label}
-          onquantic__headerclick={toggleFacetVisibility}
-          onquantic__headerkeydown={toggleFacetVisibility}
-        >
-          <lightning-button-icon
-            class={actionButtonCssClasses}
-            slot="actions"
-            onmousedown={preventDefault}
-            icon-name={actionButtonIcon}
-            alternative-text={actionButtonLabel}
-            variant="bare"
-            tabindex="-1"
-            aria-hidden="true"
-          >
-          </lightning-button-icon>
-          <template if:true={hasActiveValues}>
-            <button
-              class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-horizontal_x-small slds-m-top_small"
-              onclick={clearSelections}
-              title={clearFilterLabel}
-              aria-label={clearFilterAriaLabelValue}
+    <template lwc:if={isFacetEnabled}>
+      <div data-test="facet-content">
+        <template if:true={showPlaceholder}>
+          <c-quantic-placeholder
+            variant="card"
+            number-of-rows={numberOfValues}
+          ></c-quantic-placeholder>
+        </template>
+        <template if:true={hasValues}>
+          <div class="slds-size_1-of-1 slds-var-m-bottom_large">
+            <c-quantic-card-container
+              title={label}
+              onquantic__headerclick={toggleFacetVisibility}
+              onquantic__headerkeydown={toggleFacetVisibility}
             >
-              <lightning-icon
-                class="slds-current-color slds-m-right_xx-small"
-                icon-name="utility:close"
-                size="xx-small"
+              <lightning-button-icon
+                class={actionButtonCssClasses}
+                slot="actions"
+                onmousedown={preventDefault}
+                icon-name={actionButtonIcon}
+                alternative-text={actionButtonLabel}
+                variant="bare"
+                tabindex="-1"
                 aria-hidden="true"
-              ></lightning-icon>
-              <span class="pill__text-container slds-truncate"
-                >{clearFilterLabel}</span
               >
-            </button>
-          </template>
-          <template if:false={isCollapsed}>
-            <div class="slds-has-dividers_around-space slds-m-top_medium">
-              <template if:true={displaySearch}>
-                <div onchange={handleKeyUp} class="slds-size_1-of-1">
-                  <lightning-input
-                    class="facet__searchbox-input slds-p-horizontal_x-small slds-p-bottom_x-small"
-                    name={labels.search}
-                    type="search"
-                    label="facet-input"
-                    variant="label-hidden"
-                    placeholder={labels.search}
-                  ></lightning-input>
-                </div>
+              </lightning-button-icon>
+              <template if:true={hasActiveValues}>
+                <button
+                  class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-horizontal_x-small slds-m-top_small"
+                  onclick={clearSelections}
+                  title={clearFilterLabel}
+                  aria-label={clearFilterAriaLabelValue}
+                >
+                  <lightning-icon
+                    class="slds-current-color slds-m-right_xx-small"
+                    icon-name="utility:close"
+                    size="xx-small"
+                    aria-hidden="true"
+                  ></lightning-icon>
+                  <span class="pill__text-container slds-truncate"
+                    >{clearFilterLabel}</span
+                  >
+                </button>
               </template>
+              <template if:false={isCollapsed}>
+                <div class="slds-has-dividers_around-space slds-m-top_medium">
+                  <template if:true={displaySearch}>
+                    <div onchange={handleKeyUp} class="slds-size_1-of-1">
+                      <lightning-input
+                        class="facet__searchbox-input slds-p-horizontal_x-small slds-p-bottom_x-small"
+                        name={labels.search}
+                        type="search"
+                        label="facet-input"
+                        variant="label-hidden"
+                        placeholder={labels.search}
+                      ></lightning-input>
+                    </div>
+                  </template>
 
-              <template if:false={isFacetSearchActive}>
-                <fieldset>
-                  <legend class="slds-assistive-text">{field}</legend>
-                  <ul>
-                    <template for:each={values} for:item="v">
-                      <li class="slds-grid" key={v.value}>
+                  <template if:false={isFacetSearchActive}>
+                    <fieldset>
+                      <legend class="slds-assistive-text">{field}</legend>
+                      <ul>
+                        <template for:each={values} for:item="v">
+                          <li class="slds-grid" key={v.value}>
+                            <c-quantic-facet-value
+                              onquantic__selectvalue={onSelectValue}
+                              item={v}
+                              key={v.value}
+                              is-checked={v.checked}
+                              data-cy={v.value}
+                              display-as-link={isDisplayAsLink}
+                              formatting-function={remoteGetValueCaption}
+                            >
+                            </c-quantic-facet-value>
+                          </li>
+                        </template>
+                      </ul>
+                    </fieldset>
+                    <div
+                      class="facet__show slds-m-top_x-small slds-p-horizontal_x-small"
+                    >
+                      <template if:true={canShowLess}>
+                        <button
+                          variant="base"
+                          class="facet__show-less slds-p-around_none"
+                          onclick={showLess}
+                          data-cy="less"
+                          aria-label={showLessFacetValuesLabel}
+                        >
+                          <span class="facet__show-less_text"
+                            >{labels.showLess}</span
+                          >
+                        </button>
+                      </template>
+                      <template if:true={canShowMore}>
+                        <button
+                          variant="base"
+                          class="facet__show-more slds-p-around_none"
+                          onclick={showMore}
+                          data-cy="more"
+                          aria-label={showMoreFacetValuesLabel}
+                        >
+                          <span class="facet__show-more_text"
+                            >{labels.showMore}</span
+                          >
+                        </button>
+                      </template>
+                    </div>
+                  </template>
+
+                  <template if:true={isFacetSearchActive}>
+                    <template if:true={hasSearchResults}>
+                      <template for:each={facetSearchResults} for:item="result">
                         <c-quantic-facet-value
                           onquantic__selectvalue={onSelectValue}
-                          item={v}
-                          key={v.value}
-                          is-checked={v.checked}
-                          data-cy={v.value}
+                          key={result.value}
+                          item={result}
+                          is-checked={result.checked}
                           display-as-link={isDisplayAsLink}
                           formatting-function={remoteGetValueCaption}
                         >
                         </c-quantic-facet-value>
-                      </li>
+                      </template>
                     </template>
-                  </ul>
-                </fieldset>
-                <div
-                  class="facet__show slds-m-top_x-small slds-p-horizontal_x-small"
-                >
-                  <template if:true={canShowLess}>
-                    <button
-                      variant="base"
-                      class="facet__show-less slds-p-around_none"
-                      onclick={showLess}
-                      data-cy="less"
-                      aria-label={showLessFacetValuesLabel}
-                    >
-                      <span class="facet__show-less_text"
-                        >{labels.showLess}</span
-                      >
-                    </button>
-                  </template>
-                  <template if:true={canShowMore}>
-                    <button
-                      variant="base"
-                      class="facet__show-more slds-p-around_none"
-                      onclick={showMore}
-                      data-cy="more"
-                      aria-label={showMoreFacetValuesLabel}
-                    >
-                      <span class="facet__show-more_text"
-                        >{labels.showMore}</span
-                      >
-                    </button>
+                    <div class="slds-p-horizontal_x-small">
+                      <template if:false={hasSearchResults}>
+                        <li class="slds-grid slds-m-top_x-small">
+                          <span
+                            class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
+                          >
+                            {noMatchesForLabel}
+                          </span>
+                        </li>
+                      </template>
+                      <template if:true={canShowMoreSearchResults}>
+                        <li class="slds-grid">
+                          <span
+                            class="slds-truncate facet__search-results_more-matches"
+                            >{moreMatchesForLabel}</span
+                          >
+                        </li>
+                      </template>
+                    </div>
                   </template>
                 </div>
               </template>
-
-              <template if:true={isFacetSearchActive}>
-                <template if:true={hasSearchResults}>
-                  <template for:each={facetSearchResults} for:item="result">
-                    <c-quantic-facet-value
-                      onquantic__selectvalue={onSelectValue}
-                      key={result.value}
-                      item={result}
-                      is-checked={result.checked}
-                      display-as-link={isDisplayAsLink}
-                      formatting-function={remoteGetValueCaption}
-                    >
-                    </c-quantic-facet-value>
-                  </template>
-                </template>
-                <div class="slds-p-horizontal_x-small">
-                  <template if:false={hasSearchResults}>
-                    <li class="slds-grid slds-m-top_x-small">
-                      <span
-                        class="slds-truncate slds-p-around_small slds-size_1-of-1 facet__search-results_no-match"
-                      >
-                        {noMatchesForLabel}
-                      </span>
-                    </li>
-                  </template>
-                  <template if:true={canShowMoreSearchResults}>
-                    <li class="slds-grid"> 
-                      <span
-                        class="slds-truncate facet__search-results_more-matches"
-                        >{moreMatchesForLabel}</span
-                      >
-                    </li>
-                  </template>
-                </div>
-              </template>
-            </div>
-          </template>
-        </c-quantic-card-container>
+            </c-quantic-card-container>
+          </div>
+        </template>
       </div>
     </template>
     <slot name="captions"></slot>

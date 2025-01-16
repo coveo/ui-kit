@@ -12,6 +12,7 @@ import {
   initializeWithHeadless,
   registerComponentForInit,
   registerToStore,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
 import {
   DateUtils,
@@ -19,6 +20,7 @@ import {
   I18nUtils,
   RelativeDateFormatter,
   Store,
+  generateFacetDependencyConditions,
 } from 'c/quanticUtils';
 import {api, LightningElement, track} from 'lwc';
 
@@ -32,6 +34,8 @@ import {api, LightningElement, track} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").RelativeDatePeriod} RelativeDatePeriod */
 /** @typedef {import("coveo").RelativeDateUnit} RelativeDateUnit */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef {Object} DatepickerElement
  * @property {string} min
@@ -133,6 +137,37 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @defaultValue `1000`
    */
   @api injectionDepth = 1000;
+  /**
+   * This property defines the relationship between this facet and a parent facet, indicating
+   * the specific parent facet that this facet relies on and the selected value required
+   * from that parent facet for this facet to be displayed.
+   *
+   * When this property is defined, the facet will only display if the specified `parentFacetId`
+   * has the `expectedValue` selected. If `expectedValue` is omitted or set to `undefined`,
+   * the facet will display as long as any value is selected in the parent facet.
+   *
+   * **Supported facets:** Dependencies can only be created on a basic or category facet.
+   * Dependencies on numeric, timeframe, or date facets are not supported.
+   *
+   * Example usage:
+   * - To show a facet when any value is selected in the parent facet:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype'
+   *   }
+   *   ```
+   * - To show a facet only when a specific value is selected:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype',
+   *     expectedValue: 'txt'
+   *   }
+   *   ```
+   *
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
 
   static attributes = [
     'facetId',
@@ -141,6 +176,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
     'withDatePicker',
     'noFilterFacetCount',
     'injectionDepth',
+    'dependsOn',
   ];
 
   /** @type {DateFacetState} */
@@ -174,6 +210,10 @@ export default class QuanticTimeframeFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  dateFacetConditionsManager;
+  /** @type {FacetConditionsManager} */
+  dateFilterConditionsManager;
 
   _isCollapsed = false;
   _showValues = true;
@@ -205,6 +245,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeFacet?.();
     this.unsubscribeSearchStatus?.();
     this.unsubscribeDateFilter?.();
+    this.dateFacetConditionsManager?.stopWatching();
+    this.dateFilterConditionsManager?.stopWatching();
+  }
+
+  get isFacetEnabled() {
+    return this.facetState?.enabled;
   }
 
   /**
@@ -369,6 +415,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
@@ -381,6 +428,26 @@ export default class QuanticTimeframeFacet extends LightningElement {
       metadata: {timeframes: this.timeframes},
     });
   };
+
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
 
   /**
    * @param {SearchEngine} engine
@@ -408,6 +475,12 @@ export default class QuanticTimeframeFacet extends LightningElement {
       },
     });
     this.unsubscribeFacet = this.facet.subscribe(() => this.updateFacetState());
+    if (this.dependsOn) {
+      this.dateFacetConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.facet.state?.facetId
+      );
+    }
   }
 
   /**
@@ -427,6 +500,21 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
       this.updateDateFilterState()
     );
+    if (this.dependsOn) {
+      this.dateFilterConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.dateFilter.state?.facetId
+      );
+    }
+  }
+
+  initFacetConditionManager(engine, facetId) {
+    return this.headless.buildFacetConditionsManager(engine, {
+      facetId,
+      conditions: generateFacetDependencyConditions({
+        [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+      }),
+    });
   }
 
   updateSearchStatusState() {

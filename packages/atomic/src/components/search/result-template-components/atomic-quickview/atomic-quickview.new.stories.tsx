@@ -34,6 +34,15 @@ const {decorator: resultDecorator, engineConfig} = wrapInResult({
 const {decorator: searchInterfaceDecorator, play} =
   wrapInSearchInterface(engineConfig);
 
+export const OutsideResultTemplate: Story = {
+  name: 'Not inside a result template',
+  tags: ['test'],
+  render: renderComponent,
+  decorators: [searchInterfaceDecorator],
+  parameters,
+  play,
+};
+
 const meta: Meta = {
   component: 'atomic-quickview',
   title: 'Atomic/ResultList/Quickview',

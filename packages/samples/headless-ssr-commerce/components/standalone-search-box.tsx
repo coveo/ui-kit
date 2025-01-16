@@ -23,7 +23,7 @@ export default function StandaloneSearchBox() {
 
   useEffect(() => {
     if (state.redirectTo === '/search') {
-      const url = `${state.redirectTo}#q=${encodeURIComponent(state.value)}`;
+      const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
       router.push(url, {scroll: false});
       methods?.afterRedirection();
     }
@@ -48,6 +48,9 @@ export default function StandaloneSearchBox() {
   return (
     <div>
       <input
+        type="search"
+        aria-label="searchbox"
+        placeholder="search"
         value={state.value}
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}

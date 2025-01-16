@@ -6,7 +6,6 @@
       "!{projectRoot}/dist",
       "!{projectRoot}/www",
       "!{projectRoot}/docs",
-      "!{projectRoot}/loader",
       "!{projectRoot}/src/components.d.ts"
     ],
     "buildInputs": [
@@ -28,12 +27,18 @@
         "{projectRoot}/dist",
         "{projectRoot}/www",
         "{projectRoot}/docs",
-        "{projectRoot}/loader",
         "{projectRoot}/src/components.d.ts"
       ],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "commands": [
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+          "node ./scripts/stencil-proxy.mjs",
+          "tsc -p tsconfig.lit.json",
+          "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
+          "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
+        ],
+        "parallel": false,
         "cwd": "packages/atomic"
       }
     },
@@ -86,8 +91,23 @@
       }
     },
     "dev": {
-      "dependsOn": ["storybook", "stencil:dev", "cem:dev"],
+      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
       "executor": "nx:noop"
+    },
+    "build:watch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/watch.mjs",
+        "cwd": "{projectRoot}",
+        "waitUntilTargets": ["^dev"]
+      }
+    },
+    "web:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite serve dev",
+        "cwd": "{projectRoot}"
+      }
     },
     "stencil:dev": {
       "dependsOn": ["^build", "build:locales"],
@@ -127,7 +147,6 @@
     },
     "storybook": {
       "executor": "nx:run-commands",
-      "dependsOn": ["wait-on:stencil-ping"],
       "options": {
         "cwd": "{projectRoot}",
         "command": "npx storybook dev -p 4400"
@@ -152,7 +171,7 @@
       "dependsOn": ["^build", "cached:build:stencil"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "rm ./dist/loader/package.json",
+        "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
       }
     }

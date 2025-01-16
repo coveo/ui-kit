@@ -1,5 +1,5 @@
 import {AtomicResultLink, AtomicResultList} from '@coveo/atomic-react';
-import React, {FunctionComponent} from 'react';
+import {FunctionComponent} from 'react';
 import {AtomicPageWrapper} from '../components/AtomicPageWrapper';
 
 export const ResultListPage: FunctionComponent = () => {

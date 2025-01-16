@@ -12,7 +12,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
+    - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
       with:
         registry-url: 'https://registry.npmjs.org'
         node-version-file: '.nvmrc'
@@ -20,25 +20,25 @@ runs:
       run: echo "NX_REJECT_UNKNOWN_LOCAL_CACHE=0" >> $GITHUB_ENV
       shell: bash
     - name: Install npm
-      run: npm i -g npm@10
+      run: npm i -g npm@11
       shell: bash
-    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       id: npm-cache
       with:
         path: |
           **/node_modules/
           !.nx/cache/
         key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
-    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       with:
         path: packages/quantic/force-app/main/default/staticresources
         key: quantic-${{ hashFiles('package-lock.json') }}}}
-    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       with:
         path: ~/.cache/Cypress
         key: cy-${{ hashFiles('package-lock.json') }}
     - if: inputs.load-cache == 'true'
-      uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4
+      uses: actions/cache/restore@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       id: nx-cache
       with:
         path: .nx/cache

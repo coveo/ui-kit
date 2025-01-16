@@ -1,0 +1,35 @@
+name: 'Quantic Cypress E2E tests'
+description: 'Runs Cypress tests for Quantic'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+  spec:
+    description: Specify the spec files to run
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
+      with:
+        path: packages/quantic/cypress/plugins/config
+        key: quantic-cypress-config-${{ github.sha }}
+    - run: npx cypress install
+      shell: bash
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        working-directory: ./packages/quantic
+        spec: ${{ inputs.spec }}
+        install: false
+        record: false
+        config: reporter=cypress/reporters/detailed-reporter.js
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+    - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+      if: failure()
+      with:
+        name: quantic-screenshots-${{ inputs.spec}}
+        path: packages/quantic/cypress/screenshots

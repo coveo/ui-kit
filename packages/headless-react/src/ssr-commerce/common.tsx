@@ -1,11 +1,12 @@
 import {
   Controller,
   ControllerDefinitionsMap,
-  CoreEngineNext,
+  ControllerDefinition,
   InferControllerFromDefinition,
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   InferControllersMapFromDefinition,
   SolutionType,
+  CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 import {
   useContext,
@@ -15,7 +16,10 @@ import {
   PropsWithChildren,
 } from 'react';
 import {useSyncMemoizedStore} from '../client-utils.js';
-import {MissingEngineProviderError} from '../errors.js';
+import {
+  MissingEngineProviderError,
+  UndefinedControllerError,
+} from '../errors.js';
 import {SingletonGetter, capitalize, mapObject} from '../utils.js';
 import {
   ContextHydratedState,
@@ -25,25 +29,24 @@ import {
 } from './types.js';
 
 function isHydratedStateContext<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
-  ctx: ContextState<TEngine, TControllers, TSolutionType>
-): ctx is ContextHydratedState<TEngine, TControllers, TSolutionType> {
+  ctx: ContextState<TControllers, TSolutionType>
+): ctx is ContextHydratedState<TControllers, TSolutionType> {
   return 'engine' in ctx;
 }
 
 function buildControllerHook<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TKey extends keyof TControllers,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >,
-  key: TKey
+  key: TKey,
+  controllerDefinition: ControllerDefinition<Controller>
 ): ControllerHook<InferControllerFromDefinition<TControllers[TKey]>> {
   return () => {
     const ctx = useContext(singletonContext.get());
@@ -51,8 +54,21 @@ function buildControllerHook<
       throw new MissingEngineProviderError();
     }
 
+    const allSolutionTypes = Object.values(SolutionType);
+
+    const supportedSolutionTypes = allSolutionTypes.filter(
+      (solutionType) => controllerDefinition[solutionType] === true
+    );
+
     // TODO: KIT-3715 - Workaround to ensure that 'key' can be used as an index for 'ctx.controllers'. A more robust solution is needed.
     type ControllerKey = Exclude<keyof typeof ctx.controllers, symbol>;
+    if (ctx.controllers[key as ControllerKey] === undefined) {
+      throw new UndefinedControllerError(
+        key.toString(),
+        supportedSolutionTypes
+      );
+    }
+
     const subscribe = useCallback(
       (listener: () => void) =>
         isHydratedStateContext(ctx)
@@ -80,21 +96,20 @@ function buildControllerHook<
 }
 
 export function buildControllerHooks<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >,
   controllersMap?: TControllers
 ) {
   return (
     controllersMap
       ? Object.fromEntries(
-          Object.keys(controllersMap).map((key) => [
+          Object.entries(controllersMap).map(([key, controllerDefinition]) => [
             `use${capitalize(key)}`,
-            buildControllerHook(singletonContext, key),
+            buildControllerHook(singletonContext, key, controllerDefinition),
           ])
         )
       : {}
@@ -102,12 +117,11 @@ export function buildControllerHooks<
 }
 
 export function buildEngineHook<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
+    Context<ContextState<TControllers, TSolutionType> | null>
   >
 ) {
   return () => {
@@ -120,13 +134,13 @@ export function buildEngineHook<
 }
 
 export function buildStaticStateProvider<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
-  >
+    Context<ContextState<TControllers, TSolutionType> | null>
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     controllers,
@@ -138,28 +152,32 @@ export function buildStaticStateProvider<
     >;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{controllers}}>{children}</Provider>;
+    return <Provider value={{controllers, solutionType}}>{children}</Provider>;
   };
 }
 
 export function buildHydratedStateProvider<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 >(
   singletonContext: SingletonGetter<
-    Context<ContextState<TEngine, TControllers, TSolutionType> | null>
-  >
+    Context<ContextState<TControllers, TSolutionType> | null>
+  >,
+  solutionType: TSolutionType
 ) {
   return ({
     engine,
     controllers,
     children,
   }: PropsWithChildren<{
-    engine: TEngine;
+    engine: SSRCommerceEngine;
     controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
   }>) => {
     const {Provider} = singletonContext.get();
-    return <Provider value={{engine, controllers}}>{children}</Provider>;
+    return (
+      <Provider value={{engine, controllers, solutionType}}>
+        {children}
+      </Provider>
+    );
   };
 }

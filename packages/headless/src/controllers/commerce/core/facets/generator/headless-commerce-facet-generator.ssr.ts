@@ -108,11 +108,16 @@ export type MappedFacetState = {
             : never;
 };
 
+/**
+ * @group Definers
+ */
 export function defineFacetGenerator<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       buildFacetGenerator(engine, {props: {solutionType: solutionType!}}),

@@ -86,6 +86,9 @@
       "c/quanticGeneratedAnswerContent": [
         "quanticGeneratedAnswerContent/quanticGeneratedAnswerContent.js"
       ],
+      "c/quanticGeneratedAnswer": [
+        "quanticGeneratedAnswer/quanticGeneratedAnswer.js"
+      ],
       "c/*": ["*"]
     }
   },
@@ -95,6 +98,7 @@
     "../../../../typings/lwc/**/*.d.ts",
     "../../../../coveo.d.ts"
   ],
+  "exclude": ["**/e2e/**"],
   "typeAcquisition": {
     "include": ["jest"]
   },

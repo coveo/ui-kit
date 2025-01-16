@@ -32,10 +32,19 @@ export function defineSummary<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing
         ? buildProductListing(engine).summary()
         : buildSearch(engine).summary(),
-  } as SubControllerDefinitionWithoutProps<Summary, TOptions>;
+  } as SubControllerDefinitionWithoutProps<
+    Summary<
+      | ProductListingSummaryState
+      | SearchSummaryState
+      | RecommendationsSummaryState
+    >,
+    TOptions
+  >;
 }

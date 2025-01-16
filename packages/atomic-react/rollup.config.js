@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isNightly = process.env.IS_NIGHTLY === 'true';
 
 let headlessVersion;
 let atomicVersion;
@@ -30,13 +31,17 @@ if (isCDN) {
     const headlessPackageJson = JSON.parse(
       readFileSync(headlessPackageJsonPath, 'utf8')
     );
-    headlessVersion = 'v' + headlessPackageJson.version;
+    headlessVersion = isNightly
+      ? `v${headlessPackageJson.version.split('.').shift()}-nightly`
+      : 'v' + headlessPackageJson.version;
     console.log('Using headless version from package.json:', headlessVersion);
 
     const atomicPackageJson = JSON.parse(
       readFileSync(atomicPackageJsonPath, 'utf8')
     );
-    atomicVersion = 'v' + atomicPackageJson.version;
+    atomicVersion = isNightly
+      ? `v${atomicPackageJson.version.split('.').shift()}-nightly`
+      : 'v' + atomicPackageJson.version;
     console.log('Using atomic version from package.json:', atomicVersion);
   } catch (error) {
     console.error('Error reading headless package.json:', error);
@@ -91,7 +96,12 @@ const commonExternal = [
   'react-dom',
   'react-dom/client',
   'react-dom/server',
+  'lit',
+  'lit/decorators.js',
+  '@lit/react',
+  '@coveo/atomic',
   '@coveo/atomic/loader',
+  '@coveo/atomic/components',
   '@coveo/headless',
   '@coveo/headless/recommendation',
   '@coveo/headless/commerce',

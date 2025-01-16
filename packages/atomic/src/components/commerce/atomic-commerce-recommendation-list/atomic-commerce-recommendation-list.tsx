@@ -40,7 +40,7 @@ import {
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
@@ -287,7 +287,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private get hasPagination() {
-    return !!this.productsPerPage;
+    return this.numberOfPages > 1;
   }
 
   private get shouldRenderPagination() {

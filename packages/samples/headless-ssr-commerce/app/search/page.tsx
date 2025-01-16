@@ -1,28 +1,58 @@
+import * as externalCartAPI from '@/actions/external-cart-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
+import ContextDropdown from '@/components/context-dropdown';
 import FacetGenerator from '@/components/facets/facet-generator';
+import ParameterManager from '@/components/parameter-manager';
 import ProductList from '@/components/product-list';
-import SearchProvider from '@/components/providers/search-provider';
-import Recommendations from '@/components/recommendation-list';
+import {SearchProvider} from '@/components/providers/providers';
 import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';
 import Triggers from '@/components/triggers/triggers';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
+import {defaultContext} from '@/utils/context';
+import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {headers} from 'next/headers';
 
-export default async function Search() {
+export default async function Search({
+  searchParams,
+}: {
+  searchParams: Promise<URLSearchParams>;
+}) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
   const navigatorContext = new NextJsNavigatorContext(headers());
   searchEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
+  const {deserialize} = buildParameterSerializer();
+  const parameters = deserialize(await searchParams);
+
+  // Fetches the cart items from an external service
+  const items = await externalCartAPI.getCart();
+
   // Fetches the static state of the app with initial state (when applicable)
-  const staticState = await searchEngineDefinition.fetchStaticState();
+  const staticState = await searchEngineDefinition.fetchStaticState({
+    controllers: {
+      cart: {initialState: {items}},
+      context: {
+        language: defaultContext.language,
+        country: defaultContext.country,
+        currency: defaultContext.currency,
+        view: {
+          url: 'https://sports.barca.group/search',
+        },
+      },
+      parameterManager: {initialState: {parameters}},
+    },
+  });
+
   return (
     <SearchProvider
       staticState={staticState}
       navigatorContext={navigatorContext.marshal}
     >
+      <ParameterManager url={navigatorContext.location} />
+      <ContextDropdown useCase="search" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
@@ -39,12 +69,6 @@ export default async function Search() {
           controller={hydratedState?.controllers.pagination}
         ></Pagination> */}
           <ShowMore />
-        </div>
-
-        <div style={{flex: 3}}>
-          {/* popularBoughtRecs */}
-          {/* TODO: KIT-3503: need to revisit the way recommendations are added*/}
-          <Recommendations />
         </div>
       </div>
     </SearchProvider>

@@ -3,10 +3,42 @@
 import {createElement} from 'lwc';
 import QuanticFacet from 'c/quanticFacet';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {generateFacetDependencyConditions} from 'c/quanticUtils';
 
+jest.mock('c/quanticUtils', () => ({
+  generateFacetDependencyConditions: jest.fn(),
+  Store: {
+    facetTypes: {
+      FACETS: 'facets',
+    },
+  },
+  I18nUtils: {
+    format: jest.fn(),
+  },
+}));
 jest.mock('c/quanticHeadlessLoader');
 
-function createTestComponent(options = {}) {
+const selectors = {
+  facetContent: '[data-test="facet-content"]',
+  componentError: 'c-quantic-component-error',
+};
+
+const exampleFacetId = 'example facet id';
+const exampleField = 'exampleField';
+const defaultOptions = {
+  field: exampleField,
+};
+const facetControllerMock = {
+  subscribe: jest.fn((callback) => callback()),
+  state: {
+    facetId: exampleFacetId,
+    values: [],
+  },
+};
+const parentFacetIdError = `The ${exampleField} c-quantic-facet requires dependsOn.parentFacetId to be a valid string.`;
+const expectedValueError = `The ${exampleField} c-quantic-facet requires dependsOn.expectedValue to be a valid string.`;
+
+function createTestComponent(options = defaultOptions) {
   prepareHeadlessState();
 
   const element = createElement('c-quantic-facet', {
@@ -21,11 +53,10 @@ function createTestComponent(options = {}) {
 }
 
 const functionsMocks = {
-  buildFacet: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
-    state: {
-      values: [],
-    },
+  buildFacet: jest.fn(() => facetControllerMock),
+  stopWatching: jest.fn(),
+  buildFacetConditionsManager: jest.fn(() => ({
+    stopWatching: functionsMocks.stopWatching,
   })),
   buildSearchStatus: jest.fn(() => ({
     subscribe: jest.fn((callback) => callback()),
@@ -39,6 +70,7 @@ function prepareHeadlessState() {
     return {
       buildFacet: functionsMocks.buildFacet,
       buildSearchStatus: functionsMocks.buildSearchStatus,
+      buildFacetConditionsManager: functionsMocks.buildFacetConditionsManager,
     };
   };
 }
@@ -64,6 +96,21 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
+function mockBueno() {
+  // @ts-ignore
+  mockHeadlessLoader.getBueno = () => {
+    // @ts-ignore
+    global.Bueno = {
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+    };
+    return new Promise((resolve) => resolve());
+  };
+}
+
 function cleanup() {
   // The jsdom instance is shared across test cases in a single file so reset the DOM
   while (document.body.firstChild) {
@@ -76,6 +123,7 @@ function cleanup() {
 describe('c-quantic-facet', () => {
   beforeAll(() => {
     mockSuccessfulHeadlessInitialization();
+    mockBueno();
   });
 
   afterEach(() => {
@@ -85,7 +133,10 @@ describe('c-quantic-facet', () => {
   describe('controller initialization', () => {
     it('should initialize the controller with the correct customSort value', async () => {
       const exampleCustomSortValues = ['test'];
-      createTestComponent({customSort: exampleCustomSortValues});
+      createTestComponent({
+        ...defaultOptions,
+        customSort: exampleCustomSortValues,
+      });
       await flushPromises();
 
       expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
@@ -97,6 +148,194 @@ describe('c-quantic-facet', () => {
           }),
         })
       );
+    });
+  });
+
+  describe('the facet conditions manager', () => {
+    it('should build the controller when the dependsOn property is set', async () => {
+      const exampleFacetDependency = {
+        parentFacetId: 'filetype',
+        expectedValue: 'txt',
+      };
+      createTestComponent({
+        ...defaultOptions,
+        dependsOn: exampleFacetDependency,
+      });
+      await flushPromises();
+
+      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        1
+      );
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
+        exampleEngine,
+        {
+          facetId: exampleFacetId,
+        }
+      );
+
+      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(1);
+      expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
+        [exampleFacetDependency.parentFacetId]:
+          exampleFacetDependency.expectedValue,
+      });
+    });
+
+    it('should not build the controller when the dependsOn property is not set', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        0
+      );
+      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('the facet enablement', () => {
+    describe('when the facet is enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildFacet.mockReturnValue({
+          ...facetControllerMock,
+          state: {...facetControllerMock.state, enabled: true},
+        });
+      });
+
+      it('should display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).not.toBeNull();
+      });
+    });
+
+    describe('when the facet is not enabled', () => {
+      beforeAll(() => {
+        functionsMocks.buildFacet.mockReturnValue({
+          ...facetControllerMock,
+          state: {...facetControllerMock.state, enabled: false},
+        });
+      });
+
+      it('should not display the facet content', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    afterAll(() => {
+      functionsMocks.buildFacet.mockReturnValue(facetControllerMock);
+    });
+  });
+
+  describe('validation of the dependsOn property', () => {
+    let consoleError;
+    beforeAll(() => {
+      consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    });
+    describe('when dependsOn.parentFacetId is not provided', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          expectedValue: 'txt',
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(parentFacetIdError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    describe('when dependsOn.parentFacetId is not a string', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          parentFacetId: 1,
+          expectedValue: 'txt',
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(parentFacetIdError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
+    });
+
+    describe('when dependsOn.expectedValue is not a string', () => {
+      it('should display the error component', async () => {
+        const invalidFacetDependency = {
+          parentFacetId: 'filetype',
+          expectedValue: 2,
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          dependsOn: invalidFacetDependency,
+        });
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+        const facetContent = element.shadowRoot.querySelector(
+          selectors.facetContent
+        );
+
+        expect(consoleError).toHaveBeenCalledTimes(1);
+        expect(consoleError).toHaveBeenCalledWith(expectedValueError);
+        expect(componentError).not.toBeNull();
+        expect(facetContent).toBeNull();
+      });
+    });
+  });
+  describe('when the component is disconnected', () => {
+    it('should make the condition manager stop watching the facet', async () => {
+      const exampleFacetDependency = {
+        parentFacetId: 'filetype',
+        expectedValue: 'txt',
+      };
+      const element = createTestComponent({
+        ...defaultOptions,
+        dependsOn: exampleFacetDependency,
+      });
+      await flushPromises();
+      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
+        1
+      );
+
+      document.body.removeChild(element);
+      expect(functionsMocks.stopWatching).toHaveBeenCalledTimes(1);
     });
   });
 });

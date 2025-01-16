@@ -120,6 +120,21 @@ describe('search request', () => {
       type: 'alphanumeric',
     });
   });
+  it('#searchRequest returns the facet state alphanumericNaturalDescending #sortCriteria', async () => {
+    const request = buildMockFacetRequest({
+      field: 'objecttype',
+      sortCriteria: 'alphanumericNaturalDescending',
+    });
+    state.facetSet[1] = buildMockFacetSlice({request});
+    const {facets} = (
+      await buildSearchRequest(state, buildMockNavigatorContextProvider()())
+    ).request;
+
+    expect(facets?.map((f) => f.sortCriteria)).toContainEqual({
+      order: 'descending',
+      type: 'alphanumericNatural',
+    });
+  });
 
   it('#searchRequest returns the facets in the state #numericFacetSet', async () => {
     const request = buildMockNumericFacetRequest({

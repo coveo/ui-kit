@@ -1,3 +1,5 @@
+import {FacetSortCriterion} from '@coveo/headless';
+import {orderBy} from 'natural-orderby';
 import {test, expect} from './fixture';
 
 test.describe('when selecting the facet search "More matches for" button', () => {
@@ -148,6 +150,161 @@ test.describe('when the "Show more" button has been selected', () => {
       facet,
     }) => {
       await expect.poll(async () => await facet.facetValue.count()).toBe(2);
+    });
+  });
+});
+
+const sortCriteriaTests: {
+  criteria: FacetSortCriterion;
+  sortFunction: (values: string[]) => string[];
+}[] = [
+  {
+    criteria: 'alphanumeric',
+    sortFunction: (values: string[]) => [...values].sort(),
+  },
+  {
+    criteria: 'alphanumericDescending',
+    sortFunction: (values: string[]) => [...values].sort().reverse(),
+  },
+  {
+    criteria: 'alphanumericNatural',
+    sortFunction: (values: string[]) =>
+      orderBy([...values], [(value: string) => value], 'asc'),
+  },
+  {
+    criteria: 'alphanumericNaturalDescending',
+    sortFunction: (values: string[]) =>
+      orderBy([...values], [(value: string) => value], ['desc']),
+  },
+];
+
+test.describe('Sort Criteria', () => {
+  for (const {criteria, sortFunction} of sortCriteriaTests) {
+    test.describe(`when sort criteria is set to "${criteria}"`, () => {
+      test.beforeEach(async ({facet}) => {
+        await facet.load({
+          args: {
+            sortCriteria: criteria,
+            field: 'cat_available_sizes',
+            label: 'Size',
+            numberOfValues: 30,
+          },
+        });
+        await facet.hydrated.waitFor();
+        await expect.poll(async () => await facet.facetValue.count()).toBe(30);
+      });
+
+      test(`should have facet values sorted by ${criteria}`, async ({
+        facet,
+      }) => {
+        const values = await facet.facetValueLabel.allTextContents();
+        const sortedValues = sortFunction(values);
+        expect(values).toEqual(sortedValues);
+      });
+
+      test.describe('when a custom sort order is set', () => {
+        test.beforeEach(async ({facet}) => {
+          await facet.load({
+            story: 'custom-sort',
+            args: {
+              sortCriteria: criteria,
+              field: 'cat_available_sizes',
+              numberOfValues: 30,
+            },
+          });
+          await facet.hydrated.waitFor();
+          await expect
+            .poll(async () => await facet.facetValue.count())
+            .toBe(30);
+        });
+
+        test('should have facet values sorted by custom order first, and then by ${criteria}', async ({
+          facet,
+        }) => {
+          const values = await facet.facetValueLabel.allTextContents();
+
+          const customSort = new Set(['XL', 'L', 'M', 'S']);
+
+          const customSortedValues = values.filter((value) =>
+            customSort.has(value)
+          );
+          const remainingValues = sortFunction(
+            values.filter((value) => !customSort.has(value))
+          );
+
+          expect(values).toEqual([...customSortedValues, ...remainingValues]);
+        });
+      });
+    });
+  }
+
+  test.describe('when sort criteria is set to "occurrences"', () => {
+    test.beforeEach(async ({facet}) => {
+      await facet.load({
+        args: {
+          sortCriteria: 'occurrences',
+          field: 'cat_available_sizes',
+          label: 'Size',
+          numberOfValues: 30,
+        },
+      });
+      await facet.hydrated.waitFor();
+      await expect.poll(async () => await facet.facetValue.count()).toBe(30);
+    });
+
+    test('should have facet values sorted by occurrences', async ({facet}) => {
+      const values = await facet.facetValueOccurrences.allTextContents();
+      const sortedValues = [...values]
+        .sort((a, b) => {
+          const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
+          const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
+          return numA - numB;
+        })
+        .reverse();
+      expect(values).toEqual(sortedValues);
+    });
+  });
+  test.describe('when sort criteria is set to "automatic"', () => {
+    test.beforeEach(async ({facet}) => {
+      await facet.load({
+        args: {
+          sortCriteria: 'automatic',
+          field: 'ec_brand',
+          label: 'Brand',
+          numberOfValues: 10,
+        },
+      });
+      await facet.hydrated.waitFor();
+      await expect.poll(async () => await facet.facetValue.count()).toBe(10);
+    });
+
+    test('should have facet values sorted by occurrences when not expanded', async ({
+      facet,
+    }) => {
+      const values = await facet.facetValueOccurrences.allTextContents();
+      const sortedValues = [...values]
+        .sort((a, b) => {
+          const numA = parseInt(a.replace(/[^\d]/g, ''), 10);
+          const numB = parseInt(b.replace(/[^\d]/g, ''), 10);
+          return numA - numB;
+        })
+        .reverse();
+      expect(values).toEqual(sortedValues);
+    });
+
+    test.describe('when expanded', () => {
+      test.beforeEach(async ({facet}) => {
+        await facet.showMoreButton.click();
+        await expect.poll(async () => await facet.facetValue.count()).toBe(20);
+      });
+
+      test('should have facet values sorted alphanumerically when expanded', async ({
+        facet,
+      }) => {
+        const values = await facet.facetValueLabel.allTextContents();
+        const sortedValues = [...values].sort();
+        expect(values).toEqual(sortedValues);
+      });
     });
   });
 });

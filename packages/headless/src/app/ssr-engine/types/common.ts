@@ -16,6 +16,22 @@ export type HasKeys<TObject> = TObject extends {}
     : true
   : boolean;
 
+export type HasRequiredKeys<TObject> = TObject extends {}
+  ? {
+      [K in keyof TObject]-?: {} extends Pick<TObject, K> ? never : K;
+    }[keyof TObject] extends never
+    ? false
+    : true
+  : boolean;
+
+export type HasOptionalKeys<TObject> = TObject extends {}
+  ? {
+      [K in keyof TObject]-?: {} extends Pick<TObject, K> ? K : never;
+    }[keyof TObject] extends never
+    ? false
+    : true
+  : boolean;
+
 export type ExtractRequiredOptions<TOptions> = {
   [TKey in keyof TOptions as Pick<TOptions, TKey> extends Required<
     Pick<TOptions, TKey>
@@ -76,7 +92,7 @@ export interface ControllerDefinitionWithProps<
    * @param props - The controller properties.
    * @returns The controller.
    */
-  buildWithProps(engine: TEngine, props: TProps): TController;
+  buildWithProps(engine: TEngine, props?: TProps): TController;
 }
 
 export type ControllerDefinition<

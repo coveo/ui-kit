@@ -6,37 +6,36 @@ import {
   InferControllerStaticStateMapFromDefinitionsWithSolutionType,
   EngineDefinition,
   SolutionType,
-  CoreEngineNext,
+  CommerceEngine as SSRCommerceEngine,
 } from '@coveo/headless/ssr-commerce';
 import {FunctionComponent, PropsWithChildren} from 'react';
 
 export type ContextStaticState<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
   controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
     TControllers,
     TSolutionType
   >;
+  solutionType: TSolutionType;
 };
 
 export type ContextHydratedState<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > = {
-  engine: TEngine;
+  engine: SSRCommerceEngine;
   controllers: InferControllersMapFromDefinition<TControllers, TSolutionType>;
+  solutionType: TSolutionType;
 };
 
 export type ContextState<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
 > =
-  | ContextStaticState<TEngine, TControllers, TSolutionType>
-  | ContextHydratedState<TEngine, TControllers, TSolutionType>;
+  | ContextStaticState<TControllers, TSolutionType>
+  | ContextHydratedState<TControllers, TSolutionType>;
 
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];
@@ -44,7 +43,7 @@ export type ControllerHook<TController extends Controller> = () => {
 };
 
 export type InferControllerHooksMapFromDefinition<
-  TControllers extends ControllerDefinitionsMap<CoreEngineNext, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
 > = {
   [K in keyof TControllers as `use${Capitalize<
     K extends string ? K : never
@@ -52,13 +51,10 @@ export type InferControllerHooksMapFromDefinition<
 };
 
 export type ReactEngineDefinition<
-  TEngine extends CoreEngineNext,
-  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+  TControllers extends ControllerDefinitionsMap<Controller>,
   TEngineOptions,
   TSolutionType extends SolutionType,
-> = EngineDefinition<TEngine, TControllers, TEngineOptions, TSolutionType> & {
-  controllers: InferControllerHooksMapFromDefinition<TControllers>;
-  useEngine(): TEngine | undefined;
+> = EngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
   StaticStateProvider: FunctionComponent<
     PropsWithChildren<{
       controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
@@ -69,7 +65,7 @@ export type ReactEngineDefinition<
   >;
   HydratedStateProvider: FunctionComponent<
     PropsWithChildren<{
-      engine: TEngine;
+      engine: SSRCommerceEngine;
       controllers: InferControllersMapFromDefinition<
         TControllers,
         TSolutionType

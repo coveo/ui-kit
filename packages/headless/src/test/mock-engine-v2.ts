@@ -3,7 +3,7 @@ import {pino, Logger} from 'pino';
 import {vi, Mock} from 'vitest';
 import {CaseAssistEngine} from '../app/case-assist-engine/case-assist-engine.js';
 import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
-import {SSRCommerceEngine} from '../app/commerce-engine/commerce-engine.ssr.js';
+import {SSRCommerceEngine} from '../app/commerce-ssr-engine/factories/build-factory.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import {InsightEngine} from '../app/insight-engine/insight-engine.js';
 import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider.js';

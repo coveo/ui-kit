@@ -13,7 +13,7 @@ import {buildSearch, Search} from '../search/headless-search.js';
 export type {ProductListingState as ProductListState} from '../product-listing/headless-product-listing.js';
 export type ProductList = Pick<
   ProductListing | Search,
-  'state' | 'subscribe' | 'interactiveProduct'
+  'state' | 'subscribe' | 'interactiveProduct' | 'promoteChildToParent'
 >;
 
 /**
@@ -29,6 +29,8 @@ export function defineProductList<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing

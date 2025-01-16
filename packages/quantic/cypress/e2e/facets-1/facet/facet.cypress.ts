@@ -109,6 +109,10 @@ describe('Facet Test Suite', () => {
                 numberOfValues: defaultNumberOfValues,
                 useCase: param.useCase,
               });
+              if (param.useCase === useCaseEnum.insight) {
+                InsightInterfaceExpect.isInitialized();
+                performSearch();
+              }
             }
             setupWithPauseBeforeSearch();
             Expect.displayPlaceholder(true);

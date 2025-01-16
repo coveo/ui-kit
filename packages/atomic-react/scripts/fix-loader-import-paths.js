@@ -7,7 +7,7 @@ const files = [
 ];
 
 const oldImport =
-  "import { defineCustomElements } from '@coveo/atomic/dist/loader';";
+  "import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';";
 const newImport =
   "import { defineCustomElements } from '@coveo/atomic/loader';";
 

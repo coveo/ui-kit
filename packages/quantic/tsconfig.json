@@ -92,7 +92,7 @@
     "typings/lwc/**/*.d.ts",
     "coveo.d.ts"
   ],
-  "exclude": ["**/__tests__/**"],
+  "exclude": ["**/__tests__/**", "**/e2e/**"],
   "typeAcquisition": {
     "include": ["jest"]
   },

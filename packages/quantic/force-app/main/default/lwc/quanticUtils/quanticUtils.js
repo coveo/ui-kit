@@ -34,6 +34,7 @@ import pastYear_plural from '@salesforce/label/c.quantic_PastYear_plural';
 
 export * from './recentQueriesUtils';
 export * from './markdownUtils';
+export * from './facetDependenciesUtils';
 
 export class Debouncer {
   _timeout;
@@ -319,6 +320,22 @@ export class TimeSpan {
       ':' +
       secondsString;
     return hhmmss;
+  }
+
+  getYoutubeFormatTimestamp() {
+    const hours = Math.floor(this.getHours());
+    const minutes = Math.floor(this.getMinutes()) % 60;
+    const seconds = Math.floor(this.getSeconds()) % 60;
+
+    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+
+    if (hours > 0) {
+      const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + formattedMinutes + ':' + formattedSeconds;
+    }
+    const formattedMinutes =
+      minutes === 0 ? '0' : minutes < 10 ? '0' + minutes : minutes;
+    return formattedMinutes + ':' + formattedSeconds;
   }
 
   getCleanHHMMSS() {

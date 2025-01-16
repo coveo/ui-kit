@@ -235,9 +235,6 @@ export const logFacetBreadcrumb = (
   });
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const facetUpdateSort = (): SearchAction => ({
-  actionCause: SearchPageEvents.facetUpdateSort,
-});
 
 export const facetClearAll = (): SearchAction => {
   return {

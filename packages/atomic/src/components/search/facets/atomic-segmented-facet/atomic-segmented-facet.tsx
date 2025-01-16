@@ -116,7 +116,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
   @Prop({reflect: true}) public numberOfValues = 6;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
 

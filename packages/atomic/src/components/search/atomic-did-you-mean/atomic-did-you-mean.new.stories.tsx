@@ -67,11 +67,6 @@ export const Default: Story = {
   play: (context) => searchPlay(context, 'coveoo'),
 };
 
-export const ManualCorrection: Story = {
-  decorators: [searchBoxDecorator],
-  play: (context) => searchPlay(context, 'ceveo'),
-};
-
 export const QueryTrigger: Story = {
   decorators: [searchBoxDecorator],
   play: (context) => searchPlay(context, 'Japan'),

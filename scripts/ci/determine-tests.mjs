@@ -33,6 +33,13 @@ class PackageJsonChangeError extends Error {
   }
 }
 
+class RunAllTestsInMergeQueueError extends Error {
+  constructor() {
+    super(`In a merge queue. Running all tests.`);
+    this.name = 'RunAllTestsInMergeQueueError';
+  }
+}
+
 /**
  * Recursively finds all end-to-end test files with the `.e2e.ts` extension in a given directory.
  *
@@ -176,18 +183,24 @@ const changedFiles = getChangedFiles(base, head).split(EOL);
 const outputNameTestsToRun = process.argv[2];
 const outputNameShardIndex = process.argv[3];
 const outputNameShardTotal = process.argv[4];
+const runAllTests = process.argv[5] === 'true';
 const projectRoot = process.env.projectRoot;
 const atomicSourceComponents = join('packages', 'atomic', 'src', 'components');
 
 try {
+  if (runAllTests) {
+    throw new RunAllTestsInMergeQueueError();
+  }
+
   const testFiles = findAllTestFiles(atomicSourceComponents);
   const testDependencies = createTestFileMappings(testFiles, projectRoot);
   const testsToRun = determineTestFilesToRun(changedFiles, testDependencies);
+
   if (testsToRun === '') {
     throw new NoRelevantChangesError();
   }
-  const maximumShards = parseInt(process.env.maximumShards, 10);
 
+  const maximumShards = parseInt(process.env.maximumShards, 10);
   const [shardIndex, shardTotal] = allocateShards(
     testsToRun.split(' ').length,
     maximumShards
@@ -202,11 +215,10 @@ try {
     setOutput(outputNameTestsToRun, '');
     setOutput(outputNameShardIndex, [0]);
     setOutput(outputNameShardTotal, [0]);
-  }
-
-  if (
+  } else if (
     error instanceof DependentPackageChangeError ||
-    error instanceof PackageJsonChangeError
+    error instanceof PackageJsonChangeError ||
+    error instanceof RunAllTestsInMergeQueueError
   ) {
     console.warn(error?.message || error);
     setOutput(outputNameTestsToRun, '');
@@ -217,5 +229,8 @@ try {
     setOutput(outputNameShardIndex, shardIndex);
     const shardTotal = [process.env.maximumShards];
     setOutput(outputNameShardTotal, shardTotal);
+  } else {
+    console.error('Unexpected error:', error);
+    process.exit(1);
   }
 }

@@ -24,6 +24,8 @@ export function defineSort<
 >(props?: SortProps & TOptions) {
   ensureAtLeastOneSolutionType(props);
   return {
+    listing: true,
+    search: true,
     ...props,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing

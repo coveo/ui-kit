@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-hosted-page",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.0.12",
+  "version": "1.0.19",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
@@ -30,14 +30,14 @@
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.5",
-    "@coveo/headless": "3.8.1",
+    "@coveo/bueno": "1.0.7",
+    "@coveo/headless": "3.13.2",
     "@stencil/core": "4.20.0"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
-    "@playwright/test": "1.45.3",
-    "@types/node": "20.14.12"
+    "@playwright/test": "1.49.1",
+    "@types/node": "22.10.5"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

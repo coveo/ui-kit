@@ -15,6 +15,7 @@ export type {BreadcrumbManager, BreadcrumbManagerState};
 
 /**
  * Defines a `BreadcrumbManager` controller instance.
+ * @group Definers
  *
  * @returns The `BreadcrumbManager` controller definition.
  *
@@ -25,6 +26,8 @@ export function defineBreadcrumbManager<
 >(options?: TOptions) {
   ensureAtLeastOneSolutionType(options);
   return {
+    listing: true,
+    search: true,
     ...options,
     build: (engine, solutionType) =>
       solutionType === SolutionType.listing

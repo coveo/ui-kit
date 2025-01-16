@@ -1,14 +1,7 @@
 {
-  "extends": "../../../tsconfig.json",
-  "compilerOptions": {
-    "target": "es2016",
-    "esModuleInterop": true,
-    "lib": ["DOM", "ES2022"],
-    "moduleResolution": "Bundler",
-    "module": "ES2022",
-    "outDir": "./public/dist",
-    "types": ["cypress"],
-    "jsx": "react"
-  },
-  "include": ["src"]
+  "files": [],
+  "references": [
+    {"path": "./tsconfig.app.json"},
+    {"path": "./tsconfig.node.json"}
+  ]
 }

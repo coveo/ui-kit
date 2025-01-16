@@ -16,7 +16,6 @@ import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
-  facetUpdateSort,
   facetClearAll,
   facetDeselect,
   facetSelect,
@@ -140,7 +139,6 @@ export function buildCategoryFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(),
         })
       );
     },

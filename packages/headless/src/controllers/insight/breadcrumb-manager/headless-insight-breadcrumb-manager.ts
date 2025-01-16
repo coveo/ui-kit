@@ -37,7 +37,6 @@ import {NumericFacetSlice} from '../../../features/facets/range-facets/numeric-f
 import {executeSearch} from '../../../features/insight-search/insight-search-actions.js';
 import {searchReducer as search} from '../../../features/search/search-slice.js';
 import {
-  staticFilterDeselect,
   toggleExcludeStaticFilterValue,
   toggleSelectStaticFilterValue,
 } from '../../../features/static-filter-set/static-filter-set-actions.js';
@@ -262,9 +261,7 @@ export function buildBreadcrumbManager(
         } else if (value.state === 'excluded') {
           dispatch(toggleExcludeStaticFilterValue({id, value}));
         }
-        dispatch(
-          executeSearch({legacy: analytics, next: staticFilterDeselect()})
-        );
+        dispatch(executeSearch({legacy: analytics}));
       },
     };
   };

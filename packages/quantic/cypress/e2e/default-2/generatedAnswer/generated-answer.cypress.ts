@@ -332,6 +332,7 @@ describe('quantic-generated-answer', () => {
 
             describe('when an end of stream event is received', () => {
               const streamId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
 
               const testMessagePayload = {
                 payloadType: 'genqa.endOfStreamType',
@@ -342,7 +343,11 @@ describe('quantic-generated-answer', () => {
               };
 
               beforeEach(() => {
-                mockSearchWithGeneratedAnswer(streamId, param.useCase);
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  searchId
+                );
                 mockStreamResponse(streamId, testMessagePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
               });
@@ -351,7 +356,7 @@ describe('quantic-generated-answer', () => {
                 if (analyticsMode === 'next') {
                   NextAnalyticsExpectations.emitRgaStreamEnd(
                     {
-                      responseId: streamId,
+                      responseId: searchId,
                       answerGenerated: true,
                     },
                     exampleTrackingId
@@ -364,13 +369,13 @@ describe('quantic-generated-answer', () => {
 
             describe('when liking the generated answer', () => {
               const streamId = crypto.randomUUID();
-              const responseId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
 
               beforeEach(() => {
                 mockSearchWithGeneratedAnswer(
                   streamId,
                   param.useCase,
-                  responseId
+                  searchId
                 );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
@@ -387,7 +392,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: streamId,
+                        responseId: searchId,
                         action: 'like',
                       },
                       exampleTrackingId
@@ -404,159 +409,150 @@ describe('quantic-generated-answer', () => {
             // The Salesforce lightning-modal is very flaky, sometimes throwing random errors in Cypress test runs.
             // We are skipping this test for now until we can find a more reliable way to test it.
             // Common stack trace when clicking on the dislike: `Cannot read properties of null (reading 'appendChild')`
-            describe.skip(
-              'when providing detailed feedback',
-              {
-                retries: 5,
-              },
-              () => {
-                const streamId = crypto.randomUUID();
-                const responseId = crypto.randomUUID();
-
-                const yesOption = 'yes';
-                const unknownOption = 'unknown';
-                const noOption = 'no';
-                const exampleDetails = 'example details';
-                const exampleDocumentUrl = 'https://www.foo.com/';
-
-                beforeEach(() => {
-                  mockSearchWithGeneratedAnswer(
-                    streamId,
-                    param.useCase,
-                    responseId
-                  );
-                  mockStreamResponse(streamId, genQaMessageTypePayload);
-                  visitGeneratedAnswer({useCase: param.useCase});
-                });
-
-                it('should send detailed feedback', () => {
-                  Expect.displayLikeButton(true);
-                  Expect.displayDislikeButton(true);
-                  Expect.likeButtonIsChecked(false);
-                  Expect.dislikeButtonIsChecked(false);
-
-                  scope('when disliking the generated answer', () => {
-                    Actions.dislikeGeneratedAnswer();
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitRgaAnswerAction(
-                        {
-                          responseId: streamId,
-                          action: 'dislike',
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logDislikeGeneratedAnswer(streamId);
-                    }
-                  });
-
-                  const feedbackQuestionsIndexes = {
-                    correctTopic: 0,
-                    hallucinationFree: 1,
-                    documented: 2,
-                    readable: 3,
-                  };
-
-                  scope('when submiting invalid feedback', () => {
-                    Actions.clickFeedbackOption(
-                      unknownOption,
-                      feedbackQuestionsIndexes.correctTopic
-                    );
-
-                    Actions.clickFeedbackSubmitButton();
-                    Expect.displaySuccessMessage(false);
-                  });
-
-                  scope('when submiting valid feedback', () => {
-                    Actions.clickFeedbackOption(
-                      unknownOption,
-                      feedbackQuestionsIndexes.correctTopic
-                    );
-                    Actions.clickFeedbackOption(
-                      yesOption,
-                      feedbackQuestionsIndexes.hallucinationFree
-                    );
-                    Actions.clickFeedbackOption(
-                      yesOption,
-                      feedbackQuestionsIndexes.documented
-                    );
-                    Actions.clickFeedbackOption(
-                      noOption,
-                      feedbackQuestionsIndexes.readable
-                    );
-                    Actions.typeInFeedbackDocumentUrlInput(exampleDocumentUrl);
-                    Actions.typeInFeedbackDetailsInput(exampleDetails);
-
-                    Actions.clickFeedbackSubmitButton();
-                    Expect.displaySuccessMessage(true);
-                    if (analyticsMode === 'next') {
-                      NextAnalyticsExpectations.emitRgaSubmitFeedback(
-                        {
-                          responseId: streamId,
-                          helpful: false,
-                          details: {
-                            readable: false,
-                            documented: true,
-                            hallucinationFree: true,
-                          },
-                          additionalNotes: exampleDetails,
-                          correctAnswerUrl: exampleDocumentUrl,
-                        },
-                        exampleTrackingId
-                      );
-                    } else {
-                      Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
-                        helpful: false,
-                        correctTopicValue: unknownOption,
-                        hallucinationFree: yesOption,
-                        documented: yesOption,
-                        readable: noOption,
-                        documentUrl: exampleDocumentUrl,
-                        details: exampleDetails,
-                      });
-                    }
-
-                    Actions.clickFeedbackDoneButton();
-                  });
-
-                  scope('when trying to open the feedback modal again', () => {
-                    Actions.dislikeGeneratedAnswer();
-                    Expect.displayFeedbackModal(false);
-                  });
-
-                  scope(
-                    'when trying to open the feedback modal after executing a new query',
-                    () => {
-                      const thirdStreamId = crypto.randomUUID();
-                      const thirdResponseId = crypto.randomUUID();
-
-                      mockSearchWithGeneratedAnswer(
-                        thirdStreamId,
-                        param.useCase,
-                        thirdResponseId
-                      );
-                      mockStreamResponse(
-                        thirdStreamId,
-                        genQaMessageTypePayload
-                      );
-                      performSearch();
-                      Actions.dislikeGeneratedAnswer();
-                      Expect.displayFeedbackModal(true);
-                    }
-                  );
-                });
-              }
-            );
-
-            describe('the generated answer toggle button', () => {
+            describe.skip('when providing detailed feedback', () => {
               const streamId = crypto.randomUUID();
-              const responseId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
+
+              const yesOption = 'yes';
+              const unknownOption = 'unknown';
+              const noOption = 'no';
+              const exampleDetails = 'example details';
+              const exampleDocumentUrl = 'https://www.foo.com/';
 
               beforeEach(() => {
                 mockSearchWithGeneratedAnswer(
                   streamId,
                   param.useCase,
-                  responseId
+                  searchId
+                );
+                mockStreamResponse(streamId, genQaMessageTypePayload);
+                visitGeneratedAnswer({useCase: param.useCase});
+              });
+
+              it('should send detailed feedback', () => {
+                Expect.displayLikeButton(true);
+                Expect.displayDislikeButton(true);
+                Expect.likeButtonIsChecked(false);
+                Expect.dislikeButtonIsChecked(false);
+
+                scope('when disliking the generated answer', () => {
+                  Actions.dislikeGeneratedAnswer();
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitRgaAnswerAction(
+                      {
+                        responseId: searchId,
+                        action: 'dislike',
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logDislikeGeneratedAnswer(streamId);
+                  }
+                });
+
+                const feedbackQuestionsIndexes = {
+                  correctTopic: 0,
+                  hallucinationFree: 1,
+                  documented: 2,
+                  readable: 3,
+                };
+
+                scope('when submiting invalid feedback', () => {
+                  Actions.clickFeedbackOption(
+                    unknownOption,
+                    feedbackQuestionsIndexes.correctTopic
+                  );
+
+                  Actions.clickFeedbackSubmitButton();
+                  Expect.displaySuccessMessage(false);
+                });
+
+                scope('when submiting valid feedback', () => {
+                  Actions.clickFeedbackOption(
+                    unknownOption,
+                    feedbackQuestionsIndexes.correctTopic
+                  );
+                  Actions.clickFeedbackOption(
+                    yesOption,
+                    feedbackQuestionsIndexes.hallucinationFree
+                  );
+                  Actions.clickFeedbackOption(
+                    yesOption,
+                    feedbackQuestionsIndexes.documented
+                  );
+                  Actions.clickFeedbackOption(
+                    noOption,
+                    feedbackQuestionsIndexes.readable
+                  );
+                  Actions.typeInFeedbackDocumentUrlInput(exampleDocumentUrl);
+                  Actions.typeInFeedbackDetailsInput(exampleDetails);
+
+                  Actions.clickFeedbackSubmitButton();
+                  Expect.displaySuccessMessage(true);
+                  if (analyticsMode === 'next') {
+                    NextAnalyticsExpectations.emitRgaSubmitFeedback(
+                      {
+                        responseId: searchId,
+                        helpful: false,
+                        details: {
+                          readable: false,
+                          documented: true,
+                          hallucinationFree: true,
+                        },
+                        additionalNotes: exampleDetails,
+                        correctAnswerUrl: exampleDocumentUrl,
+                      },
+                      exampleTrackingId
+                    );
+                  } else {
+                    Expect.logGeneratedAnswerFeedbackSubmit(streamId, {
+                      helpful: false,
+                      correctTopicValue: unknownOption,
+                      hallucinationFree: yesOption,
+                      documented: yesOption,
+                      readable: noOption,
+                      documentUrl: exampleDocumentUrl,
+                      details: exampleDetails,
+                    });
+                  }
+
+                  Actions.clickFeedbackDoneButton();
+                });
+
+                scope('when trying to open the feedback modal again', () => {
+                  Actions.dislikeGeneratedAnswer();
+                  Expect.displayFeedbackModal(false);
+                });
+
+                scope(
+                  'when trying to open the feedback modal after executing a new query',
+                  () => {
+                    const thirdStreamId = crypto.randomUUID();
+                    const thirdResponseId = crypto.randomUUID();
+
+                    mockSearchWithGeneratedAnswer(
+                      thirdStreamId,
+                      param.useCase,
+                      thirdResponseId
+                    );
+                    mockStreamResponse(thirdStreamId, genQaMessageTypePayload);
+                    performSearch();
+                    Actions.dislikeGeneratedAnswer();
+                    Expect.displayFeedbackModal(true);
+                  }
+                );
+              });
+            });
+
+            describe('the generated answer toggle button', () => {
+              const streamId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
+
+              beforeEach(() => {
+                mockSearchWithGeneratedAnswer(
+                  streamId,
+                  param.useCase,
+                  searchId
                 );
                 mockStreamResponse(streamId, genQaMessageTypePayload);
                 visitGeneratedAnswer({
@@ -579,7 +575,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: streamId,
+                        responseId: searchId,
                         action: 'hide',
                       },
                       exampleTrackingId
@@ -601,7 +597,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: streamId,
+                        responseId: searchId,
                         action: 'show',
                       },
                       exampleTrackingId
@@ -618,13 +614,13 @@ describe('quantic-generated-answer', () => {
 
             describe('the collapsible option', () => {
               const streamId = crypto.randomUUID();
-              const responseId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
 
               beforeEach(() => {
                 mockSearchWithGeneratedAnswer(
                   streamId,
                   param.useCase,
-                  responseId
+                  searchId
                 );
                 mockStreamResponse(streamId, genQaLongMessageTypePayload);
                 visitGeneratedAnswer({
@@ -652,7 +648,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: streamId,
+                        responseId: searchId,
                         action: 'expand',
                       },
                       exampleTrackingId
@@ -675,7 +671,7 @@ describe('quantic-generated-answer', () => {
                     if (analyticsMode === 'next') {
                       NextAnalyticsExpectations.emitRgaAnswerAction(
                         {
-                          responseId: streamId,
+                          responseId: searchId,
                           action: 'collapse',
                         },
                         exampleTrackingId
@@ -696,13 +692,13 @@ describe('quantic-generated-answer', () => {
               {browser: 'electron'},
               () => {
                 const streamId = crypto.randomUUID();
-                const responseId = crypto.randomUUID();
+                const searchId = crypto.randomUUID();
 
                 beforeEach(() => {
                   mockSearchWithGeneratedAnswer(
                     streamId,
                     param.useCase,
-                    responseId
+                    searchId
                   );
                   mockStreamResponse(streamId, genQaMessageTypePayload);
                   visitGeneratedAnswer({
@@ -717,7 +713,7 @@ describe('quantic-generated-answer', () => {
                     if (analyticsMode === 'next') {
                       NextAnalyticsExpectations.emitRgaAnswerAction(
                         {
-                          responseId: streamId,
+                          responseId: searchId,
                           action: 'copyToClipboard',
                         },
                         exampleTrackingId
@@ -738,7 +734,7 @@ describe('quantic-generated-answer', () => {
             describe('when a citation event is received', () => {
               const exampleLinkUrl = '#';
               const streamId = crypto.randomUUID();
-              const responseId = crypto.randomUUID();
+              const searchId = crypto.randomUUID();
               const firstTestCitation = {
                 id: 'some-id-1',
                 title: 'Some Title 1',
@@ -770,7 +766,7 @@ describe('quantic-generated-answer', () => {
                 mockSearchWithGeneratedAnswer(
                   streamId,
                   param.useCase,
-                  responseId
+                  searchId
                 );
                 mockStreamResponse(streamId, testMessagePayload);
                 visitGeneratedAnswer({useCase: param.useCase});
@@ -814,7 +810,7 @@ describe('quantic-generated-answer', () => {
                       testCitations[hoveredCitationIndex];
                     NextAnalyticsExpectations.emitRgaCitationHover(
                       {
-                        responseId: streamId,
+                        responseId: searchId,
                         citationId: id,
                         itemMetadata: {
                           uniqueFieldName: 'permanentid',
@@ -850,7 +846,7 @@ describe('quantic-generated-answer', () => {
                     testCitations[clickedCitationIndex];
                   NextAnalyticsExpectations.emitRgaCitationClick(
                     {
-                      responseId: streamId,
+                      responseId: searchId,
                       citationId: id,
                       itemMetadata: {
                         uniqueFieldName: 'permanentid',

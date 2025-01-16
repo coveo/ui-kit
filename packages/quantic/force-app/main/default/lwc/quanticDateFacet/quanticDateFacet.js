@@ -9,8 +9,14 @@ import {
   initializeWithHeadless,
   registerToStore,
   getHeadlessBundle,
+  getBueno,
 } from 'c/quanticHeadlessLoader';
-import {I18nUtils, fromSearchApiDate, Store} from 'c/quanticUtils';
+import {
+  I18nUtils,
+  fromSearchApiDate,
+  Store,
+  generateFacetDependencyConditions,
+} from 'c/quanticUtils';
 import {LightningElement, track, api} from 'lwc';
 
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
@@ -18,6 +24,8 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").DateFacetValue} DateFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
+/** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
  * @typedef FocusTarget
  * @type {object}
@@ -80,6 +88,37 @@ export default class QuanticDateFacet extends LightningElement {
       new Date(fromSearchApiDate(item.end))
     )}`;
   /**
+   * This property defines the relationship between this facet and a parent facet, indicating
+   * the specific parent facet that this facet relies on and the selected value required
+   * from that parent facet for this facet to be displayed.
+   *
+   * When this property is defined, the facet will only display if the specified `parentFacetId`
+   * has the `expectedValue` selected. If `expectedValue` is omitted or set to `undefined`,
+   * the facet will display as long as any value is selected in the parent facet.
+   *
+   * **Supported facets:** Dependencies can only be created on a basic or category facet.
+   * Dependencies on numeric, timeframe, or date facets are not supported.
+   *
+   * Example usage:
+   * - To show a facet when any value is selected in the parent facet:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype'
+   *   }
+   *   ```
+   * - To show a facet only when a specific value is selected:
+   *   ```javascript
+   *   {
+   *     parentFacetId: 'filetype',
+   *     expectedValue: 'txt'
+   *   }
+   *   ```
+   *
+   * @api
+   * @type {DependsOn}
+   */
+  @api dependsOn;
+  /**
    * Whether the facet is collapsed.
    * @api
    * @type {boolean}
@@ -94,7 +133,13 @@ export default class QuanticDateFacet extends LightningElement {
   /** @type {boolean} */
   _isCollapsed = false;
 
-  static attributes = ['facetId', 'field', 'label', 'numberOfValues'];
+  static attributes = [
+    'facetId',
+    'field',
+    'label',
+    'numberOfValues',
+    'dependsOn',
+  ];
 
   /** @type {DateFacetState} */
   @track state;
@@ -117,6 +162,8 @@ export default class QuanticDateFacet extends LightningElement {
   focusShouldBeInFacet = false;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {FacetConditionsManager} */
+  dateFacetConditionsManager;
 
   labels = {
     clearFilter,
@@ -163,11 +210,16 @@ export default class QuanticDateFacet extends LightningElement {
       format: this.formattingFunction,
       element: this.template.host,
     });
+    if (this.dependsOn) {
+      this.validateDependsOnProperty();
+      this.initFacetConditionManager(engine);
+    }
   };
 
   disconnectedCallback() {
     this.unsubscribe?.();
     this.unsubscribeSearchStatus?.();
+    this.dateFacetConditionsManager?.stopWatching();
   }
 
   updateState() {
@@ -188,6 +240,38 @@ export default class QuanticDateFacet extends LightningElement {
     this.dispatchEvent(renderFacetEvent);
   }
 
+  validateDependsOnProperty() {
+    if (this.dependsOn) {
+      getBueno(this).then(() => {
+        const {parentFacetId, expectedValue} = this.dependsOn;
+        if (!Bueno.isString(parentFacetId)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.parentFacetId to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+        if (expectedValue && !Bueno.isString(expectedValue)) {
+          console.error(
+            `The ${this.field} ${this.template.host.localName} requires dependsOn.expectedValue to be a valid string.`
+          );
+          this.setInitializationError();
+        }
+      });
+    }
+  }
+
+  initFacetConditionManager(engine) {
+    this.dateFacetConditionsManager = this.headless.buildFacetConditionsManager(
+      engine,
+      {
+        facetId: this.facet.state.facetId,
+        conditions: generateFacetDependencyConditions({
+          [this.dependsOn.parentFacetId]: this.dependsOn.expectedValue,
+        }),
+      }
+    );
+  }
+
   get values() {
     return (
       this.state?.values
@@ -199,6 +283,10 @@ export default class QuanticDateFacet extends LightningElement {
           };
         }) || []
     );
+  }
+
+  get isFacetEnabled() {
+    return this.state?.enabled;
   }
 
   get hasValues() {

@@ -1,37 +1,27 @@
 {
   "name": "@coveo/atomic-react-samples",
-  "version": "0.0.0",
-  "description": "Samples with atomic-react",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build:assets && npm run dev:vite",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
+    "dev:vite": "vite",
+    "build": "nx build"
+  },
   "dependencies": {
-    "@coveo/atomic": "3.10.1",
-    "@coveo/atomic-react": "3.2.4",
-    "@coveo/headless": "3.8.1",
+    "@coveo/atomic-react": "3.2.12",
+    "@coveo/headless": "3.13.2",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.49.1",
+    "@types/node": "22.10.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "css-loader": "7.1.0",
-    "cypress": "13.13.1",
-    "cypress-repeat": "2.3.5",
-    "eslint-plugin-react": "7.35.0",
-    "gts": "5.3.1",
-    "ncp": "2.0.0",
-    "style-loader": "4.0.0",
-    "ts-loader": "9.5.1",
-    "typescript": "5.4.5",
-    "webpack": "^5.83.1",
-    "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.0.4"
-  },
-  "scripts": {
-    "build": "nx build",
-    "dev": "npm run build:assets && npm run dev:webpack",
-    "dev:webpack": "webpack serve",
-    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
-    "e2e:watch": "cypress open --browser chrome --e2e"
+    "@vitejs/plugin-react": "4.3.2",
+    "typescript": "5.5.4",
+    "vite": "5.4.11"
   }
 }

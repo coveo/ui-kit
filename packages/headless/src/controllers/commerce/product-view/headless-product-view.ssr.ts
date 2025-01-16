@@ -1,5 +1,5 @@
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   buildController,
   Controller,
@@ -10,7 +10,7 @@ import {
 } from './headless-product-view.js';
 
 export interface ProductViewDefinition
-  extends UniversalControllerDefinitionWithoutProps<ProductView> {}
+  extends NonRecommendationControllerDefinitionWithoutProps<ProductView> {}
 
 /**
  * Defines a `ProductView` controller instance.
@@ -22,6 +22,7 @@ export interface ProductViewDefinition
  * @returns The `ProductView` controller definition.
  *
  * @internal
+ * @group Definers
  */
 export function defineProductView(): ProductViewDefinition {
   return {

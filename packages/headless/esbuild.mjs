@@ -17,8 +17,11 @@ const require = createRequire(import.meta.url);
 const devMode = process.argv[2] === 'dev';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isNightly = process.env.IS_NIGHTLY === 'true';
 
-const buenoVersion = 'v' + buenoJson.version;
+const buenoVersion = isNightly
+  ? `v${buenoJson.version.split('.').shift()}-nightly`
+  : 'v' + buenoJson.version;
 const buenoPath = isCDN
   ? `/bueno/${buenoVersion}/bueno.esm.js`
   : '@coveo/bueno';
@@ -38,6 +41,7 @@ const quanticUseCaseEntries = {
   recommendation: 'src/recommendation.index.ts',
   'case-assist': 'src/case-assist.index.ts',
   insight: 'src/insight.index.ts',
+  commerce: 'src/commerce.index.ts',
 };
 
 function getUmdGlobalName(useCase) {
@@ -84,35 +88,6 @@ const base = {
   banner: {js: apacheLicense()},
 };
 
-const browserEsmForAtomicDevelopment = Object.entries(useCaseEntries).map(
-  (entry) => {
-    const [useCase, entryPoint] = entry;
-    const outDir = getUseCaseDir('../atomic/src/external-builds', useCase);
-    const outfile = `${outDir}/headless.esm.js`;
-
-    return buildBrowserConfig(
-      {
-        entryPoints: [entryPoint],
-        outfile,
-        format: 'esm',
-        watch: devMode,
-        minify: false,
-        plugins: [
-          aliasPath({
-            alias: {
-              '@coveo/bueno': path.resolve(
-                __dirname,
-                './src/external-builds/bueno.esm.js'
-              ),
-            },
-          }),
-        ],
-      },
-      outDir
-    );
-  }
-);
-
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/browser', useCase);
@@ -157,6 +132,24 @@ const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   );
 });
 
+const codeReplacerPlugin = (filePath, target, replacement) => ({
+  name: 'code-replacer-plugin',
+  setup(build) {
+    build.onLoad({filter: /\.ts$/}, async (args) => {
+      if (args.path.endsWith(filePath)) {
+        const fs = require('fs');
+        const source = await fs.promises.readFile(args.path, 'utf8');
+        const modifiedSource = source.replace(target, replacement);
+        return {
+          contents: modifiedSource,
+          loader: 'ts',
+        };
+      }
+      return undefined;
+    });
+  },
+});
+
 const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
   const outDir = getUseCaseDir('dist/quantic/', useCase);
@@ -174,10 +167,18 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       },
       external: ['crypto'],
       inject: [
+        'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
         '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
       ],
-      plugins: [umdWrapper({libraryName: globalName})],
+      plugins: [
+        umdWrapper({libraryName: globalName}),
+        codeReplacerPlugin(
+          'src/api/knowledge/answer-slice.ts',
+          '(updatedArgs, api, extraOptions)',
+          '(updatedArgs,{...api, signal: null},extraOptions)'
+        ),
+      ],
     },
     outDir
   );
@@ -265,6 +266,7 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
     {
       entryPoints: [entryPoint],
       outfile,
+      sourcemap: true,
       format: 'esm',
       external: ['pino'],
       mainFields: ['module', 'main'],
@@ -306,7 +308,6 @@ async function main() {
   await Promise.all([
     ...browserEsm,
     ...browserUmd,
-    ...browserEsmForAtomicDevelopment,
     ...nodeEsm,
     ...nodeCjs,
     ...quanticUmd,

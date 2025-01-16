@@ -37,6 +37,9 @@ export default function SearchBox() {
   return (
     <div>
       <input
+        type="search"
+        aria-label="searchbox"
+        placeholder="search"
         value={state.value}
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}

@@ -17,7 +17,6 @@ import {
   logFacetSelect,
   logFacetExclude,
   facetSelect,
-  facetUpdateSort,
   facetClearAll,
   facetExclude,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions.js';
@@ -198,7 +197,6 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), criterion}),
-          next: facetUpdateSort(),
         })
       );
     },

@@ -92,12 +92,6 @@ describe('c-quantic-search-box', () => {
     cleanup();
   });
 
-  it('construct itself without throwing', () => {
-    expect(() =>
-      createElement('c-quantic-search-box', {is: QuanticSearchBox})
-    ).not.toThrow();
-  });
-
   describe('controller initialization', () => {
     it('should subscribe to the headless state changes', async () => {
       createTestComponent();

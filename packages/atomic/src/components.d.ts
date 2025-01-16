@@ -23,17 +23,20 @@ import { NumberInputType } from "./components/common/facets/facet-number-input/n
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
-import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
+import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
@@ -54,17 +57,20 @@ export { NumberInputType } from "./components/common/facets/facet-number-input/n
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
+export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
-export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
+export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -267,7 +273,7 @@ export namespace Components {
          */
         "resultsMustMatch": FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -886,7 +892,7 @@ export namespace Components {
          */
         "resultsMustMatch": FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -1086,6 +1092,10 @@ export namespace Components {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded": string[] | string;
@@ -1188,7 +1198,7 @@ export namespace Components {
          */
         "resultsMustMatch": FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria": InsightFacetSortCriterion;
     }
@@ -1231,6 +1241,10 @@ export namespace Components {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight": number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -1407,7 +1421,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicInsightStore;
+        "store"?: InsightStore;
     }
     interface AtomicInsightResultAction {
         /**
@@ -1424,6 +1438,10 @@ export namespace Components {
         "tooltip": string;
     }
     interface AtomicInsightResultActionBar {
+    }
+    interface AtomicInsightResultAttachToCaseAction {
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -2046,7 +2064,7 @@ export namespace Components {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: CommerceStore | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
@@ -2690,7 +2708,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicRecsStore;
+        "store"?: RecsStore;
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
@@ -2812,7 +2830,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: SearchStore;
     }
     /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
@@ -3502,7 +3520,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria": FacetSortCriterion;
         /**
@@ -3649,6 +3667,10 @@ export namespace Components {
          */
         "tabsIncluded": string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -3663,14 +3685,39 @@ export namespace Components {
          */
         "name": string;
     }
+    interface AtomicTabBar {
+    }
+    interface AtomicTabButton {
+        /**
+          * Whether the tab button is active.
+         */
+        "active": boolean;
+        /**
+          * The label to display on the tab button.
+         */
+        "label": string;
+        /**
+          * Click handler for the tab button.
+         */
+        "select": () => void;
+    }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
          */
         "clearFiltersOnTabChange"?: boolean;
+    }
+    interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
+        "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
+        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
+        "togglePopover": () => Promise<void>;
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -3778,12 +3825,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    interface TabBar {
-    }
-    interface TabPopover {
-        "setButtonVisibility": (isVisible: boolean) => Promise<void>;
-        "togglePopover": () => Promise<void>;
-    }
 }
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3820,6 +3861,10 @@ export interface AtomicInsightPagerCustomEvent<T> extends CustomEvent<T> {
 export interface AtomicInsightResultActionCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicInsightResultActionElement;
+}
+export interface AtomicInsightResultAttachToCaseActionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAtomicInsightResultAttachToCaseActionElement;
 }
 export interface AtomicInsightSmartSnippetFeedbackModalCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -4591,6 +4636,30 @@ declare global {
     var HTMLAtomicInsightResultActionBarElement: {
         prototype: HTMLAtomicInsightResultActionBarElement;
         new (): HTMLAtomicInsightResultActionBarElement;
+    };
+    interface HTMLAtomicInsightResultAttachToCaseActionElementEventMap {
+        "atomic/insight/attachToCase/attach": InsightResultAttachToCaseEvent;
+        "atomic/insight/attachToCase/detach": InsightResultAttachToCaseEvent;
+    }
+    interface HTMLAtomicInsightResultAttachToCaseActionElement extends Components.AtomicInsightResultAttachToCaseAction, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLAtomicInsightResultAttachToCaseActionElementEventMap>(type: K, listener: (this: HTMLAtomicInsightResultAttachToCaseActionElement, ev: AtomicInsightResultAttachToCaseActionCustomEvent<HTMLAtomicInsightResultAttachToCaseActionElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLAtomicInsightResultAttachToCaseActionElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseActionElement;
+        new (): HTMLAtomicInsightResultAttachToCaseActionElement;
+    };
+    interface HTMLAtomicInsightResultAttachToCaseIndicatorElement extends Components.AtomicInsightResultAttachToCaseIndicator, HTMLStencilElement {
+    }
+    var HTMLAtomicInsightResultAttachToCaseIndicatorElement: {
+        prototype: HTMLAtomicInsightResultAttachToCaseIndicatorElement;
+        new (): HTMLAtomicInsightResultAttachToCaseIndicatorElement;
     };
     interface HTMLAtomicInsightResultChildrenElement extends Components.AtomicInsightResultChildren, HTMLStencilElement {
     }
@@ -5947,20 +6016,50 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
     var HTMLAtomicTabElement: {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTabBarElement extends Components.AtomicTabBar, HTMLStencilElement {
+    }
+    var HTMLAtomicTabBarElement: {
+        prototype: HTMLAtomicTabBarElement;
+        new (): HTMLAtomicTabBarElement;
+    };
+    interface HTMLAtomicTabButtonElement extends Components.AtomicTabButton, HTMLStencilElement {
+    }
+    var HTMLAtomicTabButtonElement: {
+        prototype: HTMLAtomicTabButtonElement;
+        new (): HTMLAtomicTabButtonElement;
+    };
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface HTMLAtomicTabManagerElement extends Components.AtomicTabManager, HTMLStencilElement {
     }
     var HTMLAtomicTabManagerElement: {
         prototype: HTMLAtomicTabManagerElement;
         new (): HTMLAtomicTabManagerElement;
+    };
+    interface HTMLAtomicTabManagerBarElement extends Components.AtomicTabManagerBar, HTMLStencilElement {
+    }
+    var HTMLAtomicTabManagerBarElement: {
+        prototype: HTMLAtomicTabManagerBarElement;
+        new (): HTMLAtomicTabManagerBarElement;
+    };
+    interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
+    }
+    var HTMLAtomicTabPopoverElement: {
+        prototype: HTMLAtomicTabPopoverElement;
+        new (): HTMLAtomicTabPopoverElement;
     };
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -5999,18 +6098,6 @@ declare global {
     var HTMLAtomicTimeframeFacetElement: {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
-    };
-    interface HTMLTabBarElement extends Components.TabBar, HTMLStencilElement {
-    }
-    var HTMLTabBarElement: {
-        prototype: HTMLTabBarElement;
-        new (): HTMLTabBarElement;
-    };
-    interface HTMLTabPopoverElement extends Components.TabPopover, HTMLStencilElement {
-    }
-    var HTMLTabPopoverElement: {
-        prototype: HTMLTabPopoverElement;
-        new (): HTMLTabPopoverElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
@@ -6082,6 +6169,8 @@ declare global {
         "atomic-insight-result": HTMLAtomicInsightResultElement;
         "atomic-insight-result-action": HTMLAtomicInsightResultActionElement;
         "atomic-insight-result-action-bar": HTMLAtomicInsightResultActionBarElement;
+        "atomic-insight-result-attach-to-case-action": HTMLAtomicInsightResultAttachToCaseActionElement;
+        "atomic-insight-result-attach-to-case-indicator": HTMLAtomicInsightResultAttachToCaseIndicatorElement;
         "atomic-insight-result-children": HTMLAtomicInsightResultChildrenElement;
         "atomic-insight-result-children-template": HTMLAtomicInsightResultChildrenTemplateElement;
         "atomic-insight-result-list": HTMLAtomicInsightResultListElement;
@@ -6202,13 +6291,15 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-tab-bar": HTMLAtomicTabBarElement;
+        "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
+        "atomic-tab-manager-bar": HTMLAtomicTabManagerBarElement;
+        "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
-        "tab-bar": HTMLTabBarElement;
-        "tab-popover": HTMLTabPopoverElement;
     }
 }
 declare namespace LocalJSX {
@@ -6408,7 +6499,7 @@ declare namespace LocalJSX {
          */
         "resultsMustMatch"?: FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
@@ -6995,7 +7086,7 @@ declare namespace LocalJSX {
          */
         "resultsMustMatch"?: FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
@@ -7193,6 +7284,10 @@ declare namespace LocalJSX {
          */
         "collapsible"?: boolean;
         /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
+        /**
           * The tabs on which this generated answer must not be displayed. This property should not be used at the same time as `tabs-included`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-generated-answer tabs-excluded='["tabIDA", "tabIDB"]'></atomic-generated-answer> ``` If you don't set this property, the generated answer can be displayed on any tab. Otherwise, the generated answer won't be displayed on any of the specified tabs.
          */
         "tabsExcluded"?: string[] | string;
@@ -7296,7 +7391,7 @@ declare namespace LocalJSX {
          */
         "resultsMustMatch"?: FacetResultsMustMatch;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria"?: InsightFacetSortCriterion;
     }
@@ -7335,6 +7430,10 @@ declare namespace LocalJSX {
           * @default false
          */
         "collapsible"?: boolean;
+        /**
+          * The maximum height (in rem units) of the answer when collapsed.
+         */
+        "maxCollapsedHeight"?: number;
         /**
           * Whether to render a toggle button that lets the user hide or show the answer.
           * @default false
@@ -7500,7 +7599,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicInsightStore;
+        "store"?: InsightStore;
     }
     interface AtomicInsightResultAction {
         /**
@@ -7518,6 +7617,12 @@ declare namespace LocalJSX {
         "tooltip"?: string;
     }
     interface AtomicInsightResultActionBar {
+    }
+    interface AtomicInsightResultAttachToCaseAction {
+        "onAtomic/insight/attachToCase/attach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+        "onAtomic/insight/attachToCase/detach"?: (event: AtomicInsightResultAttachToCaseActionCustomEvent<InsightResultAttachToCaseEvent>) => void;
+    }
+    interface AtomicInsightResultAttachToCaseIndicator {
     }
     interface AtomicInsightResultChildren {
         /**
@@ -8112,7 +8217,7 @@ declare namespace LocalJSX {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: CommerceStore | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
@@ -8716,7 +8821,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicRecsStore;
+        "store"?: RecsStore;
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
@@ -8835,7 +8940,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: SearchStore;
     }
     /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
@@ -9500,7 +9605,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
          */
         "sortCriteria"?: FacetSortCriterion;
         /**
@@ -9660,6 +9765,10 @@ declare namespace LocalJSX {
          */
         "tabsIncluded"?: string[] | string;
     }
+    /**
+     * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+     * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+     */
     interface AtomicTab {
         /**
           * The [constant query expression (`cq`)](https://docs.coveo.com/en/2830/searching-with-coveo/about-the-query-expression#constant-query-expression-cq) to apply when the tab is the active one.
@@ -9674,14 +9783,36 @@ declare namespace LocalJSX {
          */
         "name": string;
     }
+    interface AtomicTabBar {
+    }
+    interface AtomicTabButton {
+        /**
+          * Whether the tab button is active.
+         */
+        "active"?: boolean;
+        /**
+          * The label to display on the tab button.
+         */
+        "label": string;
+        /**
+          * Click handler for the tab button.
+         */
+        "select": () => void;
+    }
     /**
-     * @alpha 
+     * The `atomic-tab-manager` component manages a collection of tabs,
+     * allowing users to switch between them. Each child `atomic-tab` represents an
+     * individual tab within the manager.
      */
     interface AtomicTabManager {
         /**
           * Whether to clear the filters when the active tab changes.
          */
         "clearFiltersOnTabChange"?: boolean;
+    }
+    interface AtomicTabManagerBar {
+    }
+    interface AtomicTabPopover {
     }
     /**
      * The `atomic-table-element` element defines a table column in a result list.
@@ -9789,10 +9920,6 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    interface TabBar {
-    }
-    interface TabPopover {
-    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-automatic-facet": AtomicAutomaticFacet;
@@ -9863,6 +9990,8 @@ declare namespace LocalJSX {
         "atomic-insight-result": AtomicInsightResult;
         "atomic-insight-result-action": AtomicInsightResultAction;
         "atomic-insight-result-action-bar": AtomicInsightResultActionBar;
+        "atomic-insight-result-attach-to-case-action": AtomicInsightResultAttachToCaseAction;
+        "atomic-insight-result-attach-to-case-indicator": AtomicInsightResultAttachToCaseIndicator;
         "atomic-insight-result-children": AtomicInsightResultChildren;
         "atomic-insight-result-children-template": AtomicInsightResultChildrenTemplate;
         "atomic-insight-result-list": AtomicInsightResultList;
@@ -9983,13 +10112,15 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
+        "atomic-tab-bar": AtomicTabBar;
+        "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
+        "atomic-tab-manager-bar": AtomicTabManagerBar;
+        "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
-        "tab-bar": TabBar;
-        "tab-popover": TabPopover;
     }
 }
 export { LocalJSX as JSX };
@@ -10262,6 +10393,8 @@ declare module "@stencil/core" {
             "atomic-insight-result": LocalJSX.AtomicInsightResult & JSXBase.HTMLAttributes<HTMLAtomicInsightResultElement>;
             "atomic-insight-result-action": LocalJSX.AtomicInsightResultAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionElement>;
             "atomic-insight-result-action-bar": LocalJSX.AtomicInsightResultActionBar & JSXBase.HTMLAttributes<HTMLAtomicInsightResultActionBarElement>;
+            "atomic-insight-result-attach-to-case-action": LocalJSX.AtomicInsightResultAttachToCaseAction & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseActionElement>;
+            "atomic-insight-result-attach-to-case-indicator": LocalJSX.AtomicInsightResultAttachToCaseIndicator & JSXBase.HTMLAttributes<HTMLAtomicInsightResultAttachToCaseIndicatorElement>;
             "atomic-insight-result-children": LocalJSX.AtomicInsightResultChildren & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenElement>;
             "atomic-insight-result-children-template": LocalJSX.AtomicInsightResultChildrenTemplate & JSXBase.HTMLAttributes<HTMLAtomicInsightResultChildrenTemplateElement>;
             "atomic-insight-result-list": LocalJSX.AtomicInsightResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightResultListElement>;
@@ -10847,11 +10980,21 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             /**
-             * @alpha 
+             * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+             * It must be used as a child of the `atomic-tab-manager` component to function correctly.
+             */
+            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-tab-bar": LocalJSX.AtomicTabBar & JSXBase.HTMLAttributes<HTMLAtomicTabBarElement>;
+            "atomic-tab-button": LocalJSX.AtomicTabButton & JSXBase.HTMLAttributes<HTMLAtomicTabButtonElement>;
+            /**
+             * The `atomic-tab-manager` component manages a collection of tabs,
+             * allowing users to switch between them. Each child `atomic-tab` represents an
+             * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
+            "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
+            "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.
              */
@@ -10870,8 +11013,6 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
-            "tab-bar": LocalJSX.TabBar & JSXBase.HTMLAttributes<HTMLTabBarElement>;
-            "tab-popover": LocalJSX.TabPopover & JSXBase.HTMLAttributes<HTMLTabPopoverElement>;
         }
     }
 }

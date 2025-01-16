@@ -1,3 +1,80 @@
+## <small>3.15.1 (2025-01-15)</small>
+
+- refactor(atomic): split the atomic store into composable parts (#4806) ([de2a920](https://github.com/coveo/ui-kit/commits/de2a920)), closes [#4806](https://github.com/coveo/ui-kit/issues/4806)
+
+## 3.15.0 (2025-01-15)
+
+- chore: relocate dist/components to dist/atomic/components (#4859) ([d854df2](https://github.com/coveo/ui-kit/commits/d854df2)), closes [#4859](https://github.com/coveo/ui-kit/issues/4859)
+- fix(atomic): show warning when facet displayValuesAs is not checkbox and enableExclusion is set to t ([eec0326](https://github.com/coveo/ui-kit/commits/eec0326)), closes [#4855](https://github.com/coveo/ui-kit/issues/4855)
+- feat(atomic): replace getAssetPath (#4844) ([4aa0206](https://github.com/coveo/ui-kit/commits/4aa0206)), closes [#4844](https://github.com/coveo/ui-kit/issues/4844)
+
+## 3.14.0 (2025-01-15)
+
+- fix(atomic): make toggling highlight of individual keywords work again in quickview modal (#4838) ([df0db66](https://github.com/coveo/ui-kit/commits/df0db66)), closes [#4838](https://github.com/coveo/ui-kit/issues/4838)
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- fix(insight): literally just a single character! (#4841) ([7b7e2b8](https://github.com/coveo/ui-kit/commits/7b7e2b8)), closes [#4841](https://github.com/coveo/ui-kit/issues/4841)
+- fix(insight): some ui fixes for insight panel (#4845) ([03db330](https://github.com/coveo/ui-kit/commits/03db330)), closes [#4845](https://github.com/coveo/ui-kit/issues/4845)
+- feat: add `displayIf` directive (#4846) ([d9c9856](https://github.com/coveo/ui-kit/commits/d9c9856)), closes [#4846](https://github.com/coveo/ui-kit/issues/4846)
+- feat(genqa): add collapsible height option to the component (#4817) ([db77dd0](https://github.com/coveo/ui-kit/commits/db77dd0)), closes [#4817](https://github.com/coveo/ui-kit/issues/4817)
+- chore: fix desynced package-lock (#4842) ([7ae9c0f](https://github.com/coveo/ui-kit/commits/7ae9c0f)), closes [#4842](https://github.com/coveo/ui-kit/issues/4842)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+- chore(atomic): replace HTMLStencilElement with HTMLElement (#4835) ([d695190](https://github.com/coveo/ui-kit/commits/d695190)), closes [#4835](https://github.com/coveo/ui-kit/issues/4835)
+
+## 3.13.0 (2025-01-08)
+
+- chore: remove experimental FollowQ component (#4788) ([03ae25c](https://github.com/coveo/ui-kit/commits/03ae25c)), closes [#4788](https://github.com/coveo/ui-kit/issues/4788)
+- chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
+- fix(atomic): fix accessibility issues with pager/results per page buttons (#4761) ([4c50969](https://github.com/coveo/ui-kit/commits/4c50969)), closes [#4761](https://github.com/coveo/ui-kit/issues/4761)
+- fix(atomic): fix IPX with high zoom levels (#4805) ([13eba4e](https://github.com/coveo/ui-kit/commits/13eba4e)), closes [#4805](https://github.com/coveo/ui-kit/issues/4805)
+- fix(atomic): make all components start with `atomic-` (#4823) ([0f33d58](https://github.com/coveo/ui-kit/commits/0f33d58)), closes [#4823](https://github.com/coveo/ui-kit/issues/4823)
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (#4810) ([fb2c7c6](https://github.com/coveo/ui-kit/commits/fb2c7c6)), closes [#4810](https://github.com/coveo/ui-kit/issues/4810)
+- fix(deps): update all dependencies j:kit-282 (#4818) ([dac0953](https://github.com/coveo/ui-kit/commits/dac0953)), closes [#4818](https://github.com/coveo/ui-kit/issues/4818)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+- feat(atomic): add arrow key navigation to atomic-tab/atomic-insight-tab (#4799) ([5e7b15f](https://github.com/coveo/ui-kit/commits/5e7b15f)), closes [#4799](https://github.com/coveo/ui-kit/issues/4799)
+- test(atomic): add tests for atomic-product-numeric-field-value (#4779) ([5411883](https://github.com/coveo/ui-kit/commits/5411883)), closes [#4779](https://github.com/coveo/ui-kit/issues/4779)
+
+## <small>3.12.1 (2024-12-11)</small>
+
+- fix(atomic): accessibility issues on "More" tab list (#4774) ([212b46e](https://github.com/coveo/ui-kit/commits/212b46e)), closes [#4774](https://github.com/coveo/ui-kit/issues/4774)
+- fix(atomic): disable next and previous quickview button at edges (#4762) ([4812865](https://github.com/coveo/ui-kit/commits/4812865)), closes [#4762](https://github.com/coveo/ui-kit/issues/4762)
+- fix(atomic): fix error when hovering recent result containing double quotes (#4760) ([0e89ee9](https://github.com/coveo/ui-kit/commits/0e89ee9)), closes [#4760](https://github.com/coveo/ui-kit/issues/4760)
+- fix(atomic): fix missing hover effect on more tab button (#4772) ([d6dc16d](https://github.com/coveo/ui-kit/commits/d6dc16d)), closes [#4772](https://github.com/coveo/ui-kit/issues/4772)
+
+## 3.12.0 (2024-12-04)
+
+- chore: add atomic loader to CDN deployment config (#4686) ([7a7e0ba](https://github.com/coveo/ui-kit/commits/7a7e0ba)), closes [#4686](https://github.com/coveo/ui-kit/issues/4686)
+- chore(deps): update @babel packages j:kit-282 (#4739) ([1e348ba](https://github.com/coveo/ui-kit/commits/1e348ba)), closes [#4739](https://github.com/coveo/ui-kit/issues/4739)
+- chore(deps): update @nx packages to v19.8.11 j:kit-282 (#4740) ([b115560](https://github.com/coveo/ui-kit/commits/b115560)), closes [#4740](https://github.com/coveo/ui-kit/issues/4740)
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+- chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
+- feat(atomic): add experimental component for follow-up questions (#4729) ([3d52be2](https://github.com/coveo/ui-kit/commits/3d52be2)), closes [#4729](https://github.com/coveo/ui-kit/issues/4729)
+- feat(atomic): improve atomic-tab overflow behaviour (#4725) ([5ce1ab5](https://github.com/coveo/ui-kit/commits/5ce1ab5)), closes [#4725](https://github.com/coveo/ui-kit/issues/4725)
+- feat(headless-react): create providers with definition (#4709) ([dfba10c](https://github.com/coveo/ui-kit/commits/dfba10c)), closes [#4709](https://github.com/coveo/ui-kit/issues/4709)
+- feat(insight): remove text-xs from badge (#4736) ([cfd880f](https://github.com/coveo/ui-kit/commits/cfd880f)), closes [#4736](https://github.com/coveo/ui-kit/issues/4736)
+- test(atomic): fix flaky atomic did you mean tests (#4723) ([ea85966](https://github.com/coveo/ui-kit/commits/ea85966)), closes [#4723](https://github.com/coveo/ui-kit/issues/4723)
+- fix(atomic): actually use alt field value (#4695) ([efee724](https://github.com/coveo/ui-kit/commits/efee724)), closes [#4695](https://github.com/coveo/ui-kit/issues/4695)
+- fix(deps): update dependency dompurify to v3.2.0 j:kit-282 (#4724) ([290a8b6](https://github.com/coveo/ui-kit/commits/290a8b6)), closes [#4724](https://github.com/coveo/ui-kit/issues/4724)
+- feat(atomic, headless): add support for sort criteria alphanumericNatural (#4493) ([c5a50cf](https://github.com/coveo/ui-kit/commits/c5a50cf)), closes [#4493](https://github.com/coveo/ui-kit/issues/4493)
+- docs(atomic): fix empty html tab in storybook (#4693) ([a920c5c](https://github.com/coveo/ui-kit/commits/a920c5c)), closes [#4693](https://github.com/coveo/ui-kit/issues/4693) [#4236](https://github.com/coveo/ui-kit/issues/4236)
+
+## <small>3.11.1 (2024-11-20)</small>
+
+- fix(atomic): add space after ':' in breadcrumb buttons (#4683) ([af13331](https://github.com/coveo/ui-kit/commits/af13331)), closes [#4683](https://github.com/coveo/ui-kit/issues/4683)
+- fix(atomic): remove carousel arrows when only one page of Recommendations exists (#4647) ([0554dd3](https://github.com/coveo/ui-kit/commits/0554dd3)), closes [#4647](https://github.com/coveo/ui-kit/issues/4647)
+- test(atomic): replace `atomic-quickview` Cypress tests with Playwright (#4549) ([fdf0616](https://github.com/coveo/ui-kit/commits/fdf0616)), closes [#4549](https://github.com/coveo/ui-kit/issues/4549)
+- test(commerce ssr): setup smoke tests on commerce SSR sample (#4665) ([6550a8e](https://github.com/coveo/ui-kit/commits/6550a8e)), closes [#4665](https://github.com/coveo/ui-kit/issues/4665)
+- chore: add build to deployment composante + nightly flag (#4655) ([587494d](https://github.com/coveo/ui-kit/commits/587494d)), closes [#4655](https://github.com/coveo/ui-kit/issues/4655)
+
+## 3.11.0 (2024-11-13)
+
+- feat(atomic): Add insight result attach-to-case component (#4499) ([ea6085c](https://github.com/coveo/ui-kit/commits/ea6085c)), closes [#4499](https://github.com/coveo/ui-kit/issues/4499)
+- feat(headless): add applyCorrection function in didYouMean (#4609) ([ac505ad](https://github.com/coveo/ui-kit/commits/ac505ad)), closes [#4609](https://github.com/coveo/ui-kit/issues/4609)
+- docs(atomic): hide a component (#4648) ([d823590](https://github.com/coveo/ui-kit/commits/d823590)), closes [#4648](https://github.com/coveo/ui-kit/issues/4648)
+
 ## 3.10.0 (2024-11-06)
 
 - [Version Bump][skip ci]: ui-kit publish ([afbd8fc](https://github.com/coveo/ui-kit/commits/afbd8fc))

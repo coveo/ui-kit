@@ -1,3 +1,42 @@
+## <small>2.4.1 (2025-01-15)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+
+## 2.4.0 (2025-01-08)
+
+- chore(deps): update dependency eslint-plugin-react to v7.37.3 j:kit-282 (#4819) ([b51ea24](https://github.com/coveo/ui-kit/commits/b51ea24)), closes [#4819](https://github.com/coveo/ui-kit/issues/4819)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update typescript j:kit-282 (#4721) ([4ee6eba](https://github.com/coveo/ui-kit/commits/4ee6eba)), closes [#4721](https://github.com/coveo/ui-kit/issues/4721)
+- fix(headless commerce SSR): fix react provider hydration logic (#4792) ([69efd25](https://github.com/coveo/ui-kit/commits/69efd25)), closes [#4792](https://github.com/coveo/ui-kit/issues/4792)
+- fix(headless-react): fix error when using keys other than their name for WithProps controllers (#478 ([56a5d92](https://github.com/coveo/ui-kit/commits/56a5d92)), closes [#4783](https://github.com/coveo/ui-kit/issues/4783)
+- fix(headless-ssr-commerce): fix client side recommendation refresh with a productId (#4793) ([454178b](https://github.com/coveo/ui-kit/commits/454178b)), closes [#4793](https://github.com/coveo/ui-kit/issues/4793)
+- docs(headless commerce SSR): add parameter manager in SSR + nextjs sample (#4770) ([208e054](https://github.com/coveo/ui-kit/commits/208e054)), closes [#4770](https://github.com/coveo/ui-kit/issues/4770)
+- docs(headless-react): create typedoc site & publish it as an artifact (#4747) ([3f2b6fa](https://github.com/coveo/ui-kit/commits/3f2b6fa)), closes [#4747](https://github.com/coveo/ui-kit/issues/4747)
+- feat(headless SSR): improved error messaging for hook misuse (#4771) ([915daa1](https://github.com/coveo/ui-kit/commits/915daa1)), closes [#4771](https://github.com/coveo/ui-kit/issues/4771)
+
+## 2.3.0 (2024-12-11)
+
+- feat(headless SSR): fetchStaticState should only accept solutiontype-specific controllers (#4769) ([f961cb2](https://github.com/coveo/ui-kit/commits/f961cb2)), closes [#4769](https://github.com/coveo/ui-kit/issues/4769)
+
+## 2.2.0 (2024-12-04)
+
+- chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)
+- chore(deps): update all dependencies j:kit-282 (major) (#4748) ([cc95ed7](https://github.com/coveo/ui-kit/commits/cc95ed7)), closes [#4748](https://github.com/coveo/ui-kit/issues/4748)
+- feat(headless-react): create providers with definition (#4709) ([dfba10c](https://github.com/coveo/ui-kit/commits/dfba10c)), closes [#4709](https://github.com/coveo/ui-kit/issues/4709)
+- feat(headless): refresh commerce recommendations server-side (#4617) ([51708a0](https://github.com/coveo/ui-kit/commits/51708a0)), closes [#4617](https://github.com/coveo/ui-kit/issues/4617)
+- feat(ssr): reorder headless react exports (#4714) ([d66d49e](https://github.com/coveo/ui-kit/commits/d66d49e)), closes [#4714](https://github.com/coveo/ui-kit/issues/4714)
+
+## <small>2.1.2 (2024-11-20)</small>
+
+- refactor(headless, headless-react): no more generic engine in ssr-commerce types (#4657) ([a60b308](https://github.com/coveo/ui-kit/commits/a60b308)), closes [#4657](https://github.com/coveo/ui-kit/issues/4657)
+
+## <small>2.1.1 (2024-11-13)</small>
+
+- chore: general improvements and refactors of headless-ssr-commerce (#4625) ([e7b8a48](https://github.com/coveo/ui-kit/commits/e7b8a48)), closes [#4625](https://github.com/coveo/ui-kit/issues/4625)
+- chore(headless): rename 'controllers' to 'methods' in ssr-commerce to stay consistent with ssr (#464 ([61ff4ea](https://github.com/coveo/ui-kit/commits/61ff4ea)), closes [#4642](https://github.com/coveo/ui-kit/issues/4642)
+- docs(headless commerce react samples): use react package (#4615) ([6f5ba55](https://github.com/coveo/ui-kit/commits/6f5ba55)), closes [#4615](https://github.com/coveo/ui-kit/issues/4615)
+- test(headles-react): add test for ssr-commerce (#4616) ([cdedb88](https://github.com/coveo/ui-kit/commits/cdedb88)), closes [#4616](https://github.com/coveo/ui-kit/issues/4616)
+
 ## 2.1.0 (2024-11-06)
 
 - feat(headless SSR): add hooks for ssr react commerce (#4614) ([7936561](https://github.com/coveo/ui-kit/commits/7936561)), closes [#4614](https://github.com/coveo/ui-kit/issues/4614)

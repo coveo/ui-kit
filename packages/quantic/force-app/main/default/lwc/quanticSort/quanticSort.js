@@ -25,6 +25,12 @@ import {LightningElement, track, api} from 'lwc';
  * @example {label: 'Youtube views ascending', value: '@ytviewcount ascending', criterion: {by: 'field', field: '@ytviewcount', order: 'ascending'}
  */
 
+const SORT_VARIANTS = {
+  DEFAULT: 'default',
+  WIDE: 'wide',
+};
+Object.freeze(SORT_VARIANTS);
+
 /**
  * The `QuanticSort` component renders a dropdown that the end user can interact with to select the criterion to use when sorting query results.
  * @category Search
@@ -38,8 +44,13 @@ import {LightningElement, track, api} from 'lwc';
       criterion={sortOptionCriterion}
     ></c-quantic-sort-option></c-quantic-sort>
  */
-
 export default class QuanticSort extends LightningElement {
+  /**
+   * The sort variant. Accepted variants include `default` and `wide`.
+   * @api
+   * @type {'default'|'wide'}
+   */
+  @api variant = 'default';
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -75,14 +86,19 @@ export default class QuanticSort extends LightningElement {
   schemas = {};
 
   labels = {
-    sortBy,
     relevancy,
     newest,
     oldest,
     invalidCustomSortConfig,
+    sortBy,
   };
 
   connectedCallback() {
+    if (!Object.values(SORT_VARIANTS).includes(this.variant)) {
+      console.warn(
+        `Unsupported variant: ${this.variant} specified in the QuanticSort component, using the default variant.`
+      );
+    }
     registerComponentForInit(this, this.engineId);
   }
 
@@ -253,6 +269,10 @@ export default class QuanticSort extends LightningElement {
 
   get hasError() {
     return this.hasInitializationError || !!this.errorMessage;
+  }
+
+  get isVariantWide() {
+    return this.variant === SORT_VARIANTS.WIDE;
   }
 
   /**

@@ -8,6 +8,11 @@ import {ConfigurationSection} from '../state/state-sections.js';
 type StateNeededBySearchRequest = ConfigurationSection &
   Partial<SearchAppState>;
 
+type SortCriteria = {
+  type: string;
+  order: string;
+};
+
 export function sortFacets<T extends {facetId: string}>(
   facets: T[],
   sortOrder: string[]
@@ -40,20 +45,26 @@ function getRangeFacetRequests<T extends RangeFacetSetState>(state: T) {
   });
 }
 
+export const sortCriteriaMap: Record<string, SortCriteria> = {
+  alphanumericDescending: {type: 'alphanumeric', order: 'descending'},
+  alphanumericNaturalDescending: {
+    type: 'alphanumericNatural',
+    order: 'descending',
+  },
+};
+
 function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
     At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
-    if (request.sortCriteria === 'alphanumericDescending') {
+    const sortCriteria =
+      sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
+    if (sortCriteria) {
       return {
         ...request,
-        sortCriteria: {
-          type: 'alphanumeric',
-          order: 'descending',
-        },
+        sortCriteria,
       };
     }
-
     return request;
   });
 }

@@ -7,8 +7,6 @@ import {
   makeAnalyticsAction,
   LegacySearchAction,
 } from '../analytics/analytics-utils.js';
-import {SearchPageEvents} from '../analytics/search-action-cause.js';
-import {SearchAction} from '../search/search-actions.js';
 
 export interface LogUndoTriggerQueryActionCreatorPayload {
   /**
@@ -72,6 +70,3 @@ export const logTriggerExecute = (): LegacySearchAction =>
   });
 
 // --------------------- KIT-2859 : Everything above this will get deleted ! :) ---------------------
-export const undoTriggerQuery = (): SearchAction => ({
-  actionCause: SearchPageEvents.undoTriggerQuery,
-});

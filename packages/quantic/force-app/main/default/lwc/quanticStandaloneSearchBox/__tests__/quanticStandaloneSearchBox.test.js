@@ -110,10 +110,6 @@ describe('c-quantic-standalone-search-box', () => {
     cleanup();
   });
 
-  it('construct itself without throwing', () => {
-    expect(() => createTestComponent()).not.toThrow();
-  });
-
   describe('controller initialization', () => {
     it('should subscribe to the headless state changes', async () => {
       createTestComponent();

@@ -83,7 +83,7 @@ export class AtomicInsightFacet
   @Prop({reflect: true}) public numberOfValues = 8;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: InsightFacetSortCriterion =
     'automatic';
@@ -204,8 +204,7 @@ export class AtomicInsightFacet
               onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
               headerRef={(el) => this.focusTargets.header.setTarget(el)}
             ></FacetHeader>
-
-            {[this.renderValues(), this.renderShowMoreLess()]}
+            {this.renderBody()}
           </FacetContainer>
         ) : (
           <FacetPlaceholder
@@ -215,6 +214,13 @@ export class AtomicInsightFacet
         )}
       </FacetGuard>
     );
+  }
+
+  private renderBody() {
+    if (this.isCollapsed) {
+      return;
+    }
+    return [this.renderValues(), this.renderShowMoreLess()];
   }
 
   private renderValuesContainer(children: VNode[], query?: string) {
@@ -249,7 +255,11 @@ export class AtomicInsightFacet
             {...this.facetValueProps}
             facetCount={value.numberOfResults}
             onExclude={() => this.facet.toggleExclude(value)}
-            onSelect={() => this.facet.toggleSelect(value)}
+            onSelect={() =>
+              this.displayValuesAs === 'link'
+                ? this.facet.toggleSingleSelect(value)
+                : this.facet.toggleSelect(value)
+            }
             facetValue={value.value}
             facetState={value.state}
             setRef={(btn) => {

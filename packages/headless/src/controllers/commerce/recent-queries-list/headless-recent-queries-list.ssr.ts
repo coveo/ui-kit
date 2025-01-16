@@ -1,4 +1,4 @@
-import {SearchAndListingControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {NonRecommendationControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {
   RecentQueriesList,
   RecentQueriesListProps,
@@ -13,7 +13,7 @@ export type {
 export type {RecentQueriesList, RecentQueriesListProps};
 
 export interface RecentQueriesListDefinition
-  extends SearchAndListingControllerDefinitionWithoutProps<RecentQueriesList> {}
+  extends NonRecommendationControllerDefinitionWithoutProps<RecentQueriesList> {}
 
 /**
  * Defines the `RecentQueriesList` controller for the purpose of server-side rendering.
@@ -30,6 +30,7 @@ export function defineRecentQueriesList(
   return {
     search: true,
     listing: true,
+    standalone: true,
     build: (engine) => buildRecentQueriesList(engine, props),
   };
 }

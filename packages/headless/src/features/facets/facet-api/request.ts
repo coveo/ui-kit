@@ -92,6 +92,8 @@ export interface SortCriteria<
     | 'score'
     | 'alphanumeric'
     | 'alphanumericDescending'
+    | 'alphanumericNatural'
+    | 'alphanumericNaturalDescending'
     | 'ascending'
     | 'descending'
     | 'occurrences'

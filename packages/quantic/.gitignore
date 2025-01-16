@@ -44,6 +44,9 @@ force-app/main/default/staticresources/dompurify
 # Test Coverage & Report
 coverage
 reports
+/test-results/
+/playwright-report/
+/playwright/.cache/
 
 # Cypress artifacts
 .cache/
@@ -57,3 +60,5 @@ docs/out/*
 
 # Environment Variables
 .env
+
+.tmp

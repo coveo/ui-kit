@@ -8,7 +8,7 @@ import {
   State,
   Watch,
 } from '@stencil/core';
-import {sanitize} from 'dompurify';
+import DOMPurify from 'dompurify';
 import {
   InitializableComponent,
   InitializeBindings,
@@ -94,7 +94,7 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
   private async getIcon() {
     const url = parseAssetURL(
       this.icon,
-      this.bindings.store.getIconAssetsPath()
+      this.bindings.store.state.iconAssetsPath
     );
     const svg = url ? await this.fetchIcon(url) : this.icon;
 
@@ -102,7 +102,7 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
       this.validateSVG(svg);
     }
     const sanitizedSvg = svg
-      ? sanitize(svg, {
+      ? DOMPurify.sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},
         })
       : null;

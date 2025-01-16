@@ -11,20 +11,20 @@
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
-    "@babel/standalone": "7.25.0",
-    "@coveo/atomic": "3.10.1",
-    "@coveo/atomic-hosted-page": "1.0.12",
-    "@coveo/atomic-react": "3.2.4",
-    "@coveo/headless": "3.8.1",
+    "@babel/standalone": "7.26.4",
+    "@coveo/atomic": "3.15.1",
+    "@coveo/atomic-hosted-page": "1.0.19",
+    "@coveo/atomic-react": "3.2.12",
+    "@coveo/headless": "3.13.2",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "cypress": "13.13.1",
-    "cypress-repeat": "2.3.5",
+    "cypress": "13.6.6",
+    "cypress-repeat": "2.3.8",
     "ncp": "2.0.0",
-    "resolve": "1.22.8",
-    "rimraf": "5.0.9",
-    "serve": "14.2.3"
+    "resolve": "1.22.10",
+    "rimraf": "6.0.1",
+    "serve": "14.2.4"
   }
 }

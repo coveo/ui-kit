@@ -2,7 +2,13 @@ import {
   EventSourceMessage,
   fetchEventSource,
 } from '@microsoft/fetch-event-source';
-import {createSelector} from '@reduxjs/toolkit';
+import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  setAnswerContentFormat,
+  updateCitations,
+  updateMessage,
+} from '../../features/generated-answer/generated-answer-actions.js';
+import {logGeneratedAnswerStreamEnd} from '../../features/generated-answer/generated-answer-analytics-actions.js';
 import {selectFieldsToIncludeInCitation} from '../../features/generated-answer/generated-answer-selectors.js';
 import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {maximumNumberOfResultsFromIndex} from '../../features/pagination/pagination-constants.js';
@@ -116,9 +122,10 @@ const handleError = (
   console.error(`${message.errorMessage} - code ${message.code}`);
 };
 
-const updateCacheWithEvent = (
+export const updateCacheWithEvent = (
   event: EventSourceMessage,
-  draft: GeneratedAnswerStream
+  draft: GeneratedAnswerStream,
+  dispatch: ThunkDispatch<StateNeededByAnswerAPI, unknown, UnknownAction>
 ) => {
   const message: Required<MessageType> = JSON.parse(event.data);
   if (message.finishReason === 'ERROR' && message.errorMessage) {
@@ -133,22 +140,26 @@ const updateCacheWithEvent = (
     case 'genqa.headerMessageType':
       if (parsedPayload.contentFormat) {
         handleHeaderMessage(draft, parsedPayload);
+        dispatch(setAnswerContentFormat(parsedPayload.contentFormat));
       }
       break;
     case 'genqa.messageType':
       if (parsedPayload.textDelta) {
         handleMessage(draft, parsedPayload);
+        dispatch(updateMessage({textDelta: parsedPayload.textDelta}));
       }
       break;
     case 'genqa.citationsType':
       if (parsedPayload.citations) {
         handleCitations(draft, parsedPayload);
+        dispatch(updateCitations({citations: parsedPayload.citations}));
       }
       break;
     case 'genqa.endOfStreamType':
-      if (draft.answer?.length || parsedPayload.answerGenerated) {
-        handleEndOfStream(draft, parsedPayload);
-      }
+      handleEndOfStream(draft, parsedPayload);
+      dispatch(
+        logGeneratedAnswerStreamEnd(parsedPayload.answerGenerated ?? false)
+      );
       break;
   }
 };
@@ -170,7 +181,7 @@ export const answerApi = answerSlice.injectEndpoints({
       }),
       async onCacheEntryAdded(
         args,
-        {getState, cacheDataLoaded, updateCachedData}
+        {getState, cacheDataLoaded, updateCachedData, dispatch}
       ) {
         await cacheDataLoaded;
         /**
@@ -209,7 +220,7 @@ export const answerApi = answerSlice.injectEndpoints({
             },
             onmessage: (event) => {
               updateCachedData((draft) => {
-                updateCacheWithEvent(event, draft);
+                updateCacheWithEvent(event, draft, dispatch);
               });
             },
             onerror: (error) => {

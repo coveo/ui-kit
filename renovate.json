@@ -1,157 +1,171 @@
 {
-  "enabled": false,
+  "enabled": true,
   "extends": [
     "github>coveo/renovate-presets",
     "helpers:pinGitHubActionDigests"
   ],
   "labels": ["dependencies"],
+  "dependencyDashboard": true,
   "packageRules": [
     {
-      "matchPackagePatterns": ["*"],
       "groupName": "all dependencies",
-      "groupSlug": "all"
+      "groupSlug": "all-safe",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
     },
     {
-      "matchPackagePatterns": ["typedoc"],
+      "groupName": "all dependencies (major)",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
       "groupName": "typedoc",
       "groupSlug": "typedoc",
       "rangeStrategy": "replace",
-      "description": "Isolate typedoc updates to monitor for breaking changes"
+      "description": "Isolate typedoc updates to monitor for breaking changes",
+      "matchPackageNames": ["/typedoc/"]
     },
     {
-      "matchPackagePatterns": [
-        "^@angular/*",
-        "^@angular-devkit/*",
-        "ng-packagr"
-      ],
+      "groupName": "typescript",
+      "groupSlug": "typescript",
+      "rangeStrategy": "replace",
+      "description": "Isolate typescript",
+      "matchPackageNames": ["/typescript/"]
+    },
+    {
+      "groupName": "vite",
+      "groupSlug": "vite",
+      "rangeStrategy": "replace",
+      "description": "Isolate vite until green with @nx/vite",
+      "matchPackageNames": ["vite"]
+    },
+    {
+      "groupName": "gts",
+      "groupSlug": "gts",
+      "rangeStrategy": "replace",
+      "description": "Isolate gts since it is causing memory issues when running the lint:check",
+      "matchPackageNames": ["gts"]
+    },
+    {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "17.x"
+      "allowedVersions": "18.x",
+      "matchPackageNames": [
+        "/^@angular/*/",
+        "/^@angular-devkit/*/",
+        "/ng-packagr/"
+      ]
     },
     {
-      "matchPackagePatterns": [
-        "react",
-        "react-router-dom",
-        "react-dom",
-        "@types/react"
-      ],
       "groupName": "React",
       "groupSlug": "react",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": [
+        "/react/",
+        "/react-router-dom/",
+        "/react-dom/",
+        "/@types/react/",
+        "next",
+        "/@remix-run/.*/"
+      ]
     },
     {
-      "matchPackagePatterns": ["^redux-*", "^@redux/*"],
       "groupName": "Redux",
       "groupSlug": "Redux",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^redux-*/", "/^@redux/*/"]
     },
     {
-      "matchPackagePatterns": ["^@storybook/*", "^storybook$"],
       "groupName": "Storybook",
       "groupSlug": "storybook",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@storybook/*/", "/^storybook$/"]
     },
     {
-      "matchPackagePatterns": ["^@stencil/*"],
       "groupName": "Stencil",
       "groupSlug": "stencil",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@stencil/*/"]
     },
     {
-      "matchPackagePatterns": ["^@lwc/compiler$"],
       "groupName": "LWC Compiler",
       "groupSlug": "lwc-compiler",
-      "rangeStrategy": "replace"
+      "rangeStrategy": "replace",
+      "matchPackageNames": ["/^@lwc/compiler$/"]
     },
     {
       "matchFileNames": ["packages/atomic/package.json"],
-      "matchPackagePatterns": [
-        "^jest$",
-        "^jest-cli$",
-        "@types/jest",
-        "jest-environment-node"
-      ],
       "groupSlug": "atomic-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "27.x",
-      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries"
+      "description": "Stencil do not support Jest >27 https://stenciljs.com/docs/support-policy#testing-libraries",
+      "matchPackageNames": [
+        "/^jest$/",
+        "/^jest-cli$/",
+        "/@types/jest/",
+        "/jest-environment-node/"
+      ]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^chalk$"],
       "groupSlug": "quantic-chalk",
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
-      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only"
+      "description": "Cypress custom reporter are CJS, and Chalk 5.x is ESM only",
+      "matchPackageNames": ["/^chalk$/"]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^change-case$"],
       "groupSlug": "change-case",
       "rangeStrategy": "replace",
       "allowedVersions": "4.x",
-      "description": "Quantic uses JSDOC that does not support ESM modules for template"
+      "description": "Quantic uses JSDOC that does not support ESM modules for template",
+      "matchPackageNames": ["/^change-case$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-react/package.json"],
-      "matchPackagePatterns": ["^rollup$"],
-      "groupSlug": "react-rollup",
+      "groupName": "marked",
+      "groupSlug": "marked",
       "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?"
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
     },
     {
-      "matchPackagePatterns": ["^nx$"],
-      "groupName": "nx",
-      "groupSlug": "nx",
+      "groupName": "relay",
+      "groupSlug": "relay",
       "rangeStrategy": "replace",
-      "allowedVersions": "15.x"
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
     },
     {
-      "matchPackagePatterns": ["^@nrwl/devkit$"],
-      "groupName": "nx-devkit",
-      "groupSlug": "nx-devkit",
-      "rangeStrategy": "replace",
-      "allowedVersions": "16.x"
-    },
-    {
-      "matchPackagePatterns": ["^cypress-split$"],
       "groupName": "Cypress Split",
       "groupSlug": "cypress-split",
       "rangeStrategy": "replace",
       "allowedVersions": "1.5.0",
-      "description": "Lock until bahmutov/cypress-repeat#52 is fixed"
-    },
-    {
-      "matchFileNames": ["packages/atomic-angular/package.json"],
-      "matchPackagePatterns": ["^typescript$"],
-      "groupSlug": "angular-typescript",
-      "rangeStrategy": "replace",
-      "allowedVersions": "5.1.x",
-      "description": "@angular/compiler-cli choke with TS > 5.1"
+      "description": "Lock until bahmutov/cypress-repeat#52 is fixed",
+      "matchPackageNames": ["/^cypress-split$/"]
     },
     {
       "matchFileNames": ["packages/quantic/package.json"],
-      "matchPackagePatterns": ["^@​salesforce/sfdx-lwc-jest$"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
       "allowedVersions": "3.x",
-      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)"
+      "description": "sfdx-lwc-jest uses a not GA version of Salesforce API (60)",
+      "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "matchPackagePatterns": ["^actions/upload-artifact$"],
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4"
-    },
-    {
-      "matchPackagePatterns": ["^eslint$"],
       "groupSlug": "eslint",
       "groupName": "eslint",
       "rangeStrategy": "replace",
-      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085"
+      "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
+      "matchPackageNames": [
+        "/^eslint$/",
+        "/^eslint-plugin-.*/",
+        "/@typescript-eslint/.*/"
+      ]
     }
   ],
   "rangeStrategy": "auto",
@@ -161,5 +175,10 @@
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false
-  }
+  },
+  "ignoreDeps": [
+    "eslint-plugin-canonical",
+    "@salesforce/sfdx-lwc-jest",
+    "cypress"
+  ]
 }

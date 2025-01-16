@@ -174,7 +174,7 @@ export class AtomicFacet implements InitializableComponent {
   @Prop({reflect: true}) public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'alphanumericDescending', 'occurrences', alphanumericNatural', 'alphanumericNaturalDescending' and 'automatic'.
    */
   @Prop({reflect: true}) public sortCriteria: FacetSortCriterion = 'automatic';
   /**
@@ -299,6 +299,13 @@ export class AtomicFacet implements InitializableComponent {
         'Values for both "tabs-included" and "tabs-excluded" have been provided. This is could lead to unexpected behaviors.'
       );
     }
+
+    if (this.displayValuesAs !== 'checkbox' && this.enableExclusion) {
+      console.warn(
+        'The "enableExclusion" property is only available when "displayValuesAs" is set to "checkbox".'
+      );
+    }
+
     this.facet = buildFacet(this.bindings.engine, {options: this.facetOptions});
     this.facetId = this.facet.state.facetId;
     this.searchStatus = buildSearchStatus(this.bindings.engine);

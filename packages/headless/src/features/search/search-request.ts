@@ -2,7 +2,7 @@ import {EventDescription} from 'coveo.analytics';
 import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {ConfigurationSection} from '../../state/state-sections.js';
-import {sortFacets} from '../../utils/facet-utils.js';
+import {sortCriteriaMap, sortFacets} from '../../utils/facet-utils.js';
 import {AutomaticFacetRequest} from '../facets/automatic-facet-set/interfaces/request.js';
 import {AutomaticFacetResponse} from '../facets/automatic-facet-set/interfaces/response.js';
 import {FacetSetState} from '../facets/facet-set/facet-set-state.js';
@@ -151,16 +151,14 @@ function getSpecificFacetRequests<T extends FacetSetState>(state: T) {
   return getFacetRequests(state).map((request) => {
     /* The Search API does not support 'alphanumericDescending' as a string value and instead relies on a new sort mechanism to specify sort order.
     At the moment, this is only supported for alphanumeric sorting, but will likely transition to this pattern for other types in the future. */
-    if (request.sortCriteria === 'alphanumericDescending') {
+    const sortCriteria =
+      sortCriteriaMap[request.sortCriteria as keyof typeof sortCriteriaMap];
+    if (sortCriteria) {
       return {
         ...request,
-        sortCriteria: {
-          type: 'alphanumeric',
-          order: 'descending',
-        },
+        sortCriteria,
       };
     }
-
     return request;
   });
 }

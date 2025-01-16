@@ -21,6 +21,11 @@ packages/atomic/src/external-builds/**/*
 packages/atomic/src/generated/**
 packages/headless/src/external-builds/**/*
 packages/quantic/docs/out/quantic-docs.json
+packages/quantic/.tmp/**
 packages/samples/headless-react/build/**/*
+packages/samples/headless-commerce-ssr-remix/build/**/*
 packages/samples/angular/src/lang/*.json
 packages/samples/vuejs/public/lang/*.json
+.deployment.config.json
+packages/atomic-angular/scripts/build-lit.mjs
+packages/atomic-react/scripts/build-lit.mjs

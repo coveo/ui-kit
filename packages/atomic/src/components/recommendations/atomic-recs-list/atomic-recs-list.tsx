@@ -302,7 +302,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private get hasPagination() {
-    return !!this.numberOfRecommendationsPerPage;
+    return this.numberOfPages > 1;
   }
 
   private get shouldRenderPagination() {

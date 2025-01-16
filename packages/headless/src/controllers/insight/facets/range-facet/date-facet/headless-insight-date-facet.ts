@@ -1,8 +1,5 @@
 import {InsightEngine} from '../../../../../app/insight-engine/insight-engine.js';
-import {
-  facetClearAll,
-  facetUpdateSort,
-} from '../../../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {facetClearAll} from '../../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetUpdateSort,
@@ -71,7 +68,6 @@ export function buildDateFacet(
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
-          next: facetUpdateSort(),
         })
       );
     },

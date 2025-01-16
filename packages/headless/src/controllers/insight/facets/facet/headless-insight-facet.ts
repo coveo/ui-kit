@@ -2,10 +2,7 @@ import {configuration} from '../../../../app/common-reducers.js';
 import {InsightEngine} from '../../../../app/insight-engine/insight-engine.js';
 import {FacetValueState} from '../../../../features/facets/facet-api/value.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
-import {
-  facetClearAll,
-  facetUpdateSort,
-} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
+import {facetClearAll} from '../../../../features/facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,
   logFacetShowLess,
@@ -160,7 +157,6 @@ export function buildFacet(engine: InsightEngine, props: FacetProps): Facet {
       dispatch(
         executeSearch({
           legacy: logFacetUpdateSort({facetId: getFacetId(), sortCriterion}),
-          next: facetUpdateSort(),
         })
       );
     },

@@ -18,6 +18,7 @@ import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constant
 import {
   buildInsightSearchRequest,
   buildInsightLoadCollectionRequest,
+  buildInsightBaseRequest,
 } from './insight-search-request.js';
 
 describe('insight search request', () => {
@@ -396,5 +397,48 @@ describe('insight search request', () => {
 
       expect(params.context).toBe(expectedContext);
     });
+  });
+
+  it('should enable #queryCorrection if did you mean is enabled and #queryCorrectionMode is `next`', async () => {
+    state.didYouMean.enableDidYouMean = true;
+    state.didYouMean.queryCorrectionMode = 'next';
+    expect(
+      (await buildInsightBaseRequest(state)).request.queryCorrection?.enabled
+    ).toBe(true);
+  });
+
+  it('should enable #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is true', async () => {
+    state.didYouMean.enableDidYouMean = true;
+    state.didYouMean.queryCorrectionMode = 'next';
+    state.didYouMean.automaticallyCorrectQuery = true;
+    expect(
+      (await buildInsightBaseRequest(state)).request.queryCorrection?.options
+        ?.automaticallyCorrect
+    ).toBe('whenNoResults');
+  });
+
+  it('should disable #automaticallyCorrect if did you mean is enabled and #queryCorrectionMode is `next` and #automaticallyCorrectQuery is false', async () => {
+    state.didYouMean.enableDidYouMean = true;
+    state.didYouMean.queryCorrectionMode = 'next';
+    state.didYouMean.automaticallyCorrectQuery = false;
+    expect(
+      (await buildInsightBaseRequest(state)).request.queryCorrection?.options
+        ?.automaticallyCorrect
+    ).toBe('never');
+  });
+
+  it('should set #enableDidYouMean to true if did you mean is enabled and #queryCorrectionMode is `legacy`', async () => {
+    state.didYouMean.enableDidYouMean = true;
+    state.didYouMean.queryCorrectionMode = 'legacy';
+    expect(
+      (await buildInsightBaseRequest(state)).request.enableDidYouMean
+    ).toBe(true);
+  });
+
+  it('should set #enableDidYouMean to false if did you mean is enabled and #queryCorrectionMode is not `legacy`', async () => {
+    state.didYouMean.queryCorrectionMode = 'next';
+    expect(
+      (await buildInsightBaseRequest(state)).request.enableDidYouMean
+    ).toBe(false);
   });
 });

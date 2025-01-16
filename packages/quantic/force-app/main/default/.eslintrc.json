@@ -20,6 +20,13 @@
       "rules": {
         "@lwc/lwc/no-async-operation": "off"
       }
+    },
+    {
+      "files": ["**/e2e/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "no-redeclare": ["error", {"builtinGlobals": false}]
+      }
     }
   ]
 }

@@ -211,7 +211,11 @@ export type {
   CategoryFacetValueRequest,
   CategoryFacetValue,
 } from './controllers/commerce/core/facets/headless-core-commerce-facet.js';
-export type {FacetGenerator} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.js';
+export type {
+  FacetGenerator,
+  GeneratedFacetControllers,
+  MappedGeneratedFacetController,
+} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.js';
 
 export type {FacetGeneratorState} from './controllers/commerce/core/facets/generator/headless-commerce-facet-generator.js';
 
@@ -262,6 +266,7 @@ export type {
 } from './controllers/standalone-search-box/headless-standalone-search-box.ts';
 
 export type {
+  BaseUrlManagerProps,
   UrlManagerProps,
   UrlManagerInitialState,
   UrlManagerState,
@@ -339,6 +344,7 @@ export type {
 } from './controllers/commerce/core/parameter-manager/headless-core-parameter-manager.js';
 export type {Parameters} from './features/commerce/parameters/parameters-actions.js';
 export type {SearchParameters} from './features/search-parameters/search-parameter-actions.js';
+export type {CommerceSearchParameters} from './features/commerce/search-parameters/search-parameters-actions.js';
 
 // Types & Helpers
 export {HighlightUtils};

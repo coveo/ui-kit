@@ -1,5 +1,15 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
-import {RecommendationsState} from '../recommendations/headless-recommendations.js';
+import {
+  recommendationInternalOptionKey,
+  RecommendationOnlyControllerDefinitionWithProps,
+} from '../../../app/commerce-ssr-engine/types/common.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../app/commerce-ssr-engine/types/kind.js';
+import {
+  RecommendationsOptions,
+  RecommendationsState,
+} from '../recommendations/headless-recommendations.js';
 import {
   RecommendationsProps,
   Recommendations,
@@ -8,8 +18,19 @@ import {
 
 export type {Recommendations, RecommendationsState};
 
+/**
+ * @internal
+ * */
+export type RecommendationsDefinitionMeta = {
+  [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
+};
+
 export interface RecommendationsDefinition
-  extends UniversalControllerDefinitionWithoutProps<Recommendations> {}
+  extends RecommendationOnlyControllerDefinitionWithProps<
+    Recommendations,
+    Partial<RecommendationsOptions>
+  > {}
+
 /**
  * @internal
  * Defines a `Recommendations` controller instance.
@@ -20,11 +41,21 @@ export interface RecommendationsDefinition
  * */
 export function defineRecommendations(
   props: RecommendationsProps
-): RecommendationsDefinition {
+): RecommendationsDefinition & RecommendationsDefinitionMeta {
   return {
-    search: true,
-    listing: true,
-    standalone: true,
-    build: (engine) => buildRecommendations(engine, props),
+    recommendation: true,
+    [recommendationInternalOptionKey]: {
+      ...props.options,
+    },
+    buildWithProps: (
+      engine,
+      options: Omit<RecommendationsOptions, 'slotId'>
+    ) => {
+      const staticOptions = props.options;
+      const controller = buildRecommendations(engine, {
+        options: {...staticOptions, ...options},
+      });
+      return createControllerWithKind(controller, Kind.Recommendations);
+    },
   };
 }

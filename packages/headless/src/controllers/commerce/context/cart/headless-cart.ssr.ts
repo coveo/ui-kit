@@ -1,11 +1,20 @@
-import {UniversalControllerDefinitionWithoutProps} from '../../../../app/commerce-ssr-engine/types/common.js';
-import {Cart, buildCart, CartProps, CartInitialState} from './headless-cart.js';
+import {UniversalControllerDefinitionWithProps} from '../../../../app/commerce-ssr-engine/types/common.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../../app/commerce-ssr-engine/types/kind.js';
+import {MissingControllerProps} from '../../../../utils/errors.js';
+import {Cart, buildCart, CartInitialState} from './headless-cart.js';
 
 export type {CartState, CartItem, CartProps} from './headless-cart.js';
 export type {Cart, CartInitialState};
 
+export interface CartBuildProps {
+  initialState: CartInitialState;
+}
+
 export interface CartDefinition
-  extends UniversalControllerDefinitionWithoutProps<Cart> {}
+  extends UniversalControllerDefinitionWithProps<Cart, CartBuildProps> {}
 
 /**
  * Defines a `Cart` controller instance.
@@ -15,11 +24,18 @@ export interface CartDefinition
  *
  * @internal
  */
-export function defineCart(props: CartProps = {}): CartDefinition {
+export function defineCart(): CartDefinition {
   return {
     listing: true,
     search: true,
     standalone: true,
-    build: (engine) => buildCart(engine, props),
+    recommendation: true,
+    buildWithProps: (engine, props) => {
+      if (props === undefined) {
+        throw new MissingControllerProps(Kind.Cart);
+      }
+      const controller = buildCart(engine, {initialState: props.initialState});
+      return createControllerWithKind(controller, Kind.Cart);
+    },
   };
 }
