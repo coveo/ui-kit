@@ -26,7 +26,7 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
         .eq(index),
     smartSnippetSuggestionsAnswer: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
-        .find('[data-testid="smart-snippet-answer"]')
+        .find('[data-cy="smart-snippet-answer"]')
         .eq(index),
     smartSnippetSuggestionsSourceUri: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
