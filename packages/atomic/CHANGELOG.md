@@ -1,3 +1,7 @@
+## <small>3.15.1 (2025-01-15)</small>
+
+- refactor(atomic): split the atomic store into composable parts (#4806) ([de2a920](https://github.com/coveo/ui-kit/commits/de2a920)), closes [#4806](https://github.com/coveo/ui-kit/issues/4806)
+
 ## 3.15.0 (2025-01-15)
 
 - chore: relocate dist/components to dist/atomic/components (#4859) ([d854df2](https://github.com/coveo/ui-kit/commits/d854df2)), closes [#4859](https://github.com/coveo/ui-kit/issues/4859)
