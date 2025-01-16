@@ -175,8 +175,7 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe
-      .only('when the answer is generated in a single shot and the answer exceeds the maximum height', () => {
+    test.describe('when the answer is generated in a single shot and the answer exceeds the maximum height', () => {
       test.use({
         options: {
           collapsible: true,

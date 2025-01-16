@@ -227,10 +227,6 @@ export class GeneratedAnswerObject {
     return uaRequest;
   }
 
-  async waitForFewSeconds() {
-    await this.page.waitForTimeout(3000);
-  }
-
   async waitForGeneratedAnswerCustomUaAnalytics(
     eventValue: string,
     customChecker?: Function
