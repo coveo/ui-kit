@@ -2,6 +2,7 @@ import {dirname, basename} from 'path';
 import {argv} from 'process';
 import {
   readConfigFile,
+  getLineAndCharacterOfPosition,
   sys,
   parseJsonConfigFileContent,
   getPreEmitDiagnostics,
