@@ -354,6 +354,9 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   handleAnswerDoneGenerating = (event) => {
     event.stopPropagation();
+    if (this.collapsible) {
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
+    }
     this.updateGeneratedAnswerCSSVariables();
   };
 
@@ -397,7 +400,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
-    this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     if (this._exceedsMaximumHeight) {
       const styles = this.generatedAnswerElement?.style;
       styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);
