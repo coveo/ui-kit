@@ -1,7 +1,7 @@
-import {getAssetPath} from '@stencil/core';
 import DOMPurify from 'dompurify';
 import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
+import {getAssetPath} from '../../../utils/utils';
 import {AnyEngineType} from './bindings';
 import {BaseAtomicInterface} from './interface-common';
 

@@ -1,3 +1,26 @@
+## <small>3.15.1 (2025-01-15)</small>
+
+- refactor(atomic): split the atomic store into composable parts (#4806) ([de2a920](https://github.com/coveo/ui-kit/commits/de2a920)), closes [#4806](https://github.com/coveo/ui-kit/issues/4806)
+
+## 3.15.0 (2025-01-15)
+
+- chore: relocate dist/components to dist/atomic/components (#4859) ([d854df2](https://github.com/coveo/ui-kit/commits/d854df2)), closes [#4859](https://github.com/coveo/ui-kit/issues/4859)
+- fix(atomic): show warning when facet displayValuesAs is not checkbox and enableExclusion is set to t ([eec0326](https://github.com/coveo/ui-kit/commits/eec0326)), closes [#4855](https://github.com/coveo/ui-kit/issues/4855)
+- feat(atomic): replace getAssetPath (#4844) ([4aa0206](https://github.com/coveo/ui-kit/commits/4aa0206)), closes [#4844](https://github.com/coveo/ui-kit/issues/4844)
+
+## 3.14.0 (2025-01-15)
+
+- fix(atomic): make toggling highlight of individual keywords work again in quickview modal (#4838) ([df0db66](https://github.com/coveo/ui-kit/commits/df0db66)), closes [#4838](https://github.com/coveo/ui-kit/issues/4838)
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- fix(insight): literally just a single character! (#4841) ([7b7e2b8](https://github.com/coveo/ui-kit/commits/7b7e2b8)), closes [#4841](https://github.com/coveo/ui-kit/issues/4841)
+- fix(insight): some ui fixes for insight panel (#4845) ([03db330](https://github.com/coveo/ui-kit/commits/03db330)), closes [#4845](https://github.com/coveo/ui-kit/issues/4845)
+- feat: add `displayIf` directive (#4846) ([d9c9856](https://github.com/coveo/ui-kit/commits/d9c9856)), closes [#4846](https://github.com/coveo/ui-kit/issues/4846)
+- feat(genqa): add collapsible height option to the component (#4817) ([db77dd0](https://github.com/coveo/ui-kit/commits/db77dd0)), closes [#4817](https://github.com/coveo/ui-kit/issues/4817)
+- chore: fix desynced package-lock (#4842) ([7ae9c0f](https://github.com/coveo/ui-kit/commits/7ae9c0f)), closes [#4842](https://github.com/coveo/ui-kit/issues/4842)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+- chore(atomic): replace HTMLStencilElement with HTMLElement (#4835) ([d695190](https://github.com/coveo/ui-kit/commits/d695190)), closes [#4835](https://github.com/coveo/ui-kit/issues/4835)
+
 ## 3.13.0 (2025-01-08)
 
 - chore: remove experimental FollowQ component (#4788) ([03ae25c](https://github.com/coveo/ui-kit/commits/03ae25c)), closes [#4788](https://github.com/coveo/ui-kit/issues/4788)
