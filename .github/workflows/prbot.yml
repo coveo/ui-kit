@@ -99,8 +99,8 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - run: npx cypress install
-        shell: bash
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - run: npm test
   package-compatibility:
     name: 'Verify compatibility of packages'
