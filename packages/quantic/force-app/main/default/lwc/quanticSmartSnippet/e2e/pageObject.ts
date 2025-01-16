@@ -9,7 +9,6 @@ export class SmartSnippetObject {
     this.page = page;
   }
 
-  // LOCATORS
   get smartSnippet(): Locator {
     return this.page.locator('c-quantic-smart-snippet');
   }
@@ -55,7 +54,6 @@ export class SmartSnippetObject {
     return this.page.getByTestId('feedback-modal-footer__submit');
   }
 
-  // ACTIONS
   async clickToggleButton(): Promise<void> {
     await this.smartSnippetToggleButton.click();
   }
@@ -96,7 +94,6 @@ export class SmartSnippetObject {
     await this.feedbackSubmitButton.click();
   }
 
-  // ANALYTICS
   async waitForExpandSmartSnippetUaAnalytics(): Promise<Request> {
     return this.waitForSmartSnippetCustomUaAnalytics('expandSmartSnippet');
   }
