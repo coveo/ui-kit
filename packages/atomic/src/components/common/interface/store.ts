@@ -1,4 +1,4 @@
-import {createStore} from '@stencil/store';
+import {DateFacetValue, NumericFacetValue} from '@coveo/headless';
 import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
@@ -6,137 +6,184 @@ import {
   FacetType,
   FacetValueFormat,
 } from '../facets/facet-common-store';
-import {DateFacetValue, NumericFacetValue} from '../types';
-import {AnyEngineType, CommonStencilStore} from './bindings';
+import {AnyEngineType} from './bindings';
+
+export function createStore<StoreData extends Record<string, unknown>>(
+  initialState: StoreData
+): CommonStore<StoreData> {
+  const listeners = new Map<
+    keyof StoreData,
+    Set<(newValue: unknown) => void>
+  >();
+
+  const state = new Proxy(initialState, {
+    set(target, prop: string, value) {
+      const oldValue = target[prop];
+      if (oldValue !== value) {
+        (target as Record<string, unknown>)[prop] = value;
+
+        if (listeners.has(prop)) {
+          for (const cb of listeners.get(prop)!) {
+            cb(value);
+          }
+        }
+      }
+      return true;
+    },
+  });
+
+  const get = <PropName extends keyof StoreData>(
+    propName: PropName
+  ): StoreData[PropName] => {
+    return state[propName];
+  };
+
+  const set = <PropName extends keyof StoreData>(
+    propName: PropName,
+    value: StoreData[PropName]
+  ): void => {
+    state[propName] = value;
+  };
+
+  const onChange = <PropName extends keyof StoreData>(
+    propName: PropName,
+    callback: (newValue: StoreData[PropName]) => void
+  ): (() => void) => {
+    if (!listeners.has(propName)) {
+      listeners.set(propName, new Set());
+    }
+    listeners.get(propName)!.add(callback as (newValue: unknown) => void);
+
+    return () => {
+      listeners.get(propName)!.delete(callback as (newValue: unknown) => void);
+      if (listeners.get(propName)!.size === 0) {
+        listeners.delete(propName);
+      }
+    };
+  };
+
+  return {
+    state,
+    get,
+    set,
+    onChange,
+  };
+}
+
+export interface CommonStore<StoreData> {
+  state: StoreData;
+  get: <PropName extends keyof StoreData>(
+    propName: PropName
+  ) => StoreData[PropName];
+  set: <PropName extends keyof StoreData>(
+    propName: PropName,
+    value: StoreData[PropName]
+  ) => void;
+  onChange: <PropName extends keyof StoreData>(
+    propName: PropName,
+    cb: (newValue: StoreData[PropName]) => void
+  ) => () => void;
+}
+
+export type BaseStore<T> = CommonStore<T> & {
+  getUniqueIDFromEngine(engine: unknown): string | undefined;
+};
+
+export function createBaseStore<T extends {}>(initialState: T): BaseStore<T> {
+  const store = createStore(initialState) as CommonStore<T>;
+
+  return {
+    ...store,
+
+    getUniqueIDFromEngine(_engine: AnyEngineType) {
+      throw new Error(
+        'getUniqueIDFromEngine not implemented at the base store level.'
+      );
+    },
+  };
+}
 
 export interface ResultListInfo {
   focusOnNextNewResult(): void;
   focusOnFirstResultAfterNextSearch(): Promise<void>;
 }
 
-export type AtomicCommonStoreData = {
+export function unsetLoadingFlag(
+  store: CommonStore<{loadingFlags: string[]}>,
+  loadingFlag: string
+) {
+  const flags = store.state.loadingFlags;
+  store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+}
+
+export function setLoadingFlag(
+  store: CommonStore<{loadingFlags: string[]}>,
+  loadingFlag: string
+) {
+  const flags = store.state.loadingFlags;
+  store.state.loadingFlags = flags.concat(loadingFlag);
+}
+
+interface Facets {
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
   categoryFacets: FacetStore<FacetInfo>;
-  loadingFlags: string[];
-  iconAssetsPath: string;
-  fieldsToInclude: string[];
   facetElements: HTMLElement[];
-  resultList?: ResultListInfo;
-};
-
-export interface AtomicCommonStore<StoreData extends AtomicCommonStoreData>
-  extends CommonStencilStore<StoreData> {
-  getIconAssetsPath(): string;
-  setLoadingFlag(flag: string): void;
-  unsetLoadingFlag(loadingFlag: string): void;
-  hasLoadingFlag(loadingFlag: string): boolean;
-  waitUntilAppLoaded(callback: () => void): void;
-  isAppLoaded(): boolean;
-  getUniqueIDFromEngine(engine: AnyEngineType): string;
-  getFacetElements(): HTMLElement[];
-  registerFacet<T extends FacetType, U extends string>(
-    facetType: T,
-    data: StoreData[T][U] & {facetId: U; element: HTMLElement}
-  ): void;
-  registerResultList(data: ResultListInfo): void;
-  addFieldsToInclude(fields: string[]): void;
 }
 
 export const isRefineModalFacet = 'is-refine-modal';
 
-export function createAtomicCommonStore<
-  StoreData extends AtomicCommonStoreData,
->(initialStoreData: StoreData): AtomicCommonStore<StoreData> {
-  const stencilStore = createStore(
-    initialStoreData
-  ) as CommonStencilStore<StoreData>;
-
+export function registerFacet<T extends FacetType, U extends string>(
+  store: CommonStore<Facets>,
+  facetType: T,
+  data: Facets[T][U] & {facetId: U; element: HTMLElement}
+) {
   const clearExistingFacetElement = (facetType: FacetType, facetId: string) => {
-    if (stencilStore.state[facetType][facetId]) {
-      stencilStore.state.facetElements =
-        stencilStore.state.facetElements.filter(
-          (facetElement) => facetElement.getAttribute('facet-id') !== facetId
-        );
+    if (store.state[facetType][facetId]) {
+      store.state.facetElements = store.state.facetElements.filter(
+        (facetElement) => facetElement.getAttribute('facet-id') !== facetId
+      );
     }
   };
 
-  return {
-    ...stencilStore,
+  if (data.element.getAttribute(isRefineModalFacet) !== null) {
+    return;
+  }
 
-    registerFacet<T extends FacetType, U extends string>(
-      facetType: T,
-      data: StoreData[T][U] & {facetId: U; element: HTMLElement}
-    ) {
-      if (data.element.getAttribute(isRefineModalFacet) !== null) {
-        return;
-      }
+  clearExistingFacetElement(facetType, data.facetId);
+  store.state.facetElements.push(data.element);
+  store.state[facetType][data.facetId] = data;
+}
 
-      clearExistingFacetElement(facetType, data.facetId);
-      stencilStore.state.facetElements.push(data.element);
-      stencilStore.state[facetType][data.facetId] = data;
-    },
+export function getFacetElements(store: CommonStore<Facets>) {
+  return store.state.facetElements.filter((element) => isInDocument(element));
+}
 
-    getIconAssetsPath() {
-      return stencilStore.get('iconAssetsPath');
-    },
-
-    setLoadingFlag(loadingFlag: string) {
-      const flags = stencilStore.get('loadingFlags');
-      stencilStore.set('loadingFlags', flags.concat(loadingFlag));
-    },
-
-    unsetLoadingFlag(loadingFlag: string) {
-      const flags = stencilStore.get('loadingFlags');
-      stencilStore.set(
-        'loadingFlags',
-        flags.filter((value) => value !== loadingFlag)
-      );
-    },
-
-    hasLoadingFlag(loadingFlag: string) {
-      return stencilStore.get('loadingFlags').indexOf(loadingFlag) !== -1;
-    },
-
-    registerResultList(data: ResultListInfo) {
-      stencilStore.set('resultList', data);
-    },
-
-    addFieldsToInclude(fields) {
-      stencilStore.set('fieldsToInclude', [
-        ...stencilStore.get('fieldsToInclude'),
-        ...fields,
-      ]);
-    },
-
-    waitUntilAppLoaded(callback: () => void) {
-      if (!stencilStore.get('loadingFlags').length) {
+export function waitUntilAppLoaded(
+  store: CommonStore<{loadingFlags: string[]}>,
+  callback: () => void
+) {
+  if (!store.state.loadingFlags.length) {
+    callback();
+  } else {
+    store.onChange('loadingFlags', (flags) => {
+      if (!flags.length) {
         callback();
-      } else {
-        stencilStore.onChange('loadingFlags', (flags) => {
-          if (!flags.length) {
-            callback();
-          }
-        });
       }
-    },
+    });
+  }
+}
 
-    isAppLoaded() {
-      return !stencilStore.get('loadingFlags').length;
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getUniqueIDFromEngine(_engine: AnyEngineType): string {
-      throw new Error(
-        'getUniqueIDFromEngine not implemented at the common store level.'
-      );
-    },
-
-    getFacetElements() {
-      return stencilStore
-        .get('facetElements')
-        .filter((element) => isInDocument(element));
-    },
+export function createAppLoadedListener(
+  store: CommonStore<{loadingFlags: string[]}>,
+  callback: (isAppLoaded: boolean) => void
+) {
+  const updateIsAppLoaded = () => {
+    const isAppLoaded = store.state.loadingFlags.length === 0;
+    callback(isAppLoaded);
   };
+
+  store.onChange('loadingFlags', updateIsAppLoaded);
+  updateIsAppLoaded();
 }

@@ -27,6 +27,7 @@ import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/p
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
 import {Hidden} from '../../common/hidden';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
@@ -40,7 +41,7 @@ import {
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
@@ -82,6 +83,7 @@ export class AtomicCommerceRecommendationList
   @State()
   public recommendationsState!: RecommendationsState;
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
   @State() private productTemplateRegistered = false;
   @State() private templateHasError = false;
   @State() private currentPage = 0;
@@ -198,6 +200,9 @@ export class AtomicCommerceRecommendationList
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+    });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
     });
   }
 
@@ -331,7 +336,7 @@ export class AtomicCommerceRecommendationList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       'grid',
@@ -392,7 +397,7 @@ export class AtomicCommerceRecommendationList
           density={this.density}
           display={this.display}
           imageSize={this.imageSize}
-          displayPlaceholders={!this.bindings.store.isAppLoaded()}
+          displayPlaceholders={!this.isAppLoaded}
           numberOfPlaceholders={
             this.productsPerPage ?? this.recommendationsState.products.length
           }
