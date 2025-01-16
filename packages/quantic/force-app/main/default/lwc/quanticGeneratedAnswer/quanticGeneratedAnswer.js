@@ -153,11 +153,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (this.collapsible) {
       // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
       // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
-      const answerElementHeight = this.isStreaming
-        ? this.generatedAnswerElementHeight + 50
-        : this.generatedAnswerElementHeight;
-      this._exceedsMaximumHeight =
-        answerElementHeight > this._maximumAnswerHeight;
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
 
@@ -222,6 +218,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (this.collapsible) {
       this.updateGeneratedAnswerCSSVariables();
     }
+  }
+
+  isMaximumHeightExceeded() {
+    const answerElementHeight = this.isStreaming
+      ? this.generatedAnswerElementHeight + 50
+      : this.generatedAnswerElementHeight;
+
+    return answerElementHeight > this._maximumAnswerHeight;
   }
 
   getGeneratedAnswerStatus() {
@@ -348,6 +352,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
+  handleAnswerDoneGenerating = (event) => {
+    event.stopPropagation();
+    this.updateGeneratedAnswerCSSVariables();
+  };
+
   handleToggleCollapseAnswer() {
     this.state?.expanded
       ? this.generatedAnswer.collapse()
@@ -388,6 +397,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
+    this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     if (this._exceedsMaximumHeight) {
       const styles = this.generatedAnswerElement?.style;
       styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);

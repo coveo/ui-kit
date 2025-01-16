@@ -185,19 +185,15 @@ useCaseTestCases.forEach((useCase) => {
       test('should display the answer as collapsed', async ({
         generatedAnswer,
       }) => {
+        const expectedShowMoreLabel = 'Show more';
         await generatedAnswer.waitForStreamEndUaAnalytics();
-        await generatedAnswer.waitForFewSeconds();
-        const likeAnalyticRequestPromise =
-          generatedAnswer.waitForLikeGeneratedAnswerUaAnalytics();
-        await generatedAnswer.clickLikeButton();
-        await likeAnalyticRequestPromise;
 
         const showMoreButton = generatedAnswer.showMoreButton;
         expect(showMoreButton).not.toBeNull();
 
         const showMoreButtonLabel = await showMoreButton.textContent();
         expect(showMoreButtonLabel).not.toBeNull();
-        expect(showMoreButtonLabel).toEqual('Show more');
+        expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
       });
     });
   });
