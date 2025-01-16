@@ -1,7 +1,8 @@
 import {Component, Prop, Element} from '@stencil/core';
 
 /**
- * @internal
+ * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
+ * It must be used as a child of the `atomic-tab-manager` component to function correctly.
  */
 @Component({
   tag: 'atomic-tab',

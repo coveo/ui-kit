@@ -2,7 +2,7 @@ import {ExternalCartItem} from '@/external-services/external-cart-service';
 import {ExternalCatalogItem} from '@/external-services/external-catalog-service';
 import {useProductView} from '@/lib/commerce-engine';
 import {formatCurrency} from '@/utils/format-currency';
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import AddToCartButton from './add-to-cart-button';
 import RemoveFromCartButton from './remove-from-cart-button';
 
@@ -25,12 +25,12 @@ export default function ProductView({
     uniqueId: productId,
   } = catalogItem;
 
-  const viewed = useRef(false);
+  let viewed = false;
 
   useEffect(() => {
-    if (methods && !viewed.current) {
-      viewed.current = true;
+    if (methods && !viewed) {
       methods.view({name, price, productId});
+      viewed = true;
     }
   }, []);
 

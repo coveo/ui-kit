@@ -105,7 +105,7 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   disconnectedCallback() {
-    this.bindings.i18n.off('languageChanged', this.sortFacets);
+    this.bindings?.i18n.off('languageChanged', this.sortFacets);
   }
 
   public render() {

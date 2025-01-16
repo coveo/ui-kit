@@ -1,9 +1,9 @@
 import {Page, test as base} from '@playwright/test';
-import {KnownErrorType} from '../../../../../dist/types/components/common/query-error/known-error-types';
 import {
   AxeFixture,
   makeAxeBuilder,
 } from '../../../../../playwright-utils/base-fixture';
+import type {KnownErrorType} from '../../../common/query-error/known-error-types';
 import {SearchBoxPageObject as SearchBox} from '../../atomic-commerce-search-box/e2e/page-object';
 import {QueryErrorPageObject as QueryError} from './page-object';
 

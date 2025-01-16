@@ -11,13 +11,13 @@
     "build:next": "next build"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.3.0",
+    "@coveo/headless-react": "2.4.2",
     "next": "14.2.20",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@types/node": "22.10.2",
+    "@types/node": "22.10.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@playwright/test": "1.49.1",

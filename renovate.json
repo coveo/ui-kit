@@ -9,8 +9,17 @@
   "packageRules": [
     {
       "groupName": "all dependencies",
-      "groupSlug": "all",
-      "matchPackageNames": ["*"]
+      "groupSlug": "all-safe",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "all dependencies (major)",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
       "groupName": "typedoc",
@@ -167,5 +176,9 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["eslint-plugin-canonical"]
+  "ignoreDeps": [
+    "eslint-plugin-canonical",
+    "@salesforce/sfdx-lwc-jest",
+    "cypress"
+  ]
 }
