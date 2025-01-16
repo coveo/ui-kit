@@ -147,8 +147,8 @@
     "vite": "5.4.11",
     "wait-on": "8.0.1",
     "playwright": "1.49.1",
-    "@vitest/browser": "2.1.7",
-    "vitest": "2.1.7"
+    "@vitest/browser": "2.1.8",
+    "vitest": "2.1.8"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
