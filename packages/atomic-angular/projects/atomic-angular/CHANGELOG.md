@@ -1,3 +1,8 @@
+## <small>3.3.3 (2025-01-16)</small>
+
+- chore: ensure atomic-angular component file is stable (#4866) ([a1dc782](https://github.com/coveo/ui-kit/commits/a1dc782)), closes [#4866](https://github.com/coveo/ui-kit/issues/4866)
+- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
+
 ## 3.3.0 (2025-01-15)
 
 - chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)

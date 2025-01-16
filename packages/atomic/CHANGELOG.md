@@ -1,3 +1,7 @@
+## <small>3.15.2 (2025-01-16)</small>
+
+- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
+
 ## <small>3.15.1 (2025-01-15)</small>
 
 - refactor(atomic): split the atomic store into composable parts (#4806) ([de2a920](https://github.com/coveo/ui-kit/commits/de2a920)), closes [#4806](https://github.com/coveo/ui-kit/issues/4806)
