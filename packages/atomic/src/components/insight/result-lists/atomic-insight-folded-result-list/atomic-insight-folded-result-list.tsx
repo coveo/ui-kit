@@ -26,6 +26,7 @@ import {
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
 import {extractUnfoldedItem} from '../../../common/interface/item';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {
@@ -74,6 +75,7 @@ export class AtomicInsightFoldedResultList
   public resultsPerPageState!: InsightResultsPerPageState;
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
   @State() private templateHasError = false;
 
   /**
@@ -162,6 +164,9 @@ export class AtomicInsightFoldedResultList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private get focusTarget(): FocusTargetController {
@@ -198,7 +203,7 @@ export class AtomicInsightFoldedResultList
       >
         <DisplayWrapper listClasses={listClasses} display={this.display}>
           <ResultsPlaceholdersGuard
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            displayPlaceholders={!this.isAppLoaded}
             numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
             display={this.display}
             density={this.density}
@@ -230,7 +235,7 @@ export class AtomicInsightFoldedResultList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       this.display,
