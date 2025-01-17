@@ -4,7 +4,7 @@ import {createElement} from 'lwc';
 import QuanticGeneratedAnswer from 'c/quanticGeneratedAnswer';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
-let mockAnswerHeight = 300;
+let mockAnswerHeight = 250;
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
@@ -31,6 +31,7 @@ const defaultOptions = {
   answerConfigurationId: undefined,
   withToggle: false,
   collapsible: false,
+  maxCollapsedHeight: 250,
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -101,7 +102,7 @@ const exampleEngine = {
   id: 'dummy engine',
 };
 let isInitialized = false;
-const maximumAnswerHeight = 250;
+const defaultAnswerHeight = 250;
 
 function prepareHeadlessState() {
   // @ts-ignore
@@ -342,7 +343,7 @@ describe('c-quantic-generated-answer', () => {
       describe('when the property collapsible is set to true', () => {
         describe('when the answer is shorter than the maximum answer height', () => {
           beforeEach(() => {
-            mockAnswerHeight = maximumAnswerHeight - 100;
+            mockAnswerHeight = defaultAnswerHeight - 100;
           });
 
           it('should not display the generating answer message', async () => {
@@ -363,7 +364,7 @@ describe('c-quantic-generated-answer', () => {
 
         describe('when the answer is longer than the maximum answer height', () => {
           beforeEach(() => {
-            mockAnswerHeight = maximumAnswerHeight + 100;
+            mockAnswerHeight = defaultAnswerHeight + 100;
           });
 
           it('should display the generating answer message', async () => {
@@ -489,7 +490,7 @@ describe('c-quantic-generated-answer', () => {
       describe('when the property collapsible is set to true', () => {
         describe('when the answer is shorter than the maximum answer height', () => {
           beforeEach(() => {
-            mockAnswerHeight = maximumAnswerHeight - 100;
+            mockAnswerHeight = defaultAnswerHeight - 100;
           });
 
           it('should not display the generating answer message', async () => {
@@ -525,7 +526,7 @@ describe('c-quantic-generated-answer', () => {
 
         describe('when the answer is longer than the maximum answer height', () => {
           beforeEach(() => {
-            mockAnswerHeight = maximumAnswerHeight + 100;
+            mockAnswerHeight = defaultAnswerHeight + 100;
           });
 
           it('should not display the generating answer message', async () => {
@@ -556,6 +557,82 @@ describe('c-quantic-generated-answer', () => {
               );
 
             expect(generatedAnswerCollapseToggle).not.toBeNull();
+          });
+        });
+
+        describe('when the property maxCollapsedHeight is set to a custom value', () => {
+          // The valid range is between 150 and 500 pixels.
+          describe('when the value is within the valid range', () => {
+            beforeEach(() => {
+              mockAnswerHeight = defaultAnswerHeight - 25;
+            });
+
+            it('should set the answer height with the custom value', async () => {
+              const expectedAnswerHeightValue = 300;
+              const element = createTestComponent({
+                ...defaultOptions,
+                maxCollapsedHeight: expectedAnswerHeightValue,
+              });
+              await flushPromises();
+
+              const generatedAnswer = element.shadowRoot.querySelector(
+                '.generated-answer__answer'
+              );
+              expect(generatedAnswer).not.toBeNull();
+              const computedStyle = getComputedStyle(generatedAnswer);
+              console.log(
+                'computedStyle: ' + JSON.stringify(computedStyle.maxHeight)
+              );
+              expect(computedStyle.maxHeight).toEqual(
+                `${expectedAnswerHeightValue}px`
+              );
+            });
+          });
+
+          describe('when the value is greater than the valid range', () => {
+            beforeEach(() => {
+              mockAnswerHeight = defaultAnswerHeight + 100;
+            });
+
+            it('should set the answer height with the fallback default value', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                maxCollapsedHeight: 550,
+              });
+              await flushPromises();
+
+              const generatedAnswer = element.shadowRoot.querySelector(
+                '.generated-answer__answer'
+              );
+              expect(generatedAnswer).not.toBeNull();
+              const computedStyle = getComputedStyle(generatedAnswer);
+              expect(computedStyle.maxHeight).toEqual(
+                `${defaultAnswerHeight}px`
+              );
+            });
+          });
+
+          describe('when the value is smaller than the valid range', () => {
+            beforeEach(() => {
+              mockAnswerHeight = defaultAnswerHeight;
+            });
+
+            it('should set the answer height with the fallback default value', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                maxCollapsedHeight: 100,
+              });
+              await flushPromises();
+
+              const generatedAnswer = element.shadowRoot.querySelector(
+                '.generated-answer__answer'
+              );
+              expect(generatedAnswer).not.toBeNull();
+              const computedStyle = getComputedStyle(generatedAnswer);
+              expect(computedStyle.maxHeight).toEqual(
+                `${defaultAnswerHeight}px`
+              );
+            });
           });
         });
       });

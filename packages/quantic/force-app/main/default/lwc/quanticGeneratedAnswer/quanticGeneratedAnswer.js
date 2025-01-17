@@ -44,6 +44,10 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
+const DEFAULT_COLLAPSED_HEIGHT = 250;
+const MAX_COLLAPSED_HEIGHT = 500;
+const MIN_COLLAPSED_HEIGHT = 150;
+
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
@@ -86,6 +90,13 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @type {string}
    */
   @api answerConfigurationId;
+  /**
+   * The maximum height (in px units) of the generated answer when it is collapsed.
+   * @api
+   * @type {number}
+   * @default {250}
+   */
+  @api maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
 
   labels = {
     generatedAnswerForYou,
@@ -125,8 +136,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   ariaLiveMessage;
   /** @type {boolean} */
   hasInitializationError = false;
-  /** @type {number} */
-  _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
@@ -153,11 +162,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (this.collapsible) {
       // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
       // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
-      const answerElementHeight = this.isStreaming
-        ? this.generatedAnswerElementHeight + 50
-        : this.generatedAnswerElementHeight;
-      this._exceedsMaximumHeight =
-        answerElementHeight > this._maximumAnswerHeight;
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
 
@@ -259,6 +264,15 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   }
 
+  isMaximumHeightExceeded() {
+    const maximumAnswerHeight = this.validateMaxCollapsedHeight();
+    const answerElementHeight = this.isStreaming
+      ? this.generatedAnswerElementHeight + 50
+      : this.generatedAnswerElementHeight;
+
+    return answerElementHeight > maximumAnswerHeight;
+  }
+
   /**
    * handles hovering over a citation.
    * @param {string} id
@@ -348,6 +362,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
+  handleAnswerDoneGenerating = (event) => {
+    event.stopPropagation();
+    if (this.collapsible) {
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
+    }
+    this.updateGeneratedAnswerCSSVariables();
+  };
+
   handleToggleCollapseAnswer() {
     this.state?.expanded
       ? this.generatedAnswer.collapse()
@@ -385,13 +407,30 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
+   * Sets the the value of the CSS variable "--maxHeight" the value of the maxCollapsedHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
     if (this._exceedsMaximumHeight) {
       const styles = this.generatedAnswerElement?.style;
-      styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);
+      styles.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
     }
+  }
+
+  /**
+   * Validates that the value of the maxCollapsedHeight property is within acceptable bounds.
+   */
+  validateMaxCollapsedHeight() {
+    const isValid =
+      this.maxCollapsedHeight >= MIN_COLLAPSED_HEIGHT &&
+      this.maxCollapsedHeight <= MAX_COLLAPSED_HEIGHT;
+
+    if (!isValid) {
+      console.warn(
+        `max-collapsed-height (${this.maxCollapsedHeight}px) must be between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. Falling back to default value: ${DEFAULT_COLLAPSED_HEIGHT}px.`
+      );
+    }
+
+    return isValid ? this.maxCollapsedHeight : DEFAULT_COLLAPSED_HEIGHT;
   }
 
   get answer() {
