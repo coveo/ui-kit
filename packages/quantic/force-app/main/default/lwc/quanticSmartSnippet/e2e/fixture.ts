@@ -50,30 +50,38 @@ export const testSearch =
     },
   });
 
-export const testInsight = quanticBase.extend<QuanticSmartSnippetE2EInsightFixtures>({
-  smartSnippetData,
-  options: {},
-  search: async ({page}, use) => {
-    await use(new SearchObject(page, insightSearchRequestRegex));
-  },
-  insightSetup: async ({page}, use) => {
-    await use(new InsightSetupObject(page));
-  },
-  smartSnippet: async (
-    {page, options, search, configuration, insightSetup, smartSnippetData: data},
-    use
-  ) => {
-    const smartSnippetObject = new SmartSnippetObject(page);
+export const testInsight =
+  quanticBase.extend<QuanticSmartSnippetE2EInsightFixtures>({
+    smartSnippetData,
+    options: {},
+    search: async ({page}, use) => {
+      await use(new SearchObject(page, insightSearchRequestRegex));
+    },
+    insightSetup: async ({page}, use) => {
+      await use(new InsightSetupObject(page));
+    },
+    smartSnippet: async (
+      {
+        page,
+        options,
+        search,
+        configuration,
+        insightSetup,
+        smartSnippetData: data,
+      },
+      use
+    ) => {
+      const smartSnippetObject = new SmartSnippetObject(page);
 
-    await page.goto(pageUrl);
-    await search.mockSearchWithSmartSnippetResponse(data);
+      await page.goto(pageUrl);
+      await search.mockSearchWithSmartSnippetResponse(data);
 
-    configuration.configure({...options, useCase: useCaseEnum.insight});
-    await insightSetup.waitForInsightInterfaceInitialization();
-    await search.performSearch();
-    await search.waitForSearchResponse();
-    await use(smartSnippetObject);
-  },
-});
+      configuration.configure({...options, useCase: useCaseEnum.insight});
+      await insightSetup.waitForInsightInterfaceInitialization();
+      await search.performSearch();
+      await search.waitForSearchResponse();
+      await use(smartSnippetObject);
+    },
+  });
 
 export {expect} from '@playwright/test';
