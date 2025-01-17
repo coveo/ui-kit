@@ -1,3 +1,7 @@
+## <small>3.15.3 (2025-01-17)</small>
+
+- fix(atomic): revert getAssetPath change (#4870) ([8961432](https://github.com/coveo/ui-kit/commits/8961432)), closes [#4870](https://github.com/coveo/ui-kit/issues/4870)
+
 ## <small>3.15.2 (2025-01-16)</small>
 
 - refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
