@@ -27,6 +27,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {
   DisplayTable,
@@ -89,6 +90,7 @@ export class AtomicCommerceProductList
   @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
   @State() private templateHasError = false;
+  @State() private isAppLoaded = false;
 
   /**
    * The desired number of placeholders to display while the product list is loading.
@@ -164,6 +166,9 @@ export class AtomicCommerceProductList
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   @Listen('atomic/selectChildProduct')
@@ -201,7 +206,7 @@ export class AtomicCommerceProductList
             density={this.density}
             display={this.display}
             imageSize={this.imageSize}
-            displayPlaceholders={!this.bindings.store.isAppLoaded()}
+            displayPlaceholders={!this.isAppLoaded}
             numberOfPlaceholders={this.numberOfPlaceholders}
           ></ResultsPlaceholdersGuard>
           {this.display === 'table'
@@ -215,7 +220,7 @@ export class AtomicCommerceProductList
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       this.display,

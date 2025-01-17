@@ -13,7 +13,6 @@ interface Data {
 }
 
 export type CommerceRecommendationStore = BaseStore<Data> & {
-  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
 };
@@ -27,10 +26,6 @@ export function createCommerceRecommendationStore(): CommerceRecommendationStore
 
   return {
     ...store,
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       unsetLoadingFlag(store, loadingFlag);
