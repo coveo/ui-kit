@@ -83,7 +83,8 @@
     "lit": "3.2.1",
     "marked": "12.0.2",
     "stencil-inline-svg": "1.1.0",
-    "ts-debounce": "4.0.0"
+    "ts-debounce": "4.0.0",
+    "ts-lit-plugin": "2.0.2"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.1",
