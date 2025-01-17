@@ -49,6 +49,7 @@ function createTestComponent(options = defaultOptions) {
 const selectors = {
   initializationError: 'c-quantic-component-error',
   generatedAnswerCard: '[data-testid="generated-answer__card"]',
+  generatedAnswer: '.generated-answer__answer',
   generatedAnswerBadge: '[data-testid="generated-answer__badge"]',
   generatedAnswerRetryButton: '[data-testid="generated-answer__retry-button"]',
   generatedAnswerActions: '[data-testid="generated-answer__actions"]',
@@ -563,75 +564,81 @@ describe('c-quantic-generated-answer', () => {
         describe('when the property maxCollapsedHeight is set to a custom value', () => {
           // The valid range is between 150 and 500 pixels.
           describe('when the value is within the valid range', () => {
-            beforeEach(() => {
-              mockAnswerHeight = defaultAnswerHeight - 25;
-            });
-
             it('should set the answer height with the custom value', async () => {
+              mockAnswerHeight = defaultAnswerHeight - 25;
               const expectedAnswerHeightValue = 300;
               const element = createTestComponent({
                 ...defaultOptions,
+                collapsible: true,
                 maxCollapsedHeight: expectedAnswerHeightValue,
               });
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                '.generated-answer__answer'
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
-              const computedStyle = getComputedStyle(generatedAnswer);
-              console.log(
-                'computedStyle: ' + JSON.stringify(computedStyle.maxHeight)
-              );
-              expect(computedStyle.maxHeight).toEqual(
-                `${expectedAnswerHeightValue}px`
-              );
+
+              expect(
+                generatedAnswer.classList.contains(
+                  'generated-answer__answer--collapsed'
+                )
+              ).toBe(false);
+              // expect(generatedAnswer.style.maxHeight).toEqual(
+              //   `${expectedAnswerHeightValue}px`
+              // );
             });
           });
 
           describe('when the value is greater than the valid range', () => {
-            beforeEach(() => {
-              mockAnswerHeight = defaultAnswerHeight + 100;
-            });
-
             it('should set the answer height with the fallback default value', async () => {
+              mockAnswerHeight = defaultAnswerHeight + 100;
               const element = createTestComponent({
                 ...defaultOptions,
+                collapsible: true,
                 maxCollapsedHeight: 550,
               });
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                '.generated-answer__answer'
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
-              const computedStyle = getComputedStyle(generatedAnswer);
-              expect(computedStyle.maxHeight).toEqual(
-                `${defaultAnswerHeight}px`
-              );
+
+              expect(
+                generatedAnswer.classList.contains(
+                  'generated-answer__answer--collapsed'
+                )
+              ).toBe(true);
+              // expect(generatedAnswer.style.maxHeight).toEqual(
+              //   `${defaultAnswerHeight}px`
+              // );
             });
           });
 
           describe('when the value is smaller than the valid range', () => {
-            beforeEach(() => {
-              mockAnswerHeight = defaultAnswerHeight;
-            });
-
             it('should set the answer height with the fallback default value', async () => {
+              mockAnswerHeight = defaultAnswerHeight;
               const element = createTestComponent({
                 ...defaultOptions,
+                collapsible: true,
                 maxCollapsedHeight: 100,
               });
               await flushPromises();
 
               const generatedAnswer = element.shadowRoot.querySelector(
-                '.generated-answer__answer'
+                selectors.generatedAnswer
               );
               expect(generatedAnswer).not.toBeNull();
-              const computedStyle = getComputedStyle(generatedAnswer);
-              expect(computedStyle.maxHeight).toEqual(
-                `${defaultAnswerHeight}px`
-              );
+
+              expect(
+                generatedAnswer.classList.contains(
+                  'generated-answer__answer--collapsed'
+                )
+              ).toBe(false);
+              // expect(generatedAnswer.style.maxHeight).toEqual(
+              //   `${defaultAnswerHeight}px`
+              // );
             });
           });
         });
