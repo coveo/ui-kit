@@ -1,8 +1,16 @@
-import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  MockInstance,
+} from 'vitest';
 import {makeMatchConditions} from './product-template-common';
 
 describe('makeMatchConditions', () => {
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+  let consoleErrorSpy: MockInstance;
 
   beforeEach(() => {
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
