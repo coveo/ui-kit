@@ -35,6 +35,7 @@ import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../../common/carousel';
 import {Heading} from '../../../common/heading';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
@@ -76,6 +77,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
   @Element() public host!: HTMLDivElement;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
   @State() private currentPage = 0;
@@ -201,6 +203,10 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
     this.actionsHistoryActions = loadIPXActionsHistoryActions(
       this.bindings.engine
     );
+
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   public get focusTarget() {
@@ -360,7 +366,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       'grid',
@@ -406,7 +412,7 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
           density={this.density}
           display={this.display}
           imageSize={this.imageSize}
-          displayPlaceholders={!this.bindings.store.isAppLoaded()}
+          displayPlaceholders={!this.isAppLoaded}
           numberOfPlaceholders={
             this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations
           }
