@@ -1,5 +1,3 @@
-import {getAssetPath} from '@stencil/core';
-import {NODE_TYPES} from '@stencil/core/mock-doc';
 import DOMPurify from 'dompurify';
 
 /**
@@ -57,11 +55,11 @@ export function parseHTML(string: string) {
 }
 
 export function isElementNode(node: Node): node is Element {
-  return node.nodeType === NODE_TYPES.ELEMENT_NODE;
+  return node.nodeType === Node.ELEMENT_NODE;
 }
 
 export function isTextNode(node: Node): node is Text {
-  return node.nodeType === NODE_TYPES.TEXT_NODE;
+  return node.nodeType === Node.TEXT_NODE;
 }
 
 export function isVisualNode(node: Node) {
@@ -84,7 +82,34 @@ export function containsVisualElement(node: Node) {
   return false;
 }
 
+export function getAssetPath(path: string): string {
+  const baseUrl = import.meta.url; // TODO: need to copy assets in cjs and esm
+  const assetUrl = new URL(path, baseUrl);
+  console.log('assetUrl', assetUrl.href);
+  return assetUrl.origin !== window.location.origin
+    ? assetUrl.href
+    : assetUrl.pathname;
+}
+
 export function parseAssetURL(url: string, assetPath = './assets') {
+  const [, protocol, remainder] =
+    url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
+  if (!protocol) {
+    if (url.startsWith('./') || url.startsWith('../')) {
+      return url;
+    }
+    return null;
+  }
+  if (protocol === 'http' || protocol === 'https') {
+    return url;
+  }
+  if (protocol === 'assets') {
+    return getAssetPath(`${assetPath}/${remainder}.svg`);
+  }
+  return null;
+}
+
+export function parseLangPath(url: string, assetPath = './lang') {
   const [, protocol, remainder] =
     url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
