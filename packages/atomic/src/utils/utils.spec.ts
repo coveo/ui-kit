@@ -8,12 +8,6 @@ import {
   aggregate,
 } from './utils';
 
-vi.mock('@stencil/core', () => ({
-  getAssetPath: vi.fn((path: string) => {
-    return `${path}`;
-  }),
-}));
-
 describe('once', () => {
   it('should call the function only once', () => {
     const myFunction = vi.fn();
