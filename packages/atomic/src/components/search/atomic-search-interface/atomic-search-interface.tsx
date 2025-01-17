@@ -44,7 +44,7 @@ import {
 } from '../atomic-layout/search-layout';
 import {getAnalyticsConfig} from './analytics-config';
 import type {Bindings as _Bindings} from './interfaces';
-import {createAtomicStore} from './store';
+import {createSearchStore, SearchStore} from './store';
 
 const FirstSearchExecutedFlag = 'firstSearchExecuted';
 export type InitializationOptions = SearchEngineConfiguration;
@@ -67,7 +67,7 @@ export class AtomicSearchInterface
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSearchStatus: Unsubscribe = () => {};
   private initialized = false;
-  private store = createAtomicStore();
+  private store: SearchStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<SearchEngine>;
 
   @Element() public host!: HTMLAtomicSearchInterfaceElement;
@@ -198,6 +198,7 @@ export class AtomicSearchInterface
       this,
       'CoveoAtomic'
     );
+    this.store = createSearchStore();
   }
 
   public connectedCallback() {
@@ -281,7 +282,7 @@ export class AtomicSearchInterface
 
   @Watch('iconAssetsPath')
   public updateIconAssetsPath() {
-    this.store.set('iconAssetsPath', this.iconAssetsPath);
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {
@@ -415,7 +416,7 @@ export class AtomicSearchInterface
       'atomic-search-layout'
     )?.mobileBreakpoint;
     if (breakpoint) {
-      this.store.set('mobileBreakpoint', breakpoint);
+      this.store.state.mobileBreakpoint = breakpoint;
     }
   }
 

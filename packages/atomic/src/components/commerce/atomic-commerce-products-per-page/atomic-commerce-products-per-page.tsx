@@ -15,6 +15,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {Choices} from '../../common/items-per-page/choices';
 import {
   ChoiceIsNaNError,
@@ -59,6 +60,8 @@ export class AtomicCommerceProductsPerPage
   private summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
+
   private choices!: number[];
   private readonly radioGroupName = randomID(
     'atomic-commerce-products-per-page-'
@@ -103,6 +106,9 @@ export class AtomicCommerceProductsPerPage
     this.pagination = controller.pagination(
       this.initialChoice ? {options: {pageSize: this.initialChoice}} : {}
     );
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private get label() {
@@ -114,7 +120,7 @@ export class AtomicCommerceProductsPerPage
       <PagerGuard
         hasError={this.summaryState.hasError}
         hasItems={this.summaryState.hasProducts}
-        isAppLoaded={this.bindings.store.isAppLoaded()}
+        isAppLoaded={this.isAppLoaded}
       >
         <div class="flex items-center">
           <Label>{this.label}</Label>
