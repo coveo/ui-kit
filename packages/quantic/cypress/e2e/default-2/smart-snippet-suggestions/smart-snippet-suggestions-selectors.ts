@@ -30,11 +30,11 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
         .eq(index),
     smartSnippetSuggestionsSourceUri: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
-        .find('[data-cy="smart-snippet__source-uri"]')
+        .find('[data-testid="smart-snippet__source-uri"]')
         .eq(index),
     smartSnippetSuggestionsSourceTitle: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
-        .find('[data-cy="smart-snippet__source-title"]')
+        .find('[data-testid="smart-snippet__source-title"]')
         .eq(index),
     smartSnippetSuggestionsInlineLink: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
