@@ -10,6 +10,7 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/utils';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
@@ -31,6 +32,7 @@ export class AtomicInsightSmartSnippet
   @State()
   public smartSnippetState!: InsightSmartSnippetState;
   public error!: Error;
+  @State() private isAppLoaded = false;
 
   @Element() public host!: HTMLElement;
 
@@ -89,6 +91,9 @@ export class AtomicInsightSmartSnippet
     this.bindings.store.waitUntilAppLoaded(() =>
       this.smartSnippetCommon.hideDuringRender(false)
     );
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private setModalRef(ref: HTMLElement) {
@@ -106,7 +111,7 @@ export class AtomicInsightSmartSnippet
   }
 
   public componentDidRender() {
-    if (this.bindings.store.isAppLoaded()) {
+    if (this.isAppLoaded) {
       this.smartSnippetCommon.hideDuringRender(false);
     }
   }

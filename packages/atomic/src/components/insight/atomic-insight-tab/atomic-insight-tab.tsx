@@ -8,6 +8,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {Button} from '../../common/button';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tab-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
@@ -30,6 +31,7 @@ export class AtomicInsightTab
   @InitializeBindings() public bindings!: InsightBindings;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   @BindStateToController('tab')
   @State()
@@ -69,6 +71,9 @@ export class AtomicInsightTab
     this.unsubscribe = this.tab.subscribe(
       () => (this.active = this.tab.state.isActive)
     );
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   public componentDidRender() {
@@ -80,7 +85,7 @@ export class AtomicInsightTab
   }
 
   public render() {
-    if (!this.bindings.store.isAppLoaded()) {
+    if (!this.isAppLoaded) {
       return;
     }
 
