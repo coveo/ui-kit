@@ -192,7 +192,7 @@ jobs:
       - name: Copy the docs into the version folder
         run: |
           mkdir -p typedoc-headless-react-site/${{ env.version }}/
-          cp -r packages/headless/docs/* typedoc-headless-react-site/${{ env.version }}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
           echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
 
       - name: Upload documentation artifact
