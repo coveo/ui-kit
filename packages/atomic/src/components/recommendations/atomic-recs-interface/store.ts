@@ -1,27 +1,41 @@
 import {RecommendationEngine} from '@coveo/headless/recommendation';
 import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
+  BaseStore,
+  createBaseStore,
+  ResultListInfo,
+  setLoadingFlag,
+  unsetLoadingFlag,
 } from '../../common/interface/store';
 
-export interface AtomicRecsStoreData extends AtomicCommonStoreData {}
-export interface AtomicRecsStore
-  extends AtomicCommonStore<AtomicRecsStoreData> {}
+interface Data {
+  loadingFlags: string[];
+  iconAssetsPath: string;
+  resultList: ResultListInfo | undefined;
+}
 
-export function createAtomicRecsStore(): AtomicRecsStore {
-  const commonStore = createAtomicCommonStore<AtomicRecsStoreData>({
+export type RecsStore = BaseStore<Data> & {
+  unsetLoadingFlag(loadingFlag: string): void;
+  setLoadingFlag(flag: string): void;
+};
+
+export function createRecsStore(): RecsStore {
+  const store = createBaseStore<Data>({
     loadingFlags: [],
-    facets: {},
-    numericFacets: {},
-    dateFacets: {},
-    categoryFacets: {},
     iconAssetsPath: '',
-    facetElements: [],
-    fieldsToInclude: [],
+    resultList: undefined,
   });
+
   return {
-    ...commonStore,
+    ...store,
+
+    unsetLoadingFlag(loadingFlag: string) {
+      unsetLoadingFlag(store, loadingFlag);
+    },
+
+    setLoadingFlag(loadingFlag: string) {
+      setLoadingFlag(store, loadingFlag);
+    },
+
     getUniqueIDFromEngine(engine: RecommendationEngine): string {
       return engine.state.recommendation.searchUid;
     },

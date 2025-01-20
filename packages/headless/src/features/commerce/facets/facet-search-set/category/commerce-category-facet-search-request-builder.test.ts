@@ -29,6 +29,8 @@ describe('#buildCategoryFacetSearchRequest', () => {
     query = 'test';
     state = buildMockCommerceState();
 
+    state.commerceQuery.query = 'test query';
+
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
@@ -186,7 +188,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
-      query: state.commerceQuery?.query,
+      query: 'test query',
     });
   });
 
@@ -206,7 +208,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
-      query: '',
+      query: 'test query',
     });
   });
 });

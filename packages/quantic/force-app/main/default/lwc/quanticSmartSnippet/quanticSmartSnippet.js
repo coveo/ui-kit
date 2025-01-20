@@ -152,8 +152,8 @@ export default class QuanticSmartSnippet extends LightningElement {
    */
   updateSmartSnippetCSSVariables() {
     const styles = this.smartSnippetAnswerElement?.style;
-    styles.setProperty('--maxHeight', `${this.maximumSnippetHeight}px`);
-    styles.setProperty(
+    styles?.setProperty('--maxHeight', `${this.maximumSnippetHeight}px`);
+    styles?.setProperty(
       '--fullHeight',
       `${this.smartSnippetAnswerElementHeight}px`
     );

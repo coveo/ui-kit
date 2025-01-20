@@ -1,3 +1,7 @@
+## <small>3.13.2 (2025-01-15)</small>
+
+- fix(headless SSR): validate controller props (#4796) ([3e9f466](https://github.com/coveo/ui-kit/commits/3e9f466)), closes [#4796](https://github.com/coveo/ui-kit/issues/4796)
+
 ## <small>3.13.1 (2025-01-15)</small>
 
 - docs(headless commerce SSR): copy common codes/sample between NextJS & Remix (#4778) ([4af4238](https://github.com/coveo/ui-kit/commits/4af4238)), closes [#4778](https://github.com/coveo/ui-kit/issues/4778)

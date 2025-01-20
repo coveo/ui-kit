@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.14.0",
+  "version": "3.15.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,8 +36,8 @@
       "require": "./dist/atomic/lang/*"
     },
     "./components": {
-      "types": "./dist/components/components/index.d.ts",
-      "import": "./dist/components/components/index.js"
+      "types": "./dist/atomic/components/components/index.d.ts",
+      "import": "./dist/atomic/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -52,8 +52,8 @@
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npm run build:locales && stencil test --spec",
-    "test:watch": "stencil test --spec --watchAll",
+    "test": "vitest --run && npm run build:locales && stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
     "e2e:watch": "cypress open --browser chrome --e2e",
@@ -71,10 +71,9 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.1",
+    "@coveo/headless": "3.13.2",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.25.6",
-    "@stencil/store": "2.0.16",
     "dayjs": "1.11.13",
     "dompurify": "3.2.3",
     "escape-html": "1.0.3",
@@ -145,11 +144,14 @@
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "wait-on": "8.0.1"
+    "wait-on": "8.0.1",
+    "playwright": "1.49.1",
+    "@vitest/browser": "2.1.8",
+    "vitest": "2.1.8"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.1"
+    "@coveo/headless": "3.13.2"
   },
   "license": "Apache-2.0",
   "engines": {

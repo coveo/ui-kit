@@ -46,5 +46,4 @@ console.log(execSync(`
     --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPage.major} \
     --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor} \
     --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor}.${atomicHostedPage.patch} \
-    --resolve GITHUB_RUN_ID=${process.env.RUN_ID} \
-    --changeset ${releaseCommit}`.replaceAll(/\s+/g, ' ').trim()).toString());
+    --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`.replaceAll(/\s+/g, ' ').trim()).toString());
