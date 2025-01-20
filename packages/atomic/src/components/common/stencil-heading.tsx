@@ -3,7 +3,7 @@ import {JSXBase} from '@stencil/core/internal';
 import {HeadingProps} from './heading';
 
 /**
- * @deprecated Should only be used for Stencil components; for Lit components, use the heading function instead
+ * @deprecated Should only be used for Stencil components; for Lit components, use the heading function instead.
  */
 export const Heading: FunctionalComponent<
   Pick<HeadingProps, 'level'> & JSXBase.HTMLAttributes<HTMLHeadingElement>
