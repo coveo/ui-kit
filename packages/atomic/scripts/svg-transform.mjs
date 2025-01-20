@@ -7,6 +7,34 @@ import {
   visitNode,
 } from 'typescript';
 
+/**
+ * Creates a TypeScript variable statement for an SVG import.
+ *
+ * This function generates a TypeScript variable statement that assigns the SVG content as a string literal
+ * to a variable. It is used as part of a custom TypeScript transformer to inline SVG content in the transpiled
+ * JavaScript files.
+ *
+ * @example
+ * The following TypeScript source file:
+ * ```ts
+ * // src/components/component.ts
+ * import Tick from '../../../images/checkbox.svg';
+ * () => console.log(Tick);
+ * ```
+ *
+ * Will be transpiled to (note that the SVG import statement has been replaced with the SVG content):
+ * ```js
+ * // dist/components/component.js
+ * const Tick = "<svg viewBox=\"0 0 12 9\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"> ... </svg>";
+ * () => console.log(Tick);
+ * ```
+ *
+ * @param {NodeFactory} factory - The TypeScript factory object used to create AST nodes.
+ * @param {string} svgContent - The content of the SVG file as a string.
+ * @param {string} variableName - The name of the variable to which the SVG content will be assigned.
+ * @returns {VariableStatement} A TypeScript variable statement that assigns the SVG content to the variable.
+ * @throws If the variable name is not defined.
+ */
 function createStatement(factory, svgContent, variableName) {
   const bindingName = undefined;
   const exclamationToken = undefined;
