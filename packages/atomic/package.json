@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.15.2",
+  "version": "3.15.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -52,8 +52,8 @@
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npm run build:locales && stencil test --spec",
-    "test:watch": "stencil test --spec --watchAll",
+    "test": "vitest --run && npm run build:locales && stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
     "e2e:watch": "cypress open --browser chrome --e2e",
@@ -145,7 +145,10 @@
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "wait-on": "8.0.1"
+    "wait-on": "8.0.1",
+    "playwright": "1.49.1",
+    "@vitest/browser": "2.1.8",
+    "vitest": "2.1.8"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",

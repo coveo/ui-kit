@@ -48,7 +48,7 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const tabBarElement = tabBar.tabBar;
         await tabBarElement.scrollIntoViewIfNeeded();
-        const tabs = tabBar.allVisibleTabs;
+        const tabs = tabBar.allTabs;
         expect(tabs).not.toBeNull();
         expect(await tabs.count()).toEqual(expectedNumberOfTabs);
 

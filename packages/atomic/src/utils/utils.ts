@@ -1,3 +1,5 @@
+import {getAssetPath} from '@stencil/core';
+import {NODE_TYPES} from '@stencil/core/mock-doc';
 import DOMPurify from 'dompurify';
 
 /**
@@ -55,11 +57,11 @@ export function parseHTML(string: string) {
 }
 
 export function isElementNode(node: Node): node is Element {
-  return node.nodeType === Node.ELEMENT_NODE;
+  return node.nodeType === NODE_TYPES.ELEMENT_NODE;
 }
 
 export function isTextNode(node: Node): node is Text {
-  return node.nodeType === Node.TEXT_NODE;
+  return node.nodeType === NODE_TYPES.TEXT_NODE;
 }
 
 export function isVisualNode(node: Node) {
@@ -80,12 +82,6 @@ export function containsVisualElement(node: Node) {
     }
   }
   return false;
-}
-
-export function getAssetPath(path: string): string {
-  const baseUrl = window.location.origin;
-  const assetUrl = new URL(path, baseUrl);
-  return assetUrl.origin !== baseUrl ? assetUrl.href : assetUrl.pathname;
 }
 
 export function parseAssetURL(url: string, assetPath = './assets') {
