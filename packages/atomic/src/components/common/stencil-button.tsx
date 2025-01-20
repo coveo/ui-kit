@@ -6,7 +6,10 @@ import {
   getClassNameForButtonStyle,
 } from './button-style';
 
-export interface ButtonProps {
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use ButtonProps interface instead
+ */
+export interface StencilButtonProps {
   style: ButtonStyle;
   onClick?(event?: MouseEvent): void;
   class?: string;
@@ -28,7 +31,13 @@ export interface ButtonProps {
   ref?(element?: HTMLButtonElement): void;
 }
 
-export const Button: FunctionalComponent<ButtonProps> = (props, children) => {
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the button.ts file instead
+ */
+export const Button: FunctionalComponent<StencilButtonProps> = (
+  props,
+  children
+) => {
   const rippleColor = getRippleColorForButtonStyle(props.style);
   const className = getClassNameForButtonStyle(props.style);
 

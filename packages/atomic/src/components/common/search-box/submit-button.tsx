@@ -1,9 +1,9 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
 import {AnyBindings} from '../interface/bindings';
-import {Button, ButtonProps} from '../stencil-button';
+import {Button, StencilButtonProps} from '../stencil-button';
 
-interface Props extends Partial<ButtonProps> {
+interface Props extends Partial<StencilButtonProps> {
   bindings: AnyBindings;
 }
 
