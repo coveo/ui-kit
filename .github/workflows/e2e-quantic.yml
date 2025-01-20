@@ -49,7 +49,7 @@ jobs:
           spec: ${{ matrix.spec }}
   e2e-quantic-playwright-test:
     name: 'Run Playwright e2e tests on Quantic'
-    needs: e2e-quantic-cypress-test
+    needs: e2e-quantic-setup
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -62,7 +62,9 @@ jobs:
       - uses: ./.github/actions/e2e-quantic-playwright
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
-    needs: e2e-quantic-playwright-test
+    needs:
+      - e2e-quantic-playwright-test
+      - e2e-quantic-cypress-test
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
