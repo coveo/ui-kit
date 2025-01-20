@@ -18,7 +18,9 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  * individual tab within the manager.
  *
  * @part button-container - The container for the tab button.
- * @part button - The tab button.
+ * @part button-container-active - The container for the active tab button.
+ * @part tab-button - The tab button.
+ * @part tab-button-active - The container for the active tab button.
  * @part dropdown-area - The dropdown area.
  * @part tab-area - The tab area.
  * @slot default

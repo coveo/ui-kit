@@ -3,10 +3,7 @@ import {CartInitialState} from '../../controllers/commerce/context/cart/headless
 import {ContextOptions} from '../../controllers/commerce/context/headless-context.js';
 import {cartDefinition} from '../../features/commerce/context/cart/cart-validation.js';
 import {contextDefinition} from '../../features/commerce/context/context-validation.js';
-import {
-  nonEmptyString,
-  requiredNonEmptyString,
-} from '../../utils/validate-payload.js';
+import {nonEmptyString} from '../../utils/validate-payload.js';
 import {
   AnalyticsConfiguration,
   EngineConfiguration,
@@ -58,7 +55,11 @@ export const commerceEngineConfigurationSchema =
             '@coveo/quantic': nonEmptyString,
           },
         }),
-        trackingId: requiredNonEmptyString,
+        trackingId: new StringValue({
+          required: true,
+          emptyAllowed: false,
+          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+        }),
       },
     }),
     context: new RecordValue({
