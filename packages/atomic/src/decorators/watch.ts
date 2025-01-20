@@ -14,7 +14,6 @@ type PublicProperties<T> = {
       : K;
 }[keyof T];
 
-
 // TODO: KIT-3822: add unit tests to this decorator
 export function watch<Component extends LitElement>(
   propName: PublicProperties<Component>
