@@ -1,4 +1,4 @@
-import {transformMarkdownToHtml} from './markdown-utils';
+import {transformMarkdownToHtml} from './markdown-utils.js';
 
 describe('markdownUtils', () => {
   describe('transformMarkdownToHtml', () => {
