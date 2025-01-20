@@ -160,8 +160,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     if (this.collapsible) {
-      // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
-      // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
@@ -229,6 +227,17 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   }
 
+  isMaximumHeightExceeded() {
+    // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
+    // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
+    const maximumAnswerHeight = this.validateMaxCollapsedHeight();
+    const answerElementHeight = this.isStreaming
+      ? this.generatedAnswerElementHeight + 50
+      : this.generatedAnswerElementHeight;
+
+    return answerElementHeight > maximumAnswerHeight;
+  }
+
   getGeneratedAnswerStatus() {
     if (!this.state.isVisible) {
       return this.labels.generatedAnswerIsHidden;
@@ -262,15 +271,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     } else {
       this.feedbackState = FEEDBACK_NEUTRAL_STATE;
     }
-  }
-
-  isMaximumHeightExceeded() {
-    const maximumAnswerHeight = this.validateMaxCollapsedHeight();
-    const answerElementHeight = this.isStreaming
-      ? this.generatedAnswerElementHeight + 50
-      : this.generatedAnswerElementHeight;
-
-    return answerElementHeight > maximumAnswerHeight;
   }
 
   /**
@@ -362,7 +362,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
-  handleAnswerDoneGenerating = (event) => {
+  handleAnswerContentUpdated = (event) => {
     event.stopPropagation();
     if (this.collapsible) {
       this._exceedsMaximumHeight = this.isMaximumHeightExceeded();

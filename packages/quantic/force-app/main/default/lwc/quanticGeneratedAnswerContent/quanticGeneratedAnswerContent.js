@@ -11,7 +11,7 @@ import generatedTextContentTemplate from './templates/generatedTextContent.html'
 /**
  * The `QuanticGeneratedAnswerContent` component displays the generated answer content.
  * @category Internal
- * @fires CustomEvent#quantic__answergenerated
+ * @fires CustomEvent#quantic__answercontentupdated
  * @example
  * <c-quantic-generated-answer-content answer-content-format={answerContentFormat} answer={answer} is-streaming={isStreaming}></c-quantic-generated-answer-content>
  */
@@ -111,7 +111,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     else {
       answerContainer.textContent = this.answer;
     }
-    this.dispatchEvent(new CustomEvent('quantic__answergenerated'));
+    this.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
   }
 
   get generatedAnswerContentClass() {
