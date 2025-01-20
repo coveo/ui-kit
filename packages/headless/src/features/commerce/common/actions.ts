@@ -53,6 +53,16 @@ export const buildCommerceAPIRequest = (
   };
 };
 
+export const buildInstantProductsAPIRequest = (
+  state: ListingAndSearchStateNeededByQueryCommerceAPI,
+  navigatorContext: NavigatorContext
+): CommerceAPIRequest => {
+  const {commercePagination, ...restState} = state;
+  return {
+    ...buildCommerceAPIRequest(restState, navigatorContext),
+  };
+};
+
 export const buildBaseCommerceAPIRequest = (
   state: StateNeededByQueryCommerceAPI,
   navigatorContext: NavigatorContext,

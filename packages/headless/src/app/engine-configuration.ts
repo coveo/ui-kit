@@ -187,6 +187,11 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
           required: false,
           url: true,
         }),
+        trackingId: new StringValue({
+          required: false,
+          emptyAllowed: false,
+          regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+        }),
       },
     }),
     environment: new StringValue<PlatformEnvironment>({

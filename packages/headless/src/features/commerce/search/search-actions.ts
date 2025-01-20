@@ -8,7 +8,10 @@ import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
-import {buildCommerceAPIRequest} from '../common/actions.js';
+import {
+  buildCommerceAPIRequest,
+  buildInstantProductsAPIRequest,
+} from '../common/actions.js';
 import {
   clearAllCoreFacets,
   updateAutoSelectionForAllCoreFacets,
@@ -155,7 +158,7 @@ export const fetchInstantProducts = createAsyncThunk<
     const {apiClient, navigatorContext} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...buildCommerceAPIRequest(state, navigatorContext),
+      ...buildInstantProductsAPIRequest(state, navigatorContext),
       query: q,
     });
 
@@ -163,13 +166,8 @@ export const fetchInstantProducts = createAsyncThunk<
       return rejectWithValue(fetched.error);
     }
 
-    // TODO: Should ultimately rely on different config for product suggest endpoint which would support
-    // different config for pagination: Would not have to cull array of products client side.
-    // https://coveord.atlassian.net/browse/CAPI-682
-    const products = fetched.success.products.slice(0, 5);
-
     return {
-      response: {...fetched.success, products},
+      response: {...fetched.success, products: fetched.success.products},
     };
   }
 );
