@@ -1,10 +1,12 @@
+import {vi} from 'vitest';
 import {buildDebouncedQueue, DebouncedQueue} from './debounce-utils';
 
 describe('buildDebouncedQueue', () => {
   let queue: DebouncedQueue;
   const delay = 5;
+
   beforeEach(() => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     queue = buildDebouncedQueue({delay});
   });
 
@@ -13,44 +15,44 @@ describe('buildDebouncedQueue', () => {
   });
 
   it('executes the first action synchronously', () => {
-    const action = jest.fn();
+    const action = vi.fn();
     queue.enqueue(action);
     expect(action).toHaveBeenCalledTimes(1);
   });
 
   it("doesn't execute actions more than once", () => {
-    const action = jest.fn();
+    const action = vi.fn();
     queue.enqueue(action);
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(action).toHaveBeenCalledTimes(1);
   });
 
   it('debounces actions by the given delay', () => {
-    const action = jest.fn();
+    const action = vi.fn();
     queue.enqueue(() => {});
     queue.enqueue(action);
-    jest.advanceTimersByTime(delay - 1);
+    vi.advanceTimersByTime(delay - 1);
     expect(action).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
+    vi.advanceTimersByTime(1);
     expect(action).toHaveBeenCalledTimes(1);
   });
 
   it('debounces actions executed after the last action within the delay', () => {
     queue.enqueue(() => {}); // Finishes at 0
     queue.enqueue(() => {}); // Finishes at `delay`
-    jest.advanceTimersByTime(delay * 2 - 1);
-    const action = jest.fn();
+    vi.advanceTimersByTime(delay * 2 - 1);
+    const action = vi.fn();
     queue.enqueue(action);
     expect(action).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
+    vi.advanceTimersByTime(1);
     expect(action).toHaveBeenCalledTimes(1);
   });
 
   it("doesn't debounce actions executed after the last action past the delay", () => {
     queue.enqueue(() => {}); // Finishes at 0
     queue.enqueue(() => {}); // Finishes at `delay`
-    jest.advanceTimersByTime(delay * 2);
-    const action = jest.fn();
+    vi.advanceTimersByTime(delay * 2);
+    const action = vi.fn();
     queue.enqueue(action);
     expect(action).toHaveBeenCalledTimes(1);
   });
@@ -67,7 +69,7 @@ describe('buildDebouncedQueue', () => {
     enqueue('C');
     enqueue('B');
     enqueue('A');
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(completedActions).toEqual(['C', 'B', 'A']);
   });
 
@@ -83,18 +85,18 @@ describe('buildDebouncedQueue', () => {
     enqueue('C');
     queue.cancelActionIfQueued('B');
     queue.cancelActionIfQueued('D');
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(completedActions).toEqual(['A', 'C']);
   });
 
   it('can clear the queue', () => {
-    const actionA = jest.fn();
-    const actionB = jest.fn();
+    const actionA = vi.fn();
+    const actionB = vi.fn();
     queue.enqueue(() => {});
     queue.enqueue(actionA);
     queue.enqueue(actionB);
     queue.clear();
-    jest.runAllTimers();
+    vi.runAllTimers();
     expect(actionA).not.toHaveBeenCalled();
     expect(actionB).not.toHaveBeenCalled();
   });
@@ -102,11 +104,11 @@ describe('buildDebouncedQueue', () => {
   it('still debounces actions enqueued within the delay after clearing', () => {
     queue.enqueue(() => {});
     queue.clear();
-    jest.advanceTimersByTime(delay - 1);
-    const action = jest.fn();
+    vi.advanceTimersByTime(delay - 1);
+    const action = vi.fn();
     queue.enqueue(action);
     expect(action).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(1);
+    vi.advanceTimersByTime(1);
     expect(action).toHaveBeenCalledTimes(1);
   });
 });

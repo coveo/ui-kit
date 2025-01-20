@@ -8,4 +8,5 @@ export default defineWorkspace([
   // eslint-disable-next-line @cspell/spellchecker
   './packages/samples/vuejs/vite.config.ts',
   './packages/headless-react/vitest.config.js',
+  './packages/atomic/vitest.config.ts',
 ]);

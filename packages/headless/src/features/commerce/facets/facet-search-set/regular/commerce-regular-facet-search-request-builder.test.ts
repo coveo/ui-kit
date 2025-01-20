@@ -21,6 +21,7 @@ describe('#buildFacetSearchRequest', () => {
     facetId = '1';
     query = 'test';
     state = buildMockCommerceState();
+    state.commerceQuery.query = 'test query';
     state.facetSearchSet[facetId] = buildMockFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
@@ -71,7 +72,7 @@ describe('#buildFacetSearchRequest', () => {
       ...buildCommerceAPIRequestMock.mock.results[0].value,
       facetId,
       facetQuery: `*${query}*`,
-      query: state.commerceQuery?.query,
+      query: 'test query',
     });
   });
 
@@ -89,7 +90,7 @@ describe('#buildFacetSearchRequest', () => {
     expect(request).toEqual({
       ...expectedBaseRequest,
       facetId,
-      query: '',
+      query: 'test query',
       facetQuery: `*${query}*`,
     });
   });
