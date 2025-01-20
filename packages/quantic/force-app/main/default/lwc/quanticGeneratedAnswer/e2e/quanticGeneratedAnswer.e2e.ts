@@ -1,4 +1,4 @@
-import {testSearch, testInsight} from './fixture';
+import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
 import genQaData from './data';
 
@@ -172,6 +172,27 @@ useCaseTestCases.forEach((useCase) => {
           await generatedAnswer.clickOnCitation(citationIndex);
           await citationClickAnalyticRequestPromise;
         });
+      });
+    });
+
+    test.describe('when the answer is generated in a single shot and the answer exceeds the maximum height', () => {
+      test.use({
+        options: {
+          collapsible: true,
+        },
+      });
+      test('should display the answer as collapsed', async ({
+        generatedAnswer,
+      }) => {
+        const expectedShowMoreLabel = 'Show more';
+        await generatedAnswer.waitForStreamEndUaAnalytics();
+
+        const showMoreButton = generatedAnswer.showMoreButton;
+        expect(showMoreButton).not.toBeNull();
+
+        const showMoreButtonLabel = await showMoreButton.textContent();
+        expect(showMoreButtonLabel).not.toBeNull();
+        expect(showMoreButtonLabel).toEqual(expectedShowMoreLabel);
       });
     });
   });
