@@ -148,11 +148,35 @@
       }
     },
     {
+      "id": "deploy-atomic-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-nightly-storybook-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly/storybook",
         "source": "packages/atomic/dist-storybook",
         "parameters": {
           "acl": "public-read"
@@ -196,6 +220,18 @@
       }
     },
     {
+      "id": "deploy-atomic-react-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-hosted-page-patch-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
@@ -225,6 +261,18 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-hosted-page-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]-nightly",
         "source": "packages/atomic-hosted-page/dist",
         "parameters": {
           "acl": "public-read"
