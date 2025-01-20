@@ -31,11 +31,17 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
   smartSnippetAnswer: () =>
     SmartSnippetSelectors.get().find('[data-cy="smart-snippet-answer"]'),
   smartSnippetSourceUri: () =>
-    SmartSnippetSelectors.get().find('[data-cy="smart-snippet__source-uri"]'),
+    SmartSnippetSelectors.get().find(
+      '[data-testid="smart-snippet__source-uri"]'
+    ),
   smartSnippetSourceTitle: () =>
-    SmartSnippetSelectors.get().find('[data-cy="smart-snippet__source-title"]'),
+    SmartSnippetSelectors.get().find(
+      '[data-testid="smart-snippet__source-title"]'
+    ),
   smartSnippetAnswerToggle: () =>
-    SmartSnippetSelectors.get().find('[data-cy="smart-snippet-answer-toggle"]'),
+    SmartSnippetSelectors.get().find(
+      '[data-testid="smart-snippet__toggle-button"]'
+    ),
   smartSnippetExpandableAnswer: () =>
     SmartSnippetSelectors.get().find(
       '[data-cy="expandable-smart-snippet-answer"]'
@@ -45,19 +51,25 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
       '[data-cy="smart-snippet__inline-link"] > a'
     ),
   smartSnippetLikeButton: () =>
-    SmartSnippetSelectors.get().find('[data-cy="feedback__like-button"]'),
+    SmartSnippetSelectors.get().find('[data-testid="feedback__like-button"]'),
   smartSnippetDislikeButton: () =>
-    SmartSnippetSelectors.get().find('[data-cy="feedback__dislike-button"]'),
+    SmartSnippetSelectors.get().find(
+      '[data-testid="feedback__dislike-button"]'
+    ),
   smartSnippetExplainWhyButton: () =>
     SmartSnippetSelectors.get().find(
-      '[data-cy="feedback__explain-why-button"]'
+      '[data-testid="feedback__explain-why-button"]'
     ),
   feedbackOption: (index: number) =>
     cy.get('lightning-modal').find('lightning-radio-group input').eq(index),
   feedbackSubmitButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__submit"]'),
+    cy
+      .get('lightning-modal')
+      .find('[data-testid="feedback-modal-footer__submit"]'),
   feedbackCancelButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__cancel"]'),
+    cy
+      .get('lightning-modal')
+      .find('[data-testid="feedback-modal-footer__cancel"]'),
   feedbackDoneButton: () =>
     cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__done"]'),
   feedbackDetailsInput: () =>

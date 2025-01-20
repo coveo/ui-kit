@@ -1,6 +1,6 @@
 const exportModule = require('./_loader.cjs.js');
 const searchComponents = import(
-  '../components/components/search/lazy-index.js'
+  '../atomic/components/components/search/lazy-index.js'
 );
 
 const originalDefineCustomElements = exportModule.defineCustomElements;

@@ -126,6 +126,7 @@ export const config: Config = {
     {
       type: 'dist-custom-elements',
       generateTypeDeclarations: false,
+      dir: 'dist/atomic/components',
       customElementsExportBehavior: 'single-export-module',
     },
     {

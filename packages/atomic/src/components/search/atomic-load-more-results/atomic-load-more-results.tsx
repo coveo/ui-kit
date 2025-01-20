@@ -12,6 +12,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LoadMoreButton} from '../../common/load-more/stencil-button';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {LoadMoreContainer} from '../../common/load-more/container';
 import {LoadMoreGuard} from '../../common/load-more/guard';
 import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
@@ -44,6 +45,7 @@ export class AtomicLoadMoreResults {
   @State()
   private resultListState!: ResultListState;
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);
@@ -51,6 +53,9 @@ export class AtomicLoadMoreResults {
       options: {
         fieldsToInclude: [],
       },
+    });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
     });
   }
 
@@ -66,7 +71,7 @@ export class AtomicLoadMoreResults {
     return (
       <LoadMoreGuard
         hasResults={this.querySummaryState.hasResults}
-        isLoaded={this.bindings.store.isAppLoaded()}
+        isLoaded={this.isAppLoaded}
       >
         <LoadMoreContainer>
           <LoadMoreSummary from={from} to={to} i18n={i18n} />

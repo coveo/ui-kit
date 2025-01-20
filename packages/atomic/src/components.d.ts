@@ -23,18 +23,20 @@ import { NumberInputType } from "./components/common/facets/facet-number-input/n
 import { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 import { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 import { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-import { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+import { InsightStore } from "./components/insight/atomic-insight-interface/store";
 import { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine } from "@coveo/headless/recommendation";
 import { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
-import { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
+import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
@@ -55,18 +57,20 @@ export { NumberInputType } from "./components/common/facets/facet-number-input/n
 export { NumericFilter, NumericFilterState, RelativeDateUnit } from "./components/common/types";
 export { InsightEngine, FacetSortCriterion as InsightFacetSortCriterion, FoldedResult as InsightFoldedResult, InteractiveResult as InsightInteractiveResult, LogLevel as InsightLogLevel, RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm, RangeFacetSortCriterion as InsightRangeFacetSortCriterion, Result as InsightResult, ResultTemplate as InsightResultTemplate, ResultTemplateCondition as InsightResultTemplateCondition, UserAction as IUserAction } from "./components/insight";
 export { InsightInitializationOptions } from "./components/insight/atomic-insight-interface/atomic-insight-interface";
-export { AtomicInsightStore } from "./components/insight/atomic-insight-interface/store";
+export { InsightStore } from "./components/insight/atomic-insight-interface/store";
 export { InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { AtomicCommonStore, AtomicCommonStoreData } from "./components/common/interface/store";
+export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
+export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine } from "@coveo/headless/recommendation";
 export { InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "./components/recommendations";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
-export { AtomicRecsStore } from "./components/recommendations/atomic-recs-interface/store";
+export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -1417,7 +1421,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicInsightStore;
+        "store"?: InsightStore;
     }
     interface AtomicInsightResultAction {
         /**
@@ -2060,7 +2064,7 @@ export namespace Components {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: CommerceStore | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
@@ -2704,7 +2708,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicRecsStore;
+        "store"?: RecsStore;
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
@@ -2826,7 +2830,7 @@ export namespace Components {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: SearchStore;
     }
     /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.
@@ -7595,7 +7599,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicInsightStore;
+        "store"?: InsightStore;
     }
     interface AtomicInsightResultAction {
         /**
@@ -8213,7 +8217,7 @@ declare namespace LocalJSX {
           * Global Atomic state.
           * @alpha
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: CommerceStore | CommerceRecommendationStore;
     }
     /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
@@ -8817,7 +8821,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicRecsStore;
+        "store"?: RecsStore;
     }
     /**
      * A [result template](https://docs.coveo.com/en/atomic/latest/usage/displaying-results#defining-a-result-template) determines the format of the query results, depending on the conditions that are defined for each template.
@@ -8936,7 +8940,7 @@ declare namespace LocalJSX {
         /**
           * Global Atomic state.
          */
-        "store"?: AtomicCommonStore<AtomicCommonStoreData>;
+        "store"?: SearchStore;
     }
     /**
      * The `atomic-result-badge` element renders a badge to highlight special features of a result.

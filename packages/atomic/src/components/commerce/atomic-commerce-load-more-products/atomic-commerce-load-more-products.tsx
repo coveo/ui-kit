@@ -14,6 +14,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LoadMoreButton} from '../../common/load-more/stencil-button';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {LoadMoreContainer} from '../../common/load-more/container';
 import {LoadMoreGuard} from '../../common/load-more/guard';
 import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
@@ -49,6 +50,7 @@ export class AtomicLoadMoreProducts {
   private productListingOrSearchState!: ProductListingState | SearchState;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
@@ -57,6 +59,10 @@ export class AtomicLoadMoreProducts {
       this.listingOrSearch = buildSearch(this.bindings.engine);
     }
     this.pagination = this.listingOrSearch.pagination();
+
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private get lastProduct() {
@@ -73,7 +79,7 @@ export class AtomicLoadMoreProducts {
     return (
       <LoadMoreGuard
         hasResults={this.paginationState.totalEntries > 0}
-        isLoaded={this.bindings.store.isAppLoaded()}
+        isLoaded={this.isAppLoaded}
       >
         <LoadMoreContainer>
           <LoadMoreSummary

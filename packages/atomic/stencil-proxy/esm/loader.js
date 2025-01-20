@@ -1,4 +1,4 @@
-import searchComponents from '../components/components/search/lazy-index.js';
+import searchComponents from '../atomic/components/components/search/lazy-index.js';
 import {defineCustomElements as originalDefineCustomElements} from './_loader.js';
 
 const defineCustomElements = function (...args) {

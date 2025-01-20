@@ -1,10 +1,10 @@
 import {SearchEngine} from '@coveo/headless';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
-import {AtomicStore} from './store';
+import {SearchStore} from './store';
 
 export type Bindings = CommonBindings<
   SearchEngine,
-  AtomicStore,
+  SearchStore,
   HTMLAtomicSearchInterfaceElement
 > &
   NonceBindings;

@@ -1,6 +1,6 @@
 //@ts-ignore
 //TODO: Simplify path to target some kind of index file?
-import searchElementMap from '../../components/components/search/lazy-index.js';
+import searchElementMap from '../components/components/search/lazy-index.js';
 
 if (typeof window !== 'undefined') {
   /**
