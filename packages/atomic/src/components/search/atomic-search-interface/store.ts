@@ -52,7 +52,6 @@ interface Data {
 }
 
 export type SearchStore = BaseStore<Data> & {
-  isAppLoaded(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   isMobile(): boolean;
@@ -85,10 +84,6 @@ export function createSearchStore(): SearchStore {
 
   return {
     ...store,
-
-    isAppLoaded() {
-      return !store.state.loadingFlags.length;
-    },
 
     unsetLoadingFlag(loadingFlag: string) {
       unsetLoadingFlag(store, loadingFlag);

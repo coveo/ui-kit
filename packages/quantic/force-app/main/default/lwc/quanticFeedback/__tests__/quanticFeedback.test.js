@@ -34,9 +34,9 @@ jest.mock(
 
 const selectors = {
   feedbackQuestion: '.feedback__question',
-  likeButton: 'c-quantic-stateful-button[data-cy="feedback__like-button"]',
+  likeButton: 'c-quantic-stateful-button[data-testid="feedback__like-button"]',
   dislikeButton:
-    'c-quantic-stateful-button[data-cy="feedback__dislike-button"]',
+    'c-quantic-stateful-button[data-testid="feedback__dislike-button"]',
   successMessage: '.feedback__success-message',
   explainWhyButton: '.feedback__explain-why',
 };

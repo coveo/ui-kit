@@ -43,11 +43,11 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
   likeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__like-button"] button'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-testid="feedback__like-button"] button'
     ),
   dislikeButton: () =>
     GeneratedAnswerSelectors.get().find(
-      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-cy="feedback__dislike-button"] button'
+      '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-testid="feedback__dislike-button"] button'
     ),
   citations: () =>
     GeneratedAnswerSelectors.get().find(
@@ -84,7 +84,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   feedbackCancelButton: () =>
     GeneratedAnswerSelectors.feedbackModal().find(
-      '[data-cy="feedback-modal-footer__cancel"]'
+      '[data-testid="feedback-modal-footer__cancel"]'
     ),
   feedbackDoneButton: () =>
     GeneratedAnswerSelectors.feedbackModal().find(
