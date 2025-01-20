@@ -1,8 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {Button, ButtonProps} from '../button';
-import {RadioButtonProps} from '../radio-button';
-import {RadioButton} from '../stencil-radio-button';
+import {RadioButton, StencilRadioButtonProps} from '../stencil-radio-button';
 
 export interface PagerNavigationButtonProps
   extends Omit<ButtonProps, 'style' | 'part' | 'class'> {
@@ -12,7 +11,7 @@ export interface PagerNavigationButtonProps
 
 export interface PagerPageButtonProps
   extends Omit<
-    RadioButtonProps,
+    StencilRadioButtonProps,
     'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
   > {
   page: number;
