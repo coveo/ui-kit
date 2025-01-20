@@ -111,7 +111,7 @@ export default class QuanticGeneratedAnswerContent extends LightningElement {
     else {
       answerContainer.textContent = this.answer;
     }
-    this.dispatchEvent(new CustomEvent('quantic__answergenerated'));
+    this.dispatchEvent(new CustomEvent('quantic__answercontentupdated'));
   }
 
   get generatedAnswerContentClass() {
