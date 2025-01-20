@@ -22,7 +22,7 @@ export function mapProperty<Element extends ReactiveElement>(
     ctor.addInitializer((instance) => {
       const props = {};
       const prefix =
-        options?.attributePrefix || camelToKebab(propertyKey as string);
+        options?.attributePrefix || camelToKebab(propertyKey.toString());
 
       mapAttributesToProp(
         prefix,
