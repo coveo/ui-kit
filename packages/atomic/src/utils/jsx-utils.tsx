@@ -1,13 +1,9 @@
-import {Fragment, FunctionalComponent, h, VNode} from '@stencil/core';
-import {i18n} from 'i18next';
+import {Fragment, FunctionalComponent, h} from '@stencil/core';
+import {LocalizedStringProps} from '../directives/localized-string';
 
-export interface LocalizedStringProps {
-  i18n: i18n;
-  key: string;
-  params: Record<string, VNode | string>;
-  count?: number;
-}
-
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the localizedString directive instead
+ */
 export const LocalizedString: FunctionalComponent<LocalizedStringProps> = ({
   i18n,
   key,

@@ -65,7 +65,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
   }: {index?: number; total?: number; listSide?: 'Left' | 'Right'} = {}) {
     return this.page.getByLabel(
       new RegExp(
-        `instant result\\.(?: Button\\.)? ${index ?? '\\d'} of ${total ?? '\\d'}\\.${this.listSideAffix(listSide)}`
+        `instant result\\.(?: Button\\.)? ${index ?? '\\d{1,2}'} of ${total ?? '\\d{1,2}'}\\.${this.listSideAffix(listSide)}`
       )
     );
   }

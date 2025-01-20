@@ -40,6 +40,6 @@ export const buildFacetSearchRequest = (
     clientId,
     context,
     query,
-    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest, query: ''}),
+    ...(!isFieldSuggestionsRequest && {...restOfCommerceAPIRequest}),
   };
 };
