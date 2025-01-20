@@ -127,13 +127,13 @@ jobs:
         uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
         with:
           egress-policy: audit
-      
+
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: 'release/v3'
 
-      - name: Set up and build the project 
+      - name: Set up and build the project
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
@@ -174,7 +174,7 @@ jobs:
         with:
           ref: 'release/v3'
 
-      - name: Set up and build the project 
+      - name: Set up and build the project
         uses: ./.github/actions/setup
 
       - name: Build typedoc site
