@@ -17,7 +17,9 @@ export interface StencilRadioButtonProps extends Omit<RadioButtonProps, 'ref'> {
 /**
  * @deprecated Should only be used for Stencil components; for Lit components, use the radioButton function instead
  */
-export const RadioButton: FunctionalComponent<StencilRadioButtonProps> = (props) => {
+export const RadioButton: FunctionalComponent<StencilRadioButtonProps> = (
+  props
+) => {
   const classNames = ['btn-radio'];
   let onMouseDown:
     | JSXBase.DOMAttributes<HTMLInputElement>['onMouseDown']
