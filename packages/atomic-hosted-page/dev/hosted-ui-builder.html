@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic Hosted UI</title>
 
-    <script type="module" src="/build/atomic-hosted-page.esm.js"></script>
+    <script type="module">
+      import {defineCustomElements} from '@coveo/atomic-hosted-page/loader';
+
+      defineCustomElements();
+    </script>
     <script type="module">
       await customElements.whenDefined('atomic-hosted-ui');
 
       const atomicHostedUIPage = document.querySelector('atomic-hosted-ui');
       await atomicHostedUIPage.initialize({
-        pageId: '35888cec-876c-48ed-88c9-ef10337db672',
+        pageId: '181e0278-375d-412e-818b-abb054de0c32',
         accessToken: 'xx71d82ce9-f6fe-4be0-9209-c0e43f6fae81',
         organizationId: 'searchuisamples',
       });
@@ -19,6 +23,6 @@
   </head>
 
   <body>
-    <atomic-hosted-ui hosted-type="code"></atomic-hosted-ui>
+    <atomic-hosted-ui hosted-type="builder"></atomic-hosted-ui>
   </body>
 </html>
