@@ -86,7 +86,7 @@ describe('buildInsightEngine', () => {
     it('passing trackingId containing an invalid character throws', () => {
       options.configuration.analytics = {
         trackingId:
-          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.@',
+          'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
       };
       expect(initEngine).toThrow();
     });
