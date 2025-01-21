@@ -30,4 +30,7 @@ UserInterfaceState.xcuserstate
 /blob-report/
 /playwright/.cache/
 
-/dev/public/
+/dev/atomic-hosted-page/
+/dev/bueno/
+/dev/headless/
+

@@ -40,7 +40,9 @@
     "@playwright/test": "1.49.1",
     "@types/node": "22.10.6",
     "rollup": "4.30.1",
-    "vite": "5.4.11"
+    "vite": "5.4.11",
+    "vite-plugin-static-copy": "2.2.0",
+    "local-web-server": "5.4.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

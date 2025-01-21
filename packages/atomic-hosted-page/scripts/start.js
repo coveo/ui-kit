@@ -27,7 +27,7 @@ const atomicHostedPageDir = path.resolve(
   currentDir,
   '../dist/atomic-hosted-page'
 );
-const devPublicDir = path.resolve(currentDir, '../dev/public');
+const devPublicDir = path.resolve(currentDir, '../dev');
 
 /**
  * All of this code below is there so simulate the CDN when DEPLOYMENT_ENVIRONMENT=CDN is set during the build
@@ -80,7 +80,7 @@ const run = async () => {
 
   console.log('IS IT CDN : ', process.env.DEPLOYMENT_ENVIRONMENT);
   console.log('Starting Vite server...');
-  execSync('vite serve dev', {stdio: 'inherit'});
+  execSync('ws --directory dev/', {stdio: 'inherit'});
 };
 
 run();
