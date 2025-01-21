@@ -78,6 +78,7 @@ const run = async () => {
   );
   execSync(`cp -r ${atomicHostedPageDir}/ ${devPublicDir}/atomic-hosted-page/`);
 
+  console.log('IS IT CDN : ', process.env.DEPLOYMENT_ENVIRONMENT);
   console.log('Starting Vite server...');
   execSync('vite serve dev', {stdio: 'inherit'});
 };
