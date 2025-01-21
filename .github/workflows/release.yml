@@ -128,36 +128,38 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: 'release/v3'
-      - uses: ./.github/actions/setup
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
+
       - name: Build typedoc site
         run: npm run build:typedoc
         working-directory: packages/headless
         shell: bash
+
       - name: Read version from package.json
         id: read_version
         run: |
           VERSION=$(jq -r '.version' packages/headless/package.json)
           echo "Extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
-      - name: Zip documentation folder
-        run: |
-          DOCS_DIR="packages/headless/docs"
-          if [ ! -d "$DOCS_DIR" ]; then
-            echo "Documentation folder $DOCS_DIR not found."
-            exit 1
-          fi
 
-          ZIP_NAME="headless-docs-${{ env.version }}.zip"
-          zip -r "$ZIP_NAME" "$DOCS_DIR"
-          echo "Created zip file: $ZIP_NAME"
+      - name: Copy the docs into the version folder
+        run: |
+          mkdir -p typedoc-headless-site/${{ env.version }}/
+          cp -r packages/headless/docs/* typedoc-headless-site/${{ env.version }}/
+          echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
+
       - name: Upload documentation artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: headless-docs-${{ env.version }}
-          path: headless-docs-${{ env.version }}.zip
+          path: typedoc-headless-site/
+
   typedoc-headless-react:
     needs: release
     runs-on: ubuntu-latest
@@ -167,36 +169,37 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: 'release/v3'
-      - uses: ./.github/actions/setup
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
+
       - name: Build typedoc site
         run: npm run build:typedoc
         working-directory: packages/headless-react
         shell: bash
+
       - name: Read version from package.json
         id: read_version
         run: |
           VERSION=$(jq -r '.version' packages/headless-react/package.json)
           echo "Extracted version: $VERSION"
           echo "version=$VERSION" >> $GITHUB_ENV
-      - name: Zip documentation folder
-        run: |
-          DOCS_DIR="packages/headless-react/docs"
-          if [ ! -d "$DOCS_DIR" ]; then
-            echo "Documentation folder $DOCS_DIR not found."
-            exit 1
-          fi
 
-          ZIP_NAME="headless-react-docs-${{ env.version }}.zip"
-          zip -r "$ZIP_NAME" "$DOCS_DIR"
-          echo "Created zip file: $ZIP_NAME"
+      - name: Copy the docs into the version folder
+        run: |
+          mkdir -p typedoc-headless-react-site/${{ env.version }}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
+          echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
+
       - name: Upload documentation artifact
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
         with:
           name: headless-react-docs-${{ env.version }}
-          path: headless-react-docs-${{ env.version }}.zip
+          path: typedoc-headless-react-site/
 
   # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
   # github-prod:
