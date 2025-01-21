@@ -23,7 +23,7 @@
   "scripts": {
     "clean": "rimraf -rf dist/*",
     "build": "nx build",
-    "start": "vite serve dev",
+    "start": "node ./script/start.js",
     "e2e": "playwright test",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
     "publish:npm": "npm run-script -w=@coveo/release npm-publish",
