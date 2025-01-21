@@ -1,15 +1,41 @@
-import {readdir, mkdir, readFile, writeFile} from 'fs';
+import {readFile, writeFile, readFileSync, existsSync, mkdirSync} from 'fs';
 import * as lightningcss from 'lightningcss';
-import {join, dirname, relative} from 'path';
+import {join, dirname, basename, resolve} from 'path';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
-import {fileURLToPath} from 'url';
+import {argv} from 'process';
+import {
+  readConfigFile,
+  sys,
+  parseJsonConfigFileContent,
+  isImportDeclaration,
+  forEachChild,
+  createSourceFile,
+  ScriptTarget,
+  isExportDeclaration,
+  resolveModuleName,
+} from 'typescript';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const args = argv.slice(2);
+const configArg = args.find((arg) => arg.startsWith('--config='));
+if (configArg === undefined) {
+  throw new Error('Missing --config=[PATH] argument');
+}
+const tsConfigPath = configArg.split('=')[1];
 
-const srcDir = join(__dirname, 'src');
-const distDir = join(__dirname, 'dist', 'components');
+function loadTsConfig(configPath) {
+  const configFile = readConfigFile(configPath, sys.readFile);
+  if (configFile.error) {
+    throw new Error(
+      `Error loading tsconfig file: ${configFile.error.messageText}`
+    );
+  }
+  return parseJsonConfigFileContent(
+    configFile.config,
+    sys,
+    dirname(configPath)
+  );
+}
 
 async function processAndMinifyCss(content, filename) {
   const {plugins, options} = await postcssLoadConfig();
@@ -56,32 +82,90 @@ function convertCssToJs(srcPath, distPath, file) {
   });
 }
 
-function processCssFiles(srcDir, distDir) {
-  readdir(srcDir, {withFileTypes: true}, (err, files) => {
-    if (err) {
-      throw err;
+const moduleResolutionHost = {
+  fileExists: (filePath) => existsSync(filePath),
+  readFile: (filePath) => {
+    try {
+      return readFileSync(filePath, 'utf8');
+    } catch {
+      return undefined;
     }
+  },
+};
 
-    files.forEach((file) => {
-      const srcPath = join(srcDir, file.name);
+const alreadyResolved = new Set(); // TODO: do not make global
+const compilerOptions = {
+  target: ScriptTarget.ES2021,
+};
 
-      if (file.isDirectory()) {
-        processCssFiles(srcPath, join(distDir, file.name));
-      } else if (file.isFile() && file.name.endsWith('.tw.css')) {
-        const relPath = relative(srcDir, srcPath);
-        const distPath = join(distDir, relPath);
-        const targetDir = dirname(distPath);
-        console.log(`Processing CSS for ${srcPath}`);
+const resolveAndAddImport = (containingFile, importPath) => {
+  const {resolvedModule} = resolveModuleName(
+    importPath,
+    containingFile,
+    compilerOptions,
+    moduleResolutionHost
+  );
 
-        mkdir(targetDir, {recursive: true}, (err) => {
-          if (err) {
-            throw err;
-          }
-          convertCssToJs(srcPath, distPath, file);
-        });
-      }
-    });
-  });
+  if (!resolvedModule) {
+    return null;
+  }
+
+  return resolvedModule.resolvedFileName;
+};
+
+function visit(node, currentFile) {
+  // TODO: export should be treated differently
+
+  if (isExportDeclaration(node)) {
+    if (node.moduleSpecifier === undefined) {
+      return;
+    }
+    const importPath = node.moduleSpecifier.getText().slice(1, -1); // Remove quotes
+    const resolvedFileName = resolveAndAddImport(currentFile, importPath);
+
+    if (resolvedFileName && !alreadyResolved.has(resolvedFileName)) {
+      alreadyResolved.add(resolvedFileName);
+      const fileContent = readFileSync(resolvedFileName, 'utf-8');
+      const sourceFile = getSourceFile(resolvedFileName, fileContent);
+      forEachChild(sourceFile, (childNode) =>
+        visit(childNode, resolvedFileName)
+      );
+    }
+  }
+
+  if (isImportDeclaration(node)) {
+    const importPath = node.moduleSpecifier.text;
+    if (importPath.endsWith('.tw.css')) {
+      console.log('Processing CSS for:', basename(importPath));
+      const dir = dirname(node.getSourceFile().fileName);
+      const sourcePath = resolve(dir, importPath);
+      const distPath = join(distDir, importPath);
+
+      mkdirSync(dirname(distPath), {recursive: true});
+      return convertCssToJs(sourcePath, distPath);
+    }
+  }
 }
 
-processCssFiles(srcDir, distDir);
+function getSourceFile(containingFile, fileContent) {
+  return createSourceFile(
+    containingFile,
+    fileContent,
+    ScriptTarget.ES2021,
+    true // SetParentNodes - useful for AST transformations
+  );
+}
+
+const {options, fileNames} = loadTsConfig(tsConfigPath);
+const distDir = options.outDir;
+
+fileNames.forEach((fileName) => {
+  const fileContent = readFileSync(fileName, 'utf-8');
+  const sourceFile = getSourceFile(fileName, fileContent);
+  forEachChild(sourceFile, (node) => visit(node, fileName));
+});
+// const filePath = fileNames[0];
+// const fileContent = readFileSync(filePath, 'utf-8');
+// const sourceFile = getSourceFile(filePath, fileContent);
+
+// forEachChild(sourceFile, (node) => visit(node, filePath));

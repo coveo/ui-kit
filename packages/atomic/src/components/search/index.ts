@@ -1,5 +1,7 @@
-// Export the class of the components migrated to Lit here, like this:
-//export {AtomicText} from './atomic-text/atomic-text.js';
+import '../../utils/coveo.tw.css';
+import '../../utils/tailwind.global.tw.css';
 
-// TODO: Remove this line once at least one component is migrated to Lit.
-export {};
+// Export the class of the components migrated to Lit here, like this:
+export {AtomicDummy} from './atomic-text/atomic-dummy.js';
+
+//export {AtomicText} from './atomic-text/atomic-text.js';
