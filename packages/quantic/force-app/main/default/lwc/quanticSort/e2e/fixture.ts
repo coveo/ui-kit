@@ -8,7 +8,7 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
-const pageUrl = 's/quantic-sort';
+const sortUrl = 's/quantic-sort';
 
 interface SortOptions {}
 
@@ -32,9 +32,8 @@ export const testSearch = quanticBase.extend<QuanticSortE2ESearchFixtures>({
   search: async ({page}, use) => {
     await use(new SearchObject(page, searchRequestRegex));
   },
-
   sort: async ({page, options, configuration, search, urlHash}, use) => {
-    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
+    await page.goto(urlHash ? `${sortUrl}#${urlHash}` : sortUrl);
     configuration.configure(options);
     await search.waitForSearchResponse();
     await use(new SortObject(page));
@@ -46,13 +45,11 @@ export const testInsight = quanticBase.extend<QuanticSortE2EInsightFixtures>({
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
   },
-
   insightSetup: async ({page}, use) => {
     await use(new InsightSetupObject(page));
   },
-
   sort: async ({page, options, search, configuration, insightSetup}, use) => {
-    await page.goto(pageUrl);
+    await page.goto(sortUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup.waitForInsightInterfaceInitialization();
     await search.performSearch();
