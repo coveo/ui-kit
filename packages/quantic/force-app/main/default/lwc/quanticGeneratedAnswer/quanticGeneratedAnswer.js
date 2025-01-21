@@ -407,12 +407,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Sets the the value of the CSS variable "--maxHeight" the value of the maxCollapsedHeight property.
+   * Sets the value of the CSS variable "--maxHeight" to the value of the maxCollapsedHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
     if (this._exceedsMaximumHeight) {
       const styles = this.generatedAnswerElement?.style;
-      styles.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
+      styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
     }
   }
 
@@ -426,11 +426,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
     if (!isValid) {
       console.warn(
-        `max-collapsed-height (${this.maxCollapsedHeight}px) must be between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. Falling back to default value: ${DEFAULT_COLLAPSED_HEIGHT}px.`
+        `Cannot set max-collapsed-height to (${this.maxCollapsedHeight}) it accepts a range between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
       );
+      return DEFAULT_COLLAPSED_HEIGHT;
     }
 
-    return isValid ? this.maxCollapsedHeight : DEFAULT_COLLAPSED_HEIGHT;
+    return this.maxCollapsedHeight;
   }
 
   get answer() {
