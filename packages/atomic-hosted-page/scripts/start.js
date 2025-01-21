@@ -29,6 +29,11 @@ const atomicHostedPageDir = path.resolve(
 );
 const devPublicDir = path.resolve(currentDir, '../dev/public');
 
+/**
+ * All of this code below is there so simulate the CDN when DEPLOYMENT_ENVIRONMENT=CDN is set during the build
+ * of the packages. Without DEPLOYMENT_ENVIRONMENT=CDN, for cases where we build for npm, only the
+ * "Starting Vite server..."" is important.
+ */
 const run = async () => {
   const headlessVersion = await getVersionFromPackageJson(headlessDir);
   const buenoVersion = await getVersionFromPackageJson(buenoDir);

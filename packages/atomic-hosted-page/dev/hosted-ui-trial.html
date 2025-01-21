@@ -5,8 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic Hosted UI</title>
 
-    <script type="module" src="/atomic-hosted-page/atomic-hosted-page.esm.js"></script>
-
+    <script type="module">
+      if (process.env.DEPLOYMENT_ENVIRONMENT === 'CDN') {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/atomic-hosted-page/atomic-hosted-page.esm.js';
+        document.head.appendChild(script);
+      } else {
+        import('@coveo/atomic-hosted-page/loader').then(({defineCustomElements}) => {
+          defineCustomElements();
+        });
+      }
+    </script>
     <script type="module">
       await customElements.whenDefined('atomic-hosted-ui');
 

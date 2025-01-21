@@ -6,9 +6,16 @@
     <title>Coveo Atomic Hosted UI</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic-hosted-page/loader';
-
-      defineCustomElements();
+      if (process.env.DEPLOYMENT_ENVIRONMENT === 'CDN') {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/atomic-hosted-page/atomic-hosted-page.esm.js';
+        document.head.appendChild(script);
+      } else {
+        import('@coveo/atomic-hosted-page/loader').then(({defineCustomElements}) => {
+          defineCustomElements();
+        });
+      }
     </script>
 
     <script type="module">
