@@ -57,6 +57,10 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
+  constructor() {
+    super();
+    this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
+  }
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -96,7 +100,21 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @type {number}
    * @default {250}
    */
-  @api maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
+  @api
+  get maxCollapsedHeight() {
+    return this._maxCollapsedHeight;
+  }
+
+  set maxCollapsedHeight(value) {
+    if (value >= MIN_COLLAPSED_HEIGHT && value <= MAX_COLLAPSED_HEIGHT) {
+      this._maxCollapsedHeight = value;
+    } else {
+      console.warn(
+        `Cannot set max-collapsed-height to (${value}) it accepts a range between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
+      );
+      this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
+    }
+  }
 
   labels = {
     generatedAnswerForYou,
@@ -230,12 +248,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   isMaximumHeightExceeded() {
     // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
     // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
-    const maximumAnswerHeight = this.validateMaxCollapsedHeight();
     const answerElementHeight = this.isStreaming
       ? this.generatedAnswerElementHeight + 50
       : this.generatedAnswerElementHeight;
 
-    return answerElementHeight > maximumAnswerHeight;
+    return answerElementHeight > this.maxCollapsedHeight;
   }
 
   getGeneratedAnswerStatus() {
@@ -414,24 +431,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
       const styles = this.generatedAnswerElement?.style;
       styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
     }
-  }
-
-  /**
-   * Validates that the value of the maxCollapsedHeight property is within acceptable bounds.
-   */
-  validateMaxCollapsedHeight() {
-    const isValid =
-      this.maxCollapsedHeight >= MIN_COLLAPSED_HEIGHT &&
-      this.maxCollapsedHeight <= MAX_COLLAPSED_HEIGHT;
-
-    if (!isValid) {
-      console.warn(
-        `Cannot set max-collapsed-height to (${this.maxCollapsedHeight}) it accepts a range between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
-      );
-      return DEFAULT_COLLAPSED_HEIGHT;
-    }
-
-    return this.maxCollapsedHeight;
   }
 
   get answer() {

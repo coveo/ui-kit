@@ -595,12 +595,13 @@ describe('c-quantic-generated-answer', () => {
               expect(maxHeightValue).toEqual(
                 `${expectedMaxCollapsibleAnswerHeight}px`
               );
+
+              expect(mockedConsoleWarn).not.toHaveBeenCalled();
             });
           });
 
           describe('when the maxCollapsedHeight value is greater than the valid range', () => {
             it('should set the generated answer height with the fallback default value and log a warning in the console', async () => {
-              const expectedAnswerHeightValue = 550;
               const element = createTestComponent({
                 ...defaultOptions,
                 collapsible: true,
@@ -621,7 +622,7 @@ describe('c-quantic-generated-answer', () => {
 
               const maxHeightValue =
                 generatedAnswer.style.getPropertyValue('--maxHeight');
-              expect(maxHeightValue).toEqual(`${expectedAnswerHeightValue}px`);
+              expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 
               expect(mockedConsoleWarn).toHaveBeenCalledTimes(1);
               expect(mockedConsoleWarn).toHaveBeenCalledWith(
@@ -632,11 +633,10 @@ describe('c-quantic-generated-answer', () => {
 
           describe('when the maxCollapsedHeight value is smaller than the valid range', () => {
             it('should set the generated answer height with the fallback default value and log a warning in the console', async () => {
-              const expectedAnswerHeightValue = 100;
               const element = createTestComponent({
                 ...defaultOptions,
                 collapsible: true,
-                maxCollapsedHeight: expectedAnswerHeightValue,
+                maxCollapsedHeight: 100,
               });
               await flushPromises();
 
@@ -654,7 +654,7 @@ describe('c-quantic-generated-answer', () => {
               const maxHeightValue =
                 generatedAnswer.style.getPropertyValue('--maxHeight');
 
-              expect(maxHeightValue).toEqual(`${expectedAnswerHeightValue}px`);
+              expect(maxHeightValue).toEqual(`${defaultAnswerHeight}px`);
 
               expect(mockedConsoleWarn).toHaveBeenCalledTimes(1);
               expect(mockedConsoleWarn).toHaveBeenCalledWith(
