@@ -8,6 +8,7 @@ coverage
 
 # next.js
 .next/
+apps/**/*.d.ts
 out/
 build
 

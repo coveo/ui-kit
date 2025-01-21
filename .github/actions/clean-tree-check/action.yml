@@ -1,0 +1,8 @@
+name: CleanTreeCheck
+description: Validate that the working tree is clean
+runs:
+  using: composite
+  steps:
+    - name: Clean tree check
+      shell: bash
+      run: node ./.github/actions/clean-tree-check/clean-tree-check.mjs

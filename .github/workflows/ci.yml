@@ -23,6 +23,8 @@ jobs:
         uses: ./.github/actions/lint
       - name: Build
         uses: ./.github/actions/build-packages
+      - name: Clean tree check
+        uses: ./.github/actions/clean-tree-check
       - name: Tests
         uses: ./.github/actions/test
   my-tag:

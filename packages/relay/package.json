@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/coveo-platform/relay#readme",
   "scripts": {
-    "build": "npm run clean && rollup --config ./config/rollup.config.mjs && npm run typedoc && npm run lint:fix",
+    "build": "npm run clean && rollup --config ./config/rollup.config.mjs && npm run typedoc",
     "clean": "rimraf -rf ./lib",
     "lint": "eslint src/**",
     "lint:fix": "npm run lint -- --fix",
