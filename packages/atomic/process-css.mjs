@@ -3,13 +3,37 @@ import * as lightningcss from 'lightningcss';
 import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
+import {argv} from 'process';
+import {parseJsonConfigFileContent, readConfigFile, sys} from 'typescript';
 import {fileURLToPath} from 'url';
+
+const args = argv.slice(2);
+const configArg = args.find((arg) => arg.startsWith('--config='));
+if (configArg === undefined) {
+  throw new Error('Missing --config=[PATH] argument');
+}
+const tsConfigPath = configArg.split('=')[1];
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const srcDir = join(__dirname, 'src');
-const distDir = join(__dirname, 'dist', 'components');
+const {options} = loadTsConfig(tsConfigPath);
+const distDir = options.outDir;
+
+function loadTsConfig(configPath) {
+  const configFile = readConfigFile(configPath, sys.readFile);
+  if (configFile.error) {
+    throw new Error(
+      `Error loading tsconfig file: ${configFile.error.messageText}`
+    );
+  }
+  return parseJsonConfigFileContent(
+    configFile.config,
+    sys,
+    dirname(configPath)
+  );
+}
 
 async function processAndMinifyCss(content, filename) {
   const {plugins, options} = await postcssLoadConfig();
