@@ -4,11 +4,13 @@ import { createWriteStream, readFileSync, writeFileSync } from 'fs';
 const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
 
 const atomicAngularModuleFilePath ='projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
-const atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
-const atomicAngularComponentFileStream = createWriteStream('projects/atomic-angular/src/lib/stencil-generated/components.ts', {flags: 'a'});
+const atomicAngularComponentFilePath = 'projects/atomic-angular/src/lib/stencil-generated/components.ts';
+let atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
+let atomicAngularComponentFileContent = readFileSync(atomicAngularComponentFilePath, 'utf-8');
 const litDeclarations = [];
 
-
+const startTag = '//#region Lit Declarations';
+const endTag = '//#endregion Lit Declarations';
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
@@ -31,6 +33,7 @@ export class ${declaration.name} {
 
 export declare interface ${declaration.name} extends Lit${declaration.name} {}
 `
+atomicAngularComponentFileContent = atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd() + `\n\n${startTag}\n`;
 
 const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
 
@@ -39,14 +42,14 @@ const litImports = []
 for (const module of cem.modules) {
   for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
-      atomicAngularComponentFileStream.write(declarationToProxyCmp(declaration));
+      atomicAngularComponentFileContent += declarationToProxyCmp(declaration);
       litImports.push(declarationToLitImport(declaration));
       litDeclarations.push(`${declaration.name}`);
     }
   }
 }
-atomicAngularComponentFileStream.write(`\nimport type {${litImports.join(',')}} from '@coveo/atomic/components';`);
-atomicAngularComponentFileStream.end();
+
+atomicAngularComponentFileContent+=`\n${litDeclarations.join('\n')}\nimport type {${litImports.join(',')}} from '@coveo/atomic/components';\n${endTag}`;
 
 
 if(litDeclarations.length > 0) {
@@ -56,4 +59,6 @@ if(litDeclarations.length > 0) {
       .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${litDeclarations.join(',\n')},\n`)
       .replace(/^import \{$/m, `import {\n${litDeclarations.join(',\n')},`)
   );
+
+  writeFileSync(atomicAngularComponentFilePath, atomicAngularComponentFileContent.trimEnd());
 }
