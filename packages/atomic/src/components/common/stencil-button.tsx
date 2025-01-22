@@ -4,7 +4,7 @@ import {
   ButtonStyle,
   getRippleColorForButtonStyle,
   getClassNameForButtonStyle,
-} from './button-style';
+} from './stencil-button-style';
 
 /**
  * @deprecated Should only be used for Stencil components; for Lit components, use ButtonProps interface instead
