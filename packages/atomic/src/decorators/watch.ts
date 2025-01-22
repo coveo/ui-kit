@@ -1,8 +1,12 @@
-import {LitElement} from 'lit';
+import type {LitElement, PropertyValues} from 'lit';
 
-interface WatchedPropertiesConstructor extends Function {
-  _watchedProperties?: Map<string | number | symbol, string[]>;
-}
+type UpdateHandler<T> = (prev?: T, next?: T) => void;
+
+type NonUndefined<A> = A extends undefined ? never : A;
+
+type UpdateHandlerFunctionKeys<T extends object, P extends keyof T> = {
+  [K in keyof T]-?: NonUndefined<T[K]> extends UpdateHandler<T[P]> ? K : never;
+}[keyof T];
 
 type PrivateProps = `_${string}`;
 type ProtectedProps = `#${string}`;
@@ -14,38 +18,59 @@ type PublicProperties<T> = {
       : K;
 }[keyof T];
 
-// TODO: KIT-3822: add unit tests to this decorator
-export function watch<Component extends LitElement>(
-  propName: PublicProperties<Component>
-) {
-  return function (target: Component, propertyKey: string) {
-    const constructor = target.constructor as WatchedPropertiesConstructor;
+interface WatchOptions {
+  /**
+   * If true, will only start watching after the initial update/render
+   */
+  waitUntilFirstUpdate?: boolean;
+}
 
-    if (!constructor._watchedProperties) {
-      constructor._watchedProperties = new Map();
-    }
-    if (!constructor._watchedProperties.has(propName)) {
-      constructor._watchedProperties.set(propName, []);
-    }
-    constructor._watchedProperties.get(propName)?.push(propertyKey);
-    // @ts-expect-error: accessing a protected property
-    const originalUpdated = target.willUpdate;
-    // @ts-expect-error: accessing a protected property
-    target.willUpdate = function (changedProperties: PropertyValues) {
-      if (changedProperties.has(propName)) {
-        const methods = constructor._watchedProperties?.get(propName);
-        methods?.forEach((method) => {
-          const callback = this[method as keyof LitElement];
-          if (typeof callback === 'function') {
-            (callback as Function).call(
-              this,
-              changedProperties.get(propName),
-              this[propName as keyof LitElement]
-            );
+/**
+ * A decorator that observes changes to a specified property (e.g. @property or @state) and invokes the decorated method when the property changes.
+ *
+ * It allows you to specify a property to watch, and when that property changes, the decorated method is called with the old and new values of the property.
+ *
+ * The decorated method is called before the component updates. To wait for the update to complete, use `await this.updateComplete`
+ * within the handler method. To start watching after the initial update/render, use `{ waitUntilFirstUpdate: true }` or check `this.hasUpdated`.
+ *
+ * Usage:
+ *
+ * @watch('propName')
+ * handlePropChange(oldValue, newValue) {
+ *   ...
+ * }
+ * TODO: KIT-3822: add unit tests to this decorator
+ * This decorator was adapted from the Shoelace library.:
+ * https://github.com/shoelace-style/shoelace/blob/next/src/internal/watch.ts
+ */
+export function watch<
+  Component extends LitElement,
+  Prop extends PublicProperties<Component>,
+>(propName: Prop, options?: WatchOptions) {
+  const resolvedOptions: Required<WatchOptions> = {
+    waitUntilFirstUpdate: false,
+    ...options,
+  };
+  return (
+    target: Component,
+    decoratedFnName: UpdateHandlerFunctionKeys<Component, Prop>
+  ) => {
+    // @ts-expect-error - update is a protected property
+    const {update} = target;
+
+    // @ts-expect-error - update is a protected property
+    target.update = function (this: Component, changedProps: PropertyValues) {
+      if (changedProps.has(propName)) {
+        const oldValue = changedProps.get(propName);
+        const newValue = this[propName];
+        if (oldValue !== newValue) {
+          if (!resolvedOptions.waitUntilFirstUpdate || this.hasUpdated) {
+            (this[decoratedFnName] as Function)(oldValue, newValue);
           }
-        });
+        }
       }
-      originalUpdated?.call(this, changedProperties);
+
+      update.call(this, changedProps);
     };
   };
 }
