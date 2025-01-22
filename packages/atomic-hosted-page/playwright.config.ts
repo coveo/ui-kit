@@ -39,15 +39,15 @@ export default defineConfig({
       name: 'chromium',
       use: {...devices['Desktop Chrome']},
     },
-    // {
-    //   name: 'firefox',
-    //   use: {...devices['Desktop Firefox']},
-    // },
+    {
+      name: 'firefox',
+      use: {...devices['Desktop Firefox']},
+    },
 
-    // {
-    //   name: 'webkit',
-    //   use: {...devices['Desktop Safari']},
-    // },
+    {
+      name: 'webkit',
+      use: {...devices['Desktop Safari']},
+    },
 
     /* Test against mobile viewports. */
     // {
@@ -74,7 +74,7 @@ export default defineConfig({
   webServer: {
     command: 'npm start',
     timeout: 10 * 60e3,
-    port: 8000,
+    port: 5173,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',
