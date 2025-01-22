@@ -8,6 +8,18 @@ const getCurrentDir = () => {
   return path.dirname(fileURL.pathname);
 };
 
+const verifyFilesExist = async (files) => {
+  for (const file of files) {
+    try {
+      await fs.access(file);
+      console.log(`Verified: ${file} exists`);
+    } catch {
+      console.error(`Error: ${file} is missing!`);
+      process.exit(1);
+    }
+  }
+};
+
 const getVersionFromPackageJson = async (packagePath) => {
   const packageJsonPath = path.join(packagePath, 'package.json');
   console.log(packagePath);
@@ -78,9 +90,22 @@ const run = async () => {
   );
   execSync(`cp -r ${atomicHostedPageDir}/ ${devPublicDir}/atomic-hosted-page/`);
 
+  const filesToVerify = [
+    `${devPublicDir}/headless/v${headlessVersion}/headless.esm.js`,
+    `${devPublicDir}/bueno/v${buenoVersion}/bueno.esm.js`,
+    `${devPublicDir}/atomic-hosted-page/atomic-hosted-page.esm.js`,
+  ];
+
+  console.log('Verifying copied files...');
+  await verifyFilesExist(filesToVerify);
+
   console.log('IS IT CDN : ', process.env.DEPLOYMENT_ENVIRONMENT);
   console.log('Starting Vite server...');
   execSync('ws --directory dev/', {stdio: 'inherit'});
 };
 
 run();
+
+/**
+ * PROBLEM MUST BE HERE, STUFF IS NOT COPYING CORRECTLY. ADD CHECKS THAT VERIFIES THE FILES ARE THERE BEFORE WEB SERVING IT
+ */
