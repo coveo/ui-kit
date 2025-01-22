@@ -1,45 +1,38 @@
-import {ChildProduct} from '@coveo/headless/commerce';
-import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {
-  AtomicCommonStore,
-  AtomicCommonStoreData,
-  createAtomicCommonStore,
+  BaseStore,
+  createBaseStore,
+  ResultListInfo,
+  setLoadingFlag,
+  unsetLoadingFlag,
 } from '../../common/interface/store';
-import {makeDesktopQuery} from '../atomic-commerce-layout/commerce-layout';
 
-export interface AtomicStoreData extends AtomicCommonStoreData {
-  mobileBreakpoint: string;
-  currentQuickviewPosition: number;
-  activeProductChild: ChildProduct | undefined;
+interface Data {
+  loadingFlags: string[];
+  iconAssetsPath: string;
+  resultList: ResultListInfo | undefined;
 }
 
-export interface AtomicCommerceRecommendationStore
-  extends AtomicCommonStore<AtomicStoreData> {
-  isMobile(): boolean;
-}
+export type CommerceRecommendationStore = BaseStore<Data> & {
+  unsetLoadingFlag(loadingFlag: string): void;
+  setLoadingFlag(flag: string): void;
+};
 
-export function createAtomicCommerceRecommendationStore(): AtomicCommerceRecommendationStore {
-  const commonStore = createAtomicCommonStore<AtomicStoreData>({
+export function createCommerceRecommendationStore(): CommerceRecommendationStore {
+  const store = createBaseStore<Data>({
     loadingFlags: [],
-    facets: {},
-    numericFacets: {},
-    dateFacets: {},
-    categoryFacets: {},
-    facetElements: [],
     iconAssetsPath: '',
-    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
-    fieldsToInclude: [],
-    currentQuickviewPosition: -1,
-    activeProductChild: undefined,
+    resultList: undefined,
   });
 
   return {
-    ...commonStore,
+    ...store,
 
-    isMobile() {
-      return !window.matchMedia(
-        makeDesktopQuery(commonStore.state.mobileBreakpoint)
-      ).matches;
+    unsetLoadingFlag(loadingFlag: string) {
+      unsetLoadingFlag(store, loadingFlag);
+    },
+
+    setLoadingFlag(loadingFlag: string) {
+      setLoadingFlag(store, loadingFlag);
     },
   };
 }

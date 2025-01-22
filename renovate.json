@@ -9,8 +9,17 @@
   "packageRules": [
     {
       "groupName": "all dependencies",
-      "groupSlug": "all",
-      "matchPackageNames": ["*"]
+      "groupSlug": "all-safe",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "all dependencies (major)",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["*"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false
     },
     {
       "groupName": "typedoc",
@@ -27,17 +36,24 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
-      "groupName": "dompurify",
-      "groupSlug": "dompurify",
+      "groupName": "vite",
+      "groupSlug": "vite",
       "rangeStrategy": "replace",
-      "description": "Isolate dompurify",
-      "matchPackageNames": ["/dompurify/"]
+      "description": "Isolate vite until green with @nx/vite",
+      "matchPackageNames": ["vite"]
+    },
+    {
+      "groupName": "gts",
+      "groupSlug": "gts",
+      "rangeStrategy": "replace",
+      "description": "Isolate gts since it is causing memory issues when running the lint:check",
+      "matchPackageNames": ["gts"]
     },
     {
       "groupName": "Angular",
       "groupSlug": "angular",
       "rangeStrategy": "replace",
-      "allowedVersions": "17.x",
+      "allowedVersions": "18.x",
       "matchPackageNames": [
         "/^@angular/*/",
         "/^@angular-devkit/*/",
@@ -52,7 +68,9 @@
         "/react/",
         "/react-router-dom/",
         "/react-dom/",
-        "/@types/react/"
+        "/@types/react/",
+        "next",
+        "/@remix-run/.*/"
       ]
     },
     {
@@ -109,26 +127,18 @@
       "matchPackageNames": ["/^change-case$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-react/package.json"],
-      "groupSlug": "react-rollup",
+      "groupName": "marked",
+      "groupSlug": "marked",
       "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "TODO-V3: Remove Node stuff?",
-      "matchPackageNames": ["/^rollup$/"]
+      "description": "Isolate marked",
+      "matchPackageNames": ["marked"]
     },
     {
-      "groupName": "nx",
-      "groupSlug": "nx",
+      "groupName": "relay",
+      "groupSlug": "relay",
       "rangeStrategy": "replace",
-      "allowedVersions": "15.x",
-      "matchPackageNames": ["/^nx$/"]
-    },
-    {
-      "groupName": "nx-devkit",
-      "groupSlug": "nx-devkit",
-      "rangeStrategy": "replace",
-      "allowedVersions": "16.x",
-      "matchPackageNames": ["/^@nrwl/devkit$/"]
+      "description": "Isolate relay since it is causing issues with stencil projetcs",
+      "matchPackageNames": ["@coveo/relay"]
     },
     {
       "groupName": "Cypress Split",
@@ -139,14 +149,6 @@
       "matchPackageNames": ["/^cypress-split$/"]
     },
     {
-      "matchFileNames": ["packages/atomic-angular/package.json"],
-      "groupSlug": "angular-typescript",
-      "rangeStrategy": "replace",
-      "allowedVersions": "5.1.x",
-      "description": "@angular/compiler-cli choke with TS > 5.1",
-      "matchPackageNames": ["/^typescript$/"]
-    },
-    {
       "matchFileNames": ["packages/quantic/package.json"],
       "groupSlug": "sfdx-lwc-jest",
       "rangeStrategy": "replace",
@@ -155,18 +157,15 @@
       "matchPackageNames": ["/^@​salesforce/sfdx-lwc-jest$/"]
     },
     {
-      "groupSlug": "actions-upload-artifact",
-      "rangeStrategy": "replace",
-      "allowedVersions": "3.x",
-      "description": "lock until ready to handle v4",
-      "matchPackageNames": ["/^actions/upload-artifact$/"]
-    },
-    {
       "groupSlug": "eslint",
       "groupName": "eslint",
       "rangeStrategy": "replace",
       "description": "Isolated until ready to handle v9 https://coveord.atlassian.net/browse/KIT-3085",
-      "matchPackageNames": ["/^eslint$/"]
+      "matchPackageNames": [
+        "/^eslint$/",
+        "/^eslint-plugin-.*/",
+        "/@typescript-eslint/.*/"
+      ]
     }
   ],
   "rangeStrategy": "auto",
@@ -177,5 +176,9 @@
   "vulnerabilityAlerts": {
     "enabled": false
   },
-  "ignoreDeps": ["eslint-plugin-canonical"]
+  "ignoreDeps": [
+    "eslint-plugin-canonical",
+    "@salesforce/sfdx-lwc-jest",
+    "cypress"
+  ]
 }

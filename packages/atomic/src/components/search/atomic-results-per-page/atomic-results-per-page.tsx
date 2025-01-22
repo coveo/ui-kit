@@ -14,6 +14,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
 import {FieldsetGroup} from '../../common/fieldset-group';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {Choices} from '../../common/items-per-page/choices';
 import {
   ChoiceIsNaNError,
@@ -54,6 +55,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @State()
   private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
 
   /**
    * A list of choices for the number of results to display per page, separated by commas.
@@ -89,6 +91,9 @@ export class AtomicResultsPerPage implements InitializableComponent {
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   private get label() {
@@ -100,9 +105,9 @@ export class AtomicResultsPerPage implements InitializableComponent {
       <PagerGuard
         hasError={this.searchStatusState.hasError}
         hasItems={this.searchStatusState.hasResults}
-        isAppLoaded={this.bindings.store.isAppLoaded()}
+        isAppLoaded={this.isAppLoaded}
       >
-        <div class="flex items-center">
+        <div class="flex items-center" role="toolbar" aria-label={this.label}>
           <Label>{this.label}</Label>
           <FieldsetGroup label={this.label}>
             <Choices

@@ -1,3 +1,28 @@
+## 3.12.0 (2025-01-15)
+
+- test(quantic): Tabs E2E Cypress to Playwright + unit tests Migration (#4802) ([99ce0d0](https://github.com/coveo/ui-kit/commits/99ce0d0)), closes [#4802](https://github.com/coveo/ui-kit/issues/4802)
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- feat(SFINT-5848): Playwright migration for QuanticBreadcrumbManager tests (#4826) ([cf8bb89](https://github.com/coveo/ui-kit/commits/cf8bb89)), closes [#4826](https://github.com/coveo/ui-kit/issues/4826)
+- chore: fix desynced package-lock (#4842) ([7ae9c0f](https://github.com/coveo/ui-kit/commits/7ae9c0f)), closes [#4842](https://github.com/coveo/ui-kit/issues/4842)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+
+## <small>3.11.1 (2025-01-08)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+- fix(quantic): fixed issue with breadcrumb component when facet ids are used (#4791) ([87491c6](https://github.com/coveo/ui-kit/commits/87491c6)), closes [#4791](https://github.com/coveo/ui-kit/issues/4791)
+- docs(quantic): user actions toggle missing props (#4797) ([6d0c097](https://github.com/coveo/ui-kit/commits/6d0c097)), closes [#4797](https://github.com/coveo/ui-kit/issues/4797)
+- test(quantic): added playwright tests and unit test for quantic generated answer component (#4803) ([99ed76a](https://github.com/coveo/ui-kit/commits/99ed76a)), closes [#4803](https://github.com/coveo/ui-kit/issues/4803)
+
+## 3.11.0 (2024-12-11)
+
+- feat(quantic): make quantic notifications component dismissible (#4733) ([96cc465](https://github.com/coveo/ui-kit/commits/96cc465)), closes [#4733](https://github.com/coveo/ui-kit/issues/4733)
+- test(quantic): playwright tests added for user actions feature (#4758) ([53c1c10](https://github.com/coveo/ui-kit/commits/53c1c10)), closes [#4758](https://github.com/coveo/ui-kit/issues/4758)
+- test(quantic): support e2e testing with LWS and with Locker Service with Playwright (#4711) ([4368ee0](https://github.com/coveo/ui-kit/commits/4368ee0)), closes [#4711](https://github.com/coveo/ui-kit/issues/4711)
+- fix(headless): update the rga events to send the searchId instead of the streamId as response id (#4 ([d95ed0a](https://github.com/coveo/ui-kit/commits/d95ed0a)), closes [#4766](https://github.com/coveo/ui-kit/issues/4766)
+
 ## 3.10.0 (2024-12-04)
 
 - fix(deps): update dependency dompurify to v3.2.0 j:kit-282 (#4724) ([290a8b6](https://github.com/coveo/ui-kit/commits/290a8b6)), closes [#4724](https://github.com/coveo/ui-kit/issues/4724)

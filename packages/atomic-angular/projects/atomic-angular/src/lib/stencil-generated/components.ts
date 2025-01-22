@@ -984,14 +984,14 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 
 @ProxyCmp({
-  inputs: ['collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle']
+  inputs: ['collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
 })
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['collapsible', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
+  inputs: ['collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle'],
 })
 export class AtomicGeneratedAnswer {
   protected el: HTMLElement;
@@ -2972,6 +2972,28 @@ export class AtomicSortExpression {
 
 
 export declare interface AtomicSortExpression extends Components.AtomicSortExpression {}
+
+
+@ProxyCmp({
+  inputs: ['expression', 'label', 'name']
+})
+@Component({
+  selector: 'atomic-tab',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['expression', 'label', 'name'],
+})
+export class AtomicTab {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicTab extends Components.AtomicTab {}
 
 
 @ProxyCmp({

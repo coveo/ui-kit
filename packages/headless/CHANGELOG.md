@@ -1,3 +1,45 @@
+## <small>3.13.2 (2025-01-15)</small>
+
+- fix(headless SSR): validate controller props (#4796) ([3e9f466](https://github.com/coveo/ui-kit/commits/3e9f466)), closes [#4796](https://github.com/coveo/ui-kit/issues/4796)
+
+## <small>3.13.1 (2025-01-15)</small>
+
+- docs(headless commerce SSR): copy common codes/sample between NextJS & Remix (#4778) ([4af4238](https://github.com/coveo/ui-kit/commits/4af4238)), closes [#4778](https://github.com/coveo/ui-kit/issues/4778)
+- fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)
+- fix(deps): update dependency @coveo/relay to v0.8.1 j:kit-282 (#4848) ([8ace010](https://github.com/coveo/ui-kit/commits/8ace010)), closes [#4848](https://github.com/coveo/ui-kit/issues/4848)
+- chore: fix desynced package-lock (#4842) ([7ae9c0f](https://github.com/coveo/ui-kit/commits/7ae9c0f)), closes [#4842](https://github.com/coveo/ui-kit/issues/4842)
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+
+## 3.13.0 (2025-01-08)
+
+- fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
+- fix(deps): update all dependencies j:kit-282 (#4808) ([c1ad91c](https://github.com/coveo/ui-kit/commits/c1ad91c)), closes [#4808](https://github.com/coveo/ui-kit/issues/4808)
+- fix(deps): update all dependencies j:kit-282 (#4810) ([fb2c7c6](https://github.com/coveo/ui-kit/commits/fb2c7c6)), closes [#4810](https://github.com/coveo/ui-kit/issues/4810)
+- fix(deps): update all dependencies j:kit-282 (major) (#4754) ([0a3e0d5](https://github.com/coveo/ui-kit/commits/0a3e0d5)), closes [#4754](https://github.com/coveo/ui-kit/issues/4754)
+- fix(deps): update all dependencies j:kit-282 (major) (#4813) ([4023170](https://github.com/coveo/ui-kit/commits/4023170)), closes [#4813](https://github.com/coveo/ui-kit/issues/4813)
+- fix(deps): update dependency @coveo/relay to v0.8.1 j:kit-282 (#4809) ([f6516e9](https://github.com/coveo/ui-kit/commits/f6516e9)), closes [#4809](https://github.com/coveo/ui-kit/issues/4809)
+- fix(deps): update dependency @reduxjs/toolkit to v2.5.0 j:kit-282 (#4811) ([ca85011](https://github.com/coveo/ui-kit/commits/ca85011)), closes [#4811](https://github.com/coveo/ui-kit/issues/4811)
+- fix(headless commerce SSR): expose promoteChildToParent method on SSR ProductList type (#4798) ([7d02e19](https://github.com/coveo/ui-kit/commits/7d02e19)), closes [#4798](https://github.com/coveo/ui-kit/issues/4798)
+- fix(headless-react): fix error when using keys other than their name for WithProps controllers (#478 ([56a5d92](https://github.com/coveo/ui-kit/commits/56a5d92)), closes [#4783](https://github.com/coveo/ui-kit/issues/4783)
+- fix(headless-ssr-commerce): fix client side recommendation refresh with a productId (#4793) ([454178b](https://github.com/coveo/ui-kit/commits/454178b)), closes [#4793](https://github.com/coveo/ui-kit/issues/4793)
+- fix(headless): handle end of stream message when answer can't be generated (#4800) ([7eed073](https://github.com/coveo/ui-kit/commits/7eed073)), closes [#4800](https://github.com/coveo/ui-kit/issues/4800)
+- docs(headless commerce SSR): add parameter manager in SSR + nextjs sample (#4770) ([208e054](https://github.com/coveo/ui-kit/commits/208e054)), closes [#4770](https://github.com/coveo/ui-kit/issues/4770)
+- docs(headless-react): create typedoc site & publish it as an artifact (#4747) ([3f2b6fa](https://github.com/coveo/ui-kit/commits/3f2b6fa)), closes [#4747](https://github.com/coveo/ui-kit/issues/4747)
+- test(headless SSR): add unit tests for all solution type factories (#4790) ([84f933b](https://github.com/coveo/ui-kit/commits/84f933b)), closes [#4790](https://github.com/coveo/ui-kit/issues/4790)
+- test(headless SSR): add unit tests for recommendation factories (#4786) ([f65d022](https://github.com/coveo/ui-kit/commits/f65d022)), closes [#4786](https://github.com/coveo/ui-kit/issues/4786)
+- feat(headless commerce): add commerce parameters slice and excludeDefaultParameters controller optio ([e25890d](https://github.com/coveo/ui-kit/commits/e25890d)), closes [#4759](https://github.com/coveo/ui-kit/issues/4759) [/github.com/coveo/ui-kit/pull/4759/files#diff-3418e45cea101e732b2ca21969a80f152654268fa3334c2e3a369f95e2d172a5](https://github.com//github.com/coveo/ui-kit/pull/4759/files/issues/diff-3418e45cea101e732b2ca21969a80f152654268fa3334c2e3a369f95e2d172a5) [/github.com/coveo/ui-kit/pull/4759/files#diff-ec6eb48af4ca0f0d2cac2569ba073a45015b0869fa1a5d9414f43d1472360812](https://github.com//github.com/coveo/ui-kit/pull/4759/files/issues/diff-ec6eb48af4ca0f0d2cac2569ba073a45015b0869fa1a5d9414f43d1472360812)
+- feat(headless SSR): improved error messaging for hook misuse (#4771) ([915daa1](https://github.com/coveo/ui-kit/commits/915daa1)), closes [#4771](https://github.com/coveo/ui-kit/issues/4771)
+
+## 3.12.0 (2024-12-11)
+
+- feat(headless SSR): fetch recommendations with a productId (#4768) ([6d53c57](https://github.com/coveo/ui-kit/commits/6d53c57)), closes [#4768](https://github.com/coveo/ui-kit/issues/4768)
+- feat(headless SSR): fetchStaticState should only accept solutiontype-specific controllers (#4769) ([f961cb2](https://github.com/coveo/ui-kit/commits/f961cb2)), closes [#4769](https://github.com/coveo/ui-kit/issues/4769)
+- fix(headless commerce): make parameter manager prop.initialState optional (#4776) ([79433ed](https://github.com/coveo/ui-kit/commits/79433ed)), closes [#4776](https://github.com/coveo/ui-kit/issues/4776)
+- fix(headless): update the rga events to send the searchId instead of the streamId as response id (#4 ([d95ed0a](https://github.com/coveo/ui-kit/commits/d95ed0a)), closes [#4766](https://github.com/coveo/ui-kit/issues/4766)
+- fix(headless/ssr-commerce): standalone search box only for listing & standalone (#4735) ([605156c](https://github.com/coveo/ui-kit/commits/605156c)), closes [#4735](https://github.com/coveo/ui-kit/issues/4735)
+- chore(headless): add sourcemaps for nodejs esm build (#4749) ([74cb96a](https://github.com/coveo/ui-kit/commits/74cb96a)), closes [#4749](https://github.com/coveo/ui-kit/issues/4749)
+
 ## 3.11.0 (2024-12-04)
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)

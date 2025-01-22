@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2021",
+    "moduleResolution": "bundler",
+    "lib": ["dom", "ES2023"],
+    "declaration": true,
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "outDir": "dist/atomic/components"
+  },
+  "files": [
+    "src/components/index.ts",
+    "src/components/lazy-index.ts",
+    "src/components.d.ts"
+  ]
+}

@@ -1,3 +1,19 @@
+## <small>3.3.3 (2025-01-16)</small>
+
+- chore: ensure atomic-angular component file is stable (#4866) ([a1dc782](https://github.com/coveo/ui-kit/commits/a1dc782)), closes [#4866](https://github.com/coveo/ui-kit/issues/4866)
+- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
+
+## 3.3.0 (2025-01-15)
+
+- chore: remove unused dependencies (#4825) ([5b3a877](https://github.com/coveo/ui-kit/commits/5b3a877)), closes [#4825](https://github.com/coveo/ui-kit/issues/4825)
+- chore: setup lit cohabitation (#4834) ([ed66ba0](https://github.com/coveo/ui-kit/commits/ed66ba0)), closes [#4834](https://github.com/coveo/ui-kit/issues/4834) [#4787](https://github.com/coveo/ui-kit/issues/4787)
+- feat(genqa): add collapsible height option to the component (#4817) ([db77dd0](https://github.com/coveo/ui-kit/commits/db77dd0)), closes [#4817](https://github.com/coveo/ui-kit/issues/4817)
+
+## <small>3.2.9 (2025-01-08)</small>
+
+- chore(atomic): make tabs officially public (#4824) ([9078d06](https://github.com/coveo/ui-kit/commits/9078d06)), closes [#4824](https://github.com/coveo/ui-kit/issues/4824)
+- chore(deps): update angular to 18 (#4795) ([425a5fa](https://github.com/coveo/ui-kit/commits/425a5fa)), closes [#4795](https://github.com/coveo/ui-kit/issues/4795)
+
 ## <small>3.2.7 (2024-12-04)</small>
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)

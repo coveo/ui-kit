@@ -21,6 +21,7 @@ import {
 import {ArrayProp} from '../../../../utils/props-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
   DisplayTableData,
@@ -89,8 +90,10 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('tabManager')
   @State()
   public tabManagerState!: TabManagerState;
-  @State() private resultTemplateRegistered = true;
+  @State() private resultTemplateRegistered = false;
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
+
   @State() private templateHasError = false;
 
   /**
@@ -189,6 +192,9 @@ export class AtomicResultList implements InitializableComponent {
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   @Watch('tabManagerState')
@@ -223,7 +229,7 @@ export class AtomicResultList implements InitializableComponent {
               density={this.density}
               display={this.display}
               imageSize={this.imageSize}
-              displayPlaceholders={!this.bindings.store.isAppLoaded()}
+              displayPlaceholders={!this.isAppLoaded}
               numberOfPlaceholders={this.resultsPerPageState.numberOfResults}
             ></ResultsPlaceholdersGuard>
             <ItemDisplayGuard
@@ -269,7 +275,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       this.display,

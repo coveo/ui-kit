@@ -1,4 +1,9 @@
-import {NonRecommendationControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {UniversalControllerDefinitionWithProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {
+  createControllerWithKind,
+  Kind,
+} from '../../../app/commerce-ssr-engine/types/kind.js';
+import {MissingControllerProps} from '../../../utils/errors.js';
 import {
   Context,
   buildContext,
@@ -11,10 +16,7 @@ export type {ContextState, Context, ContextProps} from './headless-context.js';
 export type {View, UserLocation, ContextOptions};
 
 export interface ContextDefinition
-  extends NonRecommendationControllerDefinitionWithProps<
-    Context,
-    ContextOptions
-  > {}
+  extends UniversalControllerDefinitionWithProps<Context, ContextOptions> {}
 
 /**
  * Defines a `Context` controller instance.
@@ -29,6 +31,13 @@ export function defineContext(): ContextDefinition {
     listing: true,
     search: true,
     standalone: true,
-    buildWithProps: (engine, props) => buildContext(engine, {options: props}),
+    recommendation: true,
+    buildWithProps: (engine, props) => {
+      if (props === undefined) {
+        throw new MissingControllerProps(Kind.Context);
+      }
+      const controller = buildContext(engine, {options: props});
+      return createControllerWithKind(controller, Kind.Context);
+    },
   };
 }

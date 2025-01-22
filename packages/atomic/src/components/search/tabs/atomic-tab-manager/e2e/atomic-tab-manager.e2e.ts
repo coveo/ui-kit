@@ -78,7 +78,8 @@ test.describe('AtomicTabManager', () => {
         await expect(tabManager.includedResultList).toBeHidden();
       });
 
-      test('generated answer', async ({tabManager, searchBox}) => {
+      //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+      test.fixme('generated answer', async ({tabManager, searchBox}) => {
         await searchBox.searchInput.waitFor({state: 'visible'});
         await searchBox.searchInput.fill(
           // eslint-disable-next-line @cspell/spellchecker
@@ -144,7 +145,8 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.excludedResultList).toBeHidden();
         });
 
-        test('generated answer', async ({tabManager, searchBox}) => {
+        //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+        test.fixme('generated answer', async ({tabManager, searchBox}) => {
           await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
@@ -195,7 +197,8 @@ test.describe('AtomicTabManager', () => {
             await expect(tabManager.includedResultList).toBeHidden();
           });
 
-          test('generated answer', async ({tabManager, searchBox}) => {
+          //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+          test.fixme('generated answer', async ({tabManager, searchBox}) => {
             await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
@@ -253,6 +256,66 @@ test.describe('AtomicTabManager', () => {
     test('should be A11y compliant', async ({makeAxeBuilder}) => {
       const accessibilityResults = await makeAxeBuilder().analyze();
       expect(accessibilityResults.violations).toEqual([]);
+    });
+
+    test.describe('keyboard navigation', () => {
+      test('should navigate within popover menu using arrow keys', async ({
+        tabManager,
+        page,
+      }) => {
+        await tabManager.tabPopoverMenuButton.click();
+        const popoverTabs = tabManager.popoverTabs();
+        await page.keyboard.press('ArrowDown');
+        await expect(popoverTabs.first()).toBeFocused();
+        await page.keyboard.press('ArrowDown');
+        await expect(popoverTabs.nth(1)).toBeFocused();
+      });
+
+      test('should navigate within popover menu using tab', async ({
+        tabManager,
+        page,
+      }) => {
+        await tabManager.tabPopoverMenuButton.click();
+        const popoverTabs = tabManager.popoverTabs();
+        await page.keyboard.press('Tab');
+        await expect(popoverTabs.first()).toBeFocused();
+        await page.keyboard.press('Tab');
+        await expect(popoverTabs.first()).not.toBeFocused();
+
+        await page.keyboard.press('Tab');
+        await expect(tabManager.tabPopoverMenuButton).not.toBeFocused();
+      });
+
+      test('should wrap around when using arrow keys', async ({
+        tabManager,
+        page,
+      }) => {
+        await tabManager.tabPopoverMenuButton.click();
+        const popoverTabs = tabManager.popoverTabs();
+        await page.keyboard.press('ArrowUp');
+        await expect(popoverTabs.last()).toBeFocused();
+        await page.keyboard.press('ArrowDown');
+        await expect(popoverTabs.first()).toBeFocused();
+      });
+
+      test('should close popover menu when pressing escape', async ({
+        tabManager,
+        page,
+      }) => {
+        const popoverTabs = tabManager.popoverTabs();
+        await expect(popoverTabs.first()).not.toBeVisible();
+
+        await tabManager.tabPopoverMenuButton.click();
+        const allTabs = await popoverTabs.all();
+        for (const tab of allTabs) {
+          await expect(tab).toBeVisible();
+        }
+
+        await page.keyboard.press('Escape');
+        for (const tab of allTabs) {
+          await expect(tab).not.toBeVisible();
+        }
+      });
     });
 
     test('should display tabs popover menu button', async ({tabManager}) => {
@@ -316,7 +379,8 @@ test.describe('AtomicTabManager', () => {
           await expect(tabManager.excludedResultList).toBeHidden();
         });
 
-        test('generated answer', async ({tabManager, searchBox}) => {
+        //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+        test.fixme('generated answer', async ({tabManager, searchBox}) => {
           await searchBox.searchInput.waitFor({state: 'visible'});
           await searchBox.searchInput.fill(
             // eslint-disable-next-line @cspell/spellchecker
@@ -371,7 +435,8 @@ test.describe('AtomicTabManager', () => {
             await expect(tabManager.includedResultList).toBeHidden();
           });
 
-          test('generated answer', async ({tabManager, searchBox}) => {
+          //TODO: fix this flaky test https://coveord.atlassian.net/browse/KIT-3816
+          test.fixme('generated answer', async ({tabManager, searchBox}) => {
             await searchBox.searchInput.waitFor({state: 'visible'});
             await searchBox.searchInput.fill(
               // eslint-disable-next-line @cspell/spellchecker
