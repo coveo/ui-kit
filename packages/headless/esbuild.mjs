@@ -157,6 +157,38 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
 
   const globalName = getUmdGlobalName(useCase);
 
+  const target = /}\)\(updatedArgs, api, extraOptions\);/g;
+
+  const replacement = `
+  fetchFn: (request: Request | String) => {
+    if (request instanceof String) {
+      throw new Error("The provided 'request' must be a Request object.");
+    }
+    const url = request.url;
+    const options: { [key: string]: any } = {};
+    [
+      'method',
+      'headers',
+      'body',
+      'mode',
+      'credentials',
+      'cache',
+      'redirect',
+      'referrer',
+      'referrerPolicy',
+      'integrity',
+      'keepalive',
+      'signal',
+    ].forEach((key) => {
+      options[key] = request[key as keyof Request];
+    });
+    options.duplex = 'half';
+
+    return fetch(url, options);
+  },
+})(updatedArgs,{...api, signal: null},extraOptions);
+`;
+
   return buildBrowserConfig(
     {
       entryPoints: [entryPoint],
@@ -167,6 +199,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       },
       external: ['crypto'],
       inject: [
+        'ponyfills/headers-shim.js',
         'ponyfills/global-this-shim.js',
         'ponyfills/abortable-fetch-shim.js',
         '../../node_modules/navigator.sendbeacon/dist/navigator.sendbeacon.cjs.js',
@@ -175,8 +208,8 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
         umdWrapper({libraryName: globalName}),
         codeReplacerPlugin(
           'src/api/knowledge/answer-slice.ts',
-          '(updatedArgs, api, extraOptions)',
-          '(updatedArgs,{...api, signal: null},extraOptions)'
+          target,
+          replacement
         ),
       ],
     },
