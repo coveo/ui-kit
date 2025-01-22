@@ -77,18 +77,20 @@ const run = async () => {
     `Copying headless files to ${devPublicDir}/headless/v${headlessVersion}`
   );
   execSync(
-    `cp -r ${headlessDir}/dist/browser/ ${devPublicDir}/headless/v${headlessVersion}`
+    `cp -r ${headlessDir}/dist/browser/. ${devPublicDir}/headless/v${headlessVersion}`
   );
 
   console.log(`Copying bueno files to ${devPublicDir}/bueno/v${buenoVersion}`);
   execSync(
-    `cp -r ${buenoDir}/dist/browser/ ${devPublicDir}/bueno/v${buenoVersion}`
+    `cp -r ${buenoDir}/dist/browser/. ${devPublicDir}/bueno/v${buenoVersion}`
   );
 
   console.log(
     `Copying atomic-hosted-page files to ${devPublicDir}/atomic-hosted-page/`
   );
-  execSync(`cp -r ${atomicHostedPageDir}/ ${devPublicDir}/atomic-hosted-page/`);
+  execSync(
+    `cp -r ${atomicHostedPageDir}/. ${devPublicDir}/atomic-hosted-page/`
+  );
 
   const filesToVerify = [
     `${devPublicDir}/headless/v${headlessVersion}/headless.esm.js`,
@@ -98,6 +100,16 @@ const run = async () => {
 
   console.log('Verifying copied files...');
   await verifyFilesExist(filesToVerify);
+
+  console.log('Directory structure in "dev":');
+  try {
+    execSync('tree dev', {stdio: 'inherit'});
+  } catch {
+    console.log(
+      '"tree" command is not available. Showing a recursive list instead:'
+    );
+    execSync('ls -R dev', {stdio: 'inherit'});
+  }
 
   console.log('IS IT CDN : ', process.env.DEPLOYMENT_ENVIRONMENT);
   console.log('Starting Vite server...');
