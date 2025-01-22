@@ -1,3 +1,11 @@
+# 1.0.0 (2025-01-22)
+
+- ([f652f24](https://github.com/coveo/relay/commits/)), closes [#150](https://github.com/coveo/relay/issues/150)
+
+### BREAKING CHANGES
+
+- major release for the Relay library (v1.0.0)
+
 ## 0.8.16 (2025-01-21)
 
 ### Bug Fixes
