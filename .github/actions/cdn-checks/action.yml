@@ -26,3 +26,5 @@ runs:
     - uses: ./.github/actions/playwright-atomic-hosted-pages
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
+      with:
+        uploadArtifacts: false
