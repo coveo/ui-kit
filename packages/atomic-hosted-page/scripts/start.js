@@ -1,5 +1,6 @@
 import {execSync} from 'child_process';
 import fs from 'fs/promises';
+import ncp from 'ncp';
 import path from 'path';
 
 const getCurrentDir = () => {
@@ -20,6 +21,18 @@ const getVersionFromPackageJson = async (packagePath) => {
   }
 };
 
+const copyFiles = async (source, destination) => {
+  return new Promise((resolve, reject) => {
+    ncp(source, destination, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+};
+
 const currentDir = getCurrentDir();
 const headlessDir = path.resolve(currentDir, '../../headless');
 const buenoDir = path.resolve(currentDir, '../../bueno');
@@ -29,11 +42,6 @@ const atomicHostedPageDir = path.resolve(
 );
 const devPublicDir = path.resolve(currentDir, '../dev/public');
 
-/**
- * All of this code below is there so simulate the CDN when DEPLOYMENT_ENVIRONMENT=CDN is set during the build
- * of the packages. Without DEPLOYMENT_ENVIRONMENT=CDN, for cases where we build for npm, only the
- * "Starting Vite server..."" is important.
- */
 const run = async () => {
   const headlessVersion = await getVersionFromPackageJson(headlessDir);
   const buenoVersion = await getVersionFromPackageJson(buenoDir);
@@ -64,24 +72,27 @@ const run = async () => {
   console.log(
     `Copying headless files to ${devPublicDir}/headless/v${headlessVersion}`
   );
-  execSync(
-    `cp -r ${headlessDir}/dist/browser/. ${devPublicDir}/headless/v${headlessVersion}`
+  await copyFiles(
+    path.join(headlessDir, 'dist/browser'),
+    `${devPublicDir}/headless/v${headlessVersion}`
   );
 
   console.log(`Copying bueno files to ${devPublicDir}/bueno/v${buenoVersion}`);
-  execSync(
-    `cp -r ${buenoDir}/dist/browser/. ${devPublicDir}/bueno/v${buenoVersion}`
+  await copyFiles(
+    path.join(buenoDir, 'dist/browser'),
+    `${devPublicDir}/bueno/v${buenoVersion}`
   );
 
   console.log(
     `Copying atomic-hosted-page files to ${devPublicDir}/atomic-hosted-page/`
   );
-  execSync(
-    `cp -r ${atomicHostedPageDir}/. ${devPublicDir}/atomic-hosted-page/`
-  );
+  await copyFiles(atomicHostedPageDir, `${devPublicDir}/atomic-hosted-page/`);
 
   console.log('Starting Vite server...');
   execSync('vite serve dev', {stdio: 'inherit'});
 };
 
-run();
+run().catch((err) => {
+  console.error('An error occurred:', err);
+  process.exit(1);
+});
