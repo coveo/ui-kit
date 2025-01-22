@@ -1,11 +1,11 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {createRipple} from '../../utils/ripple';
+import {RadioButtonProps} from './radio-button';
 import {
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
-} from './button-style';
-import {RadioButtonProps} from './radio-button';
+} from './stencil-button-style';
 
 /**
  * @deprecated Should only be used for Stencil components; for Lit components, use the RadioButtonProps from radio-button.ts instead.
