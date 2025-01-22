@@ -23,6 +23,6 @@ runs:
     - uses: ./.github/actions/playwright-headless-commerce-react
       env:
         DEPLOYMENT_ENVIRONMENT: CDN
-    # - uses: ./.github/actions/playwright-atomic-hosted-pages
-    #   env:
-    #     DEPLOYMENT_ENVIRONMENT: CDN
+    - uses: ./.github/actions/playwright-atomic-hosted-pages
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
