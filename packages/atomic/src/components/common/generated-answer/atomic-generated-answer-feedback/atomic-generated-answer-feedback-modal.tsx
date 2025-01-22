@@ -25,7 +25,7 @@ import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
-import {RadioButton} from '../../radio-button';
+import {RadioButton} from '../../stencil-radio-button';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {RadioButton} from '../radio-button';
+import {RadioButton} from '../stencil-radio-button';
 
 interface ChoicesProps {
   label: string;
