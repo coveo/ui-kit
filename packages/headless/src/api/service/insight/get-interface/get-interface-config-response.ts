@@ -11,7 +11,7 @@ export interface InsightInterface {
   facets: Facet[];
   tabs: Tab[];
   settings: SettingsSection;
-  answerConfigId: string;
+  answerConfigId?: string;
 }
 
 interface InsightResultTemplate {
