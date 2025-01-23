@@ -4,16 +4,17 @@ import {
   Raw,
   Result,
 } from '@coveo/headless';
+import {vi} from 'vitest';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildStringTemplateFromResult} from './result-utils';
 
 describe('buildStringTemplateFromResult', () => {
-  const mockRaw = jest.mocked({source: 'the source'} as Raw);
-  const mockResult = jest.mocked({
+  const mockRaw = {source: 'the source'} as Raw;
+  const mockResult = {
     title: 'foo',
     uri: 'http://uri.foo.com',
     raw: mockRaw,
-  } as Result);
+  } as Result;
   const engine = buildSearchEngine({
     configuration: getSampleSearchEngineConfiguration(),
   });
@@ -25,7 +26,7 @@ describe('buildStringTemplateFromResult', () => {
       {in: '${title}bar', out: 'foobar'},
       {in: '${raw.source}', out: 'the source'},
       {in: '${uri}/abc', out: 'http://uri.foo.com/abc'},
-      {in: '${window.location.hostname}', out: 'testing.stenciljs.com'},
+      {in: '${window.location.hostname}', out: 'localhost'},
     ];
 
     templates.forEach((template) =>
@@ -36,7 +37,7 @@ describe('buildStringTemplateFromResult', () => {
   });
 
   it('should snip out objects that cannot be evaluated properly and log a warning', () => {
-    jest.spyOn(engine.logger, 'warn');
+    const warnSpy = vi.spyOn(engine.logger, 'warn');
     expect(
       buildStringTemplateFromResult(
         '${title}/${raw.notafield}',
@@ -44,6 +45,6 @@ describe('buildStringTemplateFromResult', () => {
         bindings
       )
     ).toBe('foo/');
-    expect(engine.logger.warn).toHaveBeenCalled();
+    expect(warnSpy).toHaveBeenCalled();
   });
 });

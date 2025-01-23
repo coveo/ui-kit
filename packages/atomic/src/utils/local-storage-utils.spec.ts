@@ -2,6 +2,7 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
+import {vi} from 'vitest';
 import {SafeStorage, StorageItems} from './local-storage-utils';
 
 describe('Safe local storage', () => {
@@ -12,10 +13,6 @@ describe('Safe local storage', () => {
       configuration: getSampleSearchEngineConfiguration(),
     });
     storage = new SafeStorage();
-  });
-
-  afterEach(() => {
-    jest.clearAllMocks();
   });
 
   it('allows to save and retrieve an item', () => {
@@ -33,18 +30,24 @@ describe('Safe local storage', () => {
   });
 
   it('fails gracefully when local storage throws', () => {
-    (localStorage.setItem as jest.Mock).mockImplementationOnce(() => {
-      throw new Error('🤯');
+    vi.stubGlobal('localStorage', {
+      setItem: vi.fn().mockImplementationOnce(() => {
+        throw new Error('🤯');
+      }),
     });
+
     expect(() => {
       storage.setItem(StorageItems.RECENT_QUERIES, 'foo');
     }).not.toThrowError();
   });
 
   it('returns fallback object when local storage throws', () => {
-    (localStorage.getItem as jest.Mock).mockImplementationOnce(() => {
-      throw new Error('🤯');
+    vi.stubGlobal('localStorage', {
+      getItem: vi.fn().mockImplementationOnce(() => {
+        throw new Error('🤯');
+      }),
     });
+
     expect(storage.getParsedJSON(StorageItems.RECENT_QUERIES, 'foo')).toEqual(
       'foo'
     );

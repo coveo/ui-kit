@@ -1,5 +1,6 @@
 import {isArray} from '@coveo/bueno';
 import {ComponentInterface, getElement} from '@stencil/core';
+import {ReactiveElement} from 'lit';
 import {camelToKebab, kebabToCamel} from './utils';
 
 interface MapPropOptions {
@@ -7,6 +8,37 @@ interface MapPropOptions {
   splitValues?: boolean;
 }
 
+export function mapProperty<Element extends ReactiveElement>(
+  options?: MapPropOptions
+) {
+  return <
+    Instance extends Element & Record<string, unknown>,
+    K extends keyof Instance,
+  >(
+    proto: ReactiveElement,
+    propertyKey: K
+  ) => {
+    const ctor = proto.constructor as typeof ReactiveElement;
+    ctor.addInitializer((instance) => {
+      const props = {};
+      const prefix =
+        options?.attributePrefix || camelToKebab(propertyKey.toString());
+
+      mapAttributesToProp(
+        prefix,
+        props,
+        Array.from(instance.attributes),
+        options?.splitValues ?? false
+      );
+
+      (instance as Instance)[propertyKey] = props as Instance[K];
+    });
+  };
+}
+
+/**
+ * @deprecated Use the `mapProperty` decorator instead.
+ */
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
