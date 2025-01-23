@@ -18,7 +18,7 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
 
     smartSnippetSuggestionsCard: () =>
       SmartSnippetSuggestionsSelectors.get().find(
-        '[data-cy="smart-snippet-suggestions-card"]'
+        '[data-testid="smart-snippet-suggestions-card"]'
       ),
     smartSnippetSuggestionHeading: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()

@@ -20,36 +20,62 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 
+const exampleUri = 'https://en.wikipedia.org/wiki/The_Lord_of_the_Rings';
+
 const defaultOptions = {
   engineId: exampleEngine.id,
 };
 
 const selectors = {
   initializationError: 'c-quantic-component-error',
+  smartSnippetSuggestionsComponent:
+    '[data-testid="smart-snippet-suggestions-card"]',
+  smartSnippetSuggestions: '[data-testid="smart-snippet-suggestion"]',
+  smartSnippetSuggestionAnswers: 'c-quantic-smart-snippet-answer',
+  smartSnippetSuggestionSources: 'c-quantic-smart-snippet-source',
 };
 
 const mockSmartSnippetSource = {
   title: 'The Lord of the Rings',
-  uri: 'https://en.wikipedia.org/wiki/The_Lord_of_the_Rings',
+  uri: exampleUri,
+  clickUri: exampleUri,
 };
 
+const mockSmartSnippetRelatedQuestions = [
+  {
+    question: 'Where is Gandalf?',
+    answer: 'Gandalf is in the Mines of Moria.',
+    documentId: {
+      contentIdKey: '2',
+      contentIdValue: '2',
+    },
+    questionAnswerId: '2',
+    expanded: false,
+    source: mockSmartSnippetSource,
+    score: 0.5,
+  },
+  {
+    question: 'Legolas, what do you see?',
+    answer: "They're taking the hobbits to Isengard!",
+    documentId: {
+      contentIdKey: '3',
+      contentIdValue: '3',
+    },
+    questionAnswerId: '3',
+    expanded: false,
+    source: mockSmartSnippetSource,
+    score: 0.5,
+  },
+];
+
 const defaultSmartSnippetSuggestionsState = {
-  question: 'Where was Gondor when Westfold fell?',
-  answer: 'Gondor was obviously busy with other things.',
-  documentId: '1',
-  expanded: false,
-  answerFound: true,
-  liked: false,
-  disliked: false,
-  feedbackModalOpen: false,
-  source: mockSmartSnippetSource,
-  // ADD RELATED QUESTIONS HERE
+  questions: mockSmartSnippetRelatedQuestions,
 };
 
 let smartSnippetSuggestionsState = defaultSmartSnippetSuggestionsState;
 
 const functionsMocks = {
-  buildSmartSnippetSuggestions: jest.fn(() => ({
+  buildSmartSnippetQuestionsList: jest.fn(() => ({
     state: smartSnippetSuggestionsState,
     subscribe: functionsMocks.smartSnippetSuggestionsStateSubscriber,
   })),
@@ -80,7 +106,8 @@ function prepareHeadlessState() {
   // @ts-ignore
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
-      buildSmartSnippet: functionsMocks.buildSmartSnippetSuggestions,
+      buildSmartSnippetQuestionsList:
+        functionsMocks.buildSmartSnippetQuestionsList,
     };
   };
 }
@@ -115,6 +142,7 @@ function cleanup() {
 
 describe('c-quantic-smart-snippet-suggestions', () => {
   afterEach(() => {
+    smartSnippetSuggestionsState = defaultSmartSnippetSuggestionsState;
     cleanup();
   });
 
@@ -124,16 +152,16 @@ describe('c-quantic-smart-snippet-suggestions', () => {
       prepareHeadlessState();
     });
 
-    it('should buil the smart snippet controller with the proper parameters and subscribe to its state change', async () => {
+    it('should build the smart snippet controller with the proper parameters and subscribe to its state change', async () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.buildSmartSnippetSuggestions).toHaveBeenCalledTimes(
-        1
-      );
-      expect(functionsMocks.buildSmartSnippetSuggestions).toHaveBeenCalledWith(
-        exampleEngine
-      );
+      expect(
+        functionsMocks.buildSmartSnippetQuestionsList
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        functionsMocks.buildSmartSnippetQuestionsList
+      ).toHaveBeenCalledWith(exampleEngine);
       expect(
         functionsMocks.smartSnippetSuggestionsStateSubscriber
       ).toHaveBeenCalledTimes(1);
@@ -161,20 +189,18 @@ describe('c-quantic-smart-snippet-suggestions', () => {
     beforeAll(() => {
       smartSnippetSuggestionsState = {
         ...defaultSmartSnippetSuggestionsState,
-        answerFound: false,
+        questions: [],
       };
-      // TODO: CHANGE THIS TO NOT SHOW SUGGESTIONS
     });
 
     it('should not display the smart snippet suggestions component', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const smartSnippetSuggestions = element.shadowRoot.querySelector(
-        selectors.smartSnippetSuggestions
+      const smartSnippetSuggestionsComponent = element.shadowRoot.querySelector(
+        selectors.smartSnippetSuggestionsComponent
       );
-      expect(smartSnippetSuggestions).toBeNull();
-      expect(smartSnippetSuggestions.length).toEqual(0);
+      expect(smartSnippetSuggestionsComponent).toBeNull();
     });
   });
 
@@ -189,14 +215,49 @@ describe('c-quantic-smart-snippet-suggestions', () => {
       smartSnippetSuggestionsState = defaultSmartSnippetSuggestionsState;
     });
 
-    it('should display the smart snippet suggestions component', async () => {
+    it('should properly display the smart snippet suggestions', async () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const smartSnippetSuggestions = element.shadowRoot.querySelector(
+      const smartSnippetSuggestionsComponent = element.shadowRoot.querySelector(
+        selectors.smartSnippetSuggestionsComponent
+      );
+      expect(smartSnippetSuggestionsComponent).not.toBeNull();
+
+      const smartSnippetSuggestions = element.shadowRoot.querySelectorAll(
         selectors.smartSnippetSuggestions
       );
+      const smartSnippetSuggestionsAnswers =
+        element.shadowRoot.querySelectorAll(
+          selectors.smartSnippetSuggestionsAnswers
+        );
+      const smartSnippetSuggestionsSources =
+        element.shadowRoot.querySelectorAll(
+          selectors.smartSnippetSuggestionSources
+        );
+
       expect(smartSnippetSuggestions).not.toBeNull();
+      expect(smartSnippetSuggestions.length).toEqual(
+        mockSmartSnippetRelatedQuestions.length
+      );
+
+      smartSnippetSuggestions.forEach((suggestion, index) => {
+        expect(suggestion.label).toEqual(
+          mockSmartSnippetRelatedQuestions[index].question
+        );
+      });
+
+      smartSnippetSuggestionsAnswers.forEach((answerElement, index) => {
+        expect(answerElement.answer).toEqual(
+          mockSmartSnippetRelatedQuestions[index].answer
+        );
+      });
+
+      smartSnippetSuggestionsSources.forEach((sourceElement, index) => {
+        expect(sourceElement.source).toEqual(
+          mockSmartSnippetRelatedQuestions[index].source
+        );
+      });
     });
   });
 });
