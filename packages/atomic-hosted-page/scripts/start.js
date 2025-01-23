@@ -11,7 +11,6 @@ const getCurrentDir = () => {
 
 const getVersionFromPackageJson = async (packagePath) => {
   const packageJsonPath = path.join(packagePath, 'package.json');
-  console.log(packagePath);
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     return packageJson.version;
