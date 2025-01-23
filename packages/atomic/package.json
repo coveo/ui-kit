@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.15.3",
+  "version": "3.16.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.2",
+    "@coveo/headless": "3.13.3",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.25.6",
     "dayjs": "1.11.13",
@@ -141,6 +141,7 @@
     "shadow-dom-testing-library": "1.11.3",
     "storybook": "8.1.2",
     "tailwindcss": "3.4.17",
+    "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
@@ -151,7 +152,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.2"
+    "@coveo/headless": "3.13.3"
   },
   "license": "Apache-2.0",
   "engines": {
