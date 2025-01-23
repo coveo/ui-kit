@@ -11,15 +11,53 @@ useCaseTestCases.forEach((useCase) => {
 
   test.describe(`quantic smart snippet suggestions ${useCase.label}`, () => {
     test.describe('when expanding and collapsing the smart snippet suggestions', () => {
-      test('should send the expand and collapse analytics events', async () => {});
+      test('should send the expand and collapse analytics events', async ({
+        smartSnippetSuggestions,
+      }) => {
+        const smartSnippetSuggestionsHeadingClickPromise =
+          smartSnippetSuggestions.waitForExpandSmartSnippetSuggestionUaAnalytics();
+
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
+        await smartSnippetSuggestionsHeadingClickPromise;
+
+        const smartSnippetSuggestionsCollapseClickPromise =
+          smartSnippetSuggestions.waitForCollapseSmartSnippetSuggestionUaAnalytics();
+
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
+        await smartSnippetSuggestionsCollapseClickPromise;
+      });
     });
 
-    test.describe.skip('when interacting with a suggestion', () => {
-      test('should send the source title analytics event when the title is clicked', async () => {});
+    test.describe('when interacting with a suggestion', () => {
+      test('should send the source title analytics event when the title is clicked', async ({
+        smartSnippetSuggestions,
+      }) => {
+        const smartSnippetSuggestionsTitleClickPromise =
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
 
-      test('should send the source uri analytics event when the uri is clicked', async () => {});
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionSourceTitle();
+        await smartSnippetSuggestionsTitleClickPromise;
+      });
 
-      test('should send the inline link analytics event when an inline link is clicked', async () => {});
+      test('should send the source uri analytics event when the uri is clicked', async ({
+        smartSnippetSuggestions,
+      }) => {
+        const smartSnippetSuggestionsSourceUriClickPromise =
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
+
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionSourceUri();
+        await smartSnippetSuggestionsSourceUriClickPromise;
+      });
+
+      test('should send the inline link analytics event when an inline link is clicked', async ({
+        smartSnippetSuggestions,
+      }) => {
+        const smartSnippetSuggestionsInlineLinkClickPromise =
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics();
+
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionInlineLink();
+        await smartSnippetSuggestionsInlineLinkClickPromise;
+      });
     });
   });
 });
