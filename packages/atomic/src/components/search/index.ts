@@ -1,5 +1,3 @@
 // Export the class of the components migrated to Lit here, like this:
-//export {AtomicText} from './atomic-text/atomic-text.js';
 
-// TODO: Remove this line once at least one component is migrated to Lit.
-export {};
+export {AtomicLoadMoreResultsLit} from './atomic-load-more-results/lit-atomic-load-more-results.js';
