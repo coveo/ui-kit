@@ -5,6 +5,15 @@ const exampleContentIdKey = 'permanentid';
 const mockPermanentId = '1234';
 const exampleContentIdValue = mockPermanentId;
 
+export type RelatedQuestions = {
+  question: string;
+  answerSnippet: string;
+  documentId: {
+    contentIdKey: string;
+    contentIdValue: string;
+  };
+};
+
 export type QuestionAnswerData = {
   answerFound: boolean;
   question: string;
@@ -14,8 +23,27 @@ export type QuestionAnswerData = {
     contentIdValue: string;
   };
   score: number;
-  // NEED TO ADD RELATED QUESTIONS STUFF
+  relatedQuestions?: RelatedQuestions[];
 };
+
+const exampleRelatedQuestions = [
+  {
+    question: "What is the name of Gandalf's horse?",
+    answerSnippet: 'Is is Shadowfax, the lord of all horses.',
+    documentId: {
+      contentIdKey: exampleContentIdKey,
+      contentIdValue: exampleContentIdValue,
+    },
+  },
+  {
+    question: 'What is the name of the sword that was broken?',
+    answerSnippet: 'It is Narsil, the sword of Elendil.',
+    documentId: {
+      contentIdKey: exampleContentIdKey,
+      contentIdValue: exampleContentIdValue,
+    },
+  },
+];
 
 const smartSnippetSuggestionsData: QuestionAnswerData = {
   answerFound: true,
@@ -26,7 +54,7 @@ const smartSnippetSuggestionsData: QuestionAnswerData = {
     contentIdValue: exampleContentIdValue,
   },
   score: exampleScore,
-  // NEED TO ADD RELATED QUESTIONS STUFF
+  relatedQuestions: exampleRelatedQuestions,
 };
 
 export default smartSnippetSuggestionsData;
