@@ -57,10 +57,6 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
  * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible></c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
-  constructor() {
-    super();
-    this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
-  }
   /**
    * The ID of the engine instance the component registers to.
    * @api
@@ -104,7 +100,6 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   get maxCollapsedHeight() {
     return this._maxCollapsedHeight;
   }
-
   set maxCollapsedHeight(value) {
     if (value >= MIN_COLLAPSED_HEIGHT && value <= MAX_COLLAPSED_HEIGHT) {
       this._maxCollapsedHeight = value;
@@ -160,6 +155,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   _liked = false;
   /** @type {boolean} */
   _disliked = false;
+  /** @type {number} */
+  _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
