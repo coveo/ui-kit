@@ -29,7 +29,7 @@ async function rebuild(event, fileName) {
     'node ./scripts/stencil-proxy.mjs',
     'node ./scripts/build.mjs --config=tsconfig.lit.json',
     'node ./scripts/process-css.mjs --config=tsconfig.lit.json ',
-    'rollup -c rollup.config.js',
+    'if [ "$DEPLOYMENT_ENVIRONMENT" == "CDN" ]; then rollup -c rollup.config.js; fi',
     'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js',
     'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js',
   ];

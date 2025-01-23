@@ -17,7 +17,7 @@ const tsConfigPath = configArg.split('=')[1];
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const srcDir = join(__dirname, 'src');
+const srcDir = join(__dirname, '../src');
 const {options} = loadTsConfig(tsConfigPath);
 const distDir = options.outDir;
 
