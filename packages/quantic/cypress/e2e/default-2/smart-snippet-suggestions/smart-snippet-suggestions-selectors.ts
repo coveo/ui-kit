@@ -38,6 +38,6 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
         .eq(index),
     smartSnippetSuggestionsInlineLink: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
-        .find('[data-cy="smart-snippet__inline-link"] > a')
+        .find('[data-testid="smart-snippet__inline-link"] > a')
         .eq(index),
   };

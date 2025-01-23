@@ -48,7 +48,7 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
     ),
   smartSnippetInlineLink: () =>
     SmartSnippetSelectors.get().find(
-      '[data-cy="smart-snippet__inline-link"] > a'
+      '[data-testid="smart-snippet__inline-link"] > a'
     ),
   smartSnippetLikeButton: () =>
     SmartSnippetSelectors.get().find('[data-testid="feedback__like-button"]'),
