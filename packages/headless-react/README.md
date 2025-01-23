@@ -7,7 +7,6 @@
 
 ## Learn more
 
-<!-- TODO: KIT-3698: Add link to headless-react/ssr-commerce link in public doc -->
-
-- Checkout our [Documentation](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/)
+- Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/)
+- Checkout our [Documentation for SSR Commerce](https://docs.coveo.com/en/obif0156)
 - Refer to [samples/headless-ssr-commerce](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr-commerce/) for examples.
