@@ -5,6 +5,8 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicText,
+AtomicText2,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -140,7 +142,6 @@ AtomicSortExpression,
 AtomicTab,
 AtomicTabManager,
 AtomicTableElement,
-AtomicText,
 AtomicTimeframe,
 AtomicTimeframeFacet
 } from './components';
@@ -151,6 +152,8 @@ defineCustomElements(window);
 
         
 const DECLARATIONS = [
+AtomicText,
+AtomicText2,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -286,7 +289,6 @@ AtomicSortExpression,
 AtomicTab,
 AtomicTabManager,
 AtomicTableElement,
-AtomicText,
 AtomicTimeframe,
 AtomicTimeframeFacet
 ]

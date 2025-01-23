@@ -3041,28 +3041,6 @@ export declare interface AtomicTableElement extends Components.AtomicTableElemen
 
 
 @ProxyCmp({
-  inputs: ['count', 'value']
-})
-@Component({
-  selector: 'atomic-text',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'value'],
-})
-export class AtomicText {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicText extends Components.AtomicText {}
-
-
-@ProxyCmp({
   inputs: ['amount', 'label', 'period', 'unit']
 })
 @Component({
@@ -3105,4 +3083,49 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  inputs: ['value', 'count']
+})
+@Component({
+  selector: 'atomic-text',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['value', 'count']
+})
+export class AtomicText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+  }
+}
+
+export declare interface AtomicText extends LitAtomicText {}
+
+@ProxyCmp({
+  inputs: ['value', 'count']
+})
+@Component({
+  selector: 'atomic-text2',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['value', 'count']
+})
+export class AtomicText2 {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+  }
+}
+
+export declare interface AtomicText2 extends LitAtomicText2 {}
+
+AtomicText
+AtomicText2
+import type {AtomicText as LitAtomicText,AtomicText2 as LitAtomicText2} from '@coveo/atomic/components';
+//#endregion Lit Declarations
