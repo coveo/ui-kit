@@ -20,18 +20,18 @@
     "@angular/platform-browser": "18.2.13",
     "@angular/platform-browser-dynamic": "18.2.13",
     "@angular/router": "18.2.13",
-    "@coveo/atomic": "3.14.0",
+    "@coveo/atomic": "3.16.0",
     "rxjs": "7.8.1"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.13.1"
+    "@coveo/headless": "3.13.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "18.2.12",
     "@angular/cli": "18.2.12",
     "@angular/compiler-cli": "18.2.13",
-    "@coveo/headless": "3.13.1",
-    "@types/node": "22.10.5",
+    "@coveo/headless": "3.13.3",
+    "@types/node": "22.10.6",
     "ng-packagr": "18.2.1",
     "typescript": "5.5.4"
   },

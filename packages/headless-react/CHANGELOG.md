@@ -1,3 +1,8 @@
+## <small>2.4.3 (2025-01-23)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+- chore(deps): update dependency eslint-plugin-react to v7.37.4 j:kit-282 (#4880) ([66fbe56](https://github.com/coveo/ui-kit/commits/66fbe56)), closes [#4880](https://github.com/coveo/ui-kit/issues/4880)
+
 ## <small>2.4.1 (2025-01-15)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)

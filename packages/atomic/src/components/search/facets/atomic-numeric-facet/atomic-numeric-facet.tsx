@@ -535,7 +535,7 @@ export class AtomicNumericFacet implements InitializableComponent {
       return;
     }
 
-    if (this.bindings.store.get('numericFacets')[this.field]) {
+    if (this.bindings.store.state.numericFacets[this.field]) {
       this.facetId = randomID(`${this.field}_`);
     }
 

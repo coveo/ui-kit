@@ -1,3 +1,35 @@
+## 3.16.0 (2025-01-23)
+
+- chore(atomic): add SVG transformer (#4867) ([a331579](https://github.com/coveo/ui-kit/commits/a331579)), closes [#4867](https://github.com/coveo/ui-kit/issues/4867)
+- chore(atomic): add ts-lit-plugin (#4874) ([c0babd0](https://github.com/coveo/ui-kit/commits/c0babd0)), closes [#4874](https://github.com/coveo/ui-kit/issues/4874)
+- chore(atomic): migrate unit tests to vitest/browser (#4865) ([5030ca2](https://github.com/coveo/ui-kit/commits/5030ca2)), closes [#4865](https://github.com/coveo/ui-kit/issues/4865)
+- chore(deps): update all dependencies (major) j:kit-282 (major) (#4882) ([fe632d0](https://github.com/coveo/ui-kit/commits/fe632d0)), closes [#4882](https://github.com/coveo/ui-kit/issues/4882)
+- feat(atomic): add @watch decorator for Lit components (#4875) ([3400ea7](https://github.com/coveo/ui-kit/commits/3400ea7)), closes [#4875](https://github.com/coveo/ui-kit/issues/4875)
+- feat(atomic): add Lit equivalent for `@MapProp` decorator (#4850) ([5d907b1](https://github.com/coveo/ui-kit/commits/5d907b1)), closes [#4850](https://github.com/coveo/ui-kit/issues/4850)
+- feat(atomic): add localizedString directive (#4852) ([b7be913](https://github.com/coveo/ui-kit/commits/b7be913)), closes [#4852](https://github.com/coveo/ui-kit/issues/4852)
+- feat(atomic): add radio-button function for lit components (#4864) ([c813a3f](https://github.com/coveo/ui-kit/commits/c813a3f)), closes [#4864](https://github.com/coveo/ui-kit/issues/4864)
+- fix(atomic): add separate part name for active tab (#4868) ([7c2491c](https://github.com/coveo/ui-kit/commits/7c2491c)), closes [#4868](https://github.com/coveo/ui-kit/issues/4868)
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+- fix(headless): don't leak pagination state to productSuggest call (#4667) ([b69cf0a](https://github.com/coveo/ui-kit/commits/b69cf0a)), closes [#4667](https://github.com/coveo/ui-kit/issues/4667)
+
+## <small>3.15.3 (2025-01-17)</small>
+
+- fix(atomic): revert getAssetPath change (#4870) ([8961432](https://github.com/coveo/ui-kit/commits/8961432)), closes [#4870](https://github.com/coveo/ui-kit/issues/4870)
+
+## <small>3.15.2 (2025-01-16)</small>
+
+- refactor(atomic): replace @stencil/store with in-house implementation (#4814) ([cc9cd0f](https://github.com/coveo/ui-kit/commits/cc9cd0f)), closes [#4814](https://github.com/coveo/ui-kit/issues/4814) [/github.com/coveo/ui-kit/pull/4814#discussion_r1901058283](https://github.com//github.com/coveo/ui-kit/pull/4814/issues/discussion_r1901058283)
+
+## <small>3.15.1 (2025-01-15)</small>
+
+- refactor(atomic): split the atomic store into composable parts (#4806) ([de2a920](https://github.com/coveo/ui-kit/commits/de2a920)), closes [#4806](https://github.com/coveo/ui-kit/issues/4806)
+
+## 3.15.0 (2025-01-15)
+
+- chore: relocate dist/components to dist/atomic/components (#4859) ([d854df2](https://github.com/coveo/ui-kit/commits/d854df2)), closes [#4859](https://github.com/coveo/ui-kit/issues/4859)
+- fix(atomic): show warning when facet displayValuesAs is not checkbox and enableExclusion is set to t ([eec0326](https://github.com/coveo/ui-kit/commits/eec0326)), closes [#4855](https://github.com/coveo/ui-kit/issues/4855)
+- feat(atomic): replace getAssetPath (#4844) ([4aa0206](https://github.com/coveo/ui-kit/commits/4aa0206)), closes [#4844](https://github.com/coveo/ui-kit/issues/4844)
+
 ## 3.14.0 (2025-01-15)
 
 - fix(atomic): make toggling highlight of individual keywords work again in quickview modal (#4838) ([df0db66](https://github.com/coveo/ui-kit/commits/df0db66)), closes [#4838](https://github.com/coveo/ui-kit/issues/4838)

@@ -9,7 +9,7 @@
     "declarationMap": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/components"
+    "outDir": "dist/atomic/components"
   },
   "files": [
     "src/components/index.ts",

@@ -26,6 +26,7 @@ import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {Heading} from '../../common/heading';
+import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
@@ -73,6 +74,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   @Element() public host!: HTMLDivElement;
 
   @State() public error!: Error;
+  @State() private isAppLoaded = false;
+
   @State() private resultTemplateRegistered = false;
   @State() private templateHasError = false;
   @State() private currentPage = 0;
@@ -195,6 +198,10 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
     });
+
+    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
+      this.isAppLoaded = isAppLoaded;
+    });
   }
 
   public get focusTarget() {
@@ -205,7 +212,6 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private get recommendationListStateWithAugment() {
-    // TODO: some changes
     return {
       ...this.recommendationListState,
       firstRequestExecuted:
@@ -336,7 +342,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private computeListDisplayClasses() {
-    const displayPlaceholders = !this.bindings.store.isAppLoaded();
+    const displayPlaceholders = !this.isAppLoaded;
 
     return getItemListDisplayClasses(
       'grid',
@@ -382,7 +388,7 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
           density={this.density}
           display={this.display}
           imageSize={this.imageSize}
-          displayPlaceholders={!this.bindings.store.isAppLoaded()}
+          displayPlaceholders={!this.isAppLoaded}
           numberOfPlaceholders={
             this.numberOfRecommendationsPerPage ?? this.numberOfRecommendations
           }

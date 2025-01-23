@@ -1,3 +1,15 @@
+## <small>3.13.3 (2025-01-23)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+- fix(headless commerce): do not set query to empty string when building non field suggestions facet s ([ddf5664](https://github.com/coveo/ui-kit/commits/ddf5664)), closes [#4860](https://github.com/coveo/ui-kit/issues/4860)
+- fix(headless): add schema validation in engine configuration for analytics.trackingId (#4853) ([58a3119](https://github.com/coveo/ui-kit/commits/58a3119)), closes [#4853](https://github.com/coveo/ui-kit/issues/4853)
+- fix(headless): don't leak pagination state to productSuggest call (#4667) ([b69cf0a](https://github.com/coveo/ui-kit/commits/b69cf0a)), closes [#4667](https://github.com/coveo/ui-kit/issues/4667)
+- fix(quantic): headless quantic bundle updated to support sending RGA feedback when LWS is disabled ( ([e84d61b](https://github.com/coveo/ui-kit/commits/e84d61b)), closes [#4781](https://github.com/coveo/ui-kit/issues/4781) [/github.com/coveo/ui-kit/blob/79433ed6fb33bee24e31c5d1bf2f75c63fb9f2ce/packages/headless/src/api/knowledge/answer-slice.ts#L41-L43](https://github.com//github.com/coveo/ui-kit/blob/79433ed6fb33bee24e31c5d1bf2f75c63fb9f2ce/packages/headless/src/api/knowledge/answer-slice.ts/issues/L41-L43)
+
+## <small>3.13.2 (2025-01-15)</small>
+
+- fix(headless SSR): validate controller props (#4796) ([3e9f466](https://github.com/coveo/ui-kit/commits/3e9f466)), closes [#4796](https://github.com/coveo/ui-kit/issues/4796)
+
 ## <small>3.13.1 (2025-01-15)</small>
 
 - docs(headless commerce SSR): copy common codes/sample between NextJS & Remix (#4778) ([4af4238](https://github.com/coveo/ui-kit/commits/4af4238)), closes [#4778](https://github.com/coveo/ui-kit/issues/4778)

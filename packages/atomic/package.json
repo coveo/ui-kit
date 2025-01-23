@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.14.0",
+  "version": "3.16.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -36,8 +36,8 @@
       "require": "./dist/atomic/lang/*"
     },
     "./components": {
-      "types": "./dist/components/components/index.d.ts",
-      "import": "./dist/components/components/index.js"
+      "types": "./dist/atomic/components/components/index.d.ts",
+      "import": "./dist/atomic/components/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -52,8 +52,8 @@
     "build:locales": "npx nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "npm run build:locales && stencil test --spec",
-    "test:watch": "stencil test --spec --watchAll",
+    "test": "vitest --run && npm run build:locales && stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
     "e2e:watch": "cypress open --browser chrome --e2e",
@@ -71,10 +71,9 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.1",
+    "@coveo/headless": "3.13.3",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.25.6",
-    "@stencil/store": "2.0.16",
     "dayjs": "1.11.13",
     "dompurify": "3.2.3",
     "escape-html": "1.0.3",
@@ -91,7 +90,7 @@
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
-    "@nx/vite": "20.3.0",
+    "@nx/vite": "20.3.1",
     "@playwright/test": "1.49.1",
     "@rollup/plugin-alias": "5.1.1",
     "@rollup/plugin-replace": "6.0.2",
@@ -112,7 +111,7 @@
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
     "@types/lodash": "4.17.14",
-    "@types/node": "22.10.5",
+    "@types/node": "22.10.6",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
     "@whitespace/storybook-addon-html": "6.1.1",
@@ -135,21 +134,25 @@
     "postcss-map": "0.11.0",
     "postcss-mixins": "11.0.3",
     "postcss-nested": "7.0.2",
-    "puppeteer": "23.11.1",
+    "puppeteer": "24.0.0",
     "react": "18.3.1",
     "rollup": "4.30.1",
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.11.3",
     "storybook": "8.1.2",
     "tailwindcss": "3.4.17",
+    "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
-    "wait-on": "8.0.1"
+    "wait-on": "8.0.2",
+    "playwright": "1.49.1",
+    "@vitest/browser": "2.1.8",
+    "vitest": "2.1.8"
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.1"
+    "@coveo/headless": "3.13.3"
   },
   "license": "Apache-2.0",
   "engines": {
