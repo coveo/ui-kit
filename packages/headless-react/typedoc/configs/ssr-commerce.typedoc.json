@@ -6,8 +6,8 @@
   },
   "categorizeByGroup": true,
   "groupOrder": [
-    "React",
     "Engine",
+    "Providers",
     "Definers",
     "Controllers",
     "Buildable controllers",

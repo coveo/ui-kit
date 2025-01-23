@@ -54,6 +54,7 @@ export type {
   SuggestionHighlightingOptions,
   Suggestion,
   Delimiters,
+  CoreSearchBox,
 };
 
 export interface SearchBoxProps {

@@ -35,7 +35,13 @@ function getController<T extends Controller>(
 }
 
 /**
- * @group React
+ * Providers take care of displaying your page with the static
+ * state, and then hydrating the state and displaying the page
+ * with the hydrated state. They are required for your controller hooks to function.
+ *
+ * See docs.coveo.com/en/obif0156/#create-providers
+ *
+ * @group Providers
  */
 export function buildProviderWithDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
