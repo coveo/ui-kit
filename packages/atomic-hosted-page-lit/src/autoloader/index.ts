@@ -1,6 +1,6 @@
 const componentMap = {
   'atomic-hosted-ui': async () =>
-    await import('./components/atomic-hosted-ui/atomic-hosted-ui.js'),
+    await import('../components/atomic-hosted-ui/atomic-hosted-ui.js'),
 } as Record<string, () => Promise<unknown>>;
 
 if (typeof window !== 'undefined') {
@@ -68,5 +68,3 @@ if (typeof window !== 'undefined') {
   observer.observe(document.documentElement, {subtree: true, childList: true});
   //# sourceMappingURL=index.js.map
 }
-
-export * from './index.js';

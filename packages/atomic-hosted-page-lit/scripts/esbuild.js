@@ -56,7 +56,7 @@ esbuild
     // need the index file, the autoloader and te components
     entryPoints: [
       './src/index.ts',
-      './src/autoloader.ts',
+      './src/atomic-hosted-page.esm.ts',
       './src/components/atomic-hosted-ui/atomic-hosted-ui.ts',
     ],
     outdir: './cdn',

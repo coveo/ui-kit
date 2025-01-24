@@ -20,6 +20,7 @@
       ],
       "executor": "nx:run-commands",
       "options": {
+        // add another step to build the loader
         "commands": [
           "rm -rf dist cdn",
           "tsc --outdir dist",
