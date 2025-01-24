@@ -49,7 +49,6 @@ export function processHostedPage(
   hostedPage: HostedPage
 ) {
   element.innerHTML = hostedPage.html;
-  console.log('hostedPage', element);
   hostedPage.javascript?.forEach((file) => insertJS(file));
   hostedPage.css?.forEach((file) =>
     'url' in file ? insertCSSUrl(file) : insertCSSInline(file)

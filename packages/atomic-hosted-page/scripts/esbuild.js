@@ -53,7 +53,6 @@ esbuild
   .build({
     format: 'esm',
     target: 'es2022',
-    // need the index file, the autoloader and te components
     entryPoints: [
       './src/index.ts',
       './src/atomic-hosted-page.esm.ts',
