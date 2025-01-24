@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
-import {readdirSync, statSync} from 'fs';
+import {readdirSync, statSync, existsSync} from 'fs';
 import {EOL} from 'os';
 import {basename, dirname, join, relative} from 'path';
 import {getBaseHeadSHAs, getChangedFiles} from './hasFileChanged.mjs';
@@ -78,10 +78,15 @@ function createTestFileMappings(testPaths, projectRoot) {
   const testFileMappings = testPaths.map((testPath) => {
     const imports = new Set();
     const testName = basename(testPath);
-    const sourceFilePath = join(
+    const tsFilePath = join(
+      dirname(testPath).replace('/e2e', ''),
+      testName.replace('.e2e.ts', '.ts')
+    );
+    const tsxFilePath = join(
       dirname(testPath).replace('/e2e', ''),
       testName.replace('.e2e.ts', '.tsx')
     );
+    const sourceFilePath = existsSync(tsFilePath) ? tsFilePath : tsxFilePath;
 
     ensureFileExists(sourceFilePath);
 
