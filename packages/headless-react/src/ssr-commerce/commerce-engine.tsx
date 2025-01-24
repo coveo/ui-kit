@@ -23,7 +23,7 @@ import {
 } from './types.js';
 
 /**
- * A React engine definition that includes context providers for static and hydrated state.
+ * A React engine definition that includes context providers for static and hydrated states.
  *
  * @group Engine
  *  */
