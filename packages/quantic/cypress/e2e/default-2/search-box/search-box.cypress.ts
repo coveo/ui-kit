@@ -55,7 +55,7 @@ describe('quantic-search-box', () => {
   variants.forEach(({variantName, textarea}) => {
     describe(`variant ${variantName} with default options`, () => {
       describe('recent query suggestions', () => {
-        const exampleQuerySuggestions = ['ABC', 'EFG'];
+        const exampleQuerySuggestions = ['abc', 'efg'];
 
         describe('when no recent query is found at initial state', () => {
           beforeEach(() => {
