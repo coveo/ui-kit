@@ -29,6 +29,9 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
+  expect: {
+    timeout: 7 * 1000,
+  },
 
   /* Configure projects for major browsers */
   projects: [
@@ -36,7 +39,6 @@ export default defineConfig({
       name: 'chromium',
       use: {...devices['Desktop Chrome']},
     },
-
     {
       name: 'firefox',
       use: {...devices['Desktop Firefox']},
@@ -71,9 +73,8 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm start',
-    cwd: __dirname,
     timeout: 10 * 60e3,
-    port: 3335,
+    port: 5173,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     stderr: 'pipe',
