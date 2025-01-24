@@ -23,6 +23,8 @@
   "scripts": {
     "clean": "rimraf -rf dist/*",
     "build": "nx build",
+    "bold": "nx bold",
+    "build:bundles": "rollup --config rollup.config.js",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
@@ -33,7 +35,7 @@
   "dependencies": {
     "@coveo/bueno": "1.0.7",
     "@coveo/headless": "3.13.3",
-    "@stencil/core": "4.20.0"
+    "lit": "3.2.1"
   },
   "devDependencies": {
     "@coveo/release": "1.0.0",
