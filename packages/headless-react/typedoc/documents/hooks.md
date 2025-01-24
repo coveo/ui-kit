@@ -7,6 +7,8 @@ title: Controller hooks
 This package provides React hooks for controllers defined in the Engine Definition. Hooks allow you to access controller state and methods easily within your React components.
 Without these hooks, you would need to manually pass down props through every component or implement your own provider solution, which can be cumbersome and error-prone.
 
+See [Headless commerce usage (SSR): Define the commerce engine and controllers](https://docs.coveo.com/en/obif0156/#define-the-commerce-engine-and-controllers)
+
 ## Usage
 
 1. Create an engine configuration
