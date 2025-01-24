@@ -13,7 +13,7 @@ type ControllerProperties<T> = {
  * will only update if the original shouldUpdate method returns true and at least one of the changed properties
  * is not undefined.
  *
- * You can always defined a custom shouldUpdate method in your component which will override this one
+ * You can always define a custom shouldUpdate method in your component which will override this one.
  *
  * @param component - The LitElement component whose shouldUpdate method is being overridden.
  * @param shouldUpdate - The original shouldUpdate method of the component.
