@@ -9,12 +9,12 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": true,
+    "start_environment_automatically": false,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
     }
   },
-  "ordered_phases": [
+  "dag_phases": [
     {
       "id": "deploy-bueno-patch-to-s3-version",
       "s3": {
@@ -287,7 +287,31 @@
         "auto_approve": true,
         "auto_approve_in_production": true,
         "run_strategy": "always"
-      }
+      },
+      "dependencies": [
+        "deploy-bueno-patch-to-s3-version",
+        "deploy-bueno-minor-to-s3-version",
+        "deploy-bueno-major-to-s3-version",
+        "deploy-bueno-nightly-to-s3-version",
+        "deploy-headless-patch-to-s3-version",
+        "deploy-headless-minor-to-s3-version",
+        "deploy-headless-major-to-s3-version",
+        "deploy-headless-nightly-to-s3-version",
+        "deploy-atomic-patch-to-s3-version",
+        "deploy-atomic-minor-to-s3-version",
+        "deploy-atomic-major-to-s3-version",
+        "deploy-atomic-nightly-to-s3-version",
+        "deploy-atomic-react-patch-to-s3-version",
+        "deploy-atomic-react-minor-to-s3-version",
+        "deploy-atomic-react-major-to-s3-version",
+        "deploy-atomic-react-nightly-to-s3-version",
+        "deploy-atomic-hosted-page-patch-to-s3-version",
+        "deploy-atomic-hosted-page-minor-to-s3-version",
+        "deploy-atomic-hosted-page-major-to-s3-version",
+        "deploy-atomic-hosted-page-nightly-to-s3-version",
+        "deploy-atomic-minor-storybook-to-s3-version",
+        "deploy-atomic-nightly-storybook-to-s3-version"
+      ]
     },
     {
       "id": "smoke",
@@ -304,7 +328,8 @@
           "headless-patch": "$[HEADLESS_PATCH_VERSION]",
           "is-nightly": "$[IS_NIGHTLY]"
         }
-      }
+      },
+      "dependencies": ["invalidate-cloudfront-cache"]
     },
     {
       "id": "production-release",
@@ -319,7 +344,8 @@
         "extra_parameters": {
           "run-id": "$[GITHUB_RUN_ID]"
         }
-      }
+      },
+      "dependencies": ["smoke"]
     }
   ],
   "observatory": {

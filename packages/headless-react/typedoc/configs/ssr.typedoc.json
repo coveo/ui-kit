@@ -15,7 +15,7 @@
     "*"
   ],
   "name": "SSR Search",
-  "readme": "none",
+  "readme": "../SEARCHREADME.md",
   "entryPoints": ["../../src/ssr/index.ts"],
   "gitRevision": "typedoc-POC",
   "plugin": ["../../typedoc/dist/index.js"]

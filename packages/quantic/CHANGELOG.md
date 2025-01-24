@@ -1,3 +1,9 @@
+## 3.13.0 (2025-01-23)
+
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+- fix(quantic): CRGA component not showing collapsed when answer appears without streaming (#4840) ([0cfeec7](https://github.com/coveo/ui-kit/commits/0cfeec7)), closes [#4840](https://github.com/coveo/ui-kit/issues/4840)
+- feat(quantic): Smart Snippets E2E Cypress to Playwright + unit tests Migration (#4785) ([240f26e](https://github.com/coveo/ui-kit/commits/240f26e)), closes [#4785](https://github.com/coveo/ui-kit/issues/4785)
+
 ## 3.12.0 (2025-01-15)
 
 - test(quantic): Tabs E2E Cypress to Playwright + unit tests Migration (#4802) ([99ce0d0](https://github.com/coveo/ui-kit/commits/99ce0d0)), closes [#4802](https://github.com/coveo/ui-kit/issues/4802)
