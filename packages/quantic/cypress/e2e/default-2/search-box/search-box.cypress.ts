@@ -173,8 +173,8 @@ describe('quantic-search-box', () => {
         });
 
         describe('when the same suggestion is returned as a query suggestion and as a recent query suggestion', () => {
-          const exampleRecentQueries = ['ABC'];
-          const exampleQuerySuggestions = ['ABC'];
+          const exampleRecentQueries = ['abc'];
+          const exampleQuerySuggestions = ['abc'];
 
           beforeEach(() => {
             setRecentQueriesInLocalStorage(exampleRecentQueries);
@@ -206,10 +206,10 @@ describe('quantic-search-box', () => {
             'foo',
             'bar',
             'fill',
-            'Fun',
+            'fun',
             'baz',
           ];
-          const expectedRecentQuerySuggestions = ['foo', 'fill', 'Fun'];
+          const expectedRecentQuerySuggestions = ['foo', 'fill', 'fun'];
           const expectedDisplayedSuggestions = [
             ...expectedRecentQuerySuggestions,
             ...exampleQuerySuggestions,
