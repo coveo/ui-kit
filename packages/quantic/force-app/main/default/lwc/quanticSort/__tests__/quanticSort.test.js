@@ -38,34 +38,27 @@ jest.mock(
   }
 );
 
-let buenoMock = {
-  isString: jest
-    .fn()
-    .mockImplementation(
-      (value) => Object.prototype.toString.call(value) === '[object String]'
-    ),
-  StringValue: jest.fn(),
-  RecordValue: jest.fn(),
-  Schema: jest.fn(() => ({
-    validate: jest.fn(),
-  })),
-};
-
-const successfulBuenoValidationMock = buenoMock;
-const unsuccessfulBuenoValidationMock = {
-  ...buenoMock,
-  Schema: jest.fn(() => ({
-    validate: () => {
-      throw new Error();
-    },
-  })),
-};
-
-function mockBueno() {
+function mockBueno(shouldError = false) {
   // @ts-ignore
   mockHeadlessLoader.getBueno = () => {
     // @ts-ignore
-    global.Bueno = buenoMock;
+    global.Bueno = {
+      isString: jest
+        .fn()
+        .mockImplementation(
+          (value) => Object.prototype.toString.call(value) === '[object String]'
+        ),
+      StringValue: jest.fn(),
+      RecordValue: jest.fn(),
+      Schema: jest.fn(() => ({
+        validate: () => {
+          if (shouldError) {
+            throw new Error();
+          }
+          jest.fn();
+        },
+      })),
+    };
     return new Promise((resolve) => resolve());
   };
 }
@@ -309,13 +302,10 @@ describe('c-quantic-sort', () => {
 
   describe('when invalid sort options are passed', () => {
     beforeEach(() => {
-      // @ts-ignore
-      buenoMock = unsuccessfulBuenoValidationMock;
+      mockBueno(true);
+      jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
-    afterAll(() => {
-      buenoMock = successfulBuenoValidationMock;
-    });
     const invalidExampleSlot = {
       value: 'example value',
       label: '',
@@ -347,6 +337,7 @@ describe('c-quantic-sort', () => {
       );
 
       expect(componentError).not.toBeNull();
+      expect(console.error).toHaveBeenCalledTimes(1);
     });
   });
 
