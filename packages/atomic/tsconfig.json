@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.stencil.json",
   "compilerOptions": {
+    "types": ["@testing-library/jest-dom"],
     "plugins": [
       {
         "name": "ts-lit-plugin",
