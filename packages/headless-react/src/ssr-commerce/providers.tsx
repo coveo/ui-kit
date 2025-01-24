@@ -39,7 +39,7 @@ function getController<T extends Controller>(
  * state, and then hydrating the state and displaying the page
  * with the hydrated state. They are required for your controller hooks to function.
  *
- * See docs.coveo.com/en/obif0156/#create-providers
+ * See [Create providers](docs.coveo.com/en/obif0156/#create-providers).
  *
  * @group Providers
  */
