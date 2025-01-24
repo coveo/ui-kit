@@ -1,10 +1,14 @@
-import {readFileSync} from 'node:fs';
-import path from 'node:path';
+import {readFileSync} from 'fs';
+import path from 'path';
 
-const buenoJson = JSON.parse(readFileSync('../bueno/package.json', 'utf-8'));
-const headlessJson = JSON.parse(
-  readFileSync('../headless/package.json', 'utf-8')
+const buenoJsonPath = new URL('../../bueno/package.json', import.meta.url);
+const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
+
+const headlessJsonPath = new URL(
+  '../../headless/package.json',
+  import.meta.url
 );
+const headlessJson = JSON.parse(readFileSync(headlessJsonPath, 'utf-8'));
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
 
