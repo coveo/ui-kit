@@ -1,0 +1,5 @@
+{
+  "ignorePatterns": [
+    "loader/**/*" // Generated files
+  ]
+}

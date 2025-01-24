@@ -1,0 +1,83 @@
+const componentMap = {
+  'atomic-hosted-ui': async () =>
+    await import('./components/atomic-hosted-ui/atomic-hosted-ui.js'),
+} as Record<string, () => Promise<unknown>>;
+
+console.log('componentMap', componentMap);
+
+if (typeof window !== 'undefined') {
+  /**
+   * Checks a node for undefined elements and attempts to register them.
+   */
+  const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
+    const rootTagName =
+      root instanceof Element ? root.tagName.toLowerCase() : '';
+    console.log('rootTagName', rootTagName);
+    const rootIsShoelaceElement = rootTagName?.startsWith('atomic-');
+    console.log('rootIsShoelaceElement', rootIsShoelaceElement);
+    const tags = [...root.querySelectorAll(':not(:defined)')]
+      .map((el) => el.tagName.toLowerCase())
+      .filter((tag) => tag.startsWith('atomic-'));
+
+    console.log('tags', tags);
+    // If the root element is an undefined Shoelace component, add it to the list
+    if (rootIsShoelaceElement && !customElements.get(rootTagName)) {
+      console.log('rootTagName', rootTagName);
+      tags.push(rootTagName);
+    }
+
+    if (rootIsShoelaceElement) {
+      console.log('root', root);
+      const childTemplates = root.querySelectorAll('template');
+      //This is necessary to load the components that are inside the templates
+      for (const template of childTemplates) {
+        discover(template.content);
+        observer.observe(template.content, {subtree: true, childList: true});
+      }
+      //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
+      if ('shadowRoot' in root && root.shadowRoot) {
+        discover(root.shadowRoot);
+        observer.observe(root.shadowRoot, {subtree: true, childList: true});
+      }
+    }
+    // Make the list unique
+    const tagsToRegister = [...new Set(tags)];
+    console.log('tagsToRegister', tagsToRegister);
+    await Promise.allSettled(
+      tagsToRegister.map((tagName) => register(tagName))
+    );
+    customElements.upgrade(root);
+  };
+
+  /**
+   * Registers an element by tag name.
+   */
+  const register = (tagName: string) => {
+    console.log('tagName', tagName);
+    // If the element is already defined, there's nothing more to do
+    if (customElements.get(tagName)) {
+      console.log('customElements.get(tagName)', customElements.get(tagName));
+      return Promise.resolve();
+    }
+
+    return componentMap[tagName]?.();
+  };
+
+  const observer = new MutationObserver((mutations) => {
+    for (const {addedNodes} of mutations) {
+      console.log('addedNodes', addedNodes);
+      for (const node of addedNodes) {
+        console.log('node', node);
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          console.log('node.nodeType', node.nodeType);
+          discover(node as Element);
+        }
+      }
+    }
+  });
+  // Initial discovery
+  discover(document.body);
+  // Listen for new undefined elements
+  observer.observe(document.documentElement, {subtree: true, childList: true});
+  //# sourceMappingURL=index.js.map
+}

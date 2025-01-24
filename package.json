@@ -94,6 +94,7 @@
     "packages/atomic-angular/projects/*",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
+    "packages/atomic-hosted-page-lit",
     "utils/*"
   ],
   "config": {
