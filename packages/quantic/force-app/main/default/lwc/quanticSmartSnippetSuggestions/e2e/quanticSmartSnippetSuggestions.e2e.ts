@@ -29,6 +29,10 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when interacting with a suggestion', () => {
+      test.beforeEach(async ({smartSnippetSuggestions}) => {
+        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
+      });
+
       test('should send the source title analytics event when the title is clicked', async ({
         smartSnippetSuggestions,
       }) => {

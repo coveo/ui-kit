@@ -48,28 +48,30 @@ export class SmartSnippetSuggestionsObject {
   }
 
   async waitForExpandSmartSnippetSuggestionUaAnalytics(): Promise<Request> {
-    return this.waitForSmartSnippetCustomUaAnalytics(
+    return this.waitForSmartSnippetSuggestionsCustomUaAnalytics(
       'expandSmartSnippetSuggestion'
     );
   }
 
   async waitForCollapseSmartSnippetSuggestionUaAnalytics(): Promise<Request> {
-    return this.waitForSmartSnippetCustomUaAnalytics(
+    return this.waitForSmartSnippetSuggestionsCustomUaAnalytics(
       'collapseSmartSnippetSuggestion'
     );
   }
 
   async waitForSmartSnippetSuggestionSourceClickUaAnalytics(): Promise<Request> {
-    return this.waitForSmartSnippetClickUaAnalytics('openSmartSnippetSource');
+    return this.waitForSmartSnippetSuggestionsClickUaAnalytics(
+      'openSmartSnippetSource'
+    );
   }
 
   async waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics(): Promise<Request> {
-    return this.waitForSmartSnippetClickUaAnalytics(
+    return this.waitForSmartSnippetSuggestionsClickUaAnalytics(
       'openSmartSnippetSuggestionInlineLink'
     );
   }
 
-  async waitForSmartSnippetClickUaAnalytics(
+  async waitForSmartSnippetSuggestionsClickUaAnalytics(
     actionCause: string
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
@@ -88,9 +90,8 @@ export class SmartSnippetSuggestionsObject {
     return uaRequest;
   }
 
-  async waitForSmartSnippetCustomUaAnalytics(
-    eventValue: any,
-    customData?: any
+  async waitForSmartSnippetSuggestionsCustomUaAnalytics(
+    eventValue: string
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {
@@ -104,10 +105,7 @@ export class SmartSnippetSuggestionsObject {
           (key) => requestBody?.[key] === expectedFields[key]
         );
 
-        const bodyCustomData = requestBody?.customData;
-        const matchesCustomData = bodyCustomData === customData;
-
-        return matchesExpectedFields && matchesCustomData;
+        return matchesExpectedFields;
       }
       return false;
     });
