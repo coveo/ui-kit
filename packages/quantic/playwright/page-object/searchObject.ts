@@ -1,5 +1,5 @@
 import {Page, Locator, Response} from '@playwright/test';
-import {QuestionAnswerData} from '../../force-app/main/default/lwc/quanticSmartSnippet/e2e/data';
+import {QuestionAnswerData} from '../../force-app/main/default/lwc/quanticSmartSnippetSuggestions/e2e/data';
 
 export class SearchObject {
   constructor(
@@ -62,6 +62,22 @@ export class SearchObject {
           ...questionAnswerDataObject.documentId,
           contentIdValue: firstResult.raw.permanentid,
         },
+        relatedQuestions: [
+          {
+            ...questionAnswerDataObject.relatedQuestions?.[0],
+            documentId: {
+              ...questionAnswerDataObject.documentId,
+              contentIdValue: firstResult.raw.permanentid,
+            },
+          },
+          {
+            ...questionAnswerDataObject.relatedQuestions?.[1],
+            documentId: {
+              ...questionAnswerDataObject.documentId,
+              contentIdValue: firstResult.raw.permanentid,
+            },
+          },
+        ],
       };
 
       await route.fulfill({

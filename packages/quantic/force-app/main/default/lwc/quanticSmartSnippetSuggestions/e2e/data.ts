@@ -29,7 +29,8 @@ export type QuestionAnswerData = {
 const exampleRelatedQuestions = [
   {
     question: "What is the name of Gandalf's horse?",
-    answerSnippet: 'Is is Shadowfax, the lord of all horses.',
+    answerSnippet:
+      'Is is Shadowfax, the lord of all horses. <a href="#">Click here to see the magnificent horse.</a>',
     documentId: {
       contentIdKey: exampleContentIdKey,
       contentIdValue: exampleContentIdValue,

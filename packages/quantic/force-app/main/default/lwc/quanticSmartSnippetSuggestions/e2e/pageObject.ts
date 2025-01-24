@@ -28,7 +28,7 @@ export class SmartSnippetSuggestionsObject {
   }
 
   get smartSnippetSuggestionInlineLink(): Locator {
-    return this.page.locator('[data-testid="smart-snippet__inline-link"] > a');
+    return this.page.locator('[data-testid="smart-snippet-answer"] > a');
   }
 
   async clickOnFirstSmartSnippetSuggestionHeading(): Promise<void> {
@@ -61,7 +61,7 @@ export class SmartSnippetSuggestionsObject {
 
   async waitForSmartSnippetSuggestionSourceClickUaAnalytics(): Promise<Request> {
     return this.waitForSmartSnippetSuggestionsClickUaAnalytics(
-      'openSmartSnippetSource'
+      'openSmartSnippetSuggestionSource'
     );
   }
 
