@@ -110,8 +110,8 @@ describe('quantic-recent-queries-list', () => {
       });
 
       scope('when selecting a query in the list', () => {
-        const query1 = 'query one';
-        const query2 = 'query two';
+        const query1 = 'queryone';
+        const query2 = 'querytwo';
 
         setQuery(query1);
         performSearch().wait(InterceptAliases.Search);
