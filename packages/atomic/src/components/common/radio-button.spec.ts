@@ -1,7 +1,12 @@
 import {fireEvent, within} from '@storybook/test';
 import {html, render} from 'lit';
 import {vi} from 'vitest';
+import {createRipple} from '../../utils/ripple';
 import {radioButton, RadioButtonProps} from './radio-button';
+
+vi.mock('../../utils/ripple', () => ({
+  createRipple: vi.fn(),
+}));
 
 describe('radioButton', () => {
   let container: HTMLElement;
@@ -51,7 +56,7 @@ describe('radioButton', () => {
     const input = renderRadioButton(props);
     await fireEvent.click(input);
 
-    expect(onChecked).toHaveBeenCalled();
+    await expect(onChecked).toHaveBeenCalled();
   });
 
   it('should handle keyboard navigation', async () => {
@@ -75,31 +80,28 @@ describe('radioButton', () => {
     await focus(inputs[0]);
     await keyDown(inputs[0], {key: 'ArrowRight'});
 
-    expect(getRadio(1)).toBeInTheDocument();
+    await expect(getRadio(1)).toBeInTheDocument();
 
     keyDown(inputs[1], {key: 'ArrowRight'});
-    expect(getRadio(2)).toBeInTheDocument();
+    await expect(getRadio(2)).toBeInTheDocument();
 
     keyDown(inputs[2], {key: 'ArrowRight'});
-    expect(getRadio(3)).toBeInTheDocument();
+    await expect(getRadio(3)).toBeInTheDocument();
   });
 
-  // it('should create a ripple effect on mousedown', () => {
-  //   const createRipple = vi.fn();
-  //   const props = {
-  //
-  //     style: 'primary',
-  //   };
+  it('should create a ripple effect on mousedown', async () => {
+    const mockedRipple = vi.mocked(createRipple);
+    const props: Partial<RadioButtonProps> = {
+      style: 'primary',
+    };
 
-  //   render(html`${radioButton(props)}`, container);
+    const input = renderRadioButton(props);
+    await fireEvent.mouseDown(input);
 
-  //   const input = container.querySelector(
-  //     'input[type="radio"]'
-  //   ) as HTMLInputElement;
-  //   input.dispatchEvent(new MouseEvent('mousedown'));
-
-  //   expect(createRipple).toHaveBeenCalled();
-  // });
+    await expect(mockedRipple).toHaveBeenCalledWith(expect.anything(), {
+      color: 'primary',
+    });
+  });
 
   it('should render a radio button with the correct class', async () => {
     const props = {
@@ -108,7 +110,6 @@ describe('radioButton', () => {
 
     const input = renderRadioButton(props);
     expect(input).toBeInTheDocument();
-    // TODO: better use story book tests
     expect(input.classList.contains('test-class')).toBe(true);
     expect(input.classList.contains('btn-radio')).toBe(true);
     expect(input.classList.contains('selected')).toBe(false);
@@ -120,7 +121,6 @@ describe('radioButton', () => {
     };
 
     const input = renderRadioButton(props);
-    expect(input).toBeInTheDocument();
     expect(input.getAttribute('part')).toBe('test-part');
   });
 
@@ -141,8 +141,9 @@ describe('radioButton', () => {
       ariaCurrent: 'page',
     };
 
-    const input = renderRadioButton(props);
-    expect(input).toBeInTheDocument();
-    expect(input.getAttribute('aria-current')).toBe('page');
+    renderRadioButton(props);
+    expect(
+      within(container).getByRole('radio', {current: 'page'})
+    ).toBeInTheDocument();
   });
 });
