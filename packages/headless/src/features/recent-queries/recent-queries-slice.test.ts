@@ -80,15 +80,10 @@ describe('recent-queries-slice', () => {
     ];
     state = recentQueriesReducer(
       state,
-      registerRecentQueries({queries: queries, maxLength: 4})
+      registerRecentQueries({queries: queries, maxLength: 3})
     );
 
-    expect(state.queries).toEqual([
-      'what is love',
-      'oh baby',
-      "don't hurt me",
-      'no more!',
-    ]);
+    expect(state.queries).toEqual(['what is love', 'oh baby', "don't hurt me"]);
   });
 
   it('#clearRecentQueries should remove all queries from the queue in state', () => {
