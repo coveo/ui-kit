@@ -14,12 +14,18 @@
       "inputs": ["^production", "production"],
       "outputs": [
         "{projectRoot}/dist",
+        "{projectRoot}/cdn",
         "{projectRoot}/loader",
         "{projectRoot}/src/components.d.ts"
       ],
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --outdir dist",
+        "commands": [
+          "rm -rf dist cdn",
+          "tsc --outdir dist",
+          "tsc --outdir cdn --project tsconfig.cdn.json",
+          "node ./scripts/esbuild.js"
+        ],
         "cwd": "packages/atomic-hosted-page-lit"
       }
     },
@@ -37,21 +43,6 @@
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"
-    },
-    "bold": {
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "rm -rf dist cdn",
-          "tsc --outdir dist",
-          "tsc --outdir cdn --project tsconfig.cdn.json",
-          "node ./scripts/esbuild.js"
-        ],
-        "parallel": false,
-        "cwd": "packages/atomic-hosted-page-lit"
-      }
     }
   }
 }

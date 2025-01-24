@@ -1,5 +1,5 @@
 import {StringValue} from '@coveo/bueno';
-import {LitElement} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {
   extractPlatformUrl,
@@ -70,5 +70,8 @@ export class AtomicHostedUI extends LitElement {
     );
 
     return await pageResponse.json();
+  }
+  render() {
+    return html`<slot></slot>`;
   }
 }
