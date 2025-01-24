@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.11",
+  "version": "3.0.12",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -45,6 +45,7 @@
     "@types/node": "22.10.6",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
+    "@vitest/browser": "2.1.8",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
     "concurrently": "9.1.2",
@@ -70,8 +71,7 @@
     "rimraf": "6.0.1",
     "semver": "7.6.3",
     "typescript": "5.5.4",
-    "vite": "5.4.11",
-    "@vitest/browser": "2.1.8"
+    "vite": "5.4.11"
   },
   "overrides": {
     "@coveo/release": {

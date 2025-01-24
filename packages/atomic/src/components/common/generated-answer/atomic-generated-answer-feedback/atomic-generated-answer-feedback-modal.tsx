@@ -24,8 +24,8 @@ import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
-import {RadioButton} from '../../radio-button';
 import {Button} from '../../stencil-button';
+import {RadioButton} from '../../stencil-radio-button';
 
 /**
  * @internal

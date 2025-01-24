@@ -1,3 +1,17 @@
+## 3.16.0 (2025-01-23)
+
+- chore(atomic): add SVG transformer (#4867) ([a331579](https://github.com/coveo/ui-kit/commits/a331579)), closes [#4867](https://github.com/coveo/ui-kit/issues/4867)
+- chore(atomic): add ts-lit-plugin (#4874) ([c0babd0](https://github.com/coveo/ui-kit/commits/c0babd0)), closes [#4874](https://github.com/coveo/ui-kit/issues/4874)
+- chore(atomic): migrate unit tests to vitest/browser (#4865) ([5030ca2](https://github.com/coveo/ui-kit/commits/5030ca2)), closes [#4865](https://github.com/coveo/ui-kit/issues/4865)
+- chore(deps): update all dependencies (major) j:kit-282 (major) (#4882) ([fe632d0](https://github.com/coveo/ui-kit/commits/fe632d0)), closes [#4882](https://github.com/coveo/ui-kit/issues/4882)
+- feat(atomic): add @watch decorator for Lit components (#4875) ([3400ea7](https://github.com/coveo/ui-kit/commits/3400ea7)), closes [#4875](https://github.com/coveo/ui-kit/issues/4875)
+- feat(atomic): add Lit equivalent for `@MapProp` decorator (#4850) ([5d907b1](https://github.com/coveo/ui-kit/commits/5d907b1)), closes [#4850](https://github.com/coveo/ui-kit/issues/4850)
+- feat(atomic): add localizedString directive (#4852) ([b7be913](https://github.com/coveo/ui-kit/commits/b7be913)), closes [#4852](https://github.com/coveo/ui-kit/issues/4852)
+- feat(atomic): add radio-button function for lit components (#4864) ([c813a3f](https://github.com/coveo/ui-kit/commits/c813a3f)), closes [#4864](https://github.com/coveo/ui-kit/issues/4864)
+- fix(atomic): add separate part name for active tab (#4868) ([7c2491c](https://github.com/coveo/ui-kit/commits/7c2491c)), closes [#4868](https://github.com/coveo/ui-kit/issues/4868)
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+- fix(headless): don't leak pagination state to productSuggest call (#4667) ([b69cf0a](https://github.com/coveo/ui-kit/commits/b69cf0a)), closes [#4667](https://github.com/coveo/ui-kit/issues/4667)
+
 ## <small>3.15.3 (2025-01-17)</small>
 
 - fix(atomic): revert getAssetPath change (#4870) ([8961432](https://github.com/coveo/ui-kit/commits/8961432)), closes [#4870](https://github.com/coveo/ui-kit/issues/4870)
