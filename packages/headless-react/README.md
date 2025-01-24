@@ -7,6 +7,6 @@
 
 ## Learn more
 
-- Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/)
-- Checkout our [Documentation for SSR Commerce](https://docs.coveo.com/en/obif0156)
-- Refer to [samples/headless-ssr-commerce](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr-commerce/) for examples.
+- Checkout our [Documentation for SSR Search](https://docs.coveo.com/en/headless/latest/usage/headless-server-side-rendering/) and refer to [samples/headless-ssr](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr) for examples.
+
+- Checkout our [Documentation for SSR Commerce](https://docs.coveo.com/en/obif0156) and refer to [samples/headless-ssr-commerce](https://github.com/coveo/ui-kit/tree/master/packages/samples/headless-ssr-commerce/) for examples.
