@@ -1,6 +1,10 @@
+import {readFileSync} from 'node:fs';
 import path from 'node:path';
-import buenoJson from '../../bueno/package.json';
-import headlessJson from '../../headless/package.json';
+
+const buenoJson = JSON.parse(readFileSync('../bueno/package.json', 'utf-8'));
+const headlessJson = JSON.parse(
+  readFileSync('../headless/package.json', 'utf-8')
+);
 
 const isNightly = process.env.IS_NIGHTLY === 'true';
 
@@ -12,9 +16,7 @@ const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : 'v' + buenoJson.version;
 
-export function generateExternalPackageMappings(basePath: string): {
-  [key: string]: {devWatch: string; cdn: string};
-} {
+export function generateExternalPackageMappings(basePath) {
   return {
     '@coveo/headless/commerce': {
       devWatch: path.resolve(

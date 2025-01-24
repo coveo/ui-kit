@@ -1,7 +1,36 @@
-import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
 import {readdirSync, statSync} from 'fs';
-import {join, resolve as resolvePath, relative} from 'path';
+import {fileURLToPath} from 'node:url';
+import {join, resolve as resolvePath, relative, dirname} from 'path';
+import {generateExternalPackageMappings} from './scripts/externalPackageMappings.js';
+
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const packageMappings = generateExternalPackageMappings(__dirname);
+
+const externalizeDependenciesPlugin = () => {
+  return {
+    name: 'externalize-dependencies',
+    resolveId: (source, _importer, _options) => {
+      const packageMapping = packageMappings[source];
+
+      if (packageMapping) {
+        if (!isCDN) {
+          return false;
+        }
+
+        return {
+          id: packageMapping.cdn,
+          external: 'absolute',
+        };
+      }
+
+      return null;
+    },
+  };
+};
 
 const getDirectories = (src) => {
   const dirs = [];
@@ -40,7 +69,6 @@ export default {
     },
     chunkFileNames: '[name].js',
     manualChunks: (id) => {
-      console.log(id);
       if (id.includes('node_modules')) {
         return (
           'vendor/' +
@@ -49,6 +77,10 @@ export default {
       }
     },
   },
-  plugins: [resolve({preserveSymlinks: false}), json()],
-  external: ['@coveo/bueno', '@stencil/core', 'dompurify'],
+  plugins: [
+    resolve({preserveSymlinks: false}),
+    externalizeDependenciesPlugin(),
+  ],
+
+  external: [/\.tw.css$/],
 };
