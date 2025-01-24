@@ -530,4 +530,42 @@ describe('commerce common actions', () => {
       });
     });
   });
+
+  describe('#buildInstantProductsAPIRequest', () => {
+    let state: Actions.ListingAndSearchStateNeededByQueryCommerceAPI;
+    let mockedBuildInstantProductsAPIRequest: MockInstance;
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+      state = buildMockCommerceState();
+      mockedBuildInstantProductsAPIRequest = vi.spyOn(
+        Actions,
+        'buildInstantProductsAPIRequest'
+      );
+    });
+
+    it('given a state that has commercePagination, returns request without it', () => {
+      state.commercePagination = {
+        principal: {
+          page: 1,
+          perPage: 10,
+          totalEntries: 50,
+          totalPages: 5,
+        },
+        recommendations: {},
+      };
+
+      const request = Actions.buildInstantProductsAPIRequest(
+        state,
+        navigatorContext
+      );
+
+      expect(mockedBuildInstantProductsAPIRequest).toHaveBeenCalledWith(
+        state,
+        navigatorContext
+      );
+
+      expect(request.page).toEqual(undefined);
+    });
+  });
 });

@@ -1,28 +1,25 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {createRipple} from '../../utils/ripple';
+import {RadioButtonProps} from './radio-button';
 import {
-  ButtonStyle,
   getClassNameForButtonStyle,
   getRippleColorForButtonStyle,
-} from './button-style';
+} from './stencil-button-style';
 
-export interface RadioButtonProps {
-  groupName: string;
-  selectWhenFocused?: boolean;
-  onChecked?(): void;
-  style?: ButtonStyle;
-  key?: string | number;
-  checked?: boolean;
-  class?: string;
-  text?: string;
-  part?: string;
-  ariaLabel?: string;
-  ariaCurrent?: string;
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the RadioButtonProps from radio-button.ts instead.
+ */
+export interface StencilRadioButtonProps extends Omit<RadioButtonProps, 'ref'> {
   ref?(element?: HTMLInputElement): void;
 }
 
-export const RadioButton: FunctionalComponent<RadioButtonProps> = (props) => {
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the radioButton function instead.
+ */
+export const RadioButton: FunctionalComponent<StencilRadioButtonProps> = (
+  props
+) => {
   const classNames = ['btn-radio'];
   let onMouseDown:
     | JSXBase.DOMAttributes<HTMLInputElement>['onMouseDown']

@@ -9,12 +9,12 @@
       "sequential": ["dev", "stg", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": true,
+    "start_environment_automatically": false,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
     }
   },
-  "ordered_phases": [
+  "dag_phases": [
     {
       "id": "deploy-bueno-patch-to-s3-version",
       "s3": {
@@ -148,11 +148,35 @@
       }
     },
     {
+      "id": "deploy-atomic-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-nightly-storybook-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly/storybook",
         "source": "packages/atomic/dist-storybook",
         "parameters": {
           "acl": "public-read"
@@ -196,6 +220,18 @@
       }
     },
     {
+      "id": "deploy-atomic-react-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic-react/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-hosted-page-patch-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
@@ -232,6 +268,18 @@
       }
     },
     {
+      "id": "deploy-atomic-hosted-page-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]-nightly",
+        "source": "packages/atomic-hosted-page/dist",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "invalidate-cloudfront-cache",
       "terraform": {
         "terragrunt_path": "",
@@ -239,7 +287,31 @@
         "auto_approve": true,
         "auto_approve_in_production": true,
         "run_strategy": "always"
-      }
+      },
+      "dependencies": [
+        "deploy-bueno-patch-to-s3-version",
+        "deploy-bueno-minor-to-s3-version",
+        "deploy-bueno-major-to-s3-version",
+        "deploy-bueno-nightly-to-s3-version",
+        "deploy-headless-patch-to-s3-version",
+        "deploy-headless-minor-to-s3-version",
+        "deploy-headless-major-to-s3-version",
+        "deploy-headless-nightly-to-s3-version",
+        "deploy-atomic-patch-to-s3-version",
+        "deploy-atomic-minor-to-s3-version",
+        "deploy-atomic-major-to-s3-version",
+        "deploy-atomic-nightly-to-s3-version",
+        "deploy-atomic-react-patch-to-s3-version",
+        "deploy-atomic-react-minor-to-s3-version",
+        "deploy-atomic-react-major-to-s3-version",
+        "deploy-atomic-react-nightly-to-s3-version",
+        "deploy-atomic-hosted-page-patch-to-s3-version",
+        "deploy-atomic-hosted-page-minor-to-s3-version",
+        "deploy-atomic-hosted-page-major-to-s3-version",
+        "deploy-atomic-hosted-page-nightly-to-s3-version",
+        "deploy-atomic-minor-storybook-to-s3-version",
+        "deploy-atomic-nightly-storybook-to-s3-version"
+      ]
     },
     {
       "id": "smoke",
@@ -256,7 +328,8 @@
           "headless-patch": "$[HEADLESS_PATCH_VERSION]",
           "is-nightly": "$[IS_NIGHTLY]"
         }
-      }
+      },
+      "dependencies": ["invalidate-cloudfront-cache"]
     },
     {
       "id": "production-release",
@@ -271,7 +344,8 @@
         "extra_parameters": {
           "run-id": "$[GITHUB_RUN_ID]"
         }
-      }
+      },
+      "dependencies": ["smoke"]
     }
   ],
   "observatory": {

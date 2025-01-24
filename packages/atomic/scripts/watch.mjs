@@ -27,7 +27,7 @@ async function rebuild(event, fileName) {
   const commands = [
     'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build',
     'node ./scripts/stencil-proxy.mjs',
-    'tsc -p tsconfig.lit.json',
+    'node ./scripts/build.mjs --config=tsconfig.lit.json',
     'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js',
     'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js',
   ];

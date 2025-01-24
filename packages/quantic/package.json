@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.12.1",
+  "version": "3.13.0",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.2",
+    "@coveo/headless": "3.13.3",
     "dompurify": "3.2.3",
     "marked": "12.0.2",
     "fs-extra": "11.2.0"
@@ -63,14 +63,14 @@
     "@babel/cli": "7.26.4",
     "@babel/plugin-transform-async-to-generator": "7.25.9",
     "@ckeditor/jsdoc-plugins": "43.0.1",
-    "@coveo/relay-event-types": "13.0.0",
+    "@coveo/relay-event-types": "13.0.3",
     "@coveo/release": "1.0.0",
     "@octokit/graphql": "8.1.2",
     "@octokit/graphql-schema": "15.25.0",
     "@playwright/test": "1.49.1",
     "@salesforce/eslint-config-lwc": "3.6.0",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
-    "@types/node": "22.10.5",
+    "@types/node": "22.10.6",
     "@types/strip-color": "0.1.2",
     "@types/wait-on": "5.3.4",
     "chalk": "4.1.2",
@@ -88,7 +88,7 @@
     "prettier-plugin-apex": "2.2.2",
     "strip-color": "0.1.0",
     "ts-node": "10.9.2",
-    "wait-on": "8.0.1",
+    "wait-on": "8.0.2",
     "xml2js": "0.6.2"
   },
   "files": [
