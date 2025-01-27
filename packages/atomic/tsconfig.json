@@ -1,6 +1,10 @@
 {
-  "extends": "./tsconfig.stencil.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "lib": ["dom", "ES2023"],
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
+    "target": "ES2021",
     "types": ["@testing-library/jest-dom"],
     "plugins": [
       {
@@ -16,5 +20,6 @@
       }
     ]
   },
-  "exclude": ["node_modules", "src/external-builds"]
+  "exclude": ["node_modules", "src/external-builds"],
+  "include": ["src"]
 }
