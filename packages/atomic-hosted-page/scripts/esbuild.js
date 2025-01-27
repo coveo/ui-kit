@@ -4,14 +4,12 @@ import {resolve, dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
 const buenoJson = JSON.parse(
   readFileSync(resolve(__dirname, '../../bueno/package.json'), 'utf8')
 );
 const headlessJson = JSON.parse(
   readFileSync(resolve(__dirname, '../../headless/package.json'), 'utf8')
 );
-
 const isNightly = process.env.IS_NIGHTLY === 'true';
 const headlessVersion = isNightly
   ? `v${headlessJson.version.split('.').shift()}-nightly`
@@ -19,16 +17,9 @@ const headlessVersion = isNightly
 const buenoVersion = isNightly
   ? `v${buenoJson.version.split('.').shift()}-nightly`
   : 'v' + buenoJson.version;
-
-const alwaysExternal = ['@coveo/headless', '@coveo/bueno'];
-
 const packageMappings = {
-  '@coveo/headless': {
-    cdn: `/headless/${headlessVersion}/headless.esm.js`,
-  },
-  '@coveo/bueno': {
-    cdn: `/bueno/${buenoVersion}/bueno.esm.js`,
-  },
+  '@coveo/headless': `/headless/${headlessVersion}/headless.esm.js`,
+  '@coveo/bueno': `/bueno/${buenoVersion}/bueno.esm.js`,
 };
 
 const externalizeDependenciesPlugin = {
@@ -39,7 +30,7 @@ const externalizeDependenciesPlugin = {
 
       if (packageMapping) {
         return {
-          path: packageMapping.cdn,
+          path: packageMapping,
           external: true,
         };
       }
@@ -61,7 +52,7 @@ esbuild
     outdir: './cdn',
     chunkNames: 'chunks/[name].[hash]',
     bundle: true,
-    external: alwaysExternal,
+    external: ['@coveo/headless', '@coveo/bueno'],
     splitting: true,
     plugins: [externalizeDependenciesPlugin],
   })
