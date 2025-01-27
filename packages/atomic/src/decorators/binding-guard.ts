@@ -11,9 +11,8 @@ export interface LitElementWithBindings extends LitElement {
  * A decorator that guards the render method based on the presence of component bindings.
  *
  * This decorator is designed for LitElement components. It wraps the render method and checks for the `bindings` property
- * on the component. If the `bindings` property is not present or is false, the component will be hidden by adding the
- * `atomic-hidden` class, and the render method will return `nothing`. If the `bindings` property is present and true,
- * it calls the original render method.
+ * on the component. If the `bindings` property is not present or is false, the render method will return `nothing`.
+ * If the `bindings` property is present and true, it calls the original render method.
  *
  * This decorator works in conjunction with the @initializeBindings decorator.
  *
@@ -46,7 +45,6 @@ export function bindingGuard<
     }
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
-      this.classList.toggle('atomic-hidden', !this.bindings);
       return this.bindings
         ? originalMethod?.call(this)
         : (html`${nothing}` as GenericRender<T>);
