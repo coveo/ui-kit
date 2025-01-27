@@ -34,7 +34,7 @@ Alternatively, you can use the component directly from the CDN:
 1. Import the component into your application:
 
    ```javascript
-   import '@coveo/atomic-hosted-page';
+   import '@coveo/atomic-hosted-page/dist/components/atomic-hosted-ui/atomic-hosted-ui.js';
    ```
 
 2. Add the component to your HTML and initialize it with the required options:
