@@ -20,6 +20,7 @@
         "name": "ts-lit-plugin",
         "strict": true,
         "rules": {
+          "no-missing-import": "off",
           "no-unknown-property": "error",
           "no-unknown-tag-name": "error",
           "no-incompatible-type-binding": "error",
