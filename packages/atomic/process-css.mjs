@@ -61,8 +61,8 @@ function minifyCss(result, filename) {
 
 const cssToJs = (css) => `const css = \`${css}\`;`;
 
-const importMatcher = /(?<=^@import\s+').*\.tw\.css(?=';$)/gm;
-const importWholeLineMatcher = /^@import\s+'.*\.tw\.css';$/gm;
+const importMatcher = /(?<=^@import\s+').*\.css(?=';$)/gm;
+const importWholeLineMatcher = /^@import\s+'.*\.css';$/gm;
 
 const pushImports = (currentFile, importPaths, files) => {
   for (const importPath of importPaths) {
@@ -129,7 +129,7 @@ function processCssFiles(srcDir, distDir) {
 
       if (file.isDirectory()) {
         processCssFiles(srcPath, join(distDir, file.name));
-      } else if (file.isFile() && file.name.endsWith('.tw.css')) {
+      } else if (file.isFile() && file.name.endsWith('.css')) {
         const relPath = relative(srcDir, srcPath);
         const distPath = join(distDir, relPath);
         const targetDir = dirname(distPath);
