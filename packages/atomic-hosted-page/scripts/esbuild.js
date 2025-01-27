@@ -52,7 +52,6 @@ esbuild
     outdir: './cdn',
     chunkNames: 'chunks/[name].[hash]',
     bundle: true,
-    external: ['@coveo/headless', '@coveo/bueno'],
     splitting: true,
     plugins: [externalizeDependenciesPlugin],
   })
