@@ -34,7 +34,6 @@ export class AtomicHostedUI extends LitElement {
   hostedType: 'trial' | 'builder' | 'code' = 'code';
 
   public async initialize(options: AtomicHostedUIInitializationOptions) {
-    console.log('initialize', options);
     this.validateOptions(options);
 
     try {
