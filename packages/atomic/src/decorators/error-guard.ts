@@ -3,7 +3,7 @@ import {TemplateResultType} from 'lit-html/directive-helpers.js';
 import {GenericRender, RenderGuardDecorator} from './types';
 
 export interface LitElementWithError extends LitElement {
-  error: Error;
+  error?: Error;
 }
 
 /**
@@ -23,14 +23,13 @@ export interface LitElementWithError extends LitElement {
  *
  * @returns A decorator function that wraps the render method with error handling logic.
  * @throws {Error} If the decorator is used on a method other than the render method.
- * TODO: KIT-3822: add unit tests to this decorator
  */
 export function errorGuard<
   Component extends LitElementWithError,
   T extends TemplateResultType,
 >(): RenderGuardDecorator<Component, T> {
-  return (_, __, descriptor) => {
-    if (descriptor.value === undefined) {
+  return (_, propertyKey, descriptor) => {
+    if (descriptor?.value === undefined || propertyKey !== 'render') {
       throw new Error(
         '@errorGuard decorator can only be used on render method'
       );
