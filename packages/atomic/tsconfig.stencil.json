@@ -26,6 +26,7 @@
     "src/external-builds",
     "**/*.stories.tsx",
     "**/*.stories.ts",
+    "**/*.spec.ts",
     "**/*.stories.js",
     "**/e2e/**/*"
   ]
