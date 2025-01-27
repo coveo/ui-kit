@@ -47,7 +47,7 @@ esbuild
     entryPoints: [
       './src/index.ts',
       './src/atomic-hosted-page.esm.ts',
-      './src/components/atomic-hosted-ui/index.ts',
+      './src/components/atomic-hosted-ui/atomic-hosted-ui.ts',
     ],
     outdir: './cdn',
     chunkNames: 'chunks/[name].[hash]',

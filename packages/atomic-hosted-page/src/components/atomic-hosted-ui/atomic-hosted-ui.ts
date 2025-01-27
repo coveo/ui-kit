@@ -8,6 +8,12 @@ import {
 } from '../utils/options-utils.js';
 import {processHostedPage} from './hosted-ui.js';
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-hosted-ui': AtomicHostedUI;
+  }
+}
+
 interface AtomicHostedUIInitializationOptions extends InitializationOptions {
   /**
    * The unique identifier of the hosted search page.
