@@ -5,6 +5,8 @@
     "moduleResolution": "Bundler",
     "module": "ES2022",
     "target": "ES2021",
+    "jsx": "react",
+    "jsxFactory": "h",
     "types": ["@testing-library/jest-dom"],
     "plugins": [
       {
