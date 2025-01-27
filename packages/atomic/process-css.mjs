@@ -4,6 +4,7 @@ import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
 import postcssLoadConfig from 'postcss-load-config';
 import {argv} from 'process';
+import {dedent} from 'ts-dedent';
 import {parseJsonConfigFileContent, readConfigFile, sys} from 'typescript';
 import {fileURLToPath} from 'url';
 
@@ -58,9 +59,19 @@ function minifyCss(result, filename) {
     .code.toString();
 }
 
-function escapeString(str) {
-  return str.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
-}
+const cssToJs = (css) => `const css = \`${css}\`;`;
+
+const importMatcher = /(?<=^@import\s+').*\.tw\.css(?=';$)/gm;
+const importWholeLineMatcher = /^@import\s+'.*\.tw\.css';$/gm;
+
+const pushImports = (currentFile, importPaths, files) => {
+  for (const importPath of importPaths) {
+    const resolvedPath = join(dirname(currentFile), importPath);
+    if (!files.includes(resolvedPath)) {
+      files.push(resolvedPath);
+    }
+  }
+};
 
 function convertCssToJs(srcPath, distPath, file) {
   readFile(srcPath, 'utf8', async (err, data) => {
@@ -68,11 +79,38 @@ function convertCssToJs(srcPath, distPath, file) {
       throw err;
     }
 
-    const processedCss = await processAndMinifyCss(data, srcPath);
-    const jsContent = `export default \`${escapeString(processedCss)}\`;`;
+    const files = [file];
+
+    console.log(`Processing ${srcPath} -> ${distPath}`);
+    const imports = Array.from(data.matchAll(importMatcher)).flatMap(
+      (match) => match
+    );
+    pushImports(srcPath, imports, files);
+    data = data.replace(importWholeLineMatcher, '');
+
+    const result = await processAndMinifyCss(data, srcPath);
+
+    let importIndex = 0;
+    const fileContent = dedent`
+    ${imports.length > 0 ? imports.map((importPath) => `import dep${importIndex++} from '${importPath.replace(/\.css$/, '.css.js')}';`).join('\n') : ''}
+    ${cssToJs(result)}
+    ${
+      imports.length > 0
+        ? `
+    const allCss = [${imports
+      .map((_, index) => `...dep${index}`)
+      .concat('css')
+      .join(', ')}];
+    export default allCss;
+    `
+        : `
+    export default [css];
+    `
+    }
+    `;
     const jsPath = distPath + '.js';
 
-    writeFile(jsPath, jsContent, (err) => {
+    writeFile(jsPath, fileContent, (err) => {
       if (err) {
         throw err;
       }
