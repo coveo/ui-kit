@@ -54,6 +54,7 @@ export function processHostedPage(
     'url' in file ? insertCSSUrl(file) : insertCSSInline(file)
   );
 }
+
 function insertJS(file: HostedPageJavascriptFile) {
   const script = document.createElement('script');
   if (file.isModule) {
