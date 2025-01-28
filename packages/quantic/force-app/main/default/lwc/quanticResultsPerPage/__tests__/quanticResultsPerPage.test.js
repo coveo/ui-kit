@@ -146,7 +146,7 @@ describe('c-quantic-results-per-page', () => {
       prepareHeadlessState();
     });
 
-    it('should build the results per page and subscribe to state', async () => {
+    it('should build the results per page and search status controllers and subscribe to state', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -258,7 +258,7 @@ describe('c-quantic-results-per-page', () => {
         exampleEngine,
         {
           initialState: {
-            numberOfResults: 100,
+            numberOfResults: customChoices[0],
           },
         }
       );
