@@ -26,6 +26,7 @@ export class AtomicText2
 {
   @initializeBindings() bindings!: Bindings;
   @state() public error!: Error;
+
   protected firstUpdated(_changedProperties: PropertyValues): void {
     if (!this.value) {
       this.error = new Error('The "value" attribute must be defined.');
@@ -79,18 +80,6 @@ export class AtomicText2
    * The count value used for plurals.
    */
   @property({reflect: true}) public count?: number;
-
-  public connectedCallback() {
-    super.connectedCallback();
-
-    initializeBindings(this)
-      .then((bindings) => {
-        this.bindings = bindings;
-      })
-      .catch((error) => {
-        this.error = error;
-      });
-  }
 
   @ErrorGuard()
   @BindingGuard()

@@ -80,18 +80,6 @@ export class AtomicText
    */
   @property({reflect: true}) public count?: number;
 
-  public connectedCallback() {
-    super.connectedCallback();
-
-    initializeBindings(this)
-      .then((bindings) => {
-        this.bindings = bindings;
-      })
-      .catch((error) => {
-        this.error = error;
-      });
-  }
-
   @ErrorGuard()
   @BindingGuard()
   @SetRenderedAttribute()
