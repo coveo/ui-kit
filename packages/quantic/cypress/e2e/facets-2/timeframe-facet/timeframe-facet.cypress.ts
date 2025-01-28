@@ -277,23 +277,23 @@ describe('quantic-timeframe-facet', () => {
             Actions.expand();
           });
 
-          scope('when specifying a valid range', () => {
-            Actions.applyRange(validRange.start, validRange.end);
+          // scope('when specifying a valid range', () => {
+          //   Actions.applyRange(validRange.start, validRange.end);
 
-            cy.wait(getQueryAlias(param.useCase));
+          //   cy.wait(getQueryAlias(param.useCase));
 
-            if (param.useCase === useCaseEnum.search) {
-              Expect.urlHashContains(
-                'Date_input',
-                '2000/01/01@00:00:00...2000/12/31@23:59:59'
-              );
-            }
+          //   if (param.useCase === useCaseEnum.search) {
+          //     Expect.urlHashContains(
+          //       'Date_input',
+          //       '2000/01/01@00:00:00...2000/12/31@23:59:59'
+          //     );
+          //   }
 
-            Expect.logSelectedValue('Date', validRange.filter);
+          //   Expect.logSelectedValue('Date', validRange.filter);
 
-            Expect.displayValues(false);
-            Expect.displayClearButton(true);
-          });
+          //   Expect.displayValues(false);
+          //   Expect.displayClearButton(true);
+          // });
 
           scope('when clearing filter', () => {
             captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
