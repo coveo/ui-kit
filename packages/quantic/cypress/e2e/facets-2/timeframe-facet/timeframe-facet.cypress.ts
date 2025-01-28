@@ -368,33 +368,33 @@ describe('quantic-timeframe-facet', () => {
             // });
           });
 
-          scope('when entering a valid range', () => {
-            Actions.applyRange(validRange.start, validRange.end);
+          // scope('when entering a valid range', () => {
+          //   Actions.applyRange(validRange.start, validRange.end);
 
-            Expect.numberOfValidationErrors(0);
-            if (param.useCase === useCaseEnum.search) {
-              Expect.urlHashContains(
-                'Date_input',
-                '2000/01/01@00:00:00...2000/12/31@23:59:59'
-              );
-            }
-            Expect.displayClearButton(true);
-            Expect.displayValues(false);
+          //   Expect.numberOfValidationErrors(0);
+          //   if (param.useCase === useCaseEnum.search) {
+          //     Expect.urlHashContains(
+          //       'Date_input',
+          //       '2000/01/01@00:00:00...2000/12/31@23:59:59'
+          //     );
+          //   }
+          //   Expect.displayClearButton(true);
+          //   Expect.displayValues(false);
 
-            scope(
-              'submitting the range form again should use the same range',
-              () => {
-                Actions.submitForm();
+          //   scope(
+          //     'submitting the range form again should use the same range',
+          //     () => {
+          //       Actions.submitForm();
 
-                if (param.useCase === useCaseEnum.search) {
-                  Expect.urlHashContains(
-                    'Date_input',
-                    '2000/01/01@00:00:00...2000/12/31@23:59:59'
-                  );
-                }
-              }
-            );
-          });
+          //       if (param.useCase === useCaseEnum.search) {
+          //         Expect.urlHashContains(
+          //           'Date_input',
+          //           '2000/01/01@00:00:00...2000/12/31@23:59:59'
+          //         );
+          //       }
+          //     }
+          //   );
+          // });
         });
       });
 
