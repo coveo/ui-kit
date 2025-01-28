@@ -22,8 +22,9 @@
       "options": {
         "commands": [
           "rm -rf dist cdn",
-          "tsc --outdir dist",
-          "tsc --outdir cdn --project tsconfig.cdn.json",
+          "node ./scripts/tsc.js --config=tsconfig.json",
+          "node ./scripts/process-css.js --config=tsconfig.json",
+          "tsc --project tsconfig.cdn.json",
           "node ./scripts/esbuild.js"
         ],
         "cwd": "packages/atomic-hosted-page"

@@ -42,6 +42,9 @@ const externalizeDependenciesPlugin = {
 
 esbuild
   .build({
+    loader: {
+      '.svg': 'text',
+    },
     format: 'esm',
     target: 'es2022',
     entryPoints: [

@@ -1,7 +1,7 @@
-import {execSync} from 'child_process';
-import fs from 'fs/promises';
 import ncp from 'ncp';
-import path from 'path';
+import {execSync} from 'node:child_process';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const getCurrentDir = () => {
   const url = import.meta.url;

@@ -1,6 +1,29 @@
 const componentMap = {
+  'atomic-blossom-button': async () =>
+    await import(
+      '../components/atomic-blossom-button/atomic-blossom-button.js'
+    ),
+  'atomic-dewdrop-slider': async () =>
+    await import(
+      '../components/atomic-dewdrop-slider/atomic-dewdrop-slider.js'
+    ),
+  'atomic-leafy-card': async () =>
+    await import('../components/atomic-leafy-card/atomic-leafy-card.js'),
+  'atomic-sunbeam-tooltip': async () =>
+    await import(
+      '../components/atomic-sunbeam-tooltip/atomic-sunbeam-tooltip.js'
+    ),
   'atomic-hosted-ui': async () =>
     await import('../components/atomic-hosted-ui/atomic-hosted-ui.js'),
+
+  'atomic-breezy-navbar': async () =>
+    await import('../components/atomic-breezy-navbar/atomic-breezy-navbar.js'),
+  'atomic-firefly-icon': async () =>
+    await import('../components/atomic-firefly-icon/atomic-firefly-icon.js'),
+  'atomic-butterfly-carousel': async () =>
+    await import(
+      '../components/atomic-butterfly-carousel/atomic-butterfly-carousel.js'
+    ),
 } as Record<string, () => Promise<unknown>>;
 
 if (typeof window !== 'undefined') {

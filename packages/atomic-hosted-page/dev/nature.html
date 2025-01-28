@@ -1,0 +1,55 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic Nature</title>
+
+    <script type="module">
+      // Dynamically importing components
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-blossom-button/atomic-blossom-button.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-dewdrop-slider/atomic-dewdrop-slider.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-leafy-card/atomic-leafy-card.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-sunbeam-tooltip/atomic-sunbeam-tooltip.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-hosted-ui/atomic-hosted-ui.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-breezy-navbar/atomic-breezy-navbar.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-butterfly-carousel/atomic-butterfly-carousel.js');
+      await import('@coveo/atomic-hosted-page/dist/components/atomic-nature-icons/atomic-nature-icons.js');
+    </script>
+  </head>
+
+  <body>
+    <h1>Coveo Atomic Nature Showcase</h1>
+
+    <!-- Example usage of each component -->
+
+    <h2>atomic-blossom-button</h2>
+    <atomic-blossom-button>Blooming Button</atomic-blossom-button>
+
+    <h2>atomic-dewdrop-slider</h2>
+    <atomic-dewdrop-slider value="75"></atomic-dewdrop-slider>
+
+    <h2>atomic-leafy-card</h2>
+    <atomic-leafy-card>Leafy Card Content</atomic-leafy-card>
+
+    <h2>atomic-sunbeam-tooltip</h2>
+    <atomic-sunbeam-tooltip message="HOVER ME"> </atomic-sunbeam-tooltip>
+
+    <h2>atomic-breezy-navbar</h2>
+    <atomic-breezy-navbar>
+      <nav><a href="#">Home</a> | <a href="#">About</a> | <a href="#">Contact</a></nav>
+    </atomic-breezy-navbar>
+
+    <h2>atomic-firefly-icon</h2>
+    <atomic-firefly-icon></atomic-firefly-icon>
+
+    <h2>atomic-butterfly-carousel</h2>
+    <atomic-butterfly-carousel>
+      <div class="slide">Slide 1</div>
+      <div class="slide">Slide 2</div>
+      <div class="slide">Slide 3</div>
+    </atomic-butterfly-carousel>
+
+    <atomic-nature-icons></atomic-nature-icons>
+  </body>
+</html>
