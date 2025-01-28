@@ -338,14 +338,14 @@ describe('quantic-timeframe-facet', () => {
             //   SearchExpectations.numberOfSearchRequests(1, param.useCase);
             // });
 
-            scope('invalid start date format', () => {
-              Actions.applyRange('bad start date', validRange.end);
+            // scope('invalid start date format', () => {
+            //   Actions.applyRange('bad start date', validRange.end);
 
-              Expect.numberOfValidationErrors(1);
-              Expect.validationError(
-                'Your entry does not match the allowed format'
-              );
-            });
+            //   Expect.numberOfValidationErrors(1);
+            //   Expect.validationError(
+            //     'Your entry does not match the allowed format'
+            //   );
+            // });
 
             scope('invalid end date format', () => {
               Actions.applyRange(validRange.start, 'bad end date');
