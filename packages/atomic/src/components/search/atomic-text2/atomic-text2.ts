@@ -8,7 +8,8 @@ import {
   unsafeCSS,
 } from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {initializeBindings} from '../../../utils/initialization-utils.js';
+import {initializeBindings} from '../../../decorators/initialize-bindings.js';
+import {InitializableComponent} from '../../../decorators/types.js';
 import {TailwindLitElement} from '../../../utils/tailwind.element.js';
 import type {Bindings} from '../atomic-search-interface/interfaces.js';
 import styles from './atomic-text2.styles.tw.css';
@@ -19,8 +20,11 @@ type GenericRender = string | TemplateResult | undefined | null;
  * The `atomic-text2` component leverages the I18n translation module through the atomic-search-interface.
  */
 @customElement('atomic-text2')
-export class AtomicText2 extends TailwindLitElement {
-  @state() public bindings!: Bindings;
+export class AtomicText2
+  extends TailwindLitElement
+  implements InitializableComponent
+{
+  @initializeBindings() bindings!: Bindings;
   @state() public error!: Error;
   protected firstUpdated(_changedProperties: PropertyValues): void {
     if (!this.value) {
