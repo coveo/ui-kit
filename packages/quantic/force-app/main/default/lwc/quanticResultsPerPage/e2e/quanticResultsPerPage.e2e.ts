@@ -72,7 +72,7 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     if (useCase.value === useCaseEnum.search) {
-      test.describe.only('when loading from URL hash', () => {
+      test.describe('when loading from URL hash', () => {
         const expectedResultsPerPage = 50;
         test.use({
           urlHash: `numberOfResults=${expectedResultsPerPage}`,
