@@ -81,7 +81,7 @@ describe('@errorGuard decorator', () => {
   it('should throw an error if used on a property', () => {
     expect(() => {
       // @ts-expect-error - unused class
-      class _ extends LitElement {
+      class _ {
         // @ts-expect-error - invalid usage
         @errorGuard() myProp?: string;
       }
@@ -91,7 +91,7 @@ describe('@errorGuard decorator', () => {
   it('should throw an error if used on a method other than render', () => {
     expect(() => {
       // @ts-expect-error - unused class
-      class _ extends LitElement {
+      class _ {
         // @ts-expect-error - invalid usage
         @errorGuard()
         public someMethod() {}
