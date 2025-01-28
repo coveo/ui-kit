@@ -40,7 +40,7 @@
       "groupSlug": "vite",
       "rangeStrategy": "replace",
       "description": "Isolate vite until green with @nx/vite",
-      "matchPackageNames": ["vite"]
+      "matchPackageNames": ["vite", "vitest", "@vitest/browser"]
     },
     {
       "groupName": "gts",
