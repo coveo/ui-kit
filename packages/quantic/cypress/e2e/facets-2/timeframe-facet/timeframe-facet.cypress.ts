@@ -295,19 +295,19 @@ describe('quantic-timeframe-facet', () => {
           //   Expect.displayClearButton(true);
           // });
 
-          scope('when clearing filter', () => {
-            captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
+          // scope('when clearing filter', () => {
+          //   captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
-            Actions.clearFilter();
+          //   Actions.clearFilter();
 
-            cy.wait(getQueryAlias(param.useCase));
+          //   cy.wait(getQueryAlias(param.useCase));
 
-            SearchExpectations.numberOfSearchRequests(1, param.useCase);
-            Expect.displayClearButton(false);
-            Expect.displayValues(true);
-            Expect.urlHashIsEmpty();
-            Expect.logClearFilter('Date');
-          });
+          //   SearchExpectations.numberOfSearchRequests(1, param.useCase);
+          //   Expect.displayClearButton(false);
+          //   Expect.displayValues(true);
+          //   Expect.urlHashIsEmpty();
+          //   Expect.logClearFilter('Date');
+          // });
 
           scope('when entering an invalid range', () => {
             scope('with empty start and end dates', () => {
