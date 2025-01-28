@@ -26,10 +26,6 @@ export class ResultsPerPageObject {
     );
   }
 
-  get firstResultsPerPageOptionButton(): Locator {
-    return this.allResultsPerPageOptionsButtons.first();
-  }
-
   get selectedResultsPerPageOption(): Locator {
     return this.allResultsPerPageOptionsButtons.filter({
       has: this.page.locator(

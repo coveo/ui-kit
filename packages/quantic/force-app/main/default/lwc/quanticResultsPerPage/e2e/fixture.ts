@@ -26,7 +26,7 @@ type QuanticResultsPerPageE2ESearchFixtures =
     urlHash: string;
   };
 
-type QuanticResultsPerPageE2eInsightFixtures =
+type QuanticResultsPerPageE2EInsightFixtures =
   QuanticResultsPerPageE2ESearchFixtures & {
     insightSetup: InsightSetupObject;
   };
@@ -52,7 +52,7 @@ export const testSearch =
   });
 
 export const testInsight =
-  quanticBase.extend<QuanticResultsPerPageE2eInsightFixtures>({
+  quanticBase.extend<QuanticResultsPerPageE2EInsightFixtures>({
     options: {},
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));

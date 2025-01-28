@@ -188,6 +188,57 @@ describe('c-quantic-results-per-page', () => {
         );
       });
     });
+
+    it('should update the state when the results per page is clicked', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const resultsPerPage = element.shadowRoot.querySelector(
+        selectors.resultsPerPage
+      );
+      expect(resultsPerPage).not.toBeNull();
+
+      const resultsPerPageOptions = Array.from(
+        element.shadowRoot.querySelectorAll(selectors.resultsPerPageOption)
+      );
+
+      resultsPerPageOptions[1].dispatchEvent(
+        new CustomEvent('quantic__select', {
+          detail: defaultChoices[1],
+        })
+      );
+
+      expect(functionsMocks.set).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.set).toHaveBeenCalledWith(defaultChoices[1]);
+    });
+
+    describe('the numberOfResults headless state', () => {
+      const expectedValueSelected = 100;
+      beforeEach(() => {
+        resultsPerPageState = {
+          ...resultsPerPageState,
+          numberOfResults: expectedValueSelected,
+        };
+      });
+
+      test('should reflect the headless state and select the right option', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const resultsPerPage = element.shadowRoot.querySelector(
+          selectors.resultsPerPage
+        );
+        expect(resultsPerPage).not.toBeNull();
+
+        const resultsPerPageOptions = Array.from(
+          element.shadowRoot.querySelectorAll(selectors.resultsPerPageOption)
+        );
+
+        resultsPerPageOptions.forEach((option) => {
+          expect(option.selected).toBe(expectedValueSelected === option.number);
+        });
+      });
+    });
   });
 
   describe('with a custom #choicesDisplayed option', () => {
@@ -195,9 +246,6 @@ describe('c-quantic-results-per-page', () => {
       console.error = jest.fn();
     });
 
-    afterEach(() => {
-      cleanup();
-    });
     it('should properly render with the choices displayed', async () => {
       const customChoices = [100, 250, 500];
       const element = createTestComponent({
@@ -262,10 +310,6 @@ describe('c-quantic-results-per-page', () => {
         ...resultsPerPageState,
         numberOfResults: customInitialChoice,
       };
-    });
-
-    afterEach(() => {
-      cleanup();
     });
 
     it('should properly render with the initial choice selected', async () => {
