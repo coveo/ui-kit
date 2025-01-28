@@ -45,9 +45,7 @@ const getDirectories = (src) => {
   return dirs;
 };
 
-const distDirs = getDirectories(
-  resolvePath('dist/atomic/components/components')
-);
+const distDirs = getDirectories(resolvePath('dist/atomic'));
 
 const inputFiles = distDirs.flatMap((distDir) => {
   return readdirSync(distDir)
@@ -58,13 +56,10 @@ const inputFiles = distDirs.flatMap((distDir) => {
 export default {
   input: inputFiles,
   output: {
-    dir: 'dist/atomic/components/components',
+    dir: 'dist/atomic',
     format: 'esm',
     entryFileNames: ({facadeModuleId}) => {
-      const relativePath = relative(
-        resolvePath('dist/atomic/components/components'),
-        facadeModuleId
-      );
+      const relativePath = relative(resolvePath('dist/atomic'), facadeModuleId);
       return `${relativePath}`;
     },
     chunkFileNames: '[name].js',
@@ -82,5 +77,7 @@ export default {
     externalizeDependenciesPlugin(),
   ],
 
-  external: [/\.tw.css$/],
+  external: [
+    /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/,
+  ],
 };
