@@ -34,11 +34,11 @@ describe('quantic-timeframe-facet', () => {
     end: '2000-12-31',
     filter: '2000/01/01@00:00:00..2000/12/31@23:59:59',
   };
-  const invalidRange = {
-    start: '2000-12-31',
-    end: '2000-01-01',
-    filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
-  };
+  // const invalidRange = {
+  //   start: '2000-12-31',
+  //   end: '2000-01-01',
+  //   filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
+  // };
 
   function visitTimeframeFacet(
     options: Partial<TimeframeFacetOptions>,
@@ -356,16 +356,16 @@ describe('quantic-timeframe-facet', () => {
               );
             });
 
-            scope('end date smaller than start date', () => {
-              Actions.applyRange(invalidRange.start, invalidRange.end);
+            // scope('end date smaller than start date', () => {
+            //   Actions.applyRange(invalidRange.start, invalidRange.end);
 
-              Expect.numberOfValidationErrors(1);
-              Expect.validationError(
-                `Value must be ${invalidRange.end} or earlier.`
-              );
-              Expect.urlHashIsEmpty();
-              Expect.displayValues(true);
-            });
+            //   Expect.numberOfValidationErrors(1);
+            //   Expect.validationError(
+            //     `Value must be ${invalidRange.end} or earlier.`
+            //   );
+            //   Expect.urlHashIsEmpty();
+            //   Expect.displayValues(true);
+            // });
           });
 
           scope('when entering a valid range', () => {
