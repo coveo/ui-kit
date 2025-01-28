@@ -86,6 +86,9 @@
     "ts-debounce": "4.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "16.0.0",
+    "@rollup/plugin-typescript": "12.1.2",
+    "rollup-plugin-polyfill-node": "0.13.0",
     "@axe-core/playwright": "4.10.1",
     "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
@@ -151,6 +154,7 @@
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
     "vite": "5.4.11",
+    "vite-plugin-static-copy": "2.2.0",
     "vitest": "2.1.8",
     "wait-on": "8.0.2"
   },
