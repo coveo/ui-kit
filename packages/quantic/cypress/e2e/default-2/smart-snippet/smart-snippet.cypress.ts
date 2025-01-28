@@ -34,7 +34,7 @@ const examplePermanentId = '123';
 const exampleInlineLinkText = 'Example inline link';
 const exampleInlineLinkUrl = '#';
 const exampleAnswerText = 'Example smart snippet answer';
-const exampleSmartSnippetAnswer = `<div data-testid="smart-snippet__inline-link"><p data-cy="answer-text">${exampleAnswerText}</p><a data-cy="answer-inline-link" href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
+const exampleSmartSnippetAnswer = `<div data-cy="smart-snippet__inline-link"><p data-cy="answer-text">${exampleAnswerText}</p><a data-cy="answer-inline-link" href="${exampleInlineLinkUrl}">${exampleInlineLinkText}</a></div>`;
 const exampleUriHash = 'exampleUriHash';
 const exampleAuthor = 'example author';
 const otherOption = 'other';

@@ -1,13 +1,15 @@
 import {SmartSnippetSuggestionsObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
+import {
+  SearchObjectWithSmartSnippet,
+  RelatedQuestionsData,
+} from '../../../../../../playwright/page-object/searchObjectWithSmartSnippet';
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
-import type {QuestionAnswerData} from './data';
 import smartSnippetSuggestionsData from './data';
 
 const pageUrl = 's/quantic-smart-snippet-suggestions';
@@ -15,9 +17,9 @@ const pageUrl = 's/quantic-smart-snippet-suggestions';
 interface SmartSnippetSuggestionsOptions {}
 
 type QuanticSmartSnippetSuggestionsE2ESearchFixtures = {
-  smartSnippetSuggestionsData: QuestionAnswerData;
+  smartSnippetSuggestionsData: RelatedQuestionsData;
   smartSnippetSuggestions: SmartSnippetSuggestionsObject;
-  search: SearchObject;
+  search: SearchObjectWithSmartSnippet;
   options: Partial<SmartSnippetSuggestionsOptions>;
 };
 
@@ -31,7 +33,7 @@ export const testSearch =
     smartSnippetSuggestionsData,
     options: {},
     search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+      await use(new SearchObjectWithSmartSnippet(page, searchRequestRegex));
     },
     smartSnippetSuggestions: async (
       {page, options, configuration, search, smartSnippetSuggestionsData: data},
@@ -42,7 +44,7 @@ export const testSearch =
       );
 
       await page.goto(pageUrl);
-      await search.mockSearchWithSmartSnippetResponse(data);
+      await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
 
       configuration.configure(options);
       await search.waitForSearchResponse();
@@ -55,7 +57,9 @@ export const testInsight =
     smartSnippetSuggestionsData,
     options: {},
     search: async ({page}, use) => {
-      await use(new SearchObject(page, insightSearchRequestRegex));
+      await use(
+        new SearchObjectWithSmartSnippet(page, insightSearchRequestRegex)
+      );
     },
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));
@@ -76,7 +80,7 @@ export const testInsight =
       );
 
       await page.goto(pageUrl);
-      await search.mockSearchWithSmartSnippetResponse(data);
+      await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
 
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();

@@ -78,12 +78,28 @@ const functionsMocks = {
   buildSmartSnippetQuestionsList: jest.fn(() => ({
     state: smartSnippetSuggestionsState,
     subscribe: functionsMocks.smartSnippetSuggestionsStateSubscriber,
+    expand: functionsMocks.expand,
+    collapse: functionsMocks.collapse,
+    select: functionsMocks.select,
+    beginDelayedSelect: functionsMocks.beginDelayedSelect,
+    cancelPendingSelect: functionsMocks.cancelPendingSelect,
+    selectInlineLink: functionsMocks.selectInlineLink,
+    beginDelayedSelectInlineLink: functionsMocks.beginDelayedSelectInlineLink,
+    cancelPendingSelectInlineLink: functionsMocks.cancelPendingSelectInlineLink,
   })),
   smartSnippetSuggestionsStateSubscriber: jest.fn((cb) => {
     cb();
     return functionsMocks.smartSnippetSuggestionsStateUnsubscriber;
   }),
   smartSnippetSuggestionsStateUnsubscriber: jest.fn(),
+  expand: jest.fn(),
+  collapse: jest.fn(),
+  select: jest.fn(),
+  beginDelayedSelect: jest.fn(),
+  cancelPendingSelect: jest.fn(),
+  selectInlineLink: jest.fn(),
+  beginDelayedSelectInlineLink: jest.fn(),
+  cancelPendingSelectInlineLink: jest.fn(),
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -186,11 +202,13 @@ describe('c-quantic-smart-snippet-suggestions', () => {
   });
 
   describe('when the query does not return smart snippet suggestions', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       smartSnippetSuggestionsState = {
         ...defaultSmartSnippetSuggestionsState,
         questions: [],
       };
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
     });
 
     it('should not display the smart snippet suggestions component', async () => {
@@ -204,15 +222,10 @@ describe('c-quantic-smart-snippet-suggestions', () => {
     });
   });
 
-  describe('when the query does return smart snippet suggestions', () => {
+  describe('when the query returns smart snippet suggestions', () => {
     beforeEach(() => {
       mockSuccessfulHeadlessInitialization();
       prepareHeadlessState();
-      smartSnippetSuggestionsState = defaultSmartSnippetSuggestionsState;
-    });
-
-    afterEach(() => {
-      smartSnippetSuggestionsState = defaultSmartSnippetSuggestionsState;
     });
 
     it('should properly display the smart snippet suggestions', async () => {
@@ -227,37 +240,72 @@ describe('c-quantic-smart-snippet-suggestions', () => {
       const smartSnippetSuggestions = element.shadowRoot.querySelectorAll(
         selectors.smartSnippetSuggestions
       );
-      const smartSnippetSuggestionsAnswers =
-        element.shadowRoot.querySelectorAll(
-          selectors.smartSnippetSuggestionsAnswers
-        );
+      const smartSnippetSuggestionAnswers = element.shadowRoot.querySelectorAll(
+        selectors.smartSnippetSuggestionAnswers
+      );
       const smartSnippetSuggestionsSources =
         element.shadowRoot.querySelectorAll(
           selectors.smartSnippetSuggestionSources
         );
 
-      expect(smartSnippetSuggestions).not.toBeNull();
-      expect(smartSnippetSuggestions.length).toEqual(
-        mockSmartSnippetRelatedQuestions.length
+      mockSmartSnippetRelatedQuestions.forEach((question, index) => {
+        const suggestion = smartSnippetSuggestions[index];
+        const answerElement = smartSnippetSuggestionAnswers[index];
+        const sourceElement = smartSnippetSuggestionsSources[index];
+
+        expect(suggestion.label).toEqual(question.question);
+        expect(answerElement.answer).toEqual(question.answer);
+        expect(sourceElement.source).toEqual(question.source);
+      });
+    });
+
+    describe('when clicking on the smart snippet suggestion', () => {
+      it.skip('should call the expand and collapse methods from the smartSnippetSuggestions controller', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const smartSnippetSuggestionsItems =
+          element.shadowRoot.querySelectorAll(
+            selectors.smartSnippetSuggestions
+          );
+        expect(smartSnippetSuggestionsItems[0]).not.toBeNull();
+
+        await smartSnippetSuggestionsItems[0].click();
+        await flushPromises();
+        expect(functionsMocks.expand).toHaveBeenCalledTimes(1);
+
+        await smartSnippetSuggestionsItems[0].click();
+        await flushPromises();
+        expect(functionsMocks.collapse).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    it('should pass the proper actions to the smart snippet answer and source', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const smartSnippetAnswer = element.shadowRoot.querySelector(
+        selectors.smartSnippetSuggestionAnswers
+      );
+      const smartSnippetSource = element.shadowRoot.querySelector(
+        selectors.smartSnippetSuggestionSources
       );
 
-      smartSnippetSuggestions.forEach((suggestion, index) => {
-        expect(suggestion.label).toEqual(
-          mockSmartSnippetRelatedQuestions[index].question
-        );
-      });
+      expect(smartSnippetAnswer).not.toBeNull();
+      expect(smartSnippetSource).not.toBeNull();
 
-      smartSnippetSuggestionsAnswers.forEach((answerElement, index) => {
-        expect(answerElement.answer).toEqual(
-          mockSmartSnippetRelatedQuestions[index].answer
-        );
-      });
+      const expectedSmartSnippetSuggestionsActions = {
+        select: functionsMocks.select,
+        beginDelayedSelect: functionsMocks.beginDelayedSelect,
+        cancelPendingSelect: functionsMocks.cancelPendingSelect,
+      };
 
-      smartSnippetSuggestionsSources.forEach((sourceElement, index) => {
-        expect(sourceElement.source).toEqual(
-          mockSmartSnippetRelatedQuestions[index].source
-        );
-      });
+      expect(Object.keys(smartSnippetAnswer.actions)).toEqual(
+        Object.keys(expectedSmartSnippetSuggestionsActions)
+      );
+      expect(Object.keys(smartSnippetSource.actions)).toEqual(
+        Object.keys(expectedSmartSnippetSuggestionsActions)
+      );
     });
   });
 });

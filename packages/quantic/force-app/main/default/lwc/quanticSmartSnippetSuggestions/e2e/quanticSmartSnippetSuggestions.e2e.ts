@@ -14,23 +14,29 @@ useCaseTestCases.forEach((useCase) => {
       test('should send the expand and collapse analytics events', async ({
         smartSnippetSuggestions,
       }) => {
-        const smartSnippetSuggestionsHeadingClickPromise =
+        const expandSmartSnippetSuggestionsPromise =
           smartSnippetSuggestions.waitForExpandSmartSnippetSuggestionUaAnalytics();
 
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
-        await smartSnippetSuggestionsHeadingClickPromise;
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
+          0
+        );
+        await expandSmartSnippetSuggestionsPromise;
 
-        const smartSnippetSuggestionsCollapseClickPromise =
+        const collapseSmartSnippetSuggestionsPromise =
           smartSnippetSuggestions.waitForCollapseSmartSnippetSuggestionUaAnalytics();
 
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
-        await smartSnippetSuggestionsCollapseClickPromise;
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
+          0
+        );
+        await collapseSmartSnippetSuggestionsPromise;
       });
     });
 
-    test.describe('when interacting with a suggestion', () => {
+    test.describe('when clicking on elements of the smart snippet suggestion', () => {
       test.beforeEach(async ({smartSnippetSuggestions}) => {
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionHeading();
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
+          0
+        );
       });
 
       test('should send the source title analytics event when the title is clicked', async ({
@@ -39,7 +45,9 @@ useCaseTestCases.forEach((useCase) => {
         const smartSnippetSuggestionsTitleClickPromise =
           smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
 
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionSourceTitle();
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceTitleByIndex(
+          0
+        );
         await smartSnippetSuggestionsTitleClickPromise;
       });
 
@@ -49,7 +57,9 @@ useCaseTestCases.forEach((useCase) => {
         const smartSnippetSuggestionsSourceUriClickPromise =
           smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
 
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionSourceUri();
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceUriByIndex(
+          0
+        );
         await smartSnippetSuggestionsSourceUriClickPromise;
       });
 
@@ -59,7 +69,9 @@ useCaseTestCases.forEach((useCase) => {
         const smartSnippetSuggestionsInlineLinkClickPromise =
           smartSnippetSuggestions.waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics();
 
-        await smartSnippetSuggestions.clickOnFirstSmartSnippetSuggestionInlineLink();
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionInlineLinkByIndex(
+          0
+        );
         await smartSnippetSuggestionsInlineLinkClickPromise;
       });
     });

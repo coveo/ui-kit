@@ -20,31 +20,39 @@ export class SmartSnippetSuggestionsObject {
   }
 
   get smartSnippetSuggestionSourceUri(): Locator {
-    return this.page.locator('[data-testid="smart-snippet__source-uri"]');
+    return this.page.getByTestId('smart-snippet__source-uri');
   }
 
   get smartSnippetSuggestionSourceTitle(): Locator {
-    return this.page.locator('[data-testid="smart-snippet__source-title"]');
+    return this.page.getByTestId('smart-snippet__source-title');
   }
 
   get smartSnippetSuggestionInlineLink(): Locator {
-    return this.page.locator('[data-testid="smart-snippet-answer"] > a');
+    return this.page.getByTestId('smart-snippet-answer').locator('a');
   }
 
-  async clickOnFirstSmartSnippetSuggestionHeading(): Promise<void> {
-    await this.smartSnippetSuggestionHeading.first().click();
+  async clickOnSmartSnippetSuggestionHeadingByIndex(
+    index: number
+  ): Promise<void> {
+    await this.smartSnippetSuggestionHeading.nth(index).click();
   }
 
-  async clickOnFirstSmartSnippetSuggestionSourceUri(): Promise<void> {
-    await this.smartSnippetSuggestionSourceUri.first().click();
+  async clickOnSmartSnippetSuggestionSourceUriByIndex(
+    index: number
+  ): Promise<void> {
+    await this.smartSnippetSuggestionSourceUri.nth(index).click();
   }
 
-  async clickOnFirstSmartSnippetSuggestionSourceTitle(): Promise<void> {
-    await this.smartSnippetSuggestionSourceTitle.first().click();
+  async clickOnSmartSnippetSuggestionSourceTitleByIndex(
+    index: number
+  ): Promise<void> {
+    await this.smartSnippetSuggestionSourceTitle.nth(index).click();
   }
 
-  async clickOnFirstSmartSnippetSuggestionInlineLink(): Promise<void> {
-    await this.smartSnippetSuggestionInlineLink.first().click();
+  async clickOnSmartSnippetSuggestionInlineLinkByIndex(
+    index: number
+  ): Promise<void> {
+    await this.smartSnippetSuggestionInlineLink.nth(index).click();
   }
 
   async waitForExpandSmartSnippetSuggestionUaAnalytics(): Promise<Request> {
