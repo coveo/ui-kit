@@ -31,7 +31,15 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @type {string}
    * @defaultValue `'10,25,50,100'`
    */
-  @api choicesDisplayed = '10,25,50,100';
+  @api
+  get choicesDisplayed() {
+    return this._choicesDisplayed;
+  }
+  set choicesDisplayed(value) {
+    if (this.validateChoicesDisplayed(value)) {
+      this._choicesDisplayed = value;
+    }
+  }
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @api
@@ -65,7 +73,10 @@ export default class QuanticResultsPerPage extends LightningElement {
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {number} */
   _initialChoice;
+  /** @type {string} */
+  _choicesDisplayed = '10,25,50,100';
 
   labels = {
     showNResultsPerPage,
@@ -115,13 +126,25 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this.choicesDisplayed.split(',').map((choice) => {
       const parsedChoice = parseInt(choice, 10);
       if (isNaN(parsedChoice)) {
-        console.error(
-          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
-        );
         this.setInitializationError();
       }
       return parsedChoice;
     });
+  }
+
+  validateChoicesDisplayed(value) {
+    let valid = true;
+    value.split(',').forEach((choice) => {
+      const parsedChoice = parseInt(choice, 10);
+      if (isNaN(parsedChoice)) {
+        console.error(
+          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+        );
+        this.setInitializationError();
+        valid = false;
+      }
+    });
+    return valid;
   }
 
   validateInitialChoice() {
