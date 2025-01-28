@@ -10,7 +10,12 @@ import {
 } from '../product-listing/headless-product-listing.js';
 import {buildSearch, Search} from '../search/headless-search.js';
 
-export type {ProductListingState as ProductListState} from '../product-listing/headless-product-listing.js';
+export type {
+  ProductListing,
+  ProductListingState as ProductListState,
+} from '../product-listing/headless-product-listing.js';
+export type {Search} from '../search/headless-search.js';
+
 export type ProductList = Pick<
   ProductListing | Search,
   'state' | 'subscribe' | 'interactiveProduct' | 'promoteChildToParent'

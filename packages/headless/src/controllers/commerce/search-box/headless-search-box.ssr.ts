@@ -11,6 +11,7 @@ export type {
   SearchBoxState,
   SearchBox,
   SearchBoxProps,
+  CoreSearchBox,
 } from './headless-search-box.js';
 export type {SearchBoxOptions, Suggestion};
 

@@ -9,7 +9,6 @@ export interface LocalizedStringProps {
   count?: number;
 }
 
-// TODO: KIT-3822: add unit tests to this directive
 class LocalizedStringDirective extends Directive {
   private readonly delimitingCharacter = '\u001d'; // Unicode group separator
   private readonly placeholderPrefixCharacter = '\u001a'; // Unicode substitute character

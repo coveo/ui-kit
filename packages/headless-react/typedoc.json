@@ -8,5 +8,6 @@
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "typedoc-POC",
-  "plugin": ["./typedoc/dist/index.js"]
+  "plugin": ["./typedoc/dist/index.js"],
+  "projectDocuments": ["./README.md"]
 }
