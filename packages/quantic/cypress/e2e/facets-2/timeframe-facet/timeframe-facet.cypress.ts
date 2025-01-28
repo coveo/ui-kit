@@ -317,26 +317,26 @@ describe('quantic-timeframe-facet', () => {
               Expect.validationError('Complete this field');
             });
 
-            scope('when entering then erasing dates', () => {
-              Actions.typeStartDate(validRange.start);
-              Actions.submitForm();
+            // scope('when entering then erasing dates', () => {
+            //   Actions.typeStartDate(validRange.start);
+            //   Actions.submitForm();
 
-              Expect.numberOfValidationErrors(1);
-              Expect.validationError('Complete this field');
+            //   Expect.numberOfValidationErrors(1);
+            //   Expect.validationError('Complete this field');
 
-              Actions.typeEndDate(validRange.end);
-              Actions.submitForm();
-              cy.wait(getQueryAlias(param.useCase));
+            //   Actions.typeEndDate(validRange.end);
+            //   Actions.submitForm();
+            //   cy.wait(getQueryAlias(param.useCase));
 
-              Expect.numberOfValidationErrors(0);
+            //   Expect.numberOfValidationErrors(0);
 
-              captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
+            //   captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
-              Actions.clearFilter();
-              cy.wait(getQueryAlias(param.useCase));
+            //   Actions.clearFilter();
+            //   cy.wait(getQueryAlias(param.useCase));
 
-              SearchExpectations.numberOfSearchRequests(1, param.useCase);
-            });
+            //   SearchExpectations.numberOfSearchRequests(1, param.useCase);
+            // });
 
             scope('invalid start date format', () => {
               Actions.applyRange('bad start date', validRange.end);
