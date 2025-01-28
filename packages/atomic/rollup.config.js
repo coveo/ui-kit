@@ -2,7 +2,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import {readdirSync, statSync} from 'fs';
 import {fileURLToPath} from 'node:url';
 import {join, resolve as resolvePath, relative, dirname} from 'path';
-import {generateExternalPackageMappings} from './scripts/externalPackageMappings.js';
+import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const __filename = fileURLToPath(import.meta.url);
