@@ -1,3 +1,7 @@
+## <small>3.2.16 (2025-01-29)</small>
+
+- chore: add tailwind styles support for lit components (#4862) ([6537c36](https://github.com/coveo/ui-kit/commits/6537c36)), closes [#4862](https://github.com/coveo/ui-kit/issues/4862) [/github.com/coveo/ui-kit/pull/4804#issue-2751560151](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/issue-2751560151) [/github.com/coveo/ui-kit/pull/4804#discussion_r1894392106](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/discussion_r1894392106) [#4804](https://github.com/coveo/ui-kit/issues/4804)
+
 ## <small>3.2.15 (2025-01-23)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)

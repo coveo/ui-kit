@@ -1,5 +1,6 @@
-import {AnyAction, type Draft as WritableDraft} from '@reduxjs/toolkit';
+import {type Draft as WritableDraft} from '@reduxjs/toolkit';
 import {createReducer} from '@reduxjs/toolkit';
+import {registerRecentQueries as registerCommerceRecentQueries} from '../commerce/recent-queries/recent-queries-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
   registerRecentQueries,
@@ -17,7 +18,7 @@ export const recentQueriesReducer = createReducer(
       .addCase(registerRecentQueries, handleRegisterQueries)
       .addCase(clearRecentQueries, handleClearRecentQueries)
       .addCase(executeSearch.fulfilled, (state, action) => {
-        const query = action.payload.queryExecuted.trim();
+        const query = action.payload.queryExecuted;
         const results = action.payload.response.results;
         if (!query.length || !results.length) {
           return;
@@ -29,9 +30,13 @@ export const recentQueriesReducer = createReducer(
 
 export function handleRegisterQueries(
   state: WritableDraft<RecentQueriesState>,
-  action: AnyAction
+  action:
+    | ReturnType<typeof registerRecentQueries>
+    | ReturnType<typeof registerCommerceRecentQueries>
 ) {
-  state.queries = action.payload.queries.slice(0, action.payload.maxLength);
+  state.queries = Array.from(
+    new Set(action.payload.queries.map((query) => query.trim().toLowerCase()))
+  ).slice(0, action.payload.maxLength);
   state.maxLength = action.payload.maxLength;
 }
 
@@ -45,7 +50,18 @@ export function handleExecuteSearchFulfilled(
   query: string,
   state: WritableDraft<RecentQueriesState>
 ) {
-  state.queries = state.queries.filter((q) => q !== query);
-  const remaining = state.queries.slice(0, state.maxLength - 1);
-  state.queries = [query, ...remaining];
+  const cleanNewQuery = query.trim().toLowerCase();
+  if (cleanNewQuery === '') {
+    return;
+  }
+
+  const previousQueries = Array.from(
+    new Set(
+      state.queries.filter(
+        (query) => query.trim().toLowerCase() !== cleanNewQuery
+      )
+    )
+  ).slice(0, state.maxLength - 1);
+
+  state.queries = [cleanNewQuery, ...previousQueries];
 }
