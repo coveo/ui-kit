@@ -73,8 +73,4 @@ export default {
     resolve({preserveSymlinks: false}),
     externalizeDependenciesPlugin(),
   ],
-
-  external: [
-    /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/,
-  ],
 };
