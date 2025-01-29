@@ -1,12 +1,9 @@
-import {StringValue} from '@coveo/bueno';
+import {Schema, StringValue} from '@coveo/bueno';
+import {type PlatformEnvironment} from '@coveo/headless';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {
-  extractPlatformUrl,
-  validateOptions,
-  type InitializationOptions,
-} from '../utils/options-utils.js';
-import {processHostedPage} from './hosted-ui.js';
+import {getHostedPage} from './api.js';
+import {processHostedPage} from './process.js';
 
 declare global {
   interface HTMLElementTagNameMap {
@@ -14,11 +11,23 @@ declare global {
   }
 }
 
-interface AtomicHostedUIInitializationOptions extends InitializationOptions {
+export interface InitializationOptions {
   /**
    * The unique identifier of the hosted search page.
    */
   pageId: string;
+  /**
+   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   */
+  organizationId: string;
+  /**
+   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
+   */
+  accessToken: string;
+  /**
+   * The environment of the target Coveo organization. This property is optional and defaults to `prod`.
+   */
+  environment?: PlatformEnvironment;
 }
 
 /**
@@ -27,10 +36,21 @@ interface AtomicHostedUIInitializationOptions extends InitializationOptions {
  */
 @customElement('atomic-hosted-ui')
 export class AtomicHostedUI extends LitElement {
-  private validateOptions(opts: AtomicHostedUIInitializationOptions) {
-    validateOptions(opts, {
-      pageId: new StringValue({required: true, emptyAllowed: false}),
-    });
+  private validateOptions(opts: InitializationOptions) {
+    try {
+      new Schema({
+        organizationId: new StringValue({required: true, emptyAllowed: false}),
+        accessToken: new StringValue({required: true, emptyAllowed: false}),
+        environment: new StringValue<PlatformEnvironment>({
+          required: false,
+          default: 'prod',
+          constrainTo: ['prod', 'hipaa', 'stg', 'dev'],
+        }),
+        pageId: new StringValue({required: true, emptyAllowed: false}),
+      }).validate(opts);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   /**
@@ -39,47 +59,17 @@ export class AtomicHostedUI extends LitElement {
   @property({attribute: 'hosted-type'})
   hostedType: 'trial' | 'builder' | 'code' = 'code';
 
-  public async initialize(options: AtomicHostedUIInitializationOptions) {
+  public async initialize(options: InitializationOptions) {
     this.validateOptions(options);
 
     try {
-      processHostedPage(this, await this.getHostedPage(options));
+      const hostedPage = await getHostedPage(options, this.hostedType);
+      processHostedPage(this, hostedPage);
     } catch (e) {
       console.error(e);
     }
   }
 
-  private async getHostedPage(options: AtomicHostedUIInitializationOptions) {
-    const platformUrl = extractPlatformUrl(options);
-
-    const paths = {
-      builder: {
-        pagePathPrefix: 'searchpage/v1/interfaces',
-        pagePath: '/json',
-      },
-      trial: {
-        pagePathPrefix: 'searchinterfaces',
-        pagePath: '/hostedpage/v1',
-      },
-      code: {
-        pagePathPrefix: 'hostedpages',
-        pagePath: '',
-      },
-    } as const;
-
-    const {pagePathPrefix, pagePath} = paths[this.hostedType];
-
-    const pageResponse = await fetch(
-      `${platformUrl}/rest/organizations/${options.organizationId}/${pagePathPrefix}/${options.pageId}${pagePath}`,
-      {
-        headers: {
-          Authorization: `Bearer ${options.accessToken}`,
-        },
-      }
-    );
-
-    return await pageResponse.json();
-  }
   render() {
     return html`<slot></slot>`;
   }
