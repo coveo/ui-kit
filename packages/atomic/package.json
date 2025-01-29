@@ -150,7 +150,7 @@
     "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
-    "vite": "5.4.11",
+    "vite": "5.4.14",
     "vitest": "2.1.8",
     "wait-on": "8.0.2"
   },
