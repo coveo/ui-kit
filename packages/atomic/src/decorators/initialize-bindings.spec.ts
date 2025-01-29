@@ -1,10 +1,8 @@
-import {buildSearchEngine} from '@coveo/headless';
-import {i18n} from 'i18next';
+import i18next from 'i18next';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {Mock, vi} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
-import {createSearchStore} from '../components/search/atomic-search-interface/store';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
 import {initializeBindings} from './initialize-bindings';
 import {InitializableComponent} from './types';
@@ -13,16 +11,10 @@ vi.mock('../utils/initialization-lit-stencil-common-utils', () => ({
   fetchBindings: vi.fn(),
 }));
 
-const mockBindings = () => ({
-  engine: buildSearchEngine({
-    configuration: {
-      accessToken: 'accessToken',
-      organizationId: 'organizationId',
-    },
-  }),
-  i18n: {on: vi.fn(), off: vi.fn()} as unknown as i18n,
-  store: createSearchStore(),
-});
+const mockBindings = () =>
+  ({
+    i18n: i18next.createInstance(),
+  }) as Bindings;
 
 @customElement('test-element')
 export class TestElement
@@ -38,41 +30,19 @@ export class TestElement
     return html``;
   }
 
-  public initialize() {}
-}
-
-@customElement('test-element-no-initialize')
-export class TestElementNoInitialize extends LitElement {
-  @initializeBindings()
-  @state()
-  public bindings!: Bindings;
-  @state() public error!: Error;
-
-  public render() {
-    return html``;
-  }
+  initialize = vi.fn();
 }
 
 @customElement('test-element-invalid-bindings-property')
-// @ts-expect-error - invalid property
-export class TestElementNoBindings
-  extends LitElement
-  implements InitializableComponent<Bindings>
-{
+export class TestElementNoBindings extends LitElement {
   @initializeBindings()
   @state()
   public invalidProp!: Bindings;
-  @state() public error!: Error;
-
-  public render() {
-    return html``;
-  }
-
-  public initialize() {}
 }
 
 describe('@initializeBindings decorator', () => {
   let element: InitializableComponent<Bindings> & LitElement;
+  let bindings: Bindings;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
   const mockedFetchBindings = fetchBindings as Mock;
 
@@ -90,53 +60,42 @@ describe('@initializeBindings decorator', () => {
   };
 
   beforeEach(async () => {
-    mockedFetchBindings.mockImplementation(() =>
-      Promise.resolve(mockBindings())
-    );
+    bindings = mockBindings();
+    bindings.i18n.init();
+    mockedFetchBindings.mockImplementation(() => Promise.resolve(bindings));
     consoleErrorSpy = vi.spyOn(console, 'error');
   });
 
   afterEach(() => {
-    teardownElement(); // TODO: need to call it manually
+    teardownElement();
     consoleErrorSpy.mockRestore();
-    mockedFetchBindings.mockRestore(); // TODO: not sure
+    mockedFetchBindings.mockRestore();
   });
 
-  // it('should update the state when bindings are present', async () => {
-  //   const bindings = new MockBindings();
-  //   (buildCustomEvent as any).mockImplementation((_, callback) => {
-  //     callback(bindings);
-  //     return new Event('initialize');
-  //   });
-  //   (closest as any).mockReturnValue(true);
+  it('should subscribe to language changes', async () => {
+    vi.spyOn(bindings.i18n, 'on');
+    await setupElement();
+    expect(element.bindings.i18n.on).toHaveBeenCalled();
+  });
 
-  //   element.requestUpdate();
-  //   await element.updateComplete;
+  it('should unsubscribe to language changes when the host is disconnected from the component tree', async () => {
+    vi.spyOn(bindings.i18n, 'off');
+    await setupElement();
+    await teardownElement();
+    expect(element.bindings.i18n.off).toHaveBeenCalled();
+  });
 
-  //   expect(element.shadowRoot?.textContent).toContain('Bindings present');
-  // });
+  it('should request a component update when the language changes', async () => {
+    await setupElement();
+    vi.spyOn(element, 'requestUpdate');
+    element.bindings.i18n.changeLanguage('fr');
+    expect(element.requestUpdate).toHaveBeenCalled();
+  });
 
-  // it('should log an error if the initialize method is not defined', async () => {
-  //   await setupElement('test-element-no-initialize');
-  //   element.requestUpdate();
-  //   await element.updateComplete;
-
-  //   expect(consoleErrorSpy).toHaveBeenCalledWith(
-  //     'ControllerState: The "initialize" method has to be defined and instantiate a controller for the property controller',
-  //     element
-  //   );
-  // });
-
-  // it('should log an error if bindings are not instantiated in the initialize method', async () => {
-  //   await setupElement('test-element-no-bindings');
-  //   element.requestUpdate();
-  //   await element.updateComplete;
-
-  //   expect(consoleErrorSpy).toHaveBeenCalledWith(
-  //     'ControllerState: The "initialize" method has to be defined and instantiate a controller for the property controller',
-  //     element
-  //   );
-  // });
+  it('should call the initialize method when bindings are present', async () => {
+    await setupElement();
+    expect(element.initialize).toHaveBeenCalled();
+  });
 
   it('should log an error when using the decorator with a property other than bindings ', async () => {
     await setupElement<TestElementNoBindings>(
@@ -153,12 +112,6 @@ describe('@initializeBindings decorator', () => {
     mockedFetchBindings.mockRejectedValue(new Error('test-element'));
     await setupElement();
 
-    // element.requestUpdate();
-    // await element.updateComplete;
-
     expect(element.error).toBeInstanceOf(Error);
   });
 });
-
-// describe('#fetchBindings method', () => {
-// })
