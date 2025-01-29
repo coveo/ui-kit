@@ -49,7 +49,7 @@ const setSuggestions = (count: number) => () => {
 const setRecentQueries = (count: number) => () => {
   new SafeStorage().setJSON(
     StorageItems.RECENT_QUERIES,
-    Array.from({length: count}, (_, i) => `Recent query ${i}`)
+    Array.from({length: count}, (_, i) => `recent query ${i}`)
   );
 };
 
@@ -349,11 +349,11 @@ describe('Search Box Test Suites', () => {
         beforeEach(() => {
           setupWithRecentQueries();
           SearchBoxSelectors.textArea().focus();
-          SearchBoxSelectors.querySuggestion('Recent query 1').click();
+          SearchBoxSelectors.querySuggestion('recent query 1').click();
         });
 
         SearchBoxAssertions.assertFocusSearchBox();
-        SearchBoxAssertions.assertHasText('Recent query 1');
+        SearchBoxAssertions.assertHasText('recent query 1');
       });
 
       describe('after focusing a suggestion with the keyboard', () => {
@@ -368,11 +368,11 @@ describe('Search Box Test Suites', () => {
         });
 
         it('has recent query', () => {
-          SearchBoxAssertions.assertHasText('Recent query 1');
+          SearchBoxAssertions.assertHasText('recent query 1');
         });
 
         it('should always have one active suggestion at a time', () => {
-          SearchBoxSelectors.querySuggestion('Recent query 2').trigger(
+          SearchBoxSelectors.querySuggestion('recent query 2').trigger(
             'mouseover'
           );
 
@@ -383,7 +383,7 @@ describe('Search Box Test Suites', () => {
 
         it('still has recent query after pressing the search button', () => {
           SearchBoxSelectors.submitButton().click();
-          SearchBoxAssertions.assertHasText('Recent query 1');
+          SearchBoxAssertions.assertHasText('recent query 1');
         });
       });
 
@@ -395,7 +395,7 @@ describe('Search Box Test Suites', () => {
         });
 
         it('should submit what is in the search box regardless of the mouse position', () => {
-          SearchBoxSelectors.querySuggestion('Recent query 1').trigger(
+          SearchBoxSelectors.querySuggestion('recent query 1').trigger(
             'mouseover'
           );
           SearchBoxSelectors.submitButton().click();
