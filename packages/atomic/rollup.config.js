@@ -1,14 +1,11 @@
 import resolve from '@rollup/plugin-node-resolve';
 import {readdirSync, statSync} from 'fs';
-import {fileURLToPath} from 'node:url';
-import {join, resolve as resolvePath, relative, dirname} from 'path';
+import {join, resolve as resolvePath, relative} from 'path';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
-const packageMappings = generateExternalPackageMappings(__dirname);
+const packageMappings = generateExternalPackageMappings(import.meta.dirname);
 
 const externalizeDependenciesPlugin = () => {
   return {
