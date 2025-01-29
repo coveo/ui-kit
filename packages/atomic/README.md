@@ -142,12 +142,22 @@ To generate a new component, use the following command:
 npx nx run atomic:generate-component --name=<component-name> --output=<path-to-output-directory>
 ```
 
-For example, to generate a component named `atomic-ball` under the path `src/components/search`, run:
+The `output` argument is optional. If not provided, it will default to `src/components/commerce`.
+
+For example, to generate a component named `atomic-ball`, run:
+
+```bash
+npx nx run atomic:generate-component --name=ball
+```
+
+This will create the necessary component files under the default path `src/components/commerce/atomic-ball`.
+
+If you'd like to specify a different path, you can use the `--output` flag. For example, to generate the component under `src/components/search`, run:
 
 ```bash
 npx nx run atomic:generate-component --name=ball --output=src/components/search
 ```
 
-You can also use --name=atomic-ball if you'd like. The script will automatically add the "atomic" prefix if necessary.
+You can also use `--name=atomic-ball` if you'd like, but the script will automatically add the "atomic" prefix if necessary.
 
-This will create the necessary component files under the `src/components/search/atomic-ball` directory.
+This will create the component in the specified directory (`src/components/search/atomic-ball` in this case), or use the default `src/components/commerce/atomic-ball` if no `output` is provided.
