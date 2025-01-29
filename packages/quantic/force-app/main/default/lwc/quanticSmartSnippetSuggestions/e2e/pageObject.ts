@@ -31,56 +31,77 @@ export class SmartSnippetSuggestionsObject {
     return this.page.getByTestId('smart-snippet-answer').locator('a');
   }
 
-  async clickOnSmartSnippetSuggestionHeadingByIndex(
-    index: number
-  ): Promise<void> {
+  async clickOnSmartSnippetSuggestionHeading(index: number): Promise<void> {
     await this.smartSnippetSuggestionHeading.nth(index).click();
   }
 
-  async clickOnSmartSnippetSuggestionSourceUriByIndex(
-    index: number
-  ): Promise<void> {
+  async clickOnSmartSnippetSuggestionSourceUri(index: number): Promise<void> {
     await this.smartSnippetSuggestionSourceUri.nth(index).click();
   }
 
-  async clickOnSmartSnippetSuggestionSourceTitleByIndex(
-    index: number
-  ): Promise<void> {
+  async clickOnSmartSnippetSuggestionSourceTitle(index: number): Promise<void> {
     await this.smartSnippetSuggestionSourceTitle.nth(index).click();
   }
 
-  async clickOnSmartSnippetSuggestionInlineLinkByIndex(
-    index: number
-  ): Promise<void> {
+  async clickOnSmartSnippetSuggestionInlineLink(index: number): Promise<void> {
     await this.smartSnippetSuggestionInlineLink.nth(index).click();
   }
 
-  async waitForExpandSmartSnippetSuggestionUaAnalytics(): Promise<Request> {
+  async waitForExpandSmartSnippetSuggestionUaAnalytics(
+    expectedFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForSmartSnippetSuggestionsCustomUaAnalytics(
-      'expandSmartSnippetSuggestion'
+      'expandSmartSnippetSuggestion',
+      (customData: Record<string, any>) => {
+        return Object.keys(expectedFields).every(
+          (key) => customData?.[key] === expectedFields[key]
+        );
+      }
     );
   }
 
-  async waitForCollapseSmartSnippetSuggestionUaAnalytics(): Promise<Request> {
+  async waitForCollapseSmartSnippetSuggestionUaAnalytics(
+    expectedFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForSmartSnippetSuggestionsCustomUaAnalytics(
-      'collapseSmartSnippetSuggestion'
+      'collapseSmartSnippetSuggestion',
+      (customData: Record<string, any>) => {
+        return Object.keys(expectedFields).every(
+          (key) => customData?.[key] === expectedFields[key]
+        );
+      }
     );
   }
 
-  async waitForSmartSnippetSuggestionSourceClickUaAnalytics(): Promise<Request> {
+  async waitForSmartSnippetSuggestionSourceClickUaAnalytics(
+    expectedCustomFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForSmartSnippetSuggestionsClickUaAnalytics(
-      'openSmartSnippetSuggestionSource'
+      'openSmartSnippetSuggestionSource',
+      (customData: Record<string, any>) => {
+        return Object.keys(expectedCustomFields).every(
+          (key) => customData?.[key] === expectedCustomFields[key]
+        );
+      }
     );
   }
 
-  async waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics(): Promise<Request> {
+  async waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics(
+    expectedCustomFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForSmartSnippetSuggestionsClickUaAnalytics(
-      'openSmartSnippetSuggestionInlineLink'
+      'openSmartSnippetSuggestionInlineLink',
+      (customData: Record<string, any>) => {
+        return Object.keys(expectedCustomFields).every(
+          (key) => customData?.[key] === expectedCustomFields[key]
+        );
+      }
     );
   }
 
   async waitForSmartSnippetSuggestionsClickUaAnalytics(
-    actionCause: string
+    actionCause: string,
+    customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaClickEvent(request)) {
@@ -91,7 +112,18 @@ export class SmartSnippetSuggestionsObject {
           actionCause,
         };
 
-        return requestData?.actionCause === expectedFields.actionCause;
+        const matchesExpectedFields = Object.keys(expectedFields).every(
+          (key) => requestData?.[key] === expectedFields[key]
+        );
+
+        const customData = requestData?.customData;
+
+        return (
+          matchesExpectedFields &&
+          (customChecker
+            ? customChecker(requestData.customData, customData)
+            : true)
+        );
       }
       return false;
     });
@@ -99,7 +131,8 @@ export class SmartSnippetSuggestionsObject {
   }
 
   async waitForSmartSnippetSuggestionsCustomUaAnalytics(
-    eventValue: string
+    eventValue: string,
+    customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaCustomEvent(request)) {
@@ -113,11 +146,15 @@ export class SmartSnippetSuggestionsObject {
           (key) => requestBody?.[key] === expectedFields[key]
         );
 
-        return matchesExpectedFields;
+        const customData = requestBody?.customData;
+
+        return (
+          matchesExpectedFields &&
+          (customChecker ? customChecker(customData) : true)
+        );
       }
       return false;
     });
-
     return uaRequest;
   }
 }

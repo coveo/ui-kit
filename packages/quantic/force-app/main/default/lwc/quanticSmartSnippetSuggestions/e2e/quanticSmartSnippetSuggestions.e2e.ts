@@ -1,5 +1,6 @@
 import {testSearch, testInsight} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
+import smartSnippetSuggestionsData from './data';
 
 const fixtures = {
   search: testSearch,
@@ -10,23 +11,41 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic smart snippet suggestions ${useCase.label}`, () => {
+    test.use({
+      smartSnippetSuggestionsData,
+    });
     test.describe('when expanding and collapsing the smart snippet suggestions', () => {
       test('should send the expand and collapse analytics events', async ({
         smartSnippetSuggestions,
       }) => {
+        const smartSnippetSuggestionIndex = 0;
+        const {question, answerSnippet} =
+          smartSnippetSuggestionsData.relatedQuestions[
+            smartSnippetSuggestionIndex
+          ];
         const expandSmartSnippetSuggestionsPromise =
-          smartSnippetSuggestions.waitForExpandSmartSnippetSuggestionUaAnalytics();
+          smartSnippetSuggestions.waitForExpandSmartSnippetSuggestionUaAnalytics(
+            {
+              question,
+              answerSnippet,
+            }
+          );
 
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
-          0
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeading(
+          smartSnippetSuggestionIndex
         );
         await expandSmartSnippetSuggestionsPromise;
 
         const collapseSmartSnippetSuggestionsPromise =
-          smartSnippetSuggestions.waitForCollapseSmartSnippetSuggestionUaAnalytics();
+          smartSnippetSuggestions.waitForCollapseSmartSnippetSuggestionUaAnalytics(
+            {
+              question,
+              answerSnippet,
+            }
+          );
 
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
-          0
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeading(
+          smartSnippetSuggestionIndex
         );
         await collapseSmartSnippetSuggestionsPromise;
       });
@@ -34,19 +53,27 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when clicking on elements of the smart snippet suggestion', () => {
       test.beforeEach(async ({smartSnippetSuggestions}) => {
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeadingByIndex(
-          0
-        );
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionHeading(0);
       });
 
       test('should send the source title analytics event when the title is clicked', async ({
         smartSnippetSuggestions,
       }) => {
+        const smartSnippetSuggestionIndex = 0;
+        const {question, answerSnippet} =
+          smartSnippetSuggestionsData.relatedQuestions[
+            smartSnippetSuggestionIndex
+          ];
         const smartSnippetSuggestionsTitleClickPromise =
-          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics(
+            {
+              question,
+              answerSnippet,
+            }
+          );
 
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceTitleByIndex(
-          0
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceTitle(
+          smartSnippetSuggestionIndex
         );
         await smartSnippetSuggestionsTitleClickPromise;
       });
@@ -54,11 +81,22 @@ useCaseTestCases.forEach((useCase) => {
       test('should send the source uri analytics event when the uri is clicked', async ({
         smartSnippetSuggestions,
       }) => {
-        const smartSnippetSuggestionsSourceUriClickPromise =
-          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics();
+        const smartSnippetSuggestionIndex = 0;
+        const {question, answerSnippet} =
+          smartSnippetSuggestionsData.relatedQuestions[
+            smartSnippetSuggestionIndex
+          ];
 
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceUriByIndex(
-          0
+        const smartSnippetSuggestionsSourceUriClickPromise =
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionSourceClickUaAnalytics(
+            {
+              question,
+              answerSnippet,
+            }
+          );
+
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionSourceUri(
+          smartSnippetSuggestionIndex
         );
         await smartSnippetSuggestionsSourceUriClickPromise;
       });
@@ -66,11 +104,21 @@ useCaseTestCases.forEach((useCase) => {
       test('should send the inline link analytics event when an inline link is clicked', async ({
         smartSnippetSuggestions,
       }) => {
+        const smartSnippetSuggestionIndex = 0;
+        const {question, answerSnippet} =
+          smartSnippetSuggestionsData.relatedQuestions[
+            smartSnippetSuggestionIndex
+          ];
         const smartSnippetSuggestionsInlineLinkClickPromise =
-          smartSnippetSuggestions.waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics();
+          smartSnippetSuggestions.waitForSmartSnippetSuggestionInlineLinkClickUaAnalytics(
+            {
+              question,
+              answerSnippet,
+            }
+          );
 
-        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionInlineLinkByIndex(
-          0
+        await smartSnippetSuggestions.clickOnSmartSnippetSuggestionInlineLink(
+          smartSnippetSuggestionIndex
         );
         await smartSnippetSuggestionsInlineLinkClickPromise;
       });

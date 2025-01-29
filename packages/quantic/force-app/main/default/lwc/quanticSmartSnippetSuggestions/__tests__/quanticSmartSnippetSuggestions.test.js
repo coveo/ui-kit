@@ -33,6 +33,7 @@ const selectors = {
   smartSnippetSuggestions: '[data-testid="smart-snippet-suggestion"]',
   smartSnippetSuggestionAnswers: 'c-quantic-smart-snippet-answer',
   smartSnippetSuggestionSources: 'c-quantic-smart-snippet-source',
+  smartSnippetAccordionElement: 'lightning-accordion',
 };
 
 const mockSmartSnippetSource = {
@@ -260,9 +261,17 @@ describe('c-quantic-smart-snippet-suggestions', () => {
     });
 
     describe('when clicking on the smart snippet suggestion', () => {
-      it.skip('should call the expand and collapse methods from the smartSnippetSuggestions controller', async () => {
+      it('should call the expand and collapse methods from the smartSnippetSuggestions controller', async () => {
         const element = createTestComponent();
         await flushPromises();
+
+        const smartSnippetAccordionElement = element.shadowRoot.querySelector(
+          selectors.smartSnippetAccordionElement
+        );
+        expect(smartSnippetAccordionElement).not.toBeNull();
+        smartSnippetAccordionElement.activeSectionName = [
+          mockSmartSnippetRelatedQuestions[0].question,
+        ];
 
         const smartSnippetSuggestionsItems =
           element.shadowRoot.querySelectorAll(
@@ -272,11 +281,20 @@ describe('c-quantic-smart-snippet-suggestions', () => {
 
         await smartSnippetSuggestionsItems[0].click();
         await flushPromises();
-        expect(functionsMocks.expand).toHaveBeenCalledTimes(1);
 
+        expect(functionsMocks.expand).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.expand).toHaveBeenCalledWith(
+          mockSmartSnippetRelatedQuestions[0].questionAnswerId
+        );
+
+        smartSnippetAccordionElement.activeSectionName = [];
         await smartSnippetSuggestionsItems[0].click();
         await flushPromises();
+
         expect(functionsMocks.collapse).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.collapse).toHaveBeenCalledWith(
+          mockSmartSnippetRelatedQuestions[0].questionAnswerId
+        );
       });
     });
 
