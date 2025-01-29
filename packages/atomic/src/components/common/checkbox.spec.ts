@@ -111,7 +111,7 @@ describe('checkbox', () => {
     expect(button.getAttribute('aria-current')).toBe('page');
   });
 
-  it('should call onMouseDown when the checkbox is mousedown', async () => {
+  it('should call onMouseDown when the mousedown event is fired on the checkbox', async () => {
     const onMouseDown = vi.fn();
     const props = {
       onMouseDown,
