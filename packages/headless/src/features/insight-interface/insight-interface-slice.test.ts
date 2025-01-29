@@ -116,6 +116,7 @@ describe('insight interface slice', () => {
               },
             },
           },
+          answerConfigId: '123',
         },
       },
     };

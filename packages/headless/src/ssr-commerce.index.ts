@@ -196,6 +196,8 @@ export {defineParameterManager} from './controllers/commerce/core/parameter-mana
 export type {
   ProductList,
   ProductListState,
+  ProductListing,
+  Search,
 } from './controllers/commerce/product-list/headless-product-list.ssr.js';
 export {defineProductList} from './controllers/commerce/product-list/headless-product-list.ssr.js';
 
@@ -205,6 +207,7 @@ export {defineProductView} from './controllers/commerce/product-view/headless-pr
 export type {
   RecommendationsState,
   Recommendations,
+  RecommendationsDefinition,
 } from './controllers/commerce/recommendations/headless-recommendations.ssr.js';
 export {defineRecommendations} from './controllers/commerce/recommendations/headless-recommendations.ssr.js';
 
@@ -237,6 +240,7 @@ export type {
   SearchBoxState,
   Suggestion,
   SearchBoxDefinition,
+  CoreSearchBox,
 } from './controllers/commerce/search-box/headless-search-box.ssr.js';
 export {defineSearchBox} from './controllers/commerce/search-box/headless-search-box.ssr.js';
 
@@ -321,6 +325,12 @@ export type {
   InstantProductsDefinition,
 } from './controllers/commerce/instant-products/headless-instant-products.ssr.js';
 export {defineInstantProducts} from './controllers/commerce/instant-products/headless-instant-products.ssr.js';
+
+export type {
+  InteractiveProduct,
+  InteractiveProductOptions,
+  InteractiveProductProps,
+} from './controllers/commerce/core/interactive-product/headless-core-interactive-product.js';
 // TODO: KIT-3391 - export other SSR commerce controllers
 
 //#endregion
