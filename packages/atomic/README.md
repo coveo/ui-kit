@@ -65,16 +65,6 @@ To run all the test in Firefox:
 npm run e2e:firefox
 ```
 
-### Separate test for Hosted Search Page
-
-To test the current Atomic build against the hosted search pages for Trials, use the following commands:
-
-```sh
-npm run e2e:hsp:watch
-npm run e2e:hsp
-npm run e2e:hsp:firefox
-```
-
 ## Utilities
 
 ### Stencil decorators
@@ -143,3 +133,21 @@ export class AtomicResultComponent {
   }
 }
 ```
+
+## Generate Component Command
+
+To generate a new component, use the following command:
+
+```bash
+npx nx run atomic:generate-component --name=<component-name> --output=<path-to-output-directory>
+```
+
+For example, to generate a component named `atomic-ball` under the path `src/components/search`, run:
+
+```bash
+npx nx run atomic:generate-component --name=ball --output=src/components/search
+```
+
+You can also use --name=atomic-ball if you'd like. The script will automatically add the "atomic" prefix if necessary.
+
+This will create the necessary component files under the `src/components/search/atomic-ball` directory.

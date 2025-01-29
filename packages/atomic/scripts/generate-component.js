@@ -67,6 +67,7 @@ async function generateFiles(name, outputDir) {
 
 const [componentName, outputDir] = process.argv.slice(2);
 
+// Ensure the component name is prefixed with 'atomic-' if it's not already there
 const normalizedComponentName = componentName.startsWith('atomic-')
   ? componentName
   : `atomic-${componentName}`;
