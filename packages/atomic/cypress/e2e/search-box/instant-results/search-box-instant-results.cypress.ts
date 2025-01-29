@@ -43,7 +43,7 @@ const setInstantResults = (count: number) => (fixture: TestFixture) => {
 const setRecentQueries = (count: number) => () => {
   new SafeStorage().setJSON(
     StorageItems.RECENT_QUERIES,
-    Array.from({length: count}, (_, i) => `Recent query ${i}`)
+    Array.from({length: count}, (_, i) => `recent query ${i}`)
   );
 };
 
@@ -165,7 +165,7 @@ describe('Instant Results Test Suites', () => {
     );
 
     SearchBoxAssertions.assertSuggestionIsSelectedWithoutIt(0);
-    SearchBoxAssertions.assertHasTextWithoutIt('Recent query 0');
+    SearchBoxAssertions.assertHasTextWithoutIt('recent query 0');
 
     cy.log('when navigating to first suggestion and back with up arrow');
     SearchBoxSelectors.textArea().type(`${downKeys(3)}{upArrow}`, delay());
@@ -202,7 +202,7 @@ describe('Instant Results Test Suites', () => {
 
     SearchBoxAssertions.assertNoSuggestionIsSelected();
 
-    SearchBoxAssertions.assertHasTextWithoutIt('Recent query ');
+    SearchBoxAssertions.assertHasTextWithoutIt('recent query ');
 
     cy.wait(1000);
     SearchBoxSelectors.textArea().type(

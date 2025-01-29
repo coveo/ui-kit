@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.12",
+  "version": "3.0.13",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -71,8 +71,7 @@
     "rimraf": "6.0.1",
     "semver": "7.6.3",
     "typescript": "5.5.4",
-    "vite": "5.4.11",
-    "@vitest/browser": "2.1.8"
+    "vite": "5.4.14"
   },
   "overrides": {
     "@coveo/release": {

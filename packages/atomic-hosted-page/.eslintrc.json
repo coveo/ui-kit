@@ -1,5 +1,3 @@
 {
-  "ignorePatterns": [
-    "loader/**/*" // Generated files
-  ]
+  "ignorePatterns": ["loader/**/*", "cdn/**/*", "dist/**/*"]
 }
