@@ -22,6 +22,11 @@ import {
   ReactEngineDefinition,
 } from './types.js';
 
+/**
+ * A React engine definition that includes context providers for static and hydrated states.
+ *
+ * @group Engine
+ *  */
 export type ReactCommerceEngineDefinition<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
@@ -38,11 +43,11 @@ export function createSingletonContext<
 }
 
 /**
+ * Returns engine and controller hooks, and context providers.
  *
- * Returns controller hooks as well as SSR and CSR context providers that can be used to interact with a Commerce engine
- *  on the server and client side respectively.
+ * See [Define the commerce engine and controllers](docs.coveo.com/en/obif0156#define-the-commerce-engine-and-controllers).
  *
- * @group React
+ * @group Engine
  */
 export function defineCommerceEngine<
   TControllers extends ControllerDefinitionsMap<Controller>,

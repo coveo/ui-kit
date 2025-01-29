@@ -15,7 +15,7 @@ import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import tailwindNesting from 'tailwindcss/nesting';
-import {generateExternalPackageMappings} from './scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
 const isProduction = process.env.BUILD === 'production';

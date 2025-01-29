@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.16.0",
+  "version": "3.17.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.3",
+    "@coveo/headless": "3.14.0",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.25.6",
     "dayjs": "1.11.13",
@@ -128,12 +128,15 @@
     "jest-cli": "29.7.0",
     "jest-environment-node": "29.7.0",
     "jest-localstorage-mock": "2.4.26",
+    "lightningcss": "1.29.1",
     "lit-html": "3.2.1",
     "local-web-server": "5.4.0",
     "natural-orderby": "5.0.0",
     "playwright": "1.49.1",
+    "postcss": "8.5.1",
     "postcss-focus-visible": "10.0.1",
     "postcss-import": "16.1.0",
+    "postcss-load-config": "6.0.1",
     "postcss-map": "0.11.0",
     "postcss-mixins": "11.0.3",
     "postcss-nested": "7.0.2",
@@ -144,6 +147,7 @@
     "shadow-dom-testing-library": "1.11.3",
     "storybook": "8.1.2",
     "tailwindcss": "3.4.17",
+    "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",
     "typescript": "5.5.4",
@@ -153,7 +157,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.3"
+    "@coveo/headless": "3.14.0"
   },
   "license": "Apache-2.0",
   "engines": {

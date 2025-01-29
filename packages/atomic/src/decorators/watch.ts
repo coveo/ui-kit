@@ -39,7 +39,6 @@ interface WatchOptions {
  * handlePropChange(oldValue, newValue) {
  *   ...
  * }
- * TODO: KIT-3822: add unit tests to this decorator
  * This decorator was adapted from the Shoelace library.:
  * https://github.com/shoelace-style/shoelace/blob/next/src/internal/watch.ts
  */
