@@ -34,11 +34,11 @@ describe('quantic-timeframe-facet', () => {
     end: '2000-12-31',
     filter: '2000/01/01@00:00:00..2000/12/31@23:59:59',
   };
-  // const invalidRange = {
-  //   start: '2000-12-31',
-  //   end: '2000-01-01',
-  //   filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
-  // };
+  const invalidRange = {
+    start: '2000-12-31',
+    end: '2000-01-01',
+    filter: '2000/12/31@00:00:00..2000/01/01@23:59:59',
+  };
 
   function visitTimeframeFacet(
     options: Partial<TimeframeFacetOptions>,
@@ -277,37 +277,37 @@ describe('quantic-timeframe-facet', () => {
             Actions.expand();
           });
 
-          // scope('when specifying a valid range', () => {
-          //   Actions.applyRange(validRange.start, validRange.end);
+          scope('when specifying a valid range', () => {
+            Actions.applyRange(validRange.start, validRange.end);
 
-          //   cy.wait(getQueryAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
-          //   if (param.useCase === useCaseEnum.search) {
-          //     Expect.urlHashContains(
-          //       'Date_input',
-          //       '2000/01/01@00:00:00...2000/12/31@23:59:59'
-          //     );
-          //   }
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains(
+                'Date_input',
+                '2000/01/01@00:00:00...2000/12/31@23:59:59'
+              );
+            }
 
-          //   Expect.logSelectedValue('Date', validRange.filter);
+            Expect.logSelectedValue('Date', validRange.filter);
 
-          //   Expect.displayValues(false);
-          //   Expect.displayClearButton(true);
-          // });
+            Expect.displayValues(false);
+            Expect.displayClearButton(true);
+          });
 
-          // scope('when clearing filter', () => {
-          //   captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
+          scope('when clearing filter', () => {
+            captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
-          //   Actions.clearFilter();
+            Actions.clearFilter();
 
-          //   cy.wait(getQueryAlias(param.useCase));
+            cy.wait(getQueryAlias(param.useCase));
 
-          //   SearchExpectations.numberOfSearchRequests(1, param.useCase);
-          //   Expect.displayClearButton(false);
-          //   Expect.displayValues(true);
-          //   Expect.urlHashIsEmpty();
-          //   Expect.logClearFilter('Date');
-          // });
+            SearchExpectations.numberOfSearchRequests(1, param.useCase);
+            Expect.displayClearButton(false);
+            Expect.displayValues(true);
+            Expect.urlHashIsEmpty();
+            Expect.logClearFilter('Date');
+          });
 
           scope('when entering an invalid range', () => {
             scope('with empty start and end dates', () => {
@@ -317,35 +317,35 @@ describe('quantic-timeframe-facet', () => {
               Expect.validationError('Complete this field');
             });
 
-            // scope('when entering then erasing dates', () => {
-            //   Actions.typeStartDate(validRange.start);
-            //   Actions.submitForm();
+            scope('when entering then erasing dates', () => {
+              Actions.typeStartDate(validRange.start);
+              Actions.submitForm();
 
-            //   Expect.numberOfValidationErrors(1);
-            //   Expect.validationError('Complete this field');
+              Expect.numberOfValidationErrors(1);
+              Expect.validationError('Complete this field');
 
-            //   Actions.typeEndDate(validRange.end);
-            //   Actions.submitForm();
-            //   cy.wait(getQueryAlias(param.useCase));
+              Actions.typeEndDate(validRange.end);
+              Actions.submitForm();
+              cy.wait(getQueryAlias(param.useCase));
 
-            //   Expect.numberOfValidationErrors(0);
+              Expect.numberOfValidationErrors(0);
 
-            //   captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
+              captureBaselineNumberOfRequests(getQueryAlias(param.useCase));
 
-            //   Actions.clearFilter();
-            //   cy.wait(getQueryAlias(param.useCase));
+              Actions.clearFilter();
+              cy.wait(getQueryAlias(param.useCase));
 
-            //   SearchExpectations.numberOfSearchRequests(1, param.useCase);
-            // });
+              SearchExpectations.numberOfSearchRequests(1, param.useCase);
+            });
 
-            // scope('invalid start date format', () => {
-            //   Actions.applyRange('bad start date', validRange.end);
+            scope('invalid start date format', () => {
+              Actions.applyRange('bad start date', validRange.end);
 
-            //   Expect.numberOfValidationErrors(1);
-            //   Expect.validationError(
-            //     'Your entry does not match the allowed format'
-            //   );
-            // });
+              Expect.numberOfValidationErrors(1);
+              Expect.validationError(
+                'Your entry does not match the allowed format'
+              );
+            });
 
             scope('invalid end date format', () => {
               Actions.applyRange(validRange.start, 'bad end date');
@@ -356,45 +356,45 @@ describe('quantic-timeframe-facet', () => {
               );
             });
 
-            // scope('end date smaller than start date', () => {
-            //   Actions.applyRange(invalidRange.start, invalidRange.end);
+            scope('end date smaller than start date', () => {
+              Actions.applyRange(invalidRange.start, invalidRange.end);
 
-            //   Expect.numberOfValidationErrors(1);
-            //   Expect.validationError(
-            //     `Value must be ${invalidRange.end} or earlier.`
-            //   );
-            //   Expect.urlHashIsEmpty();
-            //   Expect.displayValues(true);
-            // });
+              Expect.numberOfValidationErrors(1);
+              Expect.validationError(
+                `Value must be ${invalidRange.end} or earlier.`
+              );
+              Expect.urlHashIsEmpty();
+              Expect.displayValues(true);
+            });
           });
 
-          // scope('when entering a valid range', () => {
-          //   Actions.applyRange(validRange.start, validRange.end);
+          scope('when entering a valid range', () => {
+            Actions.applyRange(validRange.start, validRange.end);
 
-          //   Expect.numberOfValidationErrors(0);
-          //   if (param.useCase === useCaseEnum.search) {
-          //     Expect.urlHashContains(
-          //       'Date_input',
-          //       '2000/01/01@00:00:00...2000/12/31@23:59:59'
-          //     );
-          //   }
-          //   Expect.displayClearButton(true);
-          //   Expect.displayValues(false);
+            Expect.numberOfValidationErrors(0);
+            if (param.useCase === useCaseEnum.search) {
+              Expect.urlHashContains(
+                'Date_input',
+                '2000/01/01@00:00:00...2000/12/31@23:59:59'
+              );
+            }
+            Expect.displayClearButton(true);
+            Expect.displayValues(false);
 
-          //   scope(
-          //     'submitting the range form again should use the same range',
-          //     () => {
-          //       Actions.submitForm();
+            scope(
+              'submitting the range form again should use the same range',
+              () => {
+                Actions.submitForm();
 
-          //       if (param.useCase === useCaseEnum.search) {
-          //         Expect.urlHashContains(
-          //           'Date_input',
-          //           '2000/01/01@00:00:00...2000/12/31@23:59:59'
-          //         );
-          //       }
-          //     }
-          //   );
-          // });
+                if (param.useCase === useCaseEnum.search) {
+                  Expect.urlHashContains(
+                    'Date_input',
+                    '2000/01/01@00:00:00...2000/12/31@23:59:59'
+                  );
+                }
+              }
+            );
+          });
         });
       });
 
