@@ -31,14 +31,28 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @type {string}
    * @defaultValue `'10,25,50,100'`
    */
-  @api choicesDisplayed = '10,25,50,100';
+  @api
+  get choicesDisplayed() {
+    return this._choicesDisplayed;
+  }
+  set choicesDisplayed(value) {
+    if (this.validateChoicesDisplayed(value)) {
+      this._choicesDisplayed = value;
+    }
+  }
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    * @api
    * @type {number}
-   * @defaultValue `10`
+   * @defaultValue `the first value in 'choicesDisplayed'`
    */
-  @api initialChoice = 10;
+  @api
+  get initialChoice() {
+    return this._initialChoice;
+  }
+  set initialChoice(value) {
+    this._initialChoice = value;
+  }
 
   /** @type {boolean}*/
   @track hasResults;
@@ -59,12 +73,21 @@ export default class QuanticResultsPerPage extends LightningElement {
   headless;
   /** @type {boolean} */
   hasInitializationError = false;
+  /** @type {number} */
+  _initialChoice;
+  /** @type {string} */
+  _choicesDisplayed = '10,25,50,100';
 
   labels = {
     showNResultsPerPage,
   };
 
   connectedCallback() {
+    this.choices = this.parseChoicesDisplayed();
+    if (!this._initialChoice) {
+      this._initialChoice = this.choices[0];
+    }
+    this.validateInitialChoice();
     registerComponentForInit(this, this.engineId);
   }
 
@@ -77,8 +100,6 @@ export default class QuanticResultsPerPage extends LightningElement {
    */
   initialize = (engine) => {
     this.headless = getHeadlessBundle(this.engineId);
-    this.choices = this.parseChoicesDisplayed();
-    this.validateInitialChoice();
     this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
       initialState: {
         numberOfResults: Number(this.initialChoice) ?? this.choices[0],
@@ -105,19 +126,33 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this.choicesDisplayed.split(',').map((choice) => {
       const parsedChoice = parseInt(choice, 10);
       if (isNaN(parsedChoice)) {
-        throw new Error(
-          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
-        );
+        this.setInitializationError();
       }
       return parsedChoice;
     });
   }
 
+  validateChoicesDisplayed(value) {
+    let valid = true;
+    value.split(',').forEach((choice) => {
+      const parsedChoice = parseInt(choice, 10);
+      if (isNaN(parsedChoice)) {
+        console.error(
+          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+        );
+        this.setInitializationError();
+        valid = false;
+      }
+    });
+    return valid;
+  }
+
   validateInitialChoice() {
     if (!this.choices.includes(Number(this.initialChoice))) {
-      throw new Error(
-        `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`
+      console.error(
+        `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}". Defaulting to the first value of the choices.`
       );
+      this._initialChoice = this.choices[0];
     }
   }
 
