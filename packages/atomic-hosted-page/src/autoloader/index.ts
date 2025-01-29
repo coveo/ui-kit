@@ -1,5 +1,7 @@
-//@ts-expect-error TODO: Simplify path to target some kind of index file?
-import searchElementMap from '../components/components/search/lazy-index.js';
+const componentMap = {
+  'atomic-hosted-ui': async () =>
+    await import('../components/atomic-hosted-ui/atomic-hosted-ui.js'),
+} as Record<string, () => Promise<unknown>>;
 
 if (typeof window !== 'undefined') {
   /**
@@ -17,6 +19,7 @@ if (typeof window !== 'undefined') {
     if (rootIsAtomicElement && !customElements.get(rootTagName)) {
       tags.push(rootTagName);
     }
+
     if (rootIsAtomicElement) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
@@ -47,7 +50,7 @@ if (typeof window !== 'undefined') {
       return Promise.resolve();
     }
 
-    return searchElementMap[tagName]?.();
+    return componentMap[tagName]?.();
   };
 
   const observer = new MutationObserver((mutations) => {
