@@ -35,7 +35,7 @@ export const checkbox = (props: CheckboxProps): TemplateResult => {
   const unSelectedClassNames = 'border border-neutral-dark';
 
   const classNames = {
-    baseClassNames,
+    [baseClassNames]: true,
     [selectedClassNames]: props.checked,
     [unSelectedClassNames]: !props.checked,
     [props.class ?? '']: Boolean(props.class),
