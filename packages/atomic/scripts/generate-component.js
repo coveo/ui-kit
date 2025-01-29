@@ -46,6 +46,7 @@ async function generateFiles(name, outputDir) {
       file.output.replace('noop', name)
     );
 
+    // Does not overwrite existing files
     if (await fs.pathExists(outputPath)) {
       console.log(`Skipped (already exists): ${outputPath}`);
       continue;
@@ -55,6 +56,7 @@ async function generateFiles(name, outputDir) {
     const compiled = handlebars.compile(templateContent);
     let content = compiled({name, namePascalCase, shorterName});
 
+    // Format each file with Prettier
     content = await formatWithPrettier(content, outputPath);
 
     await fs.ensureDir(path.dirname(outputPath));
@@ -64,11 +66,32 @@ async function generateFiles(name, outputDir) {
 }
 
 const [componentName, outputDir] = process.argv.slice(2);
-if (!componentName || !outputDir) {
+
+// Ensure the component name is prefixed with 'atomic-' if it's not already there
+const normalizedComponentName = componentName.startsWith('atomic-')
+  ? componentName
+  : `atomic-${componentName}`;
+
+let resolvedOutputDir;
+
+if (outputDir) {
+  // Use the provided output dir and add the component name
+  resolvedOutputDir = path.join(outputDir, normalizedComponentName);
+} else {
+  // Default to src/components/commerce/<component-name> if no output dir is provided
+  resolvedOutputDir = path.resolve(
+    'src',
+    'components',
+    'commerce',
+    normalizedComponentName
+  );
+}
+
+if (!componentName) {
   console.error(
-    'Usage: node generate-component.js <component-name> <output-dir>'
+    'Usage: node generate-component.js <component-name> [<output-dir>]'
   );
   process.exit(1);
 }
 
-generateFiles(componentName, outputDir).catch(console.error);
+generateFiles(normalizedComponentName, resolvedOutputDir).catch(console.error);
