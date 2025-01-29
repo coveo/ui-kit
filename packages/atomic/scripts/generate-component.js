@@ -47,10 +47,9 @@ async function generateFiles(name, outputDir) {
       file.output.replace('noop', name)
     );
 
-    // Check if the file already exists
     if (await fs.pathExists(outputPath)) {
       console.log(`Skipped (already exists): ${outputPath}`);
-      continue; // Skip to the next file
+      continue;
     }
 
     const templateContent = await fs.readFile(templatePath, 'utf8');
@@ -65,7 +64,6 @@ async function generateFiles(name, outputDir) {
   }
 }
 
-// Run the script
 const [componentName, outputDir] = process.argv.slice(2);
 if (!componentName || !outputDir) {
   console.error(
