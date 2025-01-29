@@ -1,7 +1,7 @@
 import react from '@vitejs/plugin-react';
 import {defineConfig} from 'vite';
 import {viteStaticCopy} from 'vite-plugin-static-copy';
-import {generateExternalPackageMappings} from '../../atomic/scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from '../../atomic/scripts/externalPackageMappings.mjs';
 import buenoJson from '../../bueno/package.json';
 import headlessJson from '../../headless/package.json';
 

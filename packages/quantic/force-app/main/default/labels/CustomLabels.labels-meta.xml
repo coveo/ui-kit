@@ -1444,10 +1444,10 @@
   </labels>
   <labels>
     <fullName>quantic_RecentQueryAriaLabel</fullName>
-    <value>Recent query,</value>
+    <value>recent query,</value>
     <language>en_US</language>
     <protected>false</protected>
-    <shortDescription>Recent query,</shortDescription>
+    <shortDescription>recent query,</shortDescription>
   </labels>
   <labels>
     <fullName>quantic_QuerySuggestionAriaLabel</fullName>

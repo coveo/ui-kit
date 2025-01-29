@@ -1,39 +1,140 @@
 # Atomic Hosted Page
 
-A Web Component used to inject a Coveo Hosted Search Page in the DOM.
+The **Atomic Hosted Page** package provides a Web Component, `<atomic-hosted-ui>`, that integrates a Coveo Hosted Search Page into your web application. This component leverages the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/).
 
-## Getting Started
+---
 
-Once you have cloned the repo, follow the instructions in the top-level [README.md](../../README.md) to install dependencies and link packages.
+## Installation
 
-To start the project in development mode, run:
+### Via npm
 
-```bash
-npm run dev
-```
-
-To build the library for production, run:
+To use the `<atomic-hosted-ui>` component in your project, install it via npm:
 
 ```bash
-npm run build
+npm install @coveo/atomic-hosted-page
 ```
 
-## Run Cypress for Atomic components
+### Via CDN
 
-Ref: https://docs.cypress.io/
+Alternatively, you can use the component directly from the CDN:
 
-- All the tests need to be under folder cypress\integration
-
-### Open
-
-To open cypress, run:
-
-```sh
-npm run e2e:watch
+```html
+<script
+  type="module"
+  src="https://static.cloud.coveo.com/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js"
+></script>
 ```
 
-To run all the test, run:
+---
 
-```sh
-npm run e2e
+## Usage
+
+### Import and Use in JavaScript
+
+1. Import the component into your application:
+
+   ```javascript
+   import '@coveo/atomic-hosted-page/dist/components/atomic-hosted-ui/atomic-hosted-ui.js';
+   ```
+
+2. Add the component to your HTML and initialize it with the required options:
+
+   ```html
+   <atomic-hosted-ui hosted-type="code"></atomic-hosted-ui>
+   ```
+
+   ```javascript
+   const hostedUI = document.querySelector('atomic-hosted-ui');
+   hostedUI.initialize({
+     pageId: 'your-hosted-page-id',
+     organizationId: 'your-organization-id',
+     accessToken: 'your-access-token',
+   });
+   ```
+
+### Using the CDN
+
+1. Add the component script from the CDN to your HTML:
+
+   ```html
+   <script
+     type="module"
+     src="https://static.cloud.coveo.com/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js"
+   ></script>
+   ```
+
+2. Include the component in your HTML and initialize it:
+
+   ```html
+   <atomic-hosted-ui hosted-type="builder"></atomic-hosted-ui>
+   <script>
+     const hostedUI = document.querySelector('atomic-hosted-ui');
+     hostedUI.initialize({
+       pageId: 'example-page-id',
+       organizationId: 'my-organization-id',
+       accessToken: 'your-api-key',
+     });
+   </script>
+   ```
+
+---
+
+## Properties
+
+### `hosted-type`
+
+- **Type:** `'trial' | 'builder' | 'code'`
+- **Default:** `'code'`
+- **Description:** Specifies the type of hosted search page to load:
+  - `trial`: Loads a trial page.
+  - `builder`: Loads a builder page.
+  - `code`: Loads a custom code page.
+
+---
+
+## Initialization Options
+
+The `initialize()` method requires the following options:
+
+| Option           | Type   | Required | Description                                                                    |
+| ---------------- | ------ | -------- | ------------------------------------------------------------------------------ |
+| `pageId`         | string | Yes      | The unique identifier of the hosted search page.                               |
+| `organizationId` | string | Yes      | The Coveo organization ID.                                                     |
+| `accessToken`    | string | Yes      | The API key or token used for authorization.                                   |
+| `platformUrl`    | string | No       | The URL of the Coveo platform. Defaults to `https://platform.cloud.coveo.com`. |
+
+---
+
+## Example
+
+### Basic Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Atomic Hosted Page Example</title>
+    <script
+      type="module"
+      src="https://static.cloud.coveo.com/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js"
+    ></script>
+  </head>
+  <body>
+    <atomic-hosted-ui hosted-type="builder"></atomic-hosted-ui>
+    <script>
+      const hostedUI = document.querySelector('atomic-hosted-ui');
+      hostedUI.initialize({
+        pageId: 'example-page-id',
+        organizationId: 'my-organization-id',
+        accessToken: 'your-api-key',
+      });
+    </script>
+  </body>
+</html>
 ```
+
+---
+
+## License
+
+This project is licensed under the [Apache 2.0 License](LICENSE).

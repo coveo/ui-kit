@@ -36,11 +36,18 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
+      "groupName": "tailwindcss",
+      "groupSlug": "tailwindcss",
+      "rangeStrategy": "replace",
+      "description": "Isolate tailwind for v4",
+      "matchPackageNames": ["tailwindcss"]
+    },
+    {
       "groupName": "vite",
       "groupSlug": "vite",
       "rangeStrategy": "replace",
       "description": "Isolate vite until green with @nx/vite",
-      "matchPackageNames": ["vite"]
+      "matchPackageNames": ["vite", "vitest", "@vitest/browser"]
     },
     {
       "groupName": "gts",

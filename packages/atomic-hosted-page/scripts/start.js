@@ -35,10 +35,7 @@ const copyFiles = async (source, destination) => {
 const currentDir = getCurrentDir();
 const headlessDir = path.resolve(currentDir, '../../headless');
 const buenoDir = path.resolve(currentDir, '../../bueno');
-const atomicHostedPageDir = path.resolve(
-  currentDir,
-  '../dist/atomic-hosted-page'
-);
+const atomicHostedPageDir = path.resolve(currentDir, '../cdn');
 const devPublicDir = path.resolve(currentDir, '../dev/public');
 
 const run = async () => {
