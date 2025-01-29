@@ -1,74 +1,34 @@
-// // TODO:
-// import { AnyBindings } from '../components/common/interface/bindings';
-// import { closest } from './dom-utils';
-// import { buildCustomEvent } from './event-utils';
-// import {
-//   initializableElements,
-//   InitializeEventHandler,
-//   initializeEventName,
-//   MissingInterfaceParentError,
-// } from './initialization-lit-stencil-common-utils';
-// import { fetchBindings } from './initialization-utils';
-// import { vi } from 'vitest';
+import {
+  fetchBindings,
+  MissingInterfaceParentError,
+} from './initialization-lit-stencil-common-utils';
 
-// vi.mock('./dom-utils', () => ({
-//   closest: vi.fn(),
-// }));
+describe('fetchBindings', () => {
+  it('should rejects when the component is not the children of a search interface element', async () => {
+    const element = document.createElement('my-component');
+    await expect(fetchBindings(element)).rejects.toEqual(
+      new MissingInterfaceParentError('my-component')
+    );
+  });
 
-// vi.mock('./event-utils', () => ({
-//   buildCustomEvent: vi.fn(),
-// }));
+  // TODO: KIT-XXXX: un-skip test once the search interface is implemented
+  it.skip("revolves the bindings when it's a children of a configured search interface element", async () => {
+    const searchInterface = document.createElement('atomic-search-interface');
+    document.body.appendChild(searchInterface);
 
-// describe('fetchBindings', () => {
-//   let element: HTMLElement;
+    await searchInterface.initialize({
+      accessToken: '123456789',
+      organizationId: 'myorg',
+    });
 
-//   beforeEach(() => {
-//     element = document.createElement('div');
-//     document.body.appendChild(element);
-//   });
-
-//   afterEach(() => {
-//     document.body.removeChild(element);
-//     vi.clearAllMocks();
-//   });
-
-//   it('should resolve with bindings when the event is dispatched and closest element is found', async () => {
-//     const bindings = { some: 'bindings' } as AnyBindings;
-//     (buildCustomEvent as any).mockImplementation((_, callback) => {
-//       callback(bindings);
-//       return new Event('initialize');
-//     });
-//     (closest as any).mockReturnValue(true);
-
-//     const result = await fetchBindings<AnyBindings>(element);
-
-//     expect(result).toEqual(bindings);
-//     expect(buildCustomEvent).toHaveBeenCalledWith(
-//       initializeEventName,
-//       expect.any(Function)
-//     );
-//     expect(closest).toHaveBeenCalledWith(element, initializableElements.join(', '));
-//   });
-
-//   it('should reject with MissingInterfaceParentError when closest element is not found', async () => {
-//     (closest as any).mockReturnValue(false);
-
-//     await expect(fetchBindings<AnyBindings>(element)).rejects.toThrow(MissingInterfaceParentError);
-//     expect(closest).toHaveBeenCalledWith(element, initializableElements.join(', '));
-//   });
-
-//   it('should dispatch the event', async () => {
-//     const dispatchEventSpy = vi.spyOn(element, 'dispatchEvent');
-//     (closest as any).mockReturnValue(true);
-
-//     fetchBindings<AnyBindings>(element);
-
-//     expect(dispatchEventSpy).toHaveBeenCalled();
-//   });
-// });
-
-describe('TODO:', () => {
-  it('TODO:', () => {
-    expect(true).toBe(true);
+    const element = document.createElement('my-component');
+    searchInterface.appendChild(element);
+    const bindings = await fetchBindings(element);
+    expect(bindings).toMatchObject({
+      interfaceElement: searchInterface,
+      i18n: searchInterface.i18n,
+      store: expect.anything(),
+      engine: searchInterface.engine,
+    });
   });
 });
