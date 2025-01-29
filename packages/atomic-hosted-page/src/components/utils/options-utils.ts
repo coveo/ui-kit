@@ -1,5 +1,8 @@
-import {Schema, SchemaValue, StringValue} from '@coveo/bueno';
-import {getOrganizationEndpoint, PlatformEnvironment} from '@coveo/headless';
+import {Schema, type SchemaValue, StringValue} from '@coveo/bueno';
+import {
+  getOrganizationEndpoint,
+  type PlatformEnvironment,
+} from '@coveo/headless';
 
 export interface InitializationOptions {
   /**

@@ -236,8 +236,8 @@
       "s3": {
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]",
-        "source": "packages/atomic-hosted-page/dist",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_PATCH_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -248,8 +248,8 @@
       "s3": {
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]",
-        "source": "packages/atomic-hosted-page/dist",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MINOR_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -260,8 +260,8 @@
       "s3": {
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]",
-        "source": "packages/atomic-hosted-page/dist",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -272,8 +272,8 @@
       "s3": {
         "disabled": $[IS_NOT_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]-nightly",
-        "source": "packages/atomic-hosted-page/dist",
+        "directory": "proda/StaticCDN/atomic-hosted-page/v$[ATOMIC_HOSTED_PAGE_MAJOR_VERSION]-nightly/atomic-hosted-page",
+        "source": "packages/atomic-hosted-page/cdn",
         "parameters": {
           "acl": "public-read"
         }

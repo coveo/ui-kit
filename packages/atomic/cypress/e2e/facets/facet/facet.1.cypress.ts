@@ -261,7 +261,7 @@ describe('Facet Test Suite 1', () => {
       });
 
       describe('when searching for a value that returns a single result', () => {
-        const query = 'people';
+        const query = 'kbarticle';
         function setupSearchForSingleValue() {
           setupSelectCheckboxValue();
           typeFacetSearchQuery(FacetSelectors, query, true);

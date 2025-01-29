@@ -16,7 +16,7 @@ export async function setRecentQueries(page: Page, count: number) {
   await page.evaluate((count: number) => {
     const recentQueries = Array.from(
       {length: count},
-      (_, i) => `Recent query ${i}`
+      (_, i) => `recent query ${i}`
     );
     const stringified = JSON.stringify(recentQueries);
     localStorage.setItem('coveo-recent-queries', stringified);

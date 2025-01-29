@@ -1,17 +1,18 @@
 import {StringValue} from '@coveo/bueno';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {
-  Component,
-  ComponentInterface,
-  Method,
-  Element,
-  Prop,
-} from '@stencil/core';
-import {
-  InitializationOptions,
   extractPlatformUrl,
   validateOptions,
-} from '../utils/options-utils';
-import {processHostedPage} from './hosted-ui';
+  type InitializationOptions,
+} from '../utils/options-utils.js';
+import {processHostedPage} from './hosted-ui.js';
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-hosted-ui': AtomicHostedUI;
+  }
+}
 
 interface AtomicHostedUIInitializationOptions extends InitializationOptions {
   /**
@@ -24,13 +25,8 @@ interface AtomicHostedUIInitializationOptions extends InitializationOptions {
  * A Web Component used to inject a Coveo Hosted Search Page in the DOM.
  * Pulls from the [Search Interfaces API](https://platform.cloud.coveo.com/docs?urls.primaryName=Search%20Interface%20Service#/)
  */
-@Component({
-  tag: 'atomic-hosted-ui',
-  shadow: false,
-})
-export class AtomicHostedUI implements ComponentInterface {
-  @Element() private element!: HTMLElement;
-
+@customElement('atomic-hosted-ui')
+export class AtomicHostedUI extends LitElement {
   private validateOptions(opts: AtomicHostedUIInitializationOptions) {
     validateOptions(opts, {
       pageId: new StringValue({required: true, emptyAllowed: false}),
@@ -40,16 +36,14 @@ export class AtomicHostedUI implements ComponentInterface {
   /**
    * The type of hosted search page to load.
    */
-  @Prop({reflect: true}) public hostedType: 'trial' | 'builder' | 'code' =
-    'code';
+  @property({attribute: 'hosted-type'})
+  hostedType: 'trial' | 'builder' | 'code' = 'code';
 
-  @Method() public async initialize(
-    options: AtomicHostedUIInitializationOptions
-  ) {
+  public async initialize(options: AtomicHostedUIInitializationOptions) {
     this.validateOptions(options);
 
     try {
-      processHostedPage(this.element, await this.getHostedPage(options));
+      processHostedPage(this, await this.getHostedPage(options));
     } catch (e) {
       console.error(e);
     }
@@ -85,5 +79,8 @@ export class AtomicHostedUI implements ComponentInterface {
     );
 
     return await pageResponse.json();
+  }
+  render() {
+    return html`<slot></slot>`;
   }
 }
