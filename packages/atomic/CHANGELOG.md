@@ -1,3 +1,13 @@
+## 3.17.0 (2025-01-29)
+
+- chore: add tailwind styles support for lit components (#4862) ([6537c36](https://github.com/coveo/ui-kit/commits/6537c36)), closes [#4862](https://github.com/coveo/ui-kit/issues/4862) [/github.com/coveo/ui-kit/pull/4804#issue-2751560151](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/issue-2751560151) [/github.com/coveo/ui-kit/pull/4804#discussion_r1894392106](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/discussion_r1894392106) [#4804](https://github.com/coveo/ui-kit/issues/4804)
+- chore: convert externalpackagemappings script to js (#4907) ([6aa41a8](https://github.com/coveo/ui-kit/commits/6aa41a8)), closes [#4907](https://github.com/coveo/ui-kit/issues/4907)
+- chore: keep css imports intact (#4901) ([fe1f002](https://github.com/coveo/ui-kit/commits/fe1f002)), closes [#4901](https://github.com/coveo/ui-kit/issues/4901)
+- chore(atomic): various utils fixes (#4878) ([0bd99f2](https://github.com/coveo/ui-kit/commits/0bd99f2)), closes [#4878](https://github.com/coveo/ui-kit/issues/4878)
+- feat(atomic): add binding decorators (#4891) ([e5ac52c](https://github.com/coveo/ui-kit/commits/e5ac52c)), closes [#4891](https://github.com/coveo/ui-kit/issues/4891)
+- test(atomic): add test for watch decorator (#4894) ([0abb2af](https://github.com/coveo/ui-kit/commits/0abb2af)), closes [#4894](https://github.com/coveo/ui-kit/issues/4894)
+- test(atomic): test localized-string directive (#4895) ([0161af2](https://github.com/coveo/ui-kit/commits/0161af2)), closes [#4895](https://github.com/coveo/ui-kit/issues/4895)
+
 ## 3.16.0 (2025-01-23)
 
 - chore(atomic): add SVG transformer (#4867) ([a331579](https://github.com/coveo/ui-kit/commits/a331579)), closes [#4867](https://github.com/coveo/ui-kit/issues/4867)
