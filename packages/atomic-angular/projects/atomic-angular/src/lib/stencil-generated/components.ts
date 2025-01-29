@@ -3105,4 +3105,28 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  inputs: ['name']
+})
+@Component({
+  selector: 'atomic-result-example-component',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['name']
+})
+export class AtomicResultExampleComponent {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+  }
+}
+
+export declare interface AtomicResultExampleComponent extends LitAtomicResultExampleComponent {}
+
+AtomicResultExampleComponent
+import type {AtomicResultExampleComponent as LitAtomicResultExampleComponent} from '@coveo/atomic/components';
+//#endregion Lit Declarations
