@@ -2,10 +2,6 @@ import fs from 'fs-extra';
 import handlebars from 'handlebars';
 import path from 'path';
 import prettier from 'prettier';
-import {fileURLToPath} from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
@@ -21,7 +17,10 @@ async function formatWithPrettier(content, filePath) {
 }
 
 async function generateFiles(name, outputDir) {
-  const templatesDir = path.resolve(__dirname, 'generate-component-templates');
+  const templatesDir = path.resolve(
+    import.meta.dirname,
+    'generate-component-templates'
+  );
   const resolvedOutputDir = path.resolve(outputDir);
   const namePascalCase = kebabToPascal(name);
   const shorterName = name.replace(/^atomic-/, '').toLowerCase();
@@ -47,10 +46,9 @@ async function generateFiles(name, outputDir) {
       file.output.replace('noop', name)
     );
 
-    // Check if the file already exists
     if (await fs.pathExists(outputPath)) {
       console.log(`Skipped (already exists): ${outputPath}`);
-      continue; // Skip to the next file
+      continue;
     }
 
     const templateContent = await fs.readFile(templatePath, 'utf8');
@@ -65,7 +63,6 @@ async function generateFiles(name, outputDir) {
   }
 }
 
-// Run the script
 const [componentName, outputDir] = process.argv.slice(2);
 if (!componentName || !outputDir) {
   console.error(

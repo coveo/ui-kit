@@ -1,3 +1,4 @@
+import {within} from 'shadow-dom-testing-library';
 import {describe, test, expect, beforeAll, afterAll} from 'vitest';
 import './{{name}}';
 import { {{namePascalCase}} } from './{{name}}';
@@ -13,11 +14,9 @@ describe('{{namePascalCase}}', () => {
     document.body.removeChild(element);
   });
 
-  test('should render the component', () => {
-    const element = document.createElement('{{name}}');
-    document.body.appendChild(element);
-
+  test('should render the component', async () => {
     expect(element.shadowRoot).toBeTruthy();
-    expect(element.shadowRoot!.innerHTML).toContain('Hello World');
+    const text = await within(element).findByShadowText('Hello World');
+    expect(text).toBeTruthy();
   });
 });
