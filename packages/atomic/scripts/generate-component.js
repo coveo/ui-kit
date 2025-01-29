@@ -71,4 +71,8 @@ if (!componentName || !outputDir) {
   process.exit(1);
 }
 
-generateFiles(componentName, outputDir).catch(console.error);
+const normalizedComponentName = componentName.startsWith('atomic-')
+  ? componentName
+  : `atomic-${componentName}`;
+
+generateFiles(normalizedComponentName, outputDir).catch(console.error);
