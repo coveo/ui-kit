@@ -37,21 +37,23 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when testing accessibility', () => {
-      test('should be accessible to keyboard', async ({sort}) => {
+      test('should be accessible to keyboard', async ({sort, page}) => {
         let selectedSortLabel = await sort.sortDropDown.textContent();
         expect(selectedSortLabel).toEqual(defaultSortLabels[0]);
 
         // Selecting the next sort using Enter to open dropdown, the ArrowDown, then ENTER key
         await sort.focusSortDropDown();
-        await sort.openSortDropdownUsingEnter();
-        await sort.selectSortOptionUsingArrow();
+        await sort.openSortDropdownUsingKeyboardEnter();
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
         selectedSortLabel = await sort.sortDropDown.textContent();
         expect(selectedSortLabel).toEqual(defaultSortLabels[1]);
 
         // Selecting the next sort using Space to open dropdown, the ArrowDown, then ENTER key
         await sort.focusSortDropDown();
-        await sort.openSortDropdownUsingEnter(false);
-        await sort.selectSortOptionUsingArrow();
+        await sort.openSortDropdownUsingKeyboardEnter(false);
+        await page.keyboard.press('ArrowDown');
+        await page.keyboard.press('Enter');
         selectedSortLabel = await sort.sortDropDown.textContent();
         expect(selectedSortLabel).toEqual(defaultSortLabels[2]);
       });

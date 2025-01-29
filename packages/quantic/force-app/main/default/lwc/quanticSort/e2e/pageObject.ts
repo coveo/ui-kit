@@ -31,19 +31,14 @@ export class SortObject {
     await this.sortButton(buttonName).click();
   }
 
-  async openSortDropdownUsingEnter(useEnter = true): Promise<void> {
+  async openSortDropdownUsingKeyboardEnter(useEnter = true): Promise<void> {
     if (useEnter) {
       await this.page.keyboard.press('Enter');
     } else {
       await this.page.keyboard.press('Space');
     }
-  }
-
-  async selectSortOptionUsingArrow(): Promise<void> {
     await this.sortButton('Oldest').isVisible();
     await this.page.waitForTimeout(500);
-    await this.page.keyboard.press('ArrowDown');
-    await this.page.keyboard.press('Enter');
   }
 
   async waitForSortUaAnalytics(eventValue: any): Promise<Request> {
