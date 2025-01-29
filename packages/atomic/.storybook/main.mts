@@ -3,7 +3,7 @@ import type {StorybookConfig} from '@storybook/web-components-vite';
 import path from 'path';
 import {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
-import {generateExternalPackageMappings} from '../scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
 const externalizeDependencies: PluginImpl = () => {
   return {

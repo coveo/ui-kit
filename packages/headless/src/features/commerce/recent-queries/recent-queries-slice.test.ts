@@ -29,24 +29,52 @@ describe('commerce/recent-queries-slice', () => {
     });
   });
 
-  it('#registerRecentQueries should set queries and maxLength params in state', () => {
+  it('#registerRecentQueries should trim and lowercase queries, and eliminate duplicates in state', () => {
+    state = recentQueriesReducer(
+      state,
+      registerRecentQueries({
+        queries: [
+          'what is LOVE',
+          'Oh baby',
+          "don't hurt me",
+          "   DON'T HURT ME   ",
+          'no more!',
+        ],
+        maxLength: testMaxLength,
+      })
+    );
+
+    expect(state.queries).toEqual([
+      'what is love',
+      'oh baby',
+      "don't hurt me",
+      'no more!',
+    ]);
+  });
+
+  it('#registerRecentQueries should set maxLength params in state', () => {
     state = recentQueriesReducer(
       state,
       registerRecentQueries({queries: testQueries, maxLength: testMaxLength})
     );
 
-    expect(state.queries).toEqual(testQueries);
     expect(state.maxLength).toEqual(testMaxLength);
   });
 
-  it('#registerRecentQueries should shorten queries if it exceeds maxLength param', () => {
-    const queries = ['q1', 'q2', 'q3', 'q4'];
+  it('#registerRecentQueries should only keep queries up to the specified maxLength (after eliminating duplicates) in state', () => {
+    const queries = [
+      'what is LOVE',
+      'Oh baby',
+      "don't hurt me",
+      "   DON'T HURT ME   ",
+      'no more!',
+    ];
     state = recentQueriesReducer(
       state,
       registerRecentQueries({queries: queries, maxLength: 3})
     );
 
-    expect(state.queries).toEqual(['q1', 'q2', 'q3']);
+    expect(state.queries).toEqual(['what is love', 'oh baby', "don't hurt me"]);
   });
 
   it('#clearRecentQueries should remove all queries from the queue in state', () => {
@@ -57,7 +85,7 @@ describe('commerce/recent-queries-slice', () => {
     expect(state.queries).toEqual([]);
   });
 
-  it('should add new recent query on search fulfilled if queue is empty', () => {
+  it('should add trimmed and lowercased new recent query on search fulfilled if queue is empty', () => {
     const searchAction = executeSearch.fulfilled(
       buildSearchResponse(
         {products: [buildMockProduct()]},
@@ -73,7 +101,7 @@ describe('commerce/recent-queries-slice', () => {
   });
 
   it('should add new recent query on search fulfilled if queue is non-empty', () => {
-    const otherTestQuery = 'bar';
+    const otherTestQuery = ' BAR ';
     state.queries = testQueries;
     state.maxLength = 10;
     const searchAction = executeSearch.fulfilled(
@@ -86,29 +114,29 @@ describe('commerce/recent-queries-slice', () => {
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
-      otherTestQuery,
+      'bar',
       ...testQueries,
     ]);
   });
 
   it('should add new recent query on search fulfilled and kick out oldest query if queue is full', () => {
-    state.queries = ['5', '4', '3', '2', '1'];
+    state.queries = ['five', 'four', 'three', 'two', 'one'];
     state.maxLength = 5;
     const searchAction = executeSearch.fulfilled(
-      buildSearchResponse({products: [buildMockProduct()]}, '6', '6'),
+      buildSearchResponse({products: [buildMockProduct()]}, 'SiX', 'SiX'),
       ''
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
-      '6',
-      '5',
-      '4',
-      '3',
-      '2',
+      'six',
+      'five',
+      'four',
+      'three',
+      'two',
     ]);
   });
 
-  it('should not add new recent query on search fulfilled if queue already contains the query', () => {
+  it('should not add new recent query on search fulfilled if first query in queue is already the query', () => {
     const duplicates = [testQuery, ` ${testQuery}      `];
     for (const i in duplicates) {
       state.queries = testQueries;
@@ -156,25 +184,25 @@ describe('commerce/recent-queries-slice', () => {
   });
 
   it('should place the query at the start of the list if it already exists', () => {
-    state.queries = ['5', '4', '3', '2', '1'];
+    state.queries = ['five', 'four', 'three', 'two', 'one'];
     state.maxLength = 5;
     const searchAction = executeSearch.fulfilled(
       buildSearchResponse(
         {
           products: [buildMockProduct()],
         },
-        '3',
-        '3'
+        'THREE',
+        'THREE'
       ),
       ''
     );
 
     expect(recentQueriesReducer(state, searchAction).queries).toEqual([
-      '3',
-      '5',
-      '4',
-      '2',
-      '1',
+      'three',
+      'five',
+      'four',
+      'two',
+      'one',
     ]);
   });
 });

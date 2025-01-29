@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@coveo/auth": "2.0.6",
-    "@coveo/headless": "3.13.3",
+    "@coveo/headless": "3.14.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "14.3.1",
     "@testing-library/user-event": "14.5.2",
@@ -52,10 +52,10 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "8.7.0",
     "@vitejs/plugin-react": "4.3.2",
-    "cypress": "13.6.6",
+    "cypress": "13.7.3",
     "cypress-repeat": "2.3.8",
     "gts": "5.3.1",
-    "vite": "5.4.11",
+    "vite": "5.4.14",
     "vitest": "2.1.8"
   }
 }

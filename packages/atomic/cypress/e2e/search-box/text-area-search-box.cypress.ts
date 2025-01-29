@@ -40,7 +40,7 @@ const setSuggestions = (count: number) => () => {
 const setRecentQueries = (count: number) => () => {
   new SafeStorage().setJSON(
     StorageItems.RECENT_QUERIES,
-    Array.from({length: count}, (_, i) => `Recent query ${i}`)
+    Array.from({length: count}, (_, i) => `recent query ${i}`)
   );
 };
 
