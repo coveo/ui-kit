@@ -1,0 +1,23 @@
+import {describe, test, expect, beforeAll, afterAll} from 'vitest';
+import './{{name}}';
+import { {{namePascalCase}} } from './{{name}}';
+
+describe('{{namePascalCase}}', () => {
+  let element: {{namePascalCase}};
+  beforeAll(async () => {
+    element = document.createElement('{{name}}');
+    document.body.appendChild(element);
+  });
+
+  afterAll(() => {
+    document.body.removeChild(element);
+  });
+
+  test('should render the component', () => {
+    const element = document.createElement('{{name}}');
+    document.body.appendChild(element);
+
+    expect(element.shadowRoot).toBeTruthy();
+    expect(element.shadowRoot!.innerHTML).toContain('Hello World');
+  });
+});

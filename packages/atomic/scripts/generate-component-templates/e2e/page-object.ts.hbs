@@ -1,0 +1,8 @@
+import type {Page} from '@playwright/test';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
+
+export class {{namePascalCase}}PageObject extends BasePageObject {
+  constructor(page: Page) {
+    super(page, '{{name}}');
+  }
+}

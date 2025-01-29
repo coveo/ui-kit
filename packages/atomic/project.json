@@ -175,6 +175,27 @@
         "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
       }
+    },
+    "generate-component": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/generate-component.js {args.name} {args.output}",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [],
+      "schema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the component to generate"
+          },
+          "output": {
+            "type": "string",
+            "description": "The output directory for the generated files"
+          }
+        },
+        "required": ["name", "output"]
+      }
     }
   }
 }

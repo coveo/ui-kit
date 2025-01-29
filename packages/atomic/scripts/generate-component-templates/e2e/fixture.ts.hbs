@@ -1,0 +1,16 @@
+import {test as base} from '@playwright/test';
+import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
+import { {{namePascalCase}}PageObject } from './page-object';
+
+type Fixtures = {
+  {{shorterName}}: {{namePascalCase}}PageObject;
+};
+
+export const test = base.extend<Fixtures & AxeFixture>({
+  makeAxeBuilder,
+  {{shorterName}}: async ({page}, use) => {
+    await use(new {{namePascalCase}}PageObject(page));
+  },
+});
+
+export {expect} from '@playwright/test';
