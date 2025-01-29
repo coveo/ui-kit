@@ -2,10 +2,6 @@ import fs from 'fs-extra';
 import handlebars from 'handlebars';
 import path from 'path';
 import prettier from 'prettier';
-import {fileURLToPath} from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
@@ -21,7 +17,10 @@ async function formatWithPrettier(content, filePath) {
 }
 
 async function generateFiles(name, outputDir) {
-  const templatesDir = path.resolve(__dirname, 'generate-component-templates');
+  const templatesDir = path.resolve(
+    import.meta.dirname,
+    'generate-component-templates'
+  );
   const resolvedOutputDir = path.resolve(outputDir);
   const namePascalCase = kebabToPascal(name);
   const shorterName = name.replace(/^atomic-/, '').toLowerCase();
