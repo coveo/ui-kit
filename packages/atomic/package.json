@@ -87,7 +87,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.1",
-    "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@nx/vite": "20.3.1",
@@ -124,6 +123,7 @@
     "cypress-axe": "1.5.0",
     "cypress-repeat": "2.3.8",
     "cypress-split": "1.5.0",
+    "handlebars": "4.7.8",
     "html-loader-jest": "0.2.1",
     "jest": "29.7.0",
     "jest-cli": "29.7.0",

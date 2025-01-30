@@ -15,7 +15,7 @@ export const wrapInCommerceInterface = ({
   engineConfig?: Partial<CommerceEngineConfiguration>;
   skipFirstSearch?: boolean;
   type?: 'search' | 'product-listing';
-}): {
+} = {}): {
   decorator: Decorator;
   play: (context: StoryContext) => Promise<void>;
 } => ({

@@ -1,6 +1,6 @@
-import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
-import {wrapInInsightInterface} from '@coveo/atomic-storybook-utils/insight/insight-interface-wrapper';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInInsightInterface} from '@/storybook-utils/insight/insight-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
 const {decorator, play} = wrapInInsightInterface();
