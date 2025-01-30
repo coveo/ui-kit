@@ -11,7 +11,7 @@ describe('fetchBindings', () => {
     );
   });
 
-  // TODO: KIT-XXXX: un-skip test once the search interface is implemented
+  // TODO: KIT-3909: un-skip test once the search interface is implemented
   it.skip("revolves the bindings when it's a children of a configured search interface element", async () => {
     const searchInterface = document.createElement('atomic-search-interface');
     document.body.appendChild(searchInterface);

@@ -66,6 +66,16 @@ describe('@bindingGuard decorator', () => {
     expect(renderSpy).not.toHaveBeenCalled();
   });
 
+  it('should throw an error if used on a property', () => {
+    expect(() => {
+      // @ts-expect-error - unused class
+      class _ {
+        // @ts-expect-error - invalid usage
+        @bindingGuard() myProp?: string;
+      }
+    }).toThrow('@bindingGuard decorator can only be used on render method');
+  });
+
   it('should throw an error if used on a method other than render', () => {
     expect(() => {
       // @ts-expect-error - unused class
