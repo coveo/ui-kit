@@ -56,9 +56,10 @@ export const WithDependsOn: Story = {
             margin: auto;
           }
         </style>
-        <atomic-breadbox></atomic-breadbox>
+        <atomic-breadbox data-testid="breadbox"></atomic-breadbox>
         ${story({})}
         <atomic-facet
+          data-testid="parent-facet"
           field="filetype"
           label="File Type (Parent facet)"
         ></atomic-facet>`,
