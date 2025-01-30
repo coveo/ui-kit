@@ -87,7 +87,6 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.1",
-    "@coveo/atomic-storybook-utils": "file:./storybookUtils",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@nx/vite": "20.3.1",

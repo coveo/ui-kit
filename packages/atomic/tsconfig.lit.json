@@ -9,8 +9,12 @@
     "declarationMap": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/atomic/components"
+    "outDir": "dist/atomic/components",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
+
   "files": [
     "src/components/index.ts",
     "src/components/lazy-index.ts",

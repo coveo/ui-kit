@@ -27,6 +27,7 @@ async function generateFiles(name, outputDir) {
 
   const files = [
     {template: 'component.ts.hbs', output: `${name}.ts`},
+    {template: 'component.mdx.hbs', output: `${name}.mdx`},
     {
       template: 'component.new.stories.tsx.hbs',
       output: `${name}.new.stories.tsx`,
@@ -95,3 +96,7 @@ if (!componentName) {
 }
 
 generateFiles(normalizedComponentName, resolvedOutputDir).catch(console.error);
+
+// add the import to the lazy index file
+// add the import to the index file
+// change the output arg to always start with search/commerce/insight/ipx/recommendations
