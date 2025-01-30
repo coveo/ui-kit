@@ -22,7 +22,7 @@ export class SmartSnippetObject {
   }
 
   get smartSnippetAnwerInlineLink(): Locator {
-    return this.page.locator('.smart-snippet-answer a');
+    return this.page.locator('[data-testid="smart-snippet-answer"] > a');
   }
 
   get smartSnippetToggleButton(): Locator {

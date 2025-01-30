@@ -1,8 +1,8 @@
-import {SmartSnippetObject} from './pageObject';
+import {SmartSnippetSuggestionsObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {
   SearchObjectWithSmartSnippet,
-  QuestionAnswerData,
+  RelatedQuestionsData,
 } from '../../../../../../playwright/page-object/searchObjectWithSmartSnippet';
 import {
   searchRequestRegex,
@@ -10,51 +10,51 @@ import {
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
-import smartSnippetData from './data';
+import smartSnippetSuggestionsData from './data';
 
-const pageUrl = 's/quantic-smart-snippet';
+const pageUrl = 's/quantic-smart-snippet-suggestions';
 
-interface SmartSnippetOptions {
-  maximumSnippetHeight: number;
-}
+interface SmartSnippetSuggestionsOptions {}
 
-type QuanticSmartSnippetE2ESearchFixtures = {
-  smartSnippetData: QuestionAnswerData;
-  smartSnippet: SmartSnippetObject;
+type QuanticSmartSnippetSuggestionsE2ESearchFixtures = {
+  smartSnippetSuggestionsData: RelatedQuestionsData;
+  smartSnippetSuggestions: SmartSnippetSuggestionsObject;
   search: SearchObjectWithSmartSnippet;
-  options: Partial<SmartSnippetOptions>;
+  options: Partial<SmartSnippetSuggestionsOptions>;
 };
 
-type QuanticSmartSnippetE2EInsightFixtures =
-  QuanticSmartSnippetE2ESearchFixtures & {
+type QuanticSmartSnippetSuggestionsE2EInsightFixtures =
+  QuanticSmartSnippetSuggestionsE2ESearchFixtures & {
     insightSetup: InsightSetupObject;
   };
 
 export const testSearch =
-  quanticBase.extend<QuanticSmartSnippetE2ESearchFixtures>({
-    smartSnippetData,
+  quanticBase.extend<QuanticSmartSnippetSuggestionsE2ESearchFixtures>({
+    smartSnippetSuggestionsData,
     options: {},
     search: async ({page}, use) => {
       await use(new SearchObjectWithSmartSnippet(page, searchRequestRegex));
     },
-    smartSnippet: async (
-      {page, options, configuration, search, smartSnippetData: data},
+    smartSnippetSuggestions: async (
+      {page, options, configuration, search, smartSnippetSuggestionsData: data},
       use
     ) => {
-      const smartSnippetObject = new SmartSnippetObject(page);
+      const smartSnippetSuggestionsObject = new SmartSnippetSuggestionsObject(
+        page
+      );
 
       await page.goto(pageUrl);
-      await search.mockSearchWithSmartSnippetResponse(data);
+      await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
 
       configuration.configure(options);
       await search.waitForSearchResponse();
-      await use(smartSnippetObject);
+      await use(smartSnippetSuggestionsObject);
     },
   });
 
 export const testInsight =
-  quanticBase.extend<QuanticSmartSnippetE2EInsightFixtures>({
-    smartSnippetData,
+  quanticBase.extend<QuanticSmartSnippetSuggestionsE2EInsightFixtures>({
+    smartSnippetSuggestionsData,
     options: {},
     search: async ({page}, use) => {
       await use(
@@ -64,27 +64,29 @@ export const testInsight =
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));
     },
-    smartSnippet: async (
+    smartSnippetSuggestions: async (
       {
         page,
         options,
         search,
         configuration,
         insightSetup,
-        smartSnippetData: data,
+        smartSnippetSuggestionsData: data,
       },
       use
     ) => {
-      const smartSnippetObject = new SmartSnippetObject(page);
+      const smartSnippetSuggestionsObject = new SmartSnippetSuggestionsObject(
+        page
+      );
 
       await page.goto(pageUrl);
-      await search.mockSearchWithSmartSnippetResponse(data);
+      await search.mockSearchWithSmartSnippetSuggestionsResponse(data);
 
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
       await search.waitForSearchResponse();
-      await use(smartSnippetObject);
+      await use(smartSnippetSuggestionsObject);
     },
   });
 
