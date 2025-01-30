@@ -23,6 +23,13 @@ export default class ExampleQuanticGeneratedAnswer extends LightningElement {
       defaultValue: false,
     },
     {
+      attribute: 'maxCollapsedHeight',
+      label: 'Max Collapsed Height',
+      description:
+        'The maximum height of the answer when it is collapsed, in pixels.',
+      defaultValue: 250,
+    },
+    {
       attribute: 'withToggle',
       label: 'With Toggle',
       description:
