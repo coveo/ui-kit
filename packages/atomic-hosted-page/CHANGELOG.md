@@ -1,3 +1,11 @@
+## <small>1.0.21 (2025-01-29)</small>
+
+- fix(atomic-hosted-page): fix cdn import errors by externalizing headless (#4884) ([2364a8d](https://github.com/coveo/ui-kit/commits/2364a8d)), closes [#4884](https://github.com/coveo/ui-kit/issues/4884)
+
+## <small>1.0.20 (2025-01-23)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)
+
 ## <small>1.0.18 (2025-01-15)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4847) ([e42499f](https://github.com/coveo/ui-kit/commits/e42499f)), closes [#4847](https://github.com/coveo/ui-kit/issues/4847)

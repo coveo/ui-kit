@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.12.1",
+  "version": "3.13.1",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -51,10 +51,10 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.13.2",
+    "@coveo/headless": "3.14.0",
     "dompurify": "3.2.3",
-    "marked": "12.0.2",
-    "fs-extra": "11.2.0"
+    "fs-extra": "11.2.0",
+    "marked": "12.0.2"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
@@ -75,7 +75,7 @@
     "@types/wait-on": "5.3.4",
     "chalk": "4.1.2",
     "change-case": "4.1.2",
-    "cypress": "13.6.6",
+    "cypress": "13.7.3",
     "cypress-real-events": "1.13.0",
     "cypress-repeat": "2.3.8",
     "dotenv": "16.4.7",

@@ -5,7 +5,7 @@
   </template>
   <template lwc:else>
     <template if:true={hasResults}>
-      <div class="slds-float_right">
+      <div class="slds-float_right" data-testid="results-per-page">
         <template for:each={choicesObjects} for:item="choice">
           <c-quantic-number-button
             key={choice.value}
