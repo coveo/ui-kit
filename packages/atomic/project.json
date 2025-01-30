@@ -32,7 +32,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
           "node ./scripts/stencil-proxy.mjs",
           "node ./scripts/build.mjs --config=tsconfig.lit.json",
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
@@ -114,7 +114,7 @@
       "dependsOn": ["^build", "build:locales"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
         "cwd": "{projectRoot}"
       }
     },
