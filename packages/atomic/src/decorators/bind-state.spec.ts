@@ -110,7 +110,7 @@ describe('@bindStateToController decorator', () => {
     expect(consoleErrorSpy).not.toHaveBeenCalled();
   });
 
-  it('it should not log an error to the console when "controller" property is not defined', async () => {
+  it('it should log an error to the console when "controller" property is not defined', async () => {
     await setupElement<MissingProperty>('missing-property');
     element.initialize!();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -119,7 +119,7 @@ describe('@bindStateToController decorator', () => {
     );
   });
 
-  it('it should not log an error to the console when the "initialize" method is not defined', async () => {
+  it('it should log an error to the console when the "initialize" method is not defined', async () => {
     await setupElement<MissingInitialize>('missing-initialize');
     element.initialize!();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
