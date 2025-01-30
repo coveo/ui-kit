@@ -29,8 +29,7 @@ const copyFiles = async (source, destination) => {
 const currentDir = import.meta.dirname;
 const headlessDir = path.resolve(currentDir, '../../headless');
 const buenoDir = path.resolve(currentDir, '../../bueno');
-const atomicHostedPageDir = path.resolve(currentDir, '../cdn');
-const devPublicDir = path.resolve(currentDir, '../dev/public');
+const devPublicDir = path.resolve(currentDir, '../dev');
 
 const run = async () => {
   const headlessVersion = await getVersionFromPackageJson(headlessDir);
@@ -39,7 +38,6 @@ const run = async () => {
   const directories = [
     `${devPublicDir}/headless/v${headlessVersion}`,
     `${devPublicDir}/bueno/v${buenoVersion}`,
-    `${devPublicDir}/atomic-hosted-page/`,
   ];
 
   for (const dir of directories) {
@@ -72,11 +70,6 @@ const run = async () => {
     path.join(buenoDir, 'dist/browser'),
     `${devPublicDir}/bueno/v${buenoVersion}`
   );
-
-  console.log(
-    `Copying atomic-hosted-page files to ${devPublicDir}/atomic-hosted-page/`
-  );
-  await copyFiles(atomicHostedPageDir, `${devPublicDir}/atomic-hosted-page/`);
 
   console.log('Starting Vite server...');
   execSync('vite serve dev', {stdio: 'inherit'});

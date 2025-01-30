@@ -14,6 +14,14 @@ const externalizeDependencies: PluginImpl = () => {
         return false;
       }
 
+      if (
+        /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(
+          source
+        )
+      ) {
+        return false;
+      }
+
       const packageMappings = generateExternalPackageMappings(__dirname);
       const packageMapping = packageMappings[source];
 
