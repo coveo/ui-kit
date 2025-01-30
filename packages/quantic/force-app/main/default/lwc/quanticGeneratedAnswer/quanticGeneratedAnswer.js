@@ -45,8 +45,8 @@ const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
 const DEFAULT_COLLAPSED_HEIGHT = 250;
-const MAX_COLLAPSED_HEIGHT = 500;
-const MIN_COLLAPSED_HEIGHT = 150;
+const MAX_VALID_COLLAPSED_HEIGHT = 500;
+const MIN_VALID_COLLAPSED_HEIGHT = 150;
 
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
@@ -101,11 +101,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return this._maxCollapsedHeight;
   }
   set maxCollapsedHeight(value) {
-    if (value >= MIN_COLLAPSED_HEIGHT && value <= MAX_COLLAPSED_HEIGHT) {
+    if (
+      value >= MIN_VALID_COLLAPSED_HEIGHT &&
+      value <= MAX_VALID_COLLAPSED_HEIGHT
+    ) {
       this._maxCollapsedHeight = value;
     } else {
       console.warn(
-        `Cannot set max-collapsed-height to (${value}) it accepts a range between ${MIN_COLLAPSED_HEIGHT} and ${MAX_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
+        `Cannot set max-collapsed-height to (${value}) it accepts a range between ${MIN_VALID_COLLAPSED_HEIGHT} and ${MAX_VALID_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
       );
       this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
     }
