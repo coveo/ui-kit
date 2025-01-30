@@ -3,6 +3,9 @@ import {CSSResultGroup, html, unsafeCSS} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import styles from './{{name}}.css';
 
+/**
+* The {{name}} is a component that does something.
+*/
 @customElement('{{name}}')
 export class {{namePascalCase}} extends TailwindLitElement {
   static styles: CSSResultGroup = [
@@ -10,6 +13,9 @@ export class {{namePascalCase}} extends TailwindLitElement {
     unsafeCSS(styles),
   ];
 
+  /**
+   * The name of the {{name}}
+   */
   @property() name = 'World';
 
   render() {

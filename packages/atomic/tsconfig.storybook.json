@@ -4,7 +4,10 @@
     "emitDecoratorMetadata": true,
     "composite": true,
     "jsxFactory": "h",
-    "declaration": true
+    "declaration": true,
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": [
