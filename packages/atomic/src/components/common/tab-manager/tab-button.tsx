@@ -25,7 +25,7 @@ export class AtomicTabButton {
 
   private get activeTabClass() {
     return this.active
-      ? 'relative after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded'
+      ? "relative after:block after:w-full after:h-1 after:absolute after:-bottom-0.5 after:bg-primary after:rounded after:content-['']"
       : '';
   }
 
