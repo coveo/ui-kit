@@ -103,7 +103,7 @@ export class AtomicNotifyTrigger implements InitializableComponent {
 
     return (
       <Fragment>
-        <Heading level={this.headingLevel ?? 0} class="accessibility-only">
+        <Heading level={this.headingLevel ?? 0} class="sr-only">
           {this.bindings.i18n.t('notifications')}
         </Heading>
         {this.renderNotifications()}
