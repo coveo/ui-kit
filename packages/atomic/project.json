@@ -93,7 +93,7 @@
       }
     },
     "dev": {
-      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
+      "dependsOn": ["storybook", "watch2", "cem:dev", "web:dev"],
       "executor": "nx:noop"
     },
     "build:watch": {
@@ -175,6 +175,13 @@
       "options": {
         "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
+      }
+    },
+    "watch3": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/watch3.js",
+        "cwd": "{projectRoot}"
       }
     }
   }

@@ -20,10 +20,7 @@ function checkPort(port) {
   });
 }
 
-async function rebuild(event, fileName) {
-  if (fileName.contains('/e2e/') || fileName.contains('/.e2e.')) {
-    return;
-  }
+async function rebuild() {
   const commands = [
     'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json',
     'node ./scripts/stencil-proxy.mjs',

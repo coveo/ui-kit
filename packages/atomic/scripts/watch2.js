@@ -1,11 +1,14 @@
 import chalk from 'chalk';
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
+// import util from 'node:util';
 import ora from 'ora';
 
 let runningProcesses = [];
 let isStopped = false;
 let currentTask = null;
+
+// const execPromise = util.promisify(exec);
 
 function runCommand(command) {
   return new Promise((resolve, reject) => {
@@ -43,7 +46,7 @@ function runCommand(command) {
   });
 }
 
-function funkyAnimation(text) {
+async function funkyAnimation(text, action) {
   if (isStopped) {
     return Promise.resolve();
   }
@@ -54,14 +57,19 @@ function funkyAnimation(text) {
     spinner: {frames, interval: 200},
   }).start();
 
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (!isStopped) {
-        spinner.succeed(chalk.magenta.bold(`${text} ✅`));
-      }
-      resolve();
-    }, 3000);
-  });
+  try {
+    await action();
+    spinner.succeed(chalk.magenta.bold(`${text} ✅`));
+  } catch (error) {
+    spinner.fail(chalk.red.bold(`${text} ❌`));
+    if (error.stdout) {
+      console.error(chalk.red(error.stdout));
+    }
+    if (error.stderr) {
+      console.error(chalk.red(error.stderr));
+    }
+    process.exit(1);
+  }
 }
 
 async function stopAllProcesses() {
