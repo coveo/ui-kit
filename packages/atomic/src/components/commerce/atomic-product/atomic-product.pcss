@@ -24,7 +24,8 @@
           line-clamp: 2;
         }
       }
-      @screen desktop-only {
+
+      @media (min-width: 1024px) {
         &.image-large {
           atomic-product-section-children .product-child {
             @mixin aspect-ratio-h 1 / 1, auto;
@@ -48,7 +49,7 @@
         }
       }
 
-      @screen mobile-only {
+      @media (max-width: 1023px) {
         &.image-large {
           atomic-product-section-children .product-child {
             @mixin aspect-ratio-h 1 / 1, auto;
@@ -106,7 +107,7 @@
     }
 
     &.display-list {
-      @screen desktop-only {
+      @media (min-width: 1024px) {
         &.image-large.density-comfortable,
         &.image-large.density-normal {
           atomic-product-section-children .product-child {
@@ -125,7 +126,7 @@
         }
       }
 
-      @screen mobile-only {
+      @media (max-width: 1023px) {
         &.image-large {
           atomic-product-section-children .product-child {
             @mixin aspect-ratio-h 1 / 1, auto;

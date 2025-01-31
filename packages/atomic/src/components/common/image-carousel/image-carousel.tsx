@@ -18,7 +18,7 @@ export const ImageCarousel: FunctionalComponent<
   CarouselProps & JSXBase.HTMLAttributes<HTMLHeadingElement>
 > = (props, children) => {
   const commonPaginationClasses =
-    'w-6 h-6 grid mobile-only:w-10 mobile-only:h-10 justify-center items-center z-1 group rounded-full duration-200 opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity hover:shadow bottom-0 mb-1 absolute';
+    'w-6 h-6 grid mobile-only:w-10 mobile-only:h-10 justify-center items-center z-1 group rounded-full duration-200 opacity-50 hover:opacity-100 focus:opacity-100 transition-opacity hover:shadow-sm bottom-0 mb-1 absolute';
   const commonArrowClasses =
     'w-4 align-middle text-on-background group-hover:text-primary';
 

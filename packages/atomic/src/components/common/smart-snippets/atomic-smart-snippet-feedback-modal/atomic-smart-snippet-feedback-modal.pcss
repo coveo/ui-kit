@@ -3,11 +3,11 @@
 [part='reason'] {
   @apply text-neutral-dark text-base leading-4;
 
-  @screen desktop-only {
+  @media (min-width: 1024px) {
     @apply mt-2;
   }
 
-  @screen mobile-only {
+  @media (max-width: 1023px) {
     @apply mt-4;
   }
 }

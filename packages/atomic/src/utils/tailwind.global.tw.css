@@ -1,3 +1,41 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@import './coveo.tw.css';
+
+@config '../../tailwind.config.cjs';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  :host {
+    display: block;
+    /* TODO: remove when upgrading Tailwind > v3.0.23 */
+    --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
+  }
+
+  :host,
+  button,
+  input,
+  select {
+    @apply font-sans text-base font-normal;
+  }
+
+  :host(.atomic-hidden) {
+    display: none;
+  }
+}

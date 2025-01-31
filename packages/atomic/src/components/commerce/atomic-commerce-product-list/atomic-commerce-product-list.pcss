@@ -32,13 +32,13 @@
     }
   }
 
-  @screen desktop-only {
+  @media (min-width: 1024px) {
     .result-grid {
       display: grid;
     }
   }
 
-  @screen mobile-only {
+  @media (max-width: 1023px) {
     .result-grid {
       display: flex;
       flex-direction: column;

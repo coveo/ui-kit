@@ -314,7 +314,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         <textarea
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-none focus-visible:ring-2"
+          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary focus:outline-hidden mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus-visible:ring-2"
           rows={4}
           placeholder={this.bindings.i18n.t('add-notes')}
           onChange={(e) =>

@@ -32,7 +32,7 @@
       }
     }
 
-    @screen mobile-only {
+    @media (max-width: 1023px) {
       [part~='outline'] {
         &::before {
           margin: 1.75rem 0;
@@ -48,7 +48,7 @@
       }
     }
 
-    @screen mobile-only {
+    @media (max-width: 1023px) {
       [part~='outline'] {
         &::before {
           margin: 1.5rem 0;
@@ -188,7 +188,7 @@
 
 @define-mixin atomic-grid-display-desktop {
   .list-root.display-grid {
-    @screen desktop-only {
+    @media (min-width: 1024px) {
       grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
       &.density-comfortable {
@@ -223,7 +223,7 @@
 
 @define-mixin atomic-grid-display-mobile {
   .list-root.display-grid {
-    @screen mobile-only {
+    @media (max-width: 1023px) {
       &.image-large {
         @media not all and (min-width: 768px) {
           @mixin atomic-list-with-dividers;

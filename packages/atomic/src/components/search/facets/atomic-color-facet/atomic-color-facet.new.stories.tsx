@@ -83,7 +83,7 @@ const argTypes = Object.keys(facetValueToCss).reduce<ArgTypes>(
           value: {},
         },
         table: {
-          category: 'css shadow parts',
+          category: 'css shadow-sm parts',
           subcategory: 'Dynamic parts',
           type: {},
           defaultValue: {},

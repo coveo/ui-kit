@@ -15,7 +15,7 @@ export const SortSelect: FunctionalComponent<SortSelectProps> = (
     <div class="relative" part="select-parent">
       <select
         id={id}
-        class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pl-3 pr-24"
+        class="btn-outline-neutral h-10 grow cursor-pointer appearance-none pl-3 pr-24"
         part="select"
         aria-label={i18n.t('sort-by')}
         onChange={(option) => onSelect(option)}
