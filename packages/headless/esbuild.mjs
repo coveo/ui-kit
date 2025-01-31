@@ -301,7 +301,6 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       sourcemap: true,
       format: 'esm',
-      external: ['pino'],
       mainFields: ['module', 'main'],
     },
     dir
@@ -317,6 +316,7 @@ async function buildNodeConfig(options, outDir) {
     ...base,
     metafile: true,
     platform: 'node',
+    packages: 'external',
     treeShaking: true,
     plugins: [
       alias({
