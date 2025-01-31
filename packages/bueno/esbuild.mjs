@@ -20,6 +20,7 @@ function nodeCjs() {
   return build({
     ...base,
     platform: 'node',
+    packages: 'external',
     outfile: 'dist/bueno.js',
     format: 'cjs',
   });
@@ -29,6 +30,7 @@ function nodeEsm() {
   return build({
     ...base,
     platform: 'node',
+    packages: 'external',
     outfile: 'dist/bueno.esm.js',
     format: 'esm',
   });
