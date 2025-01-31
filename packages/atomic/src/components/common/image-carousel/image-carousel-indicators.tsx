@@ -17,7 +17,7 @@ const CarouselIndicator: FunctionalComponent<CarouselIndicatorProps> = ({
   return (
     <ul
       part="indicators"
-      class="absolute bottom-2 mb-1 mt-6 flex max-w-[80%] items-center justify-center gap-2"
+      class="max-w-4/5 absolute bottom-2 mb-1 mt-6 flex items-center justify-center gap-2"
     >
       {Array.from({length: numberOfImages}, (_, index) => {
         const isActive = index === currentImage % numberOfImages;

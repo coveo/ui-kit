@@ -211,7 +211,7 @@ export class TabPopover implements InitializableComponent {
 
   private renderPopover() {
     return (
-      <div class={`relative ${this.isOpen ? 'z-9999' : ''}`}>
+      <div class={`relative ${this.isOpen ? 'z-100' : ''}`}>
         {this.renderDropdownButton()}
         <ul
           id={this.popoverId}

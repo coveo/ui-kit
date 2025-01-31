@@ -4,10 +4,6 @@
 @import './ripple.pcss';
 
 @layer components {
-  .link {
-    @apply text-primary hover:text-primary-light focus-visible:text-primary-light hover:underline focus-visible:underline;
-  }
-
   .input-primary {
     @apply border-neutral bg-background hover:border-primary-light focus-visible:border-primary focus-visible:ring-ring-primary rounded border focus-visible:outline-none focus-visible:ring-2;
   }
@@ -19,6 +15,7 @@
     @apply before:content-[attr(value)];
   }
 
+  /* TODO: move button components directly into button-style.ts KIT-3927 */
   .btn-primary {
     @apply bg-primary text-on-primary hover:bg-primary-light focus-visible:bg-primary-light focus-visible:ring-ring-primary disabled:bg-disabled rounded focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed;
   }
@@ -59,42 +56,11 @@
     @apply border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light border focus-visible:outline-none;
   }
 
-  .btn-pill {
-    @apply rounded-xl;
-  }
-
   .btn-page {
-    @apply grid place-items-center border-0 text-lg hover:border focus-visible:border;
+    @apply grid h-10 w-10 place-items-center border-0 text-lg hover:border focus-visible:border;
 
     &.selected {
       @apply border-primary border-2 font-bold;
     }
-  }
-}
-
-@layer utilities {
-  .empty\:border-none:empty {
-    border: none;
-  }
-
-  .accessibility-only {
-    position: absolute;
-    display: block;
-    height: 0;
-    overflow: hidden;
-    margin: 0;
-  }
-
-  .text-inherit {
-    font-size: inherit;
-  }
-
-  .cursor-inherit {
-    cursor: inherit;
-  }
-
-  .text-bg-primary {
-    color: var(--atomic-primary);
-    background: var(--atomic-primary-background);
   }
 }

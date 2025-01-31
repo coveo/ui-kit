@@ -23,7 +23,7 @@ export const BreadcrumbShowLess: FunctionalComponent<
         part="show-less"
         style="outline-primary"
         text={props.i18n.t('show-less')}
-        class="btn-pill p-2"
+        class="rounded-xl p-2"
         onClick={props.onShowLess}
       ></Button>
     </li>
