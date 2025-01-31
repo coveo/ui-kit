@@ -87,12 +87,9 @@ export const WithDependsOn: Story = {
     const {canvasElement, step} = context;
     const canvas = within(canvasElement);
     await play(context);
-    await step('Select YouTubeVideo in File Type facet', async () => {
+    await step('Select YouTubeVideo in filetype facet', async () => {
       const button = await canvas.findByShadowLabelText(
-        'Inclusion filter on YouTubeVideo',
-        {
-          exact: false,
-        }
+        'Inclusion filter on YouTubeVideo'
       );
       button.ariaChecked === 'false' ? button.click() : null;
     });
