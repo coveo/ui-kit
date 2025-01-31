@@ -419,7 +419,6 @@ export class GeneratedAnswerCommon {
   }
 
   public render() {
-    console.log('I did changes');
     if (this.shouldBeHidden) {
       return null;
     }

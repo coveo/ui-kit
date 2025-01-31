@@ -64,7 +64,6 @@ const config: StorybookConfig = {
       plugins: [
         nxViteTsPaths(),
         resolveStorybookUtilsImports(),
-        resolveSrcImports(),
         forceInlineCssImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
@@ -81,21 +80,6 @@ const resolveStorybookUtilsImports: PluginImpl = () => {
             '@/storybook-utils',
             path.resolve(__dirname, '../storybook-utils')
           ),
-          importer,
-          options
-        );
-      }
-    },
-  };
-};
-
-const resolveSrcImports: PluginImpl = () => {
-  return {
-    name: 'resolve-storybook-utils-imports',
-    async resolveId(source: string, importer, options) {
-      if (source.startsWith('@/src')) {
-        return this.resolve(
-          source.replace('@/src', path.resolve(__dirname, '../src')),
           importer,
           options
         );

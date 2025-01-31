@@ -185,7 +185,6 @@ export class AtomicFacet implements InitializableComponent {
    */
   @Prop({reflect: true}) public resultsMustMatch: FacetResultsMustMatch =
     'atLeastOneValue';
-
   /**
    * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection).
    * Possible values are 'checkbox', 'link', and 'box'.
@@ -349,7 +348,6 @@ export class AtomicFacet implements InitializableComponent {
         firstSearchExecuted={this.searchStatusState.firstSearchExecuted}
         hasResults={this.facetState.values.length > 0}
       >
-        poop changesss
         {this.searchStatusState.firstSearchExecuted ? (
           <FacetContainer>
             <FacetHeader

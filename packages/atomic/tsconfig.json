@@ -27,7 +27,10 @@
           "no-nullable-attribute-binding": "warning"
         }
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "exclude": ["node_modules", "src/external-builds"],
   "include": ["src"]
