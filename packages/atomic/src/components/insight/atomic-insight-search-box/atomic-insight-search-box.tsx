@@ -240,7 +240,7 @@ export class AtomicInsightSearchBox {
       <div
         part={'suggestions'}
         ref={setRef}
-        class="flex flex-grow basis-1/2 flex-col"
+        class="flex grow basis-1/2 flex-col"
         onMouseDown={(e) => {
           if (e.target === getRef()) {
             e.preventDefault();

@@ -1,4 +1,6 @@
-:host {
+@import 'tailwindcss/theme';
+
+@theme {
   /* Primary colors */
   --atomic-primary: #1372ec;
   --atomic-primary-light: #399ffe;
@@ -49,4 +51,26 @@
   /* Layout */
   --atomic-layout-spacing-x: 1.5rem;
   --atomic-layout-spacing-y: 1rem;
+
+  --tw-border-style: solid;
+}
+
+@theme {
+  /* --color-*: initial; */
+  --color-primary: var(--atomic-primary);
+  --color-primary-light: var(--atomic-primary-light);
+  --color-primary-dark: var(--atomic-primary-dark);
+  --color-on-primary: var(--atomic-on-primary);
+  --color-ring-primary: var(--atomic-ring-primary);
+
+  --color-neutral: var(--atomic-neutral);
+  --color-neutral-light: var(--atomic-neutral-light);
+  --color-neutral-dark: var(--atomic-neutral-dark);
+
+  --color-background: var(--atomic-background);
+  --color-on-background: var(--atomic-on-background);
+  --color-success: var(--atomic-success);
+  --color-error: var(--atomic-error);
+  --color-visited: var(--atomic-visited);
+  --color-disabled: var(--atomic-disabled);
 }

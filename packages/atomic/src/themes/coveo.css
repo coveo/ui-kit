@@ -49,4 +49,5 @@
   /* Layout */
   --atomic-layout-spacing-x: 1.5rem;
   --atomic-layout-spacing-y: 1rem;
+  --tw-border-style: solid;
 }

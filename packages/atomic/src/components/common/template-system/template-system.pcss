@@ -36,10 +36,10 @@
       @mixin result-with-sections map(post-css-map-for-sections, variables);
 
       &.display-list {
-        @screen desktop-only {
+        @media (min-width: 1024px) {
           @mixin row-result-desktop map(post-css-map-for-sections, variables);
         }
-        @screen mobile-only {
+        @media (max-width: 1023px) {
           @mixin row-result-mobile map(post-css-map-for-sections, variables);
         }
       }
@@ -50,20 +50,20 @@
         }
 
         &.image-large {
-          @screen desktop-only {
+          @media (min-width: 1024px) {
             @mixin cell-result-desktop map(post-css-map-for-sections, variables);
           }
-          @screen mobile-only {
+          @media (max-width: 1023px) {
             @mixin row-result-mobile map(post-css-map-for-sections, variables);
           }
         }
         &.image-small,
         &.image-icon,
         &.image-none {
-          @screen desktop-only {
+          @media (min-width: 1024px) {
             @mixin cell-result-desktop map(post-css-map-for-sections, variables);
           }
-          @screen mobile-only {
+          @media (max-width: 1023px) {
             @mixin cell-result-mobile map(post-css-map-for-sections, variables);
           }
         }

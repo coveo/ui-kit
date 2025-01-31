@@ -148,8 +148,8 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
           part={`${direction}-fade`}
           class={`from-background-60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
             direction === 'left'
-              ? 'left-0 bg-gradient-to-r'
-              : 'right-0 bg-gradient-to-l'
+              ? 'bg-linear-to-r left-0'
+              : 'bg-linear-to-l right-0'
           }`}
         ></div>
       </div>

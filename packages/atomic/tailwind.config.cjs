@@ -37,6 +37,8 @@ module.exports = {
       },
       boxShadow: {
         'inner-primary': 'inset 0 0 0 1px var(--atomic-primary)',
+        lg: '0px 2px 8px rgba(229, 232, 232, 0.75)',
+        't-lg': '0px -2px 8px rgba(229, 232, 232, 0.75)',
       },
       fontWeight: {
         normal: 'var(--atomic-font-normal)',
@@ -48,10 +50,6 @@ module.exports = {
         lg: 'var(--atomic-text-lg)',
         xl: 'var(--atomic-text-xl)',
         '2xl': 'var(--atomic-text-2xl)',
-      },
-      screens: {
-        'desktop-only': {min: '1024px'},
-        'mobile-only': {raw: 'not all and (min-width: 1024px)'},
       },
       gradientColorStops: (theme) => ({
         ...theme('colors'),
@@ -89,16 +87,4 @@ module.exports = {
       sans: `var(--atomic-font-family)`,
     },
   },
-  plugins: [
-    plugin(function ({addUtilities, theme, variants}) {
-      addUtilities(
-        {
-          '.outline-color': {
-            outlineColor: theme('colors.primary-light'),
-          },
-        },
-        variants('outlineColor')
-      );
-    }),
-  ],
 };

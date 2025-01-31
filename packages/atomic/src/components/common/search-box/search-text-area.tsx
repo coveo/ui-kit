@@ -136,7 +136,7 @@ export const SearchTextArea: FunctionalComponent<Props> = ({
       <div class="searchbox-button-wrapper ml-2 flex items-center justify-center">
         <span
           part="loading"
-          class="loading mr-2 grid h-5 w-5 animate-spin place-items-center rounded-full bg-gradient-to-r"
+          class="loading bg-linear-to-r mr-2 grid h-5 w-5 animate-spin place-items-center rounded-full"
         ></span>
       </div>
     )}

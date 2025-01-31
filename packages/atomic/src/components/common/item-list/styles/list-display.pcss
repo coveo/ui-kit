@@ -17,11 +17,11 @@
     width: auto;
   }
 
-  @screen desktop-only {
+  @media (min-width: 1024px) {
     @mixin atomic-list-with-dividers;
   }
 
-  @screen mobile-only {
+  @media (max-width: 1023px) {
     &.image-large {
       @mixin atomic-list-with-dividers;
       display: grid;

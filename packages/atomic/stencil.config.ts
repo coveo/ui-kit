@@ -3,6 +3,7 @@ import {postcss} from '@stencil-community/postcss';
 import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
+import tailwindcss from '@tailwindcss/postcss';
 import autoprefixer from 'autoprefixer';
 import {readFileSync, readdirSync} from 'fs';
 import focusVisible from 'postcss-focus-visible';
@@ -13,8 +14,6 @@ import postcssNesting from 'postcss-nested';
 import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-import tailwind from 'tailwindcss';
-import tailwindNesting from 'tailwindcss/nesting';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 import {generateAngularModuleDefinition as angularModule} from './stencil-plugin/atomic-angular-module';
 
@@ -174,10 +173,11 @@ export const config: Config = {
           ],
         }),
         mixins(),
-        tailwindNesting(),
-        tailwind(),
+
         focusVisible(),
         postcssNesting(),
+        tailwindcss(),
+
         autoprefixer(),
       ],
     }),
