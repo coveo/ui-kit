@@ -1,6 +1,6 @@
-import {wrapInCommerceInterface} from '@coveo/atomic-storybook-utils/commerce/commerce-interface-wrapper';
-import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {
   Decorator,
   Meta,

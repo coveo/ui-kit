@@ -14,6 +14,14 @@ const externalizeDependencies: PluginImpl = () => {
         return false;
       }
 
+      if (
+        /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(
+          source
+        )
+      ) {
+        return false;
+      }
+
       const packageMappings = generateExternalPackageMappings(__dirname);
       const packageMapping = packageMappings[source];
 
@@ -65,11 +73,11 @@ const resolveStorybookUtils: PluginImpl = () => {
   return {
     name: 'resolve-storybook-utils',
     async resolveId(source: string, importer, options) {
-      if (source.startsWith('@coveo/atomic-storybook-utils')) {
+      if (source.startsWith('@/storybook-utils')) {
         return this.resolve(
           source.replace(
-            '@coveo/atomic-storybook-utils',
-            path.resolve(__dirname, '../storybookUtils')
+            '@/storybook-utils',
+            path.resolve(__dirname, '../storybook-utils')
           ),
           importer,
           options

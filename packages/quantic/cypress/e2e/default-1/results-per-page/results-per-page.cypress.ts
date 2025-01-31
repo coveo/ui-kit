@@ -136,7 +136,9 @@ describe('quantic-result-per-page', () => {
         });
 
         describe('with initial choice not in choices displayed', () => {
-          it('should not load component', () => {
+          it('should still load the component and default on the first choice', () => {
+            const choicesDisplayed = [10, 15, 20];
+            const expectedChoice = choicesDisplayed[0];
             visitResultsPerPage(
               {
                 initialChoice: 32,
@@ -146,14 +148,17 @@ describe('quantic-result-per-page', () => {
               false
             );
 
-            Expect.displayChoices(false);
+            Expect.displayChoices(true);
+            Expect.choicesEqual(choicesDisplayed);
+            Expect.selectedChoiceEqual(expectedChoice);
             Expect.console.error(true);
-            Expect.displayComponentError(true);
+            Expect.displayComponentError(false);
+            Expect.search.numberOfResults(expectedChoice, param.useCase);
           });
         });
 
         describe('with invalid initial choice', () => {
-          it('should not load component', () => {
+          it('should still load the component and default on the first choice', () => {
             visitResultsPerPage(
               {
                 initialChoice: -1,
@@ -163,14 +168,17 @@ describe('quantic-result-per-page', () => {
               false
             );
 
-            Expect.displayChoices(false);
+            Expect.displayChoices(true);
+            Expect.choicesEqual(defaultChoices);
+            Expect.selectedChoiceEqual(defaultChoices[0]);
             Expect.console.error(true);
-            Expect.displayComponentError(true);
+            Expect.displayComponentError(false);
+            Expect.search.numberOfResults(defaultChoices[0], param.useCase);
           });
         });
 
         describe('with invalid choices displayed', () => {
-          it('should not load component', () => {
+          it('should not load component and display the component error', () => {
             visitResultsPerPage(
               {
                 initialChoice: defaultInitialChoice,

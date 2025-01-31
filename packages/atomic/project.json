@@ -32,10 +32,11 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
           "node ./scripts/stencil-proxy.mjs",
           "node ./scripts/build.mjs --config=tsconfig.lit.json",
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" == \"CDN\" ]; then rollup -c rollup.config.js; fi",
           "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
           "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
         ],
@@ -106,7 +107,7 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "vite serve dev",
+        "command": "node ./scripts/start-dev.mjs",
         "cwd": "{projectRoot}"
       }
     },
@@ -114,7 +115,7 @@
       "dependsOn": ["^build", "build:locales"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
         "cwd": "{projectRoot}"
       }
     },
@@ -174,6 +175,27 @@
       "options": {
         "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
+      }
+    },
+    "generate-component": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/generate-component.js {args.name} {args.output}",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [],
+      "schema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the component to generate"
+          },
+          "output": {
+            "type": "string",
+            "description": "The output directory for the generated files"
+          }
+        },
+        "required": ["name", "output"]
       }
     }
   }

@@ -3,12 +3,6 @@ import fs from 'fs/promises';
 import ncp from 'ncp';
 import path from 'path';
 
-const getCurrentDir = () => {
-  const url = import.meta.url;
-  const fileURL = new URL(url);
-  return path.dirname(fileURL.pathname);
-};
-
 const getVersionFromPackageJson = async (packagePath) => {
   const packageJsonPath = path.join(packagePath, 'package.json');
   try {
@@ -32,7 +26,7 @@ const copyFiles = async (source, destination) => {
   });
 };
 
-const currentDir = getCurrentDir();
+const currentDir = import.meta.dirname;
 const headlessDir = path.resolve(currentDir, '../../headless');
 const buenoDir = path.resolve(currentDir, '../../bueno');
 const atomicHostedPageDir = path.resolve(currentDir, '../cdn');
