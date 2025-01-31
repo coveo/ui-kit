@@ -121,7 +121,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
 
   /**
-   * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
   @Prop() answerConfigurationId?: string;
