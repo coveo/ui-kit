@@ -22,11 +22,11 @@ export class AtomicNumericFacetPageObject extends BasePageObject<'atomic-numeric
     return this.facet.getByLabel('Apply custom numerical values');
   }
 
-  get facetClearFilter() {
+  get facetClearFilterButton() {
     return this.facet.getByRole('button').filter({hasText: 'Clear filter'});
   }
 
-  get getFacetValue() {
+  get facetValues() {
     return this.facet.locator('[part="value-checkbox"]');
   }
 }

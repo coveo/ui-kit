@@ -42,12 +42,12 @@ test.describe('default', () => {
     test.describe('when clicking the apply button', () => {
       test.beforeEach(async ({facet}) => {
         await facet.facetApplyButton.click();
-        await facet.facetClearFilter.waitFor({state: 'visible'});
+        await facet.facetClearFilterButton.waitFor({state: 'visible'});
       });
 
       test.describe('when clicking the clear filter button', () => {
         test.beforeEach(async ({facet}) => {
-          await facet.facetClearFilter.click();
+          await facet.facetClearFilterButton.click();
         });
 
         test('should clear the selected dates', async ({facet}) => {
@@ -66,7 +66,7 @@ test.describe('default', () => {
         });
 
         test('should hide the clear filter button', async ({facet}) => {
-          await expect(facet.facetClearFilter).not.toBeVisible();
+          await expect(facet.facetClearFilterButton).not.toBeVisible();
         });
       });
     });
@@ -131,7 +131,7 @@ test.describe('with min and max values', () => {
 
       test.describe('when clicking the clear filter button', () => {
         test.beforeEach(async ({facet}) => {
-          await facet.facetClearFilter.click();
+          await facet.facetClearFilterButton.click();
         });
 
         test('should clear the selected dates', async ({facet}) => {
@@ -153,7 +153,7 @@ test.describe('with min and max values', () => {
         });
 
         test('should hide the clear filter button', async ({facet}) => {
-          await expect(facet.facetClearFilter).not.toBeVisible();
+          await expect(facet.facetClearFilterButton).not.toBeVisible();
         });
       });
     });
@@ -170,24 +170,105 @@ test.describe('with min and max values', () => {
   });
 });
 
-test.describe('when dependent', () => {
+test.describe('when a "depends-on" prop is provided', () => {
   test.beforeEach(async ({facet}) => {
     await facet.load({story: 'with-depends-on'});
+    await facet.facet.waitFor({state: 'visible'});
   });
 
-  test('when the specified dependency is selected in the parent facet, should be visible', () => {
-    expect(true);
+  test('when the specified dependency is selected in the parent facet, dependent facet should be visible', async ({
+    facet,
+  }) => {
+    expect(facet.facet).toBeVisible();
   });
 
-  test.describe('when the specified dependency is not selected in the parent facet', () => {
-    test('should not be visible', () => {
-      expect(true);
+  test.describe('when the specified dependency is cleared from the parent facet', () => {
+    test('dependent facet should not be visible', async ({facet}) => {
+      const parent = facet.page.getByTestId('parent-facet');
+      await parent.locator('[part="clear-button"]').click();
+
+      expect(facet.facet).not.toBeVisible();
     });
-    test('should clear previously selected range', () => {
-      expect(true);
+
+    test('should clear previously selected dependent facet range', async ({
+      facet,
+    }) => {
+      await facet.facetValues.first().click();
+
+      const breadbox = facet.page.getByTestId('breadbox');
+      expect(breadbox).toBeVisible();
+
+      const parent = facet.page.getByTestId('parent-facet');
+      await parent.locator('[part="clear-button"]').click();
+
+      await breadbox.waitFor({state: 'hidden'});
+      expect(breadbox).not.toBeVisible();
     });
-    test('should clear previously selected input range', () => {
-      expect(true);
+    test('should clear previously selected dependent facet input range', async ({
+      facet,
+    }) => {
+      await facet.facetInputStart.fill('2025-01-01');
+      await facet.facetInputEnd.fill('2025-02-01');
+      await facet.facetApplyButton.click();
+
+      const breadbox = facet.page.getByTestId('breadbox');
+      expect(breadbox).toBeVisible();
+
+      const parent = facet.page.getByTestId('parent-facet');
+      await parent.locator('[part="clear-button"]').click();
+
+      await breadbox.waitFor({state: 'hidden'});
+      expect(breadbox).not.toBeVisible();
+    });
+  });
+
+  test.describe('when the specified dependency is cleared from the breadbox', () => {
+    test('dependent facet should not be visible', async ({facet}) => {
+      const breadbox = facet.page.getByTestId('breadbox');
+      await breadbox
+        .getByLabel(
+          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
+        )
+        .click();
+
+      expect(facet.facet).not.toBeVisible();
+    });
+
+    test('should clear previously selected dependent facet range', async ({
+      facet,
+    }) => {
+      await facet.facetValues.first().click();
+
+      const breadbox = facet.page.getByTestId('breadbox');
+      expect(breadbox).toBeVisible();
+
+      await breadbox
+        .getByLabel(
+          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
+        )
+        .click();
+
+      await breadbox.waitFor({state: 'hidden'});
+      expect(breadbox).not.toBeVisible();
+    });
+    test('should clear previously selected dependent facet input range', async ({
+      facet,
+    }) => {
+      await facet.facetInputStart.fill('2025-01-01');
+      await facet.facetInputEnd.fill('2025-02-01');
+      await facet.facetApplyButton.click();
+
+      const breadbox = facet.page.getByTestId('breadbox');
+      expect(breadbox).toBeVisible();
+
+      await breadbox
+        .getByLabel(
+          'Remove inclusion filter on File Type (Parent facet): YouTubeVideo'
+        )
+        .click();
+
+      await breadbox.waitFor({state: 'hidden'});
+      expect(breadbox).not.toBeVisible();
     });
   });
 });
