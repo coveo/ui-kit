@@ -111,7 +111,6 @@ const [isStencil] = process.argv.slice(2);
 
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {
-  console.log(isStencil);
   await stopAllProcesses();
   console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
 

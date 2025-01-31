@@ -100,6 +100,13 @@
         "waitUntilTargets": ["^dev"]
       }
     },
+    "web:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/start-dev.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
     "stencil:dev": {
       "dependsOn": ["^build", "build:locales"],
       "executor": "nx:run-commands",

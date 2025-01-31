@@ -9,7 +9,8 @@ import {
 } from 'typescript';
 
 /**
- * Custom SVG transformer to handle .svg imports.
+ * //TODO Add a lot of jsdoc
+ * TypeScript transformer that replaces import paths starting with `@/` with relative paths.
  */
 export default function pathTransformer(context) {
   const {factory} = context;
@@ -23,8 +24,6 @@ export default function pathTransformer(context) {
           sourceFile.fileName,
           importPath
         );
-
-        console.log(relativePath);
 
         return factory.updateImportDeclaration(
           node,
