@@ -344,6 +344,9 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
     interactiveResult.select = () => {
       this.onSelect(recommendation, originalSelect);
     };
+    const linkContent =
+      this.itemTemplateProvider.getLinkTemplateContent(recommendation);
+
     return {
       interactiveResult,
       result: recommendation,
@@ -356,8 +359,8 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(recommendation),
-      linkContent:
-        this.itemTemplateProvider.getLinkTemplateContent(recommendation),
+      linkContent,
+      stopPropagation: !!linkContent,
       store: this.bindings.store,
       density: this.density,
       display: this.display,
