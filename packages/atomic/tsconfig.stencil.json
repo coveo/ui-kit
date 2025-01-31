@@ -13,10 +13,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "jsxFactory": "h"
   },
   "references": [
     {

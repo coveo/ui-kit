@@ -63,15 +63,17 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
-        resolveStorybookUtils(),
+        resolveStorybookUtilsImports(),
+        resolveSrcImports(),
+        forceInlineCssImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
 };
 
-const resolveStorybookUtils: PluginImpl = () => {
+const resolveStorybookUtilsImports: PluginImpl = () => {
   return {
-    name: 'resolve-storybook-utils',
+    name: 'resolve-storybook-utils-imports',
     async resolveId(source: string, importer, options) {
       if (source.startsWith('@/storybook-utils')) {
         return this.resolve(
@@ -87,4 +89,38 @@ const resolveStorybookUtils: PluginImpl = () => {
   };
 };
 
+const resolveSrcImports: PluginImpl = () => {
+  return {
+    name: 'resolve-storybook-utils-imports',
+    async resolveId(source: string, importer, options) {
+      if (source.startsWith('@/src')) {
+        return this.resolve(
+          source.replace('@/src', path.resolve(__dirname, '../src')),
+          importer,
+          options
+        );
+      }
+    },
+  };
+};
+
+const forceInlineCssImports: PluginImpl = () => {
+  return {
+    name: 'force-inline-css-imports',
+    enforce: 'pre',
+    transform(code, id) {
+      if (id.endsWith('.ts')) {
+        return {
+          code: code.replace(
+            /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
+            (_, importName, cssPath) =>
+              `import ${importName} from '${cssPath}?inline'`
+          ),
+          map: null,
+        };
+      }
+      return null;
+    },
+  };
+};
 export default config;

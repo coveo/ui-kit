@@ -107,30 +107,35 @@ async function startServers() {
 // Start the servers first
 startServers();
 
+const [isStencil] = process.argv.slice(2);
+
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {
+  console.log(isStencil);
   await stopAllProcesses();
   console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
 
   isStopped = false;
 
-  // await nextTask(
-  //   'Rebuilding Stencil...',
-  //   'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
-  // );
+  if (isStencil) {
+    await nextTask(
+      'Rebuilding Stencil...',
+      'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
+    );
 
-  // if (isStopped) {
-  //   return;
-  // }
+    if (isStopped) {
+      return;
+    }
 
-  // await nextTask(
-  //   'Placing the Stencil Proxy...',
-  //   'node ./scripts/stencil-proxy.mjs'
-  // );
+    await nextTask(
+      'Placing the Stencil Proxy...',
+      'node ./scripts/stencil-proxy.mjs'
+    );
 
-  // if (isStopped) {
-  //   return;
-  // }
+    if (isStopped) {
+      return;
+    }
+  }
 
   await nextTask(
     'Rebuilding Lit...',
@@ -142,7 +147,7 @@ watch('src', {recursive: true}, async (_, filename) => {
   }
 
   await nextTask(
-    'Process CSS...',
+    'Processing CSS...',
     'node ./scripts/process-css.mjs --config=tsconfig.lit.json'
   );
 
@@ -168,25 +173,15 @@ watch('src', {recursive: true}, async (_, filename) => {
     return;
   }
 
-  await nextTask('CEM build...', 'cem analyze');
-
-  if (isStopped) {
-    return;
-  }
-
   await nextTask('Building storybook', 'npx storybook build -o dist-storybook');
-
-  if (isStopped) {
-    return;
-  }
-
   // restart storybook server, somehow even after build, it doesn't pick up the changes
   // it needs a dev restart to pick up the changes
   storybookServer.kill('SIGTERM');
   exec('npx storybook dev -p 4400 --no-open', {stdio: 'ignore'});
 
+  if (isStopped) {
+    return;
+  }
+
   console.log(chalk.magenta.bold(' 🎇 Build process completed! 🎇 '));
 });
-
-// test is with a lit component
-// Add the flag

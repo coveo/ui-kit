@@ -178,6 +178,14 @@
       "options": {
         "command": "node ./scripts/dev.js",
         "cwd": "{projectRoot}"
+      },
+      "schema": {
+        "properties": {
+          "stencil": {
+            "type": "boolean",
+            "description": "If you want to rebuild stencil in dev mode"
+          }
+        }
       }
     }
   }
