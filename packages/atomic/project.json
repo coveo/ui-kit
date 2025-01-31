@@ -92,10 +92,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "dev": {
-      "dependsOn": ["storybook", "watch2", "cem:dev", "web:dev"],
-      "executor": "nx:noop"
-    },
     "build:watch": {
       "executor": "nx:run-commands",
       "options": {
@@ -104,25 +100,11 @@
         "waitUntilTargets": ["^dev"]
       }
     },
-    "web:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node ./scripts/start-dev.mjs",
-        "cwd": "{projectRoot}"
-      }
-    },
     "stencil:dev": {
       "dependsOn": ["^build", "build:locales"],
       "executor": "nx:run-commands",
       "options": {
         "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "cem:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cem analyze --watch",
         "cwd": "{projectRoot}"
       }
     },
@@ -145,13 +127,6 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "wait-on http://localhost:3333/ping"
-      }
-    },
-    "storybook": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "npx storybook dev -p 4400"
       }
     },
     "build-storybook": {
@@ -198,10 +173,10 @@
         "required": ["name", "output"]
       }
     },
-    "watch3": {
+    "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/watch3.js",
+        "command": "node ./scripts/dev.js",
         "cwd": "{projectRoot}"
       }
     }

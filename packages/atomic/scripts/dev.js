@@ -9,13 +9,7 @@ let isStopped = false;
 let storybookServer;
 
 async function nextTask(text, command) {
-  const frames = [
-    '⚽  🐕  ', // Ball at the start, dog behind
-    ' ⚽ 🐕  ', // Dog moves closer
-    '  ⚽🐕  ', // Almost touching the ball
-    ' ⚽🐕   ', // Dog pushes the ball
-    '⚽ 🐕   ', // Ball moves forward
-  ];
+  const frames = ['⚽  🐕  ', ' ⚽ 🐕  ', '  ⚽🐕  ', ' ⚽🐕   ', '⚽ 🐕   '];
   const spinner = ora({
     text: text,
     spinner: {frames, interval: 200},
@@ -95,9 +89,12 @@ function waitForPort(port, host = 'localhost', timeout = 30000) {
 async function startServers() {
   console.log(chalk.green.bold('🚀 Starting development servers...'));
 
-  storybookServer = exec('npx storybook dev -p 4400', {stdio: 'ignore'});
+  storybookServer = exec('npx storybook dev -p 4400 --no-open', {
+    stdio: 'ignore',
+  });
 
-  exec('vite serve dev', {stdio: 'ignore'});
+  // Script that starts the Vite server and copies files for CDN mode
+  exec('node ./scripts/start-dev.mjs', {stdio: 'ignore'});
 
   console.log(
     chalk.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
@@ -110,29 +107,30 @@ async function startServers() {
 // Start the servers first
 startServers();
 
-watch('src', {recursive: true}, async (eventType, filename) => {
+// Watch the src folder for changes
+watch('src', {recursive: true}, async (_, filename) => {
   await stopAllProcesses();
   console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
 
   isStopped = false;
 
-  await nextTask(
-    'Rebuilding Stencil...',
-    'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
-  );
+  // await nextTask(
+  //   'Rebuilding Stencil...',
+  //   'node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json'
+  // );
 
-  if (isStopped) {
-    return;
-  }
+  // if (isStopped) {
+  //   return;
+  // }
 
-  await nextTask(
-    'Placing the Stencil Proxy...',
-    'node ./scripts/stencil-proxy.mjs'
-  );
+  // await nextTask(
+  //   'Placing the Stencil Proxy...',
+  //   'node ./scripts/stencil-proxy.mjs'
+  // );
 
-  if (isStopped) {
-    return;
-  }
+  // if (isStopped) {
+  //   return;
+  // }
 
   await nextTask(
     'Rebuilding Lit...',
@@ -185,7 +183,10 @@ watch('src', {recursive: true}, async (eventType, filename) => {
   // restart storybook server, somehow even after build, it doesn't pick up the changes
   // it needs a dev restart to pick up the changes
   storybookServer.kill('SIGTERM');
-  exec('npx storybook dev -p 4400', {stdio: 'ignore'});
+  exec('npx storybook dev -p 4400 --no-open', {stdio: 'ignore'});
 
   console.log(chalk.magenta.bold(' 🎇 Build process completed! 🎇 '));
 });
+
+// test is with a lit component
+// Add the flag
