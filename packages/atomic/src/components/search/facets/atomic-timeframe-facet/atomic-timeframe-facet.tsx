@@ -232,10 +232,9 @@ export class AtomicTimeframeFacet implements InitializableComponent {
       dependsOn: parseDependsOn(this.dependsOn) && this.dependsOn,
       withDatePicker: this.withDatePicker,
       setFacetId: (id: string) => (this.facetId = id),
-      buildDependenciesManager: () =>
+      buildDependenciesManager: (facetId: string) =>
         buildFacetConditionsManager(this.bindings.engine, {
-          facetId:
-            this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
+          facetId,
           conditions: parseDependsOn<
             FacetValueRequest | CategoryFacetValueRequest
           >(this.dependsOn),

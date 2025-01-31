@@ -6,33 +6,29 @@ export class AtomicTimeframeFacetPageObject extends BasePageObject<'atomic-timef
     super(page, 'atomic-timeframe-facet');
   }
 
-  get getFacetSearch() {
-    return this.page.getByLabel('Search');
+  get facet() {
+    return this.page.locator('atomic-timeframe-facet');
   }
 
   get facetInputStart() {
-    return this.page.getByLabel('Enter a start date for the No label facet');
+    return this.facet.getByLabel('Enter a start date');
   }
 
   get facetInputEnd() {
-    return this.page.getByLabel('Enter an end date for the No label facet');
+    return this.facet.getByLabel('Enter an end date');
   }
 
   get facetApplyButton() {
-    return this.page.getByRole('button', {
-      name: 'Apply custom start and end dates for the No label facet',
+    return this.facet.getByRole('button', {
+      name: 'Apply custom start and end dates',
     });
   }
 
-  get facetClearFilter() {
-    return this.page.getByRole('button').filter({hasText: 'Clear filter'});
+  get facetValues() {
+    return this.facet.getByLabel('Inclusion filter on');
   }
 
-  get getFacetValue() {
-    return this.page.locator('[part="value-box"]');
-  }
-
-  get facetSearchMoreMatchesFor() {
-    return this.page.getByRole('button', {name: 'More matches for p'});
+  get facetClearFilterButton() {
+    return this.facet.getByRole('button').filter({hasText: 'Clear filter'});
   }
 }
