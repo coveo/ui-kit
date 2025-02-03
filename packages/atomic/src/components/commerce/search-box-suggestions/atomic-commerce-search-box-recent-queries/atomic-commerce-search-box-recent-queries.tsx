@@ -127,10 +127,8 @@ export class AtomicCommerceSearchBoxRecentQueries {
     const hasQuery = query !== '';
     const max = hasQuery ? this.maxWithQuery : this.maxWithoutQuery;
     const filteredQueries = this.recentQueriesList.state.queries
-      .filter(
-        (recentQuery) =>
-          recentQuery !== query &&
-          recentQuery.toLowerCase().startsWith(query.toLowerCase())
+      .filter((recentQuery) =>
+        recentQuery.toLowerCase().startsWith(query.toLowerCase())
       )
       .slice(0, max);
 

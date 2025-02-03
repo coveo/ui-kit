@@ -1,9 +1,9 @@
-import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
 import {
   playExecuteFirstSearch,
   wrapInSearchInterface,
-} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
+} from '@/storybook-utils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit/static-html.js';
 

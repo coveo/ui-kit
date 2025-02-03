@@ -83,10 +83,14 @@ interface Tab {
   conditions: Condition[];
 }
 
+interface InsightGenQAOptions extends InsightOption {
+  collapsible: boolean;
+}
+
 interface SettingsSection {
   createArticle: InsightOption;
   fullSearch: InsightOption;
-  genQA: InsightOption;
+  genQA: InsightGenQAOptions;
   userActions: InsightUserActionOptions;
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable @cspell/spellchecker */
-import {parameters} from '@coveo/atomic-storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@coveo/atomic-storybook-utils/common/render-component';
-import {wrapInSearchInterface} from '@coveo/atomic-storybook-utils/search/search-interface-wrapper';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
+import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import {userEvent} from '@storybook/test';
 import type {
   Decorator,

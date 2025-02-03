@@ -114,6 +114,12 @@ function cleanup() {
 }
 
 describe('c-quantic-breadcrumb-manager', () => {
+  beforeEach(() => {
+    mockSuccessfulHeadlessInitialization();
+    prepareHeadlessState();
+    mockStoreState();
+  });
+
   afterEach(() => {
     breadcrumbManagerState = initialBreadcrumbManagerState;
     storeState = initialStoreState;
@@ -153,18 +159,6 @@ describe('c-quantic-breadcrumb-manager', () => {
       );
       expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
-  });
-
-  beforeEach(() => {
-    mockSuccessfulHeadlessInitialization();
-    prepareHeadlessState();
-    mockStoreState();
-  });
-
-  afterEach(() => {
-    breadcrumbManagerState = initialBreadcrumbManagerState;
-    storeState = initialStoreState;
-    cleanup();
   });
 
   describe('facet breadcrumbs rendering', () => {
