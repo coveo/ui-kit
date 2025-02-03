@@ -9,7 +9,10 @@
     "declarationMap": true,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
-    "outDir": "dist/atomic/components"
+    "outDir": "dist/atomic/components",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
 
   "files": [

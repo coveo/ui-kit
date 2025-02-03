@@ -64,7 +64,6 @@ const config: StorybookConfig = {
       plugins: [
         nxViteTsPaths(),
         resolveStorybookUtilsImports(),
-        forceInlineCssImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
@@ -88,23 +87,4 @@ const resolveStorybookUtilsImports: PluginImpl = () => {
   };
 };
 
-const forceInlineCssImports: PluginImpl = () => {
-  return {
-    name: 'force-inline-css-imports',
-    enforce: 'pre',
-    transform(code, id) {
-      if (id.endsWith('.ts')) {
-        return {
-          code: code.replace(
-            /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
-            (_, importName, cssPath) =>
-              `import ${importName} from '${cssPath}?inline'`
-          ),
-          map: null,
-        };
-      }
-      return null;
-    },
-  };
-};
 export default config;
