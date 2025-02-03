@@ -202,7 +202,10 @@ watch('src', {recursive: true}, async (_, filename) => {
     return;
   }
 
-  await nextTask('Building storybook', 'npx storybook build -o dist-storybook');
+  await nextTask(
+    'Building storybook...',
+    'npx storybook build -o dist-storybook'
+  );
 
   // Restart storybook server
   // Somehow even after a build, the dev server doesn't pick up the changes.
