@@ -10,7 +10,7 @@ import {
 import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {
   InteractiveProductContext,
   ProductContext,

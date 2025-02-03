@@ -1,10 +1,11 @@
 import {html, LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit-html/directive-helpers.js';
+import type {CommerceBindings} from '../components/commerce/atomic-commerce-interface/lit-stencil-common-types';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import type {GenericRender, RenderGuardDecorator} from './types';
 
 export interface LitElementWithBindings extends LitElement {
-  bindings?: Bindings;
+  bindings?: Bindings | CommerceBindings;
 }
 
 /**

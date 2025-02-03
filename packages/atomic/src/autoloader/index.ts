@@ -1,6 +1,10 @@
 //@ts-ignore
 //TODO: Simplify path to target some kind of index file?
+import commerceElementMap from '../components/components/commerce/lazy-index.js';
+//@ts-ignore
 import searchElementMap from '../components/components/search/lazy-index.js';
+
+const elementMap = {...searchElementMap, ...commerceElementMap};
 
 if (typeof window !== 'undefined') {
   /**
@@ -47,7 +51,7 @@ if (typeof window !== 'undefined') {
       return Promise.resolve();
     }
 
-    return searchElementMap[tagName]?.();
+    return elementMap[tagName]?.();
   };
 
   const observer = new MutationObserver((mutations) => {

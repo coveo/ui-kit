@@ -18,7 +18,7 @@ import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
 import {SearchTips} from '../../common/no-items/tips';
 import {getSummary} from '../../common/no-items/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * @alpha

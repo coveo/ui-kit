@@ -26,7 +26,7 @@ import {
 } from '../../common/pager/pager-buttons';
 import {PagerGuard} from '../../common/pager/pager-guard';
 import {PagerNavigation} from '../../common/pager/pager-navigation';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 import {getCurrentPagesRange} from './commerce-pager-utils';
 
 /**

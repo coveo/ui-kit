@@ -10,7 +10,7 @@ import {
   TruncateAfter,
 } from '../../../common/expandable-text/expandable-text';
 import {Hidden} from '../../../common/hidden';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {ProductContext} from '../product-template-decorators';
 
 /**

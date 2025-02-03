@@ -1,6 +1,6 @@
 import {SortCriterion} from '@coveo/headless/commerce';
 import {FunctionalComponent, h} from '@stencil/core';
-import {SortOption, SortOptionProps} from '../../common/sort/option';
+import {SortOption, SortOptionProps} from '../../common/sort/stencil-option';
 
 interface CommerceSortOptionProps
   extends Omit<SortOptionProps, 'label' | 'value'> {

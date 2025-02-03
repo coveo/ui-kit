@@ -24,7 +24,7 @@ import {QueryErrorLink} from '../../common/query-error/link';
 import {QueryErrorShowMore} from '../../common/query-error/show-more';
 import {QueryErrorTitle} from '../../common/query-error/title';
 import {getAriaMessageFromErrorType} from '../../common/query-error/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-query-error` component handles fatal errors when performing a query on the Commerce API. When the error is known, it displays a link to relevant documentation for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.

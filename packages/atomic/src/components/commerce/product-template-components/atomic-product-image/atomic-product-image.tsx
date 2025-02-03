@@ -7,7 +7,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {ImageCarousel} from '../../../common/image-carousel/image-carousel';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {ProductContext} from '../product-template-decorators';
 
 type Image = {

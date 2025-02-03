@@ -15,12 +15,12 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {SortContainer} from '../../common/sort/container';
-import {SortGuard} from '../../common/sort/guard';
-import {SortLabel} from '../../common/sort/label';
-import {SortSelect} from '../../common/sort/select';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {CommerceSortOption, getSortByLabel} from '../sort/option';
+import {SortContainer} from '../../common/sort/stencil-container';
+import {SortGuard} from '../../common/sort/stencil-guard';
+import {SortLabel} from '../../common/sort/stencil-label';
+import {SortSelect} from '../../common/sort/stencil-select';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
+import {CommerceSortOption, getSortByLabel} from '../sort/stencil-option';
 
 /**
  * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
@@ -34,7 +34,7 @@ import {CommerceSortOption, getSortByLabel} from '../sort/option';
  * @alpha
  */
 @Component({
-  tag: 'atomic-commerce-sort-dropdown',
+  tag: 'stencil-atomic-commerce-sort-dropdown',
   styleUrl: 'atomic-commerce-sort-dropdown.pcss',
   shadow: true,
 })
@@ -76,6 +76,7 @@ export class AtomicCommerceSortDropdown
   }
 
   public render() {
+    console.log('STENCIL render dropdown');
     const {error, responseId, products} = this.searchOrListingState;
     const {
       bindings: {i18n},

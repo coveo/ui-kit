@@ -27,6 +27,7 @@ function overrideShouldUpdate(
   component.shouldUpdate = function (changedProperties: PropertyValues) {
     for (const [key, value] of changedProperties.entries()) {
       if (key === stateProperty && value === undefined) {
+        // console.log('== should update BIND');
         return false;
       }
     }

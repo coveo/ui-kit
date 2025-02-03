@@ -20,11 +20,11 @@ import {
 } from '../../../utils/initialization-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {randomID} from '../../../utils/utils';
-import {SortContainer} from '../../common/sort/container';
-import {SortGuard} from '../../common/sort/guard';
-import {SortLabel} from '../../common/sort/label';
-import {SortOption} from '../../common/sort/option';
-import {SortSelect} from '../../common/sort/select';
+import {SortContainer} from '../../common/sort/stencil-container';
+import {SortGuard} from '../../common/sort/stencil-guard';
+import {SortLabel} from '../../common/sort/stencil-label';
+import {SortOption} from '../../common/sort/stencil-option';
+import {SortSelect} from '../../common/sort/stencil-select';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

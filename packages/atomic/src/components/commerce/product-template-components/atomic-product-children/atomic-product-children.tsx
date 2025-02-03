@@ -20,7 +20,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
 import {Button} from '../../../common/button';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {ProductContext} from '../product-template-decorators';
 
 export interface SelectChildProductEventArgs {
