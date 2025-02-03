@@ -4,10 +4,28 @@ import {watch} from 'node:fs';
 import net from 'node:net';
 import ora from 'ora';
 
+/**
+ * An array to keep track of running processes.
+ * @type {Array<import('node:child_process').ChildProcess>}
+ */
 let runningProcesses = [];
+/**
+ * A flag to stop the build process if a file changes during the build.
+ * @type {boolean}
+ */
 let isStopped = false;
+/**
+ * @type {import('node:child_process').ChildProcess}
+ */
 let storybookServer;
 
+/**
+ * Executes a command as a child process with a spinner animation.
+ *
+ * @param {string} text - The text to display alongside the spinner.
+ * @param {string} command - The command to execute in the child process.
+ * @returns {Promise<void>} A promise that resolves when the command completes successfully, or rejects if an error occurs.
+ */
 async function nextTask(text, command) {
   const frames = ['⚽  🐕  ', ' ⚽ 🐕  ', '  ⚽🐕  ', ' ⚽🐕   ', '⚽ 🐕   '];
   const spinner = ora({
@@ -18,6 +36,7 @@ async function nextTask(text, command) {
   return new Promise((resolve, reject) => {
     const childProcess = exec(command, {stdio: 'inherit'});
 
+    // Add the process to the list of running processes to be able to stop them
     runningProcesses.push(childProcess);
 
     childProcess.on('exit', (code) => {
@@ -50,9 +69,17 @@ async function stopAllProcesses() {
   runningProcesses = [];
 
   // Wait briefly to ensure processes terminate before restarting the build
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 300));
 }
 
+/**
+ * Waits for a specific port to be available on the given host.
+ *
+ * @param {number} port - The port number to check.
+ * @param {string} [host='localhost'] - The host to check the port on.
+ * @param {number} [timeout=30000] - The maximum time to wait for the port to be available, in milliseconds.
+ * @returns {Promise<void>} A promise that resolves when the port is available, or rejects if the timeout is reached.
+ */
 function waitForPort(port, host = 'localhost', timeout = 30000) {
   return new Promise((resolve, reject) => {
     const start = Date.now();
@@ -94,7 +121,7 @@ async function startServers() {
   });
 
   // Script that starts the Vite server and copies files for CDN mode
-  exec('node ./scripts/start-dev.mjs', {stdio: 'ignore'});
+  exec('node ./scripts/start-vite.mjs', {stdio: 'ignore'});
 
   console.log(
     chalk.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
@@ -104,16 +131,19 @@ async function startServers() {
   console.log(chalk.blue.bold('✅ Servers started! Watching for changes...'));
 }
 
-// Start the servers first
-startServers();
+// Get the stencil flag
+const isStencil = process.argv.includes('--stencil');
 
-const [isStencil] = process.argv.slice(2);
+// Start the servers (vite & storybook) first
+startServers();
 
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {
+  // Stop all processes if a file changes to prevent multiple builds at once
   await stopAllProcesses();
   console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
 
+  // Flag to stop the build process if a file changes during the build
   isStopped = false;
 
   if (isStencil) {
@@ -173,8 +203,9 @@ watch('src', {recursive: true}, async (_, filename) => {
   }
 
   await nextTask('Building storybook', 'npx storybook build -o dist-storybook');
-  // restart storybook server, somehow even after build, it doesn't pick up the changes
-  // it needs a dev restart to pick up the changes
+  // Restart storybook server
+  // Somehow even after a build, the dev server doesn't pick up the changes.
+  // It needs a dev restart to pick them up.
   storybookServer.kill('SIGTERM');
   exec('npx storybook dev -p 4400 --no-open', {stdio: 'ignore'});
 

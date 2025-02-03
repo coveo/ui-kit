@@ -103,7 +103,7 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/start-dev.mjs",
+        "command": "node ./scripts/start-vite.mjs",
         "cwd": "{projectRoot}"
       }
     },
@@ -162,7 +162,7 @@
     "generate-component": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/generate-component.js {args.name} {args.output}",
+        "command": "node ./scripts/generate-component.mjs {args.name} {args.output}",
         "cwd": "{projectRoot}"
       },
       "inputs": [],
@@ -183,7 +183,7 @@
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/dev.js",
+        "command": "node ./scripts/dev.mjs {args.stencil}",
         "cwd": "{projectRoot}"
       },
       "schema": {
