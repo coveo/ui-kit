@@ -1,16 +1,19 @@
-import {readFileSync} from 'fs';
-import {basename, dirname, join, resolve, relative} from 'path';
+import {dirname, resolve, relative} from 'path';
 import {
-  NodeFlags,
   isImportDeclaration,
   visitEachChild,
   visitNode,
   isStringLiteral,
 } from 'typescript';
 
+// The import prefix as defined in the tsconfig under paths
+const IMPORT_PREFIX = '@/';
+
 /**
- * //TODO Add a lot of jsdoc
- * TypeScript transformer that replaces import paths starting with `@/` with relative paths.
+ * Transforms import paths in TypeScript source files.
+ *
+ * @param {import('typescript').TransformationContext} context - The transformation context provided by TypeScript.
+ * @returns {import('typescript').Transformer<import('typescript').SourceFile>} A transformer function that processes a source file.
  */
 export default function pathTransformer(context) {
   const {factory} = context;
@@ -19,7 +22,7 @@ export default function pathTransformer(context) {
     if (isImportDeclaration(node) && isStringLiteral(node.moduleSpecifier)) {
       const importPath = node.moduleSpecifier.text;
 
-      if (importPath.startsWith('@/')) {
+      if (importPath.startsWith(IMPORT_PREFIX)) {
         const relativePath = getRelativeImportPath(
           sourceFile.fileName,
           importPath
@@ -29,8 +32,7 @@ export default function pathTransformer(context) {
           node,
           node.modifiers,
           node.importClause,
-          factory.createStringLiteral(relativePath),
-          node.assertClause
+          factory.createStringLiteral(relativePath)
         );
       }
     }
@@ -41,9 +43,19 @@ export default function pathTransformer(context) {
     visitNode(sourceFile, (node) => visit(node, sourceFile));
 }
 
+/**
+ * Generates a relative import path from a source file path and an import path.
+ *
+ * @param {string} sourceFilePath - The file path of the source file.
+ * @param {string} importPath - The import path to be transformed.
+ * @returns {string} The relative import path.
+ */
 function getRelativeImportPath(sourceFilePath, importPath) {
   const basePath = resolve(process.cwd());
-  const absoluteImportPath = resolve(basePath, importPath.replace('@/', ''));
+  const absoluteImportPath = resolve(
+    basePath,
+    importPath.replace(IMPORT_PREFIX, '')
+  );
   const relativePath = relative(dirname(sourceFilePath), absoluteImportPath);
   return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
 }
