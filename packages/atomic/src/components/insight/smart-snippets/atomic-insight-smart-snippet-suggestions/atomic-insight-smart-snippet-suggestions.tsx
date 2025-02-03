@@ -1,10 +1,10 @@
-import {Component, Prop, State, Element} from '@stencil/core';
 import {
-  buildInsightSmartSnippetQuestionsList,
-  InsightSmartSnippetQuestionsList,
-  InsightSmartSnippetQuestionsListState,
-  InsightSmartSnippetRelatedQuestion,
-} from '../..';
+  buildSmartSnippetQuestionsList as buildInsightSmartSnippetQuestionsList,
+  SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
+  SmartSnippetQuestionsListState as InsightSmartSnippetQuestionsListState,
+  SmartSnippetRelatedQuestion as InsightSmartSnippetRelatedQuestion,
+} from '@coveo/headless/insight';
+import {Component, Prop, State, Element} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,

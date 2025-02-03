@@ -1,13 +1,13 @@
-import {Component, Element, State, Prop, Watch} from '@stencil/core';
 import {
-  InsightSearchStatus,
-  InsightSearchStatusState,
-  buildInsightGeneratedAnswer,
-  buildInsightInteractiveCitation,
-  buildInsightSearchStatus,
-  InsightGeneratedAnswer,
-  InsightGeneratedAnswerState,
-} from '..';
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+  buildGeneratedAnswer as buildInsightGeneratedAnswer,
+  buildInteractiveCitation as buildInsightInteractiveCitation,
+  buildSearchStatus as buildInsightSearchStatus,
+  GeneratedAnswer as InsightGeneratedAnswer,
+  GeneratedAnswerState as InsightGeneratedAnswerState,
+} from '@coveo/headless/insight';
+import {Component, Element, State, Prop, Watch} from '@stencil/core';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {

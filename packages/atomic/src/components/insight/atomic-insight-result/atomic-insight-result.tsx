@@ -1,5 +1,9 @@
+import {
+  Result as InsightResult,
+  InteractiveResult as InsightInteractiveResult,
+  FoldedResult as InsightFoldedResult,
+} from '@coveo/headless/insight';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {InsightResult, InsightInteractiveResult, InsightFoldedResult} from '..';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,

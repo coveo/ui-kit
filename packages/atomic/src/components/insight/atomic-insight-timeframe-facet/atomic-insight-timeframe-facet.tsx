@@ -1,23 +1,23 @@
-import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
-  buildInsightDateFacet,
-  buildInsightDateFilter,
-  buildInsightDateRange,
-  buildInsightFacetConditionsManager,
-  buildInsightSearchStatus,
-  deserializeInsightRelativeDate,
-  InsightDateFacet,
-  InsightDateFacetState,
-  InsightDateFilter,
-  InsightDateFilterState,
-  InsightDateRangeRequest,
-  InsightSearchStatus,
-  InsightSearchStatusState,
-  loadInsightDateFacetSetActions,
-  InsightRangeFacetSortCriterion,
-  InsightFacetValueRequest,
-  InsightCategoryFacetValueRequest,
-} from '..';
+  buildDateFacet as buildInsightDateFacet,
+  buildDateFilter as buildInsightDateFilter,
+  buildDateRange as buildInsightDateRange,
+  buildFacetConditionsManager as buildInsightFacetConditionsManager,
+  buildSearchStatus as buildInsightSearchStatus,
+  deserializeRelativeDate as deserializeInsightRelativeDate,
+  DateFacet as InsightDateFacet,
+  DateFacetState as InsightDateFacetState,
+  DateFilter as InsightDateFilter,
+  DateFilterState as InsightDateFilterState,
+  DateRangeRequest as InsightDateRangeRequest,
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+  loadDateFacetSetActions as loadInsightDateFacetSetActions,
+  RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
+  FacetValueRequest as InsightFacetValueRequest,
+  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+} from '@coveo/headless/insight';
+import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
