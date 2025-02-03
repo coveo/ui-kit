@@ -1085,6 +1085,9 @@ export namespace Components {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        /**
+          * The unique identifier of the answer configuration to use to generate the answer.
+         */
         "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
@@ -7277,6 +7280,9 @@ declare namespace LocalJSX {
      * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
      */
     interface AtomicGeneratedAnswer {
+        /**
+          * The unique identifier of the answer configuration to use to generate the answer.
+         */
         "answerConfigurationId"?: string;
         /**
           * Whether to allow the answer to be collapsed when the text is taller than the specified `--atomic-crga-collapsed-height` value (16rem by default).
