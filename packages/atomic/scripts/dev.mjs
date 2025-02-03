@@ -203,11 +203,14 @@ watch('src', {recursive: true}, async (_, filename) => {
   }
 
   await nextTask('Building storybook', 'npx storybook build -o dist-storybook');
+
   // Restart storybook server
   // Somehow even after a build, the dev server doesn't pick up the changes.
   // It needs a dev restart to pick them up.
   storybookServer.kill('SIGTERM');
-  exec('npx storybook dev -p 4400 --no-open', {stdio: 'ignore'});
+  storybookServer = exec('npx storybook dev -p 4400 --no-open', {
+    stdio: 'ignore',
+  });
 
   if (isStopped) {
     return;
