@@ -420,8 +420,3 @@ export {
 export {getCommerceApiBaseUrl} from './api/commerce/commerce-api-client.js';
 
 export * from './utils/query-expression/query-expression.js';
-
-export {
-  productListingSerializer,
-  searchSerializer,
-} from './features/commerce/parameters/parameters-serializer.js';
