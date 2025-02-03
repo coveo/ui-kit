@@ -20,14 +20,18 @@ type ControllerProperties<T> = {
  */
 function overrideShouldUpdate(
   component: ReactiveElement,
-  shouldUpdate: (changedProperties: PropertyValues) => boolean
+  shouldUpdate: (changedProperties: PropertyValues) => boolean,
+  stateProperty: string
 ) {
   // @ts-expect-error - shouldUpdate is a protected property
   component.shouldUpdate = function (changedProperties: PropertyValues) {
-    return (
-      shouldUpdate.call(this, changedProperties) &&
-      [...changedProperties.values()].some((v) => v !== undefined)
-    );
+    for (const [key, value] of changedProperties.entries()) {
+      if (key === stateProperty && value === undefined) {
+        return false;
+      }
+    }
+
+    return shouldUpdate.call(this, changedProperties);
   };
 }
 
@@ -43,9 +47,8 @@ function overrideShouldUpdate(
  *
  * @param controllerProperty The controller property to subscribe to. The controller has to be created inside of the `initialize` method.
  * @param options The configurable `bindStateToController` options.
- * TODO: KIT-3822: add unit tests to this decorator
  */
-export function bindStateToController<Element extends ReactiveElement>( // TODO: check if can inject @state decorator
+export function bindStateToController<Element extends ReactiveElement>(
   controllerProperty: ControllerProperties<Element>,
   options?: {
     /**
@@ -70,13 +73,23 @@ export function bindStateToController<Element extends ReactiveElement>( // TODO:
       // @ts-expect-error - shouldUpdate is a protected property
       const {disconnectedCallback, initialize, shouldUpdate} = component;
 
-      overrideShouldUpdate(component, shouldUpdate);
+      overrideShouldUpdate(component, shouldUpdate, stateProperty.toString());
 
       component.initialize = function () {
         initialize && initialize.call(this);
 
+        if (!initialize) {
+          return console.error(
+            `ControllerState: The "initialize" method has to be defined and instantiate a controller for the property ${controllerProperty.toString()}`,
+            component
+          );
+        }
+
         if (!component[controllerProperty]) {
-          return;
+          return console.error(
+            `${controllerProperty.toString()} property is not defined on component`,
+            component
+          );
         }
 
         if (
