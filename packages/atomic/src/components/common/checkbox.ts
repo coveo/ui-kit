@@ -36,7 +36,7 @@ export const checkbox = (props: CheckboxProps): TemplateResult => {
 
   const classNames = {
     [baseClassNames]: true,
-    [selectedClassNames]: props.checked,
+    [selectedClassNames]: Boolean(props.checked),
     [unSelectedClassNames]: !props.checked,
     [props.class ?? '']: Boolean(props.class),
   };
