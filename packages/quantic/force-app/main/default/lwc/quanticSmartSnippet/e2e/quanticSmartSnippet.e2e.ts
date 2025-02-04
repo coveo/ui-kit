@@ -116,7 +116,7 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('when trying to open the feedback modal after executing the same query', () => {
-        test('should not open the feedback modal', async ({
+        test('should not allow to open the feedback modal', async ({
           smartSnippet,
           search,
         }) => {
@@ -133,7 +133,6 @@ useCaseTestCases.forEach((useCase) => {
 
           expect(smartSnippet.dislikeButton).not.toBeNull();
           await smartSnippet.clickDislikeButton();
-
           expect(smartSnippet.explainWhyButton).not.toBeVisible();
         });
       });
