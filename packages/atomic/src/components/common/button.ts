@@ -39,7 +39,6 @@ export interface ButtonProps {
   title?: string;
 }
 
-// TODO: KIT-3822: add unit tests to this function
 export const button = <T>({
   props,
   children,
