@@ -4,25 +4,28 @@
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",
-      "!{projectRoot}/www",
-      "!{projectRoot}/loader",
       "!{projectRoot}/src/components.d.ts"
     ]
   },
   "targets": {
     "release:phase1": {},
-    "cached:build:stencil": {
+    "cached:build": {
       "dependsOn": ["^build"],
       "inputs": ["^production", "production"],
       "outputs": [
         "{projectRoot}/dist",
-        "{projectRoot}/www",
+        "{projectRoot}/cdn",
         "{projectRoot}/loader",
         "{projectRoot}/src/components.d.ts"
       ],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+        "commands": [
+          "rm -rf dist cdn",
+          "tsc --outdir dist",
+          "tsc --outdir cdn --project tsconfig.cdn.json",
+          "node ./scripts/esbuild.js"
+        ],
         "cwd": "packages/atomic-hosted-page"
       }
     },
@@ -36,7 +39,7 @@
       }
     },
     "build": {
-      "dependsOn": ["cached:build:stencil", "validate:definitions"],
+      "dependsOn": ["cached:build"],
       "inputs": [],
       "outputs": [],
       "executor": "nx:noop"

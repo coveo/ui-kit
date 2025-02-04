@@ -1,6 +1,5 @@
 dist/
-www/
-loader/
+cdn/
 docs/
 
 *~
@@ -29,3 +28,6 @@ UserInterfaceState.xcuserstate
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+/dev/public/
+

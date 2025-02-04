@@ -32,9 +32,11 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build",
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
           "node ./scripts/stencil-proxy.mjs",
-          "tsc -p tsconfig.lit.json",
+          "node ./scripts/build.mjs --config=tsconfig.lit.json",
+          "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
+          "if [ \"$DEPLOYMENT_ENVIRONMENT\" == \"CDN\" ]; then rollup -c rollup.config.js; fi",
           "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
           "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
         ],
@@ -90,10 +92,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "dev": {
-      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
-      "executor": "nx:noop"
-    },
     "build:watch": {
       "executor": "nx:run-commands",
       "options": {
@@ -105,7 +103,7 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "vite serve dev",
+        "command": "node ./scripts/start-vite.mjs",
         "cwd": "{projectRoot}"
       }
     },
@@ -113,14 +111,7 @@
       "dependsOn": ["^build", "build:locales"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --dev --watch --serve",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "cem:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cem analyze --watch",
+        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
         "cwd": "{projectRoot}"
       }
     },
@@ -145,13 +136,6 @@
         "command": "wait-on http://localhost:3333/ping"
       }
     },
-    "storybook": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "npx storybook dev -p 4400"
-      }
-    },
     "build-storybook": {
       "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
       "executor": "nx:run-commands",
@@ -173,6 +157,42 @@
       "options": {
         "command": "rm -f ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
+      }
+    },
+    "generate-component": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/generate-component.mjs {args.name} {args.output}",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [],
+      "schema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the component to generate"
+          },
+          "output": {
+            "type": "string",
+            "description": "The output directory for the generated files"
+          }
+        },
+        "required": ["name", "output"]
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/dev.mjs",
+        "cwd": "{projectRoot}"
+      },
+      "schema": {
+        "properties": {
+          "stencil": {
+            "type": "boolean",
+            "description": "If you want to rebuild stencil in dev mode"
+          }
+        }
       }
     }
   }

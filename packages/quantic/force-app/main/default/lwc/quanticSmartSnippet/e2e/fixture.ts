@@ -1,13 +1,15 @@
 import {SmartSnippetObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
-import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
+import {
+  SearchObjectWithSmartSnippet,
+  QuestionAnswerData,
+} from '../../../../../../playwright/page-object/searchObjectWithSmartSnippet';
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
-import type {QuestionAnswerData} from './data';
 import smartSnippetData from './data';
 
 const pageUrl = 's/quantic-smart-snippet';
@@ -19,7 +21,7 @@ interface SmartSnippetOptions {
 type QuanticSmartSnippetE2ESearchFixtures = {
   smartSnippetData: QuestionAnswerData;
   smartSnippet: SmartSnippetObject;
-  search: SearchObject;
+  search: SearchObjectWithSmartSnippet;
   options: Partial<SmartSnippetOptions>;
 };
 
@@ -33,7 +35,7 @@ export const testSearch =
     smartSnippetData,
     options: {},
     search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+      await use(new SearchObjectWithSmartSnippet(page, searchRequestRegex));
     },
     smartSnippet: async (
       {page, options, configuration, search, smartSnippetData: data},
@@ -55,7 +57,9 @@ export const testInsight =
     smartSnippetData,
     options: {},
     search: async ({page}, use) => {
-      await use(new SearchObject(page, insightSearchRequestRegex));
+      await use(
+        new SearchObjectWithSmartSnippet(page, insightSearchRequestRegex)
+      );
     },
     insightSetup: async ({page}, use) => {
       await use(new InsightSetupObject(page));

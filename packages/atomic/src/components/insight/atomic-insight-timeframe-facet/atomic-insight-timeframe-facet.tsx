@@ -142,10 +142,9 @@ export class AtomicInsightTimeframeFacet
       dependsOn: this.dependsOn,
       withDatePicker: this.withDatePicker,
       setFacetId: (id: string) => (this.facetId = id),
-      buildDependenciesManager: () =>
+      buildDependenciesManager: (facetId: string) =>
         buildInsightFacetConditionsManager(this.bindings.engine, {
-          facetId:
-            this.facetForDateRange?.state.facetId ?? this.filter!.state.facetId,
+          facetId,
           conditions: parseDependsOn<
             InsightFacetValueRequest | InsightCategoryFacetValueRequest
           >(this.dependsOn),

@@ -55,6 +55,7 @@ export {
 
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
+ * @deprecated To be used for Stencil components. For Lit components. use `InitializableComponent` from './decorators/types/'
  */
 export interface InitializableComponent<
   SpecificBindings extends AnyBindings = Bindings,

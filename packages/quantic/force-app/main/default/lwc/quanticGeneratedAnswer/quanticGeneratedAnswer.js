@@ -44,6 +44,10 @@ const FEEDBACK_LIKED_STATE = 'liked';
 const FEEDBACK_DISLIKED_STATE = 'disliked';
 const FEEDBACK_NEUTRAL_STATE = 'neutral';
 
+const DEFAULT_COLLAPSED_HEIGHT = 250;
+const MAX_VALID_COLLAPSED_HEIGHT = 500;
+const MIN_VALID_COLLAPSED_HEIGHT = 150;
+
 const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
@@ -86,6 +90,29 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * @type {string}
    */
   @api answerConfigurationId;
+  /**
+   * The maximum height (in px units) of the generated answer when it is collapsed.
+   * @api
+   * @type {number}
+   * @default {250}
+   */
+  @api
+  get maxCollapsedHeight() {
+    return this._maxCollapsedHeight;
+  }
+  set maxCollapsedHeight(value) {
+    if (
+      value >= MIN_VALID_COLLAPSED_HEIGHT &&
+      value <= MAX_VALID_COLLAPSED_HEIGHT
+    ) {
+      this._maxCollapsedHeight = value;
+    } else {
+      console.warn(
+        `Cannot set max-collapsed-height to (${value}) it accepts a range between ${MIN_VALID_COLLAPSED_HEIGHT} and ${MAX_VALID_COLLAPSED_HEIGHT}. The default value of ${DEFAULT_COLLAPSED_HEIGHT}px will be used.`
+      );
+      this._maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
+    }
+  }
 
   labels = {
     generatedAnswerForYou,
@@ -125,14 +152,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   ariaLiveMessage;
   /** @type {boolean} */
   hasInitializationError = false;
-  /** @type {number} */
-  _maximumAnswerHeight = 250;
   /** @type {boolean} */
   _exceedsMaximumHeight = false;
   /** @type {boolean} */
   _liked = false;
   /** @type {boolean} */
   _disliked = false;
+  /** @type {number} */
+  _maxCollapsedHeight = DEFAULT_COLLAPSED_HEIGHT;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -151,13 +178,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize);
     if (this.collapsible) {
-      // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
-      // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
-      const answerElementHeight = this.isStreaming
-        ? this.generatedAnswerElementHeight + 50
-        : this.generatedAnswerElementHeight;
-      this._exceedsMaximumHeight =
-        answerElementHeight > this._maximumAnswerHeight;
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
     }
   }
 
@@ -222,6 +243,16 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     if (this.collapsible) {
       this.updateGeneratedAnswerCSSVariables();
     }
+  }
+
+  isMaximumHeightExceeded() {
+    // If we are still streaming add a little extra height to the answer element to account for the next answer chunk.
+    // This helps a lot with the jankyness of the answer fading out when the chunk is close but not yet over the max height.
+    const answerElementHeight = this.isStreaming
+      ? this.generatedAnswerElementHeight + 50
+      : this.generatedAnswerElementHeight;
+
+    return answerElementHeight > this.maxCollapsedHeight;
   }
 
   getGeneratedAnswerStatus() {
@@ -348,6 +379,14 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     }
   };
 
+  handleAnswerContentUpdated = (event) => {
+    event.stopPropagation();
+    if (this.collapsible) {
+      this._exceedsMaximumHeight = this.isMaximumHeightExceeded();
+    }
+    this.updateGeneratedAnswerCSSVariables();
+  };
+
   handleToggleCollapseAnswer() {
     this.state?.expanded
       ? this.generatedAnswer.collapse()
@@ -385,12 +424,12 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   /**
-   * Sets the the value of the CSS variable "--maxHeight" the value of the _maximumAnswerHeight property.
+   * Sets the value of the CSS variable "--maxHeight" to the value of the maxCollapsedHeight property.
    */
   updateGeneratedAnswerCSSVariables() {
     if (this._exceedsMaximumHeight) {
       const styles = this.generatedAnswerElement?.style;
-      styles.setProperty('--maxHeight', `${this._maximumAnswerHeight}px`);
+      styles?.setProperty('--maxHeight', `${this.maxCollapsedHeight}px`);
     }
   }
 
