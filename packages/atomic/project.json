@@ -93,7 +93,7 @@
       }
     },
     "dev": {
-      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
+      "dependsOn": ["build:watch", "cem:dev", "web:dev"],
       "executor": "nx:noop"
     },
     "build:watch": {

@@ -1,6 +1,8 @@
 import {i18n} from 'i18next';
 import {html, TemplateResult} from 'lit';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
+// TODO: check if this is needed
+import '../atomic-icon/atomic-icon';
 
 interface SortSelectProps {
   id: string;
@@ -30,8 +32,7 @@ export const renderSortSelect = ({
         part="select-separator"
         class="border-neutral pointer-events-none absolute bottom-px right-0 top-px flex w-10 items-center justify-center border-l"
       >
-        <!-- TODO: ensure src works as expected with svg -->
-        <img class="w-2.5" src=${ArrowBottomIcon} alt="Arrow Icon" />
+        <atomic-icon class="w-2.5" icon="${ArrowBottomIcon}"></atomic-icon>
       </div>
     </div>
   `;

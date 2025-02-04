@@ -84,7 +84,10 @@ export function containsVisualElement(node: Node) {
   return false;
 }
 
-export function parseAssetURL(url: string, assetPath = './assets') {
+/**
+ * @deprecated use parseAssetURL
+ */
+export function stencilParseAssetURL(url: string, assetPath = './assets') {
   const [, protocol, remainder] =
     url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
   if (!protocol) {
@@ -100,6 +103,29 @@ export function parseAssetURL(url: string, assetPath = './assets') {
     return getAssetPath(`${assetPath}/${remainder}.svg`);
   }
   return null;
+}
+
+export function parseAssetURL(url: string, assetPath = './assets') {
+  const [, protocol, remainder] =
+    url.match(/^([a-z]+):\/\/(.*?)(\.svg)?$/) || [];
+  if (!protocol) {
+    if (url.startsWith('./') || url.startsWith('../')) {
+      return url;
+    }
+    return null;
+  }
+  if (protocol === 'http' || protocol === 'https') {
+    return url;
+  }
+  if (protocol === 'assets') {
+    return litGetAssetPath(`${assetPath}/${remainder}.svg`);
+  }
+  return null;
+}
+
+function litGetAssetPath(path: string) {
+  // TODO: implement this function
+  return new URL(path, import.meta.url).href;
 }
 
 // TODO: add tests
