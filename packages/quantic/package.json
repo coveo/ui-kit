@@ -70,7 +70,7 @@
     "@playwright/test": "1.50.0",
     "@salesforce/eslint-config-lwc": "3.7.1",
     "@salesforce/sfdx-lwc-jest": "5.1.0",
-    "@types/node": "22.10.10",
+    "@types/node": "22.12.0",
     "@types/strip-color": "0.1.2",
     "@types/wait-on": "5.3.4",
     "chalk": "4.1.2",
