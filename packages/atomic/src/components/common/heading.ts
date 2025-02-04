@@ -1,4 +1,3 @@
-// import {spread} from '@open-wc/lit-helpers';
 import {ifDefined} from 'lit-html/directives/if-defined.js';
 import {html, literal, unsafeStatic} from 'lit/static-html.js';
 
@@ -19,7 +18,6 @@ export interface HeadingProps {
   part?: string;
 }
 
-// TODO: KIT-3822: add unit tests to this function
 export const heading = <T>(
   {level, class: classname, part}: HeadingProps,
   children?: T
