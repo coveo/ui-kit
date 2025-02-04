@@ -3,6 +3,7 @@ import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
 import net from 'node:net';
 import ora from 'ora';
+import waitOn from 'wait-on';
 
 /**
  * An array to keep track of running processes.
@@ -73,44 +74,25 @@ async function stopAllProcesses() {
 }
 
 /**
- * Waits for a specific port to be available on the given host.
+ * Waits for a specific port to be available on the given host using wait-on.
  *
  * @param {number} port - The port number to check.
  * @param {string} [host='localhost'] - The host to check the port on.
  * @param {number} [timeout=30000] - The maximum time to wait for the port to be available, in milliseconds.
  * @returns {Promise<void>} A promise that resolves when the port is available, or rejects if the timeout is reached.
  */
-function waitForPort(port, host = 'localhost', timeout = 30000) {
-  return new Promise((resolve, reject) => {
-    const start = Date.now();
-
-    function check() {
-      const socket = net.createConnection(port, host);
-      socket.setTimeout(1000);
-      socket.on('connect', () => {
-        socket.destroy();
-        resolve();
-      });
-      socket.on('timeout', () => {
-        socket.destroy();
-        if (Date.now() - start > timeout) {
-          reject(new Error(`Timeout waiting for port ${port}`));
-        } else {
-          setTimeout(check, 500);
-        }
-      });
-      socket.on('error', () => {
-        socket.destroy();
-        if (Date.now() - start > timeout) {
-          reject(new Error(`Timeout waiting for port ${port}`));
-        } else {
-          setTimeout(check, 500);
-        }
-      });
-    }
-
-    check();
-  });
+async function waitForPort(port, host = 'localhost', timeout = 30000) {
+  const resource = `tcp:${host}:${port}`;
+  try {
+    await waitOn({
+      resources: [resource],
+      timeout,
+      tcpTimeout: 1000,
+      interval: 500,
+    });
+  } catch (error) {
+    throw new Error(`Timeout waiting for port ${port} on ${host}`);
+  }
 }
 
 async function startServers() {
