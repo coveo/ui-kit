@@ -5,7 +5,7 @@ import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import Tick from '../../images/checkbox.svg';
 
 export interface CheckboxProps {
-  checked: boolean;
+  checked?: boolean;
   onToggle(checked: boolean): void;
   key?: string | number;
   id?: string;
@@ -52,7 +52,7 @@ export const checkbox = (props: CheckboxProps): TemplateResult => {
       id=${ifDefined(props.id)}
       class=${classMap(classNames)}
       part=${parts.join(' ')}
-      aria-checked=${props.checked}
+      aria-checked=${ifDefined(props.checked)}
       aria-current=${ifDefined(props.ariaCurrent)}
       aria-label=${ifDefined(props.ariaLabel ?? props.text)}
       value=${ifDefined(props.text)}
