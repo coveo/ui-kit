@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.13.3",
+  "version": "3.14.0",
   "files": [
     "dist/"
   ],
@@ -157,10 +157,10 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.7",
-    "@coveo/relay": "0.8.1",
-    "@coveo/relay-event-types": "13.0.3",
+    "@coveo/relay": "1.0.0",
+    "@coveo/relay-event-types": "13.1.0",
     "@microsoft/fetch-event-source": "2.0.1",
-    "@reduxjs/toolkit": "2.5.0",
+    "@reduxjs/toolkit": "2.5.1",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.43",
     "dayjs": "1.11.13",

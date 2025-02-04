@@ -13,7 +13,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "references": [
     {
@@ -25,6 +28,7 @@
     "node_modules",
     "src/external-builds",
     "**/*.stories.tsx",
+    "**/*.spec.ts",
     "**/*.stories.ts",
     "**/*.spec.ts",
     "**/*.stories.js",

@@ -32,6 +32,9 @@ export const buildContentURL = (req: HtmlRequest, path: string) => {
   url.addParam('access_token', req.accessToken);
   url.addParam('organizationId', req.organizationId);
   url.addParam('uniqueId', req.uniqueId);
+  if (req.authentication) {
+    url.addParam('authentication', req.authentication);
+  }
   if (req.q !== undefined) {
     url.addParam('q', req.q);
   }

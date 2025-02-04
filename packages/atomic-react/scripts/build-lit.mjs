@@ -3,7 +3,7 @@ import {writeFileSync} from 'node:fs';
 import * as prettier from 'prettier';
 
 const isLitDeclaration = (declaration) =>
-  declaration?.superclass?.name === 'LitElement';
+  declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
 
 const entries = [
   {

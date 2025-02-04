@@ -50,7 +50,7 @@ function getDeploymentPipelineAssets() {
   }
 
   /**
-   * @returns {{ ordered_phases: { s3?: { directory: string, source: string } }[] }}
+   * @returns {{ dag_phases: { s3?: { directory: string, source: string } }[] }}
    */
   function getDeploymentConfig() {
     const deploymentConfig = JSON.parse(
@@ -64,9 +64,7 @@ function getDeploymentPipelineAssets() {
   }
 
   const deploymentConfig = getDeploymentConfig();
-  const s3Phases = deploymentConfig.ordered_phases.filter(
-    (phase) => 's3' in phase
-  );
+  const s3Phases = deploymentConfig.dag_phases.filter((phase) => 's3' in phase);
   const phasesBySource = aggregate(s3Phases, (phase) => phase.s3.source);
   /**
    * @type {CDNAsset[]}

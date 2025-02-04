@@ -1,9 +1,9 @@
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceProductList} from '@/storybook-utils/commerce/commerce-product-list-wrapper';
+import {wrapInProductTemplate} from '@/storybook-utils/commerce/commerce-product-template-wrapper';
+import {parameters} from '@/storybook-utils/common/common-meta-parameters';
+import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {wrapInCommerceInterface} from '../../../../../storybookUtils/commerce/commerce-interface-wrapper';
-import {wrapInCommerceProductList} from '../../../../../storybookUtils/commerce/commerce-product-list-wrapper';
-import {wrapInProductTemplate} from '../../../../../storybookUtils/commerce/commerce-product-template-wrapper';
-import {parameters} from '../../../../../storybookUtils/common/common-meta-parameters';
-import {renderComponent} from '../../../../../storybookUtils/common/render-component';
 
 const {
   decorator: commerceInterfaceDecorator,

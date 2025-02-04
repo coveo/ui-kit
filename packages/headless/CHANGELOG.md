@@ -1,3 +1,8 @@
+## 3.14.0 (2025-01-29)
+
+- feat(headless): Add answerConfigId to the InsightInterface to be supported in insight use case (#488 ([4678a59](https://github.com/coveo/ui-kit/commits/4678a59)), closes [#4887](https://github.com/coveo/ui-kit/issues/4887)
+- docs(headless-react): more typedoc annotations (#4890) ([5e06b8b](https://github.com/coveo/ui-kit/commits/5e06b8b)), closes [#4890](https://github.com/coveo/ui-kit/issues/4890)
+
 ## <small>3.13.3 (2025-01-23)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)

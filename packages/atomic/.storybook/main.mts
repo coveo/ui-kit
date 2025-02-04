@@ -3,7 +3,7 @@ import type {StorybookConfig} from '@storybook/web-components-vite';
 import path from 'path';
 import {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
-import {generateExternalPackageMappings} from '../scripts/externalPackageMappings';
+import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
 
 const externalizeDependencies: PluginImpl = () => {
   return {
@@ -11,6 +11,14 @@ const externalizeDependencies: PluginImpl = () => {
     enforce: 'pre',
     resolveId(source, _importer, _options) {
       if (/^\/(headless|bueno)/.test(source)) {
+        return false;
+      }
+
+      if (
+        /(.*)(\/|\\)+(bueno|headless)\/v\d+\.\d+\.\d+(-nightly)?(\/|\\).*/.test(
+          source
+        )
+      ) {
         return false;
       }
 
@@ -35,7 +43,7 @@ const externalizeDependencies: PluginImpl = () => {
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.new.stories.@(js|jsx|ts|tsx|mdx)'],
+  stories: ['../src/**/*.new.stories.tsx', '../src/**/*.mdx'],
   staticDirs: [
     {from: '../dist/atomic', to: './assets'},
     {from: '../dist/atomic/lang', to: './lang'},
@@ -55,21 +63,21 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
-        resolveStorybookUtils(),
+        resolveStorybookUtilsImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
 };
 
-const resolveStorybookUtils: PluginImpl = () => {
+const resolveStorybookUtilsImports: PluginImpl = () => {
   return {
-    name: 'resolve-storybook-utils',
+    name: 'resolve-storybook-utils-imports',
     async resolveId(source: string, importer, options) {
-      if (source.startsWith('@coveo/atomic-storybook-utils')) {
+      if (source.startsWith('@/storybook-utils')) {
         return this.resolve(
           source.replace(
-            '@coveo/atomic-storybook-utils',
-            path.resolve(__dirname, '../storybookUtils')
+            '@/storybook-utils',
+            path.resolve(__dirname, '../storybook-utils')
           ),
           importer,
           options
