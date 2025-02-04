@@ -39,3 +39,6 @@ headless/
 /playwright/.cache/
 
 dist-storybook/
+
+/dev/bueno/
+/dev/headless/

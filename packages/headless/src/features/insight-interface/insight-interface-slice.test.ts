@@ -102,6 +102,7 @@ describe('insight interface slice', () => {
             },
             genQA: {
               enabled: false,
+              collapsible: true,
             },
             userActions: {
               enabled: false,
@@ -116,6 +117,7 @@ describe('insight interface slice', () => {
               },
             },
           },
+          answerConfigId: '123',
         },
       },
     };

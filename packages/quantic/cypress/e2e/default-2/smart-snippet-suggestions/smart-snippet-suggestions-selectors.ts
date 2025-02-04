@@ -18,7 +18,7 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
 
     smartSnippetSuggestionsCard: () =>
       SmartSnippetSuggestionsSelectors.get().find(
-        '[data-cy="smart-snippet-suggestions-card"]'
+        '[data-testid="smart-snippet-suggestions-card"]'
       ),
     smartSnippetSuggestionHeading: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
@@ -26,7 +26,7 @@ export const SmartSnippetSuggestionsSelectors: SmartSnippetSuggestionsSelector =
         .eq(index),
     smartSnippetSuggestionsAnswer: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()
-        .find('[data-cy="smart-snippet-answer"]')
+        .find('[data-testid="smart-snippet-answer"]')
         .eq(index),
     smartSnippetSuggestionsSourceUri: (index: number) =>
       SmartSnippetSuggestionsSelectors.get()

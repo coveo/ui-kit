@@ -29,7 +29,7 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
   smartSnippetQuestion: () =>
     SmartSnippetSelectors.smartSnippetCard().find('header'),
   smartSnippetAnswer: () =>
-    SmartSnippetSelectors.get().find('[data-cy="smart-snippet-answer"]'),
+    SmartSnippetSelectors.get().find('[data-testid="smart-snippet-answer"]'),
   smartSnippetSourceUri: () =>
     SmartSnippetSelectors.get().find(
       '[data-testid="smart-snippet__source-uri"]'

@@ -94,7 +94,9 @@ export class AtomicNumericFacet implements InitializableComponent {
   @Element() private host!: HTMLElement;
   private manualRanges: (NumericRangeRequest & {label?: string})[] = [];
   private formatter: NumberFormatter = defaultNumberFormatter;
-  private dependenciesManager?: FacetConditionsManager;
+  private facetForRangeDependenciesManager?: FacetConditionsManager;
+  private facetForInputDependenciesManager?: FacetConditionsManager;
+  private filterDependenciesManager?: FacetConditionsManager;
 
   @BindStateToController('facetForRange')
   @State()
@@ -244,9 +246,7 @@ export class AtomicNumericFacet implements InitializableComponent {
     this.initializeFacetForInput();
     this.initializeFacetForRange();
     this.initializeFilter();
-    this.initializeDependenciesManager();
     this.initializeSearchStatus();
-
     this.registerFacetToStore();
   }
 
@@ -254,7 +254,9 @@ export class AtomicNumericFacet implements InitializableComponent {
     if (this.host.isConnected) {
       return;
     }
-    this.dependenciesManager?.stopWatching();
+    this.facetForRangeDependenciesManager?.stopWatching();
+    this.facetForInputDependenciesManager?.stopWatching();
+    this.filterDependenciesManager?.stopWatching();
   }
 
   private initializeSearchStatus() {
@@ -283,6 +285,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         },
       },
     });
+
+    this.facetForInputDependenciesManager = this.initializeDependenciesManager(
+      this.facetForInput.state.facetId
+    );
 
     return this.facetForInput;
   }
@@ -313,6 +319,10 @@ export class AtomicNumericFacet implements InitializableComponent {
       },
     });
 
+    this.facetForRangeDependenciesManager = this.initializeDependenciesManager(
+      this.facetForRange.state.facetId
+    );
+
     return this.facetForRange;
   }
 
@@ -326,19 +336,19 @@ export class AtomicNumericFacet implements InitializableComponent {
         field: this.field,
       },
     });
+
+    this.filterDependenciesManager = this.initializeDependenciesManager(
+      this.filter.state.facetId
+    );
   }
 
-  private initializeDependenciesManager() {
-    this.dependenciesManager = buildFacetConditionsManager(
-      this.bindings.engine,
-      {
-        facetId:
-          this.facetForRange?.state.facetId ?? this.filter!.state.facetId,
-        conditions: parseDependsOn<
-          FacetValueRequest | CategoryFacetValueRequest
-        >(this.dependsOn),
-      }
-    );
+  private initializeDependenciesManager(facetId: string) {
+    return buildFacetConditionsManager(this.bindings.engine, {
+      facetId,
+      conditions: parseDependsOn<FacetValueRequest | CategoryFacetValueRequest>(
+        this.dependsOn
+      ),
+    });
   }
 
   private registerFacetToStore() {

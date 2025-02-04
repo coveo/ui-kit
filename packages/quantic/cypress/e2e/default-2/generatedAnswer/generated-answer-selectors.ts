@@ -40,7 +40,9 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
       '[data-testid="generated-answer__card"]'
     ),
   generatedAnswer: () =>
-    GeneratedAnswerSelectors.get().find('[data-cy="generated-answer__answer"]'),
+    GeneratedAnswerSelectors.get().find(
+      '[data-testid="generated-answer__answer"]'
+    ),
   likeButton: () =>
     GeneratedAnswerSelectors.get().find(
       '[data-cy="generated-answer__feedback"] c-quantic-stateful-button[data-testid="feedback__like-button"] button'
