@@ -5,9 +5,9 @@ import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import Remove from '../../../../images/remove.svg';
-import {Checkbox} from '../../../common/checkbox';
 import {FieldsetGroup} from '../../../common/fieldset-group';
 import {IconButton} from '../../../common/iconButton';
+import {StencilCheckbox} from '../../../common/stencil-checkbox';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 
@@ -80,7 +80,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
   >
 > = ({i18n, highlightKeywords, onHighlightKeywords, minimized}) => (
   <Fragment>
-    <Checkbox
+    <StencilCheckbox
       text={i18n.t('keywords-highlight')}
       class="mr-2"
       id="atomic-quickview-sidebar-highlight-keywords"
@@ -91,7 +91,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
           highlightNone: !checked,
         })
       }
-    ></Checkbox>
+    ></StencilCheckbox>
     {!minimized && (
       <label
         class="cursor-pointer whitespace-nowrap font-bold"

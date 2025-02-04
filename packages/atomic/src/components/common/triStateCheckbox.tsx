@@ -2,9 +2,9 @@ import {FacetValueState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
 import Close from '../../images/close.svg';
-import {CheckboxProps} from './checkbox';
+import {StencilCheckboxProps} from './stencil-checkbox';
 
-export type TriStateCheckboxProps = Omit<CheckboxProps, 'checked'> & {
+export type TriStateCheckboxProps = Omit<StencilCheckboxProps, 'checked'> & {
   state: FacetValueState;
 };
 
