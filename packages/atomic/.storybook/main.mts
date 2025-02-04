@@ -63,15 +63,15 @@ const config: StorybookConfig = {
     mergeConfig(config, {
       plugins: [
         nxViteTsPaths(),
-        resolveStorybookUtils(),
+        resolveStorybookUtilsImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     }),
 };
 
-const resolveStorybookUtils: PluginImpl = () => {
+const resolveStorybookUtilsImports: PluginImpl = () => {
   return {
-    name: 'resolve-storybook-utils',
+    name: 'resolve-storybook-utils-imports',
     async resolveId(source: string, importer, options) {
       if (source.startsWith('@/storybook-utils')) {
         return this.resolve(

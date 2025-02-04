@@ -90,7 +90,7 @@ if (outputDir) {
 
 if (!componentName) {
   console.error(
-    'Usage: node generate-component.js <component-name> [<output-dir>]'
+    'Usage: npx nx run atomic:generate-component --name=<component-name> --output=<output-dir>'
   );
   process.exit(1);
 }
