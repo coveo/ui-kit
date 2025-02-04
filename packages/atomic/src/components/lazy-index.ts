@@ -5,11 +5,11 @@ import RecommendationsComponentMap from './recommendations/lazy-index.js';
 import SearchComponentMap from './search/lazy-index.js';
 
 export default {
-  ...SearchComponentMap,
-  ...CommerceComponentMap,
-  ...InsightComponentMap,
-  ...IpxComponentMap,
   ...RecommendationsComponentMap,
+  ...IpxComponentMap,
+  ...InsightComponentMap,
+  ...CommerceComponentMap,
+  ...SearchComponentMap,
 };
 
 export type * from './index.js';
