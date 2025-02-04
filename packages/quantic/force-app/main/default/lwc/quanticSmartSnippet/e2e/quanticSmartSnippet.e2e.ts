@@ -138,7 +138,7 @@ useCaseTestCases.forEach((useCase) => {
       });
 
       test.describe('when trying to open the feedback modal after executing a query that gave a new answer', () => {
-        test('should open the feedback modal', async ({
+        test('should allow to open the feedback modal', async ({
           smartSnippet,
           search,
         }) => {
