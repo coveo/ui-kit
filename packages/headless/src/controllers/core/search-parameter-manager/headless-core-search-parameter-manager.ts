@@ -16,6 +16,7 @@ import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
   SearchParameters,
+  restoreTab,
 } from '../../../features/search-parameters/search-parameter-actions.js';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
@@ -105,16 +106,27 @@ export function buildCoreSearchParameterManager(
     props.initialState,
     'buildSearchParameterManager'
   );
-  dispatch(restoreSearchParameters(props.initialState.parameters));
+  const {tab, ...parametersWithoutTab} = props.initialState.parameters;
+
+  if (tab) {
+    dispatch(restoreTab(tab));
+  }
+  dispatch(restoreSearchParameters(parametersWithoutTab));
 
   return {
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const newParams = enrichParameters(engine, parameters);
-      dispatch(restoreSearchParameters(newParams));
-    },
+      const {tab, ...newParamsWithoutTab} = enrichParameters(
+        engine,
+        parameters
+      );
 
+      if (tab) {
+        dispatch(restoreTab(tab));
+      }
+      dispatch(restoreSearchParameters(newParamsWithoutTab));
+    },
     get state() {
       const parameters = getCoreActiveSearchParameters(engine);
       return {parameters};
@@ -151,7 +163,7 @@ export function getCoreActiveSearchParameters(
         const activeTab = Object.values(tabSet ?? {}).find(
           (tab) => tab.isActive
         );
-        return activeTab ? activeTab.id : Object.keys(tabSet)[0];
+        return activeTab ? activeTab.id : Object.keys(tabSet ?? {})[0];
       },
       state.tabSet ? Object.keys(state.tabSet)[0] : ''
     ),
@@ -195,23 +207,10 @@ function getTab<Section, Value>(
 }
 
 function validateTab(
-  engine: CoreEngine,
-  parameters: Required<SearchParameters>
+  _engine: CoreEngine,
+  _parameters: Required<SearchParameters>
 ) {
-  const tabState = engine.state.tabSet;
-  const tabParam = parameters.tab;
-  if (!tabState || !Object.entries(tabState).length || !tabParam) {
-    return true;
-  }
-
-  const isInState = tabParam in tabState;
-  if (!isInState) {
-    engine.logger.warn(
-      `The tab search parameter "${tabParam}" is invalid. Ignoring change.`
-    );
-  }
-
-  return isInState;
+  return true;
 }
 
 export function getSelectedValues(request: FacetRequest) {
