@@ -1,4 +1,9 @@
 import {
+  buildSmartSnippet as buildInsightSmartSnippet,
+  SmartSnippet as InsightSmartSnippet,
+  SmartSnippetFeedback as InsightSmartSnippetFeedback,
+} from '@coveo/headless/insight';
+import {
   Component,
   State,
   Prop,
@@ -7,11 +12,6 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core';
-import {
-  buildInsightSmartSnippet,
-  InsightSmartSnippet,
-  InsightSmartSnippetFeedback,
-} from '../..';
 import {
   InitializableComponent,
   InitializeBindings,

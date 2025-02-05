@@ -1,9 +1,9 @@
-import {Component, h, Prop, Element, State} from '@stencil/core';
 import {
-  buildInsightUserActions,
-  InsightUserActions,
-  InsightUserActionsState,
-} from '../..';
+  buildUserActions as buildInsightUserActions,
+  UserActions as InsightUserActions,
+  UserActionsState as InsightUserActionsState,
+} from '@coveo/headless/insight';
+import {Component, h, Prop, Element, State} from '@stencil/core';
 import Clockicon from '../../../../images/clock.svg';
 import {
   BindStateToController,

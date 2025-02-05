@@ -1,12 +1,12 @@
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {
-  buildInsightPager,
-  buildInsightSearchStatus,
-  InsightPager,
-  InsightPagerState,
-  InsightSearchStatus,
-  InsightSearchStatusState,
-} from '../';
+  buildPager as buildInsightPager,
+  buildSearchStatus as buildInsightSearchStatus,
+  Pager as InsightPager,
+  PagerState as InsightPagerState,
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+} from '@coveo/headless/insight';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
