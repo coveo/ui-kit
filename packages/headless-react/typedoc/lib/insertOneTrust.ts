@@ -4,7 +4,7 @@ export function insertOneTrust() {
       .split('; ')
       .some(
         (cookie) =>
-          cookie.startsWith('OptanonConsent') && cookie.includes('C0003:1')
+          cookie.startsWith('OptanonConsent') && cookie.includes('C0003%3A1')
       );
 
     if (!areFunctionalCookiesEnabled) {
