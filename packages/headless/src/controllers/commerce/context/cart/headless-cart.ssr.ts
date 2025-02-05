@@ -21,8 +21,6 @@ export interface CartDefinition
  * @group Definers
  *
  * @returns The `Cart` controller definition.
- *
- * @internal
  */
 export function defineCart(): CartDefinition {
   return {

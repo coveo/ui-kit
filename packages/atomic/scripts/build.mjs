@@ -9,6 +9,7 @@ import {
   createProgram,
   flattenDiagnosticMessageText,
 } from 'typescript';
+import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
 
 const args = argv.slice(2);
@@ -38,7 +39,7 @@ function emit(program) {
   const writeFile = undefined;
   const emitOnlyDtsFiles = false;
   const customTransformers = {
-    before: [svgTransformer],
+    before: [svgTransformer, pathTransformer],
   };
 
   return program.emit(

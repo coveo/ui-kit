@@ -89,6 +89,8 @@ export const config: Config = {
         includeDefineCustomElements: true,
         excludeComponents: [
           'atomic-result-template',
+          'atomic-result-children',
+          'atomic-result-children-template',
           'atomic-recs-result-template',
           'atomic-field-condition',
         ].concat(

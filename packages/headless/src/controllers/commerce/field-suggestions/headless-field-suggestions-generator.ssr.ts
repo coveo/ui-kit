@@ -24,8 +24,6 @@ export interface FieldSuggestionsGeneratorDefinition
  * @group Definers
  *
  * @returns The `FieldSuggestionsGenerator` controller definition.
- *
- * @internal
  */
 export function defineFieldSuggestionsGenerator(): FieldSuggestionsGeneratorDefinition {
   return {

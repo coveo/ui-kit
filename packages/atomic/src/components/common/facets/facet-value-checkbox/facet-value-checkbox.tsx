@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
-import {Checkbox} from '../../checkbox';
+import {StencilCheckbox} from '../../stencil-checkbox';
 import {TriStateCheckbox} from '../../triStateCheckbox';
 import {FacetValueProps} from '../facet-common';
 import {FacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
@@ -51,7 +51,7 @@ export const FacetValueCheckbox: FunctionalComponent<
       return <TriStateCheckbox {...attributes} state={props.state} />;
     }
 
-    return <Checkbox {...attributes} checked={props.isSelected} />;
+    return <StencilCheckbox {...attributes} checked={props.isSelected} />;
   };
 
   const renderExclusion = () => {
