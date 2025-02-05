@@ -26,13 +26,9 @@ import {getHistoryInitialState, HistoryState} from './history-state.js';
 export const historyReducer = createReducer(
   getHistoryInitialState(),
   (builder) => {
-    builder.addCase(snapshot, (state, action) => {
-      console.log(
-        JSON.parse(JSON.stringify(state)).tabSet,
-        JSON.parse(JSON.stringify(action.payload)).tabSet
-      );
-      return isEqual(state, action.payload) ? undefined : action.payload;
-    });
+    builder.addCase(snapshot, (state, action) =>
+      isEqual(state, action.payload) ? undefined : action.payload
+    );
   }
 );
 
