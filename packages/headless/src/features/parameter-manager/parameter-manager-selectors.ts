@@ -25,19 +25,6 @@ export function getSortCriteria<Section, Value>(
   const shouldInclude = sortCriteria !== initialState;
   return shouldInclude ? {sortCriteria} : {};
 }
-export function getTab<Section, Value>(
-  section: Section | undefined,
-  tabSelector: (state: Section) => Value,
-  initialState: Value
-) {
-  if (section === undefined) {
-    return {};
-  }
-
-  const tab = tabSelector(section);
-  const shouldInclude = tab !== initialState;
-  return shouldInclude ? {tab: tab} : {};
-}
 
 export function getFacets<Value, Request, Parameters>(
   section: Record<string, {request: Request}> | undefined,

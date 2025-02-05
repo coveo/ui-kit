@@ -72,7 +72,7 @@ const isDictionaryFieldContextEqual = (
 const isTabSetEqual = (current: TabSetState, next: TabSetState) => {
   const currentTab = findActiveTab(current);
   const nextTab = findActiveTab(next);
-  console.log(currentTab?.id === nextTab?.id);
+
   return currentTab?.id === nextTab?.id;
 };
 
