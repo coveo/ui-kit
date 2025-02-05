@@ -1,5 +1,8 @@
+import {
+  ResultTemplateCondition as RecsResultTemplateCondition,
+  ResultTemplate as RecsResultTemplate,
+} from '@coveo/headless/recommendation';
 import {Component, Element, Prop, Method, State} from '@stencil/core';
-import {RecsResultTemplateCondition, RecsResultTemplate} from '..';
 import {MapProp} from '../../../utils/props-utils';
 import {
   makeDefinedConditions,
