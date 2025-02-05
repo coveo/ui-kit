@@ -24,7 +24,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '../../../common/suggestions/suggestions-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {ProductTemplateProvider} from '../../product-list/product-template-provider';
 
 export type AriaLabelGenerator = (

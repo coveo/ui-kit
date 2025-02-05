@@ -24,8 +24,8 @@ import {
 } from '../../common/refine-modal/filters';
 import {RefineModal} from '../../common/refine-modal/modal';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {CommerceSortOption, getSortByLabel} from '../sort/option';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
+import {CommerceSortOption, getSortByLabel} from '../sort/stencil-option';
 
 /**
  * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.

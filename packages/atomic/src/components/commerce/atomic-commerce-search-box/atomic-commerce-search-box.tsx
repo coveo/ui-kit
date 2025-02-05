@@ -55,7 +55,7 @@ import {
   ButtonSearchSuggestion,
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
-import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
 
 /**

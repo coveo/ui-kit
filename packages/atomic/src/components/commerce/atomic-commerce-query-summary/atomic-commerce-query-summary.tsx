@@ -17,7 +17,7 @@ import {LocalizedString} from '../../../utils/jsx-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/container';
 import {QuerySummaryGuard} from '../../common/query-summary/guard';
 import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").

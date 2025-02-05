@@ -5,7 +5,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
 import {randomID} from '../../../utils/utils';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 import {buildCommerceLayout} from './commerce-layout';
 
 /**

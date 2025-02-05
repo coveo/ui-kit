@@ -43,7 +43,7 @@ import {
 } from '../../../common/facets/facet-value/facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.

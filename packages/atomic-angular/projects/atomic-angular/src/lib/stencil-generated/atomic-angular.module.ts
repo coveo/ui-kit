@@ -35,7 +35,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicComponentError,
@@ -142,7 +141,8 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceSortDropdown
 } from './components';
 
         
@@ -181,7 +181,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicComponentError,
@@ -288,7 +287,8 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceSortDropdown
 ]
 
         

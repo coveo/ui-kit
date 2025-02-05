@@ -28,7 +28,7 @@ import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../../common/formats/format-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
 
 /**

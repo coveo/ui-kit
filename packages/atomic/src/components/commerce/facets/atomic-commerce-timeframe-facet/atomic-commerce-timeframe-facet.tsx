@@ -26,7 +26,7 @@ import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * A facet is a list of values for a certain field occurring in the results.

@@ -20,7 +20,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.

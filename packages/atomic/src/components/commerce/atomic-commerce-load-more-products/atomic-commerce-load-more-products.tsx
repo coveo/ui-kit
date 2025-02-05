@@ -19,7 +19,7 @@ import {LoadMoreContainer} from '../../common/load-more/container';
 import {LoadMoreGuard} from '../../common/load-more/guard';
 import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {LoadMoreSummary} from '../../common/load-more/summary';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.

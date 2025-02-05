@@ -39,7 +39,7 @@ import {
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
 import {Hidden} from '../../common/hidden';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 type AnyFacetValue =
   | RegularFacetValue

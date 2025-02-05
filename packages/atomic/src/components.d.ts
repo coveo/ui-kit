@@ -7,10 +7,9 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/lit-stencil-common-types";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
-import { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
@@ -41,10 +40,9 @@ import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/s
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
 export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+export { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/lit-stencil-common-types";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
-export { CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
@@ -753,12 +751,6 @@ export namespace Components {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -3825,6 +3817,12 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
+     */
+    interface StencilAtomicCommerceSortDropdown {
+    }
 }
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -4285,16 +4283,6 @@ declare global {
     var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
         prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-    };
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSortDropdownElement: {
-        prototype: HTMLAtomicCommerceSortDropdownElement;
-        new (): HTMLAtomicCommerceSortDropdownElement;
     };
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -6099,6 +6087,16 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
+     */
+    interface HTMLStencilAtomicCommerceSortDropdownElement extends Components.StencilAtomicCommerceSortDropdown, HTMLStencilElement {
+    }
+    var HTMLStencilAtomicCommerceSortDropdownElement: {
+        prototype: HTMLStencilAtomicCommerceSortDropdownElement;
+        new (): HTMLStencilAtomicCommerceSortDropdownElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
@@ -6131,7 +6129,6 @@ declare global {
         "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
@@ -6300,6 +6297,7 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
+        "stencil-atomic-commerce-sort-dropdown": HTMLStencilAtomicCommerceSortDropdownElement;
     }
 }
 declare namespace LocalJSX {
@@ -6947,12 +6945,6 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -9920,6 +9912,12 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
+    /**
+     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+     * @alpha 
+     */
+    interface StencilAtomicCommerceSortDropdown {
+    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-automatic-facet": AtomicAutomaticFacet;
@@ -9952,7 +9950,6 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
-        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-component-error": AtomicComponentError;
@@ -10121,6 +10118,7 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
+        "stencil-atomic-commerce-sort-dropdown": StencilAtomicCommerceSortDropdown;
     }
 }
 export { LocalJSX as JSX };
@@ -10287,11 +10285,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
-            /**
-             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-             * @alpha 
-             */
-            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             /**
              * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
              */
@@ -11013,6 +11006,11 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
+            /**
+             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+             * @alpha 
+             */
+            "stencil-atomic-commerce-sort-dropdown": LocalJSX.StencilAtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLStencilAtomicCommerceSortDropdownElement>;
         }
     }
 }

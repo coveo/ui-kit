@@ -698,27 +698,6 @@ export declare interface AtomicCommerceSearchBoxRecentQueries extends Components
 
 
 @ProxyCmp({
-})
-@Component({
-  selector: 'atomic-commerce-sort-dropdown',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicCommerceSortDropdown {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceSortDropdown extends Components.AtomicCommerceSortDropdown {}
-
-
-@ProxyCmp({
   inputs: ['count', 'value']
 })
 @Component({
@@ -3104,5 +3083,26 @@ export class AtomicTimeframeFacet {
 
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
+
+
+@ProxyCmp({
+})
+@Component({
+  selector: 'stencil-atomic-commerce-sort-dropdown',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class StencilAtomicCommerceSortDropdown {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface StencilAtomicCommerceSortDropdown extends Components.StencilAtomicCommerceSortDropdown {}
 
 

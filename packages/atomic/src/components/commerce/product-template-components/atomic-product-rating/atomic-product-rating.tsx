@@ -9,7 +9,7 @@ import {
   Rating,
   computeNumberOfStars,
 } from '../../../common/atomic-rating/atomic-rating';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../../atomic-commerce-interface/lit-stencil-common-types';
 import {ProductContext} from '../product-template-decorators';
 
 /**

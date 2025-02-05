@@ -27,7 +27,7 @@ import {
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/pager-guard';
-import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-products-per-page` component determines how many products to display per page.

@@ -1,4 +1,5 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
+import {noChange} from 'lit-html';
 
 interface SortGuardProps {
   hasError: boolean;
@@ -9,8 +10,8 @@ export const SortGuard: FunctionalComponent<SortGuardProps> = (
   {hasError, firstSearchExecuted, hasResults},
   children
 ) => {
-  if (hasError) {
-    return;
+  if (hasError || !hasResults) {
+    return noChange;
   }
 
   if (!firstSearchExecuted) {
@@ -21,10 +22,6 @@ export const SortGuard: FunctionalComponent<SortGuardProps> = (
         class="bg-neutral my-2 h-6 w-44 animate-pulse rounded"
       ></div>
     );
-  }
-
-  if (!hasResults) {
-    return;
   }
 
   return <Fragment>{children}</Fragment>;

@@ -16,7 +16,7 @@ import {AutoCorrection} from '../../common/query-correction/auto-correction';
 import {Correction} from '../../common/query-correction/correction';
 import {QueryCorrectionGuard} from '../../common/query-correction/guard';
 import {TriggerCorrection} from '../../common/query-correction/trigger-correction';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * @alpha

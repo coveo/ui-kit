@@ -13,7 +13,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {RefineToggleButton} from '../../common/refine-modal/button';
 import {RefineToggleGuard} from '../../common/refine-modal/guard';
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/lit-stencil-common-types';
 
 /**
  * The `atomic-commerce-refine-toggle` component displays a button that opens a modal containing the facets and the sort components.
