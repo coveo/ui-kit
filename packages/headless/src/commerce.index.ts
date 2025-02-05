@@ -352,3 +352,8 @@ export {
   deserializeRelativeDate,
   validateRelativeDate,
 } from './api/search/date/relative-date.js';
+
+export {
+  productListingSerializer,
+  searchSerializer,
+} from './features/commerce/parameters/parameters-serializer.js';
