@@ -9,9 +9,7 @@ export type {DidYouMean, DidYouMeanState};
  * @group Definers
  *
  * @returns The `DidYouMean` controller definition.
- *
- * @internal
- * */
+ */
 export function defineDidYouMean(): SearchOnlyControllerDefinitionWithoutProps<DidYouMean> {
   return {
     search: true,

@@ -21,8 +21,6 @@ export interface RecentQueriesListDefinition
  *
  * @param props - The configuration `RecentQueriesList` properties.
  * @returns The `RecentQueriesList` controller definition.
- *
- * @internal
  */
 export function defineRecentQueriesList(
   props: RecentQueriesListProps = {}

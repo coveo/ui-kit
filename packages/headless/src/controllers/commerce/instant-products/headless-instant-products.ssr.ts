@@ -19,8 +19,6 @@ export interface InstantProductsDefinition
  * @group Definers
  *
  * @returns The `InstantProducts` controller definition.
- *
- * @internal
  */
 export function defineInstantProducts(
   props: InstantProductsProps = {options: {}}

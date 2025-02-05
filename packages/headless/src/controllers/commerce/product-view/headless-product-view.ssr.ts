@@ -21,7 +21,6 @@ export interface ProductViewDefinition
  *
  * @returns The `ProductView` controller definition.
  *
- * @internal
  * @group Definers
  */
 export function defineProductView(): ProductViewDefinition {
