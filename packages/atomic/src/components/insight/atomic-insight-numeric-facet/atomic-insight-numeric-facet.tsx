@@ -1,25 +1,25 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {
-  buildInsightFacetConditionsManager,
-  buildInsightNumericFacet,
-  buildInsightNumericFilter,
-  buildInsightNumericRange,
-  buildInsightSearchStatus,
-  InsightCategoryFacetValueRequest,
-  InsightFacetConditionsManager,
-  InsightFacetValueRequest,
-  InsightNumericFacet,
-  InsightNumericFacetState,
-  InsightNumericFilter,
-  InsightNumericFilterState,
-  InsightNumericRangeRequest,
-  InsightRangeFacetRangeAlgorithm,
-  InsightRangeFacetSortCriterion,
-  InsightSearchStatus,
-  InsightSearchStatusState,
-  loadInsightNumericFacetSetActions,
-} from '..';
+  buildFacetConditionsManager as buildInsightFacetConditionsManager,
+  buildNumericFacet as buildInsightNumericFacet,
+  buildNumericFilter as buildInsightNumericFilter,
+  buildNumericRange as buildInsightNumericRange,
+  buildSearchStatus as buildInsightSearchStatus,
+  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+  FacetConditionsManager as InsightFacetConditionsManager,
+  FacetValueRequest as InsightFacetValueRequest,
+  NumericFacet as InsightNumericFacet,
+  NumericFacetState as InsightNumericFacetState,
+  NumericFilter as InsightNumericFilter,
+  NumericFilterState as InsightNumericFilterState,
+  NumericRangeRequest as InsightNumericRangeRequest,
+  RangeFacetRangeAlgorithm as InsightRangeFacetRangeAlgorithm,
+  RangeFacetSortCriterion as InsightRangeFacetSortCriterion,
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+  loadNumericFacetSetActions as loadInsightNumericFacetSetActions,
+} from '@coveo/headless/insight';
+import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,

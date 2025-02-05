@@ -23,8 +23,6 @@ export interface ContextDefinition
  * @group Definers
  *
  * @returns The `Context` controller definition.
- *
- * @internal
  */
 export function defineContext(): ContextDefinition {
   return {

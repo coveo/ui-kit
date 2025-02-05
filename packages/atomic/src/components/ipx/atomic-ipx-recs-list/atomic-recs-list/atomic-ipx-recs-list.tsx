@@ -8,6 +8,8 @@ import {
   RecommendationList,
   RecommendationListState,
   loadConfigurationActions,
+  Result as RecsResult,
+  buildInteractiveResult as buildRecsInteractiveResult,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -41,8 +43,6 @@ import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListCommon} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {getItemListDisplayClasses} from '../../../common/layout/display-options';
-import {Heading} from '../../../common/stencil-heading';
-import {RecsResult, buildRecsInteractiveResult} from '../../../recommendations';
 import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 
 /**

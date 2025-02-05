@@ -4,6 +4,8 @@ import {
   RecommendationList,
   RecommendationListState,
   loadConfigurationActions,
+  buildInteractiveResult as buildRecsInteractiveResult,
+  Result as RecsResult,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -15,7 +17,6 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
-import {buildRecsInteractiveResult, RecsResult} from '..';
 import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,

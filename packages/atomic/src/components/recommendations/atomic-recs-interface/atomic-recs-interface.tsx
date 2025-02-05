@@ -6,6 +6,7 @@ import {
   buildRecommendationEngine,
   loadRecommendationActions,
   loadSearchConfigurationActions,
+  LogLevel as RecsLogLevel,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -19,7 +20,6 @@ import {
   setNonce,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {RecsLogLevel} from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';

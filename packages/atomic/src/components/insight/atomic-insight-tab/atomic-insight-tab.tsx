@@ -1,6 +1,10 @@
 import {Unsubscribe} from '@coveo/headless';
+import {
+  buildTab as buildInsightTab,
+  Tab as InsightTab,
+  TabState as InsightTabState,
+} from '@coveo/headless/insight';
 import {Component, h, Prop, State, Method, Element} from '@stencil/core';
-import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
   BindStateToController,
   InitializableComponent,

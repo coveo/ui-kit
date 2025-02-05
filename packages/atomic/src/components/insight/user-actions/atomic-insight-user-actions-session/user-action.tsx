@@ -1,5 +1,5 @@
+import {UserAction as IUserAction} from '@coveo/headless/insight';
 import {FunctionalComponent, h} from '@stencil/core';
-import {InsightUserAction as IUserAction} from '../..';
 import BookmarkIcon from '../../../../images/bookmark.svg';
 import DocumentIcon from '../../../../images/document.svg';
 import PointIcon from '../../../../images/point.svg';

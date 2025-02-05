@@ -1,7 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import Tick from '../../images/checkbox.svg';
 
-export interface CheckboxProps {
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the CheckboxProps interface from the checkbox.ts file
+ */
+export interface StencilCheckboxProps {
   checked: boolean;
   onToggle(checked: boolean): void;
   key?: string | number;
@@ -16,7 +19,12 @@ export interface CheckboxProps {
   onMouseDown?(evt: MouseEvent): void;
 }
 
-export const Checkbox: FunctionalComponent<CheckboxProps> = (props) => {
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the Checkbox function from the checkbox.ts file
+ */
+export const StencilCheckbox: FunctionalComponent<StencilCheckboxProps> = (
+  props
+) => {
   const partName = props.part ?? 'checkbox';
 
   const classNames = [
