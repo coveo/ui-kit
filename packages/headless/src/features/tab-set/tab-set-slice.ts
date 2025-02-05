@@ -20,12 +20,12 @@ export const tabSetReducer = createReducer(
       })
       .addCase(updateActiveTab, (state, action) => {
         const id = action.payload;
+        console.log(JSON.parse(JSON.stringify(state)));
         activateTabIfIdExists(state, id);
       })
       .addCase(restoreSearchParameters, (state, action) => {
         const id = action.payload.tab || '';
         activateTabIfIdExists(state, id);
-        updateActiveTab(id);
       })
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.tabSet ?? state;
@@ -37,6 +37,10 @@ function activateTabIfIdExists(state: TabSetState, id: string) {
   const hasId = id in state;
 
   if (!hasId) {
+    const firstTabId = Object.keys(state)[0];
+    if (firstTabId) {
+      state[firstTabId].isActive = true;
+    }
     return;
   }
 
