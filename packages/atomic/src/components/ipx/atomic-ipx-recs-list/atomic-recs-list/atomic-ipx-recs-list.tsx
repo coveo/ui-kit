@@ -1,4 +1,3 @@
-import {Heading} from '@/src/components/common/stencil-heading';
 import {NumberValue} from '@coveo/bueno';
 import {
   IPXActionsHistoryActionCreators,
@@ -44,6 +43,7 @@ import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListCommon} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {getItemListDisplayClasses} from '../../../common/layout/display-options';
+import {Heading} from '../../../common/stencil-heading';
 import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 
 /**
