@@ -133,14 +133,12 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
   const {id, expression} = props.options;
   dispatch(registerTab({id, expression}));
 
-  // If this is the first tab controller being built, set initialState.isActive to true
   const isFirstTab = Object.keys(engine.state.tabSet).length === 1;
   if (isFirstTab) {
     initialState.isActive = true;
   }
 
-  // Only dispatch updateActiveTab if the tab is active and it's not the initial load
-  if (initialState.isActive && !isFirstTab) {
+  if (initialState.isActive) {
     dispatch(updateActiveTab(id));
   }
 
