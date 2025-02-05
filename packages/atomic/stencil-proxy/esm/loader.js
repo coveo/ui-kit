@@ -10,8 +10,8 @@ const defineCustomElements = function (...args) {
     ...recommendationsComponents,
     ...ipxComponents,
     ...insightComponents,
-    commerceComponents,
-    searchComponents,
+    ...commerceComponents,
+    ...searchComponents,
   }).forEach((importFunction) => importFunction());
   originalDefineCustomElements(...args);
 };
