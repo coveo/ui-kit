@@ -144,13 +144,6 @@ export function enrichParameters(
   };
 }
 
-export function validateParams(
-  engine: CoreEngine,
-  parameters: Required<SearchParameters>
-): boolean {
-  return validateTab(engine, parameters);
-}
-
 export function getCoreActiveSearchParameters(
   engine: CoreEngine
 ): SearchParameters {
@@ -204,13 +197,6 @@ function getTab<Section, Value>(
   const tab = tabSelector(section);
   const shouldInclude = tab !== initialState;
   return shouldInclude ? {tab} : {};
-}
-
-function validateTab(
-  _engine: CoreEngine,
-  _parameters: Required<SearchParameters>
-) {
-  return true;
 }
 
 export function getSelectedValues(request: FacetRequest) {
