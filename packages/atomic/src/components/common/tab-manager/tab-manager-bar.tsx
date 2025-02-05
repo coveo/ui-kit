@@ -153,7 +153,7 @@ export class AtomicTabManagerBar {
           onClick={() => {
             tab.select();
             this.updatePopoverTabs();
-            this.tabPopover?.togglePopover();
+            this.tabPopover?.toggle();
           }}
         >
           {tab.label}

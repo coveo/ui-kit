@@ -13,7 +13,6 @@ import {
   Event,
   EventEmitter,
 } from '@stencil/core/internal';
-import {AnyBindings} from '../../../../components';
 import CloseIcon from '../../../../images/close.svg';
 import Success from '../../../../images/success.svg';
 import {
@@ -25,6 +24,7 @@ import {once, randomID} from '../../../../utils/utils';
 import {Button} from '../../button';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
+import {AnyBindings} from '../../interface/bindings';
 import {RadioButton} from '../../stencil-radio-button';
 
 /**
