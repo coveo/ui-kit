@@ -1,3 +1,4 @@
+import {Heading} from '@/src/components/common/stencil-heading';
 import {NumberValue} from '@coveo/bueno';
 import {
   IPXActionsHistoryActionCreators,
