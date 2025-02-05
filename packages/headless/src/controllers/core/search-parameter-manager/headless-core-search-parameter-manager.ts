@@ -145,7 +145,16 @@ export function getCoreActiveSearchParameters(
   const state = engine.state;
   return {
     ...getQ(state.query, (s) => s.q, getQueryInitialState().q),
-    ...getTab(state),
+    ...getTab(
+      state.tabSet,
+      (tabSet) => {
+        const activeTab = Object.values(tabSet ?? {}).find(
+          (tab) => tab.isActive
+        );
+        return activeTab ? activeTab.id : Object.keys(tabSet)[0];
+      },
+      state.tabSet ? Object.keys(state.tabSet)[0] : ''
+    ),
     ...getSortCriteria(
       state.sortCriteria,
       (sortCriteria) => sortCriteria,
@@ -171,12 +180,18 @@ function facetIsEnabled(state: CoreEngine['state']) {
   };
 }
 
-function getTab(state: Partial<SearchParametersState>) {
-  const activeTab = Object.values(state.tabSet ?? {}).find(
-    (tab) => tab.isActive
-  );
+function getTab<Section, Value>(
+  section: Section | undefined,
+  tabSelector: (state: Section) => Value,
+  initialState: Value
+) {
+  if (section === undefined) {
+    return {};
+  }
 
-  return activeTab ? {tab: activeTab.id} : {};
+  const tab = tabSelector(section);
+  const shouldInclude = tab !== initialState;
+  return shouldInclude ? {tab} : {};
 }
 
 function validateTab(

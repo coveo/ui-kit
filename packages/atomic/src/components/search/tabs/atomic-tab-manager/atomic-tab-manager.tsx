@@ -60,7 +60,7 @@ export class AtomicTabManager {
       return;
     }
 
-    tabElements.forEach((tabElement, index) => {
+    tabElements.forEach((tabElement) => {
       if (!tabElement.name) {
         this.error = new Error(
           'The "name" attribute must be defined on all "atomic-tab" children.'
@@ -73,7 +73,6 @@ export class AtomicTabManager {
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
-        initialState: {isActive: index === 0 ? true : false},
       });
 
       this.tabs.push({
