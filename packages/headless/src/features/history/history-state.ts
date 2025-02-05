@@ -41,7 +41,7 @@ export function extractHistory(state: Partial<HistoryState>): HistoryState {
       state.automaticFacetSet ?? getAutomaticFacetSetInitialState(),
     pagination: state.pagination || getPaginationInitialState(),
     query: state.query || getQueryInitialState(),
-    tabSet: state.tabSet || getTabSetInitialState(),
+    tabSet: getTabSetInitialState(),
     advancedSearchQueries:
       state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
     staticFilterSet: state.staticFilterSet || getStaticFilterSetInitialState(),
