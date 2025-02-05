@@ -1,6 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {restoreTab} from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
 import {getTabSetInitialState, TabSetState} from './tab-set-state.js';
 
@@ -20,11 +20,10 @@ export const tabSetReducer = createReducer(
       })
       .addCase(updateActiveTab, (state, action) => {
         const id = action.payload;
-        console.log(JSON.parse(JSON.stringify(state)));
         activateTabIfIdExists(state, id);
       })
-      .addCase(restoreSearchParameters, (state, action) => {
-        const id = action.payload.tab || '';
+      .addCase(restoreTab, (state, action) => {
+        const id = action.payload;
         activateTabIfIdExists(state, id);
       })
       .addCase(change.fulfilled, (state, action) => {
@@ -37,10 +36,6 @@ function activateTabIfIdExists(state: TabSetState, id: string) {
   const hasId = id in state;
 
   if (!hasId) {
-    const firstTabId = Object.keys(state)[0];
-    if (firstTabId) {
-      state[firstTabId].isActive = true;
-    }
     return;
   }
 

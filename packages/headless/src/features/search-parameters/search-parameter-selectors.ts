@@ -30,7 +30,7 @@ export function initialSearchParameterSelector(
     df: {},
     debug: getDebugInitialState(),
     sf: {},
-    tab: 'all',
+    tab: '',
     af: {},
     mnf: {},
   };
