@@ -26,9 +26,13 @@ import {getHistoryInitialState, HistoryState} from './history-state.js';
 export const historyReducer = createReducer(
   getHistoryInitialState(),
   (builder) => {
-    builder.addCase(snapshot, (state, action) =>
-      isEqual(state, action.payload) ? undefined : action.payload
-    );
+    builder.addCase(snapshot, (state, action) => {
+      console.log(
+        JSON.parse(JSON.stringify(state)).tabSet,
+        JSON.parse(JSON.stringify(action.payload)).tabSet
+      );
+      return isEqual(state, action.payload) ? undefined : action.payload;
+    });
   }
 );
 
@@ -72,7 +76,7 @@ const isDictionaryFieldContextEqual = (
 const isTabSetEqual = (current: TabSetState, next: TabSetState) => {
   const currentTab = findActiveTab(current);
   const nextTab = findActiveTab(next);
-
+  console.log(currentTab?.id === nextTab?.id);
   return currentTab?.id === nextTab?.id;
 };
 
