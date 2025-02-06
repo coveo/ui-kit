@@ -724,7 +724,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     }
 
     return (
-      <Host>
+      <Host aria-expanded={this.isExpanded.toString()}>
         {this.renderAbsolutePositionSpacer()}
         {[
           <SearchBoxWrapper

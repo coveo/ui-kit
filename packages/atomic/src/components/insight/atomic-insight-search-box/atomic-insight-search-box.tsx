@@ -5,7 +5,7 @@ import {
   SearchBoxState as InsightSearchBoxState,
   Suggestion as InsightSuggestion,
 } from '@coveo/headless/insight';
-import {Component, Element, h, Prop, State} from '@stencil/core';
+import {Component, Element, h, Host, Prop, State} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
@@ -331,39 +331,41 @@ export class AtomicInsightSearchBox {
 
   public render() {
     return (
-      <SearchBoxWrapper
-        disabled={this.disableSearch}
-        onFocusout={(event) => {
-          if (!isFocusingOut(event)) {
-            return;
-          }
-          this.suggestionManager.clearSuggestions();
-          this.isExpanded = false;
-        }}
-      >
-        <atomic-icon
-          part="submit-icon"
-          icon={SearchSlimIcon}
-          class="my-auto ml-4 mr-0 h-4 w-4"
-        />
-        <SearchTextArea
-          textAreaRef={this.textAreaRef}
-          loading={this.searchBoxState.isLoading}
-          ref={(el) => el && (this.textAreaRef = el)}
-          bindings={this.bindings}
-          value={this.searchBoxState.value}
-          ariaLabel={this.getSearchInputLabel()}
-          placeholder={this.bindings.i18n.t('search-ellipsis')}
-          onFocus={() => this.onFocus()}
-          onKeyDown={(e) => this.onKeyDown(e)}
-          onClear={() => {
-            this.searchBox.clear();
-            this.triggerTextAreaChange('');
+      <Host aria-expanded={this.isExpanded.toString()}>
+        <SearchBoxWrapper
+          disabled={this.disableSearch}
+          onFocusout={(event) => {
+            if (!isFocusingOut(event)) {
+              return;
+            }
+            this.suggestionManager.clearSuggestions();
+            this.isExpanded = false;
           }}
-          onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
-        />
-        {this.renderSuggestions()}
-      </SearchBoxWrapper>
+        >
+          <atomic-icon
+            part="submit-icon"
+            icon={SearchSlimIcon}
+            class="my-auto ml-4 mr-0 h-4 w-4"
+          />
+          <SearchTextArea
+            textAreaRef={this.textAreaRef}
+            loading={this.searchBoxState.isLoading}
+            ref={(el) => el && (this.textAreaRef = el)}
+            bindings={this.bindings}
+            value={this.searchBoxState.value}
+            ariaLabel={this.getSearchInputLabel()}
+            placeholder={this.bindings.i18n.t('search-ellipsis')}
+            onFocus={() => this.onFocus()}
+            onKeyDown={(e) => this.onKeyDown(e)}
+            onClear={() => {
+              this.searchBox.clear();
+              this.triggerTextAreaChange('');
+            }}
+            onInput={(e) => this.onInput((e.target as HTMLInputElement).value)}
+          />
+          {this.renderSuggestions()}
+        </SearchBoxWrapper>
+      </Host>
     );
   }
 }
