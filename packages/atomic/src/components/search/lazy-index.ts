@@ -1,6 +1,6 @@
 export default {
   // Add entries as such when new components are added/moved to Lit.
-  // 'atomic-text': async () => await import('./atomic-text/atomic-text.js'),
+  'atomic-icon': async () => await import('../common/atomic-icon/atomic-icon'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

@@ -1,10 +1,10 @@
 import {html, LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit-html/directive-helpers.js';
-import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
+import {AnyBindings} from '../components/common/interface/bindings';
 import type {GenericRender, RenderGuardDecorator} from './types';
 
 export interface LitElementWithBindings extends LitElement {
-  bindings?: Bindings;
+  bindings?: AnyBindings;
 }
 
 /**

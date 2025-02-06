@@ -1,19 +1,12 @@
-import {
-  Component,
-  Element,
-  forceUpdate,
-  h,
-  Host,
-  Prop,
-  State,
-  Watch,
-} from '@stencil/core';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {initializeBindings} from '@/src/decorators/initialize-bindings';
+import {InitializableComponent} from '@/src/decorators/types';
+import {watch} from '@/src/decorators/watch';
+import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {parseAssetURL} from '../../../utils/utils';
+import {LitElement, svg} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
 import {AnyBindings} from '../interface/bindings';
 
 class IconFetchError extends Error {
@@ -39,17 +32,11 @@ class IconFetchError extends Error {
  *
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
-@Component({
-  tag: 'atomic-icon',
-  styleUrl: 'atomic-icon.pcss',
-  shadow: false,
-  assetsDirs: ['assets'],
-})
-export class AtomicIcon implements InitializableComponent<AnyBindings> {
-  @Element() host!: HTMLElement;
-
-  @InitializeBindings() public bindings!: AnyBindings;
-
+@customElement('atomic-icon')
+export class AtomicIcon
+  extends LitElement
+  implements InitializableComponent<AnyBindings>
+{
   /**
    * The SVG icon to display.
    *
@@ -57,10 +44,11 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop({reflect: true}) icon!: string;
+  @property({type: String, reflect: true}) icon!: string;
+  @state() private svg: string | null = null;
+  @state() error?: Error;
 
-  public error!: Error;
-  @State() private svg: string | null = null;
+  @initializeBindings() public bindings!: AnyBindings;
 
   private async fetchIcon(url: string) {
     try {
@@ -77,14 +65,14 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
       return await response.text();
     } catch (e) {
       this.error = e as Error;
-      forceUpdate(this);
+      this.requestUpdate(); // TODO: not sure this is needed
       return null;
     }
   }
 
   private validateSVG(svg: string) {
     if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
-      this.bindings.engine.logger.warn(
+      console.warn(
         'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
         this.icon
       );
@@ -109,22 +97,17 @@ export class AtomicIcon implements InitializableComponent<AnyBindings> {
     return sanitizedSvg;
   }
 
-  @Watch('icon')
+  @watch('icon')
   public async updateIcon() {
     const svgPromise = this.getIcon();
     this.svg = await svgPromise;
+    // TODO: check if should mark svg as not a state var and trigger a refresh manually
   }
 
-  public initialize() {
-    this.updateIcon();
-  }
-
-  public render() {
-    if (this.error) {
-      console.error(this.error, this.host);
-      this.host.remove();
-      return;
-    }
-    return <Host innerHTML={this.svg} aria-hidden="true"></Host>;
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    console.log('rendering icon');
+    return svg`${this.svg}`;
   }
 }
