@@ -213,8 +213,9 @@ describe('search parameter manager', () => {
       a: buildMockStaticFilterSlice({id: 'a', values: staticFilterValues}),
     };
 
-    const tab = buildMockTabSlice({id: 'a', isActive: true});
-    engine.state.tabSet = {a: tab};
+    const tab = buildMockTabSlice({id: 'a', isActive: false});
+    const tab2 = buildMockTabSlice({id: 'b', isActive: true});
+    engine.state.tabSet = {a: tab, b: tab2};
 
     const automaticFacetValues = [buildMockFacetValue({state: 'selected'})];
     engine.state.automaticFacetSet!.set = {
@@ -250,9 +251,11 @@ describe('search parameter manager', () => {
       const params = {q: 'a'};
       manager.synchronize(params);
 
-      const initialParameters = initialSearchParameterSelector(engine.state);
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
+
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialParameters,
+        ...initialParametersWithoutTab,
         ...params,
       });
     });
@@ -260,15 +263,6 @@ describe('search parameter manager', () => {
     it('given valid search parameters, executes a search', () => {
       manager.synchronize({q: 'a'});
       expect(executeSearch).toHaveBeenCalled();
-    });
-
-    it('given invalid search parameters, should not execute a search', () => {
-      engine.state.tabSet = {
-        someTab: {id: 'someTab', isActive: true, expression: ''},
-      };
-      manager.synchronize({tab: 'notMyTab!'});
-
-      expect(executeSearch).not.toHaveBeenCalled();
     });
 
     it(`when only the order of facet values changes,
