@@ -1,3 +1,23 @@
+## 3.18.0 (2025-02-05)
+
+- chore: fix failing atomic test due to source change (#4909) ([ac4da32](https://github.com/coveo/ui-kit/commits/ac4da32)), closes [#4909](https://github.com/coveo/ui-kit/issues/4909)
+- chore: script to create new setup for atomic component (#4913) ([f872a49](https://github.com/coveo/ui-kit/commits/f872a49)), closes [#4913](https://github.com/coveo/ui-kit/issues/4913) [#4914](https://github.com/coveo/ui-kit/issues/4914)
+- chore(atomic): add index & lazy-index file in every use case (#4927) ([cf5ce1d](https://github.com/coveo/ui-kit/commits/cf5ce1d)), closes [#4927](https://github.com/coveo/ui-kit/issues/4927)
+- chore(atomic): better dev mode (#4920) ([3ba383c](https://github.com/coveo/ui-kit/commits/3ba383c)), closes [#4920](https://github.com/coveo/ui-kit/issues/4920)
+- chore(atomic): bundle lit dependencies for CDN build (#4908) ([87681ca](https://github.com/coveo/ui-kit/commits/87681ca)), closes [#4908](https://github.com/coveo/ui-kit/issues/4908)
+- chore(deps): update dependency vite to v5.4.14 j:kit-282 (#4902) ([e0b448b](https://github.com/coveo/ui-kit/commits/e0b448b)), closes [#4902](https://github.com/coveo/ui-kit/issues/4902)
+- chore(tests): fix flakiness issue (#4905) ([ab7f0d5](https://github.com/coveo/ui-kit/commits/ab7f0d5)), closes [#4905](https://github.com/coveo/ui-kit/issues/4905) [/github.com/cypress-io/cypress/issues/29085#issuecomment-2040258080](https://github.com//github.com/cypress-io/cypress/issues/29085/issues/issuecomment-2040258080) [/docs.cypress.io/app/references/changelog#13-7-3](https://github.com//docs.cypress.io/app/references/changelog/issues/13-7-3) [/github.com/coveo/ui-kit/pull/4905#discussion_r1933951647](https://github.com//github.com/coveo/ui-kit/pull/4905/issues/discussion_r1933951647)
+- test(atomic): add lit checkbox tests (#4899) ([694475f](https://github.com/coveo/ui-kit/commits/694475f)), closes [#4899](https://github.com/coveo/ui-kit/issues/4899)
+- test(atomic): add tests to binding decorators (#4911) ([12c4aac](https://github.com/coveo/ui-kit/commits/12c4aac)), closes [#4911](https://github.com/coveo/ui-kit/issues/4911)
+- test(atomic): test radio-button render function (#4896) ([7c5ac43](https://github.com/coveo/ui-kit/commits/7c5ac43)), closes [#4896](https://github.com/coveo/ui-kit/issues/4896)
+- fix(atomic-react): stop exporting atomicResultChildren and atomicResultChildrenTemplate (#4931) ([c0d2f08](https://github.com/coveo/ui-kit/commits/c0d2f08)), closes [#4931](https://github.com/coveo/ui-kit/issues/4931)
+- fix(atomic): hide unhydrated results (#4900) ([5bb6b51](https://github.com/coveo/ui-kit/commits/5bb6b51)), closes [#4900](https://github.com/coveo/ui-kit/issues/4900)
+- fix(atomic): reset dependent numeric / date facet input when parent facet is cleared (#4851) ([b30b8a2](https://github.com/coveo/ui-kit/commits/b30b8a2)), closes [#4851](https://github.com/coveo/ui-kit/issues/4851)
+- fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
+- fix(deps): update all dependencies j:kit-282 (#4933) ([9016283](https://github.com/coveo/ui-kit/commits/9016283)), closes [#4933](https://github.com/coveo/ui-kit/issues/4933)
+- feat(atomic-hosted-page): migrate from stencil to lit (#4897) ([bf6bed4](https://github.com/coveo/ui-kit/commits/bf6bed4)), closes [#4897](https://github.com/coveo/ui-kit/issues/4897)
+- fix(headless+atomic): make recent queries case insensitive + display recent query even if it fully m ([6ceebaa](https://github.com/coveo/ui-kit/commits/6ceebaa)), closes [#4854](https://github.com/coveo/ui-kit/issues/4854)
+
 ## 3.17.0 (2025-01-29)
 
 - chore: add tailwind styles support for lit components (#4862) ([6537c36](https://github.com/coveo/ui-kit/commits/6537c36)), closes [#4862](https://github.com/coveo/ui-kit/issues/4862) [/github.com/coveo/ui-kit/pull/4804#issue-2751560151](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/issue-2751560151) [/github.com/coveo/ui-kit/pull/4804#discussion_r1894392106](https://github.com//github.com/coveo/ui-kit/pull/4804/issues/discussion_r1894392106) [#4804](https://github.com/coveo/ui-kit/issues/4804)

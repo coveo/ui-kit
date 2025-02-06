@@ -1,3 +1,14 @@
+## 3.15.0 (2025-02-05)
+
+- chore(headless): make ssr-commerce definers public (#4929) ([a6add1d](https://github.com/coveo/ui-kit/commits/a6add1d)), closes [#4929](https://github.com/coveo/ui-kit/issues/4929)
+- feat(headless): export the search/product-listing serializers (#4930) ([0d90c64](https://github.com/coveo/ui-kit/commits/0d90c64)), closes [#4930](https://github.com/coveo/ui-kit/issues/4930)
+- fix: ensure we give auth query param to html-api-client (#4916) ([2955a0c](https://github.com/coveo/ui-kit/commits/2955a0c)), closes [#4916](https://github.com/coveo/ui-kit/issues/4916)
+- fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
+- fix(deps): update dependency @coveo/relay to v1 j:kit-282 (#4915) ([bd4d888](https://github.com/coveo/ui-kit/commits/bd4d888)), closes [#4915](https://github.com/coveo/ui-kit/issues/4915)
+- fix(deps): update dependency @reduxjs/toolkit to v2.5.1 j:kit-282 (#4934) ([4c0600a](https://github.com/coveo/ui-kit/commits/4c0600a)), closes [#4934](https://github.com/coveo/ui-kit/issues/4934)
+- fix(headless): collapsible key added to insightGenQAOptions type (#4912) ([5bb7cd9](https://github.com/coveo/ui-kit/commits/5bb7cd9)), closes [#4912](https://github.com/coveo/ui-kit/issues/4912)
+- fix(headless+atomic): make recent queries case insensitive + display recent query even if it fully m ([6ceebaa](https://github.com/coveo/ui-kit/commits/6ceebaa)), closes [#4854](https://github.com/coveo/ui-kit/issues/4854)
+
 ## 3.14.0 (2025-01-29)
 
 - feat(headless): Add answerConfigId to the InsightInterface to be supported in insight use case (#488 ([4678a59](https://github.com/coveo/ui-kit/commits/4678a59)), closes [#4887](https://github.com/coveo/ui-kit/issues/4887)

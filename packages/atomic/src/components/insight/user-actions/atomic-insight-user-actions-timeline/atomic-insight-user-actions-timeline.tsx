@@ -1,10 +1,10 @@
-import {Component, h, State, Prop} from '@stencil/core';
 import {
-  buildInsightUserActions,
-  InsightUserActions,
-  InsightUserActionsState,
-  InsightUserSession,
-} from '../..';
+  buildUserActions as buildInsightUserActions,
+  UserActions as InsightUserActions,
+  UserActionsState as InsightUserActionsState,
+  UserSession as InsightUserSession,
+} from '@coveo/headless/insight';
+import {Component, h, State, Prop} from '@stencil/core';
 import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
 import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
 import {

@@ -12,8 +12,6 @@ export interface NotifyTriggerDefinition
  * @group Definers
  *
  * @returns The `NotifyTrigger` controller definition.
- *
- * @internal
  */
 export function defineNotifyTrigger(): NotifyTriggerDefinition {
   return {

@@ -1,6 +1,6 @@
 import {FoldedResult, Result} from '@coveo/headless';
 import {Product} from '@coveo/headless/commerce';
-import {InsightResult} from '../../insight';
+import {Result as InsightResult} from '@coveo/headless/insight';
 
 export type AnyItem = FoldedResult | AnyUnfoldedItem | Product;
 export type AnyUnfoldedItem = Result | InsightResult;
