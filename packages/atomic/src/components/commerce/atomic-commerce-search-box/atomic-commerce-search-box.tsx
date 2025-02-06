@@ -741,7 +741,7 @@ export class AtomicCommerceSearchBox
     }
 
     return (
-      <Host>
+      <Host aria-expanded={this.isExpanded.toString()}>
         {this.renderAbsolutePositionSpacer()}
         {[
           <SearchBoxWrapper
