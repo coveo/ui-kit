@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
 import {parseDate} from '../../../../utils/date-utils';
-import {Button} from '../../../common/button';
+import {Button} from '../../../common/stencil-button';
 import {AnyBindings} from '../../interface/bindings';
 
 /**
