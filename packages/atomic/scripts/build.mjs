@@ -9,6 +9,7 @@ import {
   createProgram,
   flattenDiagnosticMessageText,
 } from 'typescript';
+import resourceUrlTransformer from './asset-path-transformer.mjs';
 import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
 
@@ -18,6 +19,12 @@ if (configArg === undefined) {
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const transformers = [
+  svgTransformer,
+  pathTransformer,
+  ...[isCDN ? resourceUrlTransformer : null].filter(Boolean),
+];
 
 function loadTsConfig(configPath) {
   const configFile = readConfigFile(configPath, sys.readFile);
@@ -39,7 +46,7 @@ function emit(program) {
   const writeFile = undefined;
   const emitOnlyDtsFiles = false;
   const customTransformers = {
-    before: [svgTransformer, pathTransformer],
+    before: transformers,
   };
 
   return program.emit(
