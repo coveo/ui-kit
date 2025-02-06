@@ -8,7 +8,7 @@ import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 const selectors = {
   lightningCombobox: 'lightning-combobox',
   componentError: 'c-quantic-component-error',
-  sortDropdown: '[data-cy="sort-dropdown"]',
+  sortDropdown: '[data-testid="sort-dropdown"]',
   initializationError: 'c-quantic-component-error',
 };
 
