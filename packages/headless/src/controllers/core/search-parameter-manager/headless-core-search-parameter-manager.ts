@@ -11,6 +11,7 @@ import {
   getQ,
   getSortCriteria,
   getFacets,
+  getTab,
 } from '../../../features/parameter-manager/parameter-manager-selectors.js';
 import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
@@ -183,20 +184,6 @@ function facetIsEnabled(state: CoreEngine['state']) {
   return (facetId: string) => {
     return state.facetOptions?.facets[facetId]?.enabled ?? true;
   };
-}
-
-function getTab<Section, Value>(
-  section: Section | undefined,
-  tabSelector: (state: Section) => Value,
-  initialState: Value
-) {
-  if (section === undefined) {
-    return {};
-  }
-
-  const tab = tabSelector(section);
-  const shouldInclude = tab !== initialState;
-  return shouldInclude ? {tab} : {};
 }
 
 export function getSelectedValues(request: FacetRequest) {
