@@ -153,7 +153,7 @@ export class TabBar {
           onClick={() => {
             tab.select();
             this.updatePopoverTabs();
-            this.tabPopover?.togglePopover();
+            this.tabPopover?.toggle();
           }}
         >
           {tab.label}

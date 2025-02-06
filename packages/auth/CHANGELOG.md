@@ -1,3 +1,7 @@
+## <small>2.0.7 (2025-02-05)</small>
+
+- chore(deps): update dependency vite to v5.4.14 j:kit-282 (#4902) ([e0b448b](https://github.com/coveo/ui-kit/commits/e0b448b)), closes [#4902](https://github.com/coveo/ui-kit/issues/4902)
+
 ## <small>2.0.6 (2025-01-08)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4753) ([8a2cae4](https://github.com/coveo/ui-kit/commits/8a2cae4)), closes [#4753](https://github.com/coveo/ui-kit/issues/4753)
