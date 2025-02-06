@@ -196,10 +196,6 @@ describe('c-quantic-sort', () => {
       mockErroneousHeadlessInitialization();
     });
 
-    afterAll(() => {
-      mockSuccessfulHeadlessInitialization();
-    });
-
     it('should display the initialization error component', async () => {
       const element = createTestComponent();
       await flushPromises();
