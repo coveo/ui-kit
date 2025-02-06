@@ -63,8 +63,12 @@ describe('url manager', () => {
     it(`when adding a parameter
     should restore the right parameters and execute a search`, () => {
       manager.synchronize('q=test');
+
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
+
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialSearchParameterSelector(engine.state),
+        ...initialParametersWithoutTab,
         q: 'test',
       });
       expect(executeSearch).toHaveBeenCalled();
@@ -74,8 +78,12 @@ describe('url manager', () => {
     should restore the right parameters and execute a search`, () => {
       engine.state.query!.q = 'test';
       manager.synchronize('');
+
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
+
       expect(restoreSearchParameters).toHaveBeenCalledWith(
-        expect.objectContaining(initialSearchParameterSelector(engine.state))
+        expect.objectContaining(initialParametersWithoutTab)
       );
       expect(executeSearch).toHaveBeenCalled();
     });
@@ -93,8 +101,11 @@ describe('url manager', () => {
       engine.state.query!.q = 'books';
       manager.synchronize('q=movies');
 
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
+
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialSearchParameterSelector(engine.state),
+        ...initialParametersWithoutTab,
         q: 'movies',
       });
 
