@@ -20,7 +20,7 @@ useCaseTestCases.forEach((useCase) => {
     test = fixtures[useCase.value] as typeof testInsight;
   }
 
-  test.describe(`quantic sort  ${useCase.label}`, () => {
+  test.describe(`quantic sort ${useCase.label}`, () => {
     test.describe(`when changing sort option to Newest`, () => {
       test('should trigger a new search and log analytics', async ({
         sort,
