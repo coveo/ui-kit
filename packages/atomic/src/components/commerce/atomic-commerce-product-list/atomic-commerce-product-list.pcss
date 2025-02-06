@@ -1,5 +1,4 @@
 @import '../../../global/global.pcss';
-@import '../../../global/mixins.pcss';
 @import '../../common/item-list/styles/placeholders.pcss';
 @import '../../common/item-list/styles/table-display.pcss';
 @import '../../common/item-list/styles/list-display.pcss';
@@ -7,7 +6,7 @@
 
 :host {
   .result-link {
-    @mixin link-style;
+    @apply link-style;
   }
   .result-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));

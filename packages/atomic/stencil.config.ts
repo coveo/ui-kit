@@ -4,13 +4,7 @@ import {angularOutputTarget as angular} from '@stencil/angular-output-target';
 import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import tailwindcss from '@tailwindcss/postcss';
-import autoprefixer from 'autoprefixer';
 import {readFileSync, readdirSync} from 'fs';
-import focusVisible from 'postcss-focus-visible';
-import atImport from 'postcss-import';
-import postcssMap from 'postcss-map';
-import mixins from 'postcss-mixins';
-import postcssNesting from 'postcss-nested';
 import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
@@ -165,21 +159,7 @@ export const config: Config = {
     // https://github.com/fabriciomendonca/stencil-inline-svg/issues/16
     inlineSvg(),
     postcss({
-      plugins: [
-        atImport(),
-        postcssMap({
-          maps: [
-            'src/components/common/template-system/post-css-map-for-sections.yaml',
-          ],
-        }),
-        mixins(),
-
-        focusVisible(),
-        postcssNesting(),
-        tailwindcss(),
-
-        autoprefixer(),
-      ],
+      plugins: [tailwindcss()],
     }),
     replace(),
   ],

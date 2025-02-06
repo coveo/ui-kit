@@ -1,6 +1,6 @@
 @import '../../common/template-system/template-system.pcss';
 
-@mixin atomic-template-system map(post-css-map-for-sections, commerce);
+@apply atomic-template-system;
 
 :host {
   @apply relative;
@@ -20,22 +20,21 @@
       &.image-none {
         atomic-product-section-name {
           min-height: calc(var(--line-height) * 2);
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
+          @apply line-clamp-2;
         }
       }
 
       @media (min-width: 1024px) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square;
             width: 16.65%;
           }
         }
 
         &.image-small {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square;
             width: 16.65%;
           }
         }
@@ -52,13 +51,13 @@
       @media (max-width: 1023px) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square;
             width: 16.65%;
           }
         }
         &.image-small {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square;
             width: 16.65%;
             max-width: 4.75rem;
           }
@@ -129,7 +128,7 @@
       @media (max-width: 1023px) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square;
             width: 16.65%;
           }
         }

@@ -1,14 +1,13 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
 
 [part='source-url'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-base);
+  @apply link-style;
+  @apply set-font-size-base;
 }
 
 [part='source-title'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-xl);
+  @apply link-style;
+  @apply set-font-size-xl;
   @apply mb-6;
 }
 

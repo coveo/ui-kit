@@ -1,46 +1,49 @@
 @import '../../../global/global.pcss';
-@import '../../../global/mixins.pcss';
 @import './with-sections.pcss';
 @import './row-desktop.pcss';
 @import './row-mobile.pcss';
 @import './cell-desktop.pcss';
 @import './cell-mobile.pcss';
 
-@define-mixin atomic-template-system map(post-css-map-for-sections, variables) {
+@utility atomic-template-system {
   /* == Common styles == */
   :host {
     @apply font-sans font-normal;
   }
 
-  $(section-badges) {
+  atomic-result-section-badges,
+  atomic-product-section-badges {
     text-align: left;
   }
 
-  $(section-actions) {
+  atomic-result-section-actions,
+  atomic-product-section-actions {
     text-align: left;
   }
 
-  $(section-title-metadata) {
-    @mixin set-font-size var(--atomic-text-sm);
+  atomic-result-section-title-metadata,
+  atomic-product-section-metadata {
+    @apply set-font-size-sm;
   }
 
-  $(section-emphasized) {
+  atomic-result-section-emphasized,
+  atomic-product-section-emphasized {
     font-weight: 500;
-    @mixin set-font-size var(--atomic-text-2xl);
+    @apply set-font-size-2xl;
     margin-top: 0.5rem;
   }
   /* == End of common styles == */
 
   .result-root {
     &.with-sections {
-      @mixin result-with-sections map(post-css-map-for-sections, variables);
+      @apply result-with-sections;
 
       &.display-list {
         @media (min-width: 1024px) {
-          @mixin row-result-desktop map(post-css-map-for-sections, variables);
+          @apply row-result-desktop;
         }
         @media (max-width: 1023px) {
-          @mixin row-result-mobile map(post-css-map-for-sections, variables);
+          @apply row-result-mobile;
         }
       }
       &.display-grid {
@@ -51,25 +54,25 @@
 
         &.image-large {
           @media (min-width: 1024px) {
-            @mixin cell-result-desktop map(post-css-map-for-sections, variables);
+            @apply cell-result-desktop;
           }
           @media (max-width: 1023px) {
-            @mixin row-result-mobile map(post-css-map-for-sections, variables);
+            @apply row-result-mobile;
           }
         }
         &.image-small,
         &.image-icon,
         &.image-none {
           @media (min-width: 1024px) {
-            @mixin cell-result-desktop map(post-css-map-for-sections, variables);
+            @apply cell-result-desktop;
           }
           @media (max-width: 1023px) {
-            @mixin cell-result-mobile map(post-css-map-for-sections, variables);
+            @apply cell-result-mobile;
           }
         }
       }
       &.display-table {
-        @mixin row-result-desktop map(post-css-map-for-sections, variables);
+        @apply row-result-desktop;
       }
     }
 
