@@ -1,14 +1,14 @@
-import {Component, h, Element, State, Prop, Method} from '@stencil/core';
 import {
-  InsightResultList,
-  InsightResultListState,
-  buildInsightResultList,
-  InsightResult,
-  buildInsightInteractiveResult,
-  buildInsightResultsPerPage,
-  InsightResultsPerPage,
-  InsightResultsPerPageState,
-} from '../..';
+  ResultList as InsightResultList,
+  ResultListState as InsightResultListState,
+  buildResultList as buildInsightResultList,
+  Result as InsightResult,
+  buildInteractiveResult as buildInsightInteractiveResult,
+  buildResultsPerPage as buildInsightResultsPerPage,
+  ResultsPerPage as InsightResultsPerPage,
+  ResultsPerPageState as InsightResultsPerPageState,
+} from '@coveo/headless/insight';
+import {Component, h, Element, State, Prop, Method} from '@stencil/core';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,

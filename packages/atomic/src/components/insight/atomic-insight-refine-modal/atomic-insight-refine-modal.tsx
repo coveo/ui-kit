@@ -1,12 +1,12 @@
-import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {
-  InsightQuerySummary,
-  InsightQuerySummaryState,
-  buildInsightQuerySummary,
-  InsightBreadcrumbManager,
-  InsightBreadcrumbManagerState,
-  buildInsightBreadcrumbManager,
-} from '..';
+  QuerySummary as InsightQuerySummary,
+  QuerySummaryState as InsightQuerySummaryState,
+  buildQuerySummary as buildInsightQuerySummary,
+  BreadcrumbManager as InsightBreadcrumbManager,
+  BreadcrumbManagerState as InsightBreadcrumbManagerState,
+  buildBreadcrumbManager as buildInsightBreadcrumbManager,
+} from '@coveo/headless/insight';
+import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import {rectEquals} from '../../../utils/dom-utils';
 import {
   BindStateToController,

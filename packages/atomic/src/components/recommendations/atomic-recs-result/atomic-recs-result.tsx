@@ -1,5 +1,8 @@
+import {
+  InteractiveResult as RecsInteractiveResult,
+  Result as RecsResult,
+} from '@coveo/headless/recommendation';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {RecsInteractiveResult, RecsResult} from '..';
 import {parentNodeToString} from '../../../utils/dom-utils';
 import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {

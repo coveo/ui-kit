@@ -1,10 +1,5 @@
-export {
-  RecommendationEngineConfiguration,
-  Result as RecsResult,
-  InteractiveResult as RecsInteractiveResult,
-  buildInteractiveResult as buildRecsInteractiveResult,
-  ResultTemplateCondition as RecsResultTemplateCondition,
-  ResultTemplate as RecsResultTemplate,
-  ResultTemplatesHelpers as RecsResultTemplatesHelpers,
-  LogLevel as RecsLogLevel,
-} from '@coveo/headless/recommendation';
+// Export the class of the components migrated to Lit here, like this:
+//export {AtomicRecsError} from './atomic-recs-error/atomic-recs-error.js';
+
+// TODO: Remove this line once at least one component is migrated to Lit.
+export {};

@@ -1,5 +1,12 @@
 import {loadFieldActions} from '@coveo/headless/insight';
 import {
+  LogLevel as InsightLogLevel,
+  InsightEngine,
+  InsightEngineConfiguration,
+  buildInsightEngine,
+  buildResultsPerPage as buildInsightResultsPerPage,
+} from '@coveo/headless/insight';
+import {
   Component,
   Element,
   h,
@@ -11,13 +18,6 @@ import {
   Watch,
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
-import {
-  InsightLogLevel,
-  InsightEngine,
-  InsightEngineConfiguration,
-  buildInsightEngine,
-  buildInsightResultsPerPage,
-} from '..';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';

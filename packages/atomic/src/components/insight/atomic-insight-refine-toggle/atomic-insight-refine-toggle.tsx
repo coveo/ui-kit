@@ -1,12 +1,12 @@
-import {Component, h, State, Element} from '@stencil/core';
 import {
-  buildInsightBreadcrumbManager,
-  buildInsightSearchStatus,
-  InsightBreadcrumbManager,
-  InsightBreadcrumbManagerState,
-  InsightSearchStatus,
-  InsightSearchStatusState,
-} from '..';
+  buildBreadcrumbManager as buildInsightBreadcrumbManager,
+  buildSearchStatus as buildInsightSearchStatus,
+  BreadcrumbManager as InsightBreadcrumbManager,
+  BreadcrumbManagerState as InsightBreadcrumbManagerState,
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+} from '@coveo/headless/insight';
+import {Component, h, State, Element} from '@stencil/core';
 import FilterIcon from '../../../images/filter.svg';
 import {
   InitializeBindings,

@@ -26,9 +26,7 @@ export type ProductList = Pick<
  * @group Definers
  *
  * @returns The `ProductList` controller definition.
- *
- * @internal
- * */
+ */
 export function defineProductList<
   TOptions extends ControllerDefinitionOption | undefined,
 >(options?: TOptions) {

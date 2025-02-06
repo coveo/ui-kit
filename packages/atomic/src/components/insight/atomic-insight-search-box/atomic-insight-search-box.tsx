@@ -1,11 +1,11 @@
 import {loadInsightSearchActions} from '@coveo/headless/insight';
-import {Component, Element, h, Prop, State} from '@stencil/core';
 import {
-  buildInsightSearchBox,
-  InsightSearchBox,
-  InsightSearchBoxState,
-  InsightSuggestion,
-} from '..';
+  buildSearchBox as buildInsightSearchBox,
+  SearchBox as InsightSearchBox,
+  SearchBoxState as InsightSearchBoxState,
+  Suggestion as InsightSuggestion,
+} from '@coveo/headless/insight';
+import {Component, Element, h, Prop, State} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
 import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
