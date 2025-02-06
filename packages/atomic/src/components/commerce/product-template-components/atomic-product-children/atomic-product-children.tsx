@@ -19,7 +19,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {filterProtocol} from '../../../../utils/xss-utils';
-import {Button} from '../../../common/button';
+import {Button} from '../../../common/stencil-button';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 
