@@ -2,8 +2,8 @@
 @import '../../common/item-list/styles/mixins.pcss';
 @import '../../common/item-list/styles/placeholders.pcss';
 
-@mixin atomic-grid-clickable-elements;
-@mixin atomic-grid-display-common;
+@apply atomic-grid-clickable-elements;
+@apply atomic-grid-display-common;
 
 :host {
   display: block;
@@ -13,7 +13,7 @@
  * @prop --atomic-recs-number-of-columns: Number of columns for the recommendation list.
  */
 .list-root {
-  @mixin atomic-grid-with-cards;
+  @apply atomic-grid-with-cards;
   grid-template-columns: repeat(var(--atomic-recs-number-of-columns, 1), minmax(0, 1fr));
 }
 

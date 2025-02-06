@@ -18,12 +18,12 @@
   }
 
   @media (min-width: 1024px) {
-    @mixin atomic-list-with-dividers;
+    @apply atomic-list-with-dividers;
   }
 
   @media (max-width: 1023px) {
     &.image-large {
-      @mixin atomic-list-with-dividers;
+      @apply atomic-list-with-dividers;
       display: grid;
       justify-content: space-evenly;
       grid-template-columns: minmax(auto, 35rem);
@@ -34,7 +34,7 @@
     &.image-none {
       grid-row-gap: 1rem;
 
-      @mixin atomic-list-with-cards;
+      @apply atomic-list-with-cards;
     }
   }
 }

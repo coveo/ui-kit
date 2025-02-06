@@ -1,12 +1,11 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
 
 /**
  * @prop --atomic-smart-snippet-gradient-start: At which height to start fading out a truncated answer.
  */
 :host {
   atomic-smart-snippet-answer {
-    @mixin set-font-size var(--atomic-text-lg);
+    @apply set-font-size-lg;
 
     display: block;
     overflow: hidden;

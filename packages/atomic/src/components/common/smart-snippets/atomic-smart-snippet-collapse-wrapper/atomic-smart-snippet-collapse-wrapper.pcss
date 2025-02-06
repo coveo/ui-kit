@@ -1,12 +1,11 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
 
 /**
  * @prop --atomic-smart-snippet-gradient-start: At which height to start fading out a truncated answer.
  */
 :host {
   &::part(smart-snippet-collapse-wrapper) {
-    @mixin set-font-size var(--atomic-text-lg);
+    @apply set-font-size-lg;
 
     height: auto;
     max-height: var(--collapsed-size);

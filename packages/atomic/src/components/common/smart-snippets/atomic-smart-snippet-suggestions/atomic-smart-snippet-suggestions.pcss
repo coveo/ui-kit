@@ -1,5 +1,4 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
 
 [part='answer-and-source'] {
   /*
@@ -10,14 +9,14 @@
 }
 
 [part='source-url'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-base);
+  @apply link-style;
+  @apply set-font-size-base;
   display: block;
 }
 
 [part='source-title'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-xl);
+  @apply link-style;
+  @apply set-font-size-xl;
   display: block;
 }
 

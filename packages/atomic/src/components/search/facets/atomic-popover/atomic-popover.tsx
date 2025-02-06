@@ -138,7 +138,7 @@ export class AtomicPopover implements InitializableComponent {
         ariaExpanded={`${this.isOpen}`}
         ariaLabel={ariaLabel}
         ariaControls={this.popoverId}
-        class={`hover:border-primary-light focus-visible:border-primary-light max-w-15 group box-border flex h-full min-w-6 items-center rounded p-2.5 hover:border focus-visible:border ${
+        class={`hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full min-w-6 max-w-[15rem] items-center rounded p-2.5 hover:border focus-visible:border ${
           this.isOpen
             ? 'border-primary ring-ring-primary text-primary z-100 ring-3'
             : ''

@@ -1,6 +1,6 @@
 @import '../../../../global/global.pcss';
 
-@define-mixin mobile-feedback-modal {
+@utility mobile-feedback-modal {
   &::part(container) {
     @apply w-auto min-w-full;
   }
@@ -43,7 +43,7 @@
   }
 
   @media (max-width: 1023px) {
-    @mixin mobile-feedback-modal;
+    @apply mobile-feedback-modal;
   }
 }
 

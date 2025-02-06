@@ -1,6 +1,6 @@
-@define-mixin icon-coloring $color {
+@utility icon-coloring-* {
   atomic-icon {
-    color: $color;
+    color: ----value(--atomic- *]);
   }
 }
 
@@ -9,7 +9,7 @@
     width: 2.2rem;
     height: 2.2rem;
 
-    @mixin icon-coloring var(--atomic-neutral-dark);
+    @apply icon-coloring-neutral-dark;
 
     &.dislike {
       rotate: 180deg;
@@ -18,11 +18,11 @@
     &:hover,
     &.active {
       &.like {
-        @mixin icon-coloring var(--atomic-success);
+        @apply icon-coloring-success;
       }
 
       &.dislike {
-        @mixin icon-coloring var(--atomic-error);
+        @apply icon-coloring-error;
       }
     }
   }
