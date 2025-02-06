@@ -11,9 +11,16 @@ import {
   PaginationProps,
   PaginationState,
   PaginationOptions,
+  CorePaginationOptions,
 } from './headless-core-commerce-pagination.js';
 
-export type {Pagination, PaginationProps, PaginationState, PaginationOptions};
+export type {
+  Pagination,
+  PaginationProps,
+  PaginationState,
+  PaginationOptions,
+  CorePaginationOptions,
+};
 
 /**
  * Defines a `Pagination` controller instance.

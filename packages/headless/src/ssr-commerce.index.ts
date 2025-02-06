@@ -180,6 +180,7 @@ export type {
   PaginationProps,
   PaginationState,
   PaginationOptions,
+  CorePaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
 export {definePagination} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
 
