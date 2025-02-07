@@ -147,7 +147,7 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         </Button>
         <div
           part={`${direction}-fade`}
-          class={`from-background-60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
+          class={`from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
             direction === 'left'
               ? 'bg-linear-to-r left-0'
               : 'bg-linear-to-l right-0'

@@ -151,7 +151,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-neutral"></hr>
+        <hr part="header-ruler" class="border-neutral border-t"></hr>
         <div
           part="body-wrapper"
           class="flex w-full grow flex-col items-center overflow-auto"

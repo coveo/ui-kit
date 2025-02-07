@@ -95,7 +95,7 @@ export class FacetDateInput {
 
     return (
       <form
-        class="grid-cols-min-1fr mt-4 grid gap-2 px-2"
+        class="grid-cols-[min-content 1fr] mt-4 grid gap-2 px-2"
         onSubmit={(e) => {
           e.preventDefault();
           this.apply();
