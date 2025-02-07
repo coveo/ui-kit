@@ -62,6 +62,7 @@
   --color-primary-dark: var(--atomic-primary-dark);
   --color-on-primary: var(--atomic-on-primary);
   --color-ring-primary: var(--atomic-ring-primary);
+  --color-primary-background: var(--atomic-primary-background);
 
   --color-neutral: var(--atomic-neutral);
   --color-neutral-light: var(--atomic-neutral-light);
@@ -73,4 +74,53 @@
   --color-error: var(--atomic-error);
   --color-visited: var(--atomic-visited);
   --color-disabled: var(--atomic-disabled);
+}
+
+@theme {
+  --animate-slide-down-modal: slideDown 0.5s linear forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+
+  @keyframes scaleUp {
+    0% {
+      transform: scale(0.7) translateY(150vh);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1) translateY(0px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    0% {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(150vh);
+      opacity: 0.7;
+    }
+  }
+}
+
+@theme {
+  --text-sm: var(--atomic-text-sm);
+  --text-base: var(--atomic-text-base);
+  --text-lg: var(--atomic-text-lg);
+  --text-xl: var(--atomic-text-xl);
+  --text-2xl: var(--atomic-text-2xl);
+
+  --font-weight-normal: var(--atomic-font-normal);
+  --font-weight-bold: var(--atomic-font-bold);
+
+  --shadow-inner-primary: inset 0 0 0 1px var(--atomic-primary);
+  --shadow-lg: 0px 2px 8px rgba(229, 232, 232, 0.75);
+  --shadow-t-lg: 0px -2px 8px rgba(229, 232, 232, 0.75);
+
+  --radius-sm: var(--atomic-border-radius);
+  --radius-md: var(--atomic-border-radius-md);
+  --radius-lg: var(--atomic-border-radius-lg);
+  --radius-xl: var(--atomic-border-radius-xl);
+
+  --font-sans: var(--atomic-font-family);
 }
