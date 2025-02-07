@@ -1,0 +1,25 @@
+@import '../../../global/polyfills.pcss';
+
+:host {
+  display: inline-block;
+  fill: currentColor;
+  /* TODO: KIT-3925 use utility class instead */
+  aspect-ratio: 1;
+  height: auto;
+
+  @supports not (aspect-ratio: 1) {
+    height: auto;
+  }
+
+  > svg {
+    width: 100%;
+    max-height: 100%;
+    /* TODO: KIT-3925 use utility class instead */
+    aspect-ratio: 1;
+    height: auto;
+
+    @supports not (aspect-ratio: 1) {
+      height: auto;
+    }
+  }
+}

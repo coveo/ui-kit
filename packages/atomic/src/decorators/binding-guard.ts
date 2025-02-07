@@ -1,11 +1,13 @@
 import {html, LitElement, nothing} from 'lit';
 import type {TemplateResultType} from 'lit-html/directive-helpers.js';
-import {AnyBindings} from '../components/common/interface/bindings';
-import type {GenericRender, RenderGuardDecorator} from './types';
+import type {
+  GenericRender,
+  InitializableComponent,
+  RenderGuardDecorator,
+} from './types';
 
-export interface LitElementWithBindings extends LitElement {
-  bindings?: AnyBindings;
-}
+type LitElementWithBindings = Pick<InitializableComponent, 'bindings'> &
+  LitElement;
 
 /**
  * A decorator that guards the render method based on the presence of component bindings.

@@ -42,7 +42,7 @@ export const initializeBindings =
             const updateLanguage = () => instance.requestUpdate();
             instance.bindings.i18n.on('languageChanged', updateLanguage);
             unsubscribeLanguage = () =>
-              instance.bindings.i18n.off('languageChanged', updateLanguage);
+              instance.bindings?.i18n.off('languageChanged', updateLanguage);
 
             instance.initialize?.();
           })

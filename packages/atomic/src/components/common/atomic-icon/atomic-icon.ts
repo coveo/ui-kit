@@ -3,11 +3,15 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {initializeBindings} from '@/src/decorators/initialize-bindings';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
+import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {LitElement, svg} from 'lit';
+import {CSSResultGroup, html, unsafeCSS} from 'lit';
+import {guard} from 'lit-html/directives/guard.js';
+import {unsafeSVG} from 'lit-html/directives/unsafe-svg.js';
 import {customElement, property, state} from 'lit/decorators.js';
 import {AnyBindings} from '../interface/bindings';
+import styles from './atomic-icon.tw.css';
 
 class IconFetchError extends Error {
   static fromStatusCode(url: string, statusCode: number, statusText: string) {
@@ -34,7 +38,7 @@ class IconFetchError extends Error {
  */
 @customElement('atomic-icon')
 export class AtomicIcon
-  extends LitElement
+  extends TailwindLitElement
   implements InitializableComponent<AnyBindings>
 {
   /**
@@ -44,11 +48,20 @@ export class AtomicIcon
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @property({type: String, reflect: true}) icon!: string;
-  @state() private svg: string | null = null;
+  @property({type: String}) icon: string = '';
+
+  @state()
+  private svg: string | null = null;
   @state() error?: Error;
 
-  @initializeBindings() public bindings!: AnyBindings;
+  static styles: CSSResultGroup = [
+    TailwindLitElement.styles,
+    unsafeCSS(styles),
+  ];
+
+  @state()
+  @initializeBindings()
+  public bindings?: AnyBindings;
 
   private async fetchIcon(url: string) {
     try {
@@ -65,7 +78,7 @@ export class AtomicIcon
       return await response.text();
     } catch (e) {
       this.error = e as Error;
-      this.requestUpdate(); // TODO: not sure this is needed
+      this.requestUpdate();
       return null;
     }
   }
@@ -80,6 +93,9 @@ export class AtomicIcon
   }
 
   private async getIcon() {
+    if (!this.bindings) {
+      return null;
+    }
     const url = parseAssetURL(
       this.icon,
       this.bindings.store.state.iconAssetsPath
@@ -89,6 +105,7 @@ export class AtomicIcon
     if (svg) {
       this.validateSVG(svg);
     }
+
     const sanitizedSvg = svg
       ? DOMPurify.sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},
@@ -97,17 +114,20 @@ export class AtomicIcon
     return sanitizedSvg;
   }
 
+  public initialize() {
+    this.updateIcon();
+  }
+
   @watch('icon')
   public async updateIcon() {
     const svgPromise = this.getIcon();
     this.svg = await svgPromise;
-    // TODO: check if should mark svg as not a state var and trigger a refresh manually
   }
 
   @bindingGuard()
   @errorGuard()
   render() {
-    console.log('rendering icon');
-    return svg`${this.svg}`;
+    this.ariaHidden = 'true';
+    return html`${guard([this.svg], () => unsafeSVG(this.svg))}`;
   }
 }
