@@ -4,6 +4,8 @@
   @apply hide-scrollbar;
 }
 
-::slotted(atomic-segmented-facet:not(.atomic-hidden)) {
-  @apply mr-2;
+@layer base {
+  ::slotted(atomic-segmented-facet:not(.atomic-hidden)) {
+    @apply mr-2;
+  }
 }
