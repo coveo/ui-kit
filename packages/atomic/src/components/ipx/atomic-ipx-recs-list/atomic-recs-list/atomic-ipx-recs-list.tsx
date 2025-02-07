@@ -8,6 +8,8 @@ import {
   RecommendationList,
   RecommendationListState,
   loadConfigurationActions,
+  Result as RecsResult,
+  buildInteractiveResult as buildRecsInteractiveResult,
 } from '@coveo/headless/recommendation';
 import {
   Component,
@@ -19,12 +21,6 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
-import {
-  ItemRenderingFunction,
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '../../../../components';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   InitializableComponent,
@@ -39,10 +35,17 @@ import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
-import {ItemListCommon} from '../../../common/item-list/item-list-common';
+import {
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
-import {getItemListDisplayClasses} from '../../../common/layout/display-options';
-import {RecsResult, buildRecsInteractiveResult} from '../../../recommendations';
+import {
+  getItemListDisplayClasses,
+  ItemDisplayBasicLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+} from '../../../common/layout/display-options';
 import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 
 /**

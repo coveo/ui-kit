@@ -75,6 +75,9 @@ export interface PaginationState {
 }
 
 export interface CorePaginationOptions {
+  /**
+   * For internal use by Headless.
+   */
   slotId?: string;
   /**
    * The number of products to fetch per page.

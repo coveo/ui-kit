@@ -92,10 +92,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "dev": {
-      "dependsOn": ["storybook", "build:watch", "cem:dev", "web:dev"],
-      "executor": "nx:noop"
-    },
     "build:watch": {
       "executor": "nx:run-commands",
       "options": {
@@ -107,7 +103,7 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/start-dev.mjs",
+        "command": "node ./scripts/start-vite.mjs",
         "cwd": "{projectRoot}"
       }
     },
@@ -116,13 +112,6 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "cem:dev": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cem analyze --watch",
         "cwd": "{projectRoot}"
       }
     },
@@ -145,13 +134,6 @@
       "options": {
         "cwd": "{projectRoot}",
         "command": "wait-on http://localhost:3333/ping"
-      }
-    },
-    "storybook": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "npx storybook dev -p 4400"
       }
     },
     "build-storybook": {
@@ -180,7 +162,7 @@
     "generate-component": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/generate-component.js {args.name} {args.output}",
+        "command": "node ./scripts/generate-component.mjs {args.name} {args.output}",
         "cwd": "{projectRoot}"
       },
       "inputs": [],
@@ -196,6 +178,21 @@
           }
         },
         "required": ["name", "output"]
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/dev.mjs",
+        "cwd": "{projectRoot}"
+      },
+      "schema": {
+        "properties": {
+          "stencil": {
+            "type": "boolean",
+            "description": "If you want to rebuild stencil in dev mode"
+          }
+        }
       }
     }
   }

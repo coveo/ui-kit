@@ -18,7 +18,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 /**
  * @internal
@@ -60,7 +60,7 @@ export class TabPopover implements InitializableComponent {
     }
 
     if (e.key === 'Escape') {
-      this.togglePopover();
+      this.toggle();
     } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       this.navigatePopover(e.key);
@@ -123,7 +123,7 @@ export class TabPopover implements InitializableComponent {
   }
 
   @Method()
-  public async togglePopover() {
+  public async toggle() {
     this.isOpen = !this.isOpen;
   }
 
@@ -172,7 +172,7 @@ export class TabPopover implements InitializableComponent {
       <Button
         ref={(el) => (this.buttonRef = el!)}
         style="text-transparent"
-        onClick={() => this.togglePopover()}
+        onClick={() => this.toggle()}
         part="popover-button"
         ariaExpanded={`${this.isOpen}`}
         ariaLabel={ariaLabel}
@@ -204,7 +204,7 @@ export class TabPopover implements InitializableComponent {
       <div
         part="backdrop"
         class="fixed bottom-0 left-0 right-0 top-0 z-[9998] cursor-pointer bg-transparent"
-        onClick={() => this.togglePopover()}
+        onClick={() => this.toggle()}
       ></div>
     );
   }

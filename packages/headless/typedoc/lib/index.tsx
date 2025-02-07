@@ -7,6 +7,7 @@ import {Application, JSX, RendererEvent, Converter} from 'typedoc';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
 import {insertCoveoLogo} from './insertCoveoLogo.js';
 import {insertCustomComments} from './insertCustomComments.js';
+import {insertOneTrust} from './insertOneTrust.js';
 import {insertSurveyLink} from './insertSurveyLink.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -34,6 +35,9 @@ export function load(app: Application) {
       </script>
       <script>
         <JSX.Raw html={`(${insertSurveyLink.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertOneTrust.toString()})();`} />
       </script>
       <script>
         <JSX.Raw

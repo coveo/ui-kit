@@ -27,6 +27,10 @@ const renderComponentInternal =
         case 'slots':
           slotsControls.push(argKey);
           break;
+        default:
+          if (argKey.startsWith('attributes-depends-on-')) {
+            attributeControls.push(argKey);
+          }
       }
     }
     const styleContent = unsafeStatic(

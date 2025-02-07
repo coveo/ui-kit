@@ -1,10 +1,10 @@
-import {Component, h, State, Prop} from '@stencil/core';
 import {
-  buildInsightUserActions,
-  InsightUserActions,
-  InsightUserActionsState,
-  InsightUserSession,
-} from '../..';
+  buildUserActions as buildInsightUserActions,
+  UserActions as InsightUserActions,
+  UserActionsState as InsightUserActionsState,
+  UserSession as InsightUserSession,
+} from '@coveo/headless/insight';
+import {Component, h, State, Prop} from '@stencil/core';
 import ArrowDownIcon from '../../../../images/big-arrow-down.svg';
 import ArrowUpIcon from '../../../../images/big-arrow-up.svg';
 import {
@@ -12,9 +12,9 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/button';
 import {NoItemsContainer} from '../../../common/no-items/container';
 import {MagnifyingGlass} from '../../../common/no-items/magnifying-glass';
+import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**

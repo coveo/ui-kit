@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import escape from 'escape-html';
 import {i18n} from 'i18next';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 
 interface FacetSearchMatchesProps {
   i18n: i18n;

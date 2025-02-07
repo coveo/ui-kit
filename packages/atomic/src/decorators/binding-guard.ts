@@ -29,16 +29,14 @@ export interface LitElementWithBindings extends LitElement {
  *     return html`<div>Content to render when bindings are present</div>`;
  *   }
  * }
- * ```
- * TODO: KIT-3822: add unit tests to this decorator
  * @throws {Error} If the decorator is used on a method other than the render method.
  */
 export function bindingGuard<
   Component extends LitElementWithBindings,
   T extends TemplateResultType,
 >(): RenderGuardDecorator<Component, T> {
-  return (_, __, descriptor) => {
-    if (descriptor.value === undefined) {
+  return (_, propertyKey, descriptor) => {
+    if (descriptor?.value === undefined || propertyKey !== 'render') {
       throw new Error(
         '@bindingGuard decorator can only be used on render method'
       );

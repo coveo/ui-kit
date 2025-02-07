@@ -1,14 +1,18 @@
 import {Unsubscribe} from '@coveo/headless';
+import {
+  buildTab as buildInsightTab,
+  Tab as InsightTab,
+  TabState as InsightTabState,
+} from '@coveo/headless/insight';
 import {Component, h, Prop, State, Method, Element} from '@stencil/core';
-import {buildInsightTab, InsightTab, InsightTabState} from '..';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/utils';
-import {Button} from '../../common/button';
 import {createAppLoadedListener} from '../../common/interface/store';
+import {Button} from '../../common/stencil-button';
 import {dispatchTabLoaded, TabCommon} from '../../common/tabs/tab-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 

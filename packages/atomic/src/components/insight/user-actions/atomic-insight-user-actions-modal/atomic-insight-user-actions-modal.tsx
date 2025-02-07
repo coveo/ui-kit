@@ -5,7 +5,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/button';
+import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 const exportparts =
