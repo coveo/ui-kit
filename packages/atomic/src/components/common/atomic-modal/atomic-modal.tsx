@@ -138,7 +138,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     const Content = () => (
       <article
         part="container"
-        class={`bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'} ${this.wasEverOpened ? '' : 'invisible'}`}
+        class={`bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-scale-up-modal' : 'animate-slide-down-modal'} ${this.wasEverOpened ? '' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
         ref={(ref) => (this.animatableContainer = ref)}
       >
