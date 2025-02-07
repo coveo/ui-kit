@@ -65,4 +65,25 @@ export class SortObject {
     });
     return uaRequest;
   }
+
+  async allSortLabelOptions() {
+    const options = await this.page
+      .locator('div[part="dropdown overlay"]')
+      .allInnerTexts();
+    const arrSort = options[0].split('\n');
+    return arrSort;
+  }
+
+  async getSortLabelValue() {
+    const arrSort = await this.allSortLabelOptions();
+    const sortLabelwithValueList = await Promise.all(
+      arrSort.map(async (item) => ({
+        label: item,
+        value: await this.page
+          .getByRole('option', {name: item})
+          .getAttribute('data-value'),
+      }))
+    );
+    return sortLabelwithValueList;
+  }
 }
