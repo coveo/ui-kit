@@ -704,9 +704,15 @@ export class AtomicCommerceSearchBox
         elementHasQuery
       ).length;
     this.searchBoxAriaMessage = elsLength
-      ? this.bindings.i18n.t('query-suggestions-available', {
-          count: elsLength,
-        })
+      ? this.bindings.i18n.t(
+          this.searchBoxState.value
+            ? 'query-suggestions-available'
+            : 'query-suggestions-available-no-query',
+          {
+            count: elsLength,
+            query: this.searchBoxState.value,
+          }
+        )
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 
