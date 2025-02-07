@@ -203,7 +203,7 @@ export class TabPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="z-9998 fixed bottom-0 left-0 right-0 top-0 cursor-pointer bg-transparent"
+        class="z-99 fixed bottom-0 left-0 right-0 top-0 cursor-pointer bg-transparent"
         onClick={() => this.toggle()}
       ></div>
     );
