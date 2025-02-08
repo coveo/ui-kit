@@ -19,14 +19,6 @@ routes.forEach((route) => {
           .as('initial-results');
       });
 
-      it('should add the tab search parameter with the default value', () => {
-        cy.url().should((href) => {
-          const url = new URL(href);
-          expect(url.searchParams.size).to.equal(1);
-          expect(url.searchParams.has('tab', 'all'));
-        });
-      });
-
       describe('after submitting a search', () => {
         const query = 'abc';
         beforeEach(() => {
@@ -62,7 +54,7 @@ routes.forEach((route) => {
 
             it('should remove the search parameters', () => {
               cy.url().should((href) =>
-                expect(new URL(href).searchParams.size).to.be.equal(1)
+                expect(new URL(href).searchParams.size).to.be.equal(0)
               );
             });
 
