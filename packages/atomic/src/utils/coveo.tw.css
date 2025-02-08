@@ -56,7 +56,8 @@
 }
 
 @theme {
-  /* --color-*: initial; */
+  --color-*: initial;
+  --color-black: #000000;
   --color-primary: var(--atomic-primary);
   --color-primary-light: var(--atomic-primary-light);
   --color-primary-dark: var(--atomic-primary-dark);

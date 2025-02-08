@@ -26,6 +26,7 @@ import {
 function buildCustomTemplateContent(id = 'template-content') {
   const element = generateComponentHTML('span', {id});
   element.innerText = 'Anything';
+  element.classList.add('text-base');
   return element;
 }
 
@@ -38,8 +39,9 @@ const addScript = (content: string) => (fixture: TestFixture) => {
 const addBaseTextSize = (size: string) => (fixture: TestFixture) => {
   const element = generateComponentHTML('style');
   element.innerHTML = `
-    body {
-      --atomic-text-base: ${size}
+    * {
+      --atomic-text-base: ${size};
+      --text-base: ${size};
     }
   `;
   fixture.withElement(element);
@@ -138,11 +140,21 @@ describe('Result Template Component', () => {
 
   describe('without any conditions nor sections', () => {
     const textSize = '128px';
+    const styleElement = generateComponentHTML('style');
+    styleElement.innerHTML = `
+    * {
+      --atomic-text-base: ${textSize};
+      --text-base: ${textSize};
+    }
+  `;
     beforeEach(() => {
       new TestFixture()
         .with(
           addResultList(
-            buildTemplateWithoutSections(buildCustomTemplateContent())
+            buildTemplateWithoutSections([
+              buildCustomTemplateContent(),
+              styleElement,
+            ])
           )
         )
         .with(addBaseTextSize(textSize))
