@@ -12,11 +12,11 @@ const msgSelector = '#hydrated-msg';
 const timestampSelector = '#timestamp';
 const resultListSelector = '.result-list li';
 const searchBoxSelector = '.search-box input';
-const routes = ['generic?tab=all', 'react?tab=all'] as const;
+const routes = ['generic', 'react'] as const;
 
 // Note: Thresholds might need to be adjusted as the page tested changes (e.g. more components are added etc)
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
-  'generic?tab=all': {
+  generic: {
     thresholds: {
       lcp: 2500,
       fid: 400,
@@ -26,7 +26,7 @@ const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
       inp: 400,
     },
   },
-  'react?tab=all': {
+  react: {
     thresholds: {
       lcp: 2500,
       fid: 800,
