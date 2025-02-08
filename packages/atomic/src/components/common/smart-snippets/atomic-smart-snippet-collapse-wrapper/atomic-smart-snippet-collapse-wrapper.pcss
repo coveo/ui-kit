@@ -4,7 +4,7 @@
  * @prop --atomic-smart-snippet-gradient-start: At which height to start fading out a truncated answer.
  */
 :host {
-  &::part(smart-snippet-collapse-wrapper) {
+  [part='smart-snippet-collapse-wrapper'] {
     @apply set-font-size-lg;
 
     height: auto;
@@ -26,7 +26,7 @@
 }
 
 :host(.expanded) {
-  &::part(smart-snippet-collapse-wrapper) {
+  [part='smart-snippet-collapse-wrapper'] {
     height: auto;
     max-height: 9999999px;
     transition: max-height 2s cubic-bezier(1, 0, 1, 0) 0s;
