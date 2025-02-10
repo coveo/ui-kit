@@ -45,6 +45,10 @@ export class SmartSnippetObject {
     return this.page.getByTestId('feedback-modal-footer__cancel');
   }
 
+  get feedbackModalDoneButton(): Locator {
+    return this.page.getByTestId('feedback-modal-footer__done');
+  }
+
   get firstFeedbackOptionLabel(): Locator {
     const labelFirstOption = "Didn't answer my question at all";
     return this.page.getByText(labelFirstOption);
@@ -92,6 +96,10 @@ export class SmartSnippetObject {
 
   async clickFeedbackSubmitButton(): Promise<void> {
     await this.feedbackSubmitButton.click();
+  }
+
+  async clickFeedbackModalDoneButton(): Promise<void> {
+    await this.feedbackModalDoneButton.click();
   }
 
   async waitForExpandSmartSnippetUaAnalytics(): Promise<Request> {
