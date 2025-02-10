@@ -1,8 +1,8 @@
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {initializeBindings} from '@/src/decorators/initialize-bindings';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
+import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
@@ -38,7 +38,7 @@ class IconFetchError extends Error {
  */
 @customElement('atomic-icon')
 export class AtomicIcon
-  extends TailwindLitElement
+  extends InitializeBindingsMixin(TailwindLitElement)
   implements InitializableComponent<AnyBindings>
 {
   /**
@@ -60,7 +60,6 @@ export class AtomicIcon
   ];
 
   @state()
-  @initializeBindings()
   public bindings?: AnyBindings;
 
   private async fetchIcon(url: string) {
