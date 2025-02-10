@@ -13,12 +13,12 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
 import {
   getClonedFacetElements,
   RefineModal,
 } from '../../common/refine-modal/modal';
 import {Hidden} from '../../common/stencil-hidden';
+import {Button} from '../../common/stencil-button';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

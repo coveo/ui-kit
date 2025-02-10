@@ -16,12 +16,12 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/button';
 import {
   PopoverChildFacet,
   popoverClass,
 } from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
+import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

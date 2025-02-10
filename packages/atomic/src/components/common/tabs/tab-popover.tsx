@@ -18,7 +18,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 /**
  * @internal

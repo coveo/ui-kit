@@ -45,6 +45,7 @@ import {
   CategoryFacetValue,
   FacetType,
   getCoreFacetState,
+  CoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 import {
   getLocationFacetState,
@@ -73,6 +74,7 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
+  CoreCommerceFacet,
   DateFacet,
   DateFacetValue,
   DateFacetState,

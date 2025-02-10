@@ -1,5 +1,5 @@
 import {h, Component, Element, Host, State} from '@stencil/core';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 import {TabCommonElement} from '../tabs/tab-common';
 
 /**
