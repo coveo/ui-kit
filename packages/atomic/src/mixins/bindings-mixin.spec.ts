@@ -32,12 +32,6 @@ export class TestElement
   initialize = vi.fn();
 }
 
-// @customElement('test-element-invalid-bindings-property')
-// export class TestElementNoBindings extends InitializeBindingsMixin(LitElement) {
-//   @state()
-//   public invalidProp!: Bindings;
-// }
-
 describe('InitializeBindingsMixin mixin', () => {
   let element: InitializableComponent<Bindings> & LitElement;
   let bindings: Bindings;
@@ -94,17 +88,6 @@ describe('InitializeBindingsMixin mixin', () => {
     await setupElement();
     expect(element.initialize).toHaveBeenCalled();
   });
-
-  // it('should log an error when using the decorator with a property other than bindings ', async () => {
-  //   await setupElement<TestElementNoBindings>(
-  //     'test-element-invalid-bindings-property'
-  //   );
-
-  //   expect(consoleErrorSpy).toHaveBeenCalledWith(
-  //     'The InitializeBindings decorator should be used on a property called "bindings", and not "invalidProp"',
-  //     element
-  //   );
-  // });
 
   it('should return an error to the element if unable to fetch bindings', async () => {
     mockedFetchBindings.mockRejectedValue(new Error('test-element'));
