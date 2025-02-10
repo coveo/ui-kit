@@ -10,8 +10,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc -b; fi",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then vite build; fi"
+          "npm run-script -w=@coveo/release if-not-cdn -- \"tsc -b\"",
+          "npm run-script -w=@coveo/release if-not-cdn -- \"vite build\""
         ],
         "cwd": "packages/samples/atomic-react"
       }
