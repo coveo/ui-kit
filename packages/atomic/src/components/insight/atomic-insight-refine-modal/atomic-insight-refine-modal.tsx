@@ -17,8 +17,8 @@ import {
   getClonedFacetElements,
   RefineModal,
 } from '../../common/refine-modal/modal';
-import {Hidden} from '../../common/stencil-hidden';
 import {Button} from '../../common/stencil-button';
+import {Hidden} from '../../common/stencil-hidden';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
