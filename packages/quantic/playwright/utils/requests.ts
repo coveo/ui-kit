@@ -38,3 +38,11 @@ export function isUaClickEvent(request: Request): boolean {
     request.method() === 'POST' && analyticsClickUrlRegex.test(request.url())
   );
 }
+
+/**
+ * Indicates whether the specified request corresponds to a search request using organization endpoints.
+ * @param request The request to check.
+ */
+export function isSearchRequest(request: Request): boolean {
+  return request.method() === 'POST' && searchRequestRegex.test(request.url());
+}
