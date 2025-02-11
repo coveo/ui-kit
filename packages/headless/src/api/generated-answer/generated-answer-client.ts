@@ -3,11 +3,11 @@ import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
 import {GeneratedAnswerErrorPayload} from '../../features/generated-answer/generated-answer-actions.js';
 import {SearchAppState} from '../../state/search-app-state.js';
+import {fetchEventSource} from '../../utils/fetch-event-source/fetch';
 import {URLPath} from '../../utils/url-utils.js';
 import {resetTimeout} from '../../utils/utils.js';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload.js';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request.js';
-import { fetchEventSource } from '../../utils/fetch-event-source/index.js';
 
 export interface GeneratedAnswerAPIClientOptions {
   logger: Logger;
@@ -155,7 +155,7 @@ export class GeneratedAnswerAPIClient {
         },
         onerror: (err) => {
           if (abortController?.signal.aborted) {
-            return;
+            return null;
           }
           timeoutStateManager.remove(timeout!);
           if (err instanceof FatalError) {
@@ -175,6 +175,7 @@ export class GeneratedAnswerAPIClient {
           }
           this.logger.info(`Retrying...(${retryCount}/${MAX_RETRIES})`);
           resetAnswer();
+          return null;
         },
       });
 

@@ -5,7 +5,7 @@
     "declaration": false,
     "lib": ["DOM", "ES2023"],
     "module": "Node16",
-    "target": "ES2022",
+    "target": "ESNext",
     "moduleResolution": "Node16",
     "esModuleInterop": true,
     "noUnusedLocals": true,

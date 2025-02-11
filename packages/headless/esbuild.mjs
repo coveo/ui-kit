@@ -78,7 +78,7 @@ function getUseCaseDir(prefix, useCase) {
  * @type {import('esbuild').BuildOptions}
  */
 const base = {
-  target: ['es2020'],
+  target: ['es2024'],
   bundle: true,
   tsconfig: './src/tsconfig.build.json',
   define: {
@@ -266,7 +266,6 @@ async function buildBrowserConfig(options, outDir) {
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
@@ -315,13 +314,13 @@ async function buildNodeConfig(options, outDir) {
   const out = await build({
     ...base,
     metafile: true,
+    bundle: true,
     platform: 'node',
     packages: 'external',
     treeShaking: true,
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
     ...options,

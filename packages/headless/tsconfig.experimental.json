@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "files": ["src/ssr-commerce.index.ts"],
+  "compilerOptions": {
+    "outDir": "dist/experimerental"
+  }
+}

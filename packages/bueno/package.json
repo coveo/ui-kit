@@ -7,10 +7,6 @@
   },
   "main": "./dist/bueno.js",
   "module": "./dist/bueno.esm.js",
-  "browser": {
-    "./dist/bueno.esm.js": "./dist/browser/bueno.esm.js",
-    "./dist/bueno.js": "./dist/browser/bueno.js"
-  },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "1.0.7",
