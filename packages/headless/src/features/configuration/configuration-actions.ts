@@ -7,7 +7,7 @@ import {
   Value,
 } from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
-import {IRuntimeEnvironment} from 'coveo.analytics';
+import type {IRuntimeEnvironment} from 'coveo.analytics';
 import {PlatformEnvironment} from '../../utils/url-utils.js';
 import {
   nonEmptyString,

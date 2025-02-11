@@ -1,5 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {historyStore} from '../../../api/analytics/coveo-analytics-utils.js';
 import {getSearchApiBaseUrl} from '../../../api/platform-client.js';
 import {SearchRequest} from '../../../api/search/search/search-request.js';

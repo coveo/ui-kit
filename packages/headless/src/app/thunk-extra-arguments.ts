@@ -1,5 +1,5 @@
 import {Relay} from '@coveo/relay';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
 import {GeneratedAnswerAPIClient} from '../api/generated-answer/generated-answer-client.js';
 import {PreprocessRequest} from '../api/preprocess-request.js';

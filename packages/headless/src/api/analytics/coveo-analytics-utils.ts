@@ -1,18 +1,10 @@
-import {
-  AnalyticsClientSendEventHook,
-  CoveoAnalyticsClient,
-  IRuntimeEnvironment,
-  history,
-} from 'coveo.analytics';
-import {Logger} from 'pino';
+import type {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import type {Logger} from 'pino';
+import HistoryStore from '../../utils/coveo.analytics-light/history.js';
 import {clone} from '../../utils/utils.js';
-import {PreprocessRequest} from '../preprocess-request.js';
+import type {PreprocessRequest} from '../preprocess-request.js';
 
-export const getVisitorID = (options: {
-  runtimeEnvironment?: IRuntimeEnvironment;
-}) => new CoveoAnalyticsClient(options).getCurrentVisitorId();
-
-export const historyStore = new history.HistoryStore();
+export const historyStore = new HistoryStore();
 
 export const wrapPreprocessRequest = (
   logger: Logger,

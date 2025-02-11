@@ -1,4 +1,4 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {NavigatorContext} from '../../app/navigatorContextProvider.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {ConfigurationSection} from '../../state/state-sections.js';

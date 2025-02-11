@@ -1,6 +1,6 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {getAnalyticsSource} from '../../api/analytics/analytics-selectors.js';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getVisitorID} from '../../api/analytics/legacy-coveo-analytics-utils.js';
 import {getPageID} from '../../api/analytics/legacy-search-analytics.js';
 import {AnalyticsParam} from '../../api/search/search-api-params.js';
 import {AnalyticsState} from './configuration-state.js';

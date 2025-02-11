@@ -1,6 +1,6 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
 import {SearchResponseSuccess} from '../../api/search/search/search-response.js';

@@ -1,4 +1,4 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
 import {InsightAppState} from '../../state/insight-app-state.js';

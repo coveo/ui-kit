@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/coveo-analytics-utils.js';
+import {getVisitorID} from '../../api/analytics/legacy-coveo-analytics-utils.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {isErrorResponse} from '../../api/search/search-api-client.js';
 import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-assist-api-client.js';

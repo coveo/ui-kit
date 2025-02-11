@@ -4,7 +4,7 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {
+import type {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';

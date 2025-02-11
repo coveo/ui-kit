@@ -1,4 +1,4 @@
-import {EventDescription} from 'coveo.analytics';
+import type {EventDescription} from 'coveo.analytics';
 import {getAnalyticsSource} from '../../api/analytics/analytics-selectors.js';
 import {AnalyticsParam} from '../../api/search/search-api-params.js';
 import {NavigatorContext} from '../../app/navigatorContextProvider.js';
