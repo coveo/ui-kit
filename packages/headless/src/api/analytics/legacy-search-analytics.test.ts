@@ -24,8 +24,10 @@ import {QuerySuggestCompletion} from '../search/query-suggest/query-suggest-resp
 import {
   configureLegacyAnalytics,
   getPageID,
-  SearchAnalyticsProvider,
+} from './legacy-search-analytics.js';
+import {
   StateNeededBySearchAnalyticsProvider,
+  SearchAnalyticsProvider,
 } from './search-analytics.js';
 
 vi.mock('@coveo/relay');

@@ -14,13 +14,11 @@ import {
 import type {
   CoveoSearchPageClient,
   SearchPageClientProvider,
-  CaseAssistClient,
-  CoveoInsightClient,
   EventBuilder,
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics.js';
+import type {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics.js';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
 import {
   PartialDocumentInformation,
@@ -28,19 +26,10 @@ import {
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {Logger} from 'pino';
 import {getRelayInstanceFromState} from '../../api/analytics/analytics-relay-client.js';
+import type {StateNeededByCaseAssistAnalytics} from '../../api/analytics/case-assist-analytics.js';
+import type {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
+import {configureLegacyAnalytics} from '../../api/analytics/legacy-search-analytics.js';
 import {
-  CaseAssistAnalyticsProvider,
-  configureCaseAssistAnalytics,
-  StateNeededByCaseAssistAnalytics,
-} from '../../api/analytics/case-assist-analytics.js';
-import {
-  configureInsightAnalytics,
-  InsightAnalyticsProvider,
-  StateNeededByInsightAnalyticsProvider,
-} from '../../api/analytics/insight-analytics.js';
-import {StateNeededByInstantResultsAnalyticsProvider} from '../../api/analytics/instant-result-analytics.js';
-import {
-  configureLegacyAnalytics,
   SearchAnalyticsProvider,
   StateNeededBySearchAnalyticsProvider,
 } from '../../api/analytics/search-analytics.js';
@@ -122,21 +111,8 @@ export type InstantResultsSearchAction =
 export type InstantResultsClickAction =
   PreparableAnalyticsAction<StateNeededByInstantResultsAnalyticsProvider>;
 
-export type InsightAction =
-  PreparableAnalyticsAction<StateNeededByInsightAnalyticsProvider>;
-
-export type CaseAssistAction =
-  PreparableAnalyticsAction<StateNeededByCaseAssistAnalytics>;
-
 export interface AsyncThunkAnalyticsOptions<
   T extends StateNeededBySearchAnalyticsProvider,
-> {
-  state: T;
-  extra: ThunkExtraArguments;
-}
-
-export interface AsyncThunkInsightAnalyticsOptions<
-  T extends Partial<StateNeededByInsightAnalyticsProvider>,
 > {
   state: T;
   extra: ThunkExtraArguments;
@@ -255,7 +231,7 @@ interface ProviderClass<StateNeeded, LegacyProvider> {
   new (param: () => StateNeeded): LegacyProvider;
 }
 
-const makeAnalyticsActionFactory = <
+export const makeAnalyticsActionFactory = <
   LegacyStateNeededByProvider extends InternalLegacyStateNeeded,
   StateNeededByProvider extends InternalLegacyStateNeeded,
   Client extends CommonClient,
@@ -522,12 +498,12 @@ async function logLegacyEvent<
   logger.info({client, response}, 'Analytics response');
 }
 
-type LogFunction<Client, StateNeeded> = (
+export type LogFunction<Client, StateNeeded> = (
   client: Client,
   state: StateNeeded
 ) => Promise<void | SearchEventResponse> | void | null;
 
-const fromLogToLegacyBuilderFactory = (actionCause: string) => {
+export const fromLogToLegacyBuilderFactory = (actionCause: string) => {
   const fromLogToLegacyBuilder = <Client extends CommonClient, StateNeeded>(
     log: (
       client: Client,
@@ -551,33 +527,6 @@ export const makeAnalyticsAction = makeAnalyticsActionFactory<
   CoveoSearchPageClient,
   SearchPageClientProvider
 >(configureLegacyAnalytics, (original) => original, SearchAnalyticsProvider);
-
-export const makeCaseAssistAnalyticsAction = makeAnalyticsActionFactory<
-  StateNeededByCaseAssistAnalytics,
-  StateNeededByCaseAssistAnalytics,
-  CaseAssistClient,
-  CaseAssistAnalyticsProvider,
-  LogFunction<CaseAssistClient, StateNeededByCaseAssistAnalytics>
->(
-  configureCaseAssistAnalytics,
-  fromLogToLegacyBuilderFactory('caseAssist'),
-  CaseAssistAnalyticsProvider
-);
-
-export const makeInsightAnalyticsActionFactory = (actionCause: string) => {
-  const makeInsightAnalyticsAction = makeAnalyticsActionFactory<
-    StateNeededByInsightAnalyticsProvider,
-    StateNeededByInsightAnalyticsProvider,
-    CoveoInsightClient,
-    InsightAnalyticsProvider,
-    LogFunction<CoveoInsightClient, StateNeededByInsightAnalyticsProvider>
-  >(
-    configureInsightAnalytics,
-    fromLogToLegacyBuilderFactory(actionCause),
-    InsightAnalyticsProvider
-  );
-  return makeInsightAnalyticsAction;
-};
 
 export const makeNoopAnalyticsAction = () =>
   makeAnalyticsAction('analytics/noop', () => null);

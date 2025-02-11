@@ -2,7 +2,7 @@ import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-re
 import {
   InsightAction,
   makeInsightAnalyticsActionFactory,
-} from '../analytics/analytics-utils.js';
+} from '../analytics/insight-analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {getQueryInitialState} from '../query/query-state.js';

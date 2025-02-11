@@ -1,8 +1,6 @@
 import {CoreEngine} from '../../../app/engine.js';
-import {
-  InsightAction,
-  LegacySearchAction,
-} from '../../../features/analytics/analytics-utils.js';
+import type {LegacySearchAction} from '../../../features/analytics/analytics-utils.js';
+import type {InsightAction} from '../../../features/analytics/insight-analytics-utils.js';
 import {triggerReducer as triggers} from '../../../features/triggers/triggers-slice.js';
 import {TriggerSection} from '../../../state/state-sections.js';
 import {arrayEqual} from '../../../utils/compare-utils.js';

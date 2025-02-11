@@ -1,10 +1,5 @@
-import {
-  CoveoSearchPageClient,
-  SearchPageClientProvider,
-  AnalyticsClientSendEventHook,
-} from 'coveo.analytics';
+import type {SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
-import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
@@ -20,14 +15,7 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {StaticFilterValueMetadata} from '../../features/static-filter-set/static-filter-set-actions.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {ConfigurationSection} from '../../state/state-sections.js';
-import {getOrganizationEndpoint} from '../platform-client.js';
-import {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
-import {
-  historyStore,
-  wrapAnalyticsClientSendEventHook,
-  wrapPreprocessRequest,
-} from './coveo-analytics-utils.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -285,74 +273,3 @@ export class SearchAnalyticsProvider
     );
   }
 }
-
-interface LegacyConfigureAnalyticsOptions {
-  logger: Logger;
-  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
-  preprocessRequest?: PreprocessRequest;
-  provider?: SearchPageClientProvider;
-  getState(): StateNeededBySearchAnalyticsProvider;
-}
-
-//TODO: KIT-2859
-export const configureLegacyAnalytics = ({
-  logger,
-  getState,
-  analyticsClientMiddleware = (_, p) => p,
-  preprocessRequest,
-  provider = new SearchAnalyticsProvider(getState),
-}: LegacyConfigureAnalyticsOptions) => {
-  const state = getState();
-  const token = state.configuration.accessToken;
-  const endpoint =
-    state.configuration.analytics.apiBaseUrl ??
-    getOrganizationEndpoint(
-      state.configuration.organizationId,
-      state.configuration.environment,
-      'analytics'
-    );
-  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
-  const enableAnalytics = state.configuration.analytics.enabled;
-  const client = new CoveoSearchPageClient(
-    {
-      token,
-      endpoint,
-      runtimeEnvironment,
-      preprocessRequest: wrapPreprocessRequest(logger, preprocessRequest),
-      beforeSendHooks: [
-        wrapAnalyticsClientSendEventHook(logger, analyticsClientMiddleware),
-        (type, payload) => {
-          logger.info(
-            {
-              ...payload,
-              type,
-              endpoint,
-              token,
-            },
-            'Analytics request'
-          );
-          return payload;
-        },
-      ],
-    },
-    provider
-  );
-
-  if (!enableAnalytics) {
-    client.disable();
-  }
-  return client;
-};
-
-export const getPageID = () => {
-  const actions = historyStore.getHistory();
-  const lastPageView = actions.reverse().find((action) => {
-    return action.name === 'PageView' && action.value;
-  });
-
-  if (!lastPageView) {
-    return '';
-  }
-
-  return lastPageView.value!;
-};

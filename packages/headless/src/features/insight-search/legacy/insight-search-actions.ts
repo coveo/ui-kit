@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkInsightOptions} from '../../../api/service/insight/insight-api-client.js';
-import {InsightAction} from '../../analytics/analytics-utils.js';
+import {InsightAction} from '../../analytics/insight-analytics-utils.js';
 import {ExecuteSearchThunkReturn} from '../../search/legacy/search-actions.js';
 import {
   StateNeededByExecuteSearch,

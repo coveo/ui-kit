@@ -30,7 +30,7 @@ import {
   TabSection,
 } from '../../state/state-sections.js';
 import {requiredNonEmptyString} from '../../utils/validate-payload.js';
-import {InsightAction as LegacyInsightAction} from '../analytics/analytics-utils.js';
+import {InsightAction as LegacyInsightAction} from '../analytics/insight-analytics-utils.js';
 import {SearchPageEvents} from '../analytics/search-action-cause.js';
 import {
   FetchQuerySuggestionsActionCreatorPayload,
