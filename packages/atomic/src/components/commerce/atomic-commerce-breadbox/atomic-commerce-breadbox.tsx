@@ -38,7 +38,7 @@ import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
 } from '../../common/formats/format-common';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 type AnyFacetValue =

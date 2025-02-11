@@ -11,8 +11,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Heading} from '../../common/heading';
-import {Hidden} from '../../common/hidden';
+import {Heading} from '../../common/stencil-heading';
+import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
