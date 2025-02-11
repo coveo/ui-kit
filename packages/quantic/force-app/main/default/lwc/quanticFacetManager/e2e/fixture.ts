@@ -12,14 +12,10 @@ const pageUrl = 's/quantic-facet-manager';
 
 interface FacetManagerOptions {}
 
-type QuanticFacetManagerE2EFixtures = {
+type QuanticFacetManagerE2ESearchFixtures = {
   facetManager: FacetManagerObject;
   search: SearchObject;
   options: Partial<FacetManagerOptions>;
-};
-
-type QuanticFacetManagerE2ESearchFixtures = QuanticFacetManagerE2EFixtures & {
-  urlHash: string;
 };
 
 type QuanticFacetManagerE2EInsightFixtures =
@@ -30,15 +26,11 @@ type QuanticFacetManagerE2EInsightFixtures =
 export const testSearch =
   quanticBase.extend<QuanticFacetManagerE2ESearchFixtures>({
     options: {},
-    urlHash: '',
     search: async ({page}, use) => {
       await use(new SearchObject(page, searchRequestRegex));
     },
-    facetManager: async (
-      {page, options, configuration, search, urlHash},
-      use
-    ) => {
-      await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
+    facetManager: async ({page, options, configuration, search}, use) => {
+      await page.goto(pageUrl);
       configuration.configure(options);
       await search.waitForSearchResponse();
 
@@ -49,7 +41,6 @@ export const testSearch =
 export const testInsight =
   quanticBase.extend<QuanticFacetManagerE2EInsightFixtures>({
     options: {},
-    urlHash: '',
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
     },
@@ -57,10 +48,10 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     facetManager: async (
-      {page, options, search, configuration, insightSetup, urlHash},
+      {page, options, search, configuration, insightSetup},
       use
     ) => {
-      await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
+      await page.goto(pageUrl);
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
