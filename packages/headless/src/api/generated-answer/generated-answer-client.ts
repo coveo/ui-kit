@@ -1,4 +1,3 @@
-import {fetchEventSource} from '@microsoft/fetch-event-source';
 import {Logger} from 'pino';
 import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
 import {ClientThunkExtraArguments} from '../../app/thunk-extra-arguments.js';
@@ -8,6 +7,7 @@ import {URLPath} from '../../utils/url-utils.js';
 import {resetTimeout} from '../../utils/utils.js';
 import {GeneratedAnswerStreamEventData} from './generated-answer-event-payload.js';
 import {GeneratedAnswerStreamRequest} from './generated-answer-request.js';
+import { fetchEventSource } from '../../utils/fetch-event-source/index.js';
 
 export interface GeneratedAnswerAPIClientOptions {
   logger: Logger;

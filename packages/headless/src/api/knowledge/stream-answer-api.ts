@@ -1,7 +1,3 @@
-import {
-  EventSourceMessage,
-  fetchEventSource,
-} from '@microsoft/fetch-event-source';
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   setAnswerContentFormat,
@@ -30,6 +26,7 @@ import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-even
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
 import {answerSlice} from './answer-slice.js';
+import { EventSourceMessage, fetchEventSource } from '../../utils/fetch-event-source/index.js';
 
 export type StateNeededByAnswerAPI = {
   searchHub: string;
