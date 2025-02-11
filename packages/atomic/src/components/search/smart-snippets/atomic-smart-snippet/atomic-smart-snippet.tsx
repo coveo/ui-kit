@@ -16,10 +16,10 @@ import {
 import {ArrayProp} from '../../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
-import {Hidden} from '../../../common/hidden';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

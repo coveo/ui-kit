@@ -26,7 +26,6 @@ import {
 import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
-import {Heading} from '../../common/heading';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
@@ -42,6 +41,7 @@ import {
   ItemDisplayBasicLayout,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
+import {Heading} from '../../common/stencil-heading';
 import {RecsBindings} from '../atomic-recs-interface/atomic-recs-interface';
 
 /**

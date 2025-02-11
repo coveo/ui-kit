@@ -56,6 +56,6 @@
     "cypress-repeat": "2.3.8",
     "gts": "5.3.1",
     "vite": "5.4.14",
-    "vitest": "2.1.8"
+    "vitest": "2.1.9"
   }
 }

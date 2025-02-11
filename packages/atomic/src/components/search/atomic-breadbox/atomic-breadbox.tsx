@@ -22,7 +22,7 @@ import {BreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {BreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {BreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
 import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
