@@ -107,7 +107,7 @@ test.describe('when recommendations open in a new tab', async () => {
     await recsList.hydrated.waitFor();
   });
 
-  test.only('should open a single tab when clicking a recommendation', async ({
+  test('should open a single tab when clicking a recommendation', async ({
     recsList,
     context,
   }) => {

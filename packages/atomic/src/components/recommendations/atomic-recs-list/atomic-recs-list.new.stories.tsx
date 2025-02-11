@@ -85,7 +85,7 @@ export const RecsOpeningInNewTab: Story = {
             </template>
             <template>
               <atomic-result-section-title>
-                <span>Title Section</span>
+                <atomic-result-text field="title"></atomic-result-text>
               </atomic-result-section-title>
             </template>
           </atomic-recs-result-template>`,
