@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import LeftArrow from '../../../../images/arrow-left-rounded.svg';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 
 interface CategoryFacetParentButtonProps {
   i18n: i18n;

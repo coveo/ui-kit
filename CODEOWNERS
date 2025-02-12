@@ -12,7 +12,7 @@
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa
 
 # Owners of Atomic IPX components
-/packages/atomic/src/components/ipx @coveo/service-integrations
+/packages/atomic/src/components/ipx @coveo/service-core
 
 # Owners of the Commerce headless sub-package
 /packages/headless/commerce/ @coveo/commerce-routemasters

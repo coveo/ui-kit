@@ -1,11 +1,11 @@
 import {Product} from '@coveo/headless/commerce';
 import {Component, Prop, Element, State, Listen} from '@stencil/core';
-import {Bindings} from '../../../../components';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
 import {
   defaultNumberFormatter,
   NumberFormatter,
 } from '../../../common/formats/format-common';
+import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 import {parseValue} from '../product-utils';
 
@@ -20,7 +20,7 @@ import {parseValue} from '../product-utils';
   shadow: false,
 })
 export class AtomicProductNumber {
-  @InitializeBindings() public bindings!: Bindings;
+  @InitializeBindings() public bindings!: CommerceBindings;
   @ProductContext() private product!: Product;
 
   @Element() host!: HTMLElement;

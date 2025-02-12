@@ -59,6 +59,7 @@ export class SuggestionManager<SearchBoxController> {
   public triggerSuggestions: () => Promise<void>;
   public activeDescendant = '';
   public suggestedQuery = '';
+  public keyboardActiveDescendant = '';
 
   private queryDataAttribute = 'data-query';
   private suggestionEvents: SearchBoxSuggestionsEvent<SearchBoxController>[] =
@@ -112,6 +113,10 @@ export class SuggestionManager<SearchBoxController> {
   public updateActiveDescendant(id = '') {
     this.activeDescendant = id;
     forceUpdate(this.ownerSearchBoxProps.getHost());
+  }
+
+  public updateKeyboardActiveDescendant(id = '') {
+    this.keyboardActiveDescendant = id;
   }
 
   public clickOnActiveElement() {
@@ -187,6 +192,7 @@ export class SuggestionManager<SearchBoxController> {
   }
 
   public focusValue(value: HTMLElement) {
+    this.updateKeyboardActiveDescendant(value.id);
     this.updateActiveDescendant(value.id);
     this.scrollActiveDescendantIntoView();
     this.updateQueryFromSuggestion();
@@ -198,6 +204,8 @@ export class SuggestionManager<SearchBoxController> {
     id: string
   ) {
     const thisPanel = side === 'left' ? this.leftPanel : this.rightPanel;
+    // When hovering, always reset the keyboard active descendant
+    this.updateKeyboardActiveDescendant();
     if (this.panelInFocus === thisPanel) {
       this.updateActiveDescendant(id);
     } else {
@@ -226,6 +234,7 @@ export class SuggestionManager<SearchBoxController> {
 
   public focusPreviousValue() {
     if (this.firstValue === this.activeDescendantElement) {
+      this.updateKeyboardActiveDescendant();
       this.updateActiveDescendant();
       return;
     }

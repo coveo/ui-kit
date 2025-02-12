@@ -18,7 +18,7 @@ export interface InsightResultActionClickedEvent {
   result: Result;
 }
 
-enum Actions {
+export enum Actions {
   CopyToClipboard = 'copyToClipboard',
   AttachToCase = 'attachToCase',
   Quickview = 'quickview',

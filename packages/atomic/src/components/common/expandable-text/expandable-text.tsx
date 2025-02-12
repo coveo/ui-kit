@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import MinusIcon from '../../../images/minus.svg';
 import PlusIcon from '../../../images/plus.svg';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 export type TruncateAfter = 'none' | '1' | '2' | '3' | '4';
 

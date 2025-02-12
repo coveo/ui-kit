@@ -21,9 +21,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/button';
 import {IconButton} from '../../../common/iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
+import {Button} from '../../../common/stencil-button';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {QuickviewSidebar} from '../atomic-quickview-sidebar/atomic-quickview-sidebar';
 import {QuickviewIframe} from '../quickview-iframe/quickview-iframe';

@@ -1,11 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
+import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
   UpdateAnalyticsConfigurationPayload,
-  updateBasicConfiguration,
+  updateBasicConfiguration as updateBasicCommerceConfiguration,
   UpdateBasicConfigurationPayload,
   updateProxyBaseUrl,
   UpdateProxyBaseUrlPayload,
@@ -19,6 +20,10 @@ export const configurationReducer = createReducer(
   getConfigurationInitialState(),
   (builder) =>
     builder
+      .addCase(updateBasicCommerceConfiguration, (state, action) => {
+        handleUpdateBasicConfiguration(state, action.payload);
+      })
+      // This is to handle the renew access token middleware
       .addCase(updateBasicConfiguration, (state, action) => {
         handleUpdateBasicConfiguration(state, action.payload);
       })

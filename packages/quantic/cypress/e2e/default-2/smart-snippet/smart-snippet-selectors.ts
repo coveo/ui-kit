@@ -71,7 +71,9 @@ export const SmartSnippetSelectors: SmartSnippetSelector = {
       .get('lightning-modal')
       .find('[data-testid="feedback-modal-footer__cancel"]'),
   feedbackDoneButton: () =>
-    cy.get('lightning-modal').find('[data-cy="feedback-modal-footer__done"]'),
+    cy
+      .get('lightning-modal')
+      .find('[data-testid="feedback-modal-footer__done"]'),
   feedbackDetailsInput: () =>
     cy
       .get('lightning-modal')

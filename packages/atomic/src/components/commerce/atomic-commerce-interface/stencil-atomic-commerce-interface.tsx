@@ -6,7 +6,6 @@ import {
   buildSearch,
   loadQueryActions,
   CommerceEngine,
-  CommerceEngineConfiguration,
   buildCommerceEngine,
   buildProductListing,
   ProductListing,
@@ -34,7 +33,6 @@ import {
   StandaloneSearchBoxData,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
   BaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -45,17 +43,13 @@ import {
   noProductsSelector,
 } from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
+import {
+  CommerceBindings,
+  CommerceInitializationOptions,
+} from './atomic-commerce-interface';
 import {CommerceStore, createCommerceStore} from './store';
 
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
-
-export type CommerceInitializationOptions = CommerceEngineConfiguration;
-export type CommerceBindings = CommonBindings<
-  CommerceEngine,
-  CommerceStore,
-  HTMLAtomicCommerceInterfaceElement
-> &
-  NonceBindings;
 
 /**
  * @alpha

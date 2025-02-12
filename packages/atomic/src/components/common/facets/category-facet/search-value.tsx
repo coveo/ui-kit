@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
 
 interface CategoryFacetSearchValueProps {

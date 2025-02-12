@@ -304,6 +304,16 @@ test.describe('with instant results & query suggestions', () => {
       });
     });
   });
+
+  test.describe('when hovering a instant result and pressing Enter', () => {
+    test('should execute the query in the search box', async ({searchBox}) => {
+      await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('a');
+      await searchBox.instantResult({listSide: 'Right'}).first().hover();
+      await searchBox.searchInput.press('Enter');
+      await expect(searchBox.searchInput).toHaveValue('a');
+    });
+  });
 });
 
 test.describe('with disable-search=true and minimum-query-length=1', () => {

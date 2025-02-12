@@ -1,3 +1,7 @@
+## <small>3.3.8 (2025-02-12)</small>
+
+- fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)
+
 ## <small>3.3.3 (2025-01-16)</small>
 
 - chore: ensure atomic-angular component file is stable (#4866) ([a1dc782](https://github.com/coveo/ui-kit/commits/a1dc782)), closes [#4866](https://github.com/coveo/ui-kit/issues/4866)

@@ -3,8 +3,8 @@ import {i18n} from 'i18next';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
-import {Button} from '../../button';
-import {Heading} from '../../heading';
+import {Button} from '../../stencil-button';
+import {Heading} from '../../stencil-heading';
 
 export interface FacetHeaderProps {
   i18n: i18n;

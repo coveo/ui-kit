@@ -4,9 +4,9 @@ import {
   DateRangeRequest,
 } from '@coveo/headless';
 import {Component, h, State, Prop, Event, EventEmitter} from '@stencil/core';
-import {AnyBindings} from '../../../../components';
 import {parseDate} from '../../../../utils/date-utils';
-import {Button} from '../../../common/button';
+import {Button} from '../../../common/stencil-button';
+import {AnyBindings} from '../../interface/bindings';
 
 /**
  * Internal component made to be integrated in a TimeframeFacet.

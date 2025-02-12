@@ -9,7 +9,7 @@ import {
   ExpandableText,
   TruncateAfter,
 } from '../../../common/expandable-text/expandable-text';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 

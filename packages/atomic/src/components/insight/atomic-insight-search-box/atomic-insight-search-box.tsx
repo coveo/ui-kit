@@ -323,9 +323,15 @@ export class AtomicInsightSearchBox {
         elementHasQuery
       ).length;
     this.searchBoxAriaMessage = numberOfSuggestionsToAnnounce
-      ? this.bindings.i18n.t('query-suggestions-available', {
-          count: numberOfSuggestionsToAnnounce,
-        })
+      ? this.bindings.i18n.t(
+          this.searchBoxState.value
+            ? 'query-suggestions-available'
+            : 'query-suggestions-available-no-query',
+          {
+            count: numberOfSuggestionsToAnnounce,
+            query: this.searchBoxState.value,
+          }
+        )
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 

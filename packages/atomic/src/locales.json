@@ -4509,7 +4509,7 @@
     "zh-CN": "正在加载新结果",
     "zh-TW": "載入新結果中"
   },
-  "query-suggestions-available": {
+  "query-suggestions-available-no-query": {
     "en": "{{count}} search suggestion available.",
     "fr": "{{count}} suggestion de recherche disponible.",
     "cs": "{{count}} dostupná hledání.",
@@ -4536,7 +4536,7 @@
     "zh-CN": "{{count}} 个搜索建议可用。",
     "zh-TW": "{{count}} 個搜尋建議可用。"
   },
-  "query-suggestions-available_other": {
+  "query-suggestions-available-no-query_other": {
     "en": "{{count}} search suggestions are available.",
     "fr": "{{count}} suggestions de recherche disponible.",
     "cs": "{{count}} dostupné návrhy hledání.",
@@ -4562,6 +4562,60 @@
     "zh": "有{{count}}个搜索建议可用。",
     "zh-CN": "{{count}} 种搜索建议可用。",
     "zh-TW": "{{count}} 個搜尋建議可用。"
+  },
+  "query-suggestions-available": {
+    "en": "{{count}} search suggestion available for {{query}}.",
+    "fr": "{{count}} suggestion de recherche disponible pour {{query}}.",
+    "cs": "{{count}} dostupná hledání pro {{query}}.",
+    "da": "{{count}} søgeforslag tilgængelige for {{query}}.",
+    "de": "{{count}} Suchvorschlag verfügbar für {{query}}.",
+    "el": "{{count}} προτάσεις αναζήτησης διαθέσιμες για {{query}}.",
+    "es": "{{count}} sugerencia de búsqueda disponible para {{query}}.",
+    "fi": "{{count}} hakuehdotusta saatavilla kohteelle {{query}}.",
+    "hu": "{{count}} keresési javaslat elérhető a következőhöz: {{query}}.",
+    "id": "{{count}} saran pencarian tersedia untuk {{query}}.",
+    "it": "{{count}} suggerimento di ricerca disponibile per {{query}}.",
+    "ja": "{{count}} 件の検索提案があります: {{query}}。",
+    "ko": "{{count}} 개의 검색 제안이 있습니다: {{query}}.",
+    "nl": "{{count}} zoeksuggestie beschikbaar voor {{query}}.",
+    "no": "{{count}} søkeforslag tilgjengelig for {{query}}.",
+    "pl": "{{count}} sugestia wyszukiwania dostępna dla {{query}}.",
+    "pt": "{{count}} sugestão de pesquisa disponível para {{query}}.",
+    "pt-BR": "{{count}} sugestão de pesquisa disponível para {{query}}.",
+    "ru": "{{count}} предложение поиска доступно для {{query}}.",
+    "sv": "{{count}} sökförslag tillgängliga för {{query}}.",
+    "th": "{{count}} ข้อเสนอค้นหาที่พร้อมใช้งานสำหรับ {{query}}",
+    "tr": "{{count}} arama önerisi mevcut: {{query}}.",
+    "zh": "有{{count}}个搜索建议可用：{{query}}。",
+    "zh-CN": "{{count}} 个搜索建议可用：{{query}}。",
+    "zh-TW": "{{count}} 個搜尋建議可用：{{query}}。"
+  },
+  "query-suggestions-available_other": {
+    "en": "{{count}} search suggestions are available for {{query}}.",
+    "fr": "{{count}} suggestions de recherche disponibles pour {{query}}.",
+    "cs": "{{count}} dostupné návrhy hledání pro {{query}}.",
+    "da": "{{count}} søgeforslag er tilgængelige for {{query}}.",
+    "de": "{{count}} Suchvorschläge sind verfügbar für {{query}}.",
+    "el": "{{count}} προτάσεις αναζήτησης είναι διαθέσιμες για {{query}}.",
+    "es": "{{count}} sugerencias de búsqueda están disponibles para {{query}}.",
+    "fi": "{{count}} hakuehdotuksia on saatavilla kohteelle {{query}}.",
+    "hu": "{{count}} keresési javaslatok állnak rendelkezésre a következőhöz: {{query}}.",
+    "id": "{{count}} saran pencarian tersedia untuk {{query}}.",
+    "it": "{{count}} suggerimenti di ricerca sono disponibili per {{query}}.",
+    "ja": "{{count}} 件の検索候補があります: {{query}}。",
+    "ko": "{{count}} 개의 검색 제안이 있습니다: {{query}}.",
+    "nl": "{{count}} zoekopdracht suggesties zijn beschikbaar voor {{query}}.",
+    "no": "{{count}} søkeforslag er tilgjengelige for {{query}}.",
+    "pl": "{{count}} sugestie wyszukiwania są dostępne dla {{query}}.",
+    "pt": "{{count}} sugestões de pesquisa estão disponíveis para {{query}}.",
+    "pt-BR": "{{count}} sugestões de pesquisa estão disponíveis para {{query}}.",
+    "ru": "{{count}} предложений для поиска доступны для {{query}}.",
+    "sv": "{{count}} sökförslag finns tillgängliga för {{query}}.",
+    "th": "มีเคล็ดลับการค้นหา {{count}} รายการที่สามารถใช้ได้สำหรับ {{query}}",
+    "tr": "{{count}} arama önerisi mevcut: {{query}}.",
+    "zh": "有{{count}}个搜索建议可用：{{query}}。",
+    "zh-CN": "{{count}} 种搜索建议可用：{{query}}。",
+    "zh-TW": "{{count}} 個搜尋建議可用：{{query}}。"
   },
   "query-suggestions-unavailable": {
     "en": "There are no search suggestions.",
