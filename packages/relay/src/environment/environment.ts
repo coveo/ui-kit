@@ -2,7 +2,7 @@ import { RelayEvent } from "../event/relay-event";
 import { Storage } from "./storage";
 
 export interface Environment {
-  runtime: "browser" | "null";
+  runtime: "browser" | "null" | "custom";
   send: (url: string, token: string, event: RelayEvent) => void;
   getReferrer: () => string | null;
   getLocation: () => string | null;

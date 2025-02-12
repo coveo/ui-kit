@@ -3,13 +3,18 @@ import { buildBrowserEnvironment } from "../browser/browser";
 import { localStorageAvailable } from "../browser/storage/availability";
 import { Environment } from "../environment";
 import { buildNullEnvironment } from "../null/null";
-
 export interface EnvironmentManager {
   get: () => Readonly<Environment>;
 }
 
-function buildEnvironment(configManager: ConfigManager) {
+function buildEnvironment(configManager: ConfigManager): Environment {
   const active = configManager.get().mode !== "disabled";
+
+  const environmentFromConfig = configManager.get().environment;
+
+  if (active && environmentFromConfig) {
+    return { ...environmentFromConfig, runtime: "custom" };
+  }
 
   if (active && isBrowser() && localStorageAvailable()) {
     return buildBrowserEnvironment();

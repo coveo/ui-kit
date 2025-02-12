@@ -4,7 +4,11 @@ import { createRelayEvent, RelayEvent } from "./event/relay-event";
 import { version } from "./version";
 import { createMeta, Meta, EventConfig } from "./event/meta/meta";
 import { createListenerManager, EventCallback } from "./listener/listener";
-import { createConfigManager, RelayConfig } from "./config/config";
+import {
+  createConfigManager,
+  RelayConfig,
+  CustomEnvironment,
+} from "./config/config";
 import { createEnvironmentManager } from "./environment/manager/manager";
 import { RelayPayload } from "./relay-payload";
 
@@ -125,4 +129,5 @@ export type {
   RelayConfig,
   RelayPayload,
   RelayEvent,
+  CustomEnvironment,
 };

@@ -1,3 +1,15 @@
+import { Environment } from "../environment/environment";
+
+export type CustomEnvironment = Pick<
+  Environment,
+  | "generateUUID"
+  | "getLocation"
+  | "getReferrer"
+  | "getUserAgent"
+  | "send"
+  | "storage"
+>;
+
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.
  */
@@ -31,6 +43,12 @@ export interface RelayConfig {
    * version. The recommendation is to specify them using a 'softwarename@softwareversion' string.
    */
   source?: string[];
+
+  /**
+   * Specifies a custom environment for Relay, allowing integrations to override the default behavior.
+   * This is useful when Relay runs in unsupported or specialized contexts that require custom handling.
+   */
+  environment?: CustomEnvironment;
 }
 
 export interface ConfigManager {
@@ -50,6 +68,7 @@ function pick({
     trackingId,
     ...(!!rest.mode && { mode: rest.mode }),
     ...(!!rest.source && { source: rest.source }),
+    ...(!!rest.environment && { environment: rest.environment }),
   });
 }
 
