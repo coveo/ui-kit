@@ -1,6 +1,6 @@
 :root {
   /* Primary colors */
-  --atomic-primary: #1372ec;
+  --atomic-primary: #126ce0;
   --atomic-primary-light: #399ffe;
   --atomic-primary-dark: #1a50ad;
   --atomic-on-primary: #ffffff;
@@ -24,9 +24,6 @@
   --atomic-error-background: #fcbdc0;
   --atomic-primary-background: #edf6ff;
   --atomic-inline-code: #cd2113;
-
-  --atomic-rating-icon-active-color: #f6ce3c;
-  --atomic-rating-icon-outline: none;
 
   /* Border radius */
   --atomic-border-radius: 0.25rem;
@@ -54,4 +51,10 @@
   --atomic-layout-spacing-y: 1rem;
 
   --tw-border-style: solid;
+
+  --atomic-rating-icon-active-color: #f6ce3c;
+  --atomic-rating-icon-outline: none;
+
+  --animate-slide-down-modal: slideDown 0.5s linear forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 }
