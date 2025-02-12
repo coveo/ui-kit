@@ -1,6 +1,7 @@
 import {describe, test} from 'vitest';
 
 //TODO: Write those tests during the lit migration
+//https://coveord.atlassian.net/browse/KIT-3955
 describe('AtomicCommerceSearchBox', () => {
   describe('with instant products & suggestions', () => {
     describe('when using keyboard navigation', () => {

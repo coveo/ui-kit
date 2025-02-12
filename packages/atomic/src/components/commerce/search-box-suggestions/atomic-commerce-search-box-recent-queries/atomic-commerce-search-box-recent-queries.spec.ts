@@ -1,6 +1,7 @@
 import {describe, test} from 'vitest';
 
 //TODO: Write those tests during the lit migration
+//https://coveord.atlassian.net/browse/KIT-3958
 describe('AtomicCommerceSearchBoxRecentQueries', () => {
   describe('when clicking', () => {
     test('on a recent query, it should execute the proper search', async () => {});

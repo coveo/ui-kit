@@ -1,6 +1,7 @@
 import {describe, test} from 'vitest';
 
 //TODO: Write those tests during the lit migration
+//https://coveord.atlassian.net/browse/KIT-3957
 describe('AtomicCommerceSearchBoxInstantProducts', () => {
   describe('when clicking', () => {
     test('on a instant product, it should redirect to the product page', async () => {});
