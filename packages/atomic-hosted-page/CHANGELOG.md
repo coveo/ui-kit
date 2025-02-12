@@ -1,3 +1,7 @@
+## <small>1.1.1 (2025-02-12)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+
 ## 1.1.0 (2025-02-05)
 
 - fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
