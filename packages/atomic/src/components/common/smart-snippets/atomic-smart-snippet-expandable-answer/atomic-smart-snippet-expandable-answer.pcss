@@ -15,7 +15,7 @@
       --atomic-smart-snippet-gradient-start,
       calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
     );
-    color: var(--atomic-on-background);
+    @apply text-on-background;
     mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
 
     &.loaded {

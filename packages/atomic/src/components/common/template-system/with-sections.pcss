@@ -25,7 +25,7 @@
   atomic-result-section-title,
   atomic-product-section-name {
     grid-area: title;
-    color: var(--atomic-on-background);
+    @apply text-on-background;
   }
 
   atomic-result-section-title-metadata,
@@ -41,13 +41,13 @@
   atomic-result-section-excerpt,
   atomic-product-section-description {
     grid-area: excerpt;
-    color: var(--atomic-neutral-dark);
+    @apply text-neutral-dark;
   }
 
   atomic-result-section-bottom-metadata,
   atomic-product-section-bottom-metadata {
     grid-area: bottom-metadata;
-    color: var(--atomic-neutral-dark);
+    @apply text-neutral-dark;
   }
 
   atomic-result-section-children,
@@ -88,7 +88,7 @@
   &.image-icon {
     atomic-result-section-visual,
     atomic-product-section-visual {
-      border-radius: var(--atomic-border-radius);
+      border-radius: var(--radius-sm);
     }
   }
 }
