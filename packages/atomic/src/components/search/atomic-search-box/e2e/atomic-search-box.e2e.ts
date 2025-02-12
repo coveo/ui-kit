@@ -156,13 +156,12 @@ test.describe('with instant results & query suggestions', () => {
   });
 
   test.describe('when hovering a instant result and pressing Enter', () => {
-    test('should not redirect to the instant result url', async ({
-      searchBox,
-    }) => {
+    test('should execute the query in the search box', async ({searchBox}) => {
       await searchBox.searchInput.click();
+      await searchBox.searchInput.fill('a');
       await searchBox.instantResult({listSide: 'Right'}).first().hover();
       await searchBox.searchInput.press('Enter');
-      await expect(searchBox.searchInput).toHaveValue('');
+      await expect(searchBox.searchInput).toHaveValue('a');
     });
   });
 });
