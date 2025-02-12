@@ -16,9 +16,4 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
   describe('when using keyboard navigation and then switching to mouse and hovering a new product', () => {
     test('it should execute the search reflected in the search box', () => {});
   });
-
-  // This is a bug currently in the component
-  describe('when using the "See all products" button', () => {
-    test('it should reflect the query in the search box', async () => {});
-  });
 });

@@ -15,9 +15,4 @@ describe('AtomicSearchBoxInstantResults', () => {
   describe('when using keyboard navigation and then switching to mouse and hovering a new result', () => {
     test('it should execute the search reflected in the search box', () => {});
   });
-
-  // This is a bug currently in the component
-  describe('when using the "See all results" button', () => {
-    test('it should reflect the query in the search box', async () => {});
-  });
 });
