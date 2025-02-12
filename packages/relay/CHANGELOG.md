@@ -1,3 +1,15 @@
+# 1.1.0 (2025-02-12)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#149](https://github.com/coveo/relay/issues/149)) ([a2dd519](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#153](https://github.com/coveo/relay/issues/153)) ([b4ef5e3](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#154](https://github.com/coveo/relay/issues/154)) ([842cda7](https://github.com/coveo/relay/commits/))
+
+### Features
+
+- **relay:** add new config option to provide an environment ([#158](https://github.com/coveo/relay/issues/158)) ([32208b5](https://github.com/coveo/relay/commits/))
+
 # 1.0.0 (2025-01-22)
 
 - ([f652f24](https://github.com/coveo/relay/commits/)), closes [#150](https://github.com/coveo/relay/issues/150)
