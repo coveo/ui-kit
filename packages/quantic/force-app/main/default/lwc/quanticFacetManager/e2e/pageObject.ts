@@ -17,25 +17,44 @@ export class FacetManagerObject {
     return this.facetManager.locator('.facet-manager__item');
   }
 
-  async configureFacetOrder(
-    isOrderReversed: boolean,
-    useCase: string
-  ): Promise<void> {
+  getFacetManagerItemByIndex(index: number): Locator {
+    return this.facetManagerItems.nth(index);
+  }
+
+  /**
+   * Filters out the date_input facets because they are not displayed in the facet manager.
+   */
+  filterInputFacets(facets: any): string[] {
+    return facets
+      .map((facet: any) => facet.facetId)
+      .filter((id: string) => !/_input$/.test(id));
+  }
+
+  async mockFacetOrder(facetIds: string[], useCase: string): Promise<void> {
     const searchRequestRegexToUse =
       useCase === 'insight' ? insightSearchRequestRegex : searchRequestRegex;
 
     await this.page.route(searchRequestRegexToUse, async (route) => {
       const apiResponse = await this.page.request.fetch(route.request());
       const originalBody = await apiResponse.json();
-      originalBody.facets = isOrderReversed
-        ? originalBody.facets.reverse()
-        : originalBody.facets;
+      const facets = originalBody.facets;
+      const reorderedFacets: unknown[] = [];
+
+      facetIds.forEach((facetId, idx) => {
+        const facet = facets.find((f: any) => f.facetId === facetId);
+        if (facet) {
+          reorderedFacets.push({
+            ...facet,
+            indexScore: 1 - idx * 0.01,
+          });
+        }
+      });
 
       await route.continue({
         method: 'POST',
         postData: JSON.stringify({
           ...originalBody,
-          facets: originalBody.facets,
+          facets: reorderedFacets,
         }),
         headers: {
           ...route.request().headers(),

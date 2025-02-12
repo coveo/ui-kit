@@ -14,22 +14,20 @@ useCaseTestCases.forEach((useCase) => {
       facetManager,
       search,
     }) => {
-      // Date appears twice because the response has two (ascending and descending input) date facets
-      const expectedFacetsFields = ['date', 'date', 'objecttype', 'language'];
-
-      await facetManager.configureFacetOrder(false, useCase.value);
-      const searchRequestPromise = search.waitForSearchResponse();
+      const searchResponsePromise = search.waitForSearchResponse();
       await search.performSearch();
 
-      const searchRequest = await searchRequestPromise;
-      const searchRequestBody = searchRequest.request().postDataJSON();
-      expect(searchRequestBody).not.toBeNull();
+      const searchResponse = await searchResponsePromise;
+      const {facets} = await searchResponse.json();
+      expect(facets).not.toBeNull();
 
-      const facets = searchRequestBody.facets;
-      expect(facets.length).toEqual(expectedFacetsFields.length);
+      const filteredIds = facetManager.filterInputFacets(facets);
 
-      facets.forEach((facet: any, index: number) => {
-        expect(facet.field).toEqual(expectedFacetsFields[index]);
+      filteredIds.forEach(async (facetId: any, index: number) => {
+        const facetManagerItem = facetManager.getFacetManagerItemByIndex(index);
+        expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
+          facetId
+        );
       });
     });
 
@@ -38,28 +36,26 @@ useCaseTestCases.forEach((useCase) => {
         facetManager,
         search,
       }) => {
-        // Date appears twice because the response has two (ascending and descending input) date facets
-        const expectedReorderedFacetsFields = [
-          'language',
-          'objecttype',
-          'date',
-          'date',
-        ];
-
-        await facetManager.configureFacetOrder(true, useCase.value);
-        const searchRequestPromise = search.waitForSearchResponse();
+        await facetManager.mockFacetOrder(
+          ['objecttype', 'language', 'date'],
+          useCase.value
+        );
+        const searchResponsePromise = search.waitForSearchResponse();
         await search.performSearch();
 
-        const searchRequest = await searchRequestPromise;
-        const searchRequestBody = searchRequest.request().postDataJSON();
-        expect(searchRequestBody).not.toBeNull();
+        const searchResponse = await searchResponsePromise;
+        const searchResponseBody = await searchResponse.json();
+        expect(searchResponseBody).not.toBeNull();
 
-        const facets = searchRequestBody.facets;
-        expect(facets.length).toEqual(expectedReorderedFacetsFields.length);
-
-        facets.forEach((facet: any, index: number) => {
-          expect(facet.field).toEqual(expectedReorderedFacetsFields[index]);
-        });
+        searchResponseBody?.facets?.forEach(
+          async (facet: any, index: number) => {
+            const facetManagerItem =
+              facetManager.getFacetManagerItemByIndex(index);
+            expect(
+              await facetManagerItem.getAttribute('data-facet-id')
+            ).toEqual(facet.facetId);
+          }
+        );
       });
     });
   });
