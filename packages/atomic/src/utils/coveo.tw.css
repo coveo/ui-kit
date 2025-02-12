@@ -73,6 +73,15 @@
   --color-error: var(--atomic-error);
   --color-visited: var(--atomic-visited);
   --color-disabled: var(--atomic-disabled);
+  --color-more-results-progress-bar-color-from: var(
+    --atomic-more-results-progress-bar-color-from,
+    var(--atomic-primary-dark)
+  );
+
+  --color-more-results-progress-bar-color-to: var(
+    --atomic-more-results-progress-bar-color-to,
+    var(--atomic-primary-light)
+  );
 }
 
 @theme {
