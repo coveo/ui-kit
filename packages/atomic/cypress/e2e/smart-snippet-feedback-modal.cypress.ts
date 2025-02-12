@@ -29,7 +29,7 @@ describe('Smart Snippet Feedback Modal Test Suites', () => {
     it('should give the primary text color to the cancel button', () => {
       SmartSnippetFeedbackModalSelectors.cancelButton()
         .invoke('css', 'color')
-        .should('eq', 'rgb(18, 108, 224)');
+        .should('eq', 'rgb(48, 63, 159)');
     });
 
     describe('then clicking submit', () => {
