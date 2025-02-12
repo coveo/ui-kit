@@ -1,6 +1,6 @@
 @utility atomic-list-with-cards {
   [part~='outline'] {
-    border: 1px solid var(--atomic-neutral);
+    @apply border-neutral border;
     padding: 1rem;
     border-radius: 1rem;
   }
@@ -62,7 +62,7 @@
       display: block;
       content: ' ';
       height: 1px;
-      background-color: var(--atomic-neutral);
+      @apply bg-neutral;
     }
 
     &:first-of-type::before {
@@ -84,10 +84,8 @@
 
   th,
   td {
-    font-family: var(--atomic-font-family);
-    border: 1px solid var(--atomic-neutral);
-    --font-size: var(--atomic-text-sm);
-    font-size: var(--font-size);
+    @apply border-neutral border font-sans text-sm;
+
     line-height: 1rem;
     white-space: nowrap;
 
@@ -101,7 +99,7 @@
   }
 
   th {
-    background-color: var(--atomic-neutral-light);
+    @apply bg-neutral-light;
     border-bottom: none;
     font-weight: bold;
     color: black;
@@ -109,16 +107,16 @@
     text-align: left;
 
     &:first-child {
-      border-top-left-radius: var(--atomic-border-radius-xl);
+      @apply rounded-tl-xl;
     }
 
     &:last-child {
-      border-top-right-radius: var(--atomic-border-radius-xl);
+      @apply rounded-tr-xl;
     }
   }
 
   td {
-    color: var(--atomic-neutral-dark);
+    @apply text-neutral-dark;
     border-top: none;
     vertical-align: top;
     padding: var(--padding);
@@ -146,16 +144,15 @@
     border-radius: 1rem;
     transition: all 0.12s ease-out;
     &:hover {
-      border: 1px solid var(--atomic-neutral);
+      @apply border-neutral border;
       box-shadow: 0px 10px 25px var(--atomic-neutral);
       cursor: pointer;
     }
   }
 
   [part='result-list-grid-clickable']:focus-visible {
-    border: 2px solid var(--atomic-primary);
     border-radius: 2px;
-    color: var(--atomic-primary);
+    @apply text-primary border-primary border-2;
     cursor: pointer;
     display: inline-block;
     text-decoration: underline;
