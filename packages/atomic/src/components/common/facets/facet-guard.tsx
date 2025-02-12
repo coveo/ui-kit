@@ -1,5 +1,5 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {Hidden} from '../hidden';
+import {Hidden} from '../stencil-hidden';
 
 interface FacetGuardProps {
   hasError: boolean;

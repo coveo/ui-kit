@@ -12,8 +12,8 @@ import {
   SafeStorage,
   StorageItems,
 } from '../../../utils/local-storage-utils';
-import {Heading} from '../heading';
 import {AnyBindings} from '../interface/bindings';
+import {Heading} from '../stencil-heading';
 import {Switch} from '../switch';
 import {CopyButton} from './copy-button';
 import {FeedbackButton} from './feedback-button';

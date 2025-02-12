@@ -20,8 +20,8 @@ import {
   PopoverChildFacet,
   popoverClass,
 } from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/hidden';
 import {Button} from '../../../common/stencil-button';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

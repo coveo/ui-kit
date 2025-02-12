@@ -1,3 +1,8 @@
+## <small>2.4.6 (2025-02-12)</small>
+
+- chore(deps): update vite to v2.1.9 j:kit-282 (#4956) ([ab2acbd](https://github.com/coveo/ui-kit/commits/ab2acbd)), closes [#4956](https://github.com/coveo/ui-kit/issues/4956)
+- docs(headless,headless-react): support OneTrust preferences in typedoc sites (#4942) ([c353e4d](https://github.com/coveo/ui-kit/commits/c353e4d)), closes [#4942](https://github.com/coveo/ui-kit/issues/4942)
+
 ## <small>2.4.4 (2025-01-29)</small>
 
 - docs(headless-react): more typedoc annotations (#4890) ([5e06b8b](https://github.com/coveo/ui-kit/commits/5e06b8b)), closes [#4890](https://github.com/coveo/ui-kit/issues/4890)

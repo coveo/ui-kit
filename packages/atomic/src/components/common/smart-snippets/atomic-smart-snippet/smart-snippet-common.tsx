@@ -1,8 +1,8 @@
 import {SmartSnippetState, SmartSnippet} from '@coveo/headless';
 import {h} from '@stencil/core';
-import {Heading} from '../../heading';
-import {Hidden} from '../../hidden';
 import {AnyBindings} from '../../interface/bindings';
+import {Heading} from '../../stencil-heading';
+import {Hidden} from '../../stencil-hidden';
 import {SmartSnippetFeedbackBanner} from '../atomic-smart-snippet-feedback-banner';
 
 type FeedBackModalElement =

@@ -5,7 +5,7 @@ import {getFieldValueCaption} from '../../../utils/field-utils';
 import {randomID} from '../../../utils/utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {Hidden} from '../hidden';
+import {Hidden} from '../stencil-hidden';
 import {
   DateFacet,
   DateFacetValue,

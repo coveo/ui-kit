@@ -6,8 +6,8 @@ import {
   forceUpdate as forceUpdateComponent,
 } from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Hidden} from '../components/common/hidden';
 import {AnyBindings} from '../components/common/interface/bindings';
+import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
 import {

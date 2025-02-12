@@ -1,3 +1,10 @@
+## <small>3.14.1 (2025-02-12)</small>
+
+- fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+- test(quantic): Add tests for feedback modal edge cases in quanticSmartSnippet e2e tests (#4939) ([08648b4](https://github.com/coveo/ui-kit/commits/08648b4)), closes [#4939](https://github.com/coveo/ui-kit/issues/4939)
+- test(quantic): SFINT-5832 Sort E2E tests migrate from Cypress to Playwright (#4777) ([9c846ba](https://github.com/coveo/ui-kit/commits/9c846ba)), closes [#4777](https://github.com/coveo/ui-kit/issues/4777)
+
 ## 3.14.0 (2025-02-05)
 
 - fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
