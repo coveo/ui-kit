@@ -23,7 +23,9 @@ async function generateFiles(name, outputDir) {
   );
   const resolvedOutputDir = path.resolve(outputDir);
   const namePascalCase = kebabToPascal(name);
-  const shorterName = name.replace(/^atomic-/, '').toLowerCase();
+  const shorterName = namePascalCase
+    .replace(/^Atomic/, '')
+    .replace(/^./, (c) => c.toLowerCase());
 
   const files = [
     {template: 'component.ts.hbs', output: `${name}.ts`},

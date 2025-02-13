@@ -1,3 +1,16 @@
+## <small>1.1.1 (2025-02-12)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+
+## 1.1.0 (2025-02-05)
+
+- fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
+- fix(deps): update all dependencies j:kit-282 (#4933) ([9016283](https://github.com/coveo/ui-kit/commits/9016283)), closes [#4933](https://github.com/coveo/ui-kit/issues/4933)
+- chore(atomic): bundle lit dependencies for CDN build (#4908) ([87681ca](https://github.com/coveo/ui-kit/commits/87681ca)), closes [#4908](https://github.com/coveo/ui-kit/issues/4908)
+- chore(deps): update dependency vite to v5.4.14 j:kit-282 (#4902) ([e0b448b](https://github.com/coveo/ui-kit/commits/e0b448b)), closes [#4902](https://github.com/coveo/ui-kit/issues/4902)
+- refactor(atomic-hosted-page): refactor common files into atomic-hosted-ui (#4898) ([6c74af7](https://github.com/coveo/ui-kit/commits/6c74af7)), closes [#4898](https://github.com/coveo/ui-kit/issues/4898)
+- feat(atomic-hosted-page): migrate from stencil to lit (#4897) ([bf6bed4](https://github.com/coveo/ui-kit/commits/bf6bed4)), closes [#4897](https://github.com/coveo/ui-kit/issues/4897)
+
 ## <small>1.0.21 (2025-01-29)</small>
 
 - fix(atomic-hosted-page): fix cdn import errors by externalizing headless (#4884) ([2364a8d](https://github.com/coveo/ui-kit/commits/2364a8d)), closes [#4884](https://github.com/coveo/ui-kit/issues/4884)

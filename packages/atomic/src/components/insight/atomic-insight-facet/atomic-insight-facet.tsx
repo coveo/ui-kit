@@ -1,19 +1,19 @@
 import {FacetResultsMustMatch} from '@coveo/headless';
-import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
 import {
-  buildInsightFacet,
-  buildInsightFacetConditionsManager,
-  buildInsightSearchStatus,
-  InsightCategoryFacetValueRequest,
-  InsightFacet,
-  InsightFacetConditionsManager,
-  InsightFacetOptions,
-  InsightFacetSortCriterion,
-  InsightFacetState,
-  InsightFacetValueRequest,
-  InsightSearchStatus,
-  InsightSearchStatusState,
-} from '..';
+  buildFacet as buildInsightFacet,
+  buildFacetConditionsManager as buildInsightFacetConditionsManager,
+  buildSearchStatus as buildInsightSearchStatus,
+  CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
+  Facet as InsightFacet,
+  FacetConditionsManager as InsightFacetConditionsManager,
+  FacetOptions as InsightFacetOptions,
+  FacetSortCriterion as InsightFacetSortCriterion,
+  FacetState as InsightFacetState,
+  FacetValueRequest as InsightFacetValueRequest,
+  SearchStatus as InsightSearchStatus,
+  SearchStatusState as InsightSearchStatusState,
+} from '@coveo/headless/insight';
+import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
 import {
   AriaLiveRegion,
   FocusTargetController,

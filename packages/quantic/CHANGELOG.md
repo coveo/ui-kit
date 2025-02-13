@@ -1,3 +1,20 @@
+## <small>3.14.1 (2025-02-12)</small>
+
+- fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+- test(quantic): Add tests for feedback modal edge cases in quanticSmartSnippet e2e tests (#4939) ([08648b4](https://github.com/coveo/ui-kit/commits/08648b4)), closes [#4939](https://github.com/coveo/ui-kit/issues/4939)
+- test(quantic): SFINT-5832 Sort E2E tests migrate from Cypress to Playwright (#4777) ([9c846ba](https://github.com/coveo/ui-kit/commits/9c846ba)), closes [#4777](https://github.com/coveo/ui-kit/issues/4777)
+
+## 3.14.0 (2025-02-05)
+
+- fix(deps): update all dependencies j:kit-282 (#4903) ([192cf67](https://github.com/coveo/ui-kit/commits/192cf67)), closes [#4903](https://github.com/coveo/ui-kit/issues/4903)
+- fix(deps): update all dependencies j:kit-282 (#4933) ([9016283](https://github.com/coveo/ui-kit/commits/9016283)), closes [#4933](https://github.com/coveo/ui-kit/issues/4933)
+- feat(quantic): add collapsible max height option to the quanticGeneratedAnswer component (#4871) ([a92f563](https://github.com/coveo/ui-kit/commits/a92f563)), closes [#4871](https://github.com/coveo/ui-kit/issues/4871)
+- feat(quantic): Migration of Quantic Smart Snippet suggestions to Playwright (#4888) ([7b277e1](https://github.com/coveo/ui-kit/commits/7b277e1)), closes [#4888](https://github.com/coveo/ui-kit/issues/4888)
+- feat(quantic): QuanticResultsPerPage fixes and refactor tests (#4889) ([0d63ca9](https://github.com/coveo/ui-kit/commits/0d63ca9)), closes [#4889](https://github.com/coveo/ui-kit/issues/4889)
+- chore(tests): fix flakiness issue (#4905) ([ab7f0d5](https://github.com/coveo/ui-kit/commits/ab7f0d5)), closes [#4905](https://github.com/coveo/ui-kit/issues/4905) [/github.com/cypress-io/cypress/issues/29085#issuecomment-2040258080](https://github.com//github.com/cypress-io/cypress/issues/29085/issues/issuecomment-2040258080) [/docs.cypress.io/app/references/changelog#13-7-3](https://github.com//docs.cypress.io/app/references/changelog/issues/13-7-3) [/github.com/coveo/ui-kit/pull/4905#discussion_r1933951647](https://github.com//github.com/coveo/ui-kit/pull/4905/issues/discussion_r1933951647)
+- fix(headless+atomic): make recent queries case insensitive + display recent query even if it fully m ([6ceebaa](https://github.com/coveo/ui-kit/commits/6ceebaa)), closes [#4854](https://github.com/coveo/ui-kit/issues/4854)
+
 ## 3.13.0 (2025-01-23)
 
 - fix(deps): update all dependencies j:kit-282 (#4881) ([9cac893](https://github.com/coveo/ui-kit/commits/9cac893)), closes [#4881](https://github.com/coveo/ui-kit/issues/4881)

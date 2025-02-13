@@ -1,5 +1,6 @@
-import {testSearch, testInsight} from './fixture';
+import {testSearch, testInsight, expect} from './fixture';
 import {useCaseTestCases} from '../../../../../../playwright/utils/useCase';
+import smartSnippetData from './data';
 
 const maximumSnippetHeight = 250;
 
@@ -111,6 +112,55 @@ useCaseTestCases.forEach((useCase) => {
             await smartSnippet.clickFeedbackModalCancelButton();
             await closeFeedbackModalAnalyticsPromise;
           });
+        });
+      });
+
+      test.describe('when trying to open the feedback modal after executing the same query', () => {
+        test('should not allow to open the feedback modal', async ({
+          smartSnippet,
+          search,
+        }) => {
+          await smartSnippet.clickDislikeButton();
+          await smartSnippet.clickExplainWhyButton();
+          await smartSnippet.selectFirstFeedbackOptionLabel();
+          await smartSnippet.clickFeedbackSubmitButton();
+
+          await smartSnippet.clickFeedbackModalDoneButton();
+
+          const searchResponsePromise = search.waitForSearchResponse();
+          await search.performSearch();
+          await searchResponsePromise;
+
+          expect(smartSnippet.dislikeButton).not.toBeNull();
+          await smartSnippet.clickDislikeButton();
+          expect(smartSnippet.explainWhyButton).not.toBeVisible();
+        });
+      });
+
+      test.describe('when trying to open the feedback modal after executing a query that gave a new answer', () => {
+        test('should allow to open the feedback modal', async ({
+          smartSnippet,
+          search,
+        }) => {
+          await smartSnippet.clickDislikeButton();
+          await smartSnippet.clickExplainWhyButton();
+          await smartSnippet.selectFirstFeedbackOptionLabel();
+          await smartSnippet.clickFeedbackSubmitButton();
+
+          await smartSnippet.clickFeedbackModalDoneButton();
+
+          await search.mockSearchWithSmartSnippetResponse({
+            ...smartSnippetData,
+            question: 'new question',
+            answerSnippet: 'new answer',
+          });
+          const searchResponsePromise = search.waitForSearchResponse();
+          await search.performSearch();
+          await searchResponsePromise;
+
+          expect(smartSnippet.dislikeButton).not.toBeNull();
+          await smartSnippet.clickDislikeButton();
+          expect(smartSnippet.explainWhyButton).toBeVisible();
         });
       });
     });

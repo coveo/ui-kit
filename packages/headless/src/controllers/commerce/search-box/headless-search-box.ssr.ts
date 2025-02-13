@@ -23,8 +23,6 @@ export interface SearchBoxDefinition
  * @group Definers
  *
  * @returns The `SearchBox` controller definition.
- *
- * @internal
  */
 export function defineSearchBox(
   props: SearchBoxProps = {}

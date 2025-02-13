@@ -90,7 +90,7 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
     ),
   feedbackDoneButton: () =>
     GeneratedAnswerSelectors.feedbackModal().find(
-      '[data-cy="feedback-modal-footer__done"]'
+      '[data-testid="feedback-modal-footer__done"]'
     ),
   feedbackDocumentUrlInput: () =>
     GeneratedAnswerSelectors.feedbackModal().find('input[name="documentUrl"]'),

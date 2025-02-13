@@ -18,9 +18,6 @@ import {
 
 export type {Recommendations, RecommendationsState};
 
-/**
- * @internal
- * */
 export type RecommendationsDefinitionMeta = {
   [recommendationInternalOptionKey]: {} & RecommendationsProps['options'];
 };
@@ -32,7 +29,6 @@ export interface RecommendationsDefinition
   > {}
 
 /**
- * @internal
  * Defines a `Recommendations` controller instance.
  * @group Definers
  *

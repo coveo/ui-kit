@@ -24,8 +24,6 @@ export type {
  * @group Definers
  *
  * @returns The `Summary` controller definition.
- *
- * @internal
  */
 export function defineSummary<
   TOptions extends ControllerDefinitionOption | undefined,

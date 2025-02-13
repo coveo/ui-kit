@@ -12,8 +12,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {Button} from '../../../common/button';
-import {Hidden} from '../../../common/hidden';
+import {Button} from '../../../common/stencil-button';
+import {Hidden} from '../../../common/stencil-hidden';
 
 type ArrowDirection = 'right' | 'left';
 

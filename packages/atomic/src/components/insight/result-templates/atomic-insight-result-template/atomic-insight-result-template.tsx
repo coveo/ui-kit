@@ -1,5 +1,8 @@
+import {
+  ResultTemplate as InsightResultTemplate,
+  ResultTemplateCondition as InsightResultTemplateCondition,
+} from '@coveo/headless/insight';
 import {Component, Element, Prop, Method, State} from '@stencil/core';
-import {InsightResultTemplate, InsightResultTemplateCondition} from '../..';
 import {MapProp} from '../../../../utils/props-utils';
 import {
   makeDefinedConditions,
