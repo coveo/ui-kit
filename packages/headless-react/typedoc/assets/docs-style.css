@@ -29,9 +29,14 @@ body {
   width: 27rem;
 }
 
-[data-theme='light'] .tsd-typography thead,
-[data-theme='light'] .tsd-typography tr:nth-child(even) {
+.tsd-typography thead,
+.tsd-typography tr:nth-child(even) {
   background-color: var(--light-color-background);
+}
+
+[data-theme='dark'] .tsd-typography thead,
+[data-theme='dark'] .tsd-typography tr:nth-child(even) {
+  background-color: var(--dark-color-background);
 }
 
 .tsd-page-toolbar {
