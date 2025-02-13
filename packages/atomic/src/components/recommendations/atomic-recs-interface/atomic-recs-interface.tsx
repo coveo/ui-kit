@@ -47,7 +47,7 @@ export type RecsBindings = CommonBindings<
 @Component({
   tag: 'atomic-recs-interface',
   styleUrl: 'atomic-recs-interface.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicRecsInterface
   implements BaseAtomicInterface<RecommendationEngine>

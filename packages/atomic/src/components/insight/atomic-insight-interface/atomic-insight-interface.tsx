@@ -44,7 +44,7 @@ export type InsightBindings = CommonBindings<
 @Component({
   tag: 'atomic-insight-interface',
   styleUrl: 'atomic-insight-interface.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicInsightInterface
   implements BaseAtomicInterface<InsightEngine>
