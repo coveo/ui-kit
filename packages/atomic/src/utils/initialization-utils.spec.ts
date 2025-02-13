@@ -15,6 +15,11 @@ import {
   MissingInterfaceParentError,
 } from './initialization-utils';
 
+/* eslint-disable prettier/prettier */
+// TODO: get rid of the mock once no longer running stencil tests
+// It's important that this jest.mock is called before the imports for stencil tests.
+jest.mock('./resource-url');
+
 jest.mock('./replace-breakpoint.ts', () => ({
   ...jest.requireActual('./replace-breakpoint.ts'),
   updateBreakpoints: () => {},
