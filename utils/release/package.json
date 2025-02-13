@@ -12,7 +12,7 @@
     "conventional-changelog-conventionalcommits": "8.0.0",
     "dependency-graph": "1.0.0",
     "octokit": "4.1.0",
-    "semver": "7.6.3",
+    "semver": "7.7.1",
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
