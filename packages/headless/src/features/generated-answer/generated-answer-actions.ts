@@ -174,8 +174,8 @@ export const setIsAnswerGenerated = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
-export const setHasNoAnswer = createAction(
-  'generatedAnswer/setHasNoAnswer',
+export const setCannotAnswer = createAction(
+  'generatedAnswer/setCannotAnswer',
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
@@ -225,9 +225,9 @@ export const streamAnswer = createAsyncThunk<
         const isAnswerGenerated = (
           JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
         ).answerGenerated;
-        const hasNoAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
+        const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
 
-        dispatch(setHasNoAnswer(hasNoAnswer));
+        dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));

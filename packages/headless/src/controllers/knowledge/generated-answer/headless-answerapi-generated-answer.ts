@@ -15,7 +15,7 @@ import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
   resetAnswer,
   sendGeneratedAnswerFeedback,
-  setHasNoAnswer,
+  setCannotAnswer,
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
@@ -102,8 +102,8 @@ const subscribeToSearchRequest = (
       lastTriggerParams = triggerParams;
     }
 
-    if (triggerParams.q.length === 0 && !!state.generatedAnswer.hasNoAnswer) {
-      engine.dispatch(setHasNoAnswer(false));
+    if (triggerParams.q.length === 0 && !!state.generatedAnswer.cannotAnswer) {
+      engine.dispatch(setCannotAnswer(false));
     }
 
     if (

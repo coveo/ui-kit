@@ -20,7 +20,7 @@ import {
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
   setIsEnabled,
-  setHasNoAnswer,
+  setCannotAnswer,
 } from './generated-answer-actions.js';
 import {generatedAnswerReducer} from './generated-answer-slice.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
@@ -515,23 +515,23 @@ describe('generated answer slice', () => {
     });
   });
 
-  describe('#setHasNoAnswer', () => {
-    it('should set hasNoAnswer to true when given true', () => {
+  describe('#setCannotAnswer', () => {
+    it('should set cannotAnswer to true when given true', () => {
       const finalState = generatedAnswerReducer(
-        {...baseState, hasNoAnswer: false},
-        setHasNoAnswer(true)
+        {...baseState, cannotAnswer: false},
+        setCannotAnswer(true)
       );
 
-      expect(finalState.hasNoAnswer).toEqual(true);
+      expect(finalState.cannotAnswer).toEqual(true);
     });
 
-    it('should set hasNoAnswer to false when given false', () => {
+    it('should set cannotAnswer to false when given false', () => {
       const finalState = generatedAnswerReducer(
-        {...baseState, hasNoAnswer: true},
-        setHasNoAnswer(false)
+        {...baseState, cannotAnswer: true},
+        setCannotAnswer(false)
       );
 
-      expect(finalState.hasNoAnswer).toEqual(false);
+      expect(finalState.cannotAnswer).toEqual(false);
     });
   });
 });

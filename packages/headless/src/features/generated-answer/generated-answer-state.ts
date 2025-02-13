@@ -83,9 +83,9 @@ export interface GeneratedAnswerState {
    */
   expanded: boolean;
   /**
-   * Determines if no answer is generated after a query is executed.
+   * Whether an answer cannot be generated after a query is executed.
    */
-  hasNoAnswer: boolean;
+  cannotAnswer: boolean;
   /**
    * The answer configuration unique identifier.
    */
@@ -110,6 +110,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     fieldsToIncludeInCitations: [],
     isAnswerGenerated: false,
     expanded: false,
-    hasNoAnswer: false,
+    cannotAnswer: false,
   };
 }
