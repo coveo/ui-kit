@@ -92,7 +92,7 @@ export class AtomicTabManager {
             role="list"
             aria-label="tab-area"
             part="tab-area"
-            class="border-neutral mb-2 flex w-full flex-row border-b"
+            class="border-neutral flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
               <atomic-tab-button

@@ -62,7 +62,7 @@ const FirstRequestExecutedFlag = 'firstRequestExecuted';
 @Component({
   tag: 'atomic-commerce-interface',
   styleUrl: 'atomic-commerce-interface.pcss',
-  shadow: true,
+  shadow: false,
   assetsDirs: ['lang'],
 })
 export class AtomicCommerceInterface

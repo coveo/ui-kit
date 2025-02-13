@@ -42,7 +42,7 @@ export type CommerceBindings = CommonBindings<
 @Component({
   tag: 'atomic-commerce-recommendation-interface',
   styleUrl: 'atomic-commerce-recommendation-interface.pcss',
-  shadow: true,
+  shadow: false,
   assetsDirs: ['lang'],
 })
 export class AtomicCommerceRecommendationInterface
