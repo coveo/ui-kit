@@ -313,6 +313,9 @@ export class AtomicCommerceRecommendationList
   }
 
   private getAtomicProductProps(product: Product) {
+    const linkContent =
+      this.productTemplateProvider.getLinkTemplateContent(product);
+
     return {
       interactiveProduct: this.recommendations.interactiveProduct({
         options: {product},
@@ -327,7 +330,8 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
-      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
+      linkContent,
+      stopPropagation: !!linkContent,
       store: this.bindings.store,
       density: this.density,
       display: this.display,
