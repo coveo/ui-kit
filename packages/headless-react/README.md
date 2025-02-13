@@ -3,7 +3,7 @@
 `@coveo/headless-react` provides React utilities for server-side rendering with headless controllers. This package includes two sub-packages:
 
 - `@coveo/headless-react/ssr`: For general server-side rendering with headless controllers.
-- `@coveo/headless-react/ssr-commerce`: For implementing a commerce storefront with server-side rendering.
+- `@coveo/headless-react/ssr-commerce`: (Open Beta) For implementing a commerce storefront with server-side rendering.
 
 ## Learn more
 
