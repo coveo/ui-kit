@@ -24,7 +24,7 @@
         }
       }
 
-      @media (min-width: 1024px) {
+      @media (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
             @apply aspect-square-[auto];
@@ -48,7 +48,7 @@
         }
       }
 
-      @media (max-width: 1023px) {
+      @media (width < theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
             @apply aspect-square-[auto];
@@ -106,7 +106,7 @@
     }
 
     &.display-list {
-      @media (min-width: 1024px) {
+      @media (width >= theme(--breakpoint-desktop)) {
         &.image-large.density-comfortable,
         &.image-large.density-normal {
           atomic-product-section-children .product-child {
@@ -125,7 +125,7 @@
         }
       }
 
-      @media (max-width: 1023px) {
+      @media (width < theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
             @apply aspect-square-[auto];

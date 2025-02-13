@@ -32,7 +32,7 @@
       }
     }
 
-    @media (max-width: 1023px) {
+    @media (width < theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.75rem 0;
@@ -48,7 +48,7 @@
       }
     }
 
-    @media (max-width: 1023px) {
+    @media (width < theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.5rem 0;
@@ -185,7 +185,7 @@
 
 @utility atomic-grid-display-desktop {
   .list-root.display-grid {
-    @media (min-width: 1024px) {
+    @media (width >= theme(--breakpoint-desktop)) {
       grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
       &.density-comfortable {
@@ -207,7 +207,7 @@
         @media not all and (min-width: 1024px) {
           grid-template-columns: repeat(3, 1fr);
         }
-        @media (min-width: 1024px) {
+        @media (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: repeat(3, 1fr);
         }
         @media (min-width: 1280px) {
@@ -220,7 +220,7 @@
 
 @utility atomic-grid-display-mobile {
   .list-root.display-grid {
-    @media (max-width: 1023px) {
+    @media (width < theme(--breakpoint-desktop)) {
       &.image-large {
         @media not all and (min-width: 768px) {
           @apply atomic-list-with-dividers;
@@ -241,7 +241,7 @@
         @media (min-width: 768px) {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         }
-        @media (min-width: 1024px) {
+        @media (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
         }
       }

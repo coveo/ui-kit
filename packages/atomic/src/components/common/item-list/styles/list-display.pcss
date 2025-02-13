@@ -17,11 +17,11 @@
     width: auto;
   }
 
-  @media (min-width: 1024px) {
+  @media (width >= theme(--breakpoint-desktop)) {
     @apply atomic-list-with-dividers;
   }
 
-  @media (max-width: 1023px) {
+  @media (width < theme(--breakpoint-desktop)) {
     &.image-large {
       @apply atomic-list-with-dividers;
       display: grid;
