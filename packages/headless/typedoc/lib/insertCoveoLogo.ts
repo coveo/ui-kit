@@ -11,7 +11,7 @@ export function insertCoveoLogo(imagePath: string) {
       const logoLink = document.createElement('a');
       logoLink.href = 'https://docs.coveo.com/en/0';
       const logoImg = document.createElement('img');
-      logoImg.src = imagePath;
+      logoImg.src = `${imagePath}/coveo-docs-logo.svg`;
       logoImg.alt = 'Coveo Docs Logo';
 
       logoLink.appendChild(logoImg);
@@ -20,4 +20,8 @@ export function insertCoveoLogo(imagePath: string) {
       toolbarContents.insertBefore(logoCell, toolbarContents.firstChild);
     }
   });
+  const faviconLink = document.createElement('link');
+  faviconLink.rel = 'icon';
+  faviconLink.href = `${imagePath}/favicon.ico`;
+  document.head.appendChild(faviconLink);
 }

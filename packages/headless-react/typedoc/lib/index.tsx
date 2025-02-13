@@ -41,7 +41,7 @@ export function load(app: Application) {
       </script>
       <script>
         <JSX.Raw
-          html={`(${insertCoveoLogo.toString()})('${event.relativeURL('assets/coveo-docs-logo.svg')}');`}
+          html={`(${insertCoveoLogo.toString()})('${event.relativeURL('assets')}');`}
         />
       </script>
     </>
@@ -56,6 +56,10 @@ export function load(app: Application) {
       {
         from: resolve(__dirname, '../assets/coveo-docs-logo.svg'),
         to: resolve(app.options.getValue('out'), 'assets/coveo-docs-logo.svg'),
+      },
+      {
+        from: resolve(__dirname, '../assets/favicon.ico'),
+        to: resolve(app.options.getValue('out'), 'assets/favicon.ico'),
       },
     ];
 
