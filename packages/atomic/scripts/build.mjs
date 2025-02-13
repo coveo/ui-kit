@@ -23,7 +23,7 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [
   svgTransformer,
   pathTransformer,
-  ...[isCDN ? resourceUrlTransformer : null].filter(Boolean),
+  ...(isCDN ? [resourceUrlTransformer] : []),
 ];
 
 function loadTsConfig(configPath) {
