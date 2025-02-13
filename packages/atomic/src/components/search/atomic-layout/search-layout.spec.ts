@@ -3,6 +3,11 @@ import {AtomicLayoutSection} from '../../common/atomic-layout-section/atomic-lay
 import {AtomicSearchLayout} from './atomic-search-layout';
 import {buildSearchLayout} from './search-layout';
 
+/* eslint-disable prettier/prettier */
+// TODO: get rid of the mock once no longer running stencil tests
+// It's important that this jest.mock is called before the imports for stencil tests.
+jest.mock('../../../utils/resource-url');
+
 describe('Search Layout', () => {
   describe('#buildSearchLayout', () => {
     async function getSearchLayout(html: string) {
