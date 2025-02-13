@@ -3,11 +3,11 @@
 [part='reason'] {
   @apply text-neutral-dark text-base leading-4;
 
-  @media (min-width: 1024px) {
+  @media (width >= theme(--breakpoint-desktop)) {
     @apply mt-2;
   }
 
-  @media (max-width: 1023px) {
+  @media (width < theme(--breakpoint-desktop)) {
     @apply mt-4;
   }
 }

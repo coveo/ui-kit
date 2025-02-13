@@ -107,6 +107,8 @@
   --radius-xl: var(--atomic-border-radius-xl);
 
   --font-sans: var(--atomic-font-family);
+
+  --breakpoint-desktop: 1024px;
 }
 
 @theme {

@@ -40,10 +40,10 @@
         @apply result-with-sections;
 
         &.display-list {
-          @media (min-width: 1024px) {
+          @media (width >= theme(--breakpoint-desktop)) {
             @apply row-result-desktop;
           }
-          @media (max-width: 1023px) {
+          @media (width < theme(--breakpoint-desktop)) {
             @apply row-result-mobile;
           }
         }
@@ -54,20 +54,20 @@
           }
 
           &.image-large {
-            @media (min-width: 1024px) {
+            @media (width >= theme(--breakpoint-desktop)) {
               @apply cell-result-desktop;
             }
-            @media (max-width: 1023px) {
+            @media (width < theme(--breakpoint-desktop)) {
               @apply row-result-mobile;
             }
           }
           &.image-small,
           &.image-icon,
           &.image-none {
-            @media (min-width: 1024px) {
+            @media (width >= theme(--breakpoint-desktop)) {
               @apply cell-result-desktop;
             }
-            @media (max-width: 1023px) {
+            @media (width < theme(--breakpoint-desktop)) {
               @apply cell-result-mobile;
             }
           }
