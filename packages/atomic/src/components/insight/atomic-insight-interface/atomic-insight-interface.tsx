@@ -10,6 +10,7 @@ import {
   Component,
   Element,
   h,
+  Host,
   Listen,
   Method,
   Prop,
@@ -43,7 +44,7 @@ export type InsightBindings = CommonBindings<
 @Component({
   tag: 'atomic-insight-interface',
   styleUrl: 'atomic-insight-interface.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicInsightInterface
   implements BaseAtomicInterface<InsightEngine>
@@ -271,10 +272,10 @@ export class AtomicInsightInterface
   render() {
     return (
       this.engine && (
-        <host>
+        <Host>
           <slot name="full-search"></slot>
           <slot></slot>
-        </host>
+        </Host>
       )
     );
   }
