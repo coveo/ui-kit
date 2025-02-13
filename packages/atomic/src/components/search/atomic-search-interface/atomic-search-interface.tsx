@@ -56,7 +56,7 @@ export type Bindings = _Bindings;
 @Component({
   tag: 'atomic-search-interface',
   styleUrl: 'atomic-search-interface.pcss',
-  shadow: false,
+  shadow: true,
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface
