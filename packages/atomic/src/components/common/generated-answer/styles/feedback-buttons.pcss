@@ -1,15 +1,11 @@
-@utility icon-coloring-* {
-  atomic-icon {
-    color: --value(--atomic- *);
-  }
-}
+@import '../../../../global/global.pcss';
 
 .feedback-buttons {
   [part='feedback-button'] {
     width: 2.2rem;
     height: 2.2rem;
 
-    @apply icon-coloring-neutral-dark;
+    @apply text-neutral-dark;
 
     &.dislike {
       rotate: 180deg;
@@ -18,11 +14,11 @@
     &:hover,
     &.active {
       &.like {
-        @apply icon-coloring-success;
+        @apply text-success;
       }
 
       &.dislike {
-        @apply icon-coloring-error;
+        @apply text-error;
       }
     }
   }
