@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EventSourceMessage } from '../../../utils/fetch-event-source/index.js';
+import {EventSourceMessage} from '../../../utils/fetch-event-source/parse';
 import {
   constructAnswerQueryParams,
   GeneratedAnswerStream,
