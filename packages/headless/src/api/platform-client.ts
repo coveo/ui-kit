@@ -61,11 +61,19 @@ export class PlatformClient {
 
     const {url, ...requestData} = requestInfo;
     const request = async () => {
-      const response = await fetch(url, requestData);
-      if (isThrottled(response.status)) {
-        throw response;
+      try {
+        const response = await fetch(url, requestData);
+        if (isThrottled(response.status)) {
+          throw response;
+        }
+        return response;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+          logger.info('Request aborted');
+        } else {
+          throw error;
+        }
       }
-      return response;
     };
 
     try {
