@@ -4,6 +4,7 @@
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",
+      "!{projectRoot}/cdn",
       "!{projectRoot}/temp",
       "!{workspaceRoot}/packages/atomic/src/external-builds"
     ]
@@ -13,6 +14,7 @@
     "cached:build": {
       "outputs": [
         "{projectRoot}/dist",
+        "{projectRoot}/cdn",
         "{projectRoot}/temp",
         "{workspaceRoot}/packages/atomic/src/external-builds"
       ],
