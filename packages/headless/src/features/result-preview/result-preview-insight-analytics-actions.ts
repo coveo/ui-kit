@@ -4,11 +4,13 @@ import {
   ClickAction,
   analyticsEventItemMetadata,
   documentIdentifier,
-  makeInsightAnalyticsActionFactory,
   partialDocumentInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils.js';
-import {analyticsEventCaseContext} from '../analytics/insight-analytics-utils.js';
+import {
+  analyticsEventCaseContext,
+  makeInsightAnalyticsActionFactory,
+} from '../analytics/insight-analytics-utils.js';
 
 export const logDocumentQuickview = (result: Result): ClickAction => {
   return makeInsightAnalyticsActionFactory('')({

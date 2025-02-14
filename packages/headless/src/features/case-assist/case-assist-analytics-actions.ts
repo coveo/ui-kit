@@ -2,7 +2,7 @@ import {CaseAssist} from '@coveo/relay-event-types';
 import {
   CaseAssistAction,
   makeCaseAssistAnalyticsAction,
-} from '../analytics/analytics-utils.js';
+} from '../analytics/case-assist-analytics-utils.js';
 import {NextStageOptions} from './case-assist-analytics-actions-loader.js';
 import {
   caseAssistCaseSelector,

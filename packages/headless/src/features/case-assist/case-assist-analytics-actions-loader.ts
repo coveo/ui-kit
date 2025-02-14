@@ -1,5 +1,5 @@
 import {CaseAssistEngine} from '../../app/case-assist-engine/case-assist-engine.js';
-import {CaseAssistAction} from '../analytics/analytics-utils.js';
+import {CaseAssistAction} from '../analytics/case-assist-analytics-utils.js';
 import {
   logAbandonCase,
   logCaseNextStage,

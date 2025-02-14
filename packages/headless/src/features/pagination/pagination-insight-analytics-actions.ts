@@ -2,7 +2,7 @@ import {PaginationSection} from '../../state/state-sections.js';
 import {
   makeInsightAnalyticsActionFactory,
   InsightAction,
-} from '../analytics/analytics-utils.js';
+} from '../analytics/insight-analytics-utils.js';
 import {LegacySearchPageEvents} from '../analytics/legacy-search-action-cause.js';
 import {getCaseContextAnalyticsMetadata} from '../case-context/case-context-state.js';
 import {currentPageSelector} from './pagination-selectors.js';

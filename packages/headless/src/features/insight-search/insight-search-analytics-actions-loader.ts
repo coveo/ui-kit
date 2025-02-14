@@ -1,5 +1,5 @@
 import {InsightEngine} from '../../app/insight-engine/insight-engine.js';
-import {InsightAction} from '../analytics/analytics-utils.js';
+import {InsightAction} from '../analytics/insight-analytics-utils.js';
 import {logExpandToFullUI} from './insight-analytics-actions.js';
 import {logContextChanged} from './insight-search-analytics-actions.js';
 

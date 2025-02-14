@@ -1,6 +1,6 @@
 import {DateRangeRequest} from '../../controllers/insight/facets/range-facet/date-facet/headless-insight-date-facet.js';
 import {NumericRangeRequest} from '../../controllers/insight/facets/range-facet/numeric-facet/headless-insight-numeric-facet.js';
-import {InsightAction} from '../analytics/analytics-utils.js';
+import {InsightAction} from '../analytics/insight-analytics-utils.js';
 import {logFacetUnexclude} from '../facets/facet-set/facet-set-analytics-actions.js';
 import {
   logFacetClearAll,

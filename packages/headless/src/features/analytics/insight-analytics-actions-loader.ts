@@ -50,7 +50,7 @@ import {
   StaticFilterValueMetadata,
 } from '../static-filter-set/static-filter-set-actions.js';
 import {logInsightStaticFilterDeselect} from '../static-filter-set/static-filter-set-insight-analytics-actions.js';
-import {InsightAction} from './analytics-utils.js';
+import {InsightAction} from './insight-analytics-utils.js';
 
 export type {
   LogStaticFilterToggleValueActionCreatorPayload,
