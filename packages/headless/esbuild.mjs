@@ -90,7 +90,7 @@ const base = {
 
 const browserEsm = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
-  const outDir = getUseCaseDir('dist/browser', useCase);
+  const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.esm.js`;
 
   let config = {
@@ -113,7 +113,7 @@ const browserEsm = Object.entries(useCaseEntries).map((entry) => {
 
 const browserUmd = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
-  const outDir = getUseCaseDir('dist/browser/', useCase);
+  const outDir = getUseCaseDir('cdn', useCase);
   const outfile = `${outDir}/headless.js`;
 
   const globalName = getUmdGlobalName(useCase);
@@ -301,7 +301,6 @@ const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
       outfile,
       sourcemap: true,
       format: 'esm',
-      external: ['pino'],
       mainFields: ['module', 'main'],
     },
     dir
@@ -317,6 +316,7 @@ async function buildNodeConfig(options, outDir) {
     ...base,
     metafile: true,
     platform: 'node',
+    packages: 'external',
     treeShaking: true,
     plugins: [
       alias({
