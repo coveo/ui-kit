@@ -1,13 +1,13 @@
 @import '../../../../global/global.pcss';
 
 @utility mobile-feedback-modal {
-  [part='container'] {
+  &::part(container) {
     @apply w-auto min-w-full;
   }
 
-  [part='header'],
-  [part='body'],
-  [part='footer'] {
+  &::part(header),
+  &::part(body),
+  &::part(footer) {
     @apply max-w-full;
   }
   [part='buttons'] {
@@ -32,13 +32,13 @@
 }
 
 [part='generated-answer-feedback-modal'] {
-  [part='container'] {
+  &::part(container) {
     @apply min-w-170;
   }
 
-  [part='header'],
-  [part='body'],
-  [part='footer'] {
+  &::part(header),
+  &::part(body),
+  &::part(footer) {
     @apply max-w-170;
   }
 

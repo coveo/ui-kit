@@ -11,19 +11,19 @@
 :host(.popover-nested) {
   @apply min-w-2xs;
 
-  [part='label-button'] {
+  &::part(label-button) {
     @apply hidden;
   }
 
-  [part='facet'] {
+  &::part(facet) {
     @apply shadow-lg;
   }
 
-  [part='values'] {
+  &::part(values) {
     @apply mt-0 max-h-96 overflow-y-auto;
   }
 
-  [part='search-wrapper'] {
+  &::part(search-wrapper) {
     @apply mb-2;
   }
 }
