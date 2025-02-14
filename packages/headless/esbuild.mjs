@@ -10,7 +10,6 @@ const __dirname = dirname(new URL(import.meta.url).pathname).slice(
   process.platform === 'win32' ? 1 : 0
 );
 const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
-console.log(buenoJsonPath);
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const require = createRequire(import.meta.url);
