@@ -18,7 +18,7 @@
   "name": "SSR Commerce",
   "readme": "../COMMERCEREADME.md",
   "entryPoints": ["../../src/ssr-commerce/index.ts"],
-  "gitRevision": "typedoc-POC",
+  "gitRevision": "master",
   "plugin": ["../../typedoc/dist/index.js"],
   "projectDocuments": ["../documents/*.md"]
 }
