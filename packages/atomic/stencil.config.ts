@@ -5,6 +5,7 @@ import {Config} from '@stencil/core';
 import {reactOutputTarget as react} from '@stencil/react-output-target';
 import tailwindcss from '@tailwindcss/postcss';
 import {readFileSync, readdirSync} from 'fs';
+import postcssNested from 'postcss-nested';
 import {PluginImpl} from 'rollup';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
@@ -159,7 +160,7 @@ export const config: Config = {
     // https://github.com/fabriciomendonca/stencil-inline-svg/issues/16
     inlineSvg(),
     postcss({
-      plugins: [tailwindcss()],
+      plugins: [postcssNested(), tailwindcss()],
     }),
     replace(),
   ],
