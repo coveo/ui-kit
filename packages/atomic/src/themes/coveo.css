@@ -57,6 +57,7 @@
   --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 
   --spacing: 0.25rem;
+  --container-lg: 32rem;
   --tw-leading: 1.5;
 }
 
