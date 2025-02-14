@@ -1,0 +1,145 @@
+import {test} from './fixture';
+import {caseClassificationSuggestions, sfDefaultField} from './data';
+
+test.describe('quantic case classification', () => {
+  test.describe('the analytics', () => {
+    test.describe('when case classifications suggestions are received', () => {
+      test('should log propper ticket classification click collect event for the automatically selected suggestion', async ({
+        caseClassification,
+        caseAssist,
+      }) => {
+        const automaticallySelectedSuggestionIndex = 0;
+        const {
+          id: selectedSuggestionId,
+          value: selectedSuggestionValue,
+          confidence: selectedSuggestionConfidence,
+        } = caseClassificationSuggestions[automaticallySelectedSuggestionIndex];
+
+        const automaticallySelectedSuggestionCollectEventPromise =
+          caseClassification.waitForTicketClassificationClickCollectAnalytics({
+            classificationId: selectedSuggestionId,
+            responseId: '123',
+            fieldName: sfDefaultField,
+            classification: {
+              value: selectedSuggestionValue,
+              confidence: selectedSuggestionConfidence,
+            },
+            autoSelection: true,
+          });
+        await caseAssist.fetchClassifications();
+        await automaticallySelectedSuggestionCollectEventPromise;
+      });
+    });
+
+    test.describe('clicking on a case classification suggestion', () => {
+      test('should log propper collect events', async ({
+        caseClassification,
+      }) => {
+        const selectedSuggestionIndex = 1;
+        const {
+          id: selectedSuggestionId,
+          value: selectedSuggestionValue,
+          confidence: selectedSuggestionConfidence,
+        } = caseClassificationSuggestions[selectedSuggestionIndex];
+
+        const selectedSuggestionCollectEventPromise =
+          caseClassification.waitForTicketClassificationClickCollectAnalytics({
+            classificationId: selectedSuggestionId,
+            responseId: '123',
+            fieldName: sfDefaultField,
+            classification: {
+              value: selectedSuggestionValue,
+              confidence: selectedSuggestionConfidence,
+            },
+          });
+        const fieldUpdateCollectEventPromise =
+          caseClassification.waitForTicketFieldUpdateCollectAnalytics({
+            fieldName: sfDefaultField,
+          });
+        await caseClassification.clickCaseClassificationSuggestionAtIndex(1);
+        await selectedSuggestionCollectEventPromise;
+        await fieldUpdateCollectEventPromise;
+      });
+    });
+
+    test.describe('clicking on a case classification option', () => {
+      test('should log propper collect events', async ({
+        caseClassification,
+      }) => {
+        const fieldUpdateCollectEventPromise =
+          caseClassification.waitForTicketFieldUpdateCollectAnalytics({
+            fieldName: sfDefaultField,
+          });
+
+        await caseClassification.clickShowSelectInputButton();
+        await caseClassification.clickallOptionsSelectInput();
+        await caseClassification.clickSelectInputOptionAtIndex(3);
+        await fieldUpdateCollectEventPromise;
+      });
+    });
+  });
+
+  test.describe('when the property fetchClassificationOnChange is set to true', () => {
+    test.use({
+      options: {fetchClassificationOnChange: true},
+    });
+
+    test('should trigger a new classification request when a case classification suggestion is clicked', async ({
+      caseClassification,
+      caseAssist,
+    }) => {
+      const caseClassificationsResponsePromise =
+        caseAssist.waitForCaseClassificationsResponse();
+
+      await caseClassification.clickCaseClassificationSuggestionAtIndex(1);
+
+      await caseClassificationsResponsePromise;
+    });
+
+    test('should trigger a new classification request when a case classification option is clicked', async ({
+      caseClassification,
+      caseAssist,
+    }) => {
+      const caseClassificationsResponsePromise =
+        caseAssist.waitForCaseClassificationsResponse();
+
+      await caseClassification.clickShowSelectInputButton();
+      await caseClassification.clickallOptionsSelectInput();
+      await caseClassification.clickSelectInputOptionAtIndex(3);
+
+      await caseClassificationsResponsePromise;
+    });
+  });
+
+  test.describe('when the property fetchDocumentSuggestionOnChange is set to true', () => {
+    test.use({
+      options: {fetchDocumentSuggestionOnChange: true},
+    });
+
+    test('should trigger a new document suggestions request when a case classification suggestion is clicked', async ({
+      caseClassification,
+      caseAssist,
+    }) => {
+      const documentSuggestionResponsePromise =
+        caseAssist.waitForDocumentSuggestionResponse();
+
+      await caseClassification.clickCaseClassificationSuggestionAtIndex(1);
+
+      await documentSuggestionResponsePromise;
+    });
+
+    test('should trigger a new document suggestions request when a case classification option is clicked', async ({
+      caseClassification,
+      caseAssist,
+    }) => {
+      const documentSuggestionResponsePromise =
+        caseAssist.waitForDocumentSuggestionResponse();
+
+      await caseClassification.clickShowSelectInputButton();
+      await caseClassification.clickallOptionsSelectInput();
+      await caseClassification.clickSelectInputOptionAtIndex(3);
+
+      await documentSuggestionResponsePromise;
+    });
+  });
+});
