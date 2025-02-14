@@ -44,7 +44,7 @@ export interface FetchEventSourceInit extends RequestInit {
    * If this callback is not specified, or it returns undefined, fetchEventSource
    * will treat every error as retryable and will try again after 1 second.
    */
-  onerror?: (err: unknown) => number | null | undefined;
+  onerror?: (err: unknown) => number | null | undefined | void;
 
   /**
    * If true, will keep the request open even if the document is hidden.
