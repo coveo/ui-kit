@@ -11,7 +11,7 @@ export const BreadcrumbContainer: FunctionalComponent<
 > = (props, children) => {
   return (
     <div part="container" class="text-on-background flex text-sm">
-      <span part="label" class="py-[0.625rem] pl-0 pr-2 font-bold">
+      <span part="label" class="py-2.5 pl-0 pr-2 font-bold">
         {props.i18n.t('with-colon', {
           text: props.i18n.t('filters'),
         })}

@@ -16,7 +16,7 @@ export const TriStateCheckbox: FunctionalComponent<TriStateCheckboxProps> = (
   const partName = props.part ?? 'checkbox';
 
   const classNames = [
-    'w-4 h-4 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light',
+    'w-4 h-4 grid place-items-center rounded focus-visible:outline-none hover:border-primary-light focus-visible:border-primary-light',
   ];
   const parts = [partName];
   if (isSelected) {

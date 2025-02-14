@@ -19,7 +19,7 @@ atomic-focus-trap {
 :host(.open) {
   display: block;
 
-  &::part(backdrop) {
+  [part='backdrop'] {
     @apply pointer-events-auto;
     height: inherit;
     max-height: calc(100vh - 4.25rem);
@@ -29,7 +29,7 @@ atomic-focus-trap {
 :host {
   display: none;
 
-  &::part(backdrop) {
+  [part='backdrop'] {
     @apply pointer-events-none;
     height: inherit;
   }

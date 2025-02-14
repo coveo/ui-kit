@@ -30,7 +30,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  */
 @Component({
   tag: 'atomic-commerce-facets',
-  styleUrl: 'atomic-commerce-facets.pcss',
   shadow: false,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {

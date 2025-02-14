@@ -1,7 +1,15 @@
+@import 'tailwindcss';
 @import '../../../global/global.pcss';
 
 [part='backdrop'] {
   @apply pointer-events-none;
+}
+
+article.animate-open {
+  @apply animate-scale-up-modal;
+}
+article.animate-close {
+  @apply animate-slide-down-modal;
 }
 
 atomic-focus-trap {

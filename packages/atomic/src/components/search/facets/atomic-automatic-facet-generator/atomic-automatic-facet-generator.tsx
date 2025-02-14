@@ -28,7 +28,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
  */
 @Component({
   tag: 'atomic-automatic-facet-generator',
-  styleUrl: 'atomic-automatic-facet-generator.pcss',
   shadow: false,
 })
 export class AtomicAutomaticFacetGenerator implements InitializableComponent {
