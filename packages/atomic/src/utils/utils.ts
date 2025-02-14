@@ -1,6 +1,6 @@
-import {getAssetPath} from '@stencil/core';
 import {NODE_TYPES} from '@stencil/core/mock-doc';
 import DOMPurify from 'dompurify';
+import {getResourceUrl} from './resource-url';
 
 /**
  * Returns a function that can be executed only once
@@ -82,6 +82,19 @@ export function containsVisualElement(node: Node) {
     }
   }
   return false;
+}
+
+export function getAssetPath(path: string): string {
+  const resourceUrl = getResourceUrl();
+  const baseUrl =
+    resourceUrl !== undefined
+      ? new URL('./', resourceUrl).href
+      : new URL('./', window.document.baseURI).href;
+  const assetUrl = new URL(path, baseUrl);
+
+  return assetUrl.origin !== window.location.origin
+    ? assetUrl.href
+    : assetUrl.pathname;
 }
 
 export function parseAssetURL(url: string, assetPath = './assets') {
