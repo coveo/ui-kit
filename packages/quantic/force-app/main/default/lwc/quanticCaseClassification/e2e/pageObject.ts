@@ -59,12 +59,11 @@ export class CaseClassificationObject {
   }
 
   async mockCaseClassification(
-    page: Page,
     field: string,
     value: Array<object>,
     responseId?: string
   ) {
-    await page.route(
+    await this.page.route(
       '**/rest/organizations/*/caseassists/*/classify',
       async (route) => {
         await route.fulfill({
@@ -83,8 +82,8 @@ export class CaseClassificationObject {
     );
   }
 
-  async mockSfPicklistValues(page: Page, field: string, values: Array<object>) {
-    await page.route(
+  async mockSfPicklistValues(field: string, values: Array<object>) {
+    await this.page.route(
       '**/aura?*aura.RecordUi.getPicklistValuesByRecordType=1',
       async (route) => {
         const response = await route.fetch();
@@ -112,7 +111,6 @@ export class CaseClassificationObject {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isCollectEvent(request)) {
         const requestBody = request.postDataJSON?.();
-
         if (requestBody.svc_action !== expectedAction) {
           return false;
         }

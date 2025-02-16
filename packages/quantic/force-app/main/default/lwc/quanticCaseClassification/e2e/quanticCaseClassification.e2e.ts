@@ -1,31 +1,35 @@
 import {test} from './fixture';
-import {caseClassificationSuggestions, sfDefaultField} from './data';
+import {caseClassificationSuggestions, coveoDefaultField} from './data';
 
 test.describe('quantic case classification', () => {
   test.describe('the analytics', () => {
-    test.describe('when case classifications suggestions are received', () => {
+    test.describe('when new case classifications suggestions are received', () => {
       test('should log propper ticket classification click collect event for the automatically selected suggestion', async ({
         caseClassification,
         caseAssist,
       }) => {
-        const automaticallySelectedSuggestionIndex = 0;
+        const indexOfNewSuggestion = 1;
         const {
           id: selectedSuggestionId,
           value: selectedSuggestionValue,
           confidence: selectedSuggestionConfidence,
-        } = caseClassificationSuggestions[automaticallySelectedSuggestionIndex];
+        } = caseClassificationSuggestions[indexOfNewSuggestion];
+        caseClassification.mockCaseClassification(coveoDefaultField, [
+          caseClassificationSuggestions[indexOfNewSuggestion],
+        ]);
 
         const automaticallySelectedSuggestionCollectEventPromise =
           caseClassification.waitForTicketClassificationClickCollectAnalytics({
             classificationId: selectedSuggestionId,
             responseId: '123',
-            fieldName: sfDefaultField,
+            fieldName: coveoDefaultField,
             classification: {
               value: selectedSuggestionValue,
               confidence: selectedSuggestionConfidence,
             },
             autoSelection: true,
           });
+
         await caseAssist.fetchClassifications();
         await automaticallySelectedSuggestionCollectEventPromise;
       });
@@ -41,12 +45,11 @@ test.describe('quantic case classification', () => {
           value: selectedSuggestionValue,
           confidence: selectedSuggestionConfidence,
         } = caseClassificationSuggestions[selectedSuggestionIndex];
-
         const selectedSuggestionCollectEventPromise =
           caseClassification.waitForTicketClassificationClickCollectAnalytics({
             classificationId: selectedSuggestionId,
             responseId: '123',
-            fieldName: sfDefaultField,
+            fieldName: coveoDefaultField,
             classification: {
               value: selectedSuggestionValue,
               confidence: selectedSuggestionConfidence,
@@ -54,7 +57,7 @@ test.describe('quantic case classification', () => {
           });
         const fieldUpdateCollectEventPromise =
           caseClassification.waitForTicketFieldUpdateCollectAnalytics({
-            fieldName: sfDefaultField,
+            fieldName: coveoDefaultField,
           });
         await caseClassification.clickCaseClassificationSuggestionAtIndex(1);
         await selectedSuggestionCollectEventPromise;
@@ -68,7 +71,7 @@ test.describe('quantic case classification', () => {
       }) => {
         const fieldUpdateCollectEventPromise =
           caseClassification.waitForTicketFieldUpdateCollectAnalytics({
-            fieldName: sfDefaultField,
+            fieldName: coveoDefaultField,
           });
 
         await caseClassification.clickShowSelectInputButton();

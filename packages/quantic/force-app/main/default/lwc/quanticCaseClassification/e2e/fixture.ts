@@ -31,19 +31,14 @@ export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
     use
   ) => {
     const caseClassificationObject = new CaseClassificationObject(page);
-    caseClassificationObject.mockSfPicklistValues(
-      page,
-      sfDefaultField,
-      allOptions
-    );
+    caseClassificationObject.mockSfPicklistValues(sfDefaultField, allOptions);
     caseClassificationObject.mockCaseClassification(
-      page,
       coveoDefaultField,
       caseClassificationSuggestions
     );
     await page.goto(pageUrl);
     await configuration.configure({...options});
-    await caseClassificationObject.component.waitFor();
+    await caseClassificationObject.allOptionsSelectInput.waitFor();
 
     const caseClassificationsResponsePromise =
       caseAssist.waitForCaseClassificationsResponse();
