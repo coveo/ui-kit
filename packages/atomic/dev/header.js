@@ -27,11 +27,12 @@ const getCurrentExample = () =>
   links.find((link) => link.href === window.location.pathname);
 
 const makeLinks = () => {
+  const currentExample = getCurrentExample();
   return links
     .map(
       (link) =>
         `<li>
-           <a href="${link.href}">${link.label}</a>
+           <a href="${link.href}" style="${currentExample && currentExample.href === link.href ? 'font-weight: bold;' : ''}">${link.label}</a>
          </li>`
     )
     .join('');
@@ -47,7 +48,8 @@ styleTag.innerHTML = `
   }
 
   body{
-  margin: 0;}
+  margin: 0;
+  padding: 0;}
 
   header {
   min-height: 130px;
