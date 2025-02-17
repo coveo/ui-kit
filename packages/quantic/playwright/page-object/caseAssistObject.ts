@@ -1,4 +1,8 @@
 import {Page, Locator, Response} from '@playwright/test';
+import {
+  classifyRequestRegex,
+  documentsSuggestRequestRegex,
+} from '../utils/requests';
 
 export class CaseAssistObject {
   constructor(private page: Page) {
@@ -14,14 +18,10 @@ export class CaseAssistObject {
   }
 
   async waitForCaseClassificationsResponse(): Promise<Response> {
-    return this.page.waitForResponse(
-      '**/rest/organizations/*/caseassists/*/classify'
-    );
+    return this.page.waitForResponse(classifyRequestRegex);
   }
 
   async waitForDocumentSuggestionResponse(): Promise<Response> {
-    return this.page.waitForResponse(
-      '**/rest/organizations/*/caseassists/*/documents/suggest'
-    );
+    return this.page.waitForResponse(documentsSuggestRequestRegex);
   }
 }

@@ -1,7 +1,7 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {isCollectEvent} from '../../../../../../playwright/utils/requests';
 
-const caseClassificationElementsSelectors = {
+const elementsSelectors = {
   component: 'c-quantic-case-classification',
   caseClassificationSuggestionTestId: 'case-classification-suggestion',
   showSelectInputButtonTestId: 'show-select-input-button',
@@ -15,30 +15,34 @@ export class CaseClassificationObject {
   }
 
   get component(): Locator {
-    return this.page.locator(caseClassificationElementsSelectors.component);
+    return this.page.locator(elementsSelectors.component);
   }
 
   get caseClassificationSuggestions(): Locator {
     return this.component.getByTestId(
-      caseClassificationElementsSelectors.caseClassificationSuggestionTestId
+      elementsSelectors.caseClassificationSuggestionTestId
     );
   }
 
   get showSelectInputButton(): Locator {
     return this.component.getByTestId(
-      caseClassificationElementsSelectors.showSelectInputButtonTestId
+      elementsSelectors.showSelectInputButtonTestId
     );
   }
 
   get allOptionsSelectInput(): Locator {
     return this.component.getByTestId(
-      caseClassificationElementsSelectors.allOptionsSelectInputTestId
+      elementsSelectors.allOptionsSelectInputTestId
     );
   }
 
   get selectInputOption(): Locator {
+    return this.component.locator(elementsSelectors.selectInputOption);
+  }
+
+  get selectedSuggestion(): Locator {
     return this.component.locator(
-      caseClassificationElementsSelectors.selectInputOption
+      `[data-testid="${elementsSelectors.caseClassificationSuggestionTestId}"] > input:checked`
     );
   }
 
