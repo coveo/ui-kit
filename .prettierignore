@@ -11,6 +11,7 @@ utils/**/.storybook/**
 **/.angular/**
 **/.next/**
 **/www/**
+**/cdn/**
 scripts/deploy/execute-deployment-pipeline.mjs
 **/staticresources/**
 packages/atomic-hosted-page/loader/**/*
