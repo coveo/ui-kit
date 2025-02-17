@@ -1,6 +1,7 @@
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   setAnswerContentFormat,
+  setCannotAnswer,
   updateCitations,
   updateMessage,
 } from '../../features/generated-answer/generated-answer-actions.js';
@@ -223,6 +224,11 @@ export const answerApi = answerSlice.injectEndpoints({
             },
             onerror: (error) => {
               throw error;
+            },
+            onclose: () => {
+              updateCachedData((draft) => {
+                dispatch(setCannotAnswer(!draft.generated));
+              });
             },
           }
         );

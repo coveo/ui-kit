@@ -1,3 +1,8 @@
+## 3.16.0 (2025-02-17)
+
+- feat(headless): add has no answer state to crga state (#4961) ([d1f0e7b](https://github.com/coveo/ui-kit/commits/d1f0e7b)), closes [#4961](https://github.com/coveo/ui-kit/issues/4961)
+- docs(headless,headless-react): typedoc styling update and link fix (#4963) ([22a8bea](https://github.com/coveo/ui-kit/commits/22a8bea)), closes [#4963](https://github.com/coveo/ui-kit/issues/4963)
+
 ## <small>3.15.1 (2025-02-12)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
