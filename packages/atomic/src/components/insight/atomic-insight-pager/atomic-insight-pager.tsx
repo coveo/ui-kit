@@ -91,7 +91,7 @@ export class AtomicInsightPager
 
   public render() {
     return (
-      <Host class="bg-neutral-light box-content flex h-full items-center justify-center px-6 py-4">
+      <Host>
         <PagerNavigation i18n={this.bindings.i18n}>
           <PagerPreviousButton
             icon={ArrowLeftIcon}

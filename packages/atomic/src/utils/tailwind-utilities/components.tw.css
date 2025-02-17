@@ -1,5 +1,5 @@
 @import 'tailwindcss/theme' theme(reference);
-@import './coveo.tw.css' theme(reference);
+@import '../coveo.tw.css' theme(reference);
 
 @layer components {
   .input-primary {
@@ -60,48 +60,5 @@
     &.selected {
       @apply border-primary border-2 font-bold;
     }
-  }
-}
-
-@utility aspect-square-* {
-  aspect-ratio: 1/1;
-  height: auto;
-
-  @supports not (aspect-ratio: 1/1) {
-    height: --value([ *]);
-  }
-}
-
-@utility hide-scrollbar {
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-  }
-}
-
-@utility set-font-size-* {
-  --font-size: --value(--text- *);
-  font-size: var(--font-size);
-  --line-height: calc(var(--font-size) * var(--atomic-line-height-ratio));
-  line-height: var(--line-height);
-}
-
-@utility link-style {
-  @apply text-on-background;
-
-  &:hover,
-  &:focus-visible {
-    text-decoration: underline;
-    @apply text-primary;
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:visited {
-    @apply text-visited;
   }
 }
