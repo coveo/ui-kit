@@ -1,6 +1,6 @@
 {
   "type": "module",
   "devDependencies": {
-    "typedoc": "0.27.6"
+    "typedoc": "0.27.7"
   }
 }
