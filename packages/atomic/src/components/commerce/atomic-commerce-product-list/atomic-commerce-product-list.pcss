@@ -38,7 +38,7 @@
     }
   }
 
-  @media (width < theme(--breakpoint-desktop)) {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     .result-grid {
       display: flex;
       flex-direction: column;

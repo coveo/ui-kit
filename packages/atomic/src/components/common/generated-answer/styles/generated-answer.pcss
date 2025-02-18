@@ -52,7 +52,7 @@
   @container (max-width: 37.5rem) {
     @apply mobile-footer-layout;
   }
-  @media (width < theme(--breakpoint-desktop)) {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     @apply mobile-footer-layout;
   }
   @container (max-width: 25rem) {
@@ -65,7 +65,7 @@
     @apply mobile-generated-answer-footer-layout;
   }
 
-  @media (width < theme(--breakpoint-desktop)) {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     @apply mobile-generated-answer-footer-layout;
   }
 }

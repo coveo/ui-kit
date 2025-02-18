@@ -45,7 +45,7 @@
           @media (width >= theme(--breakpoint-desktop)) {
             @apply row-result-desktop;
           }
-          @media (width < theme(--breakpoint-desktop)) {
+          @media not all and (width >= theme(--breakpoint-desktop)) {
             @apply row-result-mobile;
           }
         }
@@ -59,7 +59,7 @@
             @media (width >= theme(--breakpoint-desktop)) {
               @apply cell-result-desktop;
             }
-            @media (width < theme(--breakpoint-desktop)) {
+            @media not all and (width >= theme(--breakpoint-desktop)) {
               @apply row-result-mobile;
             }
           }
@@ -69,7 +69,7 @@
             @media (width >= theme(--breakpoint-desktop)) {
               @apply cell-result-desktop;
             }
-            @media (width < theme(--breakpoint-desktop)) {
+            @media not all and (width >= theme(--breakpoint-desktop)) {
               @apply cell-result-mobile;
             }
           }
