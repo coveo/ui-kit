@@ -45,6 +45,7 @@ export class AtomicIcon
     TailwindLitElement.styles,
     unsafeCSS(styles),
   ];
+  static iconMap: WeakRef<Map<string, string>>;
   /**
    * The SVG icon to display.
    *
@@ -59,7 +60,22 @@ export class AtomicIcon
   @state()
   private svg: string | null = null;
 
+  private _iconMap: Map<string, string>;
+
+  constructor() {
+    super();
+    let candidateIconMap = AtomicIcon.iconMap?.deref();
+    if (!candidateIconMap) {
+      candidateIconMap = new Map<string, string>();
+      AtomicIcon.iconMap = new WeakRef(candidateIconMap);
+    }
+    this._iconMap = candidateIconMap;
+  }
+
   private async fetchIcon(url: string) {
+    if (this._iconMap.has(url)) {
+      return this._iconMap.get(url);
+    }
     try {
       const response = await fetch(url).catch((e) => {
         throw IconFetchError.fromError(url, e);
@@ -71,7 +87,9 @@ export class AtomicIcon
           response.statusText
         );
       }
-      return await response.text();
+      const svg = await response.text();
+      this._iconMap.set(url, svg);
+      return svg;
     } catch (e) {
       this.error = e as Error;
       this.requestUpdate();
