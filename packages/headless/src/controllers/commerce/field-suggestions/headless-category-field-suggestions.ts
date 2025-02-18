@@ -5,13 +5,19 @@ import {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   CategoryFacetSearchSection,
   CommerceFacetSetSection,
+  CommerceQuerySection,
   FacetSearchSection,
   FieldSuggestionsOrderSection,
 } from '../../../state/state-sections.js';
@@ -20,6 +26,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller.js';
+import {CategoryFacetSearchResult} from '../../facets/category-facet/headless-category-facet.js';
 import {
   CategoryFieldSuggestionsState as CoreCategoryFieldSuggestionsState,
   CategoryFieldSuggestionsValue,
@@ -60,11 +67,6 @@ export interface CategoryFieldSuggestions
   updateText(text: string): void;
 
   /**
-   * Requests field suggestions based on a query.
-   */
-  search(): void;
-
-  /**
    * Filters the search using the specified value.
    *
    * If a facet exists with the configured `facetId`, selects the corresponding facet value.
@@ -72,6 +74,14 @@ export interface CategoryFieldSuggestions
    * @param value - The field suggestion to select.
    */
   select(value: CategoryFieldSuggestionsValue): void;
+
+  /**
+   * Returns a serialized query for the specified value.
+   *
+   * @param value - The field suggestion for which to select the matching facet value.
+   * @returns A serialized query for the specified value.
+   */
+  getRedirectionParameters(value: CategoryFacetSearchResult): string;
 
   /**
    * Resets the query and empties the suggestions.
@@ -94,7 +104,7 @@ export function buildCategoryFieldSuggestions(
   engine: CommerceEngine,
   options: CategoryFacetOptions
 ): CategoryFieldSuggestions {
-  if (!loadFieldSuggestionsReducers(engine)) {
+  if (!loadCategoryFieldSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -107,23 +117,19 @@ export function buildCategoryFieldSuggestions(
     options: {
       facetId: namespacedFacetId,
       ...options.facetSearch,
-      numberOfValues: 10,
     },
-    select: () => {
-      dispatch(options.fetchProductsActionCreator());
-    },
+    select: () => {},
     isForFieldSuggestions: true,
   });
 
   const getState = () => engine[stateKey];
 
-  const getFacetForFieldSuggestions = (facetId: string) => {
-    return getState().fieldSuggestionsOrder.find(
-      (facet) => facet.facetId === facetId
-    )!;
-  };
-
   const controller = buildController(engine);
+
+  const facetForFieldSuggestionsSelector = createSelector(
+    (state: CommerceEngineState) => state.fieldSuggestionsOrder,
+    (facets) => facets.find((facet) => facet.facetId === options.facetId)!
+  );
 
   const facetSearchStateSelector = createSelector(
     (state: CommerceEngineState) =>
@@ -135,9 +141,35 @@ export function buildCategoryFieldSuggestions(
       values: facetSearch.response.values,
     })
   );
+
+  const {clear} = facetSearch;
+
   return {
     ...controller,
-    ...facetSearch,
+
+    clear,
+
+    getRedirectionParameters: function (value: CategoryFacetSearchResult) {
+      return searchSerializer.serialize({
+        q: facetSearchStateSelector(getState()).query,
+        cf: {[options.facetId]: [...value.path, value.rawValue]},
+      });
+    },
+
+    select: function (value: CategoryFacetSearchResult) {
+      dispatch(clearAllCoreFacets());
+      dispatch(
+        selectCategoryFacetSearchResult({facetId: options.facetId, value})
+      );
+      dispatch(
+        updateQuery({
+          query:
+            engine[stateKey].categoryFacetSearchSet[namespacedFacetId].options
+              .query,
+        })
+      );
+      dispatch(options.fetchProductsActionCreator());
+    },
 
     updateText: function (text: string) {
       facetSearch.updateText(text);
@@ -145,11 +177,12 @@ export function buildCategoryFieldSuggestions(
     },
 
     get state() {
-      const facet = getFacetForFieldSuggestions(options.facetId);
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
-        displayName: facet.displayName,
-        field: facet.field,
-        facetId: facet.facetId,
+        displayName,
+        field,
+        facetId,
         ...facetSearchStateSelector(getState()),
       };
     },
@@ -158,18 +191,20 @@ export function buildCategoryFieldSuggestions(
   };
 }
 
-function loadFieldSuggestionsReducers(
+function loadCategoryFieldSuggestionsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<
-  FieldSuggestionsOrderSection &
+  CategoryFacetSearchSection &
     CommerceFacetSetSection &
-    CategoryFacetSearchSection &
-    FacetSearchSection
+    CommerceQuerySection &
+    FacetSearchSection &
+    FieldSuggestionsOrderSection
 > {
   engine.addReducers({
-    fieldSuggestionsOrder,
     categoryFacetSearchSet,
     commerceFacetSet,
+    commerceQuery,
+    fieldSuggestionsOrder,
   });
   return true;
 }
