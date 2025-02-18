@@ -2,18 +2,26 @@ import {
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   InstantProducts as HeadlessInstantProducts,
   Suggestion,
+  FieldSuggestionsGenerator as HeadlessFieldSuggestionsGenerator,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
+import FieldSuggestionsGenerator from '../field-suggestions/field-suggestions-generator.js';
 import InstantProducts from '../instant-products/instant-products.js';
 
 interface IStandaloneSearchBoxProps {
   navigate: (url: string) => void;
   controller: HeadlessStandaloneSearchBox;
   instantProductsController: HeadlessInstantProducts;
+  fieldSuggestionsGeneratorController: HeadlessFieldSuggestionsGenerator;
 }
 
 export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
-  const {navigate, controller, instantProductsController} = props;
+  const {
+    navigate,
+    controller,
+    instantProductsController,
+    fieldSuggestionsGeneratorController,
+  } = props;
 
   const [state, setState] = useState(controller.state);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -54,6 +62,9 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
     }
 
     controller.updateText(e.target.value);
+    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+      fieldSuggestion.updateText(e.target.value);
+    }
     instantProductsController.updateQuery(e.target.value);
     controller.showSuggestions();
     showDropdown();
@@ -70,7 +81,10 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
         }
         if (state.value !== '') {
           controller.clear();
-          instantProductsController.updateQuery(state.value);
+          for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+            fieldSuggestion.clear();
+          }
+          instantProductsController.updateQuery('');
           break;
         }
         break;
@@ -87,6 +101,9 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
     focusSearchBoxInput();
     hideDropdown();
     controller.clear();
+    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+      fieldSuggestion.clear();
+    }
     instantProductsController.updateQuery(state.value);
   };
 
@@ -97,6 +114,9 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
   };
 
   const onFocusSuggestion = (suggestion: Suggestion) => {
+    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+      fieldSuggestion.updateText(suggestion.rawValue);
+    }
     instantProductsController.updateQuery(suggestion.rawValue);
   };
 
@@ -131,10 +151,19 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
           </div>
         )}
 
-        <div className="InstantProducts column">
+        <div className="InstantProducts column small">
           <InstantProducts
             controller={instantProductsController}
             navigate={navigate}
+          />
+        </div>
+
+        <div className="FieldSuggestions column small">
+          <FieldSuggestionsGenerator
+            controllers={fieldSuggestionsGeneratorController.fieldSuggestions}
+            hideDropdowns={hideDropdown}
+            navigate={navigate}
+            redirect={'/search'}
           />
         </div>
       </div>
