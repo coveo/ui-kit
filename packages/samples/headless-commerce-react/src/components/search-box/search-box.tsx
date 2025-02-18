@@ -2,18 +2,26 @@ import {
   SearchBox as HeadlessSearchBox,
   InstantProducts as HeadlessInstantProducts,
   Suggestion,
+  FieldSuggestionsGenerator as HeadlessFieldSuggestionsGenerator,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
+import FieldSuggestionsGenerator from '../field-suggestions/field-suggestions-generator.js';
 import InstantProducts from '../instant-products/instant-products.js';
 
 interface ISearchBoxProps {
   controller: HeadlessSearchBox;
   instantProductsController: HeadlessInstantProducts;
+  fieldSuggestionsGeneratorController: HeadlessFieldSuggestionsGenerator;
   navigate: (pathName: string) => void;
 }
 
 export default function SearchBox(props: ISearchBoxProps) {
-  const {controller, instantProductsController, navigate} = props;
+  const {
+    controller,
+    instantProductsController,
+    fieldSuggestionsGeneratorController,
+    navigate,
+  } = props;
 
   const [state, setState] = useState(controller.state);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -45,6 +53,9 @@ export default function SearchBox(props: ISearchBoxProps) {
 
     controller.updateText(e.target.value);
     instantProductsController.updateQuery(e.target.value);
+    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+      fieldSuggestion.updateText(e.target.value);
+    }
     controller.showSuggestions();
     showDropdown();
   };
@@ -61,6 +72,9 @@ export default function SearchBox(props: ISearchBoxProps) {
         if (state.value !== '') {
           controller.clear();
           instantProductsController.updateQuery(state.value);
+          for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+            fieldSuggestion.clear();
+          }
           break;
         }
         break;
@@ -78,6 +92,9 @@ export default function SearchBox(props: ISearchBoxProps) {
     hideDropdown();
     controller.clear();
     instantProductsController.updateQuery(state.value);
+    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
+      fieldSuggestion.clear();
+    }
   };
 
   const onClickSearchBoxSubmit = () => {
@@ -127,6 +144,13 @@ export default function SearchBox(props: ISearchBoxProps) {
             navigate={navigate}
           />
         </div>
+
+        <div className="FieldSuggestions column">
+          <FieldSuggestionsGenerator
+            controllers={fieldSuggestionsGeneratorController.fieldSuggestions}
+            hideDropdowns={hideDropdown}
+          />
+        </div>
       </div>
     );
   };
@@ -136,7 +160,7 @@ export default function SearchBox(props: ISearchBoxProps) {
       <input
         className="SearchBoxInput"
         id="search-box"
-        onChange={onSearchBoxInputChange}
+        onInput={onSearchBoxInputChange}
         onKeyDown={onSearchBoxInputKeyDown}
         ref={searchInputRef}
         value={state.value}
