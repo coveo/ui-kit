@@ -52,9 +52,13 @@ const GENERATED_ANSWER_DATA_KEY = 'coveo-generated-answer-data';
 
 /**
  * The `QuanticGeneratedAnswer` component automatically generates an answer using Coveo machine learning models to answer the query executed by the user.
+ * This component includes a slot, "no-answer-message", which allows for rendering a custom message when no answer is generated.
  * @category Search
+ * @slot no-answer-message - Slot that allows the rendering of a custom message when no answer is generated.
  * @example
- * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible></c-quantic-generated-answer>
+ * <c-quantic-generated-answer engine-id={engineId} with-toggle collapsible>
+ *  <div slot="no-answer-message">No answer was generated.</div>
+ * </c-quantic-generated-answer>
  */
 export default class QuanticGeneratedAnswer extends LightningElement {
   /**
@@ -571,6 +575,20 @@ export default class QuanticGeneratedAnswer extends LightningElement {
 
   get isExpanded() {
     return this.state?.expanded;
+  }
+
+  /**
+   * Returns whether the component has a custom message to display when no answer is generated.
+   * @returns {boolean}
+   */
+  get hasCustomNoAnswerMessage() {
+    /** @type {HTMLSlotElement} */
+    const slot = this.template.querySelector('slot[name="no-answer-message"]');
+    return !!slot?.assignedNodes()?.length;
+  }
+
+  get shouldDisplayNoAnswerMessage() {
+    return !!this.state?.cannotAnswer && this.hasCustomNoAnswerMessage;
   }
 
   /**
