@@ -129,6 +129,10 @@ styleTag.innerHTML = `
     padding: 2px 4px;
   }
 
+  #theme-toggle:hover {
+    background-color: rgb(240,240,240);
+  }
+
   #theme-toggle:after {
     margin-left: 5px;
     content: "✗";
