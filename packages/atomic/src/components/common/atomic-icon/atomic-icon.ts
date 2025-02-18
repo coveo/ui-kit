@@ -41,6 +41,10 @@ export class AtomicIcon
   extends InitializeBindingsMixin(TailwindLitElement)
   implements InitializableComponent<AnyBindings>
 {
+  static styles: CSSResultGroup = [
+    TailwindLitElement.styles,
+    unsafeCSS(styles),
+  ];
   /**
    * The SVG icon to display.
    *
@@ -50,17 +54,10 @@ export class AtomicIcon
    */
   @property({type: String}) icon: string = '';
 
+  @state() bindings?: AnyBindings;
+  @state() error?: Error;
   @state()
   private svg: string | null = null;
-  @state() error?: Error;
-
-  static styles: CSSResultGroup = [
-    TailwindLitElement.styles,
-    unsafeCSS(styles),
-  ];
-
-  @state()
-  public bindings?: AnyBindings;
 
   private async fetchIcon(url: string) {
     try {
@@ -104,7 +101,6 @@ export class AtomicIcon
     if (svg) {
       this.validateSVG(svg);
     }
-
     const sanitizedSvg = svg
       ? DOMPurify.sanitize(svg, {
           USE_PROFILES: {svg: true, svgFilters: true},
@@ -113,14 +109,14 @@ export class AtomicIcon
     return sanitizedSvg;
   }
 
-  public initialize() {
-    this.updateIcon();
-  }
-
   @watch('icon')
   public async updateIcon() {
     const svgPromise = this.getIcon();
     this.svg = await svgPromise;
+  }
+
+  public initialize() {
+    this.updateIcon();
   }
 
   @bindingGuard()
