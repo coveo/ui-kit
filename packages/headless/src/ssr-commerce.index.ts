@@ -155,6 +155,7 @@ export type {
   CategoryFacetState,
   CategoryFacetValue,
   CategoryFacetSearchResult,
+  CoreCommerceFacet,
   DateFacet,
   DateFacetValue,
   DateFacetState,
@@ -169,6 +170,7 @@ export type {
   MappedGeneratedFacetController,
   MappedFacetStates,
   MappedFacetState,
+  LocationFacet,
   LocationFacetValue,
   LocationFacetState,
   FacetType,
@@ -179,6 +181,8 @@ export type {
   Pagination,
   PaginationProps,
   PaginationState,
+  PaginationOptions,
+  CorePaginationOptions,
 } from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
 export {definePagination} from './controllers/commerce/core/pagination/headless-core-commerce-pagination.ssr.js';
 

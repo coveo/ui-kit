@@ -49,7 +49,7 @@ import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 

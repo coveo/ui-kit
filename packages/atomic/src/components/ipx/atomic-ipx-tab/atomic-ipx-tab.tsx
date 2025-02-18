@@ -5,8 +5,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
 import {createAppLoadedListener} from '../../common/interface/store';
+import {Button} from '../../common/stencil-button';
 import {dispatchTabLoaded} from '../../common/tabs/tab-common';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 

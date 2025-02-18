@@ -1,5 +1,5 @@
 import {Component, Host, Prop, h} from '@stencil/core';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 /**
  * @internal

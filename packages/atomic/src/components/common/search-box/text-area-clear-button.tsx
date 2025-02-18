@@ -1,9 +1,9 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import ClearSlim from '../../../images/clear-slim.svg';
-import {Button, ButtonProps} from '../button';
 import {AnyBindings} from '../interface/bindings';
+import {Button, StencilButtonProps} from '../stencil-button';
 
-interface Props extends Partial<ButtonProps> {
+interface Props extends Partial<StencilButtonProps> {
   bindings: AnyBindings;
   inputRef: HTMLInputElement | HTMLTextAreaElement | null;
 }

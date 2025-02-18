@@ -10,9 +10,6 @@ function replaceMediaQuery(style: string, mobileBreakpoint: string) {
 }
 
 function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {
-  // Not adopted by all browsers, not part of Typescript yet
-  // https://caniuse.com/mdn-api_document_adoptedstylesheets
-  // https://github.com/microsoft/TypeScript/issues/30022
   const stylesheets = element.shadowRoot?.adoptedStyleSheets;
   if (!stylesheets || !stylesheets.length) {
     return;
@@ -22,7 +19,7 @@ function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {
   const style = Object.values(stylesheet.cssRules)
     .map((rule) => rule.cssText)
     .join('');
-  stylesheet.replaceSync?.(replaceMediaQuery(style, mobileBreakpoint));
+  stylesheet.replaceSync(replaceMediaQuery(style, mobileBreakpoint));
 }
 
 function replateStyleContent(element: HTMLElement, breakpoint: string) {

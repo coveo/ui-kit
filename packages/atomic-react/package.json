@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.2.17",
+  "version": "3.2.19",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.18.0",
+    "@coveo/atomic": "3.19.1",
     "@lit/react": "1.0.6",
     "lit": "3.2.1"
   },
@@ -38,17 +38,17 @@
     "@coveo/release": "1.0.0",
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-typescript": "12.1.2",
-    "@types/node": "22.12.0",
+    "@types/node": "22.13.1",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "fix-esm-import-path": "1.10.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "rollup": "4.31.0",
+    "rollup": "4.34.2",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.15.0",
+    "@coveo/headless": "3.16.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

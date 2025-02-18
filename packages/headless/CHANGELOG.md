@@ -1,3 +1,17 @@
+## 3.16.0 (2025-02-17)
+
+- feat(headless): add has no answer state to crga state (#4961) ([d1f0e7b](https://github.com/coveo/ui-kit/commits/d1f0e7b)), closes [#4961](https://github.com/coveo/ui-kit/issues/4961)
+- docs(headless,headless-react): typedoc styling update and link fix (#4963) ([22a8bea](https://github.com/coveo/ui-kit/commits/22a8bea)), closes [#4963](https://github.com/coveo/ui-kit/issues/4963)
+
+## <small>3.15.1 (2025-02-12)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+- fix(headless commerce): handle action dispatched by renew access token middleware in commerce config ([e1e1f71](https://github.com/coveo/ui-kit/commits/e1e1f71)), closes [#4947](https://github.com/coveo/ui-kit/issues/4947)
+- chore(deps): update vite to v2.1.9 j:kit-282 (#4956) ([ab2acbd](https://github.com/coveo/ui-kit/commits/ab2acbd)), closes [#4956](https://github.com/coveo/ui-kit/issues/4956)
+- docs(headless-react): more facet docs (#4952) ([fa6a88d](https://github.com/coveo/ui-kit/commits/fa6a88d)), closes [#4952](https://github.com/coveo/ui-kit/issues/4952)
+- docs(headless-react): pagination typedoc reference (#4949) ([c9cae30](https://github.com/coveo/ui-kit/commits/c9cae30)), closes [#4949](https://github.com/coveo/ui-kit/issues/4949)
+- docs(headless,headless-react): support OneTrust preferences in typedoc sites (#4942) ([c353e4d](https://github.com/coveo/ui-kit/commits/c353e4d)), closes [#4942](https://github.com/coveo/ui-kit/issues/4942)
+
 ## 3.15.0 (2025-02-05)
 
 - chore(headless): make ssr-commerce definers public (#4929) ([a6add1d](https://github.com/coveo/ui-kit/commits/a6add1d)), closes [#4929](https://github.com/coveo/ui-kit/issues/4929)

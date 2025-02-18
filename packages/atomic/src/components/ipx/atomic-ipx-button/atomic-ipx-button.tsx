@@ -6,7 +6,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
+import {Button} from '../../common/stencil-button';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 const numberOrPixelValuePattern = new RegExp(/^(?=.*(?:\d+|px)$).*$/);

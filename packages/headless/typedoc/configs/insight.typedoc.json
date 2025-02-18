@@ -16,6 +16,6 @@
   "name": "Insight",
   "readme": "none",
   "entryPoints": ["../../src/insight.index.ts"],
-  "gitRevision": "typedoc-POC",
+  "gitRevision": "master",
   "plugin": ["../../typedoc/dist/index.js"]
 }

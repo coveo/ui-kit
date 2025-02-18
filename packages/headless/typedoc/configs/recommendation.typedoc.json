@@ -16,6 +16,6 @@
   "name": "Recommendation",
   "readme": "none",
   "entryPoints": ["../../src/recommendation.index.ts"],
-  "gitRevision": "typedoc-POC",
+  "gitRevision": "master",
   "plugin": ["../../typedoc/dist/index.js"]
 }

@@ -74,6 +74,24 @@ export const RecsWithFullTemplate: Story = {
   },
 };
 
+export const RecsOpeningInNewTab: Story = {
+  tags: ['test'],
+  args: {
+    'slots-default': `<atomic-recs-result-template>
+            <template slot="link">
+              <atomic-result-link>
+                <a slot="attributes" target="_blank"></a>
+              </atomic-result-link>
+            </template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-text field="title"></atomic-result-text>
+              </atomic-result-section-title>
+            </template>
+          </atomic-recs-result-template>`,
+  },
+};
+
 export const RecsAsCarousel: Story = {
   args: {
     'attributes-number-of-recommendations-per-page': 4,

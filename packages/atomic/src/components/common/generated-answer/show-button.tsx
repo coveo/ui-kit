@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import ArrowBottomIcon from '../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../images/arrow-top-rounded.svg';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 interface ShowButtonProps {
   i18n: i18n;

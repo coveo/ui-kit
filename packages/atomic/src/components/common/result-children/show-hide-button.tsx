@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 interface ShowHideButtonProps {
   moreResultsAvailable: boolean;

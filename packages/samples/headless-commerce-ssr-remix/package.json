@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.4.5",
+    "@coveo/headless-react": "2.4.7",
     "@remix-run/node": "2.15.2",
     "@remix-run/react": "2.15.2",
     "@remix-run/serve": "2.15.2",
@@ -18,7 +18,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@coveo/relay-event-types": "13.1.0",
+    "@coveo/relay-event-types": "13.1.3",
     "@remix-run/dev": "2.15.2",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",

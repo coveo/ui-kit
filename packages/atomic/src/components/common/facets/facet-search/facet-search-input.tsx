@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import CloseIcon from '../../../../images/close.svg';
 import SearchIcon from '../../../../images/search.svg';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 
 interface FacetSearchInputProps {
   label: string;

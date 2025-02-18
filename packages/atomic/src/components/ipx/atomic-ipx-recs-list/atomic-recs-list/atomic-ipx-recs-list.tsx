@@ -21,12 +21,6 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
-import {
-  ItemRenderingFunction,
-  ItemDisplayBasicLayout,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-} from '../../../../components';
 import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   InitializableComponent,
@@ -36,14 +30,22 @@ import {
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../../common/carousel';
-import {Heading} from '../../../common/heading';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
-import {ItemListCommon} from '../../../common/item-list/item-list-common';
+import {
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
-import {getItemListDisplayClasses} from '../../../common/layout/display-options';
+import {
+  getItemListDisplayClasses,
+  ItemDisplayBasicLayout,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+} from '../../../common/layout/display-options';
+import {Heading} from '../../../common/stencil-heading';
 import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 
 /**
@@ -345,6 +347,9 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
     interactiveResult.select = () => {
       this.onSelect(recommendation, originalSelect);
     };
+    const linkContent =
+      this.itemTemplateProvider.getLinkTemplateContent(recommendation);
+
     return {
       interactiveResult,
       result: recommendation,
@@ -357,8 +362,8 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(recommendation),
-      linkContent:
-        this.itemTemplateProvider.getLinkTemplateContent(recommendation),
+      linkContent,
+      stopPropagation: !!linkContent,
       store: this.bindings.store,
       density: this.density,
       display: this.display,

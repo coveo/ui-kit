@@ -5,8 +5,10 @@ import {fileURLToPath} from 'node:url';
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent, Converter} from 'typedoc';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
+import {insertBetaNote} from './insertBetaNote.js';
 import {insertCoveoLogo} from './insertCoveoLogo.js';
 import {insertCustomComments} from './insertCustomComments.js';
+import {insertOneTrust} from './insertOneTrust.js';
 import {insertSurveyLink} from './insertSurveyLink.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -36,8 +38,14 @@ export function load(app: Application) {
         <JSX.Raw html={`(${insertSurveyLink.toString()})();`} />
       </script>
       <script>
+        <JSX.Raw html={`(${insertOneTrust.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
+      </script>
+      <script>
         <JSX.Raw
-          html={`(${insertCoveoLogo.toString()})('${event.relativeURL('assets/coveo-docs-logo.svg')}');`}
+          html={`(${insertCoveoLogo.toString()})('${event.relativeURL('assets')}');`}
         />
       </script>
     </>
@@ -52,6 +60,10 @@ export function load(app: Application) {
       {
         from: resolve(__dirname, '../assets/coveo-docs-logo.svg'),
         to: resolve(app.options.getValue('out'), 'assets/coveo-docs-logo.svg'),
+      },
+      {
+        from: resolve(__dirname, '../assets/favicon.ico'),
+        to: resolve(app.options.getValue('out'), 'assets/favicon.ico'),
       },
     ];
 

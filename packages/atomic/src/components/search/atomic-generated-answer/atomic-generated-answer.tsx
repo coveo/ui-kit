@@ -21,7 +21,7 @@ import {
 import {ArrayProp} from '../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
-import {Hidden} from '../../common/hidden';
+import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -121,7 +121,6 @@ export class AtomicGeneratedAnswer implements InitializableComponent {
   @Prop() maxCollapsedHeight = this.DEFAULT_COLLAPSED_HEIGHT;
 
   /**
-   * @internal
    * The unique identifier of the answer configuration to use to generate the answer.
    */
   @Prop() answerConfigurationId?: string;

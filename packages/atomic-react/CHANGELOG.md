@@ -1,3 +1,7 @@
+## <small>3.2.18 (2025-02-12)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+
 ## <small>3.2.17 (2025-02-05)</small>
 
 - fix(atomic-react): stop exporting atomicResultChildren and atomicResultChildrenTemplate (#4931) ([c0d2f08](https://github.com/coveo/ui-kit/commits/c0d2f08)), closes [#4931](https://github.com/coveo/ui-kit/issues/4931)
