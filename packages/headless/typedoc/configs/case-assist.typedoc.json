@@ -16,6 +16,6 @@
   "name": "Case Assist",
   "readme": "none",
   "entryPoints": ["../../src/case-assist.index.ts"],
-  "gitRevision": "typedoc-POC",
+  "gitRevision": "master",
   "plugin": ["../../typedoc/dist/index.js"]
 }

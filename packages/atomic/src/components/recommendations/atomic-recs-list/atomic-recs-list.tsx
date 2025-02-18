@@ -319,6 +319,9 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
   }
 
   private getPropsForAtomicRecsResult(recommendation: RecsResult) {
+    const linkContent =
+      this.itemTemplateProvider.getLinkTemplateContent(recommendation);
+
     return {
       interactiveResult: buildRecsInteractiveResult(this.bindings.engine, {
         options: {result: recommendation},
@@ -333,8 +336,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
         this.imageSize
       ),
       content: this.itemTemplateProvider.getTemplateContent(recommendation),
-      linkContent:
-        this.itemTemplateProvider.getLinkTemplateContent(recommendation),
+      linkContent,
+      stopPropagation: !!linkContent,
       store: this.bindings.store,
       density: this.density,
       display: this.display,

@@ -1,3 +1,8 @@
+## <small>2.4.7 (2025-02-17)</small>
+
+- docs(headless,headless-react): typedoc styling update and link fix (#4963) ([22a8bea](https://github.com/coveo/ui-kit/commits/22a8bea)), closes [#4963](https://github.com/coveo/ui-kit/issues/4963)
+- docs(headless-react): add strings stating the beta status of ssr commerce (#4960) ([ce3f9c2](https://github.com/coveo/ui-kit/commits/ce3f9c2)), closes [#4960](https://github.com/coveo/ui-kit/issues/4960)
+
 ## <small>2.4.6 (2025-02-12)</small>
 
 - chore(deps): update vite to v2.1.9 j:kit-282 (#4956) ([ab2acbd](https://github.com/coveo/ui-kit/commits/ab2acbd)), closes [#4956](https://github.com/coveo/ui-kit/issues/4956)

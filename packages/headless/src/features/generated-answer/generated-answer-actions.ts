@@ -174,6 +174,11 @@ export const setIsAnswerGenerated = createAction(
   (payload: boolean) => validatePayload(payload, booleanValue)
 );
 
+export const setCannotAnswer = createAction(
+  'generatedAnswer/setCannotAnswer',
+  (payload: boolean) => validatePayload(payload, booleanValue)
+);
+
 interface StreamAnswerArgs {
   setAbortControllerRef: (ref: AbortController) => void;
 }
@@ -184,7 +189,9 @@ export const streamAnswer = createAsyncThunk<
   AsyncThunkGeneratedAnswerOptions<StateNeededByGeneratedAnswerStream>
 >('generatedAnswer/streamAnswer', async (params, config) => {
   const state = config.getState();
-  const {dispatch, extra} = config;
+  const {dispatch, extra, getState} = config;
+  const {search} = getState();
+  const {queryExecuted} = search;
 
   const {setAbortControllerRef} = params;
 
@@ -218,6 +225,9 @@ export const streamAnswer = createAsyncThunk<
         const isAnswerGenerated = (
           JSON.parse(payload) as GeneratedAnswerEndOfStreamPayload
         ).answerGenerated;
+        const cannotAnswer = queryExecuted.length !== 0 && !isAnswerGenerated;
+
+        dispatch(setCannotAnswer(cannotAnswer));
         dispatch(setIsStreaming(false));
         dispatch(setIsAnswerGenerated(isAnswerGenerated));
         dispatch(logGeneratedAnswerStreamEnd(isAnswerGenerated));

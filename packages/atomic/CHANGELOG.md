@@ -1,3 +1,9 @@
+## <small>3.19.1 (2025-02-17)</small>
+
+- fix(atomic): add isMobile to insight store (#4959) ([73341a3](https://github.com/coveo/ui-kit/commits/73341a3)), closes [#4959](https://github.com/coveo/ui-kit/issues/4959)
+- fix(atomic): don't redirect when hovering a instant result & pressing Enter (#4938) ([eea90a2](https://github.com/coveo/ui-kit/commits/eea90a2)), closes [#4938](https://github.com/coveo/ui-kit/issues/4938)
+- fix(atomic): using `_blank` target on custom recommendation link template opens two tabs on click (# ([de34ef6](https://github.com/coveo/ui-kit/commits/de34ef6)), closes [#4953](https://github.com/coveo/ui-kit/issues/4953) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx#L26](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx/issues/L26)
+
 ## 3.19.0 (2025-02-12)
 
 - fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)

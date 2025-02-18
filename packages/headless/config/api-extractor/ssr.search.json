@@ -1,8 +1,0 @@
-{
-  "extends": "./base.json",
-  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/ssr.index.d.ts",
-  "docModel": {
-    "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/ssr-search.api.json"
-  }
-}

@@ -20,6 +20,7 @@ import {
   expandGeneratedAnswer,
   collapseGeneratedAnswer,
   setIsEnabled,
+  setCannotAnswer,
 } from './generated-answer-actions.js';
 import {generatedAnswerReducer} from './generated-answer-slice.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
@@ -511,6 +512,26 @@ describe('generated answer slice', () => {
       );
 
       expect(finalState.isAnswerGenerated).toEqual(false);
+    });
+  });
+
+  describe('#setCannotAnswer', () => {
+    it('should set cannotAnswer to true when given true', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, cannotAnswer: false},
+        setCannotAnswer(true)
+      );
+
+      expect(finalState.cannotAnswer).toEqual(true);
+    });
+
+    it('should set cannotAnswer to false when given false', () => {
+      const finalState = generatedAnswerReducer(
+        {...baseState, cannotAnswer: true},
+        setCannotAnswer(false)
+      );
+
+      expect(finalState.cannotAnswer).toEqual(false);
     });
   });
 });

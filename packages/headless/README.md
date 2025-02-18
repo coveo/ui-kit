@@ -10,15 +10,15 @@ The `@coveo/headless` package exposes several entry points.
 
 The entry point from which you will import Coveo Headless resources depends on the engine type you are using:
 
-| Engine type           | Entry point                      |
-| --------------------- | -------------------------------- |
-| Search engine         | `@coveo/headless`                |
-| Search SSR engine     | `@coveo/headless/ssr`            |
-| CaseAssist engine     | `@coveo/headless/case-assist`    |
-| Commerce engine       | `@coveo/headless/commerce`       |
-| Commerce SSR engine   | `@coveo/headless/ssr-commerce`   |
-| Insight engine        | `@coveo/headless/insight`        |
-| Recommendation engine | `@coveo/headless/recommendation` |
+| Engine type                        | Entry point                      |
+| ---------------------------------- | -------------------------------- |
+| Search engine                      | `@coveo/headless`                |
+| Search SSR engine                  | `@coveo/headless/ssr`            |
+| CaseAssist engine                  | `@coveo/headless/case-assist`    |
+| Commerce engine                    | `@coveo/headless/commerce`       |
+| Commerce SSR engine (in open beta) | `@coveo/headless/ssr-commerce`   |
+| Insight engine                     | `@coveo/headless/insight`        |
+| Recommendation engine              | `@coveo/headless/recommendation` |
 
 ## Contributing
 
