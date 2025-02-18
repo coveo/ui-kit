@@ -8,7 +8,7 @@ import {
 test.describe('quantic case classification', () => {
   test.describe('the analytics', () => {
     test.describe('when new case classifications suggestions are received', () => {
-      test('should log propper ticket classification click collect event for the automatically selected suggestion', async ({
+      test('should log the proper ticket classification click collect event for the automatically selected suggestion', async ({
         caseClassification,
         caseAssist,
       }) => {
