@@ -1,5 +1,5 @@
-import {TemplateResult} from 'lit-html';
-import {TemplateResultType} from 'lit-html/directive-helpers.js';
+import {TemplateResult} from 'lit';
+import {TemplateResultType} from 'lit/directive-helpers.js';
 import {AnyBindings} from '../components/common/interface/bindings';
 
 export type GenericRender<T extends TemplateResultType> = TemplateResult<T>;

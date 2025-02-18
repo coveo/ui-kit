@@ -1,11 +1,11 @@
 import {Decorator} from '@storybook/web-components';
-import {html, TemplateResult} from 'lit-html';
+import {html, TemplateResult} from 'lit';
 
 export const wrapInProductTemplate = (): {
   decorator: Decorator;
 } => {
   const decorator: Decorator = (story) => {
-    // lit-html does not support adding expressions to `template` tags
+    // lit does not support adding expressions to `template` tags
     // https://lit.dev/docs/templates/expressions/#invalid-locations
 
     const templateTag = document.createElement('template');

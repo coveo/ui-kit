@@ -25,7 +25,6 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType>
   host: HTMLElement;
   bindings: AnyBindings;
   error?: Error;
-
   updateIconAssetsPath(): void;
   registerFieldsToInclude?: () => void; // Fix: Removed the question mark and added a semicolon.
 }

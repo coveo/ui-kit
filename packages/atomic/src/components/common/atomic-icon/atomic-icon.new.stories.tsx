@@ -4,7 +4,7 @@ import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-w
 import bgIcons from '@salesforce-ux/design-system/design-tokens/dist/bg-standard.common';
 import {userEvent, waitFor, expect} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 import {within} from 'shadow-dom-testing-library';
 import AssetsList from '../../../../docs/assets.json';
 

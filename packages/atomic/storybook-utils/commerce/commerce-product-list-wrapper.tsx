@@ -1,5 +1,5 @@
 import {Decorator} from '@storybook/web-components';
-import {html} from 'lit-html';
+import {html} from 'lit';
 
 export const wrapInCommerceProductList = (): {
   decorator: Decorator;

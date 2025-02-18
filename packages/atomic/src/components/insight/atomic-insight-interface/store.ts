@@ -1,5 +1,9 @@
 import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
-import {InsightEngine} from '@coveo/headless/insight';
+import {
+  DateFacetValue,
+  InsightEngine,
+  NumericFacetValue,
+} from '@coveo/headless/insight';
 import {
   FacetInfo,
   FacetStore,
@@ -16,7 +20,6 @@ import {
   unsetLoadingFlag,
   waitUntilAppLoaded,
 } from '../../common/interface/store';
-import {DateFacetValue, NumericFacetValue} from '../../common/types';
 import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
 
 interface Data {

@@ -1,7 +1,7 @@
 import {LitElement, noChange} from 'lit';
-import {directive, Directive, Part, PartType} from 'lit-html/directive.js';
+import {directive, Directive, Part, PartType} from 'lit/directive.js';
 
-// TODO: KIT-3822: Add unit tests for this directive.
+// TODO: KIT-3973: Add unit tests for this directive.
 class DisplayIfDirective extends Directive {
   render<T>(_condition: boolean, _children: T) {
     return noChange;
