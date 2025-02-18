@@ -1,5 +1,4 @@
 import {getAssetPath} from '@stencil/core';
-import {NODE_TYPES} from '@stencil/core/mock-doc';
 import DOMPurify from 'dompurify';
 
 /**
@@ -57,11 +56,11 @@ export function parseHTML(string: string) {
 }
 
 export function isElementNode(node: Node): node is Element {
-  return node.nodeType === NODE_TYPES.ELEMENT_NODE;
+  return node.nodeType === Node.ELEMENT_NODE;
 }
 
 export function isTextNode(node: Node): node is Text {
-  return node.nodeType === NODE_TYPES.TEXT_NODE;
+  return node.nodeType === Node.TEXT_NODE;
 }
 
 export function isVisualNode(node: Node) {
