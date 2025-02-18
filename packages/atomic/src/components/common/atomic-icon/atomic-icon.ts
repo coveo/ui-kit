@@ -6,10 +6,10 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {CSSResultGroup, html, unsafeCSS} from 'lit';
-import {guard} from 'lit-html/directives/guard.js';
-import {unsafeSVG} from 'lit-html/directives/unsafe-svg.js';
+import {CSSResultGroup, svg, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {guard} from 'lit/directives/guard.js';
+import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {AnyBindings} from '../interface/bindings';
 import styles from './atomic-icon.tw.css';
 
@@ -84,7 +84,7 @@ export class AtomicIcon
 
   private validateSVG(svg: string) {
     if (!/^<svg[\s\S]+<\/svg>$/gm.test(svg)) {
-      console.warn(
+      this.bindings?.engine.logger.warn(
         'The inline "icon" prop is not an svg element. You may encounter rendering issues.',
         this.icon
       );
@@ -127,6 +127,6 @@ export class AtomicIcon
   @errorGuard()
   render() {
     this.ariaHidden = 'true';
-    return html`${guard([this.svg], () => unsafeSVG(this.svg))}`;
+    return svg`${guard([this.svg], () => unsafeSVG(this.svg))}`;
   }
 }
