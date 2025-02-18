@@ -3,9 +3,9 @@ import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {Mock, vi} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
+import {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
-import {initializeBindings} from './initialize-bindings';
-import {InitializableComponent} from './types';
+import {InitializeBindingsMixin} from './bindings-mixin';
 
 vi.mock('../utils/initialization-lit-stencil-common-utils', () => ({
   fetchBindings: vi.fn(),
@@ -18,10 +18,9 @@ const mockBindings = () =>
 
 @customElement('test-element')
 export class TestElement
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<Bindings>
 {
-  @initializeBindings()
   @state()
   public bindings!: Bindings;
   @state() public error!: Error;
@@ -33,14 +32,7 @@ export class TestElement
   initialize = vi.fn();
 }
 
-@customElement('test-element-invalid-bindings-property')
-export class TestElementNoBindings extends LitElement {
-  @initializeBindings()
-  @state()
-  public invalidProp!: Bindings;
-}
-
-describe('@initializeBindings decorator', () => {
+describe('InitializeBindingsMixin mixin', () => {
   let element: InitializableComponent<Bindings> & LitElement;
   let bindings: Bindings;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
@@ -75,37 +67,26 @@ describe('@initializeBindings decorator', () => {
   it('should subscribe to language changes', async () => {
     vi.spyOn(bindings.i18n, 'on');
     await setupElement();
-    expect(element.bindings.i18n.on).toHaveBeenCalled();
+    expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
   it('should unsubscribe to language changes when the host is disconnected from the component tree', async () => {
     vi.spyOn(bindings.i18n, 'off');
     await setupElement();
     await teardownElement();
-    expect(element.bindings.i18n.off).toHaveBeenCalled();
+    expect(element.bindings?.i18n.off).toHaveBeenCalled();
   });
 
   it('should request a component update when the language changes', async () => {
     await setupElement();
     vi.spyOn(element, 'requestUpdate');
-    element.bindings.i18n.changeLanguage('fr');
+    element.bindings?.i18n.changeLanguage('fr');
     expect(element.requestUpdate).toHaveBeenCalled();
   });
 
   it('should call the initialize method when bindings are present', async () => {
     await setupElement();
     expect(element.initialize).toHaveBeenCalled();
-  });
-
-  it('should log an error when using the decorator with a property other than bindings ', async () => {
-    await setupElement<TestElementNoBindings>(
-      'test-element-invalid-bindings-property'
-    );
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'The InitializeBindings decorator should be used on a property called "bindings", and not "invalidProp"',
-      element
-    );
   });
 
   it('should return an error to the element if unable to fetch bindings', async () => {
