@@ -55,6 +55,8 @@ export interface NumericFilterOptions {
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.
    *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
+   *
    * @defaultValue `true`
    */
   filterFacetCount?: boolean;
@@ -62,7 +64,7 @@ export interface NumericFilterOptions {
   /**
    * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    *
-   * Note: A high injectionDepth may negatively impact the facet request performance.
+   * Note: A high `injectionDepth` may negatively impact the facet request performance.
    *
    * Minimum: `0`
    *
