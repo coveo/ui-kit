@@ -34,7 +34,7 @@ const renderShowHideButton = (
   showMoreLabel: string,
   showLessLabel: string
 ) => {
-  let buttonClass = 'expandable-text-button p-1 text-xs';
+  let buttonClass = 'expandable-text-button p-1 text-xs leading-[calc(1/.75)]';
   if (!isTruncated && !isExpanded) {
     buttonClass += ' invisible';
   } else if (!isCollapsible && !isTruncated && isExpanded) {
