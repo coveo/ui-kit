@@ -40,7 +40,7 @@ test.describe('quantic case classification', () => {
     });
 
     test.describe('clicking on a case classification suggestion', () => {
-      test('should log propper collect events', async ({
+      test('should log the proper collect events', async ({
         caseClassification,
       }) => {
         const selectedSuggestionIndex = 1;
