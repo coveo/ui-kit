@@ -46,4 +46,36 @@ export class SearchObject {
       });
     });
   }
+
+  async mockSearchFacetOrder(facetIds: string[]): Promise<void> {
+    await this.page.route(this.searchRequestRegex, async (route) => {
+      const apiResponse = await this.page.request.fetch(route.request());
+      const originalBody = await apiResponse.json();
+      const facets = originalBody.facets;
+      const reorderedFacets: unknown[] = [];
+
+      facetIds.forEach((facetId, idx) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const facet = facets.find((f: any) => f.facetId === facetId);
+        if (facet) {
+          reorderedFacets.push({
+            ...facet,
+            indexScore: 1 - idx * 0.01,
+          });
+        }
+      });
+
+      await route.continue({
+        method: 'POST',
+        postData: JSON.stringify({
+          ...originalBody,
+          facets: reorderedFacets,
+        }),
+        headers: {
+          ...route.request().headers(),
+          'Content-Type': 'application/json',
+        },
+      });
+    });
+  }
 }

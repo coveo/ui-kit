@@ -6,6 +6,17 @@ const fixtures = {
   insight: testInsight,
 };
 
+const exampleFacetsOrder = ['objecttype', 'date', 'language'];
+
+/**
+ * Filters out any facetId which contains a filter input "_input" because they are not displayed in the facet manager.
+ */
+function filterInputFacets(facets: any): string[] {
+  return facets
+    .map((facet: any) => facet.facetId)
+    .filter((id: string) => !/_input$/.test(id));
+}
+
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
@@ -21,7 +32,7 @@ useCaseTestCases.forEach((useCase) => {
       const {facets} = await searchResponse.json();
       expect(facets).not.toBeNull();
 
-      const filteredIds = facetManager.filterInputFacets(facets);
+      const filteredIds = filterInputFacets(facets);
 
       filteredIds.forEach(async (facetId: any, index: number) => {
         const facetManagerItem = facetManager.getFacetManagerItemByIndex(index);
@@ -31,15 +42,12 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    test.describe('when reordering the facets', () => {
+    test.describe('when the facets are reordered', () => {
       test('should load facets in the reordered order', async ({
         facetManager,
         search,
       }) => {
-        await facetManager.mockFacetOrder(
-          ['objecttype', 'language', 'date'],
-          useCase.value
-        );
+        await search.mockSearchFacetOrder(exampleFacetsOrder);
         const searchResponsePromise = search.waitForSearchResponse();
         await search.performSearch();
 
@@ -56,6 +64,14 @@ useCaseTestCases.forEach((useCase) => {
             ).toEqual(facet.facetId);
           }
         );
+
+        [exampleFacetsOrder.length - 1].forEach(async (index: number) => {
+          const facetManagerItem =
+            facetManager.getFacetManagerItemByIndex(index);
+          expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
+            exampleFacetsOrder[index]
+          );
+        });
       });
     });
   });
