@@ -101,6 +101,8 @@
   --shadow-lg: 0px 2px 8px rgba(229, 232, 232, 0.75);
   --shadow-t-lg: 0px -2px 8px rgba(229, 232, 232, 0.75);
 
+  --radius: var(--atomic-border-radius);
+  --radius-xs: var(--atomic-border-radius);
   --radius-sm: var(--atomic-border-radius);
   --radius-md: var(--atomic-border-radius-md);
   --radius-lg: var(--atomic-border-radius-lg);
