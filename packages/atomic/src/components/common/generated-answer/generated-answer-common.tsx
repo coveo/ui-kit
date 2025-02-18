@@ -305,7 +305,7 @@ export class GeneratedAnswerCommon {
       return null;
     }
     return (
-      <div class="text-neutral-dark text-xs">
+      <div class="text-neutral-dark text-xs/[1rem]">
         <slot name="disclaimer" slot="disclaimer">
           {i18n.t('generated-answer-disclaimer')}
         </slot>
