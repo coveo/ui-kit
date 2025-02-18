@@ -5,10 +5,6 @@ import QuanticCaseClassification from 'c/quanticCaseClassification';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {getPicklistValuesByRecordType} from 'lightning/uiObjectInfoApi';
-import {
-  exampleCaseClassificationAllOptions,
-  exampleCaseClassificationSuggestions,
-} from './data/data';
 
 jest.mock('c/quanticHeadlessLoader');
 
@@ -22,6 +18,26 @@ const exampleMoreTopicsLabel = 'example more topics label';
 const exampleSelectOptionLabel = 'example select option label';
 const exampleField = 'example field';
 const exampleLabel = 'example label';
+
+const exampleCaseClassificationSuggestions = [
+  {
+    id: '1',
+    value: 'classification 2',
+    confidence: 1,
+  },
+  {
+    id: '2',
+    value: 'classification 3',
+    confidence: 1,
+  },
+];
+
+const exampleCaseClassificationAllOptions = [
+  {value: 'classification 1'},
+  {value: 'classification 2'},
+  {value: 'classification 3'},
+  {value: 'classification 4'},
+];
 
 jest.mock(
   '@salesforce/label/c.quantic_CaseClassificationTitle',
