@@ -1,6 +1,4 @@
-@import '../../../global/polyfills.pcss';
-
-@define-mixin cell-result-mobile map(post-css-map-for-sections, variables) {
+@utility cell-result-mobile {
   grid-template-areas:
     'badges'
     'visual'
@@ -16,200 +14,228 @@
 
   /* == Density styles == */
   &.density-comfortable {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-bottom: 1rem;
     }
 
     &.image-small {
-      $(section-visual) {
+      atomic-result-section-visual,
+      atomic-product-section-visual {
         width: 10.25rem;
         height: 10.25rem;
       }
     }
 
-    $(section-badges) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-badges,
+    atomic-product-section-badges {
+      @apply set-font-size-sm;
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-actions,
+    atomic-product-section-actions {
+      @apply set-font-size-base;
 
       margin-top: 1.25rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-lg);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-lg;
 
       max-height: 3rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-title-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
+      @apply set-font-size-sm;
       margin-top: 0.475rem;
     }
 
-    $(section-emphasized) {
+    atomic-result-section-emphasized,
+    atomic-product-section-emphasized {
       font-weight: 500;
-      @mixin set-font-size var(--atomic-text-2xl);
+      @apply set-font-size-2xl;
     }
 
-    $(section-excerpt) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
+      @apply set-font-size-base;
 
       margin-top: 1.25rem;
-      max-height: 2.5rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-bottom-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
+      @apply set-font-size-sm;
 
       margin-top: 1rem;
       max-height: 3rem;
     }
 
-    $(section-children) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-children,
+    atomic-product-section-children {
+      @apply set-font-size-base;
 
       margin-top: 1.25rem;
     }
   }
 
   &.density-normal {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-bottom: 0.75rem;
     }
 
     &.image-small {
-      $(section-visual) {
+      atomic-result-section-visual,
+      atomic-product-section-visual {
         width: 10.25rem;
         height: 10.25rem;
       }
     }
 
-    $(section-badges) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-badges,
+    atomic-product-section-badges {
+      @apply set-font-size-sm;
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-actions,
+    atomic-product-section-actions {
+      @apply set-font-size-base;
 
       margin-top: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-lg);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-lg;
 
       max-height: 3rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-title-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
+      @apply set-font-size-sm;
       margin-top: 0.475rem;
     }
 
-    $(section-emphasized) {
+    atomic-result-section-emphasized,
+    atomic-product-section-emphasized {
       font-weight: 500;
-      @mixin set-font-size var(--atomic-text-2xl);
+      @apply set-font-size-2xl;
     }
 
-    $(section-excerpt) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
+      @apply set-font-size-base;
 
       margin-top: 1rem;
-      max-height: 2.5rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-bottom-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
+      @apply set-font-size-sm;
 
       margin-top: 0.75rem;
       max-height: 3rem;
     }
 
-    $(section-children) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-children,
+    atomic-product-section-children {
+      @apply set-font-size-base;
 
       margin-top: 1rem;
     }
   }
 
   &.density-compact {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-bottom: 0.5rem;
     }
 
     &.image-large {
-      $(section-visual) {
+      atomic-result-section-visual,
+      atomic-product-section-visual {
         width: 100%;
       }
     }
     &.image-small {
-      $(section-visual) {
+      atomic-result-section-visual,
+      atomic-product-section-visual {
         width: 10.25rem;
         height: 10.25rem;
       }
     }
 
-    $(section-badges) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-badges,
+    atomic-product-section-badges {
+      @apply set-font-size-sm;
 
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-actions,
+    atomic-product-section-actions {
+      @apply set-font-size-base;
 
       margin-top: 0.75rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-lg);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-lg;
 
       max-height: 3rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-title-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
+      @apply set-font-size-sm;
       margin-top: 0.475rem;
     }
 
-    $(section-emphasized) {
+    atomic-result-section-emphasized,
+    atomic-product-section-emphasized {
       font-weight: 500;
-      @mixin set-font-size var(--atomic-text-2xl);
+      @apply set-font-size-2xl;
     }
 
-    $(section-excerpt) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
+      @apply set-font-size-base;
 
       margin-top: 0.75rem;
-      max-height: 1.25rem;
-      @mixin line-clamp 1;
+      @apply line-clamp-1;
     }
 
-    $(section-bottom-metadata) {
-      @mixin set-font-size var(--atomic-text-sm);
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
+      @apply set-font-size-sm;
 
       margin-top: 0.5rem;
       max-height: 3rem;
     }
 
-    $(section-children) {
-      @mixin set-font-size var(--atomic-text-base);
+    atomic-result-section-children,
+    atomic-product-section-children {
+      @apply set-font-size-base;
 
       margin-top: 0.75rem;
     }
@@ -217,21 +243,24 @@
 
   /* == Image styles == */
   &.image-small {
-    $(section-visual) {
-      @mixin aspect-ratio-h 1 / 1, 9rem;
+    atomic-result-section-visual,
+    atomic-product-section-visual {
+      @apply aspect-square-[9rem];
       width: 100%;
     }
   }
 
   &.image-icon {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 2rem;
       height: 2rem;
     }
   }
 
   &.image-none {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       display: none;
     }
   }

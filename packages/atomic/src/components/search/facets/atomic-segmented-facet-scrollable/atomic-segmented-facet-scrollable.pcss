@@ -1,9 +1,6 @@
 @import '../../../../global/global.pcss';
+@import '../../../../utils/tailwind-utilities/hide-scrollbar.tw.css';
 
 .wrapper-segmented {
-  @mixin hide-scrollbar;
-}
-
-::slotted(atomic-segmented-facet:not(.atomic-hidden)) {
-  @apply mr-2;
+  @apply hide-scrollbar;
 }

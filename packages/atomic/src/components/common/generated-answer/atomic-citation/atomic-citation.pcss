@@ -1,5 +1,6 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
+
+@import '../../../../utils/tailwind-utilities/set-font-size.tw.css';
 
 [part='citation'] {
   --height: 2.2em;
@@ -16,6 +17,6 @@
   width: var(--popover-width);
 
   p {
-    @mixin set-font-size var(--atomic-text-sm);
+    @apply set-font-size-sm;
   }
 }

@@ -21,7 +21,7 @@ export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
     <Fragment>
       <span
         part="breadcrumb-label"
-        class={`max-w-snippet truncate group-hover:text-${activeColor} group-focus-visible:text-${activeColor} ${props.breadcrumb.state}`}
+        class={`max-w-[30ch] truncate group-hover:text-${activeColor} group-focus-visible:text-${activeColor} ${props.breadcrumb.state}`}
       >
         {props.i18n.t('with-colon', {text: props.breadcrumb.label})}
       </span>
@@ -30,7 +30,7 @@ export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
         class={`ml-1 ${
           props.breadcrumb.content
             ? ''
-            : `max-w-snippet truncate ${props.breadcrumb.state}`
+            : `max-w-[30ch] truncate ${props.breadcrumb.state}`
         }`}
       >
         {props.breadcrumb.content ?? value}

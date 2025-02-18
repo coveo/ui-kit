@@ -1,23 +1,24 @@
+@import '../../../utils/coveo.tw.css' theme(reference);
+
 /**
  * @prop --atomic-rating-icon-active-color: Color of the icon when active.
  */
 .icon-active {
-  color: var(--atomic-rating-icon-active-color, #f6ce3c);
+  @apply text-rating-icon-active;
 }
 
 /**
  * @prop --atomic-rating-icon-inactive-color: Color of the icon when inactive.
  */
 .icon-inactive {
-  color: var(--atomic-rating-icon-inactive-color, var(--atomic-neutral));
+  @apply text-rating-icon-inactive;
 }
-
 /**
- * @prop --atomic-rating-icon-outline: Color of the icon's outline.
+ * @prop --atomic-rating-icon-outfill: currentColor;line: Color of the icon's outline.
  */
 .icon-active,
 .icon-inactive {
   & svg path {
-    stroke: var(--atomic-rating-icon-outline, none);
+    stroke: var(--atomic-rating-icon-outline);
   }
 }

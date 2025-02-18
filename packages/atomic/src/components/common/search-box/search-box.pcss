@@ -1,7 +1,7 @@
+@import '../../.././utils/tailwind-utilities/hide-scrollbar.tw.css';
 .loading {
-  --tw-gradient-from: var(--atomic-primary-dark);
-  --tw-gradient-to: var(--atomic-primary-light);
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  @apply from-primary-dark;
+  @apply to-primary-light;
 }
 
 .loading::after {
@@ -17,12 +17,12 @@
   }
 
   > [part='textarea'] {
-    @mixin hide-scrollbar;
+    @apply hide-scrollbar;
   }
 
   > [part='textarea'],
   &::after {
-    @apply text-neutral-dark z-10 h-full grow resize-none overflow-hidden whitespace-nowrap bg-transparent p-3.5 px-4 text-lg outline-none;
+    @apply text-neutral-dark z-10 h-full grow resize-none overflow-hidden whitespace-nowrap bg-transparent px-4 py-3.5 text-lg outline-none;
     /* Place on top of each other */
     grid-area: 1 / 1 / 2 / 2;
   }

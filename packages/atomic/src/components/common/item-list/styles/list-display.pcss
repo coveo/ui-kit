@@ -2,7 +2,7 @@
 
 [part~='divider'] {
   &:not(:last-child) {
-    border-bottom: 1px solid var(--atomic-neutral);
+    @apply border-b-neutral;
     padding-bottom: 1rem;
   }
   margin-bottom: 1rem;
@@ -17,13 +17,13 @@
     width: auto;
   }
 
-  @screen desktop-only {
-    @mixin atomic-list-with-dividers;
+  @media (width >= theme(--breakpoint-desktop)) {
+    @apply atomic-list-with-dividers;
   }
 
-  @screen mobile-only {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     &.image-large {
-      @mixin atomic-list-with-dividers;
+      @apply atomic-list-with-dividers;
       display: grid;
       justify-content: space-evenly;
       grid-template-columns: minmax(auto, 35rem);
@@ -34,7 +34,7 @@
     &.image-none {
       grid-row-gap: 1rem;
 
-      @mixin atomic-list-with-cards;
+      @apply atomic-list-with-cards;
     }
   }
 }

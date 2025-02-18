@@ -1,138 +1,26 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-@import './polyfills.pcss';
+@reference './tailwind.default.css';
+@import '../utils/tailwind.global.tw.css';
+
 @import './ripple.pcss';
 
-@layer base {
-  :host {
-    display: block;
-    /* TODO: remove when upgrading Tailwind > v3.0.23 */
-    --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.7) translateY(150vh);
+    opacity: 0.7;
   }
-
-  :host,
-  button,
-  input,
-  select {
-    @apply font-sans text-base font-normal;
-  }
-
-  :host(.atomic-hidden) {
-    display: none;
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
   }
 }
 
-@layer components {
-  .link {
-    @apply text-primary hover:text-primary-light focus-visible:text-primary-light hover:underline focus-visible:underline;
+@keyframes slideDown {
+  0% {
+    transform: translateY(0px);
+    opacity: 1;
   }
-
-  .input-primary {
-    @apply border-neutral bg-background hover:border-primary-light focus-visible:border-primary no-outline focus-visible:ring-ring-primary rounded border focus-visible:ring-2;
-  }
-
-  .btn-radio {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    @apply before:content-[attr(value)];
-  }
-
-  .btn-primary {
-    @apply bg-primary text-on-primary hover:bg-primary-light focus-visible:bg-primary-light no-outline focus-visible:ring-ring-primary disabled:bg-disabled rounded focus-visible:ring-2 disabled:cursor-not-allowed;
-  }
-
-  .btn-outline-primary {
-    @apply border-neutral hover:border-primary-light focus-visible:border-primary bg-background text-primary hover:text-primary-light focus-visible:text-primary focus-visible:ring-ring-primary no-outline disabled:border-neutral disabled:text-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed;
-  }
-
-  .btn-text-primary {
-    @apply bg-background text-primary hover:bg-neutral-light focus-visible:bg-neutral-light no-outline rounded;
-  }
-
-  .btn-outline-neutral {
-    @apply border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
-  }
-
-  .btn-outline-error {
-    @apply border-neutral hover:border-error focus-visible:border-error bg-background text-on-background hover:text-error focus-visible:text-error focus-visible:ring-ring-primary no-outline disabled:text-on-background disabled:border-neutral rounded border focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
-  }
-
-  .btn-outline-bg-neutral {
-    @apply btn-outline-neutral hover:bg-neutral-light focus-visible:bg-neutral-light;
-  }
-
-  .btn-outline-bg-error {
-    @apply btn-outline-error hover:bg-neutral-light focus-visible:bg-neutral-light;
-  }
-
-  .btn-text-neutral {
-    @apply bg-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline text-on-background focus-visible:text-primary hover:text-primary rounded;
-  }
-
-  .btn-text-transparent {
-    @apply with-outline text-on-background focus-visible:text-primary-light hover:text-primary-light;
-  }
-
-  .btn-square-neutral {
-    @apply border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light no-outline border;
-  }
-
-  .btn-pill {
-    @apply rounded-xl;
-  }
-
-  .btn-page {
-    @apply grid place-items-center border-0 text-lg hover:border focus-visible:border;
-
-    &.selected {
-      @apply border-primary border-2 font-bold;
-    }
-  }
-}
-
-@layer utilities {
-  .empty\:border-none:empty {
-    border: none;
-  }
-
-  .no-outline {
-    @apply focus-visible:outline-none;
-  }
-
-  .with-outline {
-    @apply focus-visible:outline-color;
-  }
-
-  .accessibility-only {
-    position: absolute;
-    display: block;
-    height: 0;
-    overflow: hidden;
-    margin: 0;
-  }
-
-  .text-inherit {
-    font-size: inherit;
-  }
-
-  .cursor-inherit {
-    cursor: inherit;
-  }
-
-  .shadow-lg {
-    @apply shadow;
-    --tw-shadow: 0px 2px 8px rgba(229, 232, 232, 0.75);
-  }
-
-  .shadow-t-lg {
-    @apply shadow;
-    --tw-shadow: 0px -2px 8px rgba(229, 232, 232, 0.75);
-  }
-
-  .text-bg-primary {
-    color: var(--atomic-primary);
-    background: var(--atomic-primary-background);
+  100% {
+    transform: translateY(150vh);
+    opacity: 0.7;
   }
 }

@@ -93,16 +93,11 @@ export class AtomicInsightTab
       return;
     }
 
-    const buttonClasses = ['relative', 'pb-3', 'mt-1', 'mr-6', 'font-semibold'];
-    if (this.tabState.isActive) {
-      buttonClasses.push('active');
-    }
-
     return (
       <Button
         style="text-transparent"
         part="tab"
-        class={buttonClasses.join(' ')}
+        class={this.tabState.isActive ? 'active' : ''}
         ariaLabel={this.bindings.i18n.t('tab-search', {label: this.label})}
         title={this.label}
         ariaPressed={`${this.tabState.isActive}`}

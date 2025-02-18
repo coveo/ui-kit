@@ -1,6 +1,6 @@
 @import '../../common/template-system/template-system.pcss';
 
-@mixin atomic-template-system map(post-css-map-for-sections, commerce);
+@apply atomic-template-system;
 
 :host {
   @apply relative;
@@ -20,21 +20,21 @@
       &.image-none {
         atomic-product-section-name {
           min-height: calc(var(--line-height) * 2);
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
+          @apply line-clamp-2;
         }
       }
-      @screen desktop-only {
+
+      @media (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square-[auto];
             width: 16.65%;
           }
         }
 
         &.image-small {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square-[auto];
             width: 16.65%;
           }
         }
@@ -48,16 +48,16 @@
         }
       }
 
-      @screen mobile-only {
+      @media not all and (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square-[auto];
             width: 16.65%;
           }
         }
         &.image-small {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square-[auto];
             width: 16.65%;
             max-width: 4.75rem;
           }
@@ -106,7 +106,7 @@
     }
 
     &.display-list {
-      @screen desktop-only {
+      @media (width >= theme(--breakpoint-desktop)) {
         &.image-large.density-comfortable,
         &.image-large.density-normal {
           atomic-product-section-children .product-child {
@@ -125,10 +125,10 @@
         }
       }
 
-      @screen mobile-only {
+      @media not all and (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
-            @mixin aspect-ratio-h 1 / 1, auto;
+            @apply aspect-square-[auto];
             width: 16.65%;
           }
         }

@@ -3,10 +3,11 @@ import {closest} from './utils';
 export const DEFAULT_MOBILE_BREAKPOINT = '1024px';
 
 function replaceMediaQuery(style: string, mobileBreakpoint: string) {
-  return style.replace(
-    new RegExp(`\\(min-width: ${DEFAULT_MOBILE_BREAKPOINT}\\)`, 'g'),
-    `(min-width: ${mobileBreakpoint})`
+  const regex = new RegExp(
+    `\\(min-width: ${DEFAULT_MOBILE_BREAKPOINT}\\)|\\(width >= ${DEFAULT_MOBILE_BREAKPOINT}\\)`,
+    'g'
   );
+  return style.replace(regex, `(width >= ${mobileBreakpoint})`);
 }
 
 function replaceStyleSheet(element: HTMLElement, mobileBreakpoint: string) {

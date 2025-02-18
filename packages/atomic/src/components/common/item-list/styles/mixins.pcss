@@ -1,6 +1,6 @@
-@define-mixin atomic-list-with-cards {
+@utility atomic-list-with-cards {
   [part~='outline'] {
-    border: 1px solid var(--atomic-neutral);
+    @apply border-neutral border;
     padding: 1rem;
     border-radius: 1rem;
   }
@@ -10,13 +10,13 @@
   }
 }
 
-@define-mixin atomic-grid-with-cards {
-  @mixin atomic-list-with-cards;
+@utility atomic-grid-with-cards {
+  @apply atomic-list-with-cards;
   grid-column-gap: 0.5rem;
   grid-row-gap: 0.5rem;
 }
 
-@define-mixin atomic-list-with-dividers {
+@utility atomic-list-with-dividers {
   &.density-comfortable {
     [part~='outline'] {
       &::before {
@@ -32,7 +32,7 @@
       }
     }
 
-    @screen mobile-only {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.75rem 0;
@@ -48,7 +48,7 @@
       }
     }
 
-    @screen mobile-only {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.5rem 0;
@@ -62,7 +62,7 @@
       display: block;
       content: ' ';
       height: 1px;
-      background-color: var(--atomic-neutral);
+      @apply bg-neutral;
     }
 
     &:first-of-type::before {
@@ -77,17 +77,15 @@
   }
 }
 
-@define-mixin atomic-result-table {
+@utility atomic-result-table {
   min-width: 100%;
   border-spacing: 0;
   border-collapse: separate;
 
   th,
   td {
-    font-family: var(--atomic-font-family);
-    border: 1px solid var(--atomic-neutral);
-    --font-size: var(--atomic-text-sm);
-    font-size: var(--font-size);
+    @apply border-neutral border font-sans text-sm;
+
     line-height: 1rem;
     white-space: nowrap;
 
@@ -101,7 +99,7 @@
   }
 
   th {
-    background-color: var(--atomic-neutral-light);
+    @apply bg-neutral-light;
     border-bottom: none;
     font-weight: bold;
     color: black;
@@ -109,16 +107,16 @@
     text-align: left;
 
     &:first-child {
-      border-top-left-radius: var(--atomic-border-radius-xl);
+      @apply rounded-tl-xl;
     }
 
     &:last-child {
-      border-top-right-radius: var(--atomic-border-radius-xl);
+      @apply rounded-tr-xl;
     }
   }
 
   td {
-    color: var(--atomic-neutral-dark);
+    @apply text-neutral-dark;
     border-top: none;
     vertical-align: top;
     padding: var(--padding);
@@ -137,7 +135,7 @@
   }
 }
 
-@define-mixin atomic-grid-clickable-elements {
+@utility atomic-grid-clickable-elements {
   [part~='outline'][part~='result-list-grid-clickable-container'] {
     position: relative;
 
@@ -146,16 +144,15 @@
     border-radius: 1rem;
     transition: all 0.12s ease-out;
     &:hover {
-      border: 1px solid var(--atomic-neutral);
+      @apply border-neutral border;
       box-shadow: 0px 10px 25px var(--atomic-neutral);
       cursor: pointer;
     }
   }
 
   [part='result-list-grid-clickable']:focus-visible {
-    border: 2px solid var(--atomic-primary);
     border-radius: 2px;
-    color: var(--atomic-primary);
+    @apply text-primary border-primary border-2;
     cursor: pointer;
     display: inline-block;
     text-decoration: underline;
@@ -170,7 +167,7 @@
   }
 }
 
-@define-mixin atomic-grid-display-common {
+@utility atomic-grid-display-common {
   .list-wrapper {
     word-break: break-word;
   }
@@ -186,9 +183,9 @@
   }
 }
 
-@define-mixin atomic-grid-display-desktop {
+@utility atomic-grid-display-desktop {
   .list-root.display-grid {
-    @screen desktop-only {
+    @media (width >= theme(--breakpoint-desktop)) {
       grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
 
       &.density-comfortable {
@@ -207,10 +204,10 @@
       }
 
       &.image-small {
-        @media not all and (min-width: 1024px) {
+        @media not all and (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: repeat(3, 1fr);
         }
-        @media (min-width: 1024px) {
+        @media (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: repeat(3, 1fr);
         }
         @media (min-width: 1280px) {
@@ -221,30 +218,30 @@
   }
 }
 
-@define-mixin atomic-grid-display-mobile {
+@utility atomic-grid-display-mobile {
   .list-root.display-grid {
-    @screen mobile-only {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       &.image-large {
         @media not all and (min-width: 768px) {
-          @mixin atomic-list-with-dividers;
+          @apply atomic-list-with-dividers;
           grid-template-columns: minmax(auto, 35rem);
         }
         @media (min-width: 768px) {
-          @mixin atomic-grid-with-cards;
+          @apply atomic-grid-with-cards;
           grid-template-columns: 1fr 1fr;
         }
       }
       &.image-small,
       &.image-icon,
       &.image-none {
-        @mixin atomic-grid-with-cards;
+        @apply atomic-grid-with-cards;
         @media not all and (min-width: 640px) {
           grid-template-columns: minmax(0, 1fr);
         }
         @media (min-width: 768px) {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         }
-        @media (min-width: 1024px) {
+        @media (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
         }
       }
