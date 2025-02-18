@@ -6,12 +6,18 @@ import {
   CommerceEngineState,
 } from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
+import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {searchSerializer} from '../../../features/commerce/parameters/parameters-serializer.js';
+import {updateQuery} from '../../../features/commerce/query/query-actions.js';
+import {queryReducer as commerceQuery} from '../../../features/commerce/query/query-slice.js';
+import {selectFacetSearchResult} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {specificFacetSearchSetReducer as facetSearchSet} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice.js';
 import {
   CommerceFacetSetSection,
+  CommerceQuerySection,
   FacetSearchSection,
   FieldSuggestionsOrderSection,
 } from '../../../state/state-sections.js';
@@ -59,11 +65,6 @@ export interface FieldSuggestions
   updateText(text: string): void;
 
   /**
-   * Requests field suggestions based on a query.
-   */
-  search(): void;
-
-  /**
    * Filters the search using the specified value.
    *
    * If a facet exists with the configured `facetId`, selects the corresponding facet value.
@@ -73,13 +74,12 @@ export interface FieldSuggestions
   select(value: SpecificFacetSearchResult): void;
 
   /**
-   * Filters the search using the specified value, deselecting others.
-   *
-   * If a facet exists with the configured `facetId`, selects the corresponding facet value while deselecting other facet values.
+   * Returns a serialized query for the specified value.
    *
    * @param value - The field suggestion for which to select the matching facet value.
+   * @returns A serialized query for the specified value.
    */
-  singleSelect(value: SpecificFacetSearchResult): void;
+  getRedirectionParameters(value: SpecificFacetSearchResult): string;
 
   /**
    * Resets the query and empties the suggestions.
@@ -115,26 +115,22 @@ export function buildFieldSuggestions(
   const namespacedFacetId = getFacetIdWithCommerceFieldSuggestionNamespace(
     options.facetId
   );
+
   const facetSearch = buildRegularFacetSearch(engine, {
     options: {facetId: namespacedFacetId, ...options.facetSearch},
-    select: () => {
-      dispatch(options.fetchProductsActionCreator());
-    },
-    exclude: () => {
-      dispatch(options.fetchProductsActionCreator());
-    },
+    select: () => {},
+    exclude: () => {},
     isForFieldSuggestions: true,
   });
 
   const getState = () => engine[stateKey];
 
-  const getFacetForFieldSuggestions = (facetId: string) => {
-    return getState().fieldSuggestionsOrder.find(
-      (facet) => facet.facetId === facetId
-    )!;
-  };
-
   const controller = buildController(engine);
+
+  const facetForFieldSuggestionsSelector = createSelector(
+    (state: CommerceEngineState) => state.fieldSuggestionsOrder,
+    (facets) => facets.find((facet) => facet.facetId === options.facetId)!
+  );
 
   const facetSearchStateSelector = createSelector(
     (state: CommerceEngineState) => state.facetSearchSet[namespacedFacetId],
@@ -146,9 +142,33 @@ export function buildFieldSuggestions(
     })
   );
 
+  const {clear} = facetSearch;
+
   return {
     ...controller,
-    ...facetSearch,
+
+    clear,
+
+    getRedirectionParameters: function (
+      value: SpecificFacetSearchResult
+    ): string {
+      return searchSerializer.serialize({
+        q: facetSearchStateSelector(getState()).query,
+        f: {[options.facetId]: [value.rawValue]},
+      });
+    },
+
+    select: function (value: SpecificFacetSearchResult) {
+      dispatch(clearAllCoreFacets());
+      dispatch(selectFacetSearchResult({facetId: options.facetId, value}));
+      dispatch(
+        updateQuery({
+          query:
+            engine[stateKey].facetSearchSet[namespacedFacetId].options.query,
+        })
+      );
+      dispatch(options.fetchProductsActionCreator());
+    },
 
     updateText: function (text: string) {
       facetSearch.updateText(text);
@@ -156,11 +176,12 @@ export function buildFieldSuggestions(
     },
 
     get state() {
-      const facet = getFacetForFieldSuggestions(options.facetId);
+      const {displayName, field, facetId} =
+        facetForFieldSuggestionsSelector(getState());
       return {
-        displayName: facet.displayName,
-        field: facet.field,
-        facetId: facet.facetId,
+        displayName,
+        field,
+        facetId,
         ...facetSearchStateSelector(getState()),
       };
     },
@@ -172,8 +193,16 @@ export function buildFieldSuggestions(
 function loadFieldSuggestionsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<
-  FieldSuggestionsOrderSection & CommerceFacetSetSection & FacetSearchSection
+  CommerceFacetSetSection &
+    CommerceQuerySection &
+    FacetSearchSection &
+    FieldSuggestionsOrderSection
 > {
-  engine.addReducers({fieldSuggestionsOrder, commerceFacetSet, facetSearchSet});
+  engine.addReducers({
+    commerceFacetSet,
+    commerceQuery,
+    facetSearchSet,
+    fieldSuggestionsOrder,
+  });
   return true;
 }
