@@ -11,7 +11,7 @@ describe('@errorGuard decorator', () => {
 
   @customElement('test-element')
   class TestElement extends LitElement {
-    @state() public error?: Error;
+    @state() public error!: Error;
 
     @errorGuard()
     public render() {

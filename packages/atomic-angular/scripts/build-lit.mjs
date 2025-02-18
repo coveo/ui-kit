@@ -14,24 +14,29 @@ const endTag = '//#endregion Lit Declarations';
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
-  inputs: [${declaration.attributes.map(attr => `'${attr.name}'`).join(', ')}]
+  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
 })
 @Component({
   selector: '${declaration.tagName}',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [${declaration.attributes.map(attr => `'${attr.name}'`).join(', ')}]
+  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
 })
 export class ${declaration.name} {
   protected readonly el: HTMLElement;
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
+    proxyOutputs(this, this.el, [${declaration.events.map(event => `'${event.name}'`).join(', ')}]);
   }
 }
 
-export declare interface ${declaration.name} extends Lit${declaration.name} {}
+export declare interface ${declaration.name} extends Lit${declaration.name} {
+${declaration.events
+  .map(event => `  '${event.name}': EventEmitter<CustomEvent<any>>;`)
+  .join('\n')}
+}
 `
 atomicAngularComponentFileContent = atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd() + `\n\n${startTag}\n`;
 
@@ -49,7 +54,7 @@ for (const module of cem.modules) {
   }
 }
 
-atomicAngularComponentFileContent+=`\n${litDeclarations.join('\n')}\nimport type {${litImports.join(',')}} from '@coveo/atomic/components';\n${endTag}`;
+atomicAngularComponentFileContent += `\nimport type {${litImports.join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
 
 
 if(litDeclarations.length > 0) {

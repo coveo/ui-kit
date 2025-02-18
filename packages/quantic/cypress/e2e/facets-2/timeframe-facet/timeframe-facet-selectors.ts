@@ -60,6 +60,6 @@ export const TimeframeFacetSelectors: TimeframeFacetSelector = {
   form: () => TimeframeFacetSelectors.get().find('form'),
   validationError: () =>
     TimeframeFacetSelectors.form().find(
-      '.slds-form-element__help[data-error-message]'
+      '.slds-form-element__help[data-error-message]:visible'
     ),
 };

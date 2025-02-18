@@ -1,10 +1,12 @@
 import {html, LitElement} from 'lit';
 import {TemplateResultType} from 'lit-html/directive-helpers.js';
-import {GenericRender, RenderGuardDecorator} from './types';
+import {
+  GenericRender,
+  InitializableComponent,
+  RenderGuardDecorator,
+} from './types';
 
-export interface LitElementWithError extends LitElement {
-  error?: Error;
-}
+type LitElementWithError = Pick<InitializableComponent, 'error'> & LitElement;
 
 /**
  * A decorator that guards the render method of a LitElement component against errors.
