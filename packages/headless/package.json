@@ -161,7 +161,7 @@
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.43",
     "dayjs": "1.11.13",
-    "exponential-backoff": "3.1.1",
+    "exponential-backoff": "3.1.2",
     "fast-equals": "5.0.1",
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
