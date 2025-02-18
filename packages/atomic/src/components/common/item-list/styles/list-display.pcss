@@ -21,7 +21,7 @@
     @apply atomic-list-with-dividers;
   }
 
-  @media (width < theme(--breakpoint-desktop)) {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     &.image-large {
       @apply atomic-list-with-dividers;
       display: grid;

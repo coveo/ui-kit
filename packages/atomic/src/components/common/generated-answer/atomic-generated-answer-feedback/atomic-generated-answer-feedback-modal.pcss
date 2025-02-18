@@ -42,7 +42,7 @@
     @apply max-w-170;
   }
 
-  @media (width < theme(--breakpoint-desktop)) {
+  @media not all and (width >= theme(--breakpoint-desktop)) {
     @apply mobile-feedback-modal;
   }
 }

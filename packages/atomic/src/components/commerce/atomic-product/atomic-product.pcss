@@ -48,7 +48,7 @@
         }
       }
 
-      @media (width < theme(--breakpoint-desktop)) {
+      @media not all and (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
             @apply aspect-square-[auto];
@@ -125,7 +125,7 @@
         }
       }
 
-      @media (width < theme(--breakpoint-desktop)) {
+      @media not all and (width >= theme(--breakpoint-desktop)) {
         &.image-large {
           atomic-product-section-children .product-child {
             @apply aspect-square-[auto];

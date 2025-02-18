@@ -32,7 +32,7 @@
       }
     }
 
-    @media (width < theme(--breakpoint-desktop)) {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.75rem 0;
@@ -48,7 +48,7 @@
       }
     }
 
-    @media (width < theme(--breakpoint-desktop)) {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       [part~='outline'] {
         &::before {
           margin: 1.5rem 0;
@@ -204,7 +204,7 @@
       }
 
       &.image-small {
-        @media not all and (min-width: 1024px) {
+        @media not all and (width >= theme(--breakpoint-desktop)) {
           grid-template-columns: repeat(3, 1fr);
         }
         @media (width >= theme(--breakpoint-desktop)) {
@@ -220,7 +220,7 @@
 
 @utility atomic-grid-display-mobile {
   .list-root.display-grid {
-    @media (width < theme(--breakpoint-desktop)) {
+    @media not all and (width >= theme(--breakpoint-desktop)) {
       &.image-large {
         @media not all and (min-width: 768px) {
           @apply atomic-list-with-dividers;
