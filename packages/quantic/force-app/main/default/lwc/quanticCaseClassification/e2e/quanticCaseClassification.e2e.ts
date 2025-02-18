@@ -72,7 +72,7 @@ test.describe('quantic case classification', () => {
     });
 
     test.describe('clicking on a case classification option', () => {
-      test('should log propper collect events', async ({
+      test('should log the proper collect events', async ({
         caseClassification,
       }) => {
         const fieldUpdateCollectEventPromise =
