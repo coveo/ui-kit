@@ -1,4 +1,4 @@
-import type {
+import {
   LitElement,
   ReactiveController,
   ReactiveControllerHost,
@@ -51,7 +51,7 @@ function initializeBindings<
  *
  */
 export class BindingController implements ReactiveController {
-  host: ReactiveControllerHost & InitializableComponent<AnyBindings>;
+  host: ReactiveControllerHost;
 
   private unsubscribeLanguage = () => {};
 
@@ -60,7 +60,9 @@ export class BindingController implements ReactiveController {
   }
 
   hostConnected() {
-    initializeBindings(this.host as ReactiveElement)
+    initializeBindings(
+      this.host as ReactiveElement & InitializableComponent<AnyBindings>
+    )
       .then((unsubscribeLanguage) => {
         this.unsubscribeLanguage = unsubscribeLanguage;
       })

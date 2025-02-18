@@ -23,10 +23,10 @@ export interface InitializableComponent<
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.
    */
-  bindings?: SpecificBindings;
+  bindings: SpecificBindings;
   /**
    * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
    */
   initialize?: () => void;
-  error?: Error;
+  error: Error;
 }
