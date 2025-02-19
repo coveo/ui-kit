@@ -1,4 +1,5 @@
 import {defineConfig} from 'cypress';
+import setupNodeEvents from './cypress/plugins/index.js';
 
 export default defineConfig({
   reporter: 'spec',
@@ -18,9 +19,7 @@ export default defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
-      return require('./cypress/plugins/index.js')(on, config);
-    },
+    setupNodeEvents,
     baseUrl: 'http://localhost:3666',
     specPattern: 'cypress/e2e/**/*.cypress.ts',
   },
