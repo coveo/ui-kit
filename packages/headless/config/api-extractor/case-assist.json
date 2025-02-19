@@ -1,8 +1,0 @@
-{
-  "extends": "./base.json",
-  "mainEntryPointFilePath": "<projectFolder>/dist/definitions/case-assist.index.d.ts",
-  "docModel": {
-    "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/case-assist.api.json"
-  }
-}
