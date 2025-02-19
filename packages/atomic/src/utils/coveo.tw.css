@@ -1,4 +1,4 @@
-@theme inline {
+@theme inline static {
   /* Primary colors */
   --atomic-primary: #126ce0;
   --atomic-primary-light: #399ffe;
@@ -53,7 +53,7 @@
   --atomic-layout-spacing-y: 1rem;
 }
 
-@theme inline {
+@theme inline static {
   --color-primary: var(--atomic-primary);
   --color-primary-light: var(--atomic-primary-light);
   --color-primary-dark: var(--atomic-primary-dark);
