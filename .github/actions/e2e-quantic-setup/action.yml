@@ -25,11 +25,11 @@ runs:
         SFDX_AUTH_JWT_KEY_FILE: server.key
         SFDX_AUTH_JWT_USERNAME: rdaccess@coveo.com
         SFDX_AUTH_JWT_INSTANCE_URL: https://login.salesforce.com
-    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
+    - uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4
       with:
         path: packages/quantic/cypress/plugins/config
         key: quantic-cypress-config-${{ github.sha }}
-    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
+    - uses: actions/cache@0c907a75c2c80ebcb7f088228285e798b750cf8f # v4
       with:
         path: packages/quantic/.env
         key: quantic-playwright-env-${{ github.sha }}
