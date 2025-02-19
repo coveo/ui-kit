@@ -1,4 +1,4 @@
-import {ifDefined} from 'lit-html/directives/if-defined.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {html, literal, unsafeStatic} from 'lit/static-html.js';
 
 export interface HeadingProps {
