@@ -1,5 +1,7 @@
+interface ImportMetaEnv {
+  readonly RESOURCE_URL: string;
+}
+
 interface ImportMeta {
-  env: {
-    RESOURCE_URL?: string;
-  };
+  readonly env: ImportMetaEnv;
 }
