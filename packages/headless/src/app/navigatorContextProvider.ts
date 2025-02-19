@@ -20,6 +20,15 @@ export interface NavigatorContext {
    * See [clientId](https://docs.coveo.com/en/masb0234).
    */
   clientId: string;
+  /**
+   * Whether to capture analytics events.
+   *
+   * Must be set left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
+   *
+   * Should also be set to `false` to comply with regulations if the user has somehow indicated that they do not wish to
+   * be tracked (e.g., by rejecting the category of cookies the `coveo_visitorId` is categorized in).
+   */
+  capture?: boolean;
 }
 
 export type NavigatorContextProvider = () => NavigatorContext;
@@ -33,6 +42,7 @@ export const defaultBrowserNavigatorContextProvider: BrowserNavigatorContextProv
     userAgent: navigator.userAgent,
     location: window.location.href,
     clientId,
+    capture: clientId !== '',
   });
 
 export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
@@ -41,4 +51,5 @@ export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
     userAgent: null,
     location: null,
     clientId: '',
+    capture: false,
   });

@@ -96,7 +96,8 @@ export const buildBaseCommerceAPIRequest = (
           ? {referrer: navigatorContext.referrer}
           : {}),
       },
-      capture: state.configuration.analytics.enabled,
+      capture:
+        navigatorContext.capture ?? state.configuration.analytics.enabled,
       cart: getProductsFromCartState(state.cart),
       source: getAnalyticsSource(state.configuration.analytics),
     },
