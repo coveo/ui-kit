@@ -23,6 +23,7 @@ import {
   collapseGeneratedAnswer,
   updateAnswerConfigurationId,
   setIsEnabled,
+  setCannotAnswer,
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
@@ -128,5 +129,8 @@ export const generatedAnswerReducer = createReducer(
       })
       .addCase(updateAnswerConfigurationId, (state, {payload}) => {
         state.answerConfigurationId = payload;
+      })
+      .addCase(setCannotAnswer, (state, {payload}) => {
+        state.cannotAnswer = payload;
       })
 );

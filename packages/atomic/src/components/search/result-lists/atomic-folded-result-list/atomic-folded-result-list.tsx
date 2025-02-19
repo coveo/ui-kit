@@ -32,7 +32,6 @@ import {ArrayProp} from '../../../../utils/props-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {Hidden} from '../../../common/hidden';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
@@ -50,6 +49,7 @@ import {
   ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

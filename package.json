@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.14",
+  "version": "3.0.16",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -30,8 +30,8 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/github": "6.0.0",
-    "@commitlint/config-conventional": "19.6.0",
-    "@commitlint/lint": "19.6.0",
+    "@commitlint/config-conventional": "19.7.1",
+    "@commitlint/lint": "19.7.1",
     "@commitlint/load": "19.6.1",
     "@coveo/release": "1.0.0",
     "@cspell/dict-fr-fr": "2.2.5",
@@ -42,10 +42,10 @@
     "@tsconfig/node20": "20.1.4",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.12.0",
+    "@types/node": "22.13.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
-    "@vitest/browser": "2.1.8",
+    "@vitest/browser": "2.1.9",
     "aws-sdk": "2.1692.0",
     "commitizen": "4.3.1",
     "concurrently": "9.1.2",
@@ -69,7 +69,7 @@
     "prettier-plugin-tailwindcss": "0.6.11",
     "publint": "0.3.2",
     "rimraf": "6.0.1",
-    "semver": "7.6.3",
+    "semver": "7.7.1",
     "typescript": "5.5.4",
     "vite": "5.4.14"
   },
@@ -120,5 +120,5 @@
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "packageManager": "npm@11.0.0"
+  "packageManager": "npm@11.1.0"
 }

@@ -83,6 +83,10 @@ export interface GeneratedAnswerState {
    */
   expanded: boolean;
   /**
+   * Whether an answer cannot be generated after a query is executed.
+   */
+  cannotAnswer: boolean;
+  /**
    * The answer configuration unique identifier.
    */
   answerConfigurationId?: string;
@@ -106,5 +110,6 @@ export function getGeneratedAnswerInitialState(): GeneratedAnswerState {
     fieldsToIncludeInCitations: [],
     isAnswerGenerated: false,
     expanded: false,
+    cannotAnswer: false,
   };
 }

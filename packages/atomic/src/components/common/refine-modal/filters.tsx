@@ -1,6 +1,6 @@
 import {FunctionalComponent, Fragment, h} from '@stencil/core';
 import {i18n} from 'i18next';
-import {Button} from '../button';
+import {Button} from '../stencil-button';
 
 interface RefineModalFiltersSectionProps {
   i18n: i18n;

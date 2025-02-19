@@ -5,8 +5,8 @@ import {
   Instance as PopperInstance,
 } from '@popperjs/core';
 import {Component, h, State, Prop, Element, Watch} from '@stencil/core';
-import {Heading} from '../../heading';
 import {LinkWithItemAnalytics} from '../../item-link/item-link';
+import {Heading} from '../../stencil-heading';
 
 /**
  * @internal
