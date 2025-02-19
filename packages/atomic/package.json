@@ -107,7 +107,7 @@
     "@storybook/test": "8.1.11",
     "@storybook/web-components": "8.1.11",
     "@storybook/web-components-vite": "8.1.11",
-    "@tailwindcss/postcss": "4.0.6",
+    "@tailwindcss/postcss": "4.0.7",
     "@testing-library/jest-dom": "6.6.3",
     "@types/core-js": "2.5.8",
     "@types/escape-html": "1.0.4",
