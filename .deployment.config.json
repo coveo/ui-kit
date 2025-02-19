@@ -21,7 +21,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -33,7 +33,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_MINOR_VERSION]",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }

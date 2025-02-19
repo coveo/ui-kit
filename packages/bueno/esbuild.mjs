@@ -40,7 +40,7 @@ function browserEsm() {
   return build({
     ...base,
     platform: 'browser',
-    outfile: 'dist/browser/bueno.esm.js',
+    outfile: 'cdn/bueno.esm.js',
     format: 'esm',
     watch: devMode,
   });
@@ -72,7 +72,7 @@ function browserUmd() {
   return build({
     ...base,
     platform: 'browser',
-    outfile: 'dist/browser/bueno.js',
+    outfile: 'cdn/bueno.js',
     format: 'cjs',
     banner: {
       js: `${base.banner.js}`,
