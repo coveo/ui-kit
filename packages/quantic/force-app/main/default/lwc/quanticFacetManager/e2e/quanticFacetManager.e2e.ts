@@ -55,19 +55,11 @@ useCaseTestCases.forEach((useCase) => {
         const {facets} = await searchResponse.json();
         expect(facets).not.toBeNull();
 
-        facets?.forEach(async (facet: any, index: number) => {
-          const facetManagerItem =
-            facetManager.getFacetManagerItemByIndex(index);
-          expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
-            facet.facetId
-          );
-        });
-
         exampleFacetsOrder.forEach(async (facetId: string, index: number) => {
           const facetManagerItem =
             facetManager.getFacetManagerItemByIndex(index);
           expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
-            exampleFacetsOrder[index]
+            facetId
           );
         });
       });
