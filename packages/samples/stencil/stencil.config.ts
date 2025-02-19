@@ -1,7 +1,10 @@
 import {Config} from '@stencil/core';
-import {readFileSync} from 'fs';
-import {join} from 'path';
+import {spawnSync} from 'node:child_process';
+//@ts-expect-error will be fixed when @types/node 22.14+ will be released
+import {findPackageJSON} from 'node:module';
+import {dirname, join} from 'node:path';
 import html from 'rollup-plugin-html';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 // https://stenciljs.com/docs/config
 
@@ -38,36 +41,44 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
-      resolveAtomicPaths(),
+      coveoResolve(),
     ],
+    after: [nodePolyfills()],
   },
 };
 
-function resolveAtomicPaths() {
+function coveoResolve() {
   return {
-    resolveId(source: string) {
-      if (source.startsWith('@coveo/atomic/')) {
-        const nodeModulesLocation = '../../../node_modules';
-
-        const packageJsonPath = join(
-          process.cwd(),
-          nodeModulesLocation,
-          '@coveo',
-          'atomic',
-          'package.json'
-        );
-
-        const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
-
-        const subPath = './' + source.replace('@coveo/atomic/', '');
-        const subPathImport = packageJson.exports[subPath].import;
-
-        const id = `${nodeModulesLocation}/@coveo/atomic/${subPathImport}`;
-        return {
-          id,
-        };
+    resolveId(source: string, importer: string) {
+      if (source === '@coveo/relay') {
+        return {id: resolveRelay(importer)};
       }
-      return null;
+      if (source.startsWith('@coveo')) {
+        return nodeResolve(source, importer, ['browser', 'default', 'import']);
+      }
     },
   };
+}
+
+function resolveRelay(importer: string) {
+  const pjsonPath = findPackageJSON('@coveo/relay', importer);
+  const pjson = require(pjsonPath);
+  const defaultRelativePath = pjson.exports.default.default;
+  return join(dirname(pjsonPath), defaultRelativePath);
+}
+
+function nodeResolve(
+  source: string,
+  importer: string,
+  conditions: string[] = []
+) {
+  return spawnSync(
+    process.argv[0],
+    [
+      ...conditions.flatMap((condition) => ['-C', condition]),
+      '-p',
+      `require.resolve('${source}')`,
+    ],
+    {encoding: 'utf-8'}
+  ).stdout.trim();
 }

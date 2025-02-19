@@ -17,6 +17,14 @@
   "files": [
     "dist/"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/definitions/index.d.ts",
+      "import": "./dist/bueno.esm.js",
+      "require": "./dist/bueno.js",
+      "default": "./dist/bueno.js"
+    }
+  },
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
     "build": "nx build",
