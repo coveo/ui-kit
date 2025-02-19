@@ -42,7 +42,6 @@ export const defaultBrowserNavigatorContextProvider: BrowserNavigatorContextProv
     userAgent: navigator.userAgent,
     location: window.location.href,
     clientId,
-    capture: clientId !== '',
   });
 
 export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
@@ -51,5 +50,4 @@ export const defaultNodeJSNavigatorContextProvider: NavigatorContextProvider =
     userAgent: null,
     location: null,
     clientId: '',
-    capture: false,
   });
