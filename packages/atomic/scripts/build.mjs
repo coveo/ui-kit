@@ -1,4 +1,5 @@
-import {dirname, basename} from 'path';
+import chalk from 'chalk';
+import {dirname, basename, relative} from 'path';
 import {argv} from 'process';
 import {
   readConfigFile,
@@ -8,6 +9,7 @@ import {
   getPreEmitDiagnostics,
   createProgram,
   flattenDiagnosticMessageText,
+  DiagnosticCategory,
 } from 'typescript';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import pathTransformer from './path-transform.mjs';
@@ -68,7 +70,10 @@ function emit(program) {
  * Info: https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#a-minimal-compiler
  */
 function compileWithTransformer() {
-  console.log('Using tsconfig:', basename(tsConfigPath));
+  console.log(
+    chalk.blue('Using tsconfig:'),
+    chalk.green(basename(tsConfigPath))
+  );
   const {options, fileNames} = loadTsConfig(tsConfigPath);
   const program = createProgram(fileNames, options);
   const emitResult = emit(program);
@@ -76,6 +81,8 @@ function compileWithTransformer() {
   const allDiagnostics = getPreEmitDiagnostics(program).concat(
     emitResult.diagnostics
   );
+
+  let hasError = false;
 
   allDiagnostics.forEach((diagnostic) => {
     if (diagnostic.file) {
@@ -89,14 +96,20 @@ function compileWithTransformer() {
       );
 
       console.log(
-        `${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`
+        `${chalk.cyan(relative(process.cwd(), diagnostic.file.fileName))}:${chalk.yellow(line + 1)}:${chalk.yellow(character + 1)} - ${chalk.red('error')} ${chalk.gray(message)}`
       );
     } else {
-      console.error(flattenDiagnosticMessageText(diagnostic.messageText, '\n'));
+      console.error(
+        chalk.red(flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
+      );
+    }
+
+    if (diagnostic.category === DiagnosticCategory.Error) {
+      hasError = true;
     }
   });
 
-  let exitCode = emitResult.emitSkipped ? 1 : 0;
+  let exitCode = emitResult.emitSkipped || hasError ? 1 : 0;
   console.log(`Process exiting with code '${exitCode}'.`);
   process.exit(exitCode);
 }
