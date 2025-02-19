@@ -2,8 +2,8 @@ import {SmartSnippet, SmartSnippetFeedback} from '@coveo/headless';
 import {EventEmitter, h} from '@stencil/core';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once} from '../../../../utils/utils';
-import {Button} from '../../button';
 import {AnyBindings} from '../../interface/bindings';
+import {Button} from '../../stencil-button';
 
 interface SmartSnippetFeedbackModalProps {
   formId: string;

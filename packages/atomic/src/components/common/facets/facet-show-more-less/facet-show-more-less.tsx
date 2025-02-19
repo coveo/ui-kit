@@ -2,7 +2,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import MinusIcon from '../../../../images/minus.svg';
 import PlusIcon from '../../../../images/plus.svg';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 
 interface FacetShowMoreProps {
   label: string;

@@ -10,11 +10,19 @@ import {
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
 
+/**
+ * @group Sub-controllers
+ * @category LocationFacet
+ */
 export type LocationFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 >;
 
+/**
+ * @group Sub-controllers
+ * @category LocationFacet
+ */
 export type LocationFacetState = Omit<
   CoreCommerceFacetState<LocationFacetValue>,
   'type'
@@ -25,6 +33,9 @@ export type LocationFacetState = Omit<
 /**
  * The `LocationFacet` sub-controller offers a high-level programming interface for implementing a location commerce
  * facet UI component.
+ *
+ * @group Sub-controllers
+ * @category LocationFacet
  */
 export type LocationFacet = Omit<
   CoreCommerceFacet<FacetValueRequest, LocationFacetValue>,

@@ -1,5 +1,5 @@
 import {FunctionalComponent, h, VNode} from '@stencil/core';
-import {Button} from '../../button';
+import {Button} from '../../stencil-button';
 import {FacetValueProps} from '../facet-common';
 
 export interface FacetValueLinkProps extends FacetValueProps {

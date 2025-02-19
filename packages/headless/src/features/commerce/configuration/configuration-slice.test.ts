@@ -1,8 +1,9 @@
+import {updateBasicConfiguration} from '../../configuration/configuration-actions.js';
 import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
-  updateBasicConfiguration,
+  updateBasicConfiguration as updateBasicCommerceConfiguration,
   updateProxyBaseUrl,
 } from './configuration-actions.js';
 import {configurationReducer} from './configuration-slice.js';
@@ -51,6 +52,44 @@ describe('commerce configuration slice', () => {
         configurationReducer(
           existingState,
           updateBasicConfiguration({
+            accessToken: 'my-new-access-token',
+            environment: 'hipaa',
+            organizationId: 'my-new-org-id',
+          })
+        )
+      ).toEqual({
+        ...existingState,
+        accessToken: 'my-new-access-token',
+        environment: 'hipaa',
+        organizationId: 'my-new-org-id',
+      });
+    });
+  });
+
+  describe('updateBasicCommerceConfiguration', () => {
+    it('works on initial state', () => {
+      expect(
+        configurationReducer(
+          undefined,
+          updateBasicCommerceConfiguration({
+            accessToken: 'my-new-access-token',
+            environment: 'hipaa',
+            organizationId: 'my-new-org-id',
+          })
+        )
+      ).toEqual({
+        ...getConfigurationInitialState(),
+        accessToken: 'my-new-access-token',
+        environment: 'hipaa',
+        organizationId: 'my-new-org-id',
+      });
+    });
+
+    it('works on an existing state', () => {
+      expect(
+        configurationReducer(
+          existingState,
+          updateBasicCommerceConfiguration({
             accessToken: 'my-new-access-token',
             environment: 'hipaa',
             organizationId: 'my-new-org-id',

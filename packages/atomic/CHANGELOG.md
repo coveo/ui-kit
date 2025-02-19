@@ -1,3 +1,20 @@
+## <small>3.19.1 (2025-02-17)</small>
+
+- fix(atomic): add isMobile to insight store (#4959) ([73341a3](https://github.com/coveo/ui-kit/commits/73341a3)), closes [#4959](https://github.com/coveo/ui-kit/issues/4959)
+- fix(atomic): don't redirect when hovering a instant result & pressing Enter (#4938) ([eea90a2](https://github.com/coveo/ui-kit/commits/eea90a2)), closes [#4938](https://github.com/coveo/ui-kit/issues/4938)
+- fix(atomic): using `_blank` target on custom recommendation link template opens two tabs on click (# ([de34ef6](https://github.com/coveo/ui-kit/commits/de34ef6)), closes [#4953](https://github.com/coveo/ui-kit/issues/4953) [/github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx#L26](https://github.com//github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/common/item-list/display-grid.tsx/issues/L26)
+
+## 3.19.0 (2025-02-12)
+
+- fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)
+- fix(atomic): fix broken generated types (#4932) ([1c8d484](https://github.com/coveo/ui-kit/commits/1c8d484)), closes [#4932](https://github.com/coveo/ui-kit/issues/4932)
+- fix(atomic): search-box announces new suggestions even when count stays the same (#4950) ([ff21fd0](https://github.com/coveo/ui-kit/commits/ff21fd0)), closes [#4950](https://github.com/coveo/ui-kit/issues/4950)
+- fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)
+- chore(atomic): move `CommerceBindings` type to .ts file (#4937) ([808f891](https://github.com/coveo/ui-kit/commits/808f891)), closes [#4937](https://github.com/coveo/ui-kit/issues/4937)
+- chore(deps): update vite to v2.1.9 j:kit-282 (#4956) ([ab2acbd](https://github.com/coveo/ui-kit/commits/ab2acbd)), closes [#4956](https://github.com/coveo/ui-kit/issues/4956)
+- feat(atomic): add button function for lit components (#4857) ([b64e226](https://github.com/coveo/ui-kit/commits/b64e226)), closes [#4857](https://github.com/coveo/ui-kit/issues/4857)
+- feat(atomic): add heading function for lit components (#4861) ([33fae2f](https://github.com/coveo/ui-kit/commits/33fae2f)), closes [#4861](https://github.com/coveo/ui-kit/issues/4861)
+
 ## 3.18.0 (2025-02-05)
 
 - chore: fix failing atomic test due to source change (#4909) ([ac4da32](https://github.com/coveo/ui-kit/commits/ac4da32)), closes [#4909](https://github.com/coveo/ui-kit/issues/4909)

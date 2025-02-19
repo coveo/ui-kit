@@ -6,8 +6,8 @@ import {
   forceUpdate as forceUpdateComponent,
 } from '@stencil/core';
 import {TOptions} from 'i18next';
-import {Hidden} from '../components/common/hidden';
 import {AnyBindings} from '../components/common/interface/bindings';
+import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
 import {
@@ -113,6 +113,7 @@ const loadedAttribute = 'data-atomic-loaded';
  * @InitializeBindings() public bindings!: Bindings;
  *
  * For more information and examples, view the "Utilities" section of the readme.
+ * @deprecated To be used for Stencil components. For Lit components, use `BindingController` Reactive Controller from @/mixins/bindings-mixin.ts.
  */
 export function InitializeBindings<SpecificBindings extends AnyBindings>({
   forceUpdate,
