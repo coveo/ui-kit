@@ -52,25 +52,37 @@ useCaseTestCases.forEach((useCase) => {
         await search.performSearch();
 
         const searchResponse = await searchResponsePromise;
-        const searchResponseBody = await searchResponse.json();
-        expect(searchResponseBody).not.toBeNull();
+        const {facets} = await searchResponse.json();
+        expect(facets).not.toBeNull();
 
-        searchResponseBody?.facets?.forEach(
-          async (facet: any, index: number) => {
-            const facetManagerItem =
-              facetManager.getFacetManagerItemByIndex(index);
-            expect(
-              await facetManagerItem.getAttribute('data-facet-id')
-            ).toEqual(facet.facetId);
-          }
-        );
+        facets?.forEach(async (facet: any, index: number) => {
+          const facetManagerItem =
+            facetManager.getFacetManagerItemByIndex(index);
+          expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
+            facet.facetId
+          );
+        });
 
-        [exampleFacetsOrder.length - 1].forEach(async (index: number) => {
+        exampleFacetsOrder.forEach(async (facetId: string, index: number) => {
           const facetManagerItem =
             facetManager.getFacetManagerItemByIndex(index);
           expect(await facetManagerItem.getAttribute('data-facet-id')).toEqual(
             exampleFacetsOrder[index]
           );
+        });
+      });
+    });
+
+    test.describe('when an itemTemplate slot is provided', () => {
+      test('should customize the element that wraps each facet according to the itemTemplate slot', async ({
+        facetManager,
+      }) => {
+        const expectedClass = 'slds-m-around_xx-large';
+        expect(facetManager.itemTemplateSlot).not.toBeNull();
+
+        const facetManagerItems = await facetManager.facetManagerItems.all();
+        facetManagerItems.forEach(async (item: any) => {
+          expect(await item.getAttribute('class')).toContain(expectedClass);
         });
       });
     });

@@ -10,14 +10,14 @@ export class FacetManagerObject {
   }
 
   get facetManagerItems(): Locator {
-    return this.facetManager.locator('.facet-manager__item');
+    return this.facetManager.getByTestId('facet-manager__item');
+  }
+
+  get itemTemplateSlot(): Locator {
+    return this.facetManager.locator('slot[name="itemTemplate"]');
   }
 
   getFacetManagerItemByIndex(index: number): Locator {
     return this.facetManagerItems.nth(index);
-  }
-
-  getAllFacetManagerItems(): Promise<Locator[]> {
-    return this.facetManager.locator('.facet-manager__item').all();
   }
 }

@@ -55,8 +55,9 @@ export class SearchObject {
       const reorderedFacets: unknown[] = [];
 
       facetIds.forEach((facetId, idx) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const facet = facets.find((f: any) => f.facetId === facetId);
+        const facet = facets.find(
+          (f: {facetId: string}) => f.facetId === facetId
+        );
         if (facet) {
           reorderedFacets.push({
             ...facet,
