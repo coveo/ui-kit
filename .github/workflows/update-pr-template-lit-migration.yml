@@ -1,4 +1,4 @@
-name: Update PR Template with Dynamic Values
+name: Update PR for Lit Component Migration
 
 on:
   pull_request:
