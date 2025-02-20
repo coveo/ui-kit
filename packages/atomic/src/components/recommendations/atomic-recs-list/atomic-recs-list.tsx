@@ -17,12 +17,12 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';

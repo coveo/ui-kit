@@ -8,13 +8,13 @@ import {
   GeneratedAnswerState as InsightGeneratedAnswerState,
 } from '@coveo/headless/insight';
 import {Component, Element, State, Prop, Watch} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 

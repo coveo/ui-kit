@@ -20,13 +20,13 @@ import {
   loadNumericFacetSetActions as loadInsightNumericFacetSetActions,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';

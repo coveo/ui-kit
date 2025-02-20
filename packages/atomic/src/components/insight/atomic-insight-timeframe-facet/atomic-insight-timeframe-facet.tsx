@@ -18,13 +18,13 @@ import {
   CategoryFacetValueRequest as InsightCategoryFacetValueRequest,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {MapProp} from '../../../utils/props-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {TimeframeFacetCommon} from '../../common/facets/timeframe-facet-common';

@@ -11,7 +11,6 @@ import {
   TabManager,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Watch, h} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
@@ -19,6 +18,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
 import {Hidden} from '../../common/stencil-hidden';
