@@ -23,7 +23,7 @@ _The `[component-name]` component is designed to [brief description of the compo
 
 - [Description of accessibility considerations, such as ARIA roles, keyboard navigation, etc.]
 
-## ⚡ Performance & Security
+## ⚡ Performance & Security (if applicable)
 
 <!--
     Describe performance considerations, such as asynchronous operations, lazy loading, etc.
@@ -33,7 +33,7 @@ _The `[component-name]` component is designed to [brief description of the compo
 - [Description of performance considerations, such as asynchronous operations, lazy loading, etc.]
 - [Description of security considerations, such as sanitization, preventing XSS attacks, etc.]
 
-## ⚠️ Risks and Challenges
+## ⚠️ Risks and Challenges (if applicable)
 
 <!--
     Identify potential risks and challenges associated with the component's implementation and usage.
@@ -46,9 +46,12 @@ _The `[component-name]` component is designed to [brief description of the compo
 
 ## ✅ Checklist
 
-- [ ] 🧪 A specification file (`.spec.ts`) has been added for each migrated Atomic component.
-- [ ] 📦 The Lit component has been exported via appropriate `index.ts` and `lazy-index.ts` files.
-- [ ] 🗑️ Stencil equivalent has been removed.
-- [ ] 🎨 CSS parts are still accessible.
+- [ ] 🧪 The component is [unit tested](https://docs.google.com/document/d/1lrsHAUROGMkRbsGlor02eYKF2mfrfBa0SOESxHFU3pI/edit?tab=t.0#heading=h.l9yzzrwf1i4k)
+- [ ] 🧪 The component includes [E2E tests](https://docs.google.com/document/d/1lrsHAUROGMkRbsGlor02eYKF2mfrfBa0SOESxHFU3pI/edit?tab=t.0#heading=h.z9tw07qe1lai)
+- [ ] ♿ The component complies with the [Web Content Accessibility Guidelines](https://www.w3.org/TR/WCAG21/).
+- [ ] 🌐 All strings intended for humans or assistive technology must be localized with i18n.
+- [ ] 📦 The Lit component is exported in the appropriate `index.ts` and `lazy-index.ts` files.
+- [ ] 🎨 CSS parts are documented still accessible.
+- [ ] 🦥 Slotted Content, public methods and properties are documented
 
 https://coveord.atlassian.net/browse/KIT-[____]
