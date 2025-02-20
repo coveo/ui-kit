@@ -2,7 +2,7 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 
 const {decorator, play} = wrapInCommerceInterface({});
 

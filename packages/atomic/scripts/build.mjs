@@ -40,6 +40,7 @@ function emit(program) {
   const emitOnlyDtsFiles = false;
   const customTransformers = {
     before: [svgTransformer, pathTransformer],
+    afterDeclarations: [pathTransformer],
   };
 
   return program.emit(
