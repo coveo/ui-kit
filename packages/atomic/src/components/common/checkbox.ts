@@ -1,4 +1,5 @@
-import {html, TemplateResult} from 'lit';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
@@ -26,7 +27,7 @@ export interface CheckboxProps {
   onMouseDown?(evt: MouseEvent): void;
 }
 
-export const checkbox = (props: CheckboxProps): TemplateResult => {
+export const checkbox: FunctionalComponent<CheckboxProps> = ({props}) => {
   const partName = props.part ?? 'checkbox';
   const baseClassNames =
     'w-4 h-4 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light';
