@@ -85,7 +85,7 @@
     "jsdoc-tsimport-plugin": "1.0.5",
     "mkdirp": "3.0.1",
     "ncp": "2.0.0",
-    "prettier-plugin-apex": "2.2.3",
+    "prettier-plugin-apex": "2.2.4",
     "strip-color": "0.1.0",
     "ts-node": "10.9.2",
     "wait-on": "8.0.2",
