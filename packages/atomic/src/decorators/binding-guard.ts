@@ -1,5 +1,5 @@
 import {html, LitElement, nothing} from 'lit';
-import type {TemplateResultType} from 'lit-html/directive-helpers.js';
+import type {TemplateResultType} from 'lit/directive-helpers.js';
 import type {
   GenericRender,
   InitializableComponent,
