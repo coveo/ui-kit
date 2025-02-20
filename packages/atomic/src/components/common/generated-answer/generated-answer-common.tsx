@@ -118,7 +118,7 @@ export class GeneratedAnswerCommon {
     );
   }
 
-  private get shouldBeHidden() {
+  private get hasNoAnswerGenerated() {
     const {answer, citations} = this.props.getGeneratedAnswerState() ?? {};
     return (
       answer === undefined && !citations?.length && !this.hasRetryableError
@@ -148,6 +148,11 @@ export class GeneratedAnswerCommon {
     return !this.props.getCopied()
       ? this.props.getBindings().i18n.t('copy-generated-answer')
       : this.props.getBindings().i18n.t('generated-answer-copied');
+  }
+
+  private get hasCustomNoAnswerMessage() {
+    const slot = getNamedSlotFromHost(this.props.host, 'no-answer-message');
+    return !!slot;
   }
 
   private async copyToClipboard(answer: string) {
@@ -352,11 +357,6 @@ export class GeneratedAnswerCommon {
     );
   }
 
-  private hasCustomNoAnswerMessage() {
-    const slot = getNamedSlotFromHost(this.props.host, 'no-answer-message');
-    return !!slot;
-  }
-
   private renderContent() {
     const {getGeneratedAnswerState, getBindings, getGeneratedAnswer} =
       this.props;
@@ -450,8 +450,8 @@ export class GeneratedAnswerCommon {
     const {getGeneratedAnswerState} = this.props;
     const {cannotAnswer} = getGeneratedAnswerState() ?? {};
 
-    if (this.shouldBeHidden) {
-      return cannotAnswer && this.hasCustomNoAnswerMessage() ? (
+    if (this.hasNoAnswerGenerated) {
+      return cannotAnswer && this.hasCustomNoAnswerMessage ? (
         <div>
           <aside class={`mx-auto ${this.contentClasses}`} part="container">
             <article>{this.renderCustomNoAnswerMessage()}</article>
