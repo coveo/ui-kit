@@ -1,7 +1,3 @@
-import {
-  EventSourceMessage,
-  fetchEventSource,
-} from '@microsoft/fetch-event-source';
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   setAnswerContentFormat,
@@ -27,6 +23,8 @@ import {
   InsightConfigurationSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
+import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
+import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';

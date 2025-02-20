@@ -1,5 +1,5 @@
 import recsStory from 'atomic-storybook/recommendation/recs-story';
-import {html} from 'lit-html';
+import {html} from 'lit';
 
 const {defaultModuleExport, exportedStory} = recsStory(
   'atomic-ipx-recs-list',

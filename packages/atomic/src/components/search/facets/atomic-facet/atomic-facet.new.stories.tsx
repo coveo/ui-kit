@@ -3,7 +3,7 @@ import {facetDecorator} from '@/storybook-utils/common/facets-decorator';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit-html';
+import {html} from 'lit';
 
 const {decorator, play} = wrapInSearchInterface();
 

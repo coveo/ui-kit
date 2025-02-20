@@ -1,11 +1,4 @@
-import {h, VNode} from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
-import {parseDate} from '../../../utils/date-utils';
-import {getFieldValueCaption} from '../../../utils/field-utils';
-import {randomID} from '../../../utils/utils';
-import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
-import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
-import {Hidden} from '../stencil-hidden';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {
   DateFacet,
   DateFacetValue,
@@ -18,7 +11,14 @@ import {
   RelativeDatePeriod,
   RelativeDateUnit,
   SearchStatusState,
-} from '../types';
+} from '@coveo/headless';
+import {h, VNode} from '@stencil/core';
+import {parseDate} from '../../../utils/date-utils';
+import {getFieldValueCaption} from '../../../utils/field-utils';
+import {randomID} from '../../../utils/utils';
+import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
+import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
+import {Hidden} from '../stencil-hidden';
 import {shouldDisplayInputForFacetRange} from './facet-common';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';

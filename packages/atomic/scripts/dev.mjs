@@ -194,6 +194,12 @@ watch('src', {recursive: true}, async (_, filename) => {
     return;
   }
 
+  await nextTask('Building the custom elements manifest...', 'cem analyze');
+
+  if (isStopped) {
+    return;
+  }
+
   await nextTask(
     'Building storybook...',
     'npx storybook build -o dist-storybook'

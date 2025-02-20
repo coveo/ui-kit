@@ -5,7 +5,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import type {Decorator} from '@storybook/web-components';
-import {html} from 'lit-html';
+import {html} from 'lit';
 
 const styledDivDecorator: Decorator = (story) => {
   return html`<div style="max-width: 700px">${story()}</div>`;
