@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import {readdirSync, statSync} from 'fs';
-import {join, resolve as resolvePath, relative} from 'path';
+import {join, resolve as resolvePath, relative, sep} from 'path';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
@@ -63,8 +63,8 @@ export default {
     manualChunks: (id) => {
       if (id.includes('node_modules')) {
         return (
-          'vendor/' +
-          id.toString().split('node_modules/')[1].split('/')[0].toString()
+          `vendor${sep}` +
+          id.toString().split(`node_modules${sep}`)[1].split(sep)[0].toString()
         );
       }
     },
