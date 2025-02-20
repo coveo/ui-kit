@@ -46,9 +46,6 @@ export class GeneratedAnswerCommon {
   private _data: GeneratedAnswerData;
   private modalRef?: HTMLAtomicGeneratedAnswerFeedbackModalElement;
 
-  private contentClasses =
-    'mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
-
   constructor(private props: GeneratedAnswerCommonOptions) {
     this._data = this.readStoredData();
   }
@@ -449,19 +446,22 @@ export class GeneratedAnswerCommon {
   public render() {
     const {getGeneratedAnswerState} = this.props;
     const {cannotAnswer} = getGeneratedAnswerState() ?? {};
+    const contentClasses =
+      'mx-auto mt-0 mb-4 border border-neutral shadow-lg p-6 bg-background rounded-lg p-6 text-on-background';
 
     if (this.hasNoAnswerGenerated) {
       return cannotAnswer && this.hasCustomNoAnswerMessage ? (
         <div>
-          <aside class={`mx-auto ${this.contentClasses}`} part="container">
+          <aside class={contentClasses} part="container">
             <article>{this.renderCustomNoAnswerMessage()}</article>
           </aside>
         </div>
       ) : null;
     }
+
     return (
       <div>
-        <aside class={`mx-auto ${this.contentClasses}`} part="container">
+        <aside class={contentClasses} part="container">
           <article>{this.renderContent()}</article>
         </aside>
       </div>
