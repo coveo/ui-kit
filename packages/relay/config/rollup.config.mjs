@@ -2,14 +2,7 @@ import replace from "@rollup/plugin-replace";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import terser from "@rollup/plugin-terser";
-import { readFileSync } from "fs";
-
-const getVersion = () => {
-  const { version } = JSON.parse(
-    readFileSync("./package.json", { encoding: "utf-8" }),
-  );
-  return version;
-};
+import packageJSON from "../package.json" with { type: "json" };
 
 const commonPlugins = (compilerOptions) => [
   typescript({
@@ -19,20 +12,18 @@ const commonPlugins = (compilerOptions) => [
   replace({
     preventAssignment: true,
     values: {
-      "process.env.VERSION": getVersion(),
+      "process.env.VERSION": packageJSON.version,
     },
   }),
 ];
 
-const browser = {
-  input: "./src/relay.ts",
-  output: [
-    {
-      file: "./lib/relay.js",
-      format: "esm",
+const externalizeProductionDependencies = () => {
+  return {
+    name: "externalize-production-dependencies",
+    resolveId(id) {
+      return id in packageJSON.dependencies ? { id, external: true } : null;
     },
-  ],
-  plugins: [nodeResolve({ browser: true }), ...commonPlugins()],
+  };
 };
 
 const cdn = {
@@ -56,19 +47,19 @@ const cdn = {
   ],
 };
 
-const nodejs = {
+const npm = {
   input: "./src/relay.ts",
   output: [
     {
-      file: "./lib/relay.mjs",
+      file: "./lib/npm/relay.mjs",
       format: "esm",
     },
     {
-      file: "./lib/relay.cjs",
+      file: "./lib/npm/relay.cjs",
       format: "cjs",
     },
   ],
-  plugins: [nodeResolve({ exportConditions: ["node"] }), ...commonPlugins()],
+  plugins: [...commonPlugins(), externalizeProductionDependencies()],
 };
 
-export default [browser, cdn, nodejs];
+export default [cdn, npm];

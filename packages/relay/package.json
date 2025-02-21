@@ -2,25 +2,17 @@
   "name": "@coveo/relay",
   "version": "1.1.0",
   "description": "A library for sending analytics events using Coveo's Event protocol.",
+  "type": "module",
   "files": [
-    "lib/**/*"
+    "lib/npm/*"
   ],
-  "types": "./lib/relay.d.ts",
+  "types": "./lib/npm/relay.d.ts",
   "exports": {
-    "node": {
-      "import": {
-        "types": "./lib/relay.d.ts",
-        "default": "./lib/relay.mjs"
-      },
-      "require": {
-        "types": "./lib/relay.d.ts",
-        "default": "./lib/relay.cjs"
-      }
-    },
-    "default": {
-      "types": "./lib/relay.d.ts",
-      "default": "./lib/relay.js"
-    }
+    "types": "./lib/npm/relay.d.ts",
+    "import": "./lib/npm/relay.mjs",
+    "require": "./lib/npm/relay.cjs",
+    "browser": "./lib/npm/relay.mjs",
+    "default": "./lib/npm/relay.mjs"
   },
   "repository": {
     "type": "git",
@@ -67,7 +59,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@coveo/explorer-messenger": "^0.4.0",
+    "@coveo/explorer-messenger": "^0.4.1",
     "uuid": "^11.0.0"
   }
 }

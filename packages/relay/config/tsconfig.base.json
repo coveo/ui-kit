@@ -6,7 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "../lib",
-    "declarationDir": "../lib"
+    "declarationDir": "../lib/npm"
   },
   "exclude": ["node_modules", "../**/*.test.ts", "../src/__mocks__/**/*.ts"]
 }
