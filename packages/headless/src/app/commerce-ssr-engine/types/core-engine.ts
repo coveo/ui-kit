@@ -92,6 +92,17 @@ export interface EngineDefinition<
   setNavigatorContextProvider: (
     navigatorContextProvider: NavigatorContextProvider
   ) => void;
+
+  /**
+   * Returns the access token.
+   */
+  getAccessToken: () => string;
+
+  /**
+   * Updates the access token.
+   * @param accessToken - The access token to update.
+   */
+  setAccessToken: (accessToken: string) => void;
 }
 
 export type InferStaticState<
