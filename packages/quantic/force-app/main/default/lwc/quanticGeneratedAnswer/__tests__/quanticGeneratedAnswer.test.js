@@ -7,6 +7,10 @@ import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 let mockAnswerHeight = 250;
 let mockedConsoleWarn;
 
+const exampleItemOne = document.createElement('div');
+exampleItemOne.innerText = 'Custom error message';
+const exampleAssignedElements = [exampleItemOne];
+
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils', () => ({
   AriaLiveRegion: jest.fn(() => ({
@@ -35,7 +39,8 @@ const defaultOptions = {
   maxCollapsedHeight: 250,
 };
 
-function createTestComponent(options = defaultOptions) {
+function createTestComponent(options = defaultOptions, assignedElements = []) {
+  mockSlotAssignedNodes(assignedElements);
   const element = createElement('c-quantic-generated-answer', {
     is: QuanticGeneratedAnswer,
   });
@@ -61,6 +66,9 @@ const selectors = {
   generatedAnswerCollapseToggle:
     '[data-testid="generated-answer__answer-toggle"]',
   generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
+  generatedAnswerCardNoAnswer:
+    '[data-testid="generated-answer__card-no-answer"]',
+  generatedAnswerNoAnswer: '[data-testid="generated-answer__no-answer"]',
 };
 
 const initialSearchStatusState = {
@@ -68,7 +76,7 @@ const initialSearchStatusState = {
 };
 let searchStatusState = initialSearchStatusState;
 
-const initialGeneratedAnswerState = {isVisible: true};
+const initialGeneratedAnswerState = {isVisible: true, cannotAnswer: false};
 let generatedAnswerState = initialGeneratedAnswerState;
 
 const functionsMocks = {
@@ -93,6 +101,16 @@ const functionsMocks = {
   searchStatusStateUnsubscriber: jest.fn(),
   retry: jest.fn(),
 };
+
+/**
+ * Mocks the return value of the assignedNodes method.
+ * @param {Array<Element>} assignedElements
+ */
+function mockSlotAssignedNodes(assignedElements) {
+  HTMLSlotElement.prototype.assignedNodes = function () {
+    return assignedElements;
+  };
+}
 
 // Helper function to wait until the microtask queue is empty.
 function flushPromises() {
@@ -706,7 +724,7 @@ describe('c-quantic-generated-answer', () => {
       });
     });
 
-    describe('when the answer is empty', () => {
+    describe('when the answer cannot be generated after a query is executed', () => {
       const exampleEmptyAnswer = '';
       const exampleAnswerContentFormat = 'text/markdown';
       beforeEach(() => {
@@ -724,15 +742,50 @@ describe('c-quantic-generated-answer', () => {
         generatedAnswerState = initialGeneratedAnswerState;
       });
 
-      it('should not display the generated answer card', async () => {
-        const element = createTestComponent();
-        await flushPromises();
+      describe('when no custom error message slot is provided', () => {
+        it('should not display the generated answer card', async () => {
+          const element = createTestComponent();
+          await flushPromises();
 
-        const generatedAnswerCard = element.shadowRoot.querySelector(
-          selectors.generatedAnswerCard
-        );
+          const generatedAnswerCard = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCard
+          );
+          expect(generatedAnswerCard).toBeNull();
 
-        expect(generatedAnswerCard).toBeNull();
+          const generatedAnswer = element.shadowRoot.querySelector(
+            selectors.generatedAnswer
+          );
+          expect(generatedAnswer).toBeNull();
+        });
+      });
+
+      describe('when a custom error message slot is provided', () => {
+        beforeEach(() => {
+          generatedAnswerState = {
+            ...initialGeneratedAnswerState,
+            cannotAnswer: true,
+          };
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+        });
+
+        it('should properly display the no generated answer template', async () => {
+          const element = createTestComponent(
+            {...defaultOptions},
+            exampleAssignedElements
+          );
+          await flushPromises();
+
+          const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCardNoAnswer
+          );
+          expect(generatedAnswerCardNoAnswer).not.toBeNull();
+
+          const generatedAnswerNoAnswer = element.shadowRoot.querySelector(
+            selectors.generatedAnswerNoAnswer
+          );
+          expect(generatedAnswerNoAnswer).not.toBeNull();
+        });
       });
     });
   });
