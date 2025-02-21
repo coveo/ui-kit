@@ -7,7 +7,7 @@ interface LoadMoreButtonProps {
   i18n: i18n;
   onClick: () => void;
   moreAvailable: boolean;
-  label?: 'load-more-results' | 'load-more-products';
+  label: 'load-more-results' | 'load-more-products';
 }
 
 export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
@@ -25,6 +25,6 @@ export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
   };
   return button({
     props: buttonProps,
-    children: html`${i18n.t(label || 'load-more-results')}`,
+    children: html`${i18n.t(label)}`,
   });
 };
