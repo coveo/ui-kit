@@ -5,6 +5,15 @@ import {
 import {removeCookie, setCookie} from '@/utils/cookie-utils.client';
 import {useEffect} from 'react';
 
+/**
+ * This hook sets the `coveo_visitorId` and the `coveo_capture` cookies if the client allows Coveo requests to capture
+ * analytics data, or removes the `coveo_capture` cookie otherwise.
+ *
+ * The `coveo_capture` cookie would be considered strictly necessary in this implementation, as it is a persistent way
+ * to communicate to the server whether the client allows Coveo requests to capture analytics data, enabling the server
+ * to honor the user's privacy preferences when making Coveo requests (e.g., fetching the static state).
+ */
+
 const useClientId = () =>
   useEffect(() => {
     if (!isUserTrackingAllowedByClient()) {
