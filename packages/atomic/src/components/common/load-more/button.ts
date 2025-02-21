@@ -15,7 +15,7 @@ export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
 }) => {
   const {i18n, onClick, moreAvailable, label} = props;
   if (!moreAvailable) {
-    return html``;
+    return;
   }
   const buttonProps: ButtonProps = {
     style: 'primary',
