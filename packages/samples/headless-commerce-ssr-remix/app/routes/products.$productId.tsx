@@ -34,7 +34,8 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const {country, currency, language} =
     await externalContextService.getContextInformation();
 
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
@@ -60,14 +61,17 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   const cartItem = await externalCartService.getItem(productId);
 
-  return {
-    staticState,
-    navigatorContext,
-    catalogItem,
-    cartItem,
-    language,
-    currency,
-  };
+  return Response.json(
+    {
+      staticState,
+      navigatorContext,
+      catalogItem,
+      cartItem,
+      language,
+      currency,
+    },
+    {headers: {...setCookieHeader}}
+  );
 };
 
 export default function ProductRoute() {

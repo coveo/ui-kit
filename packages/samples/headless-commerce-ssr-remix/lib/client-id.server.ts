@@ -2,8 +2,15 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {randomUUID} from 'crypto';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server';
 
-interface CoveoAnalyticsContext
-  extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
+export interface CoveoAnalyticsContext
+  extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {
+  /**
+   * A 'Set-Cookie' response header if a new `clientId` was generated on the server-side, or an empty object otherwise.
+   */
+  setCookieHeader: SetCookieHeader;
+}
+
+export type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
 
 /**
  * Determines whether analytics data should be captured by Coveo requests, based on the provided request object.
@@ -59,25 +66,34 @@ export const getAnalyticsContext = async (
   );
 
   // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
-  // deleted the `coveo_visitorId` cookie but not the `coveo_capture` cookie. This is the only case where we generate a
-  // new `clientId` server-side (normally, it is initially generated client-side, and reused thereafter).
-  const clientId = capture ? (visitorIdCookieValue ?? randomUUID()) : '';
+  // deleted the `coveo_visitorId` cookie but not the `coveo_capture` cookie. This is the only case where generating a
+  // new `clientId` on the server is useful, as otherwise the server-side request would have to be made with
+  // `capture: false` due to the lack of a `clientId`.
+  const generateNewClientId = capture && !visitorIdCookieValue;
+  const clientId = generateNewClientId
+    ? randomUUID()
+    : (visitorIdCookieValue ?? '');
 
-  return {capture, clientId};
+  const setCookieHeader = generateNewClientId
+    ? await getVisitorIdSetCookieHeader(clientId)
+    : {};
+
+  return {capture, clientId, setCookieHeader};
 };
 
 /**
  * Generates a 'Set-Cookie' response header with the provided argument serialized into the `coveo_visitorId` cookie.
  *
  * @param clientId - The clientId to serialize into the `coveo_visitorId` 'Set-Cookie' response header.
- * @returns A 'Set-Cookie' response header, or an empty object if the `clientId` is an empty string.
+ * @returns A 'Set-Cookie' response header.
  */
-export const getVisitorIdSetCookieHeader = async (
+const getVisitorIdSetCookieHeader = async (
   clientId: string
-): Promise<{'Set-Cookie': string} | Record<string, never>> => {
-  if (!clientId) {
+): Promise<SetCookieHeader> => {
+  if (clientId === '') {
     return {};
   }
+
   const visitorIdCookie = await coveo_visitorId.serialize(clientId, {
     encode: (value) => atob(value).replaceAll('"', ''),
   });

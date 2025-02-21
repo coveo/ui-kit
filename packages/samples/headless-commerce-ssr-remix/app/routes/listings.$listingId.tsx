@@ -13,7 +13,6 @@ import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {
   listingEngineDefinition,
   ListingStaticState,
@@ -38,7 +37,8 @@ import useClientId from '../hooks/use-client-id';
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   const url = new URL(request.url);
 
@@ -103,11 +103,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   return Response.json(
     {staticState, navigatorContext, recsStaticState},
-    {
-      headers: {
-        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
-      },
-    }
+    {headers: {...setCookieHeader}}
   );
 };
 

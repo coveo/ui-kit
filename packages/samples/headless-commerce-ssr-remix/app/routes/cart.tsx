@@ -10,7 +10,6 @@ import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {
   recommendationEngineDefinition,
   RecommendationStaticState,
@@ -28,7 +27,8 @@ import {useLoaderData} from '@remix-run/react';
 import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
@@ -88,11 +88,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       currency,
       recsStaticState,
     },
-    {
-      headers: {
-        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
-      },
-    }
+    {headers: {...setCookieHeader}}
   );
 };
 

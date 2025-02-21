@@ -12,7 +12,6 @@ import Summary from '@/app/components/summary';
 import Triggers from '@/app/components/triggers/triggers';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
-import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {searchEngineDefinition, SearchStaticState} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
@@ -28,7 +27,8 @@ import {useLoaderData} from '@remix-run/react';
 import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   const url = new URL(request.url);
 
@@ -68,11 +68,7 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
       staticState,
       navigatorContext,
     },
-    {
-      headers: {
-        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
-      },
-    }
+    {headers: {...setCookieHeader}}
   );
 };
 
