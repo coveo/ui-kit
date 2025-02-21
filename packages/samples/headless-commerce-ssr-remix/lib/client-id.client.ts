@@ -1,7 +1,7 @@
 /**
- * Determines whether the client allows Coveo requests to capture analytics data.
+ * Determines whether the client allows analytics data to be captured by Coveo requests.
  *
- * @returns `true` if the client allows Coveo to capture analytics data, `false` otherwise.
+ * @returns `true` if the client allows analytics data to be captured, `false` otherwise.
  */
 export const isUserTrackingAllowedByClient = (): boolean => {
   // Actual implementation should verify whether the user has somehow indicated that they do not wish to be tracked.
@@ -12,8 +12,8 @@ export const isUserTrackingAllowedByClient = (): boolean => {
 /**
  * Retrieves the `clientId` value from the `coveo_visitorId` document cookie if possible, or generates a new one.
  *
- * @returns The parsed value retrieved from the `coveo_visitorId` document cookie if available, or a new random clientId
- * otherwise (UUID).
+ * @returns The parsed value retrieved from the `coveo_visitorId` document cookie if available, or a new random
+ * `clientId` (UUID) otherwise.
  */
 export const retrieveOrGenerateClientId = (): string => {
   return (
