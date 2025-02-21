@@ -18,10 +18,6 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
 import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../../utils/field-utils';
@@ -31,6 +27,10 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../../utils/stencil-accessibility-utils';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';

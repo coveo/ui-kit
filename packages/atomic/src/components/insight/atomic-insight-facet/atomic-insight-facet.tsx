@@ -15,14 +15,14 @@ import {
 } from '@coveo/headless/insight';
 import {Component, h, State, Prop, Element, VNode} from '@stencil/core';
 import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
-import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetInfo} from '../../common/facets/facet-common-store';
 import {FacetContainer} from '../../common/facets/facet-container/facet-container';
