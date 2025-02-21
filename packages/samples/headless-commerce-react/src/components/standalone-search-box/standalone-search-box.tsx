@@ -55,7 +55,6 @@ export default function StandaloneSearchBox(props: IStandaloneSearchBoxProps) {
 
     controller.updateText(e.target.value);
     instantProductsController.updateQuery(e.target.value);
-    controller.showSuggestions();
     showDropdown();
   };
 

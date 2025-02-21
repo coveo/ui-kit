@@ -45,7 +45,6 @@ export default function SearchBox(props: ISearchBoxProps) {
 
     controller.updateText(e.target.value);
     instantProductsController.updateQuery(e.target.value);
-    controller.showSuggestions();
     showDropdown();
   };
 
