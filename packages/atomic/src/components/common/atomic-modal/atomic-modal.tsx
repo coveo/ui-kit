@@ -138,7 +138,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     const Content = () => (
       <article
         part="container"
-        class={`bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-scaleUpModal' : 'animate-slideDownModal'} ${this.wasEverOpened ? '' : 'invisible'}`}
+        class={`bg-background text-on-background flex flex-col justify-between ${this.isOpen ? 'animate-open' : 'animate-close'} ${this.wasEverOpened ? '' : 'invisible'}`}
         onAnimationEnd={() => this.animationEnded.emit()}
         ref={(ref) => (this.animatableContainer = ref)}
       >
@@ -151,7 +151,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-neutral"></hr>
+        <hr part="header-ruler" class="border-neutral border-t"></hr>
         <div
           part="body-wrapper"
           class="flex w-full grow flex-col items-center overflow-auto"
@@ -185,7 +185,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
       <Host class={this.getClasses().join(' ')}>
         <div
           part="backdrop"
-          class={` ${this.boundary === 'page' ? 'fixed' : 'absolute'} bottom-0 left-0 right-0 top-0 z-[9999]`}
+          class={` ${this.boundary === 'page' ? 'fixed' : 'absolute'} z-100 bottom-0 left-0 right-0 top-0`}
           onClick={(e) => e.target === e.currentTarget && this.close()}
         >
           <atomic-focus-trap

@@ -1,17 +1,17 @@
 [part='generated-text'] {
   [part='answer-heading-1'] {
-    font-size: var(--atomic-text-2xl);
+    @apply text-2xl;
   }
 
   [part='answer-heading-2'] {
-    font-size: var(--atomic-text-xl);
+    @apply text-xl;
   }
 
   [part='answer-heading-3'],
   [part='answer-heading-4'],
   [part='answer-heading-5'],
   [part='answer-heading-6'] {
-    font-size: var(--atomic-text-lg);
+    @apply text-lg;
   }
 
   [part='answer-heading-1'],
@@ -20,8 +20,7 @@
   [part='answer-heading-4'],
   [part='answer-heading-5'],
   [part='answer-heading-6'] {
-    @apply mb-2 mt-4;
-    font-weight: var(--atomic-font-bold);
+    @apply mb-2 mt-4 font-bold;
   }
 
   [part='answer-paragraph'] {
@@ -37,7 +36,7 @@
   }
 
   [part='answer-strong'] {
-    font-weight: var(--atomic-font-bold);
+    @apply font-bold;
   }
 
   [part='answer-ordered-list'] {
@@ -49,23 +48,12 @@
   }
 
   [part='answer-inline-code'] {
-    @apply border border-solid px-1 py-0.5;
-    color: var(--atomic-inline-code);
-    font-size: var(--atomic-text-sm);
-    background-color: var(--atomic-neutral-light);
-    border-color: var(--atomic-neutral);
-    border-radius: var(--atomic-border-radius);
+    @apply text-inline-code bg-neutral-light border-neutral rounded-sm border border-solid px-1 py-0.5 text-sm;
   }
 
   [part='answer-code-block'] {
-    @apply my-4 max-h-96 overflow-auto border border-solid p-2;
-    background-color: var(--atomic-neutral-light);
-    border-color: var(--atomic-neutral);
-    border-radius: var(--atomic-border-radius-md);
+    @apply bg-neutral-light border-neutral text-on-background my-4 max-h-96 overflow-auto rounded-md border border-solid p-2 text-sm;
     scrollbar-color: var(--atomic-neutral);
-
-    color: var(--atomic-on-background);
-    font-size: var(--atomic-text-sm);
   }
 
   [part='answer-quote-block'] {
@@ -73,9 +61,7 @@
   }
 
   [part='answer-table-container'] {
-    @apply mb-6 inline-block max-h-96 overflow-auto border border-solid;
-    border-color: var(--atomic-neutral-dim);
-    border-radius: var(--atomic-border-radius-md);
+    @apply border-neutral-dim mb-6 inline-block max-h-96 overflow-auto rounded-md border border-solid;
 
     [part='answer-table-header'] {
       @apply sticky top-0;
@@ -83,15 +69,11 @@
   }
 
   [part='answer-table'] {
-    font-size: var(--atomic-text-base);
+    @apply text-base;
 
     thead {
       [part='answer-table-header'] {
-        @apply p-4 text-left;
-        background-color: var(--atomic-neutral);
-        font-weight: var(--atomic-font-bold);
-        border-bottom: solid 2px var(--atomic-neutral-dim);
-        border-left: solid 1px var(--atomic-neutral-dim);
+        @apply bg-neutral border-b-neutral-dim border-l-neutral-dim p-4 text-left font-bold;
       }
 
       [part='answer-table-header']:first-of-type {
@@ -102,13 +84,11 @@
     tbody {
       tr {
         &:nth-child(even) {
-          background-color: var(--atomic-neutral-light);
+          @apply bg-neutral-light;
         }
 
         [part='answer-table-content'] {
-          @apply p-4;
-          border-left: solid 1px var(--atomic-neutral-dim);
-          border-bottom: solid 1px var(--atomic-neutral-dim);
+          @apply border-l-neutral-dim border-b-neutral-dim border p-4;
         }
 
         [part='answer-table-content']:first-of-type {

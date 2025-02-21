@@ -1,148 +1,182 @@
-@define-mixin atomic-children-desktop $section-children, $children-tag-name, $margin-lg, $margin-sm {
+@utility atomic-children-desktop-* {
   &.child-result:not(.last-child) {
-    margin-bottom: $margin-lg;
+    margin-bottom: --value([ *]);
   }
 
-  & $(section-children) {
-    $(children-tag-name)::part(children-root) {
-      margin-top: $margin-sm;
-      padding: $margin-lg;
-    }
+  & {
+    atomic-result-section-children,
+    atomic-product-section-children {
+      atomic-result-children::part(children-root),
+      atomic-insight-result-children::part(children-root),
+      atomic-product-children::part(children-root) {
+        margin-top: --modifier([ *]);
+        padding: --value([ *]);
+      }
 
-    $(children-tag-name)::part(show-hide-button) {
-      margin-top: $margin-sm;
-      margin-bottom: $margin-sm;
+      atomic-result-children::part(show-hide-button),
+      atomic-insigh-result-children::part(show-hide-button),
+      atomic-product-children::part(show-hide-button) {
+        margin-top: --modifier([ *]);
+        margin-bottom: --modifier([ *]);
+      }
     }
   }
 
   .placeholder {
-    margin-bottom: $margin-lg;
+    margin-bottom: --value([ *]);
   }
 }
 
-@define-mixin row-result-desktop map(post-css-map-for-sections, variables) {
-  &.image-large.density-compact $(section-visual) {
-    width: 10.25rem;
-    height: 10.25rem;
+@utility row-result-desktop {
+  &.image-large.density-compact {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
+      width: 10.25rem;
+      height: 10.25rem;
+    }
   }
 
-  $(section-children) {
-    $(children-tag-name)::part(children-root) {
-      border: 1px solid var(--atomic-neutral);
+  atomic-result-section-children,
+  atomic-product-section-children {
+    atomic-result-children::part(children-root),
+    atomic-insight-result-children::part(children-root),
+    atomic-product-children::part(children-root) {
+      @apply border-neutral border;
       border-radius: 16px;
     }
   }
 
   /* == Density styles == */
   &.density-comfortable {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1.5rem;
     }
 
-    $(section-badges),
-    $(section-actions) {
+    atomic-result-section-badges,
+    atomic-product-section-badges,
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-bottom: 1.5rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-2xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-2xl;
     }
 
-    $(section-excerpt) {
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
       margin-top: 1.75rem;
-      @mixin set-font-size var(--atomic-text-lg);
+      @apply set-font-size-lg;
 
       max-height: 4.5rem;
-      @mixin line-clamp 3;
+      @apply line-clamp-3;
     }
 
-    $(section-bottom-metadata) {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 1.25rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 4rem;
     }
 
-    $(section-title-metadata) {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1.75rem, 1.25rem;
+    @apply atomic-children-desktop-[1.75rem]/[1.25rem];
   }
 
   &.density-normal {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1rem;
     }
 
-    $(section-badges),
-    $(section-actions) {
+    atomic-result-section-badges,
+    atomic-product-section-badges,
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-xl;
     }
 
-    $(section-excerpt) {
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
       margin-top: 1.25rem;
-      @mixin set-font-size var(--atomic-text-base);
+      @apply set-font-size-base;
 
       max-height: 2.5rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-bottom-metadata) {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 0.875rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 3.5rem;
     }
 
-    $(section-title-metadata) {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1.5rem, 0.875rem;
+    @apply atomic-children-desktop-[1.5rem]/[0.875rem];
   }
 
   &.density-compact {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1rem;
     }
 
-    $(section-badges),
-    $(section-actions) {
+    atomic-result-section-badges,
+    atomic-product-section-badges,
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-xl;
     }
 
-    $(section-excerpt) {
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
       margin-top: 1rem;
-      @mixin set-font-size var(--atomic-text-base);
+      @apply set-font-size-base;
 
       max-height: 1.25rem;
-      @mixin line-clamp 1;
+      @apply line-clamp-1;
     }
 
-    $(section-bottom-metadata) {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 0.6875rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 3.25rem;
     }
 
-    $(section-title-metadata) {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-desktop $(section-children), $(children-tag-name), 1rem, 0.475rem;
+    @apply atomic-children-desktop-[1rem]/[0.475rem];
   }
 
   /* == Image styles == */
@@ -162,7 +196,8 @@
 
   &.image-large.density-comfortable,
   &.image-large.density-normal {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 20.375rem;
       height: 20.375rem;
     }
@@ -170,7 +205,8 @@
 
   &.image-small,
   &.image-large.density-compact {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 10rem;
       height: 10rem;
     }
@@ -188,7 +224,8 @@
     grid-template-columns: minmax(0, min-content) auto 1fr auto;
     grid-template-rows: repeat(7, minmax(0, min-content));
 
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 2rem;
       height: 2rem;
     }
@@ -206,7 +243,8 @@
     grid-template-columns: auto 1fr auto;
     grid-template-rows: repeat(6, auto);
 
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       display: none;
     }
   }
@@ -222,11 +260,11 @@ atomic-result-section-actions {
 }
 
 atomic-result-section-title-metadata {
-  @mixin set-font-size var(--atomic-text-sm);
+  @apply set-font-size-sm;
 }
 
 atomic-result-section-emphasized {
   font-weight: 500;
-  @mixin set-font-size var(--atomic-text-2xl);
+  @apply set-font-size-2xl;
   margin-top: 0.5rem;
 }

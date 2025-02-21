@@ -1,8 +1,9 @@
 @import '../../../common/item-list/styles/mixins.pcss';
+@import '../../../../global/global.pcss';
 
 [part~='divider'] {
   &:not(:last-child) {
-    border-bottom: 1px solid var(--atomic-neutral);
+    @apply border-b-neutral border-b;
     padding-bottom: 1rem;
   }
   margin-bottom: 1rem;
@@ -18,7 +19,7 @@
       width: auto;
     }
 
-    @mixin atomic-list-with-dividers;
+    @apply atomic-list-with-dividers;
 
     .result-component[part~='outline']::before {
       @apply mx-6 my-0;

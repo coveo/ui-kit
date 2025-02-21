@@ -2,21 +2,21 @@
   .icon-container {
     atomic-icon {
       &:hover {
-        color: var(--atomic-primary);
+        @apply text-primary;
       }
     }
   }
   &.copied {
     .icon-container {
       atomic-icon {
-        color: var(--atomic-success);
+        @apply text-success;
       }
     }
   }
   &.error {
     .icon-container {
       atomic-icon {
-        color: var(--atomic-error);
+        @apply text-error;
       }
     }
   }

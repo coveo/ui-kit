@@ -1,0 +1,64 @@
+@import 'tailwindcss/theme' theme(reference);
+@import '../coveo.tw.css' theme(reference);
+
+@layer components {
+  .input-primary {
+    @apply border-neutral bg-background hover:border-primary-light focus-visible:border-primary focus-visible:ring-ring-primary rounded border focus-visible:outline-none focus-visible:ring-2;
+  }
+
+  .btn-radio {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    @apply before:content-[attr(value)];
+  }
+
+  /* TODO: move button components directly into button-style.ts KIT-3927 */
+  .btn-primary {
+    @apply bg-primary text-on-primary hover:bg-primary-light focus-visible:bg-primary-light focus-visible:ring-ring-primary disabled:bg-disabled rounded focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline-primary {
+    @apply border-neutral hover:border-primary-light focus-visible:border-primary bg-background text-primary hover:text-primary-light focus-visible:text-primary focus-visible:ring-ring-primary disabled:border-neutral disabled:text-neutral rounded border focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed;
+  }
+
+  .btn-text-primary {
+    @apply bg-background text-primary hover:bg-neutral-light focus-visible:bg-neutral-light rounded focus-visible:outline-none;
+  }
+
+  .btn-outline-neutral {
+    @apply border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-ring-primary disabled:text-on-background disabled:border-neutral rounded border focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-outline-bg-neutral {
+    @apply border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-ring-primary disabled:text-on-background disabled:border-neutral hover:bg-neutral-light focus-visible:bg-neutral-light rounded border focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-outline-bg-error {
+    @apply border-neutral hover:border-primary focus-visible:border-primary bg-background text-on-background hover:text-primary focus-visible:text-primary focus-visible:ring-ring-primary disabled:text-on-background disabled:border-neutral hover:bg-neutral-light focus-visible:bg-neutral-light rounded border focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-outline-error {
+    @apply border-neutral hover:border-error focus-visible:border-error bg-background text-on-background hover:text-error focus-visible:text-error focus-visible:ring-ring-primary disabled:text-on-background disabled:border-neutral rounded border focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-text-neutral {
+    @apply bg-background hover:bg-neutral-light focus-visible:bg-neutral-light text-on-background focus-visible:text-primary hover:text-primary rounded focus-visible:outline-none;
+  }
+
+  .btn-text-transparent {
+    @apply text-on-background focus-visible:text-primary-light hover:text-primary-light;
+  }
+
+  .btn-square-neutral {
+    @apply border-neutral bg-background text-on-background hover:bg-neutral-light focus-visible:bg-neutral-light border focus-visible:outline-none;
+  }
+
+  .btn-page {
+    @apply grid h-10 w-10 place-items-center border-0 text-lg hover:border focus-visible:border;
+
+    &.selected {
+      @apply border-primary border-2 font-bold;
+    }
+  }
+}

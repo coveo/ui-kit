@@ -85,7 +85,7 @@ export class AtomicIPXBody implements InitializableComponent<AnyBindings> {
             <slot name="header"></slot>
           </div>
         </header>
-        <hr part="header-ruler" class="border-neutral"></hr>
+        <hr part="header-ruler" class=""></hr>
         <div
           part="body-wrapper"
           class="scrollbar flex w-full grow flex-col overflow-auto"

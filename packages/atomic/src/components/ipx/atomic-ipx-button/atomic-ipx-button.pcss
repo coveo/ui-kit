@@ -4,23 +4,22 @@
  * @prop --atomic-ipx-button-height: height of the IPX button.
  */
 :host {
-  &::part(ipx-button) {
-    @apply btn-primary fixed bottom-1 right-12 block whitespace-nowrap px-3;
+  [part='ipx-button'] {
+    @apply fixed bottom-1 right-12 whitespace-nowrap px-3;
     height: var(--atomic-ipx-button-height, 2.75rem);
-    background-color: var(--atomic-primary);
   }
 
-  &::part(button-icon) {
+  [part='button-icon'] {
     @apply relative inline-block h-4 w-4 p-0 align-middle;
     font-size: 100%;
   }
 
-  &::part(button-text) {
+  [part='button-text'] {
     @apply ml-2 overflow-hidden;
   }
 
-  &::part(ipx-close-icon),
-  &::part(ipx-open-icon) {
+  [part='ipx-close-icon'],
+  [part='ipx-open-icon'] {
     @apply absolute left-0;
     transition: transform 500ms;
   }

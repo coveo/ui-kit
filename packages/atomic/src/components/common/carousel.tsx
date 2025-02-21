@@ -16,7 +16,7 @@ export const Carousel: FunctionalComponent<
   CarouselProps & JSXBase.HTMLAttributes<HTMLHeadingElement>
 > = (props, children) => {
   const commonPaginationClasses =
-    'w-10 h-10 grid justify-center items-center absolute top-[50%] -translate-y-1/2 z-1 shadow-lg group';
+    'w-10 h-10 grid justify-center items-center absolute top-1/2 -translate-y-1/2 z-1 shadow-lg group';
   const commonArrowClasses =
     'w-3.5 align-middle text-on-background group-hover:text-primary group-focus:text-primary-light';
 

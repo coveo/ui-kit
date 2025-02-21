@@ -1,3 +1,33 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@reference './coveo.tw.css';
+@import './tailwind-utilities/components.tw.css';
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    @apply border-gray-200;
+  }
+
+  :host {
+    display: block;
+  }
+
+  :host,
+  button,
+  input,
+  select {
+    @apply font-sans text-base font-normal;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  :host(.atomic-hidden) {
+    display: none;
+  }
+}

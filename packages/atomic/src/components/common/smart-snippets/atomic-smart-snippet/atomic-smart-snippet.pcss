@@ -1,14 +1,15 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
+@import '../../../../utils/tailwind-utilities/link-style.tw.css';
+@import '../../../../utils/tailwind-utilities/set-font-size.tw.css';
 
 [part='source-url'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-base);
+  @apply link-style;
+  @apply set-font-size-base;
 }
 
 [part='source-title'] {
-  @mixin link-style;
-  @mixin set-font-size var(--atomic-text-xl);
+  @apply link-style;
+  @apply set-font-size-xl;
   @apply mb-6;
 }
 
@@ -17,7 +18,7 @@ footer {
     content: ' ';
     display: block;
     height: 1px;
-    background-color: var(--atomic-neutral);
+    @apply bg-neutral;
     margin-bottom: 1.5rem;
   }
 }

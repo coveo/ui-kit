@@ -144,10 +144,7 @@ export class SmartSnippetCommon {
 
     return (
       <aside>
-        <Heading
-          level={this.props.getHeadingLevel() ?? 0}
-          class="accessibility-only"
-        >
+        <Heading level={this.props.getHeadingLevel() ?? 0} class="sr-only">
           {this.props.getBindings().i18n.t('smart-snippet')}
         </Heading>
         <article

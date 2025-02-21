@@ -6,7 +6,15 @@ import {
   SearchStatus as InsightSearchStatus,
   SearchStatusState as InsightSearchStatusState,
 } from '@coveo/headless/insight';
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {
+  Component,
+  Event,
+  EventEmitter,
+  h,
+  Host,
+  Prop,
+  State,
+} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
@@ -83,49 +91,51 @@ export class AtomicInsightPager
 
   public render() {
     return (
-      <PagerNavigation i18n={this.bindings.i18n}>
-        <PagerPreviousButton
-          icon={ArrowLeftIcon}
-          disabled={!this.pagerState.hasPreviousPage}
-          i18n={this.bindings.i18n}
-          onClick={() => {
-            this.pager.previousPage();
-            this.focusOnFirstResultAndScrollToTop();
-          }}
-        />
-        <PagerPageButtons i18n={this.bindings.i18n}>
-          {this.pagerState.currentPages.map((pageNumber) => {
-            return (
-              <PagerPageButton
-                isSelected={this.pager.isCurrentPage(pageNumber)}
-                ariaLabel={this.bindings.i18n.t('page-number', {pageNumber})}
-                onChecked={() => {
-                  this.pager.selectPage(pageNumber);
-                  this.focusOnFirstResultAndScrollToTop();
-                }}
-                page={pageNumber}
-                groupName={this.radioGroupName}
-                ref={(el) => {
-                  const isSelected = this.pager.isCurrentPage(pageNumber);
-                  if (isSelected && el) {
-                    this.focusTarget.setTarget(el);
-                  }
-                }}
-                text={pageNumber.toLocaleString(this.bindings.i18n.language)}
-              />
-            );
-          })}
-        </PagerPageButtons>
-        <PagerNextButton
-          icon={ArrowRightIcon}
-          disabled={!this.pagerState.hasNextPage}
-          i18n={this.bindings.i18n}
-          onClick={() => {
-            this.pager.nextPage();
-            this.focusOnFirstResultAndScrollToTop();
-          }}
-        />
-      </PagerNavigation>
+      <Host>
+        <PagerNavigation i18n={this.bindings.i18n}>
+          <PagerPreviousButton
+            icon={ArrowLeftIcon}
+            disabled={!this.pagerState.hasPreviousPage}
+            i18n={this.bindings.i18n}
+            onClick={() => {
+              this.pager.previousPage();
+              this.focusOnFirstResultAndScrollToTop();
+            }}
+          />
+          <PagerPageButtons i18n={this.bindings.i18n}>
+            {this.pagerState.currentPages.map((pageNumber) => {
+              return (
+                <PagerPageButton
+                  isSelected={this.pager.isCurrentPage(pageNumber)}
+                  ariaLabel={this.bindings.i18n.t('page-number', {pageNumber})}
+                  onChecked={() => {
+                    this.pager.selectPage(pageNumber);
+                    this.focusOnFirstResultAndScrollToTop();
+                  }}
+                  page={pageNumber}
+                  groupName={this.radioGroupName}
+                  ref={(el) => {
+                    const isSelected = this.pager.isCurrentPage(pageNumber);
+                    if (isSelected && el) {
+                      this.focusTarget.setTarget(el);
+                    }
+                  }}
+                  text={pageNumber.toLocaleString(this.bindings.i18n.language)}
+                />
+              );
+            })}
+          </PagerPageButtons>
+          <PagerNextButton
+            icon={ArrowRightIcon}
+            disabled={!this.pagerState.hasNextPage}
+            i18n={this.bindings.i18n}
+            onClick={() => {
+              this.pager.nextPage();
+              this.focusOnFirstResultAndScrollToTop();
+            }}
+          />
+        </PagerNavigation>
+      </Host>
     );
   }
 }

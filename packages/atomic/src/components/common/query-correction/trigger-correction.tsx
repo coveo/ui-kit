@@ -36,7 +36,7 @@ export const TriggerCorrection: FunctionalComponent<TriggerCorrectionProps> = ({
           params={{
             query: (
               <button
-                class="link py-1"
+                class="text-primary hover:text-primary-light focus-visible:text-primary-light py-1 hover:underline focus-visible:underline"
                 part="undo-btn"
                 onClick={() => onClick()}
               >

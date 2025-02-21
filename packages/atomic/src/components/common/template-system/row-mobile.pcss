@@ -1,13 +1,14 @@
-@import '../../../global/polyfills.pcss';
-
-@define-mixin atomic-children-mobile $section-children, $children-tag-name, $margin-lg, $margin-sm {
+@utility atomic-children-mobile-* {
   &.child-result:not(.last-child) {
-    margin-bottom: $margin-lg;
+    margin-bottom: --value([ *]);
   }
 
-  & $(section-children) {
-    $(children-tag-name)::part(children-root) {
-      padding-top: $margin-lg;
+  & atomic-result-section-children,
+  & atomic-product-section-children {
+    atomic-result-children::part(children-root),
+    atomic-insight-result-children::part(children-root),
+    atomic-product-children::part(children-root) {
+      padding-top: --value([ *]);
       margin-top: 1rem;
       margin-left: -1rem;
       margin-right: -1rem;
@@ -15,146 +16,171 @@
       padding-right: 1rem;
     }
 
-    $(children-tag-name)::part(show-hide-button) {
-      margin-top: $margin-sm;
-      margin-bottom: $margin-sm;
+    atomic-result-children::part(show-hide-button),
+    atomic-insigh-result-children::part(show-hide-button),
+    atomic-product-children::part(show-hide-button) {
+      margin-top: --modifier([ *]);
+      margin-bottom: --modifier([ *]);
     }
   }
 
   .placeholder {
-    margin-bottom: $margin-lg;
+    margin-bottom: --value([ *]);
   }
 }
 
-@define-mixin row-result-mobile map(post-css-map-for-sections, variables) {
-  $(section-children) {
-    $(children-tag-name)::part(children-root) {
-      border-top: 1px solid var(--atomic-neutral);
+@utility row-result-mobile {
+  atomic-result-section-children,
+  atomic-product-section-children {
+    atomic-result-children::part(children-root),
+    atomic-insight-result-children::part(children-root),
+    atomic-product-children::part(children-root) {
+      @apply border-t-neutral border-t;
     }
   }
 
   /* == Density styles == */
   &.density-comfortable {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1rem;
     }
 
-    $(section-badges) {
+    atomic-result-section-badges,
+    atomic-product-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-top: 1rem;
       --row-height: 2.5rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-xl;
     }
 
-    $(section-excerpt) {
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
       margin-top: 1.25rem;
-      @mixin set-font-size var(--atomic-text-base);
+      @apply set-font-size-base;
 
       max-height: 2.5rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    $(section-bottom-metadata) {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 0.75rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 4rem;
     }
 
-    $(section-title-metadata) {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-mobile $(section-children), $(children-tag-name), 1.75rem, 1.25rem;
+    @apply atomic-children-mobile-[1.75rem]/[1.25rem];
   }
 
   &.density-normal {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1rem;
     }
 
-    $(section-badges) {
+    atomic-result-section-badges,
+    atomic-product-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-top: 0.75rem;
       --row-height: 2.5rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-xl;
     }
 
-    atomic-result-section-excerpt {
+    atomic-result-section-excerpt,
+    atomic-product-section-description {
       margin-top: 1rem;
-      @mixin set-font-size var(--atomic-text-base);
+      @apply set-font-size-base;
 
       max-height: 2.5rem;
-      @mixin line-clamp 2;
+      @apply line-clamp-2;
     }
 
-    atomic-result-section-bottom-metadata {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 0.625rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 3.5rem;
     }
 
-    $(section-title)-metadata {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-mobile $(section-children), $(children-tag-name), 1.5rem, 0.875rem;
+    @apply atomic-children-mobile-[1.5rem]/[0.875rem];
   }
 
   &.density-compact {
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       margin-right: 1rem;
     }
 
-    $(section-badges) {
+    atomic-result-section-badges,
+    atomic-product-section-badges {
       margin-bottom: 1rem;
       --row-height: 2rem;
     }
 
-    $(section-actions) {
+    atomic-result-section-actions,
+    atomic-product-section-actions {
       margin-top: 0.5em;
       --row-height: 2.5rem;
     }
 
-    $(section-title) {
-      @mixin set-font-size var(--atomic-text-xl);
+    atomic-result-section-title,
+    atomic-product-section-name {
+      @apply set-font-size-xl;
     }
 
     atomic-result-section-excerpt {
       margin-top: 0.75rem;
-      @mixin set-font-size var(--atomic-text-base);
+      @apply set-font-size-base;
 
       max-height: 1.25rem;
-      @mixin line-clamp 1;
+      @apply line-clamp-1;
     }
 
-    atomic-result-section-bottom-metadata {
+    atomic-result-section-bottom-metadata,
+    atomic-product-section-bottom-metadata {
       margin-top: 0.4375rem;
-      @mixin set-font-size var(--atomic-text-sm);
+      @apply set-font-size-sm;
 
       max-height: 3.25rem;
     }
 
-    $(section-title)-metadata {
+    atomic-result-section-title-metadata,
+    atomic-product-section-metadata {
       margin-top: 0.475rem;
     }
 
-    @mixin atomic-children-mobile $(section-children), $(children-tag-name), 1rem, 0.475rem;
+    @apply atomic-children-mobile-[1rem]/[0.475rem];
   }
 
   /* == Image styles == */
@@ -172,8 +198,9 @@
     grid-template-columns: 100%;
     grid-template-rows: repeat(8, auto);
 
-    $(section-visual) {
-      @mixin aspect-ratio-h 1 / 1, 7.25rem;
+    atomic-result-section-visual,
+    atomic-product-section-visual {
+      @apply aspect-square-[7.25rem];
       width: 100%;
       margin-right: 0;
       margin-bottom: 1rem;
@@ -194,7 +221,8 @@
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(4, auto) minmax(0, 1fr) repeat(3, auto);
 
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 24vw;
       height: 24vw;
       margin-bottom: 1rem;
@@ -214,7 +242,8 @@
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-rows: repeat(7, auto) 1fr;
 
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       width: 2rem;
       height: 2rem;
       margin-bottom: 0;
@@ -234,7 +263,8 @@
     grid-template-columns: 100%;
     grid-template-rows: repeat(7, auto);
 
-    $(section-visual) {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
       display: none;
     }
   }

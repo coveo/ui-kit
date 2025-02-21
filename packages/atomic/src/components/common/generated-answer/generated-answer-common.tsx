@@ -308,7 +308,7 @@ export class GeneratedAnswerCommon {
       return null;
     }
     return (
-      <div class="text-neutral-dark text-xs">
+      <div class="text-neutral-dark text-xs/[1rem]">
         <slot name="disclaimer" slot="disclaimer">
           {i18n.t('generated-answer-disclaimer')}
         </slot>
@@ -367,7 +367,7 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
+            class="text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>

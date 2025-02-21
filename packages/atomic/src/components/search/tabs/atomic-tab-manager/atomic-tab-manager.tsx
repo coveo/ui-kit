@@ -86,13 +86,13 @@ export class AtomicTabManager {
 
   render() {
     return (
-      <Host class="mb-2">
+      <Host>
         <atomic-tab-manager-bar>
           <div
             role="list"
             aria-label="tab-area"
             part="tab-area"
-            class="mb-2 flex w-full flex-row border-b"
+            class="border-neutral mb-2 flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
               <atomic-tab-button

@@ -27,12 +27,12 @@ const getCurrentExample = () =>
   links.find((link) => link.href === window.location.pathname);
 
 const makeLinks = () => {
+  const currentExample = getCurrentExample();
   return links
-    .filter((link) => link.href !== window.location.pathname)
     .map(
       (link) =>
         `<li>
-           <a href="${link.href}">${link.label}</a>
+           <a href="${link.href}" style="${currentExample && currentExample.href === link.href ? 'font-weight: bold;' : ''}">${link.label}</a>
          </li>`
     )
     .join('');
@@ -41,7 +41,21 @@ const example = getCurrentExample();
 const styleTag = document.createElement('style');
 styleTag.innerHTML = `
   html {
+  @layer base {
+    .styles-error {
+      display: none;
+    }
+  }
+
+  body{
+  margin: 0;
+  padding: 0;}
+
+  header {
+  min-height: 130px;
+  }
     nav {
+
       padding: 10px 20px;
       font-family: var(--atomic-font-family);
       span {
@@ -64,7 +78,10 @@ styleTag.innerHTML = `
 styleTag.setAttribute('nonce', '1234567890');
 
 header.innerHTML = `
+  <span class="styles-error block  font-bold text-error">If you can see this, our styles have escaped shadow DOM
+</span>
   <nav>
+
     <span>${example ? example.label : ''} example</span>
     <ul>
       ${makeLinks()}
