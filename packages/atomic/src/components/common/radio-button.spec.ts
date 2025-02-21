@@ -24,9 +24,10 @@ describe('radioButton', () => {
     props: Partial<RadioButtonProps>
   ): HTMLInputElement => {
     render(
-      html`${radioButton({...props, groupName: 'test-group'})}`,
+      html`${radioButton({props: {...props, groupName: 'test-group'}})}`,
       container
     );
+
     return within(container).getByRole('radio');
   };
 
@@ -69,9 +70,9 @@ describe('radioButton', () => {
     };
 
     render(
-      html`${radioButton({...props, text: 'radio-1'})}
-      ${radioButton({...props, text: 'radio-2'})}
-      ${radioButton({...props, text: 'radio-3'})}`,
+      html`${radioButton({props: {...props, text: 'radio-1'}})}
+      ${radioButton({props: {...props, text: 'radio-2'}})}
+      ${radioButton({props: {...props, text: 'radio-3'}})}`,
       container
     );
 
@@ -131,7 +132,7 @@ describe('radioButton', () => {
       ref,
     };
 
-    render(html`${radioButton(props)}`, container);
+    render(html`${radioButton({props})}`, container);
 
     expect(ref).toHaveBeenCalled();
   });

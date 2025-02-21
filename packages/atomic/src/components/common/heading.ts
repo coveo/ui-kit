@@ -1,3 +1,4 @@
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {html, literal, unsafeStatic} from 'lit/static-html.js';
 
@@ -18,10 +19,12 @@ export interface HeadingProps {
   part?: string;
 }
 
-export const heading = <T>(
-  {level, class: classname, part}: HeadingProps,
-  children?: T
-) => {
+export const heading: FunctionalComponentWithChildren<HeadingProps> = ({
+  props,
+  children,
+}) => {
+  const {level, class: classname, part} = props;
+
   const headingTag =
     level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
 
