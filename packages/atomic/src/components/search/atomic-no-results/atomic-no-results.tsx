@@ -10,11 +10,11 @@ import {
   buildQuerySummary,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {Cancel} from '../../common/no-items/cancel';
 import {NoItemsContainer} from '../../common/no-items/container';
 import {NoItemsGuard} from '../../common/no-items/guard';

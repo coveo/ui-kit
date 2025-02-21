@@ -1,4 +1,4 @@
-import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {FocusTargetController} from '@/src/utils/stencil-accessibility-utils';
 import {
   DateFacet,
   DateFacetValue,

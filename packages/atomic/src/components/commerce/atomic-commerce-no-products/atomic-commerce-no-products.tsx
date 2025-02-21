@@ -6,12 +6,12 @@ import {
   buildProductListing,
 } from '@coveo/headless/commerce';
 import {Component, State, h} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {NoItemsContainer} from '../../common/no-items/container';
 import {NoItemsGuard} from '../../common/no-items/guard';
 import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';

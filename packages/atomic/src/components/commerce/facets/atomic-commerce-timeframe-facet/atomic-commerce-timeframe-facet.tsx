@@ -10,13 +10,13 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, Element, h, Listen, Prop, State, VNode} from '@stencil/core';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {parseDate} from '../../../../utils/date-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
