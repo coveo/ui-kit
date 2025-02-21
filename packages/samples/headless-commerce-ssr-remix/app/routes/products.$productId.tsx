@@ -22,6 +22,7 @@ import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;
@@ -86,6 +87,8 @@ export default function ProductRoute() {
     language: string;
     currency: string;
   }>();
+
+  useClientId();
 
   return (
     <StandaloneProvider

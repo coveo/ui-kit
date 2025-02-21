@@ -13,6 +13,7 @@ import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
+import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {
   listingEngineDefinition,
   ListingStaticState,
@@ -32,7 +33,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
-import {coveo_visitorId} from '../cookies.server';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
@@ -100,14 +101,14 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     }
   );
 
-  return {
-    staticState,
-    navigatorContext,
-    recsStaticState,
-    headers: {
-      'Set-Cookie': await coveo_visitorId.serialize(navigatorContext.clientId),
-    },
-  };
+  return Response.json(
+    {staticState, navigatorContext, recsStaticState},
+    {
+      headers: {
+        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
+      },
+    }
+  );
 };
 
 export default function ListingRoute() {
@@ -117,6 +118,8 @@ export default function ListingRoute() {
     navigatorContext: NavigatorContext;
     recsStaticState: RecommendationStaticState;
   }>();
+
+  useClientId();
 
   const getTitle = () => {
     return params.listingId

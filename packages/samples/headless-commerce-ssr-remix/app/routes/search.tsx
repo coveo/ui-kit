@@ -12,6 +12,7 @@ import Summary from '@/app/components/summary';
 import Triggers from '@/app/components/triggers/triggers';
 import externalCartService from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
+import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {searchEngineDefinition, SearchStaticState} from '@/lib/commerce-engine';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
@@ -24,6 +25,7 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -61,7 +63,17 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     },
   });
 
-  return {staticState, navigatorContext};
+  return Response.json(
+    {
+      staticState,
+      navigatorContext,
+    },
+    {
+      headers: {
+        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
+      },
+    }
+  );
 };
 
 export default function SearchRoute() {
@@ -69,6 +81,8 @@ export default function SearchRoute() {
     staticState: SearchStaticState;
     navigatorContext: NavigatorContext;
   }>();
+
+  useClientId();
 
   return (
     <SearchProvider

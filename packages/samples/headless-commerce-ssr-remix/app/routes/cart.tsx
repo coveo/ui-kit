@@ -10,6 +10,7 @@ import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
 import externalContextService from '@/external-services/external-context-service';
+import {getVisitorIdSetCookieHeader} from '@/lib/client-id.server';
 import {
   recommendationEngineDefinition,
   RecommendationStaticState,
@@ -24,6 +25,7 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
@@ -77,7 +79,21 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     }
   );
 
-  return {staticState, items, totalPrice, language, currency, recsStaticState};
+  return Response.json(
+    {
+      staticState,
+      items,
+      totalPrice,
+      language,
+      currency,
+      recsStaticState,
+    },
+    {
+      headers: {
+        ...(await getVisitorIdSetCookieHeader(navigatorContext.clientId)),
+      },
+    }
+  );
 };
 
 export default function CartRoute() {
@@ -98,6 +114,9 @@ export default function CartRoute() {
     currency: string;
     recsStaticState: RecommendationStaticState;
   }>();
+
+  useClientId();
+
   return (
     <StandaloneProvider
       staticState={staticState}
