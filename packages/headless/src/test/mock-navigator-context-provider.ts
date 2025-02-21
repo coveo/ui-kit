@@ -11,6 +11,6 @@ export const buildMockNavigatorContextProvider = (
     userAgent: context?.userAgent || '',
     location: context?.location || '',
     clientId: context?.clientId || '',
-    capture: context?.capture || false,
+    capture: context?.capture,
   });
 };
