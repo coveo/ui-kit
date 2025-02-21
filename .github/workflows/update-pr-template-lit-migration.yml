@@ -1,0 +1,38 @@
+name: Update PR for Lit Component Migration
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  update-pr-description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Get Label
+        id: get_label
+        run: echo "label=${{ github.event.label.name }}" >> $GITHUB_OUTPUT
+
+      - name: Read PR Template
+        if: steps.get_label.outputs.label == 'new-lit-component'
+        id: read_template
+        run: |
+          TEMPLATE_CONTENT=$(cat .github/PULL_REQUEST_TEMPLATE/atomic-stencil-lit-migration.md)
+          TEMPLATE_CONTENT_ESCAPED=$(echo "$TEMPLATE_CONTENT" | jq -Rs .)
+          echo "template_content=$TEMPLATE_CONTENT_ESCAPED" >> $GITHUB_OUTPUT
+
+      - name: Replace Placeholders in PR Template
+        if: steps.get_label.outputs.label == 'new-lit-component'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          TEMPLATE_CONTENT: ${{ steps.read_template.outputs.template_content }}
+        run: |
+          # Update PR description via GitHub API
+          echo "Updating PR description for PR #$PR_NUMBER"
+          curl -X PATCH -H "Authorization: token $GITHUB_TOKEN" \
+               -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/${{ github.repository }}/pulls/$PR_NUMBER \
+               -d "{\"body\": $TEMPLATE_CONTENT}"
