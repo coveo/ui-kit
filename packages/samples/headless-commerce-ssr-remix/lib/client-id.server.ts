@@ -6,7 +6,7 @@ interface CoveoAnalyticsContext
   extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
 
 /**
- * Determines whether analytics data should be captured on Coveo requests, based on the provided request object.
+ * Determines whether analytics data should be captured by Coveo requests, based on the provided request object.
  *
  * @param request - The request object.
  * @returns `true` if analytics data should be captured, `false` otherwise.
@@ -22,7 +22,7 @@ export const shouldCapture = async (request: Request): Promise<boolean> => {
  * Determines whether the request allows analytics data to be captured by Coveo requests.
  *
  * @param request - The request object.
- * @returns `true` if the request allows analytics data to be captured by Coveo requests, `false` otherwise.
+ * @returns `true` if the request allows analytics data to be captured, `false` otherwise.
  */
 const isUserTrackingAllowedByRequest = async (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,21 +34,21 @@ const isUserTrackingAllowedByRequest = async (
 };
 
 /**
- * Verifies whether the `coveo_capture` cookie is set in the 'Cookie' request header in order to determine whether the
- * client allows analytics data to be captured by Coveo requests.
+ * Determines whether the client allows analytics data to be captured by verifying if the `coveo_capture` cookie is set
+ * in the 'Cookie' request header.
  *
  * @param request - The request object.
- * @returns `true` if the `coveo_capture` is set, `false` otherwise.
+ * @returns `true` if the `coveo_capture` cookie is set, `false` otherwise.
  */
 const isUserTrackingAllowedByClient = async (request: Request) => {
   return !!(await coveo_capture.parse(request.headers.get('Cookie')));
 };
 
 /**
- * Returns the analytics context for a given request.
+ * Returns the Coveo analytics context (i.e., `clientId` and `capture` values) for the given request.
  *
  * @param request - The request object.
- * @returns The analytics context.
+ * @returns The Coveo analytics context.
  */
 export const getAnalyticsContext = async (
   request: Request
@@ -65,8 +65,8 @@ export const getAnalyticsContext = async (
 /**
  * Generates a 'Set-Cookie' response header with the provided argument serialized into the `coveo_visitorId` cookie.
  *
- * @param clientId - The clientId to serialize into the `coveo_visitorId` Set-Cookie response header.
- * @returns A Set-Cookie response header, or an empty object if the clientId is an empty string.
+ * @param clientId - The clientId to serialize into the `coveo_visitorId` 'Set-Cookie' response header.
+ * @returns A 'Set-Cookie' response header, or an empty object if the `clientId` is an empty string.
  */
 export const getVisitorIdSetCookieHeader = async (
   clientId: string
