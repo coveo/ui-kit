@@ -8,14 +8,14 @@ import {
 import {Component, Listen, Prop, State, h, Element} from '@stencil/core';
 import QuickviewIcon from '../../../images/preview.svg';
 import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../utils/accessibility-utils';
-import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../utils/stencil-accessibility-utils';
 import {IconButton} from '../../common/iconButton';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';

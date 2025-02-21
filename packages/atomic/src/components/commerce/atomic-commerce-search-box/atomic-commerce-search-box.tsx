@@ -21,7 +21,6 @@ import {
   Watch,
   h,
 } from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
@@ -34,6 +33,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
   once,

@@ -7,8 +7,8 @@ import {
   Method,
   Listen,
 } from '@stencil/core';
-import {FindAriaLiveEventArgs} from '../../../utils/accessibility-utils';
 import {buildDebouncedQueue} from '../../../utils/debounce-utils';
+import {FindAriaLiveEventArgs} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 
 type Regions = {[regionName: string]: {assertive: boolean; message: string}};

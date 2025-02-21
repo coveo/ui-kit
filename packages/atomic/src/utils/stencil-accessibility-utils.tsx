@@ -4,12 +4,18 @@ import {buildCustomEvent} from './event-utils';
 import {InitializableComponent} from './initialization-utils';
 import {defer} from './utils';
 
-export const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
+const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 
+/**
+ * @deprecated use Lit equivalent
+ */
 export interface FindAriaLiveEventArgs {
   element?: HTMLAtomicAriaLiveElement;
 }
 
+/**
+ * @deprecated use Lit equivalent
+ */
 export function AriaLiveRegion(regionName: string, assertive = false) {
   function getAriaLiveElement() {
     const event = buildCustomEvent<FindAriaLiveEventArgs>(
@@ -45,6 +51,9 @@ export function AriaLiveRegion(regionName: string, assertive = false) {
   };
 }
 
+/**
+ * @deprecated use Lit equivalent
+ */
 export class FocusTargetController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
@@ -152,6 +161,9 @@ function isFocusable(element: Element) {
   }
 }
 
+/**
+ * @deprecated use Lit equivalent
+ */
 export function* getFocusableDescendants(
   element: Element
 ): Generator<HTMLElement> {
@@ -169,6 +181,9 @@ export function* getFocusableDescendants(
   }
 }
 
+/**
+ * @deprecated use Lit equivalent
+ */
 export function getFirstFocusableDescendant(
   element: Element
 ): HTMLElement | null {
