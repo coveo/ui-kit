@@ -24,9 +24,11 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
@@ -77,7 +79,17 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     }
   );
 
-  return {staticState, items, totalPrice, language, currency, recsStaticState};
+  return Response.json(
+    {
+      staticState,
+      items,
+      totalPrice,
+      language,
+      currency,
+      recsStaticState,
+    },
+    {headers: {...setCookieHeader}}
+  );
 };
 
 export default function CartRoute() {
@@ -98,6 +110,9 @@ export default function CartRoute() {
     currency: string;
     recsStaticState: RecommendationStaticState;
   }>();
+
+  useClientId();
+
   return (
     <StandaloneProvider
       staticState={staticState}

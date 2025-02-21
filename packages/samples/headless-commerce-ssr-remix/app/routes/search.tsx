@@ -24,9 +24,11 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   const url = new URL(request.url);
 
@@ -61,7 +63,13 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     },
   });
 
-  return {staticState, navigatorContext};
+  return Response.json(
+    {
+      staticState,
+      navigatorContext,
+    },
+    {headers: {...setCookieHeader}}
+  );
 };
 
 export default function SearchRoute() {
@@ -69,6 +77,8 @@ export default function SearchRoute() {
     staticState: SearchStaticState;
     navigatorContext: NavigatorContext;
   }>();
+
+  useClientId();
 
   return (
     <SearchProvider

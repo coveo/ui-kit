@@ -32,12 +32,13 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
-import {coveo_visitorId} from '../cookies.server';
+import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const navigatorContext = await getNavigatorContext(request);
+  const {navigatorContext, setCookieHeader} =
+    await getNavigatorContext(request);
 
   const url = new URL(request.url);
 
@@ -100,14 +101,10 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     }
   );
 
-  return {
-    staticState,
-    navigatorContext,
-    recsStaticState,
-    headers: {
-      'Set-Cookie': await coveo_visitorId.serialize(navigatorContext.clientId),
-    },
-  };
+  return Response.json(
+    {staticState, navigatorContext, recsStaticState},
+    {headers: {...setCookieHeader}}
+  );
 };
 
 export default function ListingRoute() {
@@ -117,6 +114,8 @@ export default function ListingRoute() {
     navigatorContext: NavigatorContext;
     recsStaticState: RecommendationStaticState;
   }>();
+
+  useClientId();
 
   const getTitle = () => {
     return params.listingId

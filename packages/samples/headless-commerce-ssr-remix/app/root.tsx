@@ -1,5 +1,5 @@
 import externalCartService from '@/external-services/external-cart-service';
-import {LoaderFunctionArgs, MetaFunction} from '@remix-run/node';
+import {MetaFunction} from '@remix-run/node';
 import {
   Links,
   Meta,
@@ -9,8 +9,6 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react';
-import {randomUUID} from 'crypto';
-import {coveo_visitorId} from './cookies.server';
 
 export const meta: MetaFunction = () => {
   return [
@@ -19,24 +17,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async ({request}: LoaderFunctionArgs) => {
+export const loader = async () => {
   const totalItemsInCart = await externalCartService.getTotalCount();
-  const cookie = await coveo_visitorId.parse(request.headers.get('Cookie'));
-
-  if (!cookie) {
-    const visitorId = randomUUID();
-    return Response.json(
-      {totalItemsInCart},
-      {
-        headers: {
-          'Set-Cookie': await coveo_visitorId.serialize(visitorId, {
-            encode: (value) => atob(value).replaceAll('"', ''),
-            maxAge: 60 * 24 * 365,
-          }),
-        },
-      }
-    );
-  }
 
   return {totalItemsInCart};
 };
