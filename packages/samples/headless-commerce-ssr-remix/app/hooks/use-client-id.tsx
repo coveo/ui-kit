@@ -10,8 +10,8 @@ import {useEffect} from 'react';
  * analytics data, or removes the `coveo_capture` cookie otherwise.
  *
  * The `coveo_capture` cookie would be considered strictly necessary in this implementation, as it is a persistent way
- * to communicate to the server whether the client allows Coveo requests to capture analytics data, enabling the server
- * to honor the user's privacy preferences when making Coveo requests (e.g., fetching the static state).
+ * to communicate to the server whether the client allows Coveo requests to capture analytics data, thus enabling the
+ * server to honor the user's privacy settings when performing Coveo requests (e.g., to fetch the static state).
  */
 
 const useClientId = () =>
