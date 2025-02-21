@@ -57,6 +57,10 @@ export const getAnalyticsContext = async (
   const visitorIdCookieValue = await coveo_visitorId.parse(
     request.headers.get('Cookie')
   );
+
+  // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
+  // deleted the `coveo_visitorId` cookie but not the `coveo_capture` cookie. This is the only case where we generate a
+  // new `clientId` server-side (normally, it is initially generated client-side, and reused thereafter).
   const clientId = capture ? (visitorIdCookieValue ?? randomUUID()) : '';
 
   return {capture, clientId};
