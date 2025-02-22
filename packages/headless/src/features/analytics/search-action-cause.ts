@@ -88,6 +88,10 @@ export enum SearchPageEvents {
    */
   facetUpdateSort = 'facetUpdateSort',
   /**
+   * Identifies the search event that gets logged when the document suggestions are fetched.
+   */
+  documentSuggestion = 'documentSuggestion',
+  /**
    * The custom event that gets logged when an end-user expands a facet to see additional values.
    */
   facetShowMore = 'showMoreFacetResults',
