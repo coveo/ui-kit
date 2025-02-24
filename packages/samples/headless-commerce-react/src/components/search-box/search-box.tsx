@@ -149,14 +149,14 @@ export default function SearchBox(props: ISearchBoxProps) {
           </div>
         )}
 
-        <div className="InstantProducts column">
+        <div className="InstantProducts column small">
           <InstantProducts
             controller={instantProductsController}
             navigate={navigate}
           />
         </div>
 
-        <div className="FilterSuggestions column">
+        <div className="FilterSuggestions column small">
           <FilterSuggestionsGenerator
             controller={filterSuggestionsGeneratorController}
             onClickFilterSuggestion={(
