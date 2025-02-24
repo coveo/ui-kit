@@ -12,12 +12,12 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {Button} from '../../common/button';
-import {Hidden} from '../../common/hidden';
 import {
   getClonedFacetElements,
   RefineModal,
 } from '../../common/refine-modal/modal';
+import {Button} from '../../common/stencil-button';
+import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 
 /**

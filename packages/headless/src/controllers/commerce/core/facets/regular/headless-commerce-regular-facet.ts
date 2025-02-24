@@ -21,12 +21,20 @@ import {
   buildRegularFacetSearch,
 } from './headless-commerce-regular-facet-search.js';
 
+/**
+ * @group Sub-controllers
+ * @category RegularFacet
+ */
 export type RegularFacetOptions = Omit<
   CoreCommerceFacetOptions,
   'toggleSelectActionCreator' | 'toggleExcludeActionCreator'
 > &
   SearchableFacetOptions;
 
+/**
+ * @group Sub-controllers
+ * @category RegularFacet
+ */
 export type RegularFacetState = Omit<
   CoreCommerceFacetState<RegularFacetValue>,
   'type'

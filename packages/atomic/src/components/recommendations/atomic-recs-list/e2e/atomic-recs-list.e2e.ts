@@ -101,6 +101,24 @@ test.describe('when there are no enough recommendations for multiple pages', () 
   });
 });
 
+test.describe('when recommendations open in a new tab', async () => {
+  test.beforeEach(async ({recsList}) => {
+    await recsList.load({story: 'recs-opening-in-new-tab'});
+    await recsList.hydrated.waitFor();
+  });
+
+  test('should open a single tab when clicking a recommendation', async ({
+    recsList,
+    context,
+  }) => {
+    const pagePromise = context.waitForEvent('page');
+    await recsList.recommendation.first().click();
+    await pagePromise;
+
+    expect(context.pages().length).toBe(2);
+  });
+});
+
 test('with no recommendations returned by the API, should render placeholders', async ({
   recsList,
   page,

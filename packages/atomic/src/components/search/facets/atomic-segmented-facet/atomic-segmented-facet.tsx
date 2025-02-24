@@ -26,7 +26,7 @@ import {
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';
 
@@ -100,6 +100,9 @@ export class AtomicSegmentedFacet implements InitializableComponent {
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**

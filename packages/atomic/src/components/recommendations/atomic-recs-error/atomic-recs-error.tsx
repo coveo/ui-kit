@@ -6,12 +6,12 @@ import {
   RecommendationListState,
 } from '@coveo/headless/recommendation';
 import {Component, h, State} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QueryErrorContainer} from '../../common/query-error/container';
 import {QueryErrorDescription} from '../../common/query-error/description';
 import {QueryErrorDetails} from '../../common/query-error/details';

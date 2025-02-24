@@ -47,6 +47,7 @@ function emit(program) {
   const emitOnlyDtsFiles = false;
   const customTransformers = {
     before: transformers,
+    // afterDeclarations: [pathTransformer],
   };
 
   return program.emit(

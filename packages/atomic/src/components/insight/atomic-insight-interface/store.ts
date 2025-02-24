@@ -1,4 +1,9 @@
-import {InsightEngine} from '@coveo/headless/insight';
+import {DEFAULT_MOBILE_BREAKPOINT} from '@/src/utils/replace-breakpoint';
+import {
+  DateFacetValue,
+  InsightEngine,
+  NumericFacetValue,
+} from '@coveo/headless/insight';
 import {
   FacetInfo,
   FacetStore,
@@ -15,12 +20,13 @@ import {
   unsetLoadingFlag,
   waitUntilAppLoaded,
 } from '../../common/interface/store';
-import {DateFacetValue, NumericFacetValue} from '../../common/types';
+import {makeDesktopQuery} from '../atomic-insight-layout/insight-layout';
 
 interface Data {
   loadingFlags: string[];
   iconAssetsPath: string;
   resultList: ResultListInfo | undefined;
+  mobileBreakpoint: string;
   facets: FacetStore<FacetInfo>;
   numericFacets: FacetStore<FacetInfo & FacetValueFormat<NumericFacetValue>>;
   dateFacets: FacetStore<FacetInfo & FacetValueFormat<DateFacetValue>>;
@@ -30,6 +36,7 @@ interface Data {
 }
 
 export type InsightStore = BaseStore<Data> & {
+  isMobile(): boolean;
   unsetLoadingFlag(loadingFlag: string): void;
   setLoadingFlag(flag: string): void;
   registerFacet<T extends FacetType, U extends string>(
@@ -46,6 +53,7 @@ export function createInsightStore(): InsightStore {
     loadingFlags: [],
     iconAssetsPath: '',
     resultList: undefined,
+    mobileBreakpoint: DEFAULT_MOBILE_BREAKPOINT,
     facets: {},
     numericFacets: {},
     dateFacets: {},
@@ -63,6 +71,11 @@ export function createInsightStore(): InsightStore {
 
     setLoadingFlag(loadingFlag: string) {
       setLoadingFlag(store, loadingFlag);
+    },
+
+    isMobile() {
+      return !window.matchMedia(makeDesktopQuery(store.state.mobileBreakpoint))
+        .matches;
     },
 
     registerFacet<T extends FacetType, U extends string>(

@@ -121,6 +121,16 @@ startServers();
 
 // Watch the src folder for changes
 watch('src', {recursive: true}, async (_, filename) => {
+  // Ignore irrelevant files
+  if (
+    filename.endsWith('.mdx') ||
+    filename.endsWith('.new.stories.tsx') ||
+    filename.endsWith('.spec.ts') ||
+    filename.includes('e2e')
+  ) {
+    return;
+  }
+
   // Stop all processes if a file changes to prevent multiple builds at once
   await stopAllProcesses();
   console.log(chalk.cyanBright(`📂 File changed: ${filename}`));
@@ -179,6 +189,12 @@ watch('src', {recursive: true}, async (_, filename) => {
     'Running esbuild for autoloader CJS...',
     'esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js'
   );
+
+  if (isStopped) {
+    return;
+  }
+
+  await nextTask('Building the custom elements manifest...', 'cem analyze');
 
   if (isStopped) {
     return;

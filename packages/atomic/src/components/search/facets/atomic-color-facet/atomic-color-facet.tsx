@@ -19,10 +19,6 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {
   getFieldCaptions,
   getFieldValueCaption,
 } from '../../../../utils/field-utils';
@@ -32,6 +28,10 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
@@ -49,7 +49,7 @@ import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ColorFacetCheckbox} from '../color-facet-checkbox/color-facet-checkbox';
 
@@ -192,6 +192,9 @@ export class AtomicColorFacet implements InitializableComponent {
   @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**

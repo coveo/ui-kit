@@ -16,17 +16,15 @@ import {
   Watch,
   h,
 } from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
-import {Heading} from '../../common/heading';
-import {Hidden} from '../../common/hidden';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
@@ -41,6 +39,8 @@ import {
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
+import {Heading} from '../../common/stencil-heading';
+import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
@@ -313,6 +313,9 @@ export class AtomicCommerceRecommendationList
   }
 
   private getAtomicProductProps(product: Product) {
+    const linkContent =
+      this.productTemplateProvider.getLinkTemplateContent(product);
+
     return {
       interactiveProduct: this.recommendations.interactiveProduct({
         options: {product},
@@ -327,7 +330,8 @@ export class AtomicCommerceRecommendationList
         this.imageSize
       ),
       content: this.productTemplateProvider.getTemplateContent(product),
-      linkContent: this.productTemplateProvider.getLinkTemplateContent(product),
+      linkContent,
+      stopPropagation: !!linkContent,
       store: this.bindings.store,
       density: this.density,
       display: this.display,

@@ -19,13 +19,13 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Prop, VNode, Element} from '@stencil/core';
 import Star from '../../../../images/star.svg';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
@@ -35,7 +35,7 @@ import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-p
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {Hidden} from '../../../common/hidden';
+import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -161,6 +161,9 @@ export class AtomicRatingRangeFacet implements InitializableComponent {
   @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**

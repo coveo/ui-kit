@@ -20,7 +20,6 @@ import {
   EventEmitter,
   Host,
 } from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
@@ -33,6 +32,7 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
   once,
@@ -427,12 +427,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
 
   private onSubmit() {
     this.isExpanded = false;
-    if (
-      this.suggestionManager.isRightPanelInFocus() ||
-      this.suggestionManager.activeDescendantElement?.part.contains(
-        'recent-query-title-item'
-      )
-    ) {
+    if (this.suggestionManager.keyboardActiveDescendant) {
       this.suggestionManager.onSubmit();
       return;
     }
@@ -706,9 +701,15 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         elementHasQuery
       ).length;
     this.searchBoxAriaMessage = elsLength
-      ? this.bindings.i18n.t('query-suggestions-available', {
-          count: elsLength,
-        })
+      ? this.bindings.i18n.t(
+          this.searchBoxState.value
+            ? 'query-suggestions-available'
+            : 'query-suggestions-available-no-query',
+          {
+            count: elsLength,
+            query: this.searchBoxState.value,
+          }
+        )
       : this.bindings.i18n.t('query-suggestions-unavailable');
   }
 

@@ -2,7 +2,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit-html/static.js';
+import {html} from 'lit';
 
 const {decorator, play} = wrapInRecommendationInterface();
 
@@ -69,6 +69,24 @@ export const RecsWithFullTemplate: Story = {
               <atomic-result-section-bottom-metadata>
                 <span>Bottom Metadata Section</span>
               </atomic-result-section-bottom-metadata>
+            </template>
+          </atomic-recs-result-template>`,
+  },
+};
+
+export const RecsOpeningInNewTab: Story = {
+  tags: ['test'],
+  args: {
+    'slots-default': `<atomic-recs-result-template>
+            <template slot="link">
+              <atomic-result-link>
+                <a slot="attributes" target="_blank"></a>
+              </atomic-result-link>
+            </template>
+            <template>
+              <atomic-result-section-title>
+                <atomic-result-text field="title"></atomic-result-text>
+              </atomic-result-section-title>
             </template>
           </atomic-recs-result-template>`,
   },

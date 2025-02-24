@@ -1,5 +1,5 @@
 import {FunctionalComponent, h, Fragment} from '@stencil/core';
-import {Hidden} from '../hidden';
+import {Hidden} from '../stencil-hidden';
 
 export interface PagerGuardProps {
   hasError: boolean;

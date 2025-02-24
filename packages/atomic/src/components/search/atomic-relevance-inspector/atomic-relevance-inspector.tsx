@@ -1,6 +1,6 @@
 import {getOrganizationEndpoint} from '@coveo/headless';
 import {Component, h, Prop, Event, EventEmitter} from '@stencil/core';
-import {Button} from '../../common/button';
+import {Button} from '../../common/stencil-button';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
