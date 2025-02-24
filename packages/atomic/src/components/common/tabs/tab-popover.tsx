@@ -203,7 +203,7 @@ export class TabPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="z-99 fixed bottom-0 left-0 right-0 top-0 cursor-pointer bg-transparent"
+        class="z-9998 fixed bottom-0 left-0 right-0 top-0 cursor-pointer bg-transparent"
         onClick={() => this.toggle()}
       ></div>
     );
@@ -211,7 +211,7 @@ export class TabPopover implements InitializableComponent {
 
   private renderPopover() {
     return (
-      <div class={`relative ${this.isOpen ? 'z-100' : ''}`}>
+      <div class={`relative ${this.isOpen ? 'z-9999' : ''}`}>
         {this.renderDropdownButton()}
         <ul
           id={this.popoverId}
