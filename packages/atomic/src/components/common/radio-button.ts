@@ -1,4 +1,5 @@
-import {html, TemplateResult} from 'lit';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
+import {html} from 'lit';
 import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
@@ -31,7 +32,7 @@ export interface RadioButtonProps {
   ref?: RefOrCallback;
 }
 
-export const radioButton = (props: RadioButtonProps): TemplateResult => {
+export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
   const classNames = {
     'btn-radio': true,
     selected: Boolean(props.checked),

@@ -1,3 +1,4 @@
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
@@ -40,12 +41,9 @@ export interface ButtonProps {
   title?: string;
 }
 
-export const button = <T>({
+export const button: FunctionalComponentWithChildren<ButtonProps> = ({
   props,
   children,
-}: {
-  props: ButtonProps;
-  children: T;
 }) => {
   const rippleColor = getRippleColorForButtonStyle(props.style);
   const className = getClassNameForButtonStyle(props.style);

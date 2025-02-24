@@ -18,9 +18,11 @@ describe('checkbox', () => {
   const renderCheckbox = (props: Partial<CheckboxProps>): HTMLButtonElement => {
     render(
       html`${checkbox({
-        ...props,
-        checked: props.checked ?? false,
-        onToggle: props.onToggle ?? vi.fn(),
+        props: {
+          ...props,
+          checked: props.checked ?? false,
+          onToggle: props.onToggle ?? vi.fn(),
+        },
       })}`,
       container
     );
@@ -111,7 +113,6 @@ describe('checkbox', () => {
     expect(button).toHaveClass(
       'w-4',
       // TODO: KIT-3907
-      // @ts-expect-error the typing is incorrect. matchers should be a string[]
       'h-4',
       'grid',
       'place-items-center',
