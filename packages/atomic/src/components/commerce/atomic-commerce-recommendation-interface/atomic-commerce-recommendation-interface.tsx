@@ -23,6 +23,7 @@ import {
   StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common-stencil';
+import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -32,7 +33,7 @@ export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
-  HTMLAtomicCommerceInterfaceElement
+  AtomicCommerceInterface
 > &
   NonceBindings;
 
@@ -52,7 +53,7 @@ export class AtomicCommerceRecommendationInterface
   private store = createCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @Element() public host!: HTMLAtomicCommerceInterfaceElement;
+  @Element() public host!: AtomicCommerceInterface;
 
   @State() public error?: Error;
 
