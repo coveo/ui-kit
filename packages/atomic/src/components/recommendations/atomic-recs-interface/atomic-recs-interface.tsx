@@ -24,10 +24,10 @@ import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, RecsStore} from './store';
 
@@ -50,7 +50,7 @@ export type RecsBindings = CommonBindings<
   shadow: true,
 })
 export class AtomicRecsInterface
-  implements BaseAtomicInterface<RecommendationEngine>
+  implements StencilBaseAtomicInterface<RecommendationEngine>
 {
   private store = createRecsStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;

@@ -33,10 +33,10 @@ import {
 } from '../../../utils/local-storage-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {
   errorSelector,
   firstSearchExecutedSelector,
@@ -60,7 +60,7 @@ export type Bindings = _Bindings;
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface
-  implements BaseAtomicInterface<SearchEngine>
+  implements StencilBaseAtomicInterface<SearchEngine>
 {
   private urlManager!: UrlManager;
   private searchStatus!: SearchStatus;

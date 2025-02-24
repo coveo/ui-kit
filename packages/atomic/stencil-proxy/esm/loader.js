@@ -5,14 +5,16 @@ import recommendationsComponents from '../atomic/components/components/recommend
 import searchComponents from '../atomic/components/components/search/lazy-index.js';
 import {defineCustomElements as originalDefineCustomElements} from './_loader.js';
 
-const defineCustomElements = function (...args) {
-  Object.values({
-    ...recommendationsComponents,
-    ...ipxComponents,
-    ...insightComponents,
-    ...commerceComponents,
-    ...searchComponents,
-  }).forEach((importFunction) => importFunction());
+const defineCustomElements = async function (...args) {
+  await Promise.all(
+    Object.values({
+      ...recommendationsComponents,
+      ...ipxComponents,
+      ...insightComponents,
+      ...commerceComponents,
+      ...searchComponents,
+    }).map((importFunction) => importFunction())
+  );
   originalDefineCustomElements(...args);
 };
 
