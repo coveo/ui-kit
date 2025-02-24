@@ -54,7 +54,15 @@ export default function FilterSuggestions(props: IFilterSuggestionsProps) {
       </p>
       <ul>
         {state.values.map((value) => (
-          <li key={value.rawValue}>{renderFilterSuggestionButton(value)}</li>
+          <li
+            key={
+              'path' in value
+                ? [...value.path, value.rawValue].join(';')
+                : value.rawValue
+            }
+          >
+            {renderFilterSuggestionButton(value)}
+          </li>
         ))}
       </ul>
     </div>

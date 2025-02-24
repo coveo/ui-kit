@@ -52,7 +52,7 @@ export default function LegacyFieldSuggestions(
       </p>
       <ul>
         {state.values.map((value) => (
-          <li key={value.rawValue}>
+          <li key={[...value.path, value.rawValue].join(';')}>
             {renderLegacyFieldSuggestionButton(value)}
           </li>
         ))}
