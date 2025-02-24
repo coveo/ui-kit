@@ -20,9 +20,10 @@ import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
+import {AtomicCommerceInterface} from '../lazy-index';
 import {
   CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -32,7 +33,7 @@ export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
-  HTMLAtomicCommerceInterfaceElement
+  AtomicCommerceInterface
 > &
   NonceBindings;
 
@@ -47,12 +48,12 @@ export type CommerceBindings = CommonBindings<
   assetsDirs: ['lang'],
 })
 export class AtomicCommerceRecommendationInterface
-  implements BaseAtomicInterface<CommerceEngine>
+  implements StencilBaseAtomicInterface<CommerceEngine>
 {
   private store = createCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @Element() public host!: HTMLAtomicCommerceInterfaceElement;
+  @Element() public host!: AtomicCommerceInterface;
 
   @State() public error?: Error;
 

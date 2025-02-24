@@ -25,10 +25,12 @@ const allComponents = Promise.all([
 
 const originalDefineCustomElements = exportModule.defineCustomElements;
 exportModule.defineCustomElements = function (...args) {
-  allComponents.then((module) =>
-    Object.values(module).forEach((importFunction) => importFunction())
-  );
-  originalDefineCustomElements(...args);
+  allComponents.then((modules) => {
+    modules.forEach((module) =>
+      Object.values(module).forEach((importFunction) => importFunction())
+    );
+    originalDefineCustomElements(...args);
+  });
 };
 
 module.exports = exportModule;
