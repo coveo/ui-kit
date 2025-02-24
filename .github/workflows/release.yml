@@ -70,24 +70,6 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
-  docs-prod:
-    needs: release
-    runs-on: ubuntu-latest
-    environment: 'Docs Production'
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: 'release/v3'
-      - uses: ./.github/actions/setup
-      - name: Notify Docs
-        run: npm run notify:docs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   quantic-prod:
     needs: release
     runs-on: ubuntu-latest
@@ -159,7 +141,6 @@ jobs:
         with:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
-
   typedoc-headless-react:
     needs: release
     runs-on: ubuntu-latest
@@ -200,7 +181,24 @@ jobs:
         with:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
+  docs-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Docs Production'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        with:
+          egress-policy: audit
 
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - name: Notify Docs
+        run: npm run notify:docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
   # github-prod:
   #   needs: release
