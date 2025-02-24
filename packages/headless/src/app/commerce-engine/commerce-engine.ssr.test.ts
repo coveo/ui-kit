@@ -7,16 +7,13 @@ import {CommerceEngineDefinitionOptions} from '../commerce-ssr-engine/factories/
 import {getSampleCommerceEngineConfiguration} from './commerce-engine-configuration.js';
 import {defineCommerceEngine} from './commerce-engine.ssr.js';
 
-type WithRequired<T, K extends keyof T> = T & {[P in K]-?: T[P]};
-
 describe('Commerce Engine SSR', () => {
-  let definitionOptions: WithRequired<
-    CommerceEngineDefinitionOptions,
-    'controllers'
-  >;
+  let definitionOptions: NonNullable<CommerceEngineDefinitionOptions>;
 
   let engineDefinition: ReturnType<
-    typeof defineCommerceEngine<typeof definitionOptions.controllers>
+    typeof defineCommerceEngine<
+      NonNullable<typeof definitionOptions.controllers>
+    >
   >;
 
   let listingEngineDefinition: (typeof engineDefinition)['listingEngineDefinition'];
