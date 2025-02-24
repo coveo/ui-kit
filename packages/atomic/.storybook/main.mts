@@ -47,6 +47,8 @@ const config: StorybookConfig = {
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},
+    {from: '../dist/atomic', to: './assets'},
+    {from: '../dist/atomic/lang', to: './lang'},
   ],
   addons: [
     '@storybook/addon-essentials',
