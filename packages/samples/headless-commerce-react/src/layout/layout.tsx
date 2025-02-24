@@ -1,5 +1,6 @@
 import {
   buildCart,
+  //buildFieldSuggestionsGenerator,
   buildFilterSuggestionsGenerator,
   buildInstantProducts,
   buildStandaloneSearchBox,
@@ -107,6 +108,7 @@ export default function Layout(props: ILayoutProps) {
             filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
               engine
             )}
+            //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}
           />
         )}
       </section>

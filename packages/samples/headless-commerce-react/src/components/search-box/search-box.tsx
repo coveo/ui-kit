@@ -7,15 +7,20 @@ import {
   FilterSuggestions,
   RegularFacetSearchResult,
   CategoryFacetSearchResult,
+  //FieldSuggestionsGenerator,
+  //CategoryFieldSuggestions,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
 import FilterSuggestionsGenerator from '../filter-suggestions/filter-suggestions-generator.js';
 import InstantProducts from '../instant-products/instant-products.js';
 
+//import LegacyFieldSuggestionsGenerator from '../legacy-field-suggestions/legacy-field-suggestions-generator.js';
+
 interface ISearchBoxProps {
   controller: HeadlessSearchBox;
   instantProductsController: HeadlessInstantProducts;
   filterSuggestionsGeneratorController: HeadlessFilterSuggestionsGenerator;
+  //legacyFieldSuggestionsGeneratorController: FieldSuggestionsGenerator;
   navigate: (pathName: string) => void;
 }
 
@@ -24,6 +29,7 @@ export default function SearchBox(props: ISearchBoxProps) {
     controller,
     instantProductsController,
     filterSuggestionsGeneratorController,
+    //legacyFieldSuggestionsGeneratorController,
     navigate,
   } = props;
 
@@ -38,14 +44,22 @@ export default function SearchBox(props: ISearchBoxProps) {
 
   const fetchFilterSuggestions = (value: string) => {
     for (const filterSuggestions of filterSuggestionsGeneratorController.filterSuggestions) {
-      filterSuggestions.fetchSuggestions(value);
+      filterSuggestions.updateQuery(value);
     }
+
+    // for (const legacyFieldSuggestions of legacyFieldSuggestionsGeneratorController.fieldSuggestions) {
+    //   legacyFieldSuggestions.updateText(value);
+    // }
   };
 
   const clearFilterSuggestions = () => {
     for (const filterSuggestions of filterSuggestionsGeneratorController.filterSuggestions) {
       filterSuggestions.clear();
     }
+
+    // for (const legacyFieldSuggestions of legacyFieldSuggestionsGeneratorController.fieldSuggestions) {
+    //   legacyFieldSuggestions.clear();
+    // }
   };
 
   const focusSearchBoxInput = () => {
@@ -169,6 +183,16 @@ export default function SearchBox(props: ISearchBoxProps) {
                 : controller.select(value as RegularFacetSearchResult);
             }}
           />
+          {/* <LegacyFieldSuggestionsGenerator
+            controller={legacyFieldSuggestionsGeneratorController}
+            onClickLegacyFieldSuggestion={(
+              controller: CategoryFieldSuggestions,
+              value: CategoryFacetSearchResult
+            ) => {
+              hideDropdown();
+              controller.select(value);
+            }}
+          /> */}
         </div>
       </div>
     );
