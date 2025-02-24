@@ -22,9 +22,9 @@ import {
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
 import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regular-facet.js';
 import {
-  buildFieldSuggestions,
-  FieldSuggestions,
-} from './headless-field-suggestions.js';
+  buildFilterSuggestions,
+  FilterSuggestions,
+} from './headless-filter-suggestions.js';
 
 vi.mock(
   '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
@@ -43,12 +43,12 @@ describe('FieldSuggestions', () => {
     getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let fieldSuggestions: FieldSuggestions;
+  let fieldSuggestions: FilterSuggestions;
   let options: RegularFacetOptions;
 
   function initFieldSuggestions() {
     engine = buildMockCommerceEngine(state);
-    fieldSuggestions = buildFieldSuggestions(engine, options);
+    fieldSuggestions = buildFilterSuggestions(engine, options);
   }
 
   function setRequestInFacetSearchSet(
@@ -100,7 +100,7 @@ describe('FieldSuggestions', () => {
     });
 
     expect(
-      fieldSuggestions.getRedirectionParameters({
+      fieldSuggestions.getSearchParameters({
         count: 0,
         displayValue: 'Purple',
         rawValue: 'purple',
@@ -144,7 +144,7 @@ describe('FieldSuggestions', () => {
 
   describe('#updateText', () => {
     beforeEach(() => {
-      fieldSuggestions.updateText('pants');
+      fieldSuggestions.updateQuery('pants');
     });
     it('dispatches #updateFacetSearch with namespaced #facetId, new #query, and correct #numberOfValues', () => {
       expect(updateFacetSearch).toHaveBeenCalledWith({

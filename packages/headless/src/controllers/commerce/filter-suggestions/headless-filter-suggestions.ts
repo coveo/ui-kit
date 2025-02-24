@@ -36,77 +36,98 @@ import {RegularFacetOptions} from '../core/facets/regular/headless-commerce-regu
 export type {SpecificFacetSearchResult};
 
 /**
- * The state of the `FieldSuggestions` controller.
+ * The state of the `FilterSuggestions` controller.
  *
  * @group Buildable controllers
- * @category FieldSuggestions
+ * @category FilterSuggestions
  */
-export type FieldSuggestionsState = RegularFacetSearchState &
+export type FilterSuggestionsState = RegularFacetSearchState &
   Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
 
 /**
- * The `FieldSuggestions` controller provides query suggestions based on a particular facet field.
+ * The `FilterSuggestions` controller provides methods to request and interact with facet suggestions based on a
+ * specific field for a given search query.
  *
- * For example, you could use this controller to provide auto-completion suggestions while the end user is typing an item title.
- *
- * This controller is a wrapper around the basic facet controller search functionality, and thus exposes similar options and properties.
+ * @alpha  This controller relies on a Commerce API functionality that is not yet generally available. If you wish to
+ * use this feature in an implementation, please contact your Coveo representative.
  *
  * @group Buildable controllers
- * @category FieldSuggestions
+ * @category FilterSuggestions
  */
-export interface FieldSuggestions
+export interface FilterSuggestions
   extends Controller,
     FacetControllerType<'regular'> {
   /**
-   * Requests field suggestions based on a query.
-   *
-   * @param text - The query to search.
+   * Resets the query in the controller state and clears the filter suggestions.
    */
-  updateText(text: string): void;
+  clear(): void;
 
   /**
-   * Filters the search using the specified value.
+   * Returns the serialized search parameters for the current search query and specified filter suggestion.
    *
-   * If a facet exists with the configured `facetId`, selects the corresponding facet value.
+   * For example, `q=jeans&f-cat_color=Blue`.
    *
-   * @param value - The field suggestion for which to select the matching facet value.
+   * In a typical scenario, this method should called when the user selects a filter suggestion from a standalone search
+   * box. The returned string is then used to pass the correct URL query parametes or fragment when redirecting the
+   * browser to the search page.
+   *
+   * When the user selects a filter suggestion from the main search box on the search page, use the `select` method
+   * instead.
+   *
+   * @param value - The filter suggestion to serialize.
+   * @returns The serialized search parameters for the current search query and specified filter suggestion.
+   */
+  getSearchParameters(value: SpecificFacetSearchResult): string;
+
+  /**
+   * Clears all facet values, selects the specified filter suggestion, updates the query, and executes a new search
+   * request.
+   *
+   * In a typical scenario, this method should be called when the user selects a filter suggestion from the main search
+   * box on the search page.
+   *
+   * When the user selects a filter suggestion from a standalone search box, use the `getSearchParameters` method
+   * instead.
+   *
+   * @param value - The filter suggestion to select.
    */
   select(value: SpecificFacetSearchResult): void;
 
   /**
-   * Returns a serialized query for the specified value.
+   * Sets the query in the controller state to the specified value and requests filter suggestions based on the updated
+   * query.
    *
-   * @param value - The field suggestion for which to select the matching facet value.
-   * @returns A serialized query for the specified value.
+   * For example, if this method is called with `jeans` as an argument, it will request values from the controller's
+   * field (e.g., `ec_brand`) that would return results if selected when the search query is `jeans` (such as
+   * `Calvin Klein`, `Columbia`, and `Nautica`).
+   *
+   * @param query - The search query to use as context to request the category filter suggestions. In a typical
+   * scenario, this should set to the current value of the search box input.
    */
-  getRedirectionParameters(value: SpecificFacetSearchResult): string;
+  updateQuery(query: string): void;
 
-  /**
-   * Resets the query and empties the suggestions.
-   */
-  clear(): void;
-
-  state: FieldSuggestionsState;
+  state: FilterSuggestionsState;
 }
 
 /**
- * Creates a `FieldSuggestions` controller instance.
+ * The `FilterSuggestions` controller provides methods to request and interact with facet suggestions based on a
+ * specific field for a given search query.
  *
- * This controller initializes a facet under the hood, but exposes state and methods that are relevant for suggesting field values based on a query.
- * It's important not to initialize a facet with the same `facetId` but different options, because only the options of the controller which is built first will be taken into account.
+ * @alpha  This controller relies on a Commerce API functionality that is not yet generally available. If you wish to use this
+ * feature in an implementation, please contact your Coveo representative.
  *
- * @param engine The headless engine.
- * @param options The `FieldSuggestions` options used internally.
- * @returns A `FieldSuggestions` controller instance.
+ * @param engine - The headless commerce engine.
+ * @param options - The options for the `FilterSuggestions` controller.
+ * @returns A `FilterSuggestions` controller instance.
  *
  * @group Buildable controllers
- * @category FieldSuggestions
+ * @category FilterSuggestions
  */
-export function buildFieldSuggestions(
+export function buildFilterSuggestions(
   engine: CommerceEngine,
   options: RegularFacetOptions
-): FieldSuggestions {
-  if (!loadFieldSuggestionsReducers(engine)) {
+): FilterSuggestions {
+  if (!loadFilterSuggestionsReducers(engine)) {
     throw loadReducerError;
   }
 
@@ -149,9 +170,12 @@ export function buildFieldSuggestions(
 
     clear,
 
-    getRedirectionParameters: function (
-      value: SpecificFacetSearchResult
-    ): string {
+    updateQuery: function (text: string) {
+      facetSearch.updateText(text);
+      facetSearch.search();
+    },
+
+    getSearchParameters: function (value: SpecificFacetSearchResult): string {
       return searchSerializer.serialize({
         q: facetSearchStateSelector(getState()).query,
         f: {[options.facetId]: [value.rawValue]},
@@ -170,11 +194,6 @@ export function buildFieldSuggestions(
       dispatch(options.fetchProductsActionCreator());
     },
 
-    updateText: function (text: string) {
-      facetSearch.updateText(text);
-      facetSearch.search();
-    },
-
     get state() {
       const {displayName, field, facetId} =
         facetForFieldSuggestionsSelector(getState());
@@ -190,7 +209,7 @@ export function buildFieldSuggestions(
   };
 }
 
-function loadFieldSuggestionsReducers(
+function loadFilterSuggestionsReducers(
   engine: CommerceEngine
 ): engine is CommerceEngine<
   CommerceFacetSetSection &
