@@ -60,7 +60,6 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
       };
 
       atomicInterface.render = () => {
-        console.log('atomicInterface', atomicInterface);
         if (atomicInterface.error) {
           return html`<atomic-component-error
             .element=${atomicInterface.host}
