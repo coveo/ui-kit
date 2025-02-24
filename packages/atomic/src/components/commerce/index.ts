@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
