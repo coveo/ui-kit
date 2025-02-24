@@ -2,16 +2,20 @@ import {
   SearchBox as HeadlessSearchBox,
   InstantProducts as HeadlessInstantProducts,
   Suggestion,
-  FieldSuggestionsGenerator as HeadlessFieldSuggestionsGenerator,
+  FilterSuggestionsGenerator as HeadlessFilterSuggestionsGenerator,
+  CategoryFilterSuggestions,
+  FilterSuggestions,
+  RegularFacetSearchResult,
+  CategoryFacetSearchResult,
 } from '@coveo/headless/commerce';
 import {useEffect, useRef, useState} from 'react';
-import FieldSuggestionsGenerator from '../field-suggestions/field-suggestions-generator.js';
+import FilterSuggestionsGenerator from '../filter-suggestions/filter-suggestions-generator.js';
 import InstantProducts from '../instant-products/instant-products.js';
 
 interface ISearchBoxProps {
   controller: HeadlessSearchBox;
   instantProductsController: HeadlessInstantProducts;
-  fieldSuggestionsGeneratorController: HeadlessFieldSuggestionsGenerator;
+  filterSuggestionsGeneratorController: HeadlessFilterSuggestionsGenerator;
   navigate: (pathName: string) => void;
 }
 
@@ -19,7 +23,7 @@ export default function SearchBox(props: ISearchBoxProps) {
   const {
     controller,
     instantProductsController,
-    fieldSuggestionsGeneratorController,
+    filterSuggestionsGeneratorController,
     navigate,
   } = props;
 
@@ -31,6 +35,18 @@ export default function SearchBox(props: ISearchBoxProps) {
   useEffect(() => {
     controller.subscribe(() => setState({...controller.state}));
   }, [controller]);
+
+  const fetchFilterSuggestions = (value: string) => {
+    for (const filterSuggestions of filterSuggestionsGeneratorController.filterSuggestions) {
+      filterSuggestions.fetchSuggestions(value);
+    }
+  };
+
+  const clearFilterSuggestions = () => {
+    for (const filterSuggestions of filterSuggestionsGeneratorController.filterSuggestions) {
+      filterSuggestions.clear();
+    }
+  };
 
   const focusSearchBoxInput = () => {
     searchInputRef.current!.focus();
@@ -52,11 +68,9 @@ export default function SearchBox(props: ISearchBoxProps) {
     }
 
     controller.updateText(e.target.value);
-    instantProductsController.updateQuery(e.target.value);
-    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
-      fieldSuggestion.updateText(e.target.value);
-    }
     controller.showSuggestions();
+    instantProductsController.updateQuery(e.target.value);
+    fetchFilterSuggestions(e.target.value);
     showDropdown();
   };
 
@@ -72,9 +86,7 @@ export default function SearchBox(props: ISearchBoxProps) {
         if (state.value !== '') {
           controller.clear();
           instantProductsController.updateQuery(state.value);
-          for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
-            fieldSuggestion.clear();
-          }
+          clearFilterSuggestions();
           break;
         }
         break;
@@ -92,9 +104,7 @@ export default function SearchBox(props: ISearchBoxProps) {
     hideDropdown();
     controller.clear();
     instantProductsController.updateQuery(state.value);
-    for (const fieldSuggestion of fieldSuggestionsGeneratorController.fieldSuggestions) {
-      fieldSuggestion.clear();
-    }
+    clearFilterSuggestions();
   };
 
   const onClickSearchBoxSubmit = () => {
@@ -105,6 +115,7 @@ export default function SearchBox(props: ISearchBoxProps) {
 
   const onFocusSuggestion = (suggestion: Suggestion) => {
     instantProductsController.updateQuery(suggestion.rawValue);
+    fetchFilterSuggestions(suggestion.rawValue);
   };
 
   const onSelectSuggestion = (suggestion: Suggestion) => {
@@ -145,10 +156,18 @@ export default function SearchBox(props: ISearchBoxProps) {
           />
         </div>
 
-        <div className="FieldSuggestions column">
-          <FieldSuggestionsGenerator
-            controllers={fieldSuggestionsGeneratorController.fieldSuggestions}
-            hideDropdowns={hideDropdown}
+        <div className="FilterSuggestions column">
+          <FilterSuggestionsGenerator
+            controller={filterSuggestionsGeneratorController}
+            onClickFilterSuggestion={(
+              controller: FilterSuggestions | CategoryFilterSuggestions,
+              value: RegularFacetSearchResult | CategoryFacetSearchResult
+            ) => {
+              hideDropdown();
+              controller.type === 'hierarchical'
+                ? controller.select(value as CategoryFacetSearchResult)
+                : controller.select(value as RegularFacetSearchResult);
+            }}
           />
         </div>
       </div>

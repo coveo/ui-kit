@@ -1,6 +1,6 @@
 import {
   buildCart,
-  buildFieldSuggestionsGenerator,
+  buildFilterSuggestionsGenerator,
   buildInstantProducts,
   buildStandaloneSearchBox,
   CommerceEngine,
@@ -104,7 +104,7 @@ export default function Layout(props: ILayoutProps) {
             instantProductsController={buildInstantProducts(engine, {
               options: {searchBoxId: standaloneSearchBoxId},
             })}
-            fieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(
+            filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
               engine
             )}
           />
