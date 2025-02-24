@@ -20,7 +20,7 @@
 
 [part~='suggestions-wrapper'] {
   flex-direction: column;
-  @media only screen and (not width >= theme(--breakpoint-desktop)) {
+  @media (width >= theme(--breakpoint-desktop)) {
     flex-direction: row;
   }
 }
