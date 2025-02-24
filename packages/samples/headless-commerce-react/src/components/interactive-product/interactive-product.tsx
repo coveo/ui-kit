@@ -6,6 +6,7 @@ import {
 import {useEffect, useState} from 'react';
 import {saveCartItemsToLocaleStorage} from '../../utils/cart-utils.js';
 import {formatCurrency} from '../../utils/format-currency.js';
+import {highlightKeywords} from '../../utils/highlight-utils.js';
 
 interface IInteractiveProductProps {
   product: Product;
@@ -120,11 +121,37 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
     // This is by no means a realistic scenario.
   };
 
+  const getHighlightedExcerpt = () => {
+    if (!product.excerpt) {
+      return {__html: ''};
+    }
+
+    if (!product.excerptHighlights) {
+      return {__html: product.excerpt};
+    }
+
+    return highlightKeywords(product.excerpt, product.excerptHighlights);
+  };
+
+  const getHighlightedTitle = () => {
+    if (!product.ec_name) {
+      return {__html: ''};
+    }
+
+    if (!product.nameHighlights) {
+      return {__html: product.ec_name};
+    }
+
+    return highlightKeywords(product.ec_name, product.nameHighlights);
+  };
+
   return (
     <div className="InteractiveProduct">
-      <button className="ProductLink" onClick={clickProduct}>
-        {product.ec_name}
-      </button>
+      <button
+        className="ProductLink"
+        onClick={clickProduct}
+        dangerouslySetInnerHTML={getHighlightedTitle()}
+      ></button>
       <div className="ProductImageWrapper">
         <img
           src={product.ec_images[0]}
@@ -134,7 +161,7 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       </div>
       {renderProductPrice()}
       <div className="ProductDescription">
-        <p>{product.ec_description}</p>
+        <p dangerouslySetInnerHTML={getHighlightedExcerpt()}></p>
       </div>
       {renderProductCartControls()}
     </div>
