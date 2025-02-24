@@ -1,7 +1,9 @@
 import CoveoAnalyticsClient, {AnalyticsClient, ClientOptions} from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import doNotTrack from '../donottrack';
+import {ClickEventRequest} from '../events';
 import {SVCPlugin} from '../plugins/svc';
+import {DocumentIdentifier, PartialDocumentInformation, SearchPageEvents} from '../searchPage/searchPageEvents';
 import {
     CaseAssistActions,
     CaseAssistEvents,
@@ -19,6 +21,12 @@ import {
 
 export interface CaseAssistClientProvider {
     getOriginLevel1: () => string;
+    getOriginLevel2: () => string;
+    getOriginLevel3: () => string;
+    getOriginContext: () => string;
+    getIsAnonymous: () => boolean;
+    getSearchUID: () => string;
+    getLanguage: () => string;
 }
 
 export interface CaseAssistClientOptions extends ClientOptions {
@@ -67,9 +75,17 @@ export class CaseAssistClient {
     }
 
     public logSelectDocumentSuggestion(meta: SelectDocumentSuggestionMetadata) {
-        this.svc.setAction(CaseAssistActions.suggestionClick, meta.suggestion);
-        this.svc.setTicket(meta.ticket);
-        return this.sendClickEvent();
+        return this.logClickEvent(CaseAssistActions.documentSuggestionClick, meta.suggestion.suggestion, {
+            contentIDKey: 'permanentId',
+            contentIDValue: meta.suggestion.permanentId,
+        });
+    }
+
+    public logQuickviewDocumentSuggestion(meta: SelectDocumentSuggestionMetadata) {
+        return this.logClickEvent(CaseAssistActions.documentSuggestionQuickview, meta.suggestion.suggestion, {
+            contentIDKey: 'permanentId',
+            contentIDValue: meta.suggestion.permanentId,
+        });
     }
 
     public logRateDocumentSuggestion(meta: RateDocumentSuggestionMetadata) {
@@ -135,5 +151,47 @@ export class CaseAssistClient {
                   }
                 : null
         );
+    }
+
+    private async getBaseEventRequest(metadata?: Record<string, any>) {
+        const customData = {...metadata};
+        return {
+            ...this.getOrigins(),
+            customData,
+            language: this.provider?.getLanguage(),
+            anonymous: this.provider?.getIsAnonymous(),
+            clientId: await this.getClientId(),
+        };
+    }
+
+    private getClientId() {
+        return this.coveoAnalyticsClient instanceof CoveoAnalyticsClient
+            ? this.coveoAnalyticsClient.getCurrentVisitorId()
+            : undefined;
+    }
+
+    private getOrigins() {
+        return {
+            originContext: this.provider?.getOriginContext?.(),
+            originLevel1: this.provider?.getOriginLevel1(),
+            originLevel2: this.provider?.getOriginLevel2(),
+            originLevel3: this.provider?.getOriginLevel3(),
+        };
+    }
+
+    private async logClickEvent(
+        event: CaseAssistActions,
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: Record<string, any>
+    ) {
+        const payload: ClickEventRequest = {
+            ...info,
+            ...(await this.getBaseEventRequest({...identifier, ...metadata})),
+            searchQueryUid: this.provider?.getSearchUID() ?? '',
+            actionCause: event,
+        };
+
+        return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 }

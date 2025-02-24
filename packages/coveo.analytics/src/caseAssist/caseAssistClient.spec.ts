@@ -11,6 +11,7 @@ import {TicketProperties} from '../plugins/svc';
 const {fetchMock, fetchMockBeforeEach} = mockFetch();
 import doNotTrack from '../donottrack';
 import {Cookie} from '../cookieutils';
+import {PartialDocumentInformation} from '../searchPage/searchPageEvents';
 jest.mock('../donottrack', () => {
     return {
         default: jest.fn(),
@@ -19,17 +20,31 @@ jest.mock('../donottrack', () => {
 });
 
 describe('CaseAssistClient', () => {
-    const defaultSearchHub = 'origin-level-1';
+    const exampleSearchHub = 'example origin-level-1';
+    const exampleOriginLevel2 = 'example origin-level-2';
+    const exampleOriginLevel3 = 'example origin-level-3';
+    const exampleOriginContext = 'example origin-context';
+    const exampleSearchUID = 'foo';
+    const exampleLanguage = 'en';
+    const exampleClientId = '123-456';
+
     let client: CaseAssistClient;
 
     const provider: CaseAssistClientProvider = {
-        getOriginLevel1: () => defaultSearchHub,
+        getOriginLevel1: () => exampleSearchHub,
+        getOriginLevel2: () => exampleOriginLevel2,
+        getOriginLevel3: () => exampleOriginLevel3,
+        getOriginContext: () => exampleOriginContext,
+        getIsAnonymous: () => false,
+        getSearchUID: () => exampleSearchUID,
+        getLanguage: () => exampleLanguage,
     };
 
     beforeEach(() => {
         fetchMockBeforeEach();
 
         client = initClient();
+        client.coveoAnalyticsClient.runtime.storage.setItem('visitorId', exampleClientId);
         fetchMock.mock(/.*/, {
             visitorId: 'visitor-id',
         });
@@ -76,18 +91,18 @@ describe('CaseAssistClient', () => {
         };
     };
 
-    const fakeDocumentSuggestion = (): DocumentSuggestion => {
-        return {
-            responseId: 'document-suggestion-response-id',
-            suggestionId: 'document-suggestion-id',
-            suggestion: {
-                documentPosition: 0,
-                documentTitle: 'the document title',
-                documentUri: 'some-document-uri',
-                documentUriHash: 'documenturihash',
-                documentUrl: 'some-document-url',
-            },
-        };
+    const fakeDocumentSuggestion: DocumentSuggestion = {
+        responseId: 'document-suggestion-response-id',
+        suggestionId: 'document-suggestion-id',
+        permanentId: 'example permanent-id',
+        suggestion: {
+            documentPosition: 0,
+            documentTitle: 'the document title',
+            documentUri: 'some-document-uri',
+            documentUriHash: 'documenturihash',
+            documentUrl: 'some-document-url',
+            sourceName: 'example source-name',
+        },
     };
 
     const expectMatchPayload = (actionName: CaseAssistActions, actionData: Object, ticket: TicketProperties) => {
@@ -96,7 +111,23 @@ describe('CaseAssistClient', () => {
 
         expectMatchActionPayload(content, actionName, actionData);
         expectMatchTicketPayload(content, ticket);
-        expectMatchProperty(content, 'searchHub', defaultSearchHub);
+        expectMatchProperty(content, 'searchHub', exampleSearchHub);
+    };
+
+    const expectMatchDocumentPayload = (actionCause: CaseAssistActions, doc: PartialDocumentInformation, meta = {}) => {
+        const body: string = lastCallBody(fetchMock);
+        const customData = {...meta};
+        expect(JSON.parse(body.toString())).toMatchObject({
+            actionCause,
+            customData,
+            language: exampleLanguage,
+            clientId: exampleClientId,
+            ...doc,
+            originContext: exampleOriginContext,
+            originLevel1: exampleSearchHub,
+            originLevel2: exampleOriginLevel2,
+            originLevel3: exampleOriginLevel3,
+        });
     };
 
     const expectMatchActionPayload = (
@@ -241,33 +272,26 @@ describe('CaseAssistClient', () => {
 
     it('should send proper payload for #logSelectDocumentSuggestion', async () => {
         await client.logSelectDocumentSuggestion({
-            suggestion: fakeDocumentSuggestion(),
+            suggestion: fakeDocumentSuggestion,
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.suggestionClick, fakeDocumentSuggestion(), fakeTicket);
+        expectMatchDocumentPayload(CaseAssistActions.documentSuggestionClick, fakeDocumentSuggestion.suggestion, {
+            contentIDKey: 'permanentId',
+            contentIDValue: fakeDocumentSuggestion.permanentId,
+        });
     });
 
-    it('should send proper payload for #logSelectDocumentSuggestion when the fromQuickview property is set to true', async () => {
-        const myFakeDocumentSuggestion = fakeDocumentSuggestion();
-        myFakeDocumentSuggestion.fromQuickview = true;
-        await client.logSelectDocumentSuggestion({
-            suggestion: myFakeDocumentSuggestion,
+    it('should send proper payload for #logQuickviewDocumentSuggestion', async () => {
+        await client.logQuickviewDocumentSuggestion({
+            suggestion: fakeDocumentSuggestion,
             ticket: fakeTicket,
         });
 
-        expectMatchPayload(CaseAssistActions.suggestionClick, myFakeDocumentSuggestion, fakeTicket);
-    });
-
-    it('should send proper payload for #logSelectDocumentSuggestion when the openDocument property is set to true', async () => {
-        const myFakeDocumentSuggestion = fakeDocumentSuggestion();
-        myFakeDocumentSuggestion.openDocument = true;
-        await client.logSelectDocumentSuggestion({
-            suggestion: myFakeDocumentSuggestion,
-            ticket: fakeTicket,
+        expectMatchDocumentPayload(CaseAssistActions.documentSuggestionQuickview, fakeDocumentSuggestion.suggestion, {
+            contentIDKey: 'permanentId',
+            contentIDValue: fakeDocumentSuggestion.permanentId,
         });
-
-        expectMatchPayload(CaseAssistActions.suggestionClick, myFakeDocumentSuggestion, fakeTicket);
     });
 
     it('should send proper payload for #logRateDocumentSuggestion', async () => {
@@ -275,14 +299,14 @@ describe('CaseAssistClient', () => {
 
         await client.logRateDocumentSuggestion({
             rating,
-            suggestion: fakeDocumentSuggestion(),
+            suggestion: fakeDocumentSuggestion,
             ticket: fakeTicket,
         });
 
         expectMatchPayload(
             CaseAssistActions.suggestionRate,
             {
-                ...fakeDocumentSuggestion(),
+                ...fakeDocumentSuggestion,
                 rate: rating,
             },
             fakeTicket
