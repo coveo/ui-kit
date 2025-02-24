@@ -1,7 +1,7 @@
 import {TemplateResult} from 'lit';
 
 export interface FunctionalComponent<T> {
-  ({props}: {props: T}): TemplateResult;
+  ({props}: {props: T}): TemplateResult | undefined;
 }
 
 export interface FunctionalComponentWithChildren<T> {
@@ -10,6 +10,9 @@ export interface FunctionalComponentWithChildren<T> {
     children,
   }: {
     props: T;
-    children: TemplateResult | TemplateResult[];
+    children:
+      | TemplateResult
+      | TemplateResult[]
+      | (TemplateResult | undefined)[];
   }): TemplateResult;
 }
