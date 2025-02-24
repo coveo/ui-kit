@@ -33,8 +33,11 @@ export class AtomicCommerceLayout
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-commerce-layout-');
     this.host.id = id;
-    const styleTag = this.bindings.createStyleElement();
-    styleTag.innerHTML = buildCommerceLayout(this.host, this.mobileBreakpoint);
-    this.host.appendChild(styleTag);
+
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(
+      buildCommerceLayout(this.host, this.mobileBreakpoint)
+    );
+    this.bindings.addAdoptedStyleSheets(styleSheet);
   }
 }
