@@ -35,8 +35,7 @@ export interface CommonBindings<
   interfaceElement: InterfaceElement;
 }
 export interface NonceBindings {
-  /**
-   * Creates a Style Information element with the nonce attribute if it exists.
+  /* Creates a Style Information element with the nonce attribute if it exists.
    * Note: the element is **not** appended to the DOM.
    * @returns a style element.
    */
@@ -48,6 +47,13 @@ export interface NonceBindings {
    * @returns a script element.
    */
   createScriptElement: () => HTMLScriptElement;
+}
+
+export interface AdoptedStylesBindings {
+  /**
+   * An array of adopted stylesheets to be used in the shadow DOM.
+   */
+  addAdoptedStyleSheets: (stylesheet: CSSStyleSheet) => void;
 }
 
 export type AnyBindings = CommonBindings<AnyEngineType, AnyStore, HTMLElement>;
