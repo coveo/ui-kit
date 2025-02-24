@@ -12,6 +12,7 @@ export default defineConfig({
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
     __ATOMIC_VERSION__: `"${packageJson.version}"`,
     __HEADLESS_VERSION__: `"${packageJson.dependencies['@coveo/headless']}"`,
+    'process.env': {},
   },
   server: {
     port: port,
