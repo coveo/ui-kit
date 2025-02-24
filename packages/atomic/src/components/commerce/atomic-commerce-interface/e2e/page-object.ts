@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class CommerceInterfacePageObject extends BasePageObject<'atomic-commerce-interface'> {
+export class AtomicCommerceInterfacePageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-interface');
   }
@@ -12,6 +12,10 @@ export class CommerceInterfacePageObject extends BasePageObject<'atomic-commerce
 
   interface() {
     return this.page.locator('atomic-commerce-interface');
+  }
+
+  searchBox() {
+    return this.page.locator('atomic-commerce-search-box');
   }
 
   getBreadcrumbButtons(value?: string | RegExp) {
