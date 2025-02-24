@@ -122,11 +122,11 @@ describe('CaseAssistClient', () => {
             customData,
             language: exampleLanguage,
             clientId: exampleClientId,
-            ...doc,
             originContext: exampleOriginContext,
             originLevel1: exampleSearchHub,
             originLevel2: exampleOriginLevel2,
             originLevel3: exampleOriginLevel3,
+            ...doc,
         });
     };
 
