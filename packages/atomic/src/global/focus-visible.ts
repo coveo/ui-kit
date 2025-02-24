@@ -1,6 +1,11 @@
+// Extend the Window interface to include applyFocusVisiblePolyfill
+interface Window {
+  applyFocusVisiblePolyfill?: boolean;
+}
+
 // Necessary for Safari under version 15.4.
 export function loadFocusVisiblePolyfill() {
-  if (window.applyFocusVisiblePolyfill) {
+  if ((window as Window).applyFocusVisiblePolyfill) {
     return;
   }
 
