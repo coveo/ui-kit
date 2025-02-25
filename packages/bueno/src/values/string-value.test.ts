@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {StringValue} from './string-value.js';
 
 describe('string value', () => {

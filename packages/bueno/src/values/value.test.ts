@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {Value} from './value.js';
 
 describe('value', () => {

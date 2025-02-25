@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {Schema} from './schema.js';
 import {Value} from './values/value.js';
 

@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {BooleanValue} from './boolean-value.js';
 
 describe('boolean value', () => {

@@ -1,3 +1,4 @@
+import {describe, it, expect, beforeEach} from 'vitest';
 import {EnumValue, EnumValueConfig} from './enum-value.js';
 
 describe('Enum value', () => {
