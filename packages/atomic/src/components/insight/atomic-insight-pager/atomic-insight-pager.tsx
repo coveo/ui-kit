@@ -22,7 +22,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/utils';
 import {
   PagerNextButton,
@@ -66,7 +65,6 @@ export class AtomicInsightPager
    */
   @Prop({reflect: true}) numberOfPages = 5;
 
-  private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-insight-pager-');
 
   public initialize() {
@@ -74,14 +72,6 @@ export class AtomicInsightPager
     this.pager = buildInsightPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
     });
-  }
-
-  private get focusTarget(): FocusTargetController {
-    if (!this.activePage) {
-      this.activePage = new FocusTargetController(this);
-    }
-
-    return this.activePage;
   }
 
   private async focusOnFirstResultAndScrollToTop() {
@@ -114,12 +104,6 @@ export class AtomicInsightPager
                   }}
                   page={pageNumber}
                   groupName={this.radioGroupName}
-                  ref={(el) => {
-                    const isSelected = this.pager.isCurrentPage(pageNumber);
-                    if (isSelected && el) {
-                      this.focusTarget.setTarget(el);
-                    }
-                  }}
                   text={pageNumber.toLocaleString(this.bindings.i18n.language)}
                 />
               );

@@ -1,4 +1,3 @@
-import {nxViteTsPaths} from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import path from 'path';
 import {PluginImpl} from 'rollup';
@@ -64,7 +63,6 @@ const config: StorybookConfig = {
   viteFinal: async (config, {configType}) =>
     mergeConfig(config, {
       plugins: [
-        nxViteTsPaths(),
         resolvePathAliases(),
         forceInlineCssImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
