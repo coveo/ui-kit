@@ -1,4 +1,4 @@
-import {EnumValue, EnumValueConfig} from './enum-value';
+import {EnumValue, EnumValueConfig} from './enum-value.js';
 
 describe('Enum value', () => {
   enum Letter {

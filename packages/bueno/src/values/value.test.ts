@@ -1,4 +1,4 @@
-import {Value} from './value';
+import {Value} from './value.js';
 
 describe('value', () => {
   let value: Value<unknown>;

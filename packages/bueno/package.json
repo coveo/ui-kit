@@ -26,7 +26,7 @@
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
     "build": "nx build",
     "build:bundles": "node esbuild.mjs",
-    "build:definitions": "tsc -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",

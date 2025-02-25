@@ -9,8 +9,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": true,
-    "types": []
+    "types": ["jest"]
   },
-  "include": ["src"],
-  "exclude": ["**/*.test.ts"]
+  "include": ["src"]
 }

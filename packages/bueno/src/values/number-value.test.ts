@@ -1,4 +1,4 @@
-import {NumberValue} from './number-value';
+import {NumberValue} from './number-value.js';
 
 describe('number value', () => {
   let value: NumberValue;

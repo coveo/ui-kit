@@ -1,4 +1,4 @@
-import {StringValue} from './string-value';
+import {StringValue} from './string-value.js';
 
 describe('string value', () => {
   let value: StringValue;

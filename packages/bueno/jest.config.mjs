@@ -1,9 +1,9 @@
-module.exports = {
+export default {
   transform: {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        tsconfig: 'tsconfig.test.json',
+        tsconfig: 'tsconfig.json',
       },
     ],
   },

@@ -1,4 +1,4 @@
-import {BooleanValue} from './boolean-value';
+import {BooleanValue} from './boolean-value.js';
 
 describe('boolean value', () => {
   let value: BooleanValue;
