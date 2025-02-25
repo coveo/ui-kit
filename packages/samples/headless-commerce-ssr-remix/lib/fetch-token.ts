@@ -3,5 +3,5 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless-react/ssr-co
 export const fetchToken = async (apiKeyAuthentication = false) => {
   return apiKeyAuthentication
     ? getSampleCommerceEngineConfiguration().accessToken
-    : (await (await fetch('/token')).json()).token;
+    : (await (await fetch('http://localhost:5173/token')).json()).token;
 };
