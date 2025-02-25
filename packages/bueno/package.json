@@ -5,7 +5,7 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/bueno"
   },
-  "main": "./dist/bueno.js",
+  "main": "./dist/bueno.esm.js",
   "module": "./dist/bueno.esm.js",
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
@@ -13,12 +13,13 @@
   "files": [
     "dist/"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
       "import": "./dist/bueno.esm.js",
       "require": "./dist/bueno.js",
-      "default": "./dist/bueno.js"
+      "default": "./dist/bueno.esm.js"
     }
   },
   "scripts": {
