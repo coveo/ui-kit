@@ -23,13 +23,13 @@ import {
   TabManagerState,
 } from '@coveo/headless';
 import {Component, Element, h, Listen, Prop, State} from '@stencil/core';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
@@ -191,6 +191,9 @@ export class AtomicNumericFacet implements InitializableComponent {
   @Prop({reflect: true}) public headingLevel = 0;
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**

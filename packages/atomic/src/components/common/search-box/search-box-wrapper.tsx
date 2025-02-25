@@ -11,7 +11,7 @@ export const SearchBoxWrapper: FunctionalComponent<Props> = (
 ) => {
   const getClasses = () => {
     const baseClasses =
-      'flex bg-background w-full border border-neutral rounded-md focus-within:ring absolute top-0 left-0';
+      'flex bg-background w-full border border-neutral rounded-md focus-within:ring-3 absolute top-0 left-0';
     const focusClasses = props.disabled
       ? 'focus-within:border-disabled focus-within:ring-neutral'
       : 'focus-within:border-primary focus-within:ring-ring-primary';

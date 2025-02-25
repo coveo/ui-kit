@@ -1,15 +1,17 @@
+@import '../../../../global/global.pcss';
+
 atomic-result-printable-uri {
   max-width: 100%;
   word-break: break-word;
 
   a,
   button {
-    color: var(--atomic-primary);
+    @apply text-primary;
 
     &:hover,
     &:focus-visible {
       text-decoration: underline;
-      color: var(--atomic-primary);
+      @apply text-primary;
     }
 
     &:focus {
@@ -17,7 +19,7 @@ atomic-result-printable-uri {
     }
 
     &:visited {
-      color: var(--atomic-visited);
+      @apply text-visited;
     }
   }
 
@@ -54,7 +56,7 @@ atomic-result-printable-uri {
       vertical-align: middle;
       width: 0.75rem;
       height: 0.75rem;
-      color: var(--atomic-neutral-dark);
+      @apply text-neutral-dark;
     }
   }
 }

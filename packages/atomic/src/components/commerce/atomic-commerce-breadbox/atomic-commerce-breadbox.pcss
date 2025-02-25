@@ -8,7 +8,7 @@
 [part='breadcrumb-label'].excluded,
 [part='breadcrumb-value'].excluded {
   text-decoration: line-through;
-  color: var(--atomic-error);
+  @apply text-error;
 }
 
 /* When excluded, strikethrough line must be continuous, so we must prepend empty character instead of margin */

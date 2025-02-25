@@ -9,7 +9,7 @@ export const FieldsetGroup: FunctionalComponent<GroupProps> = (
   children
 ) => (
   <fieldset class="contents">
-    <legend class="accessibility-only">{label}</legend>
+    <legend class="sr-only">{label}</legend>
     {children}
   </fieldset>
 );

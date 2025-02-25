@@ -11,7 +11,7 @@
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
-    "@babel/standalone": "7.26.7",
+    "@babel/standalone": "7.26.8",
     "@coveo/atomic": "3.19.1",
     "@coveo/atomic-hosted-page": "1.1.2",
     "@coveo/atomic-react": "3.2.19",

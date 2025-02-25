@@ -1,12 +1,11 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
 @import './generated-text.pcss';
 @import '../generated-content/generated-markdown-content.pcss';
 @import './feedback-buttons.pcss';
 @import './typing-indicator.pcss';
 @import './copy-button.pcss';
 
-@define-mixin mobile-footer-layout {
+@utility mobile-footer-layout {
   & {
     @apply flex-col gap-4;
   }
@@ -16,7 +15,7 @@
   }
 }
 
-@define-mixin mobile-footer-xs-layout {
+@utility mobile-footer-xs-layout {
   & {
     @apply mt-4;
   }
@@ -26,7 +25,7 @@
   }
 }
 
-@define-mixin mobile-generated-answer-footer-layout {
+@utility mobile-generated-answer-footer-layout {
   & {
     @apply flex-col gap-1;
   }
@@ -51,23 +50,23 @@
   }
 
   @container (max-width: 37.5rem) {
-    @mixin mobile-footer-layout;
+    @apply mobile-footer-layout;
   }
-  @screen mobile-only {
-    @mixin mobile-footer-layout;
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mobile-footer-layout;
   }
   @container (max-width: 25rem) {
-    @mixin mobile-footer-xs-layout;
+    @apply mobile-footer-xs-layout;
   }
 }
 
 [part='generated-answer-footer'] {
   @container (max-width: 37.5rem) {
-    @mixin mobile-generated-answer-footer-layout;
+    @apply mobile-generated-answer-footer-layout;
   }
 
-  @screen mobile-only {
-    @mixin mobile-generated-answer-footer-layout;
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mobile-generated-answer-footer-layout;
   }
 }
 
