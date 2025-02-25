@@ -1,4 +1,6 @@
+import engineDefinitionOptions from '@/lib/commerce-engine-config';
 import {isExpired, parseJwt} from '@/lib/jwt-utils';
+import {getOrganizationEndpoint} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {coveo_accessToken} from '../cookies.server';
 
@@ -11,27 +13,28 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     return Response.json({token: accessTokenCookie});
   }
 
-  const res = await fetch(
-    'https://platform.cloud.coveo.com/rest/search/v2/token?organizationId=searchuisamples',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        userIds: [
-          {
-            name: 'anonymous',
-            type: 'User',
-            provider: 'Email Security Provider',
-            infos: {},
-            authCookie: '',
-          },
-        ],
-      }),
-      headers: {
-        Authorization: 'Bearer <API_KEY_WITH_IMPERSONATE_PRIVILEGE>',
-        'Content-Type': 'application/json',
-      },
-    }
+  const endpoint = getOrganizationEndpoint(
+    engineDefinitionOptions.configuration.organizationId
   );
+
+  const res = await fetch(`${endpoint}/rest/search/v2/token`, {
+    method: 'POST',
+    body: JSON.stringify({
+      userIds: [
+        {
+          name: 'anonymous',
+          type: 'User',
+          provider: 'Email Security Provider',
+          infos: {},
+          authCookie: '',
+        },
+      ],
+    }),
+    headers: {
+      Authorization: 'Bearer <API_KEY_WITH_IMPERSONATE_PRIVILEGE>',
+      'Content-Type': 'application/json',
+    },
+  });
 
   if (res.status !== 200) {
     return Response.json(
