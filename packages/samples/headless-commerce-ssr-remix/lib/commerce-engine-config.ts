@@ -21,6 +21,13 @@ import {
   defineRecommendations,
   defineParameterManager,
 } from '@coveo/headless-react/ssr-commerce';
+import {fetchToken} from './fetch-token';
+
+const getAccessToken = async (usePublicApiKey: boolean) => {
+  return usePublicApiKey || typeof window !== 'undefined'
+    ? await fetchToken(usePublicApiKey)
+    : '';
+};
 
 export default {
   /**
@@ -30,6 +37,7 @@ export default {
   //loggerOptions: {level: 'debug'},
   configuration: {
     ...getSampleCommerceEngineConfiguration(),
+    accessToken: await getAccessToken(true),
   },
   controllers: {
     summary: defineSummary(),
