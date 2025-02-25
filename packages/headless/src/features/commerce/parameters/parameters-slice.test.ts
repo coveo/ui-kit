@@ -630,7 +630,7 @@ describe('commerceParameters slice', () => {
       );
       expect(finalState.page).toBeUndefined();
     });
-    it('sets state.cf[payload.facetId] to payload.value.path', () => {
+    it('sets state.cf[payload.facetId] to [...payload.value.path, payload.value.rawValue]', () => {
       const finalState = parametersReducer(
         state,
         selectCategoryFacetSearchResult({
@@ -638,15 +638,15 @@ describe('commerceParameters slice', () => {
           value: {
             path: ['f2v1', 'f2v2'],
             count: 1,
-            displayValue: 'f2v2',
-            rawValue: 'f2v2',
+            displayValue: 'F2V3',
+            rawValue: 'f2v3',
           },
         })
       );
 
       expect(finalState).toEqual({
         ...state,
-        cf: {facetId1: ['f1v1'], facetId2: ['f2v1', 'f2v2']},
+        cf: {facetId1: ['f1v1'], facetId2: ['f2v1', 'f2v2', 'f2v3']},
       });
     });
   });
