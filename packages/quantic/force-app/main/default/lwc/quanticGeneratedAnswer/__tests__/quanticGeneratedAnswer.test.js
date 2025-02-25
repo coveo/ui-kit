@@ -66,8 +66,8 @@ const selectors = {
   generatedAnswerCollapseToggle:
     '[data-testid="generated-answer__answer-toggle"]',
   generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
-  generatedAnswerCardNoAnswer:
-    '[data-testid="generated-answer__no-card-answer"]',
+  generatedAnswerNoAnswerCard:
+    '[data-testid="generated-answer__no-answer-card"]',
 };
 
 const initialSearchStatusState = {
@@ -753,22 +753,13 @@ describe('c-quantic-generated-answer', () => {
           expect(generatedAnswerCard).toBeNull();
 
           const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
-            selectors.generatedAnswerCardNoAnswer
+            selectors.generatedAnswerNoAnswerCard
           );
           expect(generatedAnswerCardNoAnswer).toBeNull();
         });
       });
 
       describe('when a custom error message slot is provided', () => {
-        beforeEach(() => {
-          generatedAnswerState = {
-            ...initialGeneratedAnswerState,
-            cannotAnswer: true,
-          };
-          mockSuccessfulHeadlessInitialization();
-          prepareHeadlessState();
-        });
-
         it('should properly display the no generated answer card', async () => {
           const element = createTestComponent(
             defaultOptions,
@@ -782,7 +773,7 @@ describe('c-quantic-generated-answer', () => {
           expect(generatedAnswerCard).toBeNull();
 
           const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
-            selectors.generatedAnswerCardNoAnswer
+            selectors.generatedAnswerNoAnswerCard
           );
           expect(generatedAnswerCardNoAnswer).not.toBeNull();
         });
