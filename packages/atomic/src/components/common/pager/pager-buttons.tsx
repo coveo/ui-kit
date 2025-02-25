@@ -12,7 +12,7 @@ export interface PagerNavigationButtonProps
 export interface PagerPageButtonProps
   extends Omit<
     StencilRadioButtonProps,
-    'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class'
+    'part' | 'style' | 'checked' | 'ariaCurrent' | 'key' | 'class' | 'ref'
   > {
   page: number;
   isSelected: boolean;
