@@ -40,7 +40,7 @@
     "@playwright/test": "1.50.1",
     "@types/node": "22.13.4",
     "rollup": "4.34.8",
-    "vite": "5.4.14",
+    "vite": "6.1.0",
     "ncp": "2.0.0"
   },
   "engines": {
