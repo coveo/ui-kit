@@ -120,7 +120,8 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
       (direction === 'left' && this.hideLeftArrow) ||
       (direction === 'right' && this.hideRightArrow);
     const hiddenClass = hide ? 'invisible opacity-0' : '';
-    const transitionClass = 'transition-visi-opacity ease-in-out duration-300';
+    const transitionClass =
+      'transition-opacity transition-[visibility] ease-in-out duration-300';
 
     return (
       <div
@@ -146,10 +147,10 @@ export class AtomicSegmentedFacetScrollable implements InitializableComponent {
         </Button>
         <div
           part={`${direction}-fade`}
-          class={`from-background-60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
+          class={`from-background/60 pointer-events-none absolute top-0 z-0 h-10 w-20 ${
             direction === 'left'
-              ? 'left-0 bg-gradient-to-r'
-              : 'right-0 bg-gradient-to-l'
+              ? 'bg-linear-to-r left-0'
+              : 'bg-linear-to-l right-0'
           }`}
         ></div>
       </div>

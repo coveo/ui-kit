@@ -1,7 +1,7 @@
+@import '../../../../global/global.pcss';
 :host {
-  color: var(--atomic-on-background);
-  font-size: var(--atomic-text-lg);
-  line-height: calc(var(--atomic-text-lg) * var(--atomic-line-height-ratio));
+  @apply text-on-background text-lg;
+  line-height: calc(var(--text-lg) * var(--atomic-line-height-ratio));
 
   .wrapper {
     display: flow-root;
