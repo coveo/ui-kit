@@ -67,8 +67,7 @@ const selectors = {
     '[data-testid="generated-answer__answer-toggle"]',
   generatedAnswerDisclaimer: '[data-testid="generated-answer__disclaimer"]',
   generatedAnswerCardNoAnswer:
-    '[data-testid="generated-answer__card-no-answer"]',
-  generatedAnswerNoAnswer: '[data-testid="generated-answer__no-answer"]',
+    '[data-testid="generated-answer__no-card-answer"]',
 };
 
 const initialSearchStatusState = {
@@ -733,6 +732,7 @@ describe('c-quantic-generated-answer', () => {
           isStreaming: false,
           answer: exampleEmptyAnswer,
           answerContentFormat: exampleAnswerContentFormat,
+          cannotAnswer: true,
         };
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -752,10 +752,10 @@ describe('c-quantic-generated-answer', () => {
           );
           expect(generatedAnswerCard).toBeNull();
 
-          const generatedAnswer = element.shadowRoot.querySelector(
-            selectors.generatedAnswer
+          const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCardNoAnswer
           );
-          expect(generatedAnswer).toBeNull();
+          expect(generatedAnswerCardNoAnswer).toBeNull();
         });
       });
 
@@ -769,22 +769,22 @@ describe('c-quantic-generated-answer', () => {
           prepareHeadlessState();
         });
 
-        it('should properly display the no generated answer template', async () => {
+        it('should properly display the no generated answer card', async () => {
           const element = createTestComponent(
-            {...defaultOptions},
+            defaultOptions,
             exampleAssignedElements
           );
           await flushPromises();
+
+          const generatedAnswerCard = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCard
+          );
+          expect(generatedAnswerCard).toBeNull();
 
           const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
             selectors.generatedAnswerCardNoAnswer
           );
           expect(generatedAnswerCardNoAnswer).not.toBeNull();
-
-          const generatedAnswerNoAnswer = element.shadowRoot.querySelector(
-            selectors.generatedAnswerNoAnswer
-          );
-          expect(generatedAnswerNoAnswer).not.toBeNull();
         });
       });
     });

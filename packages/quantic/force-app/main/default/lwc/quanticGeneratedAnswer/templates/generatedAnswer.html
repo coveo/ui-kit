@@ -115,20 +115,15 @@
       </template>
     </div>
   </template>
-  <template lwc:if={shouldDisplayNoAnswerMessage}>
-      <div data-testid="generated-answer__card-no-answer" class="slds-box">
+  <template lwc:if={shouldDisplayCustomNoAnswerMessage}>
+      <div data-testid="generated-answer__no-card-answer" class="slds-box">
         <div class="generated-answer__card-header slds-grid">
-          <span
-            data-testid="generated-answer__badge"
-            class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+          <span class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
             >{labels.generatedAnswerForYou}</span
           >
         </div>
-          <div
-            data-cy="generated-answer__content"
-            class="generated-answer__content slds-var-m-top_medium"
-          >
-            <div data-testid="generated-answer__no-answer" class={generatedAnswerClass}>
+          <div class="generated-answer__content slds-var-m-top_medium">
+            <div class={generatedAnswerClass}>
               <slot name="no-answer-message"></slot>
             </div>
           </div>

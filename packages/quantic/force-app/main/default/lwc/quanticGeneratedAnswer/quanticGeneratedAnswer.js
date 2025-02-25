@@ -587,8 +587,8 @@ export default class QuanticGeneratedAnswer extends LightningElement {
     return !!slot?.assignedNodes()?.length;
   }
 
-  get shouldDisplayNoAnswerMessage() {
-    return !!this.state?.cannotAnswer && this.hasCustomNoAnswerMessage;
+  get shouldDisplayCustomNoAnswerMessage() {
+    return this.state?.cannotAnswer && this.hasCustomNoAnswerMessage;
   }
 
   /**
