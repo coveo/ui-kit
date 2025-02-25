@@ -31,7 +31,7 @@
     "@angular/cli": "18.2.14",
     "@angular/compiler-cli": "18.2.13",
     "@coveo/headless": "3.16.0",
-    "@types/node": "22.13.1",
+    "@types/node": "22.13.4",
     "ng-packagr": "18.2.1",
     "typescript": "5.5.4"
   },

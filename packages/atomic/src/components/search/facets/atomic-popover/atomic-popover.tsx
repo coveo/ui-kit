@@ -138,9 +138,9 @@ export class AtomicPopover implements InitializableComponent {
         ariaExpanded={`${this.isOpen}`}
         ariaLabel={ariaLabel}
         ariaControls={this.popoverId}
-        class={`hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full min-w-[6rem] max-w-[15rem] items-center rounded p-2.5 ${
+        class={`hover:border-primary-light focus-visible:border-primary-light group box-border flex h-full min-w-24 max-w-60 items-center rounded p-2.5 hover:border focus-visible:border ${
           this.isOpen
-            ? 'border-primary ring-ring-primary text-primary z-[9999] ring'
+            ? 'border-primary ring-ring-primary text-primary z-9999 ring-3'
             : ''
         }`}
       >
@@ -180,7 +180,7 @@ export class AtomicPopover implements InitializableComponent {
     return (
       <div
         part="backdrop"
-        class="fixed bottom-0 left-0 right-0 top-0 z-[9998] cursor-pointer bg-transparent"
+        class="z-9998 fixed bottom-0 left-0 right-0 top-0 cursor-pointer bg-transparent"
         onClick={() => this.togglePopover()}
       ></div>
     );
@@ -188,7 +188,7 @@ export class AtomicPopover implements InitializableComponent {
 
   private renderPopover() {
     return (
-      <div class={`relative ${this.isOpen ? 'z-[9999]' : ''}`}>
+      <div class={`relative ${this.isOpen ? 'z-9999' : ''}`}>
         {this.renderDropdownButton()}
         <div
           id={this.popoverId}

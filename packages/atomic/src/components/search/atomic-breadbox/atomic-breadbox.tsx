@@ -8,13 +8,13 @@ import {
   buildFacetManager,
 } from '@coveo/headless';
 import {Component, h, State, Element, Prop} from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {BreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
 import {BreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
 import {BreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
