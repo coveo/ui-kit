@@ -39,7 +39,6 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
 
   if (isExpired(standaloneEngineDefinition.getAccessToken())) {
-    console.log('token in definition is expired');
     const accessTokenCookie = await coveo_accessToken.parse(
       request.headers.get('Cookie')
     );
