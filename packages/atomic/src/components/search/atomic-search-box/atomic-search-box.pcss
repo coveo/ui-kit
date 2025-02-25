@@ -6,8 +6,7 @@
 }
 
 [part~='instant-results-show-all'] {
-  @apply justify-center py-1;
-  border-top: 1px solid var(--atomic-neutral);
+  @apply border-t-neutral justify-center border-t py-1;
   margin-top: auto;
   box-sizing: content-box;
   button {
@@ -16,12 +15,12 @@
 }
 
 [part~='suggestions-left'] + [part~='suggestions-right'] {
-  border-left: 1px solid var(--atomic-neutral);
+  @apply border-l-neutral border-l;
 }
 
 [part~='suggestions-wrapper'] {
   flex-direction: column;
-  @media only screen and (min-width: 1024px) {
+  @media (width >= theme(--breakpoint-desktop)) {
     flex-direction: row;
   }
 }

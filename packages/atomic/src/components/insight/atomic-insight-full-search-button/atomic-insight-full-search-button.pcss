@@ -1,10 +1,12 @@
 @import '../../../global/global.pcss';
 
 :host {
+  position: absolute;
+  right: 0;
   --full-search-background-color: var(--atomic-neutral-dark);
   --full-search-secondary-background-color: #333536;
   &::part(full-search-button) {
-    @apply h-[27px] w-[27px] rounded-none border-none;
+    @apply size-[27px] rounded-none border-none;
     background-color: var(--full-search-background-color);
     clip-path: polygon(0 0, 100% 100%, 100% 0);
   }

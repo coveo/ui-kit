@@ -1,6 +1,6 @@
 :root {
   /* Primary colors */
-  --atomic-primary: #1372ec;
+  --atomic-primary: #126ce0;
   --atomic-primary-light: #399ffe;
   --atomic-primary-dark: #1a50ad;
   --atomic-on-primary: #ffffff;
@@ -49,4 +49,161 @@
   /* Layout */
   --atomic-layout-spacing-x: 1.5rem;
   --atomic-layout-spacing-y: 1rem;
+
+  --atomic-rating-icon-active-color: #f6ce3c;
+  --atomic-rating-icon-outline: none;
+
+  --animate-slide-down-modal: slideDown 0.5s linear forwards;
+  --animate-scale-up-modal: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+
+  --spacing: 0.25rem;
+  --container-lg: 32rem;
+  --tw-leading: 1.5;
+}
+
+@property --tw-ring-offset-shadow {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+
+@property --tw-ring-shadow {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-outline-style {
+  syntax: '*';
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-inset-ring-shadow {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-translate-z {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-gradient-via {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-scale-y {
+  syntax: '*';
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-translate-y {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-inset-shadow {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-offset-color {
+  syntax: '*';
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-rotate-y {
+  syntax: '*';
+  inherits: false;
+  initial-value: rotateY(0);
+}
+@property --tw-gradient-from {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-content {
+  syntax: '*';
+  inherits: false;
+  initial-value: '';
+}
+@property --tw-gradient-to {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-skew-x {
+  syntax: '*';
+  inherits: false;
+  initial-value: skewX(0);
+}
+@property --tw-divide-y-reverse {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: '*';
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-scale-z {
+  syntax: '*';
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-shadow {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-translate-x {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-ring-offset-width {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-gradient-via-position {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 50%;
+}
+@property --tw-space-x-reverse {
+  syntax: '*';
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-scale-x {
+  syntax: '*';
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-rotate-x {
+  syntax: '*';
+  inherits: false;
+  initial-value: rotateX(0);
+}
+@property --tw-gradient-to-position {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-rotate-z {
+  syntax: '*';
+  inherits: false;
+  initial-value: rotateZ(0);
+}
+@property --tw-skew-y {
+  syntax: '*';
+  inherits: false;
+  initial-value: skewY(0);
+}
+@property --tw-gradient-from-position {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0%;
 }

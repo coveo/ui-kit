@@ -314,7 +314,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     return (
       <div
         part="segmented-container"
-        class="flex h-10 items-center whitespace-nowrap"
+        class="mr-2 flex h-10 items-center whitespace-nowrap"
       >
         {this.renderLabel()}
         {this.renderValues()}
