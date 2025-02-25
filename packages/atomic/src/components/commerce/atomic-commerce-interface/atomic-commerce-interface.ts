@@ -42,7 +42,7 @@ import {
   noProductsSelector,
 } from '../atomic-commerce-layout/commerce-layout';
 import {getAnalyticsConfig} from './analytics-config';
-import styles from './atomic-commerce-interface.css';
+import styles from './atomic-commerce-interface.tw.css';
 
 export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
@@ -163,6 +163,8 @@ export class AtomicCommerceInterface
    *  setNonce('<YOUR_GENERATED_NONCE>');
    * </script>
    * ```
+   *
+   * @deprecated This prop is deprecated and will be removed in a future release.
    */
   @property({type: String, reflect: true}) CspNonce?: string;
 
