@@ -24,9 +24,6 @@ export interface NavigatorContext {
    * Whether to capture analytics events.
    *
    * Must be set left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
-   *
-   * Should also be set to `false` to comply with regulations if the user has somehow indicated that they do not wish to
-   * be tracked (e.g., by rejecting the category of cookies the `coveo_visitorId` is categorized in).
    */
   capture?: boolean;
 }
