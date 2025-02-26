@@ -7,6 +7,8 @@ import {vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 import {createSearchStore} from './store';
 
+vi.unmock('../../common/interface/store');
+
 vi.mock('../../../global/environment', () => ({
   getAtomicEnvironment: vi.fn(() => ({
     version: '0.0.0',

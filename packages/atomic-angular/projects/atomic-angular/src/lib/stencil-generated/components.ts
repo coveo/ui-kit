@@ -383,32 +383,6 @@ export declare interface AtomicCommerceNumericFacet extends Components.AtomicCom
 
 
 @ProxyCmp({
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
-})
-@Component({
-  selector: 'atomic-commerce-pager',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
-})
-export class AtomicCommercePager {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
-  }
-}
-
-
-export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
-
-  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
-}
-
-
-@ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
   methods: ['setRenderFunction']
 })
@@ -3105,4 +3079,30 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon']
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon']
+})
+export class AtomicCommercePager {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+export declare interface AtomicCommercePager extends LitAtomicCommercePager {
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+import type {AtomicCommercePager as LitAtomicCommercePager} from '@coveo/atomic/components';
+//#endregion Lit Declarations
