@@ -7,12 +7,12 @@ import {
 } from '@coveo/headless/insight';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {isFocusingOut, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
@@ -240,7 +240,7 @@ export class AtomicInsightSearchBox {
       <div
         part={'suggestions'}
         ref={setRef}
-        class="flex flex-grow basis-1/2 flex-col"
+        class="flex grow basis-1/2 flex-col"
         onMouseDown={(e) => {
           if (e.target === getRef()) {
             e.preventDefault();

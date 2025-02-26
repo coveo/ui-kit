@@ -19,7 +19,7 @@ export const BreadcrumbClearAll: FunctionalComponent<
         part="clear"
         style="text-primary"
         text={props.i18n.t('clear')}
-        class="btn-pill p-2"
+        class="rounded-xl p-2"
         ariaLabel={props.i18n.t('clear-all-filters')}
         onClick={props.onClick}
       ></Button>

@@ -9,7 +9,7 @@ import {
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 
 const {context, ...restOfConfiguration} =
   getSampleCommerceEngineConfiguration();
