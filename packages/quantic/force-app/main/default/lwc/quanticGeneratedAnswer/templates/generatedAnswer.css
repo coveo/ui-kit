@@ -10,6 +10,10 @@
   position: relative;
 }
 
+.generated-answer__content {
+  word-wrap: break-word;
+}
+
 .generated-answer__footer {
   gap: 1rem;
 }
