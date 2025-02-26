@@ -1,3 +1,4 @@
+/// <reference types="../types/custom-env" />
 // TODO: get rid of the mock once no longer running stencil tests
 
 // import.meta is an ESM only feature and cannot be used in CJS.

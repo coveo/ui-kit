@@ -91,7 +91,7 @@ describe('c-quantic-tooltip', () => {
     expect(tooltip.classList.contains('tooltip__content--visible')).toBe(false);
   });
 
-  it('shouldnot display the tooltip when the slot content is empty', async () => {
+  it('should not display the tooltip when the slot content is empty', async () => {
     const element = createTestComponent(exampleOptions, []);
     await flushPromises();
 
