@@ -4,7 +4,6 @@ import {
   CaseAssistClientProvider,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
-import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {
   CaseAssistConfigurationSection,
   CaseFieldSection,
@@ -15,6 +14,7 @@ import {
 } from '../../state/state-sections.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {PreprocessRequest} from '../preprocess-request.js';
+import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
@@ -27,18 +27,16 @@ export type StateNeededByCaseAssistAnalytics = ConfigurationSection &
   Partial<CaseInputSection> &
   Partial<DocumentSuggestionSection>;
 
-export class CaseAssistAnalyticsProvider implements CaseAssistClientProvider {
-  private state: StateNeededByCaseAssistAnalytics;
-  constructor(getState: () => StateNeededByCaseAssistAnalytics) {
-    this.state = getState();
-  }
-
+export class CaseAssistAnalyticsProvider
+  extends BaseAnalyticsProvider<StateNeededByCaseAssistAnalytics>
+  implements CaseAssistClientProvider
+{
   public getSearchUID() {
-    return null as unknown as string;
+    return this.state.documentSuggestion?.status.lastResponseId as string;
   }
 
-  public getOriginLevel1() {
-    return this.state.searchHub || getSearchHubInitialState();
+  public getBaseMetadata() {
+    return {};
   }
 }
 

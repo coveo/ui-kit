@@ -134,6 +134,7 @@ export const caseAssistDocumentSuggestionSelector = (
 
   const result = {
     suggestionId: suggestion.uniqueId,
+    permanentId: suggestion.fields['permanentid'] as string,
     responseId: state.documentSuggestion?.status.lastResponseId ?? '',
     suggestion: {
       documentUri: suggestion.fields['uri'] as string,
@@ -141,6 +142,7 @@ export const caseAssistDocumentSuggestionSelector = (
       documentTitle: suggestion.title,
       documentUrl: suggestion.clickUri,
       documentPosition: suggestionIdx ?? 0,
+      sourceName: suggestion.fields['source'] as string,
     },
   };
 
