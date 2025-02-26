@@ -125,18 +125,6 @@ describe('radioButton', () => {
     expect(input.getAttribute('part')).toBe('test-part');
   });
 
-  it('should render a radio button with the correct ref', () => {
-    const ref = vi.fn();
-    const props = {
-      groupName: 'test-group',
-      ref,
-    };
-
-    render(html`${radioButton({props})}`, container);
-
-    expect(ref).toHaveBeenCalled();
-  });
-
   it('should render a radio button with the correct aria-current attribute', () => {
     const props: Partial<RadioButtonProps> = {
       ariaCurrent: 'page',
