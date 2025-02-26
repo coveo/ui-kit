@@ -19,16 +19,15 @@ export interface HeadingProps {
   part?: string;
 }
 
-export const heading: FunctionalComponentWithChildren<HeadingProps> = ({
-  props,
-  children,
-}) => {
-  const {level, class: classname, part} = props;
+export const heading: FunctionalComponentWithChildren<HeadingProps> =
+  ({props}) =>
+  (children) => {
+    const {level, class: classname, part} = props;
 
-  const headingTag =
-    level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
+    const headingTag =
+      level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
 
-  return html`<${headingTag} class="${ifDefined(classname)}" part="${ifDefined(part)}">
-    ${children}
-  </${headingTag}>`;
-};
+    return html`<${headingTag} class="${ifDefined(classname)}" part="${ifDefined(part)}">
+      ${children}
+    </${headingTag}>`;
+  };

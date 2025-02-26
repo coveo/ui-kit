@@ -57,7 +57,7 @@ test.describe('Default', () => {
     });
 
     test('should include the page in the hash', async ({page}) => {
-      await expect(page.url()).toContain('#page=1');
+      expect(page.url()).toContain('#page=1');
     });
 
     test('nextButton should be enabled', async ({pager}) => {
