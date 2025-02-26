@@ -46,6 +46,7 @@ export type RecsBindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-recs-interface',
+  styleUrl: 'atomic-recs-interface.pcss',
   shadow: true,
 })
 export class AtomicRecsInterface

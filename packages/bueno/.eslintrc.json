@@ -1,1 +1,1 @@
-{"ignorePatterns": ["dist/**/*"], "rules": {"curly": ["error"]}}
+{"ignorePatterns": ["dist/**/*", "cdn/**/*"], "rules": {"curly": ["error"]}}

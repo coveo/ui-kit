@@ -1,3 +1,26 @@
+## 3.20.0 (2025-02-26)
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(atomic): add interfaces for functional lit components (#5000) ([66c7f30](https://github.com/coveo/ui-kit/commits/66c7f30)), closes [#5000](https://github.com/coveo/ui-kit/issues/5000)
+- chore(atomic): deprecate accessibility-utils (#4999) ([880a126](https://github.com/coveo/ui-kit/commits/880a126)), closes [#4999](https://github.com/coveo/ui-kit/issues/4999)
+- chore(atomic): fix display-if directive for lit components (#4988) ([d6ef356](https://github.com/coveo/ui-kit/commits/d6ef356)), closes [#4988](https://github.com/coveo/ui-kit/issues/4988)
+- chore(atomic): fix lit functional button (#4989) ([5f81597](https://github.com/coveo/ui-kit/commits/5f81597)), closes [#4989](https://github.com/coveo/ui-kit/issues/4989)
+- chore(atomic): fix storybook integration for lit components (#4990) ([60c25db](https://github.com/coveo/ui-kit/commits/60c25db)), closes [#4990](https://github.com/coveo/ui-kit/issues/4990)
+- chore(atomic): fix tsc path transformer for declaration files (#4984) ([ed12109](https://github.com/coveo/ui-kit/commits/ed12109)), closes [#4984](https://github.com/coveo/ui-kit/issues/4984) [/github.com/microsoft/TypeScript/issues/29543#issuecomment-456873917](https://github.com//github.com/microsoft/TypeScript/issues/29543/issues/issuecomment-456873917)
+- chore(atomic): generate .tw.css files instead of .css in component generate command (#5006) ([727a7b9](https://github.com/coveo/ui-kit/commits/727a7b9)), closes [#5006](https://github.com/coveo/ui-kit/issues/5006)
+- chore(atomic): migrate to Tailwind V4 (#4923) ([0965a64](https://github.com/coveo/ui-kit/commits/0965a64)), closes [#4923](https://github.com/coveo/ui-kit/issues/4923)
+- chore(atomic): remove useless FocusTargetController from pager components (#5002) ([2ea3008](https://github.com/coveo/ui-kit/commits/2ea3008)), closes [#5002](https://github.com/coveo/ui-kit/issues/5002)
+- chore(atomic): replace lit-html with lit (#4985) ([edda81c](https://github.com/coveo/ui-kit/commits/edda81c)), closes [#4985](https://github.com/coveo/ui-kit/issues/4985)
+- chore(atomic): update getAssetPath (#4946) ([eed82ab](https://github.com/coveo/ui-kit/commits/eed82ab)), closes [#4946](https://github.com/coveo/ui-kit/issues/4946) [/#diff-59124eddaa5017c075b045fd7028286720966faf8a9ff0f7a3807e08f23862c7R4-R13](https://github.com///issues/diff-59124eddaa5017c075b045fd7028286720966faf8a9ff0f7a3807e08f23862c7R4-R13)
+- chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
+- test(atomic): styling smoke tests (#4978) ([9065972](https://github.com/coveo/ui-kit/commits/9065972)), closes [#4978](https://github.com/coveo/ui-kit/issues/4978)
+- test(atomic): write unit tests for load more functional button (#5001) ([2f5ed05](https://github.com/coveo/ui-kit/commits/2f5ed05)), closes [#5001](https://github.com/coveo/ui-kit/issues/5001)
+- fix(atomic): use mixin to fetch bindings (#4979) ([1b4a20f](https://github.com/coveo/ui-kit/commits/1b4a20f)), closes [#4979](https://github.com/coveo/ui-kit/issues/4979)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+- fix(deps): update all dependencies j:kit-282 (#5008) ([ae6b710](https://github.com/coveo/ui-kit/commits/ae6b710)), closes [#5008](https://github.com/coveo/ui-kit/issues/5008)
+- docs(atomic,headless): update filter facet count documentation (#4980) ([a783022](https://github.com/coveo/ui-kit/commits/a783022)), closes [#4980](https://github.com/coveo/ui-kit/issues/4980)
+- feat(atomic): provide a custom no answer message (#4977) ([3f264d0](https://github.com/coveo/ui-kit/commits/3f264d0)), closes [#4977](https://github.com/coveo/ui-kit/issues/4977)
+
 ## <small>3.19.1 (2025-02-17)</small>
 
 - fix(atomic): add isMobile to insight store (#4959) ([73341a3](https://github.com/coveo/ui-kit/commits/73341a3)), closes [#4959](https://github.com/coveo/ui-kit/issues/4959)

@@ -15,14 +15,14 @@ import {
   Fragment,
 } from '@stencil/core';
 import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
-import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../../utils/stencil-accessibility-utils';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';

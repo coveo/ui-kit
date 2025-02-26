@@ -1,12 +1,12 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
+@import '../../../../utils/tailwind-utilities/set-font-size.tw.css';
 
 /**
  * @prop --atomic-smart-snippet-gradient-start: At which height to start fading out a truncated answer.
  */
 :host {
   &::part(smart-snippet-collapse-wrapper) {
-    @mixin set-font-size var(--atomic-text-lg);
+    @apply set-font-size-lg;
 
     height: auto;
     max-height: var(--collapsed-size);
@@ -15,7 +15,7 @@
       --atomic-smart-snippet-gradient-start,
       calc(max(var(--collapsed-size) - (var(--line-height) * 1.5), var(--collapsed-size) * 0.5))
     );
-    color: var(--atomic-on-background);
+    @apply text-on-background;
     mask-image: linear-gradient(black, black var(--gradient-start), transparent 100%);
 
     transition: max-height 2s cubic-bezier(0, 1, 0.16, 1) -1.82s;

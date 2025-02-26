@@ -1,7 +1,8 @@
-import {BooleanValue} from './boolean-value';
-import {RecordValue, ArrayValue} from './complex-value';
-import {NumberValue} from './number-value';
-import {StringValue} from './string-value';
+import {describe, it, expect} from 'vitest';
+import {BooleanValue} from './boolean-value.js';
+import {RecordValue, ArrayValue} from './complex-value.js';
+import {NumberValue} from './number-value.js';
+import {StringValue} from './string-value.js';
 
 describe('complex value', () => {
   describe('record value', () => {
