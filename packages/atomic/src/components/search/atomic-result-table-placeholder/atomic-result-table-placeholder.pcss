@@ -6,9 +6,7 @@
 }
 
 .list-root.display-table {
-  @mixin atomic-result-table;
-  border: 1px solid var(--atomic-neutral);
-  border-radius: var(--atomic-border-radius-xl);
+  @apply atomic-result-table border-neutral rounded-xl border;
 
   thead tr,
   tbody tr:not(:last-child) {
@@ -22,7 +20,7 @@
       bottom: 0;
       left: var(--padding);
       right: var(--padding);
-      background-color: var(--atomic-neutral);
+      @apply bg-neutral;
     }
   }
 

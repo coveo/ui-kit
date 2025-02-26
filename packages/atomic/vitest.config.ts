@@ -1,7 +1,16 @@
 import path from 'node:path';
 import {defineConfig} from 'vitest/config';
 
+const port = 63315;
+const resourceUrl = `http://localhost:${port}/`;
+
 export default defineConfig({
+  define: {
+    'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+  },
+  server: {
+    port: port,
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './'),

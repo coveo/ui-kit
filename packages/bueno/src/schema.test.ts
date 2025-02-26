@@ -1,5 +1,6 @@
-import {Schema} from './schema';
-import {Value} from './values/value';
+import {describe, it, expect} from 'vitest';
+import {Schema} from './schema.js';
+import {Value} from './values/value.js';
 
 describe('schema', () => {
   describe('calling validate', () => {

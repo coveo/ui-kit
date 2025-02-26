@@ -6,17 +6,17 @@ atomic-product-children .children-container {
 }
 
 .display-grid {
-  & atomic-product-children .children-container .product-child  {
-    &:nth-child(n + 6) {
+  atomic-product-children .children-container {
+    .product-child:nth-child(n + 6) {
       display: none;
     }
-    &:nth-child(6) {
-      & ~ .plus-button {
-        display: block;
-      }
-      &:last-child ~ .plus-button {
-        display: none;
-      }
+
+    .product-child:nth-child(6) ~ .plus-button {
+      display: block;
+    }
+
+    .product-child:nth-child(6):last-child ~ .plus-button {
+      display: none;
     }
   }
 }
