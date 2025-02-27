@@ -37,18 +37,18 @@ vi.mock('../../../features/commerce/facets/core-facet/core-facet-actions');
 
 vi.mock('../../../features/commerce/query/query-actions');
 
-describe('FieldSuggestions', () => {
+describe('FilterSuggestions', () => {
   const facetId = 'cat_color';
   const namespacedFacetId =
     getFacetIdWithCommerceFieldSuggestionNamespace(facetId);
   let state: CommerceAppState;
   let engine: MockedCommerceEngine;
-  let fieldSuggestions: FilterSuggestions;
+  let filterSuggestions: FilterSuggestions;
   let options: RegularFacetOptions;
 
-  function initFieldSuggestions() {
+  function initFilterSuggestions() {
     engine = buildMockCommerceEngine(state);
-    fieldSuggestions = buildFilterSuggestions(engine, options);
+    filterSuggestions = buildFilterSuggestions(engine, options);
   }
 
   function setRequestInFacetSearchSet(
@@ -82,7 +82,7 @@ describe('FieldSuggestions', () => {
     setRequestInFacetSearchSet();
     setFacetInFieldSuggestionsOrder();
 
-    initFieldSuggestions();
+    initFilterSuggestions();
   });
 
   it('adds correct reducers to engine', () => {
@@ -100,7 +100,7 @@ describe('FieldSuggestions', () => {
     });
 
     expect(
-      fieldSuggestions.getSearchParameters({
+      filterSuggestions.getSearchParameters({
         count: 0,
         displayValue: 'Purple',
         rawValue: 'purple',
@@ -113,7 +113,7 @@ describe('FieldSuggestions', () => {
       setRequestInFacetSearchSet({
         options: {query: 'jeans', captions: {}, numberOfValues: 0},
       });
-      fieldSuggestions.select({
+      filterSuggestions.select({
         count: 1,
         displayValue: 'Blue',
         rawValue: 'blue',
@@ -144,7 +144,7 @@ describe('FieldSuggestions', () => {
 
   describe('#updateText', () => {
     beforeEach(() => {
-      fieldSuggestions.updateQuery('pants');
+      filterSuggestions.updateQuery('pants');
     });
     it('dispatches #updateFacetSearch with namespaced #facetId, new #query, and correct #numberOfValues', () => {
       expect(updateFacetSearch).toHaveBeenCalledWith({
@@ -164,7 +164,7 @@ describe('FieldSuggestions', () => {
 
   describe('#state', () => {
     it('returns the correct state', () => {
-      expect(fieldSuggestions.state).toEqual({
+      expect(filterSuggestions.state).toEqual({
         displayName: 'Color',
         facetId,
         field: facetId,
@@ -182,7 +182,7 @@ describe('FieldSuggestions', () => {
           displayName: 'Colors',
         },
       ];
-      expect(fieldSuggestions.state).toEqual({
+      expect(filterSuggestions.state).toEqual({
         displayName: 'Colors',
         facetId,
         field: facetId,
@@ -214,7 +214,7 @@ describe('FieldSuggestions', () => {
         },
       });
 
-      expect(fieldSuggestions.state).toEqual({
+      expect(filterSuggestions.state).toEqual({
         displayName: 'Color',
         facetId,
         field: facetId,
@@ -232,7 +232,7 @@ describe('FieldSuggestions', () => {
     });
   });
 
-  it('type returns "regular"', () => {
-    expect(fieldSuggestions.type).toBe('regular');
+  it('#type returns "regular"', () => {
+    expect(filterSuggestions.type).toBe('regular');
   });
 });

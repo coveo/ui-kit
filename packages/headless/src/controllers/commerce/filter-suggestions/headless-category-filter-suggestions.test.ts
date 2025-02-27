@@ -48,7 +48,7 @@ describe('CategoryFilterSuggestions', () => {
   let filterSuggestions: CategoryFilterSuggestions;
   let options: CategoryFacetOptions;
 
-  function initFieldSuggestions() {
+  function initFilterSuggestions() {
     engine = buildMockCommerceEngine(state);
     filterSuggestions = buildCategoryFilterSuggestions(engine, options);
   }
@@ -84,7 +84,7 @@ describe('CategoryFilterSuggestions', () => {
     setRequestInCategoryFacetSearchSet();
     setFacetInFieldSuggestionsOrder();
 
-    initFieldSuggestions();
+    initFilterSuggestions();
   });
 
   it('adds correct reducers to engine', () => {
@@ -251,7 +251,7 @@ describe('CategoryFilterSuggestions', () => {
     });
   });
 
-  it('type returns "hierarchical"', () => {
+  it('#type returns "hierarchical"', () => {
     expect(filterSuggestions.type).toBe('hierarchical');
   });
 });

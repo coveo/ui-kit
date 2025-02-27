@@ -18,7 +18,7 @@ import {
 } from './headless-filter-suggestions-generator.js';
 import {buildFilterSuggestions} from './headless-filter-suggestions.js';
 
-describe('filterSuggestionsGenerator', () => {
+describe('FilterSuggestionsGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
   let filterSuggestionsGenerator: FilterSuggestionsGenerator;
@@ -33,7 +33,7 @@ describe('filterSuggestionsGenerator', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceFacetGenerator() {
+  function initFilterSuggestionsGenerator() {
     filterSuggestionsGenerator = buildFilterSuggestionsGenerator(engine);
   }
 
@@ -65,7 +65,7 @@ describe('filterSuggestionsGenerator', () => {
     setFacetState();
 
     initEngine(state);
-    initCommerceFacetGenerator();
+    initFilterSuggestionsGenerator();
   });
 
   it('initializes', () => {
@@ -82,8 +82,8 @@ describe('filterSuggestionsGenerator', () => {
     expect(filterSuggestionsGenerator.subscribe).toBeTruthy();
   });
 
-  describe('#fieldSuggestions', () => {
-    it('when engine facet state contains a regular facet, generates a field suggestions controller', () => {
+  describe('#filterSuggestions', () => {
+    it('when engine facet state contains a regular facet, generates a filter suggestions controller', () => {
       const facetId = 'regular_facet_id';
       setFacetState([
         {
@@ -100,7 +100,7 @@ describe('filterSuggestionsGenerator', () => {
       );
     });
 
-    it('when engine facet state contains a category facet, generates a category field suggestions controller', () => {
+    it('when engine facet state contains a category facet, generates a category filter suggestions controller', () => {
       const facetId = 'category_facet_id';
       setFacetState([
         {
@@ -163,7 +163,7 @@ describe('filterSuggestionsGenerator', () => {
       type: 'regular',
     });
 
-    initCommerceFacetGenerator();
+    initFilterSuggestionsGenerator();
 
     expect(filterSuggestionsGenerator.state).toEqual(
       state.fieldSuggestionsOrder

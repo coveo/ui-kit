@@ -70,7 +70,7 @@ export interface CategoryFilterSuggestions
    * For example, `q=jeans&cf-ec-category=Clothes,Pants`.
    *
    * In a typical scenario, this method should called when the user selects a category filter suggestion from a
-   * standalone search box. The returned string is then used to pass the correct URL query parametes or fragment when
+   * standalone search box. The returned string is then used to pass the correct URL query parameters or fragment when
    * redirecting the browser to the search page.
    *
    * When the user selects a category filter suggestion from the main search box on the search page, use the `select`

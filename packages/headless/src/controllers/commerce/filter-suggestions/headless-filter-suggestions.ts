@@ -67,9 +67,9 @@ export interface FilterSuggestions
    *
    * For example, `q=jeans&f-cat_color=Blue`.
    *
-   * In a typical scenario, this method should called when the user selects a filter suggestion from a standalone search
-   * box. The returned string is then used to pass the correct URL query parametes or fragment when redirecting the
-   * browser to the search page.
+   * In a typical scenario, this method should be called when the user selects a filter suggestion from a standalone
+   * search box. The returned string is then used to pass the correct URL query parametes or fragment when redirecting
+   * the browser to the search page.
    *
    * When the user selects a filter suggestion from the main search box on the search page, use the `select` method
    * instead.
