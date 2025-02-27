@@ -22,13 +22,13 @@ import {
   h,
   Watch,
 } from '@stencil/core';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';

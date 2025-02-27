@@ -8,13 +8,13 @@ import {
   GeneratedAnswerState as InsightGeneratedAnswerState,
 } from '@coveo/headless/insight';
 import {Component, Element, State, Prop, Watch} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
@@ -22,6 +22,8 @@ import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interf
  * @internal
  * The `atomic-insight-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+ *
+ * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
  *
  * @part container - The container displaying the generated answer.
  * @part header-label - The header of the generated answer container.

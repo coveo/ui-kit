@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless/commerce';
 import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 import type * as _ from '../../src/components.js';
 
 export const wrapInCommerceRecommendationInterface = (

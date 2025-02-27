@@ -9,7 +9,6 @@ import {
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
@@ -86,7 +85,6 @@ export class AtomicPager implements InitializableComponent {
    */
   @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
-  private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-pager-');
 
   public initialize() {
@@ -128,12 +126,6 @@ export class AtomicPager implements InitializableComponent {
                   }}
                   page={pageNumber}
                   groupName={this.radioGroupName}
-                  ref={(el) => {
-                    const isSelected = this.pager.isCurrentPage(pageNumber);
-                    if (isSelected && el) {
-                      this.focusTarget.setTarget(el);
-                    }
-                  }}
                   text={pageNumber.toLocaleString(this.bindings.i18n.language)}
                 />
               );
@@ -156,12 +148,5 @@ export class AtomicPager implements InitializableComponent {
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     this.scrollToTopEvent.emit();
-  }
-
-  private get focusTarget() {
-    if (!this.activePage) {
-      this.activePage = new FocusTargetController(this);
-    }
-    return this.activePage;
   }
 }

@@ -100,6 +100,9 @@ export class AtomicSegmentedFacet implements InitializableComponent {
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   *
+   * Note: Resulting count is only an estimation, in some cases this value could be incorrect.
    */
   @Prop({reflect: true}) public filterFacetCount = true;
   /**
@@ -311,7 +314,7 @@ export class AtomicSegmentedFacet implements InitializableComponent {
     return (
       <div
         part="segmented-container"
-        class="flex h-10 items-center whitespace-nowrap"
+        class="mr-2 flex h-10 items-center whitespace-nowrap"
       >
         {this.renderLabel()}
         {this.renderValues()}

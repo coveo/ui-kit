@@ -16,7 +16,7 @@ export const TextAreaClearButton: FunctionalComponent<Props> = ({
 }) => (
   <div
     part="clear-button-wrapper"
-    class="ml-2 flex items-start items-center justify-center py-2"
+    class="ml-2 flex items-center justify-center py-2"
   >
     <Button
       style="text-transparent"

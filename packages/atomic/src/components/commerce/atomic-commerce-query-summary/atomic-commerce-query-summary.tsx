@@ -7,13 +7,13 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/container';
 import {QuerySummaryGuard} from '../../common/query-summary/guard';
 import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';

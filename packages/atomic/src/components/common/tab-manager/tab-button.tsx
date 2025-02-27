@@ -6,6 +6,7 @@ import {Button} from '../stencil-button';
  */
 @Component({
   tag: 'atomic-tab-button',
+  styleUrl: 'tab-button.pcss',
 })
 export class AtomicTabButton {
   /**
@@ -30,7 +31,7 @@ export class AtomicTabButton {
   }
 
   private get activeTabTextClass() {
-    return this.active ? '' : 'text-neutral-dark';
+    return this.active ? '' : 'text-neutral-dark hover:text-primary-light';
   }
 
   render() {
