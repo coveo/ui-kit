@@ -226,7 +226,7 @@ test.describe('quantic case classification', () => {
           caseAssist.waitForCaseClassificationsResponse();
         await caseAssist.fetchClassifications();
         await caseClassificationsResponsePromise;
-        await expect(caseClassification.allOptionsSelectInput).toHaveText(
+        await expect(await caseClassification.allOptionsSelectInputValue).toBe(
           allOptions[selectedOptionIndex].value
         );
         await expect(

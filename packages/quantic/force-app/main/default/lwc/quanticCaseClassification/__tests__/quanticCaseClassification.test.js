@@ -565,15 +565,11 @@ describe('c-quantic-case-classification', () => {
           expect(suggestions.length).toBe(
             exampleCaseClassificationSuggestions.length
           );
-          for (
-            let index = 0;
-            index < exampleCaseClassificationSuggestions.length;
-            index++
-          ) {
-            expect(suggestions[index].textContent).toBe(
-              exampleCaseClassificationSuggestions[index].value
-            );
-          }
+
+          exampleCaseClassificationSuggestions.forEach(
+            ({value: expectedValue}, index) =>
+              expect(suggestions[index].textContent).toBe(expectedValue)
+          );
         });
 
         it('should automatically select the first case classification suggestion', async () => {
@@ -651,11 +647,9 @@ describe('c-quantic-case-classification', () => {
             exampleCaseClassificationSuggestions.length;
 
           expect(options.length).toBe(expectedOptionsCount);
-          for (let index = 0; index < remainingOptions.length; index++) {
-            expect(options[index].textContent).toBe(
-              remainingOptions[index].value
-            );
-          }
+          remainingOptions.forEach(({value: expectedValue}, index) =>
+            expect(options[index].textContent).toBe(expectedValue)
+          );
         });
 
         describe('when a case classification remaining options is clicked', () => {

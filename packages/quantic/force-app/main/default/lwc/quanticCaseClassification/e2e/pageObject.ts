@@ -19,8 +19,8 @@ export class CaseClassificationObject {
   }
 
   get caseClassificationSuggestions(): Locator {
-    return this.component.getByTestId(
-      elementsSelectors.caseClassificationSuggestionTestId
+    return this.component.locator(
+      `[data-testid="${elementsSelectors.caseClassificationSuggestionTestId}"]:visible`
     );
   }
 
@@ -34,6 +34,10 @@ export class CaseClassificationObject {
     return this.component.getByTestId(
       elementsSelectors.allOptionsSelectInputTestId
     );
+  }
+
+  get allOptionsSelectInputValue(): Promise<null | string> {
+    return this.allOptionsSelectInput.locator('button').textContent();
   }
 
   get selectInputOption(): Locator {
