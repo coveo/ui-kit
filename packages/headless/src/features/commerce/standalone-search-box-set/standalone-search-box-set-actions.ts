@@ -17,7 +17,7 @@ import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
-import {buildBaseCommerceAPIRequest} from '../common/actions.js';
+import {buildPaginatedCommerceAPIRequest} from '../common/paginated-commerce-api-request-builder.js';
 
 export type StateNeededForRedirect = CommerceConfigurationSection &
   CommerceContextSection &
@@ -126,6 +126,6 @@ export const buildPlanRequest = (
 ): CommerceSearchRequest => {
   return {
     query: state.commerceQuery.query,
-    ...buildBaseCommerceAPIRequest(state, navigatorContext),
+    ...buildPaginatedCommerceAPIRequest(state, navigatorContext),
   };
 };

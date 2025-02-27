@@ -6,12 +6,12 @@ import {
   ChildProduct,
 } from '../../../api/commerce/common/product.js';
 import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
-import {QueryCommerceAPIThunkReturn} from '../common/actions.js';
 import {setContext, setView} from '../context/context-actions.js';
 import {
   fetchMoreProducts,
   fetchProductListing,
   promoteChildToParent,
+  QueryCommerceAPIThunkReturn,
 } from './product-listing-actions.js';
 import {
   ProductListingState,
