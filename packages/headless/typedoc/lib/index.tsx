@@ -5,6 +5,7 @@ import {fileURLToPath} from 'node:url';
 // eslint-disable-next-line n/no-unpublished-import
 import {Application, JSX, RendererEvent, Converter} from 'typedoc';
 import {insertAtomicSearchBox} from './insertAtomicSearchBox.js';
+import {insertBetaNote} from './insertBetaNote.js';
 import {insertCoveoLogo} from './insertCoveoLogo.js';
 import {insertCustomComments} from './insertCustomComments.js';
 import {insertOneTrust} from './insertOneTrust.js';
@@ -38,6 +39,9 @@ export function load(app: Application) {
       </script>
       <script>
         <JSX.Raw html={`(${insertOneTrust.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertBetaNote.toString()})();`} />
       </script>
       <script>
         <JSX.Raw

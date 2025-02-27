@@ -8,7 +8,7 @@ import {
 test.describe('quantic case classification', () => {
   test.describe('the analytics', () => {
     test.describe('when new case classifications suggestions are received', () => {
-      test('should log propper ticket classification click collect event for the automatically selected suggestion', async ({
+      test('should log the proper ticket classification click collect event for the automatically selected suggestion', async ({
         caseClassification,
         caseAssist,
       }) => {
@@ -40,7 +40,7 @@ test.describe('quantic case classification', () => {
     });
 
     test.describe('clicking on a case classification suggestion', () => {
-      test('should log propper collect events', async ({
+      test('should log the proper collect events', async ({
         caseClassification,
       }) => {
         const selectedSuggestionIndex = 1;
@@ -72,7 +72,7 @@ test.describe('quantic case classification', () => {
     });
 
     test.describe('clicking on a case classification option', () => {
-      test('should log propper collect events', async ({
+      test('should log the proper collect events', async ({
         caseClassification,
       }) => {
         const fieldUpdateCollectEventPromise =
