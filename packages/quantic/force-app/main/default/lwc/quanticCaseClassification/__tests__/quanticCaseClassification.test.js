@@ -698,56 +698,35 @@ describe('c-quantic-case-classification', () => {
         };
       });
 
-      describe('the case classification suggestions', () => {
-        it('should not display any case classification suggestions', async () => {
-          const element = createTestComponent();
-          mockGetPicklistValuesByRecordTypeWire();
+it('should not display any case classification suggestions, but still display the options select input', async () => {
+  const element = createTestComponent();
+  mockGetPicklistValuesByRecordTypeWire();
 
-          await flushPromises();
+  await flushPromises();
 
-          const suggestions = element.shadowRoot.querySelectorAll(
-            selectors.caseClassificationSuggestion
-          );
+  const suggestions = element.shadowRoot.querySelectorAll(
+    selectors.caseClassificationSuggestion
+  );
+  expect(suggestions.length).toBe(0);
 
-          expect(suggestions.length).toBe(0);
-        });
-      });
+  const showSelectInputButton = element.shadowRoot.querySelector(
+    selectors.showSelectInputButton
+  );
+  expect(showSelectInputButton).toBeNull();
 
-      describe('the case classification all options', () => {
-        it('should not display the show select input button', async () => {
-          const element = createTestComponent();
-          mockGetPicklistValuesByRecordTypeWire();
+  const allOptionsSelectInput = element.shadowRoot.querySelector(
+    selectors.allOptionsSelectInput
+  );
 
-          await flushPromises();
-
-          const showSelectInputButton = element.shadowRoot.querySelector(
-            selectors.showSelectInputButton
-          );
-
-          expect(showSelectInputButton).toBeNull();
-        });
-
-        it('should only display the all options select input', async () => {
-          const element = createTestComponent();
-          mockGetPicklistValuesByRecordTypeWire();
-
-          await flushPromises();
-
-          const allOptionsSelectInput = element.shadowRoot.querySelector(
-            selectors.allOptionsSelectInput
-          );
-
-          expect(allOptionsSelectInput).not.toBeNull();
-          expect(allOptionsSelectInput.options).toStrictEqual(
-            exampleCaseClassificationAllOptions
-          );
-          expect(allOptionsSelectInput.value).not.toBeDefined();
-          expect(allOptionsSelectInput.placeholder).toBe(
-            exampleMoreTopicsLabel
-          );
-        });
-      });
-    });
+  expect(allOptionsSelectInput).not.toBeNull();
+  expect(allOptionsSelectInput.options).toStrictEqual(
+    exampleCaseClassificationAllOptions
+  );
+  expect(allOptionsSelectInput.value).not.toBeDefined();
+  expect(allOptionsSelectInput.placeholder).toBe(
+    exampleMoreTopicsLabel
+  );
+});
   });
 
   describe('the reportValidity public method', () => {
