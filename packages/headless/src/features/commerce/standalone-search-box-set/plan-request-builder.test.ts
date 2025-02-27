@@ -90,7 +90,7 @@ describe('#buildPlanRequest', () => {
   it('sets #perPage to 1', () => {
     const {perPage} = buildPlanRequest(state, navigatorContext);
 
-    expect(perPage).toBe(0);
+    expect(perPage).toBe(1);
   });
 
   it('sets #query to #state.commerceQuery.query', () => {
