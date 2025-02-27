@@ -1,5 +1,4 @@
 import {
-  //buildFieldSuggestionsGenerator,
   buildFilterSuggestionsGenerator,
   buildInstantProducts,
   buildSearch,
@@ -100,6 +99,8 @@ export default function Search(props: ISearchProps) {
         filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
           engine
         )}
+        /* Uncomment the `legacyFieldSUggestionsGeneratorController` prop below and comment out the
+           `filterSuggestionsGeneratorController` prop above if using legacy field suggestions */
         //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}
         navigate={navigate}
       />

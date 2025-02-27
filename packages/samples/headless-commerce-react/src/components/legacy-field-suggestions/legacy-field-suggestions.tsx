@@ -1,5 +1,6 @@
 /**
- * This component relies on a deprecated headless controller.
+ * This component relies on a deprecated Coveo Headless controller. It is included in this sample mainly for testing
+ * purposes and will be removed in a future version.
  *
  * If you wish to implement filter suggestions in your project, please contact your Coveo representative.
  */
