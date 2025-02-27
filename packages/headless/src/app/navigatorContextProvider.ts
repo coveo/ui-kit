@@ -23,7 +23,7 @@ export interface NavigatorContext {
   /**
    * Whether to capture analytics events.
    *
-   * Must be set left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
+   * Must be left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
    */
   capture?: boolean;
 }
