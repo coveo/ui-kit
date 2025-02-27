@@ -1,3 +1,7 @@
+## 3.18.0 (2025-02-27)
+
+- feat(headless commerce): re-implement field suggestions as faceted search (#5005) ([dec06a7](https://github.com/coveo/ui-kit/commits/dec06a7)), closes [#5005](https://github.com/coveo/ui-kit/issues/5005)
+
 ## 3.17.0 (2025-02-26)
 
 - chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)

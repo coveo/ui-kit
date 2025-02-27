@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@coveo/auth": "2.0.8",
-    "@coveo/headless": "3.17.0",
+    "@coveo/headless": "3.18.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "14.3.1",
     "@testing-library/user-event": "14.6.1",

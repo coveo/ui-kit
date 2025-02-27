@@ -1,3 +1,9 @@
+## <small>3.20.1 (2025-02-27)</small>
+
+- ci: replace RESOURCE_URL in stencil build (#5019) ([457e03e](https://github.com/coveo/ui-kit/commits/457e03e)), closes [#5019](https://github.com/coveo/ui-kit/issues/5019)
+- chore: fix generate-component import (#5014) ([064ca84](https://github.com/coveo/ui-kit/commits/064ca84)), closes [#5014](https://github.com/coveo/ui-kit/issues/5014)
+- chore(atomic): do not augment node.d.ts (#5013) ([7a80a7a](https://github.com/coveo/ui-kit/commits/7a80a7a)), closes [#5013](https://github.com/coveo/ui-kit/issues/5013)
+
 ## 3.20.0 (2025-02-26)
 
 - chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
