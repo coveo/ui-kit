@@ -1,10 +1,10 @@
 @import '../../../global/global.pcss';
-@import '../../../global/mixins.pcss';
+@import '../../../utils/tailwind-utilities/set-font-size.tw.css';
 
 .show-hide-button {
-  @mixin set-font-size var(--atomic-text-sm);
+  @apply set-font-size-sm;
 }
 
 .no-result-root {
-  color: var(--atomic-neutral-dark);
+  @apply text-neutral-dark;
 }

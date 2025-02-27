@@ -10,6 +10,7 @@ import {
   Component,
   Element,
   h,
+  Host,
   Listen,
   Method,
   Prop,
@@ -271,10 +272,10 @@ export class AtomicInsightInterface
   render() {
     return (
       this.engine && (
-        <host>
+        <Host>
           <slot name="full-search"></slot>
           <slot></slot>
-        </host>
+        </Host>
       )
     );
   }

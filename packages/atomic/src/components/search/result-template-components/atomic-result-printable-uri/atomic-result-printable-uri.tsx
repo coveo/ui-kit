@@ -6,8 +6,8 @@ import {
 } from '@coveo/headless';
 import {Component, Element, h, Prop, State, VNode} from '@stencil/core';
 import Arrow from '../../../../images/arrow-right.svg';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {parseXML} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';

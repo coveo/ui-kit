@@ -1,5 +1,7 @@
-import {html} from 'lit-html';
-import {ifDefined} from 'lit-html/directives/if-defined.js';
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
+import {when} from 'lit/directives/when.js';
 import {createRipple} from '../../utils/ripple';
 import {
   getRippleColorForButtonStyle,
@@ -39,17 +41,14 @@ export interface ButtonProps {
   title?: string;
 }
 
-export const button = <T>({
+export const button: FunctionalComponentWithChildren<ButtonProps> = ({
   props,
   children,
-}: {
-  props: ButtonProps;
-  children: T;
 }) => {
   const rippleColor = getRippleColorForButtonStyle(props.style);
   const className = getClassNameForButtonStyle(props.style);
 
-  return html` <button
+  return html`<button
     type=${ifDefined(props.type)}
     title=${ifDefined(props.title)}
     tabindex=${ifDefined(props.tabIndex)}
@@ -68,7 +67,7 @@ export const button = <T>({
     @click=${props.onClick}
     ?disabled=${props.disabled}
   >
-    {props.text ? <span class="truncate">${props.text}</span> : null}
+    ${when(props.text, () => html`<span class="truncate">${props.text}</span>`)}
     ${children}
   </button>`;
 };

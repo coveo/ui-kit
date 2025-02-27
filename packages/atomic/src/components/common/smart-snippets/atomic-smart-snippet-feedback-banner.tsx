@@ -45,7 +45,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           text={props.i18n.t('yes')}
           checked={props.liked}
           onChecked={() => props.onLike()}
-          class="cursor-inherit text-inherit"
+          class="cursor-[inherit] text-[inherit]"
         ></RadioButton>
       </label>
       <label
@@ -61,7 +61,7 @@ export const SmartSnippetFeedbackBanner: FunctionalComponent<
           text={props.i18n.t('no')}
           checked={props.disliked}
           onChecked={() => props.onDislike()}
-          class="cursor-inherit text-inherit"
+          class="cursor-[inherit] text-[inherit]"
         ></RadioButton>
       </label>
     </div>

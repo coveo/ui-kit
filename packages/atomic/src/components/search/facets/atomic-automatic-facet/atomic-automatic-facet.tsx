@@ -1,12 +1,12 @@
 import {isNullOrUndefined} from '@coveo/bueno';
 import {AutomaticFacet, SearchStatus, FacetValue} from '@coveo/headless';
 import {Component, Prop, State, h, VNode} from '@stencil/core';
-import {FocusTargetController} from '../../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';

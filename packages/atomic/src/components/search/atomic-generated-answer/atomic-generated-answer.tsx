@@ -11,7 +11,6 @@ import {
   TabManager,
 } from '@coveo/headless';
 import {Component, Element, State, Prop, Watch, h} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {debounce} from '../../../utils/debounce-utils';
 import {
   BindStateToController,
@@ -19,6 +18,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {GeneratedAnswerCommon} from '../../common/generated-answer/generated-answer-common';
 import {Hidden} from '../../common/stencil-hidden';
@@ -27,6 +27,8 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 /**
  * The `atomic-generated-answer` component uses Coveo Machine Learning (Coveo ML) models to automatically generate an answer to a query executed by the user.
  * For more information, see [About Relevance Generative Answering (RGA)](https://docs.coveo.com/en/n9de0370/)
+ *
+ * @slot no-answer-message - Lets you pass a custom sorry message when no answer is generated.
  *
  * @part container - The container displaying the generated answer.
  * @part header-label - The header of the generated answer container.
