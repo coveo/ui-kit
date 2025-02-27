@@ -141,7 +141,8 @@ const selectors = {
   caseClassificationOptionInput:
     '[data-testid="case-classification-option"] input',
   showSelectInputButton: '[data-testid="show-select-input-button"]',
-  allOptionsSelectInput: '[data-testid="all-options-select-input"]',
+  allOptionsSelectInput:
+    '[data-testid="case-classification-all-options-combobox"]',
   classificationErrorMessage:
     '[data-testid="case-classification-error-message"]',
 };
@@ -503,43 +504,41 @@ describe('c-quantic-case-classification', () => {
             );
           });
 
-          describe('when selecting an option from the all options select input', () => {
-            it('should select correctly', async () => {
-              const exampleSelectedOptionIndex = 3;
+          it('should select an option correctly from the all options select input', async () => {
+            const exampleSelectedOptionIndex = 3;
 
-              const element = createTestComponent({
-                ...defaultOptions,
-                maxSuggestions: exampleMaxSuggestions,
-              });
-              mockGetPicklistValuesByRecordTypeWire();
-
-              await flushPromises();
-
-              const showSelectInputButton = element.shadowRoot.querySelector(
-                selectors.showSelectInputButton
-              );
-              showSelectInputButton.click();
-              await flushPromises();
-
-              const allOptionsSelectInput = element.shadowRoot.querySelector(
-                selectors.allOptionsSelectInput
-              );
-
-              expect(allOptionsSelectInput).not.toBeNull();
-              allOptionsSelectInput.value =
-                exampleCaseClassificationAllOptions[
-                  exampleSelectedOptionIndex
-                ].value;
-              allOptionsSelectInput.dispatchEvent(new CustomEvent('change'));
-
-              expect(functionsMocks.update).toHaveBeenCalledTimes(2);
-              expect(functionsMocks.update).toHaveBeenCalledWith(
-                exampleCaseClassificationAllOptions[exampleSelectedOptionIndex]
-                  .value,
-                {caseClassifications: false, documentSuggestions: false},
-                undefined
-              );
+            const element = createTestComponent({
+              ...defaultOptions,
+              maxSuggestions: exampleMaxSuggestions,
             });
+            mockGetPicklistValuesByRecordTypeWire();
+
+            await flushPromises();
+
+            const showSelectInputButton = element.shadowRoot.querySelector(
+              selectors.showSelectInputButton
+            );
+            showSelectInputButton.click();
+            await flushPromises();
+
+            const allOptionsSelectInput = element.shadowRoot.querySelector(
+              selectors.allOptionsSelectInput
+            );
+
+            expect(allOptionsSelectInput).not.toBeNull();
+            allOptionsSelectInput.value =
+              exampleCaseClassificationAllOptions[
+                exampleSelectedOptionIndex
+              ].value;
+            allOptionsSelectInput.dispatchEvent(new CustomEvent('change'));
+
+            expect(functionsMocks.update).toHaveBeenCalledTimes(2);
+            expect(functionsMocks.update).toHaveBeenCalledWith(
+              exampleCaseClassificationAllOptions[exampleSelectedOptionIndex]
+                .value,
+              {caseClassifications: false, documentSuggestions: false},
+              undefined
+            );
           });
         });
       });

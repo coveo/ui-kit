@@ -5,7 +5,7 @@ const elementsSelectors = {
   component: 'c-quantic-case-classification',
   caseClassificationSuggestionTestId: 'case-classification-suggestion',
   showSelectInputButtonTestId: 'show-select-input-button',
-  allOptionsSelectInputTestId: 'all-options-select-input',
+  allOptionsSelectInputTestId: 'case-classification-all-options-combobox',
   selectInputOption: 'lightning-base-combobox-item',
 };
 
