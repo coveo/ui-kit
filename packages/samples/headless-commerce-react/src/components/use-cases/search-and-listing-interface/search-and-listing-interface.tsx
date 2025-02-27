@@ -1,5 +1,6 @@
 import {
   Cart,
+  ChildProduct,
   Search as HeadlessSearch,
   ProductListing,
 } from '@coveo/headless/commerce';
@@ -58,6 +59,9 @@ export default function SearchAndListingInterface(
           products={searchOrListingState.products}
           controllerBuilder={searchOrListingController.interactiveProduct}
           cartController={cartController}
+          promoteChildToParent={(child: ChildProduct) =>
+            searchOrListingController.promoteChildToParent(child)
+          }
           navigate={navigate}
         ></ProductList>
         <ProductsPerPage controller={paginationController} />

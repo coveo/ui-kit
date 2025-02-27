@@ -11,16 +11,17 @@ import {
   MockedCommerceEngine,
 } from '../../../test/mock-engine-v2.js';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search.js';
-import {buildCategoryFieldSuggestions} from './headless-category-field-suggestions.js';
+import {buildCategoryFilterSuggestions} from './headless-category-filter-suggestions.js';
 import {
-  buildFieldSuggestionsGenerator,
-  FieldSuggestionsGenerator,
-} from './headless-field-suggestions-generator.js';
+  buildFilterSuggestionsGenerator,
+  FilterSuggestionsGenerator,
+} from './headless-filter-suggestions-generator.js';
+import {buildFilterSuggestions} from './headless-filter-suggestions.js';
 
-describe('fieldSuggestionsGenerator', () => {
+describe('FilterSuggestionsGenerator', () => {
   let engine: MockedCommerceEngine;
   let state: CommerceAppState;
-  let fieldSuggestionsGenerator: FieldSuggestionsGenerator;
+  let filterSuggestionsGenerator: FilterSuggestionsGenerator;
   const commonOptions = {
     fetchProductsActionCreator: vi.fn(),
     facetResponseSelector: vi.fn(),
@@ -32,8 +33,8 @@ describe('fieldSuggestionsGenerator', () => {
     engine = buildMockCommerceEngine(preloadedState);
   }
 
-  function initCommerceFacetGenerator() {
-    fieldSuggestionsGenerator = buildFieldSuggestionsGenerator(engine);
+  function initFilterSuggestionsGenerator() {
+    filterSuggestionsGenerator = buildFilterSuggestionsGenerator(engine);
   }
 
   function setFacetState(config: FieldSuggestionsFacet[] = []) {
@@ -64,11 +65,11 @@ describe('fieldSuggestionsGenerator', () => {
     setFacetState();
 
     initEngine(state);
-    initCommerceFacetGenerator();
+    initFilterSuggestionsGenerator();
   });
 
   it('initializes', () => {
-    expect(fieldSuggestionsGenerator).toBeTruthy();
+    expect(filterSuggestionsGenerator).toBeTruthy();
   });
 
   it('adds correct reducers to engine', () => {
@@ -78,11 +79,11 @@ describe('fieldSuggestionsGenerator', () => {
   });
 
   it('exposes #subscribe method', () => {
-    expect(fieldSuggestionsGenerator.subscribe).toBeTruthy();
+    expect(filterSuggestionsGenerator.subscribe).toBeTruthy();
   });
 
-  describe('#fieldSuggestions', () => {
-    it('when engine facet state contains a regular facet, generates no field suggestions controllers', () => {
+  describe('#filterSuggestions', () => {
+    it('when engine facet state contains a regular facet, generates a filter suggestions controller', () => {
       const facetId = 'regular_facet_id';
       setFacetState([
         {
@@ -93,10 +94,13 @@ describe('fieldSuggestionsGenerator', () => {
         },
       ]);
 
-      expect(fieldSuggestionsGenerator.fieldSuggestions.length).toEqual(0);
+      expect(filterSuggestionsGenerator.filterSuggestions.length).toEqual(1);
+      expect(filterSuggestionsGenerator.filterSuggestions[0].state).toEqual(
+        buildFilterSuggestions(engine, {facetId, ...commonOptions}).state
+      );
     });
 
-    it('when engine facet state contains a category facet, generates a category field suggestions controller', () => {
+    it('when engine facet state contains a category facet, generates a category filter suggestions controller', () => {
       const facetId = 'category_facet_id';
       setFacetState([
         {
@@ -107,9 +111,10 @@ describe('fieldSuggestionsGenerator', () => {
         },
       ]);
 
-      expect(fieldSuggestionsGenerator.fieldSuggestions.length).toEqual(1);
-      expect(fieldSuggestionsGenerator.fieldSuggestions[0].state).toEqual(
-        buildCategoryFieldSuggestions(engine, {facetId, ...commonOptions}).state
+      expect(filterSuggestionsGenerator.filterSuggestions.length).toEqual(1);
+      expect(filterSuggestionsGenerator.filterSuggestions[0].state).toEqual(
+        buildCategoryFilterSuggestions(engine, {facetId, ...commonOptions})
+          .state
       );
     });
 
@@ -130,9 +135,15 @@ describe('fieldSuggestionsGenerator', () => {
       ];
       setFacetState(facets);
 
-      expect(fieldSuggestionsGenerator.fieldSuggestions.length).toEqual(1);
-      expect(fieldSuggestionsGenerator.fieldSuggestions[0].state).toEqual(
-        buildCategoryFieldSuggestions(engine, {
+      expect(filterSuggestionsGenerator.filterSuggestions.length).toEqual(2);
+      expect(filterSuggestionsGenerator.filterSuggestions[0].state).toEqual(
+        buildFilterSuggestions(engine, {
+          facetId: facets[0].facetId,
+          ...commonOptions,
+        }).state
+      );
+      expect(filterSuggestionsGenerator.filterSuggestions[1].state).toEqual(
+        buildCategoryFilterSuggestions(engine, {
           facetId: facets[1].facetId,
           ...commonOptions,
         }).state
@@ -141,7 +152,7 @@ describe('fieldSuggestionsGenerator', () => {
   });
 
   it('#state exposes the field suggestions order', () => {
-    expect(fieldSuggestionsGenerator.state).toEqual(
+    expect(filterSuggestionsGenerator.state).toEqual(
       state.fieldSuggestionsOrder
     );
 
@@ -152,9 +163,9 @@ describe('fieldSuggestionsGenerator', () => {
       type: 'regular',
     });
 
-    initCommerceFacetGenerator();
+    initFilterSuggestionsGenerator();
 
-    expect(fieldSuggestionsGenerator.state).toEqual(
+    expect(filterSuggestionsGenerator.state).toEqual(
       state.fieldSuggestionsOrder
     );
   });

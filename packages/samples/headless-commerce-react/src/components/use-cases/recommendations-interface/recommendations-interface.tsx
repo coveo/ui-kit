@@ -1,7 +1,6 @@
 import {Cart, Recommendations} from '@coveo/headless/commerce';
 import {useEffect, useState} from 'react';
 import ProductList from '../../product-list/product-list.js';
-import ShowMore from '../../show-more/show-more.js';
 import Summary from '../../summary/summary.js';
 
 //import Pagination from '../../pagination/pagination.js';
@@ -22,7 +21,6 @@ export default function RecommendationsInterface(
   );
 
   const summaryController = recommendationsController.summary();
-  const paginationController = recommendationsController.pagination();
 
   useEffect(() => {
     recommendationsController.subscribe(() => {
@@ -40,13 +38,11 @@ export default function RecommendationsInterface(
         products={recommendationsState.products}
         cartController={cartController}
         controllerBuilder={recommendationsController.interactiveProduct}
+        promoteChildToParent={(child) =>
+          recommendationsController.promoteChildToParent(child)
+        }
         navigate={navigate}
       />
-      <ShowMore
-        controller={paginationController}
-        summaryController={summaryController}
-      />
-      {/*<Pagination controller={paginationController} />*/}
     </div>
   );
 }
