@@ -4,25 +4,15 @@ import {
   AsyncThunkCommerceOptions,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
 import {isRedirectTrigger} from '../../../api/common/trigger.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
-import {
-  CartSection,
-  CommerceContextSection,
-  CommerceQuerySection,
-  CommerceConfigurationSection,
-} from '../../../state/state-sections.js';
 import {
   requiredNonEmptyString,
   validatePayload,
 } from '../../../utils/validate-payload.js';
-import {buildPaginatedCommerceAPIRequest} from '../common/paginated-commerce-api-request-builder.js';
-
-export type StateNeededForRedirect = CommerceConfigurationSection &
-  CommerceContextSection &
-  CommerceQuerySection &
-  CartSection;
+import {
+  buildPlanRequest,
+  StateNeededForPlanCommerceAPIRequest,
+} from './plan-request-builder.js';
 
 export interface FetchRedirectUrlPayload {
   /**
@@ -36,7 +26,7 @@ export interface FetchRedirectUrlPayload {
 export const fetchRedirectUrl = createAsyncThunk<
   string,
   FetchRedirectUrlPayload,
-  AsyncThunkCommerceOptions<StateNeededForRedirect>
+  AsyncThunkCommerceOptions<StateNeededForPlanCommerceAPIRequest>
 >(
   'commerce/standaloneSearchBox/fetchRedirect',
   async (
@@ -119,13 +109,3 @@ export const resetStandaloneSearchBox = createAction(
       id: requiredNonEmptyString,
     })
 );
-
-export const buildPlanRequest = (
-  state: StateNeededForRedirect,
-  navigatorContext: NavigatorContext
-): CommerceSearchRequest => {
-  return {
-    query: state.commerceQuery.query,
-    ...buildPaginatedCommerceAPIRequest(state, navigatorContext),
-  };
-};
