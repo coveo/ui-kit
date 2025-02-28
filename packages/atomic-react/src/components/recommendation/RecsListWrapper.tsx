@@ -34,22 +34,26 @@ export const RecsListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
   const recsListRef = useRef<HTMLAtomicRecsListElement>(null);
   useEffect(() => {
-    recsListRef.current?.setRenderFunction((result, root, linkContainer) => {
-      const templateResult = template(result as Result);
-      if (hasLinkTemplate(templateResult)) {
-        createRoot(linkContainer!).render(templateResult.linkTemplate);
-        createRoot(root).render(templateResult.contentTemplate);
-        return renderToString(templateResult.contentTemplate);
-      } else {
-        createRoot(root).render(templateResult);
-        otherProps.display === 'grid'
-          ? createRoot(linkContainer!).render(
-              <AtomicResultLink></AtomicResultLink>
-            )
-          : createRoot(linkContainer!).render(<></>);
-        return renderToString(templateResult);
-      }
-    });
+    const waitForElement = async () => {
+      await customElements.whenDefined('atomic-result-list');
+      recsListRef.current?.setRenderFunction((result, root, linkContainer) => {
+        const templateResult = template(result as Result);
+        if (hasLinkTemplate(templateResult)) {
+          createRoot(linkContainer!).render(templateResult.linkTemplate);
+          createRoot(root).render(templateResult.contentTemplate);
+          return renderToString(templateResult.contentTemplate);
+        } else {
+          createRoot(root).render(templateResult);
+          otherProps.display === 'grid'
+            ? createRoot(linkContainer!).render(
+                <AtomicResultLink></AtomicResultLink>
+              )
+            : createRoot(linkContainer!).render(<></>);
+          return renderToString(templateResult);
+        }
+      });
+    };
+    waitForElement();
   }, [recsListRef]);
   return <AtomicRecsList ref={recsListRef} {...otherProps} />;
 };

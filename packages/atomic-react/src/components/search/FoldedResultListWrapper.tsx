@@ -26,10 +26,15 @@ export const FoldedResultListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
   const foldedResultListRef = useRef<HTMLAtomicFoldedResultListElement>(null);
   useEffect(() => {
-    foldedResultListRef.current?.setRenderFunction((foldedResult, root) => {
-      createRoot(root).render(template(foldedResult as FoldedResult));
-      return renderToString(template(foldedResult as FoldedResult));
-    });
+    const waitForElement = async () => {
+      await customElements.whenDefined('atomic-folded-result-list');
+      await customElements.whenDefined('atomic-search-interface');
+      foldedResultListRef.current?.setRenderFunction((foldedResult, root) => {
+        createRoot(root).render(template(foldedResult as FoldedResult));
+        return renderToString(template(foldedResult as FoldedResult));
+      });
+    };
+    waitForElement();
   }, [foldedResultListRef]);
   return <AtomicFoldedResultList ref={foldedResultListRef} {...otherProps} />;
 };

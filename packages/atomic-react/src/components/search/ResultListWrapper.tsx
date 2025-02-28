@@ -34,23 +34,31 @@ export const ResultListWrapper: React.FC<WrapperProps> = (props) => {
   const {template, ...otherProps} = props;
   const resultListRef = useRef<HTMLAtomicResultListElement>(null);
   useEffect(() => {
-    resultListRef.current?.setRenderFunction((result, root, linkContainer) => {
-      const templateResult = template(result as Result);
-      if (hasLinkTemplate(templateResult)) {
-        createRoot(linkContainer!).render(templateResult.linkTemplate);
-        createRoot(root).render(templateResult.contentTemplate);
-        return renderToString(templateResult.contentTemplate);
-      } else {
-        createRoot(root).render(templateResult);
-        otherProps.display === 'grid'
-          ? createRoot(linkContainer!).render(
-              <AtomicResultLink></AtomicResultLink>
-            )
-          : createRoot(linkContainer!).render(<></>);
-        return renderToString(templateResult);
+    const waitForElement = async () => {
+      await customElements.whenDefined('atomic-result-list');
+      const resultListAtomic = resultListRef.current!;
+      if (resultListAtomic && resultListAtomic.setRenderFunction) {
+        resultListAtomic.setRenderFunction((result, root, linkContainer) => {
+          const templateResult = template(result as Result);
+          if (hasLinkTemplate(templateResult)) {
+            createRoot(linkContainer!).render(templateResult.linkTemplate);
+            createRoot(root).render(templateResult.contentTemplate);
+            return renderToString(templateResult.contentTemplate);
+          } else {
+            createRoot(root).render(templateResult);
+            otherProps.display === 'grid'
+              ? createRoot(linkContainer!).render(
+                  <AtomicResultLink></AtomicResultLink>
+                )
+              : createRoot(linkContainer!).render(<></>);
+            return renderToString(templateResult);
+          }
+        });
       }
-    });
+    };
+    waitForElement();
   }, [resultListRef]);
+
   return <AtomicResultList ref={resultListRef} {...otherProps} />;
 };
 
