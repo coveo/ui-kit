@@ -2,11 +2,11 @@ import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkCommerceOptions} from '../../../api/commerce/commerce-api-client.js';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {standaloneSearchBoxSetReducer as standaloneSearchBoxSet} from '../../standalone-search-box-set/standalone-search-box-set-slice.js';
+import {StateNeededForPlanCommerceAPIRequest} from './plan-request-builder.js';
 import {
   FetchRedirectUrlPayload,
   RegisterStandaloneSearchBoxPayload,
   ResetStandaloneSearchBoxPayload,
-  StateNeededForRedirect,
   fetchRedirectUrl,
   registerStandaloneSearchBox,
   resetStandaloneSearchBox,
@@ -37,7 +37,7 @@ export interface StandaloneSearchBoxSetActionCreators {
   ): AsyncThunkAction<
     string,
     FetchRedirectUrlPayload,
-    AsyncThunkCommerceOptions<StateNeededForRedirect>
+    AsyncThunkCommerceOptions<StateNeededForPlanCommerceAPIRequest>
   >;
 
   /**
