@@ -7,7 +7,7 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
-import {CommerceAPIRequest} from '../../../api/commerce/common/request.js';
+import {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
 import {CommerceSearchRequest} from '../../../api/commerce/search/request.js';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {ClientThunkExtraArguments} from '../../../app/thunk-extra-arguments.js';
@@ -18,9 +18,9 @@ import {
   TriggerSection,
 } from '../../../state/state-sections.js';
 import {
-  ListingAndSearchStateNeededByQueryCommerceAPI,
-  buildCommerceAPIRequest,
-} from '../common/actions.js';
+  buildFilterableCommerceAPIRequest,
+  StateNeededForFilterableCommerceAPIRequest,
+} from '../common/filterable-commerce-api-request-builder.js';
 import {updateQuery} from '../query/query-actions.js';
 import {
   applyQueryTriggerModification,
@@ -33,11 +33,11 @@ interface FetchedResponse {
   response: CommerceAPIResponse<SearchCommerceSuccessResponse>;
   duration: number;
   queryExecuted: string;
-  requestExecuted: CommerceAPIRequest;
+  requestExecuted: FilterableCommerceAPIRequest;
 }
 
 export type StateNeededByExecuteSearch =
-  ListingAndSearchStateNeededByQueryCommerceAPI &
+  StateNeededForFilterableCommerceAPIRequest &
     CommerceSearchSection &
     CommerceQuerySection &
     CommerceDidYouMeanSection &
@@ -76,7 +76,7 @@ export class AsyncSearchThunkProcessor<RejectionType> {
   }
 
   public async fetchFromAPI(
-    request: CommerceAPIRequest | CommerceSearchRequest
+    request: FilterableCommerceAPIRequest | CommerceSearchRequest
   ) {
     const startedAt = new Date().getTime();
     const response = await this.extra.apiClient.search(request);
@@ -188,7 +188,10 @@ export class AsyncSearchThunkProcessor<RejectionType> {
     );
     this.onUpdateQueryForCorrection(modified);
     const fetched = await this.fetchFromAPI({
-      ...buildCommerceAPIRequest(this.getState(), this.navigatorContext),
+      ...buildFilterableCommerceAPIRequest(
+        this.getState(),
+        this.navigatorContext
+      ),
       query: modified,
     });
 

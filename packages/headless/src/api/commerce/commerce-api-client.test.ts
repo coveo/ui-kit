@@ -7,7 +7,7 @@ import {
   CommerceAPIClient,
   getCommerceApiBaseUrl,
 } from './commerce-api-client.js';
-import {CommerceAPIRequest} from './common/request.js';
+import {FilterableCommerceAPIRequest} from './common/request.js';
 import {CommerceResponse} from './common/response.js';
 import {CommerceRecommendationsRequest} from './recommendations/recommendations-request.js';
 
@@ -36,8 +36,8 @@ describe('commerce api client', () => {
   };
 
   const buildCommerceAPIRequest = async (
-    req: Partial<CommerceAPIRequest> = {}
-  ): Promise<CommerceAPIRequest> => ({
+    req: Partial<FilterableCommerceAPIRequest> = {}
+  ): Promise<FilterableCommerceAPIRequest> => ({
     accessToken: accessToken,
     organizationId: organizationId,
     url: apiBaseUrl,

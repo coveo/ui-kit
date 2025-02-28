@@ -8,10 +8,8 @@ import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
-import {
-  buildCommerceAPIRequest,
-  buildInstantProductsAPIRequest,
-} from '../common/actions.js';
+import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
+import {buildFilterableCommerceAPIRequest} from '../common/filterable-commerce-api-request-builder.js';
 import {
   clearAllCoreFacets,
   updateAutoSelectionForAllCoreFacets,
@@ -75,7 +73,7 @@ export const executeSearch = createAsyncThunk<
   const state = getState();
   const {navigatorContext} = config.extra;
 
-  const request = buildCommerceAPIRequest(state, navigatorContext);
+  const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
   const query = querySelector(state);
 
   const processor = new AsyncSearchThunkProcessor<
@@ -105,7 +103,7 @@ export const fetchMoreProducts = createAsyncThunk<
   const nextPageToRequest = numberOfProducts / perPage;
   const query = querySelector(state);
 
-  const request = buildCommerceAPIRequest(state, navigatorContext);
+  const request = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
   const processor = new AsyncSearchThunkProcessor<
     ReturnType<typeof config.rejectWithValue>
@@ -158,7 +156,7 @@ export const fetchInstantProducts = createAsyncThunk<
     const {apiClient, navigatorContext} = extra;
     const {q} = payload;
     const fetched = await apiClient.productSuggestions({
-      ...buildInstantProductsAPIRequest(state, navigatorContext),
+      ...buildBaseCommerceAPIRequest(state, navigatorContext),
       query: q,
     });
 

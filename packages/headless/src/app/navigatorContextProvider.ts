@@ -20,6 +20,12 @@ export interface NavigatorContext {
    * See [clientId](https://docs.coveo.com/en/masb0234).
    */
   clientId: string;
+  /**
+   * Whether to capture analytics events.
+   *
+   * Must be left undefined or set to `false` if the `clientId` is an empty string, otherwise requests will fail.
+   */
+  capture?: boolean;
 }
 
 export type NavigatorContextProvider = () => NavigatorContext;
