@@ -19,19 +19,18 @@ function initializeBindings<
       .then((bindings) => {
         instance.bindings = bindings;
 
-          const updateLanguage = () => instance.requestUpdate();
-          instance.bindings.i18n.on('languageChanged', updateLanguage);
-          const unsubscribeLanguage = () =>
-            instance.bindings?.i18n.off('languageChanged', updateLanguage);
-          resolve(unsubscribeLanguage);
+        const updateLanguage = () => instance.requestUpdate();
+        instance.bindings.i18n.on('languageChanged', updateLanguage);
+        const unsubscribeLanguage = () =>
+          instance.bindings?.i18n.off('languageChanged', updateLanguage);
+        resolve(unsubscribeLanguage);
 
-          instance.initialize?.();
-        })
-        .catch((error) => {
-          instance.error = error;
-          reject(error);
-        });
-    }
+        instance.initialize?.();
+      })
+      .catch((error) => {
+        instance.error = error;
+        reject(error);
+      });
   });
 }
 
