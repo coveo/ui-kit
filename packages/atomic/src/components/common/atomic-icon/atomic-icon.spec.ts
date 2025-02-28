@@ -1,9 +1,8 @@
 import * as guardModule from '@/src/decorators/error-guard';
 import * as utils from '@/src/utils/utils';
-import {fixture, assert} from '@open-wc/testing';
+import {container, fixture} from '@/tests/testing-helpers/fixture';
 import DOMPurify from 'dompurify';
 import {html} from 'lit/static-html.js';
-import {within} from 'shadow-dom-testing-library';
 import {MockInstance, vi} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
@@ -32,7 +31,7 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 }));
 
 describe('AtomicIcon', () => {
-  let container: HTMLElement;
+  // let container: HTMLElement;
   let fetchMock: MockInstance;
   let parseAssetURLMock: MockInstance;
   let errorGuardMock: MockInstance;
@@ -51,32 +50,25 @@ describe('AtomicIcon', () => {
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
   afterEach(() => {
-    document.body.removeChild(container);
     fetchMock.mockReset();
     parseAssetURLMock.mockReset();
     sanitizeMock.mockReset();
   });
 
   const setupElement = async (icon: string) => {
-    const element = await fixture<AtomicIcon>(html`
-      <atomic-icon icon=${icon}></atomic-icon>
-    `);
+    const element = await fixture<AtomicIcon>(
+      html` <atomic-icon icon=${icon}></atomic-icon>`
+    );
 
     element.initialize();
 
-    container.appendChild(element);
     return element;
   };
 
   it('is defined', () => {
     const el = document.createElement('atomic-icon');
-    assert.instanceOf(el, AtomicIcon);
+    expect(el).toBeInstanceOf(AtomicIcon);
   });
 
   it('renders with default values', async () => {
@@ -84,7 +76,7 @@ describe('AtomicIcon', () => {
     fetchMock.mockResolvedValue(successfullResponse);
 
     await setupElement('assets://user.svg');
-    const svg = await within(container).findByShadowTestId('mocked-icon');
+    const svg = await container().findByShadowTestId('mocked-icon');
 
     expect(fetchMock).toHaveBeenCalledWith('/assets/user.svg');
     expect(svg).toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
@@ -95,7 +87,7 @@ describe('AtomicIcon', () => {
       "<svg data-testid='mocked-icon'><script>alert('xss')</script><circle cx='50' cy='50' r='40' /></svg>"
     );
 
-    const svg = await within(container).findByShadowTestId('mocked-icon');
+    const svg = await container().findByShadowTestId('mocked-icon');
 
     expect(svg).toBeInTheDocument();
     expect(svg?.querySelector('script')).not.toBeInTheDocument();
@@ -106,7 +98,7 @@ describe('AtomicIcon', () => {
     fetchMock.mockResolvedValue(successfullResponse);
 
     await setupElement('http://example.com/icon.svg');
-    const svg = await within(container).findByShadowTestId('mocked-icon');
+    const svg = await container().findByShadowTestId('mocked-icon');
 
     expect(fetchMock).toHaveBeenCalledWith('http://example.com/icon.svg');
     expect(svg).toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
