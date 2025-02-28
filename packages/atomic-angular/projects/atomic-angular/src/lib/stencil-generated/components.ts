@@ -740,28 +740,6 @@ export declare interface AtomicCommerceTimeframeFacet extends Components.AtomicC
 
 
 @ProxyCmp({
-  inputs: ['element', 'error']
-})
-@Component({
-  selector: 'atomic-component-error',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['element', 'error'],
-})
-export class AtomicComponentError {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicComponentError extends Components.AtomicComponentError {}
-
-
-@ProxyCmp({
   inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
 })
 @Component({
@@ -1002,28 +980,6 @@ export class AtomicHtml {
 
 
 export declare interface AtomicHtml extends Components.AtomicHtml {}
-
-
-@ProxyCmp({
-  inputs: ['icon']
-})
-@Component({
-  selector: 'atomic-icon',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon'],
-})
-export class AtomicIcon {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicIcon extends Components.AtomicIcon {}
 
 
 @ProxyCmp({
@@ -3085,6 +3041,29 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 //#region Lit Declarations
 
 @ProxyCmp({
+  inputs: ['icon']
+})
+@Component({
+  selector: 'atomic-icon',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon']
+})
+export class AtomicIcon {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, []);
+  }
+}
+
+export declare interface AtomicIcon extends LitAtomicIcon {
+
+}
+
+@ProxyCmp({
   inputs: ['name', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'CspNonce']
 })
 @Component({
@@ -3107,5 +3086,28 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 }
 
-import type {AtomicCommerceInterface as LitAtomicCommerceInterface} from '@coveo/atomic/components';
+@ProxyCmp({
+  inputs: ['element', 'error']
+})
+@Component({
+  selector: 'atomic-component-error',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['element', 'error']
+})
+export class AtomicComponentError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, []);
+  }
+}
+
+export declare interface AtomicComponentError extends LitAtomicComponentError {
+
+}
+
+import type {AtomicIcon as LitAtomicIcon, AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicComponentError as LitAtomicComponentError} from '@coveo/atomic/components';
 //#endregion Lit Declarations
