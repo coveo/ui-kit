@@ -47,7 +47,11 @@ export default defineConfig({
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
+<<<<<<< HEAD
     setupFiles: ['./vitest-utils/setup.ts'],
+=======
+    setupFiles: ['./tests/setup.ts'],
+>>>>>>> 4695a9200 (test(atomic): add testing helpers)
     globals: true,
     browser: {
       enabled: true,
