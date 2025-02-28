@@ -38,19 +38,21 @@ export function bindings() {
       new ContextConsumer(this, {
         context: bindingsContext,
         callback: (value) => {
-          if (!this.initialized && this.bindings) {
-            this.bindings = value;
-
-            const updateLanguage = () => this.requestUpdate();
-            this.bindings.i18n.on('languageChanged', updateLanguage);
-            const unsubscribeLanguage = () =>
-              this.bindings?.i18n.off('languageChanged', updateLanguage);
-
-            this.initialize?.();
-            this.initialized = true;
-
-            this.unsubscribeLanguage = unsubscribeLanguage;
+          if (this.initialized) {
+            return;
           }
+
+          this.initialized = true;
+
+          this.bindings = value;
+          const updateLanguage = () => this.requestUpdate();
+          this.bindings.i18n.on('languageChanged', updateLanguage);
+          const unsubscribeLanguage = () =>
+            this.bindings?.i18n.off('languageChanged', updateLanguage);
+
+          this.initialize?.();
+
+          this.unsubscribeLanguage = unsubscribeLanguage;
         },
         subscribe: true,
       });
