@@ -145,7 +145,7 @@ describe('AtomicCommercePager', () => {
         .toHaveAttribute('disabled');
     });
 
-    test('should call focusOnFirstResultAndScrollToTop when clicking on the previous button', async () => {
+    test('should call focusOnFirstResultAndScrollToTop and dispatch atomic/scrollToTop when clicking on the previous button', async () => {
       element = await renderPager({
         mockedState: {
           page: 2,
@@ -158,9 +158,14 @@ describe('AtomicCommercePager', () => {
         element as never,
         'focusOnFirstResultAndScrollToTop'
       );
+      const eventSpy = vi.spyOn(element, 'dispatchEvent');
+
       await page.getByLabelText('Previous').click();
 
       expect(focusSpy).toHaveBeenCalled();
+      expect(eventSpy).toHaveBeenCalledWith(
+        new CustomEvent('atomic/scrollToTop')
+      );
     });
 
     test('should call previousPage when clicking on the previous button', async () => {
@@ -173,13 +178,17 @@ describe('AtomicCommercePager', () => {
         },
       });
       const previousPageSpy = vi.spyOn(element.pager, 'previousPage');
+      const eventSpy = vi.spyOn(element, 'dispatchEvent');
 
       await page.getByLabelText('Previous').click();
 
       expect(previousPageSpy).toHaveBeenCalled();
+      expect(eventSpy).toHaveBeenCalledWith(
+        new CustomEvent('atomic/scrollToTop')
+      );
     });
 
-    test('should call focusOnFirstResultAndScrollToTop when clicking on the next button', async () => {
+    test('should call focusOnFirstResultAndScrollToTop and dispatch atomic/scrollToTop when clicking on the next button', async () => {
       element = await renderPager({
         mockedState: {
           page: 2,
@@ -192,10 +201,14 @@ describe('AtomicCommercePager', () => {
         element as never,
         'focusOnFirstResultAndScrollToTop'
       );
+      const eventSpy = vi.spyOn(element, 'dispatchEvent');
 
       await page.getByLabelText('Next').click();
 
       expect(focusSpy).toHaveBeenCalled;
+      expect(eventSpy).toHaveBeenCalledWith(
+        new CustomEvent('atomic/scrollToTop')
+      );
     });
 
     test('should call nextPage when clicking on the next button', async () => {
@@ -214,7 +227,7 @@ describe('AtomicCommercePager', () => {
       expect(nextPageSpy).toHaveBeenCalled();
     });
 
-    test('should call focusOnFirstResultAndScrollToTop when clicking on a page button', async () => {
+    test('should call focusOnFirstResultAndScrollToTop and dispatch atomic/scrollToTop when clicking on a page button', async () => {
       element = await renderPager();
       const focusSpy = vi.spyOn(
         element as never,
