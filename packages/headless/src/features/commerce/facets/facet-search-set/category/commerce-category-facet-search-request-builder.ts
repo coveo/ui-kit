@@ -1,6 +1,6 @@
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
-import {buildCommerceAPIRequest} from '../../../common/actions.js';
+import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
 import {
   AnyFacetRequest,
   CategoryFacetRequest,
@@ -40,7 +40,7 @@ export const buildCategoryFacetSearchRequest = (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state, navigatorContext);
+  } = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
