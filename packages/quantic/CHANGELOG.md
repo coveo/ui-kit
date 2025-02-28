@@ -1,3 +1,9 @@
+## 3.15.0 (2025-02-27)
+
+- test(quantic): playwright e2e and unit tests created for quantic case classification component (#496 ([460387c](https://github.com/coveo/ui-kit/commits/460387c)), closes [#4967](https://github.com/coveo/ui-kit/issues/4967)
+- test(quantic): Playwright migration for facet manager E2E tests (#4943) ([37ab740](https://github.com/coveo/ui-kit/commits/37ab740)), closes [#4943](https://github.com/coveo/ui-kit/issues/4943)
+- feat(quantic): Allow RGA component to provide a custom "no answer" message when no answer is shown ( ([068c05a](https://github.com/coveo/ui-kit/commits/068c05a)), closes [#4919](https://github.com/coveo/ui-kit/issues/4919)
+
 ## <small>3.14.3 (2025-02-26)</small>
 
 - chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)

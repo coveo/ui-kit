@@ -22,20 +22,21 @@ import {
   buildCategoryFieldSuggestions,
   CategoryFieldSuggestions,
 } from './headless-category-field-suggestions.js';
-import {
-  buildFieldSuggestions,
-  FieldSuggestions,
-} from './headless-field-suggestions.js';
 
-export type GeneratedFieldSuggestionsControllers = Array<
-  FieldSuggestions | CategoryFieldSuggestions
->;
+/**
+ * @alpha
+ * @deprecated
+ */
+export type GeneratedFieldSuggestionsControllers =
+  Array<CategoryFieldSuggestions>;
 
 /**
  * The `FieldSuggestionsGenerator` controller is responsible for generating field suggestions controllers for a given commerce engine.
  *
  * @group Buildable controllers
  * @category FieldSuggestionsGenerator
+ * @alpha
+ * @deprecated
  */
 export interface FieldSuggestionsGenerator extends Controller {
   /**
@@ -56,6 +57,8 @@ export interface FieldSuggestionsGenerator extends Controller {
  *
  * @group Buildable controllers
  * @category FieldSuggestionsGenerator
+ * @alpha
+ * @deprecated
  */
 export function buildFieldSuggestionsGenerator(
   engine: CommerceEngine
@@ -77,16 +80,13 @@ export function buildFieldSuggestionsGenerator(
     (state: CommerceEngineState) => state.fieldSuggestionsOrder,
     (facetOrder) =>
       facetOrder.map(({type, facetId}) => {
-        switch (type) {
-          case 'hierarchical':
-            return buildCategoryFieldSuggestions(engine, {
-              facetId,
-              ...commonOptions,
-            });
-          default:
-          case 'regular':
-            return buildFieldSuggestions(engine, {facetId, ...commonOptions});
+        if (type !== 'hierarchical') {
+          return;
         }
+        return buildCategoryFieldSuggestions(engine, {
+          facetId,
+          ...commonOptions,
+        });
       })
   );
 
@@ -94,7 +94,9 @@ export function buildFieldSuggestionsGenerator(
     ...controller,
 
     get fieldSuggestions() {
-      return createFieldSuggestionsControllers(engine[stateKey]);
+      return createFieldSuggestionsControllers(engine[stateKey]).filter(
+        (v) => v !== undefined
+      );
     },
 
     get state() {

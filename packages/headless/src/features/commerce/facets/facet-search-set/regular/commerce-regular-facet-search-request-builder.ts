@@ -12,7 +12,9 @@ export const buildFacetSearchRequest = (
 ): CommerceFacetSearchRequest => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = state.commerceQuery?.query;
+  const query = !isFieldSuggestionsRequest
+    ? state.commerceQuery?.query
+    : baseFacetQuery;
 
   const {
     url,
@@ -32,7 +34,7 @@ export const buildFacetSearchRequest = (
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
-    facetQuery,
+    facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     trackingId,
     language,
     country,
