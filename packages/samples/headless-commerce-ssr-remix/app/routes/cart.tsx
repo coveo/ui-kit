@@ -92,7 +92,15 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
     }
   );
 
-  return {staticState, items, totalPrice, language, currency, recsStaticState};
+  return {
+    staticState,
+    navigatorContext,
+    items,
+    totalPrice,
+    language,
+    currency,
+    recsStaticState,
+  };
 };
 
 export default function CartRoute() {
