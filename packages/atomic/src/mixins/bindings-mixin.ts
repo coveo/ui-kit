@@ -14,22 +14,24 @@ function initializeBindings<
     InitializableComponent<SpecificBindings>,
 >(instance: InstanceType): Promise<() => void> {
   return new Promise((resolve, reject) => {
-    fetchBindings<SpecificBindings>(instance)
-      .then((bindings) => {
-        instance.bindings = bindings;
+    if (!instance.initialized && instance.bindings) {
+      fetchBindings<SpecificBindings>(instance)
+        .then((bindings) => {
+          instance.bindings = bindings;
 
-        const updateLanguage = () => instance.requestUpdate();
-        instance.bindings.i18n.on('languageChanged', updateLanguage);
-        const unsubscribeLanguage = () =>
-          instance.bindings?.i18n.off('languageChanged', updateLanguage);
-        resolve(unsubscribeLanguage);
+          const updateLanguage = () => instance.requestUpdate();
+          instance.bindings.i18n.on('languageChanged', updateLanguage);
+          const unsubscribeLanguage = () =>
+            instance.bindings?.i18n.off('languageChanged', updateLanguage);
+          resolve(unsubscribeLanguage);
 
-        instance.initialize?.();
-      })
-      .catch((error) => {
-        instance.error = error;
-        reject(error);
-      });
+          instance.initialize?.();
+        })
+        .catch((error) => {
+          instance.error = error;
+          reject(error);
+        });
+    }
   });
 }
 
