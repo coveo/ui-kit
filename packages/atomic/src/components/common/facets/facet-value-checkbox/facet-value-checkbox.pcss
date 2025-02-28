@@ -5,11 +5,11 @@
   width: var(--atomic-facet-checkbox-size, 1rem);
   height: var(--atomic-facet-checkbox-size, 1rem);
 
-  @apply z-1 absolute left-2;
+  @apply absolute left-2 z-1;
 }
 
 .value-checkbox + label {
-  @apply text-on-background hover:bg-neutral-light flex w-full cursor-pointer flex-row truncate py-2.5 pl-8 pr-2;
+  @apply text-on-background hover:bg-neutral-light flex w-full cursor-pointer flex-row truncate py-2.5 pr-2 pl-8;
 }
 
 .value-checkbox.selected:focus-visible + label .value-label,

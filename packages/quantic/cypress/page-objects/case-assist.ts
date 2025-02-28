@@ -1,3 +1,4 @@
+import {getAnalyticsBodyFromRequest} from '../e2e/common-expectations';
 import {nextAnalyticsAlias} from '../utils/analytics-utils';
 import {interceptIndefinitely} from './search';
 
@@ -11,6 +12,8 @@ export const InterceptAliases = {
     SuggestionRate: uaAlias('suggestion_rate'),
     FieldUpdate: uaAlias('ticket_field_update'),
     ClassificationClick: uaAlias('ticket_classification_click'),
+    documentSuggestionClick: uaAlias('documentSuggestionClick'),
+    documentSuggestionQuickview: uaAlias('documentSuggestionQuickview'),
   },
   DocumentSuggestion: '@coveoDocumentSuggestion',
   CaseClassification: '@coveoCaseClassification',
@@ -30,6 +33,10 @@ export function interceptCaseAssist() {
     .intercept('POST', routeMatchers.analytics, (req) => {
       if (req.body.svc_action) {
         req.alias = uaAlias(req.body.svc_action).substring(1);
+      }
+      const analyticsBody = getAnalyticsBodyFromRequest(req);
+      if (analyticsBody.actionCause) {
+        req.alias = uaAlias(analyticsBody.actionCause as string).substring(1);
       }
     })
     .intercept('POST', routeMatchers.nextAnalytics, (req) => {

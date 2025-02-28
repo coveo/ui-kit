@@ -21,6 +21,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
 import {AnyBindings} from '../../interface/bindings';
@@ -314,7 +315,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         <textarea
           name="answer-details"
           ref={(detailsInput) => (this.detailsInputRef = detailsInput)}
-          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary focus:outline-hidden mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus-visible:ring-2"
+          class="placeholder-neutral-dark border-neutral hover:border-primary-light focus-visible:border-primary mt-4 w-full resize-none rounded-md border px-4 py-2 leading-5 focus:outline-hidden focus-visible:ring-2"
           rows={4}
           placeholder={this.bindings.i18n.t('add-notes')}
           onChange={(e) =>
@@ -436,7 +437,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         close={() => this.close()}
         container={this.host}
         part="generated-answer-feedback-modal"
-        exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
+        exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       >
         {this.renderHeader()}
         {this.renderBody()}

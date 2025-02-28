@@ -1,14 +1,10 @@
 import {NumberValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
 import {
   AsyncThunkCommerceOptions,
-  getCommerceApiBaseUrl,
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
-import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
 import {QuerySuggestSuccessResponse} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
 import {
   CartSection,
   CommerceContextSection,
@@ -28,7 +24,7 @@ import {
   RegisterQuerySuggestActionCreatorPayload,
   SelectQuerySuggestionActionCreatorPayload,
 } from '../../query-suggest/query-suggest-actions.js';
-import {getProductsFromCartState} from '../context/cart/cart-state.js';
+import {buildQuerySuggestRequest} from './query-suggest-request-builder.js';
 
 export type ClearQuerySuggestPayload = ClearQuerySuggestActionCreatorPayload;
 
@@ -116,44 +112,3 @@ export const selectQuerySuggestion = createAction(
       expression: requiredEmptyAllowedString,
     })
 );
-
-export const buildQuerySuggestRequest = (
-  id: string,
-  state: StateNeededByQuerySuggest,
-  navigatorContext: NavigatorContext
-): QuerySuggestRequest => {
-  const {view, ...restOfContext} = state.commerceContext;
-  return {
-    accessToken: state.configuration.accessToken,
-    url:
-      state.configuration.commerce.apiBaseUrl ??
-      getCommerceApiBaseUrl(
-        state.configuration.organizationId,
-        state.configuration.environment
-      ),
-    organizationId: state.configuration.organizationId,
-    trackingId: state.configuration.analytics.trackingId,
-    query: state.querySet[id],
-    ...restOfContext,
-    ...(state.configuration.analytics.enabled
-      ? {clientId: navigatorContext.clientId}
-      : {}),
-    context: {
-      user: {
-        ...location,
-        ...(navigatorContext.userAgent
-          ? {userAgent: navigatorContext.userAgent}
-          : {}),
-      },
-      view: {
-        ...view,
-        ...(navigatorContext.referrer
-          ? {referrer: navigatorContext.referrer}
-          : {}),
-      },
-      capture: state.configuration.analytics.enabled,
-      cart: getProductsFromCartState(state.cart),
-      source: getAnalyticsSource(state.configuration.analytics),
-    },
-  };
-};

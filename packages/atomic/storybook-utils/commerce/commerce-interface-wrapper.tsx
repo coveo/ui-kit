@@ -9,11 +9,11 @@ import type * as _ from '../../src/components.js';
 
 export const wrapInCommerceInterface = ({
   engineConfig,
-  skipFirstSearch,
+  skipFirstRequest,
   type = 'search',
 }: {
   engineConfig?: Partial<CommerceEngineConfiguration>;
-  skipFirstSearch?: boolean;
+  skipFirstRequest?: boolean;
   type?: 'search' | 'product-listing';
 } = {}): {
   decorator: Decorator;
@@ -27,36 +27,36 @@ export const wrapInCommerceInterface = ({
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined('atomic-commerce-interface');
     const canvas = within(canvasElement);
-    const searchInterface =
+    const commerceInterface =
       await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
         'root-interface'
       );
-    await step('Render the Search Interface', async () => {
-      await searchInterface!.initialize({
+    await step('Render the Commerce Interface', async () => {
+      await commerceInterface!.initialize({
         ...getSampleCommerceEngineConfiguration(),
         ...engineConfig,
       });
     });
-    if (skipFirstSearch) {
+    if (skipFirstRequest) {
       return;
     }
-    await step('Execute the first search', async () => {
-      await searchInterface!.executeFirstRequest();
+    await step('Execute the first request', async () => {
+      await commerceInterface!.executeFirstRequest();
     });
   },
 });
 
-export const playExecuteFirstSearch: (
+export const playExecuteFirstRequest: (
   context: StoryContext
 ) => Promise<void> = async ({canvasElement, step}) => {
   const canvas = within(canvasElement);
 
-  const searchInterface =
+  const commerceInterface =
     await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
       'root-interface'
     );
-  await step('Execute the first search', async () => {
-    await searchInterface!.executeFirstRequest();
+  await step('Execute the first request', async () => {
+    await commerceInterface!.executeFirstRequest();
   });
 };
 

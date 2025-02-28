@@ -1,18 +1,16 @@
-import {coveo_visitorId} from '@/app/cookies.server';
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
-import {randomUUID} from 'crypto';
+import {getAnalyticsContext} from './client-id.server';
 
 export const getNavigatorContext = async (
   request: Request
 ): Promise<NavigatorContext> => {
-  const clientIdCookie = await coveo_visitorId.parse(
-    request.headers.get('Cookie')
-  );
-  const clientId = clientIdCookie ?? randomUUID();
+  const {clientId, capture} = await getAnalyticsContext(request);
+
   return {
     clientId,
     referrer: request.headers.get('Referer') ?? '',
     userAgent: request.headers.get('User-Agent') ?? '',
     location: request.url,
+    capture: capture && clientId !== '',
   };
 };

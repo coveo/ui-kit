@@ -790,13 +790,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface AtomicComponentError {
-        "element": HTMLElement;
-        "error": Error;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -1132,16 +1125,6 @@ export namespace Components {
           * The string value containing HTML to display;
          */
         "value": string;
-    }
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface AtomicIcon {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
@@ -4312,15 +4295,6 @@ declare global {
         new (): HTMLAtomicCommerceTimeframeFacetElement;
     };
     /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
-    }
-    var HTMLAtomicComponentErrorElement: {
-        prototype: HTMLAtomicComponentErrorElement;
-        new (): HTMLAtomicComponentErrorElement;
-    };
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
@@ -4491,16 +4465,6 @@ declare global {
     var HTMLAtomicHtmlElement: {
         prototype: HTMLAtomicHtmlElement;
         new (): HTMLAtomicHtmlElement;
-    };
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
-    }
-    var HTMLAtomicIconElement: {
-        prototype: HTMLAtomicIconElement;
-        new (): HTMLAtomicIconElement;
     };
     interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
     }
@@ -6129,7 +6093,6 @@ declare global {
         "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
-        "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -6145,7 +6108,6 @@ declare global {
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
-        "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
@@ -6987,13 +6949,6 @@ declare namespace LocalJSX {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface AtomicComponentError {
-        "element": HTMLElement;
-        "error": Error;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -7328,16 +7283,6 @@ declare namespace LocalJSX {
           * The string value containing HTML to display;
          */
         "value": string;
-    }
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface AtomicIcon {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
@@ -9953,7 +9898,6 @@ declare namespace LocalJSX {
         "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
-        "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
         "atomic-facet": AtomicFacet;
@@ -9969,7 +9913,6 @@ declare namespace LocalJSX {
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
-        "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
@@ -10301,10 +10244,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
             /**
-             * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-             */
-            "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
-            /**
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
@@ -10368,11 +10307,6 @@ declare module "@stencil/core" {
              * Use only with values for which you are certain the content is harmless.
              */
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
-            /**
-             * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-             * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-             */
-            "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;

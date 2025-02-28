@@ -1,4 +1,10 @@
-import {ArrayValue, BooleanValue, NumberValue, Schema} from '@coveo/bueno';
+import {
+  ArrayValue,
+  BooleanValue,
+  NumberValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
 import {CommerceEngine} from '../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../app/state-key.js';
 import {UpdateQueryPayload} from '../../../features/commerce/query/query-actions.js';
@@ -72,6 +78,11 @@ export interface RecentQueriesList extends Controller {
    * @param index - The index of the recent query to execute.
    */
   executeRecentQuery(index: number): void;
+  /**
+   * Sets the recent queries list to the specified array of queries.
+   * @param queries - The array of queries to set.
+   */
+  updateRecentQueries(queries: string[]): void;
 }
 
 /**
@@ -172,6 +183,24 @@ export function buildRecentQueriesList(
 
     clear() {
       dispatch(clearRecentQueries());
+    },
+
+    updateRecentQueries(queries: string[]) {
+      const errorMessage = new ArrayValue({
+        required: true,
+        each: new StringValue({required: true}),
+        min: 1,
+      }).validate(queries);
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      }
+
+      dispatch(
+        registerRecentQueries({
+          queries,
+          maxLength: registrationOptions.maxLength,
+        })
+      );
     },
 
     executeRecentQuery(index: number) {

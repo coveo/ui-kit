@@ -5,6 +5,8 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -38,7 +40,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,
@@ -50,7 +51,6 @@ AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicGeneratedAnswer,
 AtomicHtml,
-AtomicIcon,
 AtomicLayoutSection,
 AtomicLoadMoreResults,
 AtomicNoResults,
@@ -146,11 +146,9 @@ AtomicTimeframeFacet
 } from './components';
 
         
-import {defineCustomElements} from '@coveo/atomic/loader';
-defineCustomElements(window);
-
-        
 const DECLARATIONS = [
+AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -184,7 +182,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,
@@ -196,7 +193,6 @@ AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicGeneratedAnswer,
 AtomicHtml,
-AtomicIcon,
 AtomicLayoutSection,
 AtomicLoadMoreResults,
 AtomicNoResults,

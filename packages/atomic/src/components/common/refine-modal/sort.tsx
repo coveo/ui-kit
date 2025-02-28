@@ -28,7 +28,7 @@ export const RefineModalSortSection: FunctionalComponent<
         </select>
         <div
           part="select-icon-wrapper"
-          class="pointer-events-none absolute bottom-0 right-0 top-0 flex items-center justify-center pr-6"
+          class="pointer-events-none absolute top-0 right-0 bottom-0 flex items-center justify-center pr-6"
         >
           <atomic-icon
             part="select-icon"

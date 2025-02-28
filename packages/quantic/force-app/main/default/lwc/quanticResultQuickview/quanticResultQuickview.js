@@ -121,10 +121,6 @@ export default class QuanticResultQuickview extends LightningElement {
       );
       this.dispatchEvent(resultActionRegister);
     }
-    this.addEventListener(
-      'quantic__loadingstatechange',
-      this.handleLoadingStateChange
-    );
   }
 
   renderedCallback() {
@@ -156,10 +152,6 @@ export default class QuanticResultQuickview extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
-    this.removeEventListener(
-      'loadingstatechange',
-      this.handleLoadingStateChange
-    );
   }
 
   updateState() {

@@ -1,3 +1,4 @@
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {vi} from 'vitest';
@@ -21,13 +22,7 @@ describe('@errorGuard decorator', () => {
   }
 
   const setupElement = async () => {
-    element = document.createElement('test-element') as TestElement;
-    document.body.appendChild(element);
-    await element.updateComplete;
-  };
-
-  const teardownElement = () => {
-    document.body.removeChild(element);
+    element = await fixture<TestElement>(html`<test-element></test-element>`);
   };
 
   beforeEach(async () => {
@@ -36,7 +31,6 @@ describe('@errorGuard decorator', () => {
   });
 
   afterEach(() => {
-    teardownElement();
     consoleErrorSpy.mockRestore();
     renderSpy.mockRestore();
   });
@@ -72,10 +66,10 @@ describe('@errorGuard decorator', () => {
     element.error = new Error('Test error');
     await element.updateComplete;
 
-    expect(element.shadowRoot?.textContent).toContain('component error');
-    expect(element.shadowRoot?.textContent).toContain(
-      'Look at the developer console for more information.'
+    const errorElement = element.shadowRoot?.querySelector(
+      'atomic-component-error'
     );
+    expect(errorElement).not.toBeNull();
   });
 
   it('should throw an error if used on a property', () => {

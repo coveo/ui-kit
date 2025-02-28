@@ -1,5 +1,5 @@
 import {
-  playExecuteFirstSearch,
+  playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -9,14 +9,14 @@ import {html} from 'lit';
 
 // TODO KIT-3640 - Add stories for table display
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: false});
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
 
 const {play: playNoFirstQuery} = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstRequest: true,
 });
 
 const {play: playNoProducts} = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (r) => {
       const parsed = JSON.parse(r.body as string);
@@ -63,7 +63,7 @@ export const Default: Story = {
   name: 'Grid display',
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };
 
@@ -106,7 +106,7 @@ export const ListDisplay: Story = {
   name: 'List display',
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
   args: {
     'attributes-display': 'list',
@@ -157,7 +157,7 @@ export const NoProducts: Story = {
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoProducts(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };
 
@@ -192,6 +192,6 @@ export const InPage: Story = {
   ],
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };

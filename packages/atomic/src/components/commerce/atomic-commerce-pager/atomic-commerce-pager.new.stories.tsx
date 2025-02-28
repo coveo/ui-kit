@@ -1,12 +1,12 @@
 import {
-  playExecuteFirstSearch,
+  playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',
@@ -24,7 +24,7 @@ export const Default: Story = {
   name: 'atomic-commerce-pager',
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };
 
@@ -39,6 +39,6 @@ export const CustomIcon: Story = {
   },
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };
