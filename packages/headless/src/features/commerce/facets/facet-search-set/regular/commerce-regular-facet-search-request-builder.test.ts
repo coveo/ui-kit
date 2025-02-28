@@ -1,4 +1,5 @@
 import {MockInstance} from 'vitest';
+import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
 import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
@@ -21,7 +22,7 @@ describe('#buildFacetSearchRequest', () => {
     facetId = '1';
     query = 'test';
     state = buildMockCommerceState();
-    state.commerceQuery.query = 'test query';
+    state.commerceQuery.query = query;
     state.facetSearchSet[facetId] = buildMockFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
@@ -45,56 +46,54 @@ describe('#buildFacetSearchRequest', () => {
     expect(request.facetId).toBe(facetId);
   });
 
-  it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', () => {
-    const request = buildFacetSearchRequest(
-      facetId,
-      state,
-      false,
-      navigatorContext
-    );
+  describe('when not building a field suggestion request', () => {
+    let request: CommerceFacetSearchRequest;
 
-    expect(request.facetQuery).toBe(
-      `*${state.facetSearchSet[facetId].options.query}*`
-    );
-  });
+    beforeEach(() => {
+      request = buildFacetSearchRequest(
+        facetId,
+        state,
+        false,
+        navigatorContext
+      );
+    });
 
-  it('when not building a field suggestion request, returned request includes all properties returned by #buildFilterableCommerceAPIRequest, plus the #query property', () => {
-    const buildFilterableCommerceAPIRequestMock = vi.spyOn(
-      Actions,
-      'buildFilterableCommerceAPIRequest'
-    );
+    it('returned object has a #facetQuery property whose value is the facet query from state between wildcard characters', () => {
+      expect(request.facetQuery).toBe(
+        `*${state.facetSearchSet[facetId].options.query}*`
+      );
+    });
 
-    const request = buildFacetSearchRequest(
-      facetId,
-      state,
-      false,
-      navigatorContext
-    );
-
-    expect(request).toEqual({
-      ...buildFilterableCommerceAPIRequestMock.mock.results[0].value,
-      facetId,
-      facetQuery: `*${query}*`,
-      query: 'test query',
+    it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest', () => {
+      expect(request).toEqual({
+        ...buildFilterableCommerceAPIRequestMock.mock.results[0].value,
+        facetId,
+        facetQuery: `*${query}*`,
+        query,
+      });
     });
   });
 
-  it('when building a field suggestion request, returned request includes all properties returned by #buildFilterableCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
-    const request = buildFacetSearchRequest(
-      facetId,
-      state,
-      true,
-      navigatorContext
-    );
+  describe('when building a field suggestion request', () => {
+    let request: CommerceFacetSearchRequest;
+    beforeEach(() => {
+      request = buildFacetSearchRequest(facetId, state, true, navigatorContext);
+    });
 
-    const {facets, page, sort, ...expectedBaseRequest} =
-      buildFilterableCommerceAPIRequestMock.mock.results[0].value;
+    it('returned object has a #facetQuery property whose value is the wildcard character', () => {
+      expect(request.facetQuery).toBe('*');
+    });
 
-    expect(request).toEqual({
-      ...expectedBaseRequest,
-      facetId,
-      query: 'test query',
-      facetQuery: `*${query}*`,
+    it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+      const {facets, page, sort, ...expectedBaseRequest} =
+        buildFilterableCommerceAPIRequestMock.mock.results[0].value;
+
+      expect(request).toEqual({
+        ...expectedBaseRequest,
+        facetId,
+        facetQuery: '*',
+        query,
+      });
     });
   });
 });

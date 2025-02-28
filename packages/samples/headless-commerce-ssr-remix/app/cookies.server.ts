@@ -11,3 +11,9 @@ export const coveo_capture = createCookie('coveo_capture', {
     return btoa(JSON.stringify(value));
   },
 });
+
+export const coveo_accessToken = createCookie('coveo_accessToken', {
+  decode: (value) => {
+    return btoa(JSON.stringify(value));
+  },
+});

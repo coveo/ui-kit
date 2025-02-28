@@ -3,9 +3,9 @@ import {
   InferHydratedState,
   InferStaticState,
 } from '@coveo/headless-react/ssr-commerce';
-import engineConfig from './commerce-engine-config';
+import options from './commerce-engine-config';
 
-export const engineDefinition = defineCommerceEngine(engineConfig);
+export const engineDefinition = defineCommerceEngine(options);
 
 export const {
   listingEngineDefinition,

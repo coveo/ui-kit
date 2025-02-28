@@ -19,6 +19,8 @@ import {
   recommendationEngineDefinition,
   RecommendationStaticState,
 } from '@/lib/commerce-engine';
+import {fetchToken} from '@/lib/fetch-token';
+import {isExpired} from '@/lib/jwt-utils';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
   toCoveoCartItems,
@@ -32,6 +34,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
+import {coveo_accessToken} from '../cookies.server';
 import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
@@ -44,6 +47,18 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(url.searchParams);
+
+  if (isExpired(listingEngineDefinition.getAccessToken())) {
+    const accessTokenCookie = await coveo_accessToken.parse(
+      request.headers.get('Cookie')
+    );
+
+    const accessToken = isExpired(accessTokenCookie)
+      ? await fetchToken()
+      : accessTokenCookie;
+
+    listingEngineDefinition.setAccessToken(accessToken);
+  }
 
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 

@@ -29,7 +29,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     query = 'test';
     state = buildMockCommerceState();
 
-    state.commerceQuery.query = 'test query';
+    state.commerceQuery.query = query;
 
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
@@ -191,11 +191,11 @@ describe('#buildCategoryFacetSearchRequest', () => {
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
-      query: 'test query',
+      query,
     });
   });
 
-  it('when building a field suggestion request, returned request includes all properties returned by #buildFilterableCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+  it('when building a field suggestion request, returned request includes the #query, plus all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
     const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
@@ -209,9 +209,9 @@ describe('#buildCategoryFacetSearchRequest', () => {
     expect(request).toEqual({
       ...expectedBaseRequest,
       facetId,
-      facetQuery: `*${query}*`,
+      facetQuery: '*',
       ignorePaths: [],
-      query: 'test query',
+      query: 'test',
     });
   });
 });

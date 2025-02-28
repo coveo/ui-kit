@@ -337,7 +337,7 @@ const handleSelectCategoryFacetSearchResult = (
   state.page = undefined;
 
   state.cf ??= {};
-  state.cf[payload.facetId] = payload.value.path;
+  state.cf[payload.facetId] = [...payload.value.path, payload.value.rawValue];
 };
 
 const handleToggleSelectFacetValue = (
