@@ -1,14 +1,18 @@
 import type {JSX, i18n} from '@coveo/atomic';
 import React, {useEffect, useRef} from 'react';
-import {AtomicCommerceInterface} from '../stencil-generated/commerce/index.js';
+import {AtomicCommerceInterface} from './components';
 
-type ExecuteRequest = HTMLAtomicCommerceInterfaceElement['executeFirstRequest'];
+export type AtomicCommerceInterface = React.ComponentProps<
+  typeof AtomicCommerceInterface
+>;
+
+type ExecuteRequest = AtomicCommerceInterface['executeFirstRequest'];
 
 /**
  * The properties of the AtomicCommerceInterface component
  */
 interface WrapperProps
-  extends Omit<JSX.AtomicCommerceInterface, 'i18n' | 'pipeline' | 'searchHub'> {
+  extends Omit<AtomicCommerceInterface, 'i18n' | 'pipeline' | 'searchHub'> {
   /**
    * An optional callback function that can be used to control the execution of the first request.
    *
@@ -26,7 +30,7 @@ interface WrapperProps
 
 const DefaultProps: Required<Pick<WrapperProps, 'onReady' | 'localization'>> = {
   onReady: (executeFirstRequest) => {
-    return executeFirstRequest();
+    return executeFirstRequest ? executeFirstRequest() : Promise.resolve();
   },
   localization: () => {},
 };
@@ -45,21 +49,26 @@ export const InterfaceWrapper = (
     //TODO, maybe: provide a default engine
   }
   const {engine, localization, onReady, ...allOtherProps} = mergedProps;
-  const interfaceRef = useRef<HTMLAtomicCommerceInterfaceElement>(null);
+  const interfaceRef =
+    useRef<React.ElementRef<typeof AtomicCommerceInterface>>(null);
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
     const commerceInterfaceAtomic = interfaceRef.current!;
     if (!initialization) {
-      initialization = commerceInterfaceAtomic.initializeWithEngine(engine);
-      initialization.then(() => {
-        localization(commerceInterfaceAtomic.i18n);
-        onReady(
-          commerceInterfaceAtomic.executeFirstRequest.bind(
-            commerceInterfaceAtomic
-          )
-        );
-      });
+      const waitForElement = async () => {
+        await customElements.whenDefined('atomic-commerce-interface');
+        initialization = commerceInterfaceAtomic.initializeWithEngine(engine);
+        initialization.then(() => {
+          localization(commerceInterfaceAtomic.i18n);
+          onReady(
+            commerceInterfaceAtomic.executeFirstRequest.bind(
+              commerceInterfaceAtomic
+            )
+          );
+        });
+      };
+      waitForElement();
     }
   }, [interfaceRef]);
 

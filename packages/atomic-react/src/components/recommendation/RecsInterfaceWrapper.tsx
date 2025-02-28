@@ -53,17 +53,22 @@ export const RecsInterfaceWrapper = (
   let initialization: Promise<void> | null = null;
 
   useEffect(() => {
-    const recsInterfaceAtomic = recsInterfaceRef.current!;
-    if (!initialization) {
-      initialization =
-        recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
-      initialization.then(() => {
-        localization(recsInterfaceAtomic.i18n);
-        onReady(
-          recsInterfaceAtomic.getRecommendations.bind(recsInterfaceAtomic)
-        );
-      });
-    }
+    const waitForElement = async () => {
+      await customElements.whenDefined('atomic-recs-interface');
+
+      const recsInterfaceAtomic = recsInterfaceRef.current!;
+      if (!initialization) {
+        initialization =
+          recsInterfaceAtomic.initializeWithRecommendationEngine(engine);
+        initialization.then(() => {
+          localization(recsInterfaceAtomic.i18n);
+          onReady(
+            recsInterfaceAtomic.getRecommendations.bind(recsInterfaceAtomic)
+          );
+        });
+      }
+    };
+    waitForElement();
   }, [recsInterfaceRef]);
 
   return (
