@@ -1,4 +1,5 @@
-import {Value} from './value';
+import {describe, it, expect} from 'vitest';
+import {Value} from './value.js';
 
 describe('value', () => {
   let value: Value<unknown>;

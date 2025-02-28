@@ -154,6 +154,7 @@ export default function ProductDescriptionPage(
         Price:<span> {formatCurrency(product.price)}</span>
       </p>
       {renderProductCartControls()}
+      <hr />
       <RecommendationsInterface
         cartController={cartController}
         navigate={navigate}

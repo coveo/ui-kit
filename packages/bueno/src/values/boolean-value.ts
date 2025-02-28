@@ -1,5 +1,5 @@
-import {SchemaValue} from '../schema';
-import {ValueConfig, Value, isUndefined} from './value';
+import {SchemaValue} from '../schema.js';
+import {ValueConfig, Value, isUndefined} from './value.js';
 
 type BooleanValueConfig = ValueConfig<boolean>;
 

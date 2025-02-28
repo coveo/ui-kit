@@ -128,7 +128,9 @@
               <div class="slds-var-m-vertical_small">
                 <c-quantic-generated-answer
                   engine-id={engineId}
-                ></c-quantic-generated-answer>
+                >
+                <div slot="no-answer-message">No answer was generated. You gotta give me more than that, man.</div>
+              </c-quantic-generated-answer>
               </div>
               <div class="slds-grid slds-var-m-top_small">
                 <c-quantic-summary

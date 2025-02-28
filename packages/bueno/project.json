@@ -4,6 +4,7 @@
   "namedInputs": {
     "negativeBuildOutputs": [
       "!{projectRoot}/dist",
+      "!{projectRoot}/cdn",
       "!{workspaceRoot}/packages/atomic/src/external-builds",
       "!{workspaceRoot}/packages/headless/src/external-builds"
     ]
@@ -14,6 +15,7 @@
       "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/dist",
+        "{projectRoot}/cdn",
         "{workspaceRoot}/packages/atomic/src/external-builds",
         "{workspaceRoot}/packages/headless/src/external-builds"
       ],

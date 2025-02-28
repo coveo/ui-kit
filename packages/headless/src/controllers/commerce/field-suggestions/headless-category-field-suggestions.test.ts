@@ -1,5 +1,5 @@
 import {
-  executeCommerceFieldSuggest,
+  executeCommerceFacetSearch,
   getFacetIdWithCommerceFieldSuggestionNamespace,
 } from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
@@ -25,6 +25,7 @@ import {
 vi.mock(
   '../../../features/facets/facet-search-set/specific/specific-facet-search-actions'
 );
+
 vi.mock(
   '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions'
 );
@@ -52,6 +53,7 @@ describe('categoryFieldSuggestions', () => {
   }
 
   beforeEach(() => {
+    vi.resetAllMocks();
     options = {
       facetId,
       fetchProductsActionCreator: vi.fn(),
@@ -81,6 +83,6 @@ describe('categoryFieldSuggestions', () => {
       query: 'foo',
       numberOfValues: 5,
     });
-    expect(executeCommerceFieldSuggest).toHaveBeenCalled();
+    expect(executeCommerceFacetSearch).toHaveBeenCalled();
   });
 });

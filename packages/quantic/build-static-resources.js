@@ -36,7 +36,7 @@ const LIBRARY_CONFIG = {
     ],
     files: [
       {
-        src: resolveLibraryPath('@coveo/bueno', '../dist/browser/bueno.js'),
+        src: resolveLibraryPath('@coveo/bueno', '../cdn/bueno.js'),
         dest: `${STATIC_RESOURCES_PATH}/coveobueno/browser/bueno.js`,
       },
       {

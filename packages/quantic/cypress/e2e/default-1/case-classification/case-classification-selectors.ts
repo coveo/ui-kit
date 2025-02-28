@@ -56,7 +56,7 @@ export const CaseClassificationSelectors: CaseClassificationSelector &
       .eq(idx),
   error: () =>
     CaseClassificationSelectors.get().find(
-      '[data-cy="case-classification-error-message"]'
+      '[data-testid="case-classification-error-message"]'
     ),
   loadingSpinner: () =>
     CaseClassificationSelectors.get().find('lightning-spinner'),

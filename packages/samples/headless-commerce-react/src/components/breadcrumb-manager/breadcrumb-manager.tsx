@@ -85,6 +85,7 @@ export default function BreadcrumbManager(props: BreadcrumbManagerProps) {
           );
         })}
       </ul>
+      <hr />
     </div>
   );
 }

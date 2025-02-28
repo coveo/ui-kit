@@ -1,5 +1,6 @@
 import {
   Cart,
+  ChildProduct,
   InteractiveProduct as HeadlessInteractiveProduct,
   Product,
 } from '@coveo/headless/commerce';
@@ -11,11 +12,13 @@ interface IInteractiveProductProps {
   product: Product;
   controller: HeadlessInteractiveProduct;
   cartController: Cart;
+  promoteChildToParent: (product: ChildProduct) => void;
   navigate: (pathName: string) => void;
 }
 
 export default function InteractiveProduct(props: IInteractiveProductProps) {
-  const {product, controller, cartController, navigate} = props;
+  const {product, controller, cartController, promoteChildToParent, navigate} =
+    props;
 
   const [cartState, setCartState] = useState(cartController.state);
 
@@ -136,7 +139,22 @@ export default function InteractiveProduct(props: IInteractiveProductProps) {
       <div className="ProductDescription">
         <p>{product.ec_description}</p>
       </div>
+      {product.totalNumberOfChildren! > 1 && <p>Also available in:</p>}
+      {product.children.map((child) => {
+        return child.permanentid !== product.permanentid ? (
+          <button
+            key={child.permanentid}
+            onClick={() => promoteChildToParent!(child)}
+          >
+            <img height="25px" src={child.ec_images[0]}></img>
+          </button>
+        ) : null;
+      })}
+      {product.totalNumberOfChildren! > 5 && (
+        <span> and {product.totalNumberOfChildren! - 5} more</span>
+      )}
       {renderProductCartControls()}
+      <hr />
     </div>
   );
 }

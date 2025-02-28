@@ -79,6 +79,7 @@ export default function Cart(props: ICartProps) {
       <button disabled={isCartEmpty()} onClick={emptyCart}>
         Empty cart
       </button>
+      <hr />
     </div>
   );
 }

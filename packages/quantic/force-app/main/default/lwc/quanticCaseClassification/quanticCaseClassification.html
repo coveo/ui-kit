@@ -5,7 +5,7 @@
   </template>
   <template lwc:else>
     <fieldset class={formClass}>
-      <legend class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
+      <legend data-testid="case-classification-label" class="slds-form-element__legend slds-form-element__label slds-text-heading_small">
         {label}
       </legend>
       <template if:true={loading}>
@@ -18,7 +18,7 @@
           <div class="row">
             <template if:false={hideSuggestions}>
               <template for:each={suggestions} for:item="suggestion">
-                <div key={suggestion.value} class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+                <div key={suggestion.value} data-testid="case-classification-suggestion" class="case-classification-suggestion slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
                   <input type="checkbox" checked={suggestion.checked} data-suggestion-id={suggestion.id}
                     onchange={handleSelectSuggestion} id={suggestion.value} value={suggestion.value} name="options" />
                   <label for={suggestion.value} title={suggestion.value}>
@@ -35,18 +35,18 @@
             </template>
             <template if:true={isMoreOptionsVisible}>
               <template if:false={isSelectVisible}>
-                <lightning-button class="slds-var-m-top_x-small" variant="base" label={selectPlaceholder}
+                <lightning-button data-testid="show-select-input-button" class="slds-var-m-top_x-small" variant="base" label={selectPlaceholder}
                   title={selectPlaceholder} onclick={showSelect}>
                 </lightning-button>
               </template>
               <template if:true={isSelectVisible}>
-                <lightning-combobox class="slds-var-m-top_x-small" value={value} variant="label-hidden"
+                <lightning-combobox data-testid="case-classification-all-options-combobox" class="slds-var-m-top_x-small" value={value} variant="label-hidden"
                   placeholder={selectPlaceholder} options={options} onchange={handleSelectChange}></lightning-combobox>
               </template>
             </template>
             <template if:false={isMoreOptionsVisible}>
               <template for:each={filteredOptions} for:item="option">
-                <div key={option.value} class="case-classification-option slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
+                <div key={option.value} data-testid="case-classification-option" class="case-classification-option slds-visual-picker slds-visual-picker_medium slds-m-left_none slds-var-m-right_medium slds-var-m-top_x-small">
                   <input type="checkbox" checked={option.checked} onchange={handleSelectSuggestion} id={option.value}
                     value={option.value} name="options" />
                   <label for={option.value} title={option.value}>
@@ -64,7 +64,7 @@
           </div>
         </div>
         <template if:true={hasError}>
-          <div data-cy="case-classification-error-message" class="slds-form-element__help" id="case-classification-error-message">
+          <div data-testid="case-classification-error-message" class="slds-form-element__help" id="case-classification-error-message">
             {errorMessage}
           </div>
         </template>

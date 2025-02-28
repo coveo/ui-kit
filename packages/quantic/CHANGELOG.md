@@ -1,3 +1,16 @@
+## 3.15.0 (2025-02-27)
+
+- test(quantic): playwright e2e and unit tests created for quantic case classification component (#496 ([460387c](https://github.com/coveo/ui-kit/commits/460387c)), closes [#4967](https://github.com/coveo/ui-kit/issues/4967)
+- test(quantic): Playwright migration for facet manager E2E tests (#4943) ([37ab740](https://github.com/coveo/ui-kit/commits/37ab740)), closes [#4943](https://github.com/coveo/ui-kit/issues/4943)
+- feat(quantic): Allow RGA component to provide a custom "no answer" message when no answer is shown ( ([068c05a](https://github.com/coveo/ui-kit/commits/068c05a)), closes [#4919](https://github.com/coveo/ui-kit/issues/4919)
+
+## <small>3.14.3 (2025-02-26)</small>
+
+- chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+- fix(deps): update all dependencies j:kit-282 (#5008) ([ae6b710](https://github.com/coveo/ui-kit/commits/ae6b710)), closes [#5008](https://github.com/coveo/ui-kit/issues/5008)
+- test(quantic): fixed quantic timeframe facets e2e cypress test (#4972) ([0a59bf6](https://github.com/coveo/ui-kit/commits/0a59bf6)), closes [#4972](https://github.com/coveo/ui-kit/issues/4972)
+
 ## <small>3.14.1 (2025-02-12)</small>
 
 - fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)

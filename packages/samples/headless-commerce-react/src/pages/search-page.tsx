@@ -1,4 +1,5 @@
 import {
+  buildFilterSuggestionsGenerator,
   buildInstantProducts,
   buildSearch,
   buildSearchBox,
@@ -95,6 +96,12 @@ export default function Search(props: ISearchProps) {
         instantProductsController={buildInstantProducts(engine, {
           options: {searchBoxId},
         })}
+        filterSuggestionsGeneratorController={buildFilterSuggestionsGenerator(
+          engine
+        )}
+        /* Uncomment the `legacyFieldSUggestionsGeneratorController` prop below and comment out the
+           `filterSuggestionsGeneratorController` prop above if using legacy field suggestions */
+        //legacyFieldSuggestionsGeneratorController={buildFieldSuggestionsGenerator(engine)}
         navigate={navigate}
       />
       <h2 className="PageTitle">Search</h2>

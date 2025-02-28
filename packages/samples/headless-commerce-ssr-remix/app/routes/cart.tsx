@@ -16,6 +16,8 @@ import {
   standaloneEngineDefinition,
   StandaloneStaticState,
 } from '@/lib/commerce-engine';
+import {fetchToken} from '@/lib/fetch-token';
+import {isExpired} from '@/lib/jwt-utils';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
   toCoveoCartItems,
@@ -24,9 +26,22 @@ import {
 import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
+import {coveo_accessToken} from '../cookies.server';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const navigatorContext = await getNavigatorContext(request);
+
+  if (isExpired(standaloneEngineDefinition.getAccessToken())) {
+    const accessTokenCookie = await coveo_accessToken.parse(
+      request.headers.get('Cookie')
+    );
+
+    const accessToken = isExpired(accessTokenCookie)
+      ? await fetchToken()
+      : accessTokenCookie;
+
+    standaloneEngineDefinition.setAccessToken(accessToken);
+  }
 
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext

@@ -3,6 +3,7 @@ import {
   InteractiveProductProps,
   Product as HeadlessProduct,
   Cart,
+  ChildProduct,
 } from '@coveo/headless/commerce';
 import InteractiveProduct from '../interactive-product/interactive-product.js';
 
@@ -12,11 +13,18 @@ interface IProductListProps {
     props: InteractiveProductProps
   ) => HeadlessInteractiveProduct;
   cartController: Cart;
+  promoteChildToParent: (product: ChildProduct) => void;
   navigate: (pathName: string) => void;
 }
 
 export default function ProductList(props: IProductListProps) {
-  const {products, controllerBuilder, cartController, navigate} = props;
+  const {
+    products,
+    controllerBuilder,
+    cartController,
+    promoteChildToParent,
+    navigate,
+  } = props;
 
   if (products.length === 0) {
     return null;
@@ -31,6 +39,7 @@ export default function ProductList(props: IProductListProps) {
             controller={controllerBuilder({options: {product}})}
             cartController={cartController}
             navigate={navigate}
+            promoteChildToParent={promoteChildToParent}
           ></InteractiveProduct>
         </li>
       ))}

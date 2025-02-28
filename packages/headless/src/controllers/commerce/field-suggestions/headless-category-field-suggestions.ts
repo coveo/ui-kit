@@ -1,5 +1,4 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {FieldSuggestionsFacet} from '../../../api/commerce/search/query-suggest/query-suggest-response.js';
 import {
   CommerceEngine,
   CommerceEngineState,
@@ -8,6 +7,8 @@ import {stateKey} from '../../../app/state-key.js';
 import {getFacetIdWithCommerceFieldSuggestionNamespace} from '../../../features/commerce/facets/facet-search-set/commerce-facet-search-actions.js';
 import {commerceFacetSetReducer as commerceFacetSet} from '../../../features/commerce/facets/facet-set/facet-set-slice.js';
 import {fieldSuggestionsOrderReducer as fieldSuggestionsOrder} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-slice.js';
+import {FieldSuggestionsFacet} from '../../../features/commerce/facets/field-suggestions-order/field-suggestions-order-state.js';
+import {selectCategoryFacetSearchResult} from '../../../features/facets/facet-search-set/category/category-facet-search-actions.js';
 import {categoryFacetSearchSetReducer as categoryFacetSearchSet} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice.js';
 import {
   CategoryFacetSearchSection,
@@ -35,6 +36,8 @@ export type {CategoryFieldSuggestionsValue};
  *
  * @group Buildable controllers
  * @category CategoryFieldSuggestions
+ * @alpha
+ * @deprecated
  */
 export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
   Pick<FieldSuggestionsFacet, 'facetId' | 'displayName' | 'field'>;
@@ -48,6 +51,8 @@ export type CategoryFieldSuggestionsState = CoreCategoryFieldSuggestionsState &
  *
  * @group Buildable controllers
  * @category CategoryFieldSuggestions
+ * @alpha
+ * @deprecated
  */
 export interface CategoryFieldSuggestions
   extends Controller,
@@ -112,7 +117,7 @@ export function buildCategoryFieldSuggestions(
     select: () => {
       dispatch(options.fetchProductsActionCreator());
     },
-    isForFieldSuggestions: true,
+    isForFieldSuggestions: false,
   });
 
   const getState = () => engine[stateKey];
@@ -135,9 +140,18 @@ export function buildCategoryFieldSuggestions(
       values: facetSearch.response.values,
     })
   );
+
   return {
     ...controller,
     ...facetSearch,
+
+    select: function (value: CategoryFieldSuggestionsValue) {
+      dispatch(
+        selectCategoryFacetSearchResult({facetId: options.facetId, value})
+      );
+
+      dispatch(options.fetchProductsActionCreator());
+    },
 
     updateText: function (text: string) {
       facetSearch.updateText(text);

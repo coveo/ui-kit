@@ -121,6 +121,7 @@ export default class QuanticFacetManager extends LightningElement {
       // @ts-ignore
       wrapper.setAttribute('data-facet-id', facet.facetId ?? facet.field);
       wrapper.classList.add('facet-manager__item');
+      wrapper.setAttribute('data-testid', 'facet-manager__item');
 
       wrapper.appendChild(facet);
       this.host.appendChild(wrapper);

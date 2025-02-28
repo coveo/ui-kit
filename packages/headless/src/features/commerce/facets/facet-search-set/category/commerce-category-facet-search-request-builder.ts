@@ -25,7 +25,9 @@ export const buildCategoryFacetSearchRequest = (
       ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
       : [];
   const ignorePaths = path.length ? [path] : [];
-  const query = state.commerceQuery?.query;
+  const query = isFieldSuggestionsRequest
+    ? baseFacetQuery
+    : state.commerceQuery?.query;
 
   const {
     url,
@@ -45,7 +47,7 @@ export const buildCategoryFacetSearchRequest = (
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
-    facetQuery,
+    facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     ignorePaths,
     trackingId,
     language,

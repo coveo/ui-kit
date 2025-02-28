@@ -21,24 +21,23 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
   const totalItemsInCart = await externalCartService.getTotalCount();
-  const cookie = await coveo_visitorId.parse(request.headers.get('Cookie'));
+  const visitorIdCookie = await coveo_visitorId.parse(
+    request.headers.get('Cookie')
+  );
 
-  if (!cookie) {
-    const visitorId = randomUUID();
-    return Response.json(
-      {totalItemsInCart},
-      {
-        headers: {
-          'Set-Cookie': await coveo_visitorId.serialize(visitorId, {
+  return Response.json(
+    {totalItemsInCart},
+    {
+      headers: {
+        ...(!visitorIdCookie && {
+          'Set-Cookie': await coveo_visitorId.serialize(randomUUID(), {
             encode: (value) => atob(value).replaceAll('"', ''),
             maxAge: 60 * 24 * 365,
           }),
-        },
-      }
-    );
-  }
-
-  return {totalItemsInCart};
+        }),
+      },
+    }
+  );
 };
 
 export function Layout({children}: {children: React.ReactNode}) {

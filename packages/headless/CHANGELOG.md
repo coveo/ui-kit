@@ -1,3 +1,20 @@
+## 3.18.0 (2025-02-27)
+
+- feat(headless commerce): re-implement field suggestions as faceted search (#5005) ([dec06a7](https://github.com/coveo/ui-kit/commits/dec06a7)), closes [#5005](https://github.com/coveo/ui-kit/issues/5005)
+
+## 3.17.0 (2025-02-26)
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(deps): update dependency typedoc to v0.27.7 j:kit-282 (#4973) ([a8ed5e9](https://github.com/coveo/ui-kit/commits/a8ed5e9)), closes [#4973](https://github.com/coveo/ui-kit/issues/4973)
+- chore(headless): internalize fetch-event-source (#4986) ([12eeb66](https://github.com/coveo/ui-kit/commits/12eeb66)), closes [#4986](https://github.com/coveo/ui-kit/issues/4986) [#4921](https://github.com/coveo/ui-kit/issues/4921)
+- chore(headless): remove old documentation generation setup (#4964) ([12079f9](https://github.com/coveo/ui-kit/commits/12079f9)), closes [#4964](https://github.com/coveo/ui-kit/issues/4964)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+- fix(headless commerce): add product.excerptHighlights property and deprecate misspelled one (#4991) ([4c261c0](https://github.com/coveo/ui-kit/commits/4c261c0)), closes [#4991](https://github.com/coveo/ui-kit/issues/4991)
+- fix(headless commerce): correctly set cf-facetId when selecting category facet search result (#4992) ([5d97e04](https://github.com/coveo/ui-kit/commits/5d97e04)), closes [#4992](https://github.com/coveo/ui-kit/issues/4992)
+- feat(headless commerce SSR): allow setting / getting the access token on commerce SSR engine definit ([45f04bb](https://github.com/coveo/ui-kit/commits/45f04bb)), closes [#4993](https://github.com/coveo/ui-kit/issues/4993)
+- docs(atomic,headless): update filter facet count documentation (#4980) ([a783022](https://github.com/coveo/ui-kit/commits/a783022)), closes [#4980](https://github.com/coveo/ui-kit/issues/4980)
+- docs(headless): typedoc beta note for ssr-commerce (#4969) ([f082b83](https://github.com/coveo/ui-kit/commits/f082b83)), closes [#4969](https://github.com/coveo/ui-kit/issues/4969)
+
 ## 3.16.0 (2025-02-17)
 
 - feat(headless): add has no answer state to crga state (#4961) ([d1f0e7b](https://github.com/coveo/ui-kit/commits/d1f0e7b)), closes [#4961](https://github.com/coveo/ui-kit/issues/4961)

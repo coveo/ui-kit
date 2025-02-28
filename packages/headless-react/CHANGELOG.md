@@ -1,3 +1,9 @@
+## <small>2.4.8 (2025-02-26)</small>
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(deps): update dependency typedoc to v0.27.7 j:kit-282 (#4973) ([a8ed5e9](https://github.com/coveo/ui-kit/commits/a8ed5e9)), closes [#4973](https://github.com/coveo/ui-kit/issues/4973)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+
 ## <small>2.4.7 (2025-02-17)</small>
 
 - docs(headless,headless-react): typedoc styling update and link fix (#4963) ([22a8bea](https://github.com/coveo/ui-kit/commits/22a8bea)), closes [#4963](https://github.com/coveo/ui-kit/issues/4963)

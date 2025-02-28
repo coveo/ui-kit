@@ -36,6 +36,7 @@ function replace() {
     values: {
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.VERSION': JSON.stringify(version),
+      'import.meta.env?.RESOURCE_URL': isCDN ? 'import.meta.url' : 'undefined',
     },
     preventAssignment: true,
   });
