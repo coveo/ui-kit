@@ -52,7 +52,7 @@ export class AtomicIcon
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @property({type: String}) icon: string = '';
+  @property({type: String, reflect: true}) icon!: string;
 
   @state() bindings!: AnyBindings;
   @state() error!: Error;
@@ -119,10 +119,20 @@ export class AtomicIcon
     this.updateIcon();
   }
 
+  public createRenderRoot(): HTMLElement | DocumentFragment {
+    return this;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
     this.ariaHidden = 'true';
     return svg`${guard([this.svg], () => unsafeSVG(this.svg))}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-icon': AtomicIcon;
   }
 }

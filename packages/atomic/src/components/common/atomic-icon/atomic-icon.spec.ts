@@ -2,7 +2,7 @@ import * as guardModule from '@/src/decorators/error-guard';
 import * as utils from '@/src/utils/utils';
 import {container, fixture} from '@/tests/testing-helpers/fixture';
 import DOMPurify from 'dompurify';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 import {MockInstance, vi} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
