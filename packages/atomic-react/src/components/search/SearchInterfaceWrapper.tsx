@@ -58,18 +58,13 @@ export const SearchInterfaceWrapper = (
   useEffect(() => {
     const searchInterfaceAtomic = searchInterfaceRef.current!;
     if (!initialization) {
-      const waitForElement = async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        initialization =
-          searchInterfaceAtomic.initializeWithSearchEngine(engine);
-        initialization.then(() => {
-          localization(searchInterfaceAtomic.i18n);
-          onReady(
-            searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
-          );
-        });
-      };
-      waitForElement();
+      initialization = searchInterfaceAtomic.initializeWithSearchEngine(engine);
+      initialization.then(() => {
+        localization(searchInterfaceAtomic.i18n);
+        onReady(
+          searchInterfaceAtomic.executeFirstSearch.bind(searchInterfaceAtomic)
+        );
+      });
     }
   }, [searchInterfaceRef]);
 

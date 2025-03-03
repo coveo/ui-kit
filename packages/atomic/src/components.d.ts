@@ -1060,6 +1060,16 @@ export namespace Components {
          */
         "value": string;
     }
+    /**
+     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
+     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
+     */
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
+    }
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
         "tooltip": string;
@@ -4388,6 +4398,16 @@ declare global {
         prototype: HTMLAtomicHtmlElement;
         new (): HTMLAtomicHtmlElement;
     };
+    /**
+     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
+     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
+     */
+    interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicIconElement: {
+        prototype: HTMLAtomicIconElement;
+        new (): HTMLAtomicIconElement;
+    };
     interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightEditToggleElement: {
@@ -6029,6 +6049,7 @@ declare global {
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
+        "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
@@ -7150,6 +7171,16 @@ declare namespace LocalJSX {
           * The string value containing HTML to display;
          */
         "value": string;
+    }
+    /**
+     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
+     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
+     */
+    interface AtomicIcon {
+        /**
+          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
+         */
+        "icon": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
@@ -9779,6 +9810,7 @@ declare namespace LocalJSX {
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
+        "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
@@ -10166,6 +10198,11 @@ declare module "@stencil/core" {
              * Use only with values for which you are certain the content is harmless.
              */
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
+            /**
+             * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
+             * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
+             */
+            "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;

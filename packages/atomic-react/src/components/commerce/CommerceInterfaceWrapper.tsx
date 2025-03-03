@@ -56,19 +56,15 @@ export const InterfaceWrapper = (
   useEffect(() => {
     const commerceInterfaceAtomic = interfaceRef.current!;
     if (!initialization) {
-      const waitForElement = async () => {
-        await customElements.whenDefined('atomic-commerce-interface');
-        initialization = commerceInterfaceAtomic.initializeWithEngine(engine);
-        initialization.then(() => {
-          localization(commerceInterfaceAtomic.i18n);
-          onReady(
-            commerceInterfaceAtomic.executeFirstRequest.bind(
-              commerceInterfaceAtomic
-            )
-          );
-        });
-      };
-      waitForElement();
+      initialization = commerceInterfaceAtomic.initializeWithEngine(engine);
+      initialization.then(() => {
+        localization(commerceInterfaceAtomic.i18n);
+        onReady(
+          commerceInterfaceAtomic.executeFirstRequest.bind(
+            commerceInterfaceAtomic
+          )
+        );
+      });
     }
   }, [interfaceRef]);
 
