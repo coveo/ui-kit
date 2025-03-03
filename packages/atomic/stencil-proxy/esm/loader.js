@@ -12,7 +12,7 @@ const defineCustomElements = async function (...args) {
     ...insightComponents,
     ...commerceComponents,
     ...searchComponents,
-  }).map((importFunction) => importFunction());
+  }).forEach((importFunction) => importFunction());
 
   await customElements.whenDefined('atomic-commerce-interface');
 
