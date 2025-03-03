@@ -5,6 +5,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicCommerceInterface,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -17,7 +18,6 @@ AtomicCommerceDidYouMean,
 AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
-AtomicCommerceInterface,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
 AtomicCommerceNoProducts,
@@ -151,6 +151,7 @@ defineCustomElements(window);
 
         
 const DECLARATIONS = [
+AtomicCommerceInterface,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -163,7 +164,6 @@ AtomicCommerceDidYouMean,
 AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
-AtomicCommerceInterface,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
 AtomicCommerceNoProducts,

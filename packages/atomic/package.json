@@ -91,6 +91,8 @@
     "@axe-core/playwright": "4.10.1",
     "@coveo/release": "1.0.0",
     "@custom-elements-manifest/analyzer": "0.10.4",
+    "@tailwindcss/vite": "4.0.9",
+    "@open-wc/testing": "4.0.0",
     "@playwright/test": "1.50.1",
     "@rollup/plugin-alias": "5.1.1",
     "@rollup/plugin-node-resolve": "16.0.0",

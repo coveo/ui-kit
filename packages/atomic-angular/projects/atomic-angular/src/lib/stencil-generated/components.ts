@@ -274,29 +274,6 @@ export declare interface AtomicCommerceFacets extends Components.AtomicCommerceF
 
 
 @ProxyCmp({
-  inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
-  methods: ['initialize', 'initializeWithEngine', 'executeFirstRequest']
-})
-@Component({
-  selector: 'atomic-commerce-interface',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
-})
-export class AtomicCommerceInterface {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceInterface extends Components.AtomicCommerceInterface {}
-
-
-@ProxyCmp({
   inputs: ['mobileBreakpoint']
 })
 @Component({
@@ -3105,4 +3082,30 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  inputs: ['name', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'CspNonce']
+})
+@Component({
+  selector: 'atomic-commerce-interface',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['name', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'CspNonce']
+})
+export class AtomicCommerceInterface {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, []);
+  }
+}
+
+export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterface {
+
+}
+
+import type {AtomicCommerceInterface as LitAtomicCommerceInterface} from '@coveo/atomic/components';
+//#endregion Lit Declarations

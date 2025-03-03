@@ -2,18 +2,15 @@ import {LogLevel} from '@coveo/headless';
 import {ComponentInterface, h} from '@stencil/core';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
-import {setCoveoGlobal} from '../../../global/environment';
-import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
-  i18nBackendOptions,
-  i18nTranslationNamespace,
-} from '../../common/interface/i18n';
-import {AnyBindings, AnyEngineType} from './bindings';
-import {init18n} from './i18n';
+import {setCoveoGlobal} from '../../../global/environment.js';
+import {loadFocusVisiblePolyfill} from '../../../global/focus-visible.js';
+import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
+import {InitializeEvent} from '../../../utils/initialization-utils.js';
+import {AnyBindings, AnyEngineType} from './bindings.js';
+import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
+import {init18n} from './i18n.js';
 
-export interface BaseAtomicInterface<EngineType extends AnyEngineType>
+export interface StencilBaseAtomicInterface<EngineType extends AnyEngineType>
   extends ComponentInterface {
   analytics: boolean;
   i18n: i18n;
@@ -40,7 +37,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   private hangingComponentsInitialization: InitializeEvent[] = [];
 
   constructor(
-    private atomicInterface: BaseAtomicInterface<Engine>,
+    private atomicInterface: StencilBaseAtomicInterface<Engine>,
     globalVariableName: string
   ) {
     setCoveoGlobal(globalVariableName);

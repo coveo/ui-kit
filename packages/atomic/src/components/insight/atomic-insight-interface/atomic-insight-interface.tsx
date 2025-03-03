@@ -23,9 +23,9 @@ import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {getAnalyticsConfig} from './analytics-config';
 import {createInsightStore, InsightStore} from './store';
 
@@ -47,7 +47,7 @@ export type InsightBindings = CommonBindings<
   shadow: true,
 })
 export class AtomicInsightInterface
-  implements BaseAtomicInterface<InsightEngine>
+  implements StencilBaseAtomicInterface<InsightEngine>
 {
   private initialized = false;
 
