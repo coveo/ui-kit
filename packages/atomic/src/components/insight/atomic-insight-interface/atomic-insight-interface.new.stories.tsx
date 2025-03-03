@@ -15,34 +15,6 @@ const meta: Meta = {
   render: renderComponent,
   decorators: [decorator],
   parameters,
-  argTypes: {
-    'attributes-user-id': {
-      control: {
-        type: 'text',
-      },
-      description: 'The ID of the user whose actions are being displayed.',
-      table: {
-        category: 'attributes',
-        type: {
-          summary: 'string',
-        },
-        defaultValue: {},
-      },
-    },
-    'attributes-ticket-creation-date-time': {
-      control: {
-        type: 'text',
-      },
-      description: 'The date and time when the case was created.',
-      table: {
-        category: 'attributes',
-        type: {
-          summary: 'string',
-        },
-        defaultValue: {},
-      },
-    },
-  },
   play,
 };
 

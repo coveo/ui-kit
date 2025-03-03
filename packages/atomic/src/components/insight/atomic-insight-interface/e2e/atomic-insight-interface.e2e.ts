@@ -31,6 +31,7 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.insightUserActionsToggle).toBeVisible();
 
       await expect(insightInterface.insightPager).toBeVisible();
+      await expect(insightInterface.insightPager).toHaveClass('hydrated');
       expect(
         await insightInterface.insightPagerButtons.count()
       ).toBeGreaterThan(0);
@@ -78,8 +79,6 @@ test.describe('Atomic Insight Panel', () => {
       await expect(insightInterface.getResultQuickviewByIndex(0)).toBeVisible();
 
       await insightInterface.openResultQuickviewByIndex(0);
-      await expect(insightInterface.quickviewModal).not.toBeNull();
-      await expect(insightInterface.atomicQuickviewModal).not.toBeNull();
       await expect(insightInterface.atomicQuickviewModal).toHaveAttribute(
         'is-open'
       );
@@ -90,10 +89,10 @@ test.describe('Atomic Insight Panel', () => {
   test.describe('refine modal', () => {
     test('should open and close', async ({insightInterface}) => {
       await insightInterface.openRefineModal();
-      await expect(insightInterface.insightRefineModal).not.toBeNull();
       await expect(insightInterface.insightRefineModal).toHaveAttribute(
         'is-open'
       );
+      await expect(insightInterface.insightRefineModal).toHaveClass('hydrated');
 
       await expect(
         insightInterface.insightRefineModalCloseButton

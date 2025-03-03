@@ -35,7 +35,7 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
   }
 
   get insightPagerButtons() {
-    return this.insightPager.locator('input[type="radio"]');
+    return this.insightPager.getByRole('radio');
   }
 
   get insightResults() {
