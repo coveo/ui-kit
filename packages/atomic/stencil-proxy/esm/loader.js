@@ -6,15 +6,16 @@ import searchComponents from '../atomic/components/components/search/lazy-index.
 import {defineCustomElements as originalDefineCustomElements} from './_loader.js';
 
 const defineCustomElements = async function (...args) {
-  await Promise.all(
-    Object.values({
-      ...recommendationsComponents,
-      ...ipxComponents,
-      ...insightComponents,
-      ...commerceComponents,
-      ...searchComponents,
-    }).map((importFunction) => importFunction())
-  );
+  Object.values({
+    ...recommendationsComponents,
+    ...ipxComponents,
+    ...insightComponents,
+    ...commerceComponents,
+    ...searchComponents,
+  }).map((importFunction) => importFunction());
+
+  await customElements.whenDefined('atomic-commerce-interface');
+
   originalDefineCustomElements(...args);
 };
 

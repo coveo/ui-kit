@@ -29,14 +29,10 @@ export const SearchBoxInstantResultsWrapper: React.FC<WrapperProps> = (
   const instantResultsRef =
     useRef<HTMLAtomicSearchBoxInstantResultsElement>(null);
   useEffect(() => {
-    const waitForElement = async () => {
-      await customElements.whenDefined('atomic-search-box-instant-results');
-      instantResultsRef.current?.setRenderFunction((result, root) => {
-        createRoot(root).render(template(result as Result));
-        return renderToString(template(result as Result));
-      });
-    };
-    waitForElement();
+    instantResultsRef.current?.setRenderFunction((result, root) => {
+      createRoot(root).render(template(result as Result));
+      return renderToString(template(result as Result));
+    });
   }, [instantResultsRef]);
   return (
     <AtomicSearchBoxInstantResults ref={instantResultsRef} {...otherProps} />

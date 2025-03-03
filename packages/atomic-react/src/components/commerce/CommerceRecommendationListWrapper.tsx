@@ -35,28 +35,24 @@ export const ListWrapper: React.FC<WrapperProps> = (props) => {
   const commerceRecsListRef =
     useRef<HTMLAtomicCommerceRecommendationListElement>(null);
   useEffect(() => {
-    const waitForElement = async () => {
-      await customElements.whenDefined('atomic-commerce-recommendation-list');
-      commerceRecsListRef.current?.setRenderFunction(
-        (product, root, linkContainer) => {
-          const templateResult = template(product as Product);
-          if (hasLinkTemplate(templateResult)) {
-            createRoot(linkContainer!).render(templateResult.linkTemplate);
-            createRoot(root).render(templateResult.contentTemplate);
-            return renderToString(templateResult.contentTemplate);
-          } else {
-            createRoot(root).render(templateResult);
-            otherProps.display === 'grid'
-              ? createRoot(linkContainer!).render(
-                  <AtomicProductLink></AtomicProductLink>
-                )
-              : createRoot(linkContainer!).render(<></>);
-            return renderToString(templateResult);
-          }
+    commerceRecsListRef.current?.setRenderFunction(
+      (product, root, linkContainer) => {
+        const templateResult = template(product as Product);
+        if (hasLinkTemplate(templateResult)) {
+          createRoot(linkContainer!).render(templateResult.linkTemplate);
+          createRoot(root).render(templateResult.contentTemplate);
+          return renderToString(templateResult.contentTemplate);
+        } else {
+          createRoot(root).render(templateResult);
+          otherProps.display === 'grid'
+            ? createRoot(linkContainer!).render(
+                <AtomicProductLink></AtomicProductLink>
+              )
+            : createRoot(linkContainer!).render(<></>);
+          return renderToString(templateResult);
         }
-      );
-    };
-    waitForElement();
+      }
+    );
   }, [commerceRecsListRef]);
   return (
     <AtomicCommerceRecommendationList

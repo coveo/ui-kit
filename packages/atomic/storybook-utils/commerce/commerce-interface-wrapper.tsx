@@ -28,7 +28,9 @@ export const wrapInCommerceInterface = ({
     await customElements.whenDefined('atomic-commerce-interface');
     const canvas = within(canvasElement);
     const searchInterface =
-      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
+      await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
+        'root-interface'
+      );
     await step('Render the Search Interface', async () => {
       await searchInterface!.initialize({
         ...getSampleCommerceEngineConfiguration(),
@@ -50,7 +52,9 @@ export const playExecuteFirstSearch: (
   const canvas = within(canvasElement);
 
   const searchInterface =
-    await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
+    await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
+      'root-interface'
+    );
   await step('Execute the first search', async () => {
     await searchInterface!.executeFirstRequest();
   });

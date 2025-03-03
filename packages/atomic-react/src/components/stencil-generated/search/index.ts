@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
@@ -24,6 +24,7 @@ export const AtomicFormatNumber = /*@__PURE__*/createReactComponent<JSX.AtomicFo
 export const AtomicFormatUnit = /*@__PURE__*/createReactComponent<JSX.AtomicFormatUnit, HTMLAtomicFormatUnitElement>('atomic-format-unit');
 export const AtomicGeneratedAnswer = /*@__PURE__*/createReactComponent<JSX.AtomicGeneratedAnswer, HTMLAtomicGeneratedAnswerElement>('atomic-generated-answer');
 export const AtomicHtml = /*@__PURE__*/createReactComponent<JSX.AtomicHtml, HTMLAtomicHtmlElement>('atomic-html');
+export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicLoadMoreResults = /*@__PURE__*/createReactComponent<JSX.AtomicLoadMoreResults, HTMLAtomicLoadMoreResultsElement>('atomic-load-more-results');
 export const AtomicNoResults = /*@__PURE__*/createReactComponent<JSX.AtomicNoResults, HTMLAtomicNoResultsElement>('atomic-no-results');

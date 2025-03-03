@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
@@ -34,6 +34,7 @@ export const AtomicCommerceSearchBoxRecentQueries = /*@__PURE__*/createReactComp
 export const AtomicCommerceSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSortDropdown, HTMLAtomicCommerceSortDropdownElement>('atomic-commerce-sort-dropdown');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
+export const AtomicIcon = /*@__PURE__*/createReactComponent<JSX.AtomicIcon, HTMLAtomicIconElement>('atomic-icon');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
 export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
