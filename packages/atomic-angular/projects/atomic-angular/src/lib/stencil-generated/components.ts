@@ -740,6 +740,28 @@ export declare interface AtomicCommerceTimeframeFacet extends Components.AtomicC
 
 
 @ProxyCmp({
+  inputs: ['element', 'error']
+})
+@Component({
+  selector: 'atomic-component-error',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['element', 'error'],
+})
+export class AtomicComponentError {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicComponentError extends Components.AtomicComponentError {}
+
+
+@ProxyCmp({
   inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
 })
 @Component({
