@@ -3,10 +3,9 @@ import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {CSSResultGroup, svg, unsafeCSS} from 'lit';
+import {CSSResultGroup, LitElement, svg, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
@@ -38,13 +37,10 @@ class IconFetchError extends Error {
  */
 @customElement('atomic-icon')
 export class AtomicIcon
-  extends InitializeBindingsMixin(TailwindLitElement)
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  static styles: CSSResultGroup = [
-    TailwindLitElement.styles,
-    unsafeCSS(styles),
-  ];
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
   /**
    * The SVG icon to display.
    *
