@@ -123,6 +123,17 @@ export class AtomicIcon
     return this;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.injectStyles();
+  }
+
+  private injectStyles() {
+    const style = document.createElement('style');
+    style.textContent = styles;
+    this.appendChild(style);
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
