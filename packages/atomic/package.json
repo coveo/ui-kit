@@ -39,10 +39,6 @@
       "types": "./dist/atomic/components/components/index.d.ts",
       "import": "./dist/atomic/components/components/index.js"
     },
-    "./components/commerce/*": {
-      "types": "./dist/atomic/components/components/commerce/index.d.ts",
-      "import": "./dist/atomic/components/components/commerce/*"
-    },
     "./custom-elements-manifest": "./custom-elements.json"
   },
   "files": [

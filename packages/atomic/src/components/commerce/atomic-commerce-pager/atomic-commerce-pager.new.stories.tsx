@@ -28,12 +28,25 @@ export const Default: Story = {
 };
 
 export const CustomIcon: Story = {
-  name: 'With custom icon',
+  name: 'With custom icons',
   args: {
     'attributes-previous-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
     'attributes-next-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
+  },
+  parameters: {
+    docs: {
+      story: {autoplay: true},
+    },
+    layout: 'centered',
+  },
+};
+
+export const WithACustomNumberOfPages: Story = {
+  name: 'With a custom number of pages',
+  args: {
+    'attributes-number-of-pages': '10',
   },
   parameters: {
     docs: {
