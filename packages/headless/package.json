@@ -175,7 +175,7 @@
     "eslint-plugin-canonical": "4.18.0",
     "execa": "9.5.2",
     "ts-node": "10.9.2",
-    "typedoc": "0.27.7",
+    "typedoc": "0.27.9",
     "vitest": "3.0.6"
   },
   "engines": {
