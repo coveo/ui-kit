@@ -41,7 +41,7 @@ export default defineConfig({
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ['./vitest-utils/setup.ts'],
     globals: true,
     browser: {
       enabled: true,
