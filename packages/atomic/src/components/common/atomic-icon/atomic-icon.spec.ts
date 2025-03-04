@@ -1,9 +1,12 @@
 import * as guardModule from '@/src/decorators/error-guard';
 import * as utils from '@/src/utils/utils';
-import {container, fixture} from '@/tests/testing-helpers/fixture';
+import {fixture} from '@/tests/testing-helpers/fixture';
+import {page} from '@vitest/browser/context';
+// TODO: import @vitest/browser this for all test files
+import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
-import {MockInstance, vi} from 'vitest';
+import {expect, MockInstance, vi} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
 
@@ -31,11 +34,15 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 }));
 
 describe('AtomicIcon', () => {
-  // let container: HTMLElement;
   let fetchMock: MockInstance;
   let parseAssetURLMock: MockInstance;
   let errorGuardMock: MockInstance;
   let sanitizeMock: MockInstance;
+  const locators = {
+    get svg() {
+      return page.getByTestId('mocked-icon');
+    },
+  };
   const successfullResponse = {
     ok: true,
     status: 200,
@@ -74,23 +81,25 @@ describe('AtomicIcon', () => {
   it('renders with default values', async () => {
     parseAssetURLMock.mockReturnValue('/assets/user.svg');
     fetchMock.mockResolvedValue(successfullResponse);
-
     await setupElement('assets://user.svg');
-    const svg = await container().findByShadowTestId('mocked-icon');
 
     expect(fetchMock).toHaveBeenCalledWith('/assets/user.svg');
-    expect(svg).toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
+
+    await expect.element(locators.svg).toBeInTheDocument();
+    await expect
+      .element(locators.svg)
+      .toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
   });
 
   it('should sanitizes the SVG content', async () => {
     await setupElement(
-      "<svg data-testid='mocked-icon'><script>alert('xss')</script><circle cx='50' cy='50' r='40' /></svg>"
+      "<svg data-testid='mocked-icon'><script data-testid=\"script\" role>alert('xss')</script><circle cx='50' cy='50' r='40' /></svg>"
     );
 
-    const svg = await container().findByShadowTestId('mocked-icon');
-
-    expect(svg).toBeInTheDocument();
-    expect(svg?.querySelector('script')).not.toBeInTheDocument();
+    await expect.element(locators.svg).toBeInTheDocument();
+    await expect
+      .element(locators.svg.getByTestId('script'))
+      .not.toBeInTheDocument();
   });
 
   it('fetches and renders the SVG icon from a URL', async () => {
@@ -98,10 +107,11 @@ describe('AtomicIcon', () => {
     fetchMock.mockResolvedValue(successfullResponse);
 
     await setupElement('http://example.com/icon.svg');
-    const svg = await container().findByShadowTestId('mocked-icon');
 
     expect(fetchMock).toHaveBeenCalledWith('http://example.com/icon.svg');
-    expect(svg).toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
+    await expect
+      .element(locators.svg)
+      .toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
   });
 
   it('calls parseAssetURL with the correct arguments', async () => {
