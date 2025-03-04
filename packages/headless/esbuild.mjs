@@ -1,16 +1,15 @@
 import alias from 'esbuild-plugin-alias';
-import {aliasPath} from 'esbuild-plugin-alias-path';
 import {umdWrapper} from 'esbuild-plugin-umd-wrapper';
 import {readFileSync, writeFileSync} from 'node:fs';
 import {createRequire} from 'node:module';
-import path, {dirname, resolve} from 'node:path';
-import {join} from 'path';
+import {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
-const __dirname = dirname(new URL(import.meta.url).pathname);
-
-const buenoJsonPath = join(__dirname, '../bueno/package.json');
+const __dirname = dirname(new URL(import.meta.url).pathname).slice(
+  process.platform === 'win32' ? 1 : 0
+);
+const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
 const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
 
 const require = createRequire(import.meta.url);

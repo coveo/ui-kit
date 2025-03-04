@@ -6,7 +6,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:client; fi"
+          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:client\""
         ],
         "parallel": true,
         "cwd": "packages/samples/headless-react"

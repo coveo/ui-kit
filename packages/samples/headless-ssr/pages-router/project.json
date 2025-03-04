@@ -5,7 +5,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:next; fi",
+        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:next\"",
         "cwd": "packages/samples/headless-ssr/pages-router"
       }
     },
