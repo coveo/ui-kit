@@ -3,7 +3,7 @@ import {FunctionalComponentGuard} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 
 interface PagerGuardProps {
-  hasError: boolean;
+  hasError?: boolean;
   isAppLoaded: boolean;
   hasItems: boolean;
 }

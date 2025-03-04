@@ -129,7 +129,6 @@ export class AtomicCommercePager
     );
     return html`${pagerGuard({
       props: {
-        hasError: false,
         hasItems: this.pagerState.totalPages > 1,
         isAppLoaded: this.isAppLoaded,
       },

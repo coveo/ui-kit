@@ -9,7 +9,7 @@ interface PagerNavigationProps {
 export const pagerNavigation: FunctionalComponentWithChildren<
   PagerNavigationProps
 > = ({props, children}) => {
-  return html` <nav aria-label=${props.i18n.t('pagination')}>
+  return html`<nav aria-label=${props.i18n.t('pagination')}>
     <div part="buttons" role="toolbar" class="flex flex-wrap gap-2">
       ${children}
     </div>
