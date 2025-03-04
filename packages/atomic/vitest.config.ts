@@ -4,12 +4,6 @@ import {defineConfig} from 'vitest/config';
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
 
-const externalizeSourceDependencies = (sources) => ({
-  name: 'externalize-source-dependencies',
-  resolveId: (source) =>
-    sources.includes(source) ? {id: source, external: true} : null,
-});
-
 export default defineConfig({
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
@@ -40,11 +34,6 @@ export default defineConfig({
         return null;
       },
     },
-    externalizeSourceDependencies([
-      /* @web/test-runner requires a web-socket connection to function properly.
-       * Saying to Vite /__web-dev-server__web-socket.js is an external dependency served by @web/dev-server. */
-      '/__web-dev-server__web-socket.js',
-    ]),
   ],
   test: {
     setupFiles: ['./vitest-utils/setup.ts'],
