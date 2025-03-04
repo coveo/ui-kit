@@ -1,8 +1,8 @@
 import {SlotIdParam} from '../commerce-api-params.js';
 import {CommerceApiMethod} from '../commerce-metadata.js';
-import {BaseCommerceAPIRequest, baseRequest} from '../common/request.js';
+import {PaginatedCommerceAPIRequest, baseRequest} from '../common/request.js';
 
-export type CommerceRecommendationsRequest = BaseCommerceAPIRequest &
+export type CommerceRecommendationsRequest = PaginatedCommerceAPIRequest &
   SlotIdParam;
 export const buildRecommendationsRequest = (
   req: CommerceRecommendationsRequest,

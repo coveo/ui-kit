@@ -6,6 +6,7 @@ import {
   LocaleParam,
   NumberOfResultsParam,
 } from '../../../platform-service-params.js';
+import {AnalyticsParam} from '../../../search/search-api-params.js';
 import {
   baseCaseAssistRequest,
   CaseAssistIdParam,
@@ -20,7 +21,8 @@ export type GetDocumentSuggestionsRequest = BaseParam &
   FieldsParam &
   ContextParam &
   NumberOfResultsParam &
-  DebugParam;
+  DebugParam &
+  AnalyticsParam;
 
 export const buildGetDocumentSuggestionsRequest = (
   req: GetDocumentSuggestionsRequest
@@ -50,4 +52,5 @@ const prepareRequestParams = (req: GetDocumentSuggestionsRequest) => ({
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),
   context: req.context,
+  analytics: req.analytics,
 });

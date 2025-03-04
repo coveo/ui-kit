@@ -14,7 +14,10 @@ import {
   CommerceAPIErrorResponse,
   CommerceAPIErrorStatusResponse,
 } from './commerce-api-error-response.js';
-import {buildRequest, CommerceAPIRequest} from './common/request.js';
+import {
+  getRequestOptions,
+  FilterableCommerceAPIRequest,
+} from './common/request.js';
 import {CommerceSuccessResponse} from './common/response.js';
 import {
   CommerceFacetSearchRequest,
@@ -26,7 +29,7 @@ import {
 } from './recommendations/recommendations-request.js';
 import {RecommendationsCommerceSuccessResponse} from './recommendations/recommendations-response.js';
 import {
-  buildQuerySuggestRequest,
+  getQuerySuggestRequestOptions,
   QuerySuggestRequest,
 } from './search/query-suggest/query-suggest-request.js';
 import {QuerySuggestSuccessResponse} from './search/query-suggest/query-suggest-response.js';
@@ -71,10 +74,10 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   constructor(private options: CommerceAPIClientOptions) {}
 
   async getProductListing(
-    req: CommerceAPIRequest
+    req: FilterableCommerceAPIRequest
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
     return this.query({
-      ...buildRequest(req, 'listing'),
+      ...getRequestOptions(req, 'listing'),
       ...this.options,
     });
   }
@@ -82,7 +85,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   async search(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
-    const requestOptions = buildRequest(req, 'search');
+    const requestOptions = getRequestOptions(req, 'search');
     return this.query({
       ...requestOptions,
       requestParams: {
@@ -105,7 +108,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   async productSuggestions(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<SearchCommerceSuccessResponse>> {
-    const requestOptions = buildRequest(req, 'search/productSuggest');
+    const requestOptions = getRequestOptions(req, 'search/productSuggest');
     return this.query({
       ...requestOptions,
       requestParams: {
@@ -119,7 +122,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<CommerceAPIResponse<QuerySuggestSuccessResponse>> {
-    const requestOptions = buildQuerySuggestRequest(req);
+    const requestOptions = getQuerySuggestRequestOptions(req);
     return this.query<QuerySuggestSuccessResponse>({
       ...requestOptions,
       requestParams: {
@@ -134,7 +137,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
     req: CommerceFacetSearchRequest,
     type: FacetSearchType
   ): Promise<CommerceAPIResponse<SpecificFacetSearchResponse>> {
-    const requestOptions = buildRequest(req, 'facet');
+    const requestOptions = getRequestOptions(req, 'facet');
     return this.query<SpecificFacetSearchResponse>({
       ...requestOptions,
       url: `${requestOptions.url}?type=${type}`,
@@ -153,7 +156,7 @@ export class CommerceAPIClient implements CommerceFacetSearchAPIClient {
   async plan(
     req: CommerceSearchRequest
   ): Promise<CommerceAPIResponse<CommerceSuccessResponse>> {
-    const requestOptions = buildRequest(req, 'search');
+    const requestOptions = getRequestOptions(req, 'search');
     return this.query({
       ...requestOptions,
       requestParams: {

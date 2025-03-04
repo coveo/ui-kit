@@ -6,7 +6,7 @@ import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
 const {decorator, play} = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
 });
 
 const fixedNumberOfProducts = (
@@ -21,11 +21,11 @@ const fixedNumberOfProducts = (
 });
 
 const {play: playNoInitialSearch} = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstRequest: true,
 });
 
 const {play: playFixedNumberOfProducts} = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
   engineConfig: fixedNumberOfProducts(27),
 });
 

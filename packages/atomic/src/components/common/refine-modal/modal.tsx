@@ -23,7 +23,7 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
   children
 ) => {
   const exportparts =
-    'container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
+    'backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
 
   const flushFacetElements = () => {
     props.host.querySelector('div[slot="facets"]')?.remove();

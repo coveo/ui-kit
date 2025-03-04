@@ -1,7 +1,7 @@
 import {MockInstance} from 'vitest';
 import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
-import * as Actions from '../../../../../features/commerce/common/actions.js';
+import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';
 import {buildMockFacetSearchRequestOptions} from '../../../../../test/mock-facet-search-request-options.js';
@@ -14,7 +14,7 @@ describe('#buildFacetSearchRequest', () => {
   let navigatorContext: NavigatorContext;
   let facetId: string;
   let query: string;
-  let buildCommerceAPIRequestMock: MockInstance;
+  let buildFilterableCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,7 +27,10 @@ describe('#buildFacetSearchRequest', () => {
       options: {...buildMockFacetSearchRequestOptions(), query},
     });
 
-    buildCommerceAPIRequestMock = vi.spyOn(Actions, 'buildCommerceAPIRequest');
+    buildFilterableCommerceAPIRequestMock = vi.spyOn(
+      Actions,
+      'buildFilterableCommerceAPIRequest'
+    );
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
@@ -61,9 +64,9 @@ describe('#buildFacetSearchRequest', () => {
       );
     });
 
-    it('returned request includes all properties returned by #buildCommerceAPIRequest', () => {
+    it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest', () => {
       expect(request).toEqual({
-        ...buildCommerceAPIRequestMock.mock.results[0].value,
+        ...buildFilterableCommerceAPIRequestMock.mock.results[0].value,
         facetId,
         facetQuery: `*${query}*`,
         query,
@@ -81,9 +84,9 @@ describe('#buildFacetSearchRequest', () => {
       expect(request.facetQuery).toBe('*');
     });
 
-    it('returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+    it('returned request includes all properties returned by #buildFilterableCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
       const {facets, page, sort, ...expectedBaseRequest} =
-        buildCommerceAPIRequestMock.mock.results[0].value;
+        buildFilterableCommerceAPIRequestMock.mock.results[0].value;
 
       expect(request).toEqual({
         ...expectedBaseRequest,

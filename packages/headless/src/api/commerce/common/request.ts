@@ -20,16 +20,18 @@ export type BaseCommerceAPIRequest = BaseParam &
   CountryParam &
   CurrencyParam &
   ClientIdParam &
-  ContextParam &
+  ContextParam;
+
+export type PaginatedCommerceAPIRequest = BaseCommerceAPIRequest &
   PageParam &
   PerPageParam;
 
-export type CommerceAPIRequest = BaseCommerceAPIRequest &
+export type FilterableCommerceAPIRequest = PaginatedCommerceAPIRequest &
   FacetsParam &
   SortParam;
 
-export const buildRequest = (
-  req: CommerceAPIRequest,
+export const getRequestOptions = (
+  req: FilterableCommerceAPIRequest,
   path: CommerceApiMethod
 ) => {
   return {
@@ -38,7 +40,7 @@ export const buildRequest = (
   };
 };
 
-const prepareRequestParams = (req: CommerceAPIRequest) => {
+const prepareRequestParams = (req: FilterableCommerceAPIRequest) => {
   const {
     trackingId,
     clientId,

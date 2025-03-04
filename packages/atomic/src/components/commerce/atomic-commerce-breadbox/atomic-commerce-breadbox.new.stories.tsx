@@ -1,5 +1,5 @@
 import {
-  playExecuteFirstSearch,
+  playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -30,7 +30,7 @@ const productListingEngineConfiguration: Partial<CommerceEngineConfiguration> =
 
 const {decorator, play} = wrapInCommerceInterface({
   engineConfig: productListingEngineConfiguration,
-  skipFirstSearch: true,
+  skipFirstRequest: true,
   type: 'product-listing',
 });
 
@@ -61,6 +61,6 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };

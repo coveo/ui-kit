@@ -1,6 +1,6 @@
 import {
   wrapInCommerceInterface,
-  playExecuteFirstSearch,
+  playExecuteFirstRequest,
   playKeepOnlyFirstFacetOfType,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
@@ -8,7 +8,7 @@ import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
-const {play, decorator} = wrapInCommerceInterface({skipFirstSearch: true});
+const {play, decorator} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-category-facet',
@@ -33,7 +33,7 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await play(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
     playKeepOnlyFirstFacetOfType('atomic-commerce-category-facet', context);
   },
 };

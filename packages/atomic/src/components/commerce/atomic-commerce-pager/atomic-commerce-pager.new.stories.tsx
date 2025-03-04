@@ -4,7 +4,7 @@ import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import './atomic-commerce-pager';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: false});
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',

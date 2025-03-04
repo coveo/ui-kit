@@ -10,7 +10,7 @@ const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstRequest: true,
 });
 
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();

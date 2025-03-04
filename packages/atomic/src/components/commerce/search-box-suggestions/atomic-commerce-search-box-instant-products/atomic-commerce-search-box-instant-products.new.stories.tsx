@@ -8,7 +8,7 @@ import type {
 } from '@storybook/web-components';
 import {html} from 'lit';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstSearch: true});
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const wrapInSearchBox: Decorator = (story) => {
   return html`
