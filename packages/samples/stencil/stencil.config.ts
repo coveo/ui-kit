@@ -1,5 +1,5 @@
 import {Config} from '@stencil/core';
-import {readFileSync} from 'fs';
+import {readFileSync} from 'node:fs';
 import {join} from 'path';
 import html from 'rollup-plugin-html';
 
@@ -38,34 +38,48 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
-      resolveAtomicPaths(),
+      resolveCoveoPaths(),
     ],
   },
 };
 
-function resolveAtomicPaths() {
+function resolveCoveoPaths() {
   return {
+    name: 'resolve-coveo-paths',
     resolveId(source: string) {
-      if (source.startsWith('@coveo/atomic/')) {
+      if (
+        source.startsWith('@coveo/atomic/') ||
+        source.startsWith('@coveo/headless/')
+      ) {
         const nodeModulesLocation = '../../../node_modules';
+        const packageName = source.startsWith('@coveo/atomic/')
+          ? 'atomic'
+          : 'headless';
 
         const packageJsonPath = join(
           process.cwd(),
           nodeModulesLocation,
           '@coveo',
-          'atomic',
+          packageName,
           'package.json'
         );
 
-        const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+        try {
+          const packageJson = JSON.parse(
+            readFileSync(packageJsonPath, 'utf-8')
+          );
 
-        const subPath = './' + source.replace('@coveo/atomic/', '');
-        const subPathImport = packageJson.exports[subPath].import;
+          const subPath = './' + source.replace(`@coveo/${packageName}/`, '');
+          const subPathImport = packageJson.exports?.[subPath]?.import;
 
-        const id = `${nodeModulesLocation}/@coveo/atomic/${subPathImport}`;
-        return {
-          id,
-        };
+          if (subPathImport) {
+            return {
+              id: `${nodeModulesLocation}/@coveo/${packageName}/${subPathImport}`,
+            };
+          }
+        } catch (err) {
+          console.error(`Error resolving ${source}:`, err);
+        }
       }
       return null;
     },
