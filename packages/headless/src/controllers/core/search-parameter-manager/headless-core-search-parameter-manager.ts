@@ -11,11 +11,13 @@ import {
   getQ,
   getSortCriteria,
   getFacets,
+  getTab,
 } from '../../../features/parameter-manager/parameter-manager-selectors.js';
 import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
   SearchParameters,
+  restoreTab,
 } from '../../../features/search-parameters/search-parameter-actions.js';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
@@ -105,16 +107,27 @@ export function buildCoreSearchParameterManager(
     props.initialState,
     'buildSearchParameterManager'
   );
-  dispatch(restoreSearchParameters(props.initialState.parameters));
+  const {tab, ...parametersWithoutTab} = props.initialState.parameters;
+
+  if (tab) {
+    dispatch(restoreTab(tab));
+  }
+  dispatch(restoreSearchParameters(parametersWithoutTab));
 
   return {
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const newParams = enrichParameters(engine, parameters);
-      dispatch(restoreSearchParameters(newParams));
-    },
+      const {tab, ...newParamsWithoutTab} = enrichParameters(
+        engine,
+        parameters
+      );
 
+      if (tab) {
+        dispatch(restoreTab(tab));
+      }
+      dispatch(restoreSearchParameters(newParamsWithoutTab));
+    },
     get state() {
       const parameters = getCoreActiveSearchParameters(engine);
       return {parameters};
@@ -132,20 +145,22 @@ export function enrichParameters(
   };
 }
 
-export function validateParams(
-  engine: CoreEngine,
-  parameters: Required<SearchParameters>
-): boolean {
-  return validateTab(engine, parameters);
-}
-
 export function getCoreActiveSearchParameters(
   engine: CoreEngine
 ): SearchParameters {
   const state = engine.state;
   return {
     ...getQ(state.query, (s) => s.q, getQueryInitialState().q),
-    ...getTab(state),
+    ...getTab(
+      state.tabSet,
+      (tabSet) => {
+        const activeTab = Object.values(tabSet ?? {}).find(
+          (tab) => tab.isActive
+        );
+        return activeTab ? activeTab.id : Object.keys(tabSet ?? {})[0];
+      },
+      state.tabSet ? Object.keys(state.tabSet)[0] : ''
+    ),
     ...getSortCriteria(
       state.sortCriteria,
       (sortCriteria) => sortCriteria,
@@ -169,34 +184,6 @@ function facetIsEnabled(state: CoreEngine['state']) {
   return (facetId: string) => {
     return state.facetOptions?.facets[facetId]?.enabled ?? true;
   };
-}
-
-function getTab(state: Partial<SearchParametersState>) {
-  const activeTab = Object.values(state.tabSet ?? {}).find(
-    (tab) => tab.isActive
-  );
-
-  return activeTab ? {tab: activeTab.id} : {};
-}
-
-function validateTab(
-  engine: CoreEngine,
-  parameters: Required<SearchParameters>
-) {
-  const tabState = engine.state.tabSet;
-  const tabParam = parameters.tab;
-  if (!tabState || !Object.entries(tabState).length || !tabParam) {
-    return true;
-  }
-
-  const isInState = tabParam in tabState;
-  if (!isInState) {
-    engine.logger.warn(
-      `The tab search parameter "${tabParam}" is invalid. Ignoring change.`
-    );
-  }
-
-  return isInState;
 }
 
 export function getSelectedValues(request: FacetRequest) {
