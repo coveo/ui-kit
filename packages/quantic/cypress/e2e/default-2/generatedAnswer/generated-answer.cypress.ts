@@ -354,9 +354,9 @@ describe('quantic-generated-answer', () => {
 
               it('should log the generated answer stream end event', () => {
                 if (analyticsMode === 'next') {
-                  NextAnalyticsExpectations.emitRgaStreamEnd(
+                  NextAnalyticsExpectations.emitRgaAnswerReceived(
                     {
-                      responseId: searchId,
+                      answerId: searchId,
                       answerGenerated: true,
                     },
                     exampleTrackingId
@@ -392,7 +392,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         action: 'like',
                       },
                       exampleTrackingId
@@ -440,7 +440,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         action: 'dislike',
                       },
                       exampleTrackingId
@@ -492,7 +492,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaSubmitFeedback(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         helpful: false,
                         details: {
                           readable: false,
@@ -575,7 +575,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         action: 'hide',
                       },
                       exampleTrackingId
@@ -597,7 +597,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         action: 'show',
                       },
                       exampleTrackingId
@@ -648,7 +648,7 @@ describe('quantic-generated-answer', () => {
                   if (analyticsMode === 'next') {
                     NextAnalyticsExpectations.emitRgaAnswerAction(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         action: 'expand',
                       },
                       exampleTrackingId
@@ -671,7 +671,7 @@ describe('quantic-generated-answer', () => {
                     if (analyticsMode === 'next') {
                       NextAnalyticsExpectations.emitRgaAnswerAction(
                         {
-                          responseId: searchId,
+                          answerId: searchId,
                           action: 'collapse',
                         },
                         exampleTrackingId
@@ -713,7 +713,7 @@ describe('quantic-generated-answer', () => {
                     if (analyticsMode === 'next') {
                       NextAnalyticsExpectations.emitRgaAnswerAction(
                         {
-                          responseId: searchId,
+                          answerId: searchId,
                           action: 'copyToClipboard',
                         },
                         exampleTrackingId
@@ -810,7 +810,7 @@ describe('quantic-generated-answer', () => {
                       testCitations[hoveredCitationIndex];
                     NextAnalyticsExpectations.emitRgaCitationHover(
                       {
-                        responseId: searchId,
+                        answerId: searchId,
                         citationId: id,
                         itemMetadata: {
                           uniqueFieldName: 'permanentid',
@@ -846,7 +846,7 @@ describe('quantic-generated-answer', () => {
                     testCitations[clickedCitationIndex];
                   NextAnalyticsExpectations.emitRgaCitationClick(
                     {
-                      responseId: searchId,
+                      answerId: searchId,
                       citationId: id,
                       itemMetadata: {
                         uniqueFieldName: 'permanentid',
