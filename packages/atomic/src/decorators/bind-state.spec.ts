@@ -6,6 +6,8 @@ import type {Bindings} from '../components/search/atomic-search-interface/interf
 import {bindStateToController} from './bind-state';
 import type {InitializableComponent} from './types';
 
+vi.unmock('./bind-state');
+
 class MockController implements Controller {
   state = {};
   subscribe = vi.fn((callback) => {

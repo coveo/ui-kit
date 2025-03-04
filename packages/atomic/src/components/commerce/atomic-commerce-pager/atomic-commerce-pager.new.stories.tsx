@@ -1,16 +1,14 @@
-import {
-  playExecuteFirstRequest,
-  wrapInCommerceInterface,
-} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import './atomic-commerce-pager';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
 
 const meta: Meta = {
   component: 'atomic-commerce-pager',
-  title: 'Atomic-Commerce/Interface Components/atomic-commerce-pager',
+  title: 'Commerce/atomic-commerce-pager',
   id: 'atomic-commerce-pager',
   render: renderComponent,
   decorators: [decorator],
@@ -21,24 +19,39 @@ const meta: Meta = {
 export default meta;
 
 export const Default: Story = {
-  name: 'atomic-commerce-pager',
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
+  parameters: {
+    docs: {
+      story: {autoplay: true},
+    },
+    layout: 'centered',
   },
 };
 
 export const CustomIcon: Story = {
-  name: 'With custom icon',
-  tags: ['commerce'],
+  name: 'With custom icons',
   args: {
     'attributes-previous-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
     'attributes-next-button-icon':
       'https://raw.githubusercontent.com/coveo/ui-kit/master/packages/atomic/src/images/arrow-top-rounded.svg',
   },
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
+  parameters: {
+    docs: {
+      story: {autoplay: true},
+    },
+    layout: 'centered',
+  },
+};
+
+export const WithACustomNumberOfPages: Story = {
+  name: 'With a custom number of pages',
+  args: {
+    'attributes-number-of-pages': '10',
+  },
+  parameters: {
+    docs: {
+      story: {autoplay: true},
+    },
+    layout: 'centered',
   },
 };

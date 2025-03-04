@@ -472,24 +472,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
-     * @alpha 
-     */
-    interface AtomicCommercePager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon": string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages": number;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon": string;
-    }
-    /**
      * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
      */
     interface AtomicCommerceProductList {
@@ -3825,10 +3807,6 @@ export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEven
     detail: T;
     target: HTMLAtomicCommerceFacetNumberInputElement;
 }
-export interface AtomicCommercePagerCustomEvent<T> extends CustomEvent<T> {
-    detail: T;
-    target: HTMLAtomicCommercePagerElement;
-}
 export interface AtomicCommerceProductsPerPageCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLAtomicCommerceProductsPerPageElement;
@@ -4115,27 +4093,6 @@ declare global {
     var HTMLAtomicCommerceNumericFacetElement: {
         prototype: HTMLAtomicCommerceNumericFacetElement;
         new (): HTMLAtomicCommerceNumericFacetElement;
-    };
-    interface HTMLAtomicCommercePagerElementEventMap {
-        "atomic/scrollToTop": any;
-    }
-    /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
-     * @alpha 
-     */
-    interface HTMLAtomicCommercePagerElement extends Components.AtomicCommercePager, HTMLStencilElement {
-        addEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
-        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLAtomicCommercePagerElementEventMap>(type: K, listener: (this: HTMLAtomicCommercePagerElement, ev: AtomicCommercePagerCustomEvent<HTMLAtomicCommercePagerElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
-        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
-    }
-    var HTMLAtomicCommercePagerElement: {
-        prototype: HTMLAtomicCommercePagerElement;
-        new (): HTMLAtomicCommercePagerElement;
     };
     /**
      * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
@@ -6113,7 +6070,6 @@ declare global {
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
-        "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
@@ -6688,25 +6644,6 @@ declare namespace LocalJSX {
           * The Summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
-     * @alpha 
-     */
-    interface AtomicCommercePager {
-        /**
-          * The SVG icon to use to display the Next button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "nextButtonIcon"?: string;
-        /**
-          * Specifies how many page buttons to display in the pager.
-         */
-        "numberOfPages"?: number;
-        "onAtomic/scrollToTop"?: (event: AtomicCommercePagerCustomEvent<any>) => void;
-        /**
-          * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "previousButtonIcon"?: string;
     }
     /**
      * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
@@ -9937,7 +9874,6 @@ declare namespace LocalJSX {
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
-        "atomic-commerce-pager": AtomicCommercePager;
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
@@ -10218,11 +10154,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
-            /**
-             * The `atomic-pager` provides buttons that allow the end user to navigate through the different product pages.
-             * @alpha 
-             */
-            "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
             /**
              * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
              */

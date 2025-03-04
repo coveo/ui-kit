@@ -236,6 +236,9 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
  *
  * @param controllerProperty The controller property to subscribe to. The controller has to be created inside of the `initialize` method.
  * @param options The configurable `BindStateToController` options.
+ *
+ * @deprecated To be used for Stencil components. For Lit components. use `bindStateToController` from '../decorators/bind-state.ts'
+ *
  */
 export function BindStateToController(
   controllerProperty: string,
