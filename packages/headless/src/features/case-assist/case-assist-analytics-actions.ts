@@ -209,12 +209,8 @@ export const logQuickviewDocumentSuggestionClick = (
   makeCaseAssistAnalyticsAction({
     prefix: 'analytics/caseAssist/documentSuggestion/click',
     __legacy__getBuilder: (client, state) => {
-      return client.logSelectDocumentSuggestion({
-        suggestion: caseAssistDocumentSuggestionSelector(
-          state,
-          suggestionId,
-          true
-        ),
+      return client.logQuickviewDocumentSuggestion({
+        suggestion: caseAssistDocumentSuggestionSelector(state, suggestionId),
         ticket: caseAssistCaseSelector(state),
       });
     },
