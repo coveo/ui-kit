@@ -18,7 +18,7 @@ exports[`result actions insight analytics actions > when analyticsMode is \`next
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;
@@ -41,7 +41,7 @@ exports[`result actions insight analytics actions > when analyticsMode is \`next
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;
@@ -64,7 +64,7 @@ exports[`result actions insight analytics actions > when analyticsMode is \`next
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;

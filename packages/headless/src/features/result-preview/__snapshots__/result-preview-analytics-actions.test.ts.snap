@@ -33,7 +33,7 @@ exports[`result preview analytics actions > #logDocumentQuickview > when analyti
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "someid",
+    "responseId": "someid",
   },
 ]
 `;

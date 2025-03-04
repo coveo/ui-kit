@@ -31,7 +31,7 @@ export const logCaseAttach = (result: Result) =>
       return {
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: state.search?.response.searchUid || '',
+        responseId: state.search?.response.searchUid || '',
         action: 'attach',
         context: analyticsEventCaseContext(state),
       };

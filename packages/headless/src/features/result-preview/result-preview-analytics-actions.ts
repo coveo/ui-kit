@@ -22,7 +22,7 @@ export const logDocumentQuickview = (result: Result): ClickAction => {
       const docInfo = partialDocumentInformation(result, state);
       const docId = documentIdentifier(result);
       return {
-        searchUid: result.searchUid ?? '',
+        responseId: result.searchUid ?? '',
         position: docInfo.documentPosition,
         itemMetadata: {
           uniqueFieldName: docId.contentIDKey,

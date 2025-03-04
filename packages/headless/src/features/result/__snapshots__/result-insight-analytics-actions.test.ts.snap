@@ -18,7 +18,7 @@ exports[`result insight analytics actions > when analyticsMode is \`next\` > log
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;
