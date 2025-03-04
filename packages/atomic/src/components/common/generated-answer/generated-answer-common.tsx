@@ -431,12 +431,12 @@ export class GeneratedAnswerCommon {
           <Heading
             level={0}
             part="header-label"
-            class="text-bg-primary inline-block rounded-md px-2.5 py-2 font-medium"
+            class="text-primary bg-primary-background inline-block rounded-md px-2.5 py-2 font-medium"
           >
             {i18n.t('generated-answer-title')}
           </Heading>
         </div>
-        <div part="generated-container" class="mt-6">
+        <div part="generated-container" class="mt-6 break-words">
           <slot name="no-answer-message"></slot>
         </div>
       </div>
