@@ -1,3 +1,4 @@
+import {ATOMIC_MODAL_EXPORT_PARTS} from '@/src/components/common/atomic-modal/export-parts';
 import {Component, h, State, Prop, Element, Watch, Host} from '@stencil/core';
 import CloseIcon from '../../../../images/close.svg';
 import {rectEquals} from '../../../../utils/dom-utils';
@@ -7,9 +8,6 @@ import {
 } from '../../../../utils/initialization-utils';
 import {Button} from '../../../common/stencil-button';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
-
-const exportparts =
-  'container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
 
 /**
  * @internal
@@ -143,7 +141,7 @@ export class AtomicInsightUserActionsModal
           source={this.openButton}
           container={this.host}
           close={() => (this.isOpen = false)}
-          exportparts={exportparts}
+          exportparts={ATOMIC_MODAL_EXPORT_PARTS}
           scope={this.bindings.interfaceElement}
         >
           {renderHeader()}

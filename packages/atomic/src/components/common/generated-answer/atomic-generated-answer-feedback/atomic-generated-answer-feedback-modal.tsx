@@ -21,6 +21,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/utils';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
 import {AnyBindings} from '../../interface/bindings';
@@ -436,7 +437,7 @@ export class AtomicGeneratedAnswerFeedbackModal
         close={() => this.close()}
         container={this.host}
         part="generated-answer-feedback-modal"
-        exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
+        exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       >
         {this.renderHeader()}
         {this.renderBody()}
