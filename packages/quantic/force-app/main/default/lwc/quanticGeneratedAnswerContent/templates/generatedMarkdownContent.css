@@ -108,6 +108,7 @@ blockquote {
   max-height: 24rem;
   border-color: var(--quantic-genqa-border-neutral-dim);
   border-radius: var(--quantic-genqa-border-radius);
+  max-width: 100%;
 }
 
 .scrollable-table th {
