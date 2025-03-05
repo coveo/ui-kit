@@ -9,6 +9,7 @@
   },
   "targets": {
     "release:phase1": {},
+    "release:phase2": {},
     "cached:build": {
       "dependsOn": ["^build"],
       "inputs": ["^production", "production"],
