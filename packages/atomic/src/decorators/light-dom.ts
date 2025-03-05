@@ -1,32 +1,37 @@
-export const injectStylesForNoShadowDOM =
-  (styles: string) =>
-  <
+import {CSSResult} from 'lit';
+
+export const injectStylesForNoShadowDOM = <
+  T extends {
+    styles: CSSResult;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    T extends {new (...args: any[]): Partial<any>},
-  >(
-    Base: T
-  ) => {
-    return class extends Base {
-      createRenderRoot() {
-        return this;
-      }
+    new (...args: any[]): any;
+  },
+>(
+  Base: T
+) => {
+  return class extends Base {
+    createRenderRoot() {
+      return this;
+    }
 
-      connectedCallback() {
-        super.connectedCallback();
-        this.injectStyles();
-      }
+    public connectedCallback() {
+      super.connectedCallback();
+      this.injectStyles();
+    }
 
-      injectStyles() {
-        const styleId = this.localName;
-        const root: Node = this.getRootNode && this.getRootNode();
-        const parent = root instanceof ShadowRoot ? root : document.head;
+    injectStyles() {
+      const parent = this.getRootNode();
+      const styleSheet = Base.styles?.styleSheet;
+      const isDocumentOrShadowRoot =
+        parent instanceof Document || parent instanceof ShadowRoot;
 
-        if (!parent.querySelector(`#${styleId}`)) {
-          const style = document.createElement('style');
-          style.id = styleId;
-          style.textContent = styles;
-          parent.appendChild(style);
-        }
+      if (
+        styleSheet &&
+        isDocumentOrShadowRoot &&
+        !parent.adoptedStyleSheets.includes(styleSheet)
+      ) {
+        parent.adoptedStyleSheets.push(styleSheet);
       }
-    };
+    }
   };
+};

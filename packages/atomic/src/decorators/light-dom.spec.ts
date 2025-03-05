@@ -1,25 +1,31 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {html, LitElement} from 'lit';
-import {vi} from 'vitest';
+import {html, LitElement, unsafeCSS} from 'lit';
 import {injectStylesForNoShadowDOM} from './light-dom';
 
 describe('injectStylesForNoShadowDOM', () => {
   const styles = 'body { background-color: red; }';
 
-  @injectStylesForNoShadowDOM(styles)
+  @injectStylesForNoShadowDOM
   class StyledElement extends LitElement {
+    static styles = unsafeCSS(styles);
     render() {
-      return html`<div>Hello World</div>`;
+      return html`<div>children element</div>`;
     }
   }
 
-  class ParentElement extends HTMLElement {
+  class LightDomParentElement extends HTMLElement {
+    render() {
+      return html`<slot></slot>`;
+    }
+  }
+
+  class ShadownDomParentElement extends HTMLElement {
     constructor() {
       super();
       this.attachShadow({mode: 'open'});
     }
+
     connectedCallback() {
-      // Move all children from light DOM to shadow DOM using a DocumentFragment
       const fragment = document.createDocumentFragment();
       while (this.childNodes.length > 0) {
         fragment.appendChild(this.childNodes[0]);
@@ -28,62 +34,55 @@ describe('injectStylesForNoShadowDOM', () => {
     }
   }
 
-  customElements.define('parent-element', ParentElement);
+  customElements.define('light-dom-parent-element', LightDomParentElement);
+  customElements.define('shadow-dom-parent-element', ShadownDomParentElement);
   customElements.define('styled-element', StyledElement);
-
-  it('should call appendChild only once', async () => {
-    const appendChildSpy = vi.spyOn(document.head, 'appendChild');
-    await fixture(html`
-      <styled-element></styled-element>
-      <styled-element></styled-element>
-      <styled-element></styled-element>
-    `);
-    expect(appendChildSpy).toHaveBeenCalledTimes(1);
-  });
 
   describe('when the element is added in a shadow dom', () => {
     beforeEach(async () => {
       await fixture(html`
-        <parent-element>
+        <shadow-dom-parent-element>
           <styled-element></styled-element>
           <styled-element></styled-element>
           <styled-element></styled-element>
-        </parent-element>
+        </shadow-dom-parent-element>
       `);
     });
 
-    it('should tag the styles with the element local name as the id', async () => {
-      const styleElement = document
-        .querySelector('parent-element')
-        ?.shadowRoot?.getElementById('styled-element');
-      expect(styleElement).not.toBeNull();
+    it("should add css in the parent's adoptedStyleSheets", async () => {
+      const styleElement =
+        document.querySelector('shadow-dom-parent-element')?.shadowRoot
+          ?.adoptedStyleSheets || [];
+
+      expect(styleElement).toHaveLength(1);
+      expect(styleElement[0].cssRules).toHaveLength(1);
+      expect(styleElement[0].cssRules[0].cssText).toBe(styles);
     });
 
-    it('should only have one style tag', async () => {
-      const styleElement = document
-        .querySelector('parent-element')
-        ?.shadowRoot?.querySelectorAll('style');
-      expect(styleElement?.length).toBe(1);
+    it("should add css in the document's adoptedStyleSheets", async () => {
+      const styleElement = document?.adoptedStyleSheets || [];
+
+      expect(styleElement).toHaveLength(0);
     });
   });
 
   describe('when the element is added directly into the dom', () => {
     beforeEach(async () => {
       await fixture(html`
-        <styled-element></styled-element>
-        <styled-element></styled-element>
-        <styled-element></styled-element>
+        <light-dom-parent-element>
+          <styled-element></styled-element>
+          <styled-element></styled-element>
+          <styled-element></styled-element>
+        </light-dom-parent-element>
       `);
     });
 
-    it('should inject styles into the head', async () => {
-      const styleElement = document.head.querySelector('#styled-element');
-      expect(styleElement).not.toBeNull();
-    });
+    it("should add css in the document's adoptedStyleSheets", async () => {
+      const styleElement = document?.adoptedStyleSheets || [];
 
-    it('should only have one style tag', async () => {
-      const styleElement = document.head.querySelectorAll('#styled-element');
-      expect(styleElement?.length).toBe(1);
+      expect(styleElement).toHaveLength(1);
+      expect(styleElement[0].cssRules).toHaveLength(1);
+      expect(styleElement[0].cssRules[0].cssText).toBe(styles);
     });
   });
 });
