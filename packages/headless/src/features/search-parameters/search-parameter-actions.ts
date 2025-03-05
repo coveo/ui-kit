@@ -87,6 +87,7 @@ export interface SearchParameters {
 
   /**
    * The active tab id.
+   * @deprecated restore the tab using the `restoreTab` action instead.
    */
   tab?: string;
 
