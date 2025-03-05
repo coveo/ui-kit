@@ -55,7 +55,7 @@ describe('injectStylesForNoShadowDOM', () => {
     it('should tag the styles with the element local name as the id', async () => {
       const styleElement = document
         .querySelector('parent-element')
-        ?.shadowRoot?.getElementById('styled-element');
+        ?.shadowRoot?.getElementById('styled-element-styles');
       expect(styleElement).not.toBeNull();
     });
 
@@ -77,12 +77,16 @@ describe('injectStylesForNoShadowDOM', () => {
     });
 
     it('should inject styles into the head', async () => {
-      const styleElement = document.head.querySelector('#styled-element');
+      const styleElement = document.head.querySelector(
+        '#styled-element-styles'
+      );
       expect(styleElement).not.toBeNull();
     });
 
     it('should only have one style tag', async () => {
-      const styleElement = document.head.querySelectorAll('#styled-element');
+      const styleElement = document.head.querySelectorAll(
+        '#styled-element-styles'
+      );
       expect(styleElement?.length).toBe(1);
     });
   });

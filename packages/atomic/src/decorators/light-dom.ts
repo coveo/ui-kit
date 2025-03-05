@@ -17,7 +17,7 @@ export const injectStylesForNoShadowDOM =
       }
 
       injectStyles() {
-        const styleId = this.localName;
+        const styleId = `${this.localName}-styles`;
         const root: Node = this.getRootNode && this.getRootNode();
         const parent = root instanceof ShadowRoot ? root : document.head;
 
