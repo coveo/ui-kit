@@ -22,8 +22,8 @@ export default meta;
 export const Default: Story = {
   name: 'atomic-component-error',
   args: {
-    error: new Error('This is an error'),
-    element: document.createElement('some-element'),
+    'attributes-error': new Error('This is an error'),
+    'attributes-element': document.createElement('some-element'),
   },
   decorators: [(story) => html` ${story()}`],
   play: async (context) => {
