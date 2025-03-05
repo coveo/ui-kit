@@ -10,7 +10,7 @@ const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
   type: 'product-listing',
   engineConfig: {
     context: {
