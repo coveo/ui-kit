@@ -36,18 +36,25 @@ export default defineConfig({
     },
   ],
   test: {
+    setupFiles: ['./vitest-utils/setup.ts'],
     include: ['src/**/*.spec.ts'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
+    css: true,
     globals: true,
+    deps: {
+      moduleDirectories: ['node_modules', path.resolve('../../packages')],
+    },
     browser: {
-      enabled: true,
-      name: 'chromium',
       provider: 'playwright',
-      // https://playwright.dev
-      providerOptions: {},
+      enabled: true,
+      instances: [
+        {
+          browser: 'chromium',
+        },
+      ],
     },
   },
 });
