@@ -14,7 +14,8 @@ const endTag = '//#endregion Lit Declarations';
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
-  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
+  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}],
+  methods: [${declaration.members.map(method => `'${method.name}'`).join(', ')}]
 })
 @Component({
   selector: '${declaration.tagName}',

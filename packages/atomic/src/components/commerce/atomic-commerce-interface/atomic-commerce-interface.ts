@@ -23,6 +23,7 @@ import {
   Unsubscribe,
   UrlManager,
 } from '@coveo/headless/commerce';
+import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -32,6 +33,7 @@ import {
   CommonAtomicInterfaceHelper,
   InitializeEvent,
 } from '../../common/interface/interface-common';
+import {bindingsContext} from '../../context/bindings-context';
 import {
   CommerceStore,
   createCommerceStore,
@@ -327,7 +329,23 @@ export class AtomicCommerceInterface
     }
   }
 
-  public get bindings(): CommerceBindings {
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: CommerceBindings = {} as CommerceBindings;
+
+  private async internalInitialization(initEngine: () => void) {
+    await this.commonInterfaceHelper.onInitialization(initEngine);
+
+    this.initRequestStatus();
+    this.initSummary();
+    this.initContext();
+    this.initLanguage();
+    this.initUrlManager();
+    this.initialized = true;
+    this.bindings = this.getBindings();
+  }
+
+  private getBindings(): CommerceBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -459,17 +477,6 @@ export class AtomicCommerceInterface
     this.urlManager.synchronize(this.fragment);
   };
 
-  private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
-
-    this.initRequestStatus();
-    this.initSummary();
-    this.initContext();
-    this.initLanguage();
-    this.initUrlManager();
-    this.initialized = true;
-  }
-
   private addResourceBundle(
     lng: string,
     ns: string,
@@ -486,7 +493,21 @@ export class AtomicCommerceInterface
     );
   }
 
+  private toggleLanguage() {
+    this.language = this.language === 'en' ? 'fr' : 'en';
+    this.bindings.store.set('mobileBreakpoint', this.language);
+  }
+
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <button @click="${this.toggleLanguage}">Toggle Language</button>
+      <slot></slot>
+    `;
   }
 }
+/*
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-interface': AtomicCommerceInterface;
+  }
+} */

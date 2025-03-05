@@ -4,7 +4,7 @@ import {AtomicAngularPageComponent} from './atomic-angular-page/atomic-angular-p
 
 const routes: Routes = [
   {
-    path: 'atomic-angular',
+    path: '',
     component: AtomicAngularPageComponent,
   },
 ];

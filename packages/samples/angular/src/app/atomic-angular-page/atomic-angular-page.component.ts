@@ -8,20 +8,22 @@ import {Result, Bindings} from '@coveo/atomic-angular';
 })
 export class AtomicAngularPageComponent implements AfterViewInit {
   @ViewChild('searchInterface')
-  searchInterface!: HTMLAtomicSearchInterfaceElement;
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  searchInterface!: any;
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
+    console.log(this.searchInterface);
     this.searchInterface
       ?.initialize({
-        accessToken: 'xxc23ce82a-3733-496e-b37e-9736168c4fd9',
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'electronicscoveodemocomo0n2fu8v',
         analytics: {
-          analyticsMode: 'legacy',
+          enabled: true,
         },
       })
+
       .then(() => {
-        this.searchInterface.executeFirstSearch();
+        this.searchInterface.executeFirstRequest();
         this.searchInterface.i18n.addResourceBundle('en', 'translation', {
           'no-ratings-available': 'No ratings available',
         });
