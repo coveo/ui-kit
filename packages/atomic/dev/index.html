@@ -14,6 +14,21 @@
 
     <link rel="icon" href="data:," />
     <script type="module">
+      class FixtureWrapperElement extends HTMLElement {
+        constructor() {
+          super();
+          this.attachShadow({mode: 'open'});
+        }
+        connectedCallback() {
+          // Move all children from light DOM to shadow DOM
+          while (this.childNodes.length > 0) {
+            this.shadowRoot.appendChild(this.childNodes[0]);
+          }
+        }
+      }
+
+      customElements.define('fixture-wrapper', FixtureWrapperElement);
+
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
 
@@ -140,7 +155,12 @@
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
           <h1>icon here</h1>
-          <atomic-icon icon="https://dsajkdlsads.comdsa/ds.salesforce-badge"></atomic-icon>
+          <!-- <atomic-icon icon="https://dsajkdlsads.comdsa/ds.salesforce-badge"></atomic-icon> -->
+          <fixture-wrapper>
+            <atomic-icon icon="assets://user.svg"></atomic-icon>
+            <atomic-icon icon="assets://user.svg"></atomic-icon>
+            <atomic-icon icon="assets://user.svg"></atomic-icon>
+          </fixture-wrapper>
           <h1>icon end</h1>
           <atomic-search-box></atomic-search-box>
         </atomic-layout-section>

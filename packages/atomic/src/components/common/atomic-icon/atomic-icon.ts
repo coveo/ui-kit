@@ -1,11 +1,12 @@
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
+import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {CSSResultGroup, LitElement, svg, unsafeCSS} from 'lit';
+import {LitElement, svg} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
@@ -36,11 +37,11 @@ class IconFetchError extends Error {
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
 @customElement('atomic-icon')
+@injectStylesForNoShadowDOM(styles)
 export class AtomicIcon
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
-  static styles: CSSResultGroup = [unsafeCSS(styles)];
   /**
    * The SVG icon to display.
    *
@@ -113,21 +114,6 @@ export class AtomicIcon
 
   public initialize() {
     this.updateIcon();
-  }
-
-  public createRenderRoot(): HTMLElement | DocumentFragment {
-    return this;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.injectStyles();
-  }
-
-  private injectStyles() {
-    const style = document.createElement('style');
-    style.textContent = styles;
-    this.appendChild(style);
   }
 
   @bindingGuard()
