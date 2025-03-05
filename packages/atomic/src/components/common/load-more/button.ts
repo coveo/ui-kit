@@ -1,6 +1,6 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {button, ButtonProps} from '../button';
 
 interface LoadMoreButtonProps {
@@ -15,7 +15,7 @@ export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
 }) => {
   const {i18n, onClick, moreAvailable, label} = props;
   if (!moreAvailable) {
-    return;
+    return nothing;
   }
   const buttonProps: ButtonProps = {
     style: 'primary',
