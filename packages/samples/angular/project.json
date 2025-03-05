@@ -7,8 +7,8 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:assets; fi",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:angular; fi"
+          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
+          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:angular\""
         ],
         "parallel": false,
         "cwd": "packages/samples/angular"
