@@ -144,7 +144,6 @@ test.describe('Quickview', () => {
       await quickview.load();
       await page.setViewportSize({width, height});
       await quickview.resultButton.click();
-      await quickview.resultButton.click();
       await quickview.modal.waitFor({state: 'visible'});
     });
 
