@@ -38,6 +38,7 @@ jobs:
           npm run nx:graph
           npm run release:phase1
           npm run release:phase2
+          npm run release:phase3
         env:
           DEBUG: '*'
           IS_PRERELEASE: 'true'
