@@ -6,7 +6,7 @@ import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
-import {LitElement, svg} from 'lit';
+import {LitElement, svg, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
@@ -37,11 +37,12 @@ class IconFetchError extends Error {
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
 @customElement('atomic-icon')
-@injectStylesForNoShadowDOM(styles)
+@injectStylesForNoShadowDOM
 export class AtomicIcon
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<AnyBindings>
 {
+  static styles = unsafeCSS(styles);
   /**
    * The SVG icon to display.
    *
