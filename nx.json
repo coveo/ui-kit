@@ -101,11 +101,16 @@
       "dependsOn": ["^release:phase1"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npm run publish:bump",
-          "npm run build",
-          "npm run publish:npm"
-        ],
+        "commands": ["npm run publish:bump", "npm run build"],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run publish:npm"],
         "parallel": false,
         "cwd": "{projectRoot}"
       }
