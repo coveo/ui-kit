@@ -275,7 +275,10 @@ export class AtomicCommerceInterface
    * Initializes the connection with the headless commerce engine using the specified options.
    */
   public initialize(options: CommerceInitializationOptions) {
-    return this.internalInitialization(() => this.initEngine(options));
+    return this.internalInitialization(() => {
+      this.initEngine(options);
+      this.bindings = this.getBindings();
+    });
   }
 
   /**
@@ -283,7 +286,10 @@ export class AtomicCommerceInterface
    * This bypasses the properties set on the component, such as analytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
-    return this.internalInitialization(() => (this.engine = engine));
+    return this.internalInitialization(() => {
+      this.engine = engine;
+      this.bindings = this.getBindings();
+    });
   }
 
   /**
@@ -342,7 +348,6 @@ export class AtomicCommerceInterface
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
-    this.bindings = this.getBindings();
   }
 
   private getBindings(): CommerceBindings {

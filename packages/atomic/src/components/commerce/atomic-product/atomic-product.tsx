@@ -20,6 +20,8 @@ import {
   ProductContextEvent,
 } from '../product-template-components/product-template-decorators';
 
+// import { defineCustomElements } from '../../../utils/stencil-lazy-loader';
+
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
  * @alpha
@@ -139,6 +141,13 @@ export class AtomicProduct {
       imageSize: this.imageSize!,
     });
   }
+
+  // public componentWillLoad() {
+  //   const element = getElement(this);
+  //   if (element.shadowRoot) {
+  //     defineCustomElements(element.shadowRoot);
+  //   }
+  // }
 
   public connectedCallback() {
     this.layout = new ItemLayout(

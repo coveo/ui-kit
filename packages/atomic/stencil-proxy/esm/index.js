@@ -1,4 +1,4 @@
-import '../atomic/autoloader/index.esm.js';
+import '../atomic/autoloader/esm/index.js';
 
 export * from './_index.js';
 export * as SearchComponentMap from '../atomic/components/components/search/lazy-index.js';

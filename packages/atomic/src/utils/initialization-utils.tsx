@@ -138,10 +138,26 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       );
     }
 
-    component.componentWillLoad = function () {
+    component.componentWillLoad = async function () {
       const element = getElement(this);
       element.setAttribute(renderedAttribute, 'false');
       element.setAttribute(loadedAttribute, 'false');
+
+      const closestInterface = closest(
+        element,
+        initializableElements.join(', ')
+      );
+
+      if (!closestInterface) {
+        this.error = new MissingInterfaceParentError(
+          element.nodeName.toLowerCase()
+        );
+        return;
+      }
+
+      let resolve: () => void;
+      const promise = new Promise<void>((res) => (resolve = res));
+
       const event = buildCustomEvent(
         initializeEventName,
         (bindings: SpecificBindings) => {
@@ -165,19 +181,15 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
             }
           } catch (e) {
             this.error = e as Error;
+          } finally {
+            resolve();
           }
         }
       );
 
+      await customElements.whenDefined(closestInterface.tagName.toLowerCase());
       element.dispatchEvent(event);
-
-      if (!closest(element, initializableElements.join(', '))) {
-        this.error = new MissingInterfaceParentError(
-          element.nodeName.toLowerCase()
-        );
-        return;
-      }
-
+      await promise;
       return componentWillLoad && componentWillLoad.call(this);
     };
 
@@ -220,8 +232,6 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         componentDidLoad && componentDidLoad.call(this);
       }
     };
-
-    component.componentDidLoad = function () {};
   };
 }
 

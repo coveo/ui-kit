@@ -37,8 +37,8 @@
           "node ./scripts/build.mjs --config=tsconfig.lit.json",
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
           "if [ \"$DEPLOYMENT_ENVIRONMENT\" == \"CDN\" ]; then rollup -c rollup.config.js; fi",
-          "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
-          "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
+          "esbuild src/autoloader/*.ts --format=esm --outdir=dist/atomic/autoloader/esm",
+          "esbuild src/autoloader/*.ts --format=cjs --outdir=dist/atomic/autoloader/cjs"
         ],
         "parallel": false,
         "cwd": "packages/atomic"
