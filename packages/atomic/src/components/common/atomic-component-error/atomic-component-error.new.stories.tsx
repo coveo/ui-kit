@@ -1,5 +1,4 @@
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
@@ -11,7 +10,12 @@ const meta: Meta = {
   title: 'Atomic/Common',
   id: 'atomic-component-error',
 
-  render: renderComponent,
+  render: (args) => {
+    const element = document.createElement('atomic-component-error');
+    element.error = args['attributes-error'];
+    element.element = args['attributes-element'];
+    return element;
+  },
   decorators: [decorator],
   parameters,
   play,
