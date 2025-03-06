@@ -30,6 +30,7 @@ export type InitializeEvent = CustomEvent<InitializeEventHandler>;
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
  * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
  * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
+ * @deprecated should only be used for Stencil components. For Lit components, use `initializeBindings` from @/src/decorators/initialize-bindings.
  */
 export function initializeBindings<
   SpecificBindings extends AnyBindings = Bindings,
