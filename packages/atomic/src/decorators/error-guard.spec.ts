@@ -1,4 +1,4 @@
-import {fixture} from '@/tests/testing-helpers/fixture';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {vi} from 'vitest';

@@ -1,4 +1,4 @@
-import {fixture} from '@/tests/testing-helpers/fixture';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
 import {vi} from 'vitest';
 import './atomic-component-error';
