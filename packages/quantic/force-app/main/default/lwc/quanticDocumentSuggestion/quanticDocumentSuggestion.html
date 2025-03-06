@@ -25,17 +25,9 @@
                       slds-var-p-horizontal_large
                       slds-var-p-vertical_x-small
                     ">
-                    <p class="excerpt">{it.value.excerpt}</p>
-                    <div class="row slds-var-p-top_medium">
-                      <template lwc:if={quickviewIsVisible}>
-                        <c-quantic-result-quickview engine-id={engineId}
-                          preview-button-icon="utility:new_window" preview-button-label={labels.readMore}
-                          preview-button-variant="outline-brand" result={it.value}>
-                          <slot slot="footer" name="quickview-footer" data-doc-id={it.value.uniqueId}></slot>
-                        </c-quantic-result-quickview>
-                      </template>
-                      <slot name="actions" data-doc-id={it.value.uniqueId}></slot>
-                    </div>
+                    <c-quantic-result engine-id={engineId} result={it.value}
+                      result-templates-manager={resultTemplatesManager} without-quickview={withoutQuickview}></c-quantic-result>
+                    <slot name="actions" data-doc-id={it.value.uniqueId}></slot>
                   </div>
                 </div>
               </lightning-accordion-section>

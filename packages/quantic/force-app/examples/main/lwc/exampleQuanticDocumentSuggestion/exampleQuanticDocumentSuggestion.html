@@ -4,13 +4,14 @@
       <c-action-fetch-suggestions slot="actions" disabled={notConfigured} engine-id={config.engineId}>
       </c-action-fetch-suggestions>
     </c-configurator>
-
-    <c-quantic-case-assist-interface case-assist-id={caseAssistId} engine-id={config.engineId} search-hub="test origin" slot="preview">
-      <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}
-        max-documents={config.maxDocuments} fetch-on-init={config.fetchOnInit} without-quickview={config.withoutQuickview}
-        number-of-auto-opened-documents={config.numberOfAutoOpenedDocuments}>
-        <c-action-send-rating slot="actions"></c-action-send-rating>
-      </c-quantic-document-suggestion>
-    </c-quantic-case-assist-interface>
+    <div slot="preview" onquantic__registerresulttemplates={handleResultTemplateRegistration}>
+      <c-quantic-case-assist-interface case-assist-id="dea4aeba-3023-4709-bf21-113527ca31df" engine-id={config.engineId} search-hub="test origin">
+        <c-quantic-document-suggestion engine-id={config.engineId} search-engine-id={config.searchEngineId}
+          max-documents={config.maxDocuments} fetch-on-init={config.fetchOnInit} without-quickview={config.withoutQuickview}
+          number-of-auto-opened-documents={config.numberOfAutoOpenedDocuments}>
+          <c-action-send-rating slot="actions"></c-action-send-rating>
+        </c-quantic-document-suggestion>
+      </c-quantic-case-assist-interface>
+    </div>
   </c-example-layout>
 </template>

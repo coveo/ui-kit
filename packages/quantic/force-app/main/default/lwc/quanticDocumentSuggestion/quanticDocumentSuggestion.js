@@ -106,6 +106,10 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       this.updateDocumentSuggestionState()
     );
 
+    this.resultTemplatesManager =
+      CoveoHeadlessCaseAssist.buildResultTemplatesManager(engine);
+    this.registerTemplates();
+
     this.actions = {
       ...CoveoHeadlessCaseAssist.loadCaseAssistAnalyticsActions(engine),
       ...CoveoHeadlessCaseAssist.loadDocumentSuggestionActions(engine),
@@ -132,6 +136,15 @@ export default class QuanticDocumentSuggestion extends LightningElement {
       this.initializationErrorMessage =
         this.labels.invalidNumberOfAutoOpenedDocuments;
     }
+  }
+
+  registerTemplates() {
+    this.dispatchEvent(
+      new CustomEvent('quantic__registerresulttemplates', {
+        bubbles: true,
+        detail: this.resultTemplatesManager,
+      })
+    );
   }
 
   updateDocumentSuggestionState() {

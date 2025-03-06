@@ -1,6 +1,8 @@
 // @ts-ignore
 import {getCaseAssistId} from 'c/caseAssistUtils';
 import {LightningElement, track} from 'lwc';
+// @ts-ignore
+import knowledgeTemplate from './templates/knowldgeTemplate.html';
 
 export default class ExampleQuanticDocumentSuggestion extends LightningElement {
   @track config = {};
@@ -57,5 +59,23 @@ export default class ExampleQuanticDocumentSuggestion extends LightningElement {
     this.caseAssistId = await getCaseAssistId('Demo');
     this.config = evt.detail;
     this.isConfigured = true;
+  }
+
+  handleResultTemplateRegistration(event) {
+    event.stopPropagation();
+
+    const resultTemplatesManager = event.detail;
+
+    const isKnowledge =
+      CoveoHeadlessCaseAssist.ResultTemplatesHelpers.fieldMustMatch(
+        'objecttype',
+        ['Knowledge']
+      );
+
+    resultTemplatesManager.registerTemplates({
+      content: knowledgeTemplate,
+      conditions: [isKnowledge],
+      fields: ['sfstatus', 'sfcasestatus', 'sfcasenumber'],
+    });
   }
 }
