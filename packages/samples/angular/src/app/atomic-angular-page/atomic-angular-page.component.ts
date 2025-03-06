@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {Result, Bindings} from '@coveo/atomic-angular';
+import {Result, Bindings, AtomicCommerceInterface} from '@coveo/atomic-angular';
 
 @Component({
   selector: 'app-atomic-angular-page',
@@ -9,25 +9,54 @@ import {Result, Bindings} from '@coveo/atomic-angular';
 export class AtomicAngularPageComponent implements AfterViewInit {
   @ViewChild('searchInterface')
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  searchInterface!: any;
+  searchInterface!: AtomicCommerceInterface;
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
     console.log(this.searchInterface);
-    this.searchInterface
-      ?.initialize({
-        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-        organizationId: 'electronicscoveodemocomo0n2fu8v',
-        analytics: {
-          enabled: true,
+    console.log(this.searchInterface.initialize);
+    this?.searchInterface?.initialize({
+      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+      analytics: {
+        trackingId: 'sports-ui-samples',
+      },
+      context: {
+        language: 'en',
+        country: 'US',
+        currency: 'USD',
+        view: {
+          url: 'https://sports.barca.group',
         },
-      })
-
-      .then(() => {
-        this.searchInterface.executeFirstRequest();
-        this.searchInterface.i18n.addResourceBundle('en', 'translation', {
-          'no-ratings-available': 'No ratings available',
-        });
-      });
+      },
+      cart: {
+        items: [
+          {
+            productId: 'SP01057_00001',
+            quantity: 1,
+            name: 'Kayaker Canoe',
+            price: 800,
+          },
+          {
+            productId: 'SP00081_00001',
+            quantity: 1,
+            name: 'Bamboo Canoe Paddle',
+            price: 120,
+          },
+          {
+            productId: 'SP04236_00005',
+            quantity: 1,
+            name: 'Eco-Brave Rashguard',
+            price: 33,
+          },
+          {
+            productId: 'SP04236_00005',
+            quantity: 1,
+            name: 'Eco-Brave Rashguard',
+            price: 33,
+          },
+        ],
+      },
+      organizationId: 'searchuisamples',
+    });
   }
 
   generateInstantResultsAriaLabel({i18n}: Bindings, result: Result) {

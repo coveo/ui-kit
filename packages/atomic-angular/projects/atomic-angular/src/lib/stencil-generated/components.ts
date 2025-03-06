@@ -3086,7 +3086,7 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 @ProxyCmp({
   inputs: ['name', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'CspNonce'],
-  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest']
+  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initializeWithEngine', 'executeFirstRequest']
 })
 @Component({
   selector: 'atomic-commerce-interface',

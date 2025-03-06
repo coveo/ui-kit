@@ -30,9 +30,7 @@ exportModule.defineCustomElements = async function (...args) {
     Object.values(module).forEach((importFunction) => importFunction())
   );
 
-  await customElements.whenDefined('atomic-commerce-interface');
-
-  await originalDefineCustomElements(...args);
+  originalDefineCustomElements(...args);
 };
 
 module.exports = exportModule;

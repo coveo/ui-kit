@@ -1,4 +1,5 @@
 import {watch} from '@/src/decorators/watch';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
@@ -274,9 +275,9 @@ export class AtomicCommerceInterface
   /**
    * Initializes the connection with the headless commerce engine using the specified options.
    */
-  public initialize(options: CommerceInitializationOptions) {
+  public initialize = (options: CommerceInitializationOptions) => {
     return this.internalInitialization(() => this.initEngine(options));
-  }
+  };
 
   /**
    * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance.
@@ -343,6 +344,7 @@ export class AtomicCommerceInterface
     this.initUrlManager();
     this.initialized = true;
     this.bindings = this.getBindings();
+    markParentAsReady(this);
   }
 
   private getBindings(): CommerceBindings {
@@ -505,9 +507,3 @@ export class AtomicCommerceInterface
     `;
   }
 }
-/*
-declare global {
-  interface HTMLElementTagNameMap {
-    'atomic-commerce-interface': AtomicCommerceInterface;
-  }
-} */

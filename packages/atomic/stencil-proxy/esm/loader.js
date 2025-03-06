@@ -14,8 +14,6 @@ const defineCustomElements = async function (...args) {
     ...searchComponents,
   }).forEach((importFunction) => importFunction());
 
-  await customElements.whenDefined('atomic-commerce-interface');
-
   originalDefineCustomElements(...args);
 };
 
