@@ -12,9 +12,9 @@ export class AtomicAngularPageComponent implements AfterViewInit {
   searchInterface!: AtomicCommerceInterface;
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
-    console.log(this.searchInterface);
-    console.log(this.searchInterface.initialize);
-    this?.searchInterface?.initialize({
+    await customElements.whenDefined('atomic-commerce-interface');
+
+    this?.searchInterface.initialize({
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
       analytics: {
         trackingId: 'sports-ui-samples',

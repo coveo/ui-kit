@@ -275,9 +275,9 @@ export class AtomicCommerceInterface
   /**
    * Initializes the connection with the headless commerce engine using the specified options.
    */
-  public initialize = (options: CommerceInitializationOptions) => {
+  public initialize(options: CommerceInitializationOptions) {
     return this.internalInitialization(() => this.initEngine(options));
-  };
+  }
 
   /**
    * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance.
