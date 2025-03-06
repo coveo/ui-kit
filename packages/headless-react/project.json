@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "release:phase1": {},
-    "release:phase2": {},
+    "release:phase3": {},
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {

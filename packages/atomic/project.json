@@ -54,7 +54,7 @@
       }
     },
     "release:phase1": {},
-    "release:phase2": {},
+    "release:phase3": {},
     "build": {
       "dependsOn": [
         "cached:build:stencil",
