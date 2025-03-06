@@ -1,3 +1,7 @@
+## <small>3.15.2 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
 ## 3.15.0 (2025-02-27)
 
 - test(quantic): playwright e2e and unit tests created for quantic case classification component (#496 ([460387c](https://github.com/coveo/ui-kit/commits/460387c)), closes [#4967](https://github.com/coveo/ui-kit/issues/4967)
