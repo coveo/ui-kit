@@ -1,5 +1,5 @@
 import {TailwindLitElement} from '@/src/utils/tailwind.element';
-import {html, CSSResultGroup} from 'lit';
+import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
 /** The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration. */
@@ -7,8 +7,6 @@ import {customElement, property} from 'lit/decorators.js';
 export class AtomicComponentError extends TailwindLitElement {
   @property({type: Object}) element!: HTMLElement;
   @property({type: Object}) error!: Error;
-
-  static styles: CSSResultGroup = [TailwindLitElement.styles];
 
   connectedCallback() {
     super.connectedCallback();
