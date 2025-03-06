@@ -1,5 +1,5 @@
-import enTranslations from '@/dist/atomic/lang/en.json';
-import i18next, {i18n as I18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/i18n-utils';
+import {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {loadMoreButton} from './button';
 
@@ -8,15 +8,7 @@ describe('loadMoreButton', () => {
   let i18n: I18n;
 
   beforeAll(async () => {
-    i18n = i18next.createInstance();
-    await i18n.init({
-      lng: 'en',
-      resources: {
-        en: {
-          translation: enTranslations,
-        },
-      },
-    });
+    i18n = await createTestI18n();
   });
 
   beforeEach(() => {
