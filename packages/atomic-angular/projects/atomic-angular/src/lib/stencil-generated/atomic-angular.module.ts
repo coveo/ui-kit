@@ -6,6 +6,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
         
 import {
 AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -50,7 +51,6 @@ AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicGeneratedAnswer,
 AtomicHtml,
-AtomicIcon,
 AtomicLayoutSection,
 AtomicLoadMoreResults,
 AtomicNoResults,
@@ -152,6 +152,7 @@ defineCustomElements(window);
         
 const DECLARATIONS = [
 AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -196,7 +197,6 @@ AtomicFormatNumber,
 AtomicFormatUnit,
 AtomicGeneratedAnswer,
 AtomicHtml,
-AtomicIcon,
 AtomicLayoutSection,
 AtomicLoadMoreResults,
 AtomicNoResults,
