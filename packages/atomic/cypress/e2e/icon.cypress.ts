@@ -12,7 +12,7 @@ describe('Icon Test Suites', () => {
       .init();
   }
 
-  describe.skip('with assets://attachment', () => {
+  describe('with assets://attachment', () => {
     beforeEach(() => {
       setupIcon('assets://attachment');
     });
@@ -24,7 +24,7 @@ describe('Icon Test Suites', () => {
     CommonAssertions.assertConsoleWarning(false);
   });
 
-  describe.skip('with the contents of the custom.svg icon', () => {
+  describe('with the contents of the custom.svg icon', () => {
     beforeEach(() => {
       getSvg('custom').then((icon) => {
         setupIcon(icon);
@@ -35,7 +35,7 @@ describe('Icon Test Suites', () => {
     CommonAssertions.assertConsoleWarning(false);
   });
 
-  describe.skip('with a url to email.svg', () => {
+  describe('with a url to email.svg', () => {
     beforeEach(() => {
       getSvg('email').then((icon) => {
         const url = 'https://some-website-with-icons.com/my-icon.svg';
@@ -50,13 +50,13 @@ describe('Icon Test Suites', () => {
     CommonAssertions.assertConsoleWarning(false);
   });
 
-  describe.skip('when the icon cannot be fetched', () => {
+  describe('when the icon cannot be fetched', () => {
     const iconDoesNotExistWith404ErrorMessage = (url: string) =>
       `Could not fetch icon from ${url}, got status code 404 (Not Found).`;
     const iconDoesNotExistThrowErrorMessage = (url: string) =>
       `Could not fetch icon from ${url}, got an error.`;
 
-    describe.skip('with a url that returns a 404', () => {
+    describe('with a url that returns a 404', () => {
       const url = 'https://hello.invalid/my-icon.svg';
       beforeEach(() => {
         cy.intercept(url, {statusCode: 404});
@@ -68,11 +68,11 @@ describe('Icon Test Suites', () => {
       );
     });
 
-    describe.skip('with an asset path', () => {
+    describe('with an asset path', () => {
       const asset = 'assets://some-icon-that-does-not-exist';
       const url = asset.replace('assets://', '/assets/') + '.svg';
 
-      describe.skip('with an asset path that returns a 404', () => {
+      describe('with an asset path that returns a 404', () => {
         beforeEach(() => {
           cy.intercept(url, {statusCode: 404});
           setupIcon(asset);
@@ -83,7 +83,7 @@ describe('Icon Test Suites', () => {
         );
       });
 
-      describe.skip('with an asset path that throws an error', () => {
+      describe('with an asset path that throws an error', () => {
         beforeEach(() => {
           cy.intercept(url, {forceNetworkError: true});
           setupIcon(asset);
@@ -96,7 +96,7 @@ describe('Icon Test Suites', () => {
     });
   });
 
-  describe.skip('with the contents of an inline non svg icon', () => {
+  describe('with the contents of an inline non svg icon', () => {
     beforeEach(() => {
       getSvg('custom').then(() => {
         setupIcon('<img />');
