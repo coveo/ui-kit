@@ -63,7 +63,7 @@ Additionally, this task will update the `CHANGELOG.md` file of the package to co
 
 This task does not make any changes to the `package-lock.json` file at the root of the repository, since doing so would cause [an error with NPM Workspaces](https://github.com/npm/cli/issues/5506).
 
-### Sub-phase 2: build
+## # Sub-phase 2: build
 
 The purpose of this sub-phase is to re-build a project right after it was bumped and before it gets published. This is needed because many packages contain information about their own version in their compiled code.
 
