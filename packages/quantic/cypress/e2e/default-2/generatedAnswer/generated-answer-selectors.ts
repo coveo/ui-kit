@@ -109,20 +109,20 @@ export const GeneratedAnswerSelectors: GeneratedAnswerSelector = {
   citationTooltipUri: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-testid="generated-answer__citations"] [data-cy="citation__tooltip-uri"]'
+        '[data-testid="generated-answer__citations"] [data-testid="citation__tooltip-uri"]'
       )
       .eq(index),
   citationTooltipTitle: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-testid="generated-answer__citations"] [data-cy="citation__tooltip-title"]'
+        '[data-testid="generated-answer__citations"] [data-testid="citation__tooltip-title"]'
       )
       .eq(index),
 
   citationTooltipText: (index: number) =>
     GeneratedAnswerSelectors.get()
       .find(
-        '[data-testid="generated-answer__citations"] [data-cy="citation__tooltip-text"]'
+        '[data-testid="generated-answer__citations"] [data-testid="citation__tooltip-text"]'
       )
       .eq(index),
   disclaimer: () =>
