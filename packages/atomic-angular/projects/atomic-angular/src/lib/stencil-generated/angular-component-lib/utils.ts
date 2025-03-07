@@ -25,13 +25,20 @@ export const proxyInputs = (Cmp: any, inputs: string[]) => {
 };
 
 export const proxyMethods = (Cmp: any, methods: string[]) => {
-  const Prototype = Cmp.prototype;
-  methods.forEach((methodName) => {
-    Prototype[methodName] = function () {
-      const args = arguments;
-      return this.z.runOutsideAngular(() => this.el[methodName].apply(this.el, args));
-    };
-  });
+    const Prototype = Cmp.prototype;
+    methods.forEach((methodName) => {
+        Prototype[methodName] = function () {
+            const args = arguments;
+            const callMethod = () => {
+                if (this.el[methodName]) {
+                    return this.el[methodName].apply(this.el, args);
+                } else {
+                    setTimeout(callMethod, 100);
+                }
+            };
+           return Promise.resolve(callMethod());
+        };
+    });
 };
 
 export const proxyOutputs = (instance: any, el: any, events: string[]) => {

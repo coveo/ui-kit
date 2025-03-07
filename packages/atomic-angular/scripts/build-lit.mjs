@@ -5,12 +5,17 @@ const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'Lit
 
 const atomicAngularModuleFilePath ='projects/atomic-angular/src/lib/stencil-generated/atomic-angular.module.ts';
 const atomicAngularComponentFilePath = 'projects/atomic-angular/src/lib/stencil-generated/components.ts';
+const utilsFilePath = 'projects/atomic-angular/src/lib/stencil-generated/angular-component-lib/utils.ts';
+
 let atomicAngularModuleFileContent = readFileSync(atomicAngularModuleFilePath, 'utf-8');
 let atomicAngularComponentFileContent = readFileSync(atomicAngularComponentFilePath, 'utf-8');
+let utilsFileContent = readFileSync(utilsFilePath, 'utf-8');
+
 const litDeclarations = [];
 
 const startTag = '//#region Lit Declarations';
 const endTag = '//#endregion Lit Declarations';
+
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
@@ -39,6 +44,24 @@ ${declaration.events
   .join('\n')}
 }
 `
+
+const proxyMethods = `(Cmp: any, methods: string[]) => {
+    const Prototype = Cmp.prototype;
+    methods.forEach((methodName) => {
+        Prototype[methodName] = function () {
+            const args = arguments;
+            const callMethod = () => {
+                if (this.el[methodName]) {
+                    return this.el[methodName].apply(this.el, args);
+                } else {
+                    setTimeout(callMethod, 100);
+                }
+            };
+           return Promise.resolve(callMethod());
+        };
+    });
+};`
+
 atomicAngularComponentFileContent = atomicAngularComponentFileContent.replace(new RegExp(`${startTag}.*?${endTag}`, 'gm'), '').trimEnd() + `\n\n${startTag}\n`;
 
 const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
@@ -57,8 +80,14 @@ for (const module of cem.modules) {
 
 atomicAngularComponentFileContent += `\nimport type {${litImports.join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
 
-
 if(litDeclarations.length > 0) {
+  utilsFileContent = utilsFileContent.replace(
+    /export const proxyMethods = .*?};.*}\);.};/s,
+    `export const proxyMethods = ${proxyMethods}`
+  );
+
+  writeFileSync(utilsFilePath, utilsFileContent);
+
   writeFileSync(
     atomicAngularModuleFilePath,
     atomicAngularModuleFileContent
