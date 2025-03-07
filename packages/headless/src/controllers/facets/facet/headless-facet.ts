@@ -114,6 +114,7 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   const getFacetId = () => coreController.state.facetId;
 
   const createFacetSearch = () => {
+    console.log('h');
     const {facetSearch} = props.options;
 
     return buildFacetSearch(engine, {

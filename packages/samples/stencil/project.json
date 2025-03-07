@@ -1,28 +1,14 @@
 {
   "name": "atomic-stencil-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/www",
-      "!{projectRoot}/src/components.d.ts"
-    ]
-  },
   "targets": {
-    "cached:build:stencil": {
-      "dependsOn": ["^build"],
-      "inputs": ["^production", "production"],
-      "outputs": ["{projectRoot}/www", "{projectRoot}/src/components.d.ts"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/www", "{projectRoot}/src/components.d.ts"],
       "options": {
         "command": "npm run-script -w=@coveo/release if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
-        "cwd": "packages/samples/stencil"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:noop"
     }
   }
 }

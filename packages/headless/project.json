@@ -1,31 +1,21 @@
 {
   "name": "headless",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{projectRoot}/temp",
-      "!{workspaceRoot}/packages/atomic/src/external-builds"
-    ]
-  },
   "targets": {
     "release:phase1": {},
-    "cached:build": {
+    "build": {
+      "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/dist",
         "{projectRoot}/temp",
+        //Whjat the frick is this
         "{workspaceRoot}/packages/atomic/src/external-builds"
       ],
-      "executor": "nx:run-commands",
       "options": {
         "commands": ["npm run build:prod"],
         "parallel": false,
         "cwd": "packages/headless"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     },
     "dev": {
       "executor": "nx:run-commands",

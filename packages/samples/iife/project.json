@@ -1,22 +1,14 @@
 {
   "name": "iife-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": ["!{projectRoot}/www/cdn"]
-  },
   "targets": {
-    "cached:build": {
-      "dependsOn": ["^build", "clean"],
-      "outputs": ["{projectRoot}/www/cdn"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/www/cdn"],
       "options": {
         "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
-        "cwd": "packages/samples/iife"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
