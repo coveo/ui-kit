@@ -1,7 +1,7 @@
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {restoreTab} from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
 import {tabSetReducer} from './tab-set-slice.js';
 
@@ -115,24 +115,18 @@ describe('tab set slice', () => {
     });
   });
 
-  describe('#restoreSearchParameters', () => {
+  describe('#restoreTab', () => {
     it('when the #id exists, it sets #isActive to true', () => {
       const id = 'a';
       const tab = buildMockTabSlice({id, isActive: false});
-      const finalState = tabSetReducer(
-        {[id]: tab},
-        restoreSearchParameters({tab: id})
-      );
+      const finalState = tabSetReducer({[id]: tab}, restoreTab(id));
 
       expect(finalState[id]).toEqual({...tab, isActive: true});
     });
 
     it('when the #id does not exists, it does nothing', () => {
       const tab = buildMockTabSlice({id: 'a', isActive: true});
-      const finalState = tabSetReducer(
-        {a: tab},
-        restoreSearchParameters({tab: 'b'})
-      );
+      const finalState = tabSetReducer({a: tab}, restoreTab('b'));
       expect(finalState).toEqual({a: tab});
     });
   });
