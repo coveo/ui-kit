@@ -159,7 +159,6 @@ export function buildAnswerApiGeneratedAnswer(
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
-        citations: answerApiState?.citations ?? [],
         error: {
           message: answerApiState?.error?.message,
           statusCode: answerApiState?.error?.code,
