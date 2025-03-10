@@ -3,24 +3,10 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "release:phase1": {},
-    //This is just not used
-    "validate:definitions": {
-      "dependsOn": ["^build", "cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "validate:definitions"
-      }
-    },
     "build": {
       "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/cdn",
-        "{projectRoot}/loader",
-        "{projectRoot}/src/components.d.ts"
-      ],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/cdn"],
+      "cache": true,
       "options": {
         "commands": [
           "rimraf -rf dist cdn",

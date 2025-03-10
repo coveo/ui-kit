@@ -5,7 +5,8 @@
     "release:phase1": {},
     "build": {
       "executor": "nx:run-commands",
-      "outputs": [],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": ["npm run build:bundles", "npm run build:definitions"],
         "parallel": true,

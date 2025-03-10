@@ -5,12 +5,8 @@
     "release:phase1": {},
     "build": {
       "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/temp",
-        //Whjat the frick is this
-        "{workspaceRoot}/packages/atomic/src/external-builds"
-      ],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/temp"],
+      "cache": true,
       "options": {
         "commands": ["npm run build:prod"],
         "parallel": false,

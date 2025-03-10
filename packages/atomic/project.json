@@ -6,14 +6,6 @@
     "build-stencil-lit": {
       "dependsOn": ["build:locales"],
       "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/docs",
-        "{projectRoot}/src/components.d.ts",
-        "{projectRoot}/.stencil"
-      ],
-      "inputs": ["{projectRoot}/src/**/*.ts", "{projectRoot}/src/**/*.tsx"],
-      "cache": true,
       "options": {
         "commands": [
           "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
@@ -33,19 +25,33 @@
     "build-storybook": {
       "dependsOn": ["build-stencil-lit", "cem:build", "list-assets"],
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist-storybook"],
-      "cache": true,
       "options": {
         "commands": ["npx storybook build -o dist-storybook"],
         "cwd": "{projectRoot}"
       }
     },
     "build": {
-      "dependsOn": ["^build", "build-stencil-lit", "build-storybook"],
-      "executor": "nx:noop"
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/custom-elements.json",
+        "{projectRoot}/dist-storybook",
+        "{projectRoot}/dist",
+        "{projectRoot}/docs",
+        "{projectRoot}/src/components.d.ts",
+        "{projectRoot}/.stencil",
+        "{projectRoot}/src/generated"
+      ],
+      "cache": true,
+      "options": {
+        "commands": [
+          "nx run atomic:build-stencil-lit",
+          "nx run atomic:build-storybook"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
     },
     "build:locales": {
-      "outputs": ["{projectRoot}/src/generated"],
       "executor": "nx:run-commands",
       "options": {
         "commands": [
@@ -74,8 +80,6 @@
     },
     "cem:build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/custom-elements.json"],
-      "cache": true,
       "options": {
         "command": "cem analyze",
         "cwd": "{projectRoot}"

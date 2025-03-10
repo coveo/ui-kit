@@ -5,7 +5,8 @@
     "release:phase1": {},
     "build": {
       "executor": "nx:run-commands",
-      "outputs": [],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
           "node ./scripts/build-lit.mjs",

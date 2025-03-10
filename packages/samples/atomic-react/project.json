@@ -5,6 +5,7 @@
     "build": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
           "npm run-script -w=@coveo/release if-not-cdn -- \"tsc -b\"",

@@ -1,8 +1,7 @@
 {
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "cache": true
+      "dependsOn": ["^build"]
     },
     "dev": {
       "dependsOn": ["^build"]

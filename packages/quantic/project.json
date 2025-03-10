@@ -12,6 +12,7 @@
         "{projectRoot}/force-app/main/default/staticresources/dompurify",
         "{projectRoot}/force-app/main/default/staticresources/marked"
       ],
+      "cache": true,
       "options": {
         "commands": [
           "npm run babel:headless && npm run build:staticresources",
