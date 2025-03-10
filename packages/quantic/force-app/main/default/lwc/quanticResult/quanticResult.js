@@ -56,6 +56,13 @@ export default class QuanticResult extends LightningElement {
    * @type {string}
    */
   @api openPreviewId;
+  /**
+   * Whether or not we want to hide the quick view for the result.
+   * @api
+   * @type {boolean}
+   * @defaultValue `false`
+   */
+  @api withoutQuickview = false;
 
   @track resultHasPreview = true;
 
@@ -100,7 +107,7 @@ export default class QuanticResult extends LightningElement {
   }
 
   onHasPreview = (evt) => {
-    this.resultHasPreview = evt.detail.hasPreview;
+    this.resultHasPreview = !this.withoutQuickview && evt.detail.hasPreview;
     evt.stopPropagation();
   };
 

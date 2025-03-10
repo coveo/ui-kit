@@ -118,3 +118,4 @@ export type {
 
 // Features
 export {ResultTemplatesHelpers} from './features/result-templates/result-templates-helpers.js';
+export {buildResultTemplatesManager} from './features/result-templates/result-templates-manager.js';
