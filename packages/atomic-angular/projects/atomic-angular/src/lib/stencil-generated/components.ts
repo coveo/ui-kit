@@ -391,7 +391,7 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
 })
-export class AtomicCommerceProductList {
+export class AtomicCommerceProductListStencil {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -400,7 +400,7 @@ export class AtomicCommerceProductList {
 }
 
 
-export declare interface AtomicCommerceProductList extends Components.AtomicCommerceProductList {}
+export declare interface AtomicCommerceProductListStencil extends Components.AtomicCommerceProductListStencil {}
 
 
 @ProxyCmp({

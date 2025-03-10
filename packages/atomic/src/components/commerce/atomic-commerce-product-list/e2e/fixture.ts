@@ -1,20 +1,16 @@
 import {AxeFixture, makeAxeBuilder} from '@/playwright-utils/base-fixture';
 import {test as base} from '@playwright/test';
-import {SearchBoxPageObject} from '../../atomic-commerce-search-box/e2e/page-object';
-import {ProductListObject} from './page-object';
+import {AtomicCommerceProductListPageObject} from './page-object';
 
-interface TestFixture {
-  productList: ProductListObject;
-  searchBox: SearchBoxPageObject;
-}
+type Fixtures = {
+  commerceProductList: AtomicCommerceProductListPageObject;
+};
 
-export const test = base.extend<TestFixture & AxeFixture>({
+export const test = base.extend<Fixtures & AxeFixture>({
   makeAxeBuilder,
-  searchBox: async ({page}, use) => {
-    await use(new SearchBoxPageObject(page));
-  },
-  productList: async ({page}, use) => {
-    await use(new ProductListObject(page));
+  commerceProductList: async ({page}, use) => {
+    await use(new AtomicCommerceProductListPageObject(page));
   },
 });
+
 export {expect} from '@playwright/test';
