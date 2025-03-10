@@ -42,10 +42,6 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     return this.page.locator('atomic-insight-result');
   }
 
-  get quickviewModal() {
-    return this.page.locator('atomic-quickview-modal');
-  }
-
   get atomicQuickviewModal() {
     return this.page.locator('.atomic-quickview-modal');
   }
