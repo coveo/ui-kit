@@ -1,3 +1,11 @@
+## <small>3.19.1 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+- fix(deps): update dependency @reduxjs/toolkit to v2.6.0 j:kit-282 (#5033) ([30fb327](https://github.com/coveo/ui-kit/commits/30fb327)), closes [#5033](https://github.com/coveo/ui-kit/issues/5033)
+- chore(deps): update dependency typedoc to v0.27.9 j:kit-282 (#5030) ([f8d3d0e](https://github.com/coveo/ui-kit/commits/f8d3d0e)), closes [#5030](https://github.com/coveo/ui-kit/issues/5030)
+- feat(headless SSR commerce): Allow setting analytics 'capture' property through navigator provider ( ([25495db](https://github.com/coveo/ui-kit/commits/25495db)), closes [#4995](https://github.com/coveo/ui-kit/issues/4995)
+- feat(headless): added analytics section to fetch document suggestion call (#5011) ([6c07d5f](https://github.com/coveo/ui-kit/commits/6c07d5f)), closes [#5011](https://github.com/coveo/ui-kit/issues/5011)
+
 ## 3.18.0 (2025-02-27)
 
 - feat(headless commerce): re-implement field suggestions as faceted search (#5005) ([dec06a7](https://github.com/coveo/ui-kit/commits/dec06a7)), closes [#5005](https://github.com/coveo/ui-kit/issues/5005)
