@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.20.1",
+  "version": "3.20.3",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.8",
-    "@coveo/headless": "3.18.0",
+    "@coveo/headless": "3.19.1",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.26.2",
     "@stencil/core": "4.20.0",
@@ -106,13 +106,13 @@
     "@storybook/test": "8.1.11",
     "@storybook/web-components": "8.1.11",
     "@storybook/web-components-vite": "8.1.11",
-    "@tailwindcss/postcss": "4.0.7",
+    "@tailwindcss/postcss": "4.0.8",
     "@testing-library/jest-dom": "6.6.3",
     "@types/core-js": "2.5.8",
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
     "@types/lodash": "4.17.15",
-    "@types/node": "22.13.4",
+    "@types/node": "22.13.5",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
     "@vitest/browser": "3.0.6",
@@ -137,7 +137,7 @@
     "postcss": "8.5.2",
     "postcss-load-config": "6.0.1",
     "postcss-nested": "7.0.2",
-    "puppeteer": "24.2.1",
+    "puppeteer": "24.3.0",
     "react": "18.3.1",
     "rollup": "4.34.8",
     "rollup-plugin-html": "0.2.1",
@@ -154,7 +154,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.8",
-    "@coveo/headless": "3.18.0"
+    "@coveo/headless": "3.19.1"
   },
   "license": "Apache-2.0",
   "engines": {
