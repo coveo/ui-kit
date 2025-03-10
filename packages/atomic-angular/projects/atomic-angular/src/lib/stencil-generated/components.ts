@@ -413,13 +413,13 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
   methods: ['setRenderFunction']
 })
 @Component({
-  selector: 'atomic-commerce-product-list',
+  selector: 'atomic-commerce-product-list-stencil',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
 })
-export class AtomicCommerceProductList {
+export class AtomicCommerceProductListStencil {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
@@ -428,7 +428,7 @@ export class AtomicCommerceProductList {
 }
 
 
-export declare interface AtomicCommerceProductList extends Components.AtomicCommerceProductList {}
+export declare interface AtomicCommerceProductListStencil extends Components.AtomicCommerceProductListStencil {}
 
 
 @ProxyCmp({

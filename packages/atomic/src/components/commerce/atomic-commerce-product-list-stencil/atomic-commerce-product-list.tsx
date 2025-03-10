@@ -52,18 +52,18 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 
 /**
  * @alpha
- * The `atomic-commerce-product-list` component is responsible for displaying products.
+ * The `atomic-commerce-product-list-stencil` component is responsible for displaying products.
  *
  * @part result-list - The element containing the list of products.
  *
  * @slot default - The default slot where the product templates are defined.
  */
 @Component({
-  tag: 'atomic-commerce-product-list',
+  tag: 'atomic-commerce-product-list-stencil',
   styleUrl: 'atomic-commerce-product-list.pcss',
   shadow: true,
 })
-export class AtomicCommerceProductList
+export class AtomicCommerceProductListStencil
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;

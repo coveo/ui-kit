@@ -1,5 +1,6 @@
 import {
   LitElement,
+  PropertyValues,
   ReactiveController,
   ReactiveControllerHost,
   ReactiveElement,
@@ -107,6 +108,10 @@ export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
 
     private initBindings() {
       new BindingController(this);
+    }
+
+    public updated(_changedProperties: PropertyValues) {
+      super.updated(_changedProperties);
     }
   }
 
