@@ -1,3 +1,8 @@
+## <small>2.4.11 (2025-03-06)</small>
+
+- chore(deps): update dependency typedoc to v0.27.9 j:kit-282 (#5030) ([f8d3d0e](https://github.com/coveo/ui-kit/commits/f8d3d0e)), closes [#5030](https://github.com/coveo/ui-kit/issues/5030)
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
 ## <small>2.4.8 (2025-02-26)</small>
 
 - chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)

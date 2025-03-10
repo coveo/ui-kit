@@ -110,12 +110,6 @@
         "cwd": "{projectRoot}"
       }
     },
-    "release:phase4": {
-      "dependsOn": ["^release:phase4"],
-      "//": "Currently disabled TODO KIT-3074",
-      "executor": "nx:noop",
-      "options": {"script": "publish:bump"}
-    },
     "cached:build:stencil": {
       "cache": true
     },

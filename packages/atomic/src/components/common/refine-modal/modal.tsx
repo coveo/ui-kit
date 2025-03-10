@@ -1,6 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';
 import {BaseFacetElement} from '../facets/facet-common';
 import {popoverClass} from '../facets/popover/popover-type';
 import {isRefineModalFacet} from '../interface/store';
@@ -22,9 +23,6 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
   props,
   children
 ) => {
-  const exportparts =
-    'backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper';
-
   const flushFacetElements = () => {
     props.host.querySelector('div[slot="facets"]')?.remove();
   };
@@ -86,7 +84,7 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
           flushFacetElements();
         }
       }}
-      exportparts={exportparts}
+      exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       boundary={props.boundary}
       scope={props.scope}
     >
