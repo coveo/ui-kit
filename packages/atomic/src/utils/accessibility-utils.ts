@@ -1,7 +1,7 @@
-// import {AnyBindings} from '../components/common/interface/bindings';
-// import {buildCustomEvent} from './event-utils';
-// import {InitializableComponent} from './initialization-utils';
-// import {defer} from './utils';
+import {PropertyValues} from 'lit';
+import {AnyBindings} from '../components';
+import {InitializableComponent} from '../decorators/types';
+import {defer} from './utils';
 
 // const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 
@@ -15,7 +15,85 @@ export interface FindAriaLiveEventArgs {
 export function AriaLiveRegion(_regionName: string, _assertive = false) {}
 
 //TODO: Reimplement to fit Lit
-export class FocusTargetController {}
+export class FocusTargetController {
+  private bindings: AnyBindings;
+  private lastSearchId?: string;
+  private element?: HTMLElement;
+  private onFocusCallback?: Function;
+  private doFocusAfterSearch = false;
+  private doFocusOnNextTarget = false;
+
+  constructor(private component: InitializableComponent<AnyBindings>) {
+    this.bindings = component.bindings;
+    this.handleComponentRenderLoop();
+  }
+
+  public setTarget(el: HTMLElement | undefined) {
+    if (!el) {
+      return;
+    }
+    this.element = el;
+    if (this.doFocusOnNextTarget) {
+      this.doFocusOnNextTarget = false;
+      this.focus();
+    }
+  }
+
+  public async focus() {
+    await defer();
+    this.element?.focus();
+    this.onFocusCallback?.();
+  }
+
+  public focusAfterSearch() {
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+      this.bindings.engine
+    );
+    this.doFocusAfterSearch = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public focusOnNextTarget() {
+    this.doFocusOnNextTarget = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public disableForCurrentSearch() {
+    if (
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+      this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+    }
+  }
+
+  private handleComponentRenderLoop() {
+    const originalComponentDidRender = this.component.updated;
+
+    this.component.updated = (_changedProperties: PropertyValues) => {
+      originalComponentDidRender &&
+        originalComponentDidRender.call(this.component, _changedProperties);
+      if (!this.bindings) {
+        return;
+      }
+      if (
+        this.doFocusAfterSearch &&
+        this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+          this.lastSearchId
+      ) {
+        this.doFocusAfterSearch = false;
+        if (this.element) {
+          const el = this.element;
+          // The focus seems to be flaky without deferring, especially on iOS.
+          defer().then(() => {
+            el.focus();
+            this.onFocusCallback?.();
+          });
+        }
+      }
+    };
+  }
+}
 
 function isFocusable(element: Element) {
   // Source: https://stackoverflow.com/a/30753870
