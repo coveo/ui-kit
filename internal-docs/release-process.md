@@ -94,13 +94,6 @@ This task will create a new "version bump" commit, which will contain:
 
 This task will also revert the changes from `release:phase0` to allow merging new features and fixes.
 
-## `release:phase4` (publish to GitHub Packages)
-
-> [!WARNING]
-> Currently disabled.
-
-This task will do the same thing as `release:phase1`, sub-phase 3, but is intended to publish the NPM package to GitHub Packages instead.
-
 # Deploying
 
 > [!NOTE]
