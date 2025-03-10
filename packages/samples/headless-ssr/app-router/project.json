@@ -2,16 +2,14 @@
   "name": "headless-ssr-samples-app-router",
   "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "cached:build": {
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/.next", "{projectRoot}/next-env.d.ts"],
+      "cache": true,
       "options": {
         "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:next\"",
-        "cwd": "packages/samples/headless-ssr/app-router"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
