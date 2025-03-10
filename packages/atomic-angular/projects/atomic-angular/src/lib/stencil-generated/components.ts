@@ -4,10 +4,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 
 import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 
-import { Components } from '@coveo/atomic';
-
+import type { Components } from '@coveo/atomic';
+import {defineCustomElementAtomicAriaLive, defineCustomElementAtomicCommerceSearchBox, defineCustomElementAtomicCommerceSearchBoxQuerySuggestions, defineCustomElementAtomicCommerceSearchBoxRecentQueries} from '@coveo/atomic/components'
 
 @ProxyCmp({
+  defineCustomElementFn: defineCustomElementAtomicAriaLive
 })
 @Component({
   selector: 'atomic-aria-live',
@@ -566,7 +567,8 @@ export declare interface AtomicCommerceRefineToggle extends Components.AtomicCom
 
 
 @ProxyCmp({
-  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
+  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout'],
+  defineCustomElementFn: defineCustomElementAtomicCommerceSearchBox
 })
 @Component({
   selector: 'atomic-commerce-search-box',
@@ -631,7 +633,8 @@ export declare interface AtomicCommerceSearchBoxInstantProducts extends Componen
 
 
 @ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  defineCustomElementFn: defineCustomElementAtomicCommerceSearchBoxQuerySuggestions
 })
 @Component({
   selector: 'atomic-commerce-search-box-query-suggestions',
@@ -653,7 +656,8 @@ export declare interface AtomicCommerceSearchBoxQuerySuggestions extends Compone
 
 
 @ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  defineCustomElementFn: defineCustomElementAtomicCommerceSearchBoxRecentQueries
 })
 @Component({
   selector: 'atomic-commerce-search-box-recent-queries',
@@ -828,7 +832,7 @@ export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 
 @ProxyCmp({
-  inputs: ['collapseFacetsAfter']
+  inputs: ['collapseFacetsAfter'],
 })
 @Component({
   selector: 'atomic-facet-manager',
@@ -3086,7 +3090,8 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 @ProxyCmp({
   inputs: ['name', 'type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'CspNonce'],
-  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest']
+  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
 })
 @Component({
   selector: 'atomic-commerce-interface',
@@ -3100,7 +3105,7 @@ export class AtomicCommerceInterface {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
-    proxyOutputs(this, this.el, []);
+    // proxyOutputs(this, this.el, []);
   }
 }
 
@@ -3108,5 +3113,5 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 }
 
-import type {AtomicCommerceInterface as LitAtomicCommerceInterface} from '@coveo/atomic/components';
+import {AtomicCommerceInterface as LitAtomicCommerceInterface} from '@coveo/atomic/components';
 //#endregion Lit Declarations

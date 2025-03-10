@@ -144,11 +144,6 @@ AtomicText,
 AtomicTimeframe,
 AtomicTimeframeFacet
 } from './components';
-
-        
-import {defineCustomElements} from '@coveo/atomic/loader';
-defineCustomElements(window);
-
         
 const DECLARATIONS = [
 AtomicCommerceInterface,

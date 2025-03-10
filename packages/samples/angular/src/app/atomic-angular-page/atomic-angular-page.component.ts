@@ -13,7 +13,6 @@ export class AtomicAngularPageComponent implements AfterViewInit {
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
     await customElements.whenDefined('atomic-commerce-interface');
-
     this?.searchInterface.initialize({
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
       analytics: {
