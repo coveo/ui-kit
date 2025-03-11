@@ -66,9 +66,9 @@ export class SearchObject {
         }
       });
 
-      await route.continue({
-        method: 'POST',
-        postData: JSON.stringify({
+      await route.fulfill({
+        status: 200,
+        body: JSON.stringify({
           ...originalBody,
           facets: reorderedFacets,
         }),
