@@ -3064,29 +3064,6 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 //#region Lit Declarations
 
 @ProxyCmp({
-  inputs: ['element', 'error']
-})
-@Component({
-  selector: 'atomic-component-error',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['element', 'error']
-})
-export class AtomicComponentError {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    proxyOutputs(this, this.el, []);
-  }
-}
-
-export declare interface AtomicComponentError extends LitAtomicComponentError {
-
-}
-
-@ProxyCmp({
   inputs: ['icon']
 })
 @Component({
@@ -3109,5 +3086,28 @@ export declare interface AtomicIcon extends LitAtomicIcon {
 
 }
 
-import type {AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon} from '@coveo/atomic/components';
+@ProxyCmp({
+  inputs: ['element', 'error']
+})
+@Component({
+  selector: 'atomic-component-error',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['element', 'error']
+})
+export class AtomicComponentError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, []);
+  }
+}
+
+export declare interface AtomicComponentError extends LitAtomicComponentError {
+
+}
+
+import type {AtomicIcon as LitAtomicIcon, AtomicComponentError as LitAtomicComponentError} from '@coveo/atomic/components';
 //#endregion Lit Declarations

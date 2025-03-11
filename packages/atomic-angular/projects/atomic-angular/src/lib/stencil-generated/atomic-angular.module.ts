@@ -5,8 +5,8 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicComponentError,
 AtomicIcon,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -151,8 +151,8 @@ defineCustomElements(window);
 
         
 const DECLARATIONS = [
-AtomicComponentError,
 AtomicIcon,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
