@@ -1,3 +1,11 @@
+## <small>3.20.3 (2025-03-06)</small>
+
+- fix(atomic): Added missed "backdrop" part to the exported parts in the refine modal (#5022) ([afe9f4e](https://github.com/coveo/ui-kit/commits/afe9f4e)), closes [#5022](https://github.com/coveo/ui-kit/issues/5022)
+- fix(atomic): fix class title and overflow when message is too long (#5035) ([b7ea563](https://github.com/coveo/ui-kit/commits/b7ea563)), closes [#5035](https://github.com/coveo/ui-kit/issues/5035)
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+- test(atomic): exclude lit console warning in cypress assert (#5021) ([b5789e6](https://github.com/coveo/ui-kit/commits/b5789e6)), closes [#5021](https://github.com/coveo/ui-kit/issues/5021)
+- chore: better names commerce storybook utilities (#5015) ([d54cb53](https://github.com/coveo/ui-kit/commits/d54cb53)), closes [#5015](https://github.com/coveo/ui-kit/issues/5015)
+
 ## <small>3.20.1 (2025-02-27)</small>
 
 - ci: replace RESOURCE_URL in stencil build (#5019) ([457e03e](https://github.com/coveo/ui-kit/commits/457e03e)), closes [#5019](https://github.com/coveo/ui-kit/issues/5019)
