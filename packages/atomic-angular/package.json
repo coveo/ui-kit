@@ -33,7 +33,7 @@
     "@coveo/headless": "3.19.2",
     "@types/node": "22.13.5",
     "ng-packagr": "18.2.1",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
