@@ -5,7 +5,7 @@ import {
   readFileSync,
   writeFileSync,
 } from 'node:fs';
-import {join} from 'node:path';
+import {join, sep, resolve, relative} from 'node:path';
 
 const headlessVersion = JSON.parse(
   readFileSync('../headless/package.json', 'utf8')
