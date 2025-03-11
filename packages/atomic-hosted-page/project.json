@@ -22,7 +22,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rm -rf dist cdn",
+          "rimraf -rf dist cdn",
           "tsc --outdir dist",
           "tsc --outdir cdn --project tsconfig.cdn.json",
           "node ./scripts/esbuild.js"
