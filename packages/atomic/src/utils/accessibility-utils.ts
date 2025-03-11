@@ -28,11 +28,11 @@ export class FocusTargetController {
     this.handleComponentRenderLoop();
   }
 
-  public setTarget(el: HTMLElement | undefined) {
+  public setTarget(el: Element | undefined) {
     if (!el) {
       return;
     }
-    this.element = el;
+    this.element = el as HTMLElement;
     if (this.doFocusOnNextTarget) {
       this.doFocusOnNextTarget = false;
       this.focus();
@@ -139,8 +139,6 @@ export function* getFocusableDescendants(
   }
 }
 
-export function getFirstFocusableDescendant(
-  element: Element
-): HTMLElement | null {
+export function getFirstFocusableDescendant(element: Element): Element | null {
   return getFocusableDescendants(element).next().value ?? null;
 }

@@ -5,7 +5,7 @@ import {createRef, Ref, ref} from 'lit/directives/ref.js';
 export interface DisplayGridProps {
   selectorForItem: string;
   item: {clickUri: string; title: string};
-  setRef: (element?: HTMLElement) => void;
+  setRef: (element?: Element) => void;
   select: () => void;
   beginDelayedSelect: () => void;
   cancelPendingSelect: () => void;
@@ -20,7 +20,7 @@ export const displayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
   const r: Ref<HTMLElement> = createRef();
 
   const setRef = (element: Element | undefined) => {
-    props.setRef(element as HTMLElement);
+    props.setRef(element);
     return r;
   };
 
