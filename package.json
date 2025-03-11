@@ -24,8 +24,7 @@
     "release:phase0": "npm run-script -w=@coveo/release git-lock",
     "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream; npm run-script -w=@coveo/release bump:root",
     "release:phase2": "npm run-script -w=@coveo/release reify",
-    "release:phase3": "npm run-script -w=@coveo/release git-publish-all",
-    "release:phase4": "nx run-many --targets=release:phase4 --all"
+    "release:phase3": "npm run-script -w=@coveo/release git-publish-all"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",
