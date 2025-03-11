@@ -42,7 +42,7 @@ export interface ItemListCommonProps {
 
 export class ItemListCommon {
   private indexOfResultToFocus?: number;
-  private firstResultEl?: HTMLElement;
+  private firstResultEl?: Element;
   private updateBreakpointsOnce: () => void;
 
   constructor(private props: ItemListCommonProps) {
@@ -64,7 +64,7 @@ export class ItemListCommon {
     return `${uniqueIdOnResult}${searchResponseId}${density}${imageSize}`;
   }
 
-  public setNewResultRef(element: HTMLElement, resultIndex: number) {
+  public setNewResultRef(element: Element, resultIndex: number) {
     if (resultIndex === 0) {
       this.firstResultEl = element;
     }
