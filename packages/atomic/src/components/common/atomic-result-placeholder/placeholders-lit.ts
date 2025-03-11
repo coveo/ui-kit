@@ -4,7 +4,7 @@ import {
   ItemDisplayLayout,
 } from '@/src/components';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 
 interface ResultPlaceholderProps {
   density: ItemDisplayDensity;
@@ -21,14 +21,13 @@ export const resultsPlaceholdersGuard: FunctionalComponent<
   ResultPlaceholderGuardProps
 > = ({props}) => {
   if (!props.displayPlaceholders) {
-    return;
+    return nothing;
   }
-  switch (props.display) {
-    case 'table':
-      return html`${tableDisplayResultsPlaceholder({props})}`;
-    default:
-      return html`${resultsPlaceholder({props})}`;
+  if (props.display === 'table') {
+    return html`${tableDisplayResultsPlaceholder({props})}`;
   }
+
+  return html`${resultsPlaceholder({props})}`;
 };
 
 export const resultsPlaceholder: FunctionalComponent<

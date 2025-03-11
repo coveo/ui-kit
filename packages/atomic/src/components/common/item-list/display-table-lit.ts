@@ -4,6 +4,8 @@ import {
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
 import {html, TemplateResult} from 'lit';
+import {map} from 'lit/directives/map.js';
+import {ref} from 'lit/directives/ref.js';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {AnyItem} from '../interface/item';
 
@@ -26,7 +28,7 @@ export interface TableDataProps extends TableColumnsProps {
 export interface DisplayTableRowProps {
   key: string;
   rowIndex: number;
-  setRef: (element?: HTMLElement) => void;
+  setRef: (element?: Element) => void;
 }
 
 const getFieldTableColumns = (props: TableColumnsProps) => {
@@ -78,7 +80,7 @@ export const displayTable: FunctionalComponentWithChildren<
   return html`<table class="list-root ${listClasses}" part="result-table">
     <thead part="result-table-heading">
       <tr part="result-table-heading-row">
-        ${fieldColumns.map((column) => {
+        ${map(fieldColumns, (column) => {
           return html`<th part="result-table-heading-cell">
             <atomic-text value=${column.getAttribute('label')!}></atomic-text>
           </th>`;
@@ -100,7 +102,7 @@ export const displayTableRow: FunctionalComponentWithChildren<
     key=${key}
     part="result-table-row ${rowIndex % 2 ===
     1} ? 'result-table-row-even' : 'result-table-row-odd'"
-    ref=${(element: HTMLElement) => setRef(element)}
+    ${ref((element?: Element) => setRef(element))}
   >
     ${children}
   </tr>`;
@@ -114,8 +116,14 @@ export const displayTableData: FunctionalComponent<
   const {renderItem} = props;
   const fieldColumns = getFieldTableColumns(props);
 
-  return fieldColumns.map((column) => {
-    const key = column.getAttribute('label')! + props.key;
-    return html`<tb key=${key} part="result-table-cell">${renderItem(column)}</td>`;
-  });
+  return html`${map(
+    fieldColumns,
+    (column) =>
+      html`<td
+        key=${`${column.getAttribute('label')!}${props.key}`}
+        part="result-table-cell"
+      >
+        ${renderItem(column)}
+      </td>`
+  )}`;
 };
