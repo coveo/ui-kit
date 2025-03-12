@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "release:phase1": {},
+    "release:phase3": {},
     "build": {
       "executor": "nx:run-commands",
       "outputs": ["{projectRoot}/dist", "{projectRoot}/cdn"],
