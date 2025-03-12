@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import {defineConfig} from 'vitest/config';
 
@@ -34,6 +35,7 @@ export default defineConfig({
         return null;
       },
     },
+    tailwindcss(),
   ],
   test: {
     include: ['src/**/*.spec.ts'],
