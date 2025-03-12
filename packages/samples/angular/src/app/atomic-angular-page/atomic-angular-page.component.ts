@@ -7,7 +7,6 @@ import {AfterViewInit, Component, ViewChild} from '@angular/core';
 })
 export class AtomicAngularPageComponent implements AfterViewInit {
   @ViewChild('searchInterface')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   searchInterface!: HTMLAtomicCommerceInterfaceElement;
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
