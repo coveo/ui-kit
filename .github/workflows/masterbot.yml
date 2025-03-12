@@ -40,5 +40,4 @@ jobs:
           npm run release:phase3
           npm run release:phase4
         env:
-          DEBUG: '*'
           IS_PRERELEASE: 'true'
