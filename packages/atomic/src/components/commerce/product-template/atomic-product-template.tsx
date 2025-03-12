@@ -26,7 +26,7 @@ import {
   shadow: true,
 })
 export class AtomicProductTemplate {
-  private productTemplateCommon: ProductTemplateCommon;
+  private productTemplateCommon!: ProductTemplateCommon;
 
   @State() public error!: Error;
 
@@ -60,7 +60,9 @@ export class AtomicProductTemplate {
     string[]
   > = {};
 
-  constructor() {
+  constructor() {}
+
+  connectedCallback() {
     this.productTemplateCommon = new ProductTemplateCommon({
       host: this.host,
       setError: (err) => {
