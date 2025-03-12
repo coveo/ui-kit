@@ -36,13 +36,6 @@
       "matchPackageNames": ["/typescript/"]
     },
     {
-      "groupName": "tailwindcss",
-      "groupSlug": "tailwindcss",
-      "rangeStrategy": "replace",
-      "description": "Isolate tailwind for v4",
-      "matchPackageNames": ["tailwindcss"]
-    },
-    {
       "groupName": "vite",
       "groupSlug": "vite",
       "rangeStrategy": "replace",
