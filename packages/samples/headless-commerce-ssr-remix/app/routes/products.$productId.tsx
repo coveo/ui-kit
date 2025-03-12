@@ -1,7 +1,6 @@
 import ContextDropdown from '@/app/components/context-dropdown';
 import ProductView from '@/app/components/product-view';
 import {StandaloneProvider} from '@/app/components/providers/providers';
-import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
@@ -9,23 +8,19 @@ import externalCatalogAPI, {
   ExternalCatalogItem,
 } from '@/external-services/external-catalog-service';
 import externalContextService from '@/external-services/external-context-service';
+import {StandaloneStaticState} from '@/lib/commerce-engine';
 import {
-  standaloneEngineDefinition,
-  StandaloneStaticState,
-} from '@/lib/commerce-engine';
-import {fetchToken} from '@/lib/fetch-token';
-import {isExpired} from '@/lib/jwt-utils';
+  getBaseFetchStaticStateConfiguration,
+  getEngineDefinition,
+} from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
-  toCoveoCartItems,
-  toCoveoCurrency,
-} from '@/utils/external-api-conversions';
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+  NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
-import {coveo_accessToken} from '../cookies.server';
-import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const productId = params.productId;
@@ -34,59 +29,34 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   const catalogItem = await externalCatalogAPI.getItem(request.url);
 
-  const {country, currency, language} =
+  const {currency, language} =
     await externalContextService.getContextInformation();
 
-  const {navigatorContext, setCookieHeader} =
-    await getNavigatorContext(request);
+  const {navigatorContext} = await getNavigatorContext(request);
 
-  if (isExpired(standaloneEngineDefinition.getAccessToken())) {
-    const accessTokenCookie = await coveo_accessToken.parse(
-      request.headers.get('Cookie')
-    );
-
-    const accessToken = isExpired(accessTokenCookie)
-      ? await fetchToken()
-      : accessTokenCookie;
-
-    standaloneEngineDefinition.setAccessToken(accessToken);
-  }
-
-  standaloneEngineDefinition.setNavigatorContextProvider(
-    () => navigatorContext
+  const standaloneEngineDefinition = await getEngineDefinition(
+    navigatorContext,
+    request,
+    SolutionType.standalone
   );
 
-  const staticState = await standaloneEngineDefinition.fetchStaticState({
-    controllers: {
-      cart: {
-        initialState: {
-          items: toCoveoCartItems(await externalCartService.getItems()),
-        },
-      },
-      context: {
-        language,
-        country,
-        currency: toCoveoCurrency(currency),
-        view: {
-          url: `https://sports.barca.group/products/${productId}`,
-        },
-      },
-    },
-  });
+  const baseFetchStaticStateConfiguration =
+    await getBaseFetchStaticStateConfiguration(new URL(request.url).pathname);
+
+  const staticState = await standaloneEngineDefinition.fetchStaticState(
+    baseFetchStaticStateConfiguration
+  );
 
   const cartItem = await externalCartService.getItem(productId);
 
-  return Response.json(
-    {
-      staticState,
-      navigatorContext,
-      catalogItem,
-      cartItem,
-      language,
-      currency,
-    },
-    {headers: {...setCookieHeader}}
-  );
+  return Response.json({
+    staticState,
+    navigatorContext,
+    catalogItem,
+    cartItem,
+    language,
+    currency,
+  });
 };
 
 export default function ProductRoute() {
@@ -107,15 +77,12 @@ export default function ProductRoute() {
     currency: string;
   }>();
 
-  useClientId();
-
   return (
     <StandaloneProvider
       staticState={staticState}
       navigatorContext={navigatorContext}
     >
       <ContextDropdown />
-      <StandaloneSearchBox />
       <ProductView
         catalogItem={catalogItem}
         cartItem={cartItem}
