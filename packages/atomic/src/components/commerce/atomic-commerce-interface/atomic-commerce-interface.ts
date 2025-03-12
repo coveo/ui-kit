@@ -491,6 +491,6 @@ export class AtomicCommerceInterface
   }
 
   render() {
-    return html`patate<slot></slot> `;
+    return html`<slot></slot> `;
   }
 }

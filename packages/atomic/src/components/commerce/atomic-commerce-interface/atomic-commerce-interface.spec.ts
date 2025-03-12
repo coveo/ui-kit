@@ -1,145 +1,105 @@
 import {Bindings} from '@/src/components';
+import {bindings} from '@/src/decorators/bindings';
+import {InitializableComponent} from '@/src/decorators/types';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {provide} from '@lit/context';
-import i18next from 'i18next';
 import {html} from 'lit';
-import {LitElement, render, TemplateResult} from 'lit';
+import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, test, expect} from 'vitest';
-import {bindingsContext} from '../../context/bindings-context';
+import {within} from 'shadow-dom-testing-library';
+import {describe, test, expect, vi} from 'vitest';
+import {InitializeBindingsMixin} from '../../../mixins/bindings-mixin';
 import {AtomicCommerceInterface} from './atomic-commerce-interface';
 
-const cachedWrappers: Set<HTMLElement> = new Set();
-
-/**
- * Wrapper for fixture, creates a new parent node and appends it to the document body
- * You do not need to use this function directly in the tests if you use`fixture`.
- * @param {HTMLElement} parentNode - The parent node to append to the document body.
- */
-export function fixtureWrapper(parentNode: HTMLElement) {
-  document.body.appendChild(parentNode);
-  cachedWrappers.add(parentNode);
-  return parentNode;
-}
-
-/**
- * Cleans up all the cached wrappers created by the fixtureWrapper function.
- * This function will automatically be called after each tests.
- */
-export function fixtureCleanup() {
-  if (cachedWrappers.size > 0) {
-    for (const wrapper of cachedWrappers) {
-      document.body.removeChild(wrapper);
-    }
-    cachedWrappers.clear();
-  }
-}
-
-/**
- * Asynchronously renders a Lit template into a parentNode and waits for the element to update.
- * @param {TemplateResult} template - The Lit template to render.
- * @param {HTMLElement} [parentNode=document.createElement('div')] - The parent node to render the template into.
- * @returns {Promise<T>} A promise that resolves to the rendered LitElement.
- */
-export async function fixture<T extends LitElement>(
-  template: TemplateResult,
-  parentNode: HTMLElement = document.createElement('div')
-): Promise<T> {
-  const wrapper = fixtureWrapper(parentNode);
-  render(template, wrapper);
-
-  const element = wrapper.firstElementChild as T;
-  await element.updateComplete;
-
-  return element;
-}
-
-const mockBindings = () =>
-  ({
-    i18n: i18next.createInstance(),
-  }) as Bindings;
-
-@customElement('test-interface-element')
-export class TestInterfaceElement extends LitElement {
+@customElement('test-element')
+@bindings()
+export class TestElement
+  extends InitializeBindingsMixin(LitElement)
+  implements InitializableComponent<Bindings>
+{
   @state()
-  @provide({context: bindingsContext})
   public bindings: Bindings = {} as Bindings;
   @state() public error!: Error;
 
   public initialized = false;
 
   public render() {
-    return html`interface`;
+    return html`Child Element Content`;
   }
 
-  public initialize() {
-    this.bindings = mockBindings();
-    this.bindings.i18n.init();
-  }
+  initialize = vi.fn();
 }
 
 const commerceEngineConfig: CommerceEngineConfiguration =
   getSampleCommerceEngineConfiguration();
 describe('AtomicCommerceInterface', () => {
   let element: AtomicCommerceInterface;
-  let interfaceElement: TestInterfaceElement;
+  let childElement: InitializableComponent<Bindings> & LitElement;
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+
+  const addChildElement = async <T extends LitElement>(
+    tag = 'test-element'
+  ) => {
+    childElement = document.createElement(
+      tag
+    ) as InitializableComponent<Bindings> & T;
+    element.appendChild(childElement);
+
+    await childElement.updateComplete;
+    expect(childElement).toBeInstanceOf(TestElement);
+  };
 
   const setupElement = async () => {
     element = await fixture<AtomicCommerceInterface>(
-      html` <atomic-commerce-interface></atomic-commerce-interface>`
+      html` <atomic-commerce-interface>test</atomic-commerce-interface>`
     );
 
-    interfaceElement = document.createElement(
-      'test-interface-element'
-    ) as TestInterfaceElement;
-    element.appendChild(interfaceElement);
-
     await element.updateComplete;
+    expect(element).toBeInstanceOf(AtomicCommerceInterface);
   };
 
   beforeEach(async () => {
     await setupElement();
-    console.log(element.initializeWithEngine);
-    await element.initialize(commerceEngineConfig);
+    consoleErrorSpy = vi.spyOn(console, 'error');
   });
-
-  const teardownElement = async () => {
-    if (element && element.parentNode) {
-      element.parentNode.removeChild(element);
-    }
-  };
 
   afterEach(async () => {
-    await teardownElement();
-  });
-
-  test('should initialize with default properties', () => {
-    expect(element.type).toBe('search');
-    expect(element.analytics).toBe(true);
-    expect(element.reflectStateInUrl).toBe(true);
-    expect(element.scrollContainer).toBe('atomic-commerce-interface');
-    expect(element.languageAssetsPath).toBe('/lang');
-    expect(element.iconAssetsPath).toBe('/assets');
+    fixtureCleanup();
+    consoleErrorSpy.mockRestore();
   });
 
   test('should initialize engine with given options', async () => {
     await element.initialize(commerceEngineConfig);
     expect(element.engine).toBeTruthy();
+    expect(element.engine?.configuration.organizationId).toBe(
+      commerceEngineConfig.organizationId
+    );
+    expect(element.engine?.configuration.analytics.trackingId).toBe(
+      commerceEngineConfig.analytics.trackingId
+    );
   });
 
   describe('when initialized', () => {
     beforeEach(async () => {
       await element.initialize(commerceEngineConfig);
+      await addChildElement();
+
       await element.executeFirstRequest();
     });
 
-    test('should render the component', async () => {
+    test('should render the component and its children', async () => {
       expect(element.shadowRoot).toBeTruthy();
-      const text = 'Search';
-      expect(text).toBeTruthy();
+      expect(
+        within(element).queryByShadowText('Child Element Content')
+      ).toBeTruthy();
+    });
+
+    test('should trigger the initialize method of the child component', async () => {
+      expect(childElement.initialize).toHaveBeenCalledOnce();
     });
 
     test('should update language when language property changes', async () => {
