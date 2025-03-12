@@ -9,7 +9,7 @@
   },
   "targets": {
     "release:phase1": {},
-    "release:phase2": {},
+    "release:phase3": {},
     "cached:build": {
       "dependsOn": ["^build"],
       "inputs": ["^production", "production"],
@@ -22,7 +22,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "rm -rf dist cdn",
+          "rimraf -rf dist cdn",
           "tsc --outdir dist",
           "tsc --outdir cdn --project tsconfig.cdn.json",
           "node ./scripts/esbuild.js"

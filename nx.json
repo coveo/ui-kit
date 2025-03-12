@@ -106,8 +106,8 @@
         "cwd": "{projectRoot}"
       }
     },
-    "release:phase2": {
-      "dependsOn": ["^release:phase2"],
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["npm run publish:npm"],
