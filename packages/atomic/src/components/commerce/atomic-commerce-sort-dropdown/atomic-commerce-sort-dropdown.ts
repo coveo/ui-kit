@@ -9,8 +9,8 @@ import {
   SearchState,
   ProductListingState,
 } from '@coveo/headless/commerce';
-import {html, CSSResultGroup, unsafeCSS, PropertyValues} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {html, CSSResultGroup, unsafeCSS} from 'lit';
+import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
 import {bindStateToController} from '../../../decorators/bind-state';
@@ -22,14 +22,21 @@ import {randomID} from '../../../utils/utils';
 import {sortGuard} from '../../common/sort/guard';
 import {renderSortLabel} from '../../common/sort/label';
 import {renderSortSelect} from '../../common/sort/select';
-// import {sortGuard} from '../../common/sort/guard';
-// import {renderSortLabel} from '../../common/sort/label';
-// import {renderSortSelect} from '../../common/sort/select';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-// import {renderCommerceSortOption} from '../sort/option';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
 import styles from './atomic-commerce-sort-dropdown.tw.css';
 
+/**
+ * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
+ *
+ * @part label - The "Sort by" label of the `<select>` element.
+ * @part select-parent - The `<select>` element parent.
+ * @part select - The `<select>` element of the dropdown list.
+ * @part select-separator - The element separating the select from the icon.
+ * @part placeholder - The dropdown placeholder for while the interface is initializing.
+ *
+ * @alpha
+ */
 @customElement('atomic-commerce-sort-dropdown')
 export class AtomicCommerceSortDropdown
   extends InitializeBindingsMixin(TailwindLitElement)
@@ -39,12 +46,12 @@ export class AtomicCommerceSortDropdown
 
   private readonly dropdownId = randomID('atomic-commerce-sort-dropdown-');
 
-  @property({type: Object}) sort!: Sort; // TODO: check if this should be a prop or a public/private attribute
+  public sort!: Sort;
   @bindStateToController('sort')
   @state()
   sortState!: SortState;
 
-  @property({type: Object}) searchOrListing!: Search | ProductListing; // TODO: check if this should be a prop or a private attribute
+  public searchOrListing!: Search | ProductListing;
   @bindStateToController('searchOrListing')
   @state()
   searchOrListingState?: SearchState | ProductListingState;
@@ -101,34 +108,26 @@ export class AtomicCommerceSortDropdown
     });
   }
 
-  protected shouldUpdate(_changedProperties: PropertyValues): boolean {
-    if (
-      _changedProperties.has('searchOrListingState') &&
-      this.searchOrListingState // TODO: find a better way
-    ) {
-      const {error, products} = this.searchOrListingState;
-      const hasResults =
-        products.length > 0 && this.sortState.availableSorts.length > 1;
-      const hasError = error !== null;
-      return hasResults && !hasError;
-    }
-
-    return super.shouldUpdate(_changedProperties);
-  }
-
   private sortContainer() {
     return html`<div class="text-on-background flex flex-wrap items-center">
       ${this.sortLabelTemplate()} ${this.sortSelectTemplate()}
     </div>`;
   }
 
-  // TODO: test part bubbling up
   @errorGuard()
   @bindingGuard()
   render() {
-    const {responseId} = this.searchOrListingState!; // TODO: find a better way
-    const firstSearchExecuted = responseId !== '';
+    const {responseId, error, products, isLoading} = this.searchOrListingState!;
 
-    return html`${sortGuard({firstSearchExecuted}, () => this.sortContainer())}`;
+    return html`${sortGuard(
+      {
+        isLoading,
+        firstSearchExecuted: responseId !== '',
+        hasResults:
+          products.length > 0 && this.sortState.availableSorts.length > 1,
+        hasError: error !== null,
+      },
+      () => this.sortContainer()
+    )}`;
   }
 }

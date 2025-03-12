@@ -698,27 +698,6 @@ export declare interface AtomicCommerceSearchBoxRecentQueries extends Components
 
 
 @ProxyCmp({
-})
-@Component({
-  selector: 'atomic-commerce-sort-dropdown',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicCommerceSortDropdown {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceSortDropdown extends Components.AtomicCommerceSortDropdown {}
-
-
-@ProxyCmp({
   inputs: ['count', 'value']
 })
 @Component({
@@ -2888,27 +2867,6 @@ export declare interface AtomicSmartSnippetSuggestions extends Components.Atomic
 
 
 @ProxyCmp({
-})
-@Component({
-  selector: 'atomic-sort-dropdown',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicSortDropdown {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicSortDropdown extends Components.AtomicSortDropdown {}
-
-
-@ProxyCmp({
   inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({
@@ -3061,53 +3019,4 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
-//#region Lit Declarations
 
-@ProxyCmp({
-  inputs: ['icon']
-})
-@Component({
-  selector: 'atomic-icon',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon']
-})
-export class AtomicIcon {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    proxyOutputs(this, this.el, []);
-  }
-}
-
-export declare interface AtomicIcon extends LitAtomicIcon {
-
-}
-
-@ProxyCmp({
-  inputs: ['element', 'error']
-})
-@Component({
-  selector: 'atomic-component-error',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['element', 'error']
-})
-export class AtomicComponentError {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    proxyOutputs(this, this.el, []);
-  }
-}
-
-export declare interface AtomicComponentError extends LitAtomicComponentError {
-
-}
-
-import type {AtomicIcon as LitAtomicIcon, AtomicComponentError as LitAtomicComponentError} from '@coveo/atomic/components';
-//#endregion Lit Declarations

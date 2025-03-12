@@ -1,34 +1,35 @@
-import {html, TemplateResult} from 'lit';
-import {directive, Directive} from 'lit/directive.js';
+import {html, noChange, nothing, TemplateResult} from 'lit';
 
 interface SortGuardProps {
   firstSearchExecuted: boolean;
+  hasResults: boolean;
+  hasError: boolean;
+  isLoading: boolean;
 }
 
-// TODO: test with a simple function instead of a custom directive
-class SortGuardDirective extends Directive {
-  render(
-    {firstSearchExecuted}: SortGuardProps,
-    sortTemplate: () => TemplateResult
-  ): TemplateResult {
-    if (!firstSearchExecuted) {
-      return html`
-        <div
-          part="placeholder"
-          aria-hidden="true"
-          class="bg-neutral my-2 h-6 w-44 animate-pulse rounded"
-        ></div>
-      `;
-    }
-    return sortTemplate();
-  }
-}
-
-const sortGuardDirective = directive(SortGuardDirective);
+const placeholder = () => html`
+  <div
+    part="placeholder"
+    aria-hidden="true"
+    class="bg-neutral my-2 h-6 w-44 animate-pulse rounded"
+  ></div>
+`;
 
 export const sortGuard = (
-  props: SortGuardProps,
+  {firstSearchExecuted, hasError, hasResults, isLoading}: SortGuardProps,
   sortTemplate: () => TemplateResult
 ) => {
-  return sortGuardDirective(props, sortTemplate);
+  if (hasError) {
+    return nothing;
+  }
+  if (!firstSearchExecuted) {
+    return placeholder();
+  }
+  if (isLoading) {
+    return noChange;
+  }
+  if (!hasResults) {
+    return nothing;
+  }
+  return sortTemplate();
 };
