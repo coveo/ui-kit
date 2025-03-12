@@ -85,11 +85,6 @@ export class AtomicCommerceInterface
   ];
 
   /**
-   * The name of the atomic-commerce-interface
-   */
-  @property() name = 'World';
-
-  /**
    * The type of the interface.
    * - 'search': Indicates that the interface is used for Search.
    * - 'product-listing': Indicates that the interface is used for Product listing.
@@ -495,15 +490,7 @@ export class AtomicCommerceInterface
     );
   }
 
-  private toggleLanguage() {
-    this.language = this.language === 'en' ? 'fr' : 'en';
-    this.bindings.store.set('mobileBreakpoint', this.language);
-  }
-
   render() {
-    return html`
-      <button @click="${this.toggleLanguage}">Toggle Language</button>
-      <slot></slot>
-    `;
+    return html`patate<slot></slot> `;
   }
 }
