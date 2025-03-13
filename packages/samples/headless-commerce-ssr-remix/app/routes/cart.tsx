@@ -26,7 +26,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const {navigatorContext} = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request);
 
   const items = await externalCartService.getItems();
   const totalPrice = await externalCartService.getTotalPrice();

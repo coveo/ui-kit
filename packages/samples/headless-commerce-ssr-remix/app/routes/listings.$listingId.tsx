@@ -32,7 +32,7 @@ import ParameterManager from '../components/parameter-manager';
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const {navigatorContext} = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request);
 
   const url = new URL(request.url);
   const {deserialize} = buildParameterSerializer();

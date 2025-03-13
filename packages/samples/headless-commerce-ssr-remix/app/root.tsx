@@ -1,5 +1,9 @@
 import externalCartService from '@/external-services/external-cart-service';
 import {
+  getVisitorIdSetCookieHeader,
+  shouldCapture,
+} from '@/lib/client-id.server';
+import {
   SearchEngineDefinition,
   SearchStaticState,
   StandaloneEngineDefinition,
@@ -42,8 +46,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({request}: LoaderFunctionArgs) => {
-  const {navigatorContext, setCookieHeader} =
-    await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request);
 
   const url = new URL(request.url);
   const isSearchPage = url.pathname === '/search';
@@ -87,13 +90,17 @@ export const loader = async ({request}: LoaderFunctionArgs) => {
 
   const totalItemsInCart = await externalCartService.getTotalCount();
 
+  const setCookieHeader = (await shouldCapture(request))
+    ? await getVisitorIdSetCookieHeader(navigatorContext.clientId)
+    : undefined;
+
   return Response.json(
     {
       staticState,
       navigatorContext,
       totalItemsInCart,
     },
-    {headers: {...setCookieHeader}}
+    setCookieHeader && {headers: {...setCookieHeader}}
   );
 };
 

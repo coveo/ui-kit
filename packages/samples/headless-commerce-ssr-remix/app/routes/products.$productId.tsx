@@ -32,7 +32,7 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
   const {currency, language} =
     await externalContextService.getContextInformation();
 
-  const {navigatorContext} = await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request);
 
   const standaloneEngineDefinition = await getEngineDefinition(
     navigatorContext,
