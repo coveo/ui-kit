@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {Result, Bindings} from '@coveo/atomic-angular';
+import {Result, Bindings, AtomicSearchInterface} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -9,7 +9,7 @@ import {Result, Bindings} from '@coveo/atomic-angular';
 })
 export class AtomicAngularPageComponent implements AfterViewInit {
   @ViewChild('searchInterface')
-  searchInterface!: HTMLAtomicSearchInterfaceElement;
+  searchInterface!: AtomicSearchInterface;
 
   constructor() {}
   async ngAfterViewInit(): Promise<void> {

@@ -1,18 +1,17 @@
 import {setCoveoGlobal} from '@/src/global/environment.js';
+import {loadFocusVisiblePolyfill} from '@/src/global/focus-visible.js';
+import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
+import {InitializeEvent} from '@/src/utils/initialization-utils.js';
 import {LogLevel} from '@coveo/headless';
+import {ComponentInterface, h} from '@stencil/core';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
-import {html} from 'lit';
-import {loadFocusVisiblePolyfill} from '../../../global/focus-visible.js';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
-import {AnyBindings, AnyEngineType} from './bindings.js';
-import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
-import {init18n} from './i18n.js';
+import {AnyBindings, AnyEngineType} from './bindings';
+import {i18nBackendOptions, i18nTranslationNamespace} from './i18n';
+import {init18n} from './i18n';
 
-export type InitializeEventHandler = (bindings: AnyBindings) => void;
-export type InitializeEvent = CustomEvent<InitializeEventHandler>;
-
-export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
+export interface StencilBaseAtomicInterface<EngineType extends AnyEngineType>
+  extends ComponentInterface {
   analytics: boolean;
   i18n: i18n;
   engine?: EngineType;
@@ -38,42 +37,38 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   private hangingComponentsInitialization: InitializeEvent[] = [];
 
   constructor(
-    private atomicInterface: BaseAtomicInterface<Engine>,
+    private atomicInterface: StencilBaseAtomicInterface<Engine>,
     globalVariableName: string
   ) {
     setCoveoGlobal(globalVariableName);
     loadFocusVisiblePolyfill();
 
-    if ('connectedCallback' in atomicInterface && 'render' in atomicInterface) {
-      const {
-        connectedCallback: originalConnectedCallback,
-        render: originalRender,
-      } = atomicInterface;
+    const {
+      connectedCallback: originalConnectedCallback,
+      render: originalRender,
+    } = atomicInterface;
 
-      atomicInterface.connectedCallback = () => {
-        this.i18nPromise = init18n(atomicInterface);
-
-        if (typeof originalConnectedCallback === 'function') {
-          return originalConnectedCallback.call(atomicInterface);
-        }
-        return;
-      };
-
-      atomicInterface.render = () => {
-        if (atomicInterface.error) {
-          return html`<atomic-component-error
-            .element=${atomicInterface.host}
-            .error=${atomicInterface.error}
-          ></atomic-component-error>`;
-        }
-
-        return typeof originalRender === 'function'
-          ? originalRender.call(atomicInterface)
-          : null;
-      };
-    } else {
+    atomicInterface.connectedCallback = () => {
       this.i18nPromise = init18n(atomicInterface);
-    }
+
+      return (
+        originalConnectedCallback &&
+        originalConnectedCallback.call(atomicInterface)
+      );
+    };
+
+    atomicInterface.render = () => {
+      if (atomicInterface.error) {
+        return (
+          <atomic-component-error
+            element={atomicInterface.host}
+            error={atomicInterface.error}
+          ></atomic-component-error>
+        );
+      }
+
+      return originalRender && originalRender.call(atomicInterface);
+    };
   }
 
   public onComponentInitializing(event: InitializeEvent) {
@@ -125,10 +120,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     const {i18n, language} = this.atomicInterface;
 
     loadDayjsLocale(this.language);
+    const {resolve, promise} = Promise.withResolvers<void>();
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
       this.language,
       i18nTranslationNamespace,
-      (_: unknown, data: unknown) => {
+      async (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
           this.language,
           i18nTranslationNamespace,
@@ -136,9 +132,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
           true,
           false
         );
-        i18n.changeLanguage(language);
+        await i18n.changeLanguage(language);
+        resolve();
       }
     );
+    return promise;
   }
 
   public engineIsCreated(engine?: Engine): engine is Engine {

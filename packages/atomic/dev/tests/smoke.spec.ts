@@ -80,17 +80,7 @@ test.describe('style encapsulation', () => {
 
 test.describe('theme customization', () => {
   test.beforeEach(async ({page}) => {
-    await page.goto('http://localhost:3333/themingTests.html');
-    const searchBox = page.getByRole('textbox', {
-      name: 'Search field with suggestions',
-    });
-    await page
-      .locator('atomic-query-summary')
-      .getByText(/Results 1-10 of \d*/)
-      .first()
-      .waitFor();
-    await searchBox.fill('connect.coveo.com');
-    await searchBox.press('Enter');
+    await page.goto('http://localhost:3333/themingTests.html#q=connect');
     const resultTitle = page
       .locator('atomic-result')
       .first()

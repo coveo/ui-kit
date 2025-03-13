@@ -37,7 +37,7 @@
     },
     "./components": {
       "types": "./dist/atomic/components/index.d.ts",
-      "import": "./dist/atomic/components/components/index.js"
+      "import": "./dist/atomic/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },

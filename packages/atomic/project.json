@@ -6,7 +6,8 @@
       "!{projectRoot}/dist",
       "!{projectRoot}/www",
       "!{projectRoot}/docs",
-      "!{projectRoot}/src/components.d.ts"
+      "!{projectRoot}/src/components.d.ts",
+      "!{projectRoot}/src/lit-components.d.ts"
     ],
     "buildInputs": [
       "{projectRoot}/stencil.config.ts",
@@ -27,7 +28,8 @@
         "{projectRoot}/dist",
         "{projectRoot}/www",
         "{projectRoot}/docs",
-        "{projectRoot}/src/components.d.ts"
+        "{projectRoot}/src/components.d.ts",
+        "{projectRoot}/src/lit-components.d.ts"
       ],
       "executor": "nx:run-commands",
       "options": {
@@ -54,7 +56,6 @@
       }
     },
     "release:phase1": {},
-    "release:phase3": {},
     "build": {
       "dependsOn": [
         "cached:build:stencil",

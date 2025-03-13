@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
   LogLevel,
   Search,
@@ -34,9 +35,9 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {
   errorSelector,
   firstSearchExecutedSelector,
@@ -66,7 +67,7 @@ const FirstRequestExecutedFlag = 'firstRequestExecuted';
   assetsDirs: ['lang'],
 })
 export class AtomicCommerceInterface
-  implements BaseAtomicInterface<CommerceEngine>
+  implements StencilBaseAtomicInterface<CommerceEngine>
 {
   private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
@@ -104,7 +105,7 @@ export class AtomicCommerceInterface
   /**
    * the commerce interface i18next instance.
    */
-  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop() public i18n: i18n;
 
   /**
    * the commerce interface language.
@@ -162,10 +163,9 @@ export class AtomicCommerceInterface
    */
   @Prop({reflect: true}) public CspNonce?: string;
 
-  /**
-   * A reference clone of the interface i18next instance.
-   */
-  private i18nClone!: i18n;
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
 
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -173,18 +173,17 @@ export class AtomicCommerceInterface
       'CoveoAtomic'
     );
     this.store = createCommerceStore(this.type);
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
-    this.i18nClone = this.i18n.cloneInstance();
-    this.i18n.addResourceBundle = (
-      lng: string,
-      ns: string,
-      resources: object,
-      deep?: boolean,
-      overwrite?: boolean
-    ) => this.addResourceBundle(lng, ns, resources, deep, overwrite);
   }
 
   componentWillLoad() {
@@ -192,6 +191,7 @@ export class AtomicCommerceInterface
       setNonce(this.CspNonce);
     }
     this.initAriaLive();
+    this.componentWillLoadResolver();
   }
 
   @Watch('analytics')
@@ -208,8 +208,8 @@ export class AtomicCommerceInterface
       return;
     }
 
-    this.context.setLanguage(this.language);
-    this.commonInterfaceHelper.onLanguageChange();
+    //this.context.setLanguage(this.language);
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('iconAssetsPath')
@@ -352,7 +352,8 @@ export class AtomicCommerceInterface
     ) {
       return;
     }
-    this.host.prepend(document.createElement('atomic-aria-live'));
+    const ariaLive = document.createElement('atomic-aria-live');
+    this.host.prepend(ariaLive);
   }
 
   private initUrlManager() {
@@ -432,30 +433,19 @@ export class AtomicCommerceInterface
   };
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
-
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.initContext();
+    await this.updateLanguage();
+    markParentAsReady(this.host);
     this.initRequestStatus();
     this.initSummary();
-    this.initContext();
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
-  }
-
-  private addResourceBundle(
-    lng: string,
-    ns: string,
-    resources: object,
-    deep?: boolean,
-    overwrite?: boolean
-  ) {
-    return this.i18nClone.addResourceBundle(
-      lng,
-      ns,
-      resources,
-      deep,
-      overwrite
-    );
   }
 
   public render() {

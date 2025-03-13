@@ -43,7 +43,7 @@ export class AtomicCommerceSortDropdown
 {
   @InitializeBindings() public bindings!: CommerceBindings;
 
-  private id = randomID('atomic-commerce-sort-dropdown-');
+  private id!: string;
 
   @Element() host!: HTMLElement;
 
@@ -60,6 +60,7 @@ export class AtomicCommerceSortDropdown
   @State() public error!: Error;
 
   public initialize() {
+    this.id ||= randomID('atomic-commerce-sort-dropdown-');
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
