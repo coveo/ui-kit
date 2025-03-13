@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {loadFieldActions} from '@coveo/headless/insight';
 import {
   LogLevel as InsightLogLevel,
@@ -267,6 +268,7 @@ export class AtomicInsightInterface
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     this.initResultsPerPage();
     this.initialized = true;
+    markParentAsReady(this.host);
   }
 
   render() {

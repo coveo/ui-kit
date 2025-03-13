@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
   LogLevel,
   Search,
@@ -440,6 +441,7 @@ export class AtomicCommerceInterface
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
+    markParentAsReady(this.host);
   }
 
   private addResourceBundle(

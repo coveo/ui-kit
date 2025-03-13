@@ -10,6 +10,7 @@ import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
+import {isParentReady, queueEventForParent} from './init-queue';
 import {
   MissingInterfaceParentError,
   InitializeEventHandler,
@@ -39,10 +40,20 @@ export function initializeBindings<
       initializeEventName,
       (bindings) => resolve(bindings as SpecificBindings)
     );
-    element.dispatchEvent(event);
 
-    if (!closest(element, initializableElements.join(', '))) {
+    const parent = closest(element, initializableElements.join(', '));
+
+    console.log(parent);
+
+    if (!parent) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+      return;
+    }
+
+    if (isParentReady(parent)) {
+      element.dispatchEvent(event);
+    } else {
+      queueEventForParent(parent, event as InitializeEvent, element);
     }
   });
 }
@@ -169,13 +180,19 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         }
       );
 
-      element.dispatchEvent(event);
+      const parent = closest(element, initializableElements.join(', '));
 
-      if (!closest(element, initializableElements.join(', '))) {
+      if (!parent) {
         this.error = new MissingInterfaceParentError(
           element.nodeName.toLowerCase()
         );
         return;
+      }
+
+      if (isParentReady(parent)) {
+        element.dispatchEvent(event);
+      } else {
+        queueEventForParent(parent, event as InitializeEvent, element);
       }
 
       return componentWillLoad && componentWillLoad.call(this);
@@ -320,4 +337,5 @@ export function DeferUntilRender() {
 export type I18nState = Record<string, (variables?: TOptions) => string>;
 export type AtomicInterface = HTMLElement & {
   engine?: CoreEngine;
+  bindings?: Bindings;
 };

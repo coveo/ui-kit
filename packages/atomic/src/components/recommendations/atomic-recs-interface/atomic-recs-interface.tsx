@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   RecommendationEngine,
   RecommendationEngineConfiguration,
@@ -282,6 +283,7 @@ export class AtomicRecsInterface
     this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);
     this.initialized = true;
+    markParentAsReady(this.host);
   }
 
   private initEngine(options: RecsInitializationOptions) {
