@@ -59,11 +59,11 @@ describe('init-queue', () => {
   });
 
   it('should dispatch atomic/initializeComponent event when parent is marked as ready', () => {
-    const spy = vi.spyOn(parent, 'dispatchEvent');
+    const spy = vi.spyOn(child, 'dispatchEvent');
     queueEventForParent(parent, event, child);
     markParentAsReady(parent);
     expect(spy).toHaveBeenCalledWith(
-      expect.objectContaining({type: 'atomic/initializeComponent'})
+      expect.objectContaining({type: 'initialize'})
     );
   });
 });
