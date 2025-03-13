@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -244,6 +245,7 @@ export class AtomicCommerceRecommendationInterface
     await this.commonInterfaceHelper.onInitialization(initEngine);
     this.initContext();
     this.initLanguage();
+    markParentAsReady(this.host);
   }
 
   private addResourceBundle(

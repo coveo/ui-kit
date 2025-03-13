@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   LogLevel,
   Unsubscribe,
@@ -560,6 +561,7 @@ export class AtomicSearchInterface
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
+    markParentAsReady(this.host);
   }
 
   private addResourceBundleWithWarning(
