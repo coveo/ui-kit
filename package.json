@@ -43,7 +43,7 @@
     "@tsconfig/node20": "20.1.4",
     "@types/execa": "2.0.2",
     "@types/jest": "29.5.14",
-    "@types/node": "22.13.5",
+    "@types/node": "22.13.9",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "@typescript-eslint/parser": "7.18.0",
     "@vitest/browser": "3.0.6",
@@ -56,7 +56,7 @@
     "esbuild-plugin-alias": "0.2.1",
     "esbuild-plugin-umd-wrapper": "3.0.0",
     "eslint": "8.57.1",
-    "eslint-config-prettier": "10.0.1",
+    "eslint-config-prettier": "10.0.2",
     "eslint-plugin-cypress": "2.15.2",
     "eslint-plugin-package-lock": "1.0.0",
     "execa": "9.5.2",
@@ -66,9 +66,9 @@
     "lint-staged": "15.4.3",
     "nx": "20.4.6",
     "patch-package": "8.0.0",
-    "prettier": "3.5.2",
+    "prettier": "3.5.3",
     "prettier-plugin-tailwindcss": "0.6.11",
-    "publint": "0.3.6",
+    "publint": "0.3.8",
     "rimraf": "6.0.1",
     "semver": "7.7.1",
     "typescript": "5.5.4",
@@ -121,5 +121,5 @@
   "dependencies": {
     "upgrade": "1.1.0"
   },
-  "packageManager": "npm@11.1.0"
+  "packageManager": "npm@11.2.0"
 }
