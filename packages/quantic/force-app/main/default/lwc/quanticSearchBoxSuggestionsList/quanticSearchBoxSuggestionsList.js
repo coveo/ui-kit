@@ -121,9 +121,13 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   initialRender = true;
   /** @type {string} */
   previousQuery = '';
+  /** @type {string} */
   _cachedRecentQueries;
+  /** @type {string} */
   _cachedSuggestions;
+  /** @type {Array<Object>} */
   _recentQueriesThatStartWithCurrentQuery = [];
+  /** @type {Array<Object>} */
   _querySuggestionsNotInRecentQueries = [];
 
   renderedCallback() {
