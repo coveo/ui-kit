@@ -94,7 +94,7 @@ describe('bindings decorator', () => {
     expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
-  it('should unsubscribe to language changes when the host is disconnected from the component tree', async () => {
+  it('should unsubscribe from language changes when the host is disconnected from the component tree', async () => {
     vi.spyOn(interfaceElement.bindings.i18n, 'off');
     await setupElement();
     await teardownElement();
