@@ -91,12 +91,10 @@ export function generateAngularModuleDefinition(options: {
       const componentClassNames = filteredComponents.map((component) =>
         dashToPascalCase(component.tagName)
       );
-
       compilerCtx.fs.writeFile(
         options.moduleFile,
         `${imports}
         ${componentImports(componentClassNames)}
-        
         ${declarations(componentClassNames)}
         ${shimTemplatesPrototype}
         ${provider}
