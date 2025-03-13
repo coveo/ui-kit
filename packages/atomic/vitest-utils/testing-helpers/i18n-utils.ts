@@ -1,3 +1,4 @@
+import enTranslations from '@/dist/atomic/lang/en.json';
 import i18next, {i18n as I18n} from 'i18next';
 
 export async function createTestI18n(): Promise<I18n> {
@@ -6,7 +7,7 @@ export async function createTestI18n(): Promise<I18n> {
     lng: 'en',
     resources: {
       en: {
-        translation: {},
+        translation: enTranslations,
       },
     },
   });

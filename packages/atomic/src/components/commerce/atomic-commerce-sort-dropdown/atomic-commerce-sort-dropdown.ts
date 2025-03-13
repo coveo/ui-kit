@@ -70,6 +70,7 @@ export class AtomicCommerceSortDropdown
       this.searchOrListing = buildSearch(this.bindings.engine);
     }
     this.sort = this.searchOrListing.sort();
+    console.log('INIT ---', this.sort);
   }
 
   private select(e: Event) {
@@ -97,6 +98,7 @@ export class AtomicCommerceSortDropdown
       id,
       onSelect: (evt: Event) => this.select(evt),
       children: html`${guard([this.sortState], () => {
+        console.log('SORT ---', this.sort);
         return map(this.sortState.availableSorts, (sort) =>
           renderCommerceSortOption({
             i18n,
@@ -117,8 +119,8 @@ export class AtomicCommerceSortDropdown
   @errorGuard()
   @bindingGuard()
   render() {
+    console.log('++++' + this.sort);
     const {responseId, error, products, isLoading} = this.searchOrListingState!;
-
     return html`${sortGuard(
       {
         isLoading,
