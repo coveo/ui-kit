@@ -67,13 +67,17 @@ This task does not make any changes to the `package-lock.json` file at the root 
 
 The purpose of this sub-phase is to re-build a project right after it was bumped and before it gets published. This is needed because many packages contain information about their own version in their compiled code.
 
-### Sub-phase 3: publish
+## `release:phase2` (bump the root version)
+
+This phase bumps the root package.json version. This is used by the deployment-package `--version` attribute.
+
+## `release:phase3` (publish npm)
 
 This workflow works on the assumption that we can't bump a package's version if any of its dependencies isn't published to NPM. The purpose of this task is to publish packages to NPM before dependant packages bump their versions.
 
 If a package is already published to NPM, this task will exit without error. After a package is published, this task will repeatedly query NPM until it confirms that the package exists in the registry.
 
-## `release:phase2` (reify `package-lock.json`)
+## `release:phase4` (reify `package-lock.json`)
 
 This task is run once at the root of the repository after every package's version was bumped.
 
@@ -81,7 +85,7 @@ The purpose of this task is to re-generate the root `package-lock.json` file usi
 
 Scheduled releases will commit the new `package-lock.json` to the main branch, which ensures that contributors can run `npm install` without unnecessary changes being made to their `package-lock.json`.
 
-## `release:phase3` (commit version bumps)
+## `release:phase5` (commit version bumps)
 
 This task is only run for the scheduled release.
 
