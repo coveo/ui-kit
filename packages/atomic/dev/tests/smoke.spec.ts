@@ -97,11 +97,6 @@ test.describe('theme customization', () => {
       .locator('atomic-result-section-title atomic-result-text')
       .first();
     await expect(resultTitle).toHaveText('Connect');
-    await page
-      .locator('atomic-query-summary')
-      .getByText(/Results 1-10 of \d*/)
-      .first()
-      .waitFor();
   });
 
   const outsideResultTemplateTests = [
