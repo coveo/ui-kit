@@ -146,7 +146,6 @@ AtomicTimeframeFacet
 } from './components';
 
         
-        
 const DECLARATIONS = [
 AtomicAriaLive,
 AtomicAutomaticFacet,
