@@ -43,8 +43,6 @@ export function initializeBindings<
 
     const parent = closest(element, initializableElements.join(', '));
 
-    console.log(parent);
-
     if (!parent) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
       return;
