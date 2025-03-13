@@ -89,7 +89,7 @@ test.describe('theme customization', () => {
       .getByText(/Results 1-10 of \d*/)
       .first()
       .waitFor();
-    await searchBox.fill('connect');
+    await searchBox.fill('connect.coveo.com');
     await searchBox.press('Enter');
     const resultTitle = page
       .locator('atomic-result')
