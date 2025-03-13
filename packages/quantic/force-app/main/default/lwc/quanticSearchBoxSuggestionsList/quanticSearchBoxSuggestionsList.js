@@ -121,6 +121,10 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   initialRender = true;
   /** @type {string} */
   previousQuery = '';
+  _cachedRecentQueries;
+  _cachedSuggestions;
+  _recentQueriesThatStartWithCurrentQuery = [];
+  _querySuggestionsNotInRecentQueries = [];
 
   renderedCallback() {
     if (this.initialRender) {
@@ -233,14 +237,17 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * Returns the query suggestions that are not already in the recent queries list.
    */
   getQuerySuggestionsNotInRecentQueries() {
-    return (
-      this.suggestions?.filter(
-        (suggestion) =>
-          !this.getRecentQueriesThatStartWithCurrentQuery().some(
-            (recentQuery) => recentQuery.rawValue === suggestion.rawValue
-          )
-      ) || []
-    );
+    if (this._cachedSuggestions !== JSON.stringify(this.suggestions)) {
+      this._cachedSuggestions = JSON.stringify(this.suggestions);
+      this._querySuggestionsNotInRecentQueries =
+        this.suggestions?.filter(
+          (suggestion) =>
+            !this.getRecentQueriesThatStartWithCurrentQuery().some(
+              (recentQuery) => recentQuery.rawValue === suggestion.rawValue
+            )
+        ) || [];
+    }
+    return this._querySuggestionsNotInRecentQueries;
   }
 
   handleSelection = (event, index) => {
@@ -262,19 +269,22 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * Returns the recent queries that start with the query currently typed by the end user.
    */
   getRecentQueriesThatStartWithCurrentQuery() {
-    return (
-      this.recentQueries
-        ?.filter(
-          (recentQuery) =>
-            recentQuery !== this.query &&
-            recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
-        )
-        .map((recentQuery) => ({
-          value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
-          rawValue: recentQuery,
-          isRecentQuery: true,
-        })) || []
-    );
+    if (this._cachedRecentQueries !== JSON.stringify(this.recentQueries)) {
+      this._cachedRecentQueries = JSON.stringify(this.recentQueries);
+      this._recentQueriesThatStartWithCurrentQuery =
+        this.recentQueries
+          ?.filter(
+            (recentQuery) =>
+              recentQuery !== this.query &&
+              recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
+          )
+          .map((recentQuery) => ({
+            value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+            rawValue: recentQuery,
+            isRecentQuery: true,
+          })) || [];
+    }
+    return this._recentQueriesThatStartWithCurrentQuery;
   }
 
   get shouldDisplayRecentQueries() {
