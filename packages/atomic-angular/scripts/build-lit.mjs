@@ -109,6 +109,6 @@ if(litDeclarations.length > 0) {
       .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${[...litDeclarations].join(',\n')},\n`)
       .replace(/^import \{$/m, `import {\n${[...litDeclarations].join(',\n')},`)
   );
+}
 
   writeFileSync(atomicAngularComponentFilePath, atomicAngularComponentFileContent.trimEnd());
-}

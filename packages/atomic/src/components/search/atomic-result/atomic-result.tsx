@@ -228,5 +228,6 @@ export class AtomicResult {
 
       this.executedRenderingFunctionOnce = true;
     }
+    this.host.classList.add('hydrated');
   }
 }
