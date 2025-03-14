@@ -23,6 +23,10 @@ ${components.join(',\n')}
 } from './components';
 `;
 
+const defineCustomElements = `
+import {defineCustomElements} from '@coveo/atomic/loader';
+defineCustomElements(window);\n`;
+
 const declarations = (components: string[]) => `
 const DECLARATIONS = [
 ${components.join(',\n')}
@@ -95,6 +99,7 @@ export function generateAngularModuleDefinition(options: {
         options.moduleFile,
         `${imports}
         ${componentImports(componentClassNames)}
+        ${defineCustomElements}
         ${declarations(componentClassNames)}
         ${shimTemplatesPrototype}
         ${provider}
