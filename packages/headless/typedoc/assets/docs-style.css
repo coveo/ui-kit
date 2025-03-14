@@ -31,7 +31,7 @@ body {
 
 .tsd-typography thead,
 .tsd-typography tr:nth-child(even) {
-  background-color: var(--color-icon-background);
+  background-color: var(--color-background);
 }
 
 .tsd-page-toolbar {
