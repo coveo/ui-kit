@@ -77,8 +77,12 @@ export class AtomicTabManager {
       });
 
       this.tabs.push({
-        label: tabElement.label,
-        name: tabElement.name,
+        label: this.bindings.i18n.t(tabElement.label, {
+          defaultValue: tabElement.label,
+        }),
+        name: this.bindings.i18n.t(tabElement.name, {
+          defaultValue: tabElement.name,
+        }),
         tabController,
       });
     });
