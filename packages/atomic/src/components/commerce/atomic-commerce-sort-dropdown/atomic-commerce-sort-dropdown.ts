@@ -130,3 +130,9 @@ export class AtomicCommerceSortDropdown
     )}`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-sort-dropdown': AtomicCommerceSortDropdown;
+  }
+}
