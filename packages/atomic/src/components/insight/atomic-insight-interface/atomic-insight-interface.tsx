@@ -265,10 +265,10 @@ export class AtomicInsightInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    markParentAsReady(this.host);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     this.initResultsPerPage();
     this.initialized = true;
-    markParentAsReady(this.host);
   }
 
   render() {

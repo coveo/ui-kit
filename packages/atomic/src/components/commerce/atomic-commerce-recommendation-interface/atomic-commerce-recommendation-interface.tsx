@@ -243,9 +243,9 @@ export class AtomicCommerceRecommendationInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    markParentAsReady(this.host);
     this.initContext();
     this.initLanguage();
-    markParentAsReady(this.host);
   }
 
   private addResourceBundle(
