@@ -7,7 +7,8 @@ import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 import { Components } from '@coveo/atomic';
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicAriaLive})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-aria-live',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +28,8 @@ export class AtomicAriaLive {
 export declare interface AtomicAriaLive extends Components.AtomicAriaLive {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicAutomaticFacet})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-automatic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +52,7 @@ export declare interface AtomicAutomaticFacet extends Components.AtomicAutomatic
 @ProxyCmp({
   inputs: ['desiredCount', 'numberOfValues'],
   methods: ['updateCollapseFacetsDependingOnFacetsVisibility']
-, defineCustomElementFn: defineCustomElementAtomicAutomaticFacetGenerator})
+})
 @Component({
   selector: 'atomic-automatic-facet-generator',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +74,7 @@ export declare interface AtomicAutomaticFacetGenerator extends Components.Atomic
 
 @ProxyCmp({
   inputs: ['pathLimit']
-, defineCustomElementFn: defineCustomElementAtomicBreadbox})
+})
 @Component({
   selector: 'atomic-breadbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -94,7 +96,7 @@ export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
   inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-, defineCustomElementFn: defineCustomElementAtomicCategoryFacet})
+})
 @Component({
   selector: 'atomic-category-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,7 +118,7 @@ export declare interface AtomicCategoryFacet extends Components.AtomicCategoryFa
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-, defineCustomElementFn: defineCustomElementAtomicColorFacet})
+})
 @Component({
   selector: 'atomic-color-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -138,7 +140,7 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 @ProxyCmp({
   inputs: ['pathLimit']
-, defineCustomElementFn: defineCustomElementAtomicCommerceBreadbox})
+})
 @Component({
   selector: 'atomic-commerce-breadbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -180,7 +182,8 @@ export class AtomicCommerceCategoryFacet {
 export declare interface AtomicCommerceCategoryFacet extends Components.AtomicCommerceCategoryFacet {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceDidYouMean})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-commerce-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -202,7 +205,7 @@ export declare interface AtomicCommerceDidYouMean extends Components.AtomicComme
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-, defineCustomElementFn: defineCustomElementAtomicCommerceFacet})
+})
 @Component({
   selector: 'atomic-commerce-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -250,7 +253,7 @@ export declare interface AtomicCommerceFacetNumberInput extends Components.Atomi
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-, defineCustomElementFn: defineCustomElementAtomicCommerceFacets})
+})
 @Component({
   selector: 'atomic-commerce-facets',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -273,7 +276,7 @@ export declare interface AtomicCommerceFacets extends Components.AtomicCommerceF
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'reflectStateInUrl', 'scrollContainer', 'type'],
   methods: ['initialize', 'initializeWithEngine', 'executeFirstRequest']
-, defineCustomElementFn: defineCustomElementAtomicCommerceInterface})
+})
 @Component({
   selector: 'atomic-commerce-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -295,7 +298,7 @@ export declare interface AtomicCommerceInterface extends Components.AtomicCommer
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint']
-, defineCustomElementFn: defineCustomElementAtomicCommerceLayout})
+})
 @Component({
   selector: 'atomic-commerce-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -336,7 +339,8 @@ export class AtomicCommerceLoadMoreProducts {
 export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceNoProducts})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-commerce-no-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -358,7 +362,7 @@ export declare interface AtomicCommerceNoProducts extends Components.AtomicComme
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-, defineCustomElementFn: defineCustomElementAtomicCommerceNumericFacet})
+})
 @Component({
   selector: 'atomic-commerce-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -380,7 +384,7 @@ export declare interface AtomicCommerceNumericFacet extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
-, defineCustomElementFn: defineCustomElementAtomicCommercePager})
+})
 @Component({
   selector: 'atomic-commerce-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -407,7 +411,7 @@ export declare interface AtomicCommercePager extends Components.AtomicCommercePa
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
   methods: ['setRenderFunction']
-, defineCustomElementFn: defineCustomElementAtomicCommerceProductList})
+})
 @Component({
   selector: 'atomic-commerce-product-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -429,7 +433,7 @@ export declare interface AtomicCommerceProductList extends Components.AtomicComm
 
 @ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
-, defineCustomElementFn: defineCustomElementAtomicCommerceProductsPerPage})
+})
 @Component({
   selector: 'atomic-commerce-products-per-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -498,7 +502,7 @@ export declare interface AtomicCommerceQuerySummary extends Components.AtomicCom
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'scrollContainer'],
   methods: ['initializeWithEngine']
-, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationInterface})
+})
 @Component({
   selector: 'atomic-commerce-recommendation-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -521,7 +525,7 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
 @ProxyCmp({
   inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
-, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationList})
+})
 @Component({
   selector: 'atomic-commerce-recommendation-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -543,7 +547,7 @@ export declare interface AtomicCommerceRecommendationList extends Components.Ato
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
-, defineCustomElementFn: defineCustomElementAtomicCommerceRefineModal})
+})
 @Component({
   selector: 'atomic-commerce-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -563,7 +567,8 @@ export class AtomicCommerceRefineModal {
 export declare interface AtomicCommerceRefineModal extends Components.AtomicCommerceRefineModal {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceRefineToggle})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-commerce-refine-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -585,7 +590,7 @@ export declare interface AtomicCommerceRefineToggle extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
-, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBox})
+})
 @Component({
   selector: 'atomic-commerce-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -628,7 +633,7 @@ Example:
 @ProxyCmp({
   inputs: ['ariaLabelGenerator', 'density', 'imageSize'],
   methods: ['setRenderFunction']
-, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBoxInstantProducts})
+})
 @Component({
   selector: 'atomic-commerce-search-box-instant-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -650,7 +655,7 @@ export declare interface AtomicCommerceSearchBoxInstantProducts extends Componen
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBoxQuerySuggestions})
+})
 @Component({
   selector: 'atomic-commerce-search-box-query-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -672,7 +677,7 @@ export declare interface AtomicCommerceSearchBoxQuerySuggestions extends Compone
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBoxRecentQueries})
+})
 @Component({
   selector: 'atomic-commerce-search-box-recent-queries',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -692,7 +697,8 @@ export class AtomicCommerceSearchBoxRecentQueries {
 export declare interface AtomicCommerceSearchBoxRecentQueries extends Components.AtomicCommerceSearchBoxRecentQueries {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceSortDropdown})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-commerce-sort-dropdown',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -714,7 +720,7 @@ export declare interface AtomicCommerceSortDropdown extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['count', 'value']
-, defineCustomElementFn: defineCustomElementAtomicCommerceText})
+})
 @Component({
   selector: 'atomic-commerce-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -736,7 +742,7 @@ export declare interface AtomicCommerceText extends Components.AtomicCommerceTex
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-, defineCustomElementFn: defineCustomElementAtomicCommerceTimeframeFacet})
+})
 @Component({
   selector: 'atomic-commerce-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -758,7 +764,7 @@ export declare interface AtomicCommerceTimeframeFacet extends Components.AtomicC
 
 @ProxyCmp({
   inputs: ['element', 'error']
-, defineCustomElementFn: defineCustomElementAtomicComponentError})
+})
 @Component({
   selector: 'atomic-component-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -780,7 +786,7 @@ export declare interface AtomicComponentError extends Components.AtomicComponent
 
 @ProxyCmp({
   inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
-, defineCustomElementFn: defineCustomElementAtomicDidYouMean})
+})
 @Component({
   selector: 'atomic-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -802,7 +808,7 @@ export declare interface AtomicDidYouMean extends Components.AtomicDidYouMean {}
 
 @ProxyCmp({
   inputs: ['boundInterface', 'selector']
-, defineCustomElementFn: defineCustomElementAtomicExternal})
+})
 @Component({
   selector: 'atomic-external',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -824,7 +830,7 @@ export declare interface AtomicExternal extends Components.AtomicExternal {}
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-, defineCustomElementFn: defineCustomElementAtomicFacet})
+})
 @Component({
   selector: 'atomic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -846,7 +852,7 @@ export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-, defineCustomElementFn: defineCustomElementAtomicFacetManager})
+})
 @Component({
   selector: 'atomic-facet-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -868,7 +874,7 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 @ProxyCmp({
   inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
-, defineCustomElementFn: defineCustomElementAtomicFieldCondition})
+})
 @Component({
   selector: 'atomic-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -891,7 +897,7 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
 @ProxyCmp({
   inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
-, defineCustomElementFn: defineCustomElementAtomicFoldedResultList})
+})
 @Component({
   selector: 'atomic-folded-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -913,7 +919,7 @@ export declare interface AtomicFoldedResultList extends Components.AtomicFoldedR
 
 @ProxyCmp({
   inputs: ['currency']
-, defineCustomElementFn: defineCustomElementAtomicFormatCurrency})
+})
 @Component({
   selector: 'atomic-format-currency',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -935,7 +941,7 @@ export declare interface AtomicFormatCurrency extends Components.AtomicFormatCur
 
 @ProxyCmp({
   inputs: ['maximumFractionDigits', 'maximumSignificantDigits', 'minimumFractionDigits', 'minimumIntegerDigits', 'minimumSignificantDigits']
-, defineCustomElementFn: defineCustomElementAtomicFormatNumber})
+})
 @Component({
   selector: 'atomic-format-number',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -957,7 +963,7 @@ export declare interface AtomicFormatNumber extends Components.AtomicFormatNumbe
 
 @ProxyCmp({
   inputs: ['unit', 'unitDisplay']
-, defineCustomElementFn: defineCustomElementAtomicFormatUnit})
+})
 @Component({
   selector: 'atomic-format-unit',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -979,7 +985,7 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 @ProxyCmp({
   inputs: ['answerConfigurationId', 'collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
-, defineCustomElementFn: defineCustomElementAtomicGeneratedAnswer})
+})
 @Component({
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1001,7 +1007,7 @@ export declare interface AtomicGeneratedAnswer extends Components.AtomicGenerate
 
 @ProxyCmp({
   inputs: ['sanitize', 'value']
-, defineCustomElementFn: defineCustomElementAtomicHtml})
+})
 @Component({
   selector: 'atomic-html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1023,7 +1029,7 @@ export declare interface AtomicHtml extends Components.AtomicHtml {}
 
 @ProxyCmp({
   inputs: ['icon']
-, defineCustomElementFn: defineCustomElementAtomicIcon})
+})
 @Component({
   selector: 'atomic-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1045,7 +1051,7 @@ export declare interface AtomicIcon extends Components.AtomicIcon {}
 
 @ProxyCmp({
   inputs: ['maxWidth', 'minWidth', 'section']
-, defineCustomElementFn: defineCustomElementAtomicLayoutSection})
+})
 @Component({
   selector: 'atomic-layout-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1065,7 +1071,8 @@ export class AtomicLayoutSection {
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicLoadMoreResults})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-load-more-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1087,7 +1094,7 @@ export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMore
 
 @ProxyCmp({
   inputs: ['enableCancelLastAction']
-, defineCustomElementFn: defineCustomElementAtomicNoResults})
+})
 @Component({
   selector: 'atomic-no-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1131,7 +1138,7 @@ export declare interface AtomicNotifications extends Components.AtomicNotificati
 
 @ProxyCmp({
   inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withInput']
-, defineCustomElementFn: defineCustomElementAtomicNumericFacet})
+})
 @Component({
   selector: 'atomic-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1153,7 +1160,7 @@ export declare interface AtomicNumericFacet extends Components.AtomicNumericFace
 
 @ProxyCmp({
   inputs: ['end', 'endInclusive', 'label', 'start']
-, defineCustomElementFn: defineCustomElementAtomicNumericRange})
+})
 @Component({
   selector: 'atomic-numeric-range',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1175,7 +1182,7 @@ export declare interface AtomicNumericRange extends Components.AtomicNumericRang
 
 @ProxyCmp({
   inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
-, defineCustomElementFn: defineCustomElementAtomicPager})
+})
 @Component({
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1199,7 +1206,8 @@ export declare interface AtomicPager extends Components.AtomicPager {
 }
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicPopover})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1221,7 +1229,7 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 @ProxyCmp({
   inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'interactiveProduct', 'linkContent', 'loadingFlag', 'product', 'renderingFunction', 'stopPropagation', 'store']
-, defineCustomElementFn: defineCustomElementAtomicProduct})
+})
 @Component({
   selector: 'atomic-product',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1243,7 +1251,7 @@ export declare interface AtomicProduct extends Components.AtomicProduct {}
 
 @ProxyCmp({
   inputs: ['fallback', 'field', 'label']
-, defineCustomElementFn: defineCustomElementAtomicProductChildren})
+})
 @Component({
   selector: 'atomic-product-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1271,7 +1279,7 @@ export declare interface AtomicProductChildren extends Components.AtomicProductC
 
 @ProxyCmp({
   inputs: ['field', 'isCollapsible', 'truncateAfter']
-, defineCustomElementFn: defineCustomElementAtomicProductDescription})
+})
 @Component({
   selector: 'atomic-product-description',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1293,7 +1301,7 @@ export declare interface AtomicProductDescription extends Components.AtomicProdu
 
 @ProxyCmp({
   inputs: ['isCollapsible', 'truncateAfter']
-, defineCustomElementFn: defineCustomElementAtomicProductExcerpt})
+})
 @Component({
   selector: 'atomic-product-excerpt',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1315,7 +1323,7 @@ export declare interface AtomicProductExcerpt extends Components.AtomicProductEx
 
 @ProxyCmp({
   inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
-, defineCustomElementFn: defineCustomElementAtomicProductFieldCondition})
+})
 @Component({
   selector: 'atomic-product-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1338,7 +1346,7 @@ export declare interface AtomicProductFieldCondition extends Components.AtomicPr
 @ProxyCmp({
   inputs: ['fallback', 'field', 'imageAltField'],
   methods: ['previousImage', 'nextImage', 'navigateToImage']
-, defineCustomElementFn: defineCustomElementAtomicProductImage})
+})
 @Component({
   selector: 'atomic-product-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1360,7 +1368,7 @@ export declare interface AtomicProductImage extends Components.AtomicProductImag
 
 @ProxyCmp({
   inputs: ['hrefTemplate']
-, defineCustomElementFn: defineCustomElementAtomicProductLink})
+})
 @Component({
   selector: 'atomic-product-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1382,7 +1390,7 @@ export declare interface AtomicProductLink extends Components.AtomicProductLink 
 
 @ProxyCmp({
   inputs: ['delimiter', 'field', 'maxValuesToDisplay']
-, defineCustomElementFn: defineCustomElementAtomicProductMultiValueText})
+})
 @Component({
   selector: 'atomic-product-multi-value-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1424,7 +1432,8 @@ export class AtomicProductNumericFieldValue {
 export declare interface AtomicProductNumericFieldValue extends Components.AtomicProductNumericFieldValue {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductPrice})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-price',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1446,7 +1455,7 @@ export declare interface AtomicProductPrice extends Components.AtomicProductPric
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'maxValueInIndex', 'ratingDetailsField']
-, defineCustomElementFn: defineCustomElementAtomicProductRating})
+})
 @Component({
   selector: 'atomic-product-rating',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1466,7 +1475,8 @@ export class AtomicProductRating {
 export declare interface AtomicProductRating extends Components.AtomicProductRating {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionActions})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1507,7 +1517,8 @@ export class AtomicProductSectionBadges {
 export declare interface AtomicProductSectionBadges extends Components.AtomicProductSectionBadges {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionBottomMetadata})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-bottom-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1527,7 +1538,8 @@ export class AtomicProductSectionBottomMetadata {
 export declare interface AtomicProductSectionBottomMetadata extends Components.AtomicProductSectionBottomMetadata {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionChildren})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1547,7 +1559,8 @@ export class AtomicProductSectionChildren {
 export declare interface AtomicProductSectionChildren extends Components.AtomicProductSectionChildren {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionDescription})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-description',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1567,7 +1580,8 @@ export class AtomicProductSectionDescription {
 export declare interface AtomicProductSectionDescription extends Components.AtomicProductSectionDescription {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionEmphasized})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-emphasized',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1587,7 +1601,8 @@ export class AtomicProductSectionEmphasized {
 export declare interface AtomicProductSectionEmphasized extends Components.AtomicProductSectionEmphasized {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionMetadata})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-product-section-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1630,7 +1645,7 @@ export declare interface AtomicProductSectionName extends Components.AtomicProdu
 
 @ProxyCmp({
   inputs: ['imageSize']
-, defineCustomElementFn: defineCustomElementAtomicProductSectionVisual})
+})
 @Component({
   selector: 'atomic-product-section-visual',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1653,7 +1668,7 @@ export declare interface AtomicProductSectionVisual extends Components.AtomicPro
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicProductTemplate})
+})
 @Component({
   selector: 'atomic-product-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1675,7 +1690,7 @@ export declare interface AtomicProductTemplate extends Components.AtomicProductT
 
 @ProxyCmp({
   inputs: ['default', 'field', 'shouldHighlight']
-, defineCustomElementFn: defineCustomElementAtomicProductText})
+})
 @Component({
   selector: 'atomic-product-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1695,7 +1710,8 @@ export class AtomicProductText {
 export declare interface AtomicProductText extends Components.AtomicProductText {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-query-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1715,7 +1731,8 @@ export class AtomicQueryError {
 export declare interface AtomicQueryError extends Components.AtomicQueryError {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQuerySummary})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1737,7 +1754,7 @@ export declare interface AtomicQuerySummary extends Components.AtomicQuerySummar
 
 @ProxyCmp({
   inputs: ['sandbox']
-, defineCustomElementFn: defineCustomElementAtomicQuickview})
+})
 @Component({
   selector: 'atomic-quickview',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1760,7 +1777,7 @@ export declare interface AtomicQuickview extends Components.AtomicQuickview {}
 @ProxyCmp({
   inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
   methods: ['reset']
-, defineCustomElementFn: defineCustomElementAtomicQuickviewModal})
+})
 @Component({
   selector: 'atomic-quickview-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1788,7 +1805,7 @@ export declare interface AtomicQuickviewModal extends Components.AtomicQuickview
 
 @ProxyCmp({
   inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
-, defineCustomElementFn: defineCustomElementAtomicRatingFacet})
+})
 @Component({
   selector: 'atomic-rating-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1810,7 +1827,7 @@ export declare interface AtomicRatingFacet extends Components.AtomicRatingFacet 
 
 @ProxyCmp({
   inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
-, defineCustomElementFn: defineCustomElementAtomicRatingRangeFacet})
+})
 @Component({
   selector: 'atomic-rating-range-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1830,7 +1847,8 @@ export class AtomicRatingRangeFacet {
 export declare interface AtomicRatingRangeFacet extends Components.AtomicRatingRangeFacet {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicRecsError})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-recs-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1853,7 +1871,7 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
-, defineCustomElementFn: defineCustomElementAtomicRecsInterface})
+})
 @Component({
   selector: 'atomic-recs-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1876,7 +1894,7 @@ export declare interface AtomicRecsInterface extends Components.AtomicRecsInterf
 @ProxyCmp({
   inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
-, defineCustomElementFn: defineCustomElementAtomicRecsList})
+})
 @Component({
   selector: 'atomic-recs-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1898,7 +1916,7 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 @ProxyCmp({
   inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
-, defineCustomElementFn: defineCustomElementAtomicRecsResult})
+})
 @Component({
   selector: 'atomic-recs-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1921,7 +1939,7 @@ export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
 @ProxyCmp({
   inputs: ['conditions', 'ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicRecsResultTemplate})
+})
 @Component({
   selector: 'atomic-recs-result-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1943,7 +1961,7 @@ export declare interface AtomicRecsResultTemplate extends Components.AtomicRecsR
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
-, defineCustomElementFn: defineCustomElementAtomicRefineModal})
+})
 @Component({
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1965,7 +1983,7 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-, defineCustomElementFn: defineCustomElementAtomicRefineToggle})
+})
 @Component({
   selector: 'atomic-refine-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -1987,7 +2005,7 @@ export declare interface AtomicRefineToggle extends Components.AtomicRefineToggl
 
 @ProxyCmp({
   inputs: ['bindings', 'open']
-, defineCustomElementFn: defineCustomElementAtomicRelevanceInspector})
+})
 @Component({
   selector: 'atomic-relevance-inspector',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2013,7 +2031,7 @@ export declare interface AtomicRelevanceInspector extends Components.AtomicRelev
 
 @ProxyCmp({
   inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
-, defineCustomElementFn: defineCustomElementAtomicResult})
+})
 @Component({
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2035,7 +2053,7 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'label']
-, defineCustomElementFn: defineCustomElementAtomicResultBadge})
+})
 @Component({
   selector: 'atomic-result-badge',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2057,7 +2075,7 @@ export declare interface AtomicResultBadge extends Components.AtomicResultBadge 
 
 @ProxyCmp({
   inputs: ['imageSize', 'inheritTemplates', 'noResultText']
-, defineCustomElementFn: defineCustomElementAtomicResultChildren})
+})
 @Component({
   selector: 'atomic-result-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2080,7 +2098,7 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicResultChildrenTemplate})
+})
 @Component({
   selector: 'atomic-result-children-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2102,7 +2120,7 @@ export declare interface AtomicResultChildrenTemplate extends Components.AtomicR
 
 @ProxyCmp({
   inputs: ['field', 'format', 'relativeTime']
-, defineCustomElementFn: defineCustomElementAtomicResultDate})
+})
 @Component({
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2122,7 +2140,8 @@ export class AtomicResultDate {
 export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultFieldsList})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-fields-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2144,7 +2163,7 @@ export declare interface AtomicResultFieldsList extends Components.AtomicResultF
 
 @ProxyCmp({
   inputs: ['field', 'sanitize']
-, defineCustomElementFn: defineCustomElementAtomicResultHtml})
+})
 @Component({
   selector: 'atomic-result-html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2164,7 +2183,8 @@ export class AtomicResultHtml {
 export declare interface AtomicResultHtml extends Components.AtomicResultHtml {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultIcon})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2186,7 +2206,7 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 @ProxyCmp({
   inputs: ['fallback', 'field', 'imageAltField']
-, defineCustomElementFn: defineCustomElementAtomicResultImage})
+})
 @Component({
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2208,7 +2228,7 @@ export declare interface AtomicResultImage extends Components.AtomicResultImage 
 
 @ProxyCmp({
   inputs: ['hrefTemplate']
-, defineCustomElementFn: defineCustomElementAtomicResultLink})
+})
 @Component({
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2231,7 +2251,7 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
-, defineCustomElementFn: defineCustomElementAtomicResultList})
+})
 @Component({
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2253,7 +2273,7 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   inputs: ['field', 'fieldCount', 'localeKey']
-, defineCustomElementFn: defineCustomElementAtomicResultLocalizedText})
+})
 @Component({
   selector: 'atomic-result-localized-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2297,7 +2317,7 @@ export declare interface AtomicResultMultiValueText extends Components.AtomicRes
 
 @ProxyCmp({
   inputs: ['field']
-, defineCustomElementFn: defineCustomElementAtomicResultNumber})
+})
 @Component({
   selector: 'atomic-result-number',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2319,7 +2339,7 @@ export declare interface AtomicResultNumber extends Components.AtomicResultNumbe
 
 @ProxyCmp({
   inputs: ['maxNumberOfParts']
-, defineCustomElementFn: defineCustomElementAtomicResultPrintableUri})
+})
 @Component({
   selector: 'atomic-result-printable-uri',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2341,7 +2361,7 @@ export declare interface AtomicResultPrintableUri extends Components.AtomicResul
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'maxValueInIndex']
-, defineCustomElementFn: defineCustomElementAtomicResultRating})
+})
 @Component({
   selector: 'atomic-result-rating',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2361,7 +2381,8 @@ export class AtomicResultRating {
 export declare interface AtomicResultRating extends Components.AtomicResultRating {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionActions})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2381,7 +2402,8 @@ export class AtomicResultSectionActions {
 export declare interface AtomicResultSectionActions extends Components.AtomicResultSectionActions {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBadges})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-badges',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2401,7 +2423,8 @@ export class AtomicResultSectionBadges {
 export declare interface AtomicResultSectionBadges extends Components.AtomicResultSectionBadges {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBottomMetadata})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-bottom-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2421,7 +2444,8 @@ export class AtomicResultSectionBottomMetadata {
 export declare interface AtomicResultSectionBottomMetadata extends Components.AtomicResultSectionBottomMetadata {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionChildren})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2441,7 +2465,8 @@ export class AtomicResultSectionChildren {
 export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionEmphasized})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-emphasized',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2461,7 +2486,8 @@ export class AtomicResultSectionEmphasized {
 export declare interface AtomicResultSectionEmphasized extends Components.AtomicResultSectionEmphasized {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionExcerpt})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-excerpt',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2481,7 +2507,8 @@ export class AtomicResultSectionExcerpt {
 export declare interface AtomicResultSectionExcerpt extends Components.AtomicResultSectionExcerpt {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitle})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-title',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2501,7 +2528,8 @@ export class AtomicResultSectionTitle {
 export declare interface AtomicResultSectionTitle extends Components.AtomicResultSectionTitle {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitleMetadata})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-result-section-title-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2523,7 +2551,7 @@ export declare interface AtomicResultSectionTitleMetadata extends Components.Ato
 
 @ProxyCmp({
   inputs: ['imageSize']
-, defineCustomElementFn: defineCustomElementAtomicResultSectionVisual})
+})
 @Component({
   selector: 'atomic-result-section-visual',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2546,7 +2574,7 @@ export declare interface AtomicResultSectionVisual extends Components.AtomicResu
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicResultTemplate})
+})
 @Component({
   selector: 'atomic-result-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2568,7 +2596,7 @@ export declare interface AtomicResultTemplate extends Components.AtomicResultTem
 
 @ProxyCmp({
   inputs: ['default', 'field', 'shouldHighlight']
-, defineCustomElementFn: defineCustomElementAtomicResultText})
+})
 @Component({
   selector: 'atomic-result-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2590,7 +2618,7 @@ export declare interface AtomicResultText extends Components.AtomicResultText {}
 
 @ProxyCmp({
   inputs: ['field', 'format', 'unit']
-, defineCustomElementFn: defineCustomElementAtomicResultTimespan})
+})
 @Component({
   selector: 'atomic-result-timespan',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2612,7 +2640,7 @@ export declare interface AtomicResultTimespan extends Components.AtomicResultTim
 
 @ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
-, defineCustomElementFn: defineCustomElementAtomicResultsPerPage})
+})
 @Component({
   selector: 'atomic-results-per-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2638,7 +2666,7 @@ export declare interface AtomicResultsPerPage extends Components.AtomicResultsPe
 
 @ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
-, defineCustomElementFn: defineCustomElementAtomicSearchBox})
+})
 @Component({
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2681,7 +2709,7 @@ Example:
 @ProxyCmp({
   inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
-, defineCustomElementFn: defineCustomElementAtomicSearchBoxInstantResults})
+})
 @Component({
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2703,7 +2731,7 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-, defineCustomElementFn: defineCustomElementAtomicSearchBoxQuerySuggestions})
+})
 @Component({
   selector: 'atomic-search-box-query-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2725,7 +2753,7 @@ export declare interface AtomicSearchBoxQuerySuggestions extends Components.Atom
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-, defineCustomElementFn: defineCustomElementAtomicSearchBoxRecentQueries})
+})
 @Component({
   selector: 'atomic-search-box-recent-queries',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2748,7 +2776,7 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
-, defineCustomElementFn: defineCustomElementAtomicSearchInterface})
+})
 @Component({
   selector: 'atomic-search-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2770,7 +2798,7 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint']
-, defineCustomElementFn: defineCustomElementAtomicSearchLayout})
+})
 @Component({
   selector: 'atomic-search-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2792,7 +2820,7 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded']
-, defineCustomElementFn: defineCustomElementAtomicSegmentedFacet})
+})
 @Component({
   selector: 'atomic-segmented-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2812,7 +2840,8 @@ export class AtomicSegmentedFacet {
 export declare interface AtomicSegmentedFacet extends Components.AtomicSegmentedFacet {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicSegmentedFacetScrollable})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-segmented-facet-scrollable',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2834,7 +2863,7 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 @ProxyCmp({
   inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
-, defineCustomElementFn: defineCustomElementAtomicSmartSnippet})
+})
 @Component({
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2856,7 +2885,7 @@ export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippe
 
 @ProxyCmp({
   inputs: ['isOpen', 'source']
-, defineCustomElementFn: defineCustomElementAtomicSmartSnippetFeedbackModal})
+})
 @Component({
   selector: 'atomic-smart-snippet-feedback-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2882,7 +2911,7 @@ export declare interface AtomicSmartSnippetFeedbackModal extends Components.Atom
 
 @ProxyCmp({
   inputs: ['headingLevel', 'snippetStyle']
-, defineCustomElementFn: defineCustomElementAtomicSmartSnippetSuggestions})
+})
 @Component({
   selector: 'atomic-smart-snippet-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2902,7 +2931,8 @@ export class AtomicSmartSnippetSuggestions {
 export declare interface AtomicSmartSnippetSuggestions extends Components.AtomicSmartSnippetSuggestions {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicSortDropdown})
+@ProxyCmp({
+})
 @Component({
   selector: 'atomic-sort-dropdown',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2924,7 +2954,7 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 @ProxyCmp({
   inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
-, defineCustomElementFn: defineCustomElementAtomicSortExpression})
+})
 @Component({
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2946,7 +2976,7 @@ export declare interface AtomicSortExpression extends Components.AtomicSortExpre
 
 @ProxyCmp({
   inputs: ['expression', 'label', 'name']
-, defineCustomElementFn: defineCustomElementAtomicTab})
+})
 @Component({
   selector: 'atomic-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2968,7 +2998,7 @@ export declare interface AtomicTab extends Components.AtomicTab {}
 
 @ProxyCmp({
   inputs: ['clearFiltersOnTabChange']
-, defineCustomElementFn: defineCustomElementAtomicTabManager})
+})
 @Component({
   selector: 'atomic-tab-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -2990,7 +3020,7 @@ export declare interface AtomicTabManager extends Components.AtomicTabManager {}
 
 @ProxyCmp({
   inputs: ['label']
-, defineCustomElementFn: defineCustomElementAtomicTableElement})
+})
 @Component({
   selector: 'atomic-table-element',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -3012,7 +3042,7 @@ export declare interface AtomicTableElement extends Components.AtomicTableElemen
 
 @ProxyCmp({
   inputs: ['count', 'value']
-, defineCustomElementFn: defineCustomElementAtomicText})
+})
 @Component({
   selector: 'atomic-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -3034,7 +3064,7 @@ export declare interface AtomicText extends Components.AtomicText {}
 
 @ProxyCmp({
   inputs: ['amount', 'label', 'period', 'unit']
-, defineCustomElementFn: defineCustomElementAtomicTimeframe})
+})
 @Component({
   selector: 'atomic-timeframe',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -3056,7 +3086,7 @@ export declare interface AtomicTimeframe extends Components.AtomicTimeframe {}
 
 @ProxyCmp({
   inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withDatePicker']
-, defineCustomElementFn: defineCustomElementAtomicTimeframeFacet})
+})
 @Component({
   selector: 'atomic-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -3079,5 +3109,5 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 
 import {} from '@coveo/atomic/components';
 //#endregion Lit Declarations
-import {defineCustomElementAtomicAriaLive, defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicColorFacet, defineCustomElementAtomicCommerceBreadbox, defineCustomElementAtomicCommerceDidYouMean, defineCustomElementAtomicCommerceFacet, defineCustomElementAtomicCommerceFacets, defineCustomElementAtomicCommerceInterface, defineCustomElementAtomicCommerceLayout, defineCustomElementAtomicCommerceNoProducts, defineCustomElementAtomicCommerceNumericFacet, defineCustomElementAtomicCommercePager, defineCustomElementAtomicCommerceProductList, defineCustomElementAtomicCommerceProductsPerPage, defineCustomElementAtomicCommerceRecommendationInterface, defineCustomElementAtomicCommerceRecommendationList, defineCustomElementAtomicCommerceRefineModal, defineCustomElementAtomicCommerceRefineToggle, defineCustomElementAtomicCommerceSearchBox, defineCustomElementAtomicCommerceSearchBoxInstantProducts, defineCustomElementAtomicCommerceSearchBoxQuerySuggestions, defineCustomElementAtomicCommerceSearchBoxRecentQueries, defineCustomElementAtomicCommerceSortDropdown, defineCustomElementAtomicCommerceText, defineCustomElementAtomicCommerceTimeframeFacet, defineCustomElementAtomicComponentError, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicHtml, defineCustomElementAtomicIcon, defineCustomElementAtomicLayoutSection, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPager, defineCustomElementAtomicPopover, defineCustomElementAtomicProduct, defineCustomElementAtomicProductChildren, defineCustomElementAtomicProductDescription, defineCustomElementAtomicProductExcerpt, defineCustomElementAtomicProductFieldCondition, defineCustomElementAtomicProductImage, defineCustomElementAtomicProductLink, defineCustomElementAtomicProductMultiValueText, defineCustomElementAtomicProductPrice, defineCustomElementAtomicProductRating, defineCustomElementAtomicProductSectionActions, defineCustomElementAtomicProductSectionBottomMetadata, defineCustomElementAtomicProductSectionChildren, defineCustomElementAtomicProductSectionDescription, defineCustomElementAtomicProductSectionEmphasized, defineCustomElementAtomicProductSectionMetadata, defineCustomElementAtomicProductSectionVisual, defineCustomElementAtomicProductTemplate, defineCustomElementAtomicProductText, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuerySummary, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicRelevanceInspector, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultSectionActions, defineCustomElementAtomicResultSectionBadges, defineCustomElementAtomicResultSectionBottomMetadata, defineCustomElementAtomicResultSectionChildren, defineCustomElementAtomicResultSectionEmphasized, defineCustomElementAtomicResultSectionExcerpt, defineCustomElementAtomicResultSectionTitle, defineCustomElementAtomicResultSectionTitleMetadata, defineCustomElementAtomicResultSectionVisual, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicResultsPerPage, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSearchBoxInstantResults, defineCustomElementAtomicSearchBoxQuerySuggestions, defineCustomElementAtomicSearchBoxRecentQueries, defineCustomElementAtomicSearchInterface, defineCustomElementAtomicSearchLayout, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
+import {} from '@coveo/atomic/components';
 //#endregion Lit Declarations
