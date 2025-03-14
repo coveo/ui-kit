@@ -46,3 +46,17 @@ export function getFacets<Value, Request, Parameters>(
 
   return Object.keys(facets).length ? {[out]: facets} : {};
 }
+
+export function getTab<Section>(
+  section: Section | undefined,
+  tabSelector: (tabSet: Section) => string,
+  initialState: string
+) {
+  if (section === undefined) {
+    return {};
+  }
+
+  const tab = tabSelector(section);
+  const shouldInclude = tab !== initialState;
+  return shouldInclude ? {tab} : {};
+}
