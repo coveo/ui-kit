@@ -6,6 +6,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
         
 import {
 AtomicCommerceInterface,
+AtomicCommerceProductList,
 AtomicComponentError,
 AtomicIcon,
 AtomicAriaLive,
@@ -148,6 +149,7 @@ AtomicTimeframeFacet
         
 const DECLARATIONS = [
 AtomicCommerceInterface,
+AtomicCommerceProductList,
 AtomicComponentError,
 AtomicIcon,
 AtomicAriaLive,

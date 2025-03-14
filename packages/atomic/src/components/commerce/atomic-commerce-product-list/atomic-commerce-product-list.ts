@@ -16,6 +16,7 @@ import {
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {TailwindLitElement} from '@/src/utils/tailwind.element.js';
 import {randomID} from '@/src/utils/utils.js';
+import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildProductListing,
   buildSearch,
@@ -76,6 +77,7 @@ export class AtomicCommerceProductList
   private nextNewResultTarget?: FocusTargetController;
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
+  private unsubscribeSummary!: () => void;
 
   constructor() {
     super();
@@ -95,35 +97,34 @@ export class AtomicCommerceProductList
 
   @bindStateToController('searchOrListing')
   @state()
-  private searchOrListingState!: SearchState | ProductListingState;
+  public searchOrListingState!: SearchState | ProductListingState;
   @state()
-  private summaryState!: SearchSummaryState | ProductListingSummaryState;
-  private unsubscribeSummary!: () => void;
+  public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a
    * product, and the font sizes of different parts in a product.
    */
-  @property({reflect: true})
+  @property({reflect: true, type: String})
   density: ItemDisplayDensity = 'normal';
 
   /**
    * The desired layout to use when displaying products. Layouts affect how many products to display per row and how
    * visually distinct they are from each other.
    */
-  @property({reflect: true})
+  @property({reflect: true, type: String})
   display: ItemDisplayLayout = 'grid';
 
   /**
    * The expected size of the image displayed for products.
    */
-  @property({reflect: true})
+  @property({reflect: true, attribute: 'image-size', type: String})
   imageSize: ItemDisplayImageSize = 'small';
 
   /**
    * The desired number of placeholders to display while the product list is loading.
    */
-  @property({reflect: true})
+  @property({reflect: true, attribute: 'number-of-placeholders', type: Number})
   numberOfPlaceholders = 24;
 
   /**
@@ -141,14 +142,8 @@ export class AtomicCommerceProductList
     this.itemRenderingFunction = productRenderingFunction;
   }
 
-  public get focusTarget() {
-    if (!this.nextNewResultTarget) {
-      this.nextNewResultTarget = new FocusTargetController(this);
-    }
-    return this.nextNewResultTarget;
-  }
-
   public initialize() {
+    this.validateProps();
     this.host = this;
     this.initSearchOrListing();
     this.initSummary();
@@ -166,11 +161,18 @@ export class AtomicCommerceProductList
 
   public disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.unsubscribeSummary();
+    this.unsubscribeSummary && this.unsubscribeSummary();
     this.host.removeEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback
     );
+  }
+
+  public get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
   }
 
   @bindingGuard()
@@ -212,6 +214,22 @@ export class AtomicCommerceProductList
         ],
       })}`,
     })}`;
+  }
+
+  private validateProps() {
+    new Schema({
+      density: new StringValue({constrainTo: ['normal', 'compact']}),
+      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+      imageSize: new StringValue({
+        constrainTo: ['small', 'large', 'icon', 'none'],
+      }),
+      numberOfPlaceholders: new NumberValue({min: 0}),
+    }).validate({
+      density: this.density,
+      display: this.display,
+      imageSize: this.imageSize,
+      numberOfPlaceholders: this.numberOfPlaceholders,
+    });
   }
 
   private initSearchOrListing() {
