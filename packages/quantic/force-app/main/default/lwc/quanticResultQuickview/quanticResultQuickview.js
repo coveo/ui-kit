@@ -157,7 +157,7 @@ export default class QuanticResultQuickview extends LightningElement {
   disconnectedCallback() {
     this.unsubscribe?.();
     this.removeEventListener(
-      'loadingstatechange',
+      'quantic__loadingstatechange',
       this.handleLoadingStateChange
     );
   }
@@ -223,10 +223,10 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
-  handleLoadingStateChange(event) {
+  handleLoadingStateChange = (event) => {
     event.stopPropagation();
     this._isLoading = false;
-  }
+  };
 
   showTooltip() {
     this.tooltipComponent?.showTooltip();
