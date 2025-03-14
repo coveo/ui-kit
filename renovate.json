@@ -9,17 +9,8 @@
   "packageRules": [
     {
       "groupName": "all dependencies",
-      "groupSlug": "all-safe",
-      "matchPackageNames": ["*"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
-    },
-    {
-      "groupName": "all dependencies (major)",
-      "groupSlug": "all-major",
-      "matchPackageNames": ["*"],
-      "matchUpdateTypes": ["major"],
-      "automerge": false
+      "groupSlug": "all",
+      "matchPackageNames": ["*"]
     },
     {
       "groupName": "typedoc",
@@ -34,13 +25,6 @@
       "rangeStrategy": "replace",
       "description": "Isolate typescript",
       "matchPackageNames": ["/typescript/"]
-    },
-    {
-      "groupName": "tailwindcss",
-      "groupSlug": "tailwindcss",
-      "rangeStrategy": "replace",
-      "description": "Isolate tailwind for v4",
-      "matchPackageNames": ["tailwindcss"]
     },
     {
       "groupName": "vite",
