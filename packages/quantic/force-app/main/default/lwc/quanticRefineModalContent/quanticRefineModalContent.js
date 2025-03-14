@@ -184,6 +184,12 @@ export default class QuanticRefineModalContent extends LightningElement {
   toDefaultFacet = (facetObject) => {
     return {
       isDefault: true,
+      customCaptions: facetObject.metadata?.customCaptions?.map?.(
+        (caption, index) => ({
+          ...caption,
+          index,
+        })
+      ),
       ...this.extractFacetDataFromElement(
         facetObject.element,
         QuanticFacet.attributes
@@ -199,6 +205,12 @@ export default class QuanticRefineModalContent extends LightningElement {
   toCategoryFacet = (facetObject) => {
     return {
       isCategory: true,
+      customCaptions: facetObject.metadata?.customCaptions?.map?.(
+        (caption, index) => ({
+          ...caption,
+          index,
+        })
+      ),
       ...this.extractFacetDataFromElement(
         facetObject.element,
         QuanticCategoryFacet.attributes
