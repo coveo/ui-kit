@@ -1,17 +1,15 @@
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import {wrapInSearchInterface} from '@/storybook-utils/search/search-interface-wrapper';
-// import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import '../../common/atomic-component-error/atomic-component-error';
 import './atomic-commerce-sort-dropdown';
 
-// Wrap it in whatever interface/component you need
-const {decorator, play} = wrapInSearchInterface();
-// const {decorator, play} = wrapInCommerceInterface();
+const {decorator, play} = wrapInCommerceInterface();
 
 const meta: Meta = {
   component: 'atomic-commerce-sort-dropdown',
-  title: 'AtomicCommerceSortDropdown',
+  title: 'Atomic Commerce/Atomic Commerce Sort Dropdown',
   id: 'atomic-commerce-sort-dropdown',
   render: renderComponent,
   decorators: [decorator],
