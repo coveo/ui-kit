@@ -747,12 +747,6 @@ export namespace Components {
         "maxWithoutQuery"?: number;
     }
     /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
-    }
-    /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
      */
     interface AtomicCommerceText {
@@ -3620,11 +3614,6 @@ export namespace Components {
         "snippetStyle"?: string;
     }
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
-    }
-    /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
     interface AtomicSortExpression {
@@ -4263,16 +4252,6 @@ declare global {
     var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
         prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-    };
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSortDropdownElement: {
-        prototype: HTMLAtomicCommerceSortDropdownElement;
-        new (): HTMLAtomicCommerceSortDropdownElement;
     };
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -5958,15 +5937,6 @@ declare global {
         new (): HTMLAtomicSmartSnippetSuggestionsElement;
     };
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicSortDropdownElement: {
-        prototype: HTMLAtomicSortDropdownElement;
-        new (): HTMLAtomicSortDropdownElement;
-    };
-    /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
     interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
@@ -6090,7 +6060,6 @@ declare global {
         "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -6245,7 +6214,6 @@ declare global {
         "atomic-smart-snippet-feedback-modal": HTMLAtomicSmartSnippetFeedbackModalElement;
         "atomic-smart-snippet-source": HTMLAtomicSmartSnippetSourceElement;
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
-        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
@@ -6904,12 +6872,6 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -9683,11 +9645,6 @@ declare namespace LocalJSX {
         "snippetStyle"?: string;
     }
     /**
-     * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-     */
-    interface AtomicSortDropdown {
-    }
-    /**
      * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
      */
     interface AtomicSortExpression {
@@ -9895,7 +9852,6 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
-        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -10050,7 +10006,6 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-feedback-modal": AtomicSmartSnippetFeedbackModal;
         "atomic-smart-snippet-source": AtomicSmartSnippetSource;
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
-        "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
@@ -10228,11 +10183,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
-            /**
-             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-             * @alpha 
-             */
-            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             /**
              * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
              */
@@ -10904,10 +10854,6 @@ declare module "@stencil/core" {
              * ```
              */
             "atomic-smart-snippet-suggestions": LocalJSX.AtomicSmartSnippetSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSmartSnippetSuggestionsElement>;
-            /**
-             * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
-             */
-            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             /**
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
