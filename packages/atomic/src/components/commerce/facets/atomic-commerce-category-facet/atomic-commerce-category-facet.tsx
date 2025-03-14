@@ -88,7 +88,9 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
   styleUrl: 'atomic-commerce-category-facet.pcss',
   shadow: true,
 })
-export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
+export class AtomicCommerceCategoryFacet
+  implements InitializableComponent<Bindings>
+{
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
 
@@ -204,7 +206,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   public componentShouldUpdate(
     next: unknown,
     prev: unknown,
-    propName: keyof AtomicCategoryFacet
+    propName: keyof AtomicCommerceCategoryFacet
   ) {
     if (
       this.isCategoryFacetState(prev, propName) &&
