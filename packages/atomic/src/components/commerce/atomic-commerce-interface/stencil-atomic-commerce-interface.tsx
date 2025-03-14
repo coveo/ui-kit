@@ -434,14 +434,13 @@ export class AtomicCommerceInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-
+    markParentAsReady(this.host);
     this.initRequestStatus();
     this.initSummary();
     this.initContext();
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
-    markParentAsReady(this.host);
   }
 
   private addResourceBundle(

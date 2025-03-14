@@ -556,12 +556,12 @@ export class AtomicSearchInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    markParentAsReady(this.host);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
-    markParentAsReady(this.host);
   }
 
   private addResourceBundleWithWarning(
