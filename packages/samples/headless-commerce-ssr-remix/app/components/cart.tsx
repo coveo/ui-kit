@@ -1,5 +1,5 @@
 import {ExternalCartItem} from '@/external-services/external-cart-service';
-import {formatCurrency} from '@/utils/format-currency';
+import {formatCurrency} from '@/utils/format-utils';
 import AddToCartButton from './add-to-cart-button';
 import PurchaseButton from './purchase-button';
 import RemoveFromCartButton from './remove-from-cart-button';

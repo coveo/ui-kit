@@ -1,5 +1,5 @@
 import engineDefinitionOptions from '@/lib/commerce-engine-config';
-import {isExpired, parseJwt} from '@/lib/jwt-utils';
+import {isExpired, parseJwt} from '@/utils/access-token-utils';
 import {getOrganizationEndpoint} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {coveo_accessToken} from '../cookies.server';
