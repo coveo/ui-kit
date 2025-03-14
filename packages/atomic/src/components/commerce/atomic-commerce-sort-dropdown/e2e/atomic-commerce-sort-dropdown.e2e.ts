@@ -5,8 +5,38 @@ test.describe('AtomicCommerceSortDropdown', () => {
     await commerceSortDropdown.load();
   });
 
-  test('should be accessible', async ({makeAxeBuilder}) => {
+  test('should be A11y compliant', async ({
+    commerceSortDropdown,
+    makeAxeBuilder,
+  }) => {
+    await commerceSortDropdown.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
-    expect(accessibilityResults.violations.length).toEqual(0);
+    expect(accessibilityResults.violations).toEqual([]);
+  });
+
+  test.describe('when selecting a relevance sort criterion', async () => {
+    test.beforeEach(async ({commerceSortDropdown}) => {
+      await commerceSortDropdown.select.selectOption('relevance');
+    });
+
+    test('should reflect relevance sortCriteria in the URL', async ({page}) => {
+      expect(page.url()).toContain('sortCriteria=relevance');
+    });
+  });
+
+  test.describe('when selecting a price sort criterion', async () => {
+    test.beforeEach(async ({commerceSortDropdown}) => {
+      await commerceSortDropdown.select.selectOption('Price (Low to High)');
+    });
+
+    test('should update the select state', async ({commerceSortDropdown}) => {
+      expect(await commerceSortDropdown.select.inputValue()).toBe(
+        'Price (Low to High)'
+      );
+    });
+
+    test('should reflect price sortCriteria in the URL', async ({page}) => {
+      expect(page.url()).toContain('sortCriteria=ec_price%20asc');
+    });
   });
 });
