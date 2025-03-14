@@ -4,9 +4,10 @@
   "targets": {
     "release:phase1": {},
     "release:phase3": {},
-    "cached:build": {
-      "dependsOn": ["^build", "clean"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
           "node ./scripts/build-lit.mjs",
@@ -17,12 +18,8 @@
           "npm run build:assets"
         ],
         "parallel": false,
-        "cwd": "packages/atomic-react"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
