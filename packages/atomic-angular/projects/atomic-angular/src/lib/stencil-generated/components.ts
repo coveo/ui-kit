@@ -321,27 +321,6 @@ export declare interface AtomicCommerceLayout extends Components.AtomicCommerceL
 @ProxyCmp({
 })
 @Component({
-  selector: 'atomic-commerce-load-more-products',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicCommerceLoadMoreProducts {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
-
-
-@ProxyCmp({
-})
-@Component({
   selector: 'atomic-commerce-no-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -3105,4 +3084,30 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  
+})
+@Component({
+  selector: 'atomic-commerce-load-more-products',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  
+})
+export class AtomicCommerceLoadMoreProducts {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, []);
+  }
+}
+
+export declare interface AtomicCommerceLoadMoreProducts extends LitAtomicCommerceLoadMoreProducts {
+
+}
+
+import type {AtomicCommerceLoadMoreProducts as LitAtomicCommerceLoadMoreProducts} from '@coveo/atomic/components';
+//#endregion Lit Declarations

@@ -16,7 +16,6 @@ export const AtomicCommerceFacetNumberInput = /*@__PURE__*/createReactComponent<
 export const AtomicCommerceFacets = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceFacets, HTMLAtomicCommerceFacetsElement>('atomic-commerce-facets');
 export const AtomicCommerceInterface = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceInterface, HTMLAtomicCommerceInterfaceElement>('atomic-commerce-interface');
 export const AtomicCommerceLayout = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLayout, HTMLAtomicCommerceLayoutElement>('atomic-commerce-layout');
-export const AtomicCommerceLoadMoreProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceLoadMoreProducts, HTMLAtomicCommerceLoadMoreProductsElement>('atomic-commerce-load-more-products');
 export const AtomicCommerceNoProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNoProducts, HTMLAtomicCommerceNoProductsElement>('atomic-commerce-no-products');
 export const AtomicCommerceNumericFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceNumericFacet, HTMLAtomicCommerceNumericFacetElement>('atomic-commerce-numeric-facet');
 export const AtomicCommercePager = /*@__PURE__*/createReactComponent<JSX.AtomicCommercePager, HTMLAtomicCommercePagerElement>('atomic-commerce-pager');

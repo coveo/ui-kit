@@ -14,14 +14,14 @@ const endTag = '//#endregion Lit Declarations';
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
-  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
+  ${declaration.attributes?.length ?`inputs: [${declaration.attributes?.map(attr => `'${attr.fieldName}'`).join(', ')}]`: ''}
 })
 @Component({
   selector: '${declaration.tagName}',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
+  ${declaration.attributes?.length ?`inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]`: ''}
 })
 export class ${declaration.name} {
   protected readonly el: HTMLElement;
