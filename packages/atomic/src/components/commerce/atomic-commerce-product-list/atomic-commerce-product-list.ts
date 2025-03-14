@@ -33,6 +33,7 @@ import {CSSResultGroup, html, nothing, PropertyValues, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
+import {ref} from 'lit/directives/ref.js';
 import {resultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders-lit.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {displayGrid} from '../../common/item-list/display-grid-lit.js';
@@ -336,14 +337,13 @@ export class AtomicCommerceProductList
         children: html`${keyed(
           props.key,
           html`<atomic-product
-            key=${props.key}
-            density=${props.density}
-            display=${props.display}
-            image-size=${props.imageSize}
-            loadingFlag=${props.loadingFlag}
             .content=${props.content}
-            .interactiveProduct=${props.interactiveProduct}
+            .density=${props.density}
+            .display=${props.display}
+            .imageSize=${props.imageSize}
             .linkContent=${props.linkContent}
+            .loadingFlag=${props.loadingFlag}
+            .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}
             .renderingFunction=${props.renderingFunction}
             .store=${props.store}
@@ -359,19 +359,20 @@ export class AtomicCommerceProductList
       return html`${keyed(
         props.key,
         html`<atomic-product
-          key=${props.key}
-          density=${props.density}
-          display=${props.display}
-          image-size=${props.imageSize}
-          loadingFlag=${props.loadingFlag}
-          part="outline"
           .content=${props.content}
+          .density=${props.density}
+          .display=${props.display}
+          .imageSize=${props.imageSize}
           .interactiveProduct=${props.interactiveProduct}
           .linkContent=${props.linkContent}
+          .loadingFlag=${props.loadingFlag}
+          part="outline"
           .product=${props.product}
           .renderingFunction=${props.renderingFunction}
-          .ref=${(element: Element) =>
-            element && this.productListCommon.setNewResultRef(element, index)}
+          ${ref(
+            (element) =>
+              element && this.productListCommon.setNewResultRef(element, index)
+          )}
           .store=${props.store}
         ></atomic-product>`
       )}`;
@@ -418,14 +419,13 @@ export class AtomicCommerceProductList
                   return html`${keyed(
                     props.key,
                     html`<atomic-product
-                      key=${props.key}
-                      density=${props.density}
-                      display=${props.display}
-                      image-size=${props.imageSize}
-                      loadingFlag=${props.loadingFlag}
                       .content=${content}
-                      .interactiveProduct=${props.interactiveProduct}
+                      .density=${props.density}
+                      .display=${props.display}
+                      .imageSize=${props.imageSize}
                       .linkContent=${props.linkContent}
+                      .loadingFlag=${props.loadingFlag}
+                      .interactiveProduct=${props.interactiveProduct}
                       .product=${props.product}
                       .renderingFunction=${props.renderingFunction}
                       .store=${props.store}
