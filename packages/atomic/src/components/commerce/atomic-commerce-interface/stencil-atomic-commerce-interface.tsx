@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
   LogLevel,
   Search,
@@ -433,7 +434,7 @@ export class AtomicCommerceInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
-
+    markParentAsReady(this.host);
     this.initRequestStatus();
     this.initSummary();
     this.initContext();

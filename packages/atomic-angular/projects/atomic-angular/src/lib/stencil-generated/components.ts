@@ -3105,4 +3105,9 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+import {} from '@coveo/atomic/components';
+//#endregion Lit Declarations
+import {} from '@coveo/atomic/components';
+//#endregion Lit Declarations

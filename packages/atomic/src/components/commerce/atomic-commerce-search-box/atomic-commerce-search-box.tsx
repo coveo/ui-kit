@@ -217,7 +217,7 @@ export class AtomicCommerceSearchBox
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-commerce-search-box-');
+    this.id ||= randomID('atomic-commerce-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
