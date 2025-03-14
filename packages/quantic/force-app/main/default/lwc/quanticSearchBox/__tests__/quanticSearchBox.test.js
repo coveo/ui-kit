@@ -15,19 +15,10 @@ const exampleEngine = {
 const functionsMocks = {
   buildSearchBox: jest.fn(() => ({
     state: {},
-    subscribe: functionsMocks.searchBoxSubscriber,
+    subscribe: functionsMocks.subscribe,
   })),
-  buildRecentQueriesList: jest.fn(() => ({
-    state: {},
-    subscribe: functionsMocks.recentQueriesSubscriber,
-  })),
-
   loadQuerySuggestActions: jest.fn(() => {}),
-  searchBoxSubscriber: jest.fn((cb) => {
-    cb();
-    return functionsMocks.unsubscribe;
-  }),
-  recentQueriesSubscriber: jest.fn((cb) => {
+  subscribe: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribe;
   }),
@@ -62,7 +53,6 @@ function prepareHeadlessState() {
   mockHeadlessLoader.getHeadlessBundle = () => {
     return {
       buildSearchBox: functionsMocks.buildSearchBox,
-      buildRecentQueriesList: functionsMocks.buildRecentQueriesList,
       loadQuerySuggestActions: functionsMocks.loadQuerySuggestActions,
     };
   };
@@ -103,37 +93,15 @@ describe('c-quantic-search-box', () => {
   });
 
   describe('controller initialization', () => {
-    it('should subscribe to the headless search box state changes', async () => {
+    it('should subscribe to the headless state changes', async () => {
       createTestComponent();
       await flushPromises();
 
-      expect(functionsMocks.searchBoxSubscriber).toHaveBeenCalledTimes(1);
-    });
-
-    it('should subscribe to the headless recent queries state changes', async () => {
-      createTestComponent();
-      await flushPromises();
-
-      expect(functionsMocks.recentQueriesSubscriber).toHaveBeenCalledTimes(1);
-    });
-
-    it('should properly initialize the recent queries controller with the right maxLength value', async () => {
-      createTestComponent();
-      await flushPromises();
-
-      expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledWith(
-        exampleEngine,
-        expect.objectContaining({
-          options: expect.objectContaining({
-            maxLength: 10,
-          }),
-        })
-      );
+      expect(functionsMocks.subscribe).toHaveBeenCalledTimes(1);
     });
 
     describe('when keepFiltersOnSearch is false (default)', () => {
-      it('should properly initialize the search box controller with clear filters enabled', async () => {
+      it('should properly initialize the controller with clear filters enabled', async () => {
         createTestComponent();
         await flushPromises();
 
@@ -148,7 +116,7 @@ describe('c-quantic-search-box', () => {
     });
 
     describe('when keepFiltersOnSearch is true', () => {
-      it('should properly initialize the search box controller with clear filters disabled', async () => {
+      it('should properly initialize the controller with clear filters disabled', async () => {
         createTestComponent({
           ...defaultOptions,
           keepFiltersOnSearch: true,

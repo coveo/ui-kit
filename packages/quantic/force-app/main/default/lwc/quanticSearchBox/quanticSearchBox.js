@@ -122,7 +122,7 @@ export default class QuanticSearchBox extends LightningElement {
           queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
         },
         options: {
-          maxLength: 10,
+          maxLength: 100,
         },
       });
       this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
