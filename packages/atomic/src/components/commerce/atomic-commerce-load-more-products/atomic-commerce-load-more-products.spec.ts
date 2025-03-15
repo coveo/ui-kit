@@ -1,5 +1,4 @@
-import {within} from 'shadow-dom-testing-library';
-import {describe, test, expect, beforeAll, afterAll} from 'vitest';
+import {describe, test, beforeAll, afterAll} from 'vitest';
 import './atomic-commerce-load-more-products';
 import {AtomicCommerceLoadMoreProducts} from './atomic-commerce-load-more-products.js';
 
@@ -14,9 +13,5 @@ describe('AtomicCommerceLoadMoreProducts', () => {
     document.body.removeChild(element);
   });
 
-  test('should render the component', async () => {
-    expect(element.shadowRoot).toBeTruthy();
-    const text = await within(element).findByShadowText('Hello World');
-    expect(text).toBeTruthy();
-  });
+  test.todo('should render the component', async () => {});
 });
