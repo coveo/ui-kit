@@ -20,15 +20,15 @@ describe('button', () => {
     document.body.removeChild(container);
   });
 
-  const renderButton = (props: Partial<ButtonProps>): HTMLButtonElement => {
+  const renderButton = (
+    props: Partial<ButtonProps>,
+    children = html``
+  ): HTMLButtonElement => {
     render(
       html`${button({
-        props: {
-          ...props,
-          style: props.style ?? 'primary',
-        },
-        children: html``,
-      })}`,
+        ...props,
+        style: props.style ?? 'primary',
+      })(children)}`,
       container
     );
     return within(container).getByRole('button') as HTMLButtonElement;

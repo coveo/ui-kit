@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`loadMoreSummary > should render the correct HTML structure 1`] = `
+"
+    <div class="text-neutral-dark my-2 text-lg" part="showing-results">
+      Showing <span class="font-bold text-on-background" part="highlight">1</span> of <span class="font-bold text-on-background" part="highlight">10</span> results
+    </div>
+  "
+`;

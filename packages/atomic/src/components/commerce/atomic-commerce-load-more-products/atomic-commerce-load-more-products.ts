@@ -1,5 +1,6 @@
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {
   Pagination,
   PaginationState,
@@ -10,10 +11,14 @@ import {
   buildProductListing,
   buildSearch,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import '../../common/atomic-load-more-items/atomic-load-more-items';
+import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '../../common/interface/store';
+import {loadMoreButton} from '../../common/load-more/button';
+import {loadMoreContainer} from '../../common/load-more/container';
+import {loadMoreProgressBar} from '../../common/load-more/progress-bar';
+import {loadMoreSummary} from '../../common/load-more/summary';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
@@ -38,8 +43,10 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  */
 @customElement('atomic-commerce-load-more-products')
 export class AtomicCommerceLoadMoreProducts extends InitializeBindingsMixin(
-  LitElement
+  TailwindLitElement
 ) {
+  static styles = [TailwindLitElement.styles];
+
   @state()
   bindings!: CommerceBindings;
 
@@ -86,20 +93,26 @@ export class AtomicCommerceLoadMoreProducts extends InitializeBindingsMixin(
   }
 
   render() {
-    return html`<atomic-load-more-items
-      .hasResults=${this.paginationState?.totalEntries > 0}
-      .isLoaded=${this.isAppLoaded}
-      .from=${this.lastProduct}
-      .to=${this.paginationState?.totalEntries}
-      .i18n=${this.bindings?.i18n}
-      .labels=${{
-        summary: 'showing-products-of-load-more',
-        button: 'load-more-products',
-      }}
-      .moreAvailable=${this.lastProduct < this.paginationState?.totalEntries}
-      .onClick=${() => this.onClick()}
-      exportparts="container showing-results highlight progress-bar load-more-results-button"
-    ></atomic-load-more-items>`;
+    return html`${when(this.isAppLoaded && this.lastProduct > 0, () =>
+      loadMoreContainer(html`
+        ${loadMoreSummary({
+          i18n: this.bindings.i18n,
+          from: this.lastProduct,
+          to: this.paginationState.totalEntries,
+          label: 'showing-products-of-load-more',
+        })}
+        ${loadMoreProgressBar({
+          from: this.lastProduct,
+          to: this.paginationState.totalEntries,
+        })}
+        ${loadMoreButton({
+          i18n: this.bindings.i18n,
+          moreAvailable: this.lastProduct < this.paginationState.totalEntries,
+          label: 'load-more-products',
+          onClick: () => this.onClick(),
+        })}
+      `)
+    )}`;
   }
 }
 
