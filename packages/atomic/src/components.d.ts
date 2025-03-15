@@ -439,12 +439,6 @@ export namespace Components {
         "mobileBreakpoint": string;
     }
     /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface AtomicCommerceLoadMoreProducts {
-    }
-    /**
      * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicCommerceNoProducts {
@@ -4088,16 +4082,6 @@ declare global {
         new (): HTMLAtomicCommerceLayoutElement;
     };
     /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceLoadMoreProductsElement extends Components.AtomicCommerceLoadMoreProducts, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceLoadMoreProductsElement: {
-        prototype: HTMLAtomicCommerceLoadMoreProductsElement;
-        new (): HTMLAtomicCommerceLoadMoreProductsElement;
-    };
-    /**
      * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
      */
     interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
@@ -6110,7 +6094,6 @@ declare global {
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
-        "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
@@ -6655,12 +6638,6 @@ declare namespace LocalJSX {
           * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
          */
         "mobileBreakpoint"?: string;
-    }
-    /**
-     * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-     * @alpha 
-     */
-    interface AtomicCommerceLoadMoreProducts {
     }
     /**
      * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
@@ -9934,7 +9911,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
-        "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
@@ -10204,11 +10180,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
              */
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
-            /**
-             * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
-             * @alpha 
-             */
-            "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             /**
              * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
              */
