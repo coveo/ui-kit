@@ -24,6 +24,17 @@ export interface InitializableComponent<
    * Bindings passed from the `AtomicSearchInterface` to its children components.
    */
   bindings: SpecificBindings;
+
+  /**
+   * Flag to check if the component has been initialized.
+   */
+  initialized?: boolean;
+
+  /**
+   * Method called when the component is removed from the DOM.
+   */
+  unsubscribeLanguage?: () => void;
+
   /**
    * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
    */
