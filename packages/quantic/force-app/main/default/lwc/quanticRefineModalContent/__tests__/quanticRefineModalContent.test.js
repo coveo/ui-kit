@@ -112,7 +112,7 @@ describe('c-quantic-refine-modal-content', () => {
   });
 
   describe('when the dynamic navigation feature is enabled', () => {
-    describe('when a standard facet is registered in the store', () => {
+    describe('standard facet', () => {
       const exampleFacetAttributes = {
         facetId: 'filetype',
         field: 'filetype',
@@ -127,11 +127,6 @@ describe('c-quantic-refine-modal-content', () => {
         dependsOn: '',
       };
 
-      const exampleCaption = {
-        value: 'YouTubeVideo',
-        caption: 'YouTube Video',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -143,14 +138,11 @@ describe('c-quantic-refine-modal-content', () => {
               localName: 'c-quantic-facet',
               ...exampleFacetAttributes,
             },
-            metadata: {
-              customCaptions: [exampleCaption],
-            },
           },
         });
       });
 
-      it('should display the quantic facet with its custom captions and attributes', async () => {
+      it('should display the quantic facet with its attributes and without custom captions', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -166,13 +158,53 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
-        expect(quanticFacetCaption).not.toBeNull();
-        expect(quanticFacetCaption.value).toBe(exampleCaption.value);
-        expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        expect(quanticFacetCaption).toBeNull();
+      });
+
+      describe('when a standard facet is registered in the store with custom captions', () => {
+        const exampleCaption = {
+          value: 'YouTubeVideo',
+          caption: 'YouTube Video',
+        };
+
+        beforeEach(() => {
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+          prepareQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                ...exampleFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [exampleCaption],
+              },
+            },
+          });
+        });
+
+        it('should display the quantic facet with its custom captions and attributes', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const quanticFacet = element.shadowRoot.querySelector(
+            selectors.quanticFacet
+          );
+          expect(quanticFacet).not.toBeNull();
+
+          const quanticFacetCaption = element.shadowRoot.querySelector(
+            selectors.quanticFacetCaption
+          );
+          expect(quanticFacetCaption).not.toBeNull();
+          expect(quanticFacetCaption.value).toBe(exampleCaption.value);
+          expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
       });
     });
 
-    describe('when a category facet is registered in the store', () => {
+    describe('category facet', () => {
       const exampleCategoryFacetAttributes = {
         facetId: 'country',
         field: 'country',
@@ -187,11 +219,6 @@ describe('c-quantic-refine-modal-content', () => {
         dependsOn: '',
       };
 
-      const exampleCaption = {
-        value: 'Ca',
-        caption: 'Canada',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -203,14 +230,11 @@ describe('c-quantic-refine-modal-content', () => {
               localName: 'c-quantic-category-facet',
               ...exampleCategoryFacetAttributes,
             },
-            metadata: {
-              customCaptions: [exampleCaption],
-            },
           },
         });
       });
 
-      it('should display the quantic category facet with its custom captions and attributes', async () => {
+      it('should display the quantic category facet with its attributes and without custom captions', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -228,15 +252,55 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
-        expect(quanticFacetCaption).not.toBeNull();
-        expect(quanticFacetCaption.value).toBe(exampleCaption.value);
-        expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        expect(quanticFacetCaption).toBeNull();
+      });
+
+      describe('when a category facet is registered in the store with custom captions', () => {
+        const exampleCaption = {
+          value: 'Ca',
+          caption: 'Canada',
+        };
+
+        beforeEach(() => {
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+          prepareQuanticStore({
+            country: {
+              label: 'Country',
+              facetId: 'country',
+              element: {
+                localName: 'c-quantic-category-facet',
+                ...exampleCategoryFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [exampleCaption],
+              },
+            },
+          });
+        });
+
+        it('should display the quantic category facet with its custom captions', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const quanticCategoryFacet = element.shadowRoot.querySelector(
+            selectors.quanticCategoryFacet
+          );
+          expect(quanticCategoryFacet).not.toBeNull();
+
+          const quanticFacetCaption = element.shadowRoot.querySelector(
+            selectors.quanticFacetCaption
+          );
+          expect(quanticFacetCaption).not.toBeNull();
+          expect(quanticFacetCaption.value).toBe(exampleCaption.value);
+          expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
       });
     });
   });
 
   describe('when the dynamic navigation feature is disabled', () => {
-    describe('when a standard facet is registered in the store', () => {
+    describe('standard facet', () => {
       const exampleFacetAttributes = {
         facetId: 'filetype',
         field: 'filetype',
@@ -251,11 +315,6 @@ describe('c-quantic-refine-modal-content', () => {
         dependsOn: '',
       };
 
-      const exampleCaption = {
-        value: 'YouTubeVideo',
-        caption: 'YouTube Video',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -267,14 +326,11 @@ describe('c-quantic-refine-modal-content', () => {
               localName: 'c-quantic-facet',
               ...exampleFacetAttributes,
             },
-            metadata: {
-              customCaptions: [exampleCaption],
-            },
           },
         });
       });
 
-      it('should display the quantic facet with its custom captions and attributes', async () => {
+      it('should display the quantic facet with its attributes and without custom captions', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           disableDynamicNavigation: true,
@@ -293,13 +349,56 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
-        expect(quanticFacetCaption).not.toBeNull();
-        expect(quanticFacetCaption.value).toBe(exampleCaption.value);
-        expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        expect(quanticFacetCaption).toBeNull();
+      });
+
+      describe('when a standard facet is registered in the store with custom captions', () => {
+        const exampleCaption = {
+          value: 'YouTubeVideo',
+          caption: 'YouTube Video',
+        };
+
+        beforeEach(() => {
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+          prepareQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                ...exampleFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [exampleCaption],
+              },
+            },
+          });
+        });
+
+        it('should display the quantic facet with its custom captions and attributes', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const quanticFacet = element.shadowRoot.querySelector(
+            selectors.quanticFacet
+          );
+          expect(quanticFacet).not.toBeNull();
+
+          const quanticFacetCaption = element.shadowRoot.querySelector(
+            selectors.quanticFacetCaption
+          );
+          expect(quanticFacetCaption).not.toBeNull();
+          expect(quanticFacetCaption.value).toBe(exampleCaption.value);
+          expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
       });
     });
 
-    describe('when a category facet is registered in the store', () => {
+    describe('category facet', () => {
       const exampleCategoryFacetAttributes = {
         facetId: 'country',
         field: 'country',
@@ -314,11 +413,6 @@ describe('c-quantic-refine-modal-content', () => {
         dependsOn: '',
       };
 
-      const exampleCaption = {
-        value: 'Ca',
-        caption: 'Canada',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
@@ -330,14 +424,11 @@ describe('c-quantic-refine-modal-content', () => {
               localName: 'c-quantic-category-facet',
               ...exampleCategoryFacetAttributes,
             },
-            metadata: {
-              customCaptions: [exampleCaption],
-            },
           },
         });
       });
 
-      it('should display the quantic category facet with its custom captions and attributes', async () => {
+      it('should display the quantic category facet with its attributes and without custom captions', async () => {
         const element = createTestComponent({
           ...defaultOptions,
           disableDynamicNavigation: true,
@@ -358,9 +449,52 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
-        expect(quanticFacetCaption).not.toBeNull();
-        expect(quanticFacetCaption.value).toBe(exampleCaption.value);
-        expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        expect(quanticFacetCaption).toBeNull();
+      });
+
+      describe('when a category facet is registered in the store with custom captions', () => {
+        const exampleCaption = {
+          value: 'Ca',
+          caption: 'Canada',
+        };
+
+        beforeEach(() => {
+          mockSuccessfulHeadlessInitialization();
+          prepareHeadlessState();
+          prepareQuanticStore({
+            country: {
+              label: 'Country',
+              facetId: 'country',
+              element: {
+                localName: 'c-quantic-category-facet',
+                ...exampleCategoryFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [exampleCaption],
+              },
+            },
+          });
+        });
+
+        it('should display the quantic category facet with its custom captions', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const quanticCategoryFacet = element.shadowRoot.querySelector(
+            selectors.quanticCategoryFacet
+          );
+          expect(quanticCategoryFacet).not.toBeNull();
+
+          const quanticFacetCaption = element.shadowRoot.querySelector(
+            selectors.quanticFacetCaption
+          );
+          expect(quanticFacetCaption).not.toBeNull();
+          expect(quanticFacetCaption.value).toBe(exampleCaption.value);
+          expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
       });
     });
   });
