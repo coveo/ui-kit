@@ -337,6 +337,7 @@ export class AtomicCommerceInterface
 
   private async internalInitialization(initEngine: () => void) {
     await this.commonInterfaceHelper.onInitialization(initEngine);
+    this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initRequestStatus();
     this.initSummary();
@@ -344,7 +345,6 @@ export class AtomicCommerceInterface
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
-    this.bindings = this.getBindings();
   }
 
   private getBindings(): CommerceBindings {

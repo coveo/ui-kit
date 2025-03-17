@@ -335,5 +335,4 @@ export function DeferUntilRender() {
 export type I18nState = Record<string, (variables?: TOptions) => string>;
 export type AtomicInterface = HTMLElement & {
   engine?: CoreEngine;
-  bindings?: Bindings;
 };
