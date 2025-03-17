@@ -4,118 +4,67 @@ import {useRef, useState} from 'react';
 
 export default function SearchBoxWithQuerySuggestions() {
   const {state, methods} = useSearchBox();
-  const [inputValue, setInputValue] = useState(state.value);
-  const [isExpanded, setIsExpanded] = useState(false);
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState(state.value);
+  const [showingSuggestions, setIsShowingSuggestions] = useState(false);
+
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
-  const showSuggestions = () => {
-    methods?.showSuggestions();
-    setIsExpanded(state.suggestions.length > 0);
-  };
-
   const handleSearchBoxBlur = (event: React.FocusEvent) => {
-    console.log('event.relatedTarget', event);
-    const activeSuggestion = getActiveSuggestion();
+    const activeSuggestion = suggestionSelectors.active();
     if (activeSuggestion && event.relatedTarget === activeSuggestion) {
-      activeSuggestion.click();
+      suggestionSelectors.activeButton()!.click();
     }
 
-    setIsExpanded(false);
+    setIsShowingSuggestions(false);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-    methods?.updateText(event.target.value);
-    showSuggestions();
-  };
+  const handleSearchBoxInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newValue = event.target.value;
+    setInputValue(newValue);
+    methods?.updateText(newValue);
 
-  const getActiveSuggestion = (): HTMLButtonElement | null | undefined => {
-    return suggestionsRef.current?.querySelector('[aria-selected]');
-  };
-
-  const activateNextSuggestion = () => {
-    const activeSuggestion = getActiveSuggestion();
-    let nextSuggestion: HTMLButtonElement | null | undefined;
-
-    const firstSuggestion =
-      suggestionsRef.current?.firstElementChild?.querySelector('button');
-
-    if (!activeSuggestion) {
-      nextSuggestion = firstSuggestion;
-    } else {
-      activeSuggestion.removeAttribute('aria-selected');
-      nextSuggestion =
-        activeSuggestion.parentElement?.nextElementSibling?.querySelector(
-          'button'
-        );
-      if (!nextSuggestion) {
-        nextSuggestion = firstSuggestion;
-      }
+    if (!showingSuggestions) {
+      showSuggestions();
     }
-
-    if (!nextSuggestion) {
-      return;
-    }
-
-    nextSuggestion.setAttribute('aria-selected', 'true');
-    const newInputValue = nextSuggestion.getAttribute('name') ?? '';
-    setInputValue(newInputValue);
   };
 
-  const activatePreviousSuggestion = () => {
-    const activeSuggestion = getActiveSuggestion();
-
-    if (!activeSuggestion) {
-      return;
-    }
-
-    activeSuggestion.removeAttribute('aria-selected');
-
-    const previousSuggestion =
-      activeSuggestion.parentElement?.previousElementSibling?.querySelector(
-        'button'
-      );
-    previousSuggestion?.setAttribute('aria-selected', 'true');
-    const newInputValue = previousSuggestion?.getAttribute('name') ?? '';
-    setInputValue(newInputValue);
-  };
-
-  const handleKeyDown = (
+  const handleSearchBoxKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLButtonElement>
   ) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      handleSearchBoxSubmit();
-    }
+    switch (event.key) {
+      case 'Enter':
+        event.preventDefault();
+        handleSearchBoxSubmit();
+        break;
 
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      inputRef.current?.focus();
-      activateNextSuggestion();
-    }
+      case 'ArrowDown':
+        event.preventDefault();
+        activateNextSuggestion();
+        break;
 
-    if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      inputRef.current?.focus();
-      activatePreviousSuggestion();
+      case 'ArrowUp':
+        event.preventDefault();
+        activatePreviousSuggestion();
+        break;
+
+      case 'Escape':
+        if (inputValue === '') {
+          setIsShowingSuggestions(false);
+        }
+        break;
+
+      default:
+        break;
     }
   };
 
   const handleSearchBoxSubmit = () => {
-    setIsExpanded(false);
+    setIsShowingSuggestions(false);
     methods?.updateText(inputValue);
     methods?.submit();
-  };
-
-  const handleSuggestionMouseOver = (event: React.MouseEvent) => {
-    getActiveSuggestion()?.removeAttribute('aria-selected');
-    event.currentTarget.setAttribute('aria-selected', 'true');
-  };
-
-  const handleSuggestionMouseOut = (event: React.MouseEvent) => {
-    event.currentTarget.removeAttribute('aria-selected');
   };
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
@@ -127,26 +76,106 @@ export default function SearchBoxWithQuerySuggestions() {
     methods.selectSuggestion(suggestion.rawValue);
   };
 
+  const handleSuggestionMouseOut = (event: React.MouseEvent) => {
+    event.currentTarget.removeAttribute('aria-selected');
+  };
+
+  const handleSuggestionMouseOver = (event: React.MouseEvent) => {
+    suggestionSelectors.active()?.removeAttribute('aria-selected');
+    event.currentTarget.setAttribute('aria-selected', 'true');
+  };
+
+  const activateNextSuggestion = () => {
+    const {active, first, next} = suggestionSelectors;
+
+    const activeSuggestion = active();
+    activeSuggestion?.removeAttribute('aria-selected');
+
+    const firstSuggestion = first();
+
+    const nextSuggestion = activeSuggestion
+      ? (next ?? firstSuggestion)
+      : firstSuggestion;
+
+    if (!nextSuggestion) {
+      return;
+    }
+
+    nextSuggestion.setAttribute('aria-selected', 'true');
+    const newInputValue = nextSuggestion.getAttribute('name') ?? '';
+    setInputValue(newInputValue);
+  };
+
+  const activatePreviousSuggestion = () => {
+    const {active, last, previous} = suggestionSelectors;
+
+    const activeSuggestion = active();
+    activeSuggestion?.removeAttribute('aria-selected');
+
+    const previousSuggestion = activeSuggestion ? previous : last();
+
+    if (!previousSuggestion) {
+      setInputValue('');
+      return;
+    }
+
+    previousSuggestion.setAttribute('aria-selected', 'true');
+    const newInputValue = previousSuggestion.getAttribute('name') ?? '';
+    setInputValue(newInputValue);
+  };
+
+  const isComboboxExpanded = () => {
+    return showingSuggestions && state.suggestions.length > 0;
+  };
+
+  const showSuggestions = () => {
+    if (!showingSuggestions) {
+      methods?.showSuggestions();
+      setIsShowingSuggestions(true);
+    }
+  };
+
+  const suggestionSelectors = {
+    active: () => suggestionsRef.current?.querySelector('[aria-selected]'),
+    activeButton: () =>
+      suggestionsRef.current
+        ?.querySelector('[aria-selected]')
+        ?.querySelector('button'),
+    first: () =>
+      suggestionsRef.current
+        ?.querySelector('ul')
+        ?.firstElementChild?.querySelector('button'),
+    last: () =>
+      suggestionsRef.current?.firstElementChild
+        ?.querySelector('ul')
+        ?.lastElementChild?.querySelector('button'),
+    next: suggestionsRef.current
+      ?.querySelector('[aria-selected]')
+      ?.parentElement?.nextElementSibling?.querySelector('button'),
+    previous: suggestionsRef.current
+      ?.querySelector('[aria-selected]')
+      ?.parentElement?.previousElementSibling?.querySelector('button'),
+  };
+
   return (
     <>
       <div className="SearchBoxInputWrapper" style={{whiteSpace: 'nowrap'}}>
         <input
-          {...(getActiveSuggestion() && {
-            'aria-activedescendant': `${getActiveSuggestion()!.id}`,
+          {...(suggestionSelectors.active() && {
+            'aria-activedescendant': `${suggestionSelectors.active()!.id}`,
           })}
           aria-autocomplete="list"
           aria-controls="search-box-suggestions"
-          {...(isExpanded && {'aria-expanded': true})}
+          {...(isComboboxExpanded() && {'aria-expanded': true})}
           autoFocus
           className="SearchBoxInput"
           disabled={!methods}
           onBlur={handleSearchBoxBlur}
-          onChange={handleInputChange}
+          onChange={handleSearchBoxInputChange}
           onClick={showSuggestions}
           onFocus={showSuggestions}
-          onKeyDown={handleKeyDown}
+          onKeyDown={handleSearchBoxKeyDown}
           placeholder="Search"
-          ref={inputRef}
           role="combobox"
           type="search"
           value={inputValue}
@@ -154,19 +183,19 @@ export default function SearchBoxWithQuerySuggestions() {
 
         <button
           aria-controls="search-box-suggestions"
-          {...(isExpanded && {'aria-expanded': true})}
+          {...(isComboboxExpanded() && {'aria-expanded': true})}
           aria-label="Search"
           className="SearchBoxSubmitButton"
           disabled={!methods}
-          onBlur={handleSearchBoxBlur}
           onClick={handleSearchBoxSubmit}
+          onKeyDown={handleSearchBoxKeyDown}
           onFocus={showSuggestions}
-          onKeyDown={handleKeyDown}
+          onBlur={handleSearchBoxBlur}
         >
           <span>⌕</span>
         </button>
       </div>
-      {isExpanded && (
+      {isComboboxExpanded() && (
         <>
           <style>
             {`
@@ -184,6 +213,8 @@ export default function SearchBoxWithQuerySuggestions() {
               paddingInline: '0.75em',
               display: 'flex',
               flexDirection: 'row',
+              position: 'absolute',
+              backgroundColor: 'white',
             }}
           >
             <div>
