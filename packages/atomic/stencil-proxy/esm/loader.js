@@ -5,7 +5,7 @@ import recommendationsComponents from '../atomic/components/components/recommend
 import searchComponents from '../atomic/components/components/search/lazy-index.js';
 import {defineCustomElements as originalDefineCustomElements} from './_loader.js';
 
-const defineCustomElements = async function (...args) {
+const defineCustomElements = function (...args) {
   Object.values({
     ...recommendationsComponents,
     ...ipxComponents,
@@ -13,9 +13,6 @@ const defineCustomElements = async function (...args) {
     ...commerceComponents,
     ...searchComponents,
   }).forEach((importFunction) => importFunction());
-
-  await customElements.whenDefined('atomic-commerce-interface');
-
   originalDefineCustomElements(...args);
 };
 

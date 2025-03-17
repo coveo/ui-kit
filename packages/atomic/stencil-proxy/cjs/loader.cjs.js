@@ -24,15 +24,11 @@ const allComponents = Promise.all([
 ]);
 
 const originalDefineCustomElements = exportModule.defineCustomElements;
-exportModule.defineCustomElements = async function (...args) {
-  const modules = await allComponents;
-  modules.forEach((module) =>
+exportModule.defineCustomElements = function (...args) {
+  allComponents.then((module) =>
     Object.values(module).forEach((importFunction) => importFunction())
   );
-
-  await customElements.whenDefined('atomic-commerce-interface');
-
-  await originalDefineCustomElements(...args);
+  originalDefineCustomElements(...args);
 };
 
 module.exports = exportModule;
