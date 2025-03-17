@@ -8,10 +8,6 @@ import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
 import Triggers from '@/app/components/triggers/triggers';
 
-export const loader = async () => {
-  return null;
-};
-
 export default function SearchRoute() {
   return (
     <>
