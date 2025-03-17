@@ -126,7 +126,7 @@ describe('c-quantic-search-box', () => {
         exampleEngine,
         expect.objectContaining({
           options: expect.objectContaining({
-            maxLength: 10,
+            maxLength: 20,
           }),
         })
       );
