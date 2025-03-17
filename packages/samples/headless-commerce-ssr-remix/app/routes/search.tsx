@@ -32,12 +32,10 @@ export default function SearchRoute() {
           <ContextDropdown useCase="search" />
           <FacetGenerator />
         </div>
-        <div style={{flex: 2}}>
-          <Triggers />
-          <DidYouMean />
-        </div>
+
         <div style={{flex: 1}}></div>
         <div style={{flex: 12}}>
+          <DidYouMean />
           <Summary />
           <ProductList language={language} currency={currency} />
 
