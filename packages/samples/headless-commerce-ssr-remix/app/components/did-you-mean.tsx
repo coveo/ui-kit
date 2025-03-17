@@ -11,10 +11,8 @@ export default function DidYouMean() {
     return (
       <div>
         <p>
-          No results for <b>{state.originalQuery}</b>
-        </p>
-        <p>
-          Query was automatically corrected to <b>{state.wasCorrectedTo}</b>
+          No results for <b>{state.originalQuery}</b>. Query was automatically
+          corrected to <b>{state.wasCorrectedTo}</b>.
         </p>
       </div>
     );
@@ -23,11 +21,10 @@ export default function DidYouMean() {
   return (
     <div>
       <p>
-        Search for
+        Did you mean
         <span onClick={() => methods?.applyCorrection()}>
-          <b>{state.queryCorrection.correctedQuery}</b>
+          <u>{state.queryCorrection.correctedQuery}</u>?
         </span>
-        instead?
       </p>
     </div>
   );

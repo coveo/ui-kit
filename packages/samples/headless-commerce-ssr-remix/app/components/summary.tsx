@@ -3,16 +3,6 @@ import {useSummary} from '@/lib/commerce-engine';
 export default function Summary() {
   const {state} = useSummary();
 
-  const renderBaseSummary = () => {
-    const {firstProduct, lastProduct, totalNumberOfProducts} = state;
-    return (
-      <span>
-        Showing results {firstProduct} - {lastProduct} of{' '}
-        {totalNumberOfProducts}
-      </span>
-    );
-  };
-
   const renderQuerySummary = () => {
     if (!('query' in state) || state.query.trim() === '') {
       return null;
@@ -26,14 +16,13 @@ export default function Summary() {
     );
   };
 
-  const renderSummary = () => {
-    return (
-      <p>
-        {renderBaseSummary()}
-        {renderQuerySummary()}
-      </p>
-    );
-  };
-
-  return <div className="Summary">{renderSummary()}</div>;
+  return (
+    <div>
+      <span>
+        Products <b>{state.firstProduct}</b>-<b>{state.lastProduct}</b> of{' '}
+        <b>{state.totalNumberOfProducts}</b>
+      </span>
+      {renderQuerySummary()}
+    </div>
+  );
 }

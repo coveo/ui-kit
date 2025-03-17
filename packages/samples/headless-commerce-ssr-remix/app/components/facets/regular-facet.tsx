@@ -22,6 +22,10 @@ export default function RegularFacet({
     controller?.subscribe(() => setState(controller.state));
   }, [controller]);
 
+  const getNumberOfFilters = (): number => {
+    return state.values.filter((value) => value.state !== 'idle').length;
+  };
+
   const focusFacetSearchInput = (): void => {
     facetSearchInputRef.current?.focus();
   };
@@ -29,14 +33,18 @@ export default function RegularFacet({
   const onChangeFacetSearchInput = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    if (e.target.value === '') {
-      setShowFacetSearchResults(false);
-      controller?.facetSearch.clear();
+    if (!controller) {
       return;
     }
 
-    controller?.facetSearch.updateText(e.target.value);
-    controller?.facetSearch.search();
+    if (e.target.value === '') {
+      controller.facetSearch.clear();
+      setShowFacetSearchResults(false);
+      return;
+    }
+
+    controller.facetSearch.updateText(e.target.value);
+    controller.facetSearch.search();
     setShowFacetSearchResults(true);
   };
 
@@ -53,12 +61,6 @@ export default function RegularFacet({
     focusFacetSearchInput();
   };
 
-  const onClickFacetSearchClear = (): void => {
-    setShowFacetSearchResults(false);
-    controller?.facetSearch.clear();
-    focusFacetSearchInput();
-  };
-
   const onClickClearSelectedFacetValues = (): void => {
     controller?.deselectAll();
     focusFacetSearchInput();
@@ -72,37 +74,17 @@ export default function RegularFacet({
   const renderFacetSearchControls = () => {
     return (
       <search className="FacetSearch">
-        <label className="FacetSearchLabel" htmlFor="facetSearchInput">
-          Search:{' '}
-        </label>
         <input
-          aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
           className="FacetSearchInput"
+          aria-label={`Search in facet '${state.displayName ?? state.facetId}'`}
+          type="search"
+          placeholder="Search"
           disabled={!controller}
           id="facetSearchInput"
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
           value={state.facetSearch.query}
         ></input>
-        <button
-          aria-label="Clear facet search query"
-          className="FacetSearchClear"
-          disabled={
-            !controller ||
-            state.facetSearch.query === '' ||
-            state.facetSearch.isLoading
-          }
-          onClick={onClickFacetSearchClear}
-          type="reset"
-        >
-          X
-        </button>
-        {state.facetSearch.isLoading && (
-          <span className="FacetSearchLoading">
-            {' '}
-            Facet search is loading...
-          </span>
-        )}
       </search>
     );
   };
@@ -124,7 +106,7 @@ export default function RegularFacet({
             <input
               aria-label={`Select facet search result ${value.displayValue}`}
               className="FacetSearchResultCheckbox"
-              disabled={!controller}
+              disabled={!controller || state.isLoading}
               id={value.rawValue}
               type="checkbox"
             ></input>
@@ -148,56 +130,87 @@ export default function RegularFacet({
 
   const renderFacetValues = () => {
     return (
-      <div className="FacetValuesControls">
+      <ul className="FacetValues">
+        {state.values.map((value) => (
+          <li className="FacetValue" key={value.value}>
+            <input
+              aria-label={`${value.state === 'idle' ? 'Select' : 'Deselect'} facet value '${value.value}'`}
+              checked={value.state !== 'idle'}
+              className="FacetValueCheckbox"
+              disabled={!controller || state.isLoading}
+              id={value.value}
+              onChange={() => onChangeFacetValue(value)}
+              type="checkbox"
+            ></input>
+            <label className="FacetValueLabel" htmlFor={value.value}>
+              <span className="FacetValueName">{value.value}</span>
+              <span className="FacetValueNumberOfProducts">
+                {' '}
+                ({value.numberOfResults})
+              </span>
+            </label>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const renderClearFilters = () => {
+    const numberOfFilters = getNumberOfFilters();
+
+    if (numberOfFilters === 0) {
+      return null;
+    }
+
+    return (
+      <div>
         <button
+          className="FacetClearFilters"
           aria-label="Clear selected facet values"
-          className="FacetClearSelected"
           disabled={!controller || state.isLoading || !state.hasActiveValues}
           onClick={onClickClearSelectedFacetValues}
           type="reset"
         >
-          X
+          <span>
+            × Clear{' '}
+            {numberOfFilters > 1 ? `${numberOfFilters} filters` : 'filter'}
+          </span>
         </button>
-        {state.isLoading && (
-          <span className="FacetLoading"> Facet is loading...</span>
-        )}
-        <ul className="FacetValues">
-          {state.values.map((value) => (
-            <li className="FacetValue" key={value.value}>
-              <input
-                aria-label={`${value.state === 'idle' ? 'Select' : 'Deselect'} facet value '${value.value}'`}
-                checked={value.state !== 'idle'}
-                className="FacetValueCheckbox"
-                disabled={!controller || state.isLoading}
-                id={value.value}
-                onChange={() => onChangeFacetValue(value)}
-                type="checkbox"
-              ></input>
-              <label className="FacetValueLabel" htmlFor={value.value}>
-                <span className="FacetValueName">{value.value}</span>
-                <span className="FacetValueNumberOfProducts">
-                  {' '}
-                  ({value.numberOfResults})
-                </span>
-              </label>
-            </li>
-          ))}
-        </ul>
-        <button
-          aria-label="Show more facet values"
-          className="FacetShowMore"
-          disabled={!controller || state.isLoading || !state.canShowMoreValues}
-          onClick={controller?.showMoreValues}
-        >
-          +
-        </button>
+      </div>
+    );
+  };
+
+  const renderShowLess = () => {
+    if (!state.canShowLessValues) {
+      return null;
+    }
+
+    return (
+      <div>
         <button
           aria-label="Show less facet values"
-          className="FacetShowLess"
-          disabled={!controller || state.isLoading || !state.canShowLessValues}
+          disabled={!controller || state.isLoading}
           onClick={controller?.showLessValues}
         >
-          -
+          <span>- Show less</span>
+        </button>
+      </div>
+    );
+  };
+
+  const renderShowMore = () => {
+    if (!state.canShowMoreValues) {
+      return null;
+    }
+
+    return (
+      <div>
+        <button
+          aria-label="Show more facet values"
+          disabled={!controller || state.isLoading}
+          onClick={controller?.showMoreValues}
+        >
+          <span>+ Show more</span>
         </button>
       </div>
     );
@@ -206,12 +219,16 @@ export default function RegularFacet({
   return (
     <fieldset className="RegularFacet">
       <legend className="FacetDisplayName">
-        {state.displayName ?? state.facetId}
+        <b>{state.displayName ?? state.facetId}</b>
       </legend>
+      {renderClearFilters()}
       {renderFacetSearchControls()}
       {showFacetSearchResults
         ? renderFacetSearchResults()
         : renderFacetValues()}
+
+      {renderShowLess()}
+      {renderShowMore()}
     </fieldset>
   );
 }

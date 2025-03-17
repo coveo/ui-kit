@@ -76,17 +76,33 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
     }
   );
 
-  return Response.json({listingStaticState, navigatorContext, recsStaticState});
+  const {language, currency} =
+    baseFetchStaticStateConfiguration.controllers.context;
+
+  return Response.json({
+    listingStaticState,
+    navigatorContext,
+    recsStaticState,
+    language,
+    currency,
+  });
 };
 
 export default function ListingRoute() {
   const params = useParams();
-  const {listingStaticState, navigatorContext, recsStaticState} =
-    useLoaderData<{
-      listingStaticState: ListingStaticState;
-      navigatorContext: NavigatorContext;
-      recsStaticState: RecommendationStaticState;
-    }>();
+  const {
+    listingStaticState,
+    navigatorContext,
+    recsStaticState,
+    language,
+    currency,
+  } = useLoaderData<{
+    listingStaticState: ListingStaticState;
+    navigatorContext: NavigatorContext;
+    recsStaticState: RecommendationStaticState;
+    language: string;
+    currency: string;
+  }>();
 
   const getTitle = () => {
     return params.listingId
@@ -114,7 +130,7 @@ export default function ListingRoute() {
           <BreadcrumbManager />
           <Summary />
           <Sort />
-          <ProductList />
+          <ProductList language={language} currency={currency} />
 
           {/* The `Pagination` and `ShowMore` components showcase two frequent but mutually exclusive ways to implement
               pagination. */}

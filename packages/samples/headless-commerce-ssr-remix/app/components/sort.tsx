@@ -4,9 +4,19 @@ import {SortBy, SortCriterion} from '@coveo/headless-react/ssr-commerce';
 export default function Sort() {
   const {state, methods} = useSort();
 
-  if (state.availableSorts.length === 0) {
+  if (state.availableSorts.length < 2) {
     return null;
   }
+
+  state.availableSorts[0];
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (!methods) {
+      return;
+    }
+
+    methods?.sortBy(JSON.parse(e.target.value));
+  };
 
   const formatSortFieldLabel = (field: {
     name: string;
@@ -19,29 +29,34 @@ export default function Sort() {
       case SortBy.Relevance:
         return 'Relevance';
       case SortBy.Fields:
-        return criterion.fields.map(formatSortFieldLabel);
+        return criterion.fields.map(formatSortFieldLabel).join(', ');
     }
   };
 
   return (
-    <div className="Sort">
-      <label htmlFor="sport-select">Sort by: </label>
+    <div>
+      <label htmlFor="sort">
+        <b>Sort by: </b>
+      </label>
       <select
-        name="sorts"
-        id="sorts-select"
-        value={JSON.stringify(state.appliedSort)}
-        onChange={(e) => methods?.sortBy(JSON.parse(e.target.value))}
+        id="sort"
+        name="sort"
         disabled={!methods}
+        value={JSON.stringify(state.appliedSort)}
+        onChange={handleChange}
       >
-        {state.availableSorts.map((sort, index) => (
-          <option
-            key={index}
-            value={JSON.stringify(sort)}
-            onSelect={() => methods?.sortBy(sort)}
-          >
-            {getSortLabel(sort)}
-          </option>
-        ))}
+        {state.availableSorts.map((sort) => {
+          const label = getSortLabel(sort);
+          return (
+            <option
+              key={label}
+              value={JSON.stringify(sort)}
+              onSelect={() => methods?.sortBy(sort)}
+            >
+              {label}
+            </option>
+          );
+        })}
       </select>
     </div>
   );

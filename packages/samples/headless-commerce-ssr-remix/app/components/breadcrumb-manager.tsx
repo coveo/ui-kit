@@ -1,71 +1,93 @@
 import {useBreadcrumbManager} from '@/lib/commerce-engine';
 import {
-  NumericFacetValue,
-  DateFacetValue,
+  Breadcrumb,
+  BreadcrumbValue,
   CategoryFacetValue,
-  RegularFacetValue,
+  DateFacetValue,
   LocationFacetValue,
+  NumericFacetValue,
+  RegularFacetValue,
 } from '@coveo/headless-react/ssr-commerce';
+
+type AnyFacetValue =
+  | RegularFacetValue
+  | LocationFacetValue
+  | NumericFacetValue
+  | DateFacetValue
+  | CategoryFacetValue;
 
 export default function BreadcrumbManager() {
   const {state, methods} = useBreadcrumbManager();
 
-  const renderBreadcrumbValue = (
-    value:
-      | CategoryFacetValue
-      | RegularFacetValue
-      | NumericFacetValue
-      | DateFacetValue
-      | LocationFacetValue,
-    type: string
-  ) => {
-    switch (type) {
-      case 'hierarchical':
-        return (value as CategoryFacetValue).path.join(' > ');
-      case 'regular':
-        return (value as RegularFacetValue).value;
-      case 'numericalRange':
-        return (
-          (value as NumericFacetValue).start +
-          ' - ' +
-          (value as NumericFacetValue).end
-        );
-      case 'dateRange':
-        return (
-          (value as DateFacetValue).start +
-          ' - ' +
-          (value as DateFacetValue).end
-        );
-      default:
-        // TODO COMHUB-291 support location breadcrumb
-        return null;
+  if (!state.hasBreadcrumbs) {
+    return null;
+  }
+
+  const getFormattedValue = (value: AnyFacetValue) => {
+    if ('path' in value) {
+      return value.path.join(' > ');
     }
+
+    if ('start' in value) {
+      return `${value.start} - ${value.end}`;
+    }
+
+    return value.value;
+  };
+
+  const renderBreadcrumb = (breadcrumb: Breadcrumb<AnyFacetValue>) => {
+    return (
+      <li key={`${breadcrumb.facetId}`}>
+        {breadcrumb.values.map((value) =>
+          renderBreadcrumbValue(
+            breadcrumb.facetId,
+            breadcrumb.facetDisplayName,
+            value
+          )
+        )}
+      </li>
+    );
+  };
+
+  const renderBreadcrumbValue = (
+    breadcrumbFacetID: string,
+    breadcrumbFacetDisplayName: string,
+    breadcrumbValue: BreadcrumbValue<AnyFacetValue>
+  ) => {
+    const formattedValue = getFormattedValue(breadcrumbValue.value);
+
+    return (
+      <button
+        key={`${breadcrumbFacetID}-${formattedValue}`}
+        onClick={() => breadcrumbValue.deselect()}
+        disabled={!methods}
+      >
+        <span>{breadcrumbFacetDisplayName}:</span>
+        <span> {formattedValue}</span>
+        <span> ×</span>
+      </button>
+    );
+  };
+
+  const renderClear = () => {
+    return (
+      <button disabled={!methods} onClick={methods?.deselectAll} type="reset">
+        Clear
+      </button>
+    );
   };
 
   return (
     <div>
-      <div>
-        <button onClick={methods?.deselectAll}>Clear all filters</button>
-      </div>
-      <ul>
-        {state.facetBreadcrumbs.map((facetBreadcrumb) => {
-          return (
-            <li key={`${facetBreadcrumb.facetId}-breadcrumbs`}>
-              {facetBreadcrumb.values.map((value, index) => {
-                return (
-                  <button
-                    key={`${value.value}-breadcrumb-${index}`}
-                    onClick={() => value.deselect()}
-                  >
-                    {facetBreadcrumb.facetDisplayName}:{' '}
-                    {renderBreadcrumbValue(value.value, facetBreadcrumb.type)} X
-                  </button>
-                );
-              })}
-            </li>
-          );
-        })}
+      <label htmlFor="breadcrumbs">
+        <b>Filters:</b>
+      </label>
+      <ul id="breadcrumbs">
+        {state.facetBreadcrumbs.map((facetBreadcrumb) =>
+          renderBreadcrumb(facetBreadcrumb)
+        )}
       </ul>
+      {renderClear()}
     </div>
   );
 }

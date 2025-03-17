@@ -58,9 +58,14 @@ export default function ContextDropdown({
 
   return (
     <div>
-      Context dropdown:
       <Form method="post" action="/context/update">
+        <label htmlFor="context-dropdown">
+          <span>
+            <b>Context: </b>
+          </span>
+        </label>
         <select
+          id="context-dropdown"
           value={`${state.language}-${state.country}-${state.currency}`}
           onChange={handleChange}
         >

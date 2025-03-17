@@ -4,8 +4,12 @@ export default function ShowMore() {
   const {state, methods} = usePagination();
   const {state: summaryState} = useSummary();
 
-  const handleFetchMore = () => {
-    methods?.fetchMoreProducts();
+  const handleClick = () => {
+    if (!methods) {
+      return;
+    }
+
+    methods.fetchMoreProducts();
   };
 
   const isDisabled = () => {
@@ -16,18 +20,30 @@ export default function ShowMore() {
   };
 
   return (
-    <>
+    <div>
+      <label htmlFor="load-more-progress">
+        <div>
+          Showing
+          <span>
+            <b> {summaryState?.lastProduct ?? state.pageSize} </b>
+          </span>
+          of
+          <span>
+            <b> {state.totalEntries} </b>
+          </span>
+          products
+        </div>
+      </label>
+      <progress
+        id="load-more-progress"
+        value={summaryState?.lastProduct ?? state.pageSize}
+        max={state.totalEntries}
+      ></progress>
       <div>
-        Displaying {summaryState?.lastProduct ?? state.pageSize} out of{' '}
-        {state.totalEntries} products
+        <button disabled={isDisabled()} onClick={handleClick}>
+          Load more products
+        </button>
       </div>
-      <button
-        className="ShowMore"
-        disabled={isDisabled()}
-        onClick={() => handleFetchMore()}
-      >
-        Show more
-      </button>
-    </>
+    </div>
   );
 }

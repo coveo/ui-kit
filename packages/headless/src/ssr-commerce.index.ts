@@ -256,8 +256,10 @@ export type {
 export {defineSort} from './controllers/commerce/core/sort/headless-core-commerce-sort.ssr.js';
 
 export type {
+  Breadcrumb,
   BreadcrumbManager,
   BreadcrumbManagerState,
+  BreadcrumbValue,
 } from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
 export {defineBreadcrumbManager} from './controllers/commerce/core/breadcrumb-manager/headless-core-breadcrumb-manager.ssr.js';
 

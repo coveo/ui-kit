@@ -16,24 +16,30 @@ export default function InstantProducts() {
   };
 
   return (
-    <ul>
-      Instant Products :
-      {state.products.map((product, index) => (
-        <li key={index}>
-          <button onClick={() => clickProduct(product)}>
-            {product.ec_name} ({product.ec_product_id})
-          </button>
-          {product.ec_product_id &&
-            product.ec_price !== null &&
-            product.ec_name && (
-              <AddToCartButton
-                productId={product.ec_product_id}
-                price={product.ec_price}
-                name={product.ec_name}
-              />
-            )}
-        </li>
-      ))}
-    </ul>
+    <div>
+      <label htmlFor="instant-products">
+        <span>
+          <b>Instant products</b>
+        </span>
+      </label>
+      <ul>
+        {state.products.map((product, index) => (
+          <li key={index}>
+            <button onClick={() => clickProduct(product)}>
+              {product.ec_name} ({product.ec_product_id})
+            </button>
+            {product.ec_product_id &&
+              product.ec_price !== null &&
+              product.ec_name && (
+                <AddToCartButton
+                  productId={product.ec_product_id}
+                  price={product.ec_price}
+                  name={product.ec_name}
+                />
+              )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

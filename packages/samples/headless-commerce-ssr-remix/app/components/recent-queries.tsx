@@ -6,12 +6,16 @@ export default function RecentQueries() {
 
   return (
     <div>
-      <ul>
-        Recent queries:
+      <label htmlFor="recent-queries">
+        <span>
+          <b>Recent queries</b>
+        </span>
+      </label>
+      <ul id="recent-queries">
         {state.queries.map((query, index) => (
           <li key={index}>
             <button
-              onMouseEnter={() => instantProductsController?.updateQuery(query)}
+              onFocus={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}
             >
               {query}
@@ -19,6 +23,9 @@ export default function RecentQueries() {
           </li>
         ))}
       </ul>
+      <button onClick={methods?.clear} type="reset">
+        Clear
+      </button>
     </div>
   );
 }

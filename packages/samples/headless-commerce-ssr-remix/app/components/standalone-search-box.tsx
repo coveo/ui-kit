@@ -48,7 +48,7 @@ export default function StandaloneSearchBox() {
       <input
         type="search"
         aria-label="searchbox"
-        placeholder="search"
+        placeholder="Search"
         value={state.value}
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}
