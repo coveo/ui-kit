@@ -5,6 +5,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicCommerceSortDropdown,
 AtomicComponentError,
 AtomicIcon,
 AtomicAriaLive,
@@ -37,7 +38,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicDidYouMean,
@@ -151,6 +151,7 @@ defineCustomElements(window);
 
         
 const DECLARATIONS = [
+AtomicCommerceSortDropdown,
 AtomicComponentError,
 AtomicIcon,
 AtomicAriaLive,
@@ -183,7 +184,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicDidYouMean,
