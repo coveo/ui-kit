@@ -1,9 +1,9 @@
 //import {setCoveoGlobal} from '@/src/global/environment';
+import {setCoveoGlobal} from '@/src/global/environment.js';
 import {LogLevel} from '@coveo/headless';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
-import {setCoveoGlobal} from '../../../global/environment.js';
 import {loadFocusVisiblePolyfill} from '../../../global/focus-visible.js';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
 import {AnyBindings, AnyEngineType} from './bindings.js';

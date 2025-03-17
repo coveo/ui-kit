@@ -12,19 +12,32 @@ declare global {
 }
 
 function getWindow() {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
   return window;
+}
+
+function getAtomicVersion() {
+  const win = getWindow();
+  if (!win) {
+    return 'unknown';
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (win as any).__ATOMIC_VERSION__ || 'unknown';
 }
 
 export function getAtomicEnvironment(): AtomicEnvironment {
   return {
-    version: process.env.VERSION!,
+    version: getAtomicVersion(),
     headlessVersion: VERSION,
   };
 }
 
 export function setCoveoGlobal(globalVariableName: string) {
-  if (getWindow()[globalVariableName]) {
+  const win = getWindow();
+  if (!win || win[globalVariableName]) {
     return;
   }
-  getWindow()[globalVariableName] = getAtomicEnvironment();
+  win[globalVariableName] = getAtomicEnvironment();
 }

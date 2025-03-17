@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import {readFileSync} from 'fs';
 import {dirname, basename, relative} from 'path';
 import {argv} from 'process';
 import {
@@ -42,10 +43,32 @@ function loadTsConfig(configPath) {
   );
 }
 
+function injectGlobalVariables() {
+  if (typeof window === 'undefined') {
+    return '';
+  }
+  const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+  const version = packageJson.version || 'unknown';
+  return `window.__ATOMIC_VERSION__ = '${version}';`;
+}
+
 function emit(program) {
   const targetSourceFile = undefined;
-  const cancellationToken = undefined;
-  const writeFile = undefined;
+  const cancellationToken = {
+    throwIfCancellationRequested: () => {},
+  };
+  const writeFile = (
+    fileName,
+    data,
+    writeByteOrderMark,
+    onError,
+    sourceFiles
+  ) => {
+    if (fileName.endsWith('.js')) {
+      data = injectGlobalVariables() + '\n' + data;
+    }
+    sys.writeFile(fileName, data, writeByteOrderMark, onError, sourceFiles);
+  };
   const emitOnlyDtsFiles = false;
   const customTransformers = {
     before: transformers,
@@ -54,8 +77,8 @@ function emit(program) {
 
   return program.emit(
     targetSourceFile,
-    cancellationToken,
     writeFile,
+    cancellationToken,
     emitOnlyDtsFiles,
     customTransformers
   );
