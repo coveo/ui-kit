@@ -158,13 +158,10 @@ export default function RegularFacet({
   const renderClearFilters = () => {
     const numberOfFilters = getNumberOfFilters();
 
-    if (numberOfFilters === 0) {
-      return null;
-    }
-
     return (
       <div>
         <button
+          style={numberOfFilters === 0 ? {visibility: 'hidden'} : {}}
           className="FacetClearFilters"
           aria-label="Clear selected facet values"
           disabled={!controller || state.isLoading || !state.hasActiveValues}
