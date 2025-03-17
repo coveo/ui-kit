@@ -2867,6 +2867,27 @@ export declare interface AtomicSmartSnippetSuggestions extends Components.Atomic
 
 
 @ProxyCmp({
+})
+@Component({
+  selector: 'atomic-sort-dropdown',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: [],
+})
+export class AtomicSortDropdown {
+  protected el: HTMLElement;
+  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = r.nativeElement;
+  }
+}
+
+
+export declare interface AtomicSortDropdown extends Components.AtomicSortDropdown {}
+
+
+@ProxyCmp({
   inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
 })
 @Component({

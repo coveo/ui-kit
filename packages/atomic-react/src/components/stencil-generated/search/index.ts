@@ -82,6 +82,7 @@ export const AtomicSegmentedFacetScrollable = /*@__PURE__*/createReactComponent<
 export const AtomicSmartSnippet = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippet, HTMLAtomicSmartSnippetElement>('atomic-smart-snippet');
 export const AtomicSmartSnippetFeedbackModal = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetFeedbackModal, HTMLAtomicSmartSnippetFeedbackModalElement>('atomic-smart-snippet-feedback-modal');
 export const AtomicSmartSnippetSuggestions = /*@__PURE__*/createReactComponent<JSX.AtomicSmartSnippetSuggestions, HTMLAtomicSmartSnippetSuggestionsElement>('atomic-smart-snippet-suggestions');
+export const AtomicSortDropdown = /*@__PURE__*/createReactComponent<JSX.AtomicSortDropdown, HTMLAtomicSortDropdownElement>('atomic-sort-dropdown');
 export const AtomicSortExpression = /*@__PURE__*/createReactComponent<JSX.AtomicSortExpression, HTMLAtomicSortExpressionElement>('atomic-sort-expression');
 export const AtomicTab = /*@__PURE__*/createReactComponent<JSX.AtomicTab, HTMLAtomicTabElement>('atomic-tab');
 export const AtomicTabManager = /*@__PURE__*/createReactComponent<JSX.AtomicTabManager, HTMLAtomicTabManagerElement>('atomic-tab-manager');
