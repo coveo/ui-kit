@@ -25,6 +25,7 @@ export default function SearchRoute({
 }) {
   return (
     <>
+      <Triggers />
       <h2>Search</h2>
 
       <div style={{display: 'flex', flexDirection: 'row'}}>
