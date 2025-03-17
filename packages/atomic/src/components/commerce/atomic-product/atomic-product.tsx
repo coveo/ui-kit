@@ -232,5 +232,6 @@ export class AtomicProduct {
 
       this.executedRenderingFunctionOnce = true;
     }
+    this.host.classList.add('hydrated');
   }
 }

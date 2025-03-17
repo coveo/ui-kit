@@ -93,7 +93,9 @@ for (const module of cem.modules) {
   for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
       processLitDeclaration(declaration);
-    } 
+    } else {
+      processNonLitDeclaration(declaration);
+    }
   }
 }
 
