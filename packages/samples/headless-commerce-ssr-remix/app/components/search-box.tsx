@@ -14,7 +14,7 @@ export default function SearchBox() {
   const {state: instantProductsState, methods: instantProductsMethods} =
     useInstantProducts();
 
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(state.value);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -47,21 +47,25 @@ export default function SearchBox() {
     const activeSuggestion = getActiveSuggestion();
     if (activeSuggestion && e.relatedTarget === activeSuggestion) {
       activeSuggestion.click();
+    } else if (e.relatedTarget?.classList.contains('InstantProductButton')) {
+      (e.relatedTarget as HTMLButtonElement).click();
     }
 
     setIsExpanded(false);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
     if (!methods || !instantProductsMethods) {
       return;
     }
 
     setInputValue(event.target.value);
 
-    methods.updateText(event.target.value);
+    methods.updateText(inputRef.current?.value ?? inputValue);
+    console.log('state.query', state.value);
 
-    instantProductsMethods.updateQuery(event.target.value);
+    instantProductsMethods.updateQuery(inputRef.current?.value ?? inputValue);
 
     if (areSuggestionsAvailable()) {
       setIsExpanded(true);
@@ -103,8 +107,6 @@ export default function SearchBox() {
           break;
         }
         setIsExpanded(false);
-        break;
-      default:
         break;
     }
   };
@@ -221,7 +223,7 @@ export default function SearchBox() {
           ref={inputRef}
           role="combobox"
           type="search"
-          value={inputValue}
+          value={inputRef.current?.value ?? inputValue}
         />
 
         <button
@@ -247,6 +249,8 @@ export default function SearchBox() {
             border: '2px groove  rgb(239, 239, 239)',
             paddingBlock: '0.35em 0.625em',
             paddingInline: '0.75em',
+            display: 'flex',
+            flexDirection: 'row',
           }}
         >
           {recentQueriesState.queries.length > 0 && state.value === '' && (

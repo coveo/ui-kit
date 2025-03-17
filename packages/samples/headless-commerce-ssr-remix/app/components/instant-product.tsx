@@ -25,7 +25,10 @@ export default function InstantProducts() {
       <ul>
         {state.products.map((product, index) => (
           <li key={index}>
-            <button onClick={() => clickProduct(product)}>
+            <button
+              className="InstantProductButton"
+              onClick={() => clickProduct(product)}
+            >
               {product.ec_name} ({product.ec_product_id})
             </button>
             {product.ec_product_id &&
