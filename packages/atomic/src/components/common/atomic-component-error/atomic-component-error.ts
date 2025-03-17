@@ -2,7 +2,9 @@ import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
-/** The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration. */
+/**
+ * The `atomic-component-error` component is used by other components to render and log errors.
+ */
 @customElement('atomic-component-error')
 export class AtomicComponentError extends TailwindLitElement {
   @property({type: Object}) element!: HTMLElement;
