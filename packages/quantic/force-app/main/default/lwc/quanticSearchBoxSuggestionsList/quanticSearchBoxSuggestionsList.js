@@ -39,7 +39,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
   set suggestions(value) {
     this._suggestions = Array.isArray(value) ? value : [];
-    this.getQuerySuggestionsNotInRecentQueries();
+    this.buildQuerySuggestionsNotInRecentQueries();
   }
 
   /**
@@ -53,8 +53,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
   set recentQueries(value) {
     this._recentQueries = Array.isArray(value) ? value : [];
-    this.getRecentQueriesThatStartWithCurrentQuery();
-    this.getQuerySuggestionsNotInRecentQueries();
+    this.buildRecentQueriesThatStartWithCurrentQuery();
+    this.buildQuerySuggestionsNotInRecentQueries();
   }
 
   /**
@@ -68,8 +68,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   }
   set query(value) {
     this._query = value;
-    this.getRecentQueriesThatStartWithCurrentQuery();
-    this.getQuerySuggestionsNotInRecentQueries();
+    this.buildRecentQueriesThatStartWithCurrentQuery();
+    this.buildQuerySuggestionsNotInRecentQueries();
   }
 
   /**
@@ -268,7 +268,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Returns the query suggestions that are not already in the recent queries list.
    */
-  getQuerySuggestionsNotInRecentQueries() {
+  buildQuerySuggestionsNotInRecentQueries() {
     this._querySuggestionsNotInRecentQueries =
       this.suggestions?.filter(
         (suggestion) =>
@@ -296,7 +296,7 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Returns the recent queries that start with the query currently typed by the end user.
    */
-  getRecentQueriesThatStartWithCurrentQuery() {
+  buildRecentQueriesThatStartWithCurrentQuery() {
     this._recentQueriesThatStartWithCurrentQuery =
       this.recentQueries
         ?.filter(
