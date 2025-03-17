@@ -8,6 +8,7 @@ import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
 import Triggers from '@/app/components/triggers/triggers';
 import externalContextService from '@/external-services/external-context-service';
+import {useLoaderData} from '@remix-run/react';
 
 export const loader = async () => {
   const {language, currency} =
@@ -16,13 +17,11 @@ export const loader = async () => {
   return {language, currency};
 };
 
-export default function SearchRoute({
-  language,
-  currency,
-}: {
-  language: string;
-  currency: string;
-}) {
+export default function SearchRoute() {
+  const {language, currency} = useLoaderData<{
+    language: string;
+    currency: string;
+  }>();
   return (
     <>
       <Triggers />
