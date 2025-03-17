@@ -28,15 +28,13 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from '@remix-run/react';
-//import BasicSearchBox from './components/basic-search-box';
 import Header from './components/header';
 import ParameterManager from './components/parameter-manager';
 import {
   SearchProvider,
   StandaloneProvider,
 } from './components/providers/providers';
-import SearchBoxWithQuerySuggestions from './components/search-box-with-query-suggestions';
-//import SearchBox from './components/search-box';
+import SearchBoxWithQuerySuggestions from './components/search-box/search-box-with-query-suggestions';
 import StandaloneSearchBox from './components/standalone-search-box';
 import useClientId from './hooks/use-client-id';
 

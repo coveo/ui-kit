@@ -158,8 +158,8 @@ export default function SearchBoxWithQuerySuggestions() {
   };
 
   return (
-    <>
-      <div className="SearchBoxInputWrapper" style={{whiteSpace: 'nowrap'}}>
+    <div className="SearchBox">
+      <div className="SearchBoxWrapper" style={{whiteSpace: 'nowrap'}}>
         <input
           {...(suggestionSelectors.active() && {
             'aria-activedescendant': `${suggestionSelectors.active()!.id}`,
@@ -185,7 +185,7 @@ export default function SearchBoxWithQuerySuggestions() {
           aria-controls="search-box-suggestions"
           {...(isComboboxExpanded() && {'aria-expanded': true})}
           aria-label="Search"
-          className="SearchBoxSubmitButton"
+          className="SearchBoxSubmit"
           disabled={!methods}
           onClick={handleSearchBoxSubmit}
           onKeyDown={handleSearchBoxKeyDown}
@@ -205,6 +205,7 @@ export default function SearchBoxWithQuerySuggestions() {
           `}
           </style>
           <div
+            className="SearchBoxSuggestionsWrapper"
             id="search-box-suggestions"
             ref={suggestionsRef}
             style={{
@@ -217,15 +218,22 @@ export default function SearchBoxWithQuerySuggestions() {
               backgroundColor: 'white',
             }}
           >
-            <div>
+            <div className="QuerySuggestionsWrapper">
               <label htmlFor="query-suggestions">
                 <span>
                   <b>Query suggestions</b>
                 </span>
               </label>
-              <ul id="query-suggestions" role="listbox">
+              <ul
+                className="QuerySuggestions"
+                id="query-suggestions"
+                role="listbox"
+              >
                 {state.suggestions.map((suggestion, index) => (
-                  <li key={`${suggestion.rawValue}-${index}`}>
+                  <li
+                    className="QuerySuggestion"
+                    key={`${suggestion.rawValue}-${index}`}
+                  >
                     <button
                       dangerouslySetInnerHTML={{
                         __html: suggestion.highlightedValue,
@@ -245,6 +253,6 @@ export default function SearchBoxWithQuerySuggestions() {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
