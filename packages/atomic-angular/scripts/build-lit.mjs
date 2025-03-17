@@ -11,17 +11,19 @@ const litDeclarations = [];
 
 const startTag = '//#region Lit Declarations';
 const endTag = '//#endregion Lit Declarations';
+const inputs = (attributes) =>
+  attributes ? [attributes.map((attr) => `'${attr.fieldName}'`).join(', ')] : [];
 const declarationToProxyCmp = (declaration) =>
 `
 @ProxyCmp({
-  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
+  inputs: [${inputs(declaration.attributes)}]
 })
 @Component({
   selector: '${declaration.tagName}',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]
+  inputs: [${inputs(declaration.attributes)}]
 })
 export class ${declaration.name} {
   protected readonly el: HTMLElement;
