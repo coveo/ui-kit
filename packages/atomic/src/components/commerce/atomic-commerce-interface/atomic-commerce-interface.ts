@@ -1,4 +1,5 @@
 import {watch} from '@/src/decorators/watch';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
@@ -23,6 +24,7 @@ import {
   Unsubscribe,
   UrlManager,
 } from '@coveo/headless/commerce';
+import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
@@ -32,6 +34,7 @@ import {
   CommonAtomicInterfaceHelper,
   InitializeEvent,
 } from '../../common/interface/interface-common';
+import {bindingsContext} from '../../context/bindings-context';
 import {
   CommerceStore,
   createCommerceStore,
@@ -55,7 +58,13 @@ export type CommerceBindings = CommonBindings<
 const FirstRequestExecutedFlag = 'firstRequestExecuted';
 
 /**
- * The atomic-commerce-interface is a component that does something.
+ * @alpha
+ * The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
+ * (except for `atomic-commerce-recommendation-list`, which must have
+ * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
+ * configurations.
+ *
+ * @slot default - The default slot where you can add child components to the search box.
  */
 @customElement('atomic-commerce-interface')
 export class AtomicCommerceInterface
@@ -80,11 +89,6 @@ export class AtomicCommerceInterface
     TailwindLitElement.styles,
     unsafeCSS(styles),
   ];
-
-  /**
-   * The name of the atomic-commerce-interface
-   */
-  @property() name = 'World';
 
   /**
    * The type of the interface.
@@ -327,7 +331,23 @@ export class AtomicCommerceInterface
     }
   }
 
-  public get bindings(): CommerceBindings {
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: CommerceBindings = {} as CommerceBindings;
+
+  private async internalInitialization(initEngine: () => void) {
+    await this.commonInterfaceHelper.onInitialization(initEngine);
+    markParentAsReady(this);
+    this.initRequestStatus();
+    this.initSummary();
+    this.initContext();
+    this.initLanguage();
+    this.initUrlManager();
+    this.initialized = true;
+    this.bindings = this.getBindings();
+  }
+
+  private getBindings(): CommerceBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -458,17 +478,6 @@ export class AtomicCommerceInterface
   private onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   };
-
-  private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
-
-    this.initRequestStatus();
-    this.initSummary();
-    this.initContext();
-    this.initLanguage();
-    this.initUrlManager();
-    this.initialized = true;
-  }
 
   private addResourceBundle(
     lng: string,
