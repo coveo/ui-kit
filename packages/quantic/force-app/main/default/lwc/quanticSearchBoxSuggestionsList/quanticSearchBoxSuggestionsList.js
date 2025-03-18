@@ -297,18 +297,27 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * Returns the recent queries that start with the query currently typed by the end user.
    */
   buildRecentQueriesThatStartWithCurrentQuery() {
-    this._recentQueriesThatStartWithCurrentQuery =
-      this.recentQueries
-        ?.filter(
-          (recentQuery) =>
-            recentQuery !== this.query &&
-            recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
-        )
-        .map((recentQuery) => ({
-          value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+    if (!this.query) {
+      this._recentQueriesThatStartWithCurrentQuery =
+        this.recentQueries?.map((recentQuery) => ({
+          value: RecentQueryUtils.formatRecentQuery(recentQuery, ''),
           rawValue: recentQuery,
           isRecentQuery: true,
         })) || [];
+    } else {
+      this._recentQueriesThatStartWithCurrentQuery =
+        this.recentQueries
+          ?.filter(
+            (recentQuery) =>
+              recentQuery !== this.query &&
+              recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
+          )
+          .map((recentQuery) => ({
+            value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+            rawValue: recentQuery,
+            isRecentQuery: true,
+          })) || [];
+    }
   }
 
   get shouldDisplayRecentQueries() {
