@@ -123,7 +123,7 @@ export class AtomicSearchInterface
   /**
    * The search interface i18next instance.
    */
-  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop() public i18n: i18n;
 
   /**
    * The search interface language.
@@ -188,11 +188,9 @@ export class AtomicSearchInterface
    */
   @Prop({reflect: true}) public CspNonce?: string;
 
-  /**
-   * A reference clone of the search interface i18next instance.
-   */
-  private i18nClone!: i18n;
-
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
   public constructor() {
     this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -200,19 +198,18 @@ export class AtomicSearchInterface
       'CoveoAtomic'
     );
     this.store = createSearchStore();
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   public connectedCallback() {
     this.store.setLoadingFlag(FirstSearchExecutedFlag);
     this.updateMobileBreakpoint();
-    this.i18nClone = this.i18n.cloneInstance();
-    this.i18n.addResourceBundle = (
-      lng: string,
-      ns: string,
-      resources: object,
-      deep?: boolean,
-      overwrite?: boolean
-    ) => this.addResourceBundleWithWarning(lng, ns, resources, deep, overwrite);
   }
 
   componentWillLoad() {
@@ -221,6 +218,7 @@ export class AtomicSearchInterface
     }
     this.initAriaLive();
     this.initFieldsToInclude();
+    this.componentWillLoadResolver();
   }
 
   public updateSearchConfiguration(
@@ -278,7 +276,7 @@ export class AtomicSearchInterface
         locale: this.language,
       })
     );
-    this.commonInterfaceHelper.onLanguageChange();
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('iconAssetsPath')
@@ -491,7 +489,8 @@ export class AtomicSearchInterface
     ) {
       return;
     }
-    this.host.prepend(document.createElement('atomic-aria-live'));
+    const ariaLive = document.createElement('atomic-aria-live');
+    this.host.prepend(ariaLive);
   }
 
   private initRelevanceInspector() {
@@ -555,29 +554,18 @@ export class AtomicSearchInterface
   };
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    await this.updateLanguage();
     markParentAsReady(this.host);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.initSearchStatus();
     this.initUrlManager();
     this.initialized = true;
-  }
-
-  private addResourceBundleWithWarning(
-    lng: string,
-    ns: string,
-    resources: object,
-    deep?: boolean,
-    overwrite?: boolean
-  ) {
-    return this.i18nClone.addResourceBundle(
-      lng,
-      ns,
-      resources,
-      deep,
-      overwrite
-    );
   }
 
   public render() {

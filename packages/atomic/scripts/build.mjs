@@ -15,6 +15,7 @@ import {
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
+import versionTransformer from './version-transform.mjs';
 
 const args = argv.slice(2);
 const configArg = args.find((arg) => arg.startsWith('--config='));
@@ -26,6 +27,7 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const transformers = [
   svgTransformer,
   pathTransformer,
+  versionTransformer,
   ...(isCDN ? [resourceUrlTransformer] : []),
 ];
 

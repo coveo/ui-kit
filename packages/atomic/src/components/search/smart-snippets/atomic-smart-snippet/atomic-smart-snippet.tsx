@@ -80,7 +80,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State() private isAppLoaded = false;
 
   @Element() public host!: HTMLElement;
-  private id = randomID();
+  private id!: string;
+
+  connectedCallback(): void {
+    this.id ||= randomID();
+  }
+
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
 
   private smartSnippetCommon!: SmartSnippetCommon;

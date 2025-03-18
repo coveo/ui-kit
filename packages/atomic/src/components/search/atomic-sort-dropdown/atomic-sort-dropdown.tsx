@@ -47,7 +47,7 @@ export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
   public searchStatus!: SearchStatus;
-  private id = randomID('atomic-sort-dropdown-');
+  private id!: string;
 
   @Element() host!: HTMLElement;
 
@@ -60,6 +60,10 @@ export class AtomicSortDropdown implements InitializableComponent {
   @State()
   public tabManagerState!: TabManagerState;
   @State() public error!: Error;
+
+  connectedCallback(): void {
+    this.id ||= randomID('atomic-sort-dropdown-');
+  }
 
   public initialize() {
     this.buildOptions();
