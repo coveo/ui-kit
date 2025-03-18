@@ -177,20 +177,18 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
           }
         }
       );
-      if (element.isConnected) {
-        const parent = closest(element, initializableElements.join(', '));
-        if (!parent) {
-          this.error = new MissingInterfaceParentError(
-            element.nodeName.toLowerCase()
-          );
-          return;
-        }
+      const parent = closest(element, initializableElements.join(', '));
+      if (!parent) {
+        this.error = new MissingInterfaceParentError(
+          element.nodeName.toLowerCase()
+        );
+        return;
+      }
 
-        if (isParentReady(parent)) {
-          element.dispatchEvent(event);
-        } else {
-          queueEventForParent(parent, event as InitializeEvent, element);
-        }
+      if (isParentReady(parent)) {
+        element.dispatchEvent(event);
+      } else {
+        queueEventForParent(parent, event as InitializeEvent, element);
       }
       return componentWillLoad && componentWillLoad.call(this);
     };
