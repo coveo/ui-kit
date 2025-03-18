@@ -20,6 +20,17 @@
       "matchPackageNames": ["/typedoc/"]
     },
     {
+      "groupName": "tailwind",
+      "groupSlug": "tailwind",
+      "rangeStrategy": "replace",
+      "description": "Isolate tailwind for breaking changes",
+      "matchPackageNames": [
+        "tailwindcss",
+        "@tailwindcss/postcss",
+        "@tailwindcss/vite"
+      ]
+    },
+    {
       "groupName": "typescript",
       "groupSlug": "typescript",
       "rangeStrategy": "replace",
