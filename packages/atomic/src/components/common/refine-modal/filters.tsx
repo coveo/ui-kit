@@ -12,7 +12,7 @@ export const RefineModalFiltersSection: FunctionalComponent<
 > = ({i18n, withAutomaticFacets, withFacets}, children) => {
   return (
     <Fragment>
-      <div part="filter-section" class="mb-3 mt-8 flex w-full justify-between">
+      <div part="filter-section" class="mt-8 mb-3 flex w-full justify-between">
         <h1
           part="section-title section-filters-title"
           class="truncate text-2xl font-bold"
