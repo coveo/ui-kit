@@ -34,7 +34,7 @@ import {
   SearchProvider,
   StandaloneProvider,
 } from './components/providers/providers';
-import SearchBoxWithQuerySuggestions from './components/search-box/search-box-with-query-suggestions';
+import RichSearchBox from './components/search-box/rich-search-box';
 import StandaloneSearchBox from './components/standalone-search-box';
 import useClientId from './hooks/use-client-id';
 
@@ -136,7 +136,7 @@ export function Layout({children}: {children: React.ReactNode}) {
           >
             <ParameterManager url={navigatorContext.location} />
             <Header totalItemsInCart={totalItemsInCart}>
-              <SearchBoxWithQuerySuggestions />
+              <RichSearchBox />
             </Header>
             {children}
           </SearchProvider>

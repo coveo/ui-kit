@@ -22,7 +22,7 @@ export default function InstantProducts() {
           <b>Instant products</b>
         </span>
       </label>
-      <ul>
+      <ul id="instant-products">
         {state.products.map((product, index) => (
           <li key={index}>
             <button

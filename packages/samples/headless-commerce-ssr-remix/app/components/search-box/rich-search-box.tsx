@@ -1,9 +1,12 @@
-import {useSearchBox} from '@/lib/commerce-engine';
+import {useInstantProducts, useSearchBox} from '@/lib/commerce-engine';
 import {Suggestion} from '@coveo/headless-react/ssr-commerce';
 import {useRef, useState} from 'react';
+import InstantProducts from '../instant-product';
 
-export default function SearchBoxWithQuerySuggestions() {
+export default function RichSearchBox() {
   const {state, methods} = useSearchBox();
+  const {state: instantProductsState, methods: instantProductsMethods} =
+    useInstantProducts();
 
   const [inputValue, setInputValue] = useState(state.value);
   const [showingSuggestions, setIsShowingSuggestions] = useState(false);
@@ -26,8 +29,15 @@ export default function SearchBoxWithQuerySuggestions() {
     setInputValue(newValue);
     methods?.updateText(newValue);
 
-    if (!showingSuggestions) {
+    if (state.suggestions.length > 0) {
       showSuggestions();
+      instantProductsMethods?.updateQuery(
+        suggestionSelectors.first()?.getAttribute('name') ?? ''
+      );
+    }
+
+    if (!showingSuggestions) {
+      methods?.showSuggestions();
     }
   };
 
@@ -42,12 +52,16 @@ export default function SearchBoxWithQuerySuggestions() {
 
       case 'ArrowDown':
         event.preventDefault();
-        activateNextSuggestion();
+        isActiveSuggestionInstantProduct()
+          ? activateNextInstantProduct()
+          : activateNextSuggestion();
         break;
 
       case 'ArrowUp':
         event.preventDefault();
-        activatePreviousSuggestion();
+        isActiveSuggestionInstantProduct()
+          ? activatePreviousInstantProduct()
+          : activatePreviousSuggestion();
         break;
 
       case 'Escape':
@@ -55,6 +69,16 @@ export default function SearchBoxWithQuerySuggestions() {
           setIsShowingSuggestions(false);
         }
         break;
+
+      case 'ArrowRight':
+        event.preventDefault();
+        activateFirstInstantProduct();
+
+        break;
+
+      case 'ArrowLeft':
+        event.preventDefault();
+        activateFirstSuggestion();
 
       default:
         break;
@@ -78,6 +102,8 @@ export default function SearchBoxWithQuerySuggestions() {
 
   const handleSuggestionMouseOut = (event: React.MouseEvent) => {
     event.currentTarget.removeAttribute('aria-selected');
+
+    instantProductsMethods?.updateQuery('');
   };
 
   const handleSuggestionMouseOver = (event: React.MouseEvent) => {
@@ -89,6 +115,62 @@ export default function SearchBoxWithQuerySuggestions() {
 
     currentActiveSuggestion?.removeAttribute('aria-selected');
     newActiveSuggestion.setAttribute('aria-selected', 'true');
+
+    instantProductsMethods?.updateQuery(
+      newActiveSuggestion.getAttribute('name') ?? ''
+    );
+  };
+
+  const activateFirstInstantProduct = () => {
+    const {activeInstantProduct, firstInstantProduct} = suggestionSelectors;
+
+    const activeSuggestion = activeInstantProduct();
+
+    const firstSuggestion = firstInstantProduct();
+
+    console.log(firstSuggestion);
+
+    if (!firstSuggestion) {
+      return;
+    }
+
+    activeSuggestion?.removeAttribute('aria-selected');
+    firstSuggestion.setAttribute('aria-selected', 'true');
+  };
+
+  const activateFirstSuggestion = () => {
+    const {active, first} = suggestionSelectors;
+
+    const activeSuggestion = active();
+
+    const firstSuggestion = first();
+
+    if (!firstSuggestion) {
+      return;
+    }
+
+    activeSuggestion?.removeAttribute('aria-selected');
+    firstSuggestion.setAttribute('aria-selected', 'true');
+  };
+
+  const activateNextInstantProduct = () => {
+    const {activeInstantProduct, firstInstantProduct, nextInstantProduct} =
+      suggestionSelectors;
+
+    const activeSuggestion = activeInstantProduct();
+    activeSuggestion?.removeAttribute('aria-selected');
+
+    const firstSuggestion = firstInstantProduct();
+
+    const nextSuggestion = activeSuggestion
+      ? (nextInstantProduct ?? firstSuggestion)
+      : firstSuggestion;
+
+    if (!nextSuggestion) {
+      return;
+    }
+
+    nextSuggestion.setAttribute('aria-selected', 'true');
   };
 
   const activateNextSuggestion = () => {
@@ -110,6 +192,25 @@ export default function SearchBoxWithQuerySuggestions() {
     nextSuggestion.setAttribute('aria-selected', 'true');
     const newInputValue = nextSuggestion.getAttribute('name') ?? '';
     setInputValue(newInputValue);
+    instantProductsMethods?.updateQuery(newInputValue);
+  };
+
+  const activatePreviousInstantProduct = () => {
+    const {activeInstantProduct, lastInstantProduct, previousInstantProduct} =
+      suggestionSelectors;
+
+    const activeSuggestion = activeInstantProduct();
+    activeSuggestion?.removeAttribute('aria-selected');
+
+    const previousSuggestion = activeSuggestion
+      ? previousInstantProduct
+      : lastInstantProduct();
+
+    if (!previousSuggestion) {
+      return;
+    }
+
+    previousSuggestion.setAttribute('aria-selected', 'true');
   };
 
   const activatePreviousSuggestion = () => {
@@ -122,12 +223,14 @@ export default function SearchBoxWithQuerySuggestions() {
 
     if (!previousSuggestion) {
       setInputValue('');
+      instantProductsMethods?.updateQuery('');
       return;
     }
 
     previousSuggestion.setAttribute('aria-selected', 'true');
     const newInputValue = previousSuggestion.getAttribute('name') ?? '';
     setInputValue(newInputValue);
+    instantProductsMethods?.updateQuery(newInputValue);
   };
 
   const isComboboxExpanded = () => {
@@ -137,8 +240,15 @@ export default function SearchBoxWithQuerySuggestions() {
   const showSuggestions = () => {
     if (!showingSuggestions) {
       methods?.showSuggestions();
+
       setIsShowingSuggestions(true);
     }
+  };
+
+  const isActiveSuggestionInstantProduct = () => {
+    return (
+      suggestionSelectors.active()?.parentElement?.id === 'instant-products'
+    );
   };
 
   const suggestionSelectors = {
@@ -161,6 +271,30 @@ export default function SearchBoxWithQuerySuggestions() {
     previous: suggestionsRef.current
       ?.querySelector('[aria-selected]')
       ?.parentElement?.previousElementSibling?.querySelector('button'),
+    lastInstantProduct: () =>
+      suggestionsRef.current
+        ?.querySelector('#instant-products')
+        ?.lastElementChild?.querySelector('button'),
+    firstInstantProduct: () =>
+      suggestionsRef.current
+        ?.querySelector('#instant-products')
+        ?.firstElementChild?.querySelector('button'),
+    previousInstantProduct: suggestionsRef.current
+      ?.querySelector('#instant-products')
+      ?.querySelector('[aria-selected]')
+      ?.parentElement?.parentElement?.previousElementSibling?.querySelector(
+        'button'
+      ),
+    nextInstantProduct: suggestionsRef.current
+      ?.querySelector('#instant-products')
+      ?.querySelector('[aria-selected]')
+      ?.parentElement?.parentElement?.nextElementSibling?.querySelector(
+        'button'
+      ),
+    activeInstantProduct: () =>
+      suggestionsRef.current
+        ?.querySelector('#instant-products')
+        ?.querySelector('[aria-selected]'),
   };
 
   return (
@@ -255,6 +389,8 @@ export default function SearchBoxWithQuerySuggestions() {
                 ))}
               </ul>
             </div>
+            {isComboboxExpanded() &&
+              instantProductsState.products.length > 0 && <InstantProducts />}
           </div>
         </>
       )}

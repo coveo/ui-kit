@@ -28,7 +28,6 @@ export default function SimpleSearchBox() {
     <div className="SearchBox">
       <div className="SearchBoxInputWrapper" style={{whiteSpace: 'nowrap'}}>
         <input
-          autoFocus
           className="SearchBoxInput"
           disabled={!methods}
           onChange={handleSearchBoxInputChange}
