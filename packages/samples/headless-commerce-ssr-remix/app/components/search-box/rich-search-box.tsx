@@ -28,16 +28,12 @@ export default function RichSearchBox() {
     const newValue = event.target.value;
     setInputValue(newValue);
     methods?.updateText(newValue);
+    setIsShowingSuggestions(true);
 
     if (state.suggestions.length > 0) {
-      showSuggestions();
       instantProductsMethods?.updateQuery(
         suggestionSelectors.first()?.getAttribute('name') ?? ''
       );
-    }
-
-    if (!showingSuggestions) {
-      methods?.showSuggestions();
     }
   };
 

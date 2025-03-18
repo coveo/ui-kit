@@ -25,10 +25,7 @@ export default function SearchBoxWithQuerySuggestions() {
     const newValue = event.target.value;
     setInputValue(newValue);
     methods?.updateText(newValue);
-
-    if (!showingSuggestions) {
-      showSuggestions();
-    }
+    setIsShowingSuggestions(true);
   };
 
   const handleSearchBoxKeyDown = (
