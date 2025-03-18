@@ -1,7 +1,6 @@
 import {
   Component,
   h,
-  // getElement,
   State,
   Element,
   Method,
@@ -19,15 +18,6 @@ type Regions = {[regionName: string]: {assertive: boolean; message: string}};
  */
 @Component({
   tag: 'atomic-aria-live',
-  styles: `
-    :host {
-      position: absolute;
-      display: block;
-      height: 0;
-      overflow: hidden;
-      margin: 0;
-    }
-  `,
   shadow: false,
 })
 export class AtomicAriaLive {
@@ -59,9 +49,9 @@ export class AtomicAriaLive {
     this.id = randomID('atomic-aria-live-');
   }
 
-  // /**
-  //  * @internal
-  //  */
+  /**
+   * @internal
+   */
   @Method()
   public async updateMessage(
     region: string,
@@ -79,9 +69,9 @@ export class AtomicAriaLive {
     }
   }
 
-  // /**
-  //  * @internal
-  //  */
+  /**
+   * @internal
+   */
   @Method()
   public async registerRegion(region: string, assertive: boolean) {
     if (region in this.regions) {
