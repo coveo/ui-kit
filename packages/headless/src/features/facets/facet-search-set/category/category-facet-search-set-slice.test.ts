@@ -1,10 +1,12 @@
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response.js';
-import {QueryCommerceAPIThunkReturn} from '../../../commerce/common/actions.js';
 import {
   executeCommerceFacetSearch,
   executeCommerceFieldSuggest,
 } from '../../../commerce/facets/facet-search-set/commerce-facet-search-actions.js';
-import {fetchProductListing} from '../../../commerce/product-listing/product-listing-actions.js';
+import {
+  fetchProductListing,
+  QueryCommerceAPIThunkReturn,
+} from '../../../commerce/product-listing/product-listing-actions.js';
 import {fetchQuerySuggestions} from '../../../commerce/query-suggest/query-suggest-actions.js';
 import {
   executeSearch as executeCommerceSearch,

@@ -19,7 +19,7 @@ export type QuerySuggestRequest = BaseParam &
   ContextParam &
   QueryParam;
 
-export const buildQuerySuggestRequest = (req: QuerySuggestRequest) => {
+export const getQuerySuggestRequestOptions = (req: QuerySuggestRequest) => {
   return {
     ...baseRequest(req, 'search/querySuggest'),
     requestParams: prepareRequestParams(req),

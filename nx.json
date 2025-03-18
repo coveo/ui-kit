@@ -101,20 +101,19 @@
       "dependsOn": ["^release:phase1"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npm run publish:bump",
-          "npm run build",
-          "npm run publish:npm"
-        ],
+        "commands": ["npm run publish:bump", "npm run build"],
         "parallel": false,
         "cwd": "{projectRoot}"
       }
     },
-    "release:phase4": {
-      "dependsOn": ["^release:phase4"],
-      "//": "Currently disabled TODO KIT-3074",
-      "executor": "nx:noop",
-      "options": {"script": "publish:bump"}
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run publish:npm"],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
     },
     "cached:build:stencil": {
       "cache": true

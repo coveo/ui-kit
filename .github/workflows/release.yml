@@ -199,18 +199,3 @@ jobs:
         run: npm run notify:docs
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
-  # github-prod:
-  #   needs: release
-  #   runs-on: ubuntu-latest
-  #   environment: 'GitHub Production'
-  #   steps:
-  #     - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-  #       with:
-  #         registry-url: 'https://npm.pkg.github.com'
-  #         node-version-file: '.nvmrc'
-  #     - name: Publish to GitHub Packages
-  #       run: npm run release:phase4
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         DEBUG: ${{ inputs.debug && '*' || '' }}
