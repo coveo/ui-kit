@@ -65,14 +65,14 @@ function processNonLitDeclaration(declaration) {
 
   const regex = new RegExp(
     `@ProxyCmp\\(\\{([^}]*)\\}\\)\\s*\\n@Component\\(\\{([^}]*)\\}\\)\\s*\\nexport class\\s+${declaration.name}\\b`,
-    'g'
+    'gm'
   );
 
   if (!regex.test(atomicAngularComponentFileContent)) {
    return;
   }
 
-  atomicAngularComponentFileContent = atomicAngularComponentFileContent.replace(
+  atomicAngularComponentFileContent = atomicAngularComponentFileContent.replaceAll(
     regex,
     (match, p1, p2) => {
       let newP1;
