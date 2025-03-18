@@ -1,3 +1,12 @@
+declare global {
+  interface Window {
+    TypeDoc: {
+      disableLocalStorage: () => void;
+      enableLocalStorage: () => void;
+    };
+  }
+}
+
 export function insertOneTrust() {
   document.addEventListener('DOMContentLoaded', () => {
     const areFunctionalCookiesEnabled = document.cookie
@@ -12,14 +21,9 @@ export function insertOneTrust() {
       if (settingsDiv) {
         (settingsDiv as HTMLElement).style.display = 'none';
       }
-
-      const itemsToDelete = [
-        'tsd-theme',
-        'filter-protected',
-        'filter-inherited',
-        'filter-external',
-      ];
-      itemsToDelete.forEach((item) => localStorage.removeItem(item));
+      window.TypeDoc.disableLocalStorage();
+    } else {
+      window.TypeDoc.enableLocalStorage();
     }
   });
 }
