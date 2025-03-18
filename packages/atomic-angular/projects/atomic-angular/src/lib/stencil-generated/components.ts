@@ -7,7 +7,9 @@ import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 import { Components } from '@coveo/atomic';
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicAriaLive})
+@ProxyCmp({
+  methods: ['updateMessage', 'registerRegion']
+, defineCustomElementFn: defineCustomElementAtomicAriaLive})
 @Component({
   selector: 'atomic-aria-live',
   changeDetection: ChangeDetectionStrategy.OnPush,

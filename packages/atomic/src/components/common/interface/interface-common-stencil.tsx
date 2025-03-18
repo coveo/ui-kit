@@ -120,10 +120,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     const {i18n, language} = this.atomicInterface;
 
     loadDayjsLocale(this.language);
+    const {resolve, promise} = Promise.withResolvers<void>();
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
       this.language,
       i18nTranslationNamespace,
-      (_: unknown, data: unknown) => {
+      async (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
           this.language,
           i18nTranslationNamespace,
@@ -131,9 +132,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
           true,
           false
         );
-        i18n.changeLanguage(language);
+        await i18n.changeLanguage(language);
+        resolve();
       }
     );
+    return promise;
   }
 
   public engineIsCreated(engine?: Engine): engine is Engine {

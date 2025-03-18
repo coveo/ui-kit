@@ -1,11 +1,12 @@
 import {
   Component,
   h,
-  Host,
+  // getElement,
   State,
   Element,
   Method,
   Listen,
+  Host,
 } from '@stencil/core';
 import {buildDebouncedQueue} from '../../../utils/debounce-utils';
 import {FindAriaLiveEventArgs} from '../../../utils/stencil-accessibility-utils';
@@ -18,6 +19,15 @@ type Regions = {[regionName: string]: {assertive: boolean; message: string}};
  */
 @Component({
   tag: 'atomic-aria-live',
+  styles: `
+    :host {
+      position: absolute;
+      display: block;
+      height: 0;
+      overflow: hidden;
+      margin: 0;
+    }
+  `,
   shadow: false,
 })
 export class AtomicAriaLive {
@@ -25,7 +35,7 @@ export class AtomicAriaLive {
   @State() private regions: Readonly<Regions> = {};
 
   private messagesQueue = buildDebouncedQueue({delay: 500});
-  private id = randomID('aria-live-');
+  private id!: string;
 
   @Listen('atomic/accessibility/findAriaLive', {target: 'document'})
   protected onFindAriaLive({detail: args}: CustomEvent<FindAriaLiveEventArgs>) {
@@ -45,9 +55,13 @@ export class AtomicAriaLive {
     return false;
   }
 
-  /**
-   * @internal
-   */
+  connectedCallback() {
+    this.id = randomID('atomic-aria-live-');
+  }
+
+  // /**
+  //  * @internal
+  //  */
   @Method()
   public async updateMessage(
     region: string,
@@ -65,9 +79,9 @@ export class AtomicAriaLive {
     }
   }
 
-  /**
-   * @internal
-   */
+  // /**
+  //  * @internal
+  //  */
   @Method()
   public async registerRegion(region: string, assertive: boolean) {
     if (region in this.regions) {
