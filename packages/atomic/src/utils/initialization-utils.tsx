@@ -105,6 +105,7 @@ type InitializeBindingsProps = {
   forceUpdate?: boolean;
 };
 
+const connectedAttribute = 'data-atomic-connected';
 const renderedAttribute = 'data-atomic-rendered';
 const loadedAttribute = 'data-atomic-loaded';
 
@@ -133,6 +134,7 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
   ) => {
     const {
       componentWillLoad,
+      connectedCallback,
       render,
       componentDidRender,
       componentDidLoad,
@@ -147,8 +149,17 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       );
     }
 
+    component.connectedCallback = function () {
+      connectedCallback && connectedCallback.call(this);
+      const element = getElement(this);
+      if (element.getAttribute(connectedAttribute) === 'false') {
+        component.componentWillLoad!();
+      }
+    };
+
     component.componentWillLoad = function () {
       const element = getElement(this);
+      element.setAttribute(connectedAttribute, element.isConnected.toString());
       element.setAttribute(renderedAttribute, 'false');
       element.setAttribute(loadedAttribute, 'false');
       const event = buildCustomEvent(
@@ -177,22 +188,23 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
           }
         }
       );
+      if (element.isConnected) {
+        const parent = closest(element, initializableElements.join(', '));
+        if (!parent) {
+          this.error = new MissingInterfaceParentError(
+            element.nodeName.toLowerCase()
+          );
+          return;
+        }
 
-      const parent = closest(element, initializableElements.join(', '));
-
-      if (!parent) {
-        this.error = new MissingInterfaceParentError(
-          element.nodeName.toLowerCase()
-        );
-        return;
-      }
-
-      if (isParentReady(parent)) {
-        element.dispatchEvent(event);
+        if (isParentReady(parent)) {
+          element.dispatchEvent(event);
+        } else {
+          queueEventForParent(parent, event as InitializeEvent, element);
+        }
       } else {
-        queueEventForParent(parent, event as InitializeEvent, element);
+        console.log('Element is not connected', element);
       }
-
       return componentWillLoad && componentWillLoad.call(this);
     };
 

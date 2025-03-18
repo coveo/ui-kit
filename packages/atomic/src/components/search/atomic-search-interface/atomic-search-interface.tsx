@@ -189,7 +189,8 @@ export class AtomicSearchInterface
   @Prop({reflect: true}) public CspNonce?: string;
 
   private i18Initialized: Promise<void>;
-
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
   public constructor() {
     this.initRelevanceInspector();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -197,6 +198,10 @@ export class AtomicSearchInterface
       'CoveoAtomic'
     );
     this.store = createSearchStore();
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -213,6 +218,7 @@ export class AtomicSearchInterface
     }
     this.initAriaLive();
     this.initFieldsToInclude();
+    this.componentWillLoadResolver();
   }
 
   public updateSearchConfiguration(
@@ -548,6 +554,7 @@ export class AtomicSearchInterface
   };
 
   private async internalInitialization(initEngine: () => void) {
+    await this.componentWillLoadCalledPromise;
     await Promise.all([
       this.commonInterfaceHelper.onInitialization(initEngine),
       this.i18Initialized,
