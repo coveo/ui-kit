@@ -1,3 +1,7 @@
+import {buildSearchEngine, Result} from '@coveo/headless';
+import type {NextPage} from 'next';
+import dynamic from 'next/dynamic';
+import {useMemo} from 'react';
 import {
   AtomicBreadbox,
   AtomicColorFacet,
@@ -41,11 +45,7 @@ import {
   AtomicResultSectionVisual,
   AtomicResultText,
   AtomicText,
-} from '@coveo/atomic-react';
-import {buildSearchEngine, Result} from '@coveo/headless';
-import type {NextPage} from 'next';
-import dynamic from 'next/dynamic';
-import {useMemo} from 'react';
+} from '../components/loader';
 
 const SearchPage: NextPage = () => {
   const engine = useMemo(
@@ -228,6 +228,4 @@ function MyTemplate(result: Result) {
   );
 }
 
-export default dynamic(() => Promise.resolve(SearchPage), {
-  ssr: false,
-});
+export default dynamic(() => Promise.resolve(SearchPage));
