@@ -43,7 +43,9 @@ export default function RichSearchBox() {
     switch (event.key) {
       case 'Enter':
         event.preventDefault();
-        handleSearchBoxSubmit();
+        isActiveSuggestionInstantProduct()
+          ? suggestionSelectors.activeInstantProduct()?.click()
+          : handleSearchBoxSubmit();
         break;
 
       case 'ArrowDown':
@@ -118,13 +120,11 @@ export default function RichSearchBox() {
   };
 
   const activateFirstInstantProduct = () => {
-    const {activeInstantProduct, firstInstantProduct} = suggestionSelectors;
+    const {active, firstInstantProduct} = suggestionSelectors;
 
-    const activeSuggestion = activeInstantProduct();
+    const activeSuggestion = active();
 
     const firstSuggestion = firstInstantProduct();
-
-    console.log(firstSuggestion);
 
     if (!firstSuggestion) {
       return;
@@ -154,18 +154,18 @@ export default function RichSearchBox() {
       suggestionSelectors;
 
     const activeSuggestion = activeInstantProduct();
-    activeSuggestion?.removeAttribute('aria-selected');
 
     const firstSuggestion = firstInstantProduct();
 
     const nextSuggestion = activeSuggestion
-      ? (nextInstantProduct ?? firstSuggestion)
+      ? (nextInstantProduct() ?? firstSuggestion)
       : firstSuggestion;
 
     if (!nextSuggestion) {
       return;
     }
 
+    activeSuggestion?.removeAttribute('aria-selected');
     nextSuggestion.setAttribute('aria-selected', 'true');
   };
 
@@ -173,18 +173,18 @@ export default function RichSearchBox() {
     const {active, first, next} = suggestionSelectors;
 
     const activeSuggestion = active();
-    activeSuggestion?.removeAttribute('aria-selected');
 
     const firstSuggestion = first();
 
     const nextSuggestion = activeSuggestion
-      ? (next ?? firstSuggestion)
+      ? (next() ?? firstSuggestion)
       : firstSuggestion;
 
     if (!nextSuggestion) {
       return;
     }
 
+    activeSuggestion?.removeAttribute('aria-selected');
     nextSuggestion.setAttribute('aria-selected', 'true');
     const newInputValue = nextSuggestion.getAttribute('name') ?? '';
     setInputValue(newInputValue);
@@ -196,16 +196,18 @@ export default function RichSearchBox() {
       suggestionSelectors;
 
     const activeSuggestion = activeInstantProduct();
-    activeSuggestion?.removeAttribute('aria-selected');
+
+    const lastSuggestion = lastInstantProduct();
 
     const previousSuggestion = activeSuggestion
-      ? previousInstantProduct
-      : lastInstantProduct();
+      ? (previousInstantProduct() ?? lastSuggestion)
+      : lastSuggestion;
 
     if (!previousSuggestion) {
       return;
     }
 
+    activeSuggestion?.removeAttribute('aria-selected');
     previousSuggestion.setAttribute('aria-selected', 'true');
   };
 
@@ -213,9 +215,10 @@ export default function RichSearchBox() {
     const {active, last, previous} = suggestionSelectors;
 
     const activeSuggestion = active();
-    activeSuggestion?.removeAttribute('aria-selected');
 
-    const previousSuggestion = activeSuggestion ? previous : last();
+    const previousSuggestion = activeSuggestion ? previous() : last();
+
+    activeSuggestion?.removeAttribute('aria-selected');
 
     if (!previousSuggestion) {
       setInputValue('');
@@ -243,7 +246,8 @@ export default function RichSearchBox() {
 
   const isActiveSuggestionInstantProduct = () => {
     return (
-      suggestionSelectors.active()?.parentElement?.id === 'instant-products'
+      suggestionSelectors.active()?.parentElement?.parentElement?.id ===
+      'instant-products'
     );
   };
 
@@ -261,12 +265,12 @@ export default function RichSearchBox() {
       suggestionsRef.current?.firstElementChild
         ?.querySelector('ul')
         ?.lastElementChild?.querySelector('button'),
-    next: suggestionsRef.current
-      ?.querySelector('[aria-selected]')
-      ?.parentElement?.nextElementSibling?.querySelector('button'),
-    previous: suggestionsRef.current
-      ?.querySelector('[aria-selected]')
-      ?.parentElement?.previousElementSibling?.querySelector('button'),
+    next: () =>
+      suggestionsRef.current?.querySelector('[aria-selected]')?.parentElement
+        ?.nextElementSibling?.firstElementChild,
+    previous: () =>
+      suggestionsRef.current?.querySelector('[aria-selected]')?.parentElement
+        ?.previousElementSibling?.firstElementChild,
     lastInstantProduct: () =>
       suggestionsRef.current
         ?.querySelector('#instant-products')
@@ -275,22 +279,16 @@ export default function RichSearchBox() {
       suggestionsRef.current
         ?.querySelector('#instant-products')
         ?.firstElementChild?.querySelector('button'),
-    previousInstantProduct: suggestionsRef.current
-      ?.querySelector('#instant-products')
-      ?.querySelector('[aria-selected]')
-      ?.parentElement?.parentElement?.previousElementSibling?.querySelector(
-        'button'
-      ),
-    nextInstantProduct: suggestionsRef.current
-      ?.querySelector('#instant-products')
-      ?.querySelector('[aria-selected]')
-      ?.parentElement?.parentElement?.nextElementSibling?.querySelector(
-        'button'
-      ),
-    activeInstantProduct: () =>
+    previousInstantProduct: () =>
+      suggestionsRef.current?.querySelector('[aria-selected]')?.parentElement
+        ?.previousElementSibling?.firstElementChild,
+    nextInstantProduct: () =>
+      suggestionsRef.current?.querySelector('[aria-selected]')?.parentElement
+        ?.nextElementSibling?.firstElementChild,
+    activeInstantProduct: (): HTMLButtonElement | null | undefined =>
       suggestionsRef.current
         ?.querySelector('#instant-products')
-        ?.querySelector('[aria-selected]'),
+        ?.querySelector('button[aria-selected]'),
   };
 
   return (
