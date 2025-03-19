@@ -21,7 +21,7 @@
   }
 
   .feedback-buttons {
-    @apply relative right-0 top-0;
+    @apply relative top-0 right-0;
   }
 }
 
@@ -83,7 +83,7 @@
     }
   }
   &.answer-collapsed:before {
-    @apply absolute left-0 top-0 h-full w-full content-[''];
+    @apply absolute top-0 left-0 h-full w-full content-[''];
     background: linear-gradient(
       transparent calc(var(--atomic-crga-collapsed-height, 16rem) * 0.7),
       var(--atomic-background)
