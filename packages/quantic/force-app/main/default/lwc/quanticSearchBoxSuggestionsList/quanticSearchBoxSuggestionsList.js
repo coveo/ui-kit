@@ -33,19 +33,45 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    * @api
    * @type {Suggestion[]}
    */
-  @api suggestions = [];
+  @api
+  get suggestions() {
+    return this._suggestions;
+  }
+  set suggestions(value) {
+    this._suggestions = Array.isArray(value) ? value : [];
+    this.buildQuerySuggestionsNotInRecentQueries();
+  }
+
   /**
    * The list containing the recent query suggestions.
    * @api
    * @type {String[]}
    */
-  @api recentQueries = [];
+  @api
+  get recentQueries() {
+    return this._recentQueries;
+  }
+  set recentQueries(value) {
+    this._recentQueries = Array.isArray(value) ? value : [];
+    this.buildRecentQueriesThatStartWithCurrentQuery();
+    this.buildQuerySuggestionsNotInRecentQueries();
+  }
+
   /**
    * The current search query value.
    * @api
    * @type {string}
    */
-  @api query;
+  @api
+  get query() {
+    return this._query;
+  }
+  set query(value) {
+    this._query = value;
+    this.buildRecentQueriesThatStartWithCurrentQuery();
+    this.buildQuerySuggestionsNotInRecentQueries();
+  }
+
   /**
    * The maximum number of suggestions to display.
    * @api
@@ -121,6 +147,16 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   initialRender = true;
   /** @type {string} */
   previousQuery = '';
+  /** @type {Array<Object>} */
+  _recentQueriesThatStartWithCurrentQuery = [];
+  /** @type {Array<Object>} */
+  _querySuggestionsNotInRecentQueries = [];
+  /** @type {Array<String>} */
+  _recentQueries = [];
+  /** @type {Array<Suggestion>} */
+  _suggestions = [];
+  /** @type {string} */
+  _query;
 
   renderedCallback() {
     if (this.initialRender) {
@@ -179,8 +215,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
    */
   get allOptions() {
     const options = [
-      ...this.getRecentQueriesThatStartWithCurrentQuery(),
-      ...this.getQuerySuggestionsNotInRecentQueries(),
+      ...this._recentQueriesThatStartWithCurrentQuery,
+      ...this._querySuggestionsNotInRecentQueries,
     ]
       ?.map(this.buildSuggestionListOption)
       .slice(0, this.maxNumberOfSuggestions);
@@ -232,15 +268,14 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Returns the query suggestions that are not already in the recent queries list.
    */
-  getQuerySuggestionsNotInRecentQueries() {
-    return (
+  buildQuerySuggestionsNotInRecentQueries() {
+    this._querySuggestionsNotInRecentQueries =
       this.suggestions?.filter(
         (suggestion) =>
-          !this.getRecentQueriesThatStartWithCurrentQuery().some(
+          !this._recentQueriesThatStartWithCurrentQuery.some(
             (recentQuery) => recentQuery.rawValue === suggestion.rawValue
           )
-      ) || []
-    );
+      ) || [];
   }
 
   handleSelection = (event, index) => {
@@ -261,24 +296,32 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
   /**
    * Returns the recent queries that start with the query currently typed by the end user.
    */
-  getRecentQueriesThatStartWithCurrentQuery() {
-    return (
-      this.recentQueries
-        ?.filter(
-          (recentQuery) =>
-            recentQuery !== this.query &&
-            recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
-        )
-        .map((recentQuery) => ({
-          value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+  buildRecentQueriesThatStartWithCurrentQuery() {
+    if (!this.query) {
+      this._recentQueriesThatStartWithCurrentQuery =
+        this.recentQueries?.map((recentQuery) => ({
+          value: RecentQueryUtils.formatRecentQuery(recentQuery, ''),
           rawValue: recentQuery,
           isRecentQuery: true,
-        })) || []
-    );
+        })) || [];
+    } else {
+      this._recentQueriesThatStartWithCurrentQuery =
+        this.recentQueries
+          ?.filter(
+            (recentQuery) =>
+              recentQuery !== this.query &&
+              recentQuery.toLowerCase().startsWith(this.query?.toLowerCase())
+          )
+          .map((recentQuery) => ({
+            value: RecentQueryUtils.formatRecentQuery(recentQuery, this.query),
+            rawValue: recentQuery,
+            isRecentQuery: true,
+          })) || [];
+    }
   }
 
   get shouldDisplayRecentQueries() {
-    return !!this.getRecentQueriesThatStartWithCurrentQuery?.().length;
+    return !!this._recentQueriesThatStartWithCurrentQuery?.length;
   }
 
   get clearRecentQueriesOptionCSSClass() {
