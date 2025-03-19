@@ -783,7 +783,7 @@ describe('c-quantic-generated-answer', () => {
         });
       });
 
-      describe('and when no results are returned', () => {
+      describe('when no results are returned', () => {
         beforeEach(() => {
           searchStatusState = {
             ...initialSearchStatusState,
