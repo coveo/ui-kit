@@ -72,6 +72,7 @@
   "dependencies": {
     "@coveo/bueno": "1.0.8",
     "@coveo/headless": "3.19.2",
+    "@lit/context": "1.1.4",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.26.2",
     "@stencil/core": "4.20.0",
@@ -144,7 +145,7 @@
     "rollup-plugin-html": "0.2.1",
     "shadow-dom-testing-library": "1.11.3",
     "storybook": "8.1.2",
-    "tailwindcss": "4.0.7",
+    "tailwindcss": "4.0.8",
     "ts-dedent": "2.2.0",
     "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",

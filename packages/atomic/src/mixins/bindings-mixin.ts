@@ -15,6 +15,7 @@ function initializeBindings<
     InitializableComponent<SpecificBindings>,
 >(instance: InstanceType): Promise<() => void> {
   return new Promise((resolve, reject) => {
+    instance.initialized = true;
     fetchBindings<SpecificBindings>(instance)
       .then((bindings) => {
         instance.bindings = bindings;
