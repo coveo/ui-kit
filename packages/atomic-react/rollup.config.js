@@ -125,6 +125,7 @@ const outputCJS = ({useCase}) => ({
   file: `dist/cjs/${useCase}atomic-react.cjs`,
   format: 'cjs',
   sourcemap: true,
+  inlineDynamicImports: true,
 });
 
 /** @returns {import('rollup').OutputOptions} */
