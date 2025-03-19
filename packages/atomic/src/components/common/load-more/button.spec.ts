@@ -1,5 +1,5 @@
-import enTranslations from '@/dist/atomic/lang/en.json';
-import i18next, {i18n as I18n} from 'i18next';
+import {getI18nTestInstance} from '@/src/test-utils/mocks/i18n';
+import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {loadMoreButton} from './button';
 
@@ -8,15 +8,7 @@ describe('loadMoreButton', () => {
   let i18n: I18n;
 
   beforeAll(async () => {
-    i18n = i18next.createInstance();
-    await i18n.init({
-      lng: 'en',
-      resources: {
-        en: {
-          translation: enTranslations,
-        },
-      },
-    });
+    i18n = await getI18nTestInstance();
   });
 
   beforeEach(() => {
@@ -34,12 +26,10 @@ describe('loadMoreButton', () => {
   }) => {
     render(
       html`${loadMoreButton({
-        props: {
-          i18n,
-          onClick: () => {},
-          moreAvailable: props.moreAvailable,
-          label: props.label ?? 'load-more-results',
-        },
+        i18n,
+        onClick: () => {},
+        moreAvailable: props.moreAvailable,
+        label: props.label ?? 'load-more-results',
       })}`,
       container
     );
