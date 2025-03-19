@@ -1,3 +1,7 @@
+## <small>1.1.8 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
 ## <small>1.1.7 (2025-03-12)</small>
 
 - chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
