@@ -2,6 +2,7 @@ import {AfterViewInit, Component, ViewChild} from '@angular/core';
 import {AtomicCommerceInterface} from '@coveo/atomic-angular';
 
 @Component({
+  standalone: false,
   selector: 'app-atomic-commerce-angular-page',
   templateUrl: './atomic-commerce-angular-page.component.html',
   styleUrls: ['./atomic-commerce-angular-page.component.css'],
