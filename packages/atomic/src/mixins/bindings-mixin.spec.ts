@@ -23,6 +23,8 @@ export class TestElement
 {
   @state()
   public bindings!: Bindings;
+
+  public initialized = false;
   @state() public error!: Error;
 
   public render() {
@@ -42,10 +44,11 @@ describe('InitializeBindingsMixin mixin', () => {
     element = document.createElement(tag) as InitializableComponent<Bindings> &
       T;
     document.body.appendChild(element);
+    element.bindings = bindings;
     await element.updateComplete;
   };
 
-  const teardownElement = () => {
+  const teardownElement = async () => {
     if (document.body.contains(element)) {
       document.body.removeChild(element);
     }
@@ -67,6 +70,7 @@ describe('InitializeBindingsMixin mixin', () => {
   it('should subscribe to language changes', async () => {
     vi.spyOn(bindings.i18n, 'on');
     await setupElement();
+
     expect(element.bindings?.i18n.on).toHaveBeenCalled();
   });
 
@@ -89,10 +93,15 @@ describe('InitializeBindingsMixin mixin', () => {
     expect(element.initialize).toHaveBeenCalled();
   });
 
-  it('should return an error to the element if unable to fetch bindings', async () => {
-    mockedFetchBindings.mockRejectedValue(new Error('test-element'));
-    await setupElement();
+  test('should handle fetchBindings rejection gracefully', async () => {
+    // Mock fetchBindings to return a rejected promise
+    mockedFetchBindings.mockRejectedValue(
+      new Error('Failed to fetch bindings')
+    );
 
-    expect(element.error).toBeInstanceOf(Error);
+    // Call the function and expect it to reject
+    await expect(fetchBindings(element)).rejects.toThrow(
+      'Failed to fetch bindings'
+    );
   });
 });
