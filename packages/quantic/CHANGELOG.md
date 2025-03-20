@@ -1,3 +1,17 @@
+## <small>3.15.4 (2025-03-19)</small>
+
+- fix(quantic): delay caused by recent queries fixed (#5060) ([31a14b9](https://github.com/coveo/ui-kit/commits/31a14b9)), closes [#5060](https://github.com/coveo/ui-kit/issues/5060)
+- fix(quantic): fixed issue with custom facet captions inside the refine modal (#5075) ([d9be647](https://github.com/coveo/ui-kit/commits/d9be647)), closes [#5075](https://github.com/coveo/ui-kit/issues/5075)
+- fix(quanticDocs): answer config id default value (#4970) ([707af1e](https://github.com/coveo/ui-kit/commits/707af1e)), closes [#4970](https://github.com/coveo/ui-kit/issues/4970)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>3.15.3 (2025-03-12)</small>
+
+- fix(atomic): fix generated answer scrollable table overflow when table too small (#5040) ([868c089](https://github.com/coveo/ui-kit/commits/868c089)), closes [#5040](https://github.com/coveo/ui-kit/issues/5040)
+- fix(quantic): citation url in tooltip issue fixed (#5048) ([48b5724](https://github.com/coveo/ui-kit/commits/48b5724)), closes [#5048](https://github.com/coveo/ui-kit/issues/5048)
+- fix(quantic): failing playwright tests for facet manager in quantic (#5054) ([0136764](https://github.com/coveo/ui-kit/commits/0136764)), closes [#5054](https://github.com/coveo/ui-kit/issues/5054)
+- fix(quantic): removing demo code (#5058) ([0102cbb](https://github.com/coveo/ui-kit/commits/0102cbb)), closes [#5058](https://github.com/coveo/ui-kit/issues/5058)
+
 ## <small>3.15.2 (2025-03-06)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)

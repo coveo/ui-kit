@@ -1,5 +1,8 @@
+import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import {defineConfig} from 'vitest/config';
+//@ts-expect-error - normal json import
+import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
@@ -7,6 +10,8 @@ const resourceUrl = `http://localhost:${port}/`;
 export default defineConfig({
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+    __ATOMIC_VERSION__: `"${packageJson.version}"`,
+    __HEADLESS_VERSION__: `"${packageJson.dependencies['@coveo/headless']}"`,
   },
   server: {
     port: port,
@@ -34,9 +39,10 @@ export default defineConfig({
         return null;
       },
     },
+    tailwindcss(),
   ],
   test: {
-    include: ['src/**/*.spec.ts'],
+    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',

@@ -1,3 +1,22 @@
+## 3.21.0 (2025-03-19)
+
+- chore: isolate tailwind dependency (#5076) ([2990827](https://github.com/coveo/ui-kit/commits/2990827)), closes [#5076](https://github.com/coveo/ui-kit/issues/5076)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+- chore(atomic): add decorator for bindings (#5025) ([749daef](https://github.com/coveo/ui-kit/commits/749daef)), closes [#5025](https://github.com/coveo/ui-kit/issues/5025)
+- chore(atomic): add injectStylesForNoShadowDOM decorator (#5037) ([4f749c6](https://github.com/coveo/ui-kit/commits/4f749c6)), closes [#5037](https://github.com/coveo/ui-kit/issues/5037)
+- chore(atomic): fix flaky theming smoke tests (#5072) ([2c39a87](https://github.com/coveo/ui-kit/commits/2c39a87)), closes [#5072](https://github.com/coveo/ui-kit/issues/5072)
+- chore(atomic): fix storybook & vitest integration with tailwindcss (#5061) ([ca83e1c](https://github.com/coveo/ui-kit/commits/ca83e1c)), closes [#5061](https://github.com/coveo/ui-kit/issues/5061)
+- fix(atomic): fix overflowing tables in generated answer components (#5059) ([da19807](https://github.com/coveo/ui-kit/commits/da19807)), closes [#5059](https://github.com/coveo/ui-kit/issues/5059)
+- feat(atomic): expose atomic and headless version through the dynamic CDN export (#5039) ([d66887f](https://github.com/coveo/ui-kit/commits/d66887f)), closes [#5039](https://github.com/coveo/ui-kit/issues/5039)
+
+## <small>3.20.4 (2025-03-12)</small>
+
+- test(atomic): add insight panel playwright tests (#5028) ([bd8487b](https://github.com/coveo/ui-kit/commits/bd8487b)), closes [#5028](https://github.com/coveo/ui-kit/issues/5028)
+- test(atomic): add testing helpers (#5024) ([f3ca88a](https://github.com/coveo/ui-kit/commits/f3ca88a)), closes [#5024](https://github.com/coveo/ui-kit/issues/5024) [#4998](https://github.com/coveo/ui-kit/issues/4998)
+- chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
+- chore(atomic): use nothing instead of undefined for functional components (#5038) ([e71cdf1](https://github.com/coveo/ui-kit/commits/e71cdf1)), closes [#5038](https://github.com/coveo/ui-kit/issues/5038)
+- fix(atomic): missing "backdrop" part for `atomic-insight-user-actions-modal` (#5026) ([b3dcfa2](https://github.com/coveo/ui-kit/commits/b3dcfa2)), closes [#5026](https://github.com/coveo/ui-kit/issues/5026) [#5022](https://github.com/coveo/ui-kit/issues/5022)
+
 ## <small>3.20.3 (2025-03-06)</small>
 
 - fix(atomic): Added missed "backdrop" part to the exported parts in the refine modal (#5022) ([afe9f4e](https://github.com/coveo/ui-kit/commits/afe9f4e)), closes [#5022](https://github.com/coveo/ui-kit/issues/5022)

@@ -1,3 +1,13 @@
+## <small>3.19.3 (2025-03-19)</small>
+
+- fix(generated answer): fix citation duplication issue in generated answer (#5053) ([09ca081](https://github.com/coveo/ui-kit/commits/09ca081)), closes [#5053](https://github.com/coveo/ui-kit/issues/5053)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>3.19.2 (2025-03-12)</small>
+
+- fix(headless): fix recommendation documentOpen event triggering an error for EP (#5050) ([0bb6ae6](https://github.com/coveo/ui-kit/commits/0bb6ae6)), closes [#5050](https://github.com/coveo/ui-kit/issues/5050)
+- chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
+
 ## <small>3.19.1 (2025-03-06)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)

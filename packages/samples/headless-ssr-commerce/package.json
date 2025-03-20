@@ -11,7 +11,7 @@
     "build:next": "next build"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.4.11",
+    "@coveo/headless-react": "2.4.13",
     "next": "14.2.20",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -22,6 +22,6 @@
     "@types/react-dom": "18.3.0",
     "@playwright/test": "1.50.1",
     "eslint": "8.57",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   }
 }
