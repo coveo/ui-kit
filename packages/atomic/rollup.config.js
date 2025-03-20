@@ -1,4 +1,7 @@
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
+import replace from '@rollup/plugin-replace';
 import {readdirSync, statSync} from 'fs';
 import {join, resolve as resolvePath, relative, sep} from 'path';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
@@ -53,10 +56,10 @@ const inputFiles = distDirs.flatMap((distDir) => {
 export default {
   input: inputFiles,
   output: {
-    dir: 'dist/atomic',
+    dir: 'dist',
     format: 'esm',
     entryFileNames: ({facadeModuleId}) => {
-      const relativePath = relative(resolvePath('dist/atomic'), facadeModuleId);
+      const relativePath = relative(resolvePath('dist'), facadeModuleId);
       return `${relativePath}`;
     },
     chunkFileNames: '[name].js',
@@ -69,8 +72,14 @@ export default {
       }
     },
   },
+  external: [/.*\/headless\/v.*/, /.*\/atomic\/v.*/, /.*\/bueno\/v.*/],
   plugins: [
     resolve({preserveSymlinks: false}),
     externalizeDependenciesPlugin(),
+    commonjs(),
+    json(),
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
   ],
 };
