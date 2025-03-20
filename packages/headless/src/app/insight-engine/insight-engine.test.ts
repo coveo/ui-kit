@@ -102,7 +102,7 @@ describe('buildInsightEngine', () => {
         warnSpy.mockRestore();
       });
 
-      it('should log a warning when the case assist engine is used with the next analytics mode', () => {
+      it('should log a warning when the insight engine is used with the next analytics mode', () => {
         options.configuration.analytics = {
           analyticsMode: 'next',
           trackingId: 'example_tracking_id',
@@ -118,7 +118,7 @@ describe('buildInsightEngine', () => {
         );
       });
 
-      it('should not log a warning when the case assist engine is used with the legacy analytics mode', () => {
+      it('should not log a warning when the insight engine is used with the legacy analytics mode', () => {
         options.configuration.analytics = {
           analyticsMode: 'legacy',
         };
