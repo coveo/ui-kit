@@ -208,7 +208,7 @@ export class AtomicCommerceInterface
       return;
     }
 
-    //this.context.setLanguage(this.language);
+    this.context.setLanguage(this.language);
     return this.commonInterfaceHelper.onLanguageChange();
   }
 
