@@ -1,3 +1,5 @@
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
@@ -113,6 +115,9 @@ const cdnExternal = [
   'react-dom',
   'react-dom/client',
   'react-dom/server',
+  /.*\/headless\/v.*/,
+  /.*\/atomic\/v.*/,
+  /.*\/bueno\/v.*/,
 ];
 
 /** @returns {import('rollup').OutputOptions} */
@@ -127,6 +132,7 @@ const outputESM = ({useCase}) => ({
   file: `dist/esm/${useCase}atomic-react.mjs`,
   format: 'esm',
   sourcemap: true,
+  inlineDynamicImports: true,
 });
 
 /**@type {import('rollup').InputPluginOption} */
@@ -135,6 +141,8 @@ const plugins = [
   typescript(),
   nodeResolve(),
   isCDN && externalizeDependenciesPlugin(),
+  commonjs(),
+  json(),
 ];
 
 export default defineConfig([
