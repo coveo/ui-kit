@@ -97,6 +97,11 @@ export interface SearchParameters {
   af?: Record<string, string[]>;
 }
 
+/**
+ * The unique identifier of a tab.
+ */
+export type TabId = string;
+
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
   (payload: SearchParameters) =>
@@ -105,5 +110,5 @@ export const restoreSearchParameters = createAction(
 
 export const restoreTab = createAction(
   'searchParameters/restoreTab',
-  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+  (payload: TabId) => validatePayload(payload, requiredNonEmptyString)
 );
