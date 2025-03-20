@@ -111,7 +111,7 @@ export class AtomicCommerceInterface
   /**
    * the commerce interface i18next instance.
    */
-  @property({type: Object}) i18n: i18n = i18next.createInstance();
+  @property({type: Object}) i18n: i18n;
 
   /**
    * the commerce interface language.
@@ -172,10 +172,9 @@ export class AtomicCommerceInterface
    */
   @property({type: String, reflect: true}) CspNonce?: string;
 
-  /**
-   * A reference clone of the interface i18next instance.
-   */
-  private i18nClone!: i18n;
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
 
   public constructor() {
     super();
@@ -184,25 +183,18 @@ export class AtomicCommerceInterface
       'CoveoAtomic'
     );
     this.store = createCommerceStore(this.type);
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   public connectedCallback() {
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
-    if (this.i18n.isInitialized) {
-      this.i18nClone = this.i18n.cloneInstance();
-    } else {
-      this.i18n.init({}, () => {
-        this.i18nClone = this.i18n.cloneInstance();
-      });
-    }
-    this.i18n.addResourceBundle = (
-      lng: string,
-      ns: string,
-      resources: object,
-      deep?: boolean,
-      overwrite?: boolean
-    ) => this.addResourceBundle(lng, ns, resources, deep, overwrite);
 
     this.host.addEventListener(
       'atomic/initializeComponent',
@@ -217,6 +209,7 @@ export class AtomicCommerceInterface
 
   componentWillLoad() {
     this.initAriaLive();
+    this.componentWillLoadResolver();
   }
 
   @watch('analytics')
@@ -234,7 +227,7 @@ export class AtomicCommerceInterface
     }
 
     this.context.setLanguage(this.language);
-    this.commonInterfaceHelper.onLanguageChange();
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @watch('iconAssetsPath')
@@ -336,12 +329,17 @@ export class AtomicCommerceInterface
   public bindings: CommerceBindings = {} as CommerceBindings;
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.initContext();
+    this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initRequestStatus();
     this.initSummary();
-    this.initContext();
     this.initLanguage();
     this.initUrlManager();
     this.initialized = true;
@@ -400,7 +398,8 @@ export class AtomicCommerceInterface
     ) {
       return;
     }
-    this.host.prepend(document.createElement('atomic-aria-live'));
+    const ariaLive = document.createElement('atomic-aria-live');
+    this.host.prepend(ariaLive);
   }
 
   private initUrlManager() {
@@ -478,22 +477,6 @@ export class AtomicCommerceInterface
   private onHashChange = () => {
     this.urlManager.synchronize(this.fragment);
   };
-
-  private addResourceBundle(
-    lng: string,
-    ns: string,
-    resources: object,
-    deep?: boolean,
-    overwrite?: boolean
-  ) {
-    return this.i18nClone.addResourceBundle(
-      lng,
-      ns,
-      resources,
-      deep,
-      overwrite
-    );
-  }
 
   render() {
     return html`<slot></slot>`;
