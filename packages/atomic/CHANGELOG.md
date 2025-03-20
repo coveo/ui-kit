@@ -1,3 +1,14 @@
+## 3.21.0 (2025-03-19)
+
+- chore: isolate tailwind dependency (#5076) ([2990827](https://github.com/coveo/ui-kit/commits/2990827)), closes [#5076](https://github.com/coveo/ui-kit/issues/5076)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+- chore(atomic): add decorator for bindings (#5025) ([749daef](https://github.com/coveo/ui-kit/commits/749daef)), closes [#5025](https://github.com/coveo/ui-kit/issues/5025)
+- chore(atomic): add injectStylesForNoShadowDOM decorator (#5037) ([4f749c6](https://github.com/coveo/ui-kit/commits/4f749c6)), closes [#5037](https://github.com/coveo/ui-kit/issues/5037)
+- chore(atomic): fix flaky theming smoke tests (#5072) ([2c39a87](https://github.com/coveo/ui-kit/commits/2c39a87)), closes [#5072](https://github.com/coveo/ui-kit/issues/5072)
+- chore(atomic): fix storybook & vitest integration with tailwindcss (#5061) ([ca83e1c](https://github.com/coveo/ui-kit/commits/ca83e1c)), closes [#5061](https://github.com/coveo/ui-kit/issues/5061)
+- fix(atomic): fix overflowing tables in generated answer components (#5059) ([da19807](https://github.com/coveo/ui-kit/commits/da19807)), closes [#5059](https://github.com/coveo/ui-kit/issues/5059)
+- feat(atomic): expose atomic and headless version through the dynamic CDN export (#5039) ([d66887f](https://github.com/coveo/ui-kit/commits/d66887f)), closes [#5039](https://github.com/coveo/ui-kit/issues/5039)
+
 ## <small>3.20.4 (2025-03-12)</small>
 
 - test(atomic): add insight panel playwright tests (#5028) ([bd8487b](https://github.com/coveo/ui-kit/commits/bd8487b)), closes [#5028](https://github.com/coveo/ui-kit/issues/5028)

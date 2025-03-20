@@ -43,7 +43,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
   styleUrl: 'atomic-commerce-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError
+export class AtomicCommerceQueryError
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;

@@ -73,7 +73,16 @@
               key={facet.field}
               depends-on={facet.dependsOn}
               is-collapsed
-            ></c-quantic-category-facet>
+            >
+              <template for:each={facet.customCaptions} for:item="caption">
+                <c-quantic-facet-caption
+                  key={caption.index}
+                  slot="captions"
+                  value={caption.value}
+                  caption={caption.caption}
+                ></c-quantic-facet-caption>
+              </template>
+            </c-quantic-category-facet>
           </template>
           <template if:true={facet.isTimeframe}>
             <c-quantic-timeframe-facet
@@ -128,7 +137,16 @@
               custom-sort={facet.customSort}
               depends-on={facet.dependsOn}
               is-collapsed
-            ></c-quantic-facet>
+            >
+              <template for:each={facet.customCaptions} for:item="caption">
+                <c-quantic-facet-caption
+                  key={caption.index}
+                  slot="captions"
+                  value={caption.value}
+                  caption={caption.caption}
+                ></c-quantic-facet-caption>
+              </template>
+            </c-quantic-facet>
           </template>
         </template>
       </c-quantic-facet-manager>

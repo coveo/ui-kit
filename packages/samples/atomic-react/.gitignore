@@ -17,6 +17,7 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+*.t
 *.suo
 *.ntvs*
 *.njsproj
@@ -27,6 +28,8 @@ dist-ssr
 /blob-report/
 /playwright/.cache/
 
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo
 
 public/lang
 public/assets

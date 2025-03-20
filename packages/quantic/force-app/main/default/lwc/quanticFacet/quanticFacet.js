@@ -313,6 +313,11 @@ export default class QuanticFacet extends LightningElement {
       facetId: this.facet.state.facetId,
       format: this.remoteGetValueCaption,
       element: this.template.host,
+      metadata: {
+        customCaptions: Object.entries(this.customCaptions).map(
+          ([key, label]) => ({value: key, caption: label})
+        ),
+      },
     });
     if (this.dependsOn) {
       this.validateDependsOnProperty();

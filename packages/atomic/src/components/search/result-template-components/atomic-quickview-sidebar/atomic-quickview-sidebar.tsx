@@ -94,7 +94,7 @@ const HighlightKeywordsCheckbox: FunctionalComponent<
     ></StencilCheckbox>
     {!minimized && (
       <label
-        class="cursor-pointer whitespace-nowrap font-bold"
+        class="cursor-pointer font-bold whitespace-nowrap"
         htmlFor="atomic-quickview-sidebar-highlight-keywords"
       >
         {i18n.t('keywords-highlight')}
@@ -122,7 +122,7 @@ const Keywords: FunctionalComponent<
         return (
           <div
             key={keyword.text}
-            class="w-100 my-4 flex items-center justify-between gap-x-2"
+            class="my-4 flex w-100 items-center justify-between gap-x-2"
           >
             <div
               class={`bg-background border-neutral flex grow items-center overflow-x-auto rounded-lg border ${

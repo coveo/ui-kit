@@ -19,7 +19,7 @@ import {parseValue} from '../product-utils';
   tag: 'atomic-product-numeric-field-value',
   shadow: false,
 })
-export class AtomicProductNumber {
+export class AtomicProductNumericFieldValue {
   @InitializeBindings() public bindings!: CommerceBindings;
   @ProductContext() private product!: Product;
 

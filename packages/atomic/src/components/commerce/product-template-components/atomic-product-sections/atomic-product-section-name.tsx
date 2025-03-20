@@ -15,7 +15,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
   tag: 'atomic-product-section-name',
   shadow: false,
 })
-export class AtomicProductSectionTitle {
+export class AtomicProductSectionName {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

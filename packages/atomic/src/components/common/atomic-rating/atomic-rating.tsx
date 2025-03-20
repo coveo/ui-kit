@@ -55,7 +55,7 @@ export const Rating: FunctionalComponent<RatingProps> = (props) => {
     >
       <div class="z-0 flex gap-0.5">{emptyIconDisplay()}</div>
       <div
-        class="z-1 absolute left-0 top-0 flex gap-0.5 overflow-hidden"
+        class="absolute top-0 left-0 z-1 flex gap-0.5 overflow-hidden"
         style={{width}}
       >
         {filledIconDisplay()}

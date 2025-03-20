@@ -16,7 +16,7 @@ import {hideEmptySection} from '../../../../utils/item-section-utils';
   tag: 'atomic-product-section-badges',
   shadow: false,
 })
-export class AtomicResultSectionBadges {
+export class AtomicProductSectionBadges {
   @Element() private host!: HTMLElement;
 
   public componentDidRender() {

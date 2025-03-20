@@ -160,6 +160,18 @@
       }
     },
     {
+      "id": "deploy-atomic-major-storybook-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
         "disabled": $[IS_NIGHTLY],
@@ -310,6 +322,7 @@
         "deploy-atomic-hosted-page-major-to-s3-version",
         "deploy-atomic-hosted-page-nightly-to-s3-version",
         "deploy-atomic-minor-storybook-to-s3-version",
+        "deploy-atomic-major-storybook-to-s3-version",
         "deploy-atomic-nightly-storybook-to-s3-version"
       ]
     },

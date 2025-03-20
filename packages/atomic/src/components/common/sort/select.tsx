@@ -15,7 +15,7 @@ export const SortSelect: FunctionalComponent<SortSelectProps> = (
     <div class="relative" part="select-parent">
       <select
         id={id}
-        class="btn-outline-neutral h-10 grow cursor-pointer appearance-none pl-3 pr-24"
+        class="btn-outline-neutral h-10 grow cursor-pointer appearance-none pr-24 pl-3"
         part="select"
         aria-label={i18n.t('sort-by')}
         onChange={(option) => onSelect(option)}
@@ -24,7 +24,7 @@ export const SortSelect: FunctionalComponent<SortSelectProps> = (
       </select>
       <div
         part="select-separator"
-        class="border-neutral pointer-events-none absolute bottom-px right-0 top-px flex w-10 items-center justify-center border-l"
+        class="border-neutral pointer-events-none absolute top-px right-0 bottom-px flex w-10 items-center justify-center border-l"
       >
         <atomic-icon class="w-2.5" icon={ArrowBottomIcon}></atomic-icon>
       </div>

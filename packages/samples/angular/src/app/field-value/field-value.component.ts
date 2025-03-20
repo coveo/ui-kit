@@ -8,6 +8,7 @@ import {
 import {AtomicResultText} from '@coveo/atomic-angular';
 
 @Component({
+  standalone: false,
   selector: 'app-field-value',
   templateUrl: './field-value.component.html',
 })

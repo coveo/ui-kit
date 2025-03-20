@@ -89,7 +89,7 @@ export class AtomicQuerySummary
     }
 
     return (
-      <div class="bg-[#F1F2FF] px-6 py-4 italic text-[#54698D]">
+      <div class="bg-[#F1F2FF] px-6 py-4 text-[#54698D] italic">
         {this.bindings.i18n.t('insight-related-cases')}
       </div>
     );

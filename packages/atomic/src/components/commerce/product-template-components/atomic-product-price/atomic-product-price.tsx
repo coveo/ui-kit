@@ -92,7 +92,7 @@ export class AtomicProductPrice
 
         <div
           class={
-            'original-price content-center truncate break-keep text-xl line-through' +
+            'original-price content-center truncate text-xl break-keep line-through' +
             (!originalPrice ? ' invisible' : '')
           }
         >

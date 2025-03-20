@@ -28,7 +28,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   styleUrl: 'atomic-notifications.pcss',
   shadow: true,
 })
-export class AtomicNotifyTrigger implements InitializableComponent {
+export class AtomicNotifications implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   protected notifyTrigger!: NotifyTrigger;
 

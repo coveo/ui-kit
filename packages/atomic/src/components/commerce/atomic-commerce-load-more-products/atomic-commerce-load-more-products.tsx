@@ -37,7 +37,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
   styleUrl: 'atomic-commerce-load-more-products.pcss',
   shadow: true,
 })
-export class AtomicLoadMoreProducts {
+export class AtomicCommerceLoadMoreProducts {
   @InitializeBindings() public bindings!: CommerceBindings;
   public pagination!: Pagination;
   public listingOrSearch!: ProductListing | Search;

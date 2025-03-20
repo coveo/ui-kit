@@ -35,7 +35,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
   styleUrl: 'atomic-commerce-query-summary.pcss',
   shadow: true,
 })
-export class AtomicQuerySummary
+export class AtomicCommerceQuerySummary
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;

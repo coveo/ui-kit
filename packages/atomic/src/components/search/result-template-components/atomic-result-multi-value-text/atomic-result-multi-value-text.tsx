@@ -24,7 +24,7 @@ import {ResultContext} from '../result-template-decorators';
   styleUrl: 'atomic-result-multi-value-text.pcss',
   shadow: true,
 })
-export class AtomicResultMultiText {
+export class AtomicResultMultiValueText {
   public breadcrumbManager!: BreadcrumbManager;
 
   @InitializeBindings() public bindings!: Bindings;
