@@ -100,8 +100,14 @@ for (const module of cem.modules) {
   }
 }
 
-atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
-atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
+if (litImports.size > 0) {
+  atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+}
+
+if (defineCustomElementImports.size > 0) {
+  atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+}
+atomicAngularComponentFileContent += `${endTag}`;
 
 if(litDeclarations.length > 0) {
   writeFileSync(

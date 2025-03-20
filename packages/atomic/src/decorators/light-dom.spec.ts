@@ -13,6 +13,13 @@ describe('injectStylesForNoShadowDOM', () => {
     }
   }
 
+  class UnstyledElement extends LitElement {
+    static styles = unsafeCSS(styles);
+    render() {
+      return html`<div>children element</div>`;
+    }
+  }
+
   class LightDomParentElement extends HTMLElement {
     render() {
       return html`<slot></slot>`;
@@ -37,6 +44,27 @@ describe('injectStylesForNoShadowDOM', () => {
   customElements.define('light-dom-parent-element', LightDomParentElement);
   customElements.define('shadow-dom-parent-element', ShadownDomParentElement);
   customElements.define('styled-element', StyledElement);
+  customElements.define('unstyled-element', UnstyledElement);
+
+  describe('when the element added in a shadow dom does not contain style', () => {
+    beforeEach(async () => {
+      await fixture(html`
+        <shadow-dom-parent-element>
+          <unstyled-element></unstyled-element>
+          <unstyled-element></unstyled-element>
+          <unstyled-element></unstyled-element>
+        </shadow-dom-parent-element>
+      `);
+    });
+
+    it("should not add any css in the parent's adoptedStyleSheets", async () => {
+      const styleElement =
+        document.querySelector('shadow-dom-parent-element')?.shadowRoot
+          ?.adoptedStyleSheets || [];
+
+      expect(styleElement).toHaveLength(0);
+    });
+  });
 
   describe('when the element is added in a shadow dom', () => {
     beforeEach(async () => {
@@ -59,7 +87,7 @@ describe('injectStylesForNoShadowDOM', () => {
       expect(styleElement[0].cssRules[0].cssText).toBe(styles);
     });
 
-    it("should add css in the document's adoptedStyleSheets", async () => {
+    it("should not add css in the document's adoptedStyleSheets", async () => {
       const styleElement = document?.adoptedStyleSheets || [];
 
       expect(styleElement).toHaveLength(0);
@@ -83,6 +111,24 @@ describe('injectStylesForNoShadowDOM', () => {
       expect(styleElement).toHaveLength(1);
       expect(styleElement[0].cssRules).toHaveLength(1);
       expect(styleElement[0].cssRules[0].cssText).toBe(styles);
+    });
+  });
+
+  describe('when the element added directly into the dom does not contain style', () => {
+    beforeEach(async () => {
+      await fixture(html`
+        <light-dom-parent-element>
+          <unstyled-element></unstyled-element>
+          <unstyled-element></unstyled-element>
+          <unstyled-element></unstyled-element>
+        </light-dom-parent-element>
+      `);
+    });
+
+    it("should add css in the document's adoptedStyleSheets", async () => {
+      const styleElement = document?.adoptedStyleSheets || [];
+
+      expect(styleElement).toHaveLength(0);
     });
   });
 });

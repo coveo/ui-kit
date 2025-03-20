@@ -39,7 +39,7 @@ export const RecentQueriesContainer: FunctionalComponent = (_, children) => {
   return (
     <div
       part="recent-query-content"
-      class="flex items-center text-left break-all"
+      class="flex items-center break-all text-left"
     >
       {children}
     </div>
