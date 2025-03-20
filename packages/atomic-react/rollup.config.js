@@ -97,15 +97,15 @@ const commonExternal = [
   'react-dom/client',
   'react-dom/server',
   'lit',
-  'lit/decorators.js',
-  '@lit/react',
+  /^lit\/.*/,
+  /^@lit\/.*/,
   '@coveo/atomic',
   '@coveo/atomic/loader',
-  '@coveo/atomic/components',
   '@coveo/headless',
-  '@coveo/headless/recommendation',
-  '@coveo/headless/commerce',
+  /@coveo\/headless\/.*/,
 ];
+
+const esmExternal = [...commonExternal, '@coveo/atomic/components'];
 
 /** @type {import('rollup').ExternalOption} */
 const cdnExternal = [
@@ -147,7 +147,7 @@ export default defineConfig([
   {
     input: 'src/index.ts',
     output: [outputESM({useCase: ''})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
   {
@@ -159,7 +159,7 @@ export default defineConfig([
   {
     input: 'src/recommendation.index.ts',
     output: [outputESM({useCase: 'recommendation/'})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
   {
@@ -171,7 +171,7 @@ export default defineConfig([
   {
     input: 'src/commerce.index.ts',
     output: [outputESM({useCase: 'commerce/'})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
 ]);
