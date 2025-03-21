@@ -36,7 +36,7 @@ export class AtomicInsightSmartSnippet
 
   @Element() public host!: HTMLElement;
 
-  private id = randomID();
+  private id!: string;
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
   private smartSnippetCommon!: SmartSnippetCommon;
 
@@ -71,6 +71,7 @@ export class AtomicInsightSmartSnippet
   @State() feedbackSent = false;
 
   public initialize() {
+    this.id ||= randomID();
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,

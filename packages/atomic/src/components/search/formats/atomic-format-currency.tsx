@@ -24,7 +24,10 @@ export class AtomicFormatCurrency {
    */
   @Prop({reflect: true}) public currency!: string;
 
+  private format!: NumberFormatter;
+
   componentWillLoad() {
+    this.format = defaultCurrencyFormatter(this.currency);
     try {
       dispatchNumberFormatEvent(
         (value, languages) => this.format(value, languages),
@@ -34,8 +37,6 @@ export class AtomicFormatCurrency {
       this.error = error as Error;
     }
   }
-
-  private format: NumberFormatter = defaultCurrencyFormatter(this.currency);
 
   public render() {
     if (this.error) {

@@ -1,4 +1,4 @@
-import {getAssetPath} from '@stencil/core';
+import {getAssetPath} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
 import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';

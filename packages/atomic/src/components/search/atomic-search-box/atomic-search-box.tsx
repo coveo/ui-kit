@@ -220,7 +220,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-search-box-');
+    this.id ||= randomID('atomic-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();

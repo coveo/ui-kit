@@ -47,7 +47,7 @@ export function watch<
   Prop extends PublicProperties<Component>,
 >(propName: Prop, options?: WatchOptions) {
   const resolvedOptions: Required<WatchOptions> = {
-    waitUntilFirstUpdate: false,
+    waitUntilFirstUpdate: true,
     ...options,
   };
   return (

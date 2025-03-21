@@ -211,6 +211,7 @@ export class AtomicResult {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
     applyFocusVisiblePolyfill(this.host);
+    this.host.classList.add('hydrated');
   }
 
   public componentDidRender() {

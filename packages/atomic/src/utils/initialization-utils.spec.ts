@@ -58,22 +58,72 @@ describe('InitializeBindings decorator', () => {
       expect(getErrorComponent()).toBeTruthy();
     });
 
-    it(`when child component is loaded
-    should dispatch an "atomic/initializeComponent" custom event with the initialize method as detail`, async () => {
-      page = await newSpecPage({
-        components: [AtomicSearchBox, AtomicSearchInterface],
-        html: '<atomic-search-interface></atomic-search-interface>',
+    describe('when the parent is ready', () => {
+      beforeEach(async () => {
+        page = await newSpecPage({
+          components: [AtomicSearchBox, AtomicSearchInterface],
+          html: '<atomic-search-interface></atomic-search-interface>',
+        });
+        const searchInterface = page.body.querySelector(
+          'atomic-search-interface'
+        )!;
+        await searchInterface.initialize({
+          accessToken: '123456789',
+          organizationId: 'myorg',
+        });
       });
-      let eventContent!: CustomEvent;
-      const spy = jest
-        .fn()
-        .mockImplementation((event) => (eventContent = event));
-      page.root!.addEventListener('atomic/initializeComponent', spy);
-      page.root!.innerHTML = '<atomic-search-box></atomic-search-box>';
-      await page.waitForChanges();
+      it('when child component is loaded should dispatch an "atomic/initializeComponent" custom event with the initialize method as detail', async () => {
+        let eventContent!: CustomEvent;
+        const spy = jest
+          .fn()
+          .mockImplementation((event) => (eventContent = event));
 
-      expect(spy).toHaveBeenCalled();
-      expect(typeof eventContent.detail).toBe('function');
+        page.root!.addEventListener('atomic/initializeComponent', spy);
+        page.root!.innerHTML = '<atomic-search-box></atomic-search-box>';
+        await page.waitForChanges();
+
+        expect(spy).toHaveBeenCalled();
+        expect(typeof eventContent.detail).toBe('function');
+      });
+    });
+
+    describe('when the parent is not ready', () => {
+      let searchInterface: HTMLAtomicSearchInterfaceElement;
+      beforeEach(async () => {
+        page = await newSpecPage({
+          components: [AtomicSearchBox, AtomicSearchInterface],
+          html: '<atomic-search-interface></atomic-search-interface>',
+        });
+        searchInterface = page.body.querySelector('atomic-search-interface')!;
+        searchInterface.innerHTML = '<atomic-search-box></atomic-search-box>';
+        await page.waitForChanges();
+      });
+
+      it('should queue the event', async () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const eventQueueMap = (window as any).initQueueNamespace.eventQueueMap;
+        const queue = eventQueueMap.get(searchInterface);
+        expect(queue).toBeDefined();
+        expect(queue.length).toBeGreaterThan(0);
+        expect(queue[0].event.type).toBe('atomic/initializeComponent');
+      });
+
+      it('should dispatch queued events when parent becomes ready', async () => {
+        const spy = jest.fn();
+        searchInterface.addEventListener('atomic/initializeComponent', spy);
+        await page.waitForChanges();
+
+        await searchInterface.initialize({
+          accessToken: '123456789',
+          organizationId: 'myorg',
+        });
+
+        await page.waitForChanges();
+
+        expect(spy).toHaveBeenCalledWith(
+          expect.objectContaining({type: 'atomic/initializeComponent'})
+        );
+      });
     });
   });
 

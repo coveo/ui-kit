@@ -1,3 +1,5 @@
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
 import {nodeResolve} from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import {readFileSync} from 'fs';
@@ -97,15 +99,15 @@ const commonExternal = [
   'react-dom/client',
   'react-dom/server',
   'lit',
-  'lit/decorators.js',
-  '@lit/react',
+  /^lit\/.*/,
+  /^@lit\/.*/,
   '@coveo/atomic',
   '@coveo/atomic/loader',
-  '@coveo/atomic/components',
   '@coveo/headless',
-  '@coveo/headless/recommendation',
-  '@coveo/headless/commerce',
+  /@coveo\/headless\/.*/,
 ];
+
+const esmExternal = [...commonExternal, '@coveo/atomic/components'];
 
 /** @type {import('rollup').ExternalOption} */
 const cdnExternal = [
@@ -113,6 +115,9 @@ const cdnExternal = [
   'react-dom',
   'react-dom/client',
   'react-dom/server',
+  /.*\/headless\/v.*/,
+  /.*\/atomic\/v.*/,
+  /.*\/bueno\/v.*/,
 ];
 
 /** @returns {import('rollup').OutputOptions} */
@@ -127,6 +132,7 @@ const outputESM = ({useCase}) => ({
   file: `dist/esm/${useCase}atomic-react.mjs`,
   format: 'esm',
   sourcemap: true,
+  inlineDynamicImports: true,
 });
 
 /**@type {import('rollup').InputPluginOption} */
@@ -135,6 +141,8 @@ const plugins = [
   typescript(),
   nodeResolve(),
   isCDN && externalizeDependenciesPlugin(),
+  commonjs(),
+  json(),
 ];
 
 export default defineConfig([
@@ -147,7 +155,7 @@ export default defineConfig([
   {
     input: 'src/index.ts',
     output: [outputESM({useCase: ''})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
   {
@@ -159,7 +167,7 @@ export default defineConfig([
   {
     input: 'src/recommendation.index.ts',
     output: [outputESM({useCase: 'recommendation/'})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
   {
@@ -171,7 +179,7 @@ export default defineConfig([
   {
     input: 'src/commerce.index.ts',
     output: [outputESM({useCase: 'commerce/'})],
-    external: isCDN ? cdnExternal : commonExternal,
+    external: isCDN ? cdnExternal : esmExternal,
     plugins: plugins,
   },
 ]);

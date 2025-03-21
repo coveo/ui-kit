@@ -48,7 +48,7 @@ export class AtomicResultFieldsList {
     this.updatingChildren = false;
   }
 
-  private get children() {
+  private get hostChildren() {
     return Array.from(this.host.children) as HTMLElement[];
   }
 
@@ -60,7 +60,7 @@ export class AtomicResultFieldsList {
   }
 
   private getSortedChildrenBySize() {
-    return this.children.sort((a, b) => a.offsetWidth - b.offsetWidth);
+    return this.hostChildren.sort((a, b) => a.offsetWidth - b.offsetWidth);
   }
 
   private hide(element: HTMLElement) {
@@ -80,11 +80,11 @@ export class AtomicResultFieldsList {
   }
 
   private showChildren() {
-    this.children.forEach((child) => this.show(child));
+    this.hostChildren.forEach((child) => this.show(child));
   }
 
   private showDividers() {
-    this.children.forEach((child) => this.setHideDivider(child, false));
+    this.hostChildren.forEach((child) => this.setHideDivider(child, false));
   }
 
   private hideChildrenToFit() {
@@ -97,7 +97,7 @@ export class AtomicResultFieldsList {
   private hideDividersAtEndOfRows() {
     this.rows = [];
     let previousChild: HTMLElement | null = null;
-    this.children
+    this.hostChildren
       .filter((child) => !this.isChildHidden(child))
       .forEach((child) => {
         const row = child.offsetTop;
