@@ -18,7 +18,7 @@ export const FacetValueCheckbox: FunctionalComponent<
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
   const ariaLabelAttributes = {
     value: props.displayValue,
-    count: props.numberOfResults,
+    count,
     interpolation: {escapeValue: false},
   };
   const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);
