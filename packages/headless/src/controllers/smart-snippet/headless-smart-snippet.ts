@@ -1,3 +1,4 @@
+import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
@@ -33,6 +34,9 @@ export function buildSmartSnippet(
   engine: SearchEngine,
   props?: SmartSnippetProps
 ): SmartSnippet {
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
   const smartSnippet = buildCoreSmartSnippet(
     engine,
     smartSnippetAnalyticsClient,

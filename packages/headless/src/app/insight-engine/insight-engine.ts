@@ -21,6 +21,7 @@ import {
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
+  warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
 import {buildLogger} from '../logger.js';
@@ -114,6 +115,9 @@ export function buildInsightEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
 
   const {insightId, search} = options.configuration;
 

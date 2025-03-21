@@ -1,4 +1,5 @@
 import {getSampleEngineConfiguration} from '../engine-configuration.js';
+import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
 import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
 import {
   buildCaseAssistEngine,
@@ -85,6 +86,40 @@ describe('buildCaseAssistEngine', () => {
           'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.\\',
       };
       expect(initEngine).toThrow();
+    });
+
+    describe('the analytics mode', () => {
+      let warnSpy: ReturnType<typeof vi.spyOn>;
+
+      beforeEach(() => {
+        warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      });
+
+      afterEach(() => {
+        warnSpy.mockRestore();
+      });
+
+      it('should log a warning when the case assist engine is used with the next analytics mode', () => {
+        options.configuration.analytics = {
+          analyticsMode: 'next',
+          trackingId: 'example_tracking_id',
+        };
+        initEngine();
+
+        expect(warnSpy).toHaveBeenCalledTimes(1);
+        expect(warnSpy).toHaveBeenCalledWith(
+          nextAnalyticsUsageWithServiceFeatureWarning
+        );
+      });
+
+      it('should not log a warning when the case assist engine is used with the legacy analytics mode', () => {
+        options.configuration.analytics = {
+          analyticsMode: 'legacy',
+        };
+        initEngine();
+
+        expect(warnSpy).toHaveBeenCalledTimes(0);
+      });
     });
   });
 

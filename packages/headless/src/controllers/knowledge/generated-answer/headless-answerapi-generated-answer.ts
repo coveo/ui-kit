@@ -10,6 +10,7 @@ import {
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
@@ -140,6 +141,9 @@ export function buildAnswerApiGeneratedAnswer(
   if (!loadAnswerApiReducers(engine)) {
     throw loadReducerError;
   }
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
 
   const {...controller} = buildCoreGeneratedAnswer(
     engine,
