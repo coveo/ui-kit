@@ -2,6 +2,7 @@
 
 import {
   Cart,
+  RecentQueriesList,
   Controller,
   InferControllersMapFromDefinition,
   ControllerDefinitionsMap,
@@ -88,7 +89,18 @@ export function buildProviderWithDefinition<
             hydrateArguments[key] = context.state;
             break;
           }
-
+          case Kind.RecentQueriesList: {
+            const recentQueriesList = getController<RecentQueriesList>(
+              controllers,
+              key
+            );
+            hydrateArguments[key] = {
+              initialState: {
+                queries: recentQueriesList.state.queries,
+              },
+            };
+            break;
+          }
           case Kind.ParameterManager: {
             const parameterManager = getController<
               ParameterManager<Parameters>
