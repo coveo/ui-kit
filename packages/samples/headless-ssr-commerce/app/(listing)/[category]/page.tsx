@@ -1,4 +1,5 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
+import * as externalQueriesAPI from '@/actions/external-recent-queries-api';
 import BreadcrumbManager from '@/components/breadcrumb-manager';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
@@ -58,10 +59,14 @@ export default async function Listing({
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
+  // Fetches recent queries from an external service
+  const queries = await externalQueriesAPI.getRecentQueries();
+
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
       cart: {initialState: {items}},
+      recentQueriesList: {initialState: {queries}},
       context: {
         language: defaultContext.language,
         country: defaultContext.country,
