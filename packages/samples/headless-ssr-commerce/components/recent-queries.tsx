@@ -8,20 +8,12 @@ export default function RecentQueries() {
 
   useEffect(() => {
     externalQueriesAPI.updateRecentQueries(state.queries);
-  }, [state.queries]);
+  }, [JSON.stringify(state.queries)]);
 
   return (
     <div>
       <ul>
-        Recent Queries :{' '}
-        <button
-          onClick={async () => {
-            await externalQueriesAPI.clearRecentQueries();
-            methods?.clear();
-          }}
-        >
-          Clear
-        </button>
+        Recent Queries :
         {state.queries.map((query, index) => (
           <li key={index}>
             <button
