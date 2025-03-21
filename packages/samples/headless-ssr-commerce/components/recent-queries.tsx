@@ -1,8 +1,14 @@
+import * as externalQueriesAPI from '@/actions/external-recent-queries-api';
 import {useInstantProducts, useRecentQueriesList} from '@/lib/commerce-engine';
+import {useEffect} from 'react';
 
 export default function RecentQueries() {
   const {state, methods} = useRecentQueriesList();
   const {methods: instantProductsController} = useInstantProducts();
+
+  useEffect(() => {
+    externalQueriesAPI.updateRecentQueries(state.queries);
+  }, [JSON.stringify(state.queries)]);
 
   return (
     <div>
@@ -10,7 +16,6 @@ export default function RecentQueries() {
         Recent Queries :
         {state.queries.map((query, index) => (
           <li key={index}>
-            {query}
             <button
               onMouseEnter={() => instantProductsController?.updateQuery(query)}
               onClick={() => methods?.executeRecentQuery(index)}

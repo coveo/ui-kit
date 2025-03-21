@@ -34,6 +34,12 @@ export default function SearchBox() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      methods?.submit();
+    }
+  };
+
   return (
     <div>
       <input
@@ -44,6 +50,7 @@ export default function SearchBox() {
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
       ></input>
       {state.value !== '' && (
         <span>

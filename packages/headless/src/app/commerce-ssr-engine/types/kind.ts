@@ -1,4 +1,5 @@
 export enum Kind {
+  RecentQueriesList = 'RECENT_QUERIES_LIST',
   Cart = 'CART',
   Context = 'CONTEXT',
   ParameterManager = 'PARAMETER_MANAGER',

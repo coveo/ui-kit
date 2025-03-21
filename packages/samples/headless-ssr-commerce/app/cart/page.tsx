@@ -1,4 +1,5 @@
 import * as externalCartAPI from '@/actions/external-cart-api';
+import * as externalQueriesAPI from '@/actions/external-recent-queries-api';
 import Cart from '@/components/cart';
 import ContextDropdown from '@/components/context-dropdown';
 import {
@@ -25,9 +26,13 @@ export default async function Search() {
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
 
+  // Fetches recent queries from an external service
+  const queries = await externalQueriesAPI.getRecentQueries();
+
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
+      recentQueriesList: {initialState: {queries}},
       cart: {initialState: {items}},
       context: {
         language: defaultContext.language,
