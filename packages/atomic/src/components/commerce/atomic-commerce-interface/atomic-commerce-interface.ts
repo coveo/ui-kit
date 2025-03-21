@@ -206,9 +206,6 @@ export class AtomicCommerceInterface
       this.scrollToTop as EventListener
     );
     this.connectedCallbackResolver();
-  }
-
-  componentWillLoad() {
     this.initAriaLive();
   }
 
