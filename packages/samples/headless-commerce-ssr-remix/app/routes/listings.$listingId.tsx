@@ -9,128 +9,84 @@ import {
 } from '@/app/components/providers/providers';
 import PopularRecommendations from '@/app/components/recommendations/popular-recommendations';
 import Sort from '@/app/components/sort';
-import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import Summary from '@/app/components/summary';
-import externalCartService from '@/external-services/external-cart-service';
-import externalContextService from '@/external-services/external-context-service';
 import {
-  listingEngineDefinition,
   ListingStaticState,
-  recommendationEngineDefinition,
   RecommendationStaticState,
 } from '@/lib/commerce-engine';
-import {fetchToken} from '@/lib/fetch-token';
-import {isExpired} from '@/lib/jwt-utils';
-import {getNavigatorContext} from '@/lib/navigator-context';
 import {
-  toCoveoCartItems,
-  toCoveoCurrency,
-} from '@/utils/external-api-conversions';
+  getBaseFetchStaticStateConfiguration,
+  getEngineDefinition,
+} from '@/lib/commerce-engine.server';
+import {getNavigatorContext} from '@/lib/navigator-context';
 import {
   buildParameterSerializer,
   NavigatorContext,
+  SolutionType,
 } from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
-import {coveo_accessToken} from '../cookies.server';
-import useClientId from '../hooks/use-client-id';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
 
-  const {navigatorContext, setCookieHeader} =
-    await getNavigatorContext(request);
+  const navigatorContext = await getNavigatorContext(request);
 
   const url = new URL(request.url);
-
   const {deserialize} = buildParameterSerializer();
   const parameters = deserialize(url.searchParams);
 
-  if (isExpired(listingEngineDefinition.getAccessToken())) {
-    const accessTokenCookie = await coveo_accessToken.parse(
-      request.headers.get('Cookie')
-    );
-
-    const accessToken = isExpired(accessTokenCookie)
-      ? await fetchToken()
-      : accessTokenCookie;
-
-    listingEngineDefinition.setAccessToken(accessToken);
-  }
-
-  listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
-
-  recommendationEngineDefinition.setNavigatorContextProvider(
-    () => navigatorContext
+  const listingEngineDefinition = await getEngineDefinition(
+    navigatorContext,
+    request,
+    SolutionType.listing
   );
 
-  const {country, currency, language} =
-    await externalContextService.getContextInformation();
+  const baseFetchStaticStateConfiguration =
+    await getBaseFetchStaticStateConfiguration(
+      `/browse/promotions/${params.listingId}`
+    );
 
-  const items = await externalCartService.getItems();
-
-  const staticState = await listingEngineDefinition.fetchStaticState({
+  const listingStaticState = await listingEngineDefinition.fetchStaticState({
     controllers: {
-      cart: {
-        initialState: {
-          items: toCoveoCartItems(items),
-        },
-      },
+      ...baseFetchStaticStateConfiguration.controllers,
       parameterManager: {
         initialState: {
-          parameters: parameters,
-        },
-      },
-      context: {
-        language,
-        country,
-        currency: toCoveoCurrency(currency),
-        view: {
-          url: `https://sports.barca.group/browse/promotions/${params.listingId}`,
+          parameters,
         },
       },
     },
   });
 
+  const recommendationEngineDefinition = await getEngineDefinition(
+    navigatorContext,
+    request,
+    SolutionType.recommendation
+  );
+
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       controllers: {
+        ...baseFetchStaticStateConfiguration.controllers,
         popularViewedRecs: {enabled: true},
         popularBoughtRecs: {enabled: true},
-        cart: {
-          initialState: {
-            items: toCoveoCartItems(items),
-          },
-        },
-        context: {
-          language,
-          country,
-          currency: toCoveoCurrency(currency),
-          view: {
-            url: 'https://sports.barca.group/cart',
-          },
-        },
       },
     }
   );
 
-  return Response.json(
-    {staticState, navigatorContext, recsStaticState},
-    {headers: {...setCookieHeader}}
-  );
+  return Response.json({listingStaticState, navigatorContext, recsStaticState});
 };
 
 export default function ListingRoute() {
   const params = useParams();
-  const {staticState, navigatorContext, recsStaticState} = useLoaderData<{
-    staticState: ListingStaticState;
-    navigatorContext: NavigatorContext;
-    recsStaticState: RecommendationStaticState;
-  }>();
-
-  useClientId();
+  const {listingStaticState, navigatorContext, recsStaticState} =
+    useLoaderData<{
+      listingStaticState: ListingStaticState;
+      navigatorContext: NavigatorContext;
+      recsStaticState: RecommendationStaticState;
+    }>();
 
   const getTitle = () => {
     return params.listingId
@@ -143,7 +99,7 @@ export default function ListingRoute() {
 
   return (
     <ListingProvider
-      staticState={staticState}
+      staticState={listingStaticState}
       navigatorContext={navigatorContext}
     >
       <ParameterManager url={navigatorContext.location} />
@@ -155,13 +111,16 @@ export default function ListingRoute() {
         </div>
 
         <div style={{flex: 2}}>
-          <StandaloneSearchBox />
           <BreadcrumbManager />
           <Summary />
           <Sort />
           <ProductList />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+
+          {/* The `Pagination` and `ShowMore` components showcase two frequent but mutually exclusive ways to implement
+              pagination. */}
+
           <Pagination />
+
           {/* <ShowMore
             staticState={staticState.controllers.pagination.state}
             controller={hydratedState?.controllers.pagination}

@@ -5,13 +5,13 @@ import {
 } from '@coveo/headless-react/ssr-commerce';
 import options from './commerce-engine-config';
 
-export const engineDefinition = defineCommerceEngine(options);
+const engineDefinition = defineCommerceEngine(options);
 
 export const {
-  listingEngineDefinition,
-  searchEngineDefinition,
-  recommendationEngineDefinition,
-  standaloneEngineDefinition,
+  listingEngineDefinition: _listingEngineDefinition,
+  searchEngineDefinition: _searchEngineDefinition,
+  recommendationEngineDefinition: _recommendationEngineDefinition,
+  standaloneEngineDefinition: _standaloneEngineDefinition,
   useEngine,
 } = engineDefinition;
 
@@ -38,29 +38,23 @@ export const {
   useParameterManager,
 } = engineDefinition.controllers;
 
-export type ListingStaticState = InferStaticState<
-  typeof listingEngineDefinition
->;
-export type ListingHydratedState = InferHydratedState<
-  typeof listingEngineDefinition
->;
+export type ListingEngineDefinition = typeof _listingEngineDefinition;
+export type ListingStaticState = InferStaticState<ListingEngineDefinition>;
+export type ListingHydratedState = InferHydratedState<ListingEngineDefinition>;
 
-export type SearchStaticState = InferStaticState<typeof searchEngineDefinition>;
-export type SearchHydratedState = InferHydratedState<
-  typeof searchEngineDefinition
->;
+export type SearchEngineDefinition = typeof _searchEngineDefinition;
+export type SearchStaticState = InferStaticState<SearchEngineDefinition>;
+export type SearchHydratedState = InferHydratedState<SearchEngineDefinition>;
 
-export type StandaloneStaticState = InferStaticState<
-  typeof standaloneEngineDefinition
->;
-export type StandaloneHydratedState = InferHydratedState<
-  typeof standaloneEngineDefinition
->;
+export type StandaloneEngineDefinition = typeof _standaloneEngineDefinition;
+export type StandaloneStaticState =
+  InferStaticState<StandaloneEngineDefinition>;
+export type StandaloneHydratedState =
+  InferHydratedState<StandaloneEngineDefinition>;
 
-export type RecommendationStaticState = InferStaticState<
-  typeof recommendationEngineDefinition
->;
-
-export type RecommendationHydratedState = InferHydratedState<
-  typeof recommendationEngineDefinition
->;
+export type RecommendationEngineDefinition =
+  typeof _recommendationEngineDefinition;
+export type RecommendationStaticState =
+  InferStaticState<RecommendationEngineDefinition>;
+export type RecommendationHydratedState =
+  InferHydratedState<RecommendationEngineDefinition>;
