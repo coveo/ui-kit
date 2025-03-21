@@ -1,4 +1,5 @@
 import {getSampleEngineConfiguration} from '../engine-configuration.js';
+import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
 import {CaseAssistEngineConfiguration} from './case-assist-engine-configuration.js';
 import {
   buildCaseAssistEngine,
@@ -107,10 +108,7 @@ describe('buildCaseAssistEngine', () => {
 
         expect(warnSpy).toHaveBeenCalledTimes(1);
         expect(warnSpy).toHaveBeenCalledWith(
-          '[Warning] A component from the Coveo Headless library has been instantiated with the Analytics Mode: "Next".\n' +
-            'However, this mode is not available for Coveo for Service features, and this configuration may not work as expected.\n' +
-            'Please switch back to the "legacy" analytics mode to ensure proper functionality.\n' +
-            'For more information, refer to the documentation: https://docs.coveo.com/en/o3r90189/build-a-search-ui/event-protocol'
+          nextAnalyticsUsageWithServiceFeatureWarning
         );
       });
 
