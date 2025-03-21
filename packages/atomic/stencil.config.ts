@@ -52,7 +52,6 @@ const externalizeDependenciesPlugin: PluginImpl = () => {
         if (!isCDN) {
           return false;
         }
-
         return {
           id: packageMapping.cdn,
           external: 'absolute',
