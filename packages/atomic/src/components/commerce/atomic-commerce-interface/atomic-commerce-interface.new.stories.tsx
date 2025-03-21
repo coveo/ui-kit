@@ -3,12 +3,12 @@ import {renderComponent} from '@/storybook-utils/common/render-component';
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-async function initializeSearchInterface(canvasElement: HTMLElement) {
+async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
-  const searchInterface = canvasElement.querySelector(
+  const commerceInterface = canvasElement.querySelector(
     'atomic-commerce-interface'
   );
-  await searchInterface!.initialize({
+  await commerceInterface!.initialize({
     ...getSampleCommerceEngineConfiguration(),
     ...{},
   });
@@ -20,7 +20,7 @@ const meta: Meta = {
   render: renderComponent,
   parameters,
   play: async (context) => {
-    await initializeSearchInterface(context.canvasElement);
+    await initializeCommerceInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
