@@ -53,6 +53,13 @@ export default class ExampleQuanticResultQuickview extends LightningElement {
         'The label displayed in the tooltip of the quick view button.',
       defaultValue: null,
     },
+    {
+      attribute: 'useCase',
+      label: 'Use Case',
+      description:
+        'Define which use case to test. Possible values are: search, insight',
+      defaultValue: 'search',
+    },
   ];
 
   expectedEvents = ['quantic__haspreview', 'quantic__resultactionregister'];
