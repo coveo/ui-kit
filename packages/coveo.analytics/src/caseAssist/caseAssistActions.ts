@@ -9,7 +9,8 @@ export enum CaseAssistActions {
     enterInterface = 'ticket_create_start',
     fieldUpdate = 'ticket_field_update',
     fieldSuggestionClick = 'ticket_classification_click',
-    suggestionClick = 'suggestion_click',
+    documentSuggestionClick = 'documentSuggestionClick',
+    documentSuggestionQuickview = 'documentSuggestionQuickview',
     suggestionRate = 'suggestion_rate',
     nextCaseStep = 'ticket_next_stage',
     caseCancelled = 'ticket_cancel',
@@ -78,12 +79,14 @@ export interface FieldSuggestion {
 export interface DocumentSuggestion {
     suggestionId: string;
     responseId: string;
+    permanentId: string;
     suggestion: {
         documentUri: string;
         documentUriHash: string;
         documentTitle: string;
         documentUrl: string;
         documentPosition: number;
+        sourceName: string;
     };
     fromQuickview?: boolean;
     openDocument?: boolean;
