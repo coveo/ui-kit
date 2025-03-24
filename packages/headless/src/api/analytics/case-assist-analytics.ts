@@ -34,10 +34,6 @@ export class CaseAssistAnalyticsProvider
   public getSearchUID() {
     return this.state.documentSuggestion?.status.lastResponseId as string;
   }
-
-  public getBaseMetadata() {
-    return {};
-  }
 }
 
 interface ConfigureCaseAssistAnalyticsOptions {

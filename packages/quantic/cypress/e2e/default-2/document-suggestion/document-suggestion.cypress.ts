@@ -98,7 +98,7 @@ describe('quantic-document-suggestion', () => {
                 exampleTrackingId
               );
             } else {
-              Expect.logClickingSuggestion(clickIndex, allDocuments);
+              Expect.logDocumentSuggestionClick(clickIndex, allDocuments);
             }
             Expect.displayAccordionSectionContent(true, 0);
             Expect.displayAccordionSectionContent(true, clickIndex);
@@ -149,7 +149,7 @@ describe('quantic-document-suggestion', () => {
                 exampleTrackingId
               );
             } else {
-              Expect.logClickingSuggestion(clickIndex, allDocuments, true);
+              Expect.logDocumentSuggestionQuickview(clickIndex, allDocuments);
             }
             Actions.closeQuickview();
           });
@@ -198,7 +198,7 @@ describe('quantic-document-suggestion', () => {
                 exampleTrackingId
               );
             } else {
-              Expect.logClickingSuggestion(clickIndex, allDocuments);
+              Expect.logDocumentSuggestionClick(clickIndex, allDocuments);
             }
             Expect.displayAccordionSectionContent(true, 0);
             Expect.displayAccordionSectionContent(true, clickIndex);
@@ -248,7 +248,7 @@ describe('quantic-document-suggestion', () => {
                 exampleTrackingId
               );
             } else {
-              Expect.logClickingSuggestion(clickIndex, similarDocuments);
+              Expect.logDocumentSuggestionClick(clickIndex, similarDocuments);
             }
             Expect.displayAccordionSectionContent(false, 0);
             Expect.displayAccordionSectionContent(true, clickIndex);
