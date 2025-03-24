@@ -10,29 +10,29 @@ async function validateEventWithEventAPI(request: {
   url: string;
   body: unknown;
 }) {
-  // const validateUrl = request.url.replace('/v1', '/v1/validate');
-  // const response = await fetch(validateUrl, {
-  //   method: 'post',
-  //   body: JSON.stringify(request.body),
-  //   headers: {
-  //     Accept: 'application/json',
-  //     'Content-Type': 'application/json',
-  //   },
-  // });
+  const validateUrl = request.url.replace('/v1', '/v1/validate');
+  const response = await fetch(validateUrl, {
+    method: 'post',
+    body: JSON.stringify(request.body),
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  });
 
-  // const parsedResponse = (await response.json())[0];
+  const parsedResponse = (await response.json())[0];
 
-  // parsedResponse?.errors?.forEach(
-  //   (error: {message: string; type: string; path: string}) => {
-  //     Cypress.log({
-  //       name: 'Event protocol validation',
-  //       displayName: '❌❌❌ EP validation ❌❌❌',
-  //       message: error.message,
-  //       consoleProps: () => error,
-  //     });
-  //   }
-  // );
-  // expect(parsedResponse).to.have.property('valid', true);
+  parsedResponse?.errors?.forEach(
+    (error: {message: string; type: string; path: string}) => {
+      Cypress.log({
+        name: 'Event protocol validation',
+        displayName: '❌❌❌ EP validation ❌❌❌',
+        message: error.message,
+        consoleProps: () => error,
+      });
+    }
+  );
+  expect(parsedResponse).to.have.property('valid', true);
 }
 
 function nextAnalyticsExpectations() {
@@ -194,26 +194,22 @@ function nextAnalyticsExpectations() {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
-          console.log(expectedEvent);
+          expect(eventBody).to.have.property(
+            'answerId',
+            expectedEvent.answerId
+          );
+          expect(eventBody).to.have.property(
+            'answerGenerated',
+            expectedEvent.answerGenerated
+          );
+          expect(eventMeta).to.have.property('type', 'Rga.AnswerReceived');
+          expect(eventMeta.config).to.have.property(
+            'trackingId',
+            expectedTrackingId
+          );
 
-          console.log(eventBody);
-          console.log(eventMeta);
-          // expect(eventBody).to.have.property(
-          //   'answerId',
-          //   expectedEvent.answerId
-          // );
-          // expect(eventBody).to.have.property(
-          //   'answerGenerated',
-          //   expectedEvent.answerGenerated
-          // );
-          // expect(eventMeta).to.have.property('type', 'Rga.AnswerReceived');
-          // expect(eventMeta.config).to.have.property(
-          //   'trackingId',
-          //   expectedTrackingId
-          // );
-
-          // eventBody.meta.ts = Date.now();
-          // validateEventWithEventAPI(interception.request);
+          eventBody.meta.ts = Date.now();
+          validateEventWithEventAPI(interception.request);
         })
         .logDetail('should emit the Rga.AnswerReceived event');
     },

@@ -33,7 +33,7 @@ exports[`recommendation analytics actions > #logRecommendationOpen > when analyt
       "url": "example documentUrl",
     },
     "position": 0,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;
