@@ -92,6 +92,7 @@ export default class QuanticGeneratedAnswer extends LightningElement {
    * The unique identifier of the answer configuration to use to generate the answer.
    * @api
    * @type {string}
+   * @default {undefined}
    */
   @api answerConfigurationId;
   /**
@@ -588,7 +589,11 @@ export default class QuanticGeneratedAnswer extends LightningElement {
   }
 
   get shouldDisplayCustomNoAnswerMessage() {
-    return this.state?.cannotAnswer && this.hasCustomNoAnswerMessage;
+    return (
+      this.state?.cannotAnswer &&
+      this.searchStatusState?.hasResults &&
+      this.hasCustomNoAnswerMessage
+    );
   }
 
   /**

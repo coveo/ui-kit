@@ -5,21 +5,26 @@ import {
   isErrorResponse,
 } from '../../../api/commerce/commerce-api-client.js';
 import {ChildProduct} from '../../../api/commerce/common/product.js';
+import {CommerceSuccessResponse} from '../../../api/commerce/common/response.js';
 import {ProductListingSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
-  buildCommerceAPIRequest,
-  QueryCommerceAPIThunkReturn,
-  ListingAndSearchStateNeededByQueryCommerceAPI,
-} from '../common/actions.js';
+  buildFilterableCommerceAPIRequest,
+  StateNeededForFilterableCommerceAPIRequest,
+} from '../common/filterable-commerce-api-request-builder.js';
 import {perPagePrincipalSelector} from '../pagination/pagination-selectors.js';
 import {
   moreProductsAvailableSelector,
   numberOfProductsSelector,
 } from './product-listing-selectors.js';
 
+export interface QueryCommerceAPIThunkReturn {
+  /** The successful response. */
+  response: CommerceSuccessResponse;
+}
+
 export type StateNeededByFetchProductListing =
-  ListingAndSearchStateNeededByQueryCommerceAPI & ProductListingSection;
+  StateNeededForFilterableCommerceAPIRequest & ProductListingSection;
 
 export const fetchProductListing = createAsyncThunk<
   QueryCommerceAPIThunkReturn,
@@ -33,7 +38,7 @@ export const fetchProductListing = createAsyncThunk<
   ) => {
     const state = getState();
     const fetched = await apiClient.getProductListing(
-      buildCommerceAPIRequest(state, navigatorContext)
+      buildFilterableCommerceAPIRequest(state, navigatorContext)
     );
 
     if (isErrorResponse(fetched)) {
@@ -66,7 +71,7 @@ export const fetchMoreProducts = createAsyncThunk<
     const nextPageToRequest = numberOfProducts / perPage;
 
     const fetched = await apiClient.getProductListing({
-      ...buildCommerceAPIRequest(state, navigatorContext),
+      ...buildFilterableCommerceAPIRequest(state, navigatorContext),
       page: nextPageToRequest,
     });
 

@@ -3,7 +3,8 @@ export const isFacetIncludedOnTab = (
   activeTab: string | undefined
 ) => {
   if (
-    ({...facetTabs} && Object.keys({...facetTabs}).length === 0) ||
+    (typeof facetTabs === 'object' &&
+      Object.keys({...facetTabs}).length === 0) ||
     !activeTab ||
     !facetTabs
   ) {

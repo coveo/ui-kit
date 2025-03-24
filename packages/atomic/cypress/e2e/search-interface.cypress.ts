@@ -3,6 +3,7 @@ import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {TestFixture} from '../fixtures/test-fixture';
 import {
   assertConsoleErrorMessage,
+  assertConsoleWarning,
   assertConsoleWarningMessage,
 } from './common-assertions';
 import {addQuerySummary} from './query-summary-actions';
@@ -171,7 +172,7 @@ describe('Search Interface Component', () => {
         );
 
         it('should not log any warning', () => {
-          cy.get(TestFixture.consoleAliases.warn).should('not.be.called');
+          assertConsoleWarning(false);
         });
 
         it("should update the interface's query pipeline and search hub to match the token", () => {
@@ -197,7 +198,7 @@ describe('Search Interface Component', () => {
         );
 
         it('should not log any warning', () => {
-          cy.get(TestFixture.consoleAliases.warn).should('not.be.called');
+          assertConsoleWarning(false);
         });
       });
 
