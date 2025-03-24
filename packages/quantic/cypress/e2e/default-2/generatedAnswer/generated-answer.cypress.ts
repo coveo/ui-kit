@@ -357,7 +357,7 @@ describe('quantic-generated-answer', () => {
                   NextAnalyticsExpectations.emitRgaAnswerReceived(
                     {
                       answerId: searchId,
-                      answerGenerated: true,
+                      answerGenerated: false,
                     },
                     exampleTrackingId
                   );
