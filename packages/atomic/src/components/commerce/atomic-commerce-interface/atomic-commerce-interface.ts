@@ -173,8 +173,6 @@ export class AtomicCommerceInterface
   @property({type: String, reflect: true}) CspNonce?: string;
 
   private i18Initialized: Promise<void>;
-  private connectedCallbackCalledPromise: Promise<void>;
-  private connectedCallbackResolver: () => void;
 
   public constructor() {
     super();
@@ -183,10 +181,6 @@ export class AtomicCommerceInterface
       'CoveoAtomic'
     );
     this.store = createCommerceStore(this.type);
-    ({
-      promise: this.connectedCallbackCalledPromise,
-      resolve: this.connectedCallbackResolver,
-    } = Promise.withResolvers<void>());
     const {promise, resolve} = Promise.withResolvers<void>();
     this.i18Initialized = promise;
     this.i18n = i18next.createInstance(undefined, resolve);
@@ -205,7 +199,6 @@ export class AtomicCommerceInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-    this.connectedCallbackResolver();
     this.initAriaLive();
   }
 
@@ -326,7 +319,6 @@ export class AtomicCommerceInterface
   public bindings: CommerceBindings = {} as CommerceBindings;
 
   private async internalInitialization(initEngine: () => void) {
-    await this.connectedCallbackCalledPromise;
     await Promise.all([
       this.commonInterfaceHelper.onInitialization(initEngine),
       this.i18Initialized,
