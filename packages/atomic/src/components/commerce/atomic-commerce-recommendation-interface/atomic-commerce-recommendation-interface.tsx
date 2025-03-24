@@ -18,7 +18,10 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {
+  AdoptedStylesBindings,
+  CommonBindings,
+} from '../../common/interface/bindings';
 import {
   StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
@@ -35,7 +38,7 @@ export type CommerceBindings = CommonBindings<
   CommerceRecommendationStore,
   AtomicCommerceInterface
 > &
-  NonceBindings;
+  AdoptedStylesBindings;
 
 /**
  * @alpha
@@ -203,19 +206,19 @@ export class AtomicCommerceRecommendationInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
-      createStyleElement: () => {
-        const styleTag = document.createElement('style');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
+      addAdoptedStyleSheets: (stylesheet) => {
+        const parent = this.host.getRootNode();
+        const styleSheet = stylesheet;
+        const isDocumentOrShadowRoot =
+          parent instanceof Document || parent instanceof ShadowRoot;
+
+        if (
+          styleSheet &&
+          isDocumentOrShadowRoot &&
+          !parent.adoptedStyleSheets.includes(styleSheet)
+        ) {
+          parent.adoptedStyleSheets.push(styleSheet);
         }
-        return styleTag;
-      },
-      createScriptElement: () => {
-        const styleTag = document.createElement('script');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
-        }
-        return styleTag;
       },
     };
   }
