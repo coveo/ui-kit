@@ -121,10 +121,6 @@ export default class QuanticResultQuickview extends LightningElement {
       );
       this.dispatchEvent(resultActionRegister);
     }
-    this.addEventListener(
-      'quantic__loadingstatechange',
-      this.handleLoadingStateChange
-    );
   }
 
   renderedCallback() {
@@ -156,10 +152,6 @@ export default class QuanticResultQuickview extends LightningElement {
 
   disconnectedCallback() {
     this.unsubscribe?.();
-    this.removeEventListener(
-      'quantic__loadingstatechange',
-      this.handleLoadingStateChange
-    );
   }
 
   updateState() {
@@ -223,10 +215,10 @@ export default class QuanticResultQuickview extends LightningElement {
     });
   }
 
-  handleLoadingStateChange = (event) => {
+  handleLoadingStateChange(event) {
     event.stopPropagation();
     this._isLoading = false;
-  };
+  }
 
   showTooltip() {
     this.tooltipComponent?.showTooltip();

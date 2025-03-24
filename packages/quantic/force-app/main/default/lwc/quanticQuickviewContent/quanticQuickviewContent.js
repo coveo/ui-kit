@@ -33,12 +33,7 @@ export default class QuanticQuickviewContent extends LightningElement {
 
   handleIframeLoaded() {
     this.isLoading = false;
-    this.dispatchEvent(
-      new CustomEvent('quantic__loadingstatechange', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    this.dispatchEvent(new CustomEvent('quantic__loadingstatechange'));
   }
 
   stopPropagation(evt) {
