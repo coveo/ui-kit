@@ -243,7 +243,7 @@ export const logGeneratedAnswerStreamEnd = (
     analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
       return {
         answerId: state.search?.response.searchUid || '',
-        answerGenerated: answerGenerated,
+        answerGenerated: answerGenerated ?? false,
       };
     },
   });
