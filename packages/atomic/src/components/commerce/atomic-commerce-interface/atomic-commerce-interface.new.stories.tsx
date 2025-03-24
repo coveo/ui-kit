@@ -24,7 +24,9 @@ const meta: Meta = {
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
-    await searchInterface!.executeFirstRequest();
+    setTimeout(async () => {
+      await searchInterface!.executeFirstRequest();
+    }, 250);
   },
   argTypes: {
     'attributes-language': {
@@ -43,10 +45,10 @@ export const Default: Story = {
 export const SearchBeforeInit: Story = {
   tags: ['commerce', 'test'],
   play: async (context) => {
-    const searchInterface = context.canvasElement.querySelector(
+    const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
-    await searchInterface!.executeFirstRequest();
+    await commerceInterface!.executeFirstRequest();
   },
 };
 
@@ -75,7 +77,11 @@ export const WithProductList: Story = {
             ></atomic-commerce-product-list>
             <atomic-commerce-query-error></atomic-commerce-query-error>
           </atomic-layout-section>
-          <atomic-layout-section section="pagination"></atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-pager></atomic-commerce-pager>
+            <atomic-commerce-products-per-page>
+            </atomic-commerce-products-per-page>
+          </atomic-layout-section>
         </atomic-layout-section>
       </atomic-commerce-layout>
     `,
