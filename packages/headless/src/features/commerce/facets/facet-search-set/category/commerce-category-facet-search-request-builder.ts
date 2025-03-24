@@ -1,6 +1,6 @@
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
 import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
-import {buildCommerceAPIRequest} from '../../../common/actions.js';
+import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
 import {
   AnyFacetRequest,
   CategoryFacetRequest,
@@ -25,7 +25,9 @@ export const buildCategoryFacetSearchRequest = (
       ? categoryFacet && getPathToSelectedCategoryFacetItem(categoryFacet)
       : [];
   const ignorePaths = path.length ? [path] : [];
-  const query = state.commerceQuery?.query;
+  const query = isFieldSuggestionsRequest
+    ? baseFacetQuery
+    : state.commerceQuery?.query;
 
   const {
     url,
@@ -38,14 +40,14 @@ export const buildCategoryFacetSearchRequest = (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state, navigatorContext);
+  } = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
-    facetQuery,
+    facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     ignorePaths,
     trackingId,
     language,

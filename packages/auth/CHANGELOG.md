@@ -1,3 +1,11 @@
+## <small>2.0.11 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>2.0.10 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
 ## <small>2.0.8 (2025-02-26)</small>
 
 - chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)

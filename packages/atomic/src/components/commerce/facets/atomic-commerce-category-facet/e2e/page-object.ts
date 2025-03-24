@@ -17,4 +17,11 @@ export class CategoryFacetPageObject extends AnyFacetPageObject<'atomic-commerce
   getFacetValue(value: string) {
     return this.page.getByLabel(`Inclusion filter on ${value};`);
   }
+
+  getSearchResult(value: string) {
+    return this.page
+      .locator('[part="search-results"]')
+      .locator('li')
+      .getByTitle(value);
+  }
 }

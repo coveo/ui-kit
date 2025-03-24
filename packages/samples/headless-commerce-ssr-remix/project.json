@@ -5,7 +5,7 @@
     "cached:build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build; fi",
+        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build\"",
         "cwd": "packages/samples/headless-commerce-ssr-remix"
       }
     },
