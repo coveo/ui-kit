@@ -78,6 +78,26 @@ exports[`generated answer analytics actions > when analyticsMode is \`next\` > s
 ]
 `;
 
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerStreamEnd with generated and 'empty' answer 1`] = `
+[
+  "Rga.AnswerReceived",
+  {
+    "answerGenerated": true,
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerStreamEnd with not generated and 'empty' answer 1`] = `
+[
+  "Rga.AnswerReceived",
+  {
+    "answerGenerated": false,
+    "answerId": "456",
+  },
+]
+`;
+
 exports[`generated answer analytics actions > when analyticsMode is \`next\` > should log #logHoverCitation with the right payload 1`] = `
 [
   "Rga.CitationHover",
