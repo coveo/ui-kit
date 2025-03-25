@@ -188,6 +188,7 @@ export class SmartSnippetFeedbackModalCommon {
 
     return (
       <atomic-modal
+        data-nosnippet
         fullscreen={false}
         source={this.props.getSource()}
         container={this.props.getHost()}

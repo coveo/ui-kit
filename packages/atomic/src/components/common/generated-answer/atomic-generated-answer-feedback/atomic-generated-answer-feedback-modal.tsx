@@ -432,6 +432,7 @@ export class AtomicGeneratedAnswerFeedbackModal
 
     return (
       <atomic-modal
+        data-nosnippet
         fullscreen={false}
         isOpen={this.isOpen}
         close={() => this.close()}

@@ -74,6 +74,7 @@ export const RefineModal: FunctionalComponent<RefineModalProps> = (
 
   return (
     <atomic-modal
+      data-nosnippet
       fullscreen
       isOpen={props.isOpen}
       source={props.openButton}

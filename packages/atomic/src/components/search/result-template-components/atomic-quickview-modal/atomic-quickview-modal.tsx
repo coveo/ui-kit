@@ -334,6 +334,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
   public render() {
     return (
       <atomic-modal
+        data-nosnippet
         fullscreen={this.bindings.store.isMobile()}
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
