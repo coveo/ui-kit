@@ -18,7 +18,7 @@ exports[`#logDocumentQuickview > when analyticsMode is \`next\` > should call re
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;
