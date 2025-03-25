@@ -114,7 +114,7 @@ export const InterceptAliases = {
       SubmitFeedback: nextAnalyticsAlias('Rga.SubmitFeedback'),
       CitationHover: nextAnalyticsAlias('Rga.CitationHover'),
       CitationClick: nextAnalyticsAlias('Rga.CitationClick'),
-      StreamEnd: nextAnalyticsAlias('Rga.StreamEnd'),
+      AnswerReceived: nextAnalyticsAlias('Rga.AnswerReceived'),
     },
     CaseAssist: {
       DocumentSuggestionClick: nextAnalyticsAlias(

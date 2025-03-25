@@ -44,6 +44,8 @@ export default class QuanticCaseAssistInterface extends LightningElement {
   engineOptions;
   /** @type {boolean} */
   isCaseStartLogged = false;
+  /** @type {string} */
+  analyticsOriginContext = 'CaseAssist';
 
   connectedCallback() {
     loadDependencies(this, HeadlessBundleNames.caseAssist)
@@ -61,6 +63,7 @@ export default class QuanticCaseAssistInterface extends LightningElement {
                     searchHub: this.searchHub,
                     analytics: {
                       analyticsMode: 'legacy',
+                      originContext: this.analyticsOriginContext,
                       ...(document.referrer && {
                         originLevel3: document.referrer.substring(0, 256),
                       }),

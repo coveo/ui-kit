@@ -1,5 +1,3 @@
-import {SearchPageClientProvider} from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {
   ConfigurationSection,
@@ -23,19 +21,13 @@ export type StateNeededByBaseAnalyticsProvider = ConfigurationSection &
 
 export abstract class BaseAnalyticsProvider<
   T extends StateNeededByBaseAnalyticsProvider,
-> implements SearchPageClientProvider
-{
+> {
   protected readonly state: T;
   constructor(protected getState: () => T) {
     this.state = getState();
   }
 
   public abstract getSearchUID(): string;
-  public abstract getPipeline(): string;
-  public abstract getSearchEventRequestPayload(): Omit<
-    SearchEventRequest,
-    'actionCause' | 'searchQueryUid'
-  >;
 
   public getLanguage() {
     return getLanguage(this.state);

@@ -14,7 +14,7 @@ export const QueryErrorDetails: FunctionalComponent<QueryErrorDetailsProps> = ({
   return (
     <pre
       part="error-info"
-      class="border-neutral bg-neutral-light mt-8 whitespace-pre-wrap rounded border p-3 text-left"
+      class="border-neutral bg-neutral-light mt-8 rounded border p-3 text-left whitespace-pre-wrap"
     >
       <code>{JSON.stringify(error, null, 2)}</code>
     </pre>
