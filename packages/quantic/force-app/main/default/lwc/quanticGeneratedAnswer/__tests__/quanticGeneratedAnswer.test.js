@@ -734,6 +734,10 @@ describe('c-quantic-generated-answer', () => {
           answerContentFormat: exampleAnswerContentFormat,
           cannotAnswer: true,
         };
+        searchStatusState = {
+          ...initialSearchStatusState,
+          hasResults: true,
+        };
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
       });
@@ -776,6 +780,33 @@ describe('c-quantic-generated-answer', () => {
             selectors.generatedAnswerNoAnswerCard
           );
           expect(generatedAnswerCardNoAnswer).not.toBeNull();
+        });
+      });
+
+      describe('when no results are returned', () => {
+        beforeEach(() => {
+          searchStatusState = {
+            ...initialSearchStatusState,
+            hasResults: false,
+          };
+        });
+
+        it('should not display the generated answer or the no generated answer card', async () => {
+          const element = createTestComponent(
+            defaultOptions,
+            exampleAssignedElements
+          );
+          await flushPromises();
+
+          const generatedAnswerCard = element.shadowRoot.querySelector(
+            selectors.generatedAnswerCard
+          );
+          expect(generatedAnswerCard).toBeNull();
+
+          const generatedAnswerCardNoAnswer = element.shadowRoot.querySelector(
+            selectors.generatedAnswerNoAnswerCard
+          );
+          expect(generatedAnswerCardNoAnswer).toBeNull();
         });
       });
     });
