@@ -1,0 +1,49 @@
+import {recentQueriesMaxLength} from '@/shared/recent-queries-config';
+import {useEffect} from 'react';
+
+const recentQueriesKeyStorageKey = 'commerce-recent-queries';
+
+function getStoredRecentQueries(): string[] {
+  const storedQueries = localStorage.getItem(recentQueriesKeyStorageKey);
+  if (storedQueries) {
+    try {
+      return JSON.parse(storedQueries);
+    } catch (error) {
+      console.error('Failed to parse recent queries from localStorage:', error);
+    }
+  }
+  return [];
+}
+
+function saveRecentQueries(queries: string[]) {
+  localStorage.setItem(
+    recentQueriesKeyStorageKey,
+    JSON.stringify(queries.slice(0, recentQueriesMaxLength))
+  );
+}
+
+export function useInitializeRecentQueries(
+  updateRecentQueries?: (queries: string[]) => void
+) {
+  useEffect(() => {
+    const queries = getStoredRecentQueries();
+    if (updateRecentQueries) {
+      updateRecentQueries(queries);
+    }
+  }, [updateRecentQueries]);
+}
+
+export function usePersistQuery(query: string | null) {
+  useEffect(() => {
+    console.log('new qu');
+    if (!query || query.trim() === '') {
+      return;
+    }
+
+    const queries = getStoredRecentQueries();
+    if (!queries.includes(query)) {
+      queries.unshift(query);
+      saveRecentQueries(queries);
+    }
+  }, [query]);
+}
