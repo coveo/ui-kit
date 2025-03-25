@@ -42,7 +42,7 @@ export const logRecommendationOpen = (result: Result): ClickAction =>
       const docInfo = partialRecommendationInformation(result, state);
       const docId = documentIdentifier(result);
       return {
-        searchUid: result.searchUid ?? '',
+        responseId: result.searchUid ?? '',
         position: docInfo.documentPosition,
         itemMetadata: {
           uniqueFieldName: docId.contentIDKey,

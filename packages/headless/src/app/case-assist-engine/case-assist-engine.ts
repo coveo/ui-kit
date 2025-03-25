@@ -15,6 +15,7 @@ import {
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
+  warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
 import {buildLogger} from '../logger.js';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments.js';
@@ -93,6 +94,9 @@ export function buildCaseAssistEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
 
   const {caseAssistId, locale, searchHub, proxyBaseUrl} = options.configuration;
 
