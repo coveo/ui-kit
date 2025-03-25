@@ -32,7 +32,7 @@ export class CaseAssistAnalyticsProvider
   implements CaseAssistClientProvider
 {
   public getSearchUID() {
-    return this.state.documentSuggestion?.status.lastResponseId as string;
+    return this.state.documentSuggestion?.status.lastResponseId ?? '';
   }
 }
 
