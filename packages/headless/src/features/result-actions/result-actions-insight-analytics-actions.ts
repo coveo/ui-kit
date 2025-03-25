@@ -32,7 +32,7 @@ export const logCopyToClipboard = (result: Result): InsightAction =>
       return {
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: result.searchUid || '',
+        responseId: result.searchUid || '',
         action: 'copyToClipboard',
         context: analyticsEventCaseContext(state),
       };
@@ -59,7 +59,7 @@ export const logCaseSendEmail = (result: Result): InsightAction =>
       return {
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: result.searchUid || '',
+        responseId: result.searchUid || '',
         action: 'sendEmail',
         context: analyticsEventCaseContext(state),
       };
@@ -86,7 +86,7 @@ export const logFeedItemTextPost = (result: Result): InsightAction =>
       return {
         itemMetadata: analyticsEventItemMetadata(result, state),
         position: information.documentPosition,
-        searchUid: result.searchUid || '',
+        responseId: result.searchUid || '',
         action: 'postToFeed',
         context: analyticsEventCaseContext(state),
       };

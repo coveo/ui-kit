@@ -1,5 +1,8 @@
 import {InterceptAliases} from '../../../page-objects/case-assist';
-import {ComponentErrorExpectations} from '../../common-expectations';
+import {
+  ComponentErrorExpectations,
+  getAnalyticsBodyFromRequest,
+} from '../../common-expectations';
 import {should} from '../../common-selectors';
 import {
   DocumentSuggestionSelector,
@@ -71,39 +74,58 @@ function documentSuggestionExpectations(selector: DocumentSuggestionSelector) {
         .logDetail(`should display ${value} document suggestions`);
     },
 
-    logClickingSuggestion: (
+    logDocumentSuggestionClick: (
       index: number,
-      documents: Array<{title: string; fields: Fields}>,
-      fromQuickview = false
+      documents: Array<{title: string; fields: Fields}>
     ) => {
-      cy.wait(InterceptAliases.UA.SuggestionClick)
+      cy.wait(InterceptAliases.UA.documentSuggestionClick)
         .then((interception) => {
-          const analyticsBody = interception.request.body;
+          const analyticsBody = getAnalyticsBodyFromRequest(
+            interception.request
+          );
           selector
             .accordionSection(index)
             .invoke('attr', 'data-id')
-            .should('eq', analyticsBody.svc_action_data.suggestionId);
-          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+            .should('eq', analyticsBody.customData.contentIDValue);
+          expect(analyticsBody).to.have.property(
             'documentTitle',
             documents[index].title
           );
-          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
+          expect(analyticsBody).to.have.property(
             'documentUri',
             documents[index].fields.uri
           );
-          expect(analyticsBody.svc_action_data.suggestion).to.have.property(
-            'documentPosition',
-            index + 1
-          );
-          expect(analyticsBody.searchHub).to.eq(testOrigin);
-          if (fromQuickview) {
-            expect(analyticsBody.svc_action_data).to.have.property(
-              'fromQuickview',
-              true
-            );
-          }
+          expect(analyticsBody).to.have.property('documentPosition', index + 1);
+          expect(analyticsBody.originLevel1).to.eq(testOrigin);
         })
-        .logDetail('should log the "suggestion_click" UA event');
+        .logDetail('should log the "documentSuggestionClick" UA event');
+    },
+
+    logDocumentSuggestionQuickview: (
+      index: number,
+      documents: Array<{title: string; fields: Fields}>
+    ) => {
+      cy.wait(InterceptAliases.UA.documentSuggestionQuickview)
+        .then((interception) => {
+          const analyticsBody = getAnalyticsBodyFromRequest(
+            interception.request
+          );
+          selector
+            .accordionSection(index)
+            .invoke('attr', 'data-id')
+            .should('eq', analyticsBody.customData.contentIDValue);
+          expect(analyticsBody).to.have.property(
+            'documentTitle',
+            documents[index].title
+          );
+          expect(analyticsBody).to.have.property(
+            'documentUri',
+            documents[index].fields.uri
+          );
+          expect(analyticsBody).to.have.property('documentPosition', index + 1);
+          expect(analyticsBody.originLevel1).to.eq(testOrigin);
+        })
+        .logDetail('should log the "documentSuggestionQuickview UA event');
     },
 
     logRatingSuggestion: (
