@@ -625,7 +625,10 @@ export class AtomicCommerceSearchBox
       onInput: (e: Event) =>
         this.onInput((e.target as HTMLTextAreaElement).value),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => this.searchBox.clear(),
+      onClear: () => {
+        this.searchBox.clear();
+        this.suggestionManager.clearSuggestions();
+      },
       popup: {
         id: `${this.id}-popup`,
         activeDescendant: this.suggestionManager.activeDescendant,
