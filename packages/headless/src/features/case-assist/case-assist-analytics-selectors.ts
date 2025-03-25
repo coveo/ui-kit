@@ -134,15 +134,15 @@ export const caseAssistDocumentSuggestionSelector = (
 
   const result = {
     suggestionId: suggestion.uniqueId,
-    permanentId: suggestion.fields['permanentid'] as string,
+    permanentId: suggestion.fields['permanentid'],
     responseId: state.documentSuggestion?.status.lastResponseId ?? '',
     suggestion: {
-      documentUri: suggestion.fields['uri'] as string,
-      documentUriHash: suggestion.fields['urihash'] as string,
+      documentUri: suggestion.fields['uri'],
+      documentUriHash: suggestion.fields['urihash'],
       documentTitle: suggestion.title,
       documentUrl: suggestion.clickUri,
       documentPosition: suggestionIdx ?? 0,
-      sourceName: suggestion.fields['source'] as string,
+      sourceName: suggestion.fields['source'],
     },
   };
 
