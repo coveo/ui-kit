@@ -51,7 +51,13 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this._initialChoice;
   }
   set initialChoice(value) {
-    this._initialChoice = value;
+    if (Number(value) >= 0) {
+      this._initialChoice = value;
+    } else {
+      console.warn(
+        `The "initialChoice" option value "${value}" must be a number greater than 0. Defaulting to the first choices value.`
+      );
+    }
   }
 
   /** @type {boolean}*/
@@ -136,9 +142,9 @@ export default class QuanticResultsPerPage extends LightningElement {
     let valid = true;
     value.split(',').forEach((choice) => {
       const parsedChoice = parseInt(choice, 10);
-      if (isNaN(parsedChoice)) {
+      if (isNaN(parsedChoice) || parsedChoice <= 0) {
         console.error(
-          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+          `The choice value "${choice}" from the "choicesDisplayed" option must be a positive number.`
         );
         this.setInitializationError();
         valid = false;
@@ -149,8 +155,8 @@ export default class QuanticResultsPerPage extends LightningElement {
 
   validateInitialChoice() {
     if (!this.choices.includes(Number(this.initialChoice))) {
-      console.error(
-        `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}". Defaulting to the first value of the choices.`
+      console.warn(
+        `The initialChoice "${this.initialChoice}" is not included in the choicesDisplayed "${this.choicesDisplayed}". Defaulting to the first value in choicesDisplayed.`
       );
       this._initialChoice = this.choices[0];
     }
