@@ -1,21 +1,21 @@
-import {SearchOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
+import {StandaloneOnlyControllerDefinitionWithoutProps} from '../../../app/commerce-ssr-engine/types/common.js';
 import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-trigger.js';
 import {buildRedirectionTrigger} from './headless-redirection-trigger.js';
 
 export type {RedirectionTriggerState} from '../../core/triggers/headless-core-redirection-trigger.js';
 export type {RedirectionTrigger};
 export interface RedirectionTriggerDefinition
-  extends SearchOnlyControllerDefinitionWithoutProps<RedirectionTrigger> {}
+  extends StandaloneOnlyControllerDefinitionWithoutProps<RedirectionTrigger> {}
 
 /**
- * Defines the `NotifyTrigger` controller for the purpose of server-side rendering.
+ * Defines the `RedirectionTrigger` controller for the purpose of server-side rendering.
  * @group Definers
  *
- * @returns The `NotifyTrigger` controller definition.
+ * @returns The `RedirectionTrigger` controller definition.
  */
 export function defineRedirectionTrigger(): RedirectionTriggerDefinition {
   return {
-    search: true,
+    standalone: true,
     build: (engine) => buildRedirectionTrigger(engine),
   };
 }

@@ -439,6 +439,24 @@ interface ListingOnlyController {
   [SolutionType.listing]: true;
 }
 
+interface StandaloneOnlyController {
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}
+
+interface SearchAndStandaloneController {
+  /**
+   * @internal
+   */
+  [SolutionType.search]: true;
+  /**
+   * @internal
+   */
+  [SolutionType.standalone]: true;
+}
+
 interface RecommendationOnlyController {
   /**
    * @internal
@@ -476,6 +494,15 @@ export type SearchOnlyControllerDefinitionWithProps<
   TController extends Controller,
   TProps,
 > = ControllerDefinitionWithProps<TController, TProps> & SearchOnlyController;
+
+export type StandaloneOnlyControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> & StandaloneOnlyController;
+
+export type SearchAndStandaloneControllerDefinitionWithoutProps<
+  TController extends Controller,
+> = ControllerDefinitionWithoutProps<TController> &
+  SearchAndStandaloneController;
 
 export type ListingAndStandaloneControllerWithoutProps<
   TController extends Controller,
