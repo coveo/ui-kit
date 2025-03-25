@@ -7,7 +7,11 @@ export const buildMockDocumentSuggestion = (
   title: 'Mock Document',
   excerpt: 'This is a dang good mock document.',
   fields: {
+    permanentid: 'example permanent Id',
     type: 'mock',
+    source: 'example source',
+    uri: 'example uri',
+    urihash: 'example urihash',
   },
   hasHtmlVersion: true,
   uniqueId: '123ID',
