@@ -3053,7 +3053,9 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 //#region Lit Declarations
 
 @ProxyCmp({
-  
+  inputs: [],
+  methods: ['initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-load-more-products') || customElements.define('atomic-commerce-load-more-products', LitAtomicCommerceLoadMoreProducts);}
 })
 @Component({
   selector: 'atomic-commerce-load-more-products',
@@ -3061,7 +3063,7 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  
+  inputs: []
 })
 export class AtomicCommerceLoadMoreProducts {
   protected readonly el: HTMLElement;

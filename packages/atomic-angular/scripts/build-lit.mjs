@@ -22,7 +22,9 @@ const declarationToDefineCustomElementImport = (declaration) => `defineCustomEle
 const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
 `
 @ProxyCmp({
-  ${declaration.attributes?.length ?`inputs: [${declaration.attributes?.map(attr => `'${attr.fieldName}'`).join(', ')}]`: ''}
+  inputs: [${(declaration.attributes || []).map(attr => `'${attr.fieldName}'`).join(', ')}],
+  methods: [${(declaration.members || []).map(method => `'${method.name}'`).join(', ')}],
+  defineCustomElementFn: ${defineCustomElementFn}
 })
 @Component({
   selector: '${declaration.tagName}',
@@ -30,7 +32,7 @@ const declarationToProxyCmp = (declaration, defineCustomElementFn) =>
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  ${declaration.attributes?.length ?`inputs: [${declaration.attributes.map(attr => `'${attr.fieldName}'`).join(', ')}]`: ''}
+  inputs: [${(declaration.attributes || []).map(attr => `'${attr.fieldName}'`).join(', ')}]
 })
 export class ${declaration.name} {
   protected readonly el: HTMLElement;
