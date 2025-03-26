@@ -25,7 +25,6 @@ export class AtomicRelevanceInspector {
   public render() {
     return (
       <atomic-modal
-        data-nosnippet
         exportparts="footer"
         isOpen={this.open}
         close={() => {

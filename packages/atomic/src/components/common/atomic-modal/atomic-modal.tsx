@@ -182,7 +182,7 @@ export class AtomicModal implements InitializableComponent<AnyBindings> {
     );
 
     return (
-      <Host class={this.getClasses().join(' ')}>
+      <Host class={this.getClasses().join(' ')} data-nosnippet>
         <div
           part="backdrop"
           class={` ${this.boundary === 'page' ? 'fixed' : 'absolute'} top-0 right-0 bottom-0 left-0 z-100`}

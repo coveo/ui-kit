@@ -136,7 +136,6 @@ export class AtomicInsightUserActionsModal
           </style>
         )}
         <atomic-modal
-          data-nosnippet
           fullscreen
           isOpen={this.isOpen}
           source={this.openButton}
