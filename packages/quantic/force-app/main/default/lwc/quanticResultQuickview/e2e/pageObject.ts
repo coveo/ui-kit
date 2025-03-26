@@ -1,39 +1,31 @@
-import type {Locator, Page} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
+import {isUaClickEvent} from '../../../../../../playwright/utils/requests';
 
 export class ResultQuickviewObject {
   constructor(public page: Page) {
     this.page = page;
   }
 
-  get button(): Locator {
+  get quickviewButton(): Locator {
     return this.page.locator('c-quantic-result-quickview button');
   }
 
-  get buttonIcon(): Locator {
-    return this.button.locator('lightning-icon');
-  }
-
-  get buttonTooltip(): Locator {
-    return this.button
-      .locator('..')
-      .locator('c-quantic-tooltip div[slot="content"]');
-  }
-
-  get modalTitle(): Locator {
-    return this.page.locator(
-      'c-quantic-result-quickview header c-quantic-result-highlighted-text-field span'
-    );
-  }
-
-  get modalContent(): Locator {
+  get quickviewContent(): Locator {
     return this.page.locator('c-quantic-quickview-content');
-  }
-
-  async clickQuickviewButton(): Promise<void> {
-    await this.button.click();
   }
 
   async receivedEvents(): Promise<Array<string>> {
     return this.page.locator('.event__received').allTextContents();
+  }
+
+  async waitForQuickviewClickEvent(): Promise<Request> {
+    return this.page.waitForRequest((request) => {
+      if (isUaClickEvent(request)) {
+        const requestBody = request.postDataJSON?.();
+        const clickEvent = JSON.parse(requestBody?.clickEvent);
+        return clickEvent?.actionCause === 'documentQuickview';
+      }
+      return false;
+    });
   }
 }

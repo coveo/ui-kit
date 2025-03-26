@@ -4,7 +4,11 @@ import {createElement} from 'lwc';
 import QuanticResultQuickview from '../quanticResultQuickview';
 
 const selectors = {
-  quickViewButton: '[data-cy="quick-view-button"]',
+  quickviewButton: '[data-cy="quick-view-button"]',
+  closeQuickviewButton: '[data-cy="quickview-modal__close-button"]',
+  quickviewContent: 'c-quantic-quickview-content',
+  icon: 'lightning-icon',
+  tooltip: 'c-quantic-tooltip',
 };
 
 jest.mock('c/quanticHeadlessLoader');
@@ -68,10 +72,10 @@ const functionMocks = {
 
 let useCase = 'search';
 
-function mockHeadless() {
+function mockHeadless(hasPreview = true) {
   jest.spyOn(mockHeadlessLoader, 'getHeadlessBundle').mockReturnValue({
     buildQuickview: () => ({
-      state: {resultHasPreview: true},
+      state: {resultHasPreview: hasPreview},
       fetchResultContent: jest.fn(),
       subscribe: jest.fn((callback) => {
         callback();
@@ -131,41 +135,158 @@ describe('c-quantic-result-quick-view', () => {
     cleanup();
   });
 
-  describe('when the component is used in the search use case', () => {
-    beforeAll(() => {
-      useCase = 'search';
+  it('should dispatch the pushRecentResult action', async () => {
+    const element = createTestComponent();
+    await flushPromises();
+
+    const quickViewButton = element.shadowRoot.querySelector(
+      selectors.quickviewButton
+    );
+    await quickViewButton.click();
+    await flushPromises();
+
+    expect(functionMocks.pushRecentResult).toHaveBeenCalled();
+  });
+
+  describe('when the result has no preview', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+      mockHeadless(false);
+      mockBueno();
     });
 
-    it('should dispatch the pushRecentResult action', async () => {
+    afterEach(() => {
+      cleanup();
+    });
+
+    it('should disable the quickview button', async () => {
       const element = createTestComponent();
       await flushPromises();
 
       const quickViewButton = element.shadowRoot.querySelector(
-        selectors.quickViewButton
+        selectors.quickviewButton
       );
-      await quickViewButton.click();
-      await flushPromises();
 
-      expect(functionMocks.pushRecentResult).toHaveBeenCalled();
+      expect(quickViewButton.disabled).toBeTruthy();
     });
   });
 
-  describe('when the component is not used in the search use case', () => {
-    beforeAll(() => {
-      useCase = 'insight';
+  describe('when the component has custom properties', () => {
+    it('should render the custom icon correctly', async () => {
+      const customOptions = {
+        result: exampleResult,
+        previewButtonIcon: 'utility:file',
+      };
+      const element = createTestComponent(customOptions);
+      await flushPromises();
+
+      const quickViewIcon = element.shadowRoot.querySelector(selectors.icon);
+
+      expect(quickViewIcon.iconName).toBe('utility:file');
     });
 
-    it('should not dispatch the pushRecentResult action', async () => {
+    it('should render the custom label correctly', async () => {
+      const customOptions = {
+        result: exampleResult,
+        previewButtonLabel: 'Custom Label',
+      };
+      const element = createTestComponent(customOptions);
+      await flushPromises();
+
+      const quickViewButton = element.shadowRoot.querySelector(
+        selectors.quickviewButton
+      );
+
+      expect(quickViewButton.textContent).toContain('Custom Label');
+      expect(quickViewButton.querySelector(selectors.icon).classList).toContain(
+        'slds-button__icon_right'
+      );
+    });
+
+    it.each([['brand'], ['outline_brand'], ['result-action'], ['turbo']])(
+      'should render the custom variant %s',
+      async (testVariant) => {
+        const customOptions = {
+          result: exampleResult,
+          previewButtonVariant: testVariant,
+        };
+        const element = createTestComponent(customOptions);
+        await flushPromises();
+
+        const quickViewButton = element.shadowRoot.querySelector(
+          selectors.quickviewButton
+        );
+
+        const expectedClass =
+          testVariant === 'result-action'
+            ? 'slds-button_icon-border-filled'
+            : `slds-button_${testVariant}`;
+        expect(quickViewButton.classList).toContain(expectedClass);
+      }
+    );
+
+    it('should render the tooltip correctly', async () => {
+      const customOptions = {
+        result: exampleResult,
+        tooltip: 'Custom Tooltip',
+      };
+      const element = createTestComponent(customOptions);
+      await flushPromises();
+
+      const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
+
+      expect(tooltip.textContent).toBe('Custom Tooltip');
+    });
+
+    it('should render the maximum preview size correctly', async () => {
+      const customOptions = {
+        result: exampleResult,
+        maximumPreviewSize: 500,
+      };
+      const element = createTestComponent(customOptions);
+      await flushPromises();
+
+      expect(element.maximumPreviewSize).toBe(500);
+    });
+  });
+
+  describe('when the quickview is opened and closed', () => {
+    it('should open the quickview modal', async () => {
       const element = createTestComponent();
       await flushPromises();
 
       const quickViewButton = element.shadowRoot.querySelector(
-        selectors.quickViewButton
+        selectors.quickviewButton
       );
       await quickViewButton.click();
       await flushPromises();
 
-      expect(functionMocks.pushRecentResult).not.toHaveBeenCalled();
+      const modal = element.shadowRoot.querySelector(
+        selectors.quickviewContent
+      );
+      expect(modal).not.toBeNull();
+    });
+
+    it('should close the quickview modal', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const quickViewButton = element.shadowRoot.querySelector(
+        selectors.quickviewButton
+      );
+      await quickViewButton.click();
+      await flushPromises();
+
+      const closeButton = element.shadowRoot.querySelector(
+        selectors.closeQuickviewButton
+      );
+      await closeButton.click();
+      await flushPromises();
+
+      const modal = element.shadowRoot.querySelector(
+        selectors.quickviewContent
+      );
+      expect(modal).toBeNull();
     });
   });
 });

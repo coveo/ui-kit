@@ -13,7 +13,7 @@ export const analyticsSearchesUrlRegex =
 export const analyticsCustomUrlRegex = /\/rest\/v15\/analytics\/custom/;
 export const analyticsClickUrlRegex = /\/rest(\/ua)?\/v15\/analytics\/click/;
 export const analyticsCollectUrlRegex = /\/rest\/v15\/analytics\/collect/;
-export const searchHtmlRequestRegex = /\/rest\/search\/v2\/html.*/;
+export const searchQuickviewRequestRegex = /\/rest\/search\/v2\/html.*/;
 export const insightQuickviewRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/quickview/;
 

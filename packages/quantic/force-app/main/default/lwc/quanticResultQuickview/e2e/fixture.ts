@@ -3,7 +3,7 @@ import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {
   searchRequestRegex,
   insightSearchRequestRegex,
-  searchHtmlRequestRegex,
+  searchQuickviewRequestRegex,
   insightQuickviewRequestRegex,
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
@@ -20,17 +20,11 @@ interface ResultQuickviewOptions {
   previewButtonVariant: string;
   tooltip: string;
 }
-
-type QuanticResultQuickviewE2EFixtures = {
+type QuanticResultQuickviewE2ESearchFixtures = {
   resultQuickview: ResultQuickviewObject;
   search: SearchObjectWithQuickview;
   options: Partial<ResultQuickviewOptions>;
 };
-
-type QuanticResultQuickviewE2ESearchFixtures =
-  QuanticResultQuickviewE2EFixtures & {
-    urlHash: string;
-  };
 
 type QuanticResultQuickviewE2EInsightFixtures =
   QuanticResultQuickviewE2ESearchFixtures & {
@@ -40,20 +34,17 @@ type QuanticResultQuickviewE2EInsightFixtures =
 export const testSearch =
   quanticBase.extend<QuanticResultQuickviewE2ESearchFixtures>({
     options: {},
-    urlHash: '',
     search: async ({page}, use) => {
       await use(
         new SearchObjectWithQuickview(
           page,
           searchRequestRegex,
-          searchHtmlRequestRegex
+          searchQuickviewRequestRegex
         )
       );
     },
-    resultQuickview: async ({page, options, configuration, urlHash}, use) => {
-      await page.goto(
-        urlHash ? `${resultQuickviewUrl}#${urlHash}` : resultQuickviewUrl
-      );
+    resultQuickview: async ({page, options, configuration}, use) => {
+      await page.goto(resultQuickviewUrl);
       await configuration.configure(options);
       await use(new ResultQuickviewObject(page));
     },
