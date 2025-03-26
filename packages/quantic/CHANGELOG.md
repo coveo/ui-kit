@@ -1,3 +1,12 @@
+## 3.16.0 (2025-03-26)
+
+- feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
+- feat(headless): replaced searchUid by responseId and adapted to latest genqa analytics schemas (#501 ([2f2c123](https://github.com/coveo/ui-kit/commits/2f2c123)), closes [#5018](https://github.com/coveo/ui-kit/issues/5018)
+- fix(quantic): added origin context to quantic case assist interface (#5091) ([33435f6](https://github.com/coveo/ui-kit/commits/33435f6)), closes [#5091](https://github.com/coveo/ui-kit/issues/5091)
+- fix(quantic): custom no-answer message displayed when search returns no results (#5084) ([1a38e96](https://github.com/coveo/ui-kit/commits/1a38e96)), closes [#5084](https://github.com/coveo/ui-kit/issues/5084)
+- fix(quantic): fixed how the quantic\_\_loadingstatechange event is handled (#5090) ([b874a79](https://github.com/coveo/ui-kit/commits/b874a79)), closes [#5090](https://github.com/coveo/ui-kit/issues/5090)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
 ## <small>3.15.4 (2025-03-19)</small>
 
 - fix(quantic): delay caused by recent queries fixed (#5060) ([31a14b9](https://github.com/coveo/ui-kit/commits/31a14b9)), closes [#5060](https://github.com/coveo/ui-kit/issues/5060)
