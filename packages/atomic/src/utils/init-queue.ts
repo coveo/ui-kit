@@ -43,11 +43,13 @@ export function markParentAsReady(parent: Element) {
   parentReadyMap.set(parent, true);
   const eventQueueMap = getEventQueueMap();
   const eventQueue = eventQueueMap.get(parent) || [];
+  eventQueue.reverse();
   while (eventQueue.length > 0) {
-    const {event, element} = eventQueue.shift()!;
+    const {event, element} = eventQueue.pop()!;
     element.dispatchEvent(event);
   }
   parent.dispatchEvent(new CustomEvent('atomic/parentReady', {bubbles: true}));
+  eventQueueMap.delete(parent);
 }
 
 export function isParentReady(parent: Element): boolean {
