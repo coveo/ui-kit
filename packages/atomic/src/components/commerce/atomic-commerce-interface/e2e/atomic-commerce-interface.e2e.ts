@@ -51,7 +51,9 @@ test.describe('AtomicCommerceInterface', () => {
           story: 'with-product-list',
           args: {language: 'fr'},
         });
-        await expect(commerceInterface.interface()).toContainText('Produit');
+        await expect(
+          commerceInterface.searchBox().getByPlaceholder('Recherche')
+        ).toBeVisible();
       });
 
       test('should default to english when an invalid language is selected', async ({
@@ -61,7 +63,9 @@ test.describe('AtomicCommerceInterface', () => {
           story: 'with-product-list',
           args: {language: 'foo'},
         });
-        await expect(commerceInterface.interface()).toContainText('Product');
+        await expect(
+          commerceInterface.searchBox().getByPlaceholder('search')
+        ).toBeVisible();
       });
 
       test('should default back to the non region locale (e.g., "es-ES" to "es")', async ({
@@ -72,7 +76,9 @@ test.describe('AtomicCommerceInterface', () => {
           args: {language: 'es-ES'},
         });
 
-        await expect(commerceInterface.interface()).toContainText('Productos');
+        await expect(
+          commerceInterface.searchBox().getByPlaceholder('buscar')
+        ).toBeVisible();
       });
 
       test('should support changing the language of the interface after initialization', async ({
@@ -89,7 +95,9 @@ test.describe('AtomicCommerceInterface', () => {
           commerceInterfaceComponent.language = 'fr';
         });
 
-        await expect(commerceInterface.interface()).toContainText('Produit');
+        await expect(
+          commerceInterface.searchBox().getByPlaceholder('Recherche')
+        ).toBeVisible();
       });
       test('should revert to english after changing the language to an invalid value', async ({
         page,
@@ -110,7 +118,9 @@ test.describe('AtomicCommerceInterface', () => {
           commerceInterfaceComponent.language = 'foo';
         });
 
-        await expect(commerceInterface.interface()).toContainText('Products');
+        await expect(
+          commerceInterface.searchBox().getByPlaceholder('search')
+        ).toBeVisible();
       });
     });
 
