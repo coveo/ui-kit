@@ -11,7 +11,7 @@ export const loadMoreProgressBar = ({from, to}: LoadMoreProgressBarProps) =>
     class="bg-neutral relative my-2 h-1 w-72 rounded"
   >
     <div
-      class="z-1 bg-linear-to-r from-more-results-progress-bar-color-from to-color-more-results-progress-bar-color-to absolute left-0 top-0 h-full overflow-hidden rounded"
+      class="from-more-results-progress-bar-color-from to-color-more-results-progress-bar-color-to absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
       style="width: ${Math.ceil((from / to) * 100)}%"
     ></div>
   </div>`;

@@ -1,4 +1,4 @@
-import {getI18nTestInstance} from '@/src/test-utils/mocks/i18n';
+import {getI18nTestInstance} from '@/test-utils/mocks/i18n';
 import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {loadMoreButton} from './button';

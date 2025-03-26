@@ -1,5 +1,5 @@
-import {getInnerHTMLWithoutComments} from '@/src/test-utils/html';
-import {getI18nTestInstance} from '@/src/test-utils/mocks/i18n';
+import {getInnerHTMLWithoutComments} from '@/test-utils/html';
+import {getI18nTestInstance} from '@/test-utils/mocks/i18n';
 import type {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {loadMoreSummary} from './summary';
