@@ -533,7 +533,8 @@ export class AtomicCommerceSearchBox
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
           this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
+          item.key !== 'recent-query-clear' &&
+            this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);

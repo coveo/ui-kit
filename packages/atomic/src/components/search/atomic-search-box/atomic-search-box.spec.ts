@@ -12,5 +12,10 @@ describe('AtomicSearchBox', () => {
     describe('when typing and then hovering a suggestion', () => {
       test('should execute the search reflected in the search box', () => {});
     });
+
+    describe('with recent queries', () => {
+      test('should display a "Recent searches Clear" button', () => {});
+      test('when clicking the "Recent searches Clear" button, should not reset the input value', () => {});
+    });
   });
 });
