@@ -22,6 +22,7 @@ import {
   SearchSummaryState,
   Summary,
   Unsubscribe,
+  UrlManager,
 } from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
@@ -73,9 +74,11 @@ export class AtomicCommerceInterface
   extends TailwindLitElement
   implements BaseAtomicInterface<CommerceEngine>
 {
+  private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
   private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
+  private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: CommerceStore;
@@ -224,7 +227,9 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     super.disconnectedCallback();
+    this.unsubscribeUrlManager();
     this.unsubscribeSummary();
+    window.removeEventListener('hashchange', this.onHashChange);
     this.host.removeEventListener(
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
@@ -254,16 +259,18 @@ export class AtomicCommerceInterface
   /**
    * Initializes the connection with the headless commerce engine using the specified options.
    */
-  public initialize(options: CommerceInitializationOptions) {
-    return this.internalInitialization(() => this.initEngine(options));
+  public async initialize(options: CommerceInitializationOptions) {
+    await this.internalInitialization(() => this.initEngine(options));
+    this.initUrlManager();
   }
 
   /**
    * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance.
    * This bypasses the properties set on the component, such as analytics and language.
    */
-  public initializeWithEngine(engine: CommerceEngine) {
-    return this.internalInitialization(() => (this.engine = engine));
+  public async initializeWithEngine(engine: CommerceEngine) {
+    await this.internalInitialization(() => (this.engine = engine));
+    this.initUrlManager();
   }
 
   /**
@@ -369,6 +376,10 @@ export class AtomicCommerceInterface
     }
   }
 
+  private get fragment() {
+    return window.location.hash.slice(1);
+  }
+
   private initAriaLive() {
     if (
       Array.from(this.host.children).some(
@@ -379,6 +390,21 @@ export class AtomicCommerceInterface
     }
     const ariaLive = document.createElement('atomic-aria-live');
     this.host.prepend(ariaLive);
+  }
+
+  private initUrlManager() {
+    if (!this.reflectStateInUrl) {
+      return;
+    }
+    this.urlManager = this.searchOrListing.urlManager({
+      initialState: {fragment: this.fragment},
+    });
+
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
+      this.updateHash()
+    );
+
+    window.addEventListener('hashchange', this.onHashChange);
   }
 
   private initRequestStatus() {
@@ -424,12 +450,25 @@ export class AtomicCommerceInterface
     }
   }
 
+  private updateHash() {
+    const newFragment = this.urlManager.state.fragment;
+
+    if (!this.searchOrListing.state.isLoading) {
+      history.replaceState(null, document.title, `#${newFragment}`);
+      this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
+
+      return;
+    }
+
+    history.pushState(null, document.title, `#${newFragment}`);
+    this.bindings.engine.logger.info(`History pushState #${newFragment}`);
+  }
+
+  private onHashChange = () => {
+    this.urlManager.synchronize(this.fragment);
+  };
+
   render() {
-    return html`
-      <slot></slot>
-      <atomic-commerce-url-manager
-        reflect-state-in-url=${this.reflectStateInUrl}
-      ></atomic-commerce-url-manager>
-    `;
+    return html`<slot></slot>`;
   }
 }
