@@ -22,7 +22,6 @@ import {
   SearchSummaryState,
   Summary,
   Unsubscribe,
-  UrlManager,
 } from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
@@ -74,11 +73,9 @@ export class AtomicCommerceInterface
   extends TailwindLitElement
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private urlManager!: UrlManager;
   private searchOrListing!: Search | ProductListing;
   private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
-  private unsubscribeUrlManager: Unsubscribe = () => {};
   private unsubscribeSummary: Unsubscribe = () => {};
   private initialized = false;
   private store: CommerceStore;
@@ -104,7 +101,15 @@ export class AtomicCommerceInterface
   /**
    * Whether analytics should be enabled.
    */
-  @property({type: Boolean, reflect: true}) analytics = true;
+  @property({
+    type: Boolean,
+    converter: {
+      fromAttribute: (value) => value !== 'false',
+      toAttribute: (value) => (value ? 'true' : 'false'),
+    },
+    reflect: true,
+  })
+  analytics = true;
 
   /**
    * The severity level of the messages to log in the console.
@@ -131,7 +136,16 @@ export class AtomicCommerceInterface
   /**
    * Whether the state should be reflected in the URL parameters.
    */
-  @property({type: Boolean, reflect: true}) reflectStateInUrl = true;
+  @property({
+    type: Boolean,
+    attribute: 'reflect-state-in-url',
+    reflect: true,
+    converter: {
+      fromAttribute: (value) => value !== 'false',
+      toAttribute: (value) => (value ? 'true' : 'false'),
+    },
+  })
+  reflectStateInUrl = true;
 
   /**
    * The CSS selector for the container where the interface will scroll back to.
@@ -210,9 +224,7 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeUrlManager();
     this.unsubscribeSummary();
-    window.removeEventListener('hashchange', this.onHashChange);
     this.host.removeEventListener(
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
@@ -313,7 +325,6 @@ export class AtomicCommerceInterface
     this.initRequestStatus();
     this.initSummary();
     this.initLanguage();
-    this.initUrlManager();
     this.initialized = true;
   }
 
@@ -358,10 +369,6 @@ export class AtomicCommerceInterface
     }
   }
 
-  private get fragment() {
-    return window.location.hash.slice(1);
-  }
-
   private initAriaLive() {
     if (
       Array.from(this.host.children).some(
@@ -372,21 +379,6 @@ export class AtomicCommerceInterface
     }
     const ariaLive = document.createElement('atomic-aria-live');
     this.host.prepend(ariaLive);
-  }
-
-  private initUrlManager() {
-    if (!this.reflectStateInUrl) {
-      return;
-    }
-    this.urlManager = this.searchOrListing.urlManager({
-      initialState: {fragment: this.fragment},
-    });
-
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
-      this.updateHash()
-    );
-
-    window.addEventListener('hashchange', this.onHashChange);
   }
 
   private initRequestStatus() {
@@ -432,25 +424,12 @@ export class AtomicCommerceInterface
     }
   }
 
-  private updateHash() {
-    const newFragment = this.urlManager.state.fragment;
-
-    if (!this.searchOrListing.state.isLoading) {
-      history.replaceState(null, document.title, `#${newFragment}`);
-      this.bindings.engine.logger.info(`History replaceState #${newFragment}`);
-
-      return;
-    }
-
-    history.pushState(null, document.title, `#${newFragment}`);
-    this.bindings.engine.logger.info(`History pushState #${newFragment}`);
-  }
-
-  private onHashChange = () => {
-    this.urlManager.synchronize(this.fragment);
-  };
-
   render() {
-    return html`<slot></slot>`;
+    return html`
+      <slot></slot>
+      <atomic-commerce-url-manager
+        reflect-state-in-url=${this.reflectStateInUrl}
+      ></atomic-commerce-url-manager>
+    `;
   }
 }
