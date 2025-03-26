@@ -2,19 +2,17 @@
   "name": "headless-react-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "cached:build": {
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "cache": true,
       "options": {
         "commands": [
           "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:client\""
         ],
         "parallel": true,
-        "cwd": "packages/samples/headless-react"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
