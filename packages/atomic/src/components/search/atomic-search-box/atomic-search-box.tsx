@@ -585,7 +585,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
+        class={`bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
           this.shouldShowSuggestions ? '' : 'hidden'
         }`}
         role="application"
