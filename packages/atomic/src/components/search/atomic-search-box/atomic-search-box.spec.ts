@@ -17,5 +17,13 @@ describe('AtomicSearchBox', () => {
       test('should display a "Recent searches Clear" button', () => {});
       test('when clicking the "Recent searches Clear" button, should not reset the input value', () => {});
     });
+    describe('when the search box text area is not empty', () => {
+      test('should display a clear button', () => {});
+      describe('when clicking the clear button', () => {
+        test('should clear the search box', () => {});
+        test('should clear the suggestions', () => {});
+        test('should focus the search box', () => {});
+      });
+    });
   });
 });

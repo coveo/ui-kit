@@ -628,7 +628,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           (e.target as HTMLInputElement | HTMLTextAreaElement).value
         ),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => this.searchBox.clear(),
+      onClear: () => {
+        this.searchBox.clear();
+        this.suggestionManager.clearSuggestions();
+      },
       popup: {
         id: `${this.id}-popup`,
         activeDescendant: this.suggestionManager.activeDescendant,

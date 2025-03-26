@@ -1,3 +1,9 @@
+## <small>3.21.1 (2025-03-26)</small>
+
+- fix(atomic): clear suggestions when clicking the x button (#5098) ([483c2aa](https://github.com/coveo/ui-kit/commits/483c2aa)), closes [#5098](https://github.com/coveo/ui-kit/issues/5098)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+- chore(atomic): fix flaky tests (#5088) ([cb22463](https://github.com/coveo/ui-kit/commits/cb22463)), closes [#5088](https://github.com/coveo/ui-kit/issues/5088)
+
 ## 3.21.0 (2025-03-19)
 
 - chore: isolate tailwind dependency (#5076) ([2990827](https://github.com/coveo/ui-kit/commits/2990827)), closes [#5076](https://github.com/coveo/ui-kit/issues/5076)
