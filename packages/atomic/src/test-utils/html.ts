@@ -1,3 +1,9 @@
 export function getInnerHTMLWithoutComments(element: Element): string {
-  return element.innerHTML.replaceAll(/<!--.*?-->/gs, '');
+  let innerHTML = element.innerHTML;
+  let previous;
+  do {
+    previous = innerHTML;
+    innerHTML = innerHTML.replace(/<!--.*?-->/gs, '');
+  } while (innerHTML !== previous);
+  return innerHTML;
 }
