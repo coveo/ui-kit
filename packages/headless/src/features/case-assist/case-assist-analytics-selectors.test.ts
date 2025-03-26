@@ -10,6 +10,16 @@ import {
   caseAssistDocumentSuggestionSelector,
 } from './case-assist-analytics-selectors.js';
 
+const examplePermanentid = 'example permanent id';
+const exampleSource = 'example source';
+const exampleDocumentUrl = 'http://my.document.uri/clickable';
+const exampleDocumentUriHash = 'document-uri-hash';
+const exampleDocumentUri = 'http://my.document.uri';
+const exampleDocumentTitle = 'My Document';
+const exampleDocumentSuggestionId = 'document-id';
+const exampleDocumentSuggestionResponseId =
+  'last-document-suggestion-response-id';
+
 describe('case assist analytics selectors', () => {
   const buildStateWithCaseInput = (): Partial<CaseAssistAppState> => ({
     caseInput: {
@@ -57,21 +67,23 @@ describe('case assist analytics selectors', () => {
       documentSuggestion: {
         documents: [
           {
-            uniqueId: 'document-id',
-            clickUri: 'http://my.document.uri/clickable',
+            uniqueId: exampleDocumentSuggestionId,
+            clickUri: exampleDocumentUrl,
             excerpt: 'The content of my document',
             fields: {
-              uri: 'http://my.document.uri',
-              urihash: 'document-uri-hash',
+              uri: exampleDocumentUri,
+              urihash: exampleDocumentUriHash,
+              permanentid: examplePermanentid,
+              source: exampleSource,
             },
             hasHtmlVersion: false,
-            title: 'My Document',
+            title: exampleDocumentTitle,
           },
         ],
         status: {
           loading: false,
           error: null,
-          lastResponseId: 'last-document-suggestion-response-id',
+          lastResponseId: exampleDocumentSuggestionResponseId,
         },
       },
     });
@@ -250,18 +262,20 @@ describe('case assist analytics selectors', () => {
     it('should return the document suggestion matching the specified ID', () => {
       const suggestion = caseAssistDocumentSuggestionSelector(
         buildStateWithDocumentSuggestions(),
-        'document-id'
+        exampleDocumentSuggestionId
       );
 
       expect(suggestion).toMatchObject({
-        responseId: 'last-document-suggestion-response-id',
-        suggestionId: 'document-id',
+        responseId: exampleDocumentSuggestionResponseId,
+        suggestionId: exampleDocumentSuggestionId,
+        permanentId: examplePermanentid,
         suggestion: {
           documentPosition: 1,
-          documentTitle: 'My Document',
-          documentUri: 'http://my.document.uri',
-          documentUriHash: 'document-uri-hash',
-          documentUrl: 'http://my.document.uri/clickable',
+          documentTitle: exampleDocumentTitle,
+          documentUri: exampleDocumentUri,
+          documentUriHash: exampleDocumentUriHash,
+          documentUrl: exampleDocumentUrl,
+          sourceName: exampleSource,
         },
       });
     });
@@ -269,20 +283,20 @@ describe('case assist analytics selectors', () => {
     it('should return the document suggestion matching the specified ID with the field fromQuickview when the fromQuickview parameter is set to true', () => {
       const suggestion = caseAssistDocumentSuggestionSelector(
         buildStateWithDocumentSuggestions(),
-        'document-id',
+        exampleDocumentSuggestionId,
         true
       );
 
       expect(suggestion).toMatchObject({
-        responseId: 'last-document-suggestion-response-id',
-        suggestionId: 'document-id',
+        responseId: exampleDocumentSuggestionResponseId,
+        suggestionId: exampleDocumentSuggestionId,
         fromQuickview: true,
         suggestion: {
           documentPosition: 1,
-          documentTitle: 'My Document',
-          documentUri: 'http://my.document.uri',
-          documentUriHash: 'document-uri-hash',
-          documentUrl: 'http://my.document.uri/clickable',
+          documentTitle: exampleDocumentTitle,
+          documentUri: exampleDocumentUri,
+          documentUriHash: exampleDocumentUriHash,
+          documentUrl: exampleDocumentUrl,
         },
       });
     });
@@ -290,21 +304,21 @@ describe('case assist analytics selectors', () => {
     it('should return the document suggestion matching the specified ID with the field openDocument when the openDocument parameter is set to true', () => {
       const suggestion = caseAssistDocumentSuggestionSelector(
         buildStateWithDocumentSuggestions(),
-        'document-id',
+        exampleDocumentSuggestionId,
         false,
         true
       );
 
       expect(suggestion).toMatchObject({
-        responseId: 'last-document-suggestion-response-id',
-        suggestionId: 'document-id',
+        responseId: exampleDocumentSuggestionResponseId,
+        suggestionId: exampleDocumentSuggestionId,
         openDocument: true,
         suggestion: {
           documentPosition: 1,
-          documentTitle: 'My Document',
-          documentUri: 'http://my.document.uri',
-          documentUriHash: 'document-uri-hash',
-          documentUrl: 'http://my.document.uri/clickable',
+          documentTitle: exampleDocumentTitle,
+          documentUri: exampleDocumentUri,
+          documentUriHash: exampleDocumentUriHash,
+          documentUrl: exampleDocumentUrl,
         },
       });
     });
