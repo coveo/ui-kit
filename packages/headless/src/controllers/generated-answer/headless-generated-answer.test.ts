@@ -1,4 +1,7 @@
+import {nextAnalyticsUsageWithServiceFeatureWarning} from '../../app/engine.js';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {updateResponseFormat} from '../../features/generated-answer/generated-answer-actions.js';
+import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';
 import {
   buildMockSearchEngine,
   MockedSearchEngine,
@@ -33,5 +36,56 @@ describe('generated answer', () => {
     });
 
     expect(updateResponseFormat).toHaveBeenCalledWith(responseFormat);
+  });
+
+  describe('building the controller with the next analytics mode', () => {
+    let warnSpy: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      engine = buildMockSearchEngine(
+        createMockState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsState({analyticsMode: 'next'}),
+          },
+        })
+      );
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      warnSpy.mockRestore();
+    });
+
+    it('should log a warning when the controller is used with the next analytics mode', () => {
+      initGeneratedAnswer();
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      expect(warnSpy).toHaveBeenCalledWith(
+        nextAnalyticsUsageWithServiceFeatureWarning
+      );
+    });
+  });
+
+  describe('building the controller with the legacy analytics mode', () => {
+    let warnSpy: ReturnType<typeof vi.spyOn>;
+    beforeEach(() => {
+      engine = buildMockSearchEngine(
+        createMockState({
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsState({analyticsMode: 'legacy'}),
+          },
+        })
+      );
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      warnSpy.mockRestore();
+    });
+
+    it('should not log a warning when the controller is used with the legacy analytics mode', () => {
+      initGeneratedAnswer();
+      expect(warnSpy).toHaveBeenCalledTimes(0);
+    });
   });
 });

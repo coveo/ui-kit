@@ -1,3 +1,10 @@
+## 3.20.0 (2025-03-26)
+
+- feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
+- feat(headless): replaced searchUid by responseId and adapted to latest genqa analytics schemas (#501 ([2f2c123](https://github.com/coveo/ui-kit/commits/2f2c123)), closes [#5018](https://github.com/coveo/ui-kit/issues/5018)
+- fix(headless): started logging a warning message when event protocol is used for coveo for service f ([a563c24](https://github.com/coveo/ui-kit/commits/a563c24)), closes [#5086](https://github.com/coveo/ui-kit/issues/5086)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
 ## <small>3.19.3 (2025-03-19)</small>
 
 - fix(generated answer): fix citation duplication issue in generated answer (#5053) ([09ca081](https://github.com/coveo/ui-kit/commits/09ca081)), closes [#5053](https://github.com/coveo/ui-kit/issues/5053)

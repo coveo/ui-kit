@@ -220,7 +220,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-search-box-');
+    this.id ||= randomID('atomic-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -627,7 +627,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           (e.target as HTMLInputElement | HTMLTextAreaElement).value
         ),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => this.searchBox.clear(),
+      onClear: () => {
+        this.searchBox.clear();
+        this.suggestionManager.clearSuggestions();
+      },
       popup: {
         id: `${this.id}-popup`,
         activeDescendant: this.suggestionManager.activeDescendant,
