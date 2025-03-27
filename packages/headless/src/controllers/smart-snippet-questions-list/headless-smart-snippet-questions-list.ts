@@ -1,3 +1,4 @@
+import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../app/engine.js';
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
 import {smartSnippetAnalyticsClient} from '../../features/question-answering/question-answering-analytics-actions.js';
 import {
@@ -119,6 +120,9 @@ export function buildSmartSnippetQuestionsList(
   engine: SearchEngine,
   props?: SmartSnippetQuestionsListProps
 ): SmartSnippetQuestionsList {
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
   const smartSnippetQuestionList = buildCoreSmartSnippetQuestionsList(
     engine,
     smartSnippetAnalyticsClient

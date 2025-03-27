@@ -1,11 +1,11 @@
 import {
   Component,
   h,
-  Host,
   State,
   Element,
   Method,
   Listen,
+  Host,
 } from '@stencil/core';
 import {buildDebouncedQueue} from '../../../utils/debounce-utils';
 import {FindAriaLiveEventArgs} from '../../../utils/stencil-accessibility-utils';
@@ -25,7 +25,7 @@ export class AtomicAriaLive {
   @State() private regions: Readonly<Regions> = {};
 
   private messagesQueue = buildDebouncedQueue({delay: 500});
-  private id = randomID('aria-live-');
+  private id!: string;
 
   @Listen('atomic/accessibility/findAriaLive', {target: 'document'})
   protected onFindAriaLive({detail: args}: CustomEvent<FindAriaLiveEventArgs>) {
@@ -43,6 +43,10 @@ export class AtomicAriaLive {
       element = element.parentElement;
     }
     return false;
+  }
+
+  connectedCallback() {
+    this.id = randomID('atomic-aria-live-');
   }
 
   /**

@@ -78,12 +78,20 @@ function createTestFileMappings(testPaths, projectRoot) {
   const testFileMappings = testPaths.map((testPath) => {
     const imports = new Set();
     const testName = basename(testPath);
-    const sourceFilePath = join(
+    const tsxFilePath = join(
       dirname(testPath).replace('/e2e', ''),
       testName.replace('.e2e.ts', '.tsx')
     );
+    const tsFilePath = tsxFilePath.replace('.tsx', '.ts');
 
-    ensureFileExists(sourceFilePath);
+    let sourceFilePath;
+    if (ensureFileExists(tsxFilePath)) {
+      sourceFilePath = tsxFilePath;
+    } else if (ensureFileExists(tsFilePath)) {
+      sourceFilePath = tsFilePath;
+    } else {
+      throw new Error(`File ${tsxFilePath} or ${tsFilePath} does not exist.`);
+    }
 
     [
       relative(projectRoot, sourceFilePath),

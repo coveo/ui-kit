@@ -38,7 +38,7 @@ export function bindings() {
       new ContextConsumer(this, {
         context: bindingsContext,
         callback: (value) => {
-          if (this.initialized) {
+          if (this.initialized || Object.keys(value).length === 0) {
             return;
           }
 

@@ -119,4 +119,3 @@ if(litDeclarations.length > 0) {
 }
 
   writeFileSync(atomicAngularComponentFilePath, atomicAngularComponentFileContent.trimEnd());
-  
