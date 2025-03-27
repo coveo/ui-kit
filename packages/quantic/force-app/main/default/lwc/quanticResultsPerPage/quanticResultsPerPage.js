@@ -51,12 +51,11 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this._initialChoice;
   }
   set initialChoice(value) {
-    if (Number(value) >= 0) {
+    if (Number(value) > 0) {
       this._initialChoice = value;
     } else {
-      console.warn(
-        `The "initialChoice" option value "${value}" must be a number greater than 0. Defaulting to the first choices value.`
-      );
+      console.error(`The initialChoice "${value}" must be a positive number.`);
+      this.setInitializationError();
     }
   }
 

@@ -325,6 +325,7 @@ describe('c-quantic-results-per-page', () => {
 
     beforeEach(() => {
       console.warn = jest.fn();
+      console.error = jest.fn();
       resultsPerPageState = {
         ...resultsPerPageState,
         numberOfResults: customInitialChoice,
@@ -384,7 +385,7 @@ describe('c-quantic-results-per-page', () => {
       );
     });
 
-    it('should log a console warning if the initial choice is a negative number but not prevent component initiatlization', async () => {
+    it('should log a console error if the initial choice is a negative number and prevent component initiatlization', async () => {
       const customInvalidInitialChoice = -10;
       const element = createTestComponent({
         initialChoice: customInvalidInitialChoice,
@@ -404,15 +405,15 @@ describe('c-quantic-results-per-page', () => {
       const initializationError = element.shadowRoot.querySelector(
         selectors.componentError
       );
-      expect(initializationError).toBeNull();
+      expect(initializationError).not.toBeNull();
 
-      expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(console.warn).toHaveBeenCalledWith(
-        `The "initialChoice" option value "${customInvalidInitialChoice}" must be a number greater than 0. Defaulting to the first choices value.`
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        `The initialChoice "${customInvalidInitialChoice}" must be a positive number.`
       );
     });
 
-    it('should log a console warning if the initial choice is not a number but not prevent component initiatlization', async () => {
+    it('should log a console error if the initial choice is not a number and prevent component initiatlization', async () => {
       const customInvalidInitialChoice = 'foo';
       const element = createTestComponent({
         initialChoice: customInvalidInitialChoice,
@@ -432,11 +433,11 @@ describe('c-quantic-results-per-page', () => {
       const initializationError = element.shadowRoot.querySelector(
         selectors.componentError
       );
-      expect(initializationError).toBeNull();
+      expect(initializationError).not.toBeNull();
 
-      expect(console.warn).toHaveBeenCalledTimes(1);
-      expect(console.warn).toHaveBeenCalledWith(
-        `The "initialChoice" option value "${customInvalidInitialChoice}" must be a number greater than 0. Defaulting to the first choices value.`
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        `The initialChoice "${customInvalidInitialChoice}" must be a positive number.`
       );
     });
   });
