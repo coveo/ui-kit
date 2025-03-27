@@ -13,7 +13,7 @@ const litDeclarations = [];
 const litImports = new Set();
 const defineCustomElementImports = new Set();
 
-const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
 
 const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
 
