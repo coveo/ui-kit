@@ -1,4 +1,3 @@
-import {recentQueriesMaxLength} from '@/shared/recent-queries-config';
 import {useEffect} from 'react';
 
 const recentQueriesKeyStorageKey = 'commerce-recent-queries';
@@ -16,10 +15,7 @@ function getStoredRecentQueries(): string[] {
 }
 
 function saveRecentQueries(queries: string[]) {
-  localStorage.setItem(
-    recentQueriesKeyStorageKey,
-    JSON.stringify(queries.slice(0, recentQueriesMaxLength))
-  );
+  localStorage.setItem(recentQueriesKeyStorageKey, JSON.stringify(queries));
 }
 
 export function useInitializeRecentQueries(

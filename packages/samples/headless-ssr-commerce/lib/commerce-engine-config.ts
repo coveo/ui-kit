@@ -1,4 +1,3 @@
-import {recentQueriesMaxLength} from '@/shared/recent-queries-config';
 import {
   CommerceEngineDefinitionOptions,
   defineProductList,
@@ -50,9 +49,7 @@ export default {
     cart: defineCart(),
     searchBox: defineSearchBox(),
     context: defineContext(),
-    recentQueriesList: defineRecentQueriesList({
-      options: {maxLength: recentQueriesMaxLength},
-    }),
+    recentQueriesList: defineRecentQueriesList(),
     notifyTrigger: defineNotifyTrigger(),
     queryTrigger: defineQueryTrigger(),
     redirectionTrigger: defineRedirectionTrigger(),
