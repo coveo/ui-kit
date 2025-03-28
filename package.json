@@ -59,7 +59,6 @@
     "eslint-config-prettier": "10.0.1",
     "eslint-plugin-cypress": "2.15.2",
     "eslint-plugin-package-lock": "1.0.0",
-    "execa": "9.5.2",
     "glob": "11.0.1",
     "gts": "5.3.1",
     "husky": "9.1.7",
