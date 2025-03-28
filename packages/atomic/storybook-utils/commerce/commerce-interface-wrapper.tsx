@@ -41,7 +41,9 @@ export const wrapInCommerceInterface = ({
       return;
     }
     await step('Execute the first request', async () => {
-      await commerceInterface!.executeFirstRequest();
+      setTimeout(async () => {
+        await commerceInterface!.executeFirstRequest();
+      }, 250);
     });
   },
 });
@@ -56,7 +58,9 @@ export const playExecuteFirstRequest: (
       'root-interface'
     );
   await step('Execute the first request', async () => {
-    await commerceInterface!.executeFirstRequest();
+    setTimeout(async () => {
+      await commerceInterface!.executeFirstRequest();
+    }, 250);
   });
 };
 
