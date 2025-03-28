@@ -50,7 +50,7 @@ export default function SearchBox() {
         onChange={(e) => onSearchBoxInputChange(e)}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        onKeyDown={handleKeyDown} // Add onKeyDown handler
+        onKeyDown={handleKeyDown}
       ></input>
       {state.value !== '' && (
         <span>
