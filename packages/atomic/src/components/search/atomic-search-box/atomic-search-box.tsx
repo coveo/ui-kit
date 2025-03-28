@@ -530,9 +530,12 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
-          item.key !== 'recent-query-clear' &&
-            this.triggerTextAreaChange(item.query ?? '');
+          this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
