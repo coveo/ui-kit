@@ -1,7 +1,7 @@
 <atomic-search-interface
   #searchInterface
-  searchHub="UI_KIT_E2E"
-  pipeline="UI_KIT_E2E"
+  searchHub="MainSearch"
+  pipeline="Search"
   fieldsToInclude='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'
 >
   <div class="search">
@@ -15,13 +15,16 @@
               .result-root {
                 padding: 12px;
               }
+
               div.result-root.with-sections.display-list atomic-result-section-visual {
                 height: 120px;
               }
+
               .rating-wrapper {
                 display: flex;
                 align-items: center;
               }
+
               .rating-wrapper span {
                 margin-left: 5px;
                 color: #8e959d;
@@ -118,7 +121,7 @@
             <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
           </atomic-result-section-visual>
           <atomic-result-section-excerpt>
-            <atomic-result-text field="ec_shortdesc"></atomic-result-text>
+            <atomic-result-text field="ec_description"></atomic-result-text>
           </atomic-result-section-excerpt>
           <atomic-result-section-bottom-metadata>
             <atomic-result-fields-list>
