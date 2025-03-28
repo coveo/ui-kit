@@ -1,5 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload.js';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../utils/validate-payload.js';
 import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request.js';
 import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request.js';
 import {searchParametersDefinition} from './search-parameter-schema.js';
@@ -84,6 +87,7 @@ export interface SearchParameters {
 
   /**
    * The active tab id.
+   * @deprecated Restoring the tab with the restoreSearchParameters action can cause components to be visible/hidden on the wrong tab. Instead, first restore the tab using the `restoreTab` action, then the rest of the parameters with the restoreSearchParameters action.
    */
   tab?: string;
 
@@ -93,8 +97,18 @@ export interface SearchParameters {
   af?: Record<string, string[]>;
 }
 
+/**
+ * The unique identifier of a tab.
+ */
+export type TabId = string;
+
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
   (payload: SearchParameters) =>
     validatePayload(payload, searchParametersDefinition)
+);
+
+export const restoreTab = createAction(
+  'searchParameters/restoreTab',
+  (payload: TabId) => validatePayload(payload, requiredNonEmptyString)
 );

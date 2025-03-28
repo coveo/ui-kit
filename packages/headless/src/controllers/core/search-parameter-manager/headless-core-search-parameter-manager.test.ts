@@ -1,4 +1,7 @@
-import {restoreSearchParameters} from '../../../features/search-parameters/search-parameter-actions.js';
+import {
+  restoreSearchParameters,
+  restoreTab,
+} from '../../../features/search-parameters/search-parameter-actions.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {buildMockAutomaticFacetResponse} from '../../../test/mock-automatic-facet-response.js';
 import {buildMockAutomaticFacetSlice} from '../../../test/mock-automatic-facet-slice.js';
@@ -28,7 +31,6 @@ import {
   buildCoreSearchParameterManager,
   SearchParameterManager,
   SearchParameterManagerProps,
-  validateParams,
 } from './headless-core-search-parameter-manager.js';
 
 vi.mock('../../../features/search-parameters/search-parameter-actions');
@@ -61,10 +63,19 @@ describe('search parameter manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('dispatches #restoreSearchParameters on registration', () => {
-    expect(restoreSearchParameters).toHaveBeenCalledWith(
-      props.initialState.parameters
-    );
+  it('dispatches #restoreTab with the correct argument before #restoreSearchParameters on registration when #initialState.parameters.tab is defined', () => {
+    props.initialState.parameters = {tab: 'some-tab', q: 'query'};
+    initSearchParameterManager();
+
+    expect(restoreTab).toHaveBeenCalledWith('some-tab');
+    expect(restoreSearchParameters).toHaveBeenCalledWith({q: 'query'});
+  });
+
+  it('dispatches #restoreSearchParameters on registration with parameters excluding the tab', () => {
+    props.initialState.parameters = {tab: 'some-tab', q: 'query'};
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({q: 'query'});
   });
 
   it('throws an error when #parameters is not an object', () => {
@@ -84,19 +95,31 @@ describe('search parameter manager', () => {
       expect(manager.state.parameters).not.toContain('q');
     });
   });
-
   describe('#state.parameters.tab', () => {
-    it('is included when there is an active tab', () => {
-      const id = 'a';
-      const tab = buildMockTabSlice({id, isActive: true});
-      engine.state.tabSet = {[id]: tab};
-      expect(manager.state.parameters.tab).toBe(id);
+    it('is included when there are at least two tabs, and the active one is not the first one', () => {
+      const id1 = 'a';
+      const id2 = 'b';
+      const tab1 = buildMockTabSlice({id: id1, isActive: false});
+      const tab2 = buildMockTabSlice({id: id2, isActive: true});
+      engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+      expect(manager.state.parameters.tab).toBe(id2);
     });
 
     it('is not included when there is no active tab', () => {
-      const id = 'a';
-      const tab = buildMockTabSlice({id, isActive: false});
-      engine.state.tabSet = {[id]: tab};
+      const id1 = 'a';
+      const id2 = 'b';
+      const tab1 = buildMockTabSlice({id: id1, isActive: false});
+      const tab2 = buildMockTabSlice({id: id2, isActive: false});
+      engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+      expect(manager.state.parameters.tab).toBe(undefined);
+    });
+
+    it('is not included when the active tab is the first one', () => {
+      const id1 = 'a';
+      const id2 = 'b';
+      const tab1 = buildMockTabSlice({id: id1, isActive: true});
+      const tab2 = buildMockTabSlice({id: id2, isActive: false});
+      engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
       expect(manager.state.parameters.tab).toBe(undefined);
     });
   });
@@ -338,8 +361,9 @@ describe('search parameter manager', () => {
       a: buildMockStaticFilterSlice({id: 'a', values: staticFilterValues}),
     };
 
-    const tab = buildMockTabSlice({id: 'a', isActive: true});
-    engine.state.tabSet = {a: tab};
+    const tab = buildMockTabSlice({id: 'a', isActive: false});
+    const tab2 = buildMockTabSlice({id: 'b', isActive: true});
+    engine.state.tabSet = {a: tab, b: tab2};
 
     const automaticFacetValues = [buildMockFacetValue({state: 'selected'})];
     const slice = buildMockAutomaticFacetSlice({
@@ -367,50 +391,40 @@ describe('search parameter manager', () => {
 
   describe('#synchronize', () => {
     it('it dispatches #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters', () => {
-      const params = {q: 'a'};
+      const params = {q: 'a', cq: 'b'};
       manager.synchronize(params);
 
-      const initialParameters = initialSearchParameterSelector(engine.state);
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
 
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialParameters,
+        ...initialParametersWithoutTab,
         ...params,
       });
     });
-  });
 
-  describe('#validateParams', () => {
-    it('should return true with initial params', () => {
-      const initialParameters = initialSearchParameterSelector(engine.state);
+    it('dispatches #restoreTab with the correct argument before #restoreSearchParameters when #parameters.tab is defined', () => {
+      const params = {tab: 'new-tab', q: 'new-query'};
+      manager.synchronize(params);
 
-      expect(validateParams(engine, initialParameters)).toBe(true);
+      expect(restoreTab).toHaveBeenCalledWith('new-tab');
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialSearchParameterSelector(engine.state),
+        q: 'new-query',
+        tab: undefined,
+      });
     });
 
-    describe('with tabs', () => {
-      beforeEach(() => {
-        engine.state.tabSet = {
-          someTab: {id: 'someTab', isActive: true, expression: ''},
-          otherTab: {id: 'otherTab', isActive: false, expression: ''},
-        };
-      });
+    it('dispatches #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
+      const params = {q: 'a'};
+      manager.synchronize(params);
 
-      it('should return true with an existing tab parameter', () => {
-        const initialParameters = initialSearchParameterSelector(engine.state);
+      const {tab, ...initialParametersWithoutTab} =
+        initialSearchParameterSelector(engine.state);
 
-        expect(
-          validateParams(engine, {...initialParameters, tab: 'someTab'})
-        ).toBe(true);
-        expect(
-          validateParams(engine, {...initialParameters, tab: 'otherTab'})
-        ).toBe(true);
-      });
-
-      it('should return false with a non-existing tab parameter', () => {
-        const initialParameters = initialSearchParameterSelector(engine.state);
-
-        expect(
-          validateParams(engine, {...initialParameters, tab: 'notMyTab'})
-        ).toBe(false);
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialParametersWithoutTab,
+        ...params,
       });
     });
   });

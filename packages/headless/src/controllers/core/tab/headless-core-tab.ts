@@ -131,8 +131,12 @@ export function buildCoreTab(engine: CoreEngine, props: TabProps): Tab {
   );
 
   const {id, expression} = props.options;
-
   dispatch(registerTab({id, expression}));
+
+  const isFirstTab = Object.keys(engine.state.tabSet).length === 1;
+  if (isFirstTab) {
+    initialState.isActive = true;
+  }
 
   if (initialState.isActive) {
     dispatch(updateActiveTab(id));
