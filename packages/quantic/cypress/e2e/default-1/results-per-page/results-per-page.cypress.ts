@@ -6,12 +6,13 @@ import {
   useCaseEnum,
   InsightInterfaceExpectations as InsightInterfaceExpect,
 } from '../../../page-objects/use-case';
-import {stubConsoleError} from '../../console-selectors';
+import {stubConsoleError, stubConsoleWarning} from '../../console-selectors';
 import {ResultsPerPageActions as Actions} from './results-per-page-actions';
 import {ResultsPerPageExpectations as Expect} from './results-per-page-expectations';
 
 interface ResultsPerPageOptions {
-  initialChoice: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialChoice: number | any;
   choicesDisplayed: string;
   useCase: string;
 }
@@ -30,6 +31,7 @@ describe('quantic-result-per-page', () => {
     cy.visit(pageUrl, {
       onBeforeLoad(win) {
         stubConsoleError(win);
+        stubConsoleWarning(win);
       },
     });
     configure(options);
@@ -151,14 +153,14 @@ describe('quantic-result-per-page', () => {
             Expect.displayChoices(true);
             Expect.choicesEqual(choicesDisplayed);
             Expect.selectedChoiceEqual(expectedChoice);
-            Expect.console.error(true);
+            Expect.console.warning(true);
             Expect.displayComponentError(false);
             Expect.search.numberOfResults(expectedChoice, param.useCase);
           });
         });
 
         describe('with invalid initial choice', () => {
-          it('should still load the component and default on the first choice', () => {
+          it('should not load the component and display the component error with a negative initialChoice', () => {
             visitResultsPerPage(
               {
                 initialChoice: -1,
@@ -168,12 +170,24 @@ describe('quantic-result-per-page', () => {
               false
             );
 
-            Expect.displayChoices(true);
-            Expect.choicesEqual(defaultChoices);
-            Expect.selectedChoiceEqual(defaultChoices[0]);
+            Expect.displayChoices(false);
             Expect.console.error(true);
-            Expect.displayComponentError(false);
-            Expect.search.numberOfResults(defaultChoices[0], param.useCase);
+            Expect.displayComponentError(true);
+          });
+
+          it('should not load the component and display the component error with a non-number initialChoice', () => {
+            visitResultsPerPage(
+              {
+                initialChoice: 'foo',
+                choicesDisplayed: defaultChoices.join(','),
+                useCase: param.useCase,
+              },
+              false
+            );
+
+            Expect.displayChoices(false);
+            Expect.console.error(true);
+            Expect.displayComponentError(true);
           });
         });
 
