@@ -31,7 +31,6 @@ export function useInitializeRecentQueries(
 
 export function usePersistQuery(query: string | null) {
   useEffect(() => {
-    console.log('new qu');
     if (!query || query.trim() === '') {
       return;
     }
