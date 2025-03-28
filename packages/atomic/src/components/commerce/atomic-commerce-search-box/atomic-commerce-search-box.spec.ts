@@ -23,6 +23,8 @@ describe('AtomicCommerceSearchBox', () => {
         test('should clear the search box', () => {});
         test('should clear the suggestions', () => {});
         test('should focus the search box', () => {});
+        test('should not collapse the suggestions list if suggestions are available', () => {});
+        test('should collapse the suggestion list if no suggestions are available', () => {});
       });
     });
   });
