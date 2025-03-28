@@ -14,7 +14,14 @@ const moduleLinkPhase = ({moduleDoc}) => {
     }
     declaration.attributes =
       keptAttributes.length > 0 ? keptAttributes : undefined;
-    declaration.members = [];
+
+    if (!declaration.members) {
+      continue;
+    }
+
+    declaration.members = declaration.members.filter(
+      (member) => member?.privacy !== 'private' && member.kind === 'method'
+    );
   }
 
   moduleDoc.exports = cleanExports(moduleDoc.exports);

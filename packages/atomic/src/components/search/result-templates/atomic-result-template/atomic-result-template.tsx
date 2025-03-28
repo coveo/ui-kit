@@ -21,7 +21,7 @@ import {
   shadow: true,
 })
 export class AtomicResultTemplate {
-  private resultTemplateCommon: ResultTemplateCommon;
+  private resultTemplateCommon!: ResultTemplateCommon;
 
   @State() public error!: Error;
 
@@ -54,7 +54,9 @@ export class AtomicResultTemplate {
     string[]
   > = {};
 
-  constructor() {
+  constructor() {}
+
+  connectedCallback() {
     this.resultTemplateCommon = new ResultTemplateCommon({
       host: this.host,
       setError: (err) => {

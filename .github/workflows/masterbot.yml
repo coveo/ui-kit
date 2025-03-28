@@ -56,6 +56,11 @@ jobs:
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@11
+        shell: bash
+      - run: npm ci
+        shell: bash
       - name: Call ui-kit-cd for dev
         run: node ./scripts/deploy/trigger-ui-kit-cd-dev.mjs
         env:
