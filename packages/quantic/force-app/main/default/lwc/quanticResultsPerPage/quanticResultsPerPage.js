@@ -104,17 +104,21 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.headless = getHeadlessBundle(this.engineId);
-    this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
-      initialState: {
-        numberOfResults: Number(this.initialChoice) ?? this.choices[0],
-      },
-    });
-    this.searchStatus = this.headless.buildSearchStatus(engine);
-    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
-    );
+    if (!this.hasInitializationError) {
+      this.headless = getHeadlessBundle(this.engineId);
+      this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
+        initialState: {
+          numberOfResults: Number(this.initialChoice) ?? this.choices[0],
+        },
+      });
+      this.searchStatus = this.headless.buildSearchStatus(engine);
+      this.unsubscribe = this.resultsPerPage.subscribe(() =>
+        this.updateState()
+      );
+      this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+        this.updateState()
+      );
+    }
   };
 
   disconnectedCallback() {

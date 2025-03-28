@@ -392,15 +392,7 @@ describe('c-quantic-results-per-page', () => {
       });
       await flushPromises();
 
-      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledWith(
-        exampleEngine,
-        {
-          initialState: {
-            numberOfResults: defaultChoices[0],
-          },
-        }
-      );
+      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(0);
 
       const initializationError = element.shadowRoot.querySelector(
         selectors.componentError
@@ -420,15 +412,7 @@ describe('c-quantic-results-per-page', () => {
       });
       await flushPromises();
 
-      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledWith(
-        exampleEngine,
-        {
-          initialState: {
-            numberOfResults: defaultChoices[0],
-          },
-        }
-      );
+      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(0);
 
       const initializationError = element.shadowRoot.querySelector(
         selectors.componentError
