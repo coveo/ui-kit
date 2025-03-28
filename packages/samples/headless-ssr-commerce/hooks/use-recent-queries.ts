@@ -37,9 +37,7 @@ export function usePersistQuery(query: string | null) {
     }
 
     const queries = getStoredRecentQueries();
-    if (!queries.includes(query)) {
-      queries.unshift(query);
-      saveRecentQueries(queries);
-    }
+    queries.unshift(query);
+    saveRecentQueries(queries);
   }, [query]);
 }
