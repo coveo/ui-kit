@@ -26,6 +26,8 @@ export default function StandaloneSearchBox() {
       const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
       router.push(url, {scroll: false});
       methods?.afterRedirection();
+    } else if (state.redirectTo !== '') {
+      window.location.replace(state.redirectTo);
     }
   }, [state.redirectTo, state.value, router, methods]);
 
