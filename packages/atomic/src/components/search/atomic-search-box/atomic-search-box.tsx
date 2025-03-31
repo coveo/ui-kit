@@ -220,7 +220,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-search-box-');
+    this.id ||= randomID('atomic-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -530,6 +530,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
           this.triggerTextAreaChange(item.query ?? '');
         }}
@@ -585,7 +589,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
+        class={`bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
           this.shouldShowSuggestions ? '' : 'hidden'
         }`}
         role="application"
@@ -627,7 +631,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
           (e.target as HTMLInputElement | HTMLTextAreaElement).value
         ),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => this.searchBox.clear(),
+      onClear: () => {
+        this.searchBox.clear();
+        this.suggestionManager.clearSuggestions();
+      },
       popup: {
         id: `${this.id}-popup`,
         activeDescendant: this.suggestionManager.activeDescendant,

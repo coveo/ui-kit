@@ -15,7 +15,7 @@ export type Range = {start: number; end: number};
   styleUrl: 'atomic-commerce-facet-number-input.pcss',
   shadow: false,
 })
-export class FacetNumberInput {
+export class AtomicCommerceFacetNumberInput {
   private startRef!: HTMLInputElement;
   private endRef!: HTMLInputElement;
 

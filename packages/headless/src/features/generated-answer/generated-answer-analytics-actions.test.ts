@@ -544,5 +544,18 @@ describe('generated answer analytics actions', () => {
       expect(emit).toHaveBeenCalledTimes(1);
       expect(emit.mock.calls[0]).toMatchSnapshot();
     });
+
+    [false, true].map((answerGenerated) => {
+      it(`should log #logGeneratedAnswerStreamEnd with ${answerGenerated ? 'generated' : 'not generated'} and 'empty' answer`, async () => {
+        await logGeneratedAnswerStreamEnd(answerGenerated)()(
+          engine.dispatch,
+          () => engine.state,
+          {} as ThunkExtraArguments
+        );
+
+        expect(emit).toHaveBeenCalledTimes(1);
+        expect(emit.mock.calls[0]).toMatchSnapshot();
+      });
+    });
   });
 });

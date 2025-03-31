@@ -9,7 +9,7 @@ const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
 } = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
   type: 'product-listing',
   engineConfig: {
     context: {
@@ -27,7 +27,7 @@ const {
   decorator: commerceInterfaceDecoratorEUR,
   play: initializeCommerceInterfaceEUR,
 } = wrapInCommerceInterface({
-  skipFirstSearch: false,
+  skipFirstRequest: false,
   type: 'product-listing',
   engineConfig: {
     context: {

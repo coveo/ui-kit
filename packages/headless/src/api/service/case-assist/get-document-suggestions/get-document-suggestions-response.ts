@@ -4,7 +4,12 @@
 export interface DocumentSuggestionResponse {
   clickUri: string;
   excerpt: string;
-  fields: Record<string, string | number | boolean | string[]>;
+  fields: {
+    permanentid: string;
+    source: string;
+    uri: string;
+    urihash: string;
+  } & Record<string, string | number | boolean | string[]>;
   hasHtmlVersion: boolean;
   title: string;
   uniqueId: string;

@@ -6,7 +6,8 @@
       "!{projectRoot}/dist",
       "!{projectRoot}/www",
       "!{projectRoot}/docs",
-      "!{projectRoot}/src/components.d.ts"
+      "!{projectRoot}/src/components.d.ts",
+      "!{projectRoot}/src/lit-components.d.ts"
     ],
     "buildInputs": [
       "{projectRoot}/stencil.config.ts",
@@ -27,7 +28,8 @@
         "{projectRoot}/dist",
         "{projectRoot}/www",
         "{projectRoot}/docs",
-        "{projectRoot}/src/components.d.ts"
+        "{projectRoot}/src/components.d.ts",
+        "{projectRoot}/src/lit-components.d.ts"
       ],
       "executor": "nx:run-commands",
       "options": {
@@ -36,7 +38,7 @@
           "node ./scripts/stencil-proxy.mjs",
           "node ./scripts/build.mjs --config=tsconfig.lit.json",
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" == \"CDN\" ]; then rollup -c rollup.config.js; fi",
+          "npm run-script -w=@coveo/release if-cdn -- \"rollup -c rollup.config.js\"",
           "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
           "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
         ],
@@ -155,7 +157,7 @@
       "dependsOn": ["^build", "cached:build:stencil"],
       "executor": "nx:run-commands",
       "options": {
-        "command": "rm -f ./dist/atomic/loader/package.json",
+        "command": "rimraf ./dist/atomic/loader/package.json",
         "cwd": "packages/atomic"
       }
     },
