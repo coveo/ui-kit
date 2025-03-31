@@ -6,6 +6,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
         
 import {
 AtomicCommerceLoadMoreProducts,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -38,7 +39,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,
@@ -148,6 +148,7 @@ AtomicTimeframeFacet
         
 const DECLARATIONS = [
 AtomicCommerceLoadMoreProducts,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -180,7 +181,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,

@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue} from '@coveo/bueno';
 import {deselectAllBreadcrumbs} from '../../features/breadcrumb/breadcrumb-actions.js';
 import {
   clearRecentQueries,
@@ -136,6 +136,42 @@ describe('recent queries list', () => {
       });
       recentQueriesList.executeRecentQuery(0);
       expect(deselectAllBreadcrumbs).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('#updateRecentQueries', () => {
+    const validQueries = ['query1', 'query2', 'query3'];
+    const invalidQueries = [123, null, undefined];
+
+    beforeEach(() => {
+      recentQueriesList = buildRecentQueriesList(engine, {
+        options: {maxLength: 5},
+      });
+    });
+
+    it('should validate the queries array and throw an error if invalid', () => {
+      const validationSpy = vi.spyOn(ArrayValue.prototype, 'validate');
+
+      expect(() =>
+        // @ts-expect-error invalid queries
+        recentQueriesList.updateRecentQueries(invalidQueries)
+      ).toThrow();
+      expect(validationSpy).toHaveBeenCalledWith(invalidQueries);
+    });
+
+    it('should dispatch the registerRecentQueries action with valid queries', () => {
+      recentQueriesList.updateRecentQueries(validQueries);
+
+      expect(registerRecentQueries).toHaveBeenCalledWith({
+        queries: validQueries,
+        maxLength: 5,
+      });
+    });
+
+    it('should throw an error if the queries array is empty', () => {
+      expect(() => recentQueriesList.updateRecentQueries([])).toThrow(
+        'value contains less than 1'
+      );
     });
   });
 });

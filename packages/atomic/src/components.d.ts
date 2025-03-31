@@ -784,13 +784,6 @@ export namespace Components {
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface AtomicComponentError {
-        "element": HTMLElement;
-        "error": Error;
-    }
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicDidYouMean {
@@ -4296,15 +4289,6 @@ declare global {
         new (): HTMLAtomicCommerceTimeframeFacetElement;
     };
     /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
-    }
-    var HTMLAtomicComponentErrorElement: {
-        prototype: HTMLAtomicComponentErrorElement;
-        new (): HTMLAtomicComponentErrorElement;
-    };
-    /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
@@ -6112,7 +6096,6 @@ declare global {
         "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
-        "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -6962,13 +6945,6 @@ declare namespace LocalJSX {
           * The summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-     */
-    interface AtomicComponentError {
-        "element": HTMLElement;
-        "error": Error;
     }
     /**
      * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
@@ -9929,7 +9905,6 @@ declare namespace LocalJSX {
         "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
-        "atomic-component-error": AtomicComponentError;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
         "atomic-facet": AtomicFacet;
@@ -10271,10 +10246,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-timeframe-facet": LocalJSX.AtomicCommerceTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceTimeframeFacetElement>;
-            /**
-             * The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.
-             */
-            "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             /**
              * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */

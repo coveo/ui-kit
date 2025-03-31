@@ -1,6 +1,6 @@
 import {bindStateToController} from '@/src/decorators/bind-state';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {
   Pagination,
   PaginationState,
@@ -11,7 +11,7 @@ import {
   buildProductListing,
   buildSearch,
 } from '@coveo/headless/commerce';
-import {html} from 'lit';
+import {html, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {when} from 'lit/directives/when.js';
 import {createAppLoadedListener} from '../../common/interface/store';
@@ -42,11 +42,10 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * @alpha
  */
 @customElement('atomic-commerce-load-more-products')
+@withTailwindStyles
 export class AtomicCommerceLoadMoreProducts extends InitializeBindingsMixin(
-  TailwindLitElement
+  LitElement
 ) {
-  static styles = [TailwindLitElement.styles];
-
   @state()
   bindings!: CommerceBindings;
 
