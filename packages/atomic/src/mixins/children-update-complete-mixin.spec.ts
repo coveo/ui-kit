@@ -65,7 +65,7 @@ class ChildLitElement extends LitElement {
 describe('ChildrenUpdateCompleteMixin', () => {
   let element: TestChildrenUpdateComplete;
 
-  const setupElement = async () => {
+  const setupInterfaceElement = async () => {
     element = document.createElement(
       'test-children-update-complete'
     ) as TestChildrenUpdateComplete;
@@ -115,6 +115,7 @@ describe('ChildrenUpdateCompleteMixin', () => {
     child1.appendChild(nestedChild);
     parentElement.appendChild(child1);
     parentElement.appendChild(child2);
+    await element.updateComplete;
   };
 
   const teardownElement = () => {
@@ -124,7 +125,7 @@ describe('ChildrenUpdateCompleteMixin', () => {
   };
 
   beforeEach(async () => {
-    await setupElement();
+    await setupInterfaceElement();
   });
 
   afterEach(() => {
@@ -132,21 +133,21 @@ describe('ChildrenUpdateCompleteMixin', () => {
   });
 
   it('should wait for child LitElement updates to complete', async () => {
-    setupChildLitElement(element);
+    await setupChildLitElement(element);
     await element.initialize();
 
     expect(element.isChildrenLoaded).toBe(true);
   });
 
   it('should wait for Stencil components to be ready', async () => {
-    setupStencilElement(element);
+    await setupStencilElement(element);
     await element.initialize();
 
     expect(element.isChildrenLoaded).toBe(true);
   });
 
   it('should fail if not waiting for updateComplete', async () => {
-    setupChildLitElement(element);
+    await setupChildLitElement(element);
     element.waitForUpdateComplete = false;
     await element.initialize();
 
