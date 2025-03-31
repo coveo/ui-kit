@@ -41,7 +41,8 @@ export default class QuanticResultsPerPage extends LightningElement {
     }
   }
   /**
-   * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
+   * The initial selection for the number of result per page. It must be a positive number and should be part of the `choicesDisplayed` option.
+   * If omited or not part of the `choicesDisplayed` option, it will default to the first value in `choicesDisplayed`.
    * @api
    * @type {number}
    * @defaultValue `the first value in 'choicesDisplayed'`
@@ -51,7 +52,12 @@ export default class QuanticResultsPerPage extends LightningElement {
     return this._initialChoice;
   }
   set initialChoice(value) {
-    this._initialChoice = value;
+    if (Number(value) > 0) {
+      this._initialChoice = value;
+    } else {
+      console.error(`The initialChoice "${value}" must be a positive number.`);
+      this.setInitializationError();
+    }
   }
 
   /** @type {boolean}*/
@@ -99,17 +105,21 @@ export default class QuanticResultsPerPage extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.headless = getHeadlessBundle(this.engineId);
-    this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
-      initialState: {
-        numberOfResults: Number(this.initialChoice) ?? this.choices[0],
-      },
-    });
-    this.searchStatus = this.headless.buildSearchStatus(engine);
-    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
-    );
+    if (!this.hasInitializationError) {
+      this.headless = getHeadlessBundle(this.engineId);
+      this.resultsPerPage = this.headless.buildResultsPerPage(engine, {
+        initialState: {
+          numberOfResults: Number(this.initialChoice) ?? this.choices[0],
+        },
+      });
+      this.searchStatus = this.headless.buildSearchStatus(engine);
+      this.unsubscribe = this.resultsPerPage.subscribe(() =>
+        this.updateState()
+      );
+      this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
+        this.updateState()
+      );
+    }
   };
 
   disconnectedCallback() {
@@ -136,9 +146,9 @@ export default class QuanticResultsPerPage extends LightningElement {
     let valid = true;
     value.split(',').forEach((choice) => {
       const parsedChoice = parseInt(choice, 10);
-      if (isNaN(parsedChoice)) {
+      if (isNaN(parsedChoice) || parsedChoice <= 0) {
         console.error(
-          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+          `The choice value "${choice}" from the "choicesDisplayed" option must be a positive number.`
         );
         this.setInitializationError();
         valid = false;
@@ -149,8 +159,8 @@ export default class QuanticResultsPerPage extends LightningElement {
 
   validateInitialChoice() {
     if (!this.choices.includes(Number(this.initialChoice))) {
-      console.error(
-        `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}". Defaulting to the first value of the choices.`
+      console.warn(
+        `The initialChoice "${this.initialChoice}" is not included in the choicesDisplayed "${this.choicesDisplayed}". Defaulting to the first value in choicesDisplayed.`
       );
       this._initialChoice = this.choices[0];
     }

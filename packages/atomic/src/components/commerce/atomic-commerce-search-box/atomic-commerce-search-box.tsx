@@ -532,6 +532,10 @@ export class AtomicCommerceSearchBox
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
           this.triggerTextAreaChange(item.query ?? '');
         }}
