@@ -38,12 +38,11 @@ class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
   }
 
   private checkDependent() {
-    const child = this.querySelector('*') as
-      | ChildLitElement
-      | StencilTestElement;
-    if (child && child.value === 'ready') {
-      this.isChildrenLoaded = true;
-    }
+    const children = Array.from(
+      this.querySelectorAll('child-lit-element, stencil-component')
+    ) as (ChildLitElement | StencilTestElement)[];
+
+    this.isChildrenLoaded = children.every((child) => child.value === 'ready');
   }
 }
 
