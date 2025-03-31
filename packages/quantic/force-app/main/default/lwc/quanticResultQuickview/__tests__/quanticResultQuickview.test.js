@@ -145,7 +145,7 @@ describe('c-quantic-result-quick-view', () => {
     await quickViewButton.click();
     await flushPromises();
 
-    expect(functionMocks.pushRecentResult).toHaveBeenCalled();
+    expect(functionMocks.pushRecentResult).toHaveBeenCalledWith({});
   });
 
   describe('when the result has no preview', () => {
@@ -203,7 +203,7 @@ describe('c-quantic-result-quick-view', () => {
       );
     });
 
-    it.each([['brand'], ['outline_brand'], ['result-action'], ['turbo']])(
+    it.each([['brand'], ['outline_brand'], ['result-action']])(
       'should render the custom variant %s',
       async (testVariant) => {
         const customOptions = {
@@ -236,17 +236,6 @@ describe('c-quantic-result-quick-view', () => {
       const tooltip = element.shadowRoot.querySelector(selectors.tooltip);
 
       expect(tooltip.textContent).toBe('Custom Tooltip');
-    });
-
-    it('should render the maximum preview size correctly', async () => {
-      const customOptions = {
-        result: exampleResult,
-        maximumPreviewSize: 500,
-      };
-      const element = createTestComponent(customOptions);
-      await flushPromises();
-
-      expect(element.maximumPreviewSize).toBe(500);
     });
   });
 

@@ -42,5 +42,28 @@ useCaseTestCases.forEach((useCase) => {
         );
       });
     });
+
+    test.describe('with a custom preview size defined', () => {
+      test.use({
+        options: {
+          maximumPreviewSize: 420,
+        },
+      });
+
+      test('should request the preview size on the api call', async ({
+        resultQuickview,
+        search,
+      }) => {
+        await search.mockQuickviewResponse(
+          '<html><body><div>makita 20v cordless drill</div></body></html>'
+        );
+        const quickViewButton = resultQuickview.quickviewButton;
+        const htmlResponsePromise = search.waitForQuickviewResponse();
+        await quickViewButton.click();
+        const response = await htmlResponsePromise;
+
+        expect(response.url()).toContain('requestedOutputSize=420');
+      });
+    });
   });
 });
