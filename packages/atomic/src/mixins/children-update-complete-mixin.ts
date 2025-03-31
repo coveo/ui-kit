@@ -1,0 +1,39 @@
+import {HTMLStencilElement} from '@stencil/core/internal';
+import {LitElement} from 'lit';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Constructor<T = {}> = new (...args: any[]) => T;
+
+export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(
+  superClass: T
+) => {
+  class ChildrenUpdateCompleteMixinClass extends superClass {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    constructor(...args: any[]) {
+      super(...args);
+    }
+
+    async getUpdateComplete(): Promise<boolean> {
+      const baseUpdateComplete = await super.getUpdateComplete();
+
+      const children =
+        this instanceof LitElement
+          ? Array.from(this.querySelectorAll('*'))
+          : [];
+      console.log('children', children);
+
+      await Promise.all(
+        children.map(async (child) => {
+          if (child instanceof LitElement) {
+            await child.updateComplete;
+          } else if ('componentOnReady' in child) {
+            await (child as HTMLStencilElement).componentOnReady();
+          }
+        })
+      );
+      return baseUpdateComplete;
+    }
+  }
+
+  return ChildrenUpdateCompleteMixinClass as T;
+};
