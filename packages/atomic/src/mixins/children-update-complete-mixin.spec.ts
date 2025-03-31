@@ -9,6 +9,14 @@ type StencilTestElement = HTMLElement & {
   value: string;
 };
 
+type ChildElement =
+  | ChildLitElement
+  | ChildLitElementNested
+  | StencilTestElement;
+
+const CHILDREN_SELECTOR =
+  'child-lit-element, stencil-component, child-lit-element-nested';
+
 @customElement('test-children-update-complete')
 class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
   LitElement
@@ -23,13 +31,31 @@ class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
   public async getPublicUpdateComplete() {
     return this.getUpdateComplete();
   }
+  getAllChildren() {
+    const collectChildren = (element: Element): ChildElement[] => {
+      const children: ChildElement[] = [];
+      const allChildren = [
+        ...Array.from(element.querySelectorAll(CHILDREN_SELECTOR)),
+        ...Array.from(
+          element.shadowRoot?.querySelectorAll(CHILDREN_SELECTOR) || []
+        ),
+      ];
+
+      allChildren.forEach((child) => {
+        children.push(child as ChildElement);
+        children.push(...collectChildren(child));
+      });
+
+      return children;
+    };
+
+    return collectChildren(this);
+  }
 
   public async initialize() {
-    const children = this.querySelectorAll(
-      'child-lit-element, stencil-component'
-    );
+    const children = this.getAllChildren();
     children.forEach((child) => {
-      (child as ChildLitElement | StencilTestElement).initialize();
+      child.initialize();
     });
     if (this.waitForUpdateComplete) {
       await this.updateComplete;
@@ -38,16 +64,40 @@ class TestChildrenUpdateComplete extends ChildrenUpdateCompleteMixin(
   }
 
   private checkDependent() {
-    const children = Array.from(
-      this.querySelectorAll('child-lit-element, stencil-component')
-    ) as (ChildLitElement | StencilTestElement)[];
-
+    const children = this.getAllChildren();
     this.isChildrenLoaded = children.every((child) => child.value === 'ready');
   }
 }
 
 @customElement('child-lit-element')
-class ChildLitElement extends LitElement {
+class ChildLitElement extends ChildrenUpdateCompleteMixin(LitElement) {
+  @property({type: String})
+  public value!: string;
+
+  public async initialize() {
+    this.initializeNested();
+    await this.updateComplete;
+    this.value = 'ready';
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+
+  private async initializeNested() {
+    const nestedChild = document.createElement(
+      'child-lit-element-nested'
+    ) as ChildLitElementNested;
+    this.appendChild(nestedChild);
+    if (nestedChild) {
+      (nestedChild as ChildLitElementNested).initialize();
+    }
+  }
+
+  render() {
+    return html`><slot></slot>`;
+  }
+}
+
+@customElement('child-lit-element-nested')
+class ChildLitElementNested extends LitElement {
   @property({type: String})
   public value!: string;
 
@@ -101,23 +151,6 @@ describe('ChildrenUpdateCompleteMixin', () => {
     parentElement.appendChild(stencilElement);
   };
 
-  const setupNestedChildLitElements = async (parentElement: LitElement) => {
-    const child1 = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
-    const child2 = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
-    const nestedChild = document.createElement(
-      'child-lit-element'
-    ) as ChildLitElement;
-
-    child1.appendChild(nestedChild);
-    parentElement.appendChild(child1);
-    parentElement.appendChild(child2);
-    await element.updateComplete;
-  };
-
   const teardownElement = () => {
     if (document.body.contains(element)) {
       document.body.removeChild(element);
@@ -157,13 +190,6 @@ describe('ChildrenUpdateCompleteMixin', () => {
   it('should return base updateComplete when no children are present', async () => {
     const baseUpdateComplete = await element.getPublicUpdateComplete();
     expect(baseUpdateComplete).toBe(true);
-  });
-
-  it('should wait for multiple LitElement children recursively', async () => {
-    await setupNestedChildLitElements(element);
-    await element.initialize();
-
-    expect(element.isChildrenLoaded).toBe(true);
   });
 
   it('should wait for all children to be ready before resolving updateComplete', async () => {

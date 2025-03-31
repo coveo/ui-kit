@@ -20,7 +20,9 @@ export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(
         this instanceof LitElement
           ? Array.from(this.querySelectorAll('*'))
           : [];
-      console.log('children', children);
+      this.shadowRoot
+        ?.querySelectorAll('*')
+        .forEach((child) => children.push(child));
 
       await Promise.all(
         children.map(async (child) => {
