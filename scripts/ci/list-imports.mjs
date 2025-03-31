@@ -5,8 +5,9 @@ import ts from 'typescript';
 
 export function ensureFileExists(filePath) {
   if (!existsSync(filePath)) {
-    throw new Error(`File ${filePath} does not exist.`);
+    return false;
   }
+  return true;
 }
 
 function getSourceFile(containingFile, fileContent) {

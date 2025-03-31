@@ -220,7 +220,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-search-box-');
+    this.id ||= randomID('atomic-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -530,6 +530,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
           this.triggerTextAreaChange(item.query ?? '');
         }}

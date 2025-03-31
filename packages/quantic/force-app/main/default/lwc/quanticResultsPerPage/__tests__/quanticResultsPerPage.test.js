@@ -294,9 +294,28 @@ describe('c-quantic-results-per-page', () => {
       customChoices.forEach((choice, index) => {
         expect(console.error).toHaveBeenNthCalledWith(
           index + 1,
-          `The choice value "${choice}" from the "choicesDisplayed" option is not a number.`
+          `The choice value "${choice}" from the "choicesDisplayed" option must be a positive number.`
         );
       });
+    });
+
+    it('should log an error if one of the choices displayed is a negative number', async () => {
+      const expectedBadChoice = -5;
+      const customChoices = [expectedBadChoice, '10', '20'];
+      const element = createTestComponent({
+        choicesDisplayed: customChoices.join(','),
+      });
+      await flushPromises();
+
+      const initializationError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(initializationError).not.toBeNull();
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        `The choice value "${expectedBadChoice}" from the "choicesDisplayed" option must be a positive number.`
+      );
     });
   });
 
@@ -305,6 +324,7 @@ describe('c-quantic-results-per-page', () => {
     const customInitialChoice = defaultChoices[customInitialChoiceIndex];
 
     beforeEach(() => {
+      console.warn = jest.fn();
       console.error = jest.fn();
       resultsPerPageState = {
         ...resultsPerPageState,
@@ -337,7 +357,7 @@ describe('c-quantic-results-per-page', () => {
         expect(option.selected).toBe(index === customInitialChoiceIndex);
       });
     });
-    it('should log an error if the initial choice is not included in the choices displayed but not display it to users', async () => {
+    it('should log a console warning if the initial choice is not included in the choices displayed but not prevent component initiatlization', async () => {
       const customInvalidInitialChoice = 123;
       const element = createTestComponent({
         initialChoice: customInvalidInitialChoice,
@@ -359,9 +379,49 @@ describe('c-quantic-results-per-page', () => {
       );
       expect(initializationError).toBeNull();
 
+      expect(console.warn).toHaveBeenCalledTimes(1);
+      expect(console.warn).toHaveBeenCalledWith(
+        `The initialChoice "${customInvalidInitialChoice}" is not included in the choicesDisplayed "${defaultChoices}". Defaulting to the first value in choicesDisplayed.`
+      );
+    });
+
+    it('should log a console error if the initial choice is a negative number and prevent component initiatlization', async () => {
+      const customInvalidInitialChoice = -10;
+      const element = createTestComponent({
+        initialChoice: customInvalidInitialChoice,
+      });
+      await flushPromises();
+
+      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(0);
+
+      const initializationError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(initializationError).not.toBeNull();
+
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith(
-        `The "initialChoice" option value "${customInvalidInitialChoice}" is not included in the "choicesDisplayed" option "${defaultChoices}". Defaulting to the first value of the choices.`
+        `The initialChoice "${customInvalidInitialChoice}" must be a positive number.`
+      );
+    });
+
+    it('should log a console error if the initial choice is not a number and prevent component initiatlization', async () => {
+      const customInvalidInitialChoice = 'foo';
+      const element = createTestComponent({
+        initialChoice: customInvalidInitialChoice,
+      });
+      await flushPromises();
+
+      expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(0);
+
+      const initializationError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(initializationError).not.toBeNull();
+
+      expect(console.error).toHaveBeenCalledTimes(1);
+      expect(console.error).toHaveBeenCalledWith(
+        `The initialChoice "${customInvalidInitialChoice}" must be a positive number.`
       );
     });
   });
