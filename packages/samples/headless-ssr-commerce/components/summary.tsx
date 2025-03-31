@@ -16,12 +16,13 @@ export default function Summary() {
   };
 
   const renderQuerySummary = () => {
-    if (!('query' in state)) {
+    if (!('query' in state) || state.query.trim() === '') {
       return null;
     }
 
     return (
       <span>
+        {' '}
         for <b>{state.query}</b>
       </span>
     );
