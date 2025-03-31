@@ -8,6 +8,7 @@ import {
 import {AtomicText} from '@coveo/atomic-angular';
 
 @Component({
+  standalone: false,
   selector: 'app-field-label',
   templateUrl: './field-label.component.html',
 })

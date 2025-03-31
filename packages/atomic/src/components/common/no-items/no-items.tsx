@@ -19,7 +19,7 @@ export const NoItems: FunctionalComponent<NoItemsProps> = ({
       params={{
         query: (
           <span
-            class="inline-block max-w-full truncate whitespace-normal align-bottom font-bold"
+            class="inline-block max-w-full truncate align-bottom font-bold whitespace-normal"
             part="highlight"
           >
             <LocalizedString

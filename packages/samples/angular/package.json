@@ -11,26 +11,26 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "18.2.13",
-    "@angular/common": "18.2.13",
-    "@angular/compiler": "18.2.13",
-    "@angular/core": "18.2.13",
-    "@angular/forms": "18.2.13",
-    "@angular/platform-browser": "18.2.13",
-    "@angular/platform-browser-dynamic": "18.2.13",
-    "@angular/router": "18.2.13",
-    "@coveo/atomic-angular": "3.3.14",
+    "@angular/animations": "19.2.2",
+    "@angular/common": "19.2.2",
+    "@angular/compiler": "19.2.2",
+    "@angular/core": "19.2.2",
+    "@angular/forms": "19.2.2",
+    "@angular/platform-browser": "19.2.2",
+    "@angular/platform-browser-dynamic": "19.2.2",
+    "@angular/router": "19.2.2",
+    "@coveo/atomic-angular": "3.3.16",
     "rxjs": "7.8.2",
     "zone.js": "0.15.0"
   },
   "devDependencies": {
-    "@angular/build": "18.2.14",
-    "@angular/cli": "18.2.14",
-    "@angular/compiler-cli": "18.2.13",
+    "@angular/build": "19.2.3",
+    "@angular/cli": "19.2.3",
+    "@angular/compiler-cli": "19.2.2",
     "@playwright/test": "1.50.1",
     "@types/node": "22.13.5",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "gts": "5.3.1",
-    "typescript": "5.5.4"
+    "typescript": "5.8.2"
   }
 }

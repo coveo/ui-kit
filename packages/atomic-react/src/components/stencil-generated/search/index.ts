@@ -14,7 +14,6 @@ export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<J
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
-export const AtomicComponentError = /*@__PURE__*/createReactComponent<JSX.AtomicComponentError, HTMLAtomicComponentErrorElement>('atomic-component-error');
 export const AtomicDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicDidYouMean, HTMLAtomicDidYouMeanElement>('atomic-did-you-mean');
 export const AtomicExternal = /*@__PURE__*/createReactComponent<JSX.AtomicExternal, HTMLAtomicExternalElement>('atomic-external');
 export const AtomicFacet = /*@__PURE__*/createReactComponent<JSX.AtomicFacet, HTMLAtomicFacetElement>('atomic-facet');

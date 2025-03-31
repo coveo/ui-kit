@@ -33,7 +33,7 @@ exports[`instant result analytics actions > #logRecommendationOpen > when analyt
       "url": "example documentUrl",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;

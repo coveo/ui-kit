@@ -3,7 +3,7 @@ const cachedWrappers: Set<HTMLElement> = new Set();
 
 /**
  * Wrapper for fixture, creates a new parent node and appends it to the document body
- * You do not need to use this function directly in the tests if you use`fixture`.
+ * You do not need to use this function directly in the tests if you use `fixture`.
  * @param {HTMLElement} parentNode - The parent node to append to the document body.
  */
 export function fixtureWrapper(parentNode: HTMLElement) {

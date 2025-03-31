@@ -3,12 +3,7 @@ import {randomUUID} from 'crypto';
 import {coveo_capture, coveo_visitorId} from '../app/cookies.server';
 
 export interface CoveoAnalyticsContext
-  extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {
-  /**
-   * A 'Set-Cookie' response header if a new `clientId` was generated on the server-side, or an empty object otherwise.
-   */
-  setCookieHeader: SetCookieHeader;
-}
+  extends Required<Pick<NavigatorContext, 'clientId' | 'capture'>> {}
 
 export type SetCookieHeader = {'Set-Cookie': string} | Record<string, never>;
 
@@ -61,9 +56,13 @@ export const getAnalyticsContext = async (
   request: Request
 ): Promise<CoveoAnalyticsContext> => {
   const capture = await shouldCapture(request);
-  const visitorIdCookieValue = await coveo_visitorId.parse(
-    request.headers.get('Cookie')
-  );
+  let visitorIdCookieValue: string | undefined;
+
+  if (capture) {
+    visitorIdCookieValue = await coveo_visitorId.parse(
+      request.headers.get('Cookie')
+    );
+  }
 
   // When `shouldCapture(request)` evaluates to `true`, the `visitorIdCookieValue` will be defined unless the user has
   // deleted the `coveo_visitorId` cookie but not the `coveo_capture` cookie. This is the only case where generating a
@@ -74,11 +73,7 @@ export const getAnalyticsContext = async (
     ? randomUUID()
     : (visitorIdCookieValue ?? '');
 
-  const setCookieHeader = generateNewClientId
-    ? await getVisitorIdSetCookieHeader(clientId)
-    : {};
-
-  return {capture, clientId, setCookieHeader};
+  return {capture, clientId};
 };
 
 /**
@@ -87,9 +82,9 @@ export const getAnalyticsContext = async (
  * @param clientId - The clientId to serialize into the `coveo_visitorId` 'Set-Cookie' response header.
  * @returns A 'Set-Cookie' response header.
  */
-const getVisitorIdSetCookieHeader = async (
+export const getVisitorIdSetCookieHeader = async (
   clientId: string
-): Promise<SetCookieHeader> => {
+): Promise<SetCookieHeader | undefined> => {
   if (clientId === '') {
     return {};
   }

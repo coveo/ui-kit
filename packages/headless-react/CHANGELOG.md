@@ -1,3 +1,11 @@
+## <small>2.4.14 (2025-03-26)</small>
+
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
+## <small>2.4.13 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
 ## <small>2.4.11 (2025-03-06)</small>
 
 - chore(deps): update dependency typedoc to v0.27.9 j:kit-282 (#5030) ([f8d3d0e](https://github.com/coveo/ui-kit/commits/f8d3d0e)), closes [#5030](https://github.com/coveo/ui-kit/issues/5030)

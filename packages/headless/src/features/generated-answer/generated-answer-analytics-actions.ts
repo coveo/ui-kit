@@ -71,7 +71,7 @@ export const logOpenGeneratedAnswerSource = (
     analyticsPayloadBuilder: (state): Rga.CitationClick | undefined => {
       const citation = citationSourceSelector(state, citationId);
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -110,7 +110,7 @@ export const logHoverCitation = (
     analyticsPayloadBuilder: (state): Rga.CitationHover | undefined => {
       const citation = citationSourceSelector(state, citationId);
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         citationId,
         itemMetadata: {
           uniqueFieldName: 'permanentid',
@@ -141,7 +141,7 @@ export const logLikeGeneratedAnswer = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'like',
       };
     },
@@ -165,7 +165,7 @@ export const logDislikeGeneratedAnswer = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'dislike',
       };
     },
@@ -201,7 +201,7 @@ export const logGeneratedAnswerFeedback = (
         details,
       } = feedback;
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         helpful,
         details: {
           readable: parseEvaluationDetails(readable),
@@ -239,11 +239,11 @@ export const logGeneratedAnswerStreamEnd = (
         answerTextIsEmpty,
       });
     },
-    analyticsType: 'Rga.StreamEnd',
-    analyticsPayloadBuilder: (state): Rga.StreamEnd | undefined => {
+    analyticsType: 'Rga.AnswerReceived',
+    analyticsPayloadBuilder: (state): Rga.AnswerReceived | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
-        answerGenerated: true,
+        answerId: state.search?.response.searchUid || '',
+        answerGenerated: answerGenerated ?? false,
       };
     },
   });
@@ -266,7 +266,7 @@ export const logGeneratedAnswerShowAnswers = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'show',
       };
     },
@@ -290,7 +290,7 @@ export const logGeneratedAnswerHideAnswers = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'hide',
       };
     },
@@ -314,7 +314,7 @@ export const logGeneratedAnswerExpand = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'expand',
       };
     },
@@ -338,7 +338,7 @@ export const logGeneratedAnswerCollapse = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'collapse',
       };
     },
@@ -362,7 +362,7 @@ export const logCopyGeneratedAnswer = (): CustomAction =>
     analyticsType: 'Rga.AnswerAction',
     analyticsPayloadBuilder: (state): Rga.AnswerAction | undefined => {
       return {
-        responseId: state.search?.response.searchUid || '',
+        answerId: state.search?.response.searchUid || '',
         action: 'copyToClipboard',
       };
     },

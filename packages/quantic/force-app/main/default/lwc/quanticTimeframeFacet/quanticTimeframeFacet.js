@@ -388,9 +388,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @returns {DatepickerElement|null}
    */
   get startDatepicker() {
-    // @ts-ignore
     return this.withDatePicker
-      ? this.template.querySelector('.timeframe-facet__start-input')
+      ? // @ts-ignore
+        this.template.querySelector('.timeframe-facet__start-input')
       : null;
   }
 
@@ -398,9 +398,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @returns {DatepickerElement|null}
    */
   get endDatepicker() {
-    // @ts-ignore
     return this.withDatePicker
-      ? this.template.querySelector('.timeframe-facet__end-input')
+      ? // @ts-ignore
+        this.template.querySelector('.timeframe-facet__end-input')
       : null;
   }
 

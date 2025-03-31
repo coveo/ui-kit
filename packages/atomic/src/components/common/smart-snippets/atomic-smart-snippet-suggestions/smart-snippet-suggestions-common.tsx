@@ -172,7 +172,7 @@ export class SmartSnippetSuggestionCommon {
           {relatedQuestion.expanded && (
             <div
               part="answer-and-source"
-              class="pb-6 pl-10 pr-6"
+              class="pr-6 pb-6 pl-10"
               id={this.getRelatedQuestionId(index)}
             >
               {this.renderContent(relatedQuestion)}

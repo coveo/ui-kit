@@ -1,3 +1,19 @@
+## 3.16.0 (2025-03-26)
+
+- feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
+- feat(headless): replaced searchUid by responseId and adapted to latest genqa analytics schemas (#501 ([2f2c123](https://github.com/coveo/ui-kit/commits/2f2c123)), closes [#5018](https://github.com/coveo/ui-kit/issues/5018)
+- fix(quantic): added origin context to quantic case assist interface (#5091) ([33435f6](https://github.com/coveo/ui-kit/commits/33435f6)), closes [#5091](https://github.com/coveo/ui-kit/issues/5091)
+- fix(quantic): custom no-answer message displayed when search returns no results (#5084) ([1a38e96](https://github.com/coveo/ui-kit/commits/1a38e96)), closes [#5084](https://github.com/coveo/ui-kit/issues/5084)
+- fix(quantic): fixed how the quantic\_\_loadingstatechange event is handled (#5090) ([b874a79](https://github.com/coveo/ui-kit/commits/b874a79)), closes [#5090](https://github.com/coveo/ui-kit/issues/5090)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
+## <small>3.15.4 (2025-03-19)</small>
+
+- fix(quantic): delay caused by recent queries fixed (#5060) ([31a14b9](https://github.com/coveo/ui-kit/commits/31a14b9)), closes [#5060](https://github.com/coveo/ui-kit/issues/5060)
+- fix(quantic): fixed issue with custom facet captions inside the refine modal (#5075) ([d9be647](https://github.com/coveo/ui-kit/commits/d9be647)), closes [#5075](https://github.com/coveo/ui-kit/issues/5075)
+- fix(quanticDocs): answer config id default value (#4970) ([707af1e](https://github.com/coveo/ui-kit/commits/707af1e)), closes [#4970](https://github.com/coveo/ui-kit/issues/4970)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
 ## <small>3.15.3 (2025-03-12)</small>
 
 - fix(atomic): fix generated answer scrollable table overflow when table too small (#5040) ([868c089](https://github.com/coveo/ui-kit/commits/868c089)), closes [#5040](https://github.com/coveo/ui-kit/issues/5040)
