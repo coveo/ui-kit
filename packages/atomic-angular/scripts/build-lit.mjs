@@ -101,7 +101,7 @@ for (const module of cem.modules) {
 }
 
 if (litImports.size > 0) {
-atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+  atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
 }
 
 if (defineCustomElementImports.size > 0) {
