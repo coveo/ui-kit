@@ -1,19 +1,20 @@
 // @ts-ignore
 import {createElement} from 'lwc';
 
-export function createTestComponent(TComponent, tag, options = {}) {
-  const element = createElement(tag, {
-    is: TComponent,
-  });
+export function buildCreateTestComponent(TComponent, tag, defaultOptions = {}) {
+  return (options = {}) => {
+    const element = createElement(tag, {
+      is: TComponent,
+    });
 
-  if (options) {
-    for (const [key, value] of Object.entries(options)) {
+    const optionsToApply = Object.assign({}, defaultOptions, options);
+    for (const [key, value] of Object.entries(optionsToApply)) {
       element[key] = value;
     }
-  }
 
-  document.body.appendChild(element);
-  return element;
+    document.body.appendChild(element);
+    return element;
+  };
 }
 
 export function cleanup() {
@@ -22,4 +23,10 @@ export function cleanup() {
     document.body.removeChild(document.body.firstChild);
   }
   jest.clearAllMocks();
+}
+
+// Helper function to wait until the microtask queue is empty.
+export function flushPromises() {
+  // eslint-disable-next-line @lwc/lwc/no-async-operation
+  return new Promise((resolve) => setTimeout(resolve, 0));
 }

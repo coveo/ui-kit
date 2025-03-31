@@ -95,6 +95,7 @@
     "force-app/main/default/classes/*",
     "force-app/main/default/labels/*",
     "force-app/main/default/lwc/*",
+    "!force-app/main/default/lwc/testUtils",
     "force-app/main/default/cspTrustedSites/*",
     "force-app/main/default/staticresources/*",
     "scripts/npm",

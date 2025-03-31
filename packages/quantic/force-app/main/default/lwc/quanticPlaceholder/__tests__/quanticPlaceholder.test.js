@@ -1,5 +1,5 @@
 import QuanticPlaceholder from 'c/quanticPlaceholder';
-import {cleanup, createTestComponent} from 'c/testUtils';
+import {cleanup, buildCreateTestComponent} from 'c/testUtils';
 
 const selectors = {
   resultListContainer: '.placeholder__result-container',
@@ -8,6 +8,11 @@ const selectors = {
   cardRow: '.placeholder__card-row',
 };
 
+const createTestComponent = buildCreateTestComponent(
+  QuanticPlaceholder,
+  'c-quantic-placeholder'
+);
+
 describe('c-quantic-placeholder', () => {
   afterEach(() => {
     cleanup();
@@ -15,11 +20,7 @@ describe('c-quantic-placeholder', () => {
 
   describe('without options', () => {
     it('should not display', () => {
-      const element = createTestComponent(
-        QuanticPlaceholder,
-        'c-quantic-placeholder',
-        {}
-      );
+      const element = createTestComponent();
 
       expect(element.shadowRoot.firstChild).toBeNull();
     });
@@ -30,14 +31,10 @@ describe('c-quantic-placeholder', () => {
     ['card', selectors.cardContainer, selectors.cardRow],
   ])('with %s variant', (variant, containerSelector, rowSelector) => {
     it.each([[1], [5], [10]])('should display %d rows', (rows) => {
-      const element = createTestComponent(
-        QuanticPlaceholder,
-        'c-quantic-placeholder',
-        {
-          variant: variant,
-          numberOfRows: rows,
-        }
-      );
+      const element = createTestComponent({
+        variant: variant,
+        numberOfRows: rows,
+      });
 
       expect(
         element.shadowRoot.querySelector(containerSelector)
