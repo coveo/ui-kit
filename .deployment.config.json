@@ -1,4 +1,5 @@
 {
+  "deployment_config_version": 19,
   "product": "relay",
   "team_name": "dataplatformfoundation",
   "general": {
@@ -12,9 +13,14 @@
       }
     },
     "start_environment_automatically": true,
-    "prd": {
-      "start_environment_automatically": false
-    }
+    "overrides": [
+      {
+        "environments": ["prd"],
+        "content": {
+          "start_environment_automatically": false
+        }
+      }
+    ]
   },
   "ordered_phases": [
     {
@@ -40,24 +46,30 @@
       }
     }
   ],
-  "certifiers": {},
-  "environment_post_hooks": {
-    "stg": {
-      "github": {
-        "workflow_file": "stg-release.yml"
-      }
+  "certifiers": {
+    "observatory": {
+      "no_endpoint": true
     },
-    "prd": {
-      "github": {
-        "workflow_file": "prd-release.yml"
-      }
+    "package_rollout": {
+      "only_consider_changesets_after": "90d72154b507b5e28e104f922be29efca7708ebc"
     }
   },
-  "observatory": {
-    "no_endpoint": true
-  },
-  "package_rollout": {
-    "only_consider_changesets_after": "90d72154b507b5e28e104f922be29efca7708ebc"
-  },
-  "deployment_config_version": 13
+  "hooks": {
+    "post": {
+      "custom": [
+        {
+          "environments": ["stg"],
+          "github": {
+            "workflow_file": "stg-release.yml"
+          }
+        },
+        {
+          "environments": ["prd"],
+          "github": {
+            "workflow_file": "prd-release.yml"
+          }
+        }
+      ]
+    }
+  }
 }
