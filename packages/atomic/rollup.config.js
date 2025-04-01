@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import resolve from '@rollup/plugin-node-resolve';
@@ -75,6 +76,10 @@ export default {
   },
   external: [/.*\/headless\/v.*/, /.*\/atomic\/v.*/, /.*\/bueno\/v.*/],
   plugins: [
+    alias({
+      find: 'node-fetch',
+      replacement: 'isomorphic-fetch',
+    }),
     resolve({preserveSymlinks: false}),
     externalizeDependenciesPlugin(),
     commonjs(),
