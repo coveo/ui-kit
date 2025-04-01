@@ -5,7 +5,7 @@
     "title": "Similar title",
     "excerpt": "The excerpt of the first document suggestion.",
     "hasHtmlVersion": true,
-    "fields": {"uri": "test 0"}
+    "fields": {"uri": "test 0", "source": "Source 0", "permanentid": "0"}
   },
   {
     "clickUri": "test 1",
@@ -13,6 +13,6 @@
     "title": "Similar title",
     "excerpt": "The excerpt of the second document suggestion.",
     "hasHtmlVersion": true,
-    "fields": {"uri": "test 1"}
+    "fields": {"uri": "test 1", "source": "Source 1", "permanentid": "1"}
   }
 ]

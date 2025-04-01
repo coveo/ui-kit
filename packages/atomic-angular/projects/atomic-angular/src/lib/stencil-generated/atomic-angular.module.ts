@@ -6,6 +6,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
         
 import {
 AtomicCommerceProductList,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -39,7 +40,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,
@@ -147,12 +147,9 @@ AtomicTimeframeFacet
 } from './components';
 
         
-import {defineCustomElements} from '@coveo/atomic/loader';
-defineCustomElements(window);
-
-        
 const DECLARATIONS = [
 AtomicCommerceProductList,
+AtomicComponentError,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -186,7 +183,6 @@ AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
-AtomicComponentError,
 AtomicDidYouMean,
 AtomicExternal,
 AtomicFacet,

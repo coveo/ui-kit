@@ -1,4 +1,5 @@
-import {Component, Prop, Listen} from '@stencil/core';
+import {markParentAsReady, isParentReady} from '@/src/utils/init-queue';
+import {Component, Prop, Listen, Element} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {
   AtomicInterface,
@@ -14,6 +15,7 @@ import {
   shadow: false,
 })
 export class AtomicExternal {
+  @Element() public host!: HTMLAtomicExternalElement;
   /**
    * The CSS selector that identifies the `atomic-search-interface` component with which to initialize the external components.
    */
@@ -36,10 +38,23 @@ export class AtomicExternal {
     );
   }
 
+  @Listen('atomic/parentReady', {target: 'window'})
+  public handleParentReady(event: CustomEvent) {
+    if (event.target === this.boundInterface) {
+      markParentAsReady(this.host);
+    }
+  }
+
   /**
    * Represents the bound interface for the AtomicExternal component.
    */
   @Prop({mutable: true}) boundInterface?: AtomicInterface;
+
+  connectedCallback() {
+    if (isParentReady(this.#interface)) {
+      markParentAsReady(this.host);
+    }
+  }
 
   get #interface() {
     if (!this.boundInterface) {

@@ -6,6 +6,8 @@ export default {
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
     ),
+  'atomic-component-error': async () =>
+    await import('../common/atomic-component-error/atomic-component-error'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

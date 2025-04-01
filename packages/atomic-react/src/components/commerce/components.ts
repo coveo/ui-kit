@@ -1,9 +1,9 @@
-import {AtomicCommerceProductList as LitAtomicCommerceProductList} from '@coveo/atomic/components';
+import {AtomicComponentError as LitAtomicComponentError} from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicCommerceProductList = createComponent({
-  tagName: 'atomic-commerce-product-list',
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
   react: React,
-  elementClass: LitAtomicCommerceProductList,
+  elementClass: LitAtomicComponentError,
 });

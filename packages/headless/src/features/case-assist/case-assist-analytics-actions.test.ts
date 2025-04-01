@@ -32,6 +32,7 @@ const mockLogUpdateCaseField = vi.fn();
 const mockLogSelectFieldSuggestion = vi.fn();
 const mockLogSelectDocumentSuggestion = vi.fn();
 const mockLogRateDocumentSuggestion = vi.fn();
+const mockLogQuickviewDocumentSuggestion = vi.fn();
 
 const emit = vi.fn();
 
@@ -58,6 +59,7 @@ vi.mock('coveo.analytics', () => {
     logSelectFieldSuggestion: mockLogSelectFieldSuggestion,
     logSelectDocumentSuggestion: mockLogSelectDocumentSuggestion,
     logRateDocumentSuggestion: mockLogRateDocumentSuggestion,
+    logQuickviewDocumentSuggestion: mockLogQuickviewDocumentSuggestion,
   }));
 
   return {
@@ -333,12 +335,12 @@ describe('generated answer insight analytics actions', () => {
         {} as ThunkExtraArguments
       );
 
-      const mockToUse = mockLogSelectDocumentSuggestion;
+      const mockToUse = mockLogQuickviewDocumentSuggestion;
 
       expect(mockToUse).toHaveBeenCalledTimes(1);
       expect(mockToUse).toHaveBeenCalledWith({
         ticket: expectedTicketPayload,
-        suggestion: {...expectedDocumentSuggestion, fromQuickview: true},
+        suggestion: expectedDocumentSuggestion,
       });
     });
 

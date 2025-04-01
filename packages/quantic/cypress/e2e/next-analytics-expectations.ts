@@ -167,8 +167,8 @@ function nextAnalyticsExpectations() {
           const eventMeta: EventMetadata = eventBody.meta;
 
           expect(eventBody).to.have.property(
-            'responseId',
-            expectedEvent.responseId
+            'answerId',
+            expectedEvent.answerId
           );
           expect(eventBody).to.have.property('action', expectedEvent.action);
           expect(eventMeta).to.have.property('type', 'Rga.AnswerAction');
@@ -185,24 +185,24 @@ function nextAnalyticsExpectations() {
         );
     },
 
-    emitRgaStreamEnd: (
-      expectedEvent: Rga.StreamEnd,
+    emitRgaAnswerReceived: (
+      expectedEvent: Rga.AnswerReceived,
       expectedTrackingId: string
     ) => {
-      cy.wait(InterceptAliases.NextAnalytics.Rga.StreamEnd)
+      cy.wait(InterceptAliases.NextAnalytics.Rga.AnswerReceived)
         .then((interception): void => {
           const eventBody = interception?.request?.body?.[0];
           const eventMeta: EventMetadata = eventBody.meta;
 
           expect(eventBody).to.have.property(
-            'responseId',
-            expectedEvent.responseId
+            'answerId',
+            expectedEvent.answerId
           );
           expect(eventBody).to.have.property(
             'answerGenerated',
             expectedEvent.answerGenerated
           );
-          expect(eventMeta).to.have.property('type', 'Rga.StreamEnd');
+          expect(eventMeta).to.have.property('type', 'Rga.AnswerReceived');
           expect(eventMeta.config).to.have.property(
             'trackingId',
             expectedTrackingId
@@ -211,7 +211,7 @@ function nextAnalyticsExpectations() {
           eventBody.meta.ts = Date.now();
           validateEventWithEventAPI(interception.request);
         })
-        .logDetail('should emit the Rga.StreamEnd event');
+        .logDetail('should emit the Rga.AnswerReceived event');
     },
 
     emitRgaSubmitFeedback: (
@@ -226,8 +226,8 @@ function nextAnalyticsExpectations() {
           expect(eventBody.details).to.deep.equal(expectedEvent.details);
           expect(eventBody).to.have.property('helpful', expectedEvent.helpful);
           expect(eventBody).to.have.property(
-            'responseId',
-            expectedEvent.responseId
+            'answerId',
+            expectedEvent.answerId
           );
           if (expectedEvent.additionalNotes) {
             expect(eventBody).to.have.property(
@@ -266,8 +266,8 @@ function nextAnalyticsExpectations() {
             expectedEvent.itemMetadata
           );
           expect(eventBody).to.have.property(
-            'responseId',
-            expectedEvent.responseId
+            'answerId',
+            expectedEvent.answerId
           );
           expect(eventBody).to.have.property(
             'citationId',
@@ -301,8 +301,8 @@ function nextAnalyticsExpectations() {
             expectedEvent.itemMetadata
           );
           expect(eventBody).to.have.property(
-            'responseId',
-            expectedEvent.responseId
+            'answerId',
+            expectedEvent.answerId
           );
           expect(eventBody).to.have.property(
             'citationId',
