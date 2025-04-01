@@ -45,7 +45,7 @@ export function createSingletonContext<
 /**
  * Returns engine and controller hooks, and context providers.
  *
- * See [Define the commerce engine and controllers](docs.coveo.com/en/obif0156#define-the-commerce-engine-and-controllers).
+ * See [Define the commerce engine and controllers](https://docs.coveo.com/en/obif0156#define-the-commerce-engine-and-controllers).
  *
  * @group Engine
  */
