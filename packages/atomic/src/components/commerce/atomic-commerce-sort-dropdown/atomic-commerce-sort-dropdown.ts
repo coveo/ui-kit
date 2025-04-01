@@ -1,3 +1,4 @@
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   Sort,
@@ -9,7 +10,7 @@ import {
   SearchState,
   ProductListingState,
 } from '@coveo/headless/commerce';
-import {html, CSSResultGroup, unsafeCSS} from 'lit';
+import {html, CSSResultGroup, unsafeCSS, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
@@ -17,7 +18,6 @@ import {bindStateToController} from '../../../decorators/bind-state';
 import {bindingGuard} from '../../../decorators/binding-guard';
 import {errorGuard} from '../../../decorators/error-guard';
 import {InitializableComponent} from '../../../decorators/types';
-import {TailwindLitElement} from '../../../utils/tailwind.element';
 import {randomID} from '../../../utils/utils';
 import {sortGuard} from '../../common/sort/guard';
 import {renderSortLabel} from '../../common/sort/label';
@@ -38,8 +38,9 @@ import styles from './atomic-commerce-sort-dropdown.tw.css';
  * @alpha
  */
 @customElement('atomic-commerce-sort-dropdown')
+@withTailwindStyles
 export class AtomicCommerceSortDropdown
-  extends InitializeBindingsMixin(TailwindLitElement)
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   @state() bindings!: CommerceBindings;
@@ -58,10 +59,7 @@ export class AtomicCommerceSortDropdown
 
   @state() error!: Error;
 
-  static styles: CSSResultGroup = [
-    TailwindLitElement.styles,
-    unsafeCSS(styles),
-  ];
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
