@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "31f5c9e1-186a-4adc-9f59-7561285d8c53",
+  "label": "Quantic Pager",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "926317f4-f9d4-4f0f-a86b-2936942d4737",
+              "columns": [
+                {
+                  "UUID": "d6690b94-e4c4-4be7-94ce-bb626901cab6",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "926317f4-f9d4-4f0f-a86b-2936942d4737",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticPager",
+                  "id": "58510f2e-c26e-4b1a-9cc4-77cb8a27322b",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "d6690b94-e4c4-4be7-94ce-bb626901cab6",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "dbce9a1d-dcbe-4d54-bf4c-a47fe8d323a8",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Pager"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "06cf0bfa-a776-4360-b9e3-b75437239aa8",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "9bb6f8f5-a80a-4610-b8c6-949e2559d941",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-pager"
+}

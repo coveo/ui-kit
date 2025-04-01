@@ -1,0 +1,11 @@
+{
+  "activeViewId": "0f82ebb1-3e29-4a18-a755-d278cdfce075",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "c35a33c0-514b-4f21-954f-4e07f99e7f27",
+  "label": "Quantic Tab",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-tab",
+  "type": "route",
+  "urlPrefix": "quantic-tab"
+}

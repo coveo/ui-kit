@@ -1,0 +1,20 @@
+{
+  "name": "auth",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run build:bundles", "npm run build:definitions"],
+        "parallel": true,
+        "cwd": "packages/auth"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

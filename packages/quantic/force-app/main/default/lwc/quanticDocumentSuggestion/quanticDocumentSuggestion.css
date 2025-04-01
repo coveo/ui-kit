@@ -1,0 +1,21 @@
+.excerpt {
+  font-size: 14px;
+}
+.loading-holder {
+  position: relative;
+  height: 3.5rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.slds-card {
+  border: 1px solid #dddbda;
+}
+
+.no-suggestion-message {
+  background-color: #f6f7f9;
+}

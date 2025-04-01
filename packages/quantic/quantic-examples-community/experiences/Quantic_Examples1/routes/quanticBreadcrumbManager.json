@@ -1,0 +1,11 @@
+{
+  "activeViewId": "e7f7f0ea-01ea-45ea-805b-673dc50bc487",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "6ec2bbfa-cd3d-4e70-bc66-ad5907035d0e",
+  "label": "Quantic Breadcrumb Manager",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-breadcrumb-manager",
+  "type": "route",
+  "urlPrefix": "quantic-breadcrumb-manager"
+}

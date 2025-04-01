@@ -1,0 +1,11 @@
+{
+  "activeViewId": "c01ca255-789f-48be-999d-bca16f0ff27a",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "29565a5f-0621-49bb-9c67-eecb5afd5118",
+  "label": "Quantic Modal",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-modal",
+  "type": "route",
+  "urlPrefix": "quantic-modal"
+}

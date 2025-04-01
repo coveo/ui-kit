@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "lib": ["ES2023"],
+    "module": "Node16",
+    "target": "ES2022"
+  },
+  "exclude": ["node_modules"],
+  "include": ["*.mjs"]
+}

@@ -1,0 +1,30 @@
+<template>
+  <template if:true={isStandalone}>
+    <c-quantic-search-interface
+      engine-id={standaloneEngineId}
+      search-hub={searchHub}
+      pipeline={pipeline}
+      skip-first-search
+      disable-state-in-url
+    >
+      <c-quantic-search-box-input
+        input-value={searchBoxValue}
+        textarea={textarea}
+        without-submit-button={withoutSubmitButton}
+        placeholder={placeholder}
+        suggestions={suggestions}
+        data-cy="quantic-search-box-input"
+      ></c-quantic-search-box-input>
+    </c-quantic-search-interface>
+  </template>
+  <template if:false={isStandalone}>
+    <c-quantic-search-box
+      engine-id={engineId}
+      placeholder={placeholder}
+      without-submit-button={withoutSubmitButton}
+      number-of-suggestions={numberOfSuggestions}
+      textarea={textarea}
+      keep-filters-on-search={keepFiltersOnSearch}
+    ></c-quantic-search-box>
+  </template>
+</template>

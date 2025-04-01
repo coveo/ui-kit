@@ -1,0 +1,11 @@
+{
+  "activeViewId": "0e641a46-e416-40a4-bb11-d9976ee88cef",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "1c347542-99af-4bda-8e10-6c0a102e9164",
+  "label": "Full Search Example",
+  "pageAccess": "UseParent",
+  "routeType": "custom-full-search-example",
+  "type": "route",
+  "urlPrefix": "full-search-example"
+}

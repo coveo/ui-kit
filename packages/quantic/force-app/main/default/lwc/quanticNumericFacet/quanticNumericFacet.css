@@ -1,0 +1,11 @@
+@import 'c/quanticFacetStyles';
+
+.facet__search-form {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.facet__search-form-item {
+  flex-grow: 1;
+}

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "f6e60fc9-13c5-4d6d-9dda-100c31e98649",
+  "label": "Quantic Results Per Page",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "71630d93-dcc4-4054-8693-29c77968aa6c",
+              "columns": [
+                {
+                  "UUID": "acbdfe2b-cb89-489d-99cd-8c2d2390b6cb",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "71630d93-dcc4-4054-8693-29c77968aa6c",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticResultsPerPage",
+                  "id": "df44685c-e5d7-480c-ac62-8dda569b1fa2",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "acbdfe2b-cb89-489d-99cd-8c2d2390b6cb",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "00e40135-cae5-4f97-9c00-0ef564a8df4b",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Results Per Page"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "a343a666-441b-4aa1-9ff1-9cc6ea3d5ecc",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "80a3da76-3f94-4e19-af92-bc76d865854f",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-results-per-page"
+}

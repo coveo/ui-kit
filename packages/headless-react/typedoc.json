@@ -1,0 +1,13 @@
+{
+  "entryPointStrategy": "merge",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
+  "gitRevision": "master",
+  "plugin": ["./typedoc/dist/index.js"],
+  "projectDocuments": ["./README.md"]
+}

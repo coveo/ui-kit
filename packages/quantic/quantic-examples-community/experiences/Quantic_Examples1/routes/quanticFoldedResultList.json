@@ -1,0 +1,11 @@
+{
+  "activeViewId": "6cc4c356-815b-404b-9401-fa03f9d11f8a",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "e81f1e36-d43f-41b4-804d-d0b52f39a0a6",
+  "label": "Quantic Folded Result List",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-folded-result-list",
+  "type": "route",
+  "urlPrefix": "quantic-folded-result-list"
+}

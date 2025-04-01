@@ -1,0 +1,24 @@
+{
+  "name": "atomic-react-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "namedInputs": {
+    "negativeBuildOutputs": ["!{projectRoot}/dist"]
+  },
+  "targets": {
+    "cached:build": {
+      "outputs": ["{projectRoot}/dist"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npm run-script -w=@coveo/release if-not-cdn -- \"tsc -b\"",
+          "npm run-script -w=@coveo/release if-not-cdn -- \"vite build\""
+        ],
+        "cwd": "packages/samples/atomic-react"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

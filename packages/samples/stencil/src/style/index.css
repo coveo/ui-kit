@@ -1,0 +1,34 @@
+:root {
+  --atomic-primary: orange;
+  --atomic-primary-light: magenta;
+}
+
+body {
+  margin: 0;
+}
+
+atomic-search-layout {
+  row-gap: var(--atomic-layout-spacing-y);
+}
+
+header {
+  width: 100%;
+  height: 70px;
+  background-color: cyan;
+}
+
+header nav {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+  height: 100%;
+}
+
+header nav atomic-search-box {
+  width: 500px;
+  height: 70%;
+}
+
+atomic-search-layout {
+  grid-template-rows: 0 1fr;
+}

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "3de1860b-5cca-4e2b-a328-537e9988e8ab",
+  "label": "Quantic Standalone Search Box",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "c7f7be92-a6ab-4700-8949-2424e1cf33bc",
+              "columns": [
+                {
+                  "UUID": "59dbf3a2-6a15-4baf-9e52-05f4b763f66c",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "c7f7be92-a6ab-4700-8949-2424e1cf33bc",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticStandaloneSearchBox",
+                  "id": "574d3a10-5504-47c1-9936-34b08a73aad0",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "59dbf3a2-6a15-4baf-9e52-05f4b763f66c",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "69bc4236-85aa-4f7a-b974-3e41495d1fdd",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Standalone Search Box"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "eeed3e9c-6233-4d51-b618-c91ed0f54dfc",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "702976a0-0a9a-45e9-8f71-cb1da01d2db5",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-standalone-search-box"
+}

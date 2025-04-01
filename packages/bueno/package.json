@@ -1,0 +1,44 @@
+{
+  "name": "@coveo/bueno",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/bueno"
+  },
+  "main": "./dist/bueno.esm.js",
+  "module": "./dist/bueno.esm.js",
+  "types": "./dist/definitions/index.d.ts",
+  "license": "Apache-2.0",
+  "version": "1.0.9",
+  "files": [
+    "dist/"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/definitions/index.d.ts",
+      "import": "./dist/bueno.esm.js",
+      "require": "./dist/bueno.js",
+      "default": "./dist/bueno.esm.js"
+    }
+  },
+  "scripts": {
+    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "build": "nx build",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "rimraf -rf dist/*",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
+  },
+  "devDependencies": {
+    "@coveo/release": "1.0.0",
+    "vitest": "3.0.6"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  }
+}

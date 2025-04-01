@@ -1,0 +1,137 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAbandonCase with the right payload 1`] = `
+[
+  "CaseAssist.Cancel",
+  {
+    "reason": "quit",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logAutoSelectCaseField with the right payload 1`] = `
+[
+  "CaseAssist.SelectFieldClassification",
+  {
+    "autoselected": true,
+    "classificationId": "123",
+    "responseId": "baz",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCaseStart with the right payload 1`] = `
+[
+  "CaseAssist.Start",
+  {},
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logClassificationClick with the right payload 1`] = `
+[
+  "CaseAssist.SelectFieldClassification",
+  {
+    "autoselected": false,
+    "classificationId": "123",
+    "responseId": "baz",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCreateCase with the right payload 1`] = `
+[
+  "CaseAssist.CreateTicket",
+  {
+    "ticket": {
+      "category": "example category",
+      "description": "example description",
+      "id": "456",
+      "subject": "example subject",
+      "system": "abc",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionClick with the right payload 1`] = `
+[
+  "CaseAssist.DocumentSuggestionClick",
+  {
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
+    },
+    "position": 1,
+    "responseId": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionOpen with the right payload 1`] = `
+[
+  "CaseAssist.DocumentSuggestionClick",
+  {
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
+    },
+    "position": 1,
+    "responseId": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDocumentSuggestionRating with the right payload 1`] = `
+[
+  "CaseAssist.DocumentSuggestionFeedback",
+  {
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
+    },
+    "liked": true,
+    "responseId": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logQuickviewDocumentSuggestionClick with the right payload 1`] = `
+[
+  "CaseAssist.DocumentSuggestionClick",
+  {
+    "itemMetadata": {
+      "title": "exampleTitle",
+      "uniqueFieldName": "uniqueId",
+      "uniqueFieldValue": "exampleUniqueId",
+      "url": "exampleUri",
+    },
+    "position": 1,
+    "responseId": "qux",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logSolveCase with the right payload 1`] = `
+[
+  "CaseAssist.Cancel",
+  {
+    "reason": "solved",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logUpdateCaseField with the right payload 1`] = `
+[
+  "CaseAssist.UpdateField",
+  {
+    "fieldName": "exampleField",
+    "fieldValue": "bar",
+  },
+]
+`;

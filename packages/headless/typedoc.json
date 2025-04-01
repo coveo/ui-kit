@@ -1,0 +1,19 @@
+{
+  "entryPointStrategy": "merge",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "entryPoints": [
+    "./temp/index.json",
+    "./temp/ssr.json",
+    "./temp/commerce.json",
+    "./temp/ssr-commerce.json",
+    "./temp/case-assist.json",
+    "./temp/insight.json",
+    "./temp/recommendation.json"
+  ],
+  "plugin": ["./typedoc/dist/index.js"]
+}

@@ -1,0 +1,24 @@
+<template>
+    <c-example-layout
+        title={pageTitle}
+        description={pageDescription}
+        show-preview={isConfigured}>
+
+        <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+            <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+        </c-configurator>
+
+        <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+            <c-quantic-facet
+                engine-id={engineId}
+                field={config.field}
+                label={config.label}
+                number-of-values={config.numberOfValues}
+                sort-criteria={config.sortCriteria}
+                no-search={config.noSearch}
+                is-collapsed={config.isCollapsed}
+                display-values-as={config.displayValuesAs}>
+            </c-quantic-facet>
+        </c-example-use-case>
+    </c-example-layout>
+</template>

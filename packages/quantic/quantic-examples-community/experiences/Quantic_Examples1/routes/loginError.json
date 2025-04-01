@@ -1,0 +1,10 @@
+{
+  "activeViewId": "1e1020cf-5873-4499-a3a6-8d44e86d08fe",
+  "appPageId": "44de4093-7974-4567-b1ac-b06e07dc2105",
+  "configurationTags": [],
+  "id": "6d6ffb45-a9ce-4000-aea1-918628d9303b",
+  "label": "Login Error",
+  "routeType": "login-error",
+  "type": "route",
+  "urlPrefix": "error"
+}

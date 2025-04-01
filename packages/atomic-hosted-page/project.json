@@ -1,0 +1,49 @@
+{
+  "name": "atomic-hosted-page",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "namedInputs": {
+    "negativeBuildOutputs": [
+      "!{projectRoot}/dist",
+      "!{projectRoot}/src/components.d.ts"
+    ]
+  },
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "cached:build": {
+      "dependsOn": ["^build"],
+      "inputs": ["^production", "production"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/cdn",
+        "{projectRoot}/loader",
+        "{projectRoot}/src/components.d.ts"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rimraf -rf dist cdn",
+          "tsc --outdir dist",
+          "tsc --outdir cdn --project tsconfig.cdn.json",
+          "node ./scripts/esbuild.js"
+        ],
+        "cwd": "packages/atomic-hosted-page"
+      }
+    },
+    "validate:definitions": {
+      "dependsOn": ["^build", "cached:build:stencil"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:run-script",
+      "options": {
+        "script": "validate:definitions"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "inputs": [],
+      "outputs": [],
+      "executor": "nx:noop"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<template>
+  <div class="slds-is-relative" onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}>
+    <lightning-input
+      data-testid="generated-answer__toggle-button"
+      type="toggle"
+      onchange={toggleGeneratedAnswer}
+      checked={isGeneratedAnswerVisible}
+      variant="label-hidden"
+      message-toggle-active=""
+      message-toggle-inactive=""
+      label={labels.showGeneratedAnswer}
+    ></lightning-input>
+    <c-quantic-tooltip>
+      <div slot="content">{generatedAnswerToggleTooltip}</div>
+    </c-quantic-tooltip>
+  </div>
+</template>

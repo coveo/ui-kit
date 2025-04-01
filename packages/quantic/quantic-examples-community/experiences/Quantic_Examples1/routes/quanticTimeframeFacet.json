@@ -1,0 +1,11 @@
+{
+  "activeViewId": "a70789e2-90dc-4d99-a063-97c1aa7e1e53",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "af62df2c-35c6-4811-a883-64260f3620e4",
+  "label": "Quantic Timeframe Facet",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-timeframe-facet",
+  "type": "route",
+  "urlPrefix": "quantic-timeframe-facet"
+}

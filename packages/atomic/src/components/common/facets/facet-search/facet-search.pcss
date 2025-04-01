@@ -1,0 +1,23 @@
+input[type='text']:focus-visible ~ .search-icon {
+  @apply text-primary;
+}
+
+input[type='text']:hover ~ .search-icon {
+  @apply text-primary-light;
+}
+
+/**
+ * @prop --atomic-facet-search-icon-size: The size of the facet search icon.
+ */
+.search-icon atomic-icon {
+  width: var(--atomic-facet-search-icon-size, 0.75rem);
+  height: var(--atomic-facet-search-icon-size, 0.75rem);
+}
+
+/**
+ * @prop --atomic-facet-search-clear-icon-size: The size of the facet search clear icon.
+ */
+.search-clear-button atomic-icon {
+  width: var(--atomic-facet-search-clear-icon-size, 0.625rem);
+  height: var(--atomic-facet-search-clear-icon-size, 0.625rem);
+}

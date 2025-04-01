@@ -1,0 +1,11 @@
+{
+  "activeViewId": "555b5af7-caae-4003-ac60-7ce6dc29f65f",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "78bf3aff-30bb-470f-aeb1-c771ec776c2f",
+  "label": "Quantic Tab Bar",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-tab-bar",
+  "type": "route",
+  "urlPrefix": "quantic-tab-bar"
+}

@@ -1,0 +1,22 @@
+<template>
+  <div class="slds-grid slds-gutters">
+    <template if:true={withInput}>
+      <div class="slds-col">
+        <lightning-input
+          disabled={disabled}
+          label="Results per page"
+          variant="label-hidden">
+        </lightning-input>
+      </div>
+    </template>
+    <div class="slds-col">
+      <lightning-button
+        label="Perform search"
+        title="Perform search"
+        onclick={handlePerformSearch}
+        disabled={disabled}
+        class="configurator__perform-search">
+      </lightning-button>
+    </div>
+  </div>
+</template>

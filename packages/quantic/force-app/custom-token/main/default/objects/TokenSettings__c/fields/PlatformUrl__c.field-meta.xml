@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PlatformUrl__c</fullName>
+    <externalId>false</externalId>
+    <label>Custom Endpoint Proxy</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+    <description>The URL of a custom proxy endpoint to proxy requests to Coveo. Leave empty if you are not using one. Custom endpoints proxy must point to https://yourOrgId.org.coveo.com.</description>
+</CustomField>

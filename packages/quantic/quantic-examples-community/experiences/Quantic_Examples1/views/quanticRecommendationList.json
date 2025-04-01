@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "20d46c11-8336-4fc1-bce1-4d6f2c592bf5",
+  "label": "Quantic Recommendation List",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "ab5dd13b-d721-4a43-bf1d-6448bfde7698",
+              "columns": [
+                {
+                  "UUID": "7e017120-3b6f-4132-b8de-3ede967de5df",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "ab5dd13b-d721-4a43-bf1d-6448bfde7698",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticRecommendationList",
+                  "id": "88194aba-9900-417c-bfc4-92102e883bc8",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "7e017120-3b6f-4132-b8de-3ede967de5df",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "4bcfcddf-8cf4-46ea-954e-5368b5d2bd7d",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Recommendation List"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "c29b009e-a77f-4fca-bddd-2eed95d8e99f",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "c103bf9b-70da-4e20-b1fc-9a2e6b3afcfc",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-recommendation-list"
+}

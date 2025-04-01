@@ -1,0 +1,13 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={hasResults}>
+      <p class="slds-text-color_weak">
+        <lightning-formatted-rich-text value={summaryLabel} disable-linkify></lightning-formatted-rich-text>
+      </p>
+    </template>
+  </template>
+</template>

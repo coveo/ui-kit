@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "8e1f9c49-4a4a-4a08-a8bc-f927e7258900",
+  "label": "Quantic Summary",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "3442fbd5-087a-41b5-99a1-778b28577b9f",
+              "columns": [
+                {
+                  "UUID": "eed304e1-8baa-42b4-a53b-191d0fec99a4",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "3442fbd5-087a-41b5-99a1-778b28577b9f",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticSummary",
+                  "id": "b2adcdca-3143-4bc2-a1ae-9ccc4cbbfa2e",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "eed304e1-8baa-42b4-a53b-191d0fec99a4",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "91477955-c433-46e3-b27a-7a0646aa648d",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Summary"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "dfc6bea9-13fb-4a54-ab5f-65ea48449956",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "cf1170e3-70de-4b63-bcc7-7e7fdddec564",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-summary"
+}

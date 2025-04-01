@@ -1,0 +1,13 @@
+.recommendations-list__container {
+  flex-wrap: wrap;
+}
+
+.recommendation-item__container {
+  width: var(--recommendationItemWidth, 33.33%);
+}
+
+.recommendation-item__content {
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--lwc-borderRadiusLarge, 0.5rem);
+}

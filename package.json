@@ -1,31 +1,125 @@
 {
   "name": "ui-kit",
   "private": true,
+  "version": "3.0.22",
   "scripts": {
-    "setup": "npm i && lerna bootstrap",
-    "dev": "lerna run --parallel dev",
-    "build": "lerna run --stream build",
-    "check": "gts check",
-    "fix": "gts fix"
+    "postinstall": "husky install && patch-package && npx playwright install",
+    "reset:install": "git checkout origin/master package-lock.json && npm i",
+    "clean:install": "git clean -xfd && npm run reset:install",
+    "dev:atomic": "concurrently \"npm run -w @coveo/headless dev\" \"npm run -w @coveo/atomic start\"",
+    "build": "nx run-many --target=build",
+    "test": "nx run-many --target=test",
+    "e2e": "nx run-many --target=e2e",
+    "lint:check": "eslint . && cspell **/*.md --no-progress --show-suggestions --show-context && prettier --check '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
+    "lint:fix": "eslint --fix . && prettier --write '**/*.{css,pcss,html,md,yml,ts,tsx,js,mjs,json}'",
+    "package-compatibility": "node ./scripts/ci/package-compatibility.mjs",
+    "pr:report": "node ./scripts/reports/pr-report.mjs",
+    "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.mjs",
+    "commit": "git-cz",
+    "pre-commit": "lint-staged",
+    "promote:npm:latest": "nx run-many --target=promote:npm:latest",
+    "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
+    "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3 && npm run release:phase4 && npm run release:phase5",
+    "nx:graph": "nx graph --file=topology.json",
+    "release:phase0": "npm run-script -w=@coveo/release git-lock",
+    "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
+    "release:phase2": "npm run-script -w=@coveo/release bump:root",
+    "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
+    "release:phase4": "npm run-script -w=@coveo/release reify",
+    "release:phase5": "npm run-script -w=@coveo/release git-publish-all"
   },
   "devDependencies": {
-    "gts": "^2.0.0-alpha.4",
-    "husky": "^4.2.3",
-    "lerna": "^3.20.2",
-    "lint-staged": "^10.0.8",
-    "typedoc": "https://github.com/coveord/typedoc",
-    "typescript": "^3.8.3",
-    "@types/node": "^10.0.3"
+    "@actions/core": "1.11.1",
+    "@actions/github": "6.0.0",
+    "@commitlint/config-conventional": "19.7.1",
+    "@commitlint/lint": "19.7.1",
+    "@commitlint/load": "19.6.1",
+    "@coveo/release": "1.0.0",
+    "@cspell/dict-fr-fr": "2.2.5",
+    "@cspell/eslint-plugin": "8.17.5",
+    "@nx/web": "20.4.6",
+    "@octokit/rest": "21.1.1",
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
+    "@tsconfig/node20": "20.1.4",
+    "@types/execa": "2.0.2",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.13.5",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "@vitest/browser": "3.0.6",
+    "aws-sdk": "2.1692.0",
+    "commitizen": "4.3.1",
+    "concurrently": "9.1.2",
+    "cspell": "8.17.5",
+    "cz-conventional-changelog": "3.3.0",
+    "esbuild": "0.25.0",
+    "esbuild-plugin-alias": "0.2.1",
+    "esbuild-plugin-umd-wrapper": "3.0.0",
+    "eslint": "8.57.1",
+    "eslint-config-prettier": "10.0.1",
+    "eslint-plugin-cypress": "2.15.2",
+    "eslint-plugin-package-lock": "1.0.0",
+    "execa": "9.5.2",
+    "glob": "11.0.1",
+    "gts": "5.3.1",
+    "husky": "9.1.7",
+    "lint-staged": "15.4.3",
+    "nx": "20.4.6",
+    "patch-package": "8.0.0",
+    "prettier": "3.5.2",
+    "prettier-plugin-tailwindcss": "0.6.11",
+    "publint": "0.3.6",
+    "rimraf": "6.0.1",
+    "semver": "7.7.1",
+    "typescript": "5.8.2",
+    "vite": "6.0.11"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
+  "overrides": {
+    "@coveo/release": {
+      "@types/async-retry": {
+        "@types/retry": "0.12.5"
+      }
     }
   },
-  "lint-staged": {
-    "**/*.ts": [
-      "npm run fix",
-      "git add"
+  "workspaces": [
+    "packages/bueno",
+    "packages/auth",
+    "packages/headless",
+    "packages/atomic",
+    "packages/quantic",
+    "packages/headless-react",
+    "packages/ssr",
+    "packages/atomic-hosted-page",
+    "packages/atomic-react",
+    "packages/atomic-angular",
+    "packages/atomic-angular/projects/*",
+    "packages/samples/*",
+    "packages/samples/headless-ssr/*",
+    "utils/*"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog",
+      "defaultScope": [
+        "auth",
+        "bueno",
+        "headless",
+        "atomic",
+        "quantic"
+      ]
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
-  }
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.13.1",
+    "npm": ">=8.6.0"
+  },
+  "dependencies": {
+    "upgrade": "1.1.0"
+  },
+  "packageManager": "npm@11.1.0"
 }

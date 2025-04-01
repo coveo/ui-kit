@@ -1,0 +1,11 @@
+{
+  "activeViewId": "65676752-eeb1-4ab6-8c28-735c0d557a73",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "f4c30697-c75b-4825-b9e1-8fef01827137",
+  "label": "Quantic Placeholder",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-placeholder",
+  "type": "route",
+  "urlPrefix": "quantic-placeholder"
+}

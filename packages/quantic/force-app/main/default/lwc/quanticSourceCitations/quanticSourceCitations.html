@@ -1,0 +1,17 @@
+<template>
+  <template if:true={shouldDisplayCitations}>
+    <span class="source-citations__label slds-m-top_xx-small"
+      >{labels.citations}</span
+    >
+    <ol class="slds-list_horizontal slds-wrap">
+      <template for:each={indexedCitations} for:item="citation">
+        <c-quantic-citation
+          key={citation.data.id}
+          citation={citation.data}
+          interactive-citation={citation.interactiveCitation}
+          onquantic__citationhover={citation.handleCitationHover}
+        ></c-quantic-citation>
+      </template>
+    </ol>
+  </template>
+</template>

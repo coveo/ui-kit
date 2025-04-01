@@ -1,0 +1,11 @@
+{
+  "activeViewId": "438144c9-25ea-45bd-ba1b-3c0c9e884a94",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "ccb47a42-1e1e-43eb-b47f-da984dcb33b2",
+  "label": "Quantic Category Facet with captions",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-category-facet-with-captions",
+  "type": "route",
+  "urlPrefix": "quantic-category-facet-with-captions"
+}

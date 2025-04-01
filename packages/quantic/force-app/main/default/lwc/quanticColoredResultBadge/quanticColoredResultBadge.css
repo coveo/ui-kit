@@ -1,0 +1,6 @@
+.result-badge {
+  display: block;
+  max-width: 250px;
+  background-color: var(--primaryColor, #fff7ba);
+  color: var(--secondaryColor, #e2b104);
+}

@@ -1,0 +1,50 @@
+<template>
+  <div
+    role="button"
+    class="slds-size_1-of-1 facet__value-container"
+    onclick={onSelect}
+    aria-pressed={isPressed}
+    tabindex="0"
+    onkeydown={onKeyDown}
+    aria-label={ariaLabelValue}
+  >
+    <template if:true={nonActiveParent}>
+      <div
+        class="facet__parent-value-option facet__value-option slds-grid slds-truncate slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
+      >
+        <lightning-icon class="slds-m-right_xxx-small" icon-name="utility:chevronleft" size="xx-small"></lightning-icon>
+        <span class="slds-truncate" title={facetValue}>{facetValue}</span>
+        <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
+      </div>
+    </template>
+    <template if:false={nonActiveParent}>
+      <template if:false={isSearchResult}>
+        <div
+          class="slds-grid slds-grid_vertical-align-center slds-text-color_default facet__child-value-option facet__value-option slds-size_1-of-1 slds-p-around_x-small"
+        >
+          <span class="slds-truncate" title={facetValue}>{facetValue}</span>
+          <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
+        </div>
+      </template>
+      <template if:true={isSearchResult}>
+        <div class="facet__value-option slds-size_1-of-1 slds-p-around_x-small slds-text-color_default">
+          <div class="slds-grid slds-grid_vertical slds-size_1-of-1">
+            <div
+              class="slds-col slds-p-left_none slds-grid_vertical-align-center facet__search-results slds-m-bottom_xxx-small"
+              title={facetValue}
+            >
+              <lightning-formatted-rich-text
+                class="slds-truncate slds-float_left"
+                value={item.highlightedResult}
+              ></lightning-formatted-rich-text>
+              <span class="facet__number-of-results slds-var-m-left_xx-small">({numberOfResults})</span>
+            </div>
+            <div class="slds-col slds-p-left_none">
+              <span class="facet__path slds-truncate" title={pathLabel}>{pathLabel}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </template>
+  </div>
+</template>

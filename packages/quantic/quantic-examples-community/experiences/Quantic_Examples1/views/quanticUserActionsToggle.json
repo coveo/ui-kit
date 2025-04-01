@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "5f71a149-8177-4097-8c70-fd34c6b83912",
+  "label": "Quantic User Actions Toggle",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "36d11701-5b9d-4235-b7fb-295c9dcaf334",
+              "columns": [
+                {
+                  "UUID": "926a39df-3407-459a-8653-3085d3704a62",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "36d11701-5b9d-4235-b7fb-295c9dcaf334",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticUserActionsToggle",
+                  "id": "16683d9b-94b3-459c-904c-c061a3812e8d",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "926a39df-3407-459a-8653-3085d3704a62",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "80b913eb-20ec-44cd-91a1-2b67a6ca50d7",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic User Actions Toggle"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "73316199-dc04-4d10-bbc8-f2f10865fc68",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "680c1df4-b494-42e7-9e6a-ffc05b03425e",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-user-actions-toggle"
+}

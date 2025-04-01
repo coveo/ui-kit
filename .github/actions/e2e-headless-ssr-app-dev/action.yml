@@ -1,0 +1,28 @@
+name: 'Headless SSR E2E App router tests in dev mode'
+description: 'Runs Cypress tests for Headless SSR App router in dev mode'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - run: npx cypress install
+      shell: bash
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        command-prefix: 'npm run -w @coveo/headless-ssr-samples-app-router e2e'
+        start: npx nx run headless-ssr-samples-app-router:dev
+        wait-on: 'http://localhost:3000'
+        wait-on-timeout: 600000
+        install: false
+        record: false
+
+    - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+      if: failure()
+      with:
+        name: ssr-app-dev-screenshots
+        path: packages/samples/headless-ssr/cypress/screenshots

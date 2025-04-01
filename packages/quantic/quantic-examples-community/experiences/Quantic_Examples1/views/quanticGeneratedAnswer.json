@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "38e0514b-5396-4f79-8f12-e7ccfdfc03a6",
+  "label": "Quantic Generated Answer",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "27a09dbd-a8b6-41ca-8dc0-412338a0796f",
+              "columns": [
+                {
+                  "UUID": "640b66fa-69c1-48ba-abbb-d30b248120b6",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "27a09dbd-a8b6-41ca-8dc0-412338a0796f",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticGeneratedAnswer",
+                  "id": "d0eccbd4-8542-4a7c-8976-665fcff44026",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "640b66fa-69c1-48ba-abbb-d30b248120b6",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "edeb0f09-c3c2-4cc3-94fa-3771d7a2d525",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Generated Answer"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "0505bcb8-e3d3-4525-96b8-f5113b30f9cf",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "d98b1d02-8275-4b79-a5f9-198db3d89deb",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-generated-answer"
+}

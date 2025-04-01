@@ -1,0 +1,29 @@
+@import 'c/quanticFacetStyles';
+
+.recent-query__container {
+  display: flex;
+  flex-direction: row;
+  min-width: 0;
+  border-radius: .25rem;
+  line-height: var(--lwc-lineHeightText, 1.5);
+}
+
+a {
+  text-decoration: none;
+}
+
+.recent-query__container:hover {
+  background-color: #f6f7f9;
+}
+
+.query-text__container {
+  min-width: 0;
+}
+
+.recent-query__icon {
+  margin-right: 0.5rem;
+}
+
+.empty-list-message {
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+}

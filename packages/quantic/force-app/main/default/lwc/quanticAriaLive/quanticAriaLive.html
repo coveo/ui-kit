@@ -1,0 +1,5 @@
+<template>
+  <template for:each={regionsToDisplay} for:item="region">
+    <div key={region.region} data-key={region.region} aria-live={region.assertive} role="region" class="slds-assistive-text">{region.message}</div>
+  </template>
+</template>

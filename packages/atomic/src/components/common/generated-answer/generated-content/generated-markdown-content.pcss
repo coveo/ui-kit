@@ -1,0 +1,104 @@
+[part='generated-text'] {
+  [part='answer-heading-1'] {
+    @apply text-2xl;
+  }
+
+  [part='answer-heading-2'] {
+    @apply text-xl;
+  }
+
+  [part='answer-heading-3'],
+  [part='answer-heading-4'],
+  [part='answer-heading-5'],
+  [part='answer-heading-6'] {
+    @apply text-lg;
+  }
+
+  [part='answer-heading-1'],
+  [part='answer-heading-2'],
+  [part='answer-heading-3'],
+  [part='answer-heading-4'],
+  [part='answer-heading-5'],
+  [part='answer-heading-6'] {
+    @apply mt-4 mb-2 font-bold;
+  }
+
+  [part='answer-paragraph'] {
+    @apply mb-6;
+  }
+
+  [part='answer-list-item'],
+  [part='answer-paragraph'],
+  [part='answer-quote-block'],
+  [part='answer-table-header'],
+  [part='answer-table-content'] {
+    @apply leading-6;
+  }
+
+  [part='answer-strong'] {
+    @apply font-bold;
+  }
+
+  [part='answer-ordered-list'] {
+    @apply mb-2 list-decimal ps-8;
+  }
+
+  [part='answer-unordered-list'] {
+    @apply mb-2 list-disc ps-8;
+  }
+
+  [part='answer-inline-code'] {
+    @apply text-inline-code bg-neutral-light border-neutral rounded-sm border border-solid px-1 py-0.5 text-sm;
+  }
+
+  [part='answer-code-block'] {
+    @apply bg-neutral-light border-neutral text-on-background my-4 max-h-96 overflow-auto rounded-md border border-solid p-2 text-sm;
+    scrollbar-color: var(--atomic-neutral);
+  }
+
+  [part='answer-quote-block'] {
+    @apply mx-16 italic;
+  }
+
+  [part='answer-table-container'] {
+    @apply border-neutral-dim mb-6 inline-block max-h-96 max-w-full overflow-auto rounded-md border border-solid;
+
+    [part='answer-table-header'] {
+      @apply sticky top-0;
+    }
+  }
+
+  [part='answer-table'] {
+    @apply text-base;
+
+    thead {
+      [part='answer-table-header'] {
+        @apply bg-neutral border-b-neutral-dim border-l-neutral-dim p-4 text-left font-bold;
+      }
+
+      [part='answer-table-header']:first-of-type {
+        border-left: none;
+      }
+    }
+
+    tbody {
+      tr {
+        &:nth-child(even) {
+          @apply bg-neutral-light;
+        }
+
+        [part='answer-table-content'] {
+          @apply border-l-neutral-dim border-b-neutral-dim border p-4;
+        }
+
+        [part='answer-table-content']:first-of-type {
+          border-left: none;
+        }
+
+        &:last-of-type [part='answer-table-content'] {
+          border-bottom: unset;
+        }
+      }
+    }
+  }
+}

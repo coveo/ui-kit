@@ -1,0 +1,12 @@
+@import '../../../../global/global.pcss';
+:host {
+  @apply text-on-background text-lg;
+  line-height: calc(var(--text-lg) * var(--atomic-line-height-ratio));
+
+  .wrapper {
+    display: flow-root;
+    .margin {
+      margin: 1rem 0;
+    }
+  }
+}

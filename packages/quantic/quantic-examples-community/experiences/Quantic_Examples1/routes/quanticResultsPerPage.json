@@ -1,0 +1,11 @@
+{
+  "activeViewId": "f6e60fc9-13c5-4d6d-9dda-100c31e98649",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "d17f2f7f-12bc-4b0e-bc61-d62b21946cd4",
+  "label": "Quantic Results Per Page",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-results-per-page",
+  "type": "route",
+  "urlPrefix": "quantic-results-per-page"
+}

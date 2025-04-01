@@ -1,0 +1,12 @@
+@import '../../../global/global.pcss';
+
+:host {
+  box-shadow: rgb(0 0 0 / 50%) 0 0 0.5rem;
+  height: inherit;
+
+  [part='backdrop'] {
+    @apply pointer-events-auto;
+    height: inherit;
+    inset: auto 3rem 4.25rem auto;
+  }
+}

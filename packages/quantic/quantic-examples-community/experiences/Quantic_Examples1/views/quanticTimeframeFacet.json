@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "a70789e2-90dc-4d99-a063-97c1aa7e1e53",
+  "label": "Quantic Timeframe Facet",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "5a1e2980-26da-4d9f-b321-ea12825167d6",
+              "columns": [
+                {
+                  "UUID": "55f2a35e-3ce4-4901-bce2-8ea9c6a4279f",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "5a1e2980-26da-4d9f-b321-ea12825167d6",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticTimeframeFacet",
+                  "id": "5b56714b-9d90-429e-bdbd-87bafa4b3b0b",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "55f2a35e-3ce4-4901-bce2-8ea9c6a4279f",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "c06fd8bb-7216-48d8-bf32-6c995ae02747",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Timeframe Facet"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "ec18c13e-5a7a-41d9-a2da-6b40335bb77c",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "36a479f7-1a27-47cb-9f10-62621d6bbd6c",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-timeframe-facet"
+}

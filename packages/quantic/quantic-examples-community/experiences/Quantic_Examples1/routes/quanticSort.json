@@ -1,0 +1,11 @@
+{
+  "activeViewId": "872cf820-d988-49ae-a982-f7a3cb8b9b44",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "d105d667-b9d6-4366-9e62-74b9d2d16f64",
+  "label": "Quantic Sort",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-sort",
+  "type": "route",
+  "urlPrefix": "quantic-sort"
+}

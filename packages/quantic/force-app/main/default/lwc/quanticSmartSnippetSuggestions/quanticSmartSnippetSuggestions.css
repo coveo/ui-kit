@@ -1,0 +1,7 @@
+.smart-snippet-suggestions__title {
+  font-weight: 700;
+}
+
+.accordion__summary-heading {
+  --slds-c-accordion-heading-font-size: 0.9rem;
+}

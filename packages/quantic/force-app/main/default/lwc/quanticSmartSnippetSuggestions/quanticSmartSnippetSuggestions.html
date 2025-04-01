@@ -1,0 +1,44 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={shouldDisplaySmartSnippetSuggestions}>
+      <div data-testid="smart-snippet-suggestions-card" class="slds-card">
+        <p
+          class="slds-text-heading_small slds-var-p-around_small slds-border_bottom smart-snippet-suggestions__title"
+        >
+          {labels.peopleAlsoAsk}
+        </p>
+        <lightning-accordion
+          allow-multiple-sections-open
+          class="slds-p-vertical_xx-small"
+        >
+          <template for:each={suggestions} for:item="suggestion">
+            <lightning-accordion-section
+              data-id={suggestion.questionAnswerId}
+              data-testid="smart-snippet-suggestion"
+              key={suggestion.questionAnswerId}
+              name={suggestion.question}
+              label={suggestion.question}
+              onclick={handleSuggestionClick}
+              class="accordion__summary-heading"
+            >
+              <div class="slds-var-m-bottom_small">
+                <c-quantic-smart-snippet-answer
+                  answer={suggestion.answer}
+                  actions={suggestion.inlineLinksActions}
+                ></c-quantic-smart-snippet-answer>
+              </div>
+              <c-quantic-smart-snippet-source
+                source={suggestion.source}
+                actions={suggestion.sourceActions}
+              ></c-quantic-smart-snippet-source>
+            </lightning-accordion-section>
+          </template>
+        </lightning-accordion>
+      </div>
+    </template>
+  </template>
+</template>

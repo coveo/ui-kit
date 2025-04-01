@@ -1,0 +1,37 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": false,
+    "experimentalDecorators": true,
+    "lib": ["dom", "ES2023", "ESNext.Promise"],
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
+    "target": "ES2021",
+    "resolveJsonModule": true,
+    "useDefineForClassFields": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "references": [
+    {
+      "path": "./tsconfig.storybook.json"
+    }
+  ],
+  "include": ["src", "types/jsx.d.ts"],
+  "exclude": [
+    "node_modules",
+    "src/external-builds",
+    "**/*.stories.tsx",
+    "**/*.spec.ts",
+    "**/*.stories.ts",
+    "**/*.spec.ts",
+    "**/*.stories.js",
+    "**/e2e/**/*"
+  ]
+}

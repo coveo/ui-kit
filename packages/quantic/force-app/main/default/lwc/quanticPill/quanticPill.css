@@ -1,0 +1,18 @@
+.pill__container {
+  display: flex;
+  flex-direction: row;
+  border-radius: .25rem;
+}
+
+.pill__container:hover {
+  background-color: #f6f7f9;
+}
+
+.pill__text-container {
+  min-width: 0;
+  line-height: var(--lwc-lineHeightText, 1.5);
+}
+
+a {
+  text-decoration: none;
+}

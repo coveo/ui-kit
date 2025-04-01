@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "e7f7f0ea-01ea-45ea-805b-673dc50bc487",
+  "label": "Quantic Breadcrumb Manager",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "b7ee0e05-3bf0-4c14-a0a6-9a0ee15c0203",
+              "columns": [
+                {
+                  "UUID": "f7d6a6e7-1021-4587-97b2-79c1c62c94ac",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "b7ee0e05-3bf0-4c14-a0a6-9a0ee15c0203",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticBreadcrumbManager",
+                  "id": "1fc3459a-b966-471c-b2aa-e166e0007148",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "f7d6a6e7-1021-4587-97b2-79c1c62c94ac",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "1f19b6d8-f37b-4ab1-9a00-8289d9bb1e6d",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Breadcrumb Manager"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "7877929a-2191-4e04-9407-93ffb79f285e",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "5b81eab0-ce51-4e48-8bb0-ba90db4cc08f",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-breadcrumb-manager"
+}

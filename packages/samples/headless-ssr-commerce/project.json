@@ -1,0 +1,17 @@
+{
+  "name": "headless-ssr-commerce-samples",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "cached:build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:next\"",
+        "cwd": "packages/samples/headless-ssr-commerce"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

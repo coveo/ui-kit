@@ -1,0 +1,11 @@
+{
+  "activeViewId": "27d477db-01c7-4f6b-b918-ab4734a27cd5",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "844569ed-fc9d-4a4d-89c1-321ec2b4e977",
+  "label": "Relevant Generative Answering Example",
+  "pageAccess": "UseParent",
+  "routeType": "custom-relevant-generative-answering-example",
+  "type": "route",
+  "urlPrefix": "relevant-generative-answering-example"
+}

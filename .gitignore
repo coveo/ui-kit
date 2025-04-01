@@ -1,6 +1,21 @@
 .idea
 node_modules
 npm-debug.log
-.vscode/
+.vscode/*
 .ds_store
 dist
+.size-snapshot.json
+reports/*.xml
+!.vscode/extensions.json
+.dccache
+sarifs
+**.cy.ts.mp4
+.cspellcache
+scripts/translation-gpt/temporary.json
+packages/headless/docs
+
+# CI Release
+topology.json
+.git-message
+packages/atomic/custom-elements.json
+.nx

@@ -1,0 +1,21 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={hasResults}>
+      <div class="slds-float_right" data-testid="results-per-page">
+        <template for:each={choicesObjects} for:item="choice">
+          <c-quantic-number-button
+            key={choice.value}
+            number={choice.value}
+            selected={choice.selected}
+            onquantic__select={select}
+            aria-label-value={choice.ariaLabelValue}
+          ></c-quantic-number-button>
+        </template>
+      </div>
+    </template>
+  </template>
+</template>

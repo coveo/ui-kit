@@ -1,0 +1,3 @@
+#!/bin/sh
+
+node ./hooks/commit-msg.js

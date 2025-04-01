@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "c01ca255-789f-48be-999d-bca16f0ff27a",
+  "label": "Quantic Modal",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "891530e7-b428-446c-ba27-44aa8cba061a",
+              "columns": [
+                {
+                  "UUID": "ee7390de-848e-456a-b9ea-ecc5efd00abd",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "891530e7-b428-446c-ba27-44aa8cba061a",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticModal",
+                  "id": "c5892804-a2c5-4f0a-afc9-41dc70d35da4",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "ee7390de-848e-456a-b9ea-ecc5efd00abd",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "3e27ffc2-8c2f-4c67-a71c-ec323bd3130f",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Modal"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "9b41bf3b-5f62-4aa7-b915-b16f042c4ddd",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "5e069b1a-5109-4cf7-8eec-68ca2f3b1188",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-modal"
+}

@@ -1,0 +1,18 @@
+<template>
+  <div class="slds-grid recommendations-list__container">
+    <template for:each={placeholders} for:item="item">
+      <div
+        key={item.index}
+        data-cy="recommendations__placeholder"
+        class="recommendation-item__container slds-var-p-vertical_x-small slds-var-p-right_medium"
+      >
+        <div class="recommendation-item__content slds-box slds-box_small">
+          <c-quantic-placeholder
+            variant="resultList"
+            number-of-rows="1"
+          ></c-quantic-placeholder>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>

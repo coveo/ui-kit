@@ -1,0 +1,27 @@
+{
+  "name": "@coveo/atomic-react-samples",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build:assets && npm run dev:vite",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets && ncp ../../atomic/dist/atomic/themes public/themes",
+    "dev:vite": "vite",
+    "build": "nx build"
+  },
+  "dependencies": {
+    "@coveo/atomic-react": "3.2.26",
+    "@coveo/headless": "3.20.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.50.1",
+    "@types/node": "22.13.5",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "4.3.4",
+    "typescript": "5.8.2",
+    "vite": "6.0.11"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "872cf820-d988-49ae-a982-f7a3cb8b9b44",
+  "label": "Quantic Sort",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "ffe5a92e-f086-46b2-b00b-ddbd1732679e",
+              "columns": [
+                {
+                  "UUID": "3bf2d17e-8dc9-46e5-8205-65d403967f10",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "ffe5a92e-f086-46b2-b00b-ddbd1732679e",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticSort",
+                  "id": "38f890bc-5374-41d8-ba64-84c70f56e5cc",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "3bf2d17e-8dc9-46e5-8205-65d403967f10",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "910707f7-fdea-41a6-8fde-b81bdbcc3f51",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Sort"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "ca21576f-1bdf-40d6-9c7b-75fa035cab9d",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "db5aac41-f882-4fd4-97a6-1af0354d6796",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-sort"
+}

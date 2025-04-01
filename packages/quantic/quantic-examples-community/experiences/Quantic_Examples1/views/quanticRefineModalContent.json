@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "2aa6410d-481c-43f5-b495-63e504c130ff",
+  "label": "quantic-refine-modal-content",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "b0c35469-4e54-4873-b03f-a2308974bc6c",
+              "columns": [
+                {
+                  "UUID": "a6b58d9f-a7c9-4521-b711-b416a21c9fe2",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "b0c35469-4e54-4873-b03f-a2308974bc6c",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticRefineModalContent",
+                  "id": "71bf242f-06ec-4e57-be9c-215173ad6b18",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "a6b58d9f-a7c9-4521-b711-b416a21c9fe2",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "01b36d18-da68-4104-bef0-c56a9017e115",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "quantic-refine-modal-content"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "0c7fde0e-041e-4448-8a72-2b20a17ed2e2",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "f055cc1a-b9f8-46d2-8707-8ff0e72e8c96",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-refine-modal-content"
+}

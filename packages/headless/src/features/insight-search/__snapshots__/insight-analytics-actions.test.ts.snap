@@ -1,0 +1,28 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`insight analytics actions > when analyticsMode is \`next\` > logCreateArticle > should call relay.emit properly 1`] = `
+[
+  "InsightPanel.CreateArticle",
+  {
+    "articleType": "Knowledge__kav",
+    "context": {
+      "caseNumber": "5678",
+      "targetId": "1234",
+      "targetType": "Case",
+    },
+  },
+]
+`;
+
+exports[`insight analytics actions > when analyticsMode is \`next\` > logExpandToFullUI > should call relay.emit properly 1`] = `
+[
+  "InsightPanel.ExpandToFullUI",
+  {
+    "context": {
+      "caseNumber": "5678",
+      "targetId": "1234",
+      "targetType": "Case",
+    },
+  },
+]
+`;

@@ -1,0 +1,11 @@
+{
+  "activeViewId": "38e0514b-5396-4f79-8f12-e7ccfdfc03a6",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "f56dcd72-86d6-42cc-9474-434fcfd45fcd",
+  "label": "Quantic Generated Answer",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-generated-answer",
+  "type": "route",
+  "urlPrefix": "quantic-generated-answer"
+}

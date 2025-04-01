@@ -1,0 +1,11 @@
+{
+  "activeViewId": "7e73f1a0-9732-4fb8-90ba-1925165170b2",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "448af2ef-c1a6-4f49-8baa-ef20e08fdeb5",
+  "label": "Quantic Aria Live",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-aria-live",
+  "type": "route",
+  "urlPrefix": "quantic-aria-live"
+}

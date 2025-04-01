@@ -1,0 +1,30 @@
+@import '../../../global/global.pcss';
+@import '../../common/search-box/search-box.pcss';
+
+[part~='instant-results-item'] {
+  @apply p-3;
+}
+
+[part~='instant-results-show-all'] {
+  @apply border-t-neutral justify-center border-t py-1;
+  margin-top: auto;
+  box-sizing: content-box;
+  button {
+    background-color: transparent;
+  }
+}
+
+[part~='suggestions-left'] + [part~='suggestions-right'] {
+  @apply border-l-neutral border-l;
+}
+
+[part~='suggestions-wrapper'] {
+  flex-direction: column;
+  @media (width >= theme(--breakpoint-desktop)) {
+    flex-direction: row;
+  }
+}
+
+:host {
+  @apply relative z-10;
+}

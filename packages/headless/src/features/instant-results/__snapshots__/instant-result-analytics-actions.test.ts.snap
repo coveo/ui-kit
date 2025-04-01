@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`instant result analytics actions > #logRecommendationOpen > when analyticsMode is \`legacy\` should call coveo.analytics.makeRecommendationOpen properly 1`] = `
+[
+  {
+    "collectionName": "example collectionName",
+    "documentAuthor": "unknown",
+    "documentPosition": 1,
+    "documentTitle": "example documentTitle",
+    "documentUri": "example documentUri",
+    "documentUriHash": "example documentUriHash",
+    "documentUrl": "example documentUrl",
+    "queryPipeline": "",
+    "rankingModifier": "example rankingModifier",
+    "sourceName": "example sourceName",
+  },
+  {
+    "contentIDKey": "permanentid",
+    "contentIDValue": "example contentIDValue",
+  },
+]
+`;
+
+exports[`instant result analytics actions > #logRecommendationOpen > when analyticsMode is \`next\` should call relay.emit properly 1`] = `
+[
+  "itemClick",
+  {
+    "itemMetadata": {
+      "author": "unknown",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example contentIDValue",
+      "url": "example documentUrl",
+    },
+    "position": 1,
+    "responseId": "example searchUid",
+  },
+]
+`;

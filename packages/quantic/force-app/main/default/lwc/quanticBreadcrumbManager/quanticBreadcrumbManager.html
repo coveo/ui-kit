@@ -1,0 +1,84 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={hasBreadcrumbs}>
+      <div class="slds-grid slds-grid_vertical-align-start slds-size_1-of-1 slds-var-m-vertical_x-small">
+        <div class="slds-col slds-truncate slds-col_bump-right breadcrumb-manager__column">
+          <ul>
+            <template for:each={facetBreadcrumbValues} for:item="breadcrumb">
+              <li data-testid="facet-breadcrumb" key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__facet-list breadcrumb-manager__line">
+                <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
+                <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
+                  <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                    <li key={breadcrumbValue.value.value} class="breadcrumb__container">
+                      <c-quantic-pill data-testid="facet-breadcrumb-value" label={breadcrumbValue.formattedValue} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                    </li>
+                  </template>
+                  <template if:true={breadcrumb.showMoreButton}>
+                    <li>
+                      <button onclick={breadcrumb.expandButtonClick} data-testid="breadcrumb-manager__more-button" class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
+                    </li>
+                  </template>
+                </ul>
+              </li>
+            </template>
+            <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
+              <li data-testid="numeric-facet-breadcrumb" key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__numeric-facet-list breadcrumb-manager__line">
+                <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
+                <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
+                  <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                    <li key={breadcrumbValue.value} class="breadcrumb__container">
+                      <c-quantic-pill data-testid="numeric-facet-breadcrumb-value" label={breadcrumbValue.formattedValue} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                    </li>
+                  </template>
+                  <template if:true={breadcrumb.showMoreButton}>
+                    <li>
+                      <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
+                    </li>
+                  </template>
+                </ul>
+              </li>
+            </template>
+            <template for:each={categoryFacetBreadcrumbsValues} for:item="breadcrumbValue">
+              <li data-testid="category-facet-breadcrumb" key={breadcrumbValue.facetId} class="slds-list_horizontal breadcrumb-manager__category-facet-list breadcrumb-manager__line">
+                <span class="slds-col breadcrumb-manager__field-name">{breadcrumbValue.label}{labels.colon} </span>
+                <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
+                  <li class="breadcrumb__container">
+                    <c-quantic-pill data-testid="category-facet-breadcrumb-value" label={breadcrumbValue.value} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumbValue.label} action-name={labels.clearFilter}></c-quantic-pill>
+                  </li>
+                </ul>
+              </li>
+            </template>
+            <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
+              <li data-testid="date-facet-breadcrumb" key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__date-facet-list breadcrumb-manager__line">
+                <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
+                <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
+                  <template for:each={breadcrumb.values} for:item="breadcrumbValue">
+                    <li key={breadcrumbValue.value} class="breadcrumb__container">
+                      <c-quantic-pill data-testid="date-facet-breadcrumb-value" label={breadcrumbValue.value} onquantic__deselect={breadcrumbValue.deselect} group-name={breadcrumb.label} action-name={labels.clearFilter}></c-quantic-pill>
+                    </li>
+                  </template>
+                  <template if:true={breadcrumb.showMoreButton}>
+                    <li>
+                      <button onclick={breadcrumb.expandButtonClick} class="slds-grid slds-button slds-var-m-around_xxx-small slds-p-horizontal_x-small slds-p-vertical_xx-small slds-text-color_default breadcrumb-manager__more-button">{breadcrumb.showMoreButtonText}</button>
+                    </li>
+                  </template>
+                </ul>
+              </li>
+            </template>
+          </ul>
+        </div>
+        <div class="slds-col breadcrumb-manager__column slds-nowrap breadcrumb-manager__clear-button slds-m-left_small slds-shrink-none">
+          <ul class="slds-m-around_xx-small">
+            <li>
+              <button class="slds-button slds-var-m-around_xxx-small" data-testid="breadcrumb-manager__clear-button" onclick={deselectAll}>{labels.clearAllFilters}</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </template>
+  </template>
+</template>

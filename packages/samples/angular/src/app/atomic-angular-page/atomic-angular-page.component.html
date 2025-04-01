@@ -1,0 +1,147 @@
+<atomic-search-interface
+  #searchInterface
+  searchHub="MainSearch"
+  pipeline="Search"
+  fieldsToInclude='["ec_price","ec_rating","ec_images","ec_brand","cat_platform","cat_condition","cat_categories","cat_review_count","cat_color"]'
+>
+  <div class="search">
+    <atomic-search-box>
+      <atomic-search-box-recent-queries></atomic-search-box-recent-queries>
+      <atomic-search-box-query-suggestions></atomic-search-box-query-suggestions>
+      <atomic-search-box-instant-results imageSize="small">
+        <atomic-result-template>
+          <template>
+            <style>
+              .result-root {
+                padding: 12px;
+              }
+
+              div.result-root.with-sections.display-list atomic-result-section-visual {
+                height: 120px;
+              }
+
+              .rating-wrapper {
+                display: flex;
+                align-items: center;
+              }
+
+              .rating-wrapper span {
+                margin-left: 5px;
+                color: #8e959d;
+              }
+            </style>
+            <atomic-result-section-visual>
+              <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+            </atomic-result-section-visual>
+            <atomic-result-section-title>
+              <atomic-result-link></atomic-result-link>
+            </atomic-result-section-title>
+            <atomic-result-section-title-metadata>
+              <div class="rating-wrapper">
+                <atomic-result-rating field="ec_rating"></atomic-result-rating>
+                <atomic-field-condition class="field" if-defined="ec_rating">
+                  <span>
+                    <atomic-result-number field="cat_rating_count"></atomic-result-number>
+                  </span>
+                </atomic-field-condition>
+              </div>
+            </atomic-result-section-title-metadata>
+            <atomic-result-section-bottom-metadata>
+              <atomic-result-number field="ec_price">
+                <atomic-format-currency currency="USD"></atomic-format-currency>
+              </atomic-result-number>
+            </atomic-result-section-bottom-metadata>
+          </template>
+        </atomic-result-template>
+      </atomic-search-box-instant-results>
+    </atomic-search-box>
+  </div>
+  <atomic-facet-manager>
+    <atomic-category-facet field="ec_category" label="Category" withSearch="true"></atomic-category-facet>
+    <atomic-facet field="ec_brand" label="Brand"></atomic-facet>
+    <atomic-numeric-facet field="cat_review_count" label="Amount of reviews" displayValuesAs="link">
+      <atomic-numeric-range start="0" end="150" label="Few"></atomic-numeric-range>
+      <atomic-numeric-range start="150" end="650" label="A moderate amount"></atomic-numeric-range>
+      <atomic-numeric-range start="650" end="9999999999999" label="A lot"></atomic-numeric-range>
+    </atomic-numeric-facet>
+    <atomic-color-facet field="cat_color" label="Color" numberOfValues="6" sortCriteria="occurrences">
+    </atomic-color-facet>
+    <atomic-numeric-facet field="ec_price" label="Cost" withInput="integer">
+      <atomic-format-currency currency="USD"></atomic-format-currency>
+    </atomic-numeric-facet>
+    <atomic-timeframe-facet withDatePicker="true" label="Listed within">
+      <atomic-timeframe unit="hour"></atomic-timeframe>
+      <atomic-timeframe unit="day"></atomic-timeframe>
+      <atomic-timeframe unit="week"></atomic-timeframe>
+      <atomic-timeframe unit="month"></atomic-timeframe>
+      <atomic-timeframe unit="quarter"></atomic-timeframe>
+      <atomic-timeframe unit="year"></atomic-timeframe>
+      <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
+    </atomic-timeframe-facet>
+    <atomic-rating-facet field="ec_rating" label="Rating" numberOfIntervals="5"></atomic-rating-facet>
+    <atomic-rating-range-facet field="ec_rating" label="Rating range" numberOfIntervals="5" facetId="ec_rating_range">
+    </atomic-rating-range-facet>
+    <atomic-facet field="source"></atomic-facet>
+  </atomic-facet-manager>
+
+  <atomic-breadbox></atomic-breadbox>
+
+  <div class="topbar">
+    <atomic-query-summary></atomic-query-summary>
+    <atomic-refine-toggle></atomic-refine-toggle>
+    <atomic-sort-dropdown>
+      <atomic-sort-expression label="Relevance" expression="relevancy"></atomic-sort-expression>
+      <atomic-sort-expression label="Price (low to high)" expression="ec_price ascending"> </atomic-sort-expression>
+      <atomic-sort-expression label="Price (high to low)" expression="ec_price descending"> </atomic-sort-expression>
+    </atomic-sort-dropdown>
+  </div>
+  <div class="results">
+    <atomic-did-you-mean></atomic-did-you-mean>
+    <atomic-result-list display="grid" image-size="large">
+      <atomic-result-template>
+        <template>
+          <atomic-result-section-title>
+            <h2>
+              <atomic-result-link></atomic-result-link>
+            </h2>
+          </atomic-result-section-title>
+          <atomic-result-section-emphasized>
+            <atomic-result-number field="ec_price">
+              <atomic-format-currency currency="USD"></atomic-format-currency>
+            </atomic-result-number>
+          </atomic-result-section-emphasized>
+          <atomic-result-section-title-metadata>
+            <atomic-result-rating field="ec_rating"></atomic-result-rating>
+            <atomic-result-printable-uri max-number-of-parts="3"></atomic-result-printable-uri>
+          </atomic-result-section-title-metadata>
+          <atomic-result-section-badges>
+            <atomic-result-badge field="ec_brand"></atomic-result-badge>
+          </atomic-result-section-badges>
+          <atomic-result-section-visual>
+            <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+          </atomic-result-section-visual>
+          <atomic-result-section-excerpt>
+            <atomic-result-text field="ec_description"></atomic-result-text>
+          </atomic-result-section-excerpt>
+          <atomic-result-section-bottom-metadata>
+            <atomic-result-fields-list>
+              <atomic-field-condition class="field" if-defined="cat_platform">
+                <app-label-and-field-value label="Platform" field="cat_platform"></app-label-and-field-value>
+              </atomic-field-condition>
+              <atomic-field-condition class="field" if-defined="cat_condition">
+                <app-label-and-field-value label="Condition" field="cat_condition"></app-label-and-field-value>
+              </atomic-field-condition>
+            </atomic-result-fields-list>
+          </atomic-result-section-bottom-metadata>
+        </template>
+      </atomic-result-template>
+    </atomic-result-list>
+    <div class="pagination">
+      <atomic-load-more-results></atomic-load-more-results>
+    </div>
+    <div class="status">
+      <atomic-query-error></atomic-query-error>
+      <atomic-no-results></atomic-no-results>
+    </div>
+  </div>
+</atomic-search-interface>

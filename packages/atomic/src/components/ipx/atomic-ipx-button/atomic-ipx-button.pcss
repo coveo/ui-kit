@@ -1,0 +1,26 @@
+@import '../../../global/global.pcss';
+
+/**
+ * @prop --atomic-ipx-button-height: height of the IPX button.
+ */
+:host {
+  [part='ipx-button'] {
+    @apply fixed right-12 bottom-1 px-3 whitespace-nowrap;
+    height: var(--atomic-ipx-button-height, 2.75rem);
+  }
+
+  [part='button-icon'] {
+    @apply relative inline-block h-4 w-4 p-0 align-middle;
+    font-size: 100%;
+  }
+
+  [part='button-text'] {
+    @apply ml-2 overflow-hidden;
+  }
+
+  [part='ipx-close-icon'],
+  [part='ipx-open-icon'] {
+    @apply absolute left-0;
+    transition: transform 500ms;
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "activeViewId": "e921fbf3-b6da-4356-9bc1-b6ed0126accd",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "7d87392d-03b1-4103-b64d-3a823f86ed5b",
+  "label": "Quantic Result Copy To Clipboard",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-result-copy-to-clipboard",
+  "type": "route",
+  "urlPrefix": "quantic-result-copy-to-clipboard"
+}

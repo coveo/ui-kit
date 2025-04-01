@@ -1,0 +1,47 @@
+<style>
+  .field {
+    display: inline-flex;
+    white-space: nowrap;
+    align-items: center;
+  }
+
+  .field-label {
+    font-weight: bold;
+    margin-right: 0.25rem;
+  }
+
+  .badge-source::part(result-badge-element) {
+    background-color: #c0c0c0;
+  }
+
+  .badge-source::part(result-badge-label) {
+    color: #000000;
+  }
+</style>
+<atomic-result-section-visual image-size="icon">
+  <atomic-field-condition if-not-defined="thumbnailurl">
+    <atomic-result-icon class="icon"></atomic-result-icon>
+  </atomic-field-condition>
+  <atomic-field-condition if-defined="thumbnailurl">
+    <atomic-result-image field="thumbnailurl"></atomic-result-image>
+  </atomic-field-condition>
+</atomic-result-section-visual>
+<atomic-result-section-badges>
+  <atomic-result-badge class="badge-source" field="source"></atomic-result-badge>
+</atomic-result-section-badges>
+<atomic-result-section-title>
+  <atomic-result-link></atomic-result-link>
+</atomic-result-section-title>
+<atomic-result-section-title-metadata> </atomic-result-section-title-metadata>
+<atomic-result-section-excerpt>
+  <atomic-result-text field="excerpt"></atomic-result-text>
+</atomic-result-section-excerpt>
+<atomic-result-section-bottom-metadata>
+  <sample-result-component></sample-result-component>
+  <atomic-result-fields-list>
+    <atomic-field-condition class="field" if-defined="author">
+      <span class="field-label"><atomic-text value="author"></atomic-text>:</span>
+      <atomic-result-text field="author"></atomic-result-text>
+    </atomic-field-condition>
+  </atomic-result-fields-list>
+</atomic-result-section-bottom-metadata>

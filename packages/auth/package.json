@@ -1,0 +1,56 @@
+{
+  "name": "@coveo/auth",
+  "version": "2.0.11",
+  "description": "Functions to help authenticate with the Coveo platform.",
+  "main": "./dist/auth.js",
+  "module": "./dist/auth.esm.js",
+  "browser": {
+    "./dist/auth.esm.js": "./dist/auth.esm.js"
+  },
+  "types": "./dist/definitions/auth.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "build": "nx build",
+    "test": "jest",
+    "test:watch": "jest --watch --colors --no-cache --silent=false",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "rimraf -rf dist/*",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "e2e": "npm run e2e:saml",
+    "e2e:saml": "vite manual-e2e/saml/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/auth"
+  },
+  "keywords": [
+    "coveo",
+    "authentication",
+    "saml"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/coveo/ui-kit/issues"
+  },
+  "homepage": "https://github.com/coveo/ui-kit/packages/auth#readme",
+  "devDependencies": {
+    "@coveo/release": "1.0.0",
+    "rimraf": "6.0.1",
+    "vite": "6.0.11",
+    "jest": "29.7.0",
+    "ts-jest": "29.2.6"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

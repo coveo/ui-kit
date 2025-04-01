@@ -1,0 +1,44 @@
+<template>
+  <div class="slds-var-m-left_medium">
+    <template if:true={shouldDisplayChildren}>
+      <div class="slds-var-m-top_medium">
+        <slot name="before-children"></slot>
+        <div class="slds-var-p-left_medium slds-border_left">
+          <template for:each={displayedChildren} for:item="childCollection">
+            <c-quantic-result
+              key={childCollection.result.uniqueId}
+              engine-id={engineId}
+              template-id={templateId}
+              result={childCollection.result}
+              collection={childCollection}
+              result-templates-manager={resultTemplatesManager}
+              folded-result-list-controller={foldedResultListController}
+            ></c-quantic-result>
+          </template>
+        </div>
+        <slot name="after-children"></slot>
+      </div>
+    </template>
+    <template if:true={shouldDisplayChildResultsToggle}>
+      <div class="slds-grid slds-grid_align-end result-children__toggle-button">
+        <lightning-button
+          data-cy="result-children__toggle-button"
+          variant="base"
+          icon-name={toggleChildResultsIcon}
+          icon-position="right"
+          label={toggleChildResultsLabel}
+          onclick={handleToggleChildResults}
+        ></lightning-button>
+      </div>
+    </template>
+
+    <template if:true={shouldDisplayNoChildrenMessage}>
+      <div
+        data-cy="result-children__no-more-children-message"
+        class="result-children__no-more-children-message slds-grid slds-grid_align-end slds-var-p-vertical_x-small slds-text-color_weak"
+      >
+        {labels.noRelatedItems}
+      </div>
+    </template>
+  </div>
+</template>

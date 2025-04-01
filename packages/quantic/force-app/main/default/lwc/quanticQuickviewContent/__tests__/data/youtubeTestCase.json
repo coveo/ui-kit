@@ -1,0 +1,14 @@
+{
+  "nameOfTemplate": "quanticQuickviewYoutube",
+  "contentType": "youtube video",
+  "options": {
+    "result": {
+      "uniqueId": "42.54689$https://youtube.com/Channel:UCLD76EfBpKKuBH52RMIdrJw/Video:lZHu8AM5bjY"
+    },
+    "contentUrl": "https://longdogechallenge.com/"
+  },
+  "selectors": {
+    "templateSelector": ".iframe-wrapper__youtube",
+    "iframeSelector": ".quickview__content-iframe"
+  }
+}

@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`result insight analytics actions > when analyticsMode is \`next\` > logDocumentOpen > should call relay.emit properly 1`] = `
+[
+  "InsightPanel.ItemAction",
+  {
+    "action": "open",
+    "context": {
+      "caseNumber": "5678",
+      "targetId": "1234",
+      "targetType": "Case",
+    },
+    "itemMetadata": {
+      "author": "example author",
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example contentIDValue",
+      "url": "example documentUri",
+    },
+    "position": 1,
+    "responseId": "example searchUid",
+  },
+]
+`;

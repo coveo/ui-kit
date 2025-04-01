@@ -1,0 +1,6 @@
+@import 'c/quanticFacetStyles';
+
+.facet__search-results_more-matches{
+  color: #8e959d;
+  font-size: 12px;
+}

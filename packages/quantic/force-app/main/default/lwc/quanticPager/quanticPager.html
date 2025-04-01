@@ -1,0 +1,35 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={hasResults}>
+      <lightning-button-group>
+        <lightning-button
+          variant="base"
+          disabled={previousDisabled}
+          title={labels.previousPage}
+          icon-name="utility:left"
+          class="slds-m-left_x-small"
+          onclick={previous}
+          aria-label={labels.previousPage}
+        ></lightning-button>
+
+        <template for:each={currentPagesObjects} for:item="page">
+          <c-quantic-number-button key={page.number} number={page.number} selected={page.selected} onquantic__select={goto} aria-label-value={page.ariaLabelValue}></c-quantic-number-button>
+        </template>
+
+        <lightning-button
+          disabled={nextDisabled}
+          variant="base"
+          title={labels.nextPage}
+          icon-name="utility:right"
+          class="slds-m-left_x-small"
+          onclick={next}
+          aria-label={labels.nextPage}
+        ></lightning-button>
+      </lightning-button-group>
+    </template>
+  </template>
+</template>

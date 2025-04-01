@@ -1,0 +1,23 @@
+name: 'Atomic Insight Panel E2E tests'
+description: 'Runs Cypress tests for Atomic Insight Panel'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - run: npx cypress install
+      shell: bash
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        config-file: cypress-insight-panel.config.mjs
+        start: npx nx web:dev atomic
+        wait-on: 'http://localhost:3333'
+        wait-on-timeout: 600000
+        install: false
+        record: false

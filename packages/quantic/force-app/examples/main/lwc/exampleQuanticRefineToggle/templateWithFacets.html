@@ -1,0 +1,136 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator
+      slot="configuration"
+      options={options}
+      ontryitnow={handleTryItNow}
+    >
+      <c-action-select-tab
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={engineId}
+      ></c-action-select-tab>
+      <div slot="actions" class="slds-var-p-bottom_x-small">
+        <c-action-add-facets
+          label="Add Facets"
+          data-id="add-facets"
+          slot="actions"
+          disabled={notConfigured}
+          engine-id={engineId}
+        >
+        </c-action-add-facets>
+      </div>
+      <c-action-add-facets
+        label="Add Facets Without Inputs"
+        data-id="add-facets-without-inputs"
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={engineId}
+        without-inputs
+      >
+      </c-action-add-facets>
+    </c-configurator>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <c-quantic-facet-manager engine-id={engineId}>
+        <template if:false={facetWithoutInputs}>
+          <c-quantic-facet
+            engine-id={engineId}
+            facet-id="objecttype"
+            field="objecttype"
+            label="Type"
+            number-of-values="6"
+            sort-criteria="alphanumeric"
+            display-values-as="link"
+            no-filter-facet-count
+            injection-depth="800"
+          >
+          </c-quantic-facet>
+          <c-quantic-numeric-facet
+            engine-id={engineId}
+            field="ytlikecount"
+            facet-id="ytlikecount"
+            label="Youtube Likes"
+            number-of-values="6"
+            sort-criteria="descending"
+            range-algorithm="even"
+            with-input="integer"
+            formatting-function={formattingFunction}
+          >
+          </c-quantic-numeric-facet>
+          <c-quantic-category-facet
+            engine-id={engineId}
+            facet-id="geographicalhierarchy"
+            field="geographicalhierarchy"
+            label="Country"
+            no-filter-by-base-path
+            no-filter-facet-count
+            delimiting-character=";"
+            number-of-values="6"
+            sort-criteria="alphanumeric"
+            with-search
+          >
+          </c-quantic-category-facet>
+          <c-quantic-timeframe-facet
+            engine-id={engineId}
+            facet-id="date"
+            field="date"
+            label="Timeframe"
+            with-date-picker="true"
+            no-filter-facet-count
+            injection-depth="800"
+          >
+            <c-quantic-timeframe
+              period="next"
+              unit="year"
+            ></c-quantic-timeframe>
+            <c-quantic-timeframe amount="2" unit="week"></c-quantic-timeframe>
+            <c-quantic-timeframe unit="month"></c-quantic-timeframe>
+            <c-quantic-timeframe unit="year"></c-quantic-timeframe>
+            <c-quantic-timeframe
+              amount="10"
+              unit="year"
+              label="Last decade"
+            ></c-quantic-timeframe>
+          </c-quantic-timeframe-facet>
+          <c-quantic-date-facet
+            engine-id={engineId}
+            facet-id="myfacet"
+            field="date"
+            label="Date"
+            number-of-values="5"
+          ></c-quantic-date-facet>
+        </template>
+      </c-quantic-facet-manager>
+      <div class="container slds-is-relative slds-var-p-around_small">
+        <div>
+          <c-quantic-refine-toggle
+            engine-id={engineId}
+            full-screen={config.fullScreen}
+            hide-sort={config.hideSort}
+            title={config.title}
+            disable-dynamic-navigation={config.disableDynamicNavigation}
+          >
+            <div slot="refine-title" class="refine-modal__title">
+              Custom Title
+            </div>
+            <div slot="button-content">
+              Custom Label
+              <lightning-icon
+                size="x-small"
+                icon-name="utility:filterList"
+                alternative-text={config.title}
+                class="custom-refine-icon slds-current-color slds-var-p-vertical_x-small slds-button__icon_right"
+              >
+              </lightning-icon>
+            </div>
+          </c-quantic-refine-toggle>
+        </div>
+      </div>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

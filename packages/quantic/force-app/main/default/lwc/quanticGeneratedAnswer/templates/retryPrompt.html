@@ -1,0 +1,27 @@
+<template>
+  <template lwc:if={shouldDisplayGeneratedAnswer}>
+    <div
+      data-testid="generated-answer__card"
+      class="slds-box"
+    >
+      <div
+        class="slds-var-m-bottom_medium slds-grid generated-answer__card-header"
+      >
+        <span
+          class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+          >{labels.generatedAnswerForYou}</span
+        >
+      </div>
+      <div>{labels.couldNotGenerateAnAnswer}</div>
+      <div class="slds-var-m-top_small">
+        <lightning-button
+          data-testid="generated-answer__retry-button"
+          variant="brand-outline"
+          label={labels.tryAgain}
+          title={labels.tryAgain}
+          onclick={handleRetry}
+        ></lightning-button>
+      </div>
+    </div>
+  </template>
+</template>

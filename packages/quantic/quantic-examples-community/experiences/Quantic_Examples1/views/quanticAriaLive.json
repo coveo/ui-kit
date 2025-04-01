@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "7e73f1a0-9732-4fb8-90ba-1925165170b2",
+  "label": "Quantic Aria Live",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "4be76040-f83a-487a-b0dd-fc44d55b6b7a",
+              "columns": [
+                {
+                  "UUID": "6b0fe29b-f5bf-4c73-bcb5-409027279490",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "4be76040-f83a-487a-b0dd-fc44d55b6b7a",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticAriaLive",
+                  "id": "15d5866f-4285-435d-a395-c662afe35fdc",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "6b0fe29b-f5bf-4c73-bcb5-409027279490",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "9cb6a2de-6b90-4478-bc8f-b8c0e2aef6bf",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Aria Live"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "9f145b53-f23a-4b31-8f4c-a178a5dbbb0a",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "8588baff-3cc6-4b1e-83e6-c1abf903c064",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-aria-live"
+}

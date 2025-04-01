@@ -1,0 +1,29 @@
+{
+  "name": "atomic-angular-builder",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "namedInputs": {
+    "negativeBuildOutputs": ["!{projectRoot}/projects/atomic-angular/dist"]
+  },
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "cached:build": {
+      "outputs": ["{projectRoot}/projects/atomic-angular/dist"],
+      "dependsOn": ["^build"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "node ./scripts/build-lit.mjs",
+          "npm run build:bundles",
+          "npm run build:assets"
+        ],
+        "parallel": false,
+        "cwd": "packages/atomic-angular"
+      }
+    },
+    "build": {
+      "dependsOn": ["cached:build"],
+      "executor": "nx:noop"
+    }
+  }
+}

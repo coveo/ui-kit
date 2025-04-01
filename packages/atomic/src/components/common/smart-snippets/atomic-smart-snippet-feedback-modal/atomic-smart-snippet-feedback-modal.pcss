@@ -1,0 +1,18 @@
+@import '../../../../global/global.pcss';
+
+[part='reason'] {
+  @apply text-neutral-dark text-base leading-4;
+
+  @media (width >= theme(--breakpoint-desktop)) {
+    @apply mt-2;
+  }
+
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mt-4;
+  }
+}
+
+[part='cancel-button'],
+[part='submit-button'] {
+  @apply flex justify-center p-2 text-sm leading-4;
+}

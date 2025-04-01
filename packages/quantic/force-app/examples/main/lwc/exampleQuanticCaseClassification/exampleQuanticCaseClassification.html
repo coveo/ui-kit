@@ -1,0 +1,41 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator
+      slot="configuration"
+      options={options}
+      ontryitnow={handleTryItNow}
+    >
+      <c-action-fetch-classifications
+        slot="actions"
+        disabled={notConfigured}
+        engine-id={config.engineId}
+      ></c-action-fetch-classifications>
+    </c-configurator>
+
+    <c-quantic-case-assist-interface
+      case-assist-id={caseAssistId}
+      engine-id={config.engineId}
+      search-hub="test origin"
+      slot="preview"
+    >
+      <c-quantic-case-classification
+        engine-id={config.engineId}
+        coveo-field-name={config.coveoFieldName}
+        sf-field-api-name={config.sfFieldApiName}
+        select-placeholder={config.selectPlaceholder}
+        max-suggestions={config.maxSuggestions}
+        required={config.required}
+        label={config.label}
+        message-when-value-missing={config.messageWhenValueMissing}
+        fetch-classification-on-change={config.fetchClassificationOnChange}
+        fetch-document-suggestion-on-change={config.fetchDocumentSuggestionOnChange}
+        fetch-on-init={config.fetchOnInit}
+      >
+      </c-quantic-case-classification>
+    </c-quantic-case-assist-interface>
+  </c-example-layout>
+</template>

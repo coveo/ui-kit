@@ -1,0 +1,24 @@
+@import '../../../../global/global.pcss';
+@import '../../../../utils/tailwind-utilities/link-style.tw.css';
+@import '../../../../utils/tailwind-utilities/set-font-size.tw.css';
+
+[part='source-url'] {
+  @apply link-style;
+  @apply set-font-size-base;
+}
+
+[part='source-title'] {
+  @apply link-style;
+  @apply set-font-size-xl;
+  @apply mb-6;
+}
+
+footer {
+  &:before {
+    content: ' ';
+    display: block;
+    height: 1px;
+    @apply bg-neutral;
+    margin-bottom: 1.5rem;
+  }
+}

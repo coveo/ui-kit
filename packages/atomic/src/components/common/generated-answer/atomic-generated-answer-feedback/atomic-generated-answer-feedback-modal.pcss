@@ -1,0 +1,60 @@
+@import '../../../../global/global.pcss';
+
+@utility mobile-feedback-modal {
+  &::part(container) {
+    @apply w-auto min-w-full;
+  }
+
+  &::part(header),
+  &::part(body),
+  &::part(footer) {
+    @apply max-w-full;
+  }
+  [part='buttons'] {
+    .required-label {
+      @apply text-sm;
+    }
+  }
+  [part='form'] {
+    .answer-evaluation {
+      @apply block;
+    }
+
+    .options {
+      @apply mt-2;
+    }
+  }
+  [part='modal-header'] {
+    .hide {
+      @apply hidden;
+    }
+  }
+}
+
+[part='generated-answer-feedback-modal'] {
+  &::part(container) {
+    @apply min-w-170;
+  }
+
+  &::part(header),
+  &::part(body),
+  &::part(footer) {
+    @apply max-w-170;
+  }
+
+  @media not all and (width >= theme(--breakpoint-desktop)) {
+    @apply mobile-feedback-modal;
+  }
+}
+
+[part='form'] {
+  .active {
+    @apply border-primary-light text-primary-light bg-primary-background;
+  }
+  .text-error-red {
+    @apply text-inline-code;
+  }
+  .required {
+    @apply flex;
+  }
+}
