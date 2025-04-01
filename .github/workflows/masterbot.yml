@@ -43,7 +43,7 @@ jobs:
           IS_PRERELEASE: 'true'
   prerelease-cdn:
     name: Pre-release CDN in dev
-    environment: 'Release'
+    environment: 'Prerelease (CDN)'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
