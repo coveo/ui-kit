@@ -27,6 +27,7 @@ export default function StandaloneSearchBox() {
       router.push(url, {scroll: false});
       methods?.afterRedirection();
     } else if (state.redirectTo !== '') {
+      // This handles query pipeline redirect triggers.
       window.location.replace(state.redirectTo);
     }
   }, [state.redirectTo, state.value, router, methods]);
