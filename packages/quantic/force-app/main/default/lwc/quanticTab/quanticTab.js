@@ -23,6 +23,12 @@ export default class QuanticTab extends LightningElement {
    */
   @api engineId;
   /**
+   * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
+   * @api
+   * @type {string}
+   */
+  @api tabId;
+  /**
    * The non-localized label for the tab.
    * @api
    * @type {string}
@@ -81,7 +87,7 @@ export default class QuanticTab extends LightningElement {
     this.tab = this.headless.buildTab(engine, {
       options: {
         expression: this.expression,
-        id: this.label,
+        id: this.tabId ?? this.label,
       },
       initialState: {
         isActive: this.isActive,

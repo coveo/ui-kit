@@ -14,6 +14,7 @@ const exampleEngine = {
 };
 
 const defaultOptions = {
+  tabId: 'Example Tab ID',
   engineId: exampleEngine.id,
   label: 'Example Tab',
   expression: 'exampleExpression',
@@ -144,7 +145,7 @@ describe('c-quantic-tab', () => {
       expect(functionsMocks.buildTab).toHaveBeenCalledWith(exampleEngine, {
         options: {
           expression: defaultOptions.expression,
-          id: defaultOptions.label,
+          id: defaultOptions.tabId,
         },
         initialState: {
           isActive: defaultOptions.isActive,
