@@ -1,25 +1,13 @@
 {
   "name": "atomic-hosted-page",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{projectRoot}/src/components.d.ts"
-    ]
-  },
   "targets": {
     "release:phase1": {},
     "release:phase3": {},
-    "cached:build": {
-      "dependsOn": ["^build"],
-      "inputs": ["^production", "production"],
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/cdn",
-        "{projectRoot}/loader",
-        "{projectRoot}/src/components.d.ts"
-      ],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/cdn"],
+      "cache": true,
       "options": {
         "commands": [
           "rimraf -rf dist cdn",
@@ -27,23 +15,8 @@
           "tsc --outdir cdn --project tsconfig.cdn.json",
           "node ./scripts/esbuild.js"
         ],
-        "cwd": "packages/atomic-hosted-page"
+        "cwd": "{projectRoot}"
       }
-    },
-    "validate:definitions": {
-      "dependsOn": ["^build", "cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "validate:definitions"
-      }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:noop"
     }
   }
 }

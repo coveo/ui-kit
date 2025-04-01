@@ -2,21 +2,18 @@
   "name": "atomic-angular-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "cached:build": {
-      "dependsOn": ["^build", "clean"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
           "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
           "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:angular\""
         ],
         "parallel": false,
-        "cwd": "packages/samples/angular"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
