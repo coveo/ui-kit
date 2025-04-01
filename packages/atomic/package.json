@@ -156,7 +156,13 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.9",
-    "@coveo/headless": "3.20.0"
+    "@coveo/headless": "3.20.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "license": "Apache-2.0",
   "engines": {
