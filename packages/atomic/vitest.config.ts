@@ -2,6 +2,8 @@ import {readFileSync} from 'fs';
 import path from 'node:path';
 import {dirname, resolve} from 'path';
 import {defineConfig} from 'vitest/config';
+//@ts-expect-error - normal json import
+import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
@@ -25,6 +27,8 @@ function svgTransform(code, id) {
 export default defineConfig({
   define: {
     'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+    __ATOMIC_VERSION__: `"${packageJson.version}"`,
+    __HEADLESS_VERSION__: `"${packageJson.dependencies['@coveo/headless']}"`,
   },
   server: {
     port: port,
@@ -68,7 +72,7 @@ export default defineConfig({
     },
   ],
   test: {
-    include: ['src/**/*.spec.ts'],
+    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',

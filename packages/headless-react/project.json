@@ -3,16 +3,15 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "release:phase1": {},
-    "cached:build": {
+    "release:phase3": {},
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "command": "tsc --project ./tsconfig.json",
-        "cwd": "packages/headless-react"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }

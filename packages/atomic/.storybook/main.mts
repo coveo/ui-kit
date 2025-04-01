@@ -62,15 +62,18 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  viteFinal: async (config, {configType}) =>
-    mergeConfig(config, {
+  async viteFinal(config, {configType}) {
+    const {default: tailwindcss} = await import('@tailwindcss/vite');
+    return mergeConfig(config, {
       plugins: [
+        tailwindcss(),
         resolvePathAliases(),
         forceInlineCssImports(),
         svgTransform(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
-    }),
+    });
+  },
 };
 
 const resolvePathAliases: PluginImpl = () => {

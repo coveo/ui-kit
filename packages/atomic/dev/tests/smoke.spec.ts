@@ -80,12 +80,13 @@ test.describe('style encapsulation', () => {
 
 test.describe('theme customization', () => {
   test.beforeEach(async ({page}) => {
-    await page.goto('http://localhost:3333/themingTests.html');
-    await page
-      .locator('atomic-query-summary')
-      .getByText(/Results 1-10 of \d*/)
+    await page.goto('http://localhost:3333/themingTests.html#q=connect');
+    const resultTitle = page
+      .locator('atomic-result')
       .first()
-      .waitFor();
+      .locator('atomic-result-section-title atomic-result-text')
+      .first();
+    await expect(resultTitle).toHaveText('Connect');
   });
 
   const outsideResultTemplateTests = [

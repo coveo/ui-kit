@@ -1,81 +1,7 @@
 {
-  "namedInputs": {
-    "sharedGlobals": [
-      {
-        "runtime": "node -v"
-      }
-    ],
-    "commonConfigTypescript": [
-      "{workspaceRoot}/tsconfig.json",
-      "{projectRoot}/tsconfig.json",
-      "{projectRoot}/tsconfig.*.json"
-    ],
-    "commonScripts": [
-      "{projectRoot}/.env",
-      "{projectRoot}/*.m?js",
-      "{projectRoot}/*.ts",
-      "{projectRoot}/scripts/**"
-    ],
-    "negativeCommonNonProduction": [
-      "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/.eslintrc.js",
-      "!{projectRoot}/.gitignore",
-      "!{projectRoot}/.editorconfig",
-      "!{projectRoot}/.lint-staged.config.js",
-      "!{projectRoot}/jest.{config,setup}.js",
-      "!{projectRoot}/cypress.config.ts",
-      "!{projectRoot}/cypress",
-      "!{projectRoot}/.vscode",
-      "!{projectRoot}/*.md",
-      "!{projectRoot}/*.tsbuildinfo",
-      "!{projectRoot}/LICENSE",
-      "!{projectRoot}/**/?(*.)spec.{ts,tsx}",
-      "!{projectRoot}/**/?(*.)spec.{ts,tsx}.snap}",
-      "!{projectRoot}/**/?(*.)stories.{tsx,css}",
-      "!{projectRoot}/**/?(*.)mdx"
-    ],
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{projectRoot}/www",
-      "!{projectRoot}/temp",
-      "!{projectRoot}/build",
-      "!{projectRoot}/.angular",
-      "!{projectRoot}/.next",
-      "!{projectRoot}/next-env.d.ts"
-    ],
-    "negativeNonBuildOutputs": [],
-    "buildInputs": ["{projectRoot}/**"],
-    "production": [
-      "sharedGlobals",
-      "commonConfigTypescript",
-      "commonScripts",
-      "buildInputs",
-      "negativeNonBuildOutputs",
-      "negativeBuildOutputs",
-      "negativeCommonNonProduction",
-      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/.storybook/**/*",
-      "!{projectRoot}/tsconfig.storybook.json"
-    ]
-  },
   "targetDefaults": {
     "build": {
-      "inputs": ["^production", "production"],
       "dependsOn": ["^build"]
-    },
-    "cached:build": {
-      "inputs": ["^production", "production"],
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/www",
-        "{projectRoot}/temp",
-        "{projectRoot}/build",
-        "{projectRoot}/.angular",
-        "{projectRoot}/.next",
-        "{projectRoot}/next-env.d.ts"
-      ],
-      "dependsOn": ["^build"],
-      "cache": true
     },
     "dev": {
       "dependsOn": ["^build"]
@@ -101,32 +27,19 @@
       "dependsOn": ["^release:phase1"],
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "npm run publish:bump",
-          "npm run build",
-          "npm run publish:npm"
-        ],
+        "commands": ["npm run publish:bump", "npm run build"],
         "parallel": false,
         "cwd": "{projectRoot}"
       }
     },
-    "release:phase4": {
-      "dependsOn": ["^release:phase4"],
-      "//": "Currently disabled TODO KIT-3074",
-      "executor": "nx:noop",
-      "options": {"script": "publish:bump"}
-    },
-    "cached:build:stencil": {
-      "cache": true
-    },
-    "build-storybook": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "^production",
-        "{projectRoot}/.storybook/**/*",
-        "{projectRoot}/tsconfig.storybook.json"
-      ]
+    "release:phase3": {
+      "dependsOn": ["^release:phase3"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npm run publish:npm"],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
     }
   },
   "defaultBase": "master",

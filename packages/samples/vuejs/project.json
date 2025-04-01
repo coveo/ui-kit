@@ -2,21 +2,18 @@
   "name": "atomic-vuejs-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "cached:build": {
-      "dependsOn": ["^build", "clean"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:assets; fi",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build:vue; fi"
+          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
+          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:vue\""
         ],
         "parallel": false,
-        "cwd": "packages/samples/vuejs"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }

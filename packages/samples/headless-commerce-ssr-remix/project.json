@@ -2,16 +2,14 @@
   "name": "headless-commerce-ssr-remix-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "targets": {
-    "cached:build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then npm run build; fi",
-        "cwd": "packages/samples/headless-commerce-ssr-remix"
-      }
-    },
     "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/build"],
+      "cache": true,
+      "options": {
+        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build\"",
+        "cwd": "{projectRoot}"
+      }
     }
   }
 }

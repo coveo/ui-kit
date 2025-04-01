@@ -1,8 +1,7 @@
 import * as guardModule from '@/src/decorators/error-guard';
 import * as utils from '@/src/utils/utils';
-import {fixture} from '@/tests/testing-helpers/fixture';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
-// TODO: import @vitest/browser this for all test files
 import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';

@@ -58,7 +58,7 @@ export default meta;
 const {
   decorator: commerceInterfaceDecorator,
   play: initializeCommerceInterface,
-} = wrapInCommerceInterface({skipFirstSearch: false});
+} = wrapInCommerceInterface({skipFirstRequest: false});
 const {decorator: commerceProductListDecorator} = wrapInCommerceProductList();
 
 export const InAProductList: Story = {

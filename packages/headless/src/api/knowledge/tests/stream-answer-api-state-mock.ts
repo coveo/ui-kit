@@ -675,6 +675,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
           status: 'pending' as any,
           endpointName: 'getAnswer',
           requestId: 'ePS46iWmVlz23hfyR8TVQ',
+          //@ts-expect-error - This is a mock
           originalArgs: {
             q: 'what is the hardest wood',
             pipelineRuleParameters: {
