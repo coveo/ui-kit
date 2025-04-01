@@ -6,9 +6,7 @@ export default {
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface'),
   'atomic-commerce-product-list': async () =>
-    await import(
-      './atomic-commerce-product-list/atomic-commerce-product-list.js'
-    ),
+    await import('./atomic-commerce-product-list/atomic-commerce-product-list'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

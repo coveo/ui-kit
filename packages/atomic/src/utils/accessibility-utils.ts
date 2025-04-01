@@ -1,5 +1,5 @@
 import {PropertyValues} from 'lit';
-import {AnyBindings} from '../components';
+import {AnyBindings} from '../components/common/interface/bindings';
 import {InitializableComponent} from '../decorators/types';
 import {defer} from './utils';
 

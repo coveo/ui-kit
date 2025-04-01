@@ -1,19 +1,19 @@
 import {
-  CommerceRecommendationStore,
-  CommerceStore,
-  InsightStore,
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  RecsStore,
-  SearchStore,
-} from '@/src/components';
-import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '@/src/utils/accessibility-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {defer, once} from '@/src/utils/utils';
+import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
+import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
+import {InsightStore} from '../../insight/atomic-insight-interface/store';
+import {RecsStore} from '../../recommendations/atomic-recs-interface/store';
+import {SearchStore} from '../../search/atomic-search-interface/store';
 import {AnyItem} from '../interface/item';
+import {
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+} from '../layout/display-options';
 
 export const resultComponentClass = 'result-component';
 
