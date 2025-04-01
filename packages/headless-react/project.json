@@ -4,16 +4,14 @@
   "targets": {
     "release:phase1": {},
     "release:phase3": {},
-    "cached:build": {
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "command": "tsc --project ./tsconfig.json",
-        "cwd": "packages/headless-react"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }

@@ -1,34 +1,18 @@
 {
   "name": "bueno",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{projectRoot}/cdn",
-      "!{workspaceRoot}/packages/atomic/src/external-builds",
-      "!{workspaceRoot}/packages/headless/src/external-builds"
-    ]
-  },
   "targets": {
     "release:phase1": {},
     "release:phase3": {},
-    "cached:build": {
+    "build": {
       "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/cdn",
-        "{workspaceRoot}/packages/atomic/src/external-builds",
-        "{workspaceRoot}/packages/headless/src/external-builds"
-      ],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/cdn"],
+      "cache": true,
       "options": {
         "commands": ["npm run build:bundles", "npm run build:definitions"],
         "parallel": true,
-        "cwd": "packages/bueno"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }
