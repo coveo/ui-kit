@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-conditional-expect */
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import {createElement} from 'lwc';
@@ -45,6 +46,11 @@ const exampleResult = {
   uniqueId: '123',
 };
 
+const functionMocks = {
+  pushRecentResult: jest.fn(),
+  dispatchEvent: jest.fn(),
+};
+
 function createTestComponent(options = {result: exampleResult}) {
   const element = createElement('c-quantic-result-quick-view', {
     is: QuanticResultQuickview,
@@ -57,6 +63,7 @@ function createTestComponent(options = {result: exampleResult}) {
   }
 
   document.body.appendChild(element);
+
   return element;
 }
 
@@ -65,10 +72,6 @@ function flushPromises() {
   // eslint-disable-next-line @lwc/lwc/no-async-operation
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
-
-const functionMocks = {
-  pushRecentResult: jest.fn(),
-};
 
 let useCase = 'search';
 
@@ -142,10 +145,12 @@ describe('c-quantic-result-quick-view', () => {
     const quickViewButton = element.shadowRoot.querySelector(
       selectors.quickviewButton
     );
+    expect(quickViewButton.disabled).toBeFalsy();
     await quickViewButton.click();
     await flushPromises();
 
-    expect(functionMocks.pushRecentResult).toHaveBeenCalledWith({});
+    expect(functionMocks.pushRecentResult).toHaveBeenCalledTimes(1);
+    expect(functionMocks.pushRecentResult).toHaveBeenCalledWith(exampleResult);
   });
 
   describe('when the result has no preview', () => {
@@ -173,16 +178,17 @@ describe('c-quantic-result-quick-view', () => {
 
   describe('when the component has custom properties', () => {
     it('should render the custom icon correctly', async () => {
+      const customIcon = 'utility:file';
       const customOptions = {
         result: exampleResult,
-        previewButtonIcon: 'utility:file',
+        previewButtonIcon: customIcon,
       };
       const element = createTestComponent(customOptions);
       await flushPromises();
 
       const quickViewIcon = element.shadowRoot.querySelector(selectors.icon);
 
-      expect(quickViewIcon.iconName).toBe('utility:file');
+      expect(quickViewIcon.iconName).toBe(customIcon);
     });
 
     it('should render the custom label correctly', async () => {
@@ -209,7 +215,9 @@ describe('c-quantic-result-quick-view', () => {
         const customOptions = {
           result: exampleResult,
           previewButtonVariant: testVariant,
+          dispatchEvent: functionMocks.dispatchEvent,
         };
+
         const element = createTestComponent(customOptions);
         await flushPromises();
 
@@ -217,11 +225,23 @@ describe('c-quantic-result-quick-view', () => {
           selectors.quickviewButton
         );
 
-        const expectedClass =
-          testVariant === 'result-action'
-            ? 'slds-button_icon-border-filled'
-            : `slds-button_${testVariant}`;
-        expect(quickViewButton.classList).toContain(expectedClass);
+        if (testVariant === 'result-action') {
+          expect(quickViewButton.classList).toContain(
+            'slds-button_icon-border-filled'
+          );
+          expect(functionMocks.dispatchEvent).toHaveBeenCalledTimes(2);
+          expect(functionMocks.dispatchEvent.mock.calls[0][0].type).toBe(
+            'quantic__resultactionregister'
+          );
+        } else {
+          expect(quickViewButton.classList).toContain(
+            `slds-button_${testVariant}`
+          );
+          expect(functionMocks.dispatchEvent).toHaveBeenCalledTimes(1);
+          expect(functionMocks.dispatchEvent.mock.calls[0][0].type).toBe(
+            'quantic__haspreview'
+          );
+        }
       }
     );
 

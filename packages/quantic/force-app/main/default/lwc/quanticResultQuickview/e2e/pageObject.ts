@@ -11,7 +11,14 @@ export class ResultQuickviewObject {
   }
 
   get quickviewContent(): Locator {
-    return this.page.locator('c-quantic-quickview-content');
+    return this.page
+      .locator('c-quantic-quickview-content iframe')
+      .contentFrame()
+      .locator('div');
+  }
+
+  get quickviewFooter(): Locator {
+    return this.page.locator('slot[name="footer"]');
   }
 
   async receivedEvents(): Promise<Array<string>> {

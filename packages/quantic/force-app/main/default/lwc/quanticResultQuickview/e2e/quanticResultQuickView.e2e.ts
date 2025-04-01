@@ -19,7 +19,6 @@ useCaseTestCases.forEach((useCase) => {
         );
 
         const quickViewButton = resultQuickview.quickviewButton;
-        await quickViewButton.scrollIntoViewIfNeeded();
 
         await expect(quickViewButton).toBeVisible();
         await expect(quickViewButton).not.toBeDisabled();
@@ -33,13 +32,11 @@ useCaseTestCases.forEach((useCase) => {
         await htmlResponsePromise;
         await uaRequest;
 
-        const contentContainer = resultQuickview.quickviewContent;
-        await expect(contentContainer).toBeVisible();
-        const iframe = contentContainer.locator('iframe');
-        const iframeContent = await iframe.contentFrame();
-        await expect(iframeContent?.locator('div')).toContainText(
+        const quickviewContent = resultQuickview.quickviewContent;
+        await expect(quickviewContent).toContainText(
           'dewalt 20v cordless drill'
         );
+        await expect(resultQuickview.quickviewFooter).toBeVisible();
       });
     });
 
