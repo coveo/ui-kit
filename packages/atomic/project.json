@@ -1,83 +1,17 @@
 {
   "name": "atomic",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/dist",
-      "!{projectRoot}/www",
-      "!{projectRoot}/docs",
-      "!{projectRoot}/src/components.d.ts"
-    ],
-    "buildInputs": [
-      "{projectRoot}/stencil.config.ts",
-      "{projectRoot}/collection-manifest.json",
-      "{projectRoot}/tailwind.config.cjs",
-      "{projectRoot}/svg.transform.cjs",
-      "{projectRoot}/stencil-plugin/**",
-      "!{projectRoot}/src/external-builds/**",
-      "!{projectRoot}/src/generated/**",
-      "!{projectRoot}/src/components/search/atomic-search-interface/lang/**"
-    ]
-  },
   "targets": {
-    "cached:build:stencil": {
-      "dependsOn": ["^build", "build:locales"],
-      "inputs": ["^production", "production"],
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/www",
-        "{projectRoot}/docs",
-        "{projectRoot}/src/components.d.ts"
-      ],
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
-          "node ./scripts/stencil-proxy.mjs",
-          "node ./scripts/build.mjs --config=tsconfig.lit.json",
-          "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
-          "npm run-script -w=@coveo/release if-not-cdn -- \"rollup -c rollup.config.js\"",
-          "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
-          "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js"
-        ],
-        "parallel": false,
-        "cwd": "packages/atomic"
-      }
-    },
-    "validate:definitions": {
-      "dependsOn": ["^build", "cached:build:stencil"],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:run-script",
-      "options": {
-        "script": "validate:definitions"
-      }
-    },
     "release:phase1": {},
     "release:phase3": {},
-    "build": {
-      "dependsOn": [
-        "cached:build:stencil",
-        "delete-loader-package-json",
-        "validate:definitions",
-        "build-storybook"
-      ],
-      "inputs": [],
-      "outputs": [],
-      "executor": "nx:noop"
-    },
-    "create-generated-folder": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["node ./scripts/create-generated-folder.mjs"],
-        "cwd": "{projectRoot}"
-      }
-    },
     "build:locales": {
-      "dependsOn": ["create-generated-folder"],
+      "dependsOn": ["^build"],
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/src/generated"],
+      "cache": true,
       "options": {
         "commands": [
+          "node ./scripts/create-generated-folder.mjs",
           "node ./scripts/split-locales.mjs",
           "node ./scripts/copy-dayjs-locales.mjs"
         ],
@@ -85,79 +19,70 @@
         "cwd": "{projectRoot}"
       }
     },
-    "list-assets": {
-      "dependsOn": ["cached:build:stencil"],
+    "build:stencil-lit": {
+      "dependsOn": ["build:locales"],
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/docs",
+        "{projectRoot}/src/components.d.ts",
+        "{projectRoot}/.stencil",
+        "{projectRoot}/src/lit-components.d.ts"
+      ],
+      "cache": true,
+      "options": {
+        "commands": [
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
+          "node ./scripts/stencil-proxy.mjs",
+          "node ./scripts/build.mjs --config=tsconfig.lit.json",
+          "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
+          "npm run-script -w=@coveo/release if-cdn -- \"rollup -c rollup.config.js\"",
+          "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
+          "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
+          "rimraf ./dist/atomic/loader/package.json",
+          "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:cem": {
+      "dependsOn": ["build:stencil-lit"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/custom-elements.json"],
+      "cache": true,
+      "options": {
+        "command": "cem analyze",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:list-assets": {
+      "dependsOn": ["build:stencil-lit"],
       "executor": "nx:run-commands",
       "options": {
         "commands": ["node ./scripts/list-assets.mjs"],
         "cwd": "{projectRoot}"
       }
     },
-    "build:watch": {
+    "build:storybook": {
+      "dependsOn": ["build:cem", "build:list-assets"],
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist-storybook"],
+      "cache": true,
       "options": {
-        "command": "node ./scripts/watch.mjs",
-        "cwd": "{projectRoot}",
-        "waitUntilTargets": ["^dev"]
+        "commands": ["npx storybook build -o dist-storybook"],
+        "cwd": "{projectRoot}"
       }
+    },
+    "build": {
+      "dependsOn": ["build:storybook"],
+      "executor": "nx:noop"
     },
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
         "command": "node ./scripts/start-vite.mjs",
         "cwd": "{projectRoot}"
-      }
-    },
-    "stencil:dev": {
-      "dependsOn": ["^build", "build:locales"],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json --dev --watch --serve",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "cem:build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "cem analyze",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "wait-on:dist": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "wait-on dist/atomic"
-      }
-    },
-    "wait-on:stencil-ping": {
-      "executor": "nx:run-commands",
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "wait-on http://localhost:3333/ping"
-      }
-    },
-    "build-storybook": {
-      "dependsOn": ["cached:build:stencil", "cem:build", "list-assets"],
-      "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist-storybook"],
-      "options": {
-        "cwd": "{projectRoot}",
-        "command": "npx storybook build -o dist-storybook"
-      }
-    },
-    "test-storybook": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "test-storybook -c packages/atomic/.storybook --url=http://localhost:4400"
-      }
-    },
-    "delete-loader-package-json": {
-      "dependsOn": ["^build", "cached:build:stencil"],
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "rimraf ./dist/atomic/loader/package.json",
-        "cwd": "packages/atomic"
       }
     },
     "generate-component": {

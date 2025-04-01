@@ -1,20 +1,18 @@
+import {setCoveoGlobal} from '@/src/global/environment.js';
 import {LogLevel} from '@coveo/headless';
-import {ComponentInterface, h} from '@stencil/core';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
-import {setCoveoGlobal} from '../../../global/environment';
-import {loadFocusVisiblePolyfill} from '../../../global/focus-visible';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales';
-import {InitializeEvent} from '../../../utils/initialization-utils';
-import {
-  i18nBackendOptions,
-  i18nTranslationNamespace,
-} from '../../common/interface/i18n';
-import {AnyBindings, AnyEngineType} from './bindings';
-import {init18n} from './i18n';
+import {html} from 'lit';
+import {loadFocusVisiblePolyfill} from '../../../global/focus-visible.js';
+import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
+import {AnyBindings, AnyEngineType} from './bindings.js';
+import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
+import {init18n} from './i18n.js';
 
-export interface BaseAtomicInterface<EngineType extends AnyEngineType>
-  extends ComponentInterface {
+export type InitializeEventHandler = (bindings: AnyBindings) => void;
+export type InitializeEvent = CustomEvent<InitializeEventHandler>;
+
+export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   analytics: boolean;
   i18n: i18n;
   engine?: EngineType;
@@ -46,32 +44,36 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     setCoveoGlobal(globalVariableName);
     loadFocusVisiblePolyfill();
 
-    const {
-      connectedCallback: originalConnectedCallback,
-      render: originalRender,
-    } = atomicInterface;
+    if ('connectedCallback' in atomicInterface && 'render' in atomicInterface) {
+      const {
+        connectedCallback: originalConnectedCallback,
+        render: originalRender,
+      } = atomicInterface;
 
-    atomicInterface.connectedCallback = () => {
+      atomicInterface.connectedCallback = () => {
+        this.i18nPromise = init18n(atomicInterface);
+
+        if (typeof originalConnectedCallback === 'function') {
+          return originalConnectedCallback.call(atomicInterface);
+        }
+        return;
+      };
+
+      atomicInterface.render = () => {
+        if (atomicInterface.error) {
+          return html`<atomic-component-error
+            .element=${atomicInterface.host}
+            .error=${atomicInterface.error}
+          ></atomic-component-error>`;
+        }
+
+        return typeof originalRender === 'function'
+          ? originalRender.call(atomicInterface)
+          : null;
+      };
+    } else {
       this.i18nPromise = init18n(atomicInterface);
-
-      return (
-        originalConnectedCallback &&
-        originalConnectedCallback.call(atomicInterface)
-      );
-    };
-
-    atomicInterface.render = () => {
-      if (atomicInterface.error) {
-        return (
-          <atomic-component-error
-            element={atomicInterface.host}
-            error={atomicInterface.error}
-          ></atomic-component-error>
-        );
-      }
-
-      return originalRender && originalRender.call(atomicInterface);
-    };
+    }
   }
 
   public onComponentInitializing(event: InitializeEvent) {

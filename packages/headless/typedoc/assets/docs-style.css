@@ -31,12 +31,7 @@ body {
 
 .tsd-typography thead,
 .tsd-typography tr:nth-child(even) {
-  background-color: var(--light-color-background);
-}
-
-[data-theme='dark'] .tsd-typography thead,
-[data-theme='dark'] .tsd-typography tr:nth-child(even) {
-  background-color: var(--dark-color-background);
+  background-color: var(--color-background);
 }
 
 .tsd-page-toolbar {

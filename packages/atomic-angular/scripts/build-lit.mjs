@@ -13,7 +13,7 @@ const litDeclarations = [];
 const litImports = new Set();
 const defineCustomElementImports = new Set();
 
-const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
+const isLitDeclaration = (declaration) => declaration?.superclass?.name === 'LitElement';
 
 const declarationToLitImport = (declaration) => `${declaration.name} as Lit${declaration.name}`;
 
@@ -100,8 +100,14 @@ for (const module of cem.modules) {
   }
 }
 
-atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
-atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n${endTag}`;
+if (litImports.size > 0) {
+  atomicAngularComponentFileContent += `\nimport {${[...litImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+}
+
+if (defineCustomElementImports.size > 0) {
+  atomicAngularComponentFileContent += `\nimport {${[...defineCustomElementImports].sort().join(', ')}} from '@coveo/atomic/components';\n`;
+}
+atomicAngularComponentFileContent += `${endTag}`;
 
 if(litDeclarations.length > 0) {
   writeFileSync(
@@ -113,4 +119,3 @@ if(litDeclarations.length > 0) {
 }
 
   writeFileSync(atomicAngularComponentFilePath, atomicAngularComponentFileContent.trimEnd());
-  

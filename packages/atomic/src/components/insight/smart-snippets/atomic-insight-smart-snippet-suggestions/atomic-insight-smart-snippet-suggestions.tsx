@@ -54,9 +54,10 @@ export class AtomicInsightSmartSnippetSuggestions
    */
   @Prop() snippetStyle?: string;
 
-  private id = randomID('atomic-smart-snippet-suggestions-');
+  private id!: string;
 
   public initialize() {
+    this.id ||= randomID('atomic-smart-snippet-suggestions-');
     this.smartSnippetQuestionsList = buildInsightSmartSnippetQuestionsList(
       this.bindings.engine
     );

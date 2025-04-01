@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.21.0",
+  "version": "3.21.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -37,7 +37,7 @@
     },
     "./components": {
       "types": "./dist/atomic/components/index.d.ts",
-      "import": "./dist/atomic/components/components/index.js"
+      "import": "./dist/atomic/components/index.js"
     },
     "./custom-elements-manifest": "./custom-elements.json"
   },
@@ -71,7 +71,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.9",
-    "@coveo/headless": "3.19.3",
+    "@coveo/headless": "3.20.0",
     "@lit/context": "1.1.4",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.26.2",
@@ -120,7 +120,7 @@
     "@vitest/browser": "3.0.6",
     "@whitespace/storybook-addon-html": "6.1.1",
     "axe-core": "4.10.2",
-    "chalk": "4.1.2",
+    "chalk": "5.4.1",
     "cypress": "13.7.3",
     "cypress-axe": "1.6.0",
     "cypress-repeat": "2.3.8",
@@ -156,7 +156,7 @@
   },
   "peerDependencies": {
     "@coveo/bueno": "1.0.9",
-    "@coveo/headless": "3.19.3"
+    "@coveo/headless": "3.20.0"
   },
   "license": "Apache-2.0",
   "engines": {

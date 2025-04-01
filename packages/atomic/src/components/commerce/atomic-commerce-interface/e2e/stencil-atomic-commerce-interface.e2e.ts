@@ -50,7 +50,7 @@ test.describe('when a query is performed automatically', () => {
         story: 'with-product-list',
         args: {language: 'fr'},
       });
-      await expect(commerceInterface.interface()).toContainText('Produits');
+      await expect(commerceInterface.interface()).toContainText('Produit');
     });
 
     test('should default to english when an invalid language is selected', async ({
@@ -60,7 +60,7 @@ test.describe('when a query is performed automatically', () => {
         story: 'with-product-list',
         args: {language: 'foo'},
       });
-      await expect(commerceInterface.interface()).toContainText('Products');
+      await expect(commerceInterface.interface()).toContainText('Product');
     });
 
     test('should default back to the non region locale (e.g., "es-ES" to "es")', async ({
@@ -88,7 +88,7 @@ test.describe('when a query is performed automatically', () => {
         commerceInterfaceComponent.language = 'fr';
       });
 
-      await expect(commerceInterface.interface()).toContainText('Produits');
+      await expect(commerceInterface.interface()).toContainText('Produit');
     });
     test('should revert to english after changing the language to an invalid value', async ({
       page,
@@ -133,7 +133,7 @@ test.describe('when a query is performed automatically', () => {
       test('should not update the url', async ({page, commerceInterface}) => {
         await commerceInterface.load({
           story: 'with-product-list',
-          args: {language: 'fr', reflectStateInUrl: false},
+          args: {reflectStateInUrl: false},
         });
 
         const facetValueLabel = commerceInterface.getFacetValue('Nike');
