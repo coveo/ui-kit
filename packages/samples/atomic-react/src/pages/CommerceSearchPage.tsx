@@ -1,6 +1,5 @@
 import {
   AtomicCommerceInterface,
-  AtomicCommerceProductList,
   AtomicProductLink,
   AtomicProductText,
   AtomicProductPrice,
@@ -20,6 +19,7 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
+  AtomicCommerceProductList,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,

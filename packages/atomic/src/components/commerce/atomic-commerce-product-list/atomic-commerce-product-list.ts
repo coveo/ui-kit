@@ -1,20 +1,11 @@
-import {
-  ItemDisplayDensity,
-  ItemDisplayImageSize,
-  ItemDisplayLayout,
-  ItemRenderingFunction,
-  SelectChildProductEventArgs,
-} from '@/src/components.js';
+import {SelectChildProductEventArgs} from '@/src/components.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
-import {
-  BindingController,
-  InitializeBindingsMixin,
-} from '@/src/mixins/bindings-mixin';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {BindingController} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
-import {TailwindLitElement} from '@/src/utils/tailwind.element.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
@@ -29,7 +20,14 @@ import {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {CSSResultGroup, html, nothing, PropertyValues, unsafeCSS} from 'lit';
+import {
+  CSSResultGroup,
+  html,
+  LitElement,
+  nothing,
+  PropertyValues,
+  unsafeCSS,
+} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -43,9 +41,17 @@ import {
   displayTableRow,
 } from '../../common/item-list/display-table-lit.js';
 import {displayWrapper} from '../../common/item-list/display-wrapper-lit.js';
-import {ItemListCommon} from '../../common/item-list/item-list-common-lit.js';
+import {
+  ItemListCommon,
+  ItemRenderingFunction,
+} from '../../common/item-list/item-list-common-lit.js';
 import {itemListGuard} from '../../common/item-list/item-list-guard-lit.js';
-import {getItemListDisplayClasses} from '../../common/layout/display-options.js';
+import {
+  getItemListDisplayClasses,
+  ItemDisplayDensity,
+  ItemDisplayImageSize,
+  ItemDisplayLayout,
+} from '../../common/layout/display-options.js';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
 import styles from './atomic-commerce-product-list.tw.css';
@@ -60,14 +66,12 @@ import styles from './atomic-commerce-product-list.tw.css';
  * @alpha
  */
 @customElement('atomic-commerce-product-list')
+@withTailwindStyles
 export class AtomicCommerceProductList
-  extends InitializeBindingsMixin(TailwindLitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
-  static styles: CSSResultGroup = [
-    TailwindLitElement.styles,
-    unsafeCSS(styles),
-  ];
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
