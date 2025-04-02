@@ -1,9 +1,16 @@
+import customElements from '@/custom-elements.json';
+import {defineCustomElements} from '@/dist/atomic/loader/index.js';
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import '../../common/atomic-component-error/atomic-component-error';
-import './atomic-commerce-sort-dropdown';
+import {
+  setCustomElementsManifest,
+  type Meta,
+  type StoryObj as Story,
+} from '@storybook/web-components';
+
+setCustomElementsManifest(customElements);
+defineCustomElements();
 
 const {decorator, play} = wrapInCommerceInterface();
 
