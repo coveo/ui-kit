@@ -35,7 +35,8 @@ export interface CommonBindings<
   interfaceElement: InterfaceElement;
 }
 export interface NonceBindings {
-  /* Creates a Style Information element with the nonce attribute if it exists.
+  /**
+   * Creates a Style Information element with the nonce attribute if it exists.
    * Note: the element is **not** appended to the DOM.
    * @returns a style element.
    */
