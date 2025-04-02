@@ -27,8 +27,7 @@ describe('button', () => {
           ...props,
           style: props.style ?? 'primary',
         },
-        children: html``,
-      })}`,
+      })(html``)}`,
       container
     );
     return within(container).getByRole('button') as HTMLButtonElement;

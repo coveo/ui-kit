@@ -32,20 +32,26 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
-import {resultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders-lit.js';
-import {createAppLoadedListener} from '../../common/interface/store.js';
-import {displayGrid} from '../../common/item-list/display-grid-lit.js';
+import {when} from 'lit/directives/when.js';
 import {
-  displayTable,
-  displayTableData,
-  displayTableRow,
+  ResultsPlaceholder,
+  TableDisplayResultsPlaceholder,
+} from '../../common/atomic-result-placeholder/placeholders-lit.js';
+import {createAppLoadedListener} from '../../common/interface/store.js';
+import {DisplayGrid} from '../../common/item-list/display-grid-lit.js';
+import {
+  DisplayTable,
+  DisplayTableData,
+  DisplayTableRow,
 } from '../../common/item-list/display-table-lit.js';
-import {displayWrapper} from '../../common/item-list/display-wrapper-lit.js';
+import {
+  ListWrapperForGridOrListDisplay,
+  ListWrapper,
+} from '../../common/item-list/display-wrapper-lit.js';
 import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../common/item-list/item-list-common-lit.js';
-import {itemListGuard} from '../../common/item-list/item-list-guard-lit.js';
 import {
   getItemListDisplayClasses,
   ItemDisplayDensity,
@@ -185,40 +191,30 @@ export class AtomicCommerceProductList
   render() {
     const listClasses = this.computeListDisplayClasses();
 
-    const {
-      firstRequestExecuted,
-      hasError,
-      hasProducts: hasItems,
-    } = this.summaryState;
+    return html`${when(
+      this.shouldRender,
+      () =>
+        html`${when(
+          this.templateHasError,
+          () => html`<slot></slot>`,
+          () =>
+            html`${when(
+              this.display === 'table',
+              () => this.renderTable(listClasses),
+              () => this.renderGridOrList(listClasses)
+            )}`
+        )}}`,
+      () => nothing
+    )}`;
+  }
 
-    return html`${itemListGuard({
-      props: {
-        hasError,
-        hasItems,
-        hasTemplate: this.resultTemplateRegistered,
-        firstRequestExecuted,
-        templateHasError: this.templateHasError,
-      },
-      children: html` ${displayWrapper({
-        props: {display: this.display, listClasses},
-        children: [
-          html`${resultsPlaceholdersGuard({
-            props: {
-              density: this.density,
-              imageSize: this.imageSize,
-              display: this.display,
-              numberOfPlaceholders: this.numberOfPlaceholders,
-              displayPlaceholders: !this.isAppLoaded,
-            },
-          })}`,
-          this.display === 'grid'
-            ? html`${this.renderAsGrid()}`
-            : this.display === 'list'
-              ? html`${this.renderAsList()}`
-              : html`${this.renderAsTable()}`,
-        ],
-      })}`,
-    })}`;
+  private get shouldRender() {
+    return (
+      !this.summaryState.hasError &&
+      (!this.summaryState.firstRequestExecuted ||
+        this.summaryState.hasProducts) &&
+      this.resultTemplateRegistered
+    );
   }
 
   private validateProps() {
@@ -311,10 +307,52 @@ export class AtomicCommerceProductList
     );
   }
 
+  private renderTable(listClasses: string) {
+    return ListWrapper({props: {listClasses}})(
+      html`${when(
+        this.isAppLoaded,
+        () => this.renderAsTable(),
+        () =>
+          TableDisplayResultsPlaceholder({
+            props: {
+              density: this.density,
+              imageSize: this.imageSize,
+              numberOfPlaceholders: this.numberOfPlaceholders,
+            },
+          })
+      )}`
+    );
+  }
+
+  private renderGridOrList(listClasses: string) {
+    return ListWrapperForGridOrListDisplay({
+      props: {listClasses},
+    })(html`
+      ${when(
+        this.isAppLoaded,
+        () =>
+          html`${when(
+            this.display === 'grid',
+            () => this.renderAsGrid(),
+            () => this.renderAsList()
+          )}`,
+        () =>
+          ResultsPlaceholder({
+            props: {
+              density: this.density,
+              display: this.display,
+              imageSize: this.imageSize,
+              numberOfPlaceholders: this.numberOfPlaceholders,
+            },
+          })
+      )}
+    `);
+  }
+
   private renderAsGrid() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
       const props = this.getPropsForAtomicProduct(product);
-      return html`${displayGrid({
+      return DisplayGrid({
         props: {
           selectorForItem: 'atomic-product',
           item: {
@@ -338,7 +376,8 @@ export class AtomicCommerceProductList
             props.interactiveProduct.cancelPendingSelect();
           },
         },
-        children: html`${keyed(
+      })(
+        html`${keyed(
           props.key,
           html`<atomic-product
             .content=${props.content}
@@ -350,10 +389,10 @@ export class AtomicCommerceProductList
             .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}
             .renderingFunction=${props.renderingFunction}
-            .store=${props.store}
+            .store=${props.store as never}
           ></atomic-product>`
-        )}`,
-      })}`;
+        )}`
+      );
     })}`;
   }
 
@@ -377,72 +416,73 @@ export class AtomicCommerceProductList
             (element) =>
               element && this.productListCommon.setNewResultRef(element, index)
           )}
-          .store=${props.store}
+          .store=${props.store as never}
         ></atomic-product>`
       )}`;
     })}`;
   }
 
   private renderAsTable() {
-    if (this.searchOrListingState.products.length === 0) {
-      return nothing;
-    }
+    return html`${when(
+      this.summaryState.hasProducts,
+      () => {
+        const firstItem = this.searchOrListingState.products[0];
+        const listClasses = this.computeListDisplayClasses();
+        const templateContentForFirstItem =
+          this.productTemplateProvider.getTemplateContent(firstItem);
 
-    const firstItem = this.searchOrListingState.products[0];
-    const listClasses = this.computeListDisplayClasses();
-    const templateContentForFirstItem =
-      this.productTemplateProvider.getTemplateContent(firstItem);
+        return DisplayTable({
+          props: {
+            firstItem,
+            host: this.host,
+            itemRenderingFunction: this.itemRenderingFunction,
+            listClasses,
+            logger: this.bindings.engine.logger,
+            templateContentForFirstItem,
+          },
+        })(
+          html`${map(this.searchOrListingState.products, (item, index) => {
+            const props = this.getPropsForAtomicProduct(item);
 
-    return html`${displayTable({
-      props: {
-        firstItem,
-        host: this.host,
-        itemRenderingFunction: this.itemRenderingFunction,
-        listClasses,
-        logger: this.bindings.engine.logger,
-        templateContentForFirstItem,
-      },
-      children: html`${map(
-        this.searchOrListingState.products,
-        (item, index) => {
-          const props = this.getPropsForAtomicProduct(item);
-          return html`${displayTableRow({
-            props: {
-              key: props.key,
-              rowIndex: index,
-              setRef: (element) =>
-                element &&
-                this.productListCommon.setNewResultRef(element, index),
-            },
-            children: html`${displayTableData({
+            return DisplayTableRow({
               props: {
-                firstItem,
                 key: props.key,
-                templateContentForFirstItem,
-                renderItem: (content) => {
-                  return html`${keyed(
-                    props.key,
-                    html`<atomic-product
-                      .content=${content}
-                      .density=${props.density}
-                      .display=${props.display}
-                      .imageSize=${props.imageSize}
-                      .linkContent=${props.linkContent}
-                      .loadingFlag=${props.loadingFlag}
-                      .interactiveProduct=${props.interactiveProduct}
-                      .product=${props.product}
-                      .renderingFunction=${props.renderingFunction}
-                      .store=${props.store}
-                    ></atomic-product>`
-                  )}`;
-                },
-                itemRenderingFunction: this.itemRenderingFunction,
+                rowIndex: index,
+                setRef: (element) =>
+                  element &&
+                  this.productListCommon.setNewResultRef(element, index),
               },
-            })}`,
-          })}`;
-        }
-      )}`,
-    })}`;
+            })(
+              html`${DisplayTableData({
+                props: {
+                  firstItem,
+                  key: props.key,
+                  templateContentForFirstItem,
+                  renderItem: (content) => {
+                    return html`${keyed(
+                      props.key,
+                      html`<atomic-product
+                        .content=${content}
+                        .density=${props.density}
+                        .display=${props.display}
+                        .imageSize=${props.imageSize}
+                        .linkContent=${props.linkContent}
+                        .loadingFlag=${props.loadingFlag}
+                        .interactiveProduct=${props.interactiveProduct}
+                        .product=${props.product}
+                        .renderingFunction=${props.renderingFunction}
+                        .store=${props.store as never}
+                      ></atomic-product>`
+                    )}`;
+                  },
+                },
+              })}`
+            );
+          })}`
+        );
+      },
+      () => nothing
+    )}`;
   }
 
   private logWarningIfNeeded(message?: string) {
