@@ -13,4 +13,4 @@ function getCoveoCdnResourceUrl() {
 }
 
 export const getResourceUrl = () =>
-  isCoveoCDN() ? getCoveoCdnResourceUrl() : import.meta.url;
+  isCoveoCDN() ? getCoveoCdnResourceUrl() : undefined;
