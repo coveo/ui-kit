@@ -1,6 +1,6 @@
 import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
-import {html, nothing, render} from 'lit';
+import {html, render} from 'lit';
 import {vi} from 'vitest';
 import {button, ButtonProps} from './button';
 
@@ -27,7 +27,7 @@ describe('button', () => {
           ...props,
           style: props.style ?? 'primary',
         },
-      })(nothing)}`,
+      })(html``)}`,
       container
     );
     return within(container).getByRole('button') as HTMLButtonElement;

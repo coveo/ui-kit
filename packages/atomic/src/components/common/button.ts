@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
+import {html, TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {when} from 'lit/directives/when.js';
 import {createRipple} from '../../utils/ripple';
@@ -41,13 +41,14 @@ export interface ButtonProps {
   title?: string;
 }
 
-export const button: FunctionalComponentWithChildren<ButtonProps> =
-  ({props}) =>
-  (children) => {
-    const rippleColor = getRippleColorForButtonStyle(props.style);
-    const className = getClassNameForButtonStyle(props.style);
+export const button: FunctionalComponentWithChildren<ButtonProps> = ({
+  props,
+}) => {
+  const rippleColor = getRippleColorForButtonStyle(props.style);
+  const className = getClassNameForButtonStyle(props.style);
 
-    return html`<button
+  return (children: TemplateResult) =>
+    html`<button
       type=${ifDefined(props.type)}
       title=${ifDefined(props.title)}
       tabindex=${ifDefined(props.tabIndex)}
@@ -72,4 +73,4 @@ export const button: FunctionalComponentWithChildren<ButtonProps> =
       )}
       ${children}
     </button>`;
-  };
+};
