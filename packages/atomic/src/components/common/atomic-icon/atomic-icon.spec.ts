@@ -1,5 +1,5 @@
 import * as guardModule from '@/src/decorators/error-guard';
-import * as utils from '@/src/utils/stencil-utils';
+import * as utils from '@/src/utils/utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
@@ -51,8 +51,8 @@ describe('AtomicIcon', () => {
 
   beforeAll(() => {
     fetchMock = vi.spyOn(window, 'fetch');
-    parseAssetURLMock = vi.spyOn(utils, 'parseAssetURL');
-    errorGuardMock = vi.spyOn(guardModule, 'errorGuard');
+    parseAssetURLMock = vi.mocked(utils.parseAssetURL);
+    errorGuardMock = vi.mocked(guardModule.errorGuard);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
 
