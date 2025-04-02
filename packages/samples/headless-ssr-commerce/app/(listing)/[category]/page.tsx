@@ -16,6 +16,7 @@ import PopularViewed from '@/components/recommendations/popular-viewed';
 import Sort from '@/components/sort';
 import StandaloneSearchBox from '@/components/standalone-search-box';
 import Summary from '@/components/summary';
+import NotifyTrigger from '@/components/triggers/notify-trigger';
 import {
   listingEngineDefinition,
   recommendationEngineDefinition,
@@ -98,6 +99,7 @@ export default async function Listing({
       navigatorContext={navigatorContext.marshal}
     >
       <ParameterManager url={navigatorContext.location} />
+      <NotifyTrigger />
       <ContextDropdown useCase="listing" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>

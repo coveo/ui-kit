@@ -28,6 +28,7 @@ import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData, useParams} from '@remix-run/react';
 import invariant from 'tiny-invariant';
 import ParameterManager from '../components/parameter-manager';
+import NotifyTrigger from '../components/triggers/notify-trigger';
 
 export const loader = async ({params, request}: LoaderFunctionArgs) => {
   invariant(params.listingId, 'Missing listingId parameter');
@@ -104,6 +105,7 @@ export default function ListingRoute() {
     >
       <ParameterManager url={navigatorContext.location} />
       <h2>{getTitle()}</h2>
+      <NotifyTrigger />
       <ContextDropdown useCase="listing" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
