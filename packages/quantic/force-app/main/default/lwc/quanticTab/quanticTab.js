@@ -27,9 +27,9 @@ export default class QuanticTab extends LightningElement {
    * @api
    * @type {string}
    */
-  @api tabId;
+  @api name;
   /**
-   * The non-localized label for the tab.
+   * The label to display on the tab.
    * @api
    * @type {string}
    */
@@ -87,7 +87,7 @@ export default class QuanticTab extends LightningElement {
     this.tab = this.headless.buildTab(engine, {
       options: {
         expression: this.expression,
-        id: this.tabId ?? this.label,
+        id: this.name ?? this.label,
       },
       initialState: {
         isActive: this.isActive,
