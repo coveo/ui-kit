@@ -5,19 +5,10 @@ export interface FunctionalComponent<T> {
   ({props}: {props: T}): TemplateResult | TemplateResult[] | typeof nothing;
 }
 
-export interface FunctionalComponentWithChildren<T> {
-  ({
-    props,
-    children,
-  }: {
-    props: T;
-    children:
-      | TemplateResult
-      | TemplateResult[]
-      | (TemplateResult | typeof nothing)[];
-  }): TemplateResult;
-}
-
 export interface FunctionalComponentGuard<T> {
   ({props, children}: {props: T; children: TemplateResult}): DirectiveResult;
+}
+
+export interface FunctionalComponentWithChildren<T> {
+  ({props}: {props: T}): (children: TemplateResult) => TemplateResult;
 }

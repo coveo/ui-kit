@@ -24,13 +24,13 @@ export const resultsPlaceholdersGuard: FunctionalComponent<
     return nothing;
   }
   if (props.display === 'table') {
-    return html`${tableDisplayResultsPlaceholder({props})}`;
+    return html`${TableDisplayResultsPlaceholder({props})}`;
   }
 
-  return html`${resultsPlaceholder({props})}`;
+  return html`${ResultsPlaceholder({props})}`;
 };
 
-export const resultsPlaceholder: FunctionalComponent<
+export const ResultsPlaceholder: FunctionalComponent<
   ResultPlaceholderProps
 > = ({props}) => {
   return Array.from(
@@ -39,14 +39,14 @@ export const resultsPlaceholder: FunctionalComponent<
       html` <atomic-result-placeholder
         key="{placeholder-${i}}"
         density="{${props.density}}"
-        display="{${props.display || 'list'}}"
+        display="{${props.display}}"
         imageSize="{${props.imageSize}}"
       ></atomic-result-placeholder>`
   );
 };
 
-const tableDisplayResultsPlaceholder: FunctionalComponent<
-  ResultPlaceholderProps
+export const TableDisplayResultsPlaceholder: FunctionalComponent<
+  Omit<ResultPlaceholderProps, 'display'>
 > = ({props}) => {
   return html` <atomic-result-table-placeholder
     density="{${props.density}}"

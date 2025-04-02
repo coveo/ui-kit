@@ -63,9 +63,9 @@ const getFieldTableColumnsFromHTMLTemplate = (
     props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
 
-export const displayTable: FunctionalComponentWithChildren<
+export const DisplayTable: FunctionalComponentWithChildren<
   DisplayTableProps
-> = ({props, children}) => {
+> = ({props}) => {
   const {host, listClasses, logger} = props;
 
   const fieldColumns = getFieldTableColumns(props);
@@ -77,38 +77,40 @@ export const displayTable: FunctionalComponentWithChildren<
     );
   }
 
-  return html`<table class="list-root ${listClasses}" part="result-table">
-    <thead part="result-table-heading">
-      <tr part="result-table-heading-row">
-        ${map(fieldColumns, (column) => {
-          return html`<th part="result-table-heading-cell">
-            <atomic-text value=${column.getAttribute('label')!}></atomic-text>
-          </th>`;
-        })}
-      </tr>
-    </thead>
-    <tbody part="result-table-body">
-      ${children}
-    </tbody>
-  </table>`;
+  return (children: TemplateResult) =>
+    html`<table class="list-root ${listClasses}" part="result-table">
+      <thead part="result-table-heading">
+        <tr part="result-table-heading-row">
+          ${map(fieldColumns, (column) => {
+            return html`<th part="result-table-heading-cell">
+              <atomic-text value=${column.getAttribute('label')!}></atomic-text>
+            </th>`;
+          })}
+        </tr>
+      </thead>
+      <tbody part="result-table-body">
+        ${children}
+      </tbody>
+    </table>`;
 };
 
-export const displayTableRow: FunctionalComponentWithChildren<
+export const DisplayTableRow: FunctionalComponentWithChildren<
   DisplayTableRowProps
-> = ({props, children}) => {
+> = ({props}) => {
   const {key, rowIndex, setRef} = props;
 
-  return html`<tr
-    key=${key}
-    part="result-table-row ${rowIndex % 2 ===
-    1} ? 'result-table-row-even' : 'result-table-row-odd'"
-    ${ref((element?: Element) => setRef(element))}
-  >
-    ${children}
-  </tr>`;
+  return (children: TemplateResult) =>
+    html`<tr
+      key=${key}
+      part="result-table-row ${rowIndex % 2 ===
+      1} ? 'result-table-row-even' : 'result-table-row-odd'"
+      ${ref((element?: Element) => setRef(element))}
+    >
+      ${children}
+    </tr>`;
 };
 
-export const displayTableData: FunctionalComponent<
+export const DisplayTableData: FunctionalComponent<
   TableDataProps & {
     renderItem: (content: HTMLAtomicTableElementElement) => TemplateResult;
   }

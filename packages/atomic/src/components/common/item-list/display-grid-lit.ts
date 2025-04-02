@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
+import {html, TemplateResult} from 'lit';
 import {createRef, Ref, ref} from 'lit/directives/ref.js';
 
 export interface DisplayGridProps {
@@ -11,9 +11,8 @@ export interface DisplayGridProps {
   cancelPendingSelect: () => void;
 }
 
-export const displayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
+export const DisplayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
   props,
-  children,
 }) => {
   const {selectorForItem} = props;
 
@@ -29,11 +28,12 @@ export const displayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
     (r.value?.querySelector(selectorForItem) as HTMLElement)?.click();
   };
 
-  return html` <div
-    part="result-list-grid-clickable-container outline"
-    ${ref(setRef)}
-    @click="${handleClick}"
-  >
-    ${children}
-  </div>`;
+  return (children: TemplateResult) =>
+    html` <div
+      part="result-list-grid-clickable-container outline"
+      ${ref(setRef)}
+      @click="${handleClick}"
+    >
+      ${children}
+    </div>`;
 };
