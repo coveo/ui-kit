@@ -1,14 +1,12 @@
-import {ItemDisplayLayout} from '@/src/components';
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html, TemplateResult} from 'lit';
 
 export interface DisplayWrapperProps {
-  display: ItemDisplayLayout;
   listClasses: string;
 }
 
 export const ListWrapper: FunctionalComponentWithChildren<
-  Pick<DisplayWrapperProps, 'listClasses'>
+  DisplayWrapperProps
 > = ({props}) => {
   const {listClasses} = props;
 
@@ -17,7 +15,7 @@ export const ListWrapper: FunctionalComponentWithChildren<
 };
 
 export const ListWrapperForGridOrListDisplay: FunctionalComponentWithChildren<
-  Pick<DisplayWrapperProps, 'listClasses'>
+  DisplayWrapperProps
 > = ({props}) => {
   const {listClasses} = props;
 
