@@ -1,3 +1,19 @@
+## 3.22.0 (2025-04-02)
+
+- chore(atomic): add ChildrenUpdateCompleteMixin mixin (#5110) ([ea24ea5](https://github.com/coveo/ui-kit/commits/ea24ea5)), closes [#5110](https://github.com/coveo/ui-kit/issues/5110)
+- chore(atomic): add component error custom element (#5043) ([de7b876](https://github.com/coveo/ui-kit/commits/de7b876)), closes [#5043](https://github.com/coveo/ui-kit/issues/5043)
+- chore(atomic): add withTailwindStyles decorator (#5106) ([5d92351](https://github.com/coveo/ui-kit/commits/5d92351)), closes [#5106](https://github.com/coveo/ui-kit/issues/5106)
+- chore(atomic): fix initialization issues when combining Lit interfaces with Stencil components (#507 ([1190f8c](https://github.com/coveo/ui-kit/commits/1190f8c)), closes [#5070](https://github.com/coveo/ui-kit/issues/5070)
+- chore(atomic): migrate atomic-icon (#4998) ([cace446](https://github.com/coveo/ui-kit/commits/cace446)), closes [#4998](https://github.com/coveo/ui-kit/issues/4998)
+- chore(deps): update tailwind to v4.0.15 j:kit-282 (#5112) ([d575699](https://github.com/coveo/ui-kit/commits/d575699)), closes [#5112](https://github.com/coveo/ui-kit/issues/5112)
+- chore(atomic, headless): make typescript 5 an optional peer dependency (#5126) ([17ed3a2](https://github.com/coveo/ui-kit/commits/17ed3a2)), closes [#5126](https://github.com/coveo/ui-kit/issues/5126)
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- fix(atomic): do not clear search box input when clearing recent queries (#5103) ([bb563a7](https://github.com/coveo/ui-kit/commits/bb563a7)), closes [#5103](https://github.com/coveo/ui-kit/issues/5103)
+- fix(atomic): ensure modals are not crawled by google bot (#5095) ([2d9fa1b](https://github.com/coveo/ui-kit/commits/2d9fa1b)), closes [#5095](https://github.com/coveo/ui-kit/issues/5095)
+- fix(deps): update all dependencies j:kit-282 (major) (#5069) ([44fede8](https://github.com/coveo/ui-kit/commits/44fede8)), closes [#5069](https://github.com/coveo/ui-kit/issues/5069)
+- feat(atomic): localize tab name & label (#5071) ([6556c5c](https://github.com/coveo/ui-kit/commits/6556c5c)), closes [#5071](https://github.com/coveo/ui-kit/issues/5071)
+
 ## <small>3.21.1 (2025-03-26)</small>
 
 - fix(atomic): clear suggestions when clicking the x button (#5098) ([483c2aa](https://github.com/coveo/ui-kit/commits/483c2aa)), closes [#5098](https://github.com/coveo/ui-kit/issues/5098)
