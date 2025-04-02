@@ -54,6 +54,16 @@ const inputFiles = distDirs.flatMap((distDir) => {
     .map((file) => join(distDir, file));
 });
 
+const manualChunksPackages = [
+  '@lit',
+  'dayjs',
+  '@stencil',
+  'dompurify',
+  'lit-element',
+  'lit-html',
+  'lit',
+];
+
 export default {
   input: inputFiles,
   output: {
@@ -65,7 +75,10 @@ export default {
     },
     chunkFileNames: '[name].js',
     manualChunks: (id) => {
-      if (id.includes('node_modules')) {
+      if (
+        id.includes('node_modules') &&
+        manualChunksPackages.some((pkg) => id.includes(pkg))
+      ) {
         return join(
           'atomic',
           'vendor',
@@ -76,16 +89,16 @@ export default {
   },
   external: [/.*\/headless\/v.*/, /.*\/atomic\/v.*/, /.*\/bueno\/v.*/],
   plugins: [
-    alias({
-      find: 'node-fetch',
-      replacement: 'isomorphic-fetch',
-    }),
+    json(),
     resolve({preserveSymlinks: false}),
     externalizeDependenciesPlugin(),
     commonjs(),
-    json(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
+    }),
+    alias({
+      find: 'node-fetch',
+      replacement: 'isomorphic-fetch',
     }),
   ],
 };
