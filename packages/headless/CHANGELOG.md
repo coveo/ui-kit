@@ -1,3 +1,7 @@
+## 3.22.0 (2025-04-02)
+
+- feat(headless commerce): support triggers in product listing pages (#5117) ([d23dbe9](https://github.com/coveo/ui-kit/commits/d23dbe9)), closes [#5117](https://github.com/coveo/ui-kit/issues/5117)
+
 ## 3.21.0 (2025-04-02)
 
 - chore(atomic, headless): make typescript 5 an optional peer dependency (#5126) ([17ed3a2](https://github.com/coveo/ui-kit/commits/17ed3a2)), closes [#5126](https://github.com/coveo/ui-kit/issues/5126)

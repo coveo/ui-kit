@@ -1,3 +1,7 @@
+## <small>3.22.1 (2025-04-02)</small>
+
+- chore: move vendor directory (#5128) ([d6c39dd](https://github.com/coveo/ui-kit/commits/d6c39dd)), closes [#5128](https://github.com/coveo/ui-kit/issues/5128)
+
 ## 3.22.0 (2025-04-02)
 
 - chore(atomic): add ChildrenUpdateCompleteMixin mixin (#5110) ([ea24ea5](https://github.com/coveo/ui-kit/commits/ea24ea5)), closes [#5110](https://github.com/coveo/ui-kit/issues/5110)

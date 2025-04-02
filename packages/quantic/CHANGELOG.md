@@ -1,3 +1,7 @@
+## <small>3.16.2 (2025-04-02)</small>
+
+- test(quantic): quantic placeholder cypress to jest tests (#5104) ([1bddb93](https://github.com/coveo/ui-kit/commits/1bddb93)), closes [#5104](https://github.com/coveo/ui-kit/issues/5104)
+
 ## <small>3.16.1 (2025-04-02)</small>
 
 - fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
