@@ -4,7 +4,6 @@ import {
   ItemDisplayImageSize,
   ItemDisplayLayout,
 } from '@/src/components';
-import {TailwindLitElement} from '@/src/utils/tailwind.element';
 import {createTestI18n} from '@/vitest-utils/i18n-utils';
 import * as headless from '@coveo/headless/commerce';
 import {
@@ -17,7 +16,7 @@ import {
 } from '@coveo/headless/commerce';
 import {CommerceEngine} from '@coveo/headless/ssr-commerce';
 import '@vitest/browser/matchers.d.ts';
-import {PropertyValues} from 'lit';
+import {LitElement, PropertyValues} from 'lit';
 import {describe, test, expect, vi} from 'vitest';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import './atomic-commerce-product-list';
@@ -204,7 +203,7 @@ describe('AtomicCommerceProductList', () => {
 
     test('calls #super.updated()', () => {
       const superUpdatedMock = vi.spyOn(
-        TailwindLitElement.prototype,
+        LitElement.prototype,
         'updated' as never
       );
 
@@ -226,7 +225,7 @@ describe('AtomicCommerceProductList', () => {
 
     test('calls #super.disconnectedCallback()', () => {
       const superDisconnectedCallbackMock = vi.spyOn(
-        TailwindLitElement.prototype,
+        LitElement.prototype,
         'disconnectedCallback'
       );
 
