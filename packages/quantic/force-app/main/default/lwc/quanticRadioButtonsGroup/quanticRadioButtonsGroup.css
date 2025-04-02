@@ -1,0 +1,89 @@
+:host {
+  --neutral-color: rgb(94, 94, 94);
+  --hover-background-color: #F4F6F9;
+  --hover-color: var(--lwc-brandAccessible,#2574A9);
+  --lwc-brandAccessibleActive: var(--hover-color);
+  --color-gray-6: rgb(201, 199, 197);
+  --radio-button-box-shadow: 0 0 3px #0176d3;
+  --lwc-shadowButtonFocus: none;
+}
+
+.radio-buttons-group__legend {
+  color: var(--lwc-colorTextPlaceholder, #747474);
+  font-weight: normal;
+  font-size: inherit;
+  padding-top: 0;
+}
+
+.radio-buttons-group__container {
+  container-name: radio-buttons-group;
+  container-type: inline-size;
+}
+
+@container radio-buttons-group (min-width:25em) {
+  .radio-buttons-group__label { 
+    display: block;
+  }
+}
+
+@container radio-buttons-group (max-width:25em) {
+  .radio-buttons-group__label {
+    display: none;
+  }
+
+}
+
+.radio-buttons-group__label {
+  background-color: transparent;
+}
+
+.radio-button:first-child {
+  border-top-left-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-bottom-left-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+}
+
+.radio-button:last-child {
+  border-top-right-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+  border-bottom-right-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+}
+
+.radio-button--selected:hover,
+.radio-button--unselected:hover {
+  cursor: pointer;
+}
+
+.radio-button--unselected {
+  color: var(--neutral-color);
+}
+.radio-button--unselected:hover,
+.radio-button--unselected:focus {
+  background-color: var(--hover-background-color);
+  color: var(--hover-color);
+  --slds-c-icon-color-foreground-default: var(--hover-color);
+}
+
+.radio-button--selected,
+.radio-button--selected:hover,
+.radio-button--selected:focus {
+  background-color: var(--lwc-brandAccessible,#2574A9);
+  color: var(--lwc-colorTextButtonBrand,#FFFFFF);
+}
+
+.radio-button--selected:focus-within,
+.radio-button--unselected:focus-within {
+  outline: 0;
+  box-shadow: var(--radio-button-box-shadow, 0 0 3px #0176d3);
+  z-index: 1;
+}
+
+.radio-buttons-group__tooltip-container {
+  position: relative;
+  flex-grow: 1;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.radio-buttons-group__icon-container {
+  min-height: var(--lwc-lineHeightButton,1.875rem);
+  align-items: center;
+}

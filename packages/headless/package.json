@@ -1,33 +1,190 @@
 {
-  "name": "coveo-headless-engine",
-  "private": false,
-  "main": "./dist/server/index.js",
-  "browser": "./dist/client/index.js",
-  "types": "./dist/types",
-  "license": "LicenseRef-LICENSE",
-  "version": "0.0.0",
+  "name": "@coveo/headless",
+  "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/headless"
+  },
+  "main": "./dist/headless.cjs",
+  "module": "./dist/browser/headless.esm.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/definitions/index.d.ts",
+      "node": {
+        "types": "./dist/definitions/index.d.ts",
+        "import": "./dist/headless.esm.js",
+        "require": "./dist/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/index.d.ts",
+        "import": "./dist/browser/headless.esm.js",
+        "require": "./dist/browser/headless.js"
+      },
+      "import": "./dist/browser/headless.esm.js",
+      "require": "./dist/browser/headless.js"
+    },
+    "./case-assist": {
+      "types": "./dist/definitions/case-assist.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/case-assist.index.d.ts",
+        "import": "./dist/case-assist/headless.esm.js",
+        "require": "./dist/case-assist/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/case-assist.index.d.ts",
+        "import": "./dist/browser/case-assist/headless.esm.js",
+        "require": "./dist/browser/case-assist/headless.js"
+      },
+      "import": "./dist/browser/case-assist/headless.esm.js",
+      "require": "./dist/browser/case-assist/headless.js"
+    },
+    "./commerce": {
+      "types": "./dist/definitions/commerce.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/commerce.index.d.ts",
+        "import": "./dist/commerce/headless.esm.js",
+        "require": "./dist/commerce/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/commerce.index.d.ts",
+        "import": "./dist/browser/commerce/headless.esm.js",
+        "require": "./dist/browser/commerce/headless.js"
+      },
+      "import": "./dist/browser/commerce/headless.esm.js",
+      "require": "./dist/browser/commerce/headless.js"
+    },
+    "./insight": {
+      "types": "./dist/definitions/insight.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/insight.index.d.ts",
+        "import": "./dist/insight/headless.esm.js",
+        "require": "./dist/insight/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/insight.index.d.ts",
+        "import": "./dist/browser/insight/headless.esm.js",
+        "require": "./dist/browser/insight/headless.js"
+      },
+      "import": "./dist/browser/insight/headless.esm.js",
+      "require": "./dist/browser/insight/headless.js"
+    },
+    "./recommendation": {
+      "types": "./dist/definitions/recommendation.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/recommendation.index.d.ts",
+        "import": "./dist/recommendation/headless.esm.js",
+        "require": "./dist/recommendation/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/recommendation.index.d.ts",
+        "import": "./dist/browser/recommendation/headless.esm.js",
+        "require": "./dist/browser/recommendation/headless.js"
+      },
+      "import": "./dist/browser/recommendation/headless.esm.js",
+      "require": "./dist/browser/recommendation/headless.js"
+    },
+    "./ssr": {
+      "types": "./dist/definitions/ssr.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/ssr.index.d.ts",
+        "import": "./dist/ssr/headless.esm.js",
+        "require": "./dist/ssr/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/ssr.index.d.ts",
+        "import": "./dist/browser/ssr/headless.esm.js",
+        "require": "./dist/browser/ssr/headless.js"
+      },
+      "import": "./dist/browser/ssr/headless.esm.js",
+      "require": "./dist/browser/ssr/headless.js"
+    },
+    "./ssr-commerce": {
+      "types": "./dist/definitions/ssr-commerce.index.d.ts",
+      "node": {
+        "types": "./dist/definitions/ssr-commerce.index.d.ts",
+        "import": "./dist/ssr-commerce/headless.esm.js",
+        "require": "./dist/ssr-commerce/headless.cjs"
+      },
+      "browser": {
+        "types": "./dist/definitions/ssr-commerce.index.d.ts",
+        "import": "./dist/browser/ssr-commerce/headless.esm.js",
+        "require": "./dist/browser/ssr-commerce/headless.js"
+      },
+      "import": "./dist/browser/ssr-commerce/headless.esm.js",
+      "require": "./dist/browser/ssr-commerce/headless.js"
+    }
+  },
+  "types": "./dist/definitions/index.d.ts",
+  "license": "Apache-2.0",
+  "version": "3.21.0",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "dev": "webpack --watch -d",
-    "build": "webpack -p",
-    "analyze": "webpack -p --env analyze",
-    "test": "jest"
+    "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
+    "build": "nx build",
+    "build:prod": "npm run build:definitions && npm run build:bundles",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
+    "clean": "rimraf -rf dist/*",
+    "test": "vitest run --exclude \"src/integration-tests/**\"",
+    "test:watch": "vitest --exclude \"src/integration-tests/**\"",
+    "integration-test": "vitest run --poolOptions.threads.singleThread src/integration-tests/**",
+    "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
+    "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
+    "build:typedoc:docs": "concurrently \"npm run build:typedoc:search\" \"npm run build:typedoc:commerce\" \"npm run build:typedoc:case-assist\" \"npm run build:typedoc:insight\" \"npm run build:typedoc:recommendation\" \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
+    "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
+    "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/index.typedoc.json",
+    "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/commerce.typedoc.json",
+    "build:typedoc:case-assist": "typedoc --json ./temp/case-assist.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/case-assist.typedoc.json",
+    "build:typedoc:insight": "typedoc --json ./temp/insight.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/insight.typedoc.json",
+    "build:typedoc:recommendation": "typedoc --json ./temp/recommendation.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/recommendation.typedoc.json",
+    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/ssr.typedoc.json",
+    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
+  },
+  "peerDependencies": {
+    "encoding": "^0.1.13",
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "coveo.analytics": "^2.0.1",
-    "cross-fetch": "^3.0.4",
-    "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.8",
-    "redux-thunk": "^2.3.0"
+    "@coveo/bueno": "1.0.10",
+    "@coveo/relay": "1.0.0",
+    "@coveo/relay-event-types": "14.3.3",
+    "@reduxjs/toolkit": "2.6.0",
+    "abortcontroller-polyfill": "1.7.8",
+    "coveo.analytics": "2.30.45",
+    "dayjs": "1.11.13",
+    "exponential-backoff": "3.1.2",
+    "fast-equals": "5.0.1",
+    "headers-polyfill": "4.0.3",
+    "navigator.sendbeacon": "0.0.20",
+    "node-abort-controller": "3.1.1",
+    "pino": "9.6.0",
+    "redux-thunk": "3.1.0",
+    "ts-debounce": "4.0.0"
   },
   "devDependencies": {
-    "@types/redux-immutable-state-invariant": "^2.1.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "jest": "^25.1.0",
-    "redux-immutable-state-invariant": "^2.1.0",
-    "ts-loader": "^6.2.1",
-    "webpack": "^4.42.0",
-    "webpack-bundle-analyzer": "^3.6.1",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
+    "@coveo/release": "1.0.0",
+    "esbuild-plugin-alias-path": "2.0.2",
+    "eslint-plugin-canonical": "4.18.0",
+    "execa": "9.5.2",
+    "ts-node": "10.9.2",
+    "typedoc": "0.27.9",
+    "vitest": "2.1.9"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
   }
 }

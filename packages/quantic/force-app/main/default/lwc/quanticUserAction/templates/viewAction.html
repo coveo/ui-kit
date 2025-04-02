@@ -1,0 +1,25 @@
+<template>
+    <div class="slds-grid">
+        <div class="slds-grid slds-grid_align-center user-action__icon-container slds-var-p-right_x-small">
+            <div class="slds-var-p-vertical_xx-small">
+                <lightning-icon class={iconClass} icon-name={iconName}
+                    size="xx-small"></lightning-icon>
+            </div>
+
+            <div class="slds-var-p-vertical_xx-small">
+                <div class="user-action__separator"></div>
+            </div>
+        </div>
+        <div class="slds-col">
+            <div class="user-action__title slds-var-p-vertical_x-small slds-text-title">
+                <a href={contentIdValue} target="_blank">
+                    {actionTitle}
+                </a>
+            </div>
+            <div class="slds-grid user-action__details">
+                <div data-test="action__timestamp">{timestamp}</div>
+                <div data-test="action__search-hub" class="slds-var-p-horizontal_x-small">{searchHub}</div>
+            </div>
+        </div>
+    </div>
+</template>

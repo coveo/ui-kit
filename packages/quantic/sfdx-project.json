@@ -1,0 +1,44 @@
+{
+  "packageDirectories": [
+    {
+      "package": "Quantic",
+      "versionNumber": "1.0.0.NEXT",
+      "versionDescription": "Coveo Quantic is a Lightning Web Component (LWC) library for assembling powerful and responsive Coveo for Salesforce search interfaces.",
+      "path": "force-app/main",
+      "default": true
+    },
+    {
+      "package": "Quantic - CoveoToken",
+      "versionNumber": "0.0.0.NEXT",
+      "path": "force-app/coveo-token",
+      "default": false,
+      "dependencies": [
+        {
+          "package": "CoveoForSalesforce@4.12.0.0"
+        },
+        {
+          "package": "Quantic"
+        }
+      ]
+    },
+    {
+      "package": "Quantic - CustomToken",
+      "versionNumber": "0.0.0.NEXT",
+      "path": "force-app/custom-token",
+      "default": false,
+      "dependencies": [
+        {
+          "package": "Quantic"
+        }
+      ]
+    }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "60.0",
+  "packageAliases": {
+    "CoveoForSalesforce@4.12.0.0": "04t1P000000Y08cQAC",
+    "Quantic": "0Ho6g000000k9g8CAA",
+    "Quantic@1.0.0-0": "04t6g000008feetAAA"
+  }
+}

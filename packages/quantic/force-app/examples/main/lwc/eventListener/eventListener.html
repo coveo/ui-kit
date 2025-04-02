@@ -1,0 +1,28 @@
+<template>
+  <template if:true={expectsEvents}>
+    <div class="slds-m-bottom_small">
+      <c-quantic-card-container title="Events">
+        <template for:each={events} for:item="event">
+          <div key={event.type} class="slds-card__body_inner">
+            <div class="grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+              <template if:true={event.received}>
+                <div class="event__received grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                  <lightning-icon icon-name="utility:check" alternative-text="Received" title="Received" variant="success" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                  {event.type}
+                </div>
+              </template>
+              <template if:false={event.received}>
+                <div class="event__not-received grid slds-grid_vertical-align-center slds-m-bottom_xx-small">
+                  <lightning-icon icon-name="utility:dash" alternative-text="Received" title="Received" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                  {event.type}
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </c-quantic-card-container>
+    </div>
+  </template>
+
+  <slot></slot>
+</template>

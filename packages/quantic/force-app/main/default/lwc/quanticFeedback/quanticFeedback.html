@@ -1,0 +1,21 @@
+<template>
+  <div class="slds-grid feedback__main-section">
+    <span class="slds-var-p-right_small slds-text-color_weak feedback__question"
+      id="feedback__question">{question}</span>
+    <c-quantic-stateful-button selected={liked} data-testid="feedback__like-button" tooltip={likeLabel}
+      icon-name={likeIconName} onquantic__select={handleLike} onquantic__deselect={handleLike} without-borders selected-state-color="#2e844a"
+      label={likeButtonLabel} icon-size={size}></c-quantic-stateful-button>
+    <c-quantic-stateful-button selected={disliked} data-testid="feedback__dislike-button" tooltip={dislikeLabel}
+      icon-name={dislikeIconName} onquantic__select={handleDislike} onquantic__deselect={handleDislike} without-borders selected-state-color="#ea001e"
+      label={dislikeButtonLabel} icon-size={size}></c-quantic-stateful-button>
+  </div>
+  <template if:true={displaySuccessMessage}>
+    <div class="slds-grid feedback__success-message">
+      <span class="slds-var-p-vertical_x-small">{successMessage}</span>
+      <template if:false={hideExplainWhyButton}>
+        <lightning-button data-testid="feedback__explain-why-button" class="slds-var-m-left_x-small feedback__explain-why"
+          variant="base" label={labels.explainWhy} onclick={handlePressExplainWhyButton}></lightning-button>
+      </template>
+    </div>
+  </template>
+</template>

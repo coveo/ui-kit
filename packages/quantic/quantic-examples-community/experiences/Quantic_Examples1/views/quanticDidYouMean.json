@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "47ce155e-be50-4b39-8fb6-32c4479027f8",
+  "label": "Quantic Did You Mean",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "d4e5e7ef-1a3c-49da-b5a9-621775c04eb3",
+              "columns": [
+                {
+                  "UUID": "870a4705-5f14-4c3a-a213-6f914770bd0e",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "d4e5e7ef-1a3c-49da-b5a9-621775c04eb3",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticDidYouMean",
+                  "id": "92e6f6cc-57c6-4006-ac69-70a15a9e87ee",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "870a4705-5f14-4c3a-a213-6f914770bd0e",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "3be81ba9-49d4-45e4-9c0a-3544751ff577",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Did You Mean"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "73189999-37c1-4af5-9ec7-9249c2f44ad6",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "67e35324-ce1b-4278-9dbf-bec84cdb2f0d",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-did-you-mean"
+}

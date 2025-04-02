@@ -1,0 +1,94 @@
+@utility result-with-sections {
+  display: grid;
+  justify-items: stretch;
+
+  /* == Common styles == */
+  atomic-result-section-visual,
+  atomic-product-section-visual {
+    grid-area: visual;
+  }
+
+  atomic-result-section-badges,
+  atomic-product-section-badges {
+    grid-area: badges;
+  }
+
+  atomic-result-section-actions,
+  atomic-product-section-actions {
+    grid-area: actions;
+
+    atomic-result-quickview {
+      display: inline-block;
+    }
+  }
+
+  atomic-result-section-title,
+  atomic-product-section-name {
+    grid-area: title;
+    @apply text-on-background;
+  }
+
+  atomic-result-section-title-metadata,
+  atomic-product-section-metadata {
+    grid-area: title-metadata;
+  }
+
+  atomic-result-section-emphasized,
+  atomic-product-section-emphasized {
+    grid-area: emphasized;
+  }
+
+  atomic-result-section-excerpt,
+  atomic-product-section-description {
+    grid-area: excerpt;
+    @apply text-neutral-dark;
+  }
+
+  atomic-result-section-bottom-metadata,
+  atomic-product-section-bottom-metadata {
+    grid-area: bottom-metadata;
+    @apply text-neutral-dark;
+  }
+
+  atomic-result-section-children,
+  atomic-product-section-children {
+    grid-area: children;
+  }
+
+  atomic-result-section-badges,
+  atomic-product-section-badges,
+  atomic-result-section-actions,
+  atomic-product-section-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-height: calc(2 * var(--row-height, 2rem) + 0.5rem);
+  }
+
+  atomic-result-section-visual,
+  atomic-product-section-visual,
+  atomic-result-section-badges,
+  atomic-product-section-badges,
+  atomic-result-section-actions,
+  atomic-product-section-actions,
+  atomic-result-section-title,
+  atomic-product-section-name,
+  atomic-result-section-title-metadata,
+  atomic-product-section-metadata,
+  atomic-result-section-emphasized,
+  atomic-product-section-emphasized,
+  atomic-result-section-excerpt,
+  atomic-product-section-description,
+  atomic-result-section-bottom-metadata,
+  atomic-product-section-bottom-metadata {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.image-icon {
+    atomic-result-section-visual,
+    atomic-product-section-visual {
+      @apply rounded-sm;
+    }
+  }
+}

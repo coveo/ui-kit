@@ -1,0 +1,201 @@
+name: Create release
+on:
+  schedule:
+    # At 13:00 (UTC) every Wednesday.
+    - cron: '0 13 * * 3'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '⚠ be sure of yourself ⚠'
+        required: false
+        default: ''
+      debug:
+        description: 'Add DEBUG=* to the env if true'
+        type: boolean
+        default: false
+        required: false
+
+jobs:
+  release:
+    environment: 'Release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Release
+        run: npm run release
+        env:
+          VERSION: ${{ inputs.version }}
+          DEBUG: ${{ inputs.debug && '*' || '' }}
+          RELEASER_APP_ID: ${{ secrets.RELEASER_APP_ID }}
+          RELEASER_PRIVATE_KEY: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          RELEASER_CLIENT_ID: ${{ secrets.RELEASER_CLIENT_ID }}
+          RELEASER_CLIENT_SECRET: ${{ secrets.RELEASER_CLIENT_SECRET }}
+          RELEASER_INSTALLATION_ID: ${{ secrets.RELEASER_INSTALLATION_ID }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Call ui-kit-cd
+        run: node ./scripts/deploy/trigger-ui-kit-cd.mjs
+        env:
+          GH_TOKEN: ${{ secrets.UI_KIT_CD_DISPATCHER }}
+  npm-prod:
+    needs: release
+    environment: 'NPM Production'
+    runs-on: 'ubuntu-latest'
+    permissions:
+      contents: read
+      discussions: write
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - name: Promote NPM package to production
+        run: npm run promote:npm:latest
+  quantic-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Quantic Production'
+    permissions:
+      contents: read
+      packages: write
+      discussions: write
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-sfdx
+      - name: Promote SFDX package to production
+        run: |
+          echo "${{ secrets.SFDX_AUTH_JWT_KEY }}" > ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          npx --no-install nx run quantic:"promote:sfdx:ci"
+          rm ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+        env:
+          SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
+          SFDX_AUTH_JWT_KEY: ${{ secrets.SFDX_AUTH_JWT_KEY }}
+          SFDX_AUTH_JWT_USERNAME: ${{ vars.SFDX_AUTH_JWT_USERNAME }}
+          SFDX_AUTH_JWT_KEY_FILE: ${{ vars.SFDX_AUTH_JWT_KEY_FILE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ./packages/quantic
+  typedoc-headless:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
+
+      - name: Build typedoc site
+        run: npm run build:typedoc
+        working-directory: packages/headless
+        shell: bash
+
+      - name: Read version from package.json
+        id: read_version
+        run: |
+          VERSION=$(jq -r '.version' packages/headless/package.json)
+          echo "Extracted version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Copy the docs into the version folder
+        run: |
+          mkdir -p typedoc-headless-site/${{ env.version }}/
+          cp -r packages/headless/docs/* typedoc-headless-site/${{ env.version }}/
+          echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: headless-docs-${{ env.version }}
+          path: typedoc-headless-site/
+  typedoc-headless-react:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+
+      - name: Set up and build the project
+        uses: ./.github/actions/setup
+
+      - name: Build typedoc site
+        run: npm run build:typedoc
+        working-directory: packages/headless-react
+        shell: bash
+
+      - name: Read version from package.json
+        id: read_version
+        run: |
+          VERSION=$(jq -r '.version' packages/headless-react/package.json)
+          echo "Extracted version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Copy the docs into the version folder
+        run: |
+          mkdir -p typedoc-headless-react-site/${{ env.version }}/
+          cp -r packages/headless-react/docs/* typedoc-headless-react-site/${{ env.version }}/
+          echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+        with:
+          name: headless-react-docs-${{ env.version }}
+          path: typedoc-headless-react-site/
+  docs-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Docs Production'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - name: Notify Docs
+        run: npm run notify:docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

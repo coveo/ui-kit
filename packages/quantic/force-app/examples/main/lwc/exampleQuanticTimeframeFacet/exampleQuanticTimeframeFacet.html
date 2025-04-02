@@ -1,0 +1,26 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}
+  >
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+      <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+    </c-configurator>
+
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+      <c-quantic-timeframe-facet
+        engine-id={engineId}
+        field={config.field}
+        label={config.label}
+        with-date-picker={config.withDatePicker}
+        is-collapsed={config.isCollapsed}>
+        <c-quantic-timeframe period="next" unit="year"></c-quantic-timeframe>
+        <c-quantic-timeframe amount="2" unit="week"></c-quantic-timeframe>
+        <c-quantic-timeframe unit="month"></c-quantic-timeframe>
+        <c-quantic-timeframe unit="year"></c-quantic-timeframe>
+        <c-quantic-timeframe amount="10" unit="year" label="Last decade"></c-quantic-timeframe>
+      </c-quantic-timeframe-facet>
+    </c-example-use-case>
+  </c-example-layout>
+</template>

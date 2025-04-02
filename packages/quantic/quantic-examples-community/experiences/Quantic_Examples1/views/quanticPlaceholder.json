@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "65676752-eeb1-4ab6-8c28-735c0d557a73",
+  "label": "Quantic Placeholder",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "c033424c-6f44-4290-ba7b-5941fae2b930",
+              "columns": [
+                {
+                  "UUID": "68bfa277-154a-488d-a6bf-9ef5ebb1f8ec",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "c033424c-6f44-4290-ba7b-5941fae2b930",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticPlaceholder",
+                  "id": "e457c15d-cc00-4bdd-bfd5-05ee90b09de5",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "68bfa277-154a-488d-a6bf-9ef5ebb1f8ec",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "1b561ad0-577e-441d-9ce2-eb30e9dc7e1c",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Placeholder"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "b4c8ff99-b8d2-4355-bbd5-7ae09663cca0",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "40aea3a5-1a74-420f-a4bf-b46d93ee704d",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-placeholder"
+}

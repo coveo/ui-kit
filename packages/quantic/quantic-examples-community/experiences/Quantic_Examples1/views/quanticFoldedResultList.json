@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "6cc4c356-815b-404b-9401-fa03f9d11f8a",
+  "label": "Quantic Folded Result List",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "86bc98b2-0566-46e1-a48c-a36ec5b97e68",
+              "columns": [
+                {
+                  "UUID": "bf9874da-07ec-4ff8-8524-32b0948c7cb1",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "86bc98b2-0566-46e1-a48c-a36ec5b97e68",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticFoldedResultList",
+                  "id": "4643dd15-ff9d-4d93-9bd9-bf40654cf45f",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "bf9874da-07ec-4ff8-8524-32b0948c7cb1",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "00ee434d-8eaa-4cae-9d63-87d6abcb9254",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Folded Result List"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "dc99f579-c7d1-450b-b07a-7ef794000dd8",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "23f2b5f4-04c6-44de-8ee3-9b72e2d441c0",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-folded-result-list"
+}

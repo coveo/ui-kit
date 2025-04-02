@@ -1,0 +1,49 @@
+{
+  "name": "@coveo/atomic-hosted-page",
+  "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
+  "version": "1.1.10",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/atomic-hosted-page"
+  },
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/components.d.ts",
+  "unpkg": "dist/atomic-page/atomic-hosted-page.esm.js",
+  "files": [
+    "dist/",
+    "loader/",
+    "docs/"
+  ],
+  "scripts": {
+    "clean": "rimraf -rf dist/*",
+    "build": "nx build",
+    "start": "node ./scripts/start.js",
+    "e2e": "playwright test",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
+  },
+  "dependencies": {
+    "@coveo/bueno": "1.0.10",
+    "@coveo/headless": "3.21.0",
+    "lit": "3.2.1"
+  },
+  "devDependencies": {
+    "@coveo/release": "1.0.0",
+    "@playwright/test": "1.50.1",
+    "@types/node": "22.13.5",
+    "rollup": "4.34.8",
+    "rimraf": "3.0.2",
+    "vite": "6.0.11",
+    "ncp": "2.0.0"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  }
+}

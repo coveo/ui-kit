@@ -1,0 +1,11 @@
+{
+  "activeViewId": "c70cec8c-2c8f-4b49-8882-aa161077a137",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "be8e5c0a-e8a7-48db-a12d-eab887e6c8ab",
+  "label": "Quantic Search Box",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-search-box",
+  "type": "route",
+  "urlPrefix": "quantic-search-box"
+}

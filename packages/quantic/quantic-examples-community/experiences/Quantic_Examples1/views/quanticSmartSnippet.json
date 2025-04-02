@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "b2a28298-e6ed-42d3-97c4-33ce5a15bd42",
+  "label": "Quantic smart snippet",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "1c9d9609-06af-44d8-a562-be8a6b0c935b",
+              "columns": [
+                {
+                  "UUID": "3bfd27ca-32ee-49b5-a6b4-90a097a2ec20",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "1c9d9609-06af-44d8-a562-be8a6b0c935b",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticSmartSnippet",
+                  "id": "421827b2-faf7-414c-8d4a-1017dbab3200",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "3bfd27ca-32ee-49b5-a6b4-90a097a2ec20",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "3dfbf7d3-aa95-43ef-86f8-abe3e3063db6",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic smart snippet"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "eb4f744a-5914-4cb8-9a04-a2b0920a75c6",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "e640127c-02b3-496e-83c4-db9ccd9d70f0",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-smart-snippet"
+}

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "4562247f-5298-4c06-8325-e3813f369bf8",
+  "label": "Quantic Document Suggestion",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "6132b6b4-25d6-4ce8-bf36-a8755385b879",
+              "columns": [
+                {
+                  "UUID": "f6b70876-7191-413f-ae86-b11548ad44d2",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "6132b6b4-25d6-4ce8-bf36-a8755385b879",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticDocumentSuggestion",
+                  "id": "3bc77361-0c14-49ec-a5b4-fbd5ae6daa77",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "f6b70876-7191-413f-ae86-b11548ad44d2",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "3b8ee1a3-0bb5-4ac7-a4a7-76b8eeef242d",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Document Suggestion"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "d90c32fd-b5b3-49eb-be4d-2638e7f7a644",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "71598ceb-3a1b-41a1-8453-be312618bd65",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-document-suggestion"
+}

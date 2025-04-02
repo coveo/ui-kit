@@ -1,0 +1,172 @@
+diff --git a/node_modules/@stencil/core/compiler/stencil.js b/node_modules/@stencil/core/compiler/stencil.js
+index 05c98c9..1ae35e5 100644
+--- a/node_modules/@stencil/core/compiler/stencil.js
++++ b/node_modules/@stencil/core/compiler/stencil.js
+@@ -234904,8 +234904,8 @@ var getTsOptionsToExtend = (config) => {
+     // if the `DIST_TYPES` output target is present then we'd like to emit
+     // declaration files
+     declaration: config.outputTargets.some(isOutputTargetDistTypes),
+-    module: import_typescript.default.ModuleKind.ESNext,
+-    moduleResolution: import_typescript.default.ModuleResolutionKind.NodeJs,
++    module: import_typescript.default.ModuleKind.ES2022,
++    moduleResolution: import_typescript.default.ModuleResolutionKind.Bundler,
+     noEmitOnError: false,
+     outDir: config.cacheDir || config.sys.tmpDirSync(),
+     sourceMap: config.sourceMap,
+@@ -259592,7 +259592,7 @@ var visitClassDeclaration = (config, diagnostics, typeChecker, program, classNod
+       importAliasMap.get("AttachInternals")
+     );
+   }
+-  const updatedClassFields = handleClassFields(classNode, filteredMethodsAndFields, typeChecker, importAliasMap);
++  const updatedClassFields = handleClassFields(classNode, decoratedMembers, typeChecker, importAliasMap, filteredMethodsAndFields);
+   validateMethods(diagnostics, classMembers);
+   const currentDecorators = retrieveTsDecorators(classNode);
+   return import_typescript54.default.factory.updateClassDeclaration(
+@@ -259632,9 +259632,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
+           member2.body
+         );
+       } else if (import_typescript54.default.isPropertyDeclaration(member2)) {
+-        if (shouldInitializeInConstructor(member2, importAliasMap)) {
+-          return member2;
+-        } else {
+           const modifiers = retrieveTsModifiers(member2);
+           return import_typescript54.default.factory.updatePropertyDeclaration(
+             member2,
+@@ -259644,7 +259641,6 @@ var removeStencilMethodDecorators = (classMembers, diagnostics, importAliasMap)
+             member2.type,
+             member2.initializer
+           );
+-        }
+       } else {
+         const err2 = buildError(diagnostics);
+         err2.messageText = "Unknown class member encountered!";
+@@ -259668,10 +259664,9 @@ var filterDecorators = (decorators, excludeList) => {
+   }
+   return decorators;
+ };
+-function handleClassFields(classNode, classMembers, typeChecker, importAliasMap) {
++function handleClassFields(classNode, classMembers, typeChecker, importAliasMap, updatedClassMembers) {
+   var _a;
+   const statements = [];
+-  const updatedClassMembers = [];
+   for (const member2 of classMembers) {
+     if (shouldInitializeInConstructor(member2, importAliasMap) && import_typescript54.default.isPropertyDeclaration(member2)) {
+       const memberName = tsPropDeclNameAsString(member2, typeChecker);
+@@ -259686,8 +259681,6 @@ function handleClassFields(classNode, classMembers, typeChecker, importAliasMap)
+           )
+         )
+       );
+-    } else {
+-      updatedClassMembers.push(member2);
+     }
+   }
+   if (statements.length === 0) {
+diff --git a/node_modules/@stencil/core/internal/stencil-private.d.ts b/node_modules/@stencil/core/internal/stencil-private.d.ts
+index 602cf1f..6dbb9d8 100644
+--- a/node_modules/@stencil/core/internal/stencil-private.d.ts
++++ b/node_modules/@stencil/core/internal/stencil-private.d.ts
+@@ -1756,103 +1756,7 @@ export interface Workbox {
+     injectManifest(swConfig: any): Promise<any>;
+     copyWorkboxLibraries(wwwDir: string): Promise<any>;
+ }
+-declare global {
+-    namespace jest {
+-        interface Matchers<R, T> {
+-            /**
+-             * Compares HTML, but first normalizes the HTML so all
+-             * whitespace, attribute order and css class order are
+-             * the same. When given an element, it will compare
+-             * the element's `outerHTML`. When given a Document Fragment,
+-             * such as a Shadow Root, it'll compare its `innerHTML`.
+-             * Otherwise it'll compare two strings representing HTML.
+-             */
+-            toEqualHtml(expectHtml: string): void;
+-            /**
+-             * Compares HTML light DOM only, but first normalizes the HTML so all
+-             * whitespace, attribute order and css class order are
+-             * the same. When given an element, it will compare
+-             * the element's `outerHTML`. When given a Document Fragment,
+-             * such as a Shadow Root, it'll compare its `innerHTML`.
+-             * Otherwise it'll compare two strings representing HTML.
+-             */
+-            toEqualLightHtml(expectLightHtml: string): void;
+-            /**
+-             * When given an element, it'll compare the element's
+-             * `textContent`. Otherwise it'll compare two strings. This
+-             * matcher will also `trim()` each string before comparing.
+-             */
+-            toEqualText(expectTextContent: string): void;
+-            /**
+-             * Checks if an element simply has the attribute. It does
+-             * not check any values of the attribute
+-             */
+-            toHaveAttribute(expectAttrName: string): void;
+-            /**
+-             * Checks if an element's attribute value equals the expect value.
+-             */
+-            toEqualAttribute(expectAttrName: string, expectAttrValue: any): void;
+-            /**
+-             * Checks if an element's has each of the expected attribute
+-             * names and values.
+-             */
+-            toEqualAttributes(expectAttrs: {
+-                [attrName: string]: any;
+-            }): void;
+-            /**
+-             * Checks if an element has the expected css class.
+-             */
+-            toHaveClass(expectClassName: string): void;
+-            /**
+-             * Checks if an element has each of the expected css classes
+-             * in the array.
+-             */
+-            toHaveClasses(expectClassNames: string[]): void;
+-            /**
+-             * Checks if an element has the exact same css classes
+-             * as the expected array of css classes.
+-             */
+-            toMatchClasses(expectClassNames: string[]): void;
+-            /**
+-             * When given an EventSpy, checks if the event has been
+-             * received or not.
+-             */
+-            toHaveReceivedEvent(): void;
+-            /**
+-             * When given an EventSpy, checks how many times the
+-             * event has been received.
+-             */
+-            toHaveReceivedEventTimes(count: number): void;
+-            /**
+-             * When given an EventSpy, checks the event has
+-             * received the correct custom event `detail` data.
+-             */
+-            toHaveReceivedEventDetail(eventDetail: any): void;
+-            /**
+-             * When given an EventSpy, checks the first event has
+-             * received the correct custom event `detail` data.
+-             */
+-            toHaveFirstReceivedEventDetail(eventDetail: any): void;
+-            /**
+-             * When given an EventSpy, checks the last event has
+-             * received the correct custom event `detail` data.
+-             */
+-            toHaveLastReceivedEventDetail(eventDetail: any): void;
+-            /**
+-             * When given an EventSpy, checks the event at an index
+-             * has received the correct custom event `detail` data.
+-             */
+-            toHaveNthReceivedEventDetail(index: number, eventDetail: any): void;
+-            /**
+-             * Used to evaluate the results of `compareScreenshot()`, such as
+-             * `expect(compare).toMatchScreenshot()`. The `allowableMismatchedRatio`
+-             * value from the testing config is used by default if
+-             * `MatchScreenshotOptions` were not provided.
+-             */
+-            toMatchScreenshot(opts?: MatchScreenshotOptions): void;
+-        }
+-    }
+-}
++
+ export interface MatchScreenshotOptions {
+     /**
+      * The `allowableMismatchedPixels` value is the total number of pixels

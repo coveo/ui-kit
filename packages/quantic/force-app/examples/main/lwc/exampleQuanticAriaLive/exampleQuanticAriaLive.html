@@ -1,0 +1,20 @@
+<template>
+  <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
+
+    <div slot="configuration">
+      <c-configurator options={options} ontryitnow={handleTryItNow}>
+        <c-action-perform-search slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-perform-search>
+      </c-configurator>
+    </div>
+
+    <c-quantic-search-interface slot="preview" engine-id={engineId}>
+      <c-quantic-aria-live></c-quantic-aria-live>
+      <c-quantic-search-box engine-id={engineId}></c-quantic-search-box>
+      <c-quantic-tab label="Default Tab" expression="" engine-id={engineId}></c-quantic-tab>
+      <c-quantic-tab label="TriggerQueryError" expression="@@@<>potato" engine-id={engineId}></c-quantic-tab>
+      <c-quantic-summary engine-id={engineId}></c-quantic-summary>
+      <c-quantic-query-error engine-id={engineId}></c-quantic-query-error>
+      <c-quantic-no-results engine-id={engineId}></c-quantic-no-results>
+    </c-quantic-search-interface>
+  </c-example-layout>
+</template>

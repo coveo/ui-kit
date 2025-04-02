@@ -1,0 +1,16 @@
+.card {
+  position: relative;
+  padding: 1rem 0.9rem;
+  background: var(--lwc-colorBackgroundAlt, #ffffff);
+  border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-colorBorder, #dddbda);
+  border-radius: 0.25rem;
+  background-clip: padding-box;
+  -webkit-box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
+}
+
+.card__header {
+  display: flex;
+  cursor: pointer;
+  justify-content: space-between;
+}

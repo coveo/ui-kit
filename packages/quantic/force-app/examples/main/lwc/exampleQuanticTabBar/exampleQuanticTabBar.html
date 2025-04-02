@@ -1,0 +1,16 @@
+<template>
+  <c-example-layout title={pageTitle} description={pageDescription} show-preview={isConfigured}>
+    <c-configurator slot="configuration" options={options} ontryitnow={handleTryItNow}>
+      <c-action-perform-search slot="actions" engine-id={engineId}></c-action-perform-search>
+    </c-configurator>
+
+    <c-example-use-case slot="preview" use-case={config.useCase} engine-id={engineId}>
+      <c-quantic-tab-bar light-theme={config.lightTheme}>
+        <c-quantic-tab label="Tab 1" engine-id={engineId} is-active></c-quantic-tab>
+        <c-quantic-tab label="Tab 2" engine-id={engineId} expression="@sfkbid"></c-quantic-tab>
+        <c-quantic-tab label="Tab 3" engine-id={engineId} expression="@jisourcetype"></c-quantic-tab>
+        <c-quantic-tab label="Tab 4" engine-id={engineId} expression="@sfkbid"></c-quantic-tab>
+      </c-quantic-tab-bar>
+    </c-example-use-case>
+  </c-example-layout>
+</template>

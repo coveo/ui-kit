@@ -1,0 +1,22 @@
+.items-center {
+  align-items: center;
+}
+
+.session-start__icon-container {
+  background-color: orange;
+  border-radius: var(--lwc-borderRadiusCircle, 50%);
+  width: 24px;
+  height: 24px;
+}
+
+.session__show-more-actions-button {
+  font-size: 12px;
+}
+
+.session-start__icon {
+  --slds-c-icon-color-foreground-default: white;
+}
+
+.session-start__date {
+  font-style: italic;
+}

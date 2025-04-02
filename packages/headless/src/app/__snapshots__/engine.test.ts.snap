@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`engine > should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next 1`] = `[InvalidEngineConfiguration: analytics.trackingId is required when analytics.analyticsMode="next"]`;

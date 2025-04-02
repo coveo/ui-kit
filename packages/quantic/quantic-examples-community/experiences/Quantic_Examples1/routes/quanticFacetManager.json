@@ -1,0 +1,11 @@
+{
+  "activeViewId": "17493fff-a09f-4f49-9364-336d3ed696cf",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "4b759b0d-e329-49b1-ada0-c224da5c7dd4",
+  "label": "Quantic Facet Manager",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-facet-manager",
+  "type": "route",
+  "urlPrefix": "quantic-facet-manager"
+}

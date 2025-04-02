@@ -1,0 +1,23 @@
+<template>
+  <div class="slds-wrap slds-grid_vertical-align-center slds-size_1-of-1 slds-list_horizontal">
+    <template if:true={error}>
+      <div data-test="error" class="error-message slds-text-color_destructive">{error}</div>
+    </template>
+    <template if:false={error}>
+      <template for:each={foldedParents} for:item="parent">
+        <div class="result-parenturi__container slds-grid slds-grid_vertical-align-center" key={parent.id}>
+          <template if:true={parent.isFolded}>
+            <button data-test="path__expand-button" class="slds-button expand-parenturi__container" variant="base" label="..." title="Expand URI" aria-label="Expand URI" onclick={expandParents}>...</button>
+          </template>
+          <template if:false={parent.isFolded}>
+            <a data-test="path__item" class={parent.classes} href={parent.uri} target={target}>{parent.name}</a>
+          </template>
+          <lightning-icon class="slds-m-horizontal_xx-small result-parenturi__separator slds-current-color" icon-name="utility:chevronright" size="xx-small"></lightning-icon>
+        </div>
+      </template>
+      <template lwc:if={shouldDisplayPrintableUriLink}>
+        <c-quantic-result-link engine-id={engineId} result={result} target={target} displayed-field="printableUri"></c-quantic-result-link>
+      </template>
+    </template>
+  </div>
+</template>

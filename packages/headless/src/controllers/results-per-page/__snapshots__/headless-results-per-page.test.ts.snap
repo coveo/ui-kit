@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ResultsPerPage > calling #set executes a fetchPage with the proper analytics payload 1`] = `
+[
+  {
+    "legacy": [Function],
+    "next": {
+      "actionCause": "browseResults",
+    },
+  },
+]
+`;

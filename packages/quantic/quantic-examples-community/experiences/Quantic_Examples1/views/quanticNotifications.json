@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "34e23962-77db-4585-90cf-1fb5a28f0ad8",
+  "label": "Quantic Notifications",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "01aff996-56e2-425c-b88f-7f6454852c14",
+              "columns": [
+                {
+                  "UUID": "86c55262-7f94-4883-9e25-9f414f92d766",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "01aff996-56e2-425c-b88f-7f6454852c14",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticNotifications",
+                  "id": "597cbec6-a0bf-448d-befc-37d52cc23560",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "86c55262-7f94-4883-9e25-9f414f92d766",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "75234504-085e-4a2b-83e9-d3bc8ebf9aee",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Notifications"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "eb017518-ca42-4690-992b-6fe50c7995d5",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "5c8a8f5f-a2a3-4898-bfd1-7ce39cede2a5",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-notifications"
+}

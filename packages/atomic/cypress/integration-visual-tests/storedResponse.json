@@ -1,0 +1,1417 @@
+{
+  "totalCount": 360076,
+  "totalCountFiltered": 360076,
+  "duration": 22,
+  "indexDuration": 89,
+  "requestDuration": 2,
+  "searchUid": "8c8098c2-93c7-4992-aad1-389c3549bc2d",
+  "pipeline": "default",
+  "apiVersion": 2,
+  "basicExpression": null,
+  "advancedExpression": null,
+  "largeExpression": null,
+  "constantExpression": null,
+  "disjunctionExpression": null,
+  "mandatoryExpression": null,
+  "userIdentities": [
+    {
+      "name": "anonymous_user@anonymous.coveo.com",
+      "provider": "Email Security Provider",
+      "type": "User"
+    }
+  ],
+  "rankingExpressions": [
+    {
+      "expression": "e-file OR (electronic filing) OR elf OR efile",
+      "modifier": 435,
+      "isConstant": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "e-file OR (electronic filing) OR elf OR efile",
+      "modifier": 435,
+      "isConstant": true,
+      "applyToEveryResult": true
+    },
+    {
+      "expression": "country OR countries OR europe OR asia OR america OR world OR (hello world) OR test",
+      "modifier": 1000,
+      "isConstant": true,
+      "applyToEveryResult": true
+    }
+  ],
+  "rankingExpressionGroups": [],
+  "topResults": [],
+  "executionReport": {
+    "duration": 57,
+    "children": [
+      {
+        "name": "RequestId",
+        "description": "The id correlating logs for this request",
+        "duration": 0,
+        "X-Request-ID": "57fdec0f-5f36-49f6-bdd2-6354efd1badd"
+      },
+      {
+        "name": "Organization ID",
+        "description": "Organization ID",
+        "duration": 1,
+        "coveo_organization": "searchuisamples",
+        "salesforce_organization": [
+          "00D0b000000wH1OEAU",
+          "00D6A000002kM1xUAE",
+          "00Df2000001JHSKEA4"
+        ]
+      },
+      {
+        "name": "PerformAuthentication",
+        "description": "Perform authentication",
+        "duration": 0,
+        "configured": {
+          "primary": "CloudToken"
+        },
+        "result": {
+          "userIds": [
+            {
+              "name": "anonymous_user@anonymous.coveo.com",
+              "kind": "User",
+              "provider": "Email Security Provider",
+              "infos": {}
+            }
+          ],
+          "roles": [
+            "executeSearchAsOtherUser",
+            "searchTokenCreator",
+            "queryExecutor",
+            "viewAllContent",
+            "superUserTokenUser"
+          ],
+          "queryRestrictions": {
+            "pipeline": null,
+            "filter": null
+          },
+          "userGroups": []
+        },
+        "children": [
+          {
+            "name": "ResolveProviderAuthentication",
+            "description": "Resolve authentication of provider: CloudToken",
+            "duration": 0,
+            "result": {
+              "userIds": [
+                {
+                  "name": "anonymous_user@anonymous.coveo.com",
+                  "kind": "User",
+                  "provider": "Email Security Provider",
+                  "infos": {}
+                }
+              ],
+              "roles": [
+                "executeSearchAsOtherUser",
+                "searchTokenCreator",
+                "queryExecutor",
+                "viewAllContent",
+                "superUserTokenUser"
+              ],
+              "queryRestrictions": {
+                "pipeline": null,
+                "filter": null
+              },
+              "userGroups": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "PerformAuthentication",
+        "description": "Perform authentication",
+        "duration": 0,
+        "configured": {
+          "secondary": ["sso"],
+          "mandatory": []
+        },
+        "result": {
+          "userIds": [
+            {
+              "name": "anonymous_user@anonymous.coveo.com",
+              "kind": "User",
+              "provider": "Email Security Provider",
+              "infos": {}
+            }
+          ],
+          "roles": [
+            "executeSearchAsOtherUser",
+            "searchTokenCreator",
+            "queryExecutor",
+            "viewAllContent",
+            "superUserTokenUser"
+          ],
+          "queryRestrictions": {
+            "pipeline": null,
+            "filter": null
+          },
+          "userGroups": []
+        },
+        "children": [
+          {
+            "name": "MergeAuthentications",
+            "description": "Merge authentications (if needed)",
+            "duration": 0,
+            "result": {
+              "userIds": [
+                {
+                  "name": "anonymous_user@anonymous.coveo.com",
+                  "kind": "User",
+                  "provider": "Email Security Provider",
+                  "infos": {}
+                }
+              ],
+              "roles": [
+                "executeSearchAsOtherUser",
+                "searchTokenCreator",
+                "queryExecutor",
+                "viewAllContent",
+                "superUserTokenUser"
+              ],
+              "queryRestrictions": {
+                "pipeline": null,
+                "filter": null
+              },
+              "userGroups": []
+            }
+          }
+        ]
+      },
+      {
+        "name": "ResolveContext",
+        "description": "Resolve context",
+        "duration": 0,
+        "result": {
+          "userAgent": {
+            "raw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+            "browser": ["chrome"],
+            "device": ["desktop", "pc", "mac", "osx"],
+            "os": ["osx", "mac"]
+          },
+          "searchHub": "default",
+          "tab": "default",
+          "referrer": "http://localhost:6006/?path=/story/atomic-result-list--default-result-list",
+          "locale": "en",
+          "context": {},
+          "expressions": {
+            "q": {
+              "original": "",
+              "parsed": null
+            },
+            "aq": {
+              "original": "",
+              "parsed": null
+            },
+            "cq": {
+              "original": "",
+              "parsed": null
+            },
+            "dq": {
+              "original": "",
+              "parsed": null
+            },
+            "lq": {
+              "original": "",
+              "parsed": null
+            }
+          },
+          "enableDuplicateFiltering": false,
+          "filterField": null,
+          "filterFieldRange": 5,
+          "parentField": null,
+          "childField": null,
+          "recommendation": null,
+          "lowercaseOperators": false,
+          "sortCriteria": ["relevancy"]
+        }
+      },
+      {
+        "name": "ResolvePipeline",
+        "description": "Resolve pipeline",
+        "duration": 31,
+        "result": {
+          "pipeline": "default",
+          "pipelineId": "e56141d0-00f7-4111-b4f1-a098d9f315ae",
+          "pipelineHash": "e9c4c5f4f87e4e6a681fb25882a283bd",
+          "splitTest": null,
+          "statementGroups": []
+        }
+      },
+      {
+        "name": "ResolveContext",
+        "description": "Resolve context",
+        "duration": 0,
+        "result": {
+          "userAgent": {
+            "raw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+            "browser": ["chrome"],
+            "device": ["desktop", "pc", "mac", "osx"],
+            "os": ["osx", "mac"]
+          },
+          "searchHub": "default",
+          "tab": "default",
+          "referrer": "http://localhost:6006/?path=/story/atomic-result-list--default-result-list",
+          "locale": "en",
+          "context": {},
+          "expressions": {
+            "q": {
+              "original": "",
+              "parsed": null
+            },
+            "aq": {
+              "original": "",
+              "parsed": null
+            },
+            "cq": {
+              "original": "",
+              "parsed": null
+            },
+            "dq": {
+              "original": "",
+              "parsed": null
+            },
+            "lq": {
+              "original": "",
+              "parsed": null
+            }
+          },
+          "enableDuplicateFiltering": false,
+          "filterField": null,
+          "filterFieldRange": 5,
+          "parentField": null,
+          "childField": null,
+          "recommendation": null,
+          "lowercaseOperators": false,
+          "sortCriteria": ["relevancy"]
+        }
+      },
+      {
+        "name": "ApplyQueryParamOverrideFeature",
+        "description": "Apply 'queryParamOverride' rules",
+        "duration": 0,
+        "applied": [
+          "when $locale is \"es-es\" then override query {\"q\": \"foo\"}",
+          "when $query is \"boom\" then override query {\"aq\": \"$qre()\"}"
+        ]
+      },
+      {
+        "name": "ResolveContext",
+        "description": "Resolve context",
+        "duration": 0,
+        "result": {
+          "userAgent": {
+            "raw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+            "browser": ["chrome"],
+            "device": ["desktop", "pc", "mac", "osx"],
+            "os": ["osx", "mac"]
+          },
+          "searchHub": "default",
+          "tab": "default",
+          "referrer": "http://localhost:6006/?path=/story/atomic-result-list--default-result-list",
+          "locale": "en",
+          "context": {},
+          "expressions": {
+            "q": {
+              "original": "",
+              "parsed": null
+            },
+            "aq": {
+              "original": "",
+              "parsed": null
+            },
+            "cq": {
+              "original": "",
+              "parsed": null
+            },
+            "dq": {
+              "original": "",
+              "parsed": null
+            },
+            "lq": {
+              "original": "",
+              "parsed": null
+            }
+          },
+          "enableDuplicateFiltering": false,
+          "filterField": null,
+          "filterFieldRange": 5,
+          "parentField": null,
+          "childField": null,
+          "recommendation": null,
+          "lowercaseOperators": false,
+          "sortCriteria": ["relevancy"]
+        }
+      },
+      {
+        "name": "PreprocessQuery",
+        "description": "Preprocess query",
+        "duration": 1,
+        "result": {
+          "in": {
+            "q": null,
+            "aq": null,
+            "lq": null,
+            "cq": null,
+            "dq": null,
+            "mq": null,
+            "parentField": null,
+            "childField": null,
+            "filterField": null,
+            "filterFieldRange": 5,
+            "enableDuplicateFiltering": false,
+            "numberOfResults": 10,
+            "queryFunctions": [],
+            "rankingFunctions": [],
+            "sortCriteria": ["relevancy"],
+            "rankingExpressions": [
+              {
+                "expression": "e-file OR (electronic filing) OR elf OR efile",
+                "modifier": 435,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "e-file OR (electronic filing) OR elf OR efile",
+                "modifier": 435,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "country OR countries OR europe OR asia OR america OR world OR (hello world) OR test",
+                "modifier": 1000,
+                "isConstant": true,
+                "applyToEveryResult": true
+              }
+            ],
+            "rankingOverrides": [
+              {
+                "name": "SummaryMult",
+                "value": 7
+              },
+              {
+                "name": "TFIDFMult",
+                "value": 9
+              },
+              {
+                "name": "AdjacencyMult",
+                "value": 7
+              },
+              {
+                "name": "DocDateMult",
+                "value": 8
+              },
+              {
+                "name": "TitleMult",
+                "value": 9
+              },
+              {
+                "name": "ConceptMult",
+                "value": 7
+              }
+            ]
+          },
+          "out": {
+            "q": null,
+            "aq": null,
+            "lq": null,
+            "cq": null,
+            "dq": null,
+            "mq": null,
+            "parentField": null,
+            "childField": null,
+            "filterField": null,
+            "filterFieldRange": 5,
+            "enableDuplicateFiltering": false,
+            "numberOfResults": 10,
+            "queryFunctions": [],
+            "rankingFunctions": [],
+            "sortCriteria": ["relevancy"],
+            "rankingExpressions": [
+              {
+                "expression": "e-file OR (electronic filing) OR elf OR efile",
+                "modifier": 435,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "e-file OR (electronic filing) OR elf OR efile",
+                "modifier": 435,
+                "isConstant": true,
+                "applyToEveryResult": true
+              },
+              {
+                "expression": "country OR countries OR europe OR asia OR america OR world OR (hello world) OR test",
+                "modifier": 1000,
+                "isConstant": true,
+                "applyToEveryResult": true
+              }
+            ],
+            "rankingOverrides": [
+              {
+                "name": "SummaryMult",
+                "value": 7
+              },
+              {
+                "name": "TFIDFMult",
+                "value": 9
+              },
+              {
+                "name": "AdjacencyMult",
+                "value": 7
+              },
+              {
+                "name": "DocDateMult",
+                "value": 8
+              },
+              {
+                "name": "TitleMult",
+                "value": 9
+              },
+              {
+                "name": "ConceptMult",
+                "value": 7
+              }
+            ]
+          }
+        },
+        "children": [
+          {
+            "name": "ApplyFilterFeature",
+            "description": "Apply 'filter' rules",
+            "duration": 0,
+            "applied": []
+          },
+          {
+            "name": "ApplyRankingFeature",
+            "description": "Apply 'ranking' rules",
+            "duration": 0,
+            "applied": [
+              "boost `e-file`, `efile` by 435",
+              "boost `country` by 1000"
+            ]
+          },
+          {
+            "name": "PreprocessQueryExpression",
+            "description": "Preprocess query expression",
+            "duration": 0,
+            "result": {
+              "type": "other",
+              "in": "e-file",
+              "out": "e-file OR (electronic filing) OR elf OR efile"
+            },
+            "children": [
+              {
+                "name": "ApplyThesaurusFeature",
+                "description": "Apply 'thesaurus' rules",
+                "duration": 0,
+                "applied": ["alias e-file, electronic filing, elf, efile"]
+              },
+              {
+                "name": "ApplyStopWordFeature",
+                "description": "Apply 'stop' rules",
+                "duration": 0,
+                "applied": []
+              }
+            ]
+          },
+          {
+            "name": "QueryExtension",
+            "description": "Find and execute query extensions",
+            "duration": 0
+          },
+          {
+            "name": "PreprocessQueryExpression",
+            "description": "Preprocess query expression",
+            "duration": 0,
+            "result": {
+              "type": "other",
+              "in": "efile",
+              "out": "e-file OR (electronic filing) OR elf OR efile"
+            },
+            "children": [
+              {
+                "name": "ApplyThesaurusFeature",
+                "description": "Apply 'thesaurus' rules",
+                "duration": 0,
+                "applied": ["alias e-file, electronic filing, elf, efile"]
+              },
+              {
+                "name": "ApplyStopWordFeature",
+                "description": "Apply 'stop' rules",
+                "duration": 0,
+                "applied": []
+              }
+            ]
+          },
+          {
+            "name": "QueryExtension",
+            "description": "Find and execute query extensions",
+            "duration": 0
+          },
+          {
+            "name": "PreprocessQueryExpression",
+            "description": "Preprocess query expression",
+            "duration": 0,
+            "result": {
+              "type": "other",
+              "in": "country",
+              "out": "country OR countries OR europe OR asia OR america OR world OR (hello world) OR test"
+            },
+            "children": [
+              {
+                "name": "ApplyThesaurusFeature",
+                "description": "Apply 'thesaurus' rules",
+                "duration": 0,
+                "applied": [
+                  "alias country, countries, europe, asia, america, world, hello world, test"
+                ]
+              },
+              {
+                "name": "ApplyStopWordFeature",
+                "description": "Apply 'stop' rules",
+                "duration": 0,
+                "applied": []
+              }
+            ]
+          },
+          {
+            "name": "QueryExtension",
+            "description": "Find and execute query extensions",
+            "duration": 0
+          },
+          {
+            "name": "ApplyTopResultFeature",
+            "description": "Apply 'top' rules",
+            "duration": 0,
+            "applied": []
+          },
+          {
+            "name": "ApplyRankingWeightFeature",
+            "description": "Apply 'rankingweight' rules",
+            "duration": 0,
+            "applied": [
+              "rank {\"docDate\": 8, \"TFIDF\": 9, \"concept\": 7, \"title\": 9, \"summary\": 7, \"adjacency\": 7}"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "PipelineResolveTriggers",
+        "description": "Resolve triggers",
+        "duration": 0,
+        "children": [
+          {
+            "name": "ApplyTriggerFeature",
+            "description": "Apply 'trigger' rules",
+            "duration": 0,
+            "applied": []
+          }
+        ]
+      },
+      {
+        "name": "IndexOperationV8",
+        "description": "Send query to index",
+        "duration": 4,
+        "result": {
+          "in": {
+            "BasicExpression": "@uri",
+            "AdvancedExpression": null,
+            "ConstantExpression": null,
+            "DisjunctionExpression": null,
+            "FirstResult": 0,
+            "NumberOfResults": 10,
+            "SortBy": "Relevancy",
+            "SortByFields": [],
+            "CustomFilter": null,
+            "CustomFilterRange": 5,
+            "ExcerptLength": 200,
+            "SummaryLength": 0,
+            "TimeZoneOffset": null,
+            "EnableWildcards": false,
+            "EnableQuestionMark": false,
+            "EnableDidYouMean": false,
+            "DisableLogging": false,
+            "ParentFieldName": null,
+            "ChildFieldName": null,
+            "EnableDuplicateFiltering": false,
+            "ExtractFirstSentences": false,
+            "LoadTagsOnResults": true,
+            "EnableRankingInformation": false,
+            "EnableQueryProfiling": false,
+            "TimeZone": "America/Toronto",
+            "TimeOut": 10,
+            "LanguageExpansion": null,
+            "SpecifiedLanguages": null,
+            "PreferredLanguage": null,
+            "EnableMetatermSyntax": false,
+            "BackgroundQuery": false,
+            "RankingExpressions": [
+              {
+                "Expression": "e-file OR (electronic filing) OR elf OR efile",
+                "IsConstant": true,
+                "IsDeterministic": true,
+                "Modifier": 435
+              },
+              {
+                "Expression": "country OR countries OR europe OR asia OR america OR world OR (hello world) OR test",
+                "IsConstant": true,
+                "IsDeterministic": true,
+                "Modifier": 1000
+              }
+            ],
+            "RankingFunctions": [],
+            "QueryFunctions": [],
+            "RankingOverrides": [
+              {
+                "Type": "SummaryMult",
+                "Value": 7
+              },
+              {
+                "Type": "TFIDFMult",
+                "Value": 9
+              },
+              {
+                "Type": "AdjacencyMult",
+                "Value": 7
+              },
+              {
+                "Type": "DocDateMult",
+                "Value": 8
+              },
+              {
+                "Type": "TitleMult",
+                "Value": 9
+              },
+              {
+                "Type": "ConceptMult",
+                "Value": 7
+              }
+            ],
+            "Facets": []
+          },
+          "out": {
+            "index": "cache",
+            "logEntryId": "212518323331017688",
+            "serverTime": 89,
+            "requestTime": 2,
+            "totalCount": 360076,
+            "totalCountFiltered": 360076,
+            "groupByCount": 0
+          }
+        }
+      },
+      {
+        "name": "FacetResultPostProcessingEvaluationReport",
+        "description": "Post process the result through the processors pipeline",
+        "duration": 0,
+        "Index Scores": [],
+        "children": [
+          {
+            "name": "FacetSense ML score assigning",
+            "description": "Processing facet result: FacetSense ML score assigning",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Setting more values available",
+            "description": "Processing facet result: Setting more values available",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Apply selection from request",
+            "description": "Processing facet result: Apply selection from request",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Adding optional facet IDs",
+            "description": "Processing facet result: Adding optional facet IDs",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Freezing facet values if any",
+            "description": "Processing facet result: Freezing facet values if any",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Reordering values based on facet sense",
+            "description": "Processing facet result: Reordering values based on facet sense",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Retaining selected values based on request",
+            "description": "Processing facet result: Retaining selected values based on request",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Reorder facet range values based on sort criteria",
+            "description": "Processing facet result: Reorder facet range values based on sort criteria",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Reorder facet values pushing selected values on top",
+            "description": "Processing facet result: Reorder facet values pushing selected values on top",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Truncate extra values in request",
+            "description": "Processing facet result: Truncate extra values in request",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Reorder facets using index score",
+            "description": "Processing facet result: Reorder facets using index score",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          },
+          {
+            "name": "Reorder facets using ML score",
+            "description": "Processing facet result: Reorder facets using ML score",
+            "duration": 0,
+            "changed": false,
+            "in": [],
+            "out": []
+          }
+        ]
+      },
+      {
+        "name": "QuestionAnswering",
+        "description": "Question anwsering",
+        "duration": 16,
+        "modelId": "searchuisamples_mlquestionanswering_3dfce5fb_ea7a_47e0_b345_1858c033827f",
+        "query": {
+          "questionAnsweringRequest": {
+            "q": "",
+            "num": 10,
+            "lq": "",
+            "documentIds": [
+              {
+                "key": "permanentid",
+                "value": "b7117078f255e4a6a43fbdddc203c1faaee46f195b5459ce1dba54ed9e9f"
+              },
+              {
+                "key": "permanentid",
+                "value": "c9229c01fa3d8dee9f2479b18689ad645887e219"
+              },
+              {
+                "key": "permanentid",
+                "value": "4c186abd0a5762a0e65ed86cd81afd6b54afb1af"
+              },
+              {
+                "key": "permanentid",
+                "value": "43fb9d1e920b87e9474f93cf3bd83bfc8c8ebe192638b380154b97d8f1fa"
+              },
+              {
+                "key": "permanentid",
+                "value": "70ad16bd716431d7f2aa5dee16e5610d5b8ebc08f5f4cffc7231e10c99aa"
+              },
+              {
+                "key": "permanentid",
+                "value": "6f76ef70e290263a434ad78615a7627758cc09aad65893c30bd974f3b4ae"
+              },
+              {
+                "key": "permanentid",
+                "value": "e734cb17f06340bb4d5ce806d293efc64459c2d855da5e55153cb024be86"
+              },
+              {
+                "key": "permanentid",
+                "value": "794849cd3d190f0bc239f3c0a97489977fb2e44322c5150ea0e5cdf0dde4"
+              },
+              {
+                "key": "permanentid",
+                "value": "e4afa9ea744bf89e56ff383fa3253fc395dff464ef7dd47b9f80e060a35f"
+              },
+              {
+                "key": "permanentid",
+                "value": "b8ee8cd477e5cf5d4adce0973ca491daf371fd26de260d7486a808472221"
+              }
+            ]
+          },
+          "revealContext": {
+            "customParameters": "{}",
+            "anonymous": false,
+            "visitorId": "75189439-2e42-4b41-a3ae-7e25dfcc99ff",
+            "filters": "{\"originLevel1\":\"default\",\"originLevel2\":\"default\"}",
+            "userId": "anonymous_user@anonymous.coveo.com",
+            "language": "en",
+            "language": "en",
+            "analyticsContext": "{\"clientId\":\"75189439-2e42-4b41-a3ae-7e25dfcc99ff\",\"clientTimestamp\":1654034362842,\"documentLocation\":\"http://localhost:6006/iframe.html?id=atomic-result-list--default-result-list&viewMode=story\",\"documentReferrer\":\"http://localhost:6006/?path=/story/atomic-result-list--default-result-list\",\"userAgent\":\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36\",\"userId\":\"anonymous_user@anonymous.coveo.com\",\"userIp\":\"135.19.67.239\"}"
+          },
+          "selectedFacets": []
+        },
+        "response": {
+          "question": "",
+          "snippet": "",
+          "answerId": "",
+          "documentIdKey": "permanentid",
+          "documentIdValue": "",
+          "score": 0.0,
+          "relatedQuestions": [],
+          "responseId": "7168ad09-6c11-44ef-889b-5865761af879"
+        }
+      }
+    ]
+  },
+  "index": "cache",
+  "refinedKeywords": [],
+  "triggers": [],
+  "termsToHighlight": {},
+  "phrasesToHighlight": {},
+  "queryCorrections": [],
+  "groupByResults": [],
+  "facets": [],
+  "suggestedFacets": [],
+  "categoryFacets": [],
+  "results": [
+    {
+      "title": "2020 Customer Awards: United States Postal Service - Keep Calm and Carry On",
+      "uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "printableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "clickUri": "https://community.khoros.com/t5/Kudos-Awards-2020/2020-Customer-Awards-United-States-Postal-Service-Keep-Calm-and/cns-p/600865",
+      "uniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "excerpt": "The United States Postal Service (USPS) is the world’s largest postal service and is the second oldest government department in the US. ... We deliver 47% of the world’s mail. ... USPS is an essent...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15542,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "ñvgyuDzH6CY2agð3",
+        "urihash": "ñvgyuDzH6CY2agð3",
+        "permanentid": "b7117078f255e4a6a43fbdddc203c1faaee46f195b5459ce1dba54ed9e9f",
+        "syslanguage": ["English"],
+        "objecttype": "Message",
+        "sourcetype": "Lithium",
+        "syssource": "Coveo Sample - Lithium Community",
+        "source": "Coveo Sample - Lithium Community",
+        "collection": "default",
+        "syssourcetype": "Lithium",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "2020 Customer Awards: United States Postal Service - Keep Calm and Carry On",
+      "Uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "PrintableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "ClickUri": "https://community.khoros.com/t5/Kudos-Awards-2020/2020-Customer-Awards-United-States-Postal-Service-Keep-Calm-and/cns-p/600865",
+      "UniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:kudosawards2020/thread:600865/message:600865",
+      "Excerpt": "The United States Postal Service (USPS) is the world’s largest postal service and is the second oldest government department in the US. ... We deliver 47% of the world’s mail. ... USPS is an essent...",
+      "FirstSentences": null
+    },
+    {
+      "title": "00001432Chatter",
+      "uri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "printableUri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "clickUri": "https://lvu08-dev-ed.my.salesforce.com/0D5f400002b7lEkCAI",
+      "uniqueId": "42.40643$http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "excerpt": "1092 post ... Chatter (https://lvu08-dev-ed.my.salesforce.com/0D5f400001DIPSHCA5) ... \"Data category test e-file (https://lvu08-dev-ed.my.salesforce.com/kA1f4000000V8Jj)\"",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15530,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "JXy87OxkMcQQ0yhZ",
+        "urihash": "JXy87OxkMcQQ0yhZ",
+        "permanentid": "c9229c01fa3d8dee9f2479b18689ad645887e219",
+        "syslanguage": ["English"],
+        "objecttype": "FeedItem",
+        "sourcetype": "Salesforce",
+        "syssource": "Coveo Sample - SF lvu08",
+        "source": "Coveo Sample - SF lvu08",
+        "collection": "default",
+        "syssourcetype": "Salesforce",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "00001432Chatter",
+      "Uri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "PrintableUri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "ClickUri": "https://lvu08-dev-ed.my.salesforce.com/0D5f400002b7lEkCAI",
+      "UniqueId": "42.40643$http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002b7lEkCAI",
+      "Excerpt": "1092 post ... Chatter (https://lvu08-dev-ed.my.salesforce.com/0D5f400001DIPSHCA5) ... \"Data category test e-file (https://lvu08-dev-ed.my.salesforce.com/kA1f4000000V8Jj)\"",
+      "FirstSentences": null
+    },
+    {
+      "title": "00001432Chatter",
+      "uri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "printableUri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "clickUri": "https://lvu08-dev-ed.my.salesforce.com/0D5f400002bwpnXCAQ",
+      "uniqueId": "42.40643$http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "excerpt": "Chatter (https://lvu08-dev-ed.my.salesforce.com/0D5f400001DIPSHCA5) ... \"Data category test e-file (https://lvu08-dev-ed.my.salesforce.com/kA1f4000000V8Jj)\"",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15530,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "Hai5SjTYpJUKV7ps",
+        "urihash": "Hai5SjTYpJUKV7ps",
+        "permanentid": "4c186abd0a5762a0e65ed86cd81afd6b54afb1af",
+        "syslanguage": ["English"],
+        "objecttype": "FeedItem",
+        "sourcetype": "Salesforce",
+        "syssource": "Coveo Sample - SF lvu08",
+        "source": "Coveo Sample - SF lvu08",
+        "collection": "default",
+        "syssourcetype": "Salesforce",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "00001432Chatter",
+      "Uri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "PrintableUri": "http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "ClickUri": "https://lvu08-dev-ed.my.salesforce.com/0D5f400002bwpnXCAQ",
+      "UniqueId": "42.40643$http://www.salesforce.com/org:organization/object:FeedItem/record:0D5f400002bwpnXCAQ",
+      "Excerpt": "Chatter (https://lvu08-dev-ed.my.salesforce.com/0D5f400001DIPSHCA5) ... \"Data category test e-file (https://lvu08-dev-ed.my.salesforce.com/kA1f4000000V8Jj)\"",
+      "FirstSentences": null
+    },
+    {
+      "title": "Cheers to our 2017 Lithy Award Winners!",
+      "uri": "https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "printableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "clickUri": "https://community.khoros.com/t5/Khoros-Insights-Blog/Cheers-to-our-2017-Lithy-Award-Winners/ba-p/308728",
+      "uniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "excerpt": "We’re still buzzing from a memorable party featuring our awesome customers and partners at the 2017 Lithy Awards Ball on June 14 th at the Nasdaq Entrepreneurial Center in San Francisco. ... A few ...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "B91c7dfxMðEUcD0ð",
+        "urihash": "B91c7dfxMðEUcD0ð",
+        "permanentid": "43fb9d1e920b87e9474f93cf3bd83bfc8c8ebe192638b380154b97d8f1fa",
+        "syslanguage": ["English"],
+        "objecttype": "Message",
+        "sourcetype": "Lithium",
+        "syssource": "Coveo Sample - Lithium Community",
+        "source": "Coveo Sample - Lithium Community",
+        "collection": "default",
+        "syssourcetype": "Lithium",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Cheers to our 2017 Lithy Award Winners!",
+      "Uri": "https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "PrintableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "ClickUri": "https://community.khoros.com/t5/Khoros-Insights-Blog/Cheers-to-our-2017-Lithy-Award-Winners/ba-p/308728",
+      "UniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:khorosinsights/board:lithiumblog/thread:308728/message:308728",
+      "Excerpt": "We’re still buzzing from a memorable party featuring our awesome customers and partners at the 2017 Lithy Awards Ball on June 14 th at the Nasdaq Entrepreneurial Center in San Francisco. ... A few ...",
+      "FirstSentences": null
+    },
+    {
+      "title": "Lithys 2014: Sony Europe - Best Community Design",
+      "uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "printableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "clickUri": "https://community.khoros.com/t5/Past-Lithys-old-format/Lithys-2014-Sony-Europe-Best-Community-Design/idi-p/140696",
+      "uniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "excerpt": "Sony is one of the world’s leading companies in consumer electronics and entertainment offering state-of-the-art and innovative products, movies, music and much more. ... With our products and serv...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "LY2Tp5fysJVHlYio",
+        "urihash": "LY2Tp5fysJVHlYio",
+        "permanentid": "70ad16bd716431d7f2aa5dee16e5610d5b8ebc08f5f4cffc7231e10c99aa",
+        "syslanguage": ["English"],
+        "objecttype": "Message",
+        "sourcetype": "Lithium",
+        "syssource": "Coveo Sample - Lithium Community",
+        "source": "Coveo Sample - Lithium Community",
+        "collection": "default",
+        "syssourcetype": "Lithium",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Lithys 2014: Sony Europe - Best Community Design",
+      "Uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "PrintableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "ClickUri": "https://community.khoros.com/t5/Past-Lithys-old-format/Lithys-2014-Sony-Europe-Best-Community-Design/idi-p/140696",
+      "UniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140696/message:140696",
+      "Excerpt": "Sony is one of the world’s leading companies in consumer electronics and entertainment offering state-of-the-art and innovative products, movies, music and much more. ... With our products and serv...",
+      "FirstSentences": null
+    },
+    {
+      "title": "Lithys 2014: Sony Europe - Lithium Platform Innovator",
+      "uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "printableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "clickUri": "https://community.khoros.com/t5/Past-Lithys-old-format/Lithys-2014-Sony-Europe-Lithium-Platform-Innovator/idi-p/140738",
+      "uniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "excerpt": "Sony is one of the world’s leading companies in consumer electronics and entertainment offering state-of-the-art and innovative products, movies, music and much more. ... With our products and serv...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysurihash": "kyh4c1FEoðVSñlkZ",
+        "urihash": "kyh4c1FEoðVSñlkZ",
+        "permanentid": "6f76ef70e290263a434ad78615a7627758cc09aad65893c30bd974f3b4ae",
+        "syslanguage": ["English"],
+        "objecttype": "Message",
+        "sourcetype": "Lithium",
+        "syssource": "Coveo Sample - Lithium Community",
+        "source": "Coveo Sample - Lithium Community",
+        "collection": "default",
+        "syssourcetype": "Lithium",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Lithys 2014: Sony Europe - Lithium Platform Innovator",
+      "Uri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "PrintableUri": "https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "ClickUri": "https://community.khoros.com/t5/Past-Lithys-old-format/Lithys-2014-Sony-Europe-Lithium-Platform-Innovator/idi-p/140738",
+      "UniqueId": "42.38254$https://community.lithium.com/community:lithosphere/category:litho/category:customerawards/board:Awards/thread:140738/message:140738",
+      "Excerpt": "Sony is one of the world’s leading companies in consumer electronics and entertainment offering state-of-the-art and innovative products, movies, music and much more. ... With our products and serv...",
+      "FirstSentences": null
+    },
+    {
+      "title": "Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "uri": "https://www.dropbox.com/Account:dbid:AABo4dLqGY6RWnZliY_QbQK9MFG0uOIHECc/File:\\x2Fdemo\\x2Fcoveo_idc_knowledge_quotient_june2014.pdf",
+      "printableUri": "https://www.dropbox.com/Katter Pillar/Demo/Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "clickUri": "https://www.dropbox.com/home/Demo?select=Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "uniqueId": "42.57109$https://www.dropbox.com/Account:dbid:AABo4dLqGY6RWnZliY_QbQK9MFG0uOIHECc/File:\\x2Fdemo\\x2Fcoveo_idc_knowledge_quotient_june2014.pdf",
+      "excerpt": "A big part of realizing this promise is dependent on efficient and effective access to unstructured content and the analysis of such content in addition to and in conjunction with structured data.",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysauthor": "ehughes",
+        "sysurihash": "p96UH5ðzEdqwLnðo",
+        "urihash": "p96UH5ðzEdqwLnðo",
+        "permanentid": "e734cb17f06340bb4d5ce806d293efc64459c2d855da5e55153cb024be86",
+        "syslanguage": ["English"],
+        "objecttype": "File",
+        "sourcetype": "Dropbox",
+        "syssource": "Coveo Samples - Dropbox",
+        "author": "ehughes",
+        "source": "Coveo Samples - Dropbox",
+        "collection": "default",
+        "syssourcetype": "Dropbox",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "Uri": "https://www.dropbox.com/Account:dbid:AABo4dLqGY6RWnZliY_QbQK9MFG0uOIHECc/File:\\x2Fdemo\\x2Fcoveo_idc_knowledge_quotient_june2014.pdf",
+      "PrintableUri": "https://www.dropbox.com/Katter Pillar/Demo/Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "ClickUri": "https://www.dropbox.com/home/Demo?select=Coveo_IDC_Knowledge_Quotient_June2014.pdf",
+      "UniqueId": "42.57109$https://www.dropbox.com/Account:dbid:AABo4dLqGY6RWnZliY_QbQK9MFG0uOIHECc/File:\\x2Fdemo\\x2Fcoveo_idc_knowledge_quotient_june2014.pdf",
+      "Excerpt": "A big part of realizing this promise is dependent on efficient and effective access to unstructured content and the analysis of such content in addition to and in conjunction with structured data.",
+      "FirstSentences": null
+    },
+    {
+      "title": "Western Europe-concept car-Julianne Luzzi",
+      "uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:174",
+      "printableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-concept car-Julianne Luzzi",
+      "clickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-concept%20car-Julianne%20Luzzi.docx",
+      "uniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:174",
+      "excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of interior innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysauthor": "Simon Genier (admin)",
+        "sysurihash": "9qksRDDX3uFKifRp",
+        "urihash": "9qksRDDX3uFKifRp",
+        "permanentid": "794849cd3d190f0bc239f3c0a97489977fb2e44322c5150ea0e5cdf0dde4",
+        "syslanguage": ["English"],
+        "sourcetype": "SharePoint",
+        "syssource": "Coveo Samples - Sharepoint Online Besttech",
+        "author": "Simon Genier (admin)",
+        "source": "Coveo Samples - Sharepoint Online Besttech",
+        "collection": "default",
+        "syssourcetype": "SharePoint",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Western Europe-concept car-Julianne Luzzi",
+      "Uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:174",
+      "PrintableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-concept car-Julianne Luzzi",
+      "ClickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-concept%20car-Julianne%20Luzzi.docx",
+      "UniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:174",
+      "Excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of interior innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability...",
+      "FirstSentences": null
+    },
+    {
+      "title": "Western Europe-concept car-Eve Riemann",
+      "uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:175",
+      "printableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-concept car-Eve Riemann",
+      "clickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-concept%20car-Eve%20Riemann.pptx",
+      "uniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:175",
+      "excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of interior innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;HasThumbnail",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysauthor": "Simon Genier (admin)",
+        "sysurihash": "tlñrrJmnN2XJquih",
+        "urihash": "tlñrrJmnN2XJquih",
+        "permanentid": "e4afa9ea744bf89e56ff383fa3253fc395dff464ef7dd47b9f80e060a35f",
+        "syslanguage": ["English"],
+        "sourcetype": "SharePoint",
+        "syssource": "Coveo Samples - Sharepoint Online Besttech",
+        "author": "Simon Genier (admin)",
+        "source": "Coveo Samples - Sharepoint Online Besttech",
+        "collection": "default",
+        "syssourcetype": "SharePoint",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Western Europe-concept car-Eve Riemann",
+      "Uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:175",
+      "PrintableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-concept car-Eve Riemann",
+      "ClickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-concept%20car-Eve%20Riemann.pptx",
+      "UniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:175",
+      "Excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of interior innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability...",
+      "FirstSentences": null
+    },
+    {
+      "title": "Western Europe-automotive market-Julianne Engelking",
+      "uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:173",
+      "printableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-automotive market-Julianne Engelking",
+      "clickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-automotive%20market-Julianne%20Engelking.pptx",
+      "uniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:173",
+      "excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability to creat...",
+      "firstSentences": null,
+      "summary": null,
+      "flags": "HasHtmlVersion;HasThumbnail",
+      "hasHtmlVersion": true,
+      "hasMobileHtmlVersion": false,
+      "score": 15380,
+      "percentScore": 100.0,
+      "rankingInfo": null,
+      "rating": 0.0,
+      "isTopResult": false,
+      "isRecommendation": false,
+      "isUserActionView": false,
+      "titleHighlights": [],
+      "firstSentencesHighlights": [],
+      "excerptHighlights": [],
+      "printableUriHighlights": [],
+      "summaryHighlights": [],
+      "parentResult": null,
+      "childResults": [],
+      "totalNumberOfChildResults": 0,
+      "absentTerms": [],
+      "raw": {
+        "sysauthor": "Simon Genier (admin)",
+        "sysurihash": "6pU8DGñqy28tExhf",
+        "urihash": "6pU8DGñqy28tExhf",
+        "permanentid": "b8ee8cd477e5cf5d4adce0973ca491daf371fd26de260d7486a808472221",
+        "syslanguage": ["English"],
+        "sourcetype": "SharePoint",
+        "syssource": "Coveo Samples - Sharepoint Online Besttech",
+        "author": "Simon Genier (admin)",
+        "source": "Coveo Samples - Sharepoint Online Besttech",
+        "collection": "default",
+        "syssourcetype": "SharePoint",
+        "language": ["English"],
+        "syscollection": "default"
+      },
+      "Title": "Western Europe-automotive market-Julianne Engelking",
+      "Uri": "https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:173",
+      "PrintableUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared Documents/Manufacturing/Western Europe-automotive market-Julianne Engelking",
+      "ClickUri": "https://devcoveo.sharepoint.com/sites/coveodemo/manufacturing/Shared%20Documents/Manufacturing/Western%20Europe-automotive%20market-Julianne%20Engelking.pptx",
+      "UniqueId": "42.44568$https://devcoveo.sharepoint.com/SiteCollection:3489d398-e223-47d3-853e-a9eb334e23ce/Web:fc2c4a61-2094-4112-ba37-b38dfba3634e/List:426f010d-fdc3-4bb1-b614-fbfe0e43fc1c/ListFolder:1/ListItem:173",
+      "Excerpt": "Faurecia’s new Premium Attitude concept car reveals the next generation of innovations available to automakers. ... Far from a flight of fancy, Premium Attitude displays Faurecia’s ability to creat...",
+      "FirstSentences": null
+    }
+  ],
+  "questionAnswer": {
+    "answerFound": false,
+    "question": "",
+    "answerSnippet": "",
+    "documentId": {
+      "contentIdKey": "permanentid",
+      "contentIdValue": ""
+    },
+    "score": 0.0,
+    "relatedQuestions": []
+  }
+}

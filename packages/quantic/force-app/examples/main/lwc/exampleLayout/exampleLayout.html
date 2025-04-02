@@ -1,0 +1,29 @@
+<template>
+  <div class="slds-text-heading_large">{title}</div>
+  <div class="slds-text-longform slds-var-m-top_large">{description}</div>
+
+  <div class="slds-grid slds-wrap slds-gutters_direct slds-m-top_large">
+    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <c-quantic-card-container title="Configuration">
+        <div class="slds-card__body_inner">
+          <slot name="configuration">Configuration Slot</slot>
+        </div>
+      </c-quantic-card-container>
+
+      <div class="slds-m-vertical_large">
+        <a href="/examples">Return to examples</a>
+      </div>
+    </div>
+    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+      <template if:true={showPreview}>
+        <c-event-listener expected-events={expectedEvents}>
+          <c-quantic-card-container title="Preview">
+            <div class="slds-card__body_inner slds-p-top_small">
+              <slot name="preview">Preview Slot</slot>
+            </div>
+          </c-quantic-card-container>
+        </c-event-listener>
+      </template>
+    </div>
+  </div>
+</template>

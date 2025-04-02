@@ -1,0 +1,13 @@
+{
+  "nameOfTemplate": "quanticQuickviewDefault",
+  "contentType": "other than youtube",
+  "options": {
+    "result": {
+      "uniqueId": "42.38148$https://community.fitbit.com/board:charge/thread:5332832/message:5333023"
+    },
+    "contentUrl": "https://longdogechallenge.com/"
+  },
+  "selectors": {
+    "templateSelector": ".iframe-wrapper__default"
+  }
+}

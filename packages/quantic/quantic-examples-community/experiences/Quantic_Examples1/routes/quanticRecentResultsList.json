@@ -1,0 +1,11 @@
+{
+  "activeViewId": "382d1f08-d26a-449c-ae50-3041b36c27eb",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "e6bbad60-91ba-497a-9c88-138fcc57fb70",
+  "label": "Quantic Recent Results List",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-recent-results-list",
+  "type": "route",
+  "urlPrefix": "quantic-recent-results-list"
+}

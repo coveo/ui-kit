@@ -1,0 +1,15 @@
+diff --git a/node_modules/jest-environment-jsdom/build/index.js b/node_modules/jest-environment-jsdom/build/index.js
+index 2e6c16c..0baf969 100644
+--- a/node_modules/jest-environment-jsdom/build/index.js
++++ b/node_modules/jest-environment-jsdom/build/index.js
+@@ -81,6 +81,10 @@ class JSDOMEnvironment {
+       }
+     );
+     const global = (this.global = this.dom.window);
++    global.fetch = fetch;
++    global.Headers = Headers;
++    global.Request = Request;
++    global.Response = Response;
+     if (global == null) {
+       throw new Error('JSDOM did not return a Window object');
+     }

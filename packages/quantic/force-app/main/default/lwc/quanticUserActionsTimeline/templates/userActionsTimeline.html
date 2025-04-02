@@ -1,0 +1,53 @@
+<template>
+    <template lwc:if={isFollowingSessionsSectionVisible}>
+        <div data-test="timeline__following-sessions-section">
+            <div class="slds-grid slds-grid_align-center slds-var-m-bottom_small">
+                <lightning-button data-test="timeline__toggle-following-sessions-button"
+                    class="timeline__show-following-sessions-button" variant="base"
+                    label={toggleFollowingSessionsButtonLabel} title={toggleFollowingSessionsButtonLabel}
+                    onclick={toggleFollowingSessions}
+                    icon-name={toggleFollowingSessionsButtonIconName}></lightning-button>
+            </div>
+            <div class="timeline__separator slds-var-m-bottom_medium"></div>
+            <template lwc:if={followingSessionsAreVisible}>
+                <template for:each={followingSessions} for:item="session">
+                    <div key={session.start}>
+                        <c-quantic-user-actions-session start-timestamp={session.start}
+                            user-actions={session.actions}></c-quantic-user-actions-session>
+                        <div class="timeline__separator slds-var-m-vertical_medium"></div>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </template>
+
+    <template lwc:if={ticketCreationSession}>
+        <div class="slds-var-m-bottom_medium">
+            <c-quantic-user-actions-session data-testid="ticket-creation-session"
+                start-timestamp={ticketCreationSession.start}
+                user-actions={ticketCreationSession.actions}></c-quantic-user-actions-session>
+        </div>
+        <div class="timeline__separator slds-var-m-bottom_medium"></div>
+    </template>
+
+    <template lwc:if={isPrecedingSessionsSectionVisible}>
+        <div data-test="timeline__preceding-sessions-section">
+            <template lwc:if={precedingSessionsAreVisible}>
+                <template for:each={precedingSessions} for:item="session">
+                    <div key={session.start}>
+                        <c-quantic-user-actions-session start-timestamp={session.start}
+                            user-actions={session.actions}></c-quantic-user-actions-session>
+                        <div class="timeline__separator slds-var-m-vertical_medium"></div>
+                    </div>
+                </template>
+            </template>
+            <div class="slds-grid slds-grid_align-center slds-var-m-bottom_x-small">
+                <lightning-button data-test="timeline__toggle-preceding-sessions-button"
+                    class="timeline__show-preceding-sessions-button" variant="base"
+                    label={togglePrecedingSessionsButtonLabel} title={togglePrecedingSessionsButtonLabel}
+                    onclick={togglePrecedingSessions}
+                    icon-name={togglePrecedingSessionsButtonIconName}></lightning-button>
+            </div>
+        </div>
+    </template>
+</template>

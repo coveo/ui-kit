@@ -1,0 +1,11 @@
+{
+  "activeViewId": "31f5c9e1-186a-4adc-9f59-7561285d8c53",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "7894926a-e484-42cf-9f58-8f78042de3bf",
+  "label": "Quantic Pager",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-pager",
+  "type": "route",
+  "urlPrefix": "quantic-pager"
+}

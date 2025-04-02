@@ -1,0 +1,11 @@
+{
+  "activeViewId": "1268ceb0-787c-4e51-b1a2-2330a14ac38d",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "1b986029-e45c-430f-b77a-8f0f44d8da53",
+  "label": "Quantic Smart Snippet Suggestions",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-smart-snippet-suggestions",
+  "type": "route",
+  "urlPrefix": "quantic-smart-snippet-suggestions"
+}

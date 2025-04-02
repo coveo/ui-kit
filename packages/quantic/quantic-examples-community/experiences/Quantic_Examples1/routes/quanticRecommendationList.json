@@ -1,0 +1,11 @@
+{
+  "activeViewId": "20d46c11-8336-4fc1-bce1-4d6f2c592bf5",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "cf794440-26c2-4651-8e24-a5207ed342fa",
+  "label": "Quantic Recommendation List",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-recommendation-list",
+  "type": "route",
+  "urlPrefix": "quantic-recommendation-list"
+}

@@ -1,0 +1,17 @@
+<template>
+  <div class="smart-snippet__source">
+    <template lwc:if={sourceUri}>
+      <div class="slds-truncate">
+        <a href={hrefValue} aria-label={ariaLabelValue} onclick={handleClick} data-testid="smart-snippet__source-uri"
+          class="slds-text-title_bold smart-snippet__source-uri" title={sourceUri} target="_blank">{sourceUri}</a>
+      </div>
+    </template>
+    <template lwc:if={sourceTitle}>
+      <div class="slds-var-m-top_xx-small">
+        <a href={hrefValue} aria-label={ariaLabelValue} onclick={handleClick} data-testid="smart-snippet__source-title"
+          class="smart-snippet__source-title slds-text-heading_small" title={sourceTitle}
+          target="_blank">{sourceTitle}</a>
+      </div>
+    </template>
+  </div>
+</template>

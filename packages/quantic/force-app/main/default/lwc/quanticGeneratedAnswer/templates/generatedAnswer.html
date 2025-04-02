@@ -1,0 +1,135 @@
+<template>
+  <template lwc:if={shouldDisplayGeneratedAnswer}>
+    <div data-testid="generated-answer__card" class="slds-box">
+      <div class="generated-answer__card-header slds-grid">
+        <span
+          data-testid="generated-answer__badge"
+          class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+          >{labels.generatedAnswerForYou}</span
+        >
+        <div class="generated-answer__header-actions slds-grid">
+          <template lwc:if={shouldDisplayActions}>
+            <div
+              data-testid="generated-answer__actions"
+              class="slds-grid flex-one slds-grid_align-end"
+            >
+              <c-quantic-feedback
+                state={feedbackState}
+                onquantic__like={handleLike}
+                onquantic__dislike={handleDislike}
+                like-icon-name="utility:like"
+                like-label={labels.thisAnswerWasHelpful}
+                dislike-icon-name="utility:dislike"
+                dislike-label={labels.thisAnswerWasNotHelpful}
+                size="xx-small"
+                question=""
+                hide-explain-why-button
+                hide-labels
+                data-cy="generated-answer__feedback"
+              ></c-quantic-feedback>
+              <c-quantic-generated-answer-copy-to-clipboard
+                data-testid="generated-answer__copy-to-clipboard"
+                answer={answer}
+                class="slds-var-m-horizontal_xx-small"
+              ></c-quantic-generated-answer-copy-to-clipboard>
+            </div>
+          </template>
+          <template lwc:if={withToggle}>
+            <div class="slds-grid flex-one slds-grid_align-end">
+              <c-quantic-generated-answer-toggle
+                is-generated-answer-visible={isVisible}
+              ></c-quantic-generated-answer-toggle>
+            </div>
+          </template>
+        </div>
+      </div>
+      <template lwc:if={isVisible}>
+        <div
+          data-cy="generated-answer__content"
+          class="generated-answer__content slds-var-m-top_medium"
+        >
+          <div data-testid="generated-answer__answer" class={generatedAnswerClass}>
+            <c-quantic-generated-answer-content
+              answer-content-format={answerContentFormat}
+              answer={answer}
+              is-streaming={isStreaming}
+              onquantic__answercontentupdated={handleAnswerContentUpdated}
+              data-cy="generated-answer__content"
+            >
+            </c-quantic-generated-answer-content>
+          </div>
+          <div
+            data-cy="generated-answer__footer"
+            class={generatedAnswerFooterCssClass}
+          >
+            <div
+              class={generatedAnswerFooterRowClass}
+              data-cy="generated-answer__footer-row"
+            >
+              <template lwc:if={shouldDisplayCitations}>
+                <div class="slds-var-m-top_small">
+                  <c-quantic-source-citations
+                    engine-id={engineId}
+                    data-testid="generated-answer__citations"
+                    citations={citations}
+                    citation-hover-handler={handleCitationHover}
+                  ></c-quantic-source-citations>
+                </div>
+              </template>
+            </div>
+            <div
+              class={generatedAnswerFooterRowClass}
+              data-cy="generated-answer__footer-row"
+            >
+              <template lwc:if={shouldShowCollapseGeneratingMessage}>
+                <div
+                  data-testid="generated-answer__collapse-generating-message"
+                  class="generated-answer__collapse-generating-message"
+                >
+                  {labels.generatingAnswer}...
+                </div>
+              </template>
+              <template lwc:if={shouldShowToggleCollapseAnswer}>
+                <lightning-button
+                  data-testid="generated-answer__answer-toggle"
+                  icon-name={toggleCollapseAnswerIcon}
+                  variant="base"
+                  label={toggleCollapseAnswerLabel}
+                  title={toggleCollapseAnswerLabel}
+                  onclick={handleToggleCollapseAnswer}
+                  icon-position="right"
+                  class="generated-answer__answer-toggle slds-shrink-none slds-var-m-right_large"
+                ></lightning-button>
+              </template>
+              <template lwc:if={shouldShowDisclaimer}>
+                <div
+                  class="generated-answer__disclaimer slds-grid_vertical-align-center slds-col slds-text-color_weak slds-text-body_small"
+                  data-testid="generated-answer__disclaimer"
+                >
+                  <slot name="disclaimer"> {labels.rgaDisclaimer} </slot>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </template>
+  <template lwc:if={shouldDisplayCustomNoAnswerMessage}>
+      <div data-testid="generated-answer__no-answer-card" class="slds-box">
+        <div class="generated-answer__card-header slds-grid">
+          <span class="generated-answer__badge slds-var-p-around_x-small slds-text-title_bold"
+            >{labels.generatedAnswerForYou}</span
+          >
+        </div>
+          <div class="generated-answer__content slds-var-m-top_medium">
+            <div class={generatedAnswerClass}>
+              <slot name="no-answer-message"></slot>
+            </div>
+          </div>
+      </div>
+  </template>
+  <div class="slds-hide">
+    <slot name="no-answer-message"></slot>
+  </div>
+</template>

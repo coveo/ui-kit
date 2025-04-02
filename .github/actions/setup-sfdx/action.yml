@@ -1,0 +1,7 @@
+name: 'Setup SFDX'
+description: 'Setup SFDX'
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: npm i -g @salesforce/cli@2.27.6

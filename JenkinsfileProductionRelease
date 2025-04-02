@@ -1,0 +1,46 @@
+library(
+    identifier: "jenkins-common-lib@master",
+    retriever: modernSCM(github(credentialsId: "github-app-dev", repository: "jenkins-common-lib", repoOwner: "coveo")),
+    changelog: false
+)
+
+node('heavy && linux && docker') {
+  def commitHash = params.packageName.substring(params.packageName.lastIndexOf('/') + 1)
+
+  checkout([
+    $class: 'GitSCM',
+    branches: [[name: commitHash ]],
+    extensions: [],
+    userRemoteConfigs: [[credentialsId: 'github-app-dev', url: 'https://github.com/coveo/ui-kit']]
+  ])
+
+  dockerUtils.withDocker(image: 'node:18', args: '-e HOME=/tmp -e NPM_CONFIG_PREFIX=/tmp/.npm -v /etc/passwd:/etc/passwd:ro') {
+    stage('Setup') {
+      sh 'npm ci'
+    }
+
+ stage('Approve production release') {
+      withCredentials([
+        string(credentialsId: 'RELEASER_APP_ID', variable: 'RELEASER_APP_ID'),
+        file(credentialsId: 'RELEASER_PRIVATE_KEY', variable: 'RELEASER_PRIVATE_KEY_PATH'),
+        string(credentialsId: 'RELEASER_CLIENT_ID', variable: 'RELEASER_CLIENT_ID'),
+        string(credentialsId: 'RELEASER_CLIENT_SECRET', variable: 'RELEASER_CLIENT_SECRET'),
+        string(credentialsId: 'RELEASER_INSTALLATION_ID', variable: 'RELEASER_INSTALLATION_ID'),
+      ]) {
+          sh "node ./scripts/deploy/approve-production-release.mjs ${params.GITHUB_RUN_ID}"
+      }
+    }
+
+    stage('Cloudfront invalidation') {
+      withCredentials([
+        [
+          $class: "AmazonWebServicesCredentialsBinding",
+          credentialsId: "CloudfrontCacheInvalidation",
+        ]
+      ]) {
+          sh 'npm ci';
+          sh 'node ./scripts/deploy/invalidate-cloudfront.mjs'
+      }
+    }
+  }
+}

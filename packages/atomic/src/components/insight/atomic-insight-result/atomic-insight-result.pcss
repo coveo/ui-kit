@@ -1,0 +1,31 @@
+@import '../../common/template-system/template-system.pcss';
+
+:host {
+  @apply atomic-template-system;
+  @apply relative;
+
+  .with-sections:not(.child-result) {
+    padding-top: var(--atomic-layout-spacing-y);
+    padding-bottom: var(--atomic-layout-spacing-y);
+    padding-right: var(--atomic-layout-spacing-x);
+    padding-left: var(--atomic-layout-spacing-x);
+  }
+}
+
+:host(:hover) {
+  .with-sections {
+    @apply bg-neutral-lighter;
+  }
+  atomic-insight-result-action-bar {
+    @apply visible;
+  }
+}
+
+:host(:first-of-type) {
+  .with-sections:not(.child-result) {
+    @apply pt-8;
+  }
+  atomic-insight-result-action-bar {
+    @apply top-0;
+  }
+}

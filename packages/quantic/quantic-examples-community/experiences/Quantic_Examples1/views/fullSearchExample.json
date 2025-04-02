@@ -1,0 +1,83 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "0e641a46-e416-40a4-bb11-d9976ee88cef",
+  "label": "Full Search Example",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "028993bf-2671-4087-bf45-c923799c6afb",
+              "columns": [
+                {
+                  "UUID": "d83ee6a5-ca63-40ce-805e-8682ded3cf92",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "028993bf-2671-4087-bf45-c923799c6afb",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {
+                    "engineId": "example-search"
+                  },
+                  "componentName": "c:exampleSearch",
+                  "id": "cc9646bf-72b8-44d5-a28c-9d697306e0eb",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "d83ee6a5-ca63-40ce-805e-8682ded3cf92",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "6c4cad78-7d64-4ce2-81fb-1b7937531125",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Full Search Example"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "59e21aa6-8a14-4ac7-b9d8-589fd364ebd2",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "6a7066bd-01ef-4040-bfe3-e9d09b86faf2",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-full-search-example"
+}

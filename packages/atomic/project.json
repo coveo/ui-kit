@@ -1,0 +1,125 @@
+{
+  "name": "atomic",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "release:phase1": {},
+    "release:phase3": {},
+    "build:locales": {
+      "dependsOn": ["^build"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/src/generated"],
+      "cache": true,
+      "options": {
+        "commands": [
+          "node ./scripts/create-generated-folder.mjs",
+          "node ./scripts/split-locales.mjs",
+          "node ./scripts/copy-dayjs-locales.mjs"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:stencil-lit": {
+      "dependsOn": ["build:locales"],
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/docs",
+        "{projectRoot}/src/components.d.ts",
+        "{projectRoot}/.stencil",
+        "{projectRoot}/src/lit-components.d.ts"
+      ],
+      "cache": true,
+      "options": {
+        "commands": [
+          "node --max_old_space_size=6144 ../../node_modules/@stencil/core/bin/stencil build --tsConfig tsconfig.stencil.json",
+          "node ./scripts/stencil-proxy.mjs",
+          "node ./scripts/build.mjs --config=tsconfig.lit.json",
+          "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
+          "npm run-script -w=@coveo/release if-cdn -- \"rollup -c rollup.config.js\"",
+          "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
+          "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
+          "rimraf ./dist/atomic/loader/package.json",
+          "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+        ],
+        "parallel": false,
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:cem": {
+      "dependsOn": ["build:stencil-lit"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/custom-elements.json"],
+      "cache": true,
+      "options": {
+        "command": "cem analyze",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:list-assets": {
+      "dependsOn": ["build:stencil-lit"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node ./scripts/list-assets.mjs"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:storybook": {
+      "dependsOn": ["build:cem", "build:list-assets"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist-storybook"],
+      "cache": true,
+      "options": {
+        "commands": ["npx storybook build -o dist-storybook"],
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "dependsOn": ["build:storybook"],
+      "executor": "nx:noop"
+    },
+    "web:dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/start-vite.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "generate-component": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/generate-component.mjs {args.name} {args.output}",
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [],
+      "schema": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the component to generate"
+          },
+          "output": {
+            "type": "string",
+            "description": "The output directory for the generated files"
+          }
+        },
+        "required": ["name", "output"]
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/dev.mjs",
+        "cwd": "{projectRoot}"
+      },
+      "schema": {
+        "properties": {
+          "stencil": {
+            "type": "boolean",
+            "description": "If you want to rebuild stencil in dev mode"
+          }
+        }
+      }
+    }
+  }
+}

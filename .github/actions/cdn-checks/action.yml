@@ -1,0 +1,30 @@
+name: cdn-checks
+description: 'Runs CDN checks'
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+    - uses: ./.github/actions/setup
+      with:
+        cache-suffix: 'cdn'
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
+    - run: npm run build
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
+      shell: bash
+    - uses: ./.github/actions/playwright-atomic
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
+      with:
+        shardIndex: 1
+        shardTotal: 25
+        uploadArtifacts: false
+    - uses: ./.github/actions/playwright-headless-commerce-react
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
+    - uses: ./.github/actions/playwright-atomic-hosted-pages
+      env:
+        DEPLOYMENT_ENVIRONMENT: CDN
+      with:
+        uploadArtifacts: false

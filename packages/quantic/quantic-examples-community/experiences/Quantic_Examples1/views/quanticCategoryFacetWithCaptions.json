@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "438144c9-25ea-45bd-ba1b-3c0c9e884a94",
+  "label": "Quantic Category Facet with captions",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "fc9df20e-cc67-4091-b5f1-0a62cf7345a0",
+              "columns": [
+                {
+                  "UUID": "b0a8962c-45a0-4bdd-b4b1-75239b4307f8",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "fc9df20e-cc67-4091-b5f1-0a62cf7345a0",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticCategoryFacetWithCaptions",
+                  "id": "7ebc45e0-8445-44ac-93f3-a89272f4411c",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "b0a8962c-45a0-4bdd-b4b1-75239b4307f8",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "d3c15925-ebe2-4be9-b284-4c708934e300",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Category Facet with captions"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "77719d32-84a6-4744-8a60-5f4e634d403a",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "e9a95bdb-d8fe-4507-a5d6-c6f2743a4734",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-category-facet-with-captions"
+}

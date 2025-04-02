@@ -1,0 +1,9 @@
+.feedback__main-section {
+  gap: 4px;
+}
+
+.feedback__main-section,
+.feedback__success-message {
+  justify-content: flex-end;
+  align-items: center;
+}

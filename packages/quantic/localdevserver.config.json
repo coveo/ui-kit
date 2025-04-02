@@ -1,0 +1,6 @@
+{
+  "namespace": "demo",
+  "main": "app",
+  "staticResourcesDirectory": "staticresources",
+  "port": 3334
+}

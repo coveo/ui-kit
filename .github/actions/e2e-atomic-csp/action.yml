@@ -1,0 +1,15 @@
+name: 'Atomic E2E tests'
+description: 'Runs Cypress tests for Atomic'
+runs:
+  using: composite
+  steps:
+    - name: Complementary setup
+      run: |
+        npm ci
+        npm run build -w=@coveo/atomic
+      shell: bash
+    - name: Run tests
+      # TODO KIT-3105
+      run: node ./csp/test.mjs || exit 0
+      working-directory: packages/atomic
+      shell: bash

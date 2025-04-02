@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "bd2cd0d1-5216-4878-af68-e7a924d1a247",
+  "label": "Quantic Result Template",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "aee92dd2-127d-4f91-b06b-41b8d392c76f",
+              "columns": [
+                {
+                  "UUID": "6538f53d-0331-46c3-9469-26329b120eb3",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "aee92dd2-127d-4f91-b06b-41b8d392c76f",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticResultTemplate",
+                  "id": "76b41076-6c0f-4b1b-aa85-65d7d916034b",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "6538f53d-0331-46c3-9469-26329b120eb3",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "015f47b5-c4b3-4000-8741-777639dc3ab3",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Result Template"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "2d402b1b-837d-4bbc-b430-62f657bf588a",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "95fc9739-4add-4ce5-88ee-7db473559a45",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-result-template"
+}

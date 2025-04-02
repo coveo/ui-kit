@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM", "ES2023"],
+    "module": "node16",
+    "target": "ES2022",
+    "declaration": false,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "types": [""]
+  },
+  "include": ["src"]
+}

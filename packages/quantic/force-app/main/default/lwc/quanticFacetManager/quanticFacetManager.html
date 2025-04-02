@@ -1,0 +1,11 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <div class="facet-manager__host" lwc:dom="manual"></div>
+    <slot></slot>
+    <slot name="itemTemplate"></slot>
+  </template>
+</template>

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "e921fbf3-b6da-4356-9bc1-b6ed0126accd",
+  "label": "Quantic Result Copy To Clipboard",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "8446f678-f922-4615-86fc-f36447faead4",
+              "columns": [
+                {
+                  "UUID": "12fe6ecd-7a93-4033-a222-2a4adbb326ab",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "8446f678-f922-4615-86fc-f36447faead4",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticResultCopyToClipboard",
+                  "id": "2fcdf07c-4094-4bdf-bf52-fb7e652565d7",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "12fe6ecd-7a93-4033-a222-2a4adbb326ab",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "7910dc90-2697-4a4d-856b-e12f5efe0a98",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Result Copy To Clipboard"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "1b26b71c-3923-42f9-b9a4-f4d59740996f",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "328c1f51-b941-4467-a0fa-15dd3d864291",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-result-copy-to-clipboard"
+}

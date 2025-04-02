@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "17493fff-a09f-4f49-9364-336d3ed696cf",
+  "label": "Quantic Facet Manager",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "1809a314-196a-4e4f-98ea-688d59a8d896",
+              "columns": [
+                {
+                  "UUID": "b5cb3605-b7d2-4ccf-8872-d805cfee1b23",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "1809a314-196a-4e4f-98ea-688d59a8d896",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticFacetManager",
+                  "id": "aaddf20b-e118-460d-8559-f31abbce747b",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "b5cb3605-b7d2-4ccf-8872-d805cfee1b23",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "38cdcf86-e3ba-431a-af0c-c1da7142556e",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Facet Manager"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "44fcc375-f00b-4848-ae35-70c86dcb4d7c",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "9ee66909-07d3-40d3-8a5f-ac5f42e4e572",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-facet-manager"
+}

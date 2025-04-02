@@ -1,0 +1,11 @@
+{
+  "activeViewId": "47ce155e-be50-4b39-8fb6-32c4479027f8",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "4690757a-8119-4c4d-930e-b16925d30b7d",
+  "label": "Quantic Did You Mean",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-did-you-mean",
+  "type": "route",
+  "urlPrefix": "quantic-did-you-mean"
+}

@@ -1,0 +1,33 @@
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {CSSResultGroup, html, unsafeCSS} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import styles from './{{name}}.tw.css';
+
+/**
+* The {{name}} is a component that does something.
+*/
+@customElement('{{name}}')
+@withTailwindStyles
+export class {{namePascalCase}} extends LitElement {
+  static styles: CSSResultGroup = [
+    unsafeCSS(styles),
+  ];
+
+  /**
+   * The name of the {{name}}
+   */
+  @property() name = 'World';
+
+  render() {
+    return html`<div>
+      <h1>{{name}}</h1>
+      <p>Hello ${this.name}</p>
+    </div>`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    '{{name}}': {{namePascalCase}};
+  }
+}

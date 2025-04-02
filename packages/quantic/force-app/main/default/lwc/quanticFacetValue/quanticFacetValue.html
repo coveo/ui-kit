@@ -1,0 +1,55 @@
+<template>
+  <div
+    role={divRole}
+    aria-checked={isChecked}
+    aria-pressed={isChecked}
+    onclick={onSelect}
+    class="facet__value-container facet__value-option slds-grid slds-grid_vertical-align-center slds-size_1-of-1 slds-p-around_x-small"
+    tabindex="0"
+    onkeydown={onKeyDown}
+    aria-label={ariaLabelValue}
+  >
+    <template if:false={displayAsLink}>
+      <lightning-input
+        tabindex="-1"
+        type="checkbox"
+        class="facet__value-checkbox"
+        variant="label-hidden"
+        label="Facet value option"
+        name="facet value checkbox"
+        onchange={onSelect}
+        checked={isChecked}
+      ></lightning-input>
+    </template>
+    <template if:true={isChecked}>
+      <span
+        class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_selected"
+        title={formattedFacetValue}
+      >
+        {formattedFacetValue}
+      </span>
+      <span class="slds-var-m-top_xxx-small facet__number-of-results facet__value_selected">
+        ({numberOfResults})
+      </span>
+    </template>
+    <template if:false={isChecked}>
+      <template if:true={isStandardFacet}>
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_idle"
+          title={formattedFacetValue}
+        >
+          <lightning-formatted-rich-text value={item.highlightedResult} disable-linkify></lightning-formatted-rich-text>
+        </span>
+      </template>
+      <template if:false={isStandardFacet}>
+        <span
+          class="slds-truncate slds-var-m-right_xx-small slds-var-m-top_xxx-small facet__value-text facet__value_idle"
+          title={formattedFacetValue}
+        >
+          {formattedFacetValue}
+        </span>
+      </template>
+      <span class="slds-var-m-top_xxx-small facet__number-of-results">({numberOfResults})</span>
+    </template>
+  </div>
+</template>

@@ -1,0 +1,77 @@
+{
+  "name": "@coveo/atomic-react",
+  "sideEffects": false,
+  "type": "module",
+  "version": "3.2.27",
+  "description": "React specific wrapper for the Atomic component library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/atomic-react"
+  },
+  "scripts": {
+    "build": "nx build",
+    "clean": "rimraf -rf dist",
+    "build:fixLoaderImportPaths": "node ./scripts/fix-loader-import-paths.js",
+    "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
+    "build:bundles": "rollup --config rollup.config.js",
+    "build:types": "tsc --project tsconfig.types.json",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
+  },
+  "module": "./dist/esm/atomic-react.mjs",
+  "main": "./dist/cjs/atomic-react.cjs",
+  "types": "./dist/types/index.d.ts",
+  "files": [
+    "dist/",
+    "recommendation/",
+    "commerce/"
+  ],
+  "dependencies": {
+    "@coveo/atomic": "3.22.0",
+    "@lit/react": "1.0.6",
+    "lit": "3.2.1"
+  },
+  "devDependencies": {
+    "@coveo/release": "1.0.0",
+    "@rollup/plugin-commonjs": "28.0.3",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-node-resolve": "16.0.0",
+    "@rollup/plugin-typescript": "12.1.2",
+    "@types/node": "22.13.5",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "fix-esm-import-path": "1.10.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "rollup": "4.34.8",
+    "rollup-plugin-polyfill-node": "^0.13.0"
+  },
+  "peerDependencies": {
+    "@coveo/headless": "3.21.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/atomic-react.mjs",
+      "require": "./dist/cjs/atomic-react.cjs"
+    },
+    "./commerce": {
+      "types": "./dist/types/commerce.index.d.ts",
+      "import": "./dist/esm/commerce/atomic-react.mjs",
+      "require": "./dist/cjs/commerce/atomic-react.cjs"
+    },
+    "./recommendation": {
+      "types": "./dist/types/recommendation.index.d.ts",
+      "import": "./dist/esm/recommendation/atomic-react.mjs",
+      "require": "./dist/cjs/recommendation/atomic-react.cjs"
+    }
+  }
+}

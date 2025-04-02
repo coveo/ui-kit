@@ -1,0 +1,16 @@
+.result-parenturi__container {
+  font-size: .9em;
+  color: #C5CACF
+}
+
+.result-parenturi__container:last-child {
+  min-width: 0;
+}
+
+.result-parenturi__container:last-child .result-parenturi__separator {
+  display: none;
+}
+
+.expand-parenturi__container {
+  line-height: var(--lwc-lineHeightText, 1.5);
+}

@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "0f82ebb1-3e29-4a18-a755-d278cdfce075",
+  "label": "Quantic Tab",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "100df7d7-e46e-4ea3-8f5d-a2f358365e2d",
+              "columns": [
+                {
+                  "UUID": "610bf1fb-5d90-4c34-b51d-1195ff35343e",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "100df7d7-e46e-4ea3-8f5d-a2f358365e2d",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticTab",
+                  "id": "b474607f-0464-423b-aa1c-e51323d1d37b",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "610bf1fb-5d90-4c34-b51d-1195ff35343e",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "1d27f1e3-a5ff-4e9c-b3ea-279cda1a794f",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Tab"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "b10cc68d-b704-40ea-9825-a20476753d57",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "e63b6cee-a11b-45c8-8007-fa4bbd2bdf81",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-tab"
+}

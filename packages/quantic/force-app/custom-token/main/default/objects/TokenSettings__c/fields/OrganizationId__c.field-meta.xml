@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OrganizationId__c</fullName>
+    <externalId>false</externalId>
+    <label>Coveo Organization ID</label>
+    <trackTrending>false</trackTrending>
+    <length>255</length>
+    <type>Text</type>
+    <unique>false</unique>
+    <description>The ID of the organization to query. See: https://docs.coveo.com/en/148/manage-an-organization/retrieve-the-organization-id</description>
+</CustomField>

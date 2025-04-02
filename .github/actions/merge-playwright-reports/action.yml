@@ -1,0 +1,22 @@
+name: 'Merge Playwright Reports'
+description: 'Merge Playwright reports from different browsers and shards'
+runs:
+  using: composite
+  steps:
+    - name: Download blob reports from GitHub Actions Artifacts
+      uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
+      with:
+        path: packages/atomic/all-blob-reports
+        pattern: blob-report-*
+        merge-multiple: true
+    - name: Merge into JSON Report
+      run: npx playwright merge-reports --reporter html ./all-blob-reports
+      working-directory: packages/atomic
+      shell: bash
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+      with:
+        name: atomic-playwright-report
+        path: packages/atomic/playwright-report
+        retention-days: 5

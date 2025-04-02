@@ -1,0 +1,23 @@
+name: 'Playwright Atomic React'
+description: 'Runs Playwright tests for Atomic React'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: packages/samples/angular
+      shell: bash
+    - name: Run Playwright tests
+      run: npx playwright test
+      working-directory: packages/samples/atomic-react
+      shell: bash
+    - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+      if: failure()
+      with:
+        name: react-screenshots
+        path: packages/samples/atomic-react/playwright-report/

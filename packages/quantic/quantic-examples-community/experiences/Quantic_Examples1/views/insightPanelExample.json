@@ -1,0 +1,84 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "9b192ca0-f004-4c4e-bb44-8c59a33c190f",
+  "label": "Insight Panel Example",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "d4e37a1c-ad91-4b18-b51d-3cc3d2f0fff1",
+              "columns": [
+                {
+                  "UUID": "063261e4-de40-4a42-8aa6-3fe025a1bdc4",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "d4e37a1c-ad91-4b18-b51d-3cc3d2f0fff1",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {
+                    "engineId": "example-insight-panel",
+                    "insightId": "142be676-703c-445f-b2d3-fcc7c0a3ded8"
+                  },
+                  "componentName": "c:exampleInsightPanel",
+                  "id": "fb698de6-174b-447f-817b-08959bfa06ce",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "063261e4-de40-4a42-8aa6-3fe025a1bdc4",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "e35ded96-0bdd-4f0a-9383-b980a43be6f6",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Insight Panel Example"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "2506c781-939d-43db-b267-069663c30bc3",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "7aa4906c-5fd5-48a2-b42d-252bf180edfc",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-insight-panel-example"
+}

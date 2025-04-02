@@ -1,0 +1,105 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={hasError}>
+      <div
+        class="slds-grid slds-grid_align-center slds-gutters slds-grid_vertical"
+      >
+        <div class="slds-col slds-p-top_medium">
+          <div
+            class="slds-text-heading_medium slds-text-color_error slds-text-align_center slds-text-title_bold slds-var-m-around_small"
+          >
+            {errorTitle}
+          </div>
+          <p class="slds-text-align_center">{description}</p>
+        </div>
+        <template if:true={link}>
+          <a
+            class="slds-var-m-vertical_x-small slds-align_absolute-center"
+            href={link}
+            target="_blank"
+          >
+            <lightning-formatted-rich-text
+              value={labels.coveoOnlineHelpLink}
+            ></lightning-formatted-rich-text>
+          </a>
+        </template>
+        <template if:false={link}>
+          <template if:false={showMoreInfo}>
+            <div class="slds-var-m-vertical_x-large slds-align_absolute-center">
+              <lightning-button
+                variant="brand"
+                label={labels.moreInformation}
+                class="slds-var-m-around_small"
+                onclick={handleShowMoreInfoClick}
+              ></lightning-button>
+            </div>
+          </template>
+        </template>
+        <template if:true={showMoreInfo}>
+          <div class="slds-var-m-top_medium">
+            <div
+              class="slds-rich-text-editor slds-grid slds-grid_vertical slds-nowrap"
+            >
+              <div class="slds-rich-text-editor__textarea slds-grid">
+                <div
+                  class="slds-rich-text-area__content slds-text-color_weak slds-grow"
+                  id="error"
+                >
+                  <pre>
+                                  <code>{error}</code>
+                              </pre
+                  >
+                </div>
+              </div>
+              <div
+                role="toolbar"
+                class="slds-rich-text-editor__toolbar_bottom toolbar__background slds-shrink-none"
+              >
+                <ul
+                  class="slds-button-group-list slds-float_right slds-var-p-around_small"
+                >
+                  <li>
+                    <lightning-button
+                      variant="neutral"
+                      label="Copy"
+                      icon-name="utility:copy"
+                      class="slds-var-m-left_x-small"
+                      onclick={handleCopyToClipboard}
+                    ></lightning-button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="slds-var-m-vertical_xx-large slds-text-align_center">
+            <lightning-formatted-rich-text
+              value={checkForMoreLabel}
+            ></lightning-formatted-rich-text>
+          </div>
+          <div
+            class="slds-grid slds-grid_align-center slds-var-m-vertical_x-large"
+          >
+            <lightning-button
+              variant="brand"
+              label={labels.goBack}
+              icon-name="utility:back"
+              class="slds-var-m-left_x-small"
+              onclick={handleShowMoreInfoClick}
+            ></lightning-button>
+          </div>
+        </template>
+        <template if:false={showMoreInfo}>
+          <div
+            class="slds-var-m-vertical_xx-large slds-illustration slds-illustration_small"
+          >
+            <c-quantic-svg name="pageNotFound"></c-quantic-svg>
+          </div>
+        </template>
+      </div>
+    </template>
+  </template>
+</template>

@@ -1,0 +1,31 @@
+{
+  "name": "@coveo/atomic-next-samples",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@coveo/atomic": "3.22.0",
+    "@coveo/atomic-react": "3.2.27",
+    "@coveo/headless": "3.21.0",
+    "next": "14.2.26",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.5",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "cypress": "13.7.3",
+    "cypress-repeat": "2.3.8",
+    "ncp": "2.0.0",
+    "typescript": "5.8.2"
+  },
+  "scripts": {
+    "build": "nx build",
+    "dev": "npm run build:assets && npm run dev:nextjs",
+    "dev:nextjs": "next dev",
+    "build:assets": "ncp ../../atomic-react/dist/assets public/assets && ncp ../../atomic-react/dist/lang public/lang public/assets",
+    "e2e:watch": "cypress open --browser chrome --e2e",
+    "e2e": "cypress run --browser chrome"
+  }
+}

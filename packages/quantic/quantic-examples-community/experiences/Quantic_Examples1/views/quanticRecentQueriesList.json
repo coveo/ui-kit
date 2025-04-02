@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "02c38cd0-4826-4c78-97ef-b08965ac15b5",
+  "label": "Quantic Recent Queries List",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "cd78bed1-d93c-4768-a6a6-04f43e160b03",
+              "columns": [
+                {
+                  "UUID": "c798f240-30a9-4b6a-822a-eeef2dfc7f01",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "cd78bed1-d93c-4768-a6a6-04f43e160b03",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticRecentQueriesList",
+                  "id": "e194146b-a5d8-49a2-a40b-710aa389d1a8",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "c798f240-30a9-4b6a-822a-eeef2dfc7f01",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "c143a6bd-2df3-42ba-b5ba-7b0bf7c9ed50",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Recent Queries List"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "d60ed0e8-5c9d-434d-b8eb-f5f532caf033",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "b1401a1c-c572-4b61-a770-e9ba9f9f330b",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-recent-queries-list"
+}

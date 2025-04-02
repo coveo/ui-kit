@@ -1,0 +1,36 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={answerFound}>
+      <div class="smart-snippet slds-var-m-bottom_xx-small">
+        <lightning-card data-cy="smart-snippet-card" title={question}>
+          <div class="slds-p-horizontal_medium slds-p-top_small slds-border_top">
+            <div class="slds-var-m-bottom_small">
+              <div data-cy="expandable-smart-snippet-answer" class={expandableAnswerClass}>
+                <c-quantic-smart-snippet-answer answer={answer}
+                  actions={smartSnippetAnswerActions}></c-quantic-smart-snippet-answer>
+              </div>
+            </div>
+            <template if:true={snippetHeightExceedsMaxHeight}>
+              <div class="slds-align_absolute-center slds-var-m-bottom_small">
+                <lightning-button data-testid="smart-snippet__toggle-button" icon-name={toggleSmartSnippetAnswerIcon}
+                  variant="base" label={toggleSmartSnippetAnswerLabel} title={toggleSmartSnippetAnswerLabel}
+                  onclick={handleToggleSmartSnippetAnswer} icon-position="right"></lightning-button>
+              </div>
+            </template>
+            <c-quantic-smart-snippet-source source={source}
+              actions={smartSnippetSourceActions}></c-quantic-smart-snippet-source>
+          </div>
+        </lightning-card>
+      </div>
+      <div class="slds-var-m-bottom_small">
+        <c-quantic-feedback success-message={labels.thankYouForFeedback}
+          hide-explain-why-button={hideExplainWhyFeedbackButton} onquantic__like={like} onquantic__dislike={dislike}
+          onquantic__pressexplainwhy={explainWhy} state={feedbackState}></c-quantic-feedback>
+      </div>
+    </template>
+  </template>
+</template>

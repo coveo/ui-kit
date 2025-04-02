@@ -1,0 +1,56 @@
+.facet__search-results_no-match {
+  color: var(--lwc-colorTextLabel, #696969);
+  background-color: var(--sds-c-color-gray-3, #F6F7F9);
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+fieldset {
+  min-width: 0;
+}
+
+.facet__show-less {
+  font-size: 12px;
+  background-color: white;
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+  border: none;
+  margin-bottom: 5px;
+}
+
+.facet__show-more {
+  font-size: 12px;
+  background-color: white;
+  color: var(--lwc-brandTextLink, dodgerblue);
+  border: none;
+}
+
+.facet__show-more_text,
+.facet__show-less_text {
+  display: flex;
+  align-items: left;
+}
+
+.facet__show {
+  display: flex;
+  flex-direction: column;
+}
+
+.facet__value-option {
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  border-radius: .25rem;
+}
+
+.facet__value-option:hover {
+  color: var(--lwc-brandTextLink, dodgerblue);
+  background-color: #f6f7f9;
+}
+
+.facet__clear-filter {
+  line-height: inherit;
+}
+
+.facet__number-of-results {
+  color: var(--lwc-colorTextPlaceholder, var(--lwc-colorTextIconDefault, #747474));
+}

@@ -1,0 +1,56 @@
+<!-- sldsValidatorIgnore -->
+<template>
+  <fieldset class="slds-form-element">
+    <legend
+      class="slds-form-element__legend slds-form-element__label radio-buttons-group__legend"
+      data-cy="radio-buttons-group__legend"
+    >
+      {legend}
+    </legend>
+    <div class="slds-form-element__control">
+      <div class="slds-radio_button-group radio-buttons-group__container slds-grid">
+        <template for:each={transformedOptions} for:item="option">
+          <div
+            key={option.value}
+            class={option.buttonCSSClass}
+            data-cy={option.value}
+            onmouseenter={option.mouseEnterHandler}
+            onmouseleave={option.mouseLeaveHandler}
+            onclick={option.clickHandler}
+          >
+            <template lwc:if={option.iconName}>
+              <span class="slds-grid radio-buttons-group__icon-container">
+                <lightning-icon
+                  class={option.iconCSSClass}
+                  icon-name={option.iconName}
+                  variant={option.iconVariant}
+                  size={iconSize}
+                ></lightning-icon>
+              </span>
+            </template>
+            <input
+              type="radio"
+              class="radio-input--no-outline"
+              name={option.value}
+              id={option.indexId}
+              checked={option.isChecked}
+              value={option.value}
+              onchange={handleChange}
+              onclick={handleRadioInputClick}
+            />
+            <template lwc:if={option.label}>
+              <label class={computedLabelClass} for={option.indexId}>
+                <span class="slds-radio_faux slds-p-around_none">{option.label}</span>
+              </label>
+            </template>
+            <template lwc:if={option.tooltip}>
+              <c-quantic-tooltip data-tooltip-key={option.value} style="flex-basis: 100%;">
+                <div slot="content">{option.tooltip}</div>
+              </c-quantic-tooltip>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+  </fieldset>
+</template>

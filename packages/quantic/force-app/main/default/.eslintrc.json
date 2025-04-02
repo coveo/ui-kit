@@ -1,0 +1,32 @@
+{
+  "ignorePatterns": "staticresources/**/*",
+  "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
+  "root": true,
+  "globals": {
+    "CoveoHeadless": "readonly",
+    "CoveoHeadlessCaseAssist": "readonly",
+    "CoveoHeadlessInsight": "readonly",
+    "CoveoHeadlessRecommendation": "readonly",
+    "Bueno": "readonly",
+    "DOMPurify": "readonly",
+    "marked": "readonly"
+  },
+  "rules": {
+    "no-unused-expressions": ["error", {"allowTernary": true}]
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**"],
+      "rules": {
+        "@lwc/lwc/no-async-operation": "off"
+      }
+    },
+    {
+      "files": ["**/e2e/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "no-redeclare": ["error", {"builtinGlobals": false}]
+      }
+    }
+  ]
+}

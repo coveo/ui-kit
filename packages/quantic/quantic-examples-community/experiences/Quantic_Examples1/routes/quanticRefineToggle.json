@@ -1,0 +1,11 @@
+{
+  "activeViewId": "71a68692-452a-4000-a690-cfb608c7d9ff",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "0d754e46-b4dc-4c71-ac81-b3942d76586d",
+  "label": "Quantic Refine Toggle",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-refine-toggle",
+  "type": "route",
+  "urlPrefix": "quantic-refine-toggle"
+}

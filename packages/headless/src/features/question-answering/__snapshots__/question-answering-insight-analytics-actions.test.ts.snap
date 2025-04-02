@@ -1,0 +1,202 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logCollapseSmartSnippet with the case payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "collapse",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logCollapseSmartSnippetSuggestion with the right payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "collapse",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippetSuggestion",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logDislikeSmartSnippet with the case payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "dislike",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logExpandSmartSnippet with the case payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "expand",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logExpandSmartSnippetSuggestion with the right payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "expand",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippetSuggestion",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logLikeSmartSnippet with the case payload 1`] = `
+[
+  "SmartSnippets.AnswerAction",
+  {
+    "action": "like",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetInlineLink with the right payload 1`] = `
+[
+  "SmartSnippets.SourceClick",
+  {
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSource with the right payload 1`] = `
+[
+  "SmartSnippets.SourceClick",
+  {
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSuggestionInlineLink with the right payload 1`] = `
+[
+  "SmartSnippets.SourceClick",
+  {
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippetSuggestion",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logOpenSmartSnippetSuggestionSource with the right payload 1`] = `
+[
+  "SmartSnippets.SourceClick",
+  {
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "responseId": "456",
+    "snippetType": "SmartSnippetSuggestion",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logSmartSnippetDetailedFeedback with the right payload 1`] = `
+[
+  "SmartSnippets.SubmitFeedback",
+  {
+    "additionalNotes": "example feedback details",
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "reason": "other",
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;
+
+exports[`question answering insight analytics actions > when analyticsMode is \`next\` > should log #logSmartSnippetFeedback with the right payload 1`] = `
+[
+  "SmartSnippets.SubmitFeedback",
+  {
+    "itemMetadata": {
+      "title": "example documentTitle",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "example permanent id",
+      "url": "example documentUrl",
+    },
+    "reason": "doesNotAnswer",
+    "responseId": "456",
+    "snippetType": "SmartSnippet",
+  },
+]
+`;

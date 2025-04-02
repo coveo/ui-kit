@@ -1,0 +1,1 @@
+{"ignorePatterns": ["typings/**/*", "force-app/test/jest-mocks/**"]}

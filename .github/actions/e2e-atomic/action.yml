@@ -1,0 +1,41 @@
+name: 'Atomic E2E tests'
+description: 'Runs Cypress tests for Atomic'
+inputs:
+  github-token:
+    description: The GitHub token for accurately detecting a build vs a re-run build
+    required: false
+    default: ''
+  spec:
+    description: Specify the spec files to run
+    required: true
+  SPLIT:
+    description: Amount of split
+    required: true
+  SPLIT_INDEX:
+    description: Index of the split
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: npx cypress install
+      shell: bash
+    - uses: cypress-io/github-action@v5
+      name: Run Cypress
+      with:
+        browser: chrome
+        command-prefix: 'npx -w @coveo/atomic cypress-repeat run -n 3 --until-passes --rerun-failed-only --'
+        spec: ${{ inputs.spec }}
+        start: npx nx web:dev atomic
+        wait-on: 'http://localhost:3333'
+        wait-on-timeout: 600000
+        install: false
+        record: false
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        SPLIT: ${{ inputs.SPLIT }}
+        SPLIT_INDEX: ${{ inputs.SPLIT_INDEX }}
+    - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+      if: failure()
+      with:
+        name: atomic-e2e-screenshots-${{ inputs.spec }}
+        path: packages/atomic/cypress/screenshots

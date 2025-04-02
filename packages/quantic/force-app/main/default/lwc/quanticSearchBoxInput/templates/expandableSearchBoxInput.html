@@ -1,0 +1,95 @@
+<template>
+  <div class="slds-form-element z-index-high searchbox__container-wrapper">
+    <div class="slds-form-element__control searchbox_floating-container">
+      <div class="slds-combobox_container">
+        <div
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open"
+        >
+          <div class="searchbox__container">
+            <div class={searchBoxContainerClass} role="none">
+              <template if:true={withoutSubmitButton}>
+                <div
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-left"
+                >
+                  <lightning-icon
+                    class="slds-icon slds-input__icon slds-input__icon_left searchbox__search-icon"
+                    icon-name="utility:search"
+                    size="x-small"
+                    data-cy="search-box-search-icon"
+                  ></lightning-icon>
+                </div>
+              </template>
+              <textarea
+                id="combobox-with-button-id"
+                class={searchBoxInputClass}
+                placeholder={placeholder}
+                type="search"
+                onkeydown={onKeyDown}
+                onfocus={onFocus}
+                onblur={onBlur}
+                oninput={onTextAreaInput}
+                autocomplete="off"
+                role="combobox"
+                aria-label={labels.searchFieldWithSuggestions}
+                aria-expanded={shouldDisplaySuggestions}
+                aria-autocomplete="list"
+                aria-haspopup="listbox"
+                style="white-space: nowrap"
+                data-cy="search-box-textarea"
+                data-value={inputValue}
+              >
+              </textarea>
+
+              <template if:false={isQueryEmpty}>
+                <div
+                  class="slds-grid slds-align_absolute-center searchbox__icon-container searchbox__icon-container-right"
+                >
+                  <lightning-button-icon
+                    onclick={clearInput}
+                    onmousedown={preventBlur}
+                    icon-name="utility:close"
+                    variant="bare"
+                    class="slds-grid searchbox__clear-button"
+                    size="medium"
+                    name={labels.clear}
+                    title={labels.clear}
+                    aria-label={labels.clear}
+                    alternative-text={labels.clear}
+                    data-cy="search-box-clear-button"
+                  ></lightning-button-icon>
+                </div>
+              </template>
+
+              <template if:false={withoutSubmitButton}>
+                <button
+                  class="searchbox__submit-button slds-button slds-button_neutral"
+                  title={labels.search}
+                  onclick={onSubmit}
+                  data-cy="search-box-submit-button"
+                >
+                  <lightning-icon
+                    class="slds-current-color"
+                    size="x-small"
+                    icon-name="utility:search"
+                    alternative-text={labels.search}
+                    title={labels.search}
+                  ></lightning-icon>
+                  <span class="slds-assistive-text">{labels.search}</span>
+                </button>
+              </template>
+            </div>
+          </div>
+          <template if:true={shouldDisplaySuggestions}>
+            <c-quantic-search-box-suggestions-list
+              onquantic__selection={handleSelection}
+              suggestions={suggestions}
+              query={inputValue}
+              recent-queries={recentQueries}
+              max-number-of-suggestions={maxNumberOfSuggestions}
+            ></c-quantic-search-box-suggestions-list>
+          </template>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

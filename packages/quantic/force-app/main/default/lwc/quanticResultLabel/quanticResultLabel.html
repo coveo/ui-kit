@@ -1,0 +1,13 @@
+<template>
+  <div class="result__label slds-grid slds-grid_vertical-align-center">
+    <template if:true={error}>
+      <div class="error-message slds-text-color_destructive">{error}</div>
+    </template>
+    <template if:false={error}>
+      <lightning-icon icon-name={iconToDisplay} size={size} alternative-text={labelToDisplay}></lightning-icon>
+      <template if:false={iconOnly}>
+        <span class="result-label__label slds-m-left_x-small">{labelToDisplay}</span>
+      </template> 
+    </template>
+  </div>
+</template>

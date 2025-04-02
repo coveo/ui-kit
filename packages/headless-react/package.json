@@ -1,0 +1,71 @@
+{
+  "name": "@coveo/headless-react",
+  "version": "2.4.15",
+  "description": "React utilities for SSR (Server Side Rendering) with headless",
+  "homepage": "https://docs.coveo.com/en/headless/latest/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/headless-react"
+  },
+  "keywords": [
+    "headless",
+    "react",
+    "nextjs",
+    "ssr"
+  ],
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./ssr": "./dist/ssr/index.js",
+    "./ssr-commerce": "./dist/ssr-commerce/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "nx build",
+    "clean": "rimraf dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .; publint",
+    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/release bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
+    "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
+    "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
+    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr.typedoc.json",
+    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
+    "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json"
+  },
+  "dependencies": {
+    "@coveo/headless": "3.21.0"
+  },
+  "devDependencies": {
+    "@coveo/release": "1.0.0",
+    "@testing-library/react": "14.3.1",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-testing-library": "7.1.1",
+    "gts": "5.3.1",
+    "publint": "0.3.6",
+    "rimraf": "6.0.1",
+    "typescript": "5.8.2",
+    "typedoc": "0.27.9",
+    "vitest": "3.0.6"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
+  },
+  "optionalDependencies": {
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  }
+}

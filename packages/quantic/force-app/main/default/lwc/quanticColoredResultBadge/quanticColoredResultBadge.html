@@ -1,0 +1,17 @@
+<template>
+  <template if:true={error}>
+    <div class="error-message slds-text-color_destructive">{error}</div>
+  </template>
+  <template if:true={isValid}>
+    <template if:true={hasTextToDisplay}>
+      <div class="slds-badge slds-var-p-horizontal_medium slds-truncate result-badge">
+        <template if:true={hasLabel}>
+          {label}
+        </template>
+        <template if:false={hasLabel}>
+          <c-quantic-result-field result={result} field={field} type={type}></c-quantic-result-field>
+        </template>
+      </div>
+    </template>
+  </template>
+</template>

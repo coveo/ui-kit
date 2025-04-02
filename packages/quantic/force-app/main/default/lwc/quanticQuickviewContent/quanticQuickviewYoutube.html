@@ -1,0 +1,21 @@
+<template>
+  <div class="iframe-wrapper iframe-wrapper__youtube slds-grid slds-grid_vertical">
+    <div
+      onclick={stopPropagation}
+      class="quickview__spinner-container slds-is-relative wrapper"
+    >
+      <lightning-spinner
+        if:true={isLoading}
+        alternative-text="Loading"
+        size="large"
+      ></lightning-spinner>
+      <iframe
+        id="quickview__content-iframe"
+        class="quickview__content-iframe slds-modal__content slds-p-around_large slds-wrap"
+        src={youtubeURL}
+        onload={handleIframeLoaded}
+        allowfullscreen
+      ></iframe>
+    </div>
+  </div>
+</template>

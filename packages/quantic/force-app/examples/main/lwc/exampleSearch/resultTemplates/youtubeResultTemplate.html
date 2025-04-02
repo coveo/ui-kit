@@ -1,0 +1,30 @@
+<template>
+  <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen} result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
+    <c-quantic-result-label slot="label" result={result}></c-quantic-result-label>
+    <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
+      <div class="slds-m-right_xx-small">
+        <c-quantic-result-tag variant="recommended" result={result}></c-quantic-result-tag>
+      </div>
+      <c-quantic-result-tag variant="featured" result={result}></c-quantic-result-tag>
+    </div>
+    <template if:true={resultHasPreview}>
+      <c-quantic-result-quickview slot="actions" engine-id={engineId} result={result}></c-quantic-result-quickview>
+    </template>
+    <p slot="date" class="slds-size_xx-small">
+      <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
+    </p>
+    <div slot="title" class="slds-truncate">
+      <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
+    </div>
+    <div slot="visual" class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_x-small slds-m-top_xx-small slds-m-bottom_x-small">
+      <img loading="lazy" style="border-radius: 4px; border: none;" src={videoThumbnail}></img>
+    </div>
+    <div slot="excerpt">
+      <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>
+    </div>
+    <div slot="bottom-metadata" class="slds-text-align_left slds-m-top_xx-small slds-grid slds-grid_vertical-align-center" style="font-size: 10px">
+      <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
+      <span class="slds-m-left_xxx-small">{videoTimeSpan}</span>
+    </div>
+  </c-quantic-result-template>
+</template>

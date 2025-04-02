@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ApiKey__c</fullName>
+    <externalId>false</externalId>
+    <label>Api key</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+    <description>An API key capable of requesting a search token (see: https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication#requesting-a-search-token)</description>
+</CustomField>

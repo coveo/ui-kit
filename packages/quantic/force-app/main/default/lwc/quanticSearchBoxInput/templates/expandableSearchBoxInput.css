@@ -1,0 +1,59 @@
+@import 'c/searchBoxStyle';
+
+.searchbox__icon-container {
+  margin: inherit;
+}
+
+.searchbox__icon-container-left {
+  margin-left: 0.5rem;
+}
+
+.searchbox__icon-container-right {
+  margin-right: 0.5rem;
+}
+
+/* This is to override some style from the slds-has-input and prevent */
+/* the search icon from sliding down as the searchbox expands */
+.searchbox__search-icon {
+  margin-top: 0;
+  top: auto;
+}
+
+.searchbox__container {
+  overflow: visible;
+  border: var(--lwc-borderWidthThin, 1px) solid var(--lwc-brandAccessible, #0176d3);
+}
+
+.z-index-high {
+  z-index: 5;
+}
+
+textarea.searchbox__input {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+  line-height: 20px;
+  max-height: 8.5rem;
+  resize: none;
+  border: none;
+  box-shadow: none;
+  overflow-x: clip;
+  overflow-y: hidden;
+  margin-right: 0.8rem;
+}
+
+.searchbox__submit-button {
+  border: none;
+  border-radius: 0 var(--lwc-borderRadiusMedium, 0.25rem) var(--lwc-borderRadiusMedium, 0.25rem) 0;
+}
+
+.searchbox__container-wrapper {
+  position: relative;
+  min-height: 3.125rem;
+}
+
+.searchbox_floating-container {
+  position: absolute;
+  width: 100%;
+  background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
+  border-radius: 0.25rem;
+}

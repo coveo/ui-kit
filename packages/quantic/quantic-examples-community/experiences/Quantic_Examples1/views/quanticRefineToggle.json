@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "71a68692-452a-4000-a690-cfb608c7d9ff",
+  "label": "Quantic Refine Toggle",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "cf75e72d-9843-4ec0-bdf8-1886da2c7eb8",
+              "columns": [
+                {
+                  "UUID": "63868c70-5bdd-417d-af36-3df4079d1bb2",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "cf75e72d-9843-4ec0-bdf8-1886da2c7eb8",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticRefineToggle",
+                  "id": "4c77e66d-0c41-4ce0-886f-8cebb7c261bd",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "63868c70-5bdd-417d-af36-3df4079d1bb2",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "28c9c67a-dc0c-4435-b648-f3536241a290",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Refine Toggle"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "4893b655-f2cc-4086-9ee8-22ff9a7d6724",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "49d5c12f-578c-43cd-b320-c08a9c7eda6a",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-refine-toggle"
+}

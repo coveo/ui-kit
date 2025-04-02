@@ -1,0 +1,17 @@
+{
+  "extends": "./app-router/tsconfig.json",
+  "ts-node": {
+    // For Cypress https://github.com/cypress-io/cypress/issues/27448
+    "compilerOptions": {
+      "module": "es2015",
+      "moduleResolution": "node",
+      "jsx": "react-jsx"
+    }
+  },
+  "compilerOptions": {
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/**/*.ts", "**/**/*.tsx"]
+}

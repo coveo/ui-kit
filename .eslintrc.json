@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "./node_modules/gts"
-  ],
-  "ignorePatterns": [
-    "node_modules"
-  ],
-  "rules": {}
-}

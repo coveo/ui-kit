@@ -1,0 +1,11 @@
+{
+  "activeViewId": "9b192ca0-f004-4c4e-bb44-8c59a33c190f",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "7b900664-ec81-47e9-a7e2-158c99f86a8f",
+  "label": "Insight Panel Example",
+  "pageAccess": "UseParent",
+  "routeType": "custom-insight-panel-example",
+  "type": "route",
+  "urlPrefix": "insight-panel-example"
+}

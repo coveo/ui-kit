@@ -1,0 +1,142 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logCopyGeneratedAnswer with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "copyToClipboard",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logDislikeGeneratedAnswer with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "dislike",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerCollapse with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "collapse",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerExpand with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "expand",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerFeedback with the right payload 1`] = `
+[
+  "Rga.SubmitFeedback",
+  {
+    "additionalNotes": undefined,
+    "answerId": "456",
+    "correctAnswerUrl": undefined,
+    "details": {
+      "correctTopic": false,
+      "documented": true,
+      "hallucinationFree": undefined,
+      "readable": true,
+    },
+    "helpful": true,
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerHideAnswers with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "hide",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerShowAnswers with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "show",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerStreamEnd with generated and 'empty' answer 1`] = `
+[
+  "Rga.AnswerReceived",
+  {
+    "answerGenerated": true,
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logGeneratedAnswerStreamEnd with not generated and 'empty' answer 1`] = `
+[
+  "Rga.AnswerReceived",
+  {
+    "answerGenerated": false,
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logHoverCitation with the right payload 1`] = `
+[
+  "Rga.CitationHover",
+  {
+    "answerId": "456",
+    "citationHoverTimeInMs": 100,
+    "citationId": "citation_id",
+    "itemMetadata": {
+      "title": "example title",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "citation_permanentid",
+      "url": "example: click uri",
+    },
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logLikeGeneratedAnswer with the right payload 1`] = `
+[
+  "Rga.AnswerAction",
+  {
+    "action": "like",
+    "answerId": "456",
+  },
+]
+`;
+
+exports[`generated answer insight analytics actions > when analyticsMode is \`next\` > should log #logOpenGeneratedAnswerSource with the right payload 1`] = `
+[
+  "Rga.CitationClick",
+  {
+    "answerId": "456",
+    "citationId": "citation_id",
+    "itemMetadata": {
+      "title": "example title",
+      "uniqueFieldName": "permanentid",
+      "uniqueFieldValue": "citation_permanentid",
+      "url": "example: click uri",
+    },
+  },
+]
+`;

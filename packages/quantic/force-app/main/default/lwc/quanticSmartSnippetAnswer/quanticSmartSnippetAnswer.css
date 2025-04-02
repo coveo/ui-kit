@@ -1,0 +1,16 @@
+ul {
+  list-style: inside;
+}
+
+ol {
+  list-style: decimal inside;
+}
+
+.inline-link--disabled {
+  color: initial;
+}
+
+.inline-link--disabled:hover {
+  text-decoration: none;
+  cursor: default;
+}

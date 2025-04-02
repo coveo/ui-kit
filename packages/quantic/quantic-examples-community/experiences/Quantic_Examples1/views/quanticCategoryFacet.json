@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "5bae37dd-3ff0-4700-b886-d940ec7b6d38",
+  "label": "Quantic Category Facet",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "12f35de9-7606-474e-b517-4e59d7cd1d90",
+              "columns": [
+                {
+                  "UUID": "217b9b23-2be4-4b27-8e7c-bafd255f1008",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "12f35de9-7606-474e-b517-4e59d7cd1d90",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticCategoryFacet",
+                  "id": "6f8f1e4a-43b8-4993-9892-485464153e89",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "217b9b23-2be4-4b27-8e7c-bafd255f1008",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "f2d89f3c-09a7-4cea-a13b-592808f006cc",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Category Facet"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "7d0702a7-8ec9-4bae-9767-e957f5ed6aa5",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "f36026c7-1b28-45b6-9350-f38a54467f2d",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-category-facet"
+}

@@ -1,0 +1,11 @@
+{
+  "activeViewId": "e9f0d009-989b-4ef9-827e-9cc369d35bf0",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "92ee43b8-5b90-407a-99e7-45206701f2de",
+  "label": "Quantic Case Classification",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-case-classification",
+  "type": "route",
+  "urlPrefix": "quantic-case-classification"
+}

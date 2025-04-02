@@ -1,0 +1,16 @@
+<template>
+  <c-example-layout
+    title={pageTitle}
+    description={pageDescription}
+    show-preview={isConfigured}>
+  
+    <div slot="configuration">
+      <c-configurator options={options} ontryitnow={handleTryItNow}>
+      </c-configurator>
+    </div>
+
+    <div slot="preview" class="result-template">
+      <c-quantic-result-template></c-quantic-result-template>
+    </div>
+  </c-example-layout>
+</template>

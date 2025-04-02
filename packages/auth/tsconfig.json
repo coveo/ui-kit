@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "lib": ["DOM", "ES2023"],
+    "module": "Node16",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "isolatedModules": true,
+    "types": ["node", "jest"]
+  }
+}

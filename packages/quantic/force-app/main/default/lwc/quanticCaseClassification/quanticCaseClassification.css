@@ -1,0 +1,55 @@
+lightning-icon {
+  --sds-c-icon-color-foreground-default: white;
+}
+.slds-visual-picker__figure {
+  width: 9.6rem;
+  height: 2rem;
+}
+
+.slds-form-element {
+  display: flex;
+  flex-direction: column;
+}
+
+.loading-holder {
+  position: relative;
+  width: 9.6rem;
+  height: 2rem;
+}
+
+.slds-form-element__label {
+  color: unset;
+}
+
+.slds-visual-picker {
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.visual-picker__hidden {
+  animation: hideAnimation 0.3s ease-in-out forwards;
+}
+
+@keyframes hideAnimation {
+  100% {
+    width: 0;
+    opacity: 0;
+    margin-right: 0;
+  }
+}
+
+.slds-visual-picker input:checked ~ label .slds-visual-picker__text:after {
+  border-right-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
+  border-top-color: var(--lwc-colorBorderRowSelectedHover, rgb(27, 150, 255));
+  border-radius: 4px;
+}
+
+.content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

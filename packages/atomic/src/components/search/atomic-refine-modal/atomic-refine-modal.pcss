@@ -1,0 +1,13 @@
+@import '../../common/refine-modal/refine-modal-common.pcss';
+
+:host {
+  position: absolute;
+}
+
+/**
+ * @prop --atomic-refine-modal-facet-margin: The spacing between the modal's facets.
+ */
+select:hover + div,
+select:focus-visible + div {
+  @apply text-primary-light;
+}

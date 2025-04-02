@@ -1,0 +1,24 @@
+<template>
+  <template if:true={isValidated}>
+    <lightning-modal-header label={label}></lightning-modal-header>
+    <lightning-modal-body>
+      <div class="slds-var-p-around_x-large">
+        <lightning-radio-group required class="slds-var-m-bottom_large" name="feedback" label={optionsLabel}
+          options={options} value={feedbackValue} type="radio" onchange={handleFeedbackChange}
+          message-when-value-missing={labels.selectOneOfOptions}></lightning-radio-group>
+        <div class="details-input__container">
+          <template if:true={shouldDisplayDetailsInput}>
+            <lightning-textarea data-cy="feedback-modal-body__details-input" required={detailsAreRequired} value={detailsValue} label={labels.provideDetails}
+              message-when-value-missing={labels.fillOutField} onchange={handleDetailsChange}></lightning-textarea>
+          </template>
+        </div>
+      </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+      <lightning-button data-testid="feedback-modal-footer__cancel" class="slds-button" variant="neutral" label={labels.cancel}
+        onclick={closeModal}></lightning-button>
+      <lightning-button data-testid="feedback-modal-footer__submit" class="slds-button slds-m-left_x-small feedback-modal-footer__submit" variant="brand"
+        label={labels.sendFeedback} onclick={handleSubmitFeedback}></lightning-button>
+    </lightning-modal-footer>
+  </template>
+</template>

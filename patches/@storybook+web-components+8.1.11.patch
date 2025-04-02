@@ -1,0 +1,465 @@
+diff --git a/node_modules/@storybook/web-components/dist/entry-preview-docs.js b/node_modules/@storybook/web-components/dist/entry-preview-docs.js
+index efb322f..bc32a07 100644
+--- a/node_modules/@storybook/web-components/dist/entry-preview-docs.js
++++ b/node_modules/@storybook/web-components/dist/entry-preview-docs.js
+@@ -1,2 +1,263 @@
+-"use strict";var __create=Object.create;var __defProp=Object.defineProperty;var __getOwnPropDesc=Object.getOwnPropertyDescriptor;var __getOwnPropNames=Object.getOwnPropertyNames;var __getProtoOf=Object.getPrototypeOf,__hasOwnProp=Object.prototype.hasOwnProperty;var __export=(target,all)=>{for(var name in all)__defProp(target,name,{get:all[name],enumerable:!0})},__copyProps=(to,from,except,desc)=>{if(from&&typeof from=="object"||typeof from=="function")for(let key of __getOwnPropNames(from))!__hasOwnProp.call(to,key)&&key!==except&&__defProp(to,key,{get:()=>from[key],enumerable:!(desc=__getOwnPropDesc(from,key))||desc.enumerable});return to};var __toESM=(mod,isNodeMode,target)=>(target=mod!=null?__create(__getProtoOf(mod)):{},__copyProps(isNodeMode||!mod||!mod.__esModule?__defProp(target,"default",{value:mod,enumerable:!0}):target,mod)),__toCommonJS=mod=>__copyProps(__defProp({},"__esModule",{value:!0}),mod);var entry_preview_docs_exports={};__export(entry_preview_docs_exports,{argTypesEnhancers:()=>argTypesEnhancers,decorators:()=>decorators,parameters:()=>parameters});module.exports=__toCommonJS(entry_preview_docs_exports);var import_docs_tools2=require("@storybook/docs-tools");var import_tiny_invariant=__toESM(require("tiny-invariant")),import_client_logger=require("@storybook/client-logger");var import_global3=require("@storybook/global");var import_global=require("@storybook/global"),{window:globalWindow}=import_global.global;globalWindow.STORYBOOK_ENV="web-components";var import_global2=require("@storybook/global");function isValidComponent(tagName){if(!tagName)return!1;if(typeof tagName=="string")return!0;throw new Error('Provided component needs to be a string. e.g. component: "my-element"')}function isValidMetaData(customElements){if(!customElements)return!1;if(customElements.tags&&Array.isArray(customElements.tags)||customElements.modules&&Array.isArray(customElements.modules))return!0;throw new Error(`You need to setup valid meta data in your config.js via setCustomElements().
+-    See the readme of addon-docs for web components for more details.`)}function getCustomElements(){return import_global2.global.__STORYBOOK_CUSTOM_ELEMENTS__||import_global2.global.__STORYBOOK_CUSTOM_ELEMENTS_MANIFEST__}var{window:window2,EventSource}=import_global3.global;typeof module<"u"&&module?.hot?.decline&&(module.hot.decline(),new EventSource("__webpack_hmr").addEventListener("message",function(event){try{let{action}=JSON.parse(event.data);action==="built"&&window2.location.reload()}catch{}}));function mapItem(item,category){let type;switch(category){case"attributes":case"properties":type={name:item.type?.text||item.type};break;case"slots":type={name:"string"};break;default:type={name:"void"};break}return{name:item.name,required:!1,description:item.description,type,table:{category,type:{summary:item.type?.text||item.type},defaultValue:{summary:item.default!==void 0?item.default:item.defaultValue}}}}function mapEvent(item){let name=item.name.replace(/(-|_|:|\.|\s)+(.)?/g,(_match,_separator,chr)=>chr?chr.toUpperCase():"").replace(/^([A-Z])/,match=>match.toLowerCase());return name=`on${name.charAt(0).toUpperCase()+name.substr(1)}`,[{name,action:{name:item.name},table:{disable:!0}},mapItem(item,"events")]}function mapData(data,category){return data&&data.filter(item=>item&&item.name).reduce((acc,item)=>{if(item.kind==="method")return acc;switch(category){case"events":mapEvent(item).forEach(argType=>{(0,import_tiny_invariant.default)(argType.name,`${argType} should have a name property.`),acc[argType.name]=argType});break;default:acc[item.name]=mapItem(item,category);break}return acc},{})}var getMetaDataExperimental=(tagName,customElements)=>{if(!isValidComponent(tagName)||!isValidMetaData(customElements))return null;let metaData=customElements.tags.find(tag=>tag.name.toUpperCase()===tagName.toUpperCase());return metaData||import_client_logger.logger.warn(`Component not found in custom-elements.json: ${tagName}`),metaData},getMetaDataV1=(tagName,customElements)=>{if(!isValidComponent(tagName)||!isValidMetaData(customElements))return null;let metadata;return customElements?.modules?.forEach(_module=>{_module?.declarations?.forEach(declaration=>{declaration.tagName===tagName&&(metadata=declaration)})}),metadata||import_client_logger.logger.warn(`Component not found in custom-elements.json: ${tagName}`),metadata},getMetaData=(tagName,manifest)=>manifest?.version==="experimental"?getMetaDataExperimental(tagName,manifest):getMetaDataV1(tagName,manifest),extractArgTypesFromElements=(tagName,customElements)=>{let metaData=getMetaData(tagName,customElements);return metaData&&{...mapData(metaData.members??[],"properties"),...mapData(metaData.properties??[],"properties"),...mapData(metaData.attributes??[],"attributes"),...mapData(metaData.events??[],"events"),...mapData(metaData.slots??[],"slots"),...mapData(metaData.cssProperties??[],"css custom properties"),...mapData(metaData.cssParts??[],"css shadow parts")}},extractArgTypes=tagName=>{let cem=getCustomElements();return extractArgTypesFromElements(tagName,cem)},extractComponentDescription=tagName=>{let metaData=getMetaData(tagName,getCustomElements());return metaData&&metaData.description};var import_lit=require("lit"),import_preview_api=require("@storybook/preview-api"),import_docs_tools=require("@storybook/docs-tools"),LIT_EXPRESSION_COMMENTS=/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g;function skipSourceRender(context){let sourceParams=context?.parameters.docs?.source,isArgsStory=context?.parameters.__isArgsStory;return sourceParams?.type===import_docs_tools.SourceType.DYNAMIC?!1:!isArgsStory||sourceParams?.code||sourceParams?.type===import_docs_tools.SourceType.CODE}function sourceDecorator(storyFn,context){let story=storyFn(),renderedForSource=context?.parameters.docs?.source?.excludeDecorators?context.originalStoryFn(context.args,context):story,source;if((0,import_preview_api.useEffect)(()=>{let{id,unmappedArgs}=context;source&&import_preview_api.addons.getChannel().emit(import_docs_tools.SNIPPET_RENDERED,{id,source,args:unmappedArgs})}),!skipSourceRender(context)){let container=window.document.createElement("div");renderedForSource instanceof DocumentFragment?(0,import_lit.render)(renderedForSource.cloneNode(!0),container):(0,import_lit.render)(renderedForSource,container),source=container.innerHTML.replace(LIT_EXPRESSION_COMMENTS,"")}return story}var decorators=[sourceDecorator],parameters={docs:{extractArgTypes,extractComponentDescription,story:{inline:!0},source:{type:import_docs_tools2.SourceType.DYNAMIC,language:"html"}}},argTypesEnhancers=[import_docs_tools2.enhanceArgTypes];0&&(module.exports={argTypesEnhancers,decorators,parameters});
++'use strict';
++var __create = Object.create;
++var __defProp = Object.defineProperty;
++var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
++var __getOwnPropNames = Object.getOwnPropertyNames;
++var __getProtoOf = Object.getPrototypeOf,
++  __hasOwnProp = Object.prototype.hasOwnProperty;
++var __export = (target, all) => {
++    for (var name in all)
++      __defProp(target, name, {get: all[name], enumerable: !0});
++  },
++  __copyProps = (to, from, except, desc) => {
++    if ((from && typeof from == 'object') || typeof from == 'function')
++      for (let key of __getOwnPropNames(from))
++        !__hasOwnProp.call(to, key) &&
++          key !== except &&
++          __defProp(to, key, {
++            get: () => from[key],
++            enumerable:
++              !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
++          });
++    return to;
++  };
++var __toESM = (mod, isNodeMode, target) => (
++    (target = mod != null ? __create(__getProtoOf(mod)) : {}),
++    __copyProps(
++      isNodeMode || !mod || !mod.__esModule
++        ? __defProp(target, 'default', {value: mod, enumerable: !0})
++        : target,
++      mod
++    )
++  ),
++  __toCommonJS = (mod) =>
++    __copyProps(__defProp({}, '__esModule', {value: !0}), mod);
++var entry_preview_docs_exports = {};
++__export(entry_preview_docs_exports, {
++  argTypesEnhancers: () => argTypesEnhancers,
++  decorators: () => decorators,
++  parameters: () => parameters,
++});
++module.exports = __toCommonJS(entry_preview_docs_exports);
++var import_docs_tools2 = require('@storybook/docs-tools');
++var import_tiny_invariant = __toESM(require('tiny-invariant')),
++  import_client_logger = require('@storybook/client-logger');
++var import_global3 = require('@storybook/global');
++var import_global = require('@storybook/global'),
++  {window: globalWindow} = import_global.global;
++globalWindow.STORYBOOK_ENV = 'web-components';
++var import_global2 = require('@storybook/global');
++function isValidComponent(tagName) {
++  if (!tagName) return !1;
++  if (typeof tagName == 'string') return !0;
++  throw new Error(
++    'Provided component needs to be a string. e.g. component: "my-element"'
++  );
++}
++function isValidMetaData(customElements) {
++  if (!customElements) return !1;
++  if (
++    (customElements.tags && Array.isArray(customElements.tags)) ||
++    (customElements.modules && Array.isArray(customElements.modules))
++  )
++    return !0;
++  throw new Error(`You need to setup valid meta data in your config.js via setCustomElements().
++    See the readme of addon-docs for web components for more details.`);
++}
++function getCustomElements() {
++  return (
++    import_global2.global.__STORYBOOK_CUSTOM_ELEMENTS__ ||
++    import_global2.global.__STORYBOOK_CUSTOM_ELEMENTS_MANIFEST__
++  );
++}
++var {window: window2, EventSource} = import_global3.global;
++typeof module < 'u' &&
++  module?.hot?.decline &&
++  (module.hot.decline(),
++  new EventSource('__webpack_hmr').addEventListener(
++    'message',
++    function (event) {
++      try {
++        let {action} = JSON.parse(event.data);
++        action === 'built' && window2.location.reload();
++      } catch {}
++    }
++  ));
++function mapItem(item, category) {
++  let type;
++  switch (category) {
++    case 'attributes':
++    case 'properties':
++      type = {name: item.type?.text || item.type};
++      break;
++    case 'slots':
++      type = {name: 'string'};
++      break;
++    default:
++      type = {name: 'void'};
++      break;
++  }
++  return {
++    name: item.name,
++    required: !1,
++    description: item.description,
++    type,
++    table: {
++      category,
++      type: {summary: item.type?.text || item.type},
++      defaultValue: {
++        summary: item.default !== void 0 ? item.default : item.defaultValue,
++      },
++    },
++  };
++}
++function mapEvent(item) {
++  let name = item.name
++    .replace(/(-|_|:|\.|\s)+(.)?/g, (_match, _separator, chr) =>
++      chr ? chr.toUpperCase() : ''
++    )
++    .replace(/^([A-Z])/, (match) => match.toLowerCase());
++  return (
++    (name = `on${name.charAt(0).toUpperCase() + name.substr(1)}`),
++    [
++      {name, action: {name: item.name}, table: {disable: !0}},
++      mapItem(item, 'events'),
++    ]
++  );
++}
++function mapData(data, category) {
++  return (
++    data &&
++    data
++      .filter((item) => item && item.name)
++      .reduce((acc, item) => {
++        if (item.kind === 'method') return acc;
++        switch (category) {
++          case 'events':
++            mapEvent(item).forEach((argType) => {
++              (0, import_tiny_invariant.default)(
++                argType.name,
++                `${argType} should have a name property.`
++              ),
++                (acc[argType.name] = argType);
++            });
++            break;
++          default:
++            acc[
++              `${category === 'css shadow parts' ? 'cssParts' : category}-${item.name}`
++            ] = mapItem(item, category);
++            break;
++        }
++        return acc;
++      }, {})
++  );
++}
++var getMetaDataExperimental = (tagName, customElements) => {
++    if (!isValidComponent(tagName) || !isValidMetaData(customElements))
++      return null;
++    let metaData = customElements.tags.find(
++      (tag) => tag.name.toUpperCase() === tagName.toUpperCase()
++    );
++    return (
++      metaData ||
++        import_client_logger.logger.warn(
++          `Component not found in custom-elements.json: ${tagName}`
++        ),
++      metaData
++    );
++  },
++  getMetaDataV1 = (tagName, customElements) => {
++    if (!isValidComponent(tagName) || !isValidMetaData(customElements))
++      return null;
++    let metadata;
++    return (
++      customElements?.modules?.forEach((_module) => {
++        _module?.declarations?.forEach((declaration) => {
++          declaration.tagName === tagName && (metadata = declaration);
++        });
++      }),
++      metadata ||
++        import_client_logger.logger.warn(
++          `Component not found in custom-elements.json: ${tagName}`
++        ),
++      metadata
++    );
++  },
++  getMetaData = (tagName, manifest) =>
++    manifest?.version === 'experimental'
++      ? getMetaDataExperimental(tagName, manifest)
++      : getMetaDataV1(tagName, manifest),
++  extractArgTypesFromElements = (tagName, customElements) => {
++    let metaData = getMetaData(tagName, customElements);
++    return (
++      metaData && {
++        ...mapData(metaData.members ?? [], 'properties'),
++        ...mapData(metaData.properties ?? [], 'properties'),
++        ...mapData(metaData.attributes ?? [], 'attributes'),
++        ...mapData(metaData.events ?? [], 'events'),
++        ...mapData(metaData.slots ?? [], 'slots'),
++        ...mapData(metaData.cssProperties ?? [], 'css custom properties'),
++        ...mapData(metaData.cssParts ?? [], 'css shadow parts'),
++      }
++    );
++  },
++  extractArgTypes = (tagName) => {
++    let cem = getCustomElements();
++    return extractArgTypesFromElements(tagName, cem);
++  },
++  extractComponentDescription = (tagName) => {
++    let metaData = getMetaData(tagName, getCustomElements());
++    return metaData && metaData.description;
++  };
++var import_lit = require('lit'),
++  import_preview_api = require('@storybook/preview-api'),
++  import_docs_tools = require('@storybook/docs-tools'),
++  LIT_EXPRESSION_COMMENTS = /<!--\?lit\$[0-9]+\$-->|<!--\??-->/g;
++function skipSourceRender(context) {
++  let sourceParams = context?.parameters.docs?.source,
++    isArgsStory = context?.parameters.__isArgsStory;
++  return sourceParams?.type === import_docs_tools.SourceType.DYNAMIC
++    ? !1
++    : !isArgsStory ||
++        sourceParams?.code ||
++        sourceParams?.type === import_docs_tools.SourceType.CODE;
++}
++function sourceDecorator(storyFn, context) {
++  let story = storyFn(),
++    renderedForSource = context?.parameters.docs?.source?.excludeDecorators
++      ? context.originalStoryFn(context.args, context)
++      : story,
++    source;
++  if (
++    ((0, import_preview_api.useEffect)(() => {
++      let {id, unmappedArgs} = context;
++      source &&
++        import_preview_api.addons
++          .getChannel()
++          .emit(import_docs_tools.SNIPPET_RENDERED, {
++            id,
++            source,
++            args: unmappedArgs,
++          });
++    }),
++    !skipSourceRender(context))
++  ) {
++    let container = window.document.createElement('div');
++    renderedForSource instanceof DocumentFragment
++      ? (0, import_lit.render)(renderedForSource.cloneNode(!0), container)
++      : (0, import_lit.render)(renderedForSource, container),
++      (source = container.innerHTML.replace(LIT_EXPRESSION_COMMENTS, ''));
++  }
++  return story;
++}
++var decorators = [sourceDecorator],
++  parameters = {
++    docs: {
++      extractArgTypes,
++      extractComponentDescription,
++      story: {inline: !0},
++      source: {type: import_docs_tools2.SourceType.DYNAMIC, language: 'html'},
++    },
++  },
++  argTypesEnhancers = [import_docs_tools2.enhanceArgTypes];
++0 && (module.exports = {argTypesEnhancers, decorators, parameters});
+diff --git a/node_modules/@storybook/web-components/dist/entry-preview-docs.mjs b/node_modules/@storybook/web-components/dist/entry-preview-docs.mjs
+index 74a78c8..e6ebf35 100644
+--- a/node_modules/@storybook/web-components/dist/entry-preview-docs.mjs
++++ b/node_modules/@storybook/web-components/dist/entry-preview-docs.mjs
+@@ -1,10 +1,183 @@
+-import { getCustomElements, isValidComponent, isValidMetaData } from './chunk-GKNNPQCW.mjs';
+-import { SourceType, enhanceArgTypes, SNIPPET_RENDERED } from '@storybook/docs-tools';
++import {logger} from '@storybook/client-logger';
++import {
++  SourceType,
++  enhanceArgTypes,
++  SNIPPET_RENDERED,
++} from '@storybook/docs-tools';
++import {useEffect, addons} from '@storybook/preview-api';
++import {render} from 'lit';
+ import invariant from 'tiny-invariant';
+-import { logger } from '@storybook/client-logger';
+-import { render } from 'lit';
+-import { useEffect, addons } from '@storybook/preview-api';
++import {
++  getCustomElements,
++  isValidComponent,
++  isValidMetaData,
++} from './chunk-GKNNPQCW.mjs';
+ 
+-function mapItem(item,category){let type;switch(category){case"attributes":case"properties":type={name:item.type?.text||item.type};break;case"slots":type={name:"string"};break;default:type={name:"void"};break}return {name:item.name,required:!1,description:item.description,type,table:{category,type:{summary:item.type?.text||item.type},defaultValue:{summary:item.default!==void 0?item.default:item.defaultValue}}}}function mapEvent(item){let name=item.name.replace(/(-|_|:|\.|\s)+(.)?/g,(_match,_separator,chr)=>chr?chr.toUpperCase():"").replace(/^([A-Z])/,match=>match.toLowerCase());return name=`on${name.charAt(0).toUpperCase()+name.substr(1)}`,[{name,action:{name:item.name},table:{disable:!0}},mapItem(item,"events")]}function mapData(data,category){return data&&data.filter(item=>item&&item.name).reduce((acc,item)=>{if(item.kind==="method")return acc;switch(category){case"events":mapEvent(item).forEach(argType=>{invariant(argType.name,`${argType} should have a name property.`),acc[argType.name]=argType;});break;default:acc[item.name]=mapItem(item,category);break}return acc},{})}var getMetaDataExperimental=(tagName,customElements)=>{if(!isValidComponent(tagName)||!isValidMetaData(customElements))return null;let metaData=customElements.tags.find(tag=>tag.name.toUpperCase()===tagName.toUpperCase());return metaData||logger.warn(`Component not found in custom-elements.json: ${tagName}`),metaData},getMetaDataV1=(tagName,customElements)=>{if(!isValidComponent(tagName)||!isValidMetaData(customElements))return null;let metadata;return customElements?.modules?.forEach(_module=>{_module?.declarations?.forEach(declaration=>{declaration.tagName===tagName&&(metadata=declaration);});}),metadata||logger.warn(`Component not found in custom-elements.json: ${tagName}`),metadata},getMetaData=(tagName,manifest)=>manifest?.version==="experimental"?getMetaDataExperimental(tagName,manifest):getMetaDataV1(tagName,manifest),extractArgTypesFromElements=(tagName,customElements)=>{let metaData=getMetaData(tagName,customElements);return metaData&&{...mapData(metaData.members??[],"properties"),...mapData(metaData.properties??[],"properties"),...mapData(metaData.attributes??[],"attributes"),...mapData(metaData.events??[],"events"),...mapData(metaData.slots??[],"slots"),...mapData(metaData.cssProperties??[],"css custom properties"),...mapData(metaData.cssParts??[],"css shadow parts")}},extractArgTypes=tagName=>{let cem=getCustomElements();return extractArgTypesFromElements(tagName,cem)},extractComponentDescription=tagName=>{let metaData=getMetaData(tagName,getCustomElements());return metaData&&metaData.description};var LIT_EXPRESSION_COMMENTS=/<!--\?lit\$[0-9]+\$-->|<!--\??-->/g;function skipSourceRender(context){let sourceParams=context?.parameters.docs?.source,isArgsStory=context?.parameters.__isArgsStory;return sourceParams?.type===SourceType.DYNAMIC?!1:!isArgsStory||sourceParams?.code||sourceParams?.type===SourceType.CODE}function sourceDecorator(storyFn,context){let story=storyFn(),renderedForSource=context?.parameters.docs?.source?.excludeDecorators?context.originalStoryFn(context.args,context):story,source;if(useEffect(()=>{let{id,unmappedArgs}=context;source&&addons.getChannel().emit(SNIPPET_RENDERED,{id,source,args:unmappedArgs});}),!skipSourceRender(context)){let container=window.document.createElement("div");renderedForSource instanceof DocumentFragment?render(renderedForSource.cloneNode(!0),container):render(renderedForSource,container),source=container.innerHTML.replace(LIT_EXPRESSION_COMMENTS,"");}return story}var decorators=[sourceDecorator],parameters={docs:{extractArgTypes,extractComponentDescription,story:{inline:!0},source:{type:SourceType.DYNAMIC,language:"html"}}},argTypesEnhancers=[enhanceArgTypes];
++function mapItem(item, category) {
++  let type;
++  switch (category) {
++    case 'attributes':
++    case 'properties':
++      type = {name: item.type?.text || item.type};
++      break;
++    case 'slots':
++      type = {name: 'string'};
++      break;
++    default:
++      type = {name: 'void'};
++      break;
++  }
++  return {
++    name: item.name,
++    required: !1,
++    description: item.description,
++    type,
++    table: {
++      category,
++      type: {summary: item.type?.text || item.type},
++      defaultValue: {
++        summary: item.default !== void 0 ? item.default : item.defaultValue,
++      },
++    },
++  };
++}
++function mapEvent(item) {
++  let name = item.name
++    .replace(/(-|_|:|\.|\s)+(.)?/g, (_match, _separator, chr) =>
++      chr ? chr.toUpperCase() : ''
++    )
++    .replace(/^([A-Z])/, (match) => match.toLowerCase());
++  return (
++    (name = `on${name.charAt(0).toUpperCase() + name.substr(1)}`),
++    [
++      {name, action: {name: item.name}, table: {disable: !0}},
++      mapItem(item, 'events'),
++    ]
++  );
++}
++function mapData(data, category) {
++  return (
++    data &&
++    data
++      .filter((item) => item && item.name)
++      .reduce((acc, item) => {
++        if (item.kind === 'method') return acc;
++        switch (category) {
++          case 'events':
++            mapEvent(item).forEach((argType) => {
++              invariant(
++                argType.name,
++                `${argType} should have a name property.`
++              ),
++                (acc[argType.name] = argType);
++            });
++            break;
++          default:
++            acc[
++              `${category === 'css shadow parts' ? 'cssParts' : category}-${item.name}`
++            ] = mapItem(item, category);
++            break;
++        }
++        return acc;
++      }, {})
++  );
++}
++var getMetaDataExperimental = (tagName, customElements) => {
++    if (!isValidComponent(tagName) || !isValidMetaData(customElements))
++      return null;
++    let metaData = customElements.tags.find(
++      (tag) => tag.name.toUpperCase() === tagName.toUpperCase()
++    );
++    return (
++      metaData ||
++        logger.warn(`Component not found in custom-elements.json: ${tagName}`),
++      metaData
++    );
++  },
++  getMetaDataV1 = (tagName, customElements) => {
++    if (!isValidComponent(tagName) || !isValidMetaData(customElements))
++      return null;
++    let metadata;
++    return (
++      customElements?.modules?.forEach((_module) => {
++        _module?.declarations?.forEach((declaration) => {
++          declaration.tagName === tagName && (metadata = declaration);
++        });
++      }),
++      metadata ||
++        logger.warn(`Component not found in custom-elements.json: ${tagName}`),
++      metadata
++    );
++  },
++  getMetaData = (tagName, manifest) =>
++    manifest?.version === 'experimental'
++      ? getMetaDataExperimental(tagName, manifest)
++      : getMetaDataV1(tagName, manifest),
++  extractArgTypesFromElements = (tagName, customElements) => {
++    let metaData = getMetaData(tagName, customElements);
++    return (
++      metaData && {
++        ...mapData(metaData.members ?? [], 'properties'),
++        ...mapData(metaData.properties ?? [], 'properties'),
++        ...mapData(metaData.attributes ?? [], 'attributes'),
++        ...mapData(metaData.events ?? [], 'events'),
++        ...mapData(metaData.slots ?? [], 'slots'),
++        ...mapData(metaData.cssProperties ?? [], 'css custom properties'),
++        ...mapData(metaData.cssParts ?? [], 'css shadow parts'),
++      }
++    );
++  },
++  extractArgTypes = (tagName) => {
++    let cem = getCustomElements();
++    return extractArgTypesFromElements(tagName, cem);
++  },
++  extractComponentDescription = (tagName) => {
++    let metaData = getMetaData(tagName, getCustomElements());
++    return metaData && metaData.description;
++  };
++var LIT_EXPRESSION_COMMENTS = /<!--\?lit\$[0-9]+\$-->|<!--\??-->/g;
++function skipSourceRender(context) {
++  let sourceParams = context?.parameters.docs?.source,
++    isArgsStory = context?.parameters.__isArgsStory;
++  return sourceParams?.type === SourceType.DYNAMIC
++    ? !1
++    : !isArgsStory ||
++        sourceParams?.code ||
++        sourceParams?.type === SourceType.CODE;
++}
++function sourceDecorator(storyFn, context) {
++  let story = storyFn(),
++    renderedForSource = context?.parameters.docs?.source?.excludeDecorators
++      ? context.originalStoryFn(context.args, context)
++      : story,
++    source;
++  if (
++    (useEffect(() => {
++      let {id, unmappedArgs} = context;
++      source &&
++        addons
++          .getChannel()
++          .emit(SNIPPET_RENDERED, {id, source, args: unmappedArgs});
++    }),
++    !skipSourceRender(context))
++  ) {
++    let container = window.document.createElement('div');
++    renderedForSource instanceof DocumentFragment
++      ? render(renderedForSource.cloneNode(!0), container)
++      : render(renderedForSource, container),
++      (source = container.innerHTML.replace(LIT_EXPRESSION_COMMENTS, ''));
++  }
++  return story;
++}
++var decorators = [sourceDecorator],
++  parameters = {
++    docs: {
++      extractArgTypes,
++      extractComponentDescription,
++      story: {inline: !0},
++      source: {type: SourceType.DYNAMIC, language: 'html'},
++    },
++  },
++  argTypesEnhancers = [enhanceArgTypes];
+ 
+-export { argTypesEnhancers, decorators, parameters };
++export {argTypesEnhancers, decorators, parameters};

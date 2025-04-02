@@ -1,0 +1,11 @@
+{
+  "activeViewId": "4562247f-5298-4c06-8325-e3813f369bf8",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "accfe169-1cb8-4e3d-8214-1d26f2ad6ef7",
+  "label": "Quantic Document Suggestion",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-document-suggestion",
+  "type": "route",
+  "urlPrefix": "quantic-document-suggestion"
+}

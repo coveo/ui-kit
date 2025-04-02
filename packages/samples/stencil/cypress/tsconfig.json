@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": "../node_modules",
+    "target": "es6",
+    "sourceMap": false,
+    "lib": ["esnext", "dom"],
+    "types": ["cypress"]
+  },
+  "include": ["**/*.ts", "**/*.js"]
+}

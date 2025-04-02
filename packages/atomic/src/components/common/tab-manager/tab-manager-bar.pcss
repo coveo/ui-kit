@@ -1,0 +1,23 @@
+@import '../../../global/global.pcss';
+
+:host {
+  white-space: nowrap;
+  width: 100%;
+  overflow-x: visible;
+  display: flex;
+  position: relative;
+
+  button {
+    @apply text-left;
+  }
+
+  atomic-tab-popover::part(popover-button) {
+    @apply text-xl;
+    @apply sm:px-6;
+    @apply px-2;
+    @apply pb-1;
+    @apply font-normal;
+    @apply m-0;
+    @apply text-black;
+  }
+}

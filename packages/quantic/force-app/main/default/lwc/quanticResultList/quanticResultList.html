@@ -1,0 +1,23 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:true={showPlaceholder}>
+      <c-quantic-placeholder
+        variant="resultList"
+        number-of-rows={numberOfResults}
+      ></c-quantic-placeholder>
+    </template>
+    <template for:each={results} for:item="result">
+      <c-quantic-result
+        open-preview-id={openPreviewId}
+        key={result.keyResultList}
+        result={result}
+        result-templates-manager={resultTemplatesManager}
+        engine-id={engineId}
+      ></c-quantic-result>
+    </template>
+  </template>
+</template>

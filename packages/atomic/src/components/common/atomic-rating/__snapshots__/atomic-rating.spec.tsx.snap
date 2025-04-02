@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`#computeNumberOfStars should throw an error when value is not a number 1`] = `"Could not parse "invalid" from field "rating" as a number."`;

@@ -1,0 +1,11 @@
+.tab-bar_list-container {
+  display: flex;
+}
+
+.tab-bar_dropdown {
+  max-width: 150px;
+}
+
+.slds-tabs_default__overflow-button .slds-button:focus {
+  text-decoration: none;
+}
