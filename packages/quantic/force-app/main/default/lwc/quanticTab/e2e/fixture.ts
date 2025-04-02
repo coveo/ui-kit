@@ -16,17 +16,11 @@ type QuanticTabE2EFixtures = {
   tab: TabObject;
   search: SearchObject;
   options: Partial<TabOptions>;
+  insightSetup?: InsightSetupObject;
+  urlHash?: string;
 };
 
-type QuanticTabE2ESearchFixtures = QuanticTabE2EFixtures & {
-  urlHash: string;
-};
-
-type QuanticTabE2EInsightFixtures = QuanticTabE2EFixtures & {
-  insightSetup: InsightSetupObject;
-};
-
-export const testSearch = quanticBase.extend<QuanticTabE2ESearchFixtures>({
+export const testSearch = quanticBase.extend<QuanticTabE2EFixtures>({
   options: {},
   urlHash: '',
   search: async ({page}, use) => {
@@ -41,7 +35,7 @@ export const testSearch = quanticBase.extend<QuanticTabE2ESearchFixtures>({
   },
 });
 
-export const testInsight = quanticBase.extend<QuanticTabE2EInsightFixtures>({
+export const testInsight = quanticBase.extend<QuanticTabE2EFixtures>({
   options: {},
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
@@ -52,7 +46,7 @@ export const testInsight = quanticBase.extend<QuanticTabE2EInsightFixtures>({
   tab: async ({page, options, search, configuration, insightSetup}, use) => {
     await page.goto(pageUrl);
     configuration.configure({...options, useCase: useCaseEnum.insight});
-    await insightSetup.waitForInsightInterfaceInitialization();
+    await insightSetup!.waitForInsightInterfaceInitialization();
     await search.performSearch();
     await search.waitForSearchResponse();
     await use(new TabObject(page));
