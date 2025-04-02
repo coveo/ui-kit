@@ -1,3 +1,8 @@
+## <small>2.4.15 (2025-04-02)</small>
+
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
+
 ## <small>2.4.14 (2025-03-26)</small>
 
 - chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)

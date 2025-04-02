@@ -1,3 +1,11 @@
+## 3.21.0 (2025-04-02)
+
+- chore(atomic, headless): make typescript 5 an optional peer dependency (#5126) ([17ed3a2](https://github.com/coveo/ui-kit/commits/17ed3a2)), closes [#5126](https://github.com/coveo/ui-kit/issues/5126)
+- Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- feat(headless): add method to update recent queries (#5097) ([7da4f1a](https://github.com/coveo/ui-kit/commits/7da4f1a)), closes [#5097](https://github.com/coveo/ui-kit/issues/5097)
+
 ## 3.20.0 (2025-03-26)
 
 - feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
