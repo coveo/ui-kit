@@ -17,7 +17,7 @@ import {
   initializableElements,
   initializeEventName,
 } from './initialization-lit-stencil-common-utils';
-import {closest} from './utils';
+import {closest} from './stencil-utils';
 
 declare global {
   interface Window {

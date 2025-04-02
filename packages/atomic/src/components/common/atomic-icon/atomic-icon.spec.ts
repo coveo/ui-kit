@@ -1,5 +1,5 @@
 import * as guardModule from '@/src/decorators/error-guard';
-import * as utils from '@/src/utils/utils';
+import * as utils from '@/src/utils/stencil-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';

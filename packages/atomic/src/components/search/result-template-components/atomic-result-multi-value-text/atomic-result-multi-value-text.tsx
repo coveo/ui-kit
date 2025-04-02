@@ -7,7 +7,7 @@ import {
 import {Component, Element, Prop, h, State, VNode} from '@stencil/core';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {InitializeBindings} from '../../../../utils/initialization-utils';
-import {titleToKebab} from '../../../../utils/utils';
+import {titleToKebab} from '../../../../utils/stencil-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 

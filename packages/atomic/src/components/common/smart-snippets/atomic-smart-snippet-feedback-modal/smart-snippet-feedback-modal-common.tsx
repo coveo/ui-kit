@@ -1,7 +1,7 @@
 import {SmartSnippet, SmartSnippetFeedback} from '@coveo/headless';
 import {EventEmitter, h} from '@stencil/core';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
-import {once} from '../../../../utils/utils';
+import {once} from '../../../../utils/stencil-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
