@@ -6,7 +6,7 @@ import {
   kebabToCamel,
   parseAssetURL,
   aggregate,
-} from './utils';
+} from './stencil-utils';
 
 vi.mock('@stencil/core', () => ({
   getAssetPath: vi.fn((path: string) => {
