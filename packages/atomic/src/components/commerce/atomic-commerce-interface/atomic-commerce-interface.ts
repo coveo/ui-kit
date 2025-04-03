@@ -107,7 +107,6 @@ export class AtomicCommerceInterface
     type: Boolean,
     converter: {
       fromAttribute: (value) => value !== 'false',
-      toAttribute: (value) => (value ? 'true' : 'false'),
     },
     reflect: true,
   })
@@ -116,7 +115,8 @@ export class AtomicCommerceInterface
   /**
    * The severity level of the messages to log in the console.
    */
-  @property({type: String, reflect: true}) logLevel?: LogLevel;
+  @property({type: String, attribute: 'log-level', reflect: true})
+  logLevel?: LogLevel;
 
   /**
    * the commerce interface i18next instance.
@@ -128,7 +128,8 @@ export class AtomicCommerceInterface
    *
    * Will default to the value set in the Headless engine context if not provided.
    */
-  @property({type: String, reflect: true}) language?: string;
+  @property({type: String, attribute: 'language', reflect: true})
+  language?: string;
 
   /**
    * The commerce interface headless engine.
@@ -144,7 +145,6 @@ export class AtomicCommerceInterface
     reflect: true,
     converter: {
       fromAttribute: (value) => value !== 'false',
-      toAttribute: (value) => (value ? 'true' : 'false'),
     },
   })
   reflectStateInUrl = true;
@@ -152,8 +152,8 @@ export class AtomicCommerceInterface
   /**
    * The CSS selector for the container where the interface will scroll back to.
    */
-  @property({type: String, reflect: true}) scrollContainer =
-    'atomic-commerce-interface';
+  @property({type: String, attribute: 'scroll-container', reflect: true})
+  scrollContainer = 'atomic-commerce-interface';
 
   /**
    * The language assets path. By default, this will be a relative URL pointing to `./lang`.
@@ -161,7 +161,8 @@ export class AtomicCommerceInterface
    * Example: "/mypublicpath/languages"
    *
    */
-  @property({type: String, reflect: true}) languageAssetsPath = '/lang';
+  @property({type: String, attribute: 'language-assets-path', reflect: true})
+  languageAssetsPath = '/lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -169,7 +170,8 @@ export class AtomicCommerceInterface
    * Example: "/mypublicpath/icons"
    *
    */
-  @property({type: String, reflect: true}) iconAssetsPath = '/assets';
+  @property({type: String, attribute: 'icon-assets-path', reflect: true})
+  iconAssetsPath = '/assets';
 
   private i18Initialized: Promise<void>;
 
@@ -189,12 +191,12 @@ export class AtomicCommerceInterface
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
 
-    this.host.addEventListener(
+    this.addEventListener(
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
 
-    this.host.addEventListener(
+    this.addEventListener(
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
@@ -203,15 +205,17 @@ export class AtomicCommerceInterface
 
   @watch('analytics')
   public toggleAnalytics() {
+    console.log('toggleAnalytics', this.analytics);
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
   @watch('language')
   public updateLanguage() {
-    if (!this.commonInterfaceHelper.engineIsCreated(this.engine)) {
-      return;
-    }
-    if (!this.language || !this.context) {
+    if (
+      !this.commonInterfaceHelper.engineIsCreated(this.engine) ||
+      !this.language ||
+      !this.context
+    ) {
       return;
     }
 
@@ -229,11 +233,11 @@ export class AtomicCommerceInterface
     this.unsubscribeUrlManager();
     this.unsubscribeSummary();
     window.removeEventListener('hashchange', this.onHashChange);
-    this.host.removeEventListener(
+    this.removeEventListener(
       'atomic/initializeComponent',
       this.handleInitialization as EventListener
     );
-    this.host.removeEventListener(
+    this.removeEventListener(
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
@@ -282,7 +286,7 @@ export class AtomicCommerceInterface
     if (!this.initialized) {
       console.error(
         'You have to wait until the "initialize" promise is fulfilled before executing a request.',
-        this.host
+        this
       );
       return;
     }
@@ -339,9 +343,9 @@ export class AtomicCommerceInterface
       engine: this.engine!,
       i18n: this.i18n,
       store: this.store,
-      interfaceElement: this.host as AtomicCommerceInterface,
+      interfaceElement: this as AtomicCommerceInterface,
       addAdoptedStyleSheets: (stylesheet) => {
-        const parent = this.host.getRootNode();
+        const parent = this.getRootNode();
         const styleSheet = stylesheet;
         const isDocumentOrShadowRoot =
           parent instanceof Document || parent instanceof ShadowRoot;
@@ -381,14 +385,14 @@ export class AtomicCommerceInterface
 
   private initAriaLive() {
     if (
-      Array.from(this.host.children).some(
+      Array.from(this.children).some(
         (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
       )
     ) {
       return;
     }
     const ariaLive = document.createElement('atomic-aria-live');
-    this.host.prepend(ariaLive);
+    this.prepend(ariaLive);
   }
 
   private initUrlManager() {
@@ -421,17 +425,11 @@ export class AtomicCommerceInterface
       const hasNoProductsAfterInitialQuery =
         firstRequestExecuted && !hasError && !hasProducts;
 
-      this.host.classList.toggle(
-        noProductsSelector,
-        hasNoProductsAfterInitialQuery
-      );
+      this.classList.toggle(noProductsSelector, hasNoProductsAfterInitialQuery);
 
-      this.host.classList.toggle(errorSelector, hasError);
+      this.classList.toggle(errorSelector, hasError);
 
-      this.host.classList.toggle(
-        firstSearchExecutedSelector,
-        firstRequestExecuted
-      );
+      this.classList.toggle(firstSearchExecutedSelector, firstRequestExecuted);
 
       if (firstRequestExecuted) {
         this.store.unsetLoadingFlag(FirstRequestExecutedFlag);
