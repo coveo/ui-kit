@@ -9,6 +9,10 @@ test.describe('default', () => {
     await expect(searchBox.submitButton).toBeEnabled();
   });
 
+  test('patate', async () => {
+    expect(true).toBeFalsy();
+  });
+
   test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {
     await searchBox.hydrated.waitFor();
     const accessibilityResults = await makeAxeBuilder().analyze();
