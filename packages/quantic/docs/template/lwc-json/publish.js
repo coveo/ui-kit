@@ -5,7 +5,7 @@
 'use strict';
 
 const fs = require('fs');
-const {resolve} = require('path');
+const {resolve, dirname} = require('path');
 const paramCase = require('change-case').paramCase;
 const parseString = require('xml2js').parseString;
 const dump = require('jsdoc/util/dumper').dump;
@@ -225,6 +225,7 @@ exports.publish = async function (data, opts) {
   if (opts.destination === 'console') {
     console.log(dump(root));
   } else {
+    fs.mkdirSync(dirname(opts.destination), {recursive: true});
     fs.writeFileSync(resolve(opts.destination), dump(root));
   }
 };
