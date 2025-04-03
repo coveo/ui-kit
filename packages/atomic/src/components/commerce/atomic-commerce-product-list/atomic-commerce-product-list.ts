@@ -173,48 +173,37 @@ export class AtomicCommerceProductList
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.unsubscribeSummary && this.unsubscribeSummary();
-    this.host.removeEventListener(
-      'atomic/selectChildProduct',
-      this.selectChildProductCallback
-    );
-  }
-
-  public get focusTarget() {
-    if (!this.nextNewResultTarget) {
-      this.nextNewResultTarget = new FocusTargetController(this);
+    try {
+      this.host.removeEventListener(
+        'atomic/selectChildProduct',
+        this.selectChildProductCallback
+      );
+    } catch (e) {
+      // do nothing
     }
-    return this.nextNewResultTarget;
   }
 
   @bindingGuard()
   @errorGuard()
   render() {
-    const listClasses = this.computeListDisplayClasses();
-
     return html`${when(
       this.shouldRender,
       () =>
         html`${when(
           this.templateHasError,
           () => html`<slot></slot>`,
-          () =>
-            html`${when(
+          () => {
+            const listClasses = this.computeListDisplayClasses();
+
+            return html`${when(
               this.display === 'table',
               () => this.renderTable(listClasses),
               () => this.renderGridOrList(listClasses)
-            )}`
+            )}`;
+          }
         )}}`,
       () => nothing
     )}`;
-  }
-
-  private get shouldRender() {
-    return (
-      !this.summaryState.hasError &&
-      (!this.summaryState.firstRequestExecuted ||
-        this.summaryState.hasProducts) &&
-      this.resultTemplateRegistered
-    );
   }
 
   private validateProps() {
@@ -519,6 +508,22 @@ export class AtomicCommerceProductList
       imageSize: this.imageSize,
       display: this.display,
     };
+  }
+
+  private get focusTarget() {
+    if (!this.nextNewResultTarget) {
+      this.nextNewResultTarget = new FocusTargetController(this);
+    }
+    return this.nextNewResultTarget;
+  }
+
+  private get shouldRender() {
+    return (
+      !this.summaryState.hasError &&
+      (!this.summaryState.firstRequestExecuted ||
+        this.summaryState.hasProducts) &&
+      this.resultTemplateRegistered
+    );
   }
 }
 
