@@ -1,3 +1,10 @@
+## <small>3.16.4 (2025-04-03)</small>
+
+- chore(quantic): disable debug on jsdoc (#5134) ([6a3e2f5](https://github.com/coveo/ui-kit/commits/6a3e2f5)), closes [#5134](https://github.com/coveo/ui-kit/issues/5134)
+- chore(quantic): ensure directory exist when writing doc (#5136) ([a06dcac](https://github.com/coveo/ui-kit/commits/a06dcac)), closes [#5136](https://github.com/coveo/ui-kit/issues/5136)
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
 ## <small>3.16.3 (2025-04-03)</small>
 
 - test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
