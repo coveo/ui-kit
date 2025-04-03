@@ -225,7 +225,7 @@ exports.publish = async function (data, opts) {
   if (opts.destination === 'console') {
     console.log(dump(root));
   } else {
-    fs.mkdirSync(dirname(opts.destination), {recursive: true});
+    fs.mkdirSync(resolve(dirname(opts.destination)), {recursive: true});
     fs.writeFileSync(resolve(opts.destination), dump(root));
   }
 };
