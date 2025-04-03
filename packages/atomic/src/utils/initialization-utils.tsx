@@ -19,12 +19,6 @@ import {
 } from './initialization-lit-stencil-common-utils';
 import {closest} from './stencil-utils';
 
-declare global {
-  interface Window {
-    applyFocusVisiblePolyfill?: (shadowRoot: ShadowRoot) => void;
-  }
-}
-
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 /**
@@ -79,27 +73,6 @@ export interface InitializableComponent<
    */
   initialize?: () => void;
   error: Error;
-}
-
-/**
- * Makes Shadow Dom elements compatible with the focus-visible polyfill https://github.com/WICG/focus-visible
- * Necessary for Safari under version 15.4.
- */
-export function applyFocusVisiblePolyfill(element: HTMLElement) {
-  if (!element.shadowRoot) {
-    return;
-  }
-
-  if (window.applyFocusVisiblePolyfill) {
-    window.applyFocusVisiblePolyfill(element.shadowRoot);
-    return;
-  }
-
-  window.addEventListener(
-    'focus-visible-polyfill-ready',
-    () => window.applyFocusVisiblePolyfill?.(element.shadowRoot!),
-    {once: true}
-  );
 }
 
 type InitializeBindingsProps = {
@@ -229,7 +202,6 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       componentDidRender && componentDidRender.call(this);
       if (element.getAttribute(loadedAttribute) === 'false') {
         element.setAttribute(loadedAttribute, 'true');
-        applyFocusVisiblePolyfill(getElement(this));
         componentDidLoad && componentDidLoad.call(this);
       }
     };

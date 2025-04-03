@@ -1,7 +1,6 @@
 import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
@@ -210,7 +209,6 @@ export class AtomicResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    applyFocusVisiblePolyfill(this.host);
     this.host.classList.add('hydrated');
   }
 
