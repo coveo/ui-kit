@@ -7,6 +7,7 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
+import {buildCommerceEngine} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
@@ -83,7 +84,24 @@ describe('AtomicCommerceInterface', () => {
     );
   });
 
-  describe('when initialized', () => {
+  describe('before being initialized', () => {
+    test('should log an error when calling "executeFirstRequest"', async () => {
+      const errorMessage =
+        'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
+      await element.executeFirstRequest();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element.host);
+    });
+
+    test('should return error when changing a property too early', async () => {
+      const errorMessage =
+        'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
+      element.language = 'fr';
+      await element.updateComplete;
+      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element.host);
+    });
+  });
+
+  describe('when initialized with engine configuration', () => {
     beforeEach(async () => {
       await element.initialize(commerceEngineConfig);
       await addChildElement();
@@ -114,6 +132,45 @@ describe('AtomicCommerceInterface', () => {
       element.iconAssetsPath = '/new-assets';
       await element.updateComplete;
       expect(element.store.state.iconAssetsPath).toBe('/new-assets');
+    });
+  });
+
+  describe('when initialized with existing engine', () => {
+    let preconfiguredEngine: ReturnType<typeof buildCommerceEngine>;
+
+    beforeEach(() => {
+      preconfiguredEngine = buildCommerceEngine({
+        configuration: getSampleCommerceEngineConfiguration(),
+      });
+    });
+
+    test('should render the component and its children', async () => {
+      await addChildElement();
+      await element.initializeWithEngine(preconfiguredEngine);
+      expect(element.shadowRoot).toBeTruthy();
+      expect(
+        within(element).queryByShadowText('Child Element Content')
+      ).toBeTruthy();
+    });
+
+    test('should initialize with a preconfigured engine', async () => {
+      await element.initializeWithEngine(preconfiguredEngine);
+      expect(element.engine).toBe(preconfiguredEngine);
+    });
+
+    test('should allow executing the first request after initialization', async () => {
+      await element.initializeWithEngine(preconfiguredEngine);
+      await element.executeFirstRequest();
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    test('should update language when language property changes after initialization', async () => {
+      await element.initializeWithEngine(preconfiguredEngine);
+      element.language = 'fr';
+      await element.updateComplete;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const context = (element as any).context;
+      expect(context.state.language).toBe('fr');
     });
   });
 });
