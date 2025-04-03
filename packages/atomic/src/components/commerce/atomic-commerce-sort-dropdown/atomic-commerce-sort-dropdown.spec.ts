@@ -7,11 +7,35 @@ import {expect, vi} from 'vitest';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
-vi.mock('@coveo/headless/commerce', () => {
+const mocks = vi.hoisted(() => {
   return {
-    buildProductListing: vi.fn(() => ({
+    // controller states
+    searchOrListingState: {
+      responseId: 'some-id',
+      products: [{}],
+      isLoading: false,
+      error: null,
+    },
+    sortState: {
+      availableSorts: [
+        {by: 'fields', fields: [{name: 'foo'}]},
+        {by: 'fields', fields: [{name: 'bar'}]},
+      ],
+    },
+    // controllers
+    sort: {
+      isSortedBy: vi.fn(),
+      sortBy: vi.fn(),
+    },
+    searchOrListing: vi.fn(() => ({
       sort: vi.fn(),
     })),
+  };
+});
+
+vi.mock('@coveo/headless/commerce', () => {
+  return {
+    buildProductListing: mocks.searchOrListing,
     buildSearch: vi.fn(),
   };
 });
@@ -33,38 +57,16 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
           } as HTMLAtomicCommerceInterfaceElement,
         };
 
-        this.searchOrListing = vi.fn();
-
-        this.sort = {
-          isSortedBy: vi.fn(),
-          sortBy: vi.fn(),
-        };
+        this.searchOrListing = mocks.searchOrListing;
+        this.sort = mocks.sort;
 
         createTestI18n().then((i18n) => {
-          // TODO: validate this
           this.bindings = {...baseBindings, i18n};
         });
       }
     };
   }),
 }));
-
-const mocks = vi.hoisted(() => {
-  return {
-    searchOrListingState: {
-      responseId: 'some-id',
-      products: [{}],
-      isLoading: false,
-      error: null,
-    },
-    sortState: {
-      availableSorts: [
-        {by: 'fields', fields: [{name: 'foo'}]},
-        {by: 'fields', fields: [{name: 'bar'}]},
-      ],
-    },
-  };
-});
 
 vi.mock('@/src/decorators/bind-state', async () => {
   return {
@@ -126,7 +128,7 @@ describe('AtomicCommerceSortDropdown', () => {
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
-  it.skip('renders nothing when there are no products', async () => {
+  it('renders nothing when there are no products', async () => {
     mocks.searchOrListingState.products = [];
     await setupElement();
 
@@ -134,7 +136,7 @@ describe('AtomicCommerceSortDropdown', () => {
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
-  it.skip('renders nothing when there are no available sorts', async () => {
+  it('renders nothing when there are no available sorts', async () => {
     mocks.sortState.availableSorts = [];
     await setupElement();
 
@@ -142,7 +144,7 @@ describe('AtomicCommerceSortDropdown', () => {
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
-  it.skip('renders placeholder when responseId is undefined', async () => {
+  it('renders placeholder when responseId is undefined', async () => {
     mocks.searchOrListingState.responseId = '';
     const element = await setupElement();
 
