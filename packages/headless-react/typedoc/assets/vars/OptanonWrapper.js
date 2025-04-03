@@ -14,7 +14,10 @@ function OptanonWrapper() {
       darkModeToggleSelector.style.display = 'none';
     }
 
-    window.TypeDoc.disableWritingLocalStorage();
+    waitForTypeDoc().then(() => {
+      window.TypeDoc.disableWritingLocalStorage();
+    });
+
     const itemsToDelete = [
       'tsd-theme',
       'filter-protected',
@@ -34,7 +37,9 @@ function OptanonWrapper() {
 
     accordionItemsToDelete.forEach((item) => localStorage.removeItem(item));
   } else {
-    window.TypeDoc.enableLocalStorage();
+    waitForTypeDoc().then(() => {
+      window.TypeDoc.enableLocalStorage();
+    });
 
     // Enable the 'dark-mode-toggle' Theme Selector
     const darkModeToggleSelector = document.querySelector('dark-mode-toggle');
@@ -42,6 +47,18 @@ function OptanonWrapper() {
       darkModeToggleSelector.style.display = 'block';
     }
   }
+}
+
+function waitForTypeDoc(callback) {
+  return new Promise((resolve) => {
+    if (window.TypeDoc) {
+      resolve();
+    } else {
+      setTimeout(() => {
+        waitForTypeDoc(callback).then(resolve);
+      }, 100);
+    }
+  });
 }
 
 OptanonWrapper();
