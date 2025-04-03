@@ -5,8 +5,23 @@
     "release:phase1": {},
     "release:phase3": {},
     "build": {
-      "executor": "nx:noop",
-      "dependsOn": ["build:headless", "build:doc"]
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/docs/out",
+        "{projectRoot}/force-app/main/default/staticresources/coveobueno",
+        "{projectRoot}/force-app/main/default/staticresources/coveoheadless",
+        "{projectRoot}/force-app/main/default/staticresources/dompurify",
+        "{projectRoot}/force-app/main/default/staticresources/marked"
+      ],
+      "cache": true,
+      "options": {
+        "commands": [
+          "npm run babel:headless && npm run build:staticresources",
+          "npm run build:doc"
+        ],
+        "parallel": true,
+        "cwd": "{projectRoot}"
+      }
     },
     "promote:sfdx": {
       "dependsOn": ["build"],
@@ -24,37 +39,6 @@
       "executor": "nx:run-script",
       "options": {
         "script": "promote:sfdx:ci"
-      }
-    },
-    "build:doc": {
-      "executor": "nx:run-commands",
-      "dependsOn": ["^build"],
-      "outputs": ["{projectRoot}/docs/out/quantic-docs.json"],
-      "cache": true,
-      "options": {
-        "cwd": "{projectRoot}",
-        "commands": ["jsdoc -c jsdoc-config.json"],
-        "env": {
-          "DEBUG": ""
-        }
-      }
-    },
-    "build:headless": {
-      "executor": "nx:run-commands",
-      "outputs": [
-        "{projectRoot}/force-app/main/default/staticresources/coveobueno",
-        "{projectRoot}/force-app/main/default/staticresources/coveoheadless",
-        "{projectRoot}/force-app/main/default/staticresources/dompurify",
-        "{projectRoot}/force-app/main/default/staticresources/marked"
-      ],
-      "dependsOn": ["^build"],
-      "cache": true,
-      "options": {
-        "cwd": "{projectRoot}",
-        "commands": ["npm run babel:headless && npm run build:staticresources"]
-      },
-      "env": {
-        "DEBUG": ""
       }
     }
   }
