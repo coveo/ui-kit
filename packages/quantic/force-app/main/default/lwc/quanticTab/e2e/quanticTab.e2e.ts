@@ -13,13 +13,7 @@ const expectedActionCause = 'interfaceChange';
 const exampleTabs = ['All', 'Case', 'Knowledge'];
 
 useCaseTestCases.forEach((useCase) => {
-  let test;
-  if (useCase.value === useCaseEnum.search) {
-    test = fixtures[useCase.value] as typeof testSearch;
-  } else {
-    test = fixtures[useCase.value] as typeof testInsight;
-  }
-
+  let test = fixtures[useCase.value];
   test.describe(`quantic tab ${useCase.label}`, () => {
     test.describe('when clicking on a tab', () => {
       test('should trigger a new search and send the correct UA analytics event', async ({
@@ -36,9 +30,10 @@ useCaseTestCases.forEach((useCase) => {
         const searchResponse = await searchResponsePromise;
         await uaRequestPromise;
 
-        const actionCause =
-          tab.extractActionCauseFromSearchResponse(searchResponse);
-        expect(actionCause).toEqual(expectedActionCause);
+        const {analytics, tab: tabValue} =
+          tab.extractDataFromSearchResponse(searchResponse);
+        expect(analytics.actionCause).toEqual(expectedActionCause);
+        expect(tabValue).toEqual(exampleTabs[selectedTabIndex]);
       });
     });
 

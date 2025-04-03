@@ -10,7 +10,7 @@ export class TabObject {
     return this.page.locator('c-quantic-tab');
   }
 
-  tabButton(tabLabel): Locator {
+  tabButton(tabLabel: string): Locator {
     return this.tab.getByRole('button', {name: new RegExp(`^${tabLabel}$`)});
   }
 
@@ -23,7 +23,7 @@ export class TabObject {
   }
 
   async waitForTabSearchUaAnalytics(
-    actionCause,
+    actionCause: string,
     customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
@@ -31,7 +31,7 @@ export class TabObject {
         const requestBody = request.postDataJSON?.();
         const {customData} = requestBody;
 
-        const expectedFields = {
+        const expectedFields: Record<string, any> = {
           actionCause: actionCause,
           originContext: 'Search',
         };
@@ -49,10 +49,12 @@ export class TabObject {
     return uaRequest;
   }
 
-  async waitForTabSelectUaAnalytics(expectedFields: object): Promise<Request> {
+  async waitForTabSelectUaAnalytics(
+    expectedFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForTabSearchUaAnalytics(
       'interfaceChange',
-      (customData: object) => {
+      (customData: Record<string, any>) => {
         return Object.keys(expectedFields).every(
           (key) => customData?.[key] === expectedFields[key]
         );
@@ -60,8 +62,7 @@ export class TabObject {
     );
   }
 
-  extractActionCauseFromSearchResponse(response: Response) {
-    const {analytics} = response.request().postDataJSON();
-    return analytics.actionCause;
+  extractDataFromSearchResponse(response: Response) {
+    return response.request().postDataJSON();
   }
 }
