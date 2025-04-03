@@ -1,3 +1,7 @@
+## <small>3.16.3 (2025-04-03)</small>
+
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
 ## <small>3.16.2 (2025-04-02)</small>
 
 - test(quantic): quantic placeholder cypress to jest tests (#5104) ([1bddb93](https://github.com/coveo/ui-kit/commits/1bddb93)), closes [#5104](https://github.com/coveo/ui-kit/issues/5104)
