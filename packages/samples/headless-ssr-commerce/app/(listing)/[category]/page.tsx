@@ -38,19 +38,19 @@ export default async function Listing({
   params,
   searchParams,
 }: {
-  params: {category: string};
+  params: Promise<{category: string}>;
   searchParams: Promise<URLSearchParams>;
 }) {
-  const {category} = params;
+  const {category} = await params;
 
-  const matchedCategory = categoryList.find((c) => c === category);
+  const isCategoryMatched = categoryList.includes(category);
 
-  if (!matchedCategory) {
+  if (!isCategoryMatched) {
     notFound();
   }
 
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsNavigatorContext(await headers());
   listingEngineDefinition.setNavigatorContextProvider(() => navigatorContext);
 
   const {deserialize} = buildParameterSerializer();
@@ -68,7 +68,7 @@ export default async function Listing({
         country: defaultContext.country,
         currency: defaultContext.currency,
         view: {
-          url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+          url: `https://sports.barca.group/browse/promotions/${category}`,
         },
       },
       parameterManager: {initialState: {parameters}},
@@ -86,7 +86,7 @@ export default async function Listing({
           country: defaultContext.country,
           currency: defaultContext.currency,
           view: {
-            url: `https://sports.barca.group/browse/promotions/${matchedCategory}`,
+            url: `https://sports.barca.group/browse/promotions/${category}`,
           },
         },
       },
