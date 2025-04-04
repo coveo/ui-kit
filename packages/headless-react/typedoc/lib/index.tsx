@@ -45,6 +45,17 @@ export function load(app: Application) {
         type="module"
         src={event.relativeURL('assets/vars/onetrust.js')}
       ></script>
+      <script>
+        <JSX.Raw html={`(${formatTypeDocToolbar.toString()})();`} />
+      </script>
+      <script>
+        <JSX.Raw
+          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}');`}
+        />
+      </script>
+      <script>
+        <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
+      </script>
       <script
         type="text/javascript"
         src={event.relativeURL('assets/vars/OptanonWrapper.js')}
@@ -87,17 +98,6 @@ export function load(app: Application) {
         type="module"
         src={event.relativeURL('assets/vars/dark-mode.js')}
       ></script>
-      <script>
-        <JSX.Raw html={`(${formatTypeDocToolbar.toString()})();`} />
-      </script>
-      <script>
-        <JSX.Raw
-          html={`(${insertSiteHeaderBar.toString()})('${event.relativeURL('assets')}');`}
-        />
-      </script>
-      <script>
-        <JSX.Raw html={`(${insertAtomicSearchBox.toString()})();`} />
-      </script>
     </>
   ));
 

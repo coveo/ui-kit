@@ -14,6 +14,9 @@ function OptanonWrapper() {
       darkModeToggleSelector.style.display = 'none';
     }
 
+    // Disable analytics on the atomic-search-interface if it's rendered
+    setAtomicSearchInterfaceAnalytics('false');
+
     waitForTypeDoc().then(() => {
       window.TypeDoc.disableWritingLocalStorage();
     });
@@ -46,6 +49,9 @@ function OptanonWrapper() {
     if (darkModeToggleSelector) {
       darkModeToggleSelector.style.display = 'block';
     }
+
+    // Enable analytics on the atomic-search-interface if it's rendered
+    setAtomicSearchInterfaceAnalytics('true');
   }
 }
 
@@ -59,6 +65,18 @@ function waitForTypeDoc(callback) {
       }, 100);
     }
   });
+}
+
+function setAtomicSearchInterfaceAnalytics(val) {
+  const atomicSearchInterface = document.querySelector(
+    'atomic-search-interface'
+  );
+  if (atomicSearchInterface) {
+    atomicSearchInterface.setAttribute('analytics', val);
+  }
+  if (val === 'false') {
+    localStorage.removeItem('visitorId');
+  }
 }
 
 OptanonWrapper();
