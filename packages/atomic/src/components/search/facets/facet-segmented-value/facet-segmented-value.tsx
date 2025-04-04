@@ -14,6 +14,7 @@ export const FacetSegmentedValue: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: count,
   });
 
   return (

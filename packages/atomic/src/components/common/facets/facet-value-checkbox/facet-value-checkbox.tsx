@@ -19,6 +19,7 @@ export const FacetValueCheckbox: FunctionalComponent<
   const ariaLabelAttributes = {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: count,
     interpolation: {escapeValue: false},
   };
   const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);

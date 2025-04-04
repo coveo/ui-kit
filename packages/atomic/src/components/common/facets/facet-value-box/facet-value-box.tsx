@@ -15,6 +15,7 @@ export const FacetValueBox: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: compactCount,
   });
 
   return (
