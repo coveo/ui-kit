@@ -31,7 +31,6 @@ export const renderSortSelect = ({
         part="select-separator"
         class="border-neutral pointer-events-none absolute top-px right-0 bottom-px flex w-10 items-center justify-center border-l"
       >
-        <!-- TODO: check bottom-px class -->
         <atomic-icon class="w-3" icon=${ArrowBottomIcon}></atomic-icon>
       </div>
     </div>
