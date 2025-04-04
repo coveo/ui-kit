@@ -1,6 +1,8 @@
 @import 'tailwindcss/theme' theme(reference);
 @import '../coveo.tw.css' theme(reference);
 
+@layer theme, base, components, utilities;
+
 @layer components {
   .input-primary {
     @apply border-neutral bg-background hover:border-primary-light focus-visible:border-primary focus-visible:ring-ring-primary rounded border focus-visible:ring-2 focus-visible:outline-none;

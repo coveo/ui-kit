@@ -25,6 +25,5 @@ export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
   };
   return button({
     props: buttonProps,
-    children: html`${i18n.t(label)}`,
-  });
+  })(html`${i18n.t(label)}`);
 };

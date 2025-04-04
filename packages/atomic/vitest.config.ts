@@ -49,12 +49,17 @@ export default defineConfig({
     ],
     setupFiles: ['./vitest-utils/setup.ts'],
     globals: true,
+    deps: {
+      moduleDirectories: ['node_modules', path.resolve('../../packages')],
+    },
     browser: {
-      enabled: true,
-      name: 'chromium',
       provider: 'playwright',
-      // https://playwright.dev
-      providerOptions: {},
+      enabled: true,
+      instances: [
+        {
+          browser: 'chromium',
+        },
+      ],
     },
   },
 });

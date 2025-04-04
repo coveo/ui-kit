@@ -26,7 +26,7 @@ import {
   convertChoicesToNumbers,
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
-import {PagerGuard} from '../../common/pager/pager-guard';
+import {PagerGuard} from '../../common/pager/stencil-pager-guard';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
