@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "3.16.2",
+  "version": "3.16.4",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -37,7 +37,6 @@
     "create:lws-disabled": "../../node_modules/.bin/ts-node scripts/build/deploy-community.ts --scratch-org-def-path=./config/lws-disabled-scratch-def.json",
     "deploy:main": "sf project deploy start --source-dir force-app/main --target-org",
     "deploy:examples": "sf project deploy start --source-dir force-app/examples --target-org",
-    "prebuild:doc": "mkdirp docs/out",
     "build:doc": "jsdoc -c jsdoc-config.json",
     "publish:sfdx": "../../node_modules/.bin/ts-node scripts/build/create-package.ts --remove-translations",
     "promote:sfdx": "npm run publish:sfdx -- --promote",

@@ -1,3 +1,7 @@
+## <small>3.2.30 (2025-04-03)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+
 ## <small>3.2.27 (2025-04-02)</small>
 
 - chore(atomic): add component error custom element (#5043) ([de7b876](https://github.com/coveo/ui-kit/commits/de7b876)), closes [#5043](https://github.com/coveo/ui-kit/issues/5043)
