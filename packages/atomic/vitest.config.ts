@@ -15,11 +15,10 @@ function svgTransform(code, id) {
   return code.replace(
     /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
     (_, importName, importPath) => {
-      const svgContent = readFileSync(
-        resolve(dirname(id), importPath),
-        'utf8'
-      ).replace(/'/g, "\\'");
-      return `const ${importName} = '${svgContent}';`;
+      const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
+        .replace(/'/g, "\\'")
+        .replace(/\n/g, '');
+      return `const ${importName} = '${svgContent}'`;
     }
   );
 }
