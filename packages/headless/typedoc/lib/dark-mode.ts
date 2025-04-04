@@ -36,13 +36,15 @@ class DarkMode {
   }
 
   private _updateExternalLinkIcons() {
+    const baseUrl = `${window.location.origin}/assets/icons/header/`;
     const links = document.querySelectorAll('.external-link-icon');
+
     const imgName =
       this._colorScheme && this._colorScheme.content === 'dark'
         ? 'external-action-4.svg'
         : 'external-action-6.svg';
     links.forEach((link) => {
-      link.setAttribute('src', `assets/icons/header/${imgName}`);
+      link.setAttribute('src', `${baseUrl}${imgName}`);
     });
   }
 }

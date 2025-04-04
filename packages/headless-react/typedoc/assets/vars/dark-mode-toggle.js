@@ -16,8 +16,6 @@
  */
 // @license © 2019 Google LLC. Licensed under the Apache License, Version 2.0.
 /* eslint-env browser */
-import {onetrustPreferencesGroup} from './onetrust.js';
-
 const doc = document;
 const store = localStorage;
 const PREFERS_COLOR_SCHEME = 'prefers-color-scheme';
@@ -83,6 +81,15 @@ export class DarkModeToggle extends HTMLElement {
     return [MODE, APPEARANCE, PERMANENT, LEGEND, LIGHT, DARK, REMEMBER];
   }
 
+  get areFunctionalCookiesEnabled() {
+    return document.cookie
+      .split('; ')
+      .some(
+        (cookie) =>
+          cookie.startsWith('OptanonConsent') && cookie.includes('C0003%3A1')
+      );
+  }
+
   constructor() {
     super();
 
@@ -113,7 +120,6 @@ export class DarkModeToggle extends HTMLElement {
   }
 
   _initializeDOM() {
-    window.OptanonActiveGroups = store.getItem(onetrustPreferencesGroup);
     const shadowRoot = this.attachShadow({mode: 'open'});
     shadowRoot.appendChild(template.content.cloneNode(true));
 
@@ -153,10 +159,9 @@ export class DarkModeToggle extends HTMLElement {
     // native value (if supported), and eventually defaulting to a light
     // experience.
 
-    const rememberedValue =
-      window.OptanonActiveGroups && window.OptanonActiveGroups.includes('C0003')
-        ? store.getItem(NAME)
-        : '';
+    const rememberedValue = this.areFunctionalCookiesEnabled
+      ? store.getItem(NAME)
+      : '';
     if (rememberedValue && [DARK, LIGHT].includes(rememberedValue)) {
       this.mode = rememberedValue;
       this._permanentCheckbox.checked = true;
@@ -170,8 +175,7 @@ export class DarkModeToggle extends HTMLElement {
     if (
       this.permanent &&
       !rememberedValue &&
-      window.OptanonActiveGroups &&
-      window.OptanonActiveGroups.includes('C0003')
+      this.areFunctionalCookiesEnabled
     ) {
       store.setItem(NAME, this.mode);
     }
@@ -230,11 +234,7 @@ export class DarkModeToggle extends HTMLElement {
       if (matchMedia('(hover:none)').matches && this.remember) {
         this._showPermanentAside();
       }
-      if (
-        this.permanent &&
-        window.OptanonActiveGroups &&
-        window.OptanonActiveGroups.includes('C0003')
-      ) {
+      if (this.permanent && this.areFunctionalCookiesEnabled) {
         store.setItem(NAME, this.mode);
       }
       this._updateRadios();
@@ -246,11 +246,7 @@ export class DarkModeToggle extends HTMLElement {
       }
       this._updateAppearance();
     } else if (name === PERMANENT) {
-      if (
-        this.permanent &&
-        window.OptanonActiveGroups &&
-        window.OptanonActiveGroups.includes('C0003')
-      ) {
+      if (this.permanent && this.areFunctionalCookiesEnabled) {
         store.setItem(NAME, this.mode);
       } else {
         store.removeItem(NAME);
@@ -337,6 +333,8 @@ export class DarkModeToggle extends HTMLElement {
         link.media = NOT_ALL;
         link.disabled = true;
       });
+
+      document.documentElement.setAttribute('data-theme', LIGHT);
     } else {
       this._darkCSS.forEach((link) => {
         link.media = ALL;
@@ -346,6 +344,8 @@ export class DarkModeToggle extends HTMLElement {
         link.media = NOT_ALL;
         link.disabled = true;
       });
+
+      document.documentElement.setAttribute('data-theme', DARK);
     }
   }
 
