@@ -4,6 +4,7 @@ import {
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
 import {html, TemplateResult} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
@@ -83,7 +84,9 @@ export const DisplayTable: FunctionalComponentWithChildren<
         <tr part="result-table-heading-row">
           ${map(fieldColumns, (column) => {
             return html`<th part="result-table-heading-cell">
-              <atomic-text value=${column.getAttribute('label')!}></atomic-text>
+              <atomic-text
+                .value=${column.getAttribute('label')!}
+              ></atomic-text>
             </th>`;
           })}
         </tr>
@@ -100,14 +103,16 @@ export const DisplayTableRow: FunctionalComponentWithChildren<
   const {key, rowIndex, setRef} = props;
 
   return (children: TemplateResult) =>
-    html`<tr
-      key=${key}
-      part="result-table-row ${rowIndex % 2 ===
-      1} ? 'result-table-row-even' : 'result-table-row-odd'"
-      ${ref((element?: Element) => setRef(element))}
-    >
-      ${children}
-    </tr>`;
+    html`${keyed(
+      key,
+      html`<tr
+        part="result-table-row ${rowIndex % 2 ===
+        1} ? 'result-table-row-even' : 'result-table-row-odd'"
+        ${ref((element?: Element) => setRef(element))}
+      >
+        ${children}
+      </tr>`
+    )}`;
 };
 
 export const DisplayTableData: FunctionalComponent<
@@ -121,11 +126,9 @@ export const DisplayTableData: FunctionalComponent<
   return html`${map(
     fieldColumns,
     (column) =>
-      html`<td
-        key=${`${column.getAttribute('label')!}${props.key}`}
-        part="result-table-cell"
-      >
-        ${renderItem(column)}
-      </td>`
+      html`${keyed(
+        `${column.getAttribute('label')!}${props.key}`,
+        html`<td part="result-table-cell">${renderItem(column)}</td>`
+      )}`
   )}`;
 };
