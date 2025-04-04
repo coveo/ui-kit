@@ -36,7 +36,7 @@ const mocks = vi.hoisted(() => {
 vi.mock('@coveo/headless/commerce', () => {
   return {
     buildProductListing: mocks.searchOrListing,
-    buildSearch: vi.fn(),
+    buildSearch: mocks.searchOrListing,
   };
 });
 
