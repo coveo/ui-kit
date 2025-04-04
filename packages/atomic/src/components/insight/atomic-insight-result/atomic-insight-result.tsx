@@ -4,7 +4,6 @@ import {
   FoldedResult as InsightFoldedResult,
 } from '@coveo/headless/insight';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   InteractiveItemContextEvent,
@@ -146,6 +145,5 @@ export class AtomicInsightResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    applyFocusVisiblePolyfill(this.host);
   }
 }

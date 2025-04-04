@@ -4,7 +4,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildCommerceLayout} from './commerce-layout';
 

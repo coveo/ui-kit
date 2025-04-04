@@ -1,4 +1,5 @@
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
+import {buildFetchProductListingResponse} from '../../../test/mock-product-listing.js';
 import {buildMockExecuteTrigger} from '../../../test/mock-trigger-execute.js';
 import {buildMockNotifyTrigger} from '../../../test/mock-trigger-notify.js';
 import {buildMockQueryTrigger} from '../../../test/mock-trigger-query.js';
@@ -13,6 +14,7 @@ import {
   TriggerState,
   getTriggerInitialState,
 } from '../../triggers/triggers-state.js';
+import {fetchProductListing} from '../product-listing/product-listing-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
@@ -56,6 +58,35 @@ describe('commerce triggers slice', () => {
       buildMockRedirectTrigger(),
     ];
     const action = executeSearch.fulfilled(searchResponse, '');
+    expectedState = handleFetchItemsFulfilled(
+      initialStateCopy,
+      action.payload.response.triggers
+    );
+    finalState = commerceTriggersReducer(initialState, action);
+
+    expect(finalState).toEqual(expectedState);
+  });
+
+  it('on #fetchProductListing.pending, updates state using #handleFetchItemsPending', () => {
+    expectedState = handleFetchItemsPending(initialStateCopy);
+    const action = fetchProductListing.pending('');
+    finalState = commerceTriggersReducer(initialState, action);
+
+    expect(finalState).toEqual(expectedState);
+  });
+
+  it('on #fetchProductListing.fulfilled, updates state using #handleFetchItemsFulfilled', () => {
+    const fetchProductListingResponse = buildFetchProductListingResponse();
+    fetchProductListingResponse.response.triggers = [
+      buildMockQueryTrigger(),
+      buildMockNotifyTrigger(),
+      buildMockExecuteTrigger(),
+      buildMockRedirectTrigger(),
+    ];
+    const action = fetchProductListing.fulfilled(
+      fetchProductListingResponse,
+      ''
+    );
     expectedState = handleFetchItemsFulfilled(
       initialStateCopy,
       action.payload.response.triggers

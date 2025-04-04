@@ -1,3 +1,18 @@
+## <small>3.22.3 (2025-04-03)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- chore(atomic): remove focus-visible polyfill (#5118) ([66a809a](https://github.com/coveo/ui-kit/commits/66a809a)), closes [#5118](https://github.com/coveo/ui-kit/issues/5118) [/github.com/coveo/ui-kit/pull/5017#discussion_r2017881924](https://github.com//github.com/coveo/ui-kit/pull/5017/issues/discussion_r2017881924)
+- fix(atomic-icon): split resourceURL logic for lit (#5131) ([e701eb9](https://github.com/coveo/ui-kit/commits/e701eb9)), closes [#5131](https://github.com/coveo/ui-kit/issues/5131)
+
+## <small>3.22.2 (2025-04-03)</small>
+
+- chore(atomic): remove focus-visible polyfill (#5118) ([66a809a](https://github.com/coveo/ui-kit/commits/66a809a)), closes [#5118](https://github.com/coveo/ui-kit/issues/5118) [/github.com/coveo/ui-kit/pull/5017#discussion_r2017881924](https://github.com//github.com/coveo/ui-kit/pull/5017/issues/discussion_r2017881924)
+- fix(atomic-icon): split resourceURL logic for lit (#5131) ([e701eb9](https://github.com/coveo/ui-kit/commits/e701eb9)), closes [#5131](https://github.com/coveo/ui-kit/issues/5131)
+
+## <small>3.22.1 (2025-04-02)</small>
+
+- chore: move vendor directory (#5128) ([d6c39dd](https://github.com/coveo/ui-kit/commits/d6c39dd)), closes [#5128](https://github.com/coveo/ui-kit/issues/5128)
+
 ## 3.22.0 (2025-04-02)
 
 - chore(atomic): add ChildrenUpdateCompleteMixin mixin (#5110) ([ea24ea5](https://github.com/coveo/ui-kit/commits/ea24ea5)), closes [#5110](https://github.com/coveo/ui-kit/issues/5110)

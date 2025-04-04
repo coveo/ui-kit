@@ -51,8 +51,8 @@ describe('AtomicIcon', () => {
 
   beforeAll(() => {
     fetchMock = vi.spyOn(window, 'fetch');
-    parseAssetURLMock = vi.spyOn(utils, 'parseAssetURL');
-    errorGuardMock = vi.spyOn(guardModule, 'errorGuard');
+    parseAssetURLMock = vi.mocked(utils.parseAssetURL);
+    errorGuardMock = vi.mocked(guardModule.errorGuard);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
 

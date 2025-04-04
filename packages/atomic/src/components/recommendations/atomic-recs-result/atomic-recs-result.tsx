@@ -4,7 +4,6 @@ import {
 } from '@coveo/headless/recommendation';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   InteractiveItemContextEvent,
   ItemContextEvent,
@@ -209,7 +208,6 @@ export class AtomicRecsResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    applyFocusVisiblePolyfill(this.host);
   }
 
   public componentDidRender() {

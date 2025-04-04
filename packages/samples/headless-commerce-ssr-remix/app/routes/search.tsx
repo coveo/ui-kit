@@ -6,19 +6,19 @@ import ProductList from '@/app/components/product-list';
 import ShowMore from '@/app/components/show-more';
 import Sort from '@/app/components/sort';
 import Summary from '@/app/components/summary';
-import Triggers from '@/app/components/triggers/triggers';
+import NotifyTrigger from '../components/triggers/notify-trigger';
 
 export default function SearchRoute() {
   return (
     <>
       <h2>Search</h2>
+      <NotifyTrigger />
       <ContextDropdown useCase="search" />
       <div style={{display: 'flex', flexDirection: 'row'}}>
         <div style={{flex: 1}}>
           <FacetGenerator />
         </div>
         <div style={{flex: 2}}>
-          <Triggers />
           <DidYouMean />
           <BreadcrumbManager />
           <Summary />

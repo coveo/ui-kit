@@ -8,7 +8,8 @@ import {SearchProvider} from '@/components/providers/providers';
 import SearchBox from '@/components/search-box';
 import ShowMore from '@/components/show-more';
 import Summary from '@/components/summary';
-import Triggers from '@/components/triggers/triggers';
+import NotifyTrigger from '@/components/triggers/notify-trigger';
+import QueryTrigger from '@/components/triggers/query-trigger';
 import {searchEngineDefinition} from '@/lib/commerce-engine';
 import {NextJsNavigatorContext} from '@/lib/navigatorContextProvider';
 import {defaultContext} from '@/utils/context';
@@ -47,31 +48,36 @@ export default async function Search({
   });
 
   return (
-    <SearchProvider
-      staticState={staticState}
-      navigatorContext={navigatorContext.marshal}
-    >
-      <ParameterManager url={navigatorContext.location} />
-      <ContextDropdown useCase="search" />
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div style={{flex: 1}}>
-          <FacetGenerator />
-        </div>
-        <div style={{flex: 2}}>
-          <Triggers />
-          <SearchBox />
-          <BreadcrumbManager />
-          <Summary />
-          <ProductList />
-          {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
-          {/* <Pagination
+    <>
+      <h2>Search</h2>
+
+      <SearchProvider
+        staticState={staticState}
+        navigatorContext={navigatorContext.marshal}
+      >
+        <ParameterManager url={navigatorContext.location} />
+        <NotifyTrigger />
+        <QueryTrigger />
+        <ContextDropdown useCase="search" />
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <div style={{flex: 1}}>
+            <FacetGenerator />
+          </div>
+          <div style={{flex: 2}}>
+            <SearchBox />
+            <BreadcrumbManager />
+            <Summary />
+            <ProductList />
+            {/* The ShowMore and Pagination components showcase two frequent ways to implement pagination. */}
+            {/* <Pagination
           staticState={staticState.controllers.pagination.state}
           controller={hydratedState?.controllers.pagination}
         ></Pagination> */}
-          <ShowMore />
+            <ShowMore />
+          </div>
         </div>
-      </div>
-    </SearchProvider>
+      </SearchProvider>
+    </>
   );
 }
 

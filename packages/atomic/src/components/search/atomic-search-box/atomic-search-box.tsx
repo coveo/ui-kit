@@ -38,7 +38,7 @@ import {
   once,
   randomID,
   spreadProperties,
-} from '../../../utils/utils';
+} from '../../../utils/stencil-utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';

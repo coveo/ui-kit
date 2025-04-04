@@ -1,6 +1,6 @@
 import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {closest} from '../../../utils/utils';
+import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
 
 /**
