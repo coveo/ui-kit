@@ -50,14 +50,14 @@ export interface GeneratedAnswerStream {
   error?: {message: string; code: number};
 }
 
-interface StreamPayload
+export interface StreamPayload
   extends Pick<GeneratedAnswerStream, 'contentFormat' | 'citations'> {
   textDelta?: string;
   padding?: string;
   answerGenerated?: boolean;
 }
 
-type PayloadType =
+export type PayloadType =
   | 'genqa.headerMessageType'
   | 'genqa.messageType'
   | 'genqa.citationsType'

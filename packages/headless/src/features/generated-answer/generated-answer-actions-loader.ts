@@ -1,7 +1,9 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine.js';
+import {NoopUpdateCitationsHook} from '../../controllers/core/generated-answer/headless-core-generated-answer.js';
+import {GeneratedAnswerProps} from '../../controllers/generated-answer/headless-generated-answer.js';
 import {resetAnswer} from './generated-answer-actions.js';
-import {generatedAnswerReducer as generatedAnswer} from './generated-answer-slice.js';
+import {generatedAnswerReducer} from './generated-answer-slice.js';
 
 /**
  * The generated answer action creators.
@@ -28,8 +30,13 @@ export interface GeneratedAnswerActionCreators {
  * @category GeneratedAnswer
  */
 export function loadGeneratedAnswerActions(
-  engine: CoreEngine
+  engine: CoreEngine,
+  props: GeneratedAnswerProps
 ): GeneratedAnswerActionCreators {
+  const generatedAnswer = generatedAnswerReducer(
+    props.onUpdateCitations ?? NoopUpdateCitationsHook
+  );
+
   engine.addReducers({generatedAnswer});
 
   return {

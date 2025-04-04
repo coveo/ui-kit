@@ -1,4 +1,7 @@
-import {GeneratedAnswerCitation} from '../../../api/generated-answer/generated-answer-event-payload.js';
+import {
+  GeneratedAnswerCitation,
+  GeneratedAnswerCitationsPayload,
+} from '../../../api/generated-answer/generated-answer-event-payload.js';
 import {CoreEngine} from '../../../app/engine.js';
 import {
   CustomAction,
@@ -18,7 +21,7 @@ import {
   setIsEnabled,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
-import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
+import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {GeneratedAnswerState} from '../../../features/generated-answer/generated-answer-state.js';
 import {GeneratedResponseFormat} from '../../../features/generated-answer/generated-response-format.js';
 import {
@@ -155,6 +158,10 @@ export interface GeneratedAnswerPropsInitialState {
   };
 }
 
+export type UpdateCitationsHook = (
+  citations: GeneratedAnswerCitationsPayload
+) => GeneratedAnswerCitationsPayload;
+
 export interface GeneratedAnswerProps extends GeneratedAnswerPropsInitialState {
   /**
    * The answer configuration ID used to leverage coveo answer management capabilities.
@@ -164,7 +171,13 @@ export interface GeneratedAnswerProps extends GeneratedAnswerPropsInitialState {
    * A list of indexed fields to include in the citations returned with the generated answer.
    */
   fieldsToIncludeInCitations?: string[];
+
+  onUpdateCitations?: UpdateCitationsHook;
 }
+
+export const NoopUpdateCitationsHook: UpdateCitationsHook = (
+  citations: GeneratedAnswerCitationsPayload
+) => citations;
 
 /**
  * Can be used as a basis for controllers aiming to return a `GeneratedAnswer` controller instance.
@@ -181,7 +194,7 @@ export function buildCoreGeneratedAnswer(
   analyticsClient: GeneratedAnswerAnalyticsClient,
   props: GeneratedAnswerProps = {}
 ): GeneratedAnswer {
-  if (!loadGeneratedAnswerReducer(engine)) {
+  if (!loadGeneratedAnswerReducer(engine, props)) {
     throw loadReducerError;
   }
 
@@ -301,8 +314,13 @@ export function buildCoreGeneratedAnswer(
 }
 
 function loadGeneratedAnswerReducer(
-  engine: CoreEngine
+  engine: CoreEngine,
+  props: GeneratedAnswerProps
 ): engine is CoreEngine<GeneratedAnswerSection & SearchSection & DebugSection> {
+  const generatedAnswer = generatedAnswerReducer(
+    props.onUpdateCitations ?? NoopUpdateCitationsHook
+  );
+
   engine.addReducers({generatedAnswer});
   return true;
 }

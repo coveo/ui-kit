@@ -1,6 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
 import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
+import {UpdateCitationsHook} from '../../controllers/core/generated-answer/headless-core-generated-answer.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -27,9 +28,10 @@ import {
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 
-export const generatedAnswerReducer = createReducer(
-  getGeneratedAnswerInitialState(),
-  (builder) =>
+export const generatedAnswerReducer = (
+  onUpdateCitations: UpdateCitationsHook
+) =>
+  createReducer(getGeneratedAnswerInitialState(), (builder) =>
     builder
       .addCase(setIsVisible, (state, {payload}) => {
         state.isVisible = payload;
@@ -59,7 +61,12 @@ export const generatedAnswerReducer = createReducer(
             citationMap.set(citation.uri, citation);
           }
         }
-        state.citations = Array.from(citationMap.values());
+
+        const updatedCitations = onUpdateCitations({
+          citations: Array.from(citationMap.values()),
+        });
+        state.citations = updatedCitations.citations;
+
         delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
@@ -133,4 +140,4 @@ export const generatedAnswerReducer = createReducer(
       .addCase(setCannotAnswer, (state, {payload}) => {
         state.cannotAnswer = payload;
       })
-);
+  );
