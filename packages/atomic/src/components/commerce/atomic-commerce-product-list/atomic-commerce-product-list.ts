@@ -82,8 +82,8 @@ export class AtomicCommerceProductList
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
   public host!: HTMLElement;
+  public itemRenderingFunction: ItemRenderingFunction;
 
-  private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstProductLoaded-');
   private nextNewResultTarget?: FocusTargetController;
   private productListCommon!: ItemListCommon;
