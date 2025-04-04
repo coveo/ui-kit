@@ -27,7 +27,7 @@ export class SearchBoxPageObject extends BasePageObject<'atomic-commerce-search-
   }
 
   get clearRecentQueriesButton() {
-    return this.component.getByLabel('Clear recent searches.');
+    return this.component.getByLabel('Clear recent searches.').first();
   }
 
   get numberOfQueries() {

@@ -124,11 +124,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
 
     loadDayjsLocale(this.language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
-      this.language,
+      this.language.split('-')[0],
       i18nTranslationNamespace,
       (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
-          this.language,
+          this.language.split('-')[0],
           i18nTranslationNamespace,
           data,
           true,
