@@ -1,4 +1,5 @@
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import {InitializableComponent} from '@/src/decorators/types';
@@ -37,6 +38,7 @@ class IconFetchError extends Error {
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
 @customElement('atomic-icon')
+@bindings()
 @injectStylesForNoShadowDOM
 export class AtomicIcon
   extends InitializeBindingsMixin(LitElement)

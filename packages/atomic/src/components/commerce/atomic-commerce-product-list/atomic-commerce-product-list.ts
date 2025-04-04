@@ -1,10 +1,10 @@
 import {SelectChildProductEventArgs} from '@/src/components.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {BindingController} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -20,14 +20,8 @@ import {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {
-  CSSResultGroup,
-  html,
-  LitElement,
-  nothing,
-  PropertyValues,
-  unsafeCSS,
-} from 'lit';
+import {ContextRoot} from '@lit/context';
+import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -72,6 +66,7 @@ import styles from './atomic-commerce-product-list.tw.css';
  * @alpha
  */
 @customElement('atomic-commerce-product-list')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceProductList
   extends LitElement
@@ -89,11 +84,6 @@ export class AtomicCommerceProductList
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
   private unsubscribeSummary!: () => void;
-
-  constructor() {
-    super();
-    new BindingController(this);
-  }
 
   @state()
   bindings!: CommerceBindings;
@@ -166,10 +156,6 @@ export class AtomicCommerceProductList
     });
   }
 
-  public updated(_changedProperties: PropertyValues) {
-    super.updated(_changedProperties);
-  }
-
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.unsubscribeSummary && this.unsubscribeSummary();
@@ -181,6 +167,12 @@ export class AtomicCommerceProductList
     } catch (e) {
       // do nothing
     }
+  }
+
+  constructor() {
+    super();
+    const contextRoot = new ContextRoot();
+    contextRoot.attach(document.body);
   }
 
   @bindingGuard()
@@ -201,7 +193,7 @@ export class AtomicCommerceProductList
               () => this.renderGridOrList(listClasses)
             )}`;
           }
-        )}}`,
+        )}`,
       () => nothing
     )}`;
   }
