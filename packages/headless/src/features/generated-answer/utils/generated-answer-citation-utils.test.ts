@@ -43,6 +43,26 @@ describe('filterOutDuplicatedCitations', () => {
     expect(actualCitations).toEqual(expectedCitations);
   });
 
+  it('should filter out citations based only on the uri', () => {
+    const RICK_ROLL_CITATION_TWO: GeneratedAnswerCitation = buildMockCitation({
+      uri: RICK_ROLL_CITATION.uri,
+      id: 'differentId',
+      permanentid: 'differentPermanentId',
+      title: 'differentTitle',
+      clickUri: 'differentClickUri',
+      source: 'differentSource',
+      text: 'differentText',
+    });
+
+    const actualCitations = filterOutDuplicatedCitations([
+      RICK_ROLL_CITATION,
+      RICK_ROLL_CITATION_TWO,
+    ]);
+
+    expect(actualCitations).toHaveLength(1);
+    expect(actualCitations).toEqual([RICK_ROLL_CITATION]);
+  });
+
   it('should process an empty list successfully', () => {
     const actualCitations = filterOutDuplicatedCitations([]);
 
