@@ -469,3 +469,9 @@ export class AtomicCommerceInterface
     return html`<slot></slot>`;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-interface': AtomicCommerceInterface;
+  }
+}
