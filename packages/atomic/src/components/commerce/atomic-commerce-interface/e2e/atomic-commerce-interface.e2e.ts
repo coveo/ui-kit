@@ -1,4 +1,5 @@
 /* eslint-disable @cspell/spellchecker */
+import {AtomicCommerceInterface} from '../atomic-commerce-interface';
 import {test, expect} from './fixture';
 
 test.describe('AtomicCommerceInterface', () => {
@@ -90,7 +91,7 @@ test.describe('AtomicCommerceInterface', () => {
         await page.evaluate(() => {
           const commerceInterfaceComponent = document.querySelector(
             'atomic-commerce-interface'
-          ) as HTMLAtomicCommerceInterfaceElement;
+          ) as AtomicCommerceInterface;
 
           commerceInterfaceComponent.language = 'fr';
         });
@@ -113,7 +114,7 @@ test.describe('AtomicCommerceInterface', () => {
         await page.evaluate(() => {
           const commerceInterfaceComponent = document.querySelector(
             'atomic-commerce-interface'
-          ) as HTMLAtomicCommerceInterfaceElement;
+          ) as AtomicCommerceInterface;
 
           commerceInterfaceComponent.language = 'foo';
         });
