@@ -1,9 +1,16 @@
 import {
+  recentQueriesContainer,
+  recentQueryClear,
+  recentQueryIcon,
+  recentQueryText,
+} from '@/src/components/common/suggestions/recent-queries';
+import {
   buildRecentQueriesList,
   RecentQueriesList,
   SearchBox,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
+import {html} from 'lit';
 import Clock from '../../../../images/clock.svg';
 import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
 import {once} from '../../../../utils/stencil-utils';
@@ -14,7 +21,7 @@ import {
   RecentQueryClear,
   RecentQueryIcon,
   RecentQueryText,
-} from '../../../common/suggestions/recent-queries';
+} from '../../../common/suggestions/stencil-recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -145,6 +152,7 @@ export class AtomicSearchBoxRecentQueries {
     return {
       ...partialItem,
       content: <RecentQueryClear i18n={this.bindings.i18n} />,
+      contentLit: recentQueryClear({props: {i18n: this.bindings.i18n}}),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
@@ -163,7 +171,12 @@ export class AtomicSearchBoxRecentQueries {
           <RecentQueryText query={query} value={value} />
         </RecentQueriesContainer>
       ),
-
+      contentLit: recentQueriesContainer({props: {}})(html`
+        ${recentQueryIcon({
+          props: {icon: this.renderIcon()},
+        })}
+        ${recentQueryText({props: {query, value}})}
+      `),
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);

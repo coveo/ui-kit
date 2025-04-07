@@ -1,3 +1,4 @@
+import {instantItemShowAllButton} from '@/src/components/common/suggestions/instant-item';
 import {
   SearchBox,
   buildInstantProducts,
@@ -5,6 +6,8 @@ import {
   InstantProducts,
 } from '@coveo/headless/commerce';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
+import {html} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
@@ -17,7 +20,7 @@ import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
   InstantItemShowAllButton,
-} from '../../../common/suggestions/instant-item';
+} from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -142,11 +145,14 @@ export class AtomicCommerceSearchBoxInstantProducts
           this.ariaLabelGenerator?.(this.bindings, product) || product.ec_name!,
           product.permanentid
         );
+        const key = `instant-product-${encodeForDomAttribute(
+          product.permanentid
+        )}`;
         return {
           ...partialItem,
           content: (
             <atomic-product
-              key={`instant-product-${encodeForDomAttribute(product.permanentid)}`}
+              key={key}
               part="outline"
               product={product}
               interactiveProduct={interactiveProduct}
@@ -158,6 +164,20 @@ export class AtomicCommerceSearchBoxInstantProducts
               renderingFunction={this.itemRenderingFunction}
             ></atomic-product>
           ),
+          contentLit: html`${keyed(
+            key,
+            html`<atomic-product
+              part="outline"
+              .product=${product}
+              .interactiveProduct=${interactiveProduct}
+              display=${this.display}
+              density=${this.density}
+              imageSize=${this.imageSize}
+              .content=${this.itemTemplateProvider.getTemplateContent(product)}
+              stopPropagation=${false}
+              .renderingFunction=${this.itemRenderingFunction}
+            ></atomic-product>`
+          )}`,
           onSelect: (e: MouseEvent) => {
             const link = this.getLink(e.target as HTMLElement);
 
@@ -176,6 +196,9 @@ export class AtomicCommerceSearchBoxInstantProducts
       elements.push({
         ...partialItem,
         content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
+        contentLit: instantItemShowAllButton({
+          props: {i18n: this.bindings.i18n},
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(

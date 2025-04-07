@@ -6,6 +6,7 @@ import {
   Suggestion as InsightSuggestion,
 } from '@coveo/headless/insight';
 import {Component, Element, h, Prop, State} from '@stencil/core';
+import {html} from 'lit';
 import SearchSlimIcon from '../../../images/search-slim.svg';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
@@ -17,11 +18,16 @@ import {isFocusingOut, randomID} from '../../../utils/stencil-utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {
+  querySuggestionContainer,
+  querySuggestionIcon,
+  querySuggestionText,
+} from '../../common/suggestions/query-suggestions';
+import {
   getPartialSearchBoxSuggestionElement,
   QuerySuggestionContainer,
   QuerySuggestionIcon,
   QuerySuggestionText,
-} from '../../common/suggestions/query-suggestions';
+} from '../../common/suggestions/stencil-query-suggestions';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   elementHasQuery,
@@ -221,6 +227,15 @@ export class AtomicInsightSearchBox {
           <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
         </QuerySuggestionContainer>
       ),
+      contentLit: querySuggestionContainer({props: {}})(html`
+        ${querySuggestionIcon({
+          props: {
+            icon: SearchSlimIcon,
+            hasSuggestion: this.searchBoxState.suggestions.length > 1,
+          },
+        })}
+        ${querySuggestionText({props: {suggestion, hasQuery}})}
+      `),
       onSelect: () => {
         this.searchBox.selectSuggestion(suggestion.rawValue);
       },

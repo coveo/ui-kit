@@ -1,17 +1,23 @@
 import {
+  querySuggestionContainer,
+  querySuggestionIcon,
+  querySuggestionText,
+} from '@/src/components/common/suggestions/query-suggestions';
+import {
   loadQuerySuggestActions,
   SearchBox,
   SearchEngine,
   Suggestion,
 } from '@coveo/headless';
 import {Component, Element, Prop, State, h} from '@stencil/core';
+import {html} from 'lit';
 import SearchIcon from '../../../../images/search.svg';
 import {
   getPartialSearchBoxSuggestionElement,
   QuerySuggestionContainer,
   QuerySuggestionIcon,
   QuerySuggestionText,
-} from '../../../common/suggestions/query-suggestions';
+} from '../../../common/suggestions/stencil-query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -115,6 +121,15 @@ export class AtomicSearchBoxQuerySuggestions {
           <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
         </QuerySuggestionContainer>
       ),
+      contentLit: querySuggestionContainer({props: {}})(html`
+        ${querySuggestionIcon({
+          props: {
+            icon: this.icon || SearchIcon,
+            hasSuggestion: this.bindings.getSuggestions().length > 1,
+          },
+        })}
+        ${querySuggestionText({props: {suggestion, hasQuery}})}
+      `),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },

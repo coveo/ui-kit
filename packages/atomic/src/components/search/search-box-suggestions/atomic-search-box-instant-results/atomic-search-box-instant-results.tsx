@@ -1,3 +1,4 @@
+import {instantItemShowAllButton} from '@/src/components/common/suggestions/instant-item';
 import {
   buildInstantResults,
   buildInteractiveInstantResult,
@@ -6,6 +7,8 @@ import {
   SearchBox,
 } from '@coveo/headless';
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
+import {html} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
 import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
@@ -19,7 +22,7 @@ import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
   InstantItemShowAllButton,
-} from '../../../common/suggestions/instant-item';
+} from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -139,11 +142,12 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
           this.ariaLabelGenerator?.(this.bindings, result) || result.title,
           result.uniqueId
         );
+        const key = `instant-result-${encodeForDomAttribute(result.uniqueId)}`;
         return {
           ...partialItem,
           content: (
             <atomic-result
-              key={`instant-result-${encodeForDomAttribute(result.uniqueId)}`}
+              key={key}
               part="outline"
               result={result}
               interactiveResult={buildInteractiveInstantResult(
@@ -160,6 +164,25 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
               renderingFunction={this.itemRenderingFunction}
             ></atomic-result>
           ),
+          contentLit: html`${keyed(
+            key,
+            html`<atomic-product
+              part="outline"
+              .product=${result}
+              .interactiveProduct=${buildInteractiveInstantResult(
+                this.bindings.engine,
+                {
+                  options: {result},
+                }
+              )}
+              display=${this.display}
+              density=${this.density}
+              imageSize=${this.imageSize}
+              .content=${this.itemTemplateProvider.getTemplateContent(result)}
+              stopPropagation=${false}
+              .renderingFunction=${this.itemRenderingFunction}
+            ></atomic-product>`
+          )}`,
           onSelect: (e: MouseEvent) => {
             const link = this.getLink(e.target as HTMLElement);
 
@@ -178,6 +201,9 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
       elements.push({
         ...partialItem,
         content: <InstantItemShowAllButton i18n={this.bindings.i18n} />,
+        contentLit: instantItemShowAllButton({
+          props: {i18n: this.bindings.i18n},
+        }),
         onSelect: () => {
           this.bindings.clearSuggestions();
           this.bindings.searchBoxController.updateText(
