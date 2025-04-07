@@ -3,6 +3,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {within} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
+import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
@@ -31,9 +32,7 @@ export const WithTranslations: Story = {
     await play(context);
     const canvas = within(context.canvasElement);
     const commerceInterface =
-      await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
-        'root-interface'
-      );
+      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
 
     await context.step('Load translations', () => {
       commerceInterface.i18n.addResourceBundle('en', 'translation', {
