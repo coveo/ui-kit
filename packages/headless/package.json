@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.20.0",
+  "version": "3.22.0",
   "files": [
     "dist/"
   ],
@@ -150,10 +150,16 @@
   },
   "peerDependencies": {
     "encoding": "^0.1.13",
-    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0"
+    "pino-pretty": "^6.0.0 || ^10.0.0 || ^11.0.0 || ^13.0.0",
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.9",
+    "@coveo/bueno": "1.0.10",
     "@coveo/relay": "1.0.0",
     "@coveo/relay-event-types": "14.3.3",
     "@reduxjs/toolkit": "2.6.0",

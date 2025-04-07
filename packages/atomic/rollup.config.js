@@ -65,8 +65,9 @@ export default {
     chunkFileNames: '[name].js',
     manualChunks: (id) => {
       if (id.includes('node_modules')) {
-        return (
-          `vendor${sep}` +
+        return join(
+          'atomic',
+          'vendor',
           id.toString().split(`node_modules${sep}`)[1].split(sep)[0].toString()
         );
       }

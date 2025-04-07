@@ -6,7 +6,7 @@ import {
 import {Component, Element, Prop, State, h} from '@stencil/core';
 import Clock from '../../../../images/clock.svg';
 import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
-import {once} from '../../../../utils/utils';
+import {once} from '../../../../utils/stencil-utils';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
