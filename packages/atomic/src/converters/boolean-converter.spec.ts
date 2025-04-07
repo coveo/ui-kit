@@ -10,7 +10,7 @@ describe('booleanConverter', () => {
   @customElement('test-element')
   class TestElement extends LitElement {
     @property({
-      converter: booleanConverter(),
+      converter: booleanConverter,
       type: Boolean,
     })
     value = false;
@@ -19,7 +19,6 @@ describe('booleanConverter', () => {
       return html`<div>${this.value}</div>`;
     }
   }
-
 
   it('should convert "true" to true', async () => {
     await fixture<TestElement>(
