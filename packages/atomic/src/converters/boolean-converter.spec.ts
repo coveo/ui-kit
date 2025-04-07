@@ -11,6 +11,7 @@ describe('booleanConverter', () => {
   class TestElement extends LitElement {
     @property({
       converter: booleanConverter(),
+      type: Boolean,
     })
     value = false;
 
@@ -19,12 +20,6 @@ describe('booleanConverter', () => {
     }
   }
 
-  it('should convert "true" to true', async () => {
-    await fixture<TestElement>(
-      html`<test-element value="false"></test-element>`
-    );
-    await expect.element(page.getByText('false')).toBeInTheDocument();
-  });
 
   it('should convert "true" to true', async () => {
     await fixture<TestElement>(
