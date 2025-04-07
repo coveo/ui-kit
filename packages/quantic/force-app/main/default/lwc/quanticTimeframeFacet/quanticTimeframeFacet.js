@@ -552,7 +552,6 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   updateDateFilterState() {
-    console.log(this.dateFilter.state);
     this.dateFilterState = this.dateFilter.state;
 
     if (this.dateFilterState.range) {
