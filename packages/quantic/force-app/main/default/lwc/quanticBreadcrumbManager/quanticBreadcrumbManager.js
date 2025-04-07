@@ -118,13 +118,14 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   formatRangeBreadcrumbValue(breadcrumb) {
     const data = getFromStore(this.engineId, Store.facetTypes.NUMERICFACETS);
+    const facetId = breadcrumb.facetId.replace('_input', '');
     return {
       ...breadcrumb,
-      label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
+      label: data ? data[facetId]?.label : breadcrumb.field,
       values: breadcrumb.values.map((range) => ({
         ...range,
         value: `${range.value.start} - ${range.value.end}`,
-        formattedValue: data[breadcrumb.facetId]?.format(range.value),
+        formattedValue: data[facetId]?.format(range.value),
       })),
     };
   }
@@ -173,12 +174,13 @@ export default class QuanticBreadcrumbManager extends LightningElement {
 
   formatDateRangeBreadcrumbValue(breadcrumb) {
     const data = getFromStore(this.engineId, Store.facetTypes.DATEFACETS);
+    const facetId = breadcrumb.facetId.replace('_input', '');
     return {
       ...breadcrumb,
-      label: data ? data[breadcrumb.facetId]?.label : breadcrumb.field,
+      label: data ? data[facetId]?.label : breadcrumb.field,
       values: breadcrumb.values.map((range) => ({
         ...range,
-        value: data[breadcrumb.facetId]?.format(range.value),
+        value: data[facetId]?.format(range.value),
       })),
     };
   }
