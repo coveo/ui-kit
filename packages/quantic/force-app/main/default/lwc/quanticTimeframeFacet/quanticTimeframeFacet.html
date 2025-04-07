@@ -52,11 +52,11 @@
                 </template>
 
                 <template if:false={isCollapsed}>
-                  <template if:true={withDatePicker}>
+                  <template if:true={shouldDisplayDatePicker}>
                     <div
                       class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small"
                     >
-                      <form onsubmit={handleApply}>
+                      <form data-testid="facet__date-picker" onsubmit={handleApply}>
                         <div class="slds-col slds-grid slds-gutters">
                           <div
                             class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small"
