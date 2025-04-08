@@ -29,7 +29,7 @@ import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
 import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
 export const generatedAnswerReducer = (
-  onUpdateCitations: UpdateCitationsHook
+  onUpdateCitations?: UpdateCitationsHook
 ) =>
   createReducer(getGeneratedAnswerInitialState(), (builder) =>
     builder
@@ -55,12 +55,14 @@ export const generatedAnswerReducer = (
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        const updatedCitations = onUpdateCitations({
-          citations: payload.citations,
-        });
+
+        const updatedPayload = onUpdateCitations
+          ? onUpdateCitations({citations: payload.citations})
+          : payload;
+
         state.citations = filterOutDuplicatedCitations([
           ...state.citations,
-          ...updatedCitations.citations,
+          ...updatedPayload.citations,
         ]);
         delete state.error;
       })

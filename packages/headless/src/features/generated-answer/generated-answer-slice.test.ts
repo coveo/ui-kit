@@ -1,4 +1,5 @@
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
+import {GeneratedAnswerCitationsPayload} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {buildMockCitation} from '../../test/mock-citation.js';
 import {
   dislikeGeneratedAnswer,
@@ -34,7 +35,7 @@ const baseState = getGeneratedAnswerInitialState();
 
 describe('generated answer slice', () => {
   it('initializes the state correctly', () => {
-    const finalState = generatedAnswerReducer(undefined, {type: ''});
+    const finalState = generatedAnswerReducer()(undefined, {type: ''});
 
     expect(finalState).toEqual(baseState);
   });
@@ -43,7 +44,7 @@ describe('generated answer slice', () => {
     it('concatenates the given string with the answer previously in the state', () => {
       const existingAnswer = 'I exist';
       const newMessage = ' therefore I am';
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
           answer: existingAnswer,
@@ -63,7 +64,7 @@ describe('generated answer slice', () => {
   describe('#updateCitations', () => {
     it('Adds the given citations to the state', () => {
       const newCitations = [buildMockCitation()];
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
         },
@@ -84,7 +85,7 @@ describe('generated answer slice', () => {
           uri: 'my-uri',
         }),
       ];
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
           citations: existingCitations,
@@ -111,7 +112,7 @@ describe('generated answer slice', () => {
           uri: 'my-uri',
         }),
       ];
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
           citations: existingCitations,
@@ -129,7 +130,7 @@ describe('generated answer slice', () => {
       code: 500,
     };
     it('should set isLoading to false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isLoading: true},
         updateError(testPayload)
       );
@@ -138,7 +139,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isStreaming to false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isStreaming: true},
         updateError(testPayload)
       );
@@ -147,7 +148,7 @@ describe('generated answer slice', () => {
     });
 
     it('should delete the answer', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, answer: 'I exist'},
         updateError(testPayload)
       );
@@ -156,7 +157,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set given error values', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         baseState,
         updateError({
           message: 'a message',
@@ -172,7 +173,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set retryable to true if the error code matches the retryable error code', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, answer: 'I exist'},
         updateError({
           message: 'a message',
@@ -191,7 +192,7 @@ describe('generated answer slice', () => {
       const testErrorPayload = {
         code: 500,
       };
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         getGeneratedAnswerInitialState(),
         updateError(testErrorPayload)
       );
@@ -206,7 +207,7 @@ describe('generated answer slice', () => {
       const testErrorPayload = {
         message: 'some message',
       };
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         getGeneratedAnswerInitialState(),
         updateError(testErrorPayload)
       );
@@ -242,7 +243,7 @@ describe('generated answer slice', () => {
         },
       };
 
-      const finalState = generatedAnswerReducer(state, resetAnswer());
+      const finalState = generatedAnswerReducer()(state, resetAnswer());
 
       expect(finalState).toEqual({
         ...getGeneratedAnswerInitialState(),
@@ -259,7 +260,7 @@ describe('generated answer slice', () => {
         responseFormat: responseFormat,
       };
 
-      const finalState = generatedAnswerReducer(state, resetAnswer());
+      const finalState = generatedAnswerReducer()(state, resetAnswer());
 
       expect(finalState.responseFormat).toEqual(responseFormat);
     });
@@ -270,14 +271,14 @@ describe('generated answer slice', () => {
       answerConfigurationId: 'some-id',
     };
 
-    const finalState = generatedAnswerReducer(state, resetAnswer());
+    const finalState = generatedAnswerReducer()(state, resetAnswer());
     expect(finalState.answerConfigurationId).toBe('some-id');
   });
 
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',
     (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         baseState,
         setAnswerContentFormat(format)
       );
@@ -292,7 +293,7 @@ describe('generated answer slice', () => {
   test.each(generatedContentFormat)(
     '#setAnswerContentFormat should set the "%i" content format in the state',
     (format: GeneratedContentFormat) => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         baseState,
         setAnswerContentFormat(format)
       );
@@ -305,7 +306,10 @@ describe('generated answer slice', () => {
   );
 
   it('#likeGeneratedAnswer should set the answer as liked in the state', () => {
-    const finalState = generatedAnswerReducer(baseState, likeGeneratedAnswer());
+    const finalState = generatedAnswerReducer()(
+      baseState,
+      likeGeneratedAnswer()
+    );
 
     expect(finalState).toEqual({
       ...getGeneratedAnswerInitialState(),
@@ -315,7 +319,7 @@ describe('generated answer slice', () => {
   });
 
   it('#dislikeGeneratedAnswer should set the answer as disliked in the state', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       baseState,
       dislikeGeneratedAnswer()
     );
@@ -328,7 +332,7 @@ describe('generated answer slice', () => {
   });
 
   it('#openGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to true', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       baseState,
       openGeneratedAnswerFeedbackModal()
     );
@@ -340,7 +344,7 @@ describe('generated answer slice', () => {
   });
 
   it('#closeGeneratedAnswerFeedbackModal should set the feedbackModalOpen attribute in the state to false', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       {...baseState, feedbackModalOpen: true},
       closeGeneratedAnswerFeedbackModal()
     );
@@ -352,7 +356,7 @@ describe('generated answer slice', () => {
   });
 
   it('#sendGeneratedAnswerFeedback should set feedbackSubmitted to true in the state', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       baseState,
       sendGeneratedAnswerFeedback()
     );
@@ -364,7 +368,7 @@ describe('generated answer slice', () => {
   });
 
   it('#expandGeneratedAnswer should set expanded to true in the state', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       {...baseState, expanded: false},
       expandGeneratedAnswer()
     );
@@ -372,7 +376,7 @@ describe('generated answer slice', () => {
   });
 
   it('#collapseGeneratedAnswer should set expanded to false in the state', () => {
-    const finalState = generatedAnswerReducer(
+    const finalState = generatedAnswerReducer()(
       {...baseState, expanded: true},
       collapseGeneratedAnswer()
     );
@@ -381,7 +385,7 @@ describe('generated answer slice', () => {
 
   describe('#setIsLoading', () => {
     it('should set isLoading to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isLoading: false},
         setIsLoading(true)
       );
@@ -390,7 +394,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isLoading to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isLoading: true},
         setIsLoading(false)
       );
@@ -401,7 +405,7 @@ describe('generated answer slice', () => {
 
   describe('#setIsStreaming', () => {
     it('should set isStreaming to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isStreaming: false},
         setIsStreaming(true)
       );
@@ -410,7 +414,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isStreaming to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isStreaming: true},
         setIsStreaming(false)
       );
@@ -424,7 +428,7 @@ describe('generated answer slice', () => {
       const newResponseFormat: GeneratedResponseFormat = {
         contentFormat: ['text/markdown'],
       };
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
           responseFormat: {
@@ -441,7 +445,7 @@ describe('generated answer slice', () => {
   describe('#registerFieldsToIncludeInCitations', () => {
     it('should register the given fields to include in citations', () => {
       const exampleFieldsToIncludeInCitations = ['foo', 'bar'];
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {
           ...getGeneratedAnswerInitialState(),
           fieldsToIncludeInCitations: [],
@@ -457,7 +461,7 @@ describe('generated answer slice', () => {
 
   describe('#setIsVisible', () => {
     it('should set isVisible to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isVisible: false},
         setIsVisible(true)
       );
@@ -466,7 +470,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isVisible to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isVisible: true},
         setIsVisible(false)
       );
@@ -477,7 +481,7 @@ describe('generated answer slice', () => {
 
   describe('#setIsEnabled', () => {
     it('should set isEnabled to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isEnabled: false},
         setIsEnabled(true)
       );
@@ -486,7 +490,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isEnabled to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isEnabled: true},
         setIsEnabled(false)
       );
@@ -497,7 +501,7 @@ describe('generated answer slice', () => {
 
   describe('#setIsAnswerGenerated', () => {
     it('should set isAnswerGenerated to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isAnswerGenerated: false},
         setIsAnswerGenerated(true)
       );
@@ -506,7 +510,7 @@ describe('generated answer slice', () => {
     });
 
     it('should set isAnswerGenerated to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, isAnswerGenerated: true},
         setIsAnswerGenerated(false)
       );
@@ -517,7 +521,7 @@ describe('generated answer slice', () => {
 
   describe('#setCannotAnswer', () => {
     it('should set cannotAnswer to true when given true', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, cannotAnswer: false},
         setCannotAnswer(true)
       );
@@ -526,12 +530,39 @@ describe('generated answer slice', () => {
     });
 
     it('should set cannotAnswer to false when given false', () => {
-      const finalState = generatedAnswerReducer(
+      const finalState = generatedAnswerReducer()(
         {...baseState, cannotAnswer: true},
         setCannotAnswer(false)
       );
 
       expect(finalState.cannotAnswer).toEqual(false);
+    });
+  });
+
+  describe('with citations custom hook', () => {
+    it('should store transformed citations in state', () => {
+      const expectedTitle = 'My citation title override';
+      const customTransformation = (
+        payload: GeneratedAnswerCitationsPayload
+      ): GeneratedAnswerCitationsPayload => ({
+        citations: [
+          {
+            ...payload.citations[0],
+            title: expectedTitle,
+          },
+        ],
+      });
+
+      const reducer = generatedAnswerReducer(customTransformation);
+
+      const finalState = reducer(
+        {...baseState},
+        updateCitations({
+          citations: [buildMockCitation()],
+        })
+      );
+
+      expect(finalState.citations[0].title).toEqual(expectedTitle);
     });
   });
 });

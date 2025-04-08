@@ -10,7 +10,7 @@ import {
   setId,
   streamAnswer,
 } from '../../../features/generated-answer/generated-answer-actions.js';
-import {generatedAnswerReducer as generatedAnswer} from '../../../features/generated-answer/generated-answer-slice.js';
+import {generatedAnswerReducer} from '../../../features/generated-answer/generated-answer-slice.js';
 import {executeSearch} from '../../../features/search/search-actions.js';
 import {
   DebugSection,
@@ -24,6 +24,7 @@ import {
   GeneratedAnswer,
   GeneratedAnswerAnalyticsClient,
   GeneratedAnswerProps,
+  NoopUpdateCitationsHook,
 } from './headless-core-generated-answer.js';
 
 export interface SearchAPIGeneratedAnswer extends GeneratedAnswer {}
@@ -127,7 +128,7 @@ export function buildSearchAPIGeneratedAnswer(
   analyticsClient: SearchAPIGeneratedAnswerAnalyticsClient,
   props: GeneratedAnswerProps = {}
 ): SearchAPIGeneratedAnswer {
-  if (!loadGeneratedAnswerReducer(engine)) {
+  if (!loadGeneratedAnswerReducer(engine, props)) {
     throw loadReducerError;
   }
 
@@ -185,8 +186,13 @@ export function buildSearchAPIGeneratedAnswer(
 }
 
 function loadGeneratedAnswerReducer(
-  engine: CoreEngine
+  engine: CoreEngine,
+  props: GeneratedAnswerProps
 ): engine is CoreEngine<GeneratedAnswerSection & SearchSection & DebugSection> {
-  engine.addReducers({generatedAnswer});
+  engine.addReducers({
+    generatedAnswer: generatedAnswerReducer(
+      props.onUpdateCitations ?? NoopUpdateCitationsHook
+    ),
+  });
   return true;
 }
