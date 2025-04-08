@@ -12,25 +12,72 @@ import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {within} from 'shadow-dom-testing-library';
 import {describe, test, expect, vi} from 'vitest';
+import {stateKey} from '../../../../../headless/src/app/state-key';
 import {InitializeBindingsMixin} from '../../../mixins/bindings-mixin';
 import {
   AtomicCommerceInterface,
   CommerceBindings,
 } from './atomic-commerce-interface';
 
-vi.mock('@coveo/headless/commerce', () => {
-  const originalModule = vi.importActual('@coveo/headless/commerce');
+vi.mock('@coveo/headless/commerce', async () => {
+  const originalModule = await vi.importActual('@coveo/headless/commerce');
+  const state: {language: string} = {language: 'en'};
   return {
     ...originalModule,
-    buildCommerceEngine: vi.fn(() => ({
-      dispatch: vi.fn(),
-      enableAnalytics: vi.fn(),
-      disableAnalytics: vi.fn(),
-      logger: {warn: vi.fn()},
-      store: {
-        getState: vi.fn(() => ({configuration: {analytics: {enabled: true}}})),
+    Selectors: {
+      ProductListing: {
+        responseIdSelector: vi.fn(() => 'mocked-response-id'),
       },
+    },
+    buildContext: vi.fn(() => {
+      const context = {
+        state: {...state},
+        setLanguage: (language: string) => {
+          context.state.language = language;
+        },
+      };
+      return context;
+    }),
+    buildProductListing: vi.fn(),
+    buildSearch: vi.fn(() => ({
+      summary: vi.fn(() => ({
+        subscribe: vi.fn(() => ({
+          unsubscribe: vi.fn(),
+        })),
+      })),
+      urlManager: vi.fn(() => ({
+        subscribe: vi.fn(() => ({
+          unsubscribe: vi.fn(),
+        })),
+      })),
+      executeFirstSearch: vi.fn(),
     })),
+    loadQueryActions: vi.fn(),
+    buildCommerceEngine: vi.fn(
+      (config: {configuration: CommerceEngineConfiguration}) => {
+        if (!config.configuration.organizationId) {
+          throw new Error('Invalid configuration: organizationId is required');
+        }
+        return {
+          [stateKey]: state,
+          ...config,
+          dispatch: vi.fn(),
+          addReducers: vi.fn(),
+          disableAnalytics: vi.fn(),
+          enableAnalytics: vi.fn(),
+          logger: {
+            info: vi.fn(),
+            warn: vi.fn(),
+            error: vi.fn(),
+          },
+          subscribe: vi.fn(() => {
+            return {
+              unsubscribe: vi.fn(),
+            };
+          }),
+        };
+      }
+    ),
   };
 });
 
@@ -57,7 +104,7 @@ const commerceEngineConfig: CommerceEngineConfiguration =
   getSampleCommerceEngineConfiguration();
 describe('AtomicCommerceInterface', () => {
   let element: AtomicCommerceInterface;
-  let childElement: InitializableComponent<Bindings> & LitElement;
+  let childElement: InitializableComponent<CommerceBindings> & LitElement;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   const addChildElement = async <T extends LitElement>(
@@ -65,7 +112,7 @@ describe('AtomicCommerceInterface', () => {
   ) => {
     childElement = document.createElement(
       tag
-    ) as InitializableComponent<Bindings> & T;
+    ) as InitializableComponent<CommerceBindings> & T;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
@@ -83,7 +130,7 @@ describe('AtomicCommerceInterface', () => {
 
   beforeEach(async () => {
     await setupElement();
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(async () => {
@@ -141,6 +188,7 @@ describe('AtomicCommerceInterface', () => {
     test('should update language when language property changes', async () => {
       element.language = 'fr';
       await element.updateComplete;
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const context = (element as any).context;
       expect(context.state.language).toBe('fr');
@@ -203,6 +251,16 @@ describe('AtomicCommerceInterface', () => {
       await element.initialize(commerceEngineConfig);
       expect(element.engine).toBeTruthy();
     });
+
+    test('should log a warning when scrollContainer is not found', async () => {
+      const mockEngine = element.engine!;
+      const warnSpy = vi.spyOn(mockEngine.logger, 'warn');
+      element.scrollContainer = '.non-existent-container';
+      element.scrollToTop();
+      expect(warnSpy).toHaveBeenCalledWith(
+        `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+      );
+    });
   });
 
   describe('when initialized with existing engine', () => {
@@ -238,6 +296,7 @@ describe('AtomicCommerceInterface', () => {
       await element.initializeWithEngine(preconfiguredEngine);
       element.language = 'fr';
       await element.updateComplete;
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const context = (element as any).context;
       expect(context.state.language).toBe('fr');
@@ -248,5 +307,6 @@ describe('AtomicCommerceInterface', () => {
     const invalidConfig = {...commerceEngineConfig, organizationId: ''};
     await expect(element.initialize(invalidConfig)).rejects.toThrow();
     expect(element.error).toBeDefined();
+    consoleErrorSpy.mockRestore();
   });
 });
