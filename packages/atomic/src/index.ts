@@ -3,7 +3,6 @@ export {initializeBindings} from './utils/initialization-utils';
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 
 export {Components, JSX} from './components';
-export {Components as LitComponents} from './lit-components';
 export type {i18n} from 'i18next';
 
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';

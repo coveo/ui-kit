@@ -112,8 +112,6 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
       return;
     }
 
-    console.log(!analytics, 'analytics');
-
     if (!analytics) {
       engine.disableAnalytics();
       return;
