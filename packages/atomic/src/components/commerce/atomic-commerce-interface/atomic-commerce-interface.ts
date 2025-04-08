@@ -80,8 +80,8 @@ export class AtomicCommerceInterface
   private searchOrListing!: Search | ProductListing;
   private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
   private context!: Context;
-  private unsubscribeUrlManager: Unsubscribe = () => {};
-  private unsubscribeSummary: Unsubscribe = () => {};
+  private unsubscribeUrlManager?: Unsubscribe;
+  private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
   private store: CommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
@@ -205,7 +205,6 @@ export class AtomicCommerceInterface
 
   @watch('analytics')
   public toggleAnalytics() {
-    console.log('toggleAnalytics', this.analytics);
     this.commonInterfaceHelper.onAnalyticsChange();
   }
 
@@ -230,8 +229,15 @@ export class AtomicCommerceInterface
 
   public disconnectedCallback() {
     super.disconnectedCallback();
-    this.unsubscribeUrlManager();
-    this.unsubscribeSummary();
+    if (typeof this.unsubscribeUrlManager === 'function') {
+      this.unsubscribeUrlManager();
+      this.unsubscribeUrlManager = undefined;
+    }
+    if (typeof this.unsubscribeSummary === 'function') {
+      this.unsubscribeSummary();
+      this.unsubscribeSummary = undefined;
+    }
+
     window.removeEventListener('hashchange', this.onHashChange);
     this.removeEventListener(
       'atomic/initializeComponent',
@@ -403,9 +409,9 @@ export class AtomicCommerceInterface
       initialState: {fragment: this.fragment},
     });
 
-    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
-      this.updateHash()
-    );
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() => {
+      this.updateHash();
+    });
 
     window.addEventListener('hashchange', this.onHashChange);
   }
