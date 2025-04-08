@@ -2,17 +2,17 @@
   <template if:true={wasAutomaticallyCorrected}>
     <div class="slds-var-m-vertical_x-small">
       <p class="slds-var-m-bottom_xx-small">
-        <lightning-formatted-rich-text data-cy="no-result-label"
+        <lightning-formatted-rich-text data-testid="no-result-label"
           value={noResultsLabel}></lightning-formatted-rich-text>
       </p>
-      <lightning-formatted-rich-text data-cy="automatic-query-correction-label"
+      <lightning-formatted-rich-text data-testid="automatic-query-correction-label"
         value={correctedQueryLabel}></lightning-formatted-rich-text>
     </div>
   </template>
   <template if:false={wasAutomaticallyCorrected}>
     <div class="slds-var-m-vertical_x-small">
       <span data-cy="did-you-mean-label">{labels.didYouMean} </span>
-      <button data-cy="apply-correction-button" class="slds-button" onclick={applyCorrection}>
+      <button data-testid="apply-correction-button" class="slds-button" onclick={applyCorrection}>
         <span class="slds-text-title_bold">{correctedQuery}</span>
       </button>
     </div>
