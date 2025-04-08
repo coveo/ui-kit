@@ -71,6 +71,11 @@ const selectors = {
 const defaultOptions = {
   engineId: exampleEngine.id,
   field: exampleField,
+  facetId: exampleFacetId,
+  sortCriteria: 'score',
+  numberOfValues: 10,
+  injectionDepth: 1000,
+  customSort: ['test'],
   label: 'example label',
 };
 const parentFacetIdError = `The ${exampleField} c-quantic-facet requires dependsOn.parentFacetId to be a valid string.`;
@@ -196,12 +201,8 @@ describe('c-quantic-facet', () => {
   });
 
   describe('component initialization', () => {
-    it('should initialize the facet controller with the correct customSort value', async () => {
-      const exampleCustomSortValues = ['test'];
-      createTestComponent({
-        ...defaultOptions,
-        customSort: exampleCustomSortValues,
-      });
+    it('should initialize the facet controller', async () => {
+      createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.buildFacet).toHaveBeenCalledTimes(1);
@@ -209,7 +210,12 @@ describe('c-quantic-facet', () => {
         exampleEngine,
         expect.objectContaining({
           options: expect.objectContaining({
-            customSort: exampleCustomSortValues,
+            field: exampleField,
+            facetId: exampleFacetId,
+            sortCriteria: defaultOptions.sortCriteria,
+            numberOfValues: defaultOptions.numberOfValues,
+            injectionDepth: defaultOptions.injectionDepth,
+            customSort: defaultOptions.customSort,
           }),
         })
       );
@@ -991,7 +997,7 @@ describe('c-quantic-facet', () => {
 
         expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
         expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
-          id: exampleField,
+          id: exampleFacetId,
           shouldRenderFacet: false,
         });
       });
