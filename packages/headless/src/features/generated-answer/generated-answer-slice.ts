@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {
   closeGeneratedAnswerFeedbackModal,
   dislikeGeneratedAnswer,
@@ -26,6 +25,7 @@ import {
   setCannotAnswer,
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
+import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
 export const generatedAnswerReducer = createReducer(
   getGeneratedAnswerInitialState(),
@@ -53,13 +53,10 @@ export const generatedAnswerReducer = createReducer(
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        const citationMap = new Map<string, GeneratedAnswerCitation>();
-        for (const citationCollection of [state.citations, payload.citations]) {
-          for (const citation of citationCollection) {
-            citationMap.set(citation.uri, citation);
-          }
-        }
-        state.citations = Array.from(citationMap.values());
+        state.citations = filterOutDuplicatedCitations([
+          ...state.citations,
+          ...payload.citations,
+        ]);
         delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
