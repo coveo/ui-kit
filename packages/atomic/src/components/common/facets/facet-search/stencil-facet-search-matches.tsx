@@ -34,6 +34,9 @@ function clickableMoreMatchesFound(query: string, i18n: i18n) {
   });
 }
 
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the facet-search-match.ts file instead
+ */
 export const FacetSearchMatches: FunctionalComponent<
   FacetSearchMatchesProps
 > = (props) => {

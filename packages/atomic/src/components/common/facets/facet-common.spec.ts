@@ -1,5 +1,5 @@
 import {NumericFacetValue, SearchStatusState} from '@coveo/headless';
-import {shouldDisplayInputForFacetRange} from './facet-common';
+import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
 
 describe('facet common', () => {
   describe('shouldDisplayInputForFacetRange', () => {

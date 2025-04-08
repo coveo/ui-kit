@@ -1,5 +1,4 @@
 import escape from 'escape-html';
-import {directive, Directive} from 'lit/directive.js';
 import {regexEncode} from '../../../../utils/string-utils';
 
 interface FacetSearchState {
@@ -9,7 +8,7 @@ interface FacetSearchState {
 }
 
 /**
- * Meant to be used inside the `shouldUpdate` lifecycle method.
+ * Meant to be used inside the `componentShouldUpdate` lifecycle method.
  * It prevents updating the facet between two matchless facet searches.
  * It also prevents updating the facet until the first search has loaded.
  */
@@ -46,21 +45,16 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
   return !isLoading;
 }
 
-export const highlightSearchResult = directive(
-  class extends Directive {
-    // TODO:  check if can optimize directive by checking if the value is the same
-    render(resultValue: string, searchQuery = '') {
-      const sanitizedResult = escape(resultValue);
+export function highlightSearchResult(resultValue: string, searchQuery = '') {
+  const sanitizedResult = escape(resultValue);
 
-      if (searchQuery.trim() === '') {
-        return sanitizedResult;
-      }
-
-      const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
-      return sanitizedResult.replace(
-        regex,
-        '<span part="search-highlight" class="font-bold">$1</span>'
-      );
-    }
+  if (searchQuery.trim() === '') {
+    return sanitizedResult;
   }
-);
+
+  const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
+  return escape(resultValue).replace(
+    regex,
+    '<span part="search-highlight" class="font-bold">$1</span>'
+  );
+}

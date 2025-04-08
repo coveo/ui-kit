@@ -27,13 +27,13 @@ import {
 import {sortByDocumentPosition} from '../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
+import {popoverClass} from '../../common/facets/popover/popover-type';
 import {
   BaseFacetElement,
   sortFacetVisibility,
   triageFacetsByParents,
   collapseFacetsAfter,
-} from '../../common/facets/facet-common';
-import {popoverClass} from '../../common/facets/popover/popover-type';
+} from '../../common/facets/stencil-facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
 import {RefineModalBody} from '../../common/refine-modal/body';
 import {

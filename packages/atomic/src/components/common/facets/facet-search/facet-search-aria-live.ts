@@ -1,6 +1,6 @@
 import {Facet, FacetSearchState} from '@coveo/headless';
 import {i18n} from 'i18next';
-import {shouldUpdateFacetSearchComponent} from './facet-search-utils';
+import {shouldUpdateFacetSearchComponent} from './stencil-facet-search-utils';
 
 export function announceFacetSearchResultsWithAriaLive(
   facet: Pick<Facet, 'subscribe'> & {state: {facetSearch: FacetSearchState}},

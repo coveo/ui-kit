@@ -2,12 +2,18 @@ import {Fragment, FunctionalComponent, h} from '@stencil/core';
 
 const MIN_VALUES_WHERE_FACET_SEARCH_IMPROVES_UX = 9;
 
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the facet-search-input-guard.ts file instead
+ */
 interface FacetSearchInputGuardProps {
   withSearch: boolean;
   canShowMoreValues: boolean;
   numberOfDisplayedValues: number;
 }
 
+/**
+ * @deprecated Should only be used for Stencil components; for Lit components, use the facet-search-input-guard.ts file instead
+ */
 export const FacetSearchInputGuard: FunctionalComponent<
   FacetSearchInputGuardProps
 > = ({withSearch, canShowMoreValues, numberOfDisplayedValues}, children) => {

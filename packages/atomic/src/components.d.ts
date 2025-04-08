@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -36,7 +36,7 @@ import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -319,28 +319,6 @@ export namespace Components {
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicCommerceDidYouMean {
-    }
-    /**
-     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
-     * @alpha 
-     */
-    interface AtomicCommerceFacet {
-        /**
-          * The facet controller instance.
-         */
-        "facet": RegularFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed": boolean;
-        /**
-          * The Summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -4001,16 +3979,6 @@ declare global {
         prototype: HTMLAtomicCommerceDidYouMeanElement;
         new (): HTMLAtomicCommerceDidYouMeanElement;
     };
-    /**
-     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceFacetElement extends Components.AtomicCommerceFacet, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceFacetElement: {
-        prototype: HTMLAtomicCommerceFacetElement;
-        new (): HTMLAtomicCommerceFacetElement;
-    };
     interface HTMLAtomicCommerceFacetNumberInputElementEventMap {
         "atomic/numberInputApply": any;
     }
@@ -6053,7 +6021,6 @@ declare global {
         "atomic-commerce-breadbox": HTMLAtomicCommerceBreadboxElement;
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
-        "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
@@ -6493,28 +6460,6 @@ declare namespace LocalJSX {
      * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
      */
     interface AtomicCommerceDidYouMean {
-    }
-    /**
-     * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
-     * @alpha 
-     */
-    interface AtomicCommerceFacet {
-        /**
-          * The facet controller instance.
-         */
-        "facet": RegularFacet;
-        /**
-          * The field identifier for this facet.
-         */
-        "field"?: string;
-        /**
-          * Specifies whether the facet is collapsed.
-         */
-        "isCollapsed"?: boolean;
-        /**
-          * The Summary controller instance.
-         */
-        "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
     }
     /**
      * Internal component made to be integrated in a NumericFacet.
@@ -9851,7 +9796,6 @@ declare namespace LocalJSX {
         "atomic-commerce-breadbox": AtomicCommerceBreadbox;
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
-        "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
@@ -10096,11 +10040,6 @@ declare module "@stencil/core" {
              * @alpha The `atomic-commerce-query-correction` component is responsible for handling query corrections. When a query returns no products but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
              */
             "atomic-commerce-did-you-mean": LocalJSX.AtomicCommerceDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicCommerceDidYouMeanElement>;
-            /**
-             * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
-             * @alpha 
-             */
-            "atomic-commerce-facet": LocalJSX.AtomicCommerceFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetElement>;
             /**
              * Internal component made to be integrated in a NumericFacet.
              * @alpha 

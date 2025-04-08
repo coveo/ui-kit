@@ -1,4 +1,4 @@
-import {highlightSearchResult} from './facet-search-utils';
+import {highlightSearchResult} from './stencil-facet-search-utils';
 
 describe('#highlightSearchResult', () => {
   it('should highlight the first instance of the query ', () => {

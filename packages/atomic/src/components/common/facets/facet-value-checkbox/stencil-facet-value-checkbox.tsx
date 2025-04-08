@@ -2,9 +2,9 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/stencil-utils';
 import {StencilCheckbox} from '../../stencil-checkbox';
-import {TriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValueProps} from '../facet-common';
-import {FacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
+import {TriStateCheckbox} from '../../stencil-triStateCheckbox';
+import {FacetValueExclude} from '../facet-value-exclude/stencil-facet-value-exclude';
+import {FacetValueProps} from '../stencil-facet-common';
 
 type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
   state: 'idle' | 'selected' | 'excluded';

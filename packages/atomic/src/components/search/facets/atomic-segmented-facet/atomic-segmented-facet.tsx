@@ -25,7 +25,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {FacetSegmentedValue} from '../facet-segmented-value/facet-segmented-value';

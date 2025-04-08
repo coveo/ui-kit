@@ -1,5 +1,6 @@
 import {FacetValue, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
+import {RefOrCallback} from 'lit/directives/ref.js';
 
 export interface FacetValueProps {
   i18n: i18n;
@@ -11,7 +12,7 @@ export interface FacetValueProps {
   class?: string;
   part?: string;
   additionalPart?: string;
-  buttonRef?: (element?: HTMLButtonElement) => void;
+  buttonRef?: RefOrCallback;
 }
 
 export function shouldDisplayInputForFacetRange(facetRange: {

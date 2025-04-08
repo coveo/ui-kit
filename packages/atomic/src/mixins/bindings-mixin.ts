@@ -58,6 +58,7 @@ export class BindingController implements ReactiveController {
 
   constructor(host: ReactiveControllerHost) {
     (this.host = host).addController(this);
+    console.log(this);
   }
 
   hostConnected() {

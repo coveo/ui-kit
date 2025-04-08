@@ -38,26 +38,26 @@ import {
 } from '../../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
-import {FacetGuard} from '../../../common/facets/facet-guard';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
+import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
-import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {FacetSearchInputGuard} from '../../../common/facets/facet-search/facet-search-input-guard';
-import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
+import {FacetSearchInput} from '../../../common/facets/facet-search/stencil-facet-search-input';
+import {FacetSearchInputGuard} from '../../../common/facets/facet-search/stencil-facet-search-input-guard';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
-} from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+} from '../../../common/facets/facet-search/stencil-facet-search-utils';
+import {FacetSearchValue} from '../../../common/facets/facet-search/stencil-facet-search-value';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
   FacetValueProps,
   FacetValue,
-} from '../../../common/facets/facet-value/facet-value';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+} from '../../../common/facets/facet-value/stencil-facet-value';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
+import {FacetGuard} from '../../../common/facets/stencil-facet-guard';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

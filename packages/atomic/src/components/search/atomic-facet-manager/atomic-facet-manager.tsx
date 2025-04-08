@@ -16,7 +16,7 @@ import {
   sortFacetVisibility,
   collapseFacetsAfter,
   BaseFacetElement,
-} from '../../common/facets/facet-common';
+} from '../../common/facets/stencil-facet-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

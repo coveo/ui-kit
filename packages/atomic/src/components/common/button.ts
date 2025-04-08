@@ -1,6 +1,7 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
+import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {createRipple} from '../../utils/ripple';
 import {
@@ -39,6 +40,7 @@ export interface ButtonProps {
   ariaHidden?: 'true' | 'false';
   tabIndex?: number;
   title?: string;
+  ref?: RefOrCallback;
 }
 
 export const button: FunctionalComponentWithChildren<ButtonProps> =
@@ -65,6 +67,7 @@ export const button: FunctionalComponentWithChildren<ButtonProps> =
       @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
       @click=${props.onClick}
       ?disabled=${props.disabled}
+      ${ref(props.ref)}
     >
       ${when(
         props.text,

@@ -2,20 +2,126 @@
 // import {buildCustomEvent} from './event-utils';
 // import {InitializableComponent} from './initialization-utils';
 // import {defer} from './utils';
+//TODO: Validate and test
+import {ReactiveController, ReactiveControllerHost} from 'lit';
+import {AnyBindings} from '../components';
+import {InitializableComponent} from '../decorators/types';
+import {buildCustomEvent} from './event-utils';
+import {defer} from './stencil-utils';
 
-// const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
+const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
 
-//TODO: Reimplement to fit Lit
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FindAriaLiveEventArgs {
-  // element?: HTMLAtomicAriaLiveElement;
+  // TODO: KIT-4088
+  element?: HTMLAtomicAriaLiveElement;
 }
 
-//TODO: Reimplement to fit Lit
-export function AriaLiveRegion(_regionName: string, _assertive = false) {}
+export function AriaLiveRegion(regionName: string, assertive = false) {
+  function getAriaLiveElement() {
+    const event = buildCustomEvent<FindAriaLiveEventArgs>(
+      findAriaLiveEventName,
+      {}
+    );
+    document.dispatchEvent(event);
+    const {element} = event.detail;
+    return element;
+  }
 
-//TODO: Reimplement to fit Lit
-export class FocusTargetController {}
+  function dispatchMessage(message: string) {
+    getAriaLiveElement()?.updateMessage(regionName, message, assertive);
+  }
+
+  function registerRegion() {
+    getAriaLiveElement()?.registerRegion(regionName, assertive);
+  }
+
+  return (
+    _component: InitializableComponent<AnyBindings>,
+    _setterName: string
+  ) => {
+    dispatchMessage;
+    registerRegion;
+    //TODO: Reimplement to fit Lit
+    // TODO: create a reactive component
+  };
+}
+
+// Assuming you have a `defer` utility function
+
+export class FocusTargetController implements ReactiveController {
+  private bindings: AnyBindings;
+  private lastSearchId?: string;
+  private element?: HTMLElement;
+  private onFocusCallback?: Function;
+  private doFocusAfterSearch = false;
+  private doFocusOnNextTarget = false;
+
+  constructor(
+    private host: ReactiveControllerHost,
+    bindings: AnyBindings
+  ) {
+    this.host = host;
+    this.bindings = bindings;
+    this.host.addController(this);
+  }
+
+  public setTarget(el?: HTMLElement) {
+    if (!el) {
+      return;
+    }
+    this.element = el;
+    if (this.doFocusOnNextTarget) {
+      this.doFocusOnNextTarget = false;
+      this.focus();
+    }
+  }
+
+  public async focus() {
+    await defer();
+    this.element?.focus();
+    this.onFocusCallback?.();
+  }
+
+  public focusAfterSearch() {
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+      this.bindings.engine
+    );
+    this.doFocusAfterSearch = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public focusOnNextTarget() {
+    this.doFocusOnNextTarget = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public disableForCurrentSearch() {
+    if (
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+      this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+    }
+  }
+
+  hostUpdated() {
+    if (
+      this.doFocusAfterSearch &&
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+        this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+      if (this.element) {
+        const el = this.element;
+        // The focus seems to be flaky without deferring, especially on iOS.
+        defer().then(() => {
+          el.focus();
+          this.onFocusCallback?.();
+        });
+      }
+    }
+  }
+}
 
 function isFocusable(element: Element) {
   // Source: https://stackoverflow.com/a/30753870
