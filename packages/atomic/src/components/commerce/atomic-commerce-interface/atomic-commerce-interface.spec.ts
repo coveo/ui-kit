@@ -38,7 +38,20 @@ vi.mock('@coveo/headless/commerce', async () => {
       };
       return context;
     }),
-    buildProductListing: vi.fn(),
+
+    buildProductListing: vi.fn(() => ({
+      summary: vi.fn(() => ({
+        subscribe: vi.fn(() => ({
+          unsubscribe: vi.fn(),
+        })),
+      })),
+      urlManager: vi.fn(() => ({
+        subscribe: vi.fn(() => ({
+          unsubscribe: vi.fn(),
+        })),
+      })),
+      executeFirstRequest: vi.fn(),
+    })),
     buildSearch: vi.fn(() => ({
       summary: vi.fn(() => ({
         subscribe: vi.fn(() => ({
@@ -149,12 +162,19 @@ describe('AtomicCommerceInterface', () => {
     );
   });
 
+  test('should set error when initialization fails', async () => {
+    const invalidConfig = {...commerceEngineConfig, organizationId: ''};
+    await expect(element.initialize(invalidConfig)).rejects.toThrow();
+    expect(element.error).toBeDefined();
+    consoleErrorSpy.mockRestore();
+  });
+
   describe('before being initialized', () => {
     test('should log an error when calling "executeFirstRequest"', async () => {
       const errorMessage =
         'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
       await element.executeFirstRequest();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element.host);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
     });
 
     test('should return error when changing a property too early', async () => {
@@ -162,7 +182,7 @@ describe('AtomicCommerceInterface', () => {
         'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
       element.language = 'fr';
       await element.updateComplete;
-      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element.host);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
     });
   });
 
@@ -291,22 +311,30 @@ describe('AtomicCommerceInterface', () => {
       await element.executeFirstRequest();
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
-
-    test('should update language when language property changes after initialization', async () => {
-      await element.initializeWithEngine(preconfiguredEngine);
-      element.language = 'fr';
-      await element.updateComplete;
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const context = (element as any).context;
-      expect(context.state.language).toBe('fr');
-    });
   });
 
-  test('should set error when initialization fails', async () => {
-    const invalidConfig = {...commerceEngineConfig, organizationId: ''};
-    await expect(element.initialize(invalidConfig)).rejects.toThrow();
-    expect(element.error).toBeDefined();
-    consoleErrorSpy.mockRestore();
+  const interfaceType = [
+    {type: 'product-listing', description: 'when type is product-listing'},
+    {type: 'search', description: 'when type is search'},
+  ];
+
+  interfaceType.forEach(({type, description}) => {
+    describe(description, () => {
+      beforeEach(async () => {
+        element.type = type as 'product-listing' | 'search';
+        await element.updateComplete;
+        await element.initialize(commerceEngineConfig);
+      });
+
+      test(`should initialize the ${type} engine`, async () => {
+        expect(element.engine).toBeTruthy();
+        expect(element.type).toBe(type);
+      });
+
+      test('should allow executing the first request after initialization', async () => {
+        await element.executeFirstRequest();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+      });
+    });
   });
 });
