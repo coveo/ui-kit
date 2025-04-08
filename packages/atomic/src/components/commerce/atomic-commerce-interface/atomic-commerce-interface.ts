@@ -86,8 +86,6 @@ export class AtomicCommerceInterface
   private store: CommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  public host: HTMLElement = this;
-
   @state() public error?: Error;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
