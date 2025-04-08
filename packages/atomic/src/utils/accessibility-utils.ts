@@ -15,7 +15,14 @@ export interface FindAriaLiveEventArgs {
 export function AriaLiveRegion(_regionName: string, _assertive = false) {}
 
 //TODO: Reimplement to fit Lit
-export class FocusTargetController {}
+export class FocusTargetController {
+  //@ts-expect-error to implement
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setTarget(el: HTMLElement) {}
+  public focusAfterSearch() {}
+  public focusOnNextTarget() {}
+  public async focus() {}
+}
 
 function isFocusable(element: Element) {
   // Source: https://stackoverflow.com/a/30753870
