@@ -20,6 +20,7 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   GeneratedAnswerSection,
@@ -163,6 +164,9 @@ export function buildAnswerApiGeneratedAnswer(
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
+        citations: filterOutDuplicatedCitations(
+          answerApiState?.citations ?? []
+        ),
         error: {
           message: answerApiState?.error?.message,
           statusCode: answerApiState?.error?.code,
