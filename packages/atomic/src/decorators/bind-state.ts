@@ -27,6 +27,8 @@ function overrideShouldUpdate(
   component.shouldUpdate = function (changedProperties: PropertyValues) {
     for (const [key, value] of changedProperties.entries()) {
       if (key === stateProperty && value === undefined) {
+        // TODO: understand why this is happening when the controller is passed as a prop
+        console.log(stateProperty, ' is undefined!!!!'); // TODO: This is the reason why // the component is not updating (bindStateToController: broken `shouldUpdate` override)
         return false;
       }
     }
@@ -55,6 +57,7 @@ export function bindStateToController<Element extends ReactiveElement>(
      * Component's method to be called when state is updated.
      */
     onUpdateCallbackMethod?: string;
+    overrideShouldUpdate?: boolean;
   }
 ) {
   return <
@@ -73,7 +76,9 @@ export function bindStateToController<Element extends ReactiveElement>(
       // @ts-expect-error - shouldUpdate is a protected property
       const {disconnectedCallback, initialize, shouldUpdate} = component;
 
-      overrideShouldUpdate(component, shouldUpdate, stateProperty.toString());
+      if (options?.overrideShouldUpdate !== false) {
+        overrideShouldUpdate(component, shouldUpdate, stateProperty.toString());
+      }
 
       component.initialize = function () {
         initialize && initialize.call(this);

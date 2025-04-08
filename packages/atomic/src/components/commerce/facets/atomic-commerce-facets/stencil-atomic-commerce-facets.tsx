@@ -23,13 +23,13 @@ import {createAppLoadedListener} from '../../../common/interface/store';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
- * The `atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
- * Unlike regular facets, which require explicit definition and request in the query, the `atomic-commerce-facets` component dynamically generates facets.
+ * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
+ * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
  *
  * @alpha
  */
 @Component({
-  tag: 'atomic-commerce-facets',
+  tag: 'stencil-atomic-commerce-facets',
   shadow: false,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {

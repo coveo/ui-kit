@@ -2,4 +2,5 @@
 export {AtomicComponentError} from '../common/atomic-component-error/atomic-component-error';
 export {AtomicIcon} from '../common/atomic-icon/atomic-icon';
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown';
-export {AtomicCommerceFacet} from '../commerce/facets/atomic-commerce-facet/atomic-commerce-facet.js';
+export {AtomicCommerceFacet} from '../commerce/facets/atomic-commerce-facet/atomic-commerce-facet';
+export {AtomicCommerceFacets} from './facets/atomic-commerce-facets/atomic-commerce-facets';

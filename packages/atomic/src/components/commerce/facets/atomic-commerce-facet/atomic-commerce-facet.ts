@@ -103,7 +103,7 @@ export class AtomicCommerceFacet
 
   @state() bindings!: CommerceBindings;
 
-  @bindStateToController('summary')
+  @bindStateToController('summary', {overrideShouldUpdate: false}) // TODO: remove this!!
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
@@ -125,6 +125,7 @@ export class AtomicCommerceFacet
     this.ensureSubscribed();
     this.initAriaLive();
     this.initPopover();
+    // this.requestUpdate();
   }
 
   public connectedCallback(): void {
@@ -156,10 +157,10 @@ export class AtomicCommerceFacet
     return true;
   }
 
-  @errorGuard()
   @bindingGuard()
+  @errorGuard()
   protected render() {
-    console.log('Render');
+    console.log('=== Render ===', this.bindings);
     if (!this.facet) {
       return html`${nothing}`;
     }

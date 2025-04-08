@@ -15,8 +15,10 @@ function initializeBindings<
 >(instance: InstanceType): Promise<() => void> {
   return new Promise((resolve, reject) => {
     instance.initialized = true;
+    console.log('Fetch bindings...', instance);
     fetchBindings<SpecificBindings>(instance)
       .then((bindings) => {
+        console.log('binding found...', instance);
         instance.bindings = bindings;
 
         const updateLanguage = () => instance.requestUpdate();
@@ -58,7 +60,6 @@ export class BindingController implements ReactiveController {
 
   constructor(host: ReactiveControllerHost) {
     (this.host = host).addController(this);
-    console.log(this);
   }
 
   hostConnected() {

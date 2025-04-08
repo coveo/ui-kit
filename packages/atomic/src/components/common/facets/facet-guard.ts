@@ -16,11 +16,11 @@ class FacetGuardDirective extends Directive {
       hasError,
       hasResults,
     }: FacetGuardDirectiveProps,
-    content: () => unknown
+    children: () => unknown
   ) {
     const shouldDisplay =
       enabled && !hasError && firstRequestExecuted && hasResults;
-    return displayIf(shouldDisplay, content);
+    return displayIf(shouldDisplay, children);
   }
 }
 
