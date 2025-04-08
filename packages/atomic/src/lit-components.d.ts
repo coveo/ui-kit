@@ -8,5 +8,3 @@ export namespace Components {
 
   export type AllComponents = ComponentInterfaces;
 }
-
-export {}
