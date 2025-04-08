@@ -10,9 +10,16 @@ export default class ExampleQuanticTab extends LightningElement {
     'The QuanticTab component allows the end user to view a subset of results.';
   options = [
     {
+      attribute: 'name',
+      label: 'Name',
+      description:
+        'A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.',
+      defaultValue: 'Case',
+    },
+    {
       attribute: 'label',
       label: 'Label',
-      description: 'The non-localized label for the tab.',
+      description: 'The label to display on the tab.',
       defaultValue: 'Case',
     },
     {

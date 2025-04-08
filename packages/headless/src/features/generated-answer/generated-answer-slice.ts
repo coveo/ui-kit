@@ -1,6 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {RETRYABLE_STREAM_ERROR_CODE} from '../../api/generated-answer/generated-answer-client.js';
-import {GeneratedAnswerCitation} from '../../api/generated-answer/generated-answer-event-payload.js';
 import {UpdateCitationsHook} from '../../controllers/core/generated-answer/headless-core-generated-answer.js';
 import {
   closeGeneratedAnswerFeedbackModal,
@@ -27,6 +26,7 @@ import {
   setCannotAnswer,
 } from './generated-answer-actions.js';
 import {getGeneratedAnswerInitialState} from './generated-answer-state.js';
+import {filterOutDuplicatedCitations} from './utils/generated-answer-citation-utils.js';
 
 export const generatedAnswerReducer = (
   onUpdateCitations: UpdateCitationsHook
@@ -55,18 +55,13 @@ export const generatedAnswerReducer = (
       .addCase(updateCitations, (state, {payload}) => {
         state.isLoading = false;
         state.isStreaming = true;
-        const citationMap = new Map<string, GeneratedAnswerCitation>();
-        for (const citationCollection of [state.citations, payload.citations]) {
-          for (const citation of citationCollection) {
-            citationMap.set(citation.uri, citation);
-          }
-        }
-
         const updatedCitations = onUpdateCitations({
-          citations: Array.from(citationMap.values()),
+          citations: payload.citations,
         });
-        state.citations = updatedCitations.citations;
-
+        state.citations = filterOutDuplicatedCitations([
+          ...state.citations,
+          ...updatedCitations.citations,
+        ]);
         delete state.error;
       })
       .addCase(updateError, (state, {payload}) => {
