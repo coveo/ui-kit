@@ -29,7 +29,7 @@ import {
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {Carousel} from '../../../common/carousel';
+import {Carousel} from '../../../common/carousel-stencil';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
