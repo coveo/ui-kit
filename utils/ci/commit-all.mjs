@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-import {gitPushTags} from '@coveo/semantic-monorepo-tools';
 import {Octokit} from 'octokit';
-import {commitChanges} from './common/commit.mjs';
 import {
   REPO_NAME,
   REPO_OWNER,
   REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
+import {commitChanges, setupGit} from './common/git.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 if (!process.env.INIT_CWD) {
@@ -20,14 +19,14 @@ process.chdir(process.env.INIT_CWD);
     auth: process.env.GITHUB_INSTALLATION_TOKEN,
   });
 
+  // Setup Git with the bot user
+  await setupGit();
+
   // Compile git commit message
   const commitMessage = 'Add generated files';
 
   // Craft the commit (complex process, see function)
   const commit = await commitChanges(commitMessage, octokit);
-
-  // And push them
-  await gitPushTags();
 
   // Current release branch
   await octokit.rest.git.updateRef({

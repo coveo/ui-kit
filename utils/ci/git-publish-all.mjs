@@ -3,12 +3,12 @@ import {gitTag, gitPushTags} from '@coveo/semantic-monorepo-tools';
 import {existsSync, readFileSync} from 'fs';
 import {Octokit} from 'octokit';
 import {dedent} from 'ts-dedent';
-import {commitChanges} from './common/commit.mjs';
 import {
   REPO_NAME,
   REPO_OWNER,
   REPO_RELEASE_BRANCH,
 } from './common/constants.mjs';
+import {commitChanges, setupGit} from './common/git.mjs';
 import {removeWriteAccessRestrictions} from './lock-master.mjs';
 
 if (!process.env.INIT_CWD) {
@@ -41,6 +41,9 @@ process.chdir(process.env.INIT_CWD);
     package.json
     package-lock.json
   `;
+
+  // Setup Git with the bot user
+  await setupGit();
 
   // Craft the commit (complex process, see function)
   const commit = await commitChanges(commitMessage, octokit);
