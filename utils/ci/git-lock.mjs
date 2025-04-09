@@ -1,12 +1,7 @@
 #!/usr/bin/env node
-import {
-  gitPull,
-  getSHA1fromRef,
-  gitSetupSshRemote,
-  gitSetupUser,
-} from '@coveo/semantic-monorepo-tools';
+import {gitPull, getSHA1fromRef} from '@coveo/semantic-monorepo-tools';
 import {dedent} from 'ts-dedent';
-import {REPO_MAIN_BRANCH, REPO_NAME, REPO_OWNER} from './common/constants.mjs';
+import {REPO_MAIN_BRANCH} from './common/constants.mjs';
 import {
   limitWriteAccessToBot,
   removeWriteAccessRestrictions,
@@ -18,7 +13,6 @@ if (!process.env.INIT_CWD) {
 process.chdir(process.env.INIT_CWD);
 
 const isPrerelease = process.env.IS_PRERELEASE === 'true';
-const GIT_SSH_REMOTE = 'deploy';
 
 const ensureUpToDateBranch = async () => {
   // Lock-out master
@@ -38,20 +32,6 @@ const ensureUpToDateBranch = async () => {
   }
 };
 
-const setupGit = async () => {
-  const GIT_USERNAME = 'developer-experience-bot[bot]';
-  const GIT_EMAIL =
-    '91079284+developer-experience-bot[bot]@users.noreply.github.com';
-  const DEPLOY_KEY = process.env.DEPLOY_KEY;
-  if (DEPLOY_KEY === undefined) {
-    throw new Error('Deploy key is undefined');
-  }
-
-  await gitSetupUser(GIT_USERNAME, GIT_EMAIL);
-  await gitSetupSshRemote(REPO_OWNER, REPO_NAME, DEPLOY_KEY, GIT_SSH_REMOTE);
-};
-
 if (!isPrerelease) {
-  await setupGit();
   await ensureUpToDateBranch();
 }

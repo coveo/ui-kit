@@ -11,7 +11,7 @@
       ],
       "cache": true,
       "options": {
-        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
+        "command": "npm run-script -w=@coveo/ci if-not-cdn -- \"node --max_old_space_size=6144 ../../../node_modules/@stencil/core/bin/stencil build\"",
         "cwd": "{projectRoot}"
       }
     }

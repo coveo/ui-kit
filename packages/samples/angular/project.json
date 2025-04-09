@@ -8,8 +8,8 @@
       "cache": true,
       "options": {
         "commands": [
-          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
-          "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:angular\""
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\"",
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:angular\""
         ],
         "parallel": false,
         "cwd": "{projectRoot}"

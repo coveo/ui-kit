@@ -2,13 +2,8 @@
  * Because our release process creates release commits on our main branch,
  * it needs to reserve the branch when running, so that no 'new commits' come up.
  */
-import {createAppAuth} from '@octokit/auth-app';
 import {Octokit} from 'octokit';
-import {
-  RELEASER_AUTH_SECRETS,
-  REPO_NAME,
-  REPO_OWNER,
-} from './common/constants.mjs';
+import {REPO_NAME, REPO_OWNER} from './common/constants.mjs';
 
 const RELEASE_FREEZE_ID = 215874;
 
@@ -23,8 +18,7 @@ export const removeWriteAccessRestrictions = () =>
  */
 async function changeBranchRestrictions(onlyBot) {
   const octokit = new Octokit({
-    authStrategy: createAppAuth,
-    auth: RELEASER_AUTH_SECRETS,
+    auth: process.env.GITHUB_INSTALLATION_TOKEN,
   });
   // Requires branches to be up to date before merging
   await octokit.rest.repos.updateRepoRuleset({

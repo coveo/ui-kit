@@ -8,9 +8,9 @@
       "cache": true,
       "options": {
         "commands": [
-          "npm run-script -w=@coveo/release if-not-cdn -- \"npx next build\"",
-          "npm run-script -w=@coveo/release if-not-cdn -- \"tsc --noEmit\"",
-          "npm run-script -w=@coveo/release if-not-cdn -- \"tsc --module commonjs --noEmit\""
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"npx next build\"",
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --noEmit\"",
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc --module commonjs --noEmit\""
         ],
         "parallel": true,
         "cwd": "{projectRoot}"

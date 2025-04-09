@@ -13,13 +13,6 @@ export const REPO_FS_ROOT = resolve(
   '..',
   '..'
 );
-export const RELEASER_AUTH_SECRETS = {
-  appId: process.env.RELEASER_APP_ID,
-  privateKey: process.env.RELEASER_PRIVATE_KEY,
-  clientId: process.env.RELEASER_CLIENT_ID,
-  clientSecret: process.env.RELEASER_CLIENT_SECRET,
-  installationId: process.env.RELEASER_INSTALLATION_ID,
-};
 
 export const NPM_LATEST_TAG = 'latest';
 export const NPM_BETA_TAG = 'beta';

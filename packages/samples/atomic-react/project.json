@@ -8,8 +8,8 @@
       "cache": true,
       "options": {
         "commands": [
-          "npm run-script -w=@coveo/release if-not-cdn -- \"tsc -b\"",
-          "npm run-script -w=@coveo/release if-not-cdn -- \"vite build\""
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc -b\"",
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"vite build\""
         ],
         "cwd": "{projectRoot}"
       }
