@@ -18,16 +18,17 @@ export const DidYouMeanSelectors: DidYouMeanSelector = {
   didYouMeanLabel: () =>
     DidYouMeanSelectors.get().find('[data-cy="did-you-mean-label"]'),
   noResultLabel: () =>
-    DidYouMeanSelectors.get().find('[data-cy="no-result-label"]'),
+    DidYouMeanSelectors.get().find('[data-testid="no-result-label"]'),
   automaticQueryCorrectionLabel: () =>
     DidYouMeanSelectors.get().find(
-      '[data-cy="automatic-query-correction-label"]'
+      '[data-testid="automatic-query-correction-label"]'
     ),
   applyCorrectionButton: () =>
-    DidYouMeanSelectors.get().find('[data-cy="apply-correction-button"]'),
+    DidYouMeanSelectors.get().find('[data-testid="apply-correction-button"]'),
   showingResultsForLabel: () =>
-    DidYouMeanSelectors.get().find('[data-cy="showing-results-for-label"]'),
+    DidYouMeanSelectors.get().find('[data-testid="showing-results-for-label"]'),
   searchInsteadForLabel: () =>
-    DidYouMeanSelectors.get().find('[data-cy="search-instead-for-label"]'),
-  undoButton: () => DidYouMeanSelectors.get().find('[data-cy="undo-button"]'),
+    DidYouMeanSelectors.get().find('[data-testid="search-instead-for-label"]'),
+  undoButton: () =>
+    DidYouMeanSelectors.get().find('[data-testid="undo-button"]'),
 };
