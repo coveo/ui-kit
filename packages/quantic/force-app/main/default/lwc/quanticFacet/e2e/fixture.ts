@@ -19,9 +19,7 @@ interface FacetOptions {
 type QuanticFacetE2EFixtures = {
   facet: FacetObject;
   options: Partial<FacetOptions>;
-  urlHash?: string;
   insightSetup?: InsightSetupObject;
-  preventMockFacetResponse?: boolean;
 };
 
 export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
