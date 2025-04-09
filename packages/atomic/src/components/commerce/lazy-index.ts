@@ -10,6 +10,10 @@ export default {
     await import(
       './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
     ),
+  'atomic-commerce-recommendation-list': async () =>
+    await import(
+      './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
+    ),
   'atomic-commerce-sort-dropdown': async () =>
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
