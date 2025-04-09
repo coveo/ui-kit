@@ -5,6 +5,10 @@ import QuanticBreadcrumbManager from 'c/quanticBreadcrumbManager';
 import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+jest.mock('@salesforce/label/c.quantic_Colon', () => ({default: ':'}), {
+  virtual: true,
+});
+
 const initialBreadcrumbManagerState = {
   hasBreadcrumbs: false,
   numericFacetBreadcrumbs: [],
@@ -41,8 +45,12 @@ const selectors = {
     '[data-testid="category-facet-breadcrumb-value"]',
   numericFacetBreadcrumb: '[data-testid="numeric-facet-breadcrumb"]',
   numericFacetBreadcrumbValue: '[data-testid="numeric-facet-breadcrumb-value"]',
+  numericFacetBreadcrumbFieldName:
+    '[data-testid="numeric-facet-breadcrumb-field-name"]',
   dateFacetBreadcrumb: '[data-testid="date-facet-breadcrumb"]',
   dateFacetBreadcrumbValue: '[data-testid="date-facet-breadcrumb-value"]',
+  dateFacetBreadcrumbFieldName:
+    '[data-testid="date-facet-breadcrumb-field-name"]',
 };
 
 const exampleEngine = {
@@ -532,6 +540,76 @@ describe('c-quantic-breadcrumb-manager', () => {
         expect(labels).toEqual(values);
       });
     });
+
+    describe('when a numeric range is set with a numeric filter', () => {
+      const exampleLabel = 'Field one';
+      const exampleField = 'fieldOne';
+      const testNumericFacetBreadcrumbsWithFilter = [
+        {
+          field: exampleField,
+          facetId: `${exampleField}_input`,
+          values: [{value: {start: 10, end: 11}}],
+        },
+      ];
+
+      beforeAll(() => {
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          numericFacetBreadcrumbs: testNumericFacetBreadcrumbsWithFilter,
+          hasBreadcrumbs: true,
+        };
+        storeState = {
+          [exampleField]: {
+            facetId: exampleField,
+            label: exampleLabel,
+            format: (item) => `${item.start} - ${item.end}`,
+          },
+        };
+      });
+
+      it('should display the breadcrumb values with correct labels', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const numericFacetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.numericFacetBreadcrumb
+        );
+
+        expect(numericFacetBreadcrumbs.length).toBe(
+          testNumericFacetBreadcrumbsWithFilter.length
+        );
+        numericFacetBreadcrumbs.forEach((numericFacetBreadcrumb, index) => {
+          const exampleFacetBreadcrumb =
+            testNumericFacetBreadcrumbsWithFilter[index];
+
+          const numericFacetBreadcrumbFieldName =
+            numericFacetBreadcrumb.querySelector(
+              selectors.numericFacetBreadcrumbFieldName
+            );
+          expect(numericFacetBreadcrumbFieldName.textContent).toBe(
+            `${exampleLabel}: `
+          );
+
+          const facetBreadcrumbValues = Array.from(
+            numericFacetBreadcrumb.querySelectorAll(
+              selectors.numericFacetBreadcrumbValue
+            )
+          );
+
+          expect(facetBreadcrumbValues.length).toBe(
+            exampleFacetBreadcrumb.values.length
+          );
+
+          const labels = facetBreadcrumbValues.map(
+            (facetBreadcrumbValue) => facetBreadcrumbValue.label
+          );
+          const values = exampleFacetBreadcrumb.values.map(
+            (item) => `${item.value.start} - ${item.value.end}`
+          );
+          expect(labels).toEqual(values);
+        });
+      });
+    });
   });
 
   describe('date facet breadcrumbs', () => {
@@ -598,6 +676,76 @@ describe('c-quantic-breadcrumb-manager', () => {
           (item) => `${item.value.start} - ${item.value.end}`
         );
         expect(labels).toEqual(values);
+      });
+    });
+
+    describe('when a date range is set with a date filter', () => {
+      const exampleLabel = 'Field one';
+      const exampleField = 'fieldOne';
+      const testDateFacetBreadcrumbsWithFilter = [
+        {
+          field: exampleField,
+          facetId: `${exampleField}_input`,
+          values: [{value: {start: 'last week', end: 'today'}}],
+        },
+      ];
+
+      beforeAll(() => {
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          dateFacetBreadcrumbs: testDateFacetBreadcrumbsWithFilter,
+          hasBreadcrumbs: true,
+        };
+        storeState = {
+          [exampleField]: {
+            facetId: exampleField,
+            label: exampleLabel,
+            format: (item) => `${item.start} - ${item.end}`,
+          },
+        };
+      });
+
+      it('should display the breadcrumb values with correct labels', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const dateFacetBreadcrumbs = element.shadowRoot.querySelectorAll(
+          selectors.dateFacetBreadcrumb
+        );
+
+        expect(dateFacetBreadcrumbs.length).toBe(
+          testDateFacetBreadcrumbsWithFilter.length
+        );
+        dateFacetBreadcrumbs.forEach((dateFacetBreadcrumb, index) => {
+          const exampleFacetBreadcrumb =
+            testDateFacetBreadcrumbsWithFilter[index];
+
+          const dateFacetBreadcrumbFieldName =
+            dateFacetBreadcrumb.querySelector(
+              selectors.dateFacetBreadcrumbFieldName
+            );
+          expect(dateFacetBreadcrumbFieldName.textContent).toBe(
+            `${exampleLabel}: `
+          );
+
+          const facetBreadcrumbValues = Array.from(
+            dateFacetBreadcrumb.querySelectorAll(
+              selectors.dateFacetBreadcrumbValue
+            )
+          );
+
+          expect(facetBreadcrumbValues.length).toBe(
+            exampleFacetBreadcrumb.values.length
+          );
+
+          const labels = facetBreadcrumbValues.map(
+            (facetBreadcrumbValue) => facetBreadcrumbValue.label
+          );
+          const values = exampleFacetBreadcrumb.values.map(
+            (item) => `${item.value.start} - ${item.value.end}`
+          );
+          expect(labels).toEqual(values);
+        });
       });
     });
   });

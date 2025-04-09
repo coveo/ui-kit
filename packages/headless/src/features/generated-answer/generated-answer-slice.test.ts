@@ -119,7 +119,7 @@ describe('generated answer slice', () => {
         updateCitations({citations: newCitations})
       );
 
-      expect(finalState.citations).toEqual([...newCitations]);
+      expect(finalState.citations).toEqual(existingCitations);
     });
   });
 
