@@ -44,7 +44,6 @@ export function bindingGuard<
     }
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
-      console.log('====Binding Guard====', this.tagName, this.bindings);
       return this.bindings
         ? originalMethod?.call(this)
         : (html`${nothing}` as GenericRender<T>);

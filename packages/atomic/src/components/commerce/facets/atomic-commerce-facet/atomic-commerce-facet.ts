@@ -103,7 +103,7 @@ export class AtomicCommerceFacet
 
   @state() bindings!: CommerceBindings;
 
-  @bindStateToController('summary', {overrideShouldUpdate: false}) // TODO: remove this!!
+  @bindStateToController('summary')
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
@@ -160,7 +160,6 @@ export class AtomicCommerceFacet
   @bindingGuard()
   @errorGuard()
   protected render() {
-    console.log('=== Render ===', this.bindings);
     if (!this.facet) {
       return html`${nothing}`;
     }

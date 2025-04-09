@@ -5,9 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicCommerceSortDropdown,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -17,9 +14,7 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
-AtomicCommerceFacets,
 AtomicCommerceInterface,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
@@ -142,14 +137,12 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceFacets
 } from './components';
 
         
 const DECLARATIONS = [
-AtomicCommerceSortDropdown,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -159,9 +152,7 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
-AtomicCommerceFacets,
 AtomicCommerceInterface,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
@@ -284,7 +275,8 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceFacets
 ]
 
         

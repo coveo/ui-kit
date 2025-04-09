@@ -1,41 +1,10 @@
 import type {Controller} from '@coveo/headless';
-import type {PropertyValues, ReactiveElement} from 'lit';
+import type {ReactiveElement} from 'lit';
 import type {InitializableComponent} from './types';
 
 type ControllerProperties<T> = {
   [K in keyof T]: T[K] extends Controller ? K : never;
 }[keyof T];
-
-/**
- * Overrides the shouldUpdate method to prevent triggering an unnecessary updates when the controller state is not yet defined.
- *
- * This function wraps the original shouldUpdate method of a LitElement component. It ensures that the component
- * will only update if the original shouldUpdate method returns true and at least one of the changed properties
- * is not undefined.
- *
- * You can always define a custom shouldUpdate method in your component which will override this one.
- *
- * @param component - The LitElement component whose shouldUpdate method is being overridden.
- * @param shouldUpdate - The original shouldUpdate method of the component.
- */
-function overrideShouldUpdate(
-  component: ReactiveElement,
-  shouldUpdate: (changedProperties: PropertyValues) => boolean,
-  stateProperty: string
-) {
-  // @ts-expect-error - shouldUpdate is a protected property
-  component.shouldUpdate = function (changedProperties: PropertyValues) {
-    for (const [key, value] of changedProperties.entries()) {
-      if (key === stateProperty && value === undefined) {
-        // TODO: understand why this is happening when the controller is passed as a prop
-        console.log(stateProperty, ' is undefined!!!!'); // TODO: This is the reason why // the component is not updating (bindStateToController: broken `shouldUpdate` override)
-        return false;
-      }
-    }
-
-    return shouldUpdate.call(this, changedProperties);
-  };
-}
 
 /**
  * A decorator that allows the Lit component state property to automatically get updates from a [Coveo Headless controller](https://docs.coveo.com/en/headless/latest/usage/#use-headless-controllers).
@@ -57,7 +26,6 @@ export function bindStateToController<Element extends ReactiveElement>(
      * Component's method to be called when state is updated.
      */
     onUpdateCallbackMethod?: string;
-    overrideShouldUpdate?: boolean;
   }
 ) {
   return <
@@ -73,12 +41,7 @@ export function bindStateToController<Element extends ReactiveElement>(
 
     ctor.addInitializer((instance) => {
       const component = instance as Instance;
-      // @ts-expect-error - shouldUpdate is a protected property
-      const {disconnectedCallback, initialize, shouldUpdate} = component;
-
-      if (options?.overrideShouldUpdate !== false) {
-        overrideShouldUpdate(component, shouldUpdate, stateProperty.toString());
-      }
+      const {disconnectedCallback, initialize} = component;
 
       component.initialize = function () {
         initialize && initialize.call(this);
@@ -113,6 +76,11 @@ export function bindStateToController<Element extends ReactiveElement>(
           : undefined;
 
         const unsubscribeController = controller.subscribe(() => {
+          console.log(
+            'subscribed to controller',
+            controllerProperty,
+            controller.state
+          );
           component[stateProperty] = controller.state as Instance[K];
           typeof updateCallback === 'function' && updateCallback();
         });
