@@ -12,6 +12,7 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
@@ -33,20 +34,20 @@ import {
   spreadProperties,
 } from '../../../utils/stencil-utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
+import {searchBoxTextArea} from '../../common/search-box/search-box-text-area';
 import {
   buttonSearchSuggestion,
   simpleSearchSuggestion,
 } from '../../common/search-box/search-suggestion';
 import {submitButton} from '../../common/search-box/submit-button';
-import {textArea} from '../../common/search-box/text-area';
 import {wrapper} from '../../common/search-box/wrapper';
+import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   elementHasQuery,
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from '../../common/suggestions/stencil-suggestions-common';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+} from '../../common/suggestions/suggestions-common';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-search-box.tw.css';
@@ -609,7 +610,7 @@ export class AtomicCommerceSearchBox
       },
     };
 
-    return html`${textArea({
+    return html`${searchBoxTextArea({
       props: {
         textAreaRef: this.textAreaRef,
         ref: (el) => {
