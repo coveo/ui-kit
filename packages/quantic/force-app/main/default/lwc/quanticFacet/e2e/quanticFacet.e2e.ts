@@ -15,17 +15,17 @@ useCaseTestCases.forEach((useCase) => {
   test.describe(`quantic facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
       test('should trigger a new search and log the corresponding UA analytics events', async ({
-        search,
+        baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
-        const selectUaRequest = facet.waitForFacetSelectUaAnalytics({
+        const selectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
           facetId,
           facetField: field,
           facetValue: values[selectedIndex].value,
         });
-        let searchResponsePromise = search.waitForSearchResponse();
+        let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
@@ -35,12 +35,12 @@ useCaseTestCases.forEach((useCase) => {
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
 
-        const deselectUaRequest = facet.waitForFacetDeselectUaAnalytics({
+        const deselectUaRequest = baseFacet.waitForFacetDeselectUaAnalytics({
           facetId,
           facetField: field,
           facetValue: values[selectedIndex].value,
         });
-        searchResponsePromise = search.waitForSearchResponse();
+        searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
@@ -54,17 +54,17 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when selecting a facet value and clicking the clear filter button', () => {
       test('should trigger a new search and log the corresponding UA analytics events', async ({
-        search,
+        baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
-        const selectUaRequest = facet.waitForFacetSelectUaAnalytics({
+        const selectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
           facetId,
           facetField: field,
           facetValue: values[selectedIndex].value,
         });
-        let searchResponsePromise = search.waitForSearchResponse();
+        let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
@@ -74,11 +74,11 @@ useCaseTestCases.forEach((useCase) => {
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
 
-        const clearAllUaRequest = facet.waitForFacetClearAllUaAnalytics({
+        const clearAllUaRequest = baseFacet.waitForFacetClearAllUaAnalytics({
           facetId,
           facetField: field,
         });
-        searchResponsePromise = search.waitForSearchResponse();
+        searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnClearSelectionButton();
 
@@ -92,15 +92,15 @@ useCaseTestCases.forEach((useCase) => {
 
     test.describe('when expanding and collapsing facet values using Show More/Less buttons', () => {
       test('should fetch additional facet values and send correct UA analytics', async ({
-        search,
+        baseFacet,
         facet,
       }) => {
         const {facetId, field} = facetData;
-        const uaRequest = facet.waitForShowMoreFacetResultsUaAnalytics({
+        const uaRequest = baseFacet.waitForShowMoreFacetResultsUaAnalytics({
           facetId,
           facetField: field,
         });
-        let searchResponsePromise = search.waitForSearchResponse();
+        let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnshowMoreFacetValuesButton();
 
@@ -112,11 +112,12 @@ useCaseTestCases.forEach((useCase) => {
           'showMoreFacetResults'
         );
 
-        const showLessUaRequest = facet.waitForShowLessFacetResultsUaAnalytics({
-          facetId,
-          facetField: field,
-        });
-        searchResponsePromise = search.waitForSearchResponse();
+        const showLessUaRequest =
+          baseFacet.waitForShowLessFacetResultsUaAnalytics({
+            facetId,
+            facetField: field,
+          });
+        searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnshowLessFacetValuesButton();
 
@@ -141,19 +142,19 @@ useCaseTestCases.forEach((useCase) => {
         },
       });
       test('should display the custom caption instead of the raw facet value', async ({
-        search,
+        baseFacet,
         facet,
       }) => {
         expect(facet.facetValue.nth(facetValueIndex)).toHaveText(
           exampleCaption
         );
         const {facetId, field, values} = facetData;
-        const uaRequest = facet.waitForFacetSelectUaAnalytics({
+        const uaRequest = baseFacet.waitForFacetSelectUaAnalytics({
           facetId,
           facetField: field,
           facetValue: values[facetValueIndex].value,
         });
-        const searchResponsePromise = search.waitForSearchResponse();
+        const searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(facetValueIndex);
 
@@ -168,13 +169,13 @@ useCaseTestCases.forEach((useCase) => {
     if (useCase.value === useCaseEnum.search) {
       test.describe('when typing in the facet search box input', () => {
         test('should fetch facet values according to the query', async ({
-          search,
+          baseFacet,
           facet,
         }) => {
           const {field: expectedField} = facetData;
           const exampleQuery = 'test';
           const facetSearchResponsePromise =
-            search.waitForFacetSearchResponse();
+            baseFacet.waitForFacetSearchResponse();
 
           await facet.fillFacetSearchBoxInput(exampleQuery);
 
