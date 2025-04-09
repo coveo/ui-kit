@@ -32,7 +32,7 @@ useCaseTestCases.forEach((useCase) => {
         await selectUaRequest;
         let searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
 
         const deselectUaRequest = baseFacet.waitForFacetDeselectUaAnalytics({
@@ -47,7 +47,7 @@ useCaseTestCases.forEach((useCase) => {
         await deselectUaRequest;
         searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetDeselect');
       });
     });
@@ -71,7 +71,7 @@ useCaseTestCases.forEach((useCase) => {
         await selectUaRequest;
         let searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
 
         const clearAllUaRequest = baseFacet.waitForFacetClearAllUaAnalytics({
@@ -85,7 +85,7 @@ useCaseTestCases.forEach((useCase) => {
         await clearAllUaRequest;
         searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetClearAll');
       });
     });
@@ -107,7 +107,7 @@ useCaseTestCases.forEach((useCase) => {
         await uaRequest;
         let searchResponse = await searchResponsePromise;
         const {analytics: analyticsForShowMore} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForShowMore.actionCause).toEqual(
           'showMoreFacetResults'
         );
@@ -124,7 +124,7 @@ useCaseTestCases.forEach((useCase) => {
         await showLessUaRequest;
         searchResponse = await searchResponsePromise;
         const {analytics: analyticsForShowLess} =
-          facet.extractDataFromSearchResponse(searchResponse);
+          baseFacet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForShowLess.actionCause).toEqual(
           'showLessFacetResults'
         );
@@ -181,7 +181,7 @@ useCaseTestCases.forEach((useCase) => {
 
           const facetSearchResponse = await facetSearchResponsePromise;
           const {field, query} =
-            facet.extractDataFromSearchResponse(facetSearchResponse);
+            baseFacet.extractDataFromSearchResponse(facetSearchResponse);
           expect(field).toEqual(expectedField);
           expect(query).toContain(exampleQuery);
         });

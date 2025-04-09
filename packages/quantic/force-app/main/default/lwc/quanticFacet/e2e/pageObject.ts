@@ -1,4 +1,4 @@
-import type {Locator, Page, Response} from '@playwright/test';
+import type {Locator, Page} from '@playwright/test';
 
 export class FacetObject {
   constructor(public page: Page) {
@@ -59,9 +59,5 @@ export class FacetObject {
 
   async clickOnClearSelectionButton(): Promise<void> {
     await this.clearSelectionButton.click();
-  }
-
-  extractDataFromSearchResponse(response: Response) {
-    return response.request().postDataJSON();
   }
 }
