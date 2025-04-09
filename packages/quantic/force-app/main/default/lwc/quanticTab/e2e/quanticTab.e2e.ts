@@ -5,8 +5,8 @@ import {
 } from '../../../../../../playwright/utils/useCase';
 
 const fixtures = {
-  search: testSearch as typeof testSearch,
-  insight: testInsight as typeof testInsight,
+  search: testSearch,
+  insight: testInsight,
 };
 
 const expectedActionCause = 'interfaceChange';
