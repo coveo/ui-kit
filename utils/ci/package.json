@@ -1,5 +1,5 @@
 {
-  "name": "@coveo/release",
+  "name": "@coveo/ci",
   "private": true,
   "authors": "Coveo",
   "version": "1.0.0",

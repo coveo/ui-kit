@@ -29,9 +29,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .; publint",
-    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
@@ -43,7 +43,7 @@
     "@coveo/headless": "3.22.0"
   },
   "devDependencies": {
-    "@coveo/release": "1.0.0",
+    "@coveo/ci": "1.0.0",
     "@testing-library/react": "14.3.1",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "eslint-plugin-react": "7.37.4",
