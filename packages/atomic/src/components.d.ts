@@ -9,10 +9,10 @@ import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 import { CategoryFacet, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -40,10 +40,10 @@ export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 export { CategoryFacet, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -459,53 +459,6 @@ export namespace Components {
      * @alpha
      */
     interface AtomicCommerceQuerySummary {
-    }
-    /**
-     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
-     * @alpha
-     */
-    interface AtomicCommerceRecommendationList {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
-         */
-        "display": ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel": number;
-        /**
-          * The expected size of the image displayed on the recommended products.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Moves to the next page, when the carousel is activated.
-         */
-        "nextPage": () => Promise<void>;
-        /**
-          * Moves to the previous page, when the carousel is activated.
-         */
-        "previousPage": () => Promise<void>;
-        /**
-          * The unique identifier of the product to use for seeded recommendations.
-         */
-        "productId"?: string;
-        /**
-          * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
-         */
-        "productsPerPage"?: number;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism when rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular, or Vue.  Do not use this method if you integrate Atomic in a plain HTML implementation.
-          * @param productRenderingFunction
-         */
-        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
-        /**
-          * The identifier used by the Commerce API to retrieve the desired recommendation list for the component. You can configure recommendation lists and get their respective slot IDs through the Coveo Merchandising Hub (CMH). You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
-         */
-        "slotId": string;
     }
     /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
@@ -4006,16 +3959,6 @@ declare global {
         new (): HTMLAtomicCommerceQuerySummaryElement;
     };
     /**
-     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
-     * @alpha
-     */
-    interface HTMLAtomicCommerceRecommendationListElement extends Components.AtomicCommerceRecommendationList, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceRecommendationListElement: {
-        prototype: HTMLAtomicCommerceRecommendationListElement;
-        new (): HTMLAtomicCommerceRecommendationListElement;
-    };
-    /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
      * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.
      * @alpha
@@ -5892,7 +5835,6 @@ declare global {
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
-        "atomic-commerce-recommendation-list": HTMLAtomicCommerceRecommendationListElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
@@ -6452,40 +6394,6 @@ declare namespace LocalJSX {
      * @alpha
      */
     interface AtomicCommerceQuerySummary {
-    }
-    /**
-     * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
-     * @alpha
-     */
-    interface AtomicCommerceRecommendationList {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself. To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
-         */
-        "display"?: ItemDisplayBasicLayout;
-        /**
-          * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
-         */
-        "headingLevel"?: number;
-        /**
-          * The expected size of the image displayed on the recommended products.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The unique identifier of the product to use for seeded recommendations.
-         */
-        "productId"?: string;
-        /**
-          * The number of products to display per page. The products will be displayed in a carousel if this property is set. This does not affect the display of the list itself, only the number of recommendation pages. If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
-         */
-        "productsPerPage"?: number;
-        /**
-          * The identifier used by the Commerce API to retrieve the desired recommendation list for the component. You can configure recommendation lists and get their respective slot IDs through the Coveo Merchandising Hub (CMH). You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
-         */
-        "slotId"?: string;
     }
     /**
      * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
@@ -9577,7 +9485,6 @@ declare namespace LocalJSX {
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
-        "atomic-commerce-recommendation-list": AtomicCommerceRecommendationList;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
@@ -9860,11 +9767,6 @@ declare module "@stencil/core" {
              * @alpha
              */
             "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
-            /**
-             * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
-             * @alpha
-             */
-            "atomic-commerce-recommendation-list": LocalJSX.AtomicCommerceRecommendationList & JSXBase.HTMLAttributes<HTMLAtomicCommerceRecommendationListElement>;
             /**
              * The `atomic-commerce-refine-modal` is automatically created as a child of the `atomic-commerce-search-interface` when the `atomic-commerce-refine-toggle` is initialized.
              * When the modal is opened, the class `atomic-modal-opened` is added to the interface element and the body, allowing further customization.

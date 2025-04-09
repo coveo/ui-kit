@@ -1,8 +1,20 @@
+import {SelectChildProductEventArgs} from '@/src/components';
+import {bindStateToController} from '@/src/decorators/bind-state.js';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
+import {FocusTargetController} from '@/src/utils/accessibility-utils';
+import {randomID} from '@/src/utils/utils';
 import {NumberValue} from '@coveo/bueno';
 import {
   Product,
   Recommendations,
   RecommendationsState,
+  RecommendationsSummaryState,
+  Summary,
   buildRecommendations,
 } from '@coveo/headless/commerce';
 import {
@@ -32,18 +44,17 @@ import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../common/item-list/stencil-item-list-common';
+} from '../../common/item-list/item-list-common-lit';
 import {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
-import {Heading} from '../../common/stencil-heading';
-import {Hidden} from '../../common/stencil-hidden';
-import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
+// TODO: change to atomic-commerce-recommendation-interface when merged
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
+import styles from './atomic-commerce-recommendation-list.tw.css';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.
@@ -61,60 +72,73 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  *
  * @slot default - The default slot where the product templates are defined.
  */
-@Component({
-  tag: 'atomic-commerce-recommendation-list',
-  styleUrl: 'atomic-commerce-recommendation-list.pcss',
-  shadow: true,
-})
+@customElement('atomic-commerce-recommendation-list')
+@bindings()
+@withTailwindStyles
 export class AtomicCommerceRecommendationList
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
-  @InitializeBindings() public bindings!: CommerceBindings;
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
+
   public recommendations!: Recommendations;
-  private loadingFlag = randomID('firstRecommendationLoaded-');
+  public summary!: Summary<RecommendationsSummaryState>;
+
   private itemRenderingFunction: ItemRenderingFunction;
+  private loadingFlag = randomID('firstRecommendationLoaded-');
   private nextNewProductTarget?: FocusTargetController;
+  private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
-  private itemListCommon!: ItemListCommon;
+  private unsubscribeSummary!: () => void;
 
-  @Element() public host!: HTMLDivElement;
+  @state()
+  bindings!: CommerceBindings;
+  @state()
+  error!: Error;
+  @state()
+  private isAppLoaded = false;
+  @state()
+  private productTemplateRegistered = false;
+  @state()
+  private templateHasError = false;
 
-  @BindStateToController('recommendations')
-  @State()
+  @bindStateToController('recommendations')
+  @state()
   public recommendationsState!: RecommendationsState;
-  @State() public error!: Error;
-  @State() private isAppLoaded = false;
-  @State() private productTemplateRegistered = false;
-  @State() private templateHasError = false;
-  @State() private currentPage = 0;
+  @state()
+  public summaryState!: RecommendationsSummaryState;
+
+  @state() private currentPage = 0;
 
   /**
    * The identifier used by the Commerce API to retrieve the desired recommendation list for the component.
    * You can configure recommendation lists and get their respective slot IDs through the Coveo Merchandising Hub (CMH).
    * You can include multiple `atomic-commerce-recommendation-list` components with different slot IDs in the same page to display several recommendation lists.
    */
-  @Prop({reflect: true})
+  @property({reflect: true, attribute: 'slot-id', type: String})
   public slotId = 'Recommendation';
 
   /**
    * The unique identifier of the product to use for seeded recommendations.
    */
-  @Prop({reflect: true})
+  @property({reflect: true, attribute: 'product-id', type: String})
   public productId?: string;
 
   /**
    * The layout to apply when displaying the products. This does not affect the display of the surrounding list itself.
    * To modify the number of products per column, modify the `--atomic-recs-number-of-columns` CSS variable.
    */
-  @Prop({reflect: true}) public display: ItemDisplayBasicLayout = 'list';
+  @property({reflect: true, type: String})
+  public display: ItemDisplayBasicLayout = 'list';
   /**
    * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of the parts of a product.
    */
-  @Prop({reflect: true}) public density: ItemDisplayDensity = 'normal';
+  @property({reflect: true, type: String}) public density: ItemDisplayDensity =
+    'normal';
   /**
    * The expected size of the image displayed on the recommended products.
    */
-  @Prop({reflect: true})
+  @property({reflect: true, attribute: 'image-size', type: String})
   public imageSize: ItemDisplayImageSize = 'small';
 
   /**
@@ -123,14 +147,16 @@ export class AtomicCommerceRecommendationList
    * This does not affect the display of the list itself, only the number of recommendation pages.
    * If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
    */
-  @Prop({reflect: true}) public productsPerPage?: number;
+  @property({reflect: true, attribute: 'products-per-page', type: Number})
+  public productsPerPage?: number;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the heading label, from 1 to 6.
    */
-  @Prop({reflect: true}) public headingLevel = 0;
+  @property({reflect: true, attribute: 'heading-level', type: Number})
+  public headingLevel = 0;
 
-  @Watch('productsPerPage')
+  @watch('productsPerPage')
   public async watchNumberOfRecommendationsPerPage() {
     this.currentPage = 0;
   }
@@ -143,7 +169,8 @@ export class AtomicCommerceRecommendationList
    *
    * @param productRenderingFunction
    */
-  @Method() public async setRenderFunction(
+
+  public async setRenderFunction(
     productRenderingFunction: ItemRenderingFunction
   ) {
     this.itemRenderingFunction = productRenderingFunction;
@@ -152,7 +179,7 @@ export class AtomicCommerceRecommendationList
   /**
    * Moves to the previous page, when the carousel is activated.
    */
-  @Method() public async previousPage() {
+  public async previousPage() {
     this.currentPage =
       this.currentPage - 1 < 0 ? this.numberOfPages - 1 : this.currentPage - 1;
   }
@@ -160,57 +187,36 @@ export class AtomicCommerceRecommendationList
   /**
    * Moves to the next page, when the carousel is activated.
    */
-  @Method() public async nextPage() {
+  public async nextPage() {
     this.currentPage = (this.currentPage + 1) % this.numberOfPages;
   }
 
   public initialize() {
     this.validateProductsPerPage();
     this.validateSlotID();
-
-    this.recommendations = buildRecommendations(this.bindings.engine, {
-      options: {
-        slotId: this.slotId,
-        productId: this.productId,
-      },
-    });
-
-    this.recommendations.refresh();
-
-    this.productTemplateProvider = new ProductTemplateProvider({
-      includeDefaultTemplate: true,
-      templateElements: Array.from(
-        this.host.querySelectorAll('atomic-product-template')
-      ),
-      getResultTemplateRegistered: () => this.productTemplateRegistered,
-      getTemplateHasError: () => this.templateHasError,
-      setResultTemplateRegistered: (value: boolean) => {
-        this.productTemplateRegistered = value;
-      },
-      setTemplateHasError: (value: boolean) => {
-        this.templateHasError = value;
-      },
-    });
-
-    this.itemListCommon = new ItemListCommon({
-      engineSubscribe: this.bindings.engine.subscribe,
-      getCurrentNumberOfItems: () => this.recommendationsState.products.length,
-      getIsLoading: () => this.recommendationsState.isLoading,
-      host: this.host,
-      loadingFlag: this.loadingFlag,
-      nextNewItemTarget: this.focusTarget,
-      store: this.bindings.store,
-    });
+    this.initRecommendations();
+    this.initSummary();
+    this.initProductTemplateProvider();
+    this.initProductListCommon();
+    this.createSelectChildProductListener();
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
   }
 
-  @Listen('atomic/selectChildProduct')
-  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
-    event.stopPropagation();
+  public disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribeSummary && this.unsubscribeSummary();
+    this.removeEventListener(
+      'atomic/selectChildProduct',
+      this.selectChildProductCallback
+    );
+  }
 
-    this.recommendations.promoteChildToParent(event.detail.child);
+  constructor() {
+    super();
+    const contextRoot = new ContextRoot();
+    contextRoot.attach(document.body);
   }
 
   public get focusTarget() {
@@ -252,7 +258,7 @@ export class AtomicCommerceRecommendationList
     }
   }
 
-  private renderHeading() {
+  private renderListHeading() {
     if (!this.augmentedRecommendationListState.headline) {
       return;
     }
@@ -260,11 +266,13 @@ export class AtomicCommerceRecommendationList
       return;
     }
 
-    return (
-      <Heading level={this.headingLevel} part="label" class="m-0 mb-2">
-        {this.bindings.i18n.t(this.recommendationsState.headline)}
-      </Heading>
-    );
+    return html`${renderHeading({
+      props: {
+        level: this.headingLevel,
+        part: 'label',
+        class: 'm-0 mb-2',
+      },
+    })(html`${this.bindings.i18n.t(this.recommendationsState.headline)}`)}`;
   }
 
   private get currentIndex() {
@@ -295,7 +303,7 @@ export class AtomicCommerceRecommendationList
     return this.numberOfPages > 1;
   }
 
-  private get shouldRenderPagination() {
+  private get shouldRenderWithCarousel() {
     return this.hasPagination && this.augmentedRecommendationListState.hasItems;
   }
 
@@ -306,10 +314,25 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private logWarningIfNeeded(message?: string) {
-    if (message) {
-      this.bindings.engine.logger.warn(message);
-    }
+  private initRecommendations() {
+    this.recommendations = buildRecommendations(this.bindings.engine, {
+      options: {
+        slotId: this.slotId,
+        productId: this.productId,
+      },
+    });
+    this.recommendations.refresh();
+  }
+
+  // TODO: Remove once atomic-commerce-recommendation-interface is merged
+  private initSummary() {
+    this.summary = this.recommendations.summary();
+    this.unsubscribeSummary = this.summary.subscribe(() => {
+      this.summaryState = this.summary.state;
+      if (this.summaryState.firstRequestExecuted) {
+        this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      }
+    });
   }
 
   private getAtomicProductProps(product: Product) {
@@ -323,7 +346,7 @@ export class AtomicCommerceRecommendationList
       product: product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
-      key: this.itemListCommon.getResultId(
+      key: this.productListCommon.getResultId(
         product.permanentid,
         this.recommendationsState.responseId,
         this.density,
@@ -339,6 +362,49 @@ export class AtomicCommerceRecommendationList
     };
   }
 
+  private initProductTemplateProvider() {
+    this.productTemplateProvider = new ProductTemplateProvider({
+      includeDefaultTemplate: true,
+      templateElements: Array.from(
+        this.querySelectorAll('atomic-product-template')
+      ),
+      getResultTemplateRegistered: () => this.productTemplateRegistered,
+      getTemplateHasError: () => this.templateHasError,
+      setResultTemplateRegistered: (value: boolean) => {
+        this.productTemplateRegistered = value;
+      },
+      setTemplateHasError: (value: boolean) => {
+        this.templateHasError = value;
+      },
+    });
+  }
+
+  private initProductListCommon() {
+    this.productListCommon = new ItemListCommon({
+      engineSubscribe: this.bindings.engine.subscribe,
+      getCurrentNumberOfItems: () => this.recommendationsState.products.length,
+      getIsLoading: () => this.recommendationsState.isLoading,
+      host: this,
+      loadingFlag: this.loadingFlag,
+      nextNewItemTarget: this.focusTarget,
+      store: this.bindings.store,
+    });
+  }
+
+  private createSelectChildProductListener() {
+    this.addEventListener(
+      'atomic/selectChildProduct',
+      this.selectChildProductCallback
+    );
+  }
+
+  private selectChildProductCallback(event: Event) {
+    event.stopPropagation();
+    const child = (event as CustomEvent<SelectChildProductEventArgs>).detail
+      .child;
+    this.recommendations.promoteChildToParent(child);
+  }
+
   private computeListDisplayClasses() {
     const displayPlaceholders = !this.isAppLoaded;
 
@@ -351,40 +417,79 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private renderAsGrid(product: Product, i: number) {
-    const propsForAtomicProduct = this.getAtomicProductProps(product);
-    const {interactiveProduct} = propsForAtomicProduct;
-    return (
-      <DisplayGrid
-        selectorForItem="atomic-product"
-        item={{
-          ...product,
-          clickUri: product.clickUri,
-          title: product.ec_name ?? '',
-        }}
-        select={() => {
-          this.logWarningIfNeeded(interactiveProduct.warningMessage);
-          interactiveProduct.select();
-        }}
-        beginDelayedSelect={() => {
-          this.logWarningIfNeeded(interactiveProduct.warningMessage);
-          interactiveProduct.beginDelayedSelect();
-        }}
-        cancelPendingSelect={() => {
-          this.logWarningIfNeeded(interactiveProduct.warningMessage);
-          interactiveProduct.cancelPendingSelect();
-        }}
-        setRef={(element) =>
-          element && this.itemListCommon.setNewResultRef(element, i)
-        }
-      >
-        <atomic-product {...propsForAtomicProduct}></atomic-product>
-      </DisplayGrid>
-    );
+  @bindingGuard()
+  @errorGuard()
+  render() {
+    return html` ${when(
+      this.shouldRender,
+      () =>
+        html`${when(
+          this.templateHasError,
+          () => html`<slot></slot>`,
+          () =>
+            html`${this.renderListHeading()}
+            ${this.shouldRenderWithCarousel
+              ? carousel({
+                  props: {
+                    bindings: this.bindings,
+                    previousPage: () => this.previousPage(),
+                    nextPage: () => this.nextPage(),
+                    numberOfPages: this.numberOfPages,
+                    currentPage: this.currentPage,
+                  },
+                })(
+                  html`<div class="px-3">
+                    ${this.renderRecommendationList()}
+                  </div>`
+                )
+              : this.renderRecommendationList()}`
+        )}`,
+      () => nothing
+    )}`;
+  }
+
+  private renderAsGrid() {
+    return html`${map(this.subsetRecommendations, (product, index) => {
+      const props = this.getAtomicProductProps(product);
+      return renderGridLayout({
+        props: {
+          selectorForItem: 'atomic-product',
+          item: {
+            ...product,
+            clickUri: product.clickUri,
+            title: product.ec_name ?? '',
+          },
+          ...props.interactiveProduct,
+          setRef: (element) => {
+            element &&
+              this.productListCommon.setNewResultRef(
+                element as HTMLElement,
+                index
+              );
+          },
+        },
+      })(
+        html`${keyed(
+          props.key,
+          html`<atomic-product
+            .content=${props.content}
+            .density=${props.density}
+            .display=${props.display}
+            .imageSize=${props.imageSize}
+            .linkContent=${props.linkContent}
+            .loadingFlag=${props.loadingFlag}
+            .interactiveProduct=${props.interactiveProduct}
+            .product=${props.product}
+            .renderingFunction=${props.renderingFunction}
+            .store=${props.store as never}
+          ></atomic-product>`
+        )}`
+      );
+    })}`;
   }
 
   private renderRecommendationList() {
-    this.itemListCommon.updateBreakpoints();
+    this.productListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
     if (
@@ -394,49 +499,42 @@ export class AtomicCommerceRecommendationList
     ) {
       return;
     }
-
-    return (
-      <DisplayWrapper listClasses={listClasses} display="grid">
-        <ResultsPlaceholdersGuard
-          density={this.density}
-          display={this.display}
-          imageSize={this.imageSize}
-          displayPlaceholders={!this.isAppLoaded}
-          numberOfPlaceholders={
-            this.productsPerPage ?? this.recommendationsState.products.length
-          }
-        ></ResultsPlaceholdersGuard>
-        <ItemDisplayGuard {...this.augmentedRecommendationListState}>
-          {this.subsetRecommendations.map((recommendation, i) => {
-            return this.renderAsGrid(recommendation, i);
-          })}
-        </ItemDisplayGuard>
-      </DisplayWrapper>
+    return renderListWrapper({
+      props: {listClasses},
+    })(
+      renderListRoot({
+        props: {listClasses},
+      })(html`
+        ${when(
+          this.isAppLoaded,
+          () => html`${this.renderAsGrid()}`,
+          () =>
+            renderResultPlaceholders({
+              props: {
+                density: this.density,
+                display: this.display,
+                imageSize: this.imageSize,
+                numberOfPlaceholders:
+                  this.productsPerPage ??
+                  this.recommendationsState.products.length,
+              },
+            })
+        )}
+      `)
     );
   }
 
-  public render() {
+  private get shouldRender() {
     if (this.hasNoProducts) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
-      return <Hidden></Hidden>;
+      return false;
     }
-    return (
-      <Fragment>
-        {this.renderHeading()}
-        {this.shouldRenderPagination ? (
-          <Carousel
-            bindings={this.bindings}
-            currentPage={this.currentPage}
-            nextPage={() => this.nextPage()}
-            previousPage={() => this.previousPage()}
-            numberOfPages={this.numberOfPages}
-          >
-            <div class="px-3">{this.renderRecommendationList()}</div>
-          </Carousel>
-        ) : (
-          this.renderRecommendationList()
-        )}
-      </Fragment>
-    );
+    return true;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-recommendation-list': AtomicCommerceRecommendationList;
   }
 }
