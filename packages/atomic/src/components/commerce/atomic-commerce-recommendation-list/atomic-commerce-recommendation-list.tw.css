@@ -1,4 +1,5 @@
-@import '../../../global/global.pcss';
+@reference '../../../utils/tailwind.global.tw.css';
+@reference '../../../utils/coveo.tw.css';
 @import '../../common/item-list/styles/mixins.pcss';
 @import '../../common/item-list/styles/placeholders.pcss';
 
@@ -17,8 +18,7 @@
   [part='label'] {
     @apply font-sans text-2xl font-bold;
   }
-
-  atomic-product:not(.hydrated) {
-    visibility: hidden;
-  }
+}
+atomic-product:not(.hydrated) {
+  visibility: hidden;
 }
