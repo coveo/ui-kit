@@ -1,18 +1,10 @@
 import {
   AtomicCommerceInterface,
-  AtomicCommerceProductList,
   AtomicProductLink,
   AtomicProductText,
   AtomicProductPrice,
   AtomicProductDescription,
-  AtomicCommerceSearchBox,
-  AtomicCommerceSearchBoxInstantProducts,
-  AtomicCommerceSearchBoxQuerySuggestions,
-  AtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceLayout,
-  AtomicLayoutSection,
-  AtomicCommerceFacets,
-  AtomicCommerceSortDropdown,
   AtomicProductSectionVisual,
   AtomicProductImage,
   AtomicProductRating,
@@ -20,7 +12,8 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
-  AtomicCommerceQuerySummary,
+  AtomicLayoutSection,
+  AtomicCommerceRecommendationList,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,
@@ -28,7 +21,7 @@ import {
 } from '@coveo/headless/commerce';
 import {useMemo} from 'react';
 
-export const CommerceSearchPage = () => {
+export const CommerceRecommendationPage = () => {
   const engine = useMemo(
     () =>
       buildCommerceEngine({
@@ -38,34 +31,35 @@ export const CommerceSearchPage = () => {
   );
 
   return (
-    <AtomicCommerceInterface engine={engine} type="search">
-      <AtomicCommerceLayout>
-        <AtomicLayoutSection section="search">
-          <AtomicCommerceSearchBox>
-            <AtomicCommerceSearchBoxRecentQueries></AtomicCommerceSearchBoxRecentQueries>
-            <AtomicCommerceSearchBoxQuerySuggestions></AtomicCommerceSearchBoxQuerySuggestions>
-            <AtomicCommerceSearchBoxInstantProducts image-size="small"></AtomicCommerceSearchBoxInstantProducts>
-          </AtomicCommerceSearchBox>
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="facets">
-          <AtomicCommerceFacets />
-        </AtomicLayoutSection>
-        <AtomicLayoutSection section="main">
-          <AtomicLayoutSection section="status">
-            <AtomicCommerceQuerySummary />
-            <AtomicCommerceSortDropdown />
-          </AtomicLayoutSection>
-          <AtomicLayoutSection section="products">
-            <AtomicCommerceProductList
-              display="grid"
-              density="compact"
-              image-size="small"
+    <>
+      <style>
+        {`
+    atomic-commerce-recommendation-list {
+      margin-top: var(--atomic-layout-spacing-y);
+      --atomic-recs-number-of-columns: 3;
+    }
+
+    @media only screen and (max-width: 1024px) {
+      atomic-commerce-recommendation-list {
+        --atomic-recs-number-of-columns: 1;
+      }
+    }`}
+      </style>
+      {/* TODO: change to AtomicCommerceRecommendationInterface once merged (KIT-3934) */}
+      <AtomicCommerceInterface engine={engine}>
+        <AtomicCommerceLayout mobileBreakpoint="1024px">
+          <AtomicLayoutSection section="main">
+            <AtomicCommerceRecommendationList
+              imageSize="small"
+              display="list"
+              productsPerPage={3}
+              slotId="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
               template={MyTemplate}
-            />
+            ></AtomicCommerceRecommendationList>
           </AtomicLayoutSection>
-        </AtomicLayoutSection>
-      </AtomicCommerceLayout>
-    </AtomicCommerceInterface>
+        </AtomicCommerceLayout>
+      </AtomicCommerceInterface>
+    </>
   );
 };
 
