@@ -61,6 +61,7 @@ jobs:
         run: npm run-script -w=@coveo/ci commit-all
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
+          DEBUG: '*'
   build-cdn:
     name: 'Build CDN'
     runs-on: ubuntu-latest
