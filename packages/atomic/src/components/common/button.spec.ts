@@ -1,8 +1,8 @@
 import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
-import {html, render} from 'lit';
+import {html, nothing, render} from 'lit';
 import {vi} from 'vitest';
-import {button, ButtonProps} from './button';
+import {renderButton as button, ButtonProps} from './button';
 
 vi.mock('@/src/utils/ripple', () => ({
   createRipple: vi.fn(),
@@ -27,8 +27,7 @@ describe('button', () => {
           ...props,
           style: props.style ?? 'primary',
         },
-        children: html``,
-      })}`,
+      })(nothing)}`,
       container
     );
     return within(container).getByRole('button') as HTMLButtonElement;
