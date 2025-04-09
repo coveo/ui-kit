@@ -2996,7 +2996,7 @@ export declare interface AtomicIcon extends LitAtomicIcon {
 
 @ProxyCmp({
   inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
-  methods: ['setRenderFunction', 'initialize'],
+  methods: ['setRenderFunction', 'initialize', 'initBindings'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
 })
 @Component({
