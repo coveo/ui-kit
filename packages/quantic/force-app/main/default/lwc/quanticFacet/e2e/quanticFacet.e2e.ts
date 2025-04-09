@@ -6,18 +6,12 @@ import {
 import facetData from './data';
 
 const fixtures = {
-  search: testSearch as typeof testSearch,
-  insight: testInsight as typeof testInsight,
+  search: testSearch,
+  insight: testInsight,
 };
 
 useCaseTestCases.forEach((useCase) => {
-  let test;
-  if (useCase.value === useCaseEnum.search) {
-    test = fixtures[useCase.value] as typeof testSearch;
-  } else {
-    test = fixtures[useCase.value] as typeof testInsight;
-  }
-
+  let test = fixtures[useCase.value];
   test.describe(`quantic facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
       test('should trigger a new search and log the corresponding UA analytics events', async ({
@@ -34,9 +28,9 @@ useCaseTestCases.forEach((useCase) => {
         let searchResponsePromise = search.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
+
         await selectUaRequest;
         let searchResponse = await searchResponsePromise;
-
         const {analytics: analyticsForFacetSelect} =
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
@@ -47,10 +41,11 @@ useCaseTestCases.forEach((useCase) => {
           facetValue: values[selectedIndex].value,
         });
         searchResponsePromise = search.waitForSearchResponse();
+
         await facet.clickOnFacetValue(selectedIndex);
+
         await deselectUaRequest;
         searchResponse = await searchResponsePromise;
-
         const {analytics: analyticsForFacetDeselect} =
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetDeselect');
@@ -72,9 +67,9 @@ useCaseTestCases.forEach((useCase) => {
         let searchResponsePromise = search.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
+
         await selectUaRequest;
         let searchResponse = await searchResponsePromise;
-
         const {analytics: analyticsForFacetSelect} =
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
@@ -84,10 +79,11 @@ useCaseTestCases.forEach((useCase) => {
           facetField: field,
         });
         searchResponsePromise = search.waitForSearchResponse();
+
         await facet.clickOnClearSelectionButton();
+
         await clearAllUaRequest;
         searchResponse = await searchResponsePromise;
-
         const {analytics: analyticsForFacetDeselect} =
           facet.extractDataFromSearchResponse(searchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetClearAll');
@@ -160,16 +156,16 @@ useCaseTestCases.forEach((useCase) => {
         const searchResponsePromise = search.waitForSearchResponse();
 
         await facet.clickOnFacetValue(facetValueIndex);
+
         await uaRequest;
         await searchResponsePromise;
-
         expect(facet.facetBreadcrumbValue(facetValueIndex)).toHaveText(
           exampleCaption
         );
       });
     });
 
-    if (useCase.value === 'search') {
+    if (useCase.value === useCaseEnum.search) {
       test.describe('when typing in the facet search box input', () => {
         test('should fetch facet values according to the query', async ({
           search,
@@ -179,11 +175,12 @@ useCaseTestCases.forEach((useCase) => {
           const exampleQuery = 'test';
           const facetSearchResponsePromise =
             search.waitForFacetSearchResponse();
+
           await facet.fillFacetSearchBoxInput(exampleQuery);
+
           const facetSearchResponse = await facetSearchResponsePromise;
           const {field, query} =
             facet.extractDataFromSearchResponse(facetSearchResponse);
-
           expect(field).toEqual(expectedField);
           expect(query).toContain(exampleQuery);
         });
