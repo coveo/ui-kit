@@ -22,6 +22,7 @@
     "typescript": "5.8.2"
   },
   "scripts": {
+    "commit-all": "node ./ci-commit.mjs",
     "promote-npm-prod": "node ./promote-npm-tag-to-latest.mjs",
     "git-lock": "node ./git-lock.mjs",
     "bump": "node ./bump-package.mjs",
