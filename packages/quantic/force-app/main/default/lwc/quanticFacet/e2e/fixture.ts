@@ -26,8 +26,6 @@ type QuanticFacetE2EFixtures = {
 
 export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {},
-  urlHash: '',
-  preventMockFacetResponse: false,
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, searchRequestRegex));
   },
