@@ -41,7 +41,7 @@ export interface ButtonProps {
   title?: string;
 }
 
-export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
+export const button: FunctionalComponentWithChildren<ButtonProps> =
   ({props}) =>
   (children) => {
     const rippleColor = getRippleColorForButtonStyle(props.style);
