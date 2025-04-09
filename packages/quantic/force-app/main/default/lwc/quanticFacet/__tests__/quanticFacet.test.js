@@ -825,7 +825,7 @@ describe('c-quantic-facet', () => {
 
           describe('the show less facet values button', () => {
             [true, false].forEach((canShowLessValues) => {
-              it(`should ${canShowLessValues ? '' : 'not '}display show less facet values button when the state indicates that it is ${canShowLessValues ? 'possible' : 'not possible'}`, async () => {
+              it(`should ${canShowLessValues ? '' : 'not'} display show less facet values button when the state indicates that it is ${canShowLessValues ? 'possible' : 'not possible'}`, async () => {
                 facetState = {
                   ...initialFacetState,
                   values: exampleFacetValues,
@@ -870,7 +870,7 @@ describe('c-quantic-facet', () => {
 
           describe('the show more facet values button', () => {
             [true, false].forEach((canShowMoreValues) => {
-              it(`should ${canShowMoreValues ? '' : 'not '}display show more facet values button when the state indicates that it is ${canShowMoreValues ? 'possible' : 'not possible'}`, async () => {
+              it(`should ${canShowMoreValues ? '' : 'not'} display show more facet values button when the state indicates that it is ${canShowMoreValues ? 'possible' : 'not possible'}`, async () => {
                 facetState = {
                   ...initialFacetState,
                   values: exampleFacetValues,
