@@ -1,7 +1,7 @@
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommercePager as LitAtomicCommercePager,
-  AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
@@ -23,10 +23,10 @@ export const AtomicCommercePager = createComponent({
   elementClass: LitAtomicCommercePager,
 });
 
-export const AtomicCommerceSearchBoxInstantProducts = createComponent({
-  tagName: 'atomic-commerce-search-box-instant-products',
+export const AtomicCommerceRecommendationList = createComponent({
+  tagName: 'atomic-commerce-recommendation-list',
   react: React,
-  elementClass: LitAtomicCommerceSearchBoxInstantProducts,
+  elementClass: LitAtomicCommerceRecommendationList,
 });
 
 export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
