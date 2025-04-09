@@ -59,6 +59,8 @@ jobs:
           repositories: 'ui-kit'
       - name: Commit files
         run: npm run-script -w=@coveo/ci commit-all
+        env:
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
   build-cdn:
     name: 'Build CDN'
     runs-on: ubuntu-latest
