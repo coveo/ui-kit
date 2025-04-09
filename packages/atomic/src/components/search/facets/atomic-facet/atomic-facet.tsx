@@ -123,6 +123,11 @@ export class AtomicFacet implements InitializableComponent {
   @State() public error!: Error;
 
   /**
+   * An awesome fake property to make the component look like it has a lot of props.
+   */
+  @Prop({mutable: true, reflect: true}) public fakeProperty = 'fake-value';
+
+  /**
    * Specifies a unique identifier for the facet.
    */
   @Prop({mutable: true, reflect: true}) public facetId?: string;
