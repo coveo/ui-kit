@@ -21,12 +21,12 @@
     "notify:docs": "node ./scripts/notify-docs/published-ui-kit.mjs",
     "release": "npm run nx:graph && npm run release:phase0 && npm run release:phase1 && npm run release:phase2 && npm run release:phase3 && npm run release:phase4 && npm run release:phase5",
     "nx:graph": "nx graph --file=topology.json",
-    "release:phase0": "npm run-script -w=@coveo/release git-lock",
+    "release:phase0": "npm run-script -w=@coveo/ci git-lock",
     "release:phase1": "nx run-many --targets=release:phase1 --all --parallel=false --output-style=stream",
-    "release:phase2": "npm run-script -w=@coveo/release bump:root",
+    "release:phase2": "npm run-script -w=@coveo/ci bump:root",
     "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
-    "release:phase4": "npm run-script -w=@coveo/release reify",
-    "release:phase5": "npm run-script -w=@coveo/release git-publish-all"
+    "release:phase4": "npm run-script -w=@coveo/ci reify",
+    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all"
   },
   "devDependencies": {
     "@actions/core": "1.11.1",
@@ -34,7 +34,7 @@
     "@commitlint/config-conventional": "19.7.1",
     "@commitlint/lint": "19.7.1",
     "@commitlint/load": "19.6.1",
-    "@coveo/release": "1.0.0",
+    "@coveo/ci": "1.0.0",
     "@cspell/dict-fr-fr": "2.2.5",
     "@cspell/eslint-plugin": "8.17.5",
     "@nx/web": "20.4.6",
@@ -75,7 +75,7 @@
     "vite": "6.0.11"
   },
   "overrides": {
-    "@coveo/release": {
+    "@coveo/ci": {
       "@types/async-retry": {
         "@types/retry": "0.12.5"
       }

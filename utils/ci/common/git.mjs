@@ -1,105 +1,45 @@
 #!/usr/bin/env node
 import {
   getCurrentBranchName,
-  gitTag,
   gitDeleteRemoteBranch,
-  gitPushTags,
   getSHA1fromRef,
   gitCreateBranch,
-  gitCheckoutBranch,
   gitAdd,
   gitWriteTree,
   gitCommitTree,
   gitUpdateRef,
   gitPublishBranch,
   gitPull,
+  gitSwitchBranch,
+  gitSetupUser,
 } from '@coveo/semantic-monorepo-tools';
-import {createAppAuth} from '@octokit/auth-app';
 import {spawnSync} from 'child_process';
 import {randomUUID} from 'crypto';
-import {existsSync, readFileSync} from 'fs';
 import {Octokit} from 'octokit';
-import {dedent} from 'ts-dedent';
-import {
-  RELEASER_AUTH_SECRETS,
-  REPO_NAME,
-  REPO_OWNER,
-  REPO_RELEASE_BRANCH,
-} from './common/constants.mjs';
-import {removeWriteAccessRestrictions} from './lock-master.mjs';
+import {REPO_NAME, REPO_OWNER} from './constants.mjs';
 
-if (!process.env.INIT_CWD) {
-  throw new Error('Should be called using npm run-script');
-}
-process.chdir(process.env.INIT_CWD);
-
-// Commit, tag and push
-(async () => {
-  const octokit = new Octokit({
-    authStrategy: createAppAuth,
-    auth: RELEASER_AUTH_SECRETS,
-  });
-
-  // Find all packages that have been released in this release.
-  const packagesReleased = existsSync('.git-message')
-    ? readFileSync('.git-message', {
-        encoding: 'utf-8',
-      }).trim()
-    : '';
-
-  // Compile git commit message
-  const commitMessage = dedent`
-    [Version Bump][skip ci]: ui-kit publish
-
-    ${packagesReleased}
-
-    **/CHANGELOG.md
-    **/package.json
-    CHANGELOG.md
-    package.json
-    package-lock.json
-  `;
-
-  // Craft the commit (complex process, see function)
-  const commit = await commitChanges(commitMessage, octokit);
-
-  // Add the tags locally...
-  if (packagesReleased) {
-    for (const tag of packagesReleased.split('\n')) {
-      await gitTag(tag, commit);
-    }
-  }
-
-  // And push them
-  await gitPushTags();
-
-  // Current release branch
-  await octokit.rest.git.updateRef({
-    owner: REPO_OWNER,
-    repo: REPO_NAME,
-    ref: `heads/${REPO_RELEASE_BRANCH}`,
-    sha: commit,
-    force: false,
-  });
-  // Unlock the main branch
-  await removeWriteAccessRestrictions();
-})();
+export const setupGit = async () => {
+  const GIT_USERNAME = 'developer-experience-bot[bot]';
+  const GIT_EMAIL =
+    '91079284+developer-experience-bot[bot]@users.noreply.github.com';
+  await gitSetupUser(GIT_USERNAME, GIT_EMAIL);
+};
 
 /**
- * "Craft" the signed release commit.
+ * "Craft" a signed commit.
  * @param {string} commitMessage
  * @param {Octokit} octokit
  * @returns {Promise<string>}
  */
-async function commitChanges(commitMessage, octokit) {
+export async function commitChanges(commitMessage, octokit) {
   // Get latest commit and name of the main branch.
-  const mainBranchName = await getCurrentBranchName();
-  const mainBranchCurrentSHA = await getSHA1fromRef(mainBranchName);
+  const currentBranchName = await getCurrentBranchName();
+  const currentSHA = await getSHA1fromRef(currentBranchName);
 
   // Create a temporary branch and check it out.
-  const tempBranchName = `release-temp/${randomUUID()}`;
+  const tempBranchName = `ui-kit-temp/${randomUUID()}`;
   await gitCreateBranch(tempBranchName);
-  await gitCheckoutBranch(tempBranchName);
+  await gitSwitchBranch(tempBranchName);
   // Stage all the changes...
   await gitAdd('.');
   // Lint staged files
@@ -124,7 +64,7 @@ async function commitChanges(commitMessage, octokit) {
     owner: REPO_OWNER,
     repo: REPO_NAME,
     tree: treeSHA,
-    parents: [mainBranchCurrentSHA],
+    parents: [currentSHA],
   });
 
   /**
@@ -133,11 +73,11 @@ async function commitChanges(commitMessage, octokit) {
   await octokit.rest.git.updateRef({
     owner: REPO_OWNER,
     repo: REPO_NAME,
-    ref: `heads/${mainBranchName}`,
+    ref: `heads/${currentBranchName}`,
     sha: commit.data.sha,
     force: false,
   });
-  await gitCheckoutBranch(mainBranchName);
+  await gitSwitchBranch(currentBranchName);
   await gitPull();
 
   // Delete the temp branch
