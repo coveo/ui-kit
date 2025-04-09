@@ -1,6 +1,6 @@
-import {nothing, TemplateResult} from 'lit';
+import {FunctionalComponentOutput} from '@/src/utils/functional-component-utils';
+import {closest} from '@/src/utils/utils';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
 
 /**
@@ -8,14 +8,14 @@ import {AnyBindings} from '../interface/bindings';
  */
 export interface SearchBoxSuggestionElement {
   /**
-   * Stable identity which enables Stencil to reuse DOM elements for better performance.
+   * Stable identity which enables Lit to reuse DOM elements for better performance.
    * The best way to pick a key is to use a string that uniquely identifies that list item among its siblings (often your data will already have IDs).
    */
   key: string;
   /**
    * Rendered content of the element.
    */
-  content: TemplateResult | typeof nothing;
+  content: FunctionalComponentOutput;
   /**
    * Hook called when the selection is selected.
    * @param e DOM event.
