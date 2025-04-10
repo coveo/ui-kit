@@ -4,6 +4,7 @@ import {
   AtomicProductText,
   AtomicProductPrice,
   AtomicProductDescription,
+  AtomicCommerceLayout,
   AtomicProductSectionVisual,
   AtomicProductImage,
   AtomicProductRating,
@@ -11,6 +12,7 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
+  AtomicLayoutSection,
   AtomicCommerceRecommendationList,
 } from '@coveo/atomic-react/commerce';
 import {
@@ -44,11 +46,17 @@ export const CommerceRecommendationPage = () => {
     }`}
       </style>
       <AtomicCommerceRecommendationInterface engine={engine}>
-        <AtomicCommerceRecommendationList
-          productsPerPage={3}
-          slotId="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
-          template={MyTemplate}
-        ></AtomicCommerceRecommendationList>
+        <AtomicCommerceLayout mobileBreakpoint="1024px">
+          <AtomicLayoutSection section="main">
+            <AtomicCommerceRecommendationList
+              imageSize="small"
+              display="list"
+              productsPerPage={3}
+              slotId="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+              template={MyTemplate}
+            ></AtomicCommerceRecommendationList>
+          </AtomicLayoutSection>
+        </AtomicCommerceLayout>
       </AtomicCommerceRecommendationInterface>
     </>
   );
