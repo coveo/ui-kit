@@ -15,11 +15,9 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {
   buildInstantProducts,
@@ -39,12 +37,19 @@ export type AriaLabelGenerator = (
 ) => string | undefined;
 
 /**
- * The atomic-commerce-search-box-instant-products is a component that does something.
+ * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
+ *
+ * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
+ *
+ * This component is not supported on mobile.
+ *
+ * @slot default - The default slot where the instant products are rendered.
+ * @alpha
  */
 @customElement('atomic-commerce-search-box-instant-products')
 @withTailwindStyles
 export class AtomicCommerceSearchBoxInstantProducts
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
@@ -257,10 +262,9 @@ export class AtomicCommerceSearchBoxInstantProducts
     });
   }
 
-  @bindingGuard()
   @errorGuard()
   render() {
-    return html`TODO`;
+    return html``;
   }
 }
 

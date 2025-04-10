@@ -53,9 +53,50 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 import styles from './atomic-commerce-search-box.tw.css';
 
 /**
- * The atomic-commerce-search-box is a component that does something.
+ * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
  *
- * @event redirect - TODO
+ * @slot default - The default slot where you can add child components to the search box.
+ *
+ * @part wrapper - The search box wrapper.
+ * @part input - The search box input.
+ * @part loading - The search box loading animation.
+ * @part clear-button - The button to clear the search box of input.
+ * @part clear-icon - The clear button's icon.
+ * @part submit-button - The search box submit button.
+ * @part submit-icon - The search box submit button's icon.
+ * @part suggestions - A list of suggested query corrections on each panel.
+ * @part suggestions-left - A list of suggested query corrections on the left panel.
+ * @part suggestions-right - A list of suggested query corrections on the right panel.
+ * @part suggestions-wrapper - The wrapper that contains suggestion panels.
+ * @part suggestions-single-list - The wrapper that contains 1 suggestion list.
+ * @part suggestions-double-list - The wrapper that contains 2 suggestion lists.
+ * @part suggestion - A suggested query correction.
+ * @part active-suggestion - The currently active suggestion.
+ * @part suggestion-divider - An item in the list that separates groups of suggestions.
+ * @part suggestion-with-query - An item in the list that will update the search box query.
+ *
+ * @part query-suggestion-item - A suggestion from the `atomic-commerce-search-box-query-suggestions` component.
+ * @part query-suggestion-content - The contents of a suggestion from the `atomic-commerce-search-box-query-suggestions` component.
+ * @part query-suggestion-icon - The icon of a suggestion from the `atomic-commerce-search-box-query-suggestions` component.
+ * @part query-suggestion-text - The text of a suggestion from the `atomic-commerce-search-box-query-suggestions` component.
+ *
+ * @part recent-query-item - A suggestion from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-content - The contents of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-icon - The icon of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-text - The text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-text-highlight - The highlighted portion of the text of a suggestion from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title-item - The clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title-content - The contents of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-title - The "recent searches" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ * @part recent-query-clear - The "clear" text of the clear button above suggestions from the `atomic-commerce-search-box-recent-queries` component.
+ *
+ * @part instant-results-item - An instant result rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
+ * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
+ *
+ * @event redirect - Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+ *
+ * @alpha
  */
 @customElement('atomic-commerce-search-box')
 @withTailwindStyles
@@ -181,7 +222,6 @@ export class AtomicCommerceSearchBox
   protected suggestionsAriaMessage!: string;
   public disconnectedCallback = () => {};
 
-  //TODO
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
@@ -190,7 +230,6 @@ export class AtomicCommerceSearchBox
 
   public initialize() {
     this.id ||= randomID('atomic-commerce-search-box-');
-    console.log(this.id, 'searchBox');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -224,7 +263,6 @@ export class AtomicCommerceSearchBox
   }
 
   willUpdate() {
-    //added this
     if (!this.searchBoxState || !this.searchBox) {
       return;
     }
@@ -249,7 +287,6 @@ export class AtomicCommerceSearchBox
 
     this.searchBox.afterRedirection();
 
-    //Does this work ?
     const event = new CustomEvent<RedirectionPayload>('redirect');
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
@@ -444,7 +481,6 @@ export class AtomicCommerceSearchBox
 
   private triggerTextAreaChange(value: string) {
     this.textAreaRef.value = value;
-    //what is that dispatch ?
     this.textAreaRef.dispatchEvent(new window.Event('change'));
   }
 
@@ -514,7 +550,6 @@ export class AtomicCommerceSearchBox
       return null;
     }
 
-    //Does ref work here ?
     return html`<div
       part="suggestions suggestions-${side}"
       ${ref(setRef as RefOrCallback<Element>)}
@@ -711,12 +746,6 @@ export class AtomicCommerceSearchBox
     if (!this.suggestionManager.suggestions.length) {
       this.registerSearchboxSuggestionEvents();
     }
-
-    //Needs to add more conditions here
-    console.log(
-      this.suggestionManager.suggestions.length === 0,
-      'should render the slots'
-    );
 
     return html`
       ${this.renderAbsolutePositionSpacer()}

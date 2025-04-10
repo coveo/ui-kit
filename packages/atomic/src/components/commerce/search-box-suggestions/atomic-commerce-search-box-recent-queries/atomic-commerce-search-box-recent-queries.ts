@@ -12,7 +12,6 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -74,7 +73,6 @@ export class AtomicCommerceSearchBoxRecentQueries
       dispatchSearchBoxSuggestionsEvent<SearchBox, CommerceBindings>(
         (bindings) => {
           this.bindings = bindings;
-          //Here it recalls initialize for the second time
           return this.initialize();
         },
         this
@@ -168,7 +166,6 @@ export class AtomicCommerceSearchBoxRecentQueries
   private renderItem(value: string): SearchBoxSuggestionElement {
     const query = this.bindings.searchBoxController.state.value;
     const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
-
     return {
       ...partialItem,
       content: recentQueriesContainer({props: {}})(html`
@@ -191,10 +188,9 @@ export class AtomicCommerceSearchBoxRecentQueries
     };
   }
 
-  @bindingGuard()
   @errorGuard()
   render() {
-    return html`TODO, make nothing work here`;
+    return html``;
   }
 }
 

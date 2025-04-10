@@ -10,7 +10,6 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
-import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -79,7 +78,6 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
 
-    console.log(this.bindings.id);
     engine.dispatch(
       registerQuerySuggest({
         id: this.bindings.id,
@@ -131,10 +129,9 @@ export class AtomicCommerceSearchBoxQuerySuggestions
     };
   }
 
-  @bindingGuard()
   @errorGuard()
   render() {
-    return html`TODO`;
+    return html``;
   }
 }
 
