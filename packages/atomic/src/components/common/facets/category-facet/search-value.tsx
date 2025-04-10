@@ -27,7 +27,8 @@ export const CategoryFacetSearchValue: FunctionalComponent<
     : [allCategories];
   const ariaLabel = i18n.t('under', {
     child: i18n.t('facet-value', {
-      numberOfResults: value.count,
+      count: value.count,
+      formattedCount: count,
       value: value.displayValue,
     }),
     parent: localizedPath.join(', '),
