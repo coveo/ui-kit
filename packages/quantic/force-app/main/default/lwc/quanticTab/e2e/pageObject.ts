@@ -2,15 +2,19 @@ import type {Locator, Page, Request, Response} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class TabObject {
-  constructor(public page: Page) {
+  constructor(
+    public page: Page,
+    public useCase: 'search' | 'insight' = 'search'
+  ) {
     this.page = page;
+    this.useCase = useCase;
   }
 
   get tab(): Locator {
     return this.page.locator('c-quantic-tab');
   }
 
-  tabButton(tabLabel): Locator {
+  tabButton(tabLabel: string): Locator {
     return this.tab.getByRole('button', {name: new RegExp(`^${tabLabel}$`)});
   }
 
@@ -23,7 +27,7 @@ export class TabObject {
   }
 
   async waitForTabSearchUaAnalytics(
-    actionCause,
+    actionCause: string,
     customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
@@ -31,9 +35,9 @@ export class TabObject {
         const requestBody = request.postDataJSON?.();
         const {customData} = requestBody;
 
-        const expectedFields = {
+        const expectedFields: Record<string, any> = {
           actionCause: actionCause,
-          originContext: 'Search',
+          originContext: this.useCase === 'search' ? 'Search' : 'InsightPanel',
         };
         const matchesExpectedFields = Object.keys(expectedFields).every(
           (key) => requestBody?.[key] === expectedFields[key]
@@ -49,10 +53,12 @@ export class TabObject {
     return uaRequest;
   }
 
-  async waitForTabSelectUaAnalytics(expectedFields: object): Promise<Request> {
+  async waitForTabSelectUaAnalytics(
+    expectedFields: Record<string, any>
+  ): Promise<Request> {
     return this.waitForTabSearchUaAnalytics(
       'interfaceChange',
-      (customData: object) => {
+      (customData: Record<string, any>) => {
         return Object.keys(expectedFields).every(
           (key) => customData?.[key] === expectedFields[key]
         );
@@ -60,8 +66,7 @@ export class TabObject {
     );
   }
 
-  extractActionCauseFromSearchResponse(response: Response) {
-    const {analytics} = response.request().postDataJSON();
-    return analytics.actionCause;
+  extractDataFromSearchResponse(response: Response) {
+    return response.request().postDataJSON();
   }
 }

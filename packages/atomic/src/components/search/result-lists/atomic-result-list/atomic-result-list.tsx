@@ -30,12 +30,12 @@ import {
 } from '../../../common/item-list/display-table';
 import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
+import {ItemListGuard} from '../../../common/item-list/item-list-guard';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../../common/item-list/item-list-common';
-import {ItemListGuard} from '../../../common/item-list/item-list-guard';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+} from '../../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

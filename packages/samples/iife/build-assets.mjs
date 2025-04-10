@@ -1,11 +1,7 @@
-import ncp from 'ncp';
-import {mkdirSync, readFileSync} from 'node:fs';
+import {mkdirSync, readFileSync, cpSync} from 'node:fs';
 import {dirname, join, relative, resolve as resolvePath} from 'node:path';
 import resolve from 'resolve';
-import {promisify} from 'util';
 import {workspacesRoot} from '../../../scripts/packages.mjs';
-
-const ncpAsync = promisify(ncp);
 
 /**
  *
@@ -108,16 +104,16 @@ function getDependencyAssets() {
   }));
 }
 
-async function main() {
+function main() {
   const assets = [...getDeploymentPipelineAssets(), ...getDependencyAssets()];
   for (const asset of assets) {
     for (const relativeDestination of asset.relativeDestinations) {
       const sourceDir = join(workspacesRoot, asset.sourceDirectory);
       const destinationDir = resolvePath('www', 'cdn', relativeDestination);
       mkdirSync(destinationDir, {recursive: true});
-      await ncpAsync(sourceDir, destinationDir);
+      cpSync(sourceDir, destinationDir, {recursive: true});
     }
   }
 }
 
-await main();
+main();
