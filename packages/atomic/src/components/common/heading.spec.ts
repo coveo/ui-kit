@@ -21,8 +21,7 @@ describe('heading', () => {
     render(
       html` ${heading({
         props: {...props, level: props.level ?? 1},
-        children: html`${children}`,
-      })}`,
+      })(html`${children}`)}`,
       container
     );
     return within(container).getByRole(

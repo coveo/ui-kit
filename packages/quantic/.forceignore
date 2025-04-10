@@ -11,7 +11,7 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
-**/testUtils/**/*
+testUtils
 
 # E2E tests
 **/e2e/**

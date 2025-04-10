@@ -15,7 +15,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
   PagerNextButton,

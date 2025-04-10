@@ -20,7 +20,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
-import {once, randomID} from '../../../../utils/utils';
+import {once, randomID} from '../../../../utils/stencil-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';

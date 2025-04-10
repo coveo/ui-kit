@@ -1,4 +1,4 @@
-import {closest} from './utils';
+import {closest} from './stencil-utils';
 
 export const DEFAULT_MOBILE_BREAKPOINT = '1024px';
 

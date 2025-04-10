@@ -25,7 +25,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
@@ -35,11 +35,11 @@ import {
   DisplayTableRow,
 } from '../../common/item-list/display-table';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
+import {ItemListGuard} from '../../common/item-list/item-list-guard';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../common/item-list/item-list-common';
-import {ItemListGuard} from '../../common/item-list/item-list-guard';
+} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -48,7 +48,7 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
 /**
  * @alpha

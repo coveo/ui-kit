@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/stencil-utils';
 import {StencilCheckbox} from '../../stencil-checkbox';
 import {TriStateCheckbox} from '../../triStateCheckbox';
 import {FacetValueProps} from '../facet-common';

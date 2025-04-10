@@ -12,7 +12,7 @@ import { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 import { i18n } from "i18next";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
+import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
@@ -26,7 +26,7 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
 import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
-import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -42,7 +42,7 @@ export { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 export { i18n } from "i18next";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
+export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
@@ -56,7 +56,7 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
 export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
-export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -1125,16 +1125,6 @@ export namespace Components {
           * The string value containing HTML to display;
          */
         "value": string;
-    }
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface AtomicIcon {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback": () => void;
@@ -4476,16 +4466,6 @@ declare global {
         prototype: HTMLAtomicHtmlElement;
         new (): HTMLAtomicHtmlElement;
     };
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface HTMLAtomicIconElement extends Components.AtomicIcon, HTMLStencilElement {
-    }
-    var HTMLAtomicIconElement: {
-        prototype: HTMLAtomicIconElement;
-        new (): HTMLAtomicIconElement;
-    };
     interface HTMLAtomicInsightEditToggleElement extends Components.AtomicInsightEditToggle, HTMLStencilElement {
     }
     var HTMLAtomicInsightEditToggleElement: {
@@ -6128,7 +6108,6 @@ declare global {
         "atomic-generated-answer": HTMLAtomicGeneratedAnswerElement;
         "atomic-generated-answer-feedback-modal": HTMLAtomicGeneratedAnswerFeedbackModalElement;
         "atomic-html": HTMLAtomicHtmlElement;
-        "atomic-icon": HTMLAtomicIconElement;
         "atomic-insight-edit-toggle": HTMLAtomicInsightEditToggleElement;
         "atomic-insight-facet": HTMLAtomicInsightFacetElement;
         "atomic-insight-folded-result-list": HTMLAtomicInsightFoldedResultListElement;
@@ -7304,16 +7283,6 @@ declare namespace LocalJSX {
           * The string value containing HTML to display;
          */
         "value": string;
-    }
-    /**
-     * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-     * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-     */
-    interface AtomicIcon {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon": string;
     }
     interface AtomicInsightEditToggle {
         "clickCallback"?: () => void;
@@ -9944,7 +9913,6 @@ declare namespace LocalJSX {
         "atomic-generated-answer": AtomicGeneratedAnswer;
         "atomic-generated-answer-feedback-modal": AtomicGeneratedAnswerFeedbackModal;
         "atomic-html": AtomicHtml;
-        "atomic-icon": AtomicIcon;
         "atomic-insight-edit-toggle": AtomicInsightEditToggle;
         "atomic-insight-facet": AtomicInsightFacet;
         "atomic-insight-folded-result-list": AtomicInsightFoldedResultList;
@@ -10339,11 +10307,6 @@ declare module "@stencil/core" {
              * Use only with values for which you are certain the content is harmless.
              */
             "atomic-html": LocalJSX.AtomicHtml & JSXBase.HTMLAttributes<HTMLAtomicHtmlElement>;
-            /**
-             * The `atomic-icon` component displays an SVG icon with a 1:1 aspect ratio.
-             * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
-             */
-            "atomic-icon": LocalJSX.AtomicIcon & JSXBase.HTMLAttributes<HTMLAtomicIconElement>;
             "atomic-insight-edit-toggle": LocalJSX.AtomicInsightEditToggle & JSXBase.HTMLAttributes<HTMLAtomicInsightEditToggleElement>;
             "atomic-insight-facet": LocalJSX.AtomicInsightFacet & JSXBase.HTMLAttributes<HTMLAtomicInsightFacetElement>;
             "atomic-insight-folded-result-list": LocalJSX.AtomicInsightFoldedResultList & JSXBase.HTMLAttributes<HTMLAtomicInsightFoldedResultListElement>;

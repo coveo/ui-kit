@@ -24,8 +24,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {sortByDocumentPosition} from '../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
-import {sortByDocumentPosition} from '../../../utils/utils';
 import {findSection} from '../../common/atomic-layout-section/sections';
 import {
   BaseFacetElement,

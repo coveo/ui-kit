@@ -2,16 +2,21 @@
 
 import {useQueryTrigger} from '@/lib/commerce-engine';
 
-// The query trigger query example in the searchuisamples org is 'query me'.
+// Submit the query 'query me' from the search box to activate the query trigger.
 export default function QueryTrigger() {
   const {state} = useQueryTrigger();
 
-  if (state.wasQueryModified) {
-    return (
-      <div>
-        The query changed from {state.originalQuery} to {state.newQuery}
-      </div>
-    );
+  if (!state.wasQueryModified) {
+    return null;
   }
-  return null;
+
+  return (
+    <div className="QueryTrigger">
+      <p>
+        {' '}
+        The query changed from <b>{state.originalQuery}</b> to{' '}
+        <b>{state.newQuery}</b>
+      </p>
+    </div>
+  );
 }

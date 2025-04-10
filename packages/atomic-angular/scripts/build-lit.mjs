@@ -113,8 +113,8 @@ if(litDeclarations.length > 0) {
   writeFileSync(
     atomicAngularModuleFilePath,
     atomicAngularModuleFileContent
-      .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${[...litDeclarations].join(',\n')},\n`)
-      .replace(/^import \{$/m, `import {\n${[...litDeclarations].join(',\n')},`)
+      .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${[...litDeclarations].sort().join(',\n')},\n`)
+      .replace(/^import \{$/m, `import {\n${[...litDeclarations].sort().join(',\n')},`)
   );
 }
 
