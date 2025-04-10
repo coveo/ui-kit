@@ -4,7 +4,7 @@ import {createRef, ref} from 'lit/directives/ref.js';
 import CloseIcon from '../../../../images/close.svg';
 import SearchIcon from '../../../../images/search.svg';
 import '../../atomic-icon/atomic-icon';
-import {button} from '../../button';
+import {renderButton} from '../../button';
 
 const inputRef = createRef<HTMLInputElement>();
 
@@ -43,7 +43,7 @@ export const renderFacetSearchInput = (props: FacetSearchInputProps) => {
         </div>
         ${props.query !== ''
           ? html`
-              ${button({
+              ${renderButton({
                 props: {
                   style: 'text-transparent',
                   title: clear,

@@ -5,7 +5,7 @@ import {renderFacetSearchInput} from '@/src/components/common/facets/facet-searc
 import {facetSearchInputGuard} from '@/src/components/common/facets/facet-search/facet-search-input-guard';
 import {renderFacetSearchMatches} from '@/src/components/common/facets/facet-search/facet-search-matches';
 import {renderFacetSearchValue} from '@/src/components/common/facets/facet-search/facet-search-value';
-import {facetShowMoreLess} from '@/src/components/common/facets/facet-show-more-less/facet-show-more-less';
+import {renderFacetShowMoreLess} from '@/src/components/common/facets/facet-show-more-less/facet-show-more-less';
 import {renderFacetValue} from '@/src/components/common/facets/facet-value/facet-value';
 import {renderFacetValuesGroup} from '@/src/components/common/facets/facet-values-group/facet-values-group';
 import {bindStateToController} from '@/src/decorators/bind-state';
@@ -125,7 +125,6 @@ export class AtomicCommerceFacet
     this.ensureSubscribed();
     this.initAriaLive();
     this.initPopover();
-    // this.requestUpdate();
   }
 
   public connectedCallback(): void {
@@ -287,18 +286,20 @@ export class AtomicCommerceFacet
 
   private renderShowMoreLess() {
     return html`
-      ${facetShowMoreLess({
-        label: this.displayName,
-        i18n: this.bindings.i18n,
-        canShowLessValues: this.facetState.canShowLessValues,
-        canShowMoreValues: this.facetState.canShowMoreValues,
-        onShowLess: () => {
-          this.focusTargets.showLess.focusAfterSearch();
-          this.facet.showLessValues();
-        },
-        onShowMore: () => {
-          this.focusTargets.showMore.focusAfterSearch();
-          this.facet.showMoreValues();
+      ${renderFacetShowMoreLess({
+        props: {
+          label: this.displayName,
+          i18n: this.bindings.i18n,
+          canShowLessValues: this.facetState.canShowLessValues,
+          canShowMoreValues: this.facetState.canShowMoreValues,
+          onShowLess: () => {
+            this.focusTargets.showLess.focusAfterSearch();
+            this.facet.showLessValues();
+          },
+          onShowMore: () => {
+            this.focusTargets.showMore.focusAfterSearch();
+            this.facet.showMoreValues();
+          },
         },
       })}
     `;
@@ -306,10 +307,12 @@ export class AtomicCommerceFacet
 
   private renderMatches() {
     return renderFacetSearchMatches({
-      i18n: this.bindings.i18n,
-      query: this.facetState.facetSearch.query,
-      numberOfMatches: this.facetState.facetSearch.values.length,
-      hasMoreMatches: this.facetState.facetSearch.moreValuesAvailable,
+      props: {
+        i18n: this.bindings.i18n,
+        query: this.facetState.facetSearch.query,
+        numberOfMatches: this.facetState.facetSearch.values.length,
+        hasMoreMatches: this.facetState.facetSearch.moreValuesAvailable,
+      },
     });
   }
 

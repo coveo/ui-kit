@@ -1,7 +1,7 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {button} from '../../button';
+import {renderButton} from '../../button';
 import {FacetValueProps} from '../facet-common';
 
 export const renderFacetValueBox: FunctionalComponentWithChildren<
@@ -22,7 +22,7 @@ export const renderFacetValueBox: FunctionalComponentWithChildren<
 
     return html`
       <li .key=${props.displayValue} class=${ifDefined(props.class)}>
-        ${button({
+        ${renderButton({
           props: {
             style: 'outline-bg-neutral',
             part: `value-box${props.isSelected ? ' value-box-selected' : ''}`,

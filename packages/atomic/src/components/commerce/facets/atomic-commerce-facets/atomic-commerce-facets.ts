@@ -1,3 +1,4 @@
+import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -73,7 +74,7 @@ export class AtomicCommerceFacets
   }
 
   @errorGuard()
-  // @bindingGuard() // TODO: understand why this is triggered 4 time with 3 times with the same binding value (i think) and why it would be needed
+  @bindingGuard() // TODO: understand why this is triggered 4 time with 3 times with the same binding value (i think) and why it would be needed
   protected render() {
     if (!this.isAppLoaded) {
       return html`

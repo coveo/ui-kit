@@ -4,7 +4,7 @@ import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
 import '../../atomic-icon/atomic-icon';
-import {button} from '../../button';
+import {renderButton} from '../../button';
 import {heading} from '../../heading';
 
 export interface FacetHeaderProps {
@@ -31,7 +31,7 @@ export const facetHeader = (props: FacetHeaderProps) => {
   });
 
   return html`
-    ${button({
+    ${renderButton({
       props: {
         part: 'label-button',
         style: 'text-transparent',

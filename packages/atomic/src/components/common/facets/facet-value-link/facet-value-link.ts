@@ -1,7 +1,7 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html, TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {button} from '../../button';
+import {renderButton} from '../../button';
 import {FacetValueProps} from '../facet-common';
 
 export interface FacetValueLinkProps extends FacetValueProps {
@@ -30,7 +30,7 @@ export const renderFacetValueLink: FunctionalComponentWithChildren<
 
     return html`
       <li .key=${props.displayValue} class=${ifDefined(props.class)}>
-        ${button({
+        ${renderButton({
           props: {
             style: 'text-neutral',
             part,

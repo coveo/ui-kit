@@ -1,5 +1,6 @@
-/* @reference '../../../../utils/coveo.tw.css'; */
+@reference '../../../../utils/coveo.tw.css';
 
+@import '../../../common/facets/facet-search/facet-search.tw.css';
 /* @layer components {
   @import '../../../common/facets/facet-search.pcss';
 } */

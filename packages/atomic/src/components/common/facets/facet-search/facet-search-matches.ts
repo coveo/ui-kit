@@ -1,6 +1,7 @@
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import escape from 'escape-html';
 import {i18n} from 'i18next';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 
 interface FacetSearchMatchesProps {
   i18n: i18n;
@@ -32,7 +33,9 @@ function clickableMoreMatchesFound(query: string, i18n: i18n) {
   });
 }
 
-export const renderFacetSearchMatches = (props: FacetSearchMatchesProps) => {
+export const renderFacetSearchMatches: FunctionalComponent<
+  FacetSearchMatchesProps
+> = ({props}) => {
   if (!props.numberOfMatches) {
     return html`
       <div class="px-2">
@@ -84,4 +87,5 @@ export const renderFacetSearchMatches = (props: FacetSearchMatchesProps) => {
       </div>
     `;
   }
+  return html`${nothing}`;
 };

@@ -1,9 +1,10 @@
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import MinusIcon from '../../../../images/minus.svg';
 import PlusIcon from '../../../../images/plus.svg';
 import '../../atomic-icon/atomic-icon';
-import {button} from '../../button';
+import {renderButton} from '../../button';
 
 interface FacetShowMoreProps {
   label: string;
@@ -16,7 +17,9 @@ interface FacetShowMoreProps {
   showLessRef?: (element?: HTMLButtonElement) => void;
 }
 
-export const facetShowMoreLess = (props: FacetShowMoreProps) => {
+export const renderFacetShowMoreLess: FunctionalComponent<
+  FacetShowMoreProps
+> = ({props}) => {
   const label = props.i18n.t(props.label);
   const showMore = props.i18n.t('show-more');
   const showMoreFacetValues = props.i18n.t('show-more-facet-values', {
@@ -29,11 +32,11 @@ export const facetShowMoreLess = (props: FacetShowMoreProps) => {
   const btnClasses = 'flex items-baseline text-left p-2 text-sm max-w-full';
   const iconClasses = 'w-2 h-2 mr-1';
   if (!props.canShowLessValues && !props.canShowMoreValues) {
-    return;
+    return html`${nothing}`;
   }
 
   return html`<div class="mt-2">
-    ${button({
+    ${renderButton({
       props: {
         style: 'text-primary',
         part: 'show-less',
@@ -51,7 +54,7 @@ export const facetShowMoreLess = (props: FacetShowMoreProps) => {
         ></atomic-icon>
         <span class="truncate">${showLess}</span>`
     )}
-    ${button({
+    ${renderButton({
       props: {
         style: 'text-primary',
         part: 'show-more',
