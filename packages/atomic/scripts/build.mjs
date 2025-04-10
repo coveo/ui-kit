@@ -12,6 +12,7 @@ import {
   DiagnosticCategory,
 } from 'typescript';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
+import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
@@ -73,6 +74,8 @@ function emit(program) {
  * Info: https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#a-minimal-compiler
  */
 function compileWithTransformer() {
+  generateLitExports();
+
   console.log(
     chalk.blue('Using tsconfig:'),
     chalk.green(basename(tsConfigPath))

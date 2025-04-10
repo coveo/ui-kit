@@ -5,6 +5,9 @@ const searchComponents = import(
 const commerceComponents = import(
   '../atomic/components/components/commerce/lazy-index.js'
 );
+const commonComponents = import(
+  '../atomic/components/components/common/lazy-index.js'
+);
 const insightComponents = import(
   '../atomic/components/components/insight/lazy-index.js'
 );
@@ -16,6 +19,7 @@ const recommendationsComponents = import(
 );
 
 const allComponents = Promise.all([
+  commonComponents,
   searchComponents,
   commerceComponents,
   insightComponents,
