@@ -28,8 +28,8 @@ import {
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import {ProductTemplateProvider} from '../../product-list/product-template-provider';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {ProductTemplateProvider} from '../product-list/product-template-provider';
 
 export type AriaLabelGenerator = (
   bindings: CommerceBindings,

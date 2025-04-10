@@ -21,8 +21,8 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import SearchIcon from '../../../../images/search.svg';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import SearchIcon from '../../../images/search.svg';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.

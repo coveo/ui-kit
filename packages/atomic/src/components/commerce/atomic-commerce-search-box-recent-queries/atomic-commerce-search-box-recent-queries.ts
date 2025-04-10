@@ -24,8 +24,8 @@ import {
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import Clock from '../../../../images/clock.svg';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import Clock from '../../../images/clock.svg';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
