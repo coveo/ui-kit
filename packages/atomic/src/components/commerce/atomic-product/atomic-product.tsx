@@ -1,12 +1,11 @@
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
   resultComponentClass,
-} from '../../common/item-list/item-list-common';
+} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
   ItemDisplayDensity,
@@ -214,7 +213,6 @@ export class AtomicProduct {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    applyFocusVisiblePolyfill(this.host);
   }
 
   public componentDidRender() {

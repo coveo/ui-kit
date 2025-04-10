@@ -6,6 +6,7 @@ import {
   handleUpdateIgnoreQueryTrigger,
 } from '../../triggers/triggers-slice-functions.js';
 import {getTriggerInitialState} from '../../triggers/triggers-state.js';
+import {fetchProductListing} from '../product-listing/product-listing-actions.js';
 import {executeSearch} from '../search/search-actions.js';
 import {
   applyQueryTriggerModification,
@@ -18,6 +19,10 @@ export const commerceTriggersReducer = createReducer(
     builder
       .addCase(executeSearch.pending, handleFetchItemsPending)
       .addCase(executeSearch.fulfilled, (state, action) =>
+        handleFetchItemsFulfilled(state, action.payload.response.triggers)
+      )
+      .addCase(fetchProductListing.pending, handleFetchItemsPending)
+      .addCase(fetchProductListing.fulfilled, (state, action) =>
         handleFetchItemsFulfilled(state, action.payload.response.triggers)
       )
       .addCase(applyQueryTriggerModification, (state, action) =>

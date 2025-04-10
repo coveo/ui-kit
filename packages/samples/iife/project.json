@@ -7,7 +7,7 @@
       "outputs": ["{projectRoot}/www/cdn"],
       "cache": true,
       "options": {
-        "command": "npm run-script -w=@coveo/release if-not-cdn -- \"npm run build:assets\"",
+        "command": "npm run-script -w=@coveo/ci if-not-cdn -- \"npm run build:assets\"",
         "cwd": "{projectRoot}"
       }
     }

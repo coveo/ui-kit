@@ -1,3 +1,32 @@
+## <small>3.16.5 (2025-04-09)</small>
+
+- fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
+
+## <small>3.16.4 (2025-04-03)</small>
+
+- chore(quantic): disable debug on jsdoc (#5134) ([6a3e2f5](https://github.com/coveo/ui-kit/commits/6a3e2f5)), closes [#5134](https://github.com/coveo/ui-kit/issues/5134)
+- chore(quantic): ensure directory exist when writing doc (#5136) ([a06dcac](https://github.com/coveo/ui-kit/commits/a06dcac)), closes [#5136](https://github.com/coveo/ui-kit/issues/5136)
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
+## <small>3.16.3 (2025-04-03)</small>
+
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
+## <small>3.16.2 (2025-04-02)</small>
+
+- test(quantic): quantic placeholder cypress to jest tests (#5104) ([1bddb93](https://github.com/coveo/ui-kit/commits/1bddb93)), closes [#5104](https://github.com/coveo/ui-kit/issues/5104)
+
+## <small>3.16.1 (2025-04-02)</small>
+
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- fix(quantic): handle corner-cases for ResultsPerPage (#5096) ([c006fbe](https://github.com/coveo/ui-kit/commits/c006fbe)), closes [#5096](https://github.com/coveo/ui-kit/issues/5096)
+- fix(quantic): made sure test folders are excluded from quantic npm package (#5108) ([9c01cf6](https://github.com/coveo/ui-kit/commits/9c01cf6)), closes [#5108](https://github.com/coveo/ui-kit/issues/5108)
+- fix(quantic): unneeded key attribute removed from quantic number button element (#5107) ([980d6b5](https://github.com/coveo/ui-kit/commits/980d6b5)), closes [#5107](https://github.com/coveo/ui-kit/issues/5107)
+
 ## 3.16.0 (2025-03-26)
 
 - feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)

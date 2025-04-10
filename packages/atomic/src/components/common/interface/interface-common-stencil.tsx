@@ -1,5 +1,4 @@
 import {setCoveoGlobal} from '@/src/global/environment.js';
-import {loadFocusVisiblePolyfill} from '@/src/global/focus-visible.js';
 import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
 import {InitializeEvent} from '@/src/utils/initialization-utils.js';
 import {LogLevel} from '@coveo/headless';
@@ -41,7 +40,6 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     globalVariableName: string
   ) {
     setCoveoGlobal(globalVariableName);
-    loadFocusVisiblePolyfill();
 
     const {
       connectedCallback: originalConnectedCallback,

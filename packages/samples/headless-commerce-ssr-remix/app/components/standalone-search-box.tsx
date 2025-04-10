@@ -24,6 +24,9 @@ export default function StandaloneSearchBox() {
       const url = `${state.redirectTo}?q=${encodeURIComponent(state.value)}`;
       navigate(url, {preventScrollReset: true});
       methods?.afterRedirection();
+    } else if (state.redirectTo !== '') {
+      // This handles query pipeline redirect triggers.
+      window.location.assign(state.redirectTo);
     }
   }, [state.redirectTo, state.value, navigate, methods]);
 
