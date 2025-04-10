@@ -88,9 +88,9 @@ export function generateAngularModuleDefinition(options: {
       const filteredComponents = buildCtx.components.filter((cmp) => {
         return !cmp.internal;
       });
-      const componentClassNames = filteredComponents.map((component) =>
-        dashToPascalCase(component.tagName)
-      );
+      const componentClassNames = filteredComponents
+        .map((component) => dashToPascalCase(component.tagName))
+        .sort();
       compilerCtx.fs.writeFile(
         options.moduleFile,
         `${imports}
