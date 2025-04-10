@@ -1,5 +1,5 @@
-import {getI18nTestInstance} from '@/test-utils/mocks/i18n';
-import type {i18n as I18n} from 'i18next';
+import {createTestI18n} from '@/vitest-utils/i18n-utils';
+import {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {loadMoreButton} from './button';
 
@@ -8,7 +8,7 @@ describe('loadMoreButton', () => {
   let i18n: I18n;
 
   beforeAll(async () => {
-    i18n = await getI18nTestInstance();
+    i18n = await createTestI18n();
   });
 
   beforeEach(() => {

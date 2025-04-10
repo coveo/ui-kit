@@ -3051,6 +3051,7 @@ export class AtomicComponentError {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
+    
   }
 }
 
@@ -3076,6 +3077,7 @@ export class AtomicIcon {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
+    
   }
 }
 

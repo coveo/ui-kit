@@ -5,5 +5,4 @@ export const parameters: Parameters = {
   docs: {
     story: {autoplay: true},
   },
-  layout: 'centered',
 };
