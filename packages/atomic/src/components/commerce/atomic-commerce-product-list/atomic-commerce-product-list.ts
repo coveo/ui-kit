@@ -4,7 +4,10 @@ import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {BindingController} from '@/src/mixins/bindings-mixin';
+import {
+  BindingController,
+  InitializeBindingsMixin,
+} from '@/src/mixins/bindings-mixin';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -74,7 +77,7 @@ import styles from './atomic-commerce-product-list.tw.css';
 @customElement('atomic-commerce-product-list')
 @withTailwindStyles
 export class AtomicCommerceProductList
-  extends LitElement
+  extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -109,6 +112,8 @@ export class AtomicCommerceProductList
   @bindStateToController('searchOrListing')
   @state()
   public searchOrListingState!: SearchState | ProductListingState;
+
+  @bindStateToController('summary')
   @state()
   public summaryState!: SearchSummaryState | ProductListingSummaryState;
 
@@ -194,14 +199,13 @@ export class AtomicCommerceProductList
           () => html`<slot></slot>`,
           () => {
             const listClasses = this.computeListDisplayClasses();
-
             return html`${when(
               this.display === 'table',
               () => this.renderTable(listClasses),
               () => this.renderGridOrList(listClasses)
             )}`;
           }
-        )}}`,
+        )}`,
       () => nothing
     )}`;
   }
@@ -481,9 +485,7 @@ export class AtomicCommerceProductList
   }
 
   private getInteractiveProduct(product: Product) {
-    const parentController = this.searchOrListing;
-
-    return parentController.interactiveProduct({options: {product}});
+    return this.searchOrListing.interactiveProduct({options: {product}});
   }
 
   private getPropsForAtomicProduct(product: Product) {
