@@ -2,7 +2,7 @@ import {h, FunctionalComponent, VNode, Fragment} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {isMacOS} from '../../../utils/device-utils';
 import {AnyBindings} from '../../common/interface/bindings';
-import {SearchBoxSuggestionElement} from '../../common/suggestions/suggestions-common';
+import {SearchBoxSuggestionElement} from '../../common/suggestions/stencil-suggestions-common';
 
 export const queryDataAttribute = 'data-query';
 

@@ -22,11 +22,11 @@ import {
   QuerySuggestionIcon,
   QuerySuggestionText,
 } from '../../common/suggestions/query-suggestions';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,
   SearchBoxSuggestionElement,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/stencil-suggestions-common';
 import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
