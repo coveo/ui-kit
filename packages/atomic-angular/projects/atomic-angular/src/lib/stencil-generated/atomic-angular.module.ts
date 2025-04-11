@@ -5,8 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -37,7 +35,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicDidYouMean,
@@ -147,8 +144,6 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -179,7 +174,6 @@ AtomicCommerceSearchBox,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
 AtomicCommerceText,
 AtomicCommerceTimeframeFacet,
 AtomicDidYouMean,
