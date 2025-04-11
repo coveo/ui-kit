@@ -31,7 +31,7 @@
   ],
   "dependencies": {
     "@coveo/atomic": "3.22.4",
-    "@lit/react": "1.0.7",
+    "@lit/react": "1.0.6",
     "lit": "3.2.1"
   },
   "devDependencies": {
@@ -41,8 +41,8 @@
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-typescript": "12.1.2",
     "@types/node": "22.13.5",
-    "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "fix-esm-import-path": "1.10.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
