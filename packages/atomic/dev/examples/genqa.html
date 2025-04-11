@@ -13,8 +13,6 @@
     </script>
 
     <script type="module">
-      import {loadAdvancedSearchQueryActions} from '@coveo/headless';
-
       await customElements.whenDefined('atomic-search-interface');
       const searchInterface = document.querySelector('atomic-search-interface');
 
@@ -29,17 +27,6 @@
 
       // Trigger a first search
       searchInterface.executeFirstSearch();
-
-      const advQueriesActions = loadAdvancedSearchQueryActions(searchInterface.engine);
-
-      searchInterface.engine?.dispatch(
-        advQueriesActions.updateAdvancedSearchQueries({
-          aq: '@fileType=html',
-          cq: '@fileType=html',
-          dq: '',
-          lq: '',
-        })
-      );
     </script>
     <style>
       body {
