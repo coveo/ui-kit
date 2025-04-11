@@ -126,7 +126,9 @@ watch('src', {recursive: true}, async (_, filename) => {
     filename.endsWith('.mdx') ||
     filename.endsWith('.new.stories.tsx') ||
     filename.endsWith('.spec.ts') ||
-    filename.includes('e2e')
+    filename.includes('e2e') ||
+    filename.endsWith('index.ts') ||
+    filename.endsWith('lazy-index.ts')
   ) {
     return;
   }

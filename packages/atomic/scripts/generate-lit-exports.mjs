@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
+import {formatWithPrettier} from './format-with-prettier.mjs';
 
 const baseComponentsDir = path.resolve(
   path.dirname(new URL(import.meta.url).pathname),
@@ -22,7 +23,7 @@ function toPascalCase(name) {
     .join('');
 }
 
-function generateLitExportsForDir(dir) {
+async function generateLitExportsForDir(dir) {
   const componentsDir = path.join(baseComponentsDir, dir);
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
@@ -44,41 +45,47 @@ function generateLitExportsForDir(dir) {
     .map((file) => file.name)
     .sort();
 
-  if (litComponents.length === 0) {
-    fs.writeFileSync(outputIndexFile, `// Auto-generated file\nexport {};\n`);
-    fs.writeFileSync(
-      outputLazyIndexFile,
-      `// Auto-generated file\nexport default {} as Record<string, () => Promise<unknown>>;\n\nexport type * from './index.js';\n`
-    );
-    return;
-  }
+  let indexFileContent = `
+    // Auto-generated file
+    ${
+      litComponents.length > 0
+        ? litComponents
+            .map(
+              (component) =>
+                `export {${toPascalCase(component)}} from './${component}/${component}.js';`
+            )
+            .join('\n')
+        : 'export {};'
+    }
+  `;
+  let lazyIndexFileContent = `
+    // Auto-generated file
+    export default {
+       ${litComponents
+         .map(
+           (component) =>
+             `'${component}': async () => await import('./${component}/${component}.js'),`
+         )
+         .join('\n  ')}
+    } as Record<string, () => Promise<unknown>>;
+ 
+    export type * from './index.js';
+  `;
 
-  const indexExports = litComponents
-    .map(
-      (component) =>
-        `export {${toPascalCase(component)}} from './${component}/${component}.js';`
-    )
-    .join('\n');
-
-  const lazyIndexExports = litComponents
-    .map(
-      (component) =>
-        `'${component}': async () => await import('./${component}/${component}.js'),`
-    )
-    .join('\n  ');
-
-  fs.writeFileSync(
-    outputIndexFile,
-    `// Auto-generated file\n${indexExports}\n`
+  indexFileContent = await formatWithPrettier(
+    indexFileContent,
+    outputIndexFile
+  );
+  lazyIndexFileContent = await formatWithPrettier(
+    lazyIndexFileContent,
+    outputLazyIndexFile
   );
 
-  fs.writeFileSync(
-    outputLazyIndexFile,
-    `// Auto-generated file\nexport default {\n  ${lazyIndexExports}\n} as Record<string, () => Promise<unknown>>;\n\nexport type * from './index.js';\n`
-  );
+  fs.writeFileSync(outputIndexFile, indexFileContent);
+  fs.writeFileSync(outputLazyIndexFile, lazyIndexFileContent);
 }
 
-export function generateLitExports() {
+export async function generateLitExports() {
   const directories = [
     'commerce',
     'common',
@@ -87,8 +94,8 @@ export function generateLitExports() {
     'ipx',
     'recommendations',
   ];
-  directories.forEach((dir) => {
+  for (const dir of directories) {
     console.log(chalk.blue('Directory:'), chalk.green(dir));
-    generateLitExportsForDir(dir);
-  });
+    await generateLitExportsForDir(dir);
+  }
 }
