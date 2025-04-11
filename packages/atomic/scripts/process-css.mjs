@@ -38,6 +38,10 @@ function loadTsConfig(configPath) {
   );
 }
 
+function escapeBackslashes(css) {
+  return css.replace(/\\/g, '\\\\');
+}
+
 async function processAndMinifyCss(content, filename) {
   const {plugins, options} = await postcssLoadConfig();
   const result = await postcss(plugins).process(content, {
@@ -46,6 +50,8 @@ async function processAndMinifyCss(content, filename) {
   });
 
   let processedCss = minifyCss(result, filename);
+
+  processedCss = escapeBackslashes(processedCss);
 
   return processedCss;
 }
