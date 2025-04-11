@@ -74,8 +74,6 @@ function emit(program) {
  * Info: https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API#a-minimal-compiler
  */
 function compileWithTransformer() {
-  generateLitExports();
-
   console.log(
     chalk.blue('Using tsconfig:'),
     chalk.green(basename(tsConfigPath))
@@ -120,4 +118,5 @@ function compileWithTransformer() {
   process.exit(exitCode);
 }
 
+await generateLitExports();
 compileWithTransformer();
