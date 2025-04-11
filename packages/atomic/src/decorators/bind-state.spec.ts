@@ -115,7 +115,7 @@ describe('@bindStateToController decorator', () => {
     element.initialize!();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'invalidProperty property is not defined on component',
-      element
+      element.tagName
     );
   });
 
@@ -124,7 +124,7 @@ describe('@bindStateToController decorator', () => {
     element.initialize!();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'ControllerState: The "initialize" method has to be defined and instantiate a controller for the property controller',
-      element
+      element.tagName
     );
   });
 
@@ -146,7 +146,7 @@ describe('@bindStateToController decorator', () => {
     controller.updateState({value: 'updated state'});
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'ControllerState: The onUpdateCallbackMethod property "nonExistentMethod" is not defined',
-      element
+      element.tagName
     );
   });
 });
