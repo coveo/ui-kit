@@ -22,10 +22,7 @@ import {filterProtocol} from '../../../../utils/xss-utils';
 import {Button} from '../../../common/stencil-button';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
-
-export interface SelectChildProductEventArgs {
-  child: ChildProduct;
-}
+import {SelectChildProductEventArgs} from './select-child-product-event';
 
 /**
  * @alpha

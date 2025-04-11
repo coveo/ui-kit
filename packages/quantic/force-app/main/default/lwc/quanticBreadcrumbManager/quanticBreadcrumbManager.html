@@ -27,7 +27,7 @@
             </template>
             <template for:each={numericFacetBreadcrumbsValues} for:item="breadcrumb">
               <li data-testid="numeric-facet-breadcrumb" key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__numeric-facet-list breadcrumb-manager__line">
-                <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
+                <span data-testid="numeric-facet-breadcrumb-field-name" class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                     <li key={breadcrumbValue.value} class="breadcrumb__container">
@@ -54,7 +54,7 @@
             </template>
             <template for:each={dateFacetBreadcrumbsValues} for:item="breadcrumb">
               <li data-testid="date-facet-breadcrumb" key={breadcrumb.facetId} class="slds-list_horizontal breadcrumb-manager__date-facet-list breadcrumb-manager__line">
-                <span class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
+                <span data-testid="date-facet-breadcrumb-field-name" class="slds-col breadcrumb-manager__field-name">{breadcrumb.label}{labels.colon} </span>
                 <ul class="slds-col slds-truncate slds-list_horizontal slds-grid slds-wrap">
                   <template for:each={breadcrumb.values} for:item="breadcrumbValue">
                     <li key={breadcrumbValue.value} class="breadcrumb__container">
