@@ -26,12 +26,10 @@ describe('loadMoreButton', () => {
   }) => {
     render(
       html`${loadMoreButton({
-        props: {
-          i18n,
-          onClick: () => {},
-          moreAvailable: props.moreAvailable,
-          label: props.label ?? 'load-more-results',
-        },
+        i18n,
+        onClick: () => {},
+        moreAvailable: props.moreAvailable,
+        label: props.label ?? 'load-more-results',
       })}`,
       container
     );

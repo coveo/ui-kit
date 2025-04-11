@@ -1,6 +1,6 @@
 import {createRipple} from '@/src/utils/ripple';
 import {fireEvent, within} from '@storybook/test';
-import {html, nothing, render} from 'lit';
+import {html, render} from 'lit';
 import {vi} from 'vitest';
 import {button, ButtonProps} from './button';
 
@@ -20,14 +20,15 @@ describe('button', () => {
     document.body.removeChild(container);
   });
 
-  const renderButton = (props: Partial<ButtonProps>): HTMLButtonElement => {
+  const renderButton = (
+    props: Partial<ButtonProps>,
+    children = html``
+  ): HTMLButtonElement => {
     render(
       html`${button({
-        props: {
-          ...props,
-          style: props.style ?? 'primary',
-        },
-      })(nothing)}`,
+        ...props,
+        style: props.style ?? 'primary',
+      })(children)}`,
       container
     );
     return within(container).getByRole('button') as HTMLButtonElement;
