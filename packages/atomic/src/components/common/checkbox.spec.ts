@@ -82,6 +82,21 @@ describe('checkbox', () => {
     expect(button.classList.contains('selected')).toBe(true);
   });
 
+  it('should not display an icon if not checked', async () => {
+    const button = renderCheckbox({checked: false});
+    const icon = button.querySelector('atomic-icon');
+
+    expect(window.getComputedStyle(icon!).display).toBe('none');
+  });
+
+  it('should display an icon if checked', async () => {
+    const button = renderCheckbox({checked: true});
+    const icon = button.querySelector('atomic-icon');
+    await customElements.whenDefined('atomic-icon');
+
+    expect(window.getComputedStyle(icon!).display).toBe('block');
+  });
+
   it('should not have selected attributes and classes if not checked', async () => {
     const button = renderCheckbox({checked: false});
 
