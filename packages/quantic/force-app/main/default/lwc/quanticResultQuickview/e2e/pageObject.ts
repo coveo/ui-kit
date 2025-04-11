@@ -7,7 +7,7 @@ export class ResultQuickviewObject {
   }
 
   get quickviewButton(): Locator {
-    return this.page.locator('c-quantic-result-quickview button');
+    return this.page.getByRole('button', {name: 'Open'});
   }
 
   get quickviewContent(): Locator {

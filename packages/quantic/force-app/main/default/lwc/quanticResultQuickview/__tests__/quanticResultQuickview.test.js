@@ -5,8 +5,8 @@ import {createElement} from 'lwc';
 import QuanticResultQuickview from '../quanticResultQuickview';
 
 const selectors = {
-  quickviewButton: '[data-cy="quick-view-button"]',
-  closeQuickviewButton: '[data-cy="quickview-modal__close-button"]',
+  quickviewButton: '[data-testid="quick-view-button"]',
+  closeQuickviewButton: '[data-testid="quickview-modal__close-button"]',
   quickviewContent: 'c-quantic-quickview-content',
   icon: 'lightning-icon',
   tooltip: 'c-quantic-tooltip',
