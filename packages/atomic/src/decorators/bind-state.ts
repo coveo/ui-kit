@@ -1,39 +1,10 @@
 import type {Controller} from '@coveo/headless';
-import type {PropertyValues, ReactiveElement} from 'lit';
+import type {ReactiveElement} from 'lit';
 import type {InitializableComponent} from './types';
 
 type ControllerProperties<T> = {
   [K in keyof T]: T[K] extends Controller ? K : never;
 }[keyof T];
-
-/**
- * Overrides the shouldUpdate method to prevent triggering an unnecessary updates when the controller state is not yet defined.
- *
- * This function wraps the original shouldUpdate method of a LitElement component. It ensures that the component
- * will only update if the original shouldUpdate method returns true and at least one of the changed properties
- * is not undefined.
- *
- * You can always define a custom shouldUpdate method in your component which will override this one.
- *
- * @param component - The LitElement component whose shouldUpdate method is being overridden.
- * @param shouldUpdate - The original shouldUpdate method of the component.
- */
-function overrideShouldUpdate(
-  component: ReactiveElement,
-  shouldUpdate: (changedProperties: PropertyValues) => boolean,
-  stateProperty: string
-) {
-  // @ts-expect-error - shouldUpdate is a protected property
-  component.shouldUpdate = function (changedProperties: PropertyValues) {
-    for (const [key, value] of changedProperties.entries()) {
-      if (key === stateProperty && value === undefined) {
-        return false;
-      }
-    }
-
-    return shouldUpdate.call(this, changedProperties);
-  };
-}
 
 /**
  * A decorator that allows the Lit component state property to automatically get updates from a [Coveo Headless controller](https://docs.coveo.com/en/headless/latest/usage/#use-headless-controllers).
@@ -70,10 +41,7 @@ export function bindStateToController<Element extends ReactiveElement>(
 
     ctor.addInitializer((instance) => {
       const component = instance as Instance;
-      // @ts-expect-error - shouldUpdate is a protected property
-      const {disconnectedCallback, initialize, shouldUpdate} = component;
-
-      overrideShouldUpdate(component, shouldUpdate, stateProperty.toString());
+      const {disconnectedCallback, initialize} = component;
 
       component.initialize = function () {
         initialize && initialize.call(this);
