@@ -79,4 +79,8 @@ export class SearchObject {
       });
     });
   }
+
+  extractDataFromSearchResponse(response: Response) {
+    return response.request().postDataJSON();
+  }
 }
