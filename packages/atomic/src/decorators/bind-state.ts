@@ -1,5 +1,9 @@
 import type {Controller} from '@coveo/headless';
-import type {ReactiveElement} from 'lit';
+import type {
+  ReactiveController,
+  ReactiveControllerHost,
+  ReactiveElement,
+} from 'lit';
 import type {InitializableComponent} from './types';
 
 type ControllerProperties<T> = {
@@ -41,7 +45,8 @@ export function bindStateToController<Element extends ReactiveElement>(
 
     ctor.addInitializer((instance) => {
       const component = instance as Instance;
-      const {disconnectedCallback, initialize} = component;
+      const stateController = new StateBindingController(instance);
+      const {initialize} = component;
 
       component.initialize = function () {
         initialize && initialize.call(this);
@@ -49,14 +54,14 @@ export function bindStateToController<Element extends ReactiveElement>(
         if (!initialize) {
           return console.error(
             `ControllerState: The "initialize" method has to be defined and instantiate a controller for the property ${controllerProperty.toString()}`,
-            component
+            component.tagName
           );
         }
 
         if (!component[controllerProperty]) {
           return console.error(
             `${controllerProperty.toString()} property is not defined on component`,
-            component
+            component.tagName
           );
         }
 
@@ -66,7 +71,7 @@ export function bindStateToController<Element extends ReactiveElement>(
         ) {
           return console.error(
             `ControllerState: The onUpdateCallbackMethod property "${options.onUpdateCallbackMethod}" is not defined`,
-            component
+            component.tagName
           );
         }
 
@@ -80,11 +85,26 @@ export function bindStateToController<Element extends ReactiveElement>(
           typeof updateCallback === 'function' && updateCallback();
         });
 
-        component.disconnectedCallback = function () {
-          !component.isConnected && unsubscribeController?.();
-          disconnectedCallback && disconnectedCallback.call(component);
-        };
+        stateController.registerSubscription(unsubscribeController);
       };
     });
   };
+}
+
+export class StateBindingController implements ReactiveController {
+  host: ReactiveControllerHost;
+  private unsubscribeControllers: Array<() => void> = [];
+
+  constructor(host: ReactiveControllerHost) {
+    (this.host = host).addController(this);
+  }
+
+  registerSubscription(unsubscribe: () => void) {
+    this.unsubscribeControllers.push(unsubscribe);
+  }
+
+  hostDisconnected() {
+    this.unsubscribeControllers.forEach((unsubscribe) => unsubscribe());
+    this.unsubscribeControllers = [];
+  }
 }
