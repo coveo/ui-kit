@@ -5,6 +5,8 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -145,6 +147,8 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
+AtomicComponentError,
+AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
