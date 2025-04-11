@@ -29,6 +29,9 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
       const originalBody = await apiResponse.json();
 
       originalBody.queryCorrections = [didYouMeanDataObject];
+      originalBody.results = [];
+      originalBody.totalCount = 0;
+      originalBody.totalCountFiltered = 0;
 
       await route.fulfill({
         body: JSON.stringify(originalBody),

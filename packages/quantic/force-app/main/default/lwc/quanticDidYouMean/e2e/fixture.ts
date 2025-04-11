@@ -42,30 +42,12 @@ export const testSearch =
         new SearchObjectWithDidYouMeanOrTrigger(page, searchRequestRegex)
       );
     },
-    didYouMean: async (
-      {
-        page,
-        options,
-        configuration,
-        search,
-        didYouMeanData: didYouMean,
-        queryTriggerData: queryTrigger,
-      },
-      use
-    ) => {
+    didYouMean: async ({page, options, configuration, search}, use) => {
       await page.goto(pageUrl);
 
-      // console.log('didYouMean', didYouMean);
-      // console.log('queryTrigger', queryTrigger);
-      if (didYouMean) {
-        await search.mockSearchWithDidYouMeanResponse(didYouMean);
-      } else if (queryTrigger) {
-        await search.mockSearchWithQueryTriggerResponse(queryTrigger);
-      }
-
+      const searchResponsePromise = search.waitForSearchResponse();
       configuration.configure(options);
-      await search.waitForSearchResponse();
-      // console.log('response', await response.json());
+      await searchResponsePromise;
 
       await use(new DidYouMeanObject(page));
     },
