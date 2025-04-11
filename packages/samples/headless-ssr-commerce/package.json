@@ -23,9 +23,5 @@
     "@playwright/test": "1.50.1",
     "eslint": "8.57",
     "typescript": "5.8.2"
-  },
-  "overrides": {
-    "@types/react": "19.1.0",
-    "@types/react-dom": "19.1.1"
   }
 }
