@@ -14,20 +14,20 @@ import {
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {isFocusingOut, randomID} from '../../../utils/stencil-utils';
-import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
-import {SearchTextArea} from '../../common/search-box/search-text-area';
+import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
+import {ButtonSearchSuggestion} from '../../common/search-box/stencil-search-suggestion';
+import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {
   getPartialSearchBoxSuggestionElement,
   QuerySuggestionContainer,
   QuerySuggestionIcon,
   QuerySuggestionText,
-} from '../../common/suggestions/query-suggestions';
+} from '../../common/suggestions/stencil-query-suggestions';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,
   SearchBoxSuggestionElement,
 } from '../../common/suggestions/stencil-suggestions-common';
-import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
