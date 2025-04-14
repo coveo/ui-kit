@@ -1,3 +1,14 @@
+## <small>3.22.4 (2025-04-09)</small>
+
+- chore(atomic): enable ripple styles for lit components (#5138) ([5946a9e](https://github.com/coveo/ui-kit/commits/5946a9e)), closes [#5138](https://github.com/coveo/ui-kit/issues/5138)
+- chore(atomic): remove 'children' from FunctionalComponentWithChildren interface (#5133) ([d0bb710](https://github.com/coveo/ui-kit/commits/d0bb710)), closes [#5133](https://github.com/coveo/ui-kit/issues/5133)
+
+## <small>3.22.3 (2025-04-03)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- chore(atomic): remove focus-visible polyfill (#5118) ([66a809a](https://github.com/coveo/ui-kit/commits/66a809a)), closes [#5118](https://github.com/coveo/ui-kit/issues/5118) [/github.com/coveo/ui-kit/pull/5017#discussion_r2017881924](https://github.com//github.com/coveo/ui-kit/pull/5017/issues/discussion_r2017881924)
+- fix(atomic-icon): split resourceURL logic for lit (#5131) ([e701eb9](https://github.com/coveo/ui-kit/commits/e701eb9)), closes [#5131](https://github.com/coveo/ui-kit/issues/5131)
+
 ## <small>3.22.2 (2025-04-03)</small>
 
 - chore(atomic): remove focus-visible polyfill (#5118) ([66a809a](https://github.com/coveo/ui-kit/commits/66a809a)), closes [#5118](https://github.com/coveo/ui-kit/issues/5118) [/github.com/coveo/ui-kit/pull/5017#discussion_r2017881924](https://github.com//github.com/coveo/ui-kit/pull/5017/issues/discussion_r2017881924)

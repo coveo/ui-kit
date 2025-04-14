@@ -5,7 +5,7 @@ import {DisplayConfig} from '../../common/item-list/item-decorators';
 import {
   ItemRenderingFunction,
   resultComponentClass,
-} from '../../common/item-list/item-list-common';
+} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
   ItemDisplayDensity,
