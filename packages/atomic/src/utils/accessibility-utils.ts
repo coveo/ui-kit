@@ -1,4 +1,4 @@
-import {PropertyValues} from 'lit';
+import {LitElement} from 'lit';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {InitializableComponent} from '../decorators/types';
 import {defer} from './utils';
@@ -14,7 +14,6 @@ export interface FindAriaLiveEventArgs {
 //TODO: Reimplement to fit Lit
 export function AriaLiveRegion(_regionName: string, _assertive = false) {}
 
-//TODO: Reimplement to fit Lit
 export class FocusTargetController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
@@ -23,7 +22,9 @@ export class FocusTargetController {
   private doFocusAfterSearch = false;
   private doFocusOnNextTarget = false;
 
-  constructor(private component: InitializableComponent<AnyBindings>) {
+  constructor(
+    private component: InitializableComponent<AnyBindings> & LitElement
+  ) {
     this.bindings = component.bindings;
     this.handleComponentRenderLoop();
   }
@@ -68,11 +69,7 @@ export class FocusTargetController {
   }
 
   private handleComponentRenderLoop() {
-    const originalComponentDidRender = this.component.updated;
-
-    this.component.updated = (_changedProperties: PropertyValues) => {
-      originalComponentDidRender &&
-        originalComponentDidRender.call(this.component, _changedProperties);
+    this.component.updateComplete.then(async () => {
       if (!this.bindings) {
         return;
       }
@@ -83,15 +80,15 @@ export class FocusTargetController {
       ) {
         this.doFocusAfterSearch = false;
         if (this.element) {
+          console.log(this.element);
           const el = this.element;
           // The focus seems to be flaky without deferring, especially on iOS.
-          defer().then(() => {
-            el.focus();
-            this.onFocusCallback?.();
-          });
+          await defer();
+          el.focus();
+          this.onFocusCallback?.();
         }
       }
-    };
+    });
   }
 }
 

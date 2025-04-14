@@ -1,4 +1,4 @@
-import {PropertyValues, TemplateResult} from 'lit';
+import {TemplateResult} from 'lit';
 import {TemplateResultType} from 'lit/directive-helpers.js';
 import {AnyBindings} from '../components/common/interface/bindings';
 
@@ -39,6 +39,5 @@ export interface InitializableComponent<
    * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
    */
   initialize?: () => void;
-  updated?: (_updatedProperties: PropertyValues) => void;
-  error: Error;
+  error?: Error;
 }

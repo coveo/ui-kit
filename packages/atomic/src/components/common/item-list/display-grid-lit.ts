@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {html, TemplateResult} from 'lit';
+import {html} from 'lit';
 import {createRef, Ref, ref} from 'lit/directives/ref.js';
 
 export interface DisplayGridProps {
@@ -28,7 +28,7 @@ export const DisplayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
     (r.value?.querySelector(selectorForItem) as HTMLElement)?.click();
   };
 
-  return (children: TemplateResult) =>
+  return (children) =>
     html` <div
       part="result-list-grid-clickable-container outline"
       ${ref(setRef)}

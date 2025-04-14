@@ -42,13 +42,14 @@ export default defineConfig({
     tailwindcss(),
   ],
   test: {
-    setupFiles: ['./vitest-utils/setup.ts'],
+    css: true,
     include: ['src/**/*.spec.ts'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
-    css: true,
+    restoreMocks: true,
+    setupFiles: ['./vitest-utils/setup.ts'],
     globals: true,
     deps: {
       moduleDirectories: ['node_modules', path.resolve('../../packages')],

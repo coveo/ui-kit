@@ -4,7 +4,7 @@ import {bindingGuard} from '@/src/decorators/binding-guard.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {BindingController} from '@/src/mixins/bindings-mixin';
+import {BindingController} from '@/src/mixins/bindings-mixin.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -20,14 +20,8 @@ import {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {
-  CSSResultGroup,
-  html,
-  LitElement,
-  nothing,
-  PropertyValues,
-  unsafeCSS,
-} from 'lit';
+import {ContextRoot} from '@lit/context';
+import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
@@ -93,6 +87,8 @@ export class AtomicCommerceProductList
   constructor() {
     super();
     new BindingController(this);
+    const contextRoot = new ContextRoot();
+    contextRoot.attach(document.body);
   }
 
   @state()
@@ -164,10 +160,6 @@ export class AtomicCommerceProductList
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
     });
-  }
-
-  public updated(_changedProperties: PropertyValues) {
-    super.updated(_changedProperties);
   }
 
   public disconnectedCallback(): void {

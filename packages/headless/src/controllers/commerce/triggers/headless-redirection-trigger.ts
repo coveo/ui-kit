@@ -9,6 +9,10 @@ import {RedirectionTrigger} from '../../core/triggers/headless-core-redirection-
 /**
  * Creates a `RedirectionTrigger` controller instance.
  *
+ * **Note:** The `StandaloneSearchBox` controller has a built-in mechanism to leverage query pipeline redirect triggers.
+ * Consequently, the `RedirectionTrigger` controller is only useful to implement non-standard use cases, such as
+ * handling redirect triggers on a full search page.
+ *
  * @param engine - The headless commerce engine.
  * @returns A `RedirectionTrigger` controller instance.
  *

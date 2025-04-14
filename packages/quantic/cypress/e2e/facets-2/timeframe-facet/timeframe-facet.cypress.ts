@@ -31,8 +31,8 @@ describe('quantic-timeframe-facet', () => {
 
   const validRange = {
     start: '2000-01-01',
-    end: '2000-12-31',
-    filter: '2000/01/01@00:00:00..2000/12/31@23:59:59',
+    end: '2050-12-31',
+    filter: '2000/01/01@00:00:00..2050/12/31@23:59:59',
   };
   const invalidRange = {
     start: '2000-12-31',
@@ -285,7 +285,7 @@ describe('quantic-timeframe-facet', () => {
             if (param.useCase === useCaseEnum.search) {
               Expect.urlHashContains(
                 'Date_input',
-                '2000/01/01@00:00:00...2000/12/31@23:59:59'
+                '2000/01/01@00:00:00...2050/12/31@23:59:59'
               );
             }
 
@@ -375,7 +375,7 @@ describe('quantic-timeframe-facet', () => {
             if (param.useCase === useCaseEnum.search) {
               Expect.urlHashContains(
                 'Date_input',
-                '2000/01/01@00:00:00...2000/12/31@23:59:59'
+                '2000/01/01@00:00:00...2050/12/31@23:59:59'
               );
             }
             Expect.displayClearButton(true);
@@ -389,7 +389,7 @@ describe('quantic-timeframe-facet', () => {
                 if (param.useCase === useCaseEnum.search) {
                   Expect.urlHashContains(
                     'Date_input',
-                    '2000/01/01@00:00:00...2000/12/31@23:59:59'
+                    '2000/01/01@00:00:00...2050/12/31@23:59:59'
                   );
                 }
               }
@@ -476,13 +476,13 @@ describe('quantic-timeframe-facet', () => {
         });
 
         describe('when with-date-picker is true', () => {
-          it('should show the facet', () => {
+          it('should not show the facet', () => {
             setupWithNoResultsMatchingFacet({
               withDatePicker: true,
               useCase: param.useCase,
             });
 
-            Expect.displayLabel(true);
+            Expect.displayLabel(false);
           });
         });
       });

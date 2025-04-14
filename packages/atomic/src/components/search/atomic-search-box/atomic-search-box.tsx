@@ -38,17 +38,17 @@ import {
   once,
   randomID,
   spreadProperties,
-} from '../../../utils/utils';
+} from '../../../utils/stencil-utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
   elementHasQuery,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/stencil-suggestions-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {RedirectionPayload} from './redirection-payload';
 import {

@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {html, TemplateResult} from 'lit';
+import {html} from 'lit';
 
 export interface DisplayWrapperProps {
   listClasses: string;
@@ -10,7 +10,7 @@ export const ListWrapper: FunctionalComponentWithChildren<
 > = ({props}) => {
   const {listClasses} = props;
 
-  return (children: TemplateResult) =>
+  return (children) =>
     html`<div class="list-wrapper ${listClasses}">${children}</div>`;
 };
 
@@ -19,7 +19,7 @@ export const ListWrapperForGridOrListDisplay: FunctionalComponentWithChildren<
 > = ({props}) => {
   const {listClasses} = props;
 
-  return (children: TemplateResult) =>
+  return (children) =>
     html`${ListWrapper({
       props: {listClasses},
     })(

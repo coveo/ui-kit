@@ -78,7 +78,7 @@ export const DisplayTable: FunctionalComponentWithChildren<
     );
   }
 
-  return (children: TemplateResult) =>
+  return (children) =>
     html`<table class="list-root ${listClasses}" part="result-table">
       <thead part="result-table-heading">
         <tr part="result-table-heading-row">
@@ -102,7 +102,7 @@ export const DisplayTableRow: FunctionalComponentWithChildren<
 > = ({props}) => {
   const {key, rowIndex, setRef} = props;
 
-  return (children: TemplateResult) =>
+  return (children) =>
     html`${keyed(
       key,
       html`<tr

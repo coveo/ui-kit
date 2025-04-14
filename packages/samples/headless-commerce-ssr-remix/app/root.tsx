@@ -36,6 +36,7 @@ import {
 } from './components/providers/providers';
 import SearchBox from './components/search-box';
 import StandaloneSearchBox from './components/standalone-search-box';
+import QueryTrigger from './components/triggers/query-trigger';
 import useClientId from './hooks/use-client-id';
 
 export const meta: MetaFunction = () => {
@@ -135,6 +136,7 @@ export function Layout({children}: {children: React.ReactNode}) {
             staticState={staticState}
           >
             <ParameterManager url={navigatorContext.location} />
+            <QueryTrigger />
             <Header totalItemsInCart={totalItemsInCart}>
               <SearchBox />
             </Header>

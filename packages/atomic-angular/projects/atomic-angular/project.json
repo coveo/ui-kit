@@ -9,7 +9,7 @@
       "outputs": [],
       "executor": "nx:run-commands",
       "options": {
-        "command": "npm run-script -w=@coveo/release promote-npm-prod",
+        "command": "npm run-script -w=@coveo/ci promote-npm-prod",
         "cwd": "packages/atomic-angular/projects/atomic-angular"
       }
     }

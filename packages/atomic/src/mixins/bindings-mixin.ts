@@ -1,6 +1,5 @@
-import {
+import type {
   LitElement,
-  PropertyValues,
   ReactiveController,
   ReactiveControllerHost,
   ReactiveElement,
@@ -29,7 +28,7 @@ function initializeBindings<
         instance.initialize?.();
       })
       .catch((error) => {
-        instance.error = error;
+        instance.error = error; // Ensure `error` is recognized
         reject(error);
       });
   });
@@ -111,8 +110,8 @@ export const InitializeBindingsMixin = <T extends Constructor<LitElement>>(
       new BindingController(this);
     }
 
-    public updated(_changedProperties: PropertyValues) {
-      super.updated(_changedProperties);
+    public updated(changedProperties: Map<string | number | symbol, unknown>) {
+      super.updated(changedProperties);
     }
   }
 
