@@ -15,7 +15,7 @@ headlessLoaderMock.initializeWithHeadless.mockImplementation(
   }
 );
 headlessLoaderMock.getHeadlessEnginePromise.mockImplementation(() =>
-  Promise.reject({message: 'Skip initialization'})
+  Promise.resolve(engineMock.id)
 );
 
 let updateSuggestions;
@@ -39,16 +39,19 @@ const headlessCaseAssistMock = {
   buildDocumentSuggestionList: jest
     .fn()
     .mockReturnValue(documentSuggestionListMock),
-  loadCaseAssistAnalyticsActions: jest.fn().mockReturnValue({}),
-  loadDocumentSuggestionActions: jest.fn().mockReturnValue({
-    fetchDocumentSuggestions: functionsMocks.fetchDocumentSuggestions,
+  buildQuickview: jest.fn().mockReturnValue(documentSuggestionListMock),
+  loadCaseAssistAnalyticsActions: jest.fn().mockReturnValue({
     logDocumentSuggestionClick: functionsMocks.logDocumentSuggestionClick,
     logDocumentSuggestionRating: functionsMocks.logDocumentSuggestionRating,
+  }),
+  loadDocumentSuggestionActions: jest.fn().mockReturnValue({
+    fetchDocumentSuggestions: functionsMocks.fetchDocumentSuggestions,
   }),
 };
 
 // @ts-ignore
 global.CoveoHeadlessCaseAssist = headlessCaseAssistMock;
+headlessLoaderMock.getHeadlessBundle.mockReturnValue(headlessCaseAssistMock);
 
 const createTestComponent = buildCreateTestComponent(
   QuanticDocumentSuggestion,
@@ -76,14 +79,6 @@ function mockErroneousHeadlessInitialization() {
       }
     }
   );
-}
-
-function checkElement(element, selector, shouldExist) {
-  if (shouldExist) {
-    expect(element.shadowRoot.querySelector(selector)).toBeTruthy();
-  } else {
-    expect(element.shadowRoot.querySelector(selector)).toBeFalsy();
-  }
 }
 
 describe('c-quantic-document-suggestion', () => {
@@ -129,9 +124,14 @@ describe('c-quantic-document-suggestion', () => {
       updateSuggestions();
       await flushPromises();
 
-      checkElement(element, selectors.spinner, true);
-      checkElement(element, selectors.container, false);
-      checkElement(element, selectors.noSuggestions, false);
+      const spinner = element.shadowRoot.querySelector(selectors.spinner);
+      const container = element.shadowRoot.querySelector(selectors.container);
+      const noSuggestions = element.shadowRoot.querySelector(
+        selectors.noSuggestions
+      );
+      expect(spinner).toBeTruthy();
+      expect(container).toBeFalsy();
+      expect(noSuggestions).toBeFalsy();
     });
   });
 
@@ -140,8 +140,12 @@ describe('c-quantic-document-suggestion', () => {
       const element = createTestComponent();
       await updateSuggestions();
 
-      checkElement(element, selectors.accordion, false);
-      checkElement(element, selectors.noSuggestions, true);
+      const accordion = element.shadowRoot.querySelector(selectors.accordion);
+      const noSuggestions = element.shadowRoot.querySelector(
+        selectors.noSuggestions
+      );
+      expect(accordion).toBeFalsy();
+      expect(noSuggestions).toBeTruthy();
     });
   });
 
@@ -180,25 +184,43 @@ describe('c-quantic-document-suggestion', () => {
       expect(functionsMocks.fetchDocumentSuggestions).not.toHaveBeenCalled();
       expect(headlessLoaderMock.registerComponentForInit).toHaveBeenCalled();
 
-      checkElement(element, selectors.accordion, false);
-      checkElement(element, selectors.noSuggestions, true);
-      checkElement(element, selectors.componentError, false);
+      const accordion = element.shadowRoot.querySelector(selectors.accordion);
+      const noSuggestions = element.shadowRoot.querySelector(
+        selectors.noSuggestions
+      );
+      const componentError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+
+      expect(accordion).toBeFalsy();
+      expect(noSuggestions).toBeTruthy();
+      expect(componentError).toBeFalsy();
 
       await updateSuggestions();
 
-      checkElement(element, selectors.noSuggestions, false);
-      checkElement(element, selectors.container, true);
-      checkElement(element, selectors.accordion, true);
+      const updatedNoSuggestions = element.shadowRoot.querySelector(
+        selectors.noSuggestions
+      );
+      const container = element.shadowRoot.querySelector(selectors.container);
+      const updatedAccordion = element.shadowRoot.querySelector(
+        selectors.accordion
+      );
+
+      expect(updatedNoSuggestions).toBeFalsy();
+      expect(container).toBeTruthy();
+      expect(updatedAccordion).toBeTruthy();
+
       const sections = element.shadowRoot.querySelectorAll(
         selectors.accordionSection
       );
-      expect(sections.length).toBe(2);
+      expect(sections.length).toBe(
+        documentSuggestionListMock.state.documents.length
+      );
+
       sections.forEach((section, index) => {
-        expect(section.label).toBe(
-          documentSuggestionListMock.state.documents[index].title
-        );
-        const uniqueId =
-          documentSuggestionListMock.state.documents[index].uniqueId;
+        const {uniqueId, title} =
+          documentSuggestionListMock.state.documents[index];
+        expect(section.label).toBe(title);
         expect(section.getAttribute('data-id')).toBe(uniqueId);
         expect(section.querySelector(selectors.quickview)).toBeTruthy();
         expect(
@@ -214,7 +236,7 @@ describe('c-quantic-document-suggestion', () => {
       });
     });
 
-    it('should not render quick view button when withoutQuickview is set to true', async () => {
+    it('should not render quickview button when withoutQuickview is set to true', async () => {
       const element = createTestComponent({
         withoutQuickview: true,
       });
@@ -223,7 +245,7 @@ describe('c-quantic-document-suggestion', () => {
       expect(element.shadowRoot.querySelector(selectors.quickview)).toBeFalsy();
     });
 
-    it('should log a suggestion click if not opened', async () => {
+    it('should log a suggestion click if the suggestion is not opened', async () => {
       const element = createTestComponent();
       await updateSuggestions();
 
@@ -249,7 +271,7 @@ describe('c-quantic-document-suggestion', () => {
       );
     });
 
-    it('should handle document rating event', async () => {
+    it('should log analytics when rating a document', async () => {
       const element = createTestComponent();
       await updateSuggestions();
 
@@ -316,7 +338,9 @@ describe('c-quantic-document-suggestion', () => {
         },
       ];
 
-      const element = createTestComponent();
+      const element = createTestComponent({
+        numberOfAutoOpenedDocuments: 0,
+      });
       await updateSuggestions();
 
       const sectionToClick = element.shadowRoot.querySelectorAll(
@@ -344,7 +368,10 @@ describe('c-quantic-document-suggestion', () => {
       });
       await flushPromises();
 
-      checkElement(element, selectors.componentError, true);
+      const componentError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(componentError).toBeTruthy();
     });
     it('should set an error message if numberOfAutoOpenedDocuments is invalid', async () => {
       const element = createTestComponent({
@@ -352,7 +379,10 @@ describe('c-quantic-document-suggestion', () => {
       });
       await flushPromises();
 
-      checkElement(element, selectors.componentError, true);
+      const componentError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(componentError).toBeTruthy();
     });
   });
 
@@ -365,7 +395,10 @@ describe('c-quantic-document-suggestion', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      checkElement(element, selectors.componentError, true);
+      const componentError = element.shadowRoot.querySelector(
+        selectors.componentError
+      );
+      expect(componentError).toBeTruthy();
     });
   });
 });
