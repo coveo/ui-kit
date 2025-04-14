@@ -19,7 +19,7 @@ export const AtomicCommerceInterface = createComponent({
 export const AtomicCommercePager = createComponent({
   tagName: 'atomic-commerce-pager',
   react: React,
-  elementClass: LitAtomicCommercePager,
+  elementClass: LitAtomicCommerceRecommendationInterface,
 });
 
 export const AtomicCommerceRecommendationInterface = createComponent({
