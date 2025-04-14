@@ -3,7 +3,6 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import './atomic-commerce-product-list';
 
 // Wrap it in whatever interface/component you need
 const {context} = getSampleCommerceEngineConfiguration();

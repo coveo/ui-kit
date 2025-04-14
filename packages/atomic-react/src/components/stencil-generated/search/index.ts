@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib';
+import { createReactComponent } from './react-component-lib/index.js';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/loader';
 
 defineCustomElements();
 export const AtomicAriaLive = /*@__PURE__*/createReactComponent<JSX.AtomicAriaLive, HTMLAtomicAriaLiveElement>('atomic-aria-live');
@@ -14,7 +14,6 @@ export const AtomicAutomaticFacetGenerator = /*@__PURE__*/createReactComponent<J
 export const AtomicBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicBreadbox, HTMLAtomicBreadboxElement>('atomic-breadbox');
 export const AtomicCategoryFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCategoryFacet, HTMLAtomicCategoryFacetElement>('atomic-category-facet');
 export const AtomicColorFacet = /*@__PURE__*/createReactComponent<JSX.AtomicColorFacet, HTMLAtomicColorFacetElement>('atomic-color-facet');
-export const AtomicCommerceProductListStencil = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceProductListStencil, HTMLAtomicCommerceProductListStencilElement>('atomic-commerce-product-list-stencil');
 export const AtomicDidYouMean = /*@__PURE__*/createReactComponent<JSX.AtomicDidYouMean, HTMLAtomicDidYouMeanElement>('atomic-did-you-mean');
 export const AtomicExternal = /*@__PURE__*/createReactComponent<JSX.AtomicExternal, HTMLAtomicExternalElement>('atomic-external');
 export const AtomicFacet = /*@__PURE__*/createReactComponent<JSX.AtomicFacet, HTMLAtomicFacetElement>('atomic-facet');
