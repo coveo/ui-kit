@@ -1,7 +1,8 @@
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
-  AtomicComponentError as LitAtomicComponentError,
+  AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
   AtomicIcon as LitAtomicIcon,
+  AtomicComponentError as LitAtomicComponentError,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -12,14 +13,20 @@ export const AtomicCommerceInterface = createComponent({
   elementClass: LitAtomicCommerceInterface,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicCommerceRecommendationInterface = createComponent({
+  tagName: 'atomic-commerce-recommendation-interface',
   react: React,
-  elementClass: LitAtomicComponentError,
+  elementClass: LitAtomicCommerceRecommendationInterface,
 });
 
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
