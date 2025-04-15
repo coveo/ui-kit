@@ -14,6 +14,8 @@ module.exports = {
     '.deployment.config.json',
     'packages/atomic-angular/scripts/build-lit.mjs',
     'packages/atomic-react/scripts/build-lit.mjs',
+    'packages/atomic/src/components/*/lazy-index.ts',
+    'packages/atomic/src/components/*/index.ts',
   ],
   env: {
     jest: true,

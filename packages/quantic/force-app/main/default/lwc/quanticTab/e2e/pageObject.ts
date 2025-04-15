@@ -2,8 +2,12 @@ import type {Locator, Page, Request} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class TabObject {
-  constructor(public page: Page) {
+  constructor(
+    public page: Page,
+    public useCase: 'search' | 'insight' = 'search'
+  ) {
     this.page = page;
+    this.useCase = useCase;
   }
 
   get tab(): Locator {
@@ -33,7 +37,7 @@ export class TabObject {
 
         const expectedFields: Record<string, any> = {
           actionCause: actionCause,
-          originContext: 'Search',
+          originContext: this.useCase === 'search' ? 'Search' : 'InsightPanel',
         };
         const matchesExpectedFields = Object.keys(expectedFields).every(
           (key) => requestBody?.[key] === expectedFields[key]

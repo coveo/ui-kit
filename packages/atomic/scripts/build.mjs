@@ -12,6 +12,7 @@ import {
   DiagnosticCategory,
 } from 'typescript';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
+import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
@@ -117,4 +118,5 @@ function compileWithTransformer() {
   process.exit(exitCode);
 }
 
+await generateLitExports();
 compileWithTransformer();

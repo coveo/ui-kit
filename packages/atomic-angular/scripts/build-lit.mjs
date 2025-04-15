@@ -39,6 +39,7 @@ export class ${declaration.name} {
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = el.nativeElement;
+    ${declaration.events.length ? `proxyOutputs(this, this.el, [${declaration.events.map(event => `'${event.name}'`).join(', ')}]);` : ''}
   }
 }
 
@@ -113,8 +114,8 @@ if(litDeclarations.length > 0) {
   writeFileSync(
     atomicAngularModuleFilePath,
     atomicAngularModuleFileContent
-      .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${[...litDeclarations].join(',\n')},\n`)
-      .replace(/^import \{$/m, `import {\n${[...litDeclarations].join(',\n')},`)
+      .replace(/const DECLARATIONS = \[\n/m, `const DECLARATIONS = [\n${[...litDeclarations].sort().join(',\n')},\n`)
+      .replace(/^import \{$/m, `import {\n${[...litDeclarations].sort().join(',\n')},`)
   );
 }
 
