@@ -24,7 +24,7 @@ function toPascalCase(name) {
 }
 
 async function generateLitExportsForDir(dir) {
-  const componentsDir = path.join(baseComponentsDir, dir);
+  const componentsDir = path.normalize(path.join(baseComponentsDir, dir)); // Normalize the path
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
