@@ -1,6 +1,7 @@
 import {SelectChildProductEventArgs} from '@/src/components.js';
 import {bindStateToController} from '@/src/decorators/bind-state.js';
 import {bindingGuard} from '@/src/decorators/binding-guard.js';
+import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
@@ -66,6 +67,7 @@ import styles from './atomic-commerce-product-list.tw.css';
  * @alpha
  */
 @customElement('atomic-commerce-product-list')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceProductList
   extends LitElement
