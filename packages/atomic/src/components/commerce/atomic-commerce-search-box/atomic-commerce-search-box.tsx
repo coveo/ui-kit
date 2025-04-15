@@ -43,20 +43,20 @@ import {
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
   elementHasQuery,
-} from '../../common/suggestions/suggestions-common';
+} from '../../common/suggestions/stencil-suggestions-common';
 import {RedirectionPayload} from '../../search/atomic-search-box/redirection-payload';
 import {
   ButtonSearchSuggestion,
   SimpleSearchSuggestion,
 } from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.

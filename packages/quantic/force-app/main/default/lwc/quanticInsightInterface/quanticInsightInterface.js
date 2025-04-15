@@ -45,6 +45,9 @@ export default class QuanticInsightInterface extends LightningElement {
   /** @type {boolean} */
   ariaLiveEventsBound = false;
 
+  /** @type {string} */
+  analyticsOriginContext = 'InsightPanel';
+
   disconnectedCallback() {
     destroyEngine(this.engineId);
     if (this.ariaLiveEventsBound) {
@@ -77,6 +80,7 @@ export default class QuanticInsightInterface extends LightningElement {
                     },
                     analytics: {
                       analyticsMode: 'legacy',
+                      originContext: this.analyticsOriginContext,
                       ...(document.referrer && {
                         originLevel3: document.referrer.substring(0, 256),
                       }),
