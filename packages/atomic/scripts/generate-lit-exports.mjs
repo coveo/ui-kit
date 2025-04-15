@@ -4,7 +4,7 @@ import path from 'path';
 import {formatWithPrettier} from './format-with-prettier.mjs';
 
 const baseComponentsDir = path.resolve(
-  path.dirname(new URL(import.meta.url).pathname),
+  path.dirname(path.fileURLToPath(import.meta.url)),
   '../src/components'
 );
 
@@ -24,7 +24,7 @@ function toPascalCase(name) {
 }
 
 async function generateLitExportsForDir(dir) {
-  const componentsDir = path.normalize(path.join(baseComponentsDir, dir)); // Normalize the path
+  const componentsDir = path.join(baseComponentsDir, dir);
   const outputIndexFile = path.join(componentsDir, 'index.ts');
   const outputLazyIndexFile = path.join(componentsDir, 'lazy-index.ts');
 
