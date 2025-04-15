@@ -8,7 +8,7 @@ export type WordCorrectionData = {
   offset: number;
 };
 
-export type DidYouMeanData = {
+export type DidYouMeanLegacyData = {
   correctedQuery: string;
   wordCorrections: WordCorrectionData[];
 };
@@ -29,7 +29,9 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
     super(page, searchRequestRegex);
   }
 
-  async mockSearchWithDidYouMeanResponse(didYouMeanDataObject: DidYouMeanData) {
+  async mockSearchWithDidYouMeanLegacyResponse(
+    didYouMeanDataObject: DidYouMeanLegacyData
+  ) {
     await this.page.route(this.searchRequestRegex, async (route) => {
       const apiResponse = await this.page.request.fetch(route.request());
       const originalBody = await apiResponse.json();

@@ -40,6 +40,7 @@ const exampleEngine = {
 };
 
 const defaultQueryCorrectionMode = 'legacy';
+const defaultDisableQueryAutoCorrection = false;
 
 const defaultOptions = {
   engineId: exampleEngine.id,
@@ -144,38 +145,18 @@ describe('c-quantic-did-you-mean', () => {
       await flushPromises();
 
       expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+        exampleEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            queryCorrectionMode: defaultQueryCorrectionMode,
+            automaticallyCorrectQuery: !defaultDisableQueryAutoCorrection,
+          }),
+        })
+      );
       expect(functionsMocks.subscribeDidYouMean).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildQueryTrigger).toHaveBeenCalledTimes(1);
       expect(functionsMocks.subscribeQueryTrigger).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('when hasQueryCorrection is true', () => {
-    beforeEach(() => {
-      mockSuccessfulHeadlessInitialization();
-      prepareHeadlessState();
-    });
-
-    it('should render the didYouMean component template', async () => {
-      const expectedNoResultsLabel = initialDidYouMeanState.originalQuery;
-      const expectedAutomaticQueryCorrectionLabel =
-        initialDidYouMeanState.wasCorrectedTo;
-      const element = createTestComponent();
-      await flushPromises();
-
-      const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
-        selectors.didYouMeanNoResultsLabel
-      );
-      expect(didYouMeanNoResultsLabel).not.toBeNull();
-      expect(didYouMeanNoResultsLabel.value).toContain(expectedNoResultsLabel);
-      const didYouMeanAutomaticQueryCorrectionLabel =
-        element.shadowRoot.querySelector(
-          selectors.didYouMeanAutomaticQueryCorrectionLabel
-        );
-      expect(didYouMeanAutomaticQueryCorrectionLabel).not.toBeNull();
-      expect(didYouMeanAutomaticQueryCorrectionLabel.value).toContain(
-        expectedAutomaticQueryCorrectionLabel
-      );
     });
 
     describe('#disableQueryAutoCorrection property', () => {
@@ -185,9 +166,8 @@ describe('c-quantic-did-you-mean', () => {
       ])(
         'when disableQueryAutoCorrection is %s',
         (disableQueryAutoCorrection, expectedAutomaticallyCorrectQuery) => {
-          it(`should initialize the controller with automaticallyCorrectQuery ${expectedAutomaticallyCorrectQuery}`, async () => {
+          it(`should initialize the controller with automaticallyCorrectQuery set to ${expectedAutomaticallyCorrectQuery}`, async () => {
             createTestComponent({
-              ...defaultOptions,
               disableQueryAutoCorrection,
             });
             await flushPromises();
@@ -228,6 +208,35 @@ describe('c-quantic-did-you-mean', () => {
             );
           });
         }
+      );
+    });
+  });
+
+  describe('when hasQueryCorrection is true', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
+    it('should render the didYouMean component template', async () => {
+      const expectedNoResultsLabel = initialDidYouMeanState.originalQuery;
+      const expectedAutomaticQueryCorrectionLabel =
+        initialDidYouMeanState.wasCorrectedTo;
+      const element = createTestComponent();
+      await flushPromises();
+
+      const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
+        selectors.didYouMeanNoResultsLabel
+      );
+      expect(didYouMeanNoResultsLabel).not.toBeNull();
+      expect(didYouMeanNoResultsLabel.value).toContain(expectedNoResultsLabel);
+      const didYouMeanAutomaticQueryCorrectionLabel =
+        element.shadowRoot.querySelector(
+          selectors.didYouMeanAutomaticQueryCorrectionLabel
+        );
+      expect(didYouMeanAutomaticQueryCorrectionLabel).not.toBeNull();
+      expect(didYouMeanAutomaticQueryCorrectionLabel.value).toContain(
+        expectedAutomaticQueryCorrectionLabel
       );
     });
   });
@@ -292,7 +301,6 @@ describe('c-quantic-did-you-mean', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      // Should not render the didYouMean component template
       const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
         selectors.didYouMeanNoResultsLabel
       );
@@ -303,7 +311,6 @@ describe('c-quantic-did-you-mean', () => {
         );
       expect(didYouMeanAutomaticQueryCorrectionLabel).toBeNull();
 
-      // Should not render the queryTrigger component template
       const queryTriggerShowingResultsForLabel =
         element.shadowRoot.querySelector(
           selectors.queryTriggerShowingResultsForLabel

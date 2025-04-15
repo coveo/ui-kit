@@ -6,7 +6,7 @@ import {
 } from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {
-  DidYouMeanData,
+  DidYouMeanLegacyData,
   QueryTriggerData,
   SearchObjectWithDidYouMeanOrTrigger,
 } from '../../../../../../playwright/page-object/searchObjectWithDidYouMean';
@@ -21,7 +21,7 @@ interface DidYouMeanOptions {
 }
 
 type QuanticDidYouMeanE2ESearchFixtures = {
-  didYouMeanData?: DidYouMeanData;
+  didYouMeanData?: DidYouMeanLegacyData;
   queryTriggerData?: QueryTriggerData;
   didYouMean: DidYouMeanObject;
   search: SearchObjectWithDidYouMeanOrTrigger;
@@ -45,10 +45,8 @@ export const testSearch =
     },
     didYouMean: async ({page, options, configuration, search}, use) => {
       await page.goto(pageUrl);
-
       configuration.configure(options);
       await search.waitForSearchResponse();
-
       await use(new DidYouMeanObject(page));
     },
   });
