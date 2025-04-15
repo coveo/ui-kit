@@ -34,23 +34,6 @@ export const test =
       await use(new CaseAssistObject(page));
     },
     documentSuggestion: async ({page, options, configuration}, use) => {
-      // Capture sendBeacon calls (ping) sent by EP. This must be done before the page.goto method.
-      await page.addInitScript(() => {
-        const originalSendBeacon = navigator.sendBeacon;
-        window.__beaconData = [];
-        navigator.sendBeacon = (url, data) => {
-          if (data instanceof Blob) {
-            const blob = data as Blob;
-            blob.text().then((text) => {
-              window.__beaconData.push({url, text});
-            });
-          } else {
-            window.__beaconData.push({url, data});
-          }
-          return originalSendBeacon.call(navigator, url, data);
-        };
-      });
-
       await page.goto(pageUrl);
       await configuration.configure(options);
       await use(new DocumentSuggestionObject(page));

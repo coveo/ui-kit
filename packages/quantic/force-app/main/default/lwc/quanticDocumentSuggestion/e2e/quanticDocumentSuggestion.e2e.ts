@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 import {test, expect} from './fixture';
 
+const fakeTrackingId = 'tracking_id_123';
+
 ['legacy', 'next'].forEach((mode) => {
   test.describe(`quantic document suggestion ${mode} analytics`, () => {
     let analyticsMode = 'legacy';
@@ -10,13 +12,13 @@ import {test, expect} from './fixture';
         await page.context().addCookies([
           {
             name: 'Coveo-Pendragon',
-            value: 'tracking_id_123',
+            value: fakeTrackingId,
             domain: '.my.site.com',
             path: '/',
           },
           {
             name: 'LSKey-c$Coveo-Pendragon',
-            value: 'tracking_id_123',
+            value: fakeTrackingId,
             domain: '.my.site.com',
             path: '/',
           },
@@ -62,32 +64,43 @@ import {test, expect} from './fixture';
       const response = await responsePromise;
       const suggestions = await response.json();
 
-      const analyticsPromise =
-        analyticsMode === 'legacy'
-          ? documentSuggestion.waitForSuggestionCollectEvent()
-          : documentSuggestion.waitForSuggestionClickEvent();
-
-      await documentSuggestion.clickSuggestion(1);
-      const analyticsRequest = await analyticsPromise;
+      // Hack(?) to have the request payload in the analytics request next.
+      await page.route('*analytics*', (route) => {
+        route.continue();
+      });
 
       if (analyticsMode === 'legacy') {
-        const event = analyticsRequest.postDataJSON?.();
-        expect(event?.svc_action_data.suggestion.documentPosition).toBe(2);
-        expect(event?.svc_action_data.suggestion.documentTitle).toBe(
+        const analyticsPromise =
+          documentSuggestion.waitForSuggestionCollectEvent();
+        await documentSuggestion.clickSuggestion(1);
+        const analyticsRequest = await analyticsPromise;
+        const payload = analyticsRequest.postDataJSON?.();
+
+        expect(payload).toBeDefined();
+        expect(payload.t).toBe('event');
+        expect(payload.ec).toBe('svc');
+        expect(payload.ea).toBe('click');
+        expect(payload.svc_action).toBe('suggestion_click');
+        expect(payload.svc_action_data.suggestionId).toBe(
+          suggestions.documents[1].uniqueId
+        );
+        expect(payload.svc_action_data.suggestion.documentPosition).toBe(2);
+        expect(payload.svc_action_data.suggestion.documentTitle).toBe(
           suggestions.documents[1].title
         );
       } else {
-        const beaconData = (await page.evaluate(() => window.__beaconData)).map(
-          (data) => JSON.parse(data.text)[0]
-        );
+        const analyticsPromise =
+          documentSuggestion.waitForSuggestionClickEvent();
+        await documentSuggestion.clickSuggestion(1);
+        const analyticsRequest = await analyticsPromise;
+        const payload = analyticsRequest.postDataJSON?.();
 
-        const clickEvent = beaconData.find(
-          (bacon) => bacon.meta.type === 'caseAssist.documentSuggestionClick'
-        );
-        expect(clickEvent).toBeDefined();
-        expect(clickEvent.meta.config.trackingId).toBe('tracking_id_123');
-        expect(clickEvent.documentSuggestion.responseId).toBeDefined();
-        expect(clickEvent.documentSuggestion.id).toBe(
+        expect(payload).toBeDefined();
+        expect(payload.length).toBe(1);
+        expect(payload[0].meta.config.trackingId).toBe(fakeTrackingId);
+        expect(payload[0].meta.type).toBe('caseAssist.documentSuggestionClick');
+        expect(payload[0].documentSuggestion.responseId).toBeDefined();
+        expect(payload[0].documentSuggestion.id).toBe(
           suggestions.documents[1].uniqueId
         );
       }
