@@ -80,7 +80,9 @@ let queryTriggerState = initialQueryTriggerState;
 
 const functionsMocks = {
   undoQueryTrigger: jest.fn(() => {}),
+  applyCorrection: jest.fn(() => {}),
   buildDidYouMean: jest.fn(() => ({
+    applyCorrection: functionsMocks.applyCorrection,
     state: didYouMeanState,
     subscribe: functionsMocks.subscribeDidYouMean,
   })),
@@ -89,7 +91,6 @@ const functionsMocks = {
     state: queryTriggerState,
     subscribe: functionsMocks.subscribeQueryTrigger,
   })),
-  applyCorrection: jest.fn(() => {}),
   subscribeDidYouMean: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribeDidYouMean;
@@ -218,7 +219,7 @@ describe('c-quantic-did-you-mean', () => {
       prepareHeadlessState();
     });
 
-    it('should render the didYouMean component template', async () => {
+    it('should render the didYouMean component template with the auto corrected query', async () => {
       const expectedNoResultsLabel = initialDidYouMeanState.originalQuery;
       const expectedAutomaticQueryCorrectionLabel =
         initialDidYouMeanState.wasCorrectedTo;
@@ -238,6 +239,28 @@ describe('c-quantic-did-you-mean', () => {
       expect(didYouMeanAutomaticQueryCorrectionLabel.value).toContain(
         expectedAutomaticQueryCorrectionLabel
       );
+    });
+
+    describe('when wasAutomaticallyCorrected is false', () => {
+      beforeEach(() => {
+        didYouMeanState.wasAutomaticallyCorrected = false;
+      });
+
+      it('should render the apply correction button to apply the query correct', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const applyCorrectionButton = element.shadowRoot.querySelector(
+          selectors.didYouMeanApplyCorrectionButton
+        );
+        expect(applyCorrectionButton).not.toBeNull();
+        expect(applyCorrectionButton.textContent).toBe(
+          initialDidYouMeanState.queryCorrection.correctedQuery
+        );
+        applyCorrectionButton.click();
+        await flushPromises();
+        expect(functionsMocks.applyCorrection).toHaveBeenCalledTimes(1);
+      });
     });
   });
 
