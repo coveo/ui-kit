@@ -143,7 +143,6 @@ export class DidYouMeanObject {
 
         const expectedFields: Record<string, any> = {
           actionCause: actionCause,
-          originContext: 'Search',
         };
 
         const matchesExpectedFields = Object.keys(expectedFields).every(
