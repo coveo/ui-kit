@@ -32,7 +32,7 @@ import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../common/item-list/item-list-common';
+} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
@@ -43,7 +43,7 @@ import {Heading} from '../../common/stencil-heading';
 import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
 /**
  * The `atomic-commerce-recommendation-list` component displays a list of product recommendations by applying one or more product templates.

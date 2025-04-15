@@ -49,7 +49,7 @@ export const testInsight = quanticBase.extend<QuanticTabE2EFixtures>({
     await insightSetup!.waitForInsightInterfaceInitialization();
     await search.performSearch();
     await search.waitForSearchResponse();
-    await use(new TabObject(page));
+    await use(new TabObject(page, 'insight'));
   },
 });
 

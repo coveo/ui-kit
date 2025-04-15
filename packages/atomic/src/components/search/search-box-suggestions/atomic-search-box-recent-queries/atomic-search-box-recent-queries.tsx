@@ -20,7 +20,7 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '../../../common/suggestions/stencil-suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

@@ -8,8 +8,8 @@ import {
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {ItemRenderingFunction} from '../../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
@@ -25,7 +25,7 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '../../../common/suggestions/stencil-suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 export type AriaLabelGenerator = (
