@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {readdir, mkdir, readFile, writeFile} from 'fs';
 import * as lightningcss from 'lightningcss';
 import {join, dirname, relative} from 'path';
@@ -11,6 +12,7 @@ import {fileURLToPath} from 'url';
 const args = argv.slice(2);
 const configArg = args.find((arg) => arg.startsWith('--config='));
 if (configArg === undefined) {
+  console.error(chalk.red('Error: Missing --config=[PATH] argument'));
   throw new Error('Missing --config=[PATH] argument');
 }
 const tsConfigPath = configArg.split('=')[1];
@@ -36,6 +38,10 @@ function loadTsConfig(configPath) {
   );
 }
 
+function escapeBackslashes(css) {
+  return css.replace(/\\/g, '\\\\');
+}
+
 async function processAndMinifyCss(content, filename) {
   const {plugins, options} = await postcssLoadConfig();
   const result = await postcss(plugins).process(content, {
@@ -44,6 +50,8 @@ async function processAndMinifyCss(content, filename) {
   });
 
   let processedCss = minifyCss(result, filename);
+
+  processedCss = escapeBackslashes(processedCss);
 
   return processedCss;
 }
@@ -76,12 +84,16 @@ const pushImports = (currentFile, importPaths, files) => {
 function convertCssToJs(srcPath, distPath, file) {
   readFile(srcPath, 'utf8', async (err, data) => {
     if (err) {
+      console.error(chalk.red(`Error reading file: ${srcPath}`));
       throw err;
     }
 
     const files = [file];
 
-    console.log(`Processing ${srcPath} -> ${distPath}`);
+    console.log(
+      chalk.blue('Processing:'),
+      chalk.green(`${srcPath} -> ${distPath}`)
+    );
     const imports = Array.from(data.matchAll(importMatcher)).flatMap(
       (match) => match
     );
@@ -112,15 +124,17 @@ function convertCssToJs(srcPath, distPath, file) {
 
     writeFile(jsPath, fileContent, (err) => {
       if (err) {
+        console.error(chalk.red(`Error writing file: ${jsPath}`));
         throw err;
       }
+      console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
     });
   });
 }
-
 function processCssFiles(srcDir, distDir) {
   readdir(srcDir, {withFileTypes: true}, (err, files) => {
     if (err) {
+      console.error(chalk.red(`Error reading directory: ${srcDir}`));
       throw err;
     }
 
@@ -128,15 +142,17 @@ function processCssFiles(srcDir, distDir) {
       const srcPath = join(srcDir, file.name);
 
       if (file.isDirectory()) {
+        console.log(chalk.blue('Entering directory:'), chalk.green(srcPath));
         processCssFiles(srcPath, join(distDir, file.name));
       } else if (file.isFile() && file.name.endsWith('.css')) {
         const relPath = relative(srcDir, srcPath);
         const distPath = join(distDir, relPath);
         const targetDir = dirname(distPath);
-        console.log(`Processing CSS for ${srcPath}`);
+        console.log(chalk.blue('Processing CSS for:'), chalk.green(srcPath));
 
         mkdir(targetDir, {recursive: true}, (err) => {
           if (err) {
+            console.error(chalk.red(`Error creating directory: ${targetDir}`));
             throw err;
           }
           convertCssToJs(srcPath, distPath, file);

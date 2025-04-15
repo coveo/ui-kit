@@ -85,9 +85,13 @@ export function generateAngularModuleDefinition(options: {
       compilerCtx: CompilerCtx,
       buildCtx: BuildCtx
     ) {
-      const filteredComponents = buildCtx.components.filter((cmp) => {
-        return !cmp.internal;
-      });
+      const filteredComponents = buildCtx.components
+        .sort((a, b) =>
+          a.tagName.toLowerCase().localeCompare(b.tagName.toLowerCase())
+        )
+        .filter((cmp) => {
+          return !cmp.internal;
+        });
       const componentClassNames = filteredComponents.map((component) =>
         dashToPascalCase(component.tagName)
       );

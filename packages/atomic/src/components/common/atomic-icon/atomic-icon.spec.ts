@@ -1,4 +1,3 @@
-import * as guardModule from '@/src/decorators/error-guard';
 import * as utils from '@/src/utils/utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
@@ -12,9 +11,7 @@ import {AtomicIcon} from './atomic-icon';
 vi.mock('@/src/utils/utils', () => ({
   parseAssetURL: vi.fn(),
 }));
-vi.mock('@/src/decorators/error-guard', () => ({
-  errorGuard: vi.fn(),
-}));
+
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
@@ -35,7 +32,6 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 describe('AtomicIcon', () => {
   let fetchMock: MockInstance;
   let parseAssetURLMock: MockInstance;
-  let errorGuardMock: MockInstance;
   let sanitizeMock: MockInstance;
   const locators = {
     get svg() {
@@ -49,17 +45,10 @@ describe('AtomicIcon', () => {
       '<svg data-testid="mocked-icon"><circle cx="50" cy="50" r="40" /></svg>',
   } as Response;
 
-  beforeAll(() => {
+  beforeEach(() => {
     fetchMock = vi.spyOn(window, 'fetch');
     parseAssetURLMock = vi.mocked(utils.parseAssetURL);
-    errorGuardMock = vi.mocked(guardModule.errorGuard);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
-  });
-
-  afterEach(() => {
-    fetchMock.mockReset();
-    parseAssetURLMock.mockReset();
-    sanitizeMock.mockReset();
   });
 
   const setupElement = async (icon: string) => {
@@ -127,7 +116,10 @@ describe('AtomicIcon', () => {
     fetchMock.mockRejectedValue(new Error('Network error'));
 
     await setupElement('http://example.com/icon.svg');
-    expect(errorGuardMock).toHaveBeenCalled();
+
+    await expect
+      .element(page.getByText('atomic-icon component error'))
+      .toBeInTheDocument();
   });
 
   it('calls fetchIcon with the correct arguments', async () => {
