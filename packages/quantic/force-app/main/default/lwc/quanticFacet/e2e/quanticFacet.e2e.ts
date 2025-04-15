@@ -169,7 +169,7 @@ useCaseTestCases.forEach((useCase) => {
 
     if (useCase.value === useCaseEnum.search) {
       test.describe('when typing in the facet search box input', () => {
-        test('should fetch facet values according to the query', async ({
+        test('should fetch facet values according to the query typed', async ({
           baseFacet,
           facet,
         }) => {
