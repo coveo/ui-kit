@@ -76,14 +76,14 @@ export class AtomicCommerceInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private urlManager!: UrlManager;
-  private searchOrListing!: Search | ProductListing;
-  private summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
-  private context!: Context;
+  public urlManager!: UrlManager;
+  public searchOrListing!: Search | ProductListing;
+  public summary!: Summary<SearchSummaryState | ProductListingSummaryState>;
+  public context!: Context;
   private unsubscribeUrlManager?: Unsubscribe;
   private unsubscribeSummary?: Unsubscribe;
   private initialized = false;
-  private store: CommerceStore;
+  public store: CommerceStore;
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   @state() public error?: Error;
@@ -198,7 +198,6 @@ export class AtomicCommerceInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
-    this.initAriaLive();
   }
 
   @watch('analytics')
@@ -245,6 +244,10 @@ export class AtomicCommerceInterface
       'atomic/scrollToTop',
       this.scrollToTop as EventListener
     );
+    const ariaLive = this.querySelector('atomic-aria-live');
+    if (ariaLive) {
+      ariaLive.remove();
+    }
   }
 
   private handleInitialization = (event: InitializeEvent) => {
@@ -330,6 +333,7 @@ export class AtomicCommerceInterface
       this.commonInterfaceHelper.onInitialization(initEngine),
       this.i18Initialized,
     ]);
+    this.initAriaLive();
     this.initContext();
     this.updateLanguage();
     this.bindings = this.getBindings();
