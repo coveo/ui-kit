@@ -1,4 +1,4 @@
-import {dirname, resolve, relative} from 'path';
+import {dirname, resolve, relative} from 'path/posix';
 import {
   isImportDeclaration,
   visitEachChild,
