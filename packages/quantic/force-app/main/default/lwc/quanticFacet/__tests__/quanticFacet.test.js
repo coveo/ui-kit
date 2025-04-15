@@ -456,7 +456,7 @@ describe('c-quantic-facet', () => {
           expect(facetBody).not.toBeNull();
         });
 
-        it('should correctly display the facet collapse toggle facet', async () => {
+        it('should correctly display the facet collapse toggle', async () => {
           const expectedIcon = 'utility:dash';
           const expectedCSSClass = 'facet__collapse';
           const element = createTestComponent();
@@ -487,7 +487,7 @@ describe('c-quantic-facet', () => {
           expect(facetBody).toBeNull();
         });
 
-        it('should correctly display the facet collapse toggle facet', async () => {
+        it('should correctly display the facet collapse toggle', async () => {
           const expectedIcon = 'utility:add';
           const expectedCSSClass = 'facet__expand';
 

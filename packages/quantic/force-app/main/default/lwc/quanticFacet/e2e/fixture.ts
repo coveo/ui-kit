@@ -24,25 +24,19 @@ type QuanticFacetE2EFixtures = {
 
 export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {},
+  facetResponseMock: [facetData],
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, searchRequestRegex));
   },
   facet: async (
-    {
-      page,
-      options,
-      configuration,
-      baseFacet,
-      urlHash,
-      preventMockFacetResponse,
-    },
+    {page, options, configuration, baseFacet, urlHash, facetResponseMock},
     use
   ) => {
     await page.goto(
       `${pageUrl}${options.caption ? '-with-captions' : ''}#${urlHash ? urlHash : ''}`
     );
-    if (!preventMockFacetResponse) {
-      await baseFacet.mockSearchWithFacetResponse([facetData]);
+    if (facetResponseMock) {
+      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
     }
     configuration.configure(options);
     await baseFacet.waitForSearchResponse();
@@ -53,6 +47,7 @@ export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
 
 export const testInsight = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {},
+  facetResponseMock: [facetData],
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, insightSearchRequestRegex));
   },
@@ -60,11 +55,13 @@ export const testInsight = facetBase.extend<QuanticFacetE2EFixtures>({
     await use(new InsightSetupObject(page));
   },
   facet: async (
-    {page, options, baseFacet, configuration, insightSetup},
+    {page, options, baseFacet, configuration, insightSetup, facetResponseMock},
     use
   ) => {
     await page.goto(`${pageUrl}${options.caption ? '-with-captions' : ''}`);
-    await baseFacet.mockSearchWithFacetResponse([facetData]);
+    if (facetResponseMock) {
+      await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
+    }
     configuration.configure({...options, useCase: useCaseEnum.insight});
     await insightSetup?.waitForInsightInterfaceInitialization();
     await baseFacet.performSearch();

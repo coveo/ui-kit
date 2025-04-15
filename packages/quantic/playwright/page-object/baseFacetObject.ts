@@ -35,7 +35,7 @@ export class BaseFacetObject extends SearchObject {
 
   async waitForFacetUaSearchEvent(
     actionCause: string,
-    customChecker?: Function
+    customChecker?: (obj: Record<string, unknown>) => boolean
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaSearchEvent(request)) {

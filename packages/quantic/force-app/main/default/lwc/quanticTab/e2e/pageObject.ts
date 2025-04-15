@@ -1,4 +1,4 @@
-import type {Locator, Page, Request, Response} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class TabObject {
@@ -60,9 +60,5 @@ export class TabObject {
         );
       }
     );
-  }
-
-  extractDataFromSearchResponse(response: Response) {
-    return response.request().postDataJSON();
   }
 }

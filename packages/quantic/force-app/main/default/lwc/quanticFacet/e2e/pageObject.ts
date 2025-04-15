@@ -37,7 +37,7 @@ export class FacetObject {
     return this.page.getByTestId('clear-selection-button');
   }
 
-  facetBreadcrumbValue(index: number): Locator {
+  facetBreadcrumbValueByIndex(index: number): Locator {
     return this.facetBreadcrumb.locator('c-quantic-pill').nth(index);
   }
 

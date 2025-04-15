@@ -80,7 +80,7 @@ export class SearchObject {
     });
   }
 
-  extractDataFromSearchResponse(response: Response) {
+  extractDataFromResponse(response: Response) {
     return response.request().postDataJSON();
   }
 }
