@@ -11,6 +11,7 @@ import {
   SearchObjectWithDidYouMeanOrTrigger,
 } from '../../../../../../playwright/page-object/searchObjectWithDidYouMean';
 import mockData from './data';
+import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 
 const pageUrl = 's/quantic-did-you-mean';
 
@@ -45,9 +46,8 @@ export const testSearch =
     didYouMean: async ({page, options, configuration, search}, use) => {
       await page.goto(pageUrl);
 
-      const searchResponsePromise = search.waitForSearchResponse();
       configuration.configure(options);
-      await searchResponsePromise;
+      await search.waitForSearchResponse();
 
       await use(new DidYouMeanObject(page));
     },
@@ -67,26 +67,11 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     didYouMean: async (
-      {
-        page,
-        options,
-        search,
-        configuration,
-        insightSetup,
-        didYouMeanData,
-        queryTriggerData,
-      },
+      {page, options, search, configuration, insightSetup},
       use
     ) => {
       await page.goto(pageUrl);
-
-      if (didYouMeanData) {
-        await search.mockSearchWithDidYouMeanResponse(didYouMeanData);
-      } else if (queryTriggerData) {
-        await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-      }
-
-      configuration.configure({...options, useCase: 'insight'});
+      configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
       await search.waitForSearchResponse();

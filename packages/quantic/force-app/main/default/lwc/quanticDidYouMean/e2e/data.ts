@@ -1,10 +1,12 @@
 import {
   DidYouMeanData,
+  DidYouMeanNextData,
   QueryTriggerData,
 } from '../../../../../../playwright/page-object/searchObjectWithDidYouMean';
 
 const exampleOriginalQuery = 'original query';
 const exampleCorrectedQuery = 'corrected query';
+const exampleQueryTriggered = 'query triggered';
 
 const exampleDidYouMeanData: DidYouMeanData = {
   correctedQuery: exampleCorrectedQuery,
@@ -18,12 +20,29 @@ const exampleDidYouMeanData: DidYouMeanData = {
   ],
 };
 
+const exampleDidYouMeanNextData: DidYouMeanNextData = {
+  correctedQuery: exampleCorrectedQuery,
+  wordCorrections: [
+    {
+      correctedWord: exampleCorrectedQuery,
+      originalWord: exampleOriginalQuery,
+      length: exampleCorrectedQuery.length,
+      offset: 0,
+    },
+  ],
+  originalQuery: exampleOriginalQuery,
+};
+
 const exampleQueryTriggerData: QueryTriggerData = {
   type: 'query',
-  content: exampleCorrectedQuery,
+  content: exampleQueryTriggered,
 };
 
 export default {
+  originalQuery: exampleOriginalQuery,
+  correctedQuery: exampleCorrectedQuery,
+  triggeredQuery: exampleQueryTriggered,
   didYouMeanData: exampleDidYouMeanData,
+  didYouMeanNextData: exampleDidYouMeanNextData,
   queryTriggerData: exampleQueryTriggerData,
 };

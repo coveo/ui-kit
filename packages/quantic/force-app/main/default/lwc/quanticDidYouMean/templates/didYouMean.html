@@ -11,7 +11,7 @@
   </template>
   <template if:false={wasAutomaticallyCorrected}>
     <div class="slds-var-m-vertical_x-small">
-      <span data-cy="did-you-mean-label">{labels.didYouMean} </span>
+      <span data-testid="did-you-mean-label">{labels.didYouMean} </span>
       <button data-testid="apply-correction-button" class="slds-button" onclick={applyCorrection}>
         <span class="slds-text-title_bold">{correctedQuery}</span>
       </button>

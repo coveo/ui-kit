@@ -16,7 +16,7 @@ export const DidYouMeanSelectors: DidYouMeanSelector = {
   get: () => cy.get(didYouMeanComponent),
 
   didYouMeanLabel: () =>
-    DidYouMeanSelectors.get().find('[data-cy="did-you-mean-label"]'),
+    DidYouMeanSelectors.get().find('[data-testid="did-you-mean-label"]'),
   noResultLabel: () =>
     DidYouMeanSelectors.get().find('[data-testid="no-result-label"]'),
   automaticQueryCorrectionLabel: () =>

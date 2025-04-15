@@ -124,8 +124,6 @@ export default class QuanticDidYouMean extends LightningElement {
   }
 
   updateDidYouMeanState() {
-    console.log('updateDidYouMeanState');
-    console.log(JSON.stringify(this.didYouMean.state));
     this.hasQueryCorrection = this.didYouMean.state.hasQueryCorrection;
     this.wasAutomaticallyCorrected =
       this.didYouMean.state.wasAutomaticallyCorrected;

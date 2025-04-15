@@ -56,3 +56,11 @@ export function isCollectEvent(request: Request): boolean {
     request.method() === 'POST' && analyticsCollectUrlRegex.test(request.url())
   );
 }
+
+/**
+ * Indicates whether the specified request corresponds to a search api request.
+ * @param request The request to check.
+ */
+export function isSearchRequest(request: Request): boolean {
+  return request.method() === 'POST' && searchRequestRegex.test(request.url());
+}

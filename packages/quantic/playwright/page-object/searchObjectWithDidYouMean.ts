@@ -13,6 +13,12 @@ export type DidYouMeanData = {
   wordCorrections: WordCorrectionData[];
 };
 
+export type DidYouMeanNextData = {
+  correctedQuery: string;
+  wordCorrections: WordCorrectionData[];
+  originalQuery: string;
+};
+
 export type QueryTriggerData = {
   type: string;
   content: string;
@@ -40,6 +46,27 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
           'content-type': 'application/json',
         },
       });
+      this.page.unroute(this.searchRequestRegex);
+    });
+  }
+
+  async mockSearchWithDidYouMeanNextResponse(
+    didYouMeanNextDataObject: DidYouMeanNextData
+  ) {
+    await this.page.route(this.searchRequestRegex, async (route) => {
+      const apiResponse = await this.page.request.fetch(route.request());
+      const originalBody = await apiResponse.json();
+
+      originalBody.queryCorrection = didYouMeanNextDataObject;
+
+      await route.fulfill({
+        body: JSON.stringify(originalBody),
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+      this.page.unroute(this.searchRequestRegex);
     });
   }
 
@@ -49,7 +76,7 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
     await this.page.route(this.searchRequestRegex, async (route) => {
       const apiResponse = await this.page.request.fetch(route.request());
       const originalBody = await apiResponse.json();
-      originalBody.queryTriggers = [queryTriggerDataObject];
+      originalBody.triggers = [queryTriggerDataObject];
 
       await route.fulfill({
         body: JSON.stringify(originalBody),
@@ -58,6 +85,7 @@ export class SearchObjectWithDidYouMeanOrTrigger extends SearchObject {
           'content-type': 'application/json',
         },
       });
+      this.page.unroute(this.searchRequestRegex);
     });
   }
 }
