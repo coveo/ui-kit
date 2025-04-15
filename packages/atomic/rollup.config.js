@@ -91,9 +91,9 @@ export default {
     resolve({preserveSymlinks: false}),
     externalizeDependenciesPlugin(),
     commonjs(),
+    json(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    json(),
   ],
 };
