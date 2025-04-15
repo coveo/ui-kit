@@ -126,7 +126,7 @@ test.describe('AtomicCommerceInterface', () => {
     });
 
     test.describe('when selecting a facet value', () => {
-      test.describe('when reflectStateInUrl is enabled', () => {
+      test.describe('when reflectStateInUrl is true', () => {
         test('should update the url', async ({page, commerceInterface}) => {
           const facetValueLabel = commerceInterface.getFacetValue('Nike');
 
@@ -141,7 +141,7 @@ test.describe('AtomicCommerceInterface', () => {
           expect(currentUrl).toContain('Nike');
         });
       });
-      test.describe('when reflectStateInUrl is not', () => {
+      test.describe('when reflectStateInUrl is false', () => {
         test('should not update the url', async ({page, commerceInterface}) => {
           await commerceInterface.load({
             story: 'with-product-list',

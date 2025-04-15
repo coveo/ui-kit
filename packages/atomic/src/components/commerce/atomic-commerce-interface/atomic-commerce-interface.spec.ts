@@ -278,7 +278,7 @@ describe('AtomicCommerceInterface', () => {
       element.scrollContainer = '.non-existent-container';
       element.scrollToTop();
       expect(warnSpy).toHaveBeenCalledWith(
-        `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+        `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
     });
   });

@@ -2,7 +2,7 @@ import * as ComponentsIndex from './components/index.js';
 
 export namespace Components {
   type ComponentKeys = keyof typeof ComponentsIndex;
-  type ComponentInterfaces   = {
+  type ComponentInterfaces = {
     [Key in ComponentKeys]: typeof ComponentsIndex[Key];
   };
 

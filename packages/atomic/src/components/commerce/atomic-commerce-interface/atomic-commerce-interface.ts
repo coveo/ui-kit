@@ -117,12 +117,12 @@ export class AtomicCommerceInterface
   logLevel?: LogLevel;
 
   /**
-   * the commerce interface i18next instance.
+   * The commerce interface i18next instance.
    */
   @property({type: Object}) i18n: i18n;
 
   /**
-   * the commerce interface language.
+   * The commerce interface language.
    *
    * Will default to the value set in the Headless engine context if not provided.
    */
@@ -255,7 +255,7 @@ export class AtomicCommerceInterface
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
       this.bindings.engine.logger.warn(
-        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please check the CSS selector in the scrollContainer option`
+        `Could not find the scroll container with the selector "${this.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
       return;
     }
@@ -271,7 +271,7 @@ export class AtomicCommerceInterface
   }
 
   /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance.
+   * Initializes the connection with a preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which internally creates a new commerce engine instance.
    * This bypasses the properties set on the component, such as analytics and language.
    */
   public initializeWithEngine(engine: CommerceEngine) {
