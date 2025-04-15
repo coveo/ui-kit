@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';

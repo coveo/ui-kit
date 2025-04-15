@@ -4,6 +4,7 @@ import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import Tick from '../../images/checkbox.svg';
+import './atomic-icon/atomic-icon.js';
 
 export interface CheckboxProps {
   checked?: boolean;
