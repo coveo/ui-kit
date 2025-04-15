@@ -8,10 +8,7 @@ async function initializeCommerceInterface(canvasElement: HTMLElement) {
   const commerceInterface = canvasElement.querySelector(
     'atomic-commerce-interface'
   );
-  await commerceInterface!.initialize({
-    ...getSampleCommerceEngineConfiguration(),
-    ...{},
-  });
+  await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
 const meta: Meta = {
   component: 'atomic-commerce-interface',
