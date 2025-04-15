@@ -45,11 +45,11 @@ export class FacetObject {
     await this.facetValue.nth(index).click();
   }
 
-  async clickOnshowMoreFacetValuesButton(): Promise<void> {
+  async clickOnShowMoreFacetValuesButton(): Promise<void> {
     await this.showMoreFacetValuesButton.click();
   }
 
-  async clickOnshowLessFacetValuesButton(): Promise<void> {
+  async clickOnShowLessFacetValuesButton(): Promise<void> {
     await this.showLessFacetValuesButton.click();
   }
 

@@ -103,7 +103,7 @@ useCaseTestCases.forEach((useCase) => {
         });
         let searchResponsePromise = baseFacet.waitForSearchResponse();
 
-        await facet.clickOnshowMoreFacetValuesButton();
+        await facet.clickOnShowMoreFacetValuesButton();
 
         await uaRequest;
         let searchResponse = await searchResponsePromise;
@@ -120,7 +120,7 @@ useCaseTestCases.forEach((useCase) => {
           });
         searchResponsePromise = baseFacet.waitForSearchResponse();
 
-        await facet.clickOnshowLessFacetValuesButton();
+        await facet.clickOnShowLessFacetValuesButton();
 
         await showLessUaRequest;
         searchResponse = await searchResponsePromise;
