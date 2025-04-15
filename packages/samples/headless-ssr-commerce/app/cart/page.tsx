@@ -17,7 +17,7 @@ import {headers} from 'next/headers';
 
 export default async function Search() {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsNavigatorContext(await headers());
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
