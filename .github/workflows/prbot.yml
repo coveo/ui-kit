@@ -36,13 +36,9 @@ jobs:
       - run: npm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
-  build:
-    name: 'Build'
-    runs-on: ${{ matrix.os }}
-    environment: PR Artifacts
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  build-windows:
+    name: 'Build Windows'
+    runs-on: windows-latest
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
@@ -54,9 +50,22 @@ jobs:
           ref: ${{ github.head_ref }}
       - uses: ./.github/actions/build
         with:
-          skip-cache: ${{ matrix.os == 'windows-latest' }}
+          skip-cache: true
+  build:
+    name: 'Build'
+    runs-on: ubuntu-latest
+    environment: PR Artifacts
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: ./.github/actions/build
       - name: Check for uncommitted changes
-        if: ${{ matrix.os == 'ubuntu-latest' }}
         id: check-changes
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
@@ -65,7 +74,7 @@ jobs:
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
       - name: Generate a token
-        if: ${{ matrix.os == 'ubuntu-latest' && steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         id: generate-token
         uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1
         with:
@@ -74,7 +83,7 @@ jobs:
           owner: coveo
           repositories: 'ui-kit'
       - name: Commit files
-        if: ${{ matrix.os == 'ubuntu-latest' && steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
+        if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         run: npm run-script -w=@coveo/ci commit-all
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
@@ -591,6 +600,7 @@ jobs:
     if: ${{ always() && github.event_name == 'pull_request'}}
     needs:
       - 'build'
+      - 'build-windows'
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
@@ -632,6 +642,7 @@ jobs:
     if: ${{ always() && github.event_name == 'merge_group'}}
     needs:
       - 'build'
+      - 'build-windows'
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
