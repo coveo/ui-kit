@@ -9,7 +9,7 @@ import {
   SearchBoxSuggestionsEvent,
   elementHasNoQuery,
   elementHasQuery,
-} from './stencil-suggestions-common';
+} from './suggestions-common';
 
 /**
  * List of suggestions that will be displayed along other lists (e.g recent queries) when the search box's input is selected.

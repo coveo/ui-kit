@@ -48,13 +48,9 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
   elementHasQuery,
-} from '../../common/suggestions/stencil-suggestions-common';
+} from '../../common/suggestions/suggestions-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {RedirectionPayload} from './redirection-payload';
-import {
-  ButtonSearchSuggestion,
-  SimpleSearchSuggestion,
-} from './search-suggestion';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.
@@ -501,26 +497,10 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
-    const isButton = item.onSelect || item.query;
-
-    if (!isButton) {
-      return (
-        <SimpleSearchSuggestion
-          bindings={this.bindings}
-          id={id}
-          suggestion={item}
-          isSelected={isSelected}
-          side={side}
-          index={index}
-          lastIndex={lastIndex}
-          isDoubleList={this.suggestionManager.isDoubleList}
-        ></SimpleSearchSuggestion>
-      );
-    }
 
     return (
-      <ButtonSearchSuggestion
-        bindings={this.bindings}
+      <atomic-suggestion-renderer
+        i18n={this.bindings.i18n}
         id={id}
         suggestion={item}
         isSelected={isSelected}
@@ -540,7 +520,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
-      ></ButtonSearchSuggestion>
+      ></atomic-suggestion-renderer>
     );
   }
 
