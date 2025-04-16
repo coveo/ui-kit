@@ -80,6 +80,24 @@ export class SearchObject {
     });
   }
 
+  async mockEmptySearchResponse() {
+    await this.page.route(this.searchRequestRegex, async (route) => {
+      const apiResponse = await this.page.request.fetch(route.request());
+      const originalBody = await apiResponse.json();
+      originalBody.results = [];
+      originalBody.totalCount = 0;
+      originalBody.totalCountFiltered = 0;
+
+      await route.fulfill({
+        body: JSON.stringify(originalBody),
+        status: 200,
+        headers: {
+          'content-type': 'application/json',
+        },
+      });
+    });
+  }
+
   extractDataFromResponse(response: Response) {
     return response.request().postDataJSON();
   }
