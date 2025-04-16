@@ -19,18 +19,18 @@ export default async function ProductDescriptionPage({
   params,
   searchParams,
 }: {
-  params: {productId: string};
+  params: Promise<{productId: string}>;
   searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsNavigatorContext(headers());
+  const navigatorContext = new NextJsNavigatorContext(await headers());
   standaloneEngineDefinition.setNavigatorContextProvider(
     () => navigatorContext
   );
 
   // Fetches the cart items from an external service
   const items = await externalCartAPI.getCart();
-
+  const {productId} = await params;
   // Fetches the static state of the app with initial state (when applicable)
   const staticState = await standaloneEngineDefinition.fetchStaticState({
     controllers: {
@@ -40,7 +40,7 @@ export default async function ProductDescriptionPage({
         country: defaultContext.country,
         currency: defaultContext.currency,
         view: {
-          url: `https://sports.barca.group/products/${params.productId}`,
+          url: `https://sports.barca.group/products/${productId}`,
         },
       },
     },
@@ -49,14 +49,14 @@ export default async function ProductDescriptionPage({
   const recsStaticState = await recommendationEngineDefinition.fetchStaticState(
     {
       controllers: {
-        viewedTogether: {enabled: true, productId: params.productId},
+        viewedTogether: {enabled: true, productId},
         cart: {initialState: {items}},
         context: {
           language: defaultContext.language,
           country: defaultContext.country,
           currency: defaultContext.currency,
           view: {
-            url: `https://sports.barca.group/products/${params.productId}`,
+            url: `https://sports.barca.group/products/${productId}`,
           },
         },
       },
@@ -66,8 +66,8 @@ export default async function ProductDescriptionPage({
   const resolvedSearchParams = await searchParams;
   const price = Number(resolvedSearchParams.price) ?? NaN;
   const name = Array.isArray(resolvedSearchParams.name)
-    ? params.productId
-    : (resolvedSearchParams.name ?? params.productId);
+    ? productId
+    : (resolvedSearchParams.name ?? productId);
 
   return (
     <StandaloneProvider
@@ -77,9 +77,9 @@ export default async function ProductDescriptionPage({
       <h2>Product description page</h2>
       <ContextDropdown />
       <StandaloneSearchBox />
-      <ProductViewer productId={params.productId} name={name} price={price} />
+      <ProductViewer productId={productId} name={name} price={price} />
       <p>
-        {name} ({params.productId}) - ${price}
+        {name} ({productId}) - ${price}
       </p>
       <br />
 
