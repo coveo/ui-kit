@@ -31,7 +31,7 @@ useCaseTestCases.forEach((useCase) => {
         await uaRequestPromise;
 
         const {analytics, tab: tabValue} =
-          tab.extractDataFromSearchResponse(searchResponse);
+          search.extractDataFromResponse(searchResponse);
         expect(analytics.actionCause).toEqual(expectedActionCause);
         expect(tabValue).toEqual(exampleTabs[selectedTabIndex]);
       });

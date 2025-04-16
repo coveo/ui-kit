@@ -15,7 +15,8 @@
     "paths": {
       "@/common/*": ["../common/*"],
       "react": ["../node_modules/@types/react"]
-    }
+    },
+    "target": "ES2017"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
