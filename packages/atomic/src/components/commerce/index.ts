@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicCommerceSearchBox} from './atomic-commerce-search-box/atomic-commerce-search-box.js';
