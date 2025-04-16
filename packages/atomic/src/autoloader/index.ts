@@ -1,5 +1,5 @@
 //@ts-expect-error TODO: Simplify path to target some kind of index file?
-import searchElementMap from '../components/components/lazy-index.js';
+import elementMap from '../components/components/lazy-index.js';
 
 if (typeof window !== 'undefined') {
   /**
@@ -47,7 +47,7 @@ if (typeof window !== 'undefined') {
       return Promise.resolve();
     }
 
-    return searchElementMap[tagName]?.();
+    return elementMap[tagName]?.();
   };
 
   const observer = new MutationObserver((mutations) => {
