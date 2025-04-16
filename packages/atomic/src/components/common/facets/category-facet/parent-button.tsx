@@ -17,6 +17,7 @@ export const CategoryFacetParentButton: FunctionalComponent<
   const ariaLabel = i18n.t('facet-value', {
     value: displayValue,
     count: facetValue.numberOfResults,
+    formattedCount: facetValue.numberOfResults.toLocaleString(i18n.language),
   });
 
   return (
