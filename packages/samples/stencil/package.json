@@ -8,7 +8,7 @@
     "e2e:watch": "cypress open --browser chrome --e2e"
   },
   "dependencies": {
-    "@coveo/atomic": "3.22.5",
+    "@coveo/atomic": "3.22.6",
     "@coveo/bueno": "1.0.11",
     "@coveo/headless": "3.22.2",
     "@stencil/core": "4.20.0",
