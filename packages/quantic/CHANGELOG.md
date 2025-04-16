@@ -1,3 +1,10 @@
+## 3.17.0 (2025-04-16)
+
+- test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)
+- test(quantic): e2e tests and unit tests added for quantic facet (#5141) ([0de4aa9](https://github.com/coveo/ui-kit/commits/0de4aa9)), closes [#5141](https://github.com/coveo/ui-kit/issues/5141)
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- feat(quantic): added origin context to quantic insight interface (#5142) ([4cde171](https://github.com/coveo/ui-kit/commits/4cde171)), closes [#5142](https://github.com/coveo/ui-kit/issues/5142)
+
 ## <small>3.16.5 (2025-04-09)</small>
 
 - fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)

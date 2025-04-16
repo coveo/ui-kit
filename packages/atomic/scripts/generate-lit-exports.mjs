@@ -1,10 +1,11 @@
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
+import {fileURLToPath} from 'url';
 import {formatWithPrettier} from './format-with-prettier.mjs';
 
 const baseComponentsDir = path.resolve(
-  path.dirname(new URL(import.meta.url).pathname),
+  path.dirname(fileURLToPath(import.meta.url)),
   '../src/components'
 );
 

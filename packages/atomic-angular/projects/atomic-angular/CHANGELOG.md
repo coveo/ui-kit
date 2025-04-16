@@ -1,3 +1,8 @@
+## <small>3.3.22 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(atomic): improvements for vitest, tailwind & storybook (#5157) ([42d30d7](https://github.com/coveo/ui-kit/commits/42d30d7)), closes [#5157](https://github.com/coveo/ui-kit/issues/5157)
+
 ## <small>3.3.20 (2025-04-03)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
