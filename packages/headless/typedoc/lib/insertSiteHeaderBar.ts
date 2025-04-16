@@ -63,7 +63,7 @@ export function insertSiteHeaderBar(assetsPath: string) {
                         Support
                         <img data-ot-ignore class="external-link-icon" src="${assetsPath}/icons/${externalLinkIcon}">
                         </a>
-                    <li>
+                    </li>
                     <li>
                       <hr class="dropdown-divider">
                     </li>
