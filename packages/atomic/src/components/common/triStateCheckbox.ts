@@ -42,12 +42,11 @@ export const renderTriStateCheckbox: FunctionalComponent<
   }
 
   const iconClassNames = {
-    'w-3/5': true,
+    'w-3/5': true, // TODO: for some reason, this class does not apply in the browser
     block: isSelected || isExcluded,
     hidden: !isSelected && !isExcluded,
   };
 
-  // TODO: ensure ref is working
   return html`<button
     ${ref(props.ref)}
     .key=${props.key}

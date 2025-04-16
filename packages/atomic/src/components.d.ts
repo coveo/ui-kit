@@ -331,6 +331,17 @@ export namespace Components {
         "range"?: Range;
     }
     /**
+     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
+     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
+     */
+    interface AtomicCommerceFacets {
+        /**
+          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+         */
+        "collapseFacetsAfter": number;
+    }
+    /**
      * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
      * (except for `atomic-commerce-recommendation-list`, which must have
      * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
@@ -3764,17 +3775,6 @@ export namespace Components {
          */
         "withDatePicker": boolean;
     }
-    /**
-     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface StencilAtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter": number;
-    }
 }
 export interface AtomicCommerceFacetNumberInputCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -3999,6 +3999,17 @@ declare global {
     var HTMLAtomicCommerceFacetNumberInputElement: {
         prototype: HTMLAtomicCommerceFacetNumberInputElement;
         new (): HTMLAtomicCommerceFacetNumberInputElement;
+    };
+    /**
+     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
+     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
+     */
+    interface HTMLAtomicCommerceFacetsElement extends Components.AtomicCommerceFacets, HTMLStencilElement {
+    }
+    var HTMLAtomicCommerceFacetsElement: {
+        prototype: HTMLAtomicCommerceFacetsElement;
+        new (): HTMLAtomicCommerceFacetsElement;
     };
     /**
      * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
@@ -5999,17 +6010,6 @@ declare global {
         prototype: HTMLAtomicTimeframeFacetElement;
         new (): HTMLAtomicTimeframeFacetElement;
     };
-    /**
-     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface HTMLStencilAtomicCommerceFacetsElement extends Components.StencilAtomicCommerceFacets, HTMLStencilElement {
-    }
-    var HTMLStencilAtomicCommerceFacetsElement: {
-        prototype: HTMLStencilAtomicCommerceFacetsElement;
-        new (): HTMLStencilAtomicCommerceFacetsElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-aria-live": HTMLAtomicAriaLiveElement;
         "atomic-automatic-facet": HTMLAtomicAutomaticFacetElement;
@@ -6022,6 +6022,7 @@ declare global {
         "atomic-commerce-category-facet": HTMLAtomicCommerceCategoryFacetElement;
         "atomic-commerce-did-you-mean": HTMLAtomicCommerceDidYouMeanElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
+        "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
         "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
@@ -6206,7 +6207,6 @@ declare global {
         "atomic-text": HTMLAtomicTextElement;
         "atomic-timeframe": HTMLAtomicTimeframeElement;
         "atomic-timeframe-facet": HTMLAtomicTimeframeFacetElement;
-        "stencil-atomic-commerce-facets": HTMLStencilAtomicCommerceFacetsElement;
     }
 }
 declare namespace LocalJSX {
@@ -6471,6 +6471,17 @@ declare namespace LocalJSX {
         "label": string;
         "onAtomic/numberInputApply"?: (event: AtomicCommerceFacetNumberInputCustomEvent<any>) => void;
         "range"?: Range;
+    }
+    /**
+     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
+     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
+     * @alpha 
+     */
+    interface AtomicCommerceFacets {
+        /**
+          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
+         */
+        "collapseFacetsAfter"?: number;
     }
     /**
      * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
@@ -9774,17 +9785,6 @@ declare namespace LocalJSX {
          */
         "withDatePicker"?: boolean;
     }
-    /**
-     * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-     * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
-     * @alpha 
-     */
-    interface StencilAtomicCommerceFacets {
-        /**
-          * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
-         */
-        "collapseFacetsAfter"?: number;
-    }
     interface IntrinsicElements {
         "atomic-aria-live": AtomicAriaLive;
         "atomic-automatic-facet": AtomicAutomaticFacet;
@@ -9797,6 +9797,7 @@ declare namespace LocalJSX {
         "atomic-commerce-category-facet": AtomicCommerceCategoryFacet;
         "atomic-commerce-did-you-mean": AtomicCommerceDidYouMean;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
+        "atomic-commerce-facets": AtomicCommerceFacets;
         "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
@@ -9981,7 +9982,6 @@ declare namespace LocalJSX {
         "atomic-text": AtomicText;
         "atomic-timeframe": AtomicTimeframe;
         "atomic-timeframe-facet": AtomicTimeframeFacet;
-        "stencil-atomic-commerce-facets": StencilAtomicCommerceFacets;
     }
 }
 export { LocalJSX as JSX };
@@ -10045,6 +10045,12 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-facet-number-input": LocalJSX.AtomicCommerceFacetNumberInput & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetNumberInputElement>;
+            /**
+             * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
+             * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
+             * @alpha 
+             */
+            "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             /**
              * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
              * (except for `atomic-commerce-recommendation-list`, which must have
@@ -10849,12 +10855,6 @@ declare module "@stencil/core" {
              * An `atomic-timeframe-facet` displays a facet of the results for the current query as date intervals.
              */
             "atomic-timeframe-facet": LocalJSX.AtomicTimeframeFacet & JSXBase.HTMLAttributes<HTMLAtomicTimeframeFacetElement>;
-            /**
-             * The `stencil-atomic-commerce-facets` component automatically renders commerce facets based on the Commerce API response.
-             * Unlike regular facets, which require explicit definition and request in the query, the `stencil-atomic-commerce-facets` component dynamically generates facets.
-             * @alpha 
-             */
-            "stencil-atomic-commerce-facets": LocalJSX.StencilAtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLStencilAtomicCommerceFacetsElement>;
         }
     }
 }

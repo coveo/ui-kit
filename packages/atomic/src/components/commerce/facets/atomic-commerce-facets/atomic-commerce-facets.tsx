@@ -29,7 +29,7 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
  * @alpha
  */
 @Component({
-  tag: 'stencil-atomic-commerce-facets',
+  tag: 'atomic-commerce-facets',
   shadow: false,
 })
 export class AtomicCommerceFacets implements InitializableComponent<Bindings> {

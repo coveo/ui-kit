@@ -1,5 +1,5 @@
 import escape from 'escape-html';
-import {directive, Directive} from 'lit/directive.js';
+import {directive, Directive, Part} from 'lit/directive.js';
 import {regexEncode} from '../../../../utils/string-utils';
 
 interface FacetSearchState {
@@ -46,21 +46,26 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
   return !isLoading;
 }
 
-export const highlightSearchResult = directive(
-  class extends Directive {
-    // TODO:  check if can optimize directive by checking if the value is the same
-    render(resultValue: string, searchQuery = '') {
-      const sanitizedResult = escape(resultValue);
-
-      if (searchQuery.trim() === '') {
-        return sanitizedResult;
-      }
-
-      const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
-      return sanitizedResult.replace(
-        regex,
-        '<span part="search-highlight" class="font-bold">$1</span>'
-      );
-    }
+class HighlightSearchResultDirective extends Directive {
+  update(_part: Part, props: Array<unknown>): unknown {
+    const [resultValue, searchQuery] = props as [string, string | undefined];
+    console.log('--- update', resultValue, searchQuery);
+    return this.render(resultValue, searchQuery);
   }
-);
+  render(resultValue: string, searchQuery = '') {
+    console.log('--- render', resultValue, searchQuery);
+    const sanitizedResult = escape(resultValue);
+
+    if (searchQuery.trim() === '') {
+      return sanitizedResult;
+    }
+
+    const regex = new RegExp(`(${regexEncode(escape(searchQuery))})`, 'i');
+    return sanitizedResult.replace(
+      regex,
+      '<span part="search-highlight" class="font-bold">$1</span>'
+    );
+  }
+}
+
+export const highlightSearchResult = directive(HighlightSearchResultDirective);

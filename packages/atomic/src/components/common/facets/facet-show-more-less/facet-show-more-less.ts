@@ -43,8 +43,7 @@ export const renderFacetShowMoreLess: FunctionalComponent<
         class: `${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`,
         ariaLabel: showLessFacetValues,
         onClick: () => props.onShowLess(),
-        // ref: props.showLessRef,
-        //  TODO: add ref
+        ref: (el) => props.showLessRef?.(el as HTMLButtonElement),
       },
     })(
       html`<atomic-icon
@@ -61,8 +60,7 @@ export const renderFacetShowMoreLess: FunctionalComponent<
         class: `${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`,
         ariaLabel: showMoreFacetValues,
         onClick: () => props.onShowMore(),
-        // ref: props.showMoreRef,
-        //  TODO: add ref
+        ref: (el) => props.showMoreRef?.(el as HTMLButtonElement),
       },
     })(
       html`<atomic-icon

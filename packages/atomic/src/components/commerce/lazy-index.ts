@@ -6,10 +6,6 @@ export default {
     await import(
       '../commerce/facets/atomic-commerce-facet/atomic-commerce-facet'
     ),
-  'atomic-commerce-facets': async () =>
-    await import(
-      '../commerce/facets/atomic-commerce-facets/atomic-commerce-facets'
-    ),
   'atomic-commerce-sort-dropdown': async () =>
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown'

@@ -2,6 +2,7 @@ import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import escape from 'escape-html';
 import {i18n} from 'i18next';
 import {html, nothing} from 'lit';
+import {renderButton} from '../../button';
 
 interface FacetSearchMatchesProps {
   i18n: i18n;
@@ -58,17 +59,19 @@ export const renderFacetSearchMatches: FunctionalComponent<
     if (props.showMoreMatches) {
       return html`
         <div class="px-2">
-          <button
-            style="text-primary"
-            class="mt-3 p-2"
-            @click=${props.showMoreMatches}
-          >
-            <div
+          ${renderButton({
+            props: {
+              style: 'text-primary',
+              class: 'mt-3 p-2',
+              onClick: props.showMoreMatches,
+            },
+          })(
+            html`<div
               part="more-matches"
               class="truncate text-sm"
               .innerHTML=${clickableMoreMatchesFound(props.query, props.i18n)}
-            ></div>
-          </button>
+            ></div>`
+          )}
         </div>
       `;
     }
@@ -78,7 +81,6 @@ export const renderFacetSearchMatches: FunctionalComponent<
           part="more-matches"
           class="text-neutral-dark mt-3 truncate text-sm"
           .innerHTML=${matchesFound(
-            // TODO: what is this innerHTML
             'more-matches-for',
             props.query,
             props.i18n

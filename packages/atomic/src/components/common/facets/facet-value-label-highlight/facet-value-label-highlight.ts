@@ -17,13 +17,11 @@ export const renderFacetValueLabelHighlight: FunctionalComponent<
     'value-label peer-hover:text-error truncate': true,
     'font-bold': props.isSelected || !!props.isExcluded,
   };
-  // TODO: check if should use innerHTML hack
   return html`<span
     title=${props.displayValue}
     part="value-label"
     class=${classMap(classNames)}
-    >${highlightSearchResult(props.displayValue, props.searchQuery)}</span
-  >`;
-  // .innerHTML="{highlightSearchResult(props.displayValue,"
-  // props.searchQuery)}
+    .innerHTML=${highlightSearchResult(props.displayValue, props.searchQuery)}
+  ></span>`;
+  // TODO: something is wrong with the innerHTML
 };

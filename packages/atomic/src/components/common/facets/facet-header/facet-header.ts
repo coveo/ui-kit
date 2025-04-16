@@ -40,7 +40,7 @@ export const facetHeader = (props: FacetHeaderProps) => {
         ariaLabel: props.isCollapsed ? expandFacet : collapseFacet,
         onClick: props.onToggleCollapse,
         ariaExpanded: props.isCollapsed ? 'false' : 'true',
-        // ref TODO: ref={props.headerRef}
+        ref: (el) => props.headerRef?.(el as HTMLButtonElement), // TODO: remove cast
       },
     })(
       html`${heading({
@@ -53,21 +53,22 @@ export const facetHeader = (props: FacetHeaderProps) => {
         ></atomic-icon>`
     )}
     ${props.onClearFilters && props.numberOfActiveValues > 0
-      ? html`
-          <button
-            part="clear-button"
-            class="flex max-w-full items-baseline p-2 text-sm"
-            aria-label=${clearFiltersForFacet}
-            @click=${props.onClearFilters}
-          >
-            <atomic-icon
+      ? html`${renderButton({
+          props: {
+            part: 'clear-button',
+            style: 'text-primary',
+            class: 'flex max-w-full items-baseline p-2 text-sm',
+            ariaLabel: clearFiltersForFacet,
+            onClick: props.onClearFilters,
+          },
+        })(
+          html`<atomic-icon
               part="clear-button-icon"
               class="mr-1 h-2 w-2"
               .icon=${CloseIcon}
             ></atomic-icon>
-            <span>${clearFilters}</span>
-          </button>
-        `
+            <span>${clearFilters}</span>`
+        )}`
       : nothing}
   `;
 };

@@ -12,6 +12,7 @@ import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {
   AriaLiveRegion,
@@ -24,7 +25,7 @@ import {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {LitElement, html, nothing} from 'lit';
+import {CSSResultGroup, LitElement, html, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
@@ -35,6 +36,7 @@ import {
 import {FacetValueProps} from '../../../common/facets/facet-value/facet-value';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import styles from './atomic-commerce-facet.tw.css';
 
 /**
  * The `atomic-commerce-facet` component renders a commerce facet that the end user can interact with to filter products.
@@ -77,6 +79,7 @@ import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-
  * @alpha
  */
 @customElement('atomic-commerce-facet')
+@withTailwindStyles
 export class AtomicCommerceFacet
   extends InitializeBindingsMixin(LitElement)
   implements InitializableComponent<CommerceBindings>
@@ -109,6 +112,8 @@ export class AtomicCommerceFacet
 
   @state() public facetState!: RegularFacetState;
   @state() public error!: Error;
+
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   private showLessFocus?: FocusTargetController;
   private showMoreFocus?: FocusTargetController;
@@ -188,7 +193,7 @@ export class AtomicCommerceFacet
         this.focusTargets.header.focusAfterSearch();
         this.facet.deselectAll();
       },
-      headerRef: (el) => this.focusTargets.header.setTarget(el),
+      headerRef: (el) => this.focusTargets.header.setTarget(el), // TODO: remove cast
     });
   }
 

@@ -30,6 +30,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
       'facet-value-exclude',
       ariaLabelAttributes
     );
+    // TODO: check if can use createRef instead
     let labelRef: HTMLLabelElement;
 
     const isTriStateCheckbox = (
@@ -45,7 +46,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
         part: 'value-checkbox',
         class: 'value-checkbox',
         ariaLabel: selectedAriaLabel,
-        // ref: props.buttonRef,
+        ref: props.buttonRef,
         onMouseDown: (e: MouseEvent) =>
           createRipple(e, {color: 'neutral', parent: labelRef}),
         iconPart: 'value-checkbox-icon',
@@ -81,7 +82,6 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
     return html`
       <li .key=${props.displayValue} class="relative flex items-center">
         ${renderCheckbox()}
-        <!-- TODO: check for label ref. maybe should be using createRef -->
         <label
           ${ref((ref) => (labelRef = ref as HTMLLabelElement))}
           .htmlFor=${id}
