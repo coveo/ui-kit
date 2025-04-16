@@ -20,7 +20,7 @@ export function insertSiteHeaderBar(assetsPath: string) {
         <nav class="navbar navbar-expand-md site-navbar px-md-81 py-125">
           <div class="container-fluid px-0">
             <a href="https://docs.coveo.com/en/0/">
-              <img id="docs-logo" class="h-rem300" src="${assetsPath}/coveo-docs-logo.svg">
+              <img id="docs-logo" class="h-rem300" src="${assetsPath}/icons/coveo-docs-logo.svg">
             </a>
             <button class="navbar-toggler site-navbar-toggler h-rem237 border-0" type="button" data-bs-toggle="collapse"
               data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -46,18 +46,23 @@ export function insertSiteHeaderBar(assetsPath: string) {
                 <div class="btn-group" aria-label="Site settings">
                   <button type="button" class="btn dropdown-toggle settings-dropdown w-rem300 fs-75 fw-300"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="${assetsPath}/icons/header/more.svg" class="w-rem125">
+                    <img src="${assetsPath}/icons/more.svg" class="w-rem125">
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end settings-dropdown-menu position-absolute rounded-4">
                     <li><span class="dropdown-item-text dropdown-settings-text">More</span></li>
                     <li style="cursor:pointer;"><a class="dropdown-item settings-dropdown-item fs-75 fw-300"
-                        href="{{ site.baseurl }}/3378/">Product news</a></li>
+                        href="https://docs.coveo.com/en/3378/">Product news</a></li>
                     <li style="cursor:pointer;"><a class="settings-dropdown-item dropdown-item fs-75 fw-300"
                         href="https://connect.coveo.com/" target="_blank">
                         Community
-                        <img data-ot-ignore class="external-link-icon" src="${assetsPath}/icons/header/${externalLinkIcon}">
+                        <img data-ot-ignore class="external-link-icon" src="${assetsPath}/icons/${externalLinkIcon}">
                         </a>
                     </li>
+                    <li style="cursor:pointer;"><a class="settings-dropdown-item dropdown-item fs-75 fw-300"
+                        href="https://connect.coveo.com/s/case/Case/Default" target="_blank">
+                        Support
+                        <img data-ot-ignore class="external-link-icon" src="${assetsPath}/icons/${externalLinkIcon}">
+                        </a>
                     <li>
                       <hr class="dropdown-divider">
                     </li>

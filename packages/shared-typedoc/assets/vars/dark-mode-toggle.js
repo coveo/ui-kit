@@ -224,7 +224,7 @@ export class DarkModeToggle extends HTMLElement {
     });
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name, _oldValue, newValue) {
     if (name === MODE) {
       if (![LIGHT, DARK].includes(newValue)) {
         throw new RangeError(`Allowed values: "${LIGHT}" and "${DARK}".`);
