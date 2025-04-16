@@ -33,8 +33,8 @@ runs:
         name: blob-report-${{ matrix.shardIndex }}
         path: packages/atomic/blob-report
         retention-days: 5
+    //  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#steps-context
     - run: |
-        //  https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#steps-context
         if [[ ${{ steps.playwright.outcome}} == 'failure' ]];
           then exit 1;
           else exit 0;
