@@ -29,7 +29,6 @@ export const Default: Story = {
 export const WithTranslations: Story = {
   name: 'With translations',
   play: async (context) => {
-    await play(context);
     const canvas = within(context.canvasElement);
     const commerceInterface =
       await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
@@ -43,6 +42,7 @@ export const WithTranslations: Story = {
           context.args.translationValueOther,
       });
     });
+    await play(context);
   },
   args: {
     'attributes-value': 'translation-key',
