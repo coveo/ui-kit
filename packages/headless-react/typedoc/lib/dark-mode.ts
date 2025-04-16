@@ -36,7 +36,7 @@ class DarkMode {
   }
 
   private _updateExternalLinkIcons() {
-    const baseUrl = `${window.location.origin}/assets/icons/header/`;
+    const baseUrl = `${window.location.origin}/assets/icons/`;
     const links = document.querySelectorAll('.external-link-icon');
 
     const imgName =
