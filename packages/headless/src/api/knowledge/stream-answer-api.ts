@@ -1,4 +1,5 @@
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -276,6 +277,7 @@ export const constructAnswerQueryParams = (
   usage: 'fetch' | 'select'
 ) => {
   const q = selectQuery(state)?.q;
+  const advancedQueryParams = selectAdvancedSearchQueries(state) ?? {};
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
@@ -286,6 +288,7 @@ export const constructAnswerQueryParams = (
 
   return {
     q,
+    ...advancedQueryParams,
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
         responseFormat: state.generatedAnswer.responseFormat,
