@@ -34,6 +34,7 @@ export default defineConfig({
     screenshot: process.env.CI ? 'off' : 'only-on-failure',
     // Record video on failure when not on CI.
     video: process.env.CI ? 'off' : 'retain-on-failure',
+    permissions: ['clipboard-read'],
   },
 
   projects: [
