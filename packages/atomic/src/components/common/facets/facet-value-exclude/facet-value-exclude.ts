@@ -1,6 +1,6 @@
+import {multiClassMap} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
-import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import Tick from '../../../../images/clear.svg';
@@ -27,7 +27,7 @@ export const renderFacetValueExclude: FunctionalComponent<ExcludeProps> = ({
   };
 
   return html`<button
-    class=${classMap(classNames)}
+    class=${multiClassMap(classNames)}
     part=${'value-exclude-button'}
     ${ref(props.ref)}
     .key=${props.key}

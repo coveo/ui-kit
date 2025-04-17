@@ -1,3 +1,4 @@
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {FacetValueState} from '@coveo/headless';
 import {html} from 'lit';
@@ -20,21 +21,16 @@ export const renderTriStateCheckbox: FunctionalComponent<
   const isExcluded = props.state === 'excluded';
   const partName = props.part ?? 'checkbox';
 
-  const baseClassNames =
-    'w-4 h-4 grid place-items-center rounded focus-visible:outline-none hover:border-primary-light focus-visible:border-primary-light';
-  const selectedClassNames =
-    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light';
-  const excludedClassNames =
-    'excluded bg-error hover:bg-error focus-visible:bg-error hover:border-error focus-visible:border-error';
-  const unSelectedClassNames = 'border border-neutral-dark';
-
-  const classNames = {
-    [baseClassNames]: true,
-    [selectedClassNames]: isSelected,
-    [unSelectedClassNames]: !isSelected,
-    [excludedClassNames]: isExcluded,
+  const classNames = tw({
+    'hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded focus-visible:outline-none':
+      true,
+    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
+      isSelected,
+    'border-neutral-dark border': !isSelected,
+    'excluded bg-error hover:bg-error focus-visible:bg-error hover:border-error focus-visible:border-error':
+      isExcluded,
     [props.class ?? '']: Boolean(props.class),
-  };
+  });
 
   const parts = [partName];
   if (isExcluded || isExcluded) {
@@ -42,7 +38,7 @@ export const renderTriStateCheckbox: FunctionalComponent<
   }
 
   const iconClassNames = {
-    'w-3/5': true, // TODO: for some reason, this class does not apply in the browser
+    'w-3/5': true,
     block: isSelected || isExcluded,
     hidden: !isSelected && !isExcluded,
   };
@@ -51,7 +47,7 @@ export const renderTriStateCheckbox: FunctionalComponent<
     ${ref(props.ref)}
     .key=${props.key}
     id=${ifDefined(props.id)}
-    class=${classMap(classNames)}
+    class=${multiClassMap(classNames)}
     part=${parts.join(' ')}
     aria-pressed=${isSelected ? 'true' : isExcluded ? 'mixed' : 'false'}
     aria-label=${ifDefined(props.ariaLabel ?? props.text)}

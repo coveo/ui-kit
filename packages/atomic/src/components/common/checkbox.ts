@@ -1,6 +1,6 @@
+import {multiClassMap, tw} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
-import {classMap} from 'lit/directives/class-map.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import Tick from '../../images/checkbox.svg';
@@ -30,18 +30,14 @@ export interface CheckboxProps {
 
 export const checkbox: FunctionalComponent<CheckboxProps> = ({props}) => {
   const partName = props.part ?? 'checkbox';
-  const baseClassNames =
-    'w-4 h-4 grid place-items-center rounded no-outline hover:border-primary-light focus-visible:border-primary-light';
-  const selectedClassNames =
-    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light';
-  const unSelectedClassNames = 'border border-neutral-dark';
 
-  const classNames = {
-    [baseClassNames]: true,
-    [selectedClassNames]: Boolean(props.checked),
-    [unSelectedClassNames]: !props.checked,
+  const classNames = tw({
+    'h-4 w-4': true,
+    'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
+      Boolean(props.checked),
+    'border-neutral-dark border': !props.checked,
     [props.class ?? '']: Boolean(props.class),
-  };
+  });
 
   const parts = [partName];
   if (props.checked) {
@@ -52,7 +48,7 @@ export const checkbox: FunctionalComponent<CheckboxProps> = ({props}) => {
     <button
       .key=${props.key}
       id=${ifDefined(props.id)}
-      class=${classMap(classNames)}
+      class=${multiClassMap(classNames)}
       part=${parts.join(' ')}
       aria-checked=${ifDefined(props.checked)}
       aria-current=${ifDefined(props.ariaCurrent)}

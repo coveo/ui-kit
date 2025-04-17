@@ -10,6 +10,7 @@ module.exports = {
     'prettier-plugin-tailwindcss',
   ],
   bracketSpacing: false,
+  tailwindFunctions: ['tw', 'classMap', 'multiClassMap'],
   singleQuote: true,
   trailingComma: 'es5',
   endOfLine: 'auto',

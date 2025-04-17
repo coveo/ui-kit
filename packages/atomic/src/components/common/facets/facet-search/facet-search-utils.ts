@@ -1,4 +1,5 @@
 import escape from 'escape-html';
+import {noChange} from 'lit';
 import {directive, Directive, Part} from 'lit/directive.js';
 import {regexEncode} from '../../../../utils/string-utils';
 
@@ -47,16 +48,30 @@ export function shouldDisplaySearchResults(facetSearchState: FacetSearchState) {
 }
 
 class HighlightSearchResultDirective extends Directive {
-  update(_part: Part, props: Array<unknown>): unknown {
+  private lastResultValue?: string;
+  private lastSearchQuery?: string;
+
+  update(_: Part, props: Array<unknown>): unknown {
     const [resultValue, searchQuery] = props as [string, string | undefined];
-    console.log('--- update', resultValue, searchQuery);
+
+    if (
+      resultValue === this.lastResultValue &&
+      searchQuery === this.lastSearchQuery
+    ) {
+      return noChange;
+    }
+
+    this.lastResultValue = resultValue;
+    this.lastSearchQuery = searchQuery;
+
     return this.render(resultValue, searchQuery);
   }
+
   render(resultValue: string, searchQuery = '') {
-    console.log('--- render', resultValue, searchQuery);
     const sanitizedResult = escape(resultValue);
 
     if (searchQuery.trim() === '') {
+      // TODO: something is wrong when the value is empty string
       return sanitizedResult;
     }
 
