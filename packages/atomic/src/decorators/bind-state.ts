@@ -76,11 +76,6 @@ export function bindStateToController<Element extends ReactiveElement>(
           : undefined;
 
         const unsubscribeController = controller.subscribe(() => {
-          console.log(
-            'subscribed to controller',
-            controllerProperty,
-            controller.state
-          );
           component[stateProperty] = controller.state as Instance[K];
           typeof updateCallback === 'function' && updateCallback();
         });

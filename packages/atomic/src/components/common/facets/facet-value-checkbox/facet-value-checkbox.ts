@@ -87,7 +87,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
           .htmlFor=${id}
           part="value-checkbox-label"
           class="group items-center"
-          onMouseDown=${(e: MouseEvent) => createRipple(e, {color: 'neutral'})}
+          @mousedown=${(e: MouseEvent) => createRipple(e, {color: 'neutral'})}
           aria-hidden="true"
         >
           ${children} ${renderExclusion()}
