@@ -63,45 +63,43 @@ const fakeTrackingId = 'tracking_id_123';
       await caseAssist.fetchSuggestions();
       const response = await responsePromise;
       const suggestions = await response.json();
+      const clickedPosition = 2;
 
       // Hack(?) to have the request payload in the analytics request next.
       await page.route('*analytics*', (route) => {
         route.continue();
       });
 
-      if (analyticsMode === 'legacy') {
-        const analyticsPromise =
-          documentSuggestion.waitForSuggestionCollectEvent();
-        await documentSuggestion.clickSuggestion(1);
-        const analyticsRequest = await analyticsPromise;
-        const payload = analyticsRequest.postDataJSON?.();
+      const analyticsPromise =
+        documentSuggestion.waitForSuggestionClickEvent(analyticsMode);
+      await documentSuggestion.clickSuggestion(clickedPosition);
+      const analyticsRequest = await analyticsPromise;
+      const payload = analyticsRequest.postDataJSON?.();
 
+      if (analyticsMode === 'legacy') {
         expect(payload).toBeDefined();
-        expect(payload.t).toBe('event');
-        expect(payload.ec).toBe('svc');
-        expect(payload.ea).toBe('click');
-        expect(payload.svc_action).toBe('suggestion_click');
-        expect(payload.svc_action_data.suggestionId).toBe(
-          suggestions.documents[1].uniqueId
+        const event = JSON.parse(payload.clickEvent);
+        expect(event.actionCause).toBe('documentSuggestionClick');
+        expect(event.documentPosition).toBe(clickedPosition + 1);
+        expect(event.documentTitle).toBe(
+          suggestions.documents[clickedPosition].title
         );
-        expect(payload.svc_action_data.suggestion.documentPosition).toBe(2);
-        expect(payload.svc_action_data.suggestion.documentTitle).toBe(
-          suggestions.documents[1].title
+        expect(event.documentUrl).toBe(
+          suggestions.documents[clickedPosition].clickUri
         );
       } else {
-        const analyticsPromise =
-          documentSuggestion.waitForSuggestionClickEvent();
-        await documentSuggestion.clickSuggestion(1);
-        const analyticsRequest = await analyticsPromise;
-        const payload = analyticsRequest.postDataJSON?.();
-
         expect(payload).toBeDefined();
         expect(payload.length).toBe(1);
         expect(payload[0].meta.config.trackingId).toBe(fakeTrackingId);
-        expect(payload[0].meta.type).toBe('caseAssist.documentSuggestionClick');
-        expect(payload[0].documentSuggestion.responseId).toBeDefined();
-        expect(payload[0].documentSuggestion.id).toBe(
-          suggestions.documents[1].uniqueId
+        expect(payload[0].meta.type).toBe('CaseAssist.DocumentSuggestionClick');
+        expect(payload[0].responseId).toBeDefined();
+        expect(payload[0].position).toBe(clickedPosition + 1);
+        expect(payload[0].itemMetadata.title).toBe(
+          suggestions.documents[clickedPosition].title
+        );
+        expect(payload[0].itemMetadata.uniqueFieldName).toBe('uniqueId');
+        expect(payload[0].itemMetadata.uniqueFieldValue).toBe(
+          suggestions.documents[clickedPosition].uniqueId
         );
       }
     });

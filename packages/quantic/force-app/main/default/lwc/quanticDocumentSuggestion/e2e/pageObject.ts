@@ -1,6 +1,6 @@
-import {Locator, Page, Request} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {
-  isCollectEvent,
+  isUaClickEvent,
   isUaEventsEvent,
 } from '../../../../../../playwright/utils/requests';
 
@@ -50,22 +50,13 @@ export class DocumentSuggestionObject {
     await this.sections.nth(index).click();
   }
 
-  async waitForSuggestionClickEvent(): Promise<Request> {
+  async waitForSuggestionClickEvent(mode: string): Promise<Request> {
     return this.page.waitForRequest((request) => {
-      if (isUaEventsEvent(request)) {
+      if (
+        (mode === 'legacy' && isUaClickEvent(request)) ||
+        (mode === 'next' && isUaEventsEvent(request))
+      ) {
         return true;
-      }
-      return false;
-    });
-  }
-
-  async waitForSuggestionCollectEvent(): Promise<Request> {
-    return this.page.waitForRequest((request) => {
-      if (isCollectEvent(request)) {
-        const event = request.postDataJSON?.();
-        return (
-          event?.svc_action === 'suggestion_click' && event?.ea === 'click'
-        );
       }
       return false;
     });
