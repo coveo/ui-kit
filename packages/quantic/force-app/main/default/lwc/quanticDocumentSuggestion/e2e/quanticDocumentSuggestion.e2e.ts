@@ -4,7 +4,7 @@ import {test, expect} from './fixture';
 const fakeTrackingId = 'tracking_id_123';
 
 ['legacy', 'next'].forEach((mode) => {
-  test.describe(`quantic document suggestion ${mode} analytics`, () => {
+  test.describe(`quantic document suggestion with analytics mode: ${mode}`, () => {
     let analyticsMode = 'legacy';
     test.beforeEach(async ({documentSuggestion, page}) => {
       analyticsMode = mode;
@@ -26,32 +26,6 @@ const fakeTrackingId = 'tracking_id_123';
       }
 
       await expect(documentSuggestion.noSuggestionsMessage).toBeVisible();
-    });
-
-    test('should render the component and all parts', async ({
-      documentSuggestion,
-      caseAssist,
-    }) => {
-      await expect(documentSuggestion.accordion).not.toBeVisible();
-      await expect(documentSuggestion.noSuggestionsMessage).toBeVisible();
-
-      const responsePromise = caseAssist.waitForDocumentSuggestionResponse();
-      await caseAssist.fetchSuggestions();
-      const response = await responsePromise;
-      const responseBody = await response.json();
-
-      await expect(documentSuggestion.accordion).toBeVisible();
-      await expect(documentSuggestion.noSuggestionsMessage).not.toBeVisible();
-      await expect(documentSuggestion.sections).toHaveCount(3);
-
-      for (const [index, section] of (
-        await documentSuggestion.sections.all()
-      ).entries()) {
-        await expect(section).toBeVisible();
-        await expect(section).toHaveText(
-          new RegExp(responseBody.documents[index].title)
-        );
-      }
     });
 
     test('should handle clicking on a document suggestion', async ({

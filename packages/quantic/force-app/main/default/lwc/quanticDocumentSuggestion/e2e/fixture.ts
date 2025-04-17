@@ -19,25 +19,20 @@ type QuanticDocumentSuggestionE2EFixtures = {
   search: SearchObject;
   caseAssist: CaseAssistObject;
   options: Partial<DocumentSuggestionOptions>;
+  urlHash: string;
 };
 
-type QuanticDocumentSuggestionE2ESearchFixtures =
-  QuanticDocumentSuggestionE2EFixtures & {
-    urlHash: string;
-  };
-
-export const test =
-  quanticBase.extend<QuanticDocumentSuggestionE2ESearchFixtures>({
-    options: {},
-    urlHash: '',
-    caseAssist: async ({page}, use) => {
-      await use(new CaseAssistObject(page));
-    },
-    documentSuggestion: async ({page, options, configuration}, use) => {
-      await page.goto(pageUrl);
-      await configuration.configure(options);
-      await use(new DocumentSuggestionObject(page));
-    },
-  });
+export const test = quanticBase.extend<QuanticDocumentSuggestionE2EFixtures>({
+  options: {},
+  urlHash: '',
+  caseAssist: async ({page}, use) => {
+    await use(new CaseAssistObject(page));
+  },
+  documentSuggestion: async ({page, options, configuration}, use) => {
+    await page.goto(pageUrl);
+    await configuration.configure(options);
+    await use(new DocumentSuggestionObject(page));
+  },
+});
 
 export {expect} from '@playwright/test';

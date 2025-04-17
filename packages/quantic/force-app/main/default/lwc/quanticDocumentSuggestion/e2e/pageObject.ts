@@ -31,34 +31,16 @@ export class DocumentSuggestionObject {
     return this.sections.nth(index).locator('div.slds-accordion__content');
   }
 
-  sectionQuickviewButton(index: number): Locator {
-    return this.sections
-      .nth(index)
-      .locator('c-quantic-result-quickview')
-      .getByRole('button', {name: /Open.+for preview/});
-  }
-
-  sectionRatingButton(index: number): Locator {
-    return this.sections.nth(index).getByRole('button', {name: 'Send rating'});
-  }
-
-  async numberOfSuggestions(): Promise<number> {
-    return this.sections.count();
-  }
-
   async clickSuggestion(index: number): Promise<void> {
     await this.sections.nth(index).click();
   }
 
   async waitForSuggestionClickEvent(mode: string): Promise<Request> {
     return this.page.waitForRequest((request) => {
-      if (
+      return (
         (mode === 'legacy' && isUaClickEvent(request)) ||
         (mode === 'next' && isUaEventsEvent(request))
-      ) {
-        return true;
-      }
-      return false;
+      );
     });
   }
 }
