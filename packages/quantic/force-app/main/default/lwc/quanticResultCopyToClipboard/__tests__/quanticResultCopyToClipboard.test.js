@@ -82,6 +82,11 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
+// We need this special flush function to ensure that all promises are resolved for the tooltip setTimeout test.
+async function flushPromisesWithoutTimeout() {
+  return Promise.resolve();
+}
+
 describe('c-quantic-result-copy-to-clipboard', () => {
   afterEach(() => {
     cleanup();
@@ -259,6 +264,36 @@ describe('c-quantic-result-copy-to-clipboard', () => {
             expect.any(Error)
           );
           expect(resultAction.loading).toBe(false);
+        });
+
+        describe('when the tooltip is displayed', () => {
+          beforeAll(() => {
+            jest.useFakeTimers();
+          });
+
+          afterAll(() => {
+            jest.useRealTimers();
+          });
+
+          it('should display the success label then reset the initial label after 1000ms', async () => {
+            const element = createTestComponent();
+            await flushPromisesWithoutTimeout();
+
+            const resultAction = element.shadowRoot.querySelector(
+              selectors.quanticResultAction
+            );
+            expect(resultAction).not.toBeNull();
+
+            element.dispatchEvent(copyToClipboardEvent);
+            await flushPromisesWithoutTimeout();
+
+            expect(resultAction.label).toBe(defaultOptions.successLabel);
+
+            jest.advanceTimersByTime(1000);
+            await flushPromisesWithoutTimeout();
+
+            expect(resultAction.label).toBe(defaultOptions.label);
+          });
         });
       });
     });
