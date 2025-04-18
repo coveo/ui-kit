@@ -18,9 +18,32 @@ export class ResultCopyToClipboard {
     return this.resultCopyToClipboard.locator('.slds-popover');
   }
 
-  async waitForCopyToClipboardClickEvent(): Promise<Request> {
-    return this.page.waitForRequest((request) => {
-      return isUaClickEvent(request) ? true : false;
+  async waitForCopyToClipboardClickEvent(
+    actionCause: string,
+    customChecker?: Function
+  ): Promise<Request> {
+    const uaRequest = this.page.waitForRequest((request) => {
+      if (isUaClickEvent(request)) {
+        const requestBody = request.postDataJSON?.();
+        const requestData = JSON.parse(requestBody.clickEvent);
+
+        const expectedFields: Record<string, any> = {
+          actionCause,
+        };
+
+        const matchesExpectedFields = Object.keys(expectedFields).every(
+          (key) => requestData?.[key] === expectedFields[key]
+        );
+
+        const customData = requestData?.customData;
+
+        return (
+          matchesExpectedFields &&
+          (customChecker ? customChecker(requestData, customData) : true)
+        );
+      }
+      return false;
     });
+    return uaRequest;
   }
 }
