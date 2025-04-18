@@ -884,4 +884,8 @@
     <label>Fermer la notification</label>
     <name>quantic_CloseNotification</name>
   </customLabels>
+  <customLabels>
+    <label>Perspectives liées à ce cas</label>
+    <name>quantic_InsightRelatedToThisCase</name>
+  </customLabels>
 </Translations>
