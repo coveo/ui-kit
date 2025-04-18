@@ -11,7 +11,7 @@
       </button>
     </template>
     <template if:false={loading}>
-      <lightning-button-icon-stateful onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
+      <lightning-button-icon-stateful data-testid="result-action-button" onclick={handleClick} aria-label={displayedLabel} variant="border-filled"
         class={resultActionOrderClasses} icon-name={displayedIcon} selected={_selected}>
       </lightning-button-icon-stateful>
     </template>
