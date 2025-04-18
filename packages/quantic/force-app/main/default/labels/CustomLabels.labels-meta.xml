@@ -1610,4 +1610,11 @@
     <protected>false</protected>
     <shortDescription>Close notification</shortDescription>
   </labels>
+  <labels>
+    <fullName>quantic_InsightRelatedToThisCase</fullName>
+    <value>Insights related to this case</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Insights related to this case</shortDescription>
+  </labels>
 </CustomLabels>
