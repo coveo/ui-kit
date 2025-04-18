@@ -14,9 +14,14 @@ jest.mock('c/quanticUtils', () => ({
 }));
 
 let isInitialized = false;
+const functionMocks = {
+  logCopyToClipboard: jest.fn(() => Promise.resolve()),
+  dispatch: jest.fn(() => {}),
+};
 
 const exampleEngine = {
   id: 'exampleEngineId',
+  dispatch: functionMocks.dispatch,
 };
 
 const defaultOptions = {
@@ -33,10 +38,6 @@ const defaultOptions = {
 const copyToClipboardEvent = new CustomEvent('quantic__copytoclipboard', {
   bubbles: true,
 });
-
-const functionMocks = {
-  logCopyToClipboard: jest.fn(),
-};
 
 const selectors = {
   initializationError: 'c-quantic-component-error',
@@ -132,7 +133,6 @@ describe('c-quantic-result-copy-to-clipboard', () => {
     describe('when passing custom options', () => {
       it('should render the Quantic Result Action component with the provided custom label', async () => {
         const customLabel = 'Custom Label';
-
         const element = createTestComponent({
           ...defaultOptions,
           label: customLabel,
@@ -145,6 +145,44 @@ describe('c-quantic-result-copy-to-clipboard', () => {
 
         expect(resultAction).not.toBeNull();
         expect(resultAction.label).toBe(customLabel);
+      });
+
+      it('should call the buildTemplateTextFromResult function with a provided custom textTemplate', async () => {
+        const customTemplate = 'Custom: ${title} - ${clickUri}';
+        const mockBuildTemplateTextFromResult =
+          quanticUtils.buildTemplateTextFromResult;
+        const element = createTestComponent({
+          ...defaultOptions,
+          textTemplate: customTemplate,
+        });
+        await flushPromises();
+
+        element.dispatchEvent(copyToClipboardEvent);
+        await flushPromises();
+
+        expect(mockBuildTemplateTextFromResult).toHaveBeenCalledTimes(1);
+        expect(mockBuildTemplateTextFromResult).toHaveBeenCalledWith(
+          customTemplate,
+          defaultOptions.result
+        );
+      });
+
+      it('should render the Quantic Result Action component with the provided custom successLabel', async () => {
+        const customSuccessLabel = 'Custom Success Label';
+        const element = createTestComponent({
+          ...defaultOptions,
+          successLabel: customSuccessLabel,
+        });
+        await flushPromises();
+
+        const resultAction = element.shadowRoot.querySelector(
+          selectors.quanticResultAction
+        );
+
+        element.dispatchEvent(copyToClipboardEvent);
+        await flushPromises();
+
+        expect(resultAction.label).toBe(customSuccessLabel);
       });
     });
 
