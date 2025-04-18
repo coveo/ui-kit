@@ -4,6 +4,7 @@ import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
+import '../atomic-component-error/atomic-component-error.js';
 import {AnyBindings, AnyEngineType} from './bindings.js';
 import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
 import {init18n} from './i18n.js';
@@ -19,7 +20,6 @@ export interface BaseAtomicInterface<EngineType extends AnyEngineType> {
   iconAssetsPath: string;
   logLevel?: LogLevel;
   language?: string;
-  host: HTMLElement;
   bindings: AnyBindings;
   error?: Error;
   updateIconAssetsPath(): void;
@@ -37,7 +37,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   private hangingComponentsInitialization: InitializeEvent[] = [];
 
   constructor(
-    private atomicInterface: BaseAtomicInterface<Engine>,
+    private atomicInterface: BaseAtomicInterface<Engine> & HTMLElement,
     globalVariableName: string
   ) {
     setCoveoGlobal(globalVariableName);
@@ -60,7 +60,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
       atomicInterface.render = () => {
         if (atomicInterface.error) {
           return html`<atomic-component-error
-            .element=${atomicInterface.host}
+            .element=${atomicInterface}
             .error=${atomicInterface.error}
           ></atomic-component-error>`;
         }
@@ -90,7 +90,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     if (this.atomicInterface.engine) {
       this.atomicInterface.engine.logger.warn(
         `The ${this.interfaceTagname} component "initialize" has already been called.`,
-        this.atomicInterface.host
+        this.atomicInterface
       );
       return;
     }
@@ -124,11 +124,11 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
 
     loadDayjsLocale(this.language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
-      this.language,
+      this.language.split('-')[0],
       i18nTranslationNamespace,
       (_: unknown, data: unknown) => {
         i18n.addResourceBundle(
-          this.language,
+          this.language.split('-')[0],
           i18nTranslationNamespace,
           data,
           true,
@@ -143,7 +143,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     if (!engine) {
       console.error(
         `You have to call "initialize" on the ${this.interfaceTagname} component before modifying the props or calling other public methods.`,
-        this.atomicInterface.host
+        this.atomicInterface
       );
       return false;
     }
@@ -152,7 +152,7 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
   }
 
   private get interfaceTagname() {
-    return this.atomicInterface.host.tagName.toLowerCase();
+    return this.atomicInterface.tagName.toLowerCase();
   }
 
   private initComponents() {
