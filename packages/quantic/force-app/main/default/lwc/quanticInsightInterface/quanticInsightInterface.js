@@ -133,18 +133,36 @@ export default class QuanticInsightInterface extends LightningElement {
     if (this.initialized) {
       return;
     }
-    this.dispatchEvent(
-      new CustomEvent(`quantic__insightinterfaceinitialized`, {
-        detail: {
-          engineId: this.engineId,
-          insightId: this.insightId,
-        },
-        bubbles: true,
-        composed: true,
-      })
+    const engine = getHeadlessBindings(this.engineId).engine;
+    this.insightInterface = CoveoHeadlessInsight.buildInsightInterface(engine);
+    this.unsubscribeInsightInterface = this.insightInterface.subscribe(() =>
+      this.updateInsightInterfaceState()
     );
-    this.initialized = true;
   };
+
+  updateInsightInterfaceState() {
+    if (this.initialized) {
+      return;
+    }
+    this.isInsightInterfaceReady =
+      !this.insightInterface.state.loading &&
+      !!this.insightInterface.state.config;
+
+    if (this.isInsightInterfaceReady) {
+      this.dispatchEvent(
+        new CustomEvent(`quantic__insightinterfaceinitialized`, {
+          detail: {
+            engineId: this.engineId,
+            insightId: this.insightId,
+          },
+          bubbles: true,
+          composed: true,
+        })
+      );
+      this.unsubscribeInsightInterface();
+      this.initialized = true;
+    }
+  }
 
   /**
    * @returns {HTMLInputElement}
