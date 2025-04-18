@@ -26,8 +26,7 @@ import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-man
 import {
   elementHasQuery,
   SearchBoxSuggestionElement,
-} from '../../common/suggestions/stencil-suggestions-common';
-import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
+} from '../../common/suggestions/suggestions-common';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -181,8 +180,8 @@ export class AtomicInsightSearchBox {
     }
 
     return (
-      <ButtonSearchSuggestion
-        bindings={this.bindings}
+      <atomic-suggestion-renderer
+        i18n={this.bindings.i18n}
         id={id}
         suggestion={item}
         isSelected={isSelected}
@@ -196,7 +195,7 @@ export class AtomicInsightSearchBox {
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, 'left', id);
         }}
-      ></ButtonSearchSuggestion>
+      ></atomic-suggestion-renderer>
     );
   }
 

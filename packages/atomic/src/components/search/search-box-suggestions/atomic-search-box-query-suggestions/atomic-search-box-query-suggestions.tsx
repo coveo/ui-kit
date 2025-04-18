@@ -17,7 +17,7 @@ import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/stencil-suggestions-common';
+} from '../../../common/suggestions/suggestions-common';
 
 /**
  * The `atomic-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
