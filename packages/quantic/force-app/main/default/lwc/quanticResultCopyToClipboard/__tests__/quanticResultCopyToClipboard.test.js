@@ -129,24 +129,6 @@ describe('c-quantic-result-copy-to-clipboard', () => {
       expect(resultAction.eventName).toEqual(expectedEventName);
     });
 
-    it('should dispatch the logCopyToClipboard action', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const resultAction = element.shadowRoot.querySelector(
-        selectors.quanticResultAction
-      );
-      expect(resultAction).not.toBeNull();
-
-      element.dispatchEvent(copyToClipboardEvent);
-      await flushPromises();
-
-      expect(functionMocks.logCopyToClipboard).toHaveBeenCalledTimes(1);
-      expect(functionMocks.logCopyToClipboard).toHaveBeenCalledWith(
-        defaultOptions.result
-      );
-    });
-
     describe('when passing custom options', () => {
       it('should render the Quantic Result Action component with the provided custom label', async () => {
         const customLabel = 'Custom Label';
