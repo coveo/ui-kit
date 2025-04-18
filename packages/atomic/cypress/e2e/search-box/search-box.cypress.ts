@@ -1,7 +1,7 @@
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
-} from '../../../src/components/common/suggestions/suggestions-common';
+} from '../../../src/components/common/suggestions/stencil-suggestions-common';
 import {
   SafeStorage,
   StorageItems,

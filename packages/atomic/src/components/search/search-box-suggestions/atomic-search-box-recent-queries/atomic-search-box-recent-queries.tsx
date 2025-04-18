@@ -14,7 +14,7 @@ import {
   RecentQueryClear,
   RecentQueryIcon,
   RecentQueryText,
-} from '../../../common/suggestions/recent-queries';
+} from '../../../common/suggestions/stencil-recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
