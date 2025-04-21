@@ -32,7 +32,8 @@ export const checkbox: FunctionalComponent<CheckboxProps> = ({props}) => {
   const partName = props.part ?? 'checkbox';
 
   const classNames = tw({
-    'h-4 w-4': true,
+    'hover:border-primary-light focus-visible:border-primary-light grid h-4 w-4 place-items-center rounded focus-visible:outline-none':
+      true,
     'selected bg-primary hover:bg-primary-light focus-visible:bg-primary-light':
       Boolean(props.checked),
     'border-neutral-dark border': !props.checked,

@@ -193,7 +193,7 @@ export class AtomicCommerceFacet
         this.focusTargets.header.focusAfterSearch();
         this.facet.deselectAll();
       },
-      headerRef: (el) => this.focusTargets.header.setTarget(el), // TODO: remove cast
+      headerRef: (el) => this.focusTargets.header.setTarget(el),
     });
   }
 

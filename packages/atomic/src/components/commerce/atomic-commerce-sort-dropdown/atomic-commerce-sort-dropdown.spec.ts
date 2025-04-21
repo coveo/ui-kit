@@ -7,31 +7,7 @@ import {expect, vi} from 'vitest';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
-const mocks = vi.hoisted(() => {
-  return {
-    // controller states
-    searchOrListingState: {
-      responseId: 'some-id',
-      products: [{}],
-      isLoading: false,
-      error: null,
-    },
-    sortState: {
-      availableSorts: [
-        {by: 'fields', fields: [{name: 'foo'}]},
-        {by: 'fields', fields: [{name: 'bar'}]},
-      ],
-    },
-    // controllers
-    sort: {
-      isSortedBy: vi.fn(),
-      sortBy: vi.fn(),
-    },
-    searchOrListing: vi.fn(() => ({
-      sort: vi.fn(),
-    })),
-  };
-});
+let mocks = await vi.hoisted(async () => (await import('./factory')).default());
 
 vi.mock('@coveo/headless/commerce', () => {
   return {
@@ -91,6 +67,9 @@ describe('AtomicCommerceSortDropdown', () => {
     get select() {
       return page.getByRole('combobox');
     },
+    get relevanceOption() {
+      return page.getByRole('option', {name: 'bar'});
+    },
     placeholder(element: HTMLElement) {
       return element.shadowRoot!.querySelector('[part="placeholder"]')!;
     },
@@ -105,6 +84,10 @@ describe('AtomicCommerceSortDropdown', () => {
 
     return element;
   };
+
+  beforeEach(async () => {
+    mocks = (await import('./factory')).default();
+  });
 
   it('is defined', () => {
     const el = document.createElement('atomic-commerce-sort-dropdown');
