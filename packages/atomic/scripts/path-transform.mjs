@@ -1,4 +1,4 @@
-import {dirname, resolve, relative} from 'path';
+import {dirname, posix, resolve, relative, sep} from 'path';
 import {
   isImportDeclaration,
   visitEachChild,
@@ -57,5 +57,6 @@ function getRelativeImportPath(sourceFilePath, importPath) {
     importPath.replace(IMPORT_PREFIX, '')
   );
   const relativePath = relative(dirname(sourceFilePath), absoluteImportPath);
-  return relativePath.startsWith('.') ? relativePath : `./${relativePath}`;
+  const posixPath = posix.join(...relativePath.split(sep));
+  return posixPath.startsWith('.') ? posixPath : `./${posixPath}`;
 }

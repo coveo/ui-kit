@@ -1,3 +1,22 @@
+## <small>3.22.6 (2025-04-16)</small>
+
+- fix(autoloader): fix import path for searchElementMap (#5181) ([c209c1e](https://github.com/coveo/ui-kit/commits/c209c1e)), closes [#5181](https://github.com/coveo/ui-kit/issues/5181)
+
+## <small>3.22.5 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore: ensure repo build on windows (#5177) ([f00be85](https://github.com/coveo/ui-kit/commits/f00be85)), closes [#5177](https://github.com/coveo/ui-kit/issues/5177)
+- chore: remove jsx from some utils files (#5147) ([12b920d](https://github.com/coveo/ui-kit/commits/12b920d)), closes [#5147](https://github.com/coveo/ui-kit/issues/5147)
+- chore(atomic): add a boolean converter for Lit (#5121) ([9dab7ae](https://github.com/coveo/ui-kit/commits/9dab7ae)), closes [#5121](https://github.com/coveo/ui-kit/issues/5121)
+- chore(atomic): escape backslashes in css (#5172) ([65eb58e](https://github.com/coveo/ui-kit/commits/65eb58e)), closes [#5172](https://github.com/coveo/ui-kit/issues/5172)
+- chore(atomic): improve build for lit components (#5148) ([dfc925b](https://github.com/coveo/ui-kit/commits/dfc925b)), closes [#5148](https://github.com/coveo/ui-kit/issues/5148)
+- chore(atomic): improvements for vitest, tailwind & storybook (#5157) ([42d30d7](https://github.com/coveo/ui-kit/commits/42d30d7)), closes [#5157](https://github.com/coveo/ui-kit/issues/5157)
+- chore(atomic): prettier generated lit files (#5168) ([827ab7a](https://github.com/coveo/ui-kit/commits/827ab7a)), closes [#5168](https://github.com/coveo/ui-kit/issues/5168)
+- chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
+- fix(atomic-icon): move css to components layer (#5169) ([1622060](https://github.com/coveo/ui-kit/commits/1622060)), closes [#5169](https://github.com/coveo/ui-kit/issues/5169)
+- fix(atomic): do not override `shouldUpdate` when binding state to controller (#5154) ([e83e064](https://github.com/coveo/ui-kit/commits/e83e064)), closes [#5154](https://github.com/coveo/ui-kit/issues/5154)
+- fix(atomic): localize facet value counts in aria-labels (#5122) ([58915ba](https://github.com/coveo/ui-kit/commits/58915ba)), closes [#5122](https://github.com/coveo/ui-kit/issues/5122)
+
 ## <small>3.22.4 (2025-04-09)</small>
 
 - chore(atomic): enable ripple styles for lit components (#5138) ([5946a9e](https://github.com/coveo/ui-kit/commits/5946a9e)), closes [#5138](https://github.com/coveo/ui-kit/issues/5138)

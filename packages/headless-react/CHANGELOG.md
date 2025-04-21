@@ -1,3 +1,8 @@
+## <small>2.4.18 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
+
 ## <small>2.4.16 (2025-04-02)</small>
 
 - docs(headless-react): address broken typedoc links (#5124) ([4cc3445](https://github.com/coveo/ui-kit/commits/4cc3445)), closes [#5124](https://github.com/coveo/ui-kit/issues/5124)
