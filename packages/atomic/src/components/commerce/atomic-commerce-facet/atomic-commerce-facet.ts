@@ -27,15 +27,15 @@ import {
 } from '@coveo/headless/commerce';
 import {CSSResultGroup, LitElement, html, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
+import {FacetInfo} from '../../common/facets/facet-common-store';
+import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
-} from '../../../common/facets/facet-search/stencil-facet-search-utils';
-import {FacetValueProps} from '../../../common/facets/facet-value/facet-value';
-import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+} from '../../common/facets/facet-search/stencil-facet-search-utils';
+import {FacetValueProps} from '../../common/facets/facet-value/facet-value';
+import {initializePopover} from '../../common/facets/popover/popover-type';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import styles from './atomic-commerce-facet.tw.css';
 
 /**

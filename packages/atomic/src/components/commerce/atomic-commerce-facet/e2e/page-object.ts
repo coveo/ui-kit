@@ -1,5 +1,5 @@
 import type {Page} from '@playwright/test';
-import {AnyFacetPageObject} from '../../e2e/page-object';
+import {AnyFacetPageObject} from '../../facets/e2e/page-object';
 
 export class FacetPageObject extends AnyFacetPageObject<'atomic-commerce-facet'> {
   constructor(page: Page) {
