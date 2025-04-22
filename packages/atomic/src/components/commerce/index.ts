@@ -1,2 +1,2 @@
 // Auto-generated file
-export {};
+export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager.js';
