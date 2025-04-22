@@ -33,16 +33,16 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
 /**
  * The `atomic-commerce-pager` component enables users to navigate through paginated product results.
  *
- * @part buttons - The list of the next/previous buttons and page-buttons.
- * @part page-buttons - The list of page buttons.
- * @part page-button - The page button.
+ * @part buttons - The list of all buttons rendered by the component.
+ * @part page-buttons - The list of all page buttons.
+ * @part page-button - The individual page buttons.
  * @part active-page-button - The active page button.
- * @part previous-button - The previous button.
- * @part next-button - The next button.
- * @part previous-button-icon - Icon of the previous button.
- * @part next-button-icon - Icon of the next button.
+ * @part previous-button - The "previous page" button.
+ * @part next-button - The "next page" button.
+ * @part previous-button-icon - The "previous page" button icon.
+ * @part next-button-icon - The "next page" button icon.
  *
- * @event atomic/scrollToTop - Emitted when the user clicks on a page button.
+ * @event atomic/scrollToTop - Emitted when the user clicks the next or previous button, or a page button.
  * @alpha
  */
 @customElement('atomic-commerce-pager')
@@ -61,7 +61,7 @@ export class AtomicCommercePager
   public pagerState!: PaginationState;
 
   /**
-   * Specifies how many page buttons to display in the pager.
+   * The maximum number of page buttons to display.
    */
   @property({reflect: true, attribute: 'number-of-pages', type: Number})
   numberOfPages = 5;
