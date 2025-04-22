@@ -123,6 +123,11 @@ describe('c-quantic-insight-summary', () => {
     it('should subscribe the search box and query summary state changes', async () => {
       createTestComponent();
       await flushPromises();
+
+      expect(functionsMocks.searchBoxStateSubscriber).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.querySummaryStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
     });
   });
 
@@ -159,8 +164,8 @@ describe('c-quantic-insight-summary', () => {
     });
   });
 
-  describe('when no search query is executed', () => {
-    it('should display the default insight panel message', async () => {
+  describe('when the searchbox state query value is empty', () => {
+    it('should display the default insight summary message', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -177,7 +182,7 @@ describe('c-quantic-insight-summary', () => {
     });
   });
 
-  describe('when a search query is executed', () => {
+  describe('when the searchbox state query value is not empty', () => {
     beforeEach(() => {
       searchBoxState = {
         value: 'test',
@@ -207,7 +212,7 @@ describe('c-quantic-insight-summary', () => {
       };
     });
 
-    it('should not display the Insight Panel Summary component', async () => {
+    it('should not display the Insight Summary component', async () => {
       const element = createTestComponent();
       await flushPromises();
 

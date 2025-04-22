@@ -885,7 +885,7 @@
     <name>quantic_CloseNotification</name>
   </customLabels>
   <customLabels>
-    <label>Perspectives liées à ce cas</label>
+    <label>Contenu recommandé pour ce cas</label>
     <name>quantic_InsightRelatedToThisCase</name>
   </customLabels>
 </Translations>
