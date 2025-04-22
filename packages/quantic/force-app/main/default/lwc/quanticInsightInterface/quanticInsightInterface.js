@@ -46,8 +46,6 @@ export default class QuanticInsightInterface extends LightningElement {
   ariaLiveEventsBound = false;
   /** @type {function} */
   unsubscribeInsightInterface;
-  /** @type {string} */
-  a;
 
   /** @type {string} */
   analyticsOriginContext = 'InsightPanel';
