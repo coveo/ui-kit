@@ -3,10 +3,10 @@ import {facetOptionsReducer as facetOptions} from '../../../../../features/facet
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
 import {NumericFacetValue} from '../../../../../features/facets/range-facets/numeric-facet-set/interfaces/response.js';
 import {
-  deselectAllNumericFacetValues,
   registerNumericFacet,
   validateManualNumericRanges,
 } from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
+import * as numericFacetActions from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions.js';
 import {executeToggleNumericFacetSelect} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions.js';
 import {numericFacetSetReducer as numericFacetSet} from '../../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
 import {searchReducer as search} from '../../../../../features/search/search-slice.js';
@@ -162,8 +162,12 @@ describe('numeric facet', () => {
     testCommonToggleSingleSelect(facetValue);
 
     it('does not dispatch a #deselectAllNumericFacetValues action', () => {
+      const spy = vi.spyOn(
+        numericFacetActions,
+        'deselectAllNumericFacetValues'
+      );
       numericFacet.toggleSingleSelect(facetValue());
-      expect(deselectAllNumericFacetValues).not.toHaveBeenCalledWith(facetId);
+      expect(spy).not.toHaveBeenCalledWith(facetId);
     });
   });
 
