@@ -3013,32 +3013,6 @@ export declare interface AtomicCommerceSearchBox extends LitAtomicCommerceSearch
 }
 
 @ProxyCmp({
-  inputs: ['icon'],
-  methods: ['updateIcon', 'initialize', 'initBindings'],
-  defineCustomElementFn: () => {customElements.get('atomic-icon') || customElements.define('atomic-icon', LitAtomicIcon);}
-})
-@Component({
-  selector: 'atomic-icon',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon']
-})
-export class AtomicIcon {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicIcon extends LitAtomicIcon {
-
-}
-
-@ProxyCmp({
   inputs: ['element', 'error'],
   methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
@@ -3061,6 +3035,32 @@ export class AtomicComponentError {
 }
 
 export declare interface AtomicComponentError extends LitAtomicComponentError {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon'],
+  methods: ['updateIcon', 'initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-icon') || customElements.define('atomic-icon', LitAtomicIcon);}
+})
+@Component({
+  selector: 'atomic-icon',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon']
+})
+export class AtomicIcon {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicIcon extends LitAtomicIcon {
 
 }
 
