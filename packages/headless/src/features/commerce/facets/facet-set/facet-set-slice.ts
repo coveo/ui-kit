@@ -684,9 +684,16 @@ function insertNewValue(
     firstIdleIndex === -1 ? values.length : firstIdleIndex;
 
   const valuesBefore = values.slice(0, indexToInsertAt);
-  const valuesAfter = values.slice(indexToInsertAt + 1);
+  const valuesAfter = values.slice(indexToInsertAt);
 
   facetRequest.values = [...valuesBefore, facetValue, ...valuesAfter];
+
+  if (firstIdleIndex > -1) {
+    facetRequest.values = facetRequest.values.slice(
+      0,
+      facetRequest.numberOfValues
+    );
+  }
 
   facetRequest.numberOfValues = facetRequest.values.length;
 }
