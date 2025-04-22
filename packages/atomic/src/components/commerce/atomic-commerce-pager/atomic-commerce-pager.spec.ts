@@ -9,31 +9,15 @@ import {createAppLoadedListener} from '../../common/interface/store';
 import './atomic-commerce-pager';
 import {AtomicCommercePager} from './atomic-commerce-pager';
 
-const mocks = vi.hoisted(() => {
-  return {
-    pagerState: {
-      page: 0,
-      totalPages: 10,
-      pageSize: 10,
-      totalEntries: 100,
-    },
-    pager: {
-      previousPage: vi.fn(),
-      selectPage: vi.fn(),
-      nextPage: vi.fn(),
-    },
-    searchOrListing: vi.fn(() => ({
-      pagination: vi.fn(() => ({
-        previousPage: vi.fn(),
-        selectPage: vi.fn(),
-        nextPage: vi.fn(),
-      })),
-    })),
-  };
+let mocks = await vi.hoisted(async () => {
+  const mockFactory = await import('./spec-mocks');
+  return mockFactory.default;
 });
 
 vi.mock('@/src/components/common/interface/store', () => ({
-  createAppLoadedListener: vi.fn(),
+  createAppLoadedListener: vi.fn((_, callback) => {
+    callback(true);
+  }),
 }));
 
 vi.mock('@/src/decorators/error-guard', () => ({
@@ -91,12 +75,16 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
 
 vi.mock('@coveo/headless/commerce', () => {
   return {
-    buildProductListing: mocks.searchOrListing,
-    buildSearch: mocks.searchOrListing,
+    buildProductListing: mocks.listing,
+    buildSearch: mocks.search,
   };
 });
 
 describe('AtomicCommercePager', () => {
+  beforeEach(async () => {
+    mocks = (await import('./spec-mocks')).default;
+  });
+
   let element: AtomicCommercePager;
 
   const setupElement = async ({
@@ -110,8 +98,6 @@ describe('AtomicCommercePager', () => {
       element.setAttribute('number-of-pages', numberOfPages.toString());
     }
 
-    //@ts-expect-error - manually setting up this private property since a mocked implementation of createAppLoadedListener created problems. Couldn't manage keeping it to true when I needed it.
-    element.isAppLoaded = true;
     element.initialize();
 
     return element;
@@ -129,7 +115,7 @@ describe('AtomicCommercePager', () => {
     });
 
     test('should call buildProductListing with engine when interfaceElement.type is product-listing', () => {
-      const paginationMock = {id: 'pager'};
+      const paginationMock = {id: 'pager  listing'};
       const buildProductListingMock = vi
         .spyOn(headless, 'buildProductListing')
         .mockReturnValue({pagination: vi.fn(() => paginationMock)} as never);
@@ -137,12 +123,14 @@ describe('AtomicCommercePager', () => {
 
       element.initialize();
 
-      expect(buildProductListingMock).toHaveBeenCalled();
+      expect(buildProductListingMock).toHaveBeenCalledWith(
+        element.bindings.engine
+      );
       expect(element.pager).toBe(paginationMock);
     });
 
     test('should call buildSearch with engine when interfaceElement.type is search', () => {
-      const paginationMock = {id: 'pager'};
+      const paginationMock = {id: 'pager search'};
       const buildSearchMock = vi
         .spyOn(headless, 'buildSearch')
         .mockReturnValue({
@@ -167,6 +155,17 @@ describe('AtomicCommercePager', () => {
   });
 
   describe('when rendering', () => {
+    const locators = {
+      page1: page.getByLabelText('Page 1'),
+      page2: page.getByLabelText('Page 2'),
+      page3: page.getByLabelText('Page 3'),
+      page4: page.getByLabelText('Page 4'),
+      page5: page.getByLabelText('Page 5'),
+      page6: page.getByLabelText('Page 6'),
+      previous: page.getByLabelText('Previous'),
+      next: page.getByLabelText('Next'),
+    };
+
     afterEach(() => {
       mocks.pagerState = {
         page: 0,
@@ -179,25 +178,21 @@ describe('AtomicCommercePager', () => {
     test('should show the proper page range by default', async () => {
       await setupElement();
 
-      await expect.element(page.getByLabelText('Page 1')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 2')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 3')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 4')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 5')).toBeInTheDocument();
-      await expect
-        .element(page.getByLabelText('Page 6'))
-        .not.toBeInTheDocument();
+      await expect.element(locators.page1).toBeInTheDocument();
+      await expect.element(locators.page2).toBeInTheDocument();
+      await expect.element(locators.page3).toBeInTheDocument();
+      await expect.element(locators.page4).toBeInTheDocument();
+      await expect.element(locators.page5).toBeInTheDocument();
+      await expect.element(locators.page6).not.toBeInTheDocument();
     });
 
     test('number-of-pages should affect the range of pages', async () => {
       await setupElement({numberOfPages: 3});
 
-      await expect.element(page.getByLabelText('Page 1')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 2')).toBeInTheDocument();
-      await expect.element(page.getByLabelText('Page 3')).toBeInTheDocument();
-      await expect
-        .element(page.getByLabelText('Page 4'))
-        .not.toBeInTheDocument();
+      await expect.element(locators.page1).toBeInTheDocument();
+      await expect.element(locators.page2).toBeInTheDocument();
+      await expect.element(locators.page3).toBeInTheDocument();
+      await expect.element(locators.page4).not.toBeInTheDocument();
     });
 
     test('should throw an error when numberOfPages is less than 0', async () => {
@@ -209,17 +204,19 @@ describe('AtomicCommercePager', () => {
     test('should not render when there are no pages', async () => {
       mocks.pagerState.totalPages = 0;
 
-      await expect
-        .element(page.getByLabelText('Page 1'))
-        .not.toBeInTheDocument();
+      await expect.element(locators.page1).not.toBeInTheDocument();
+    });
+
+    test('should not render when there is only 1 page', async () => {
+      mocks.pagerState.totalPages = 0;
+
+      await expect.element(locators.page1).not.toBeInTheDocument();
     });
 
     test('should disable the previous button when on the first page', async () => {
       await setupElement();
 
-      await expect
-        .element(page.getByLabelText('Previous'))
-        .toHaveAttribute('disabled');
+      await expect.element(locators.previous).toHaveAttribute('disabled');
     });
 
     test('should disable the next button when on the last page', async () => {
@@ -227,9 +224,7 @@ describe('AtomicCommercePager', () => {
       mocks.pagerState.totalPages = 10;
       await setupElement();
 
-      await expect
-        .element(page.getByLabelText('Next'))
-        .toHaveAttribute('disabled');
+      await expect.element(locators.next).toHaveAttribute('disabled');
     });
 
     test('should call focusOnFirstResultAndScrollToTop and dispatch atomic/scrollToTop when clicking on the previous button', async () => {
@@ -241,7 +236,7 @@ describe('AtomicCommercePager', () => {
       );
       const eventSpy = vi.spyOn(element, 'dispatchEvent');
 
-      await page.getByLabelText('Previous').click();
+      await locators.previous.click();
 
       expect(focusSpy).toHaveBeenCalled();
       expect(eventSpy).toHaveBeenCalledWith(
@@ -256,7 +251,7 @@ describe('AtomicCommercePager', () => {
       const previousPageSpy = vi.spyOn(element.pager, 'previousPage');
       const eventSpy = vi.spyOn(element, 'dispatchEvent');
 
-      await page.getByLabelText('Previous').click();
+      await locators.previous.click();
 
       expect(previousPageSpy).toHaveBeenCalled();
       expect(eventSpy).toHaveBeenCalledWith(
@@ -273,7 +268,7 @@ describe('AtomicCommercePager', () => {
       );
       const eventSpy = vi.spyOn(element, 'dispatchEvent');
 
-      await page.getByLabelText('Next').click();
+      await locators.next.click();
 
       expect(focusSpy).toHaveBeenCalled();
       expect(eventSpy).toHaveBeenCalledWith(
@@ -286,7 +281,7 @@ describe('AtomicCommercePager', () => {
       element = await setupElement();
       const nextPageSpy = vi.spyOn(element.pager, 'nextPage');
 
-      await page.getByLabelText('Next').click();
+      await locators.next.click();
 
       expect(nextPageSpy).toHaveBeenCalled();
     });
@@ -298,7 +293,7 @@ describe('AtomicCommercePager', () => {
         'focusOnFirstResultAndScrollToTop'
       );
 
-      await page.getByLabelText('Page 2').click();
+      await locators.page2.click();
 
       expect(focusSpy).toHaveBeenCalled();
     });
@@ -307,7 +302,7 @@ describe('AtomicCommercePager', () => {
       element = await setupElement();
       const selectPageSpy = vi.spyOn(element.pager, 'selectPage');
 
-      await page.getByLabelText('Page 2').click();
+      await locators.page2.click();
 
       expect(selectPageSpy).toHaveBeenCalled();
     });
@@ -315,25 +310,19 @@ describe('AtomicCommercePager', () => {
     test('should render the proper value on the page buttons', async () => {
       await setupElement();
 
-      await expect
-        .element(page.getByLabelText('Page 1'))
-        .toHaveAttribute('value', '1');
-      await expect
-        .element(page.getByLabelText('Page 2'))
-        .toHaveAttribute('value', '2');
-      await expect
-        .element(page.getByLabelText('Page 3'))
-        .toHaveAttribute('value', '3');
+      await expect.element(locators.page1).toHaveAttribute('value', '1');
+      await expect.element(locators.page2).toHaveAttribute('value', '2');
+      await expect.element(locators.page3).toHaveAttribute('value', '3');
     });
 
     test('should have the selected button as active', async () => {
       await setupElement();
 
       await expect
-        .element(page.getByLabelText('Page 1'))
+        .element(locators.page1)
         .toHaveAttribute('part', 'page-button active-page-button');
       await expect
-        .element(page.getByLabelText('Page 2'))
+        .element(locators.page2)
         .toHaveAttribute('part', 'page-button');
     });
   });
