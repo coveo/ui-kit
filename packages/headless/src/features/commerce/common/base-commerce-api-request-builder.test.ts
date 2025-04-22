@@ -4,7 +4,7 @@ import {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
-} from '../../../app/navigatorContextProvider.js';
+} from '../../../app/navigator-context-provider.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {
   getCartInitialState,

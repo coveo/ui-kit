@@ -9,7 +9,7 @@ import {
   InteractiveItemContextEvent,
   ItemContextEvent,
 } from '../../common/item-list/item-decorators';
-import {resultComponentClass} from '../../common/item-list/item-list-common';
+import {resultComponentClass} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
   ItemDisplayDensity,

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.4.16",
+  "version": "2.4.18",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -29,9 +29,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .; publint",
-    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
@@ -40,11 +40,11 @@
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "dependencies": {
-    "@coveo/headless": "3.22.0"
+    "@coveo/headless": "3.22.2"
   },
   "devDependencies": {
-    "@coveo/release": "1.0.0",
-    "@testing-library/react": "14.3.1",
+    "@coveo/ci": "1.0.0",
+    "@testing-library/react": "16.3.0",
     "@typescript-eslint/eslint-plugin": "7.18.0",
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-testing-library": "7.1.1",
@@ -56,14 +56,18 @@
     "vitest": "3.0.6"
   },
   "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19",
+    "@types/react": "^18 || ^19",
+    "@types/react-dom": "^18 || ^19"
   },
-  "optionalDependencies": {
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0"
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "@types/react-dom": {
+      "optional": true
+    }
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

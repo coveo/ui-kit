@@ -16,6 +16,20 @@ export default class ExampleQuanticPager extends LightningElement {
         'Define which use case to test. Possible values are: search, insight',
       defaultValue: 'search',
     },
+    {
+      attribute: 'disableQueryAutoCorrection',
+      label: 'Disable Query Auto-Correction',
+      description:
+        'Whether to disable automatically applying corrections for queries that would otherwise return no results.',
+      defaultValue: false,
+    },
+    {
+      attribute: 'queryCorrectionMode',
+      label: 'Query Correction Mode',
+      description:
+        'Defines which query correction system to use. Possible values are: legacy, next',
+      defaultValue: 'legacy',
+    },
   ];
 
   get notConfigured() {

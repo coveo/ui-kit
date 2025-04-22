@@ -114,7 +114,6 @@ useCaseTestCases.forEach((useCase) => {
           const expectedNumberOfDropdownOptions = 2;
           const expectedActionCause = 'interfaceChange';
           const expectedTabValue = 'Tab 4';
-          const expectedOriginContext = 'Search';
 
           const searchResponsePromise = search.waitForSearchResponse();
 
@@ -136,7 +135,6 @@ useCaseTestCases.forEach((useCase) => {
             expect.objectContaining({
               analytics: expect.objectContaining({
                 actionCause: expectedActionCause,
-                originContext: expectedOriginContext,
               }),
               tab: expectedTabValue,
             })

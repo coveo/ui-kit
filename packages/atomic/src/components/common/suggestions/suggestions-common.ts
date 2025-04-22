@@ -1,4 +1,4 @@
-import {VNode} from '@stencil/core';
+import {nothing, TemplateResult} from 'lit';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
@@ -15,45 +15,7 @@ export interface SearchBoxSuggestionElement {
   /**
    * Rendered content of the element.
    */
-  content: Element | VNode;
-  /**
-   * Hook called when the suggestion is selected.
-   * @param e DOM event.
-   */
-  onSelect?(e: Event): void;
-  /**
-   * The query associated with the suggestion which will replace the query in the search box if the suggestion is selected.
-   */
-  query?: string;
-  /**
-   * For improved accessibility, set this property with additional information.
-   * https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
-   */
-  ariaLabel?: string;
-  /**
-   * Adds a specific shadow part attribute that can be selected with the CSS ::part pseudo-element.
-   * https://developer.mozilla.org/en-US/docs/Web/CSS/::part
-   */
-  part?: string;
-  /**
-   * Whether to hide the suggestion when it's the last one in the list.
-   */
-  hideIfLast?: boolean;
-}
-
-/**
- * Element which will be rendered in the list of suggestions.
- */
-export interface SearchBoxSuggestionElement {
-  /**
-   * Stable identity which enables Stencil to reuse DOM elements for better performance.
-   * The best way to pick a key is to use a string that uniquely identifies that list item among its siblings (often your data will already have IDs).
-   */
-  key: string;
-  /**
-   * Rendered content of the element.
-   */
-  content: Element | VNode;
+  content: TemplateResult | typeof nothing;
   /**
    * Hook called when the selection is selected.
    * @param e DOM event.

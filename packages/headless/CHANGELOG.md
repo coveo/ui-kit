@@ -1,3 +1,11 @@
+## <small>3.22.2 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
+## <small>3.22.1 (2025-04-09)</small>
+
+- fix(generated answer): fix citations not being reset correctly when clearing the query (#5135) ([dae399f](https://github.com/coveo/ui-kit/commits/dae399f)), closes [#5135](https://github.com/coveo/ui-kit/issues/5135)
+
 ## 3.22.0 (2025-04-02)
 
 - feat(headless commerce): support triggers in product listing pages (#5117) ([d23dbe9](https://github.com/coveo/ui-kit/commits/d23dbe9)), closes [#5117](https://github.com/coveo/ui-kit/issues/5117)

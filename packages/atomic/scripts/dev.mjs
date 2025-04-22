@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import {exec} from 'node:child_process';
 import {watch} from 'node:fs';
-import net from 'node:net';
 import ora from 'ora';
 import waitOn from 'wait-on';
 
@@ -105,6 +104,11 @@ async function startServers() {
   // Script that starts the Vite server and copies files for CDN mode
   exec('node ./scripts/start-vite.mjs', {stdio: 'ignore'});
 
+  // Run headless in dev as well
+  exec('nx run headless:dev', {
+    stdio: 'ignore',
+  });
+
   console.log(
     chalk.yellow('⌛ Waiting for Storybook (4400) and Vite (3333)...')
   );
@@ -126,7 +130,9 @@ watch('src', {recursive: true}, async (_, filename) => {
     filename.endsWith('.mdx') ||
     filename.endsWith('.new.stories.tsx') ||
     filename.endsWith('.spec.ts') ||
-    filename.includes('e2e')
+    filename.includes('e2e') ||
+    filename.endsWith('index.ts') ||
+    filename.endsWith('lazy-index.ts')
   ) {
     return;
   }

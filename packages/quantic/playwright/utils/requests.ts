@@ -7,6 +7,7 @@ export const classifyRequestRegex =
   /\/rest\/organizations\/.*\/caseassists\/.*\/classify/;
 export const documentsSuggestRequestRegex =
   /\/rest\/organizations\/.*\/caseassists\/.*\/documents\/suggest/;
+export const facetRequestRegex = /\/rest\/search\/v2\/facet\?organizationId=.*/;
 
 export const analyticsSearchesUrlRegex =
   /\/rest(\/ua)?\/v15\/analytics\/search(es)?/;
@@ -55,4 +56,12 @@ export function isCollectEvent(request: Request): boolean {
   return (
     request.method() === 'POST' && analyticsCollectUrlRegex.test(request.url())
   );
+}
+
+/**
+ * Indicates whether the specified request corresponds to a search api request.
+ * @param request The request to check.
+ */
+export function isSearchRequest(request: Request): boolean {
+  return request.method() === 'POST' && searchRequestRegex.test(request.url());
 }

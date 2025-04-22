@@ -12,7 +12,7 @@ import { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 import { i18n } from "i18next";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
+import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
@@ -26,7 +26,7 @@ import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 import { Section } from "./components/common/atomic-layout-section/sections";
 import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
 import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
-import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
@@ -42,7 +42,7 @@ export { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 export { i18n } from "i18next";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/item-list-common";
+export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
@@ -56,7 +56,7 @@ export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insi
 export { Section } from "./components/common/atomic-layout-section/sections";
 export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
 export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
-export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/atomic-product-children";
+export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";

@@ -1,3 +1,16 @@
+## 3.17.0 (2025-04-16)
+
+- test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)
+- test(quantic): e2e tests and unit tests added for quantic facet (#5141) ([0de4aa9](https://github.com/coveo/ui-kit/commits/0de4aa9)), closes [#5141](https://github.com/coveo/ui-kit/issues/5141)
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- feat(quantic): added origin context to quantic insight interface (#5142) ([4cde171](https://github.com/coveo/ui-kit/commits/4cde171)), closes [#5142](https://github.com/coveo/ui-kit/issues/5142)
+
+## <small>3.16.5 (2025-04-09)</small>
+
+- fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
+
 ## <small>3.16.4 (2025-04-03)</small>
 
 - chore(quantic): disable debug on jsdoc (#5134) ([6a3e2f5](https://github.com/coveo/ui-kit/commits/6a3e2f5)), closes [#5134](https://github.com/coveo/ui-kit/issues/5134)
