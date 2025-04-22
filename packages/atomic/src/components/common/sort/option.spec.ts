@@ -43,7 +43,7 @@ describe('renderSortOption', () => {
     await expect.element(option).toHaveTextContent('Foo');
   });
 
-  it('renders as selected when the selected prop is false', async () => {
+  it('renders as not selected when the selected prop is false', async () => {
     await setupElement({
       selected: false,
     });

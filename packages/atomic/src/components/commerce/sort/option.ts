@@ -2,7 +2,7 @@ import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {SortCriterion} from '@coveo/headless/commerce';
 import {renderSortOption, SortOptionProps} from '../../common/sort/option';
 
-interface CommerceSortOptionProps
+export interface CommerceSortOptionProps
   extends Omit<SortOptionProps, 'label' | 'value'> {
   sort: SortCriterion;
 }

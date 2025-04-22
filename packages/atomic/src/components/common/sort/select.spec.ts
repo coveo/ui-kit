@@ -42,15 +42,17 @@ describe('renderSortSelect', () => {
     );
   };
 
-  it('renders correctly with default props', async () => {
-    await setupElement(html`<option value="foo">Foo</option>`);
+  it('renders correctly with valid props', async () => {
+    const element = await setupElement(html`<option value="foo">Foo</option>`);
+
+    const separator = () => locators.separator(element);
 
     await expect
       .element(locators.select)
       .toHaveAttribute('aria-label', 'Sort by');
     await expect.element(locators.select).toHaveAttribute('id', 'sort-select');
-
     await expect.element(locators.option.getByText('Foo')).toBeInTheDocument();
+    await expect.element(separator()).toBeInTheDocument();
   });
 
   it('calls onSelect when an option is selected', async () => {
