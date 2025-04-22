@@ -1,10 +1,10 @@
 import {h, FunctionalComponent, VNode, Fragment} from '@stencil/core';
 import {JSXBase} from '@stencil/core/internal';
 import {isMacOS} from '../../../utils/device-utils';
-import {AnyBindings} from '../../common/interface/bindings';
-import {SearchBoxSuggestionElement} from '../../common/suggestions/stencil-suggestions-common';
+import {AnyBindings} from '../interface/bindings';
+import {SearchBoxSuggestionElement} from '../suggestions/stencil-suggestions-common';
 
-export const queryDataAttribute = 'data-query';
+const queryDataAttribute = 'data-query';
 
 type Side = 'left' | 'right';
 

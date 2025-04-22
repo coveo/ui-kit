@@ -1,6 +1,6 @@
 import {isNullOrUndefined} from '@coveo/bueno';
-import {forceUpdate} from '@stencil/core';
 import DOMPurify from 'dompurify';
+import {LitElement} from 'lit';
 import {debounce} from '../../../utils/debounce-utils';
 import {promiseTimeout} from '../../../utils/promise-utils';
 import {
@@ -47,7 +47,7 @@ interface SearchBoxProps {
   getNumberOfSuggestionsToDisplay: () => number;
   getSuggestionDelay: () => number;
   getLogger: () => Pick<typeof console, 'warn'>;
-  getHost: () => HTMLElement;
+  getHost: () => LitElement;
 }
 
 export class SuggestionManager<SearchBoxController> {
@@ -112,7 +112,7 @@ export class SuggestionManager<SearchBoxController> {
 
   public updateActiveDescendant(id = '') {
     this.activeDescendant = id;
-    forceUpdate(this.ownerSearchBoxProps.getHost());
+    this.ownerSearchBoxProps.getHost().requestUpdate();
   }
 
   public updateKeyboardActiveDescendant(id = '') {
@@ -370,7 +370,7 @@ export class SuggestionManager<SearchBoxController> {
     );
     this.suggestedQuery = suggestedQuery;
     this.updateSuggestionElements(suggestedQuery);
-    forceUpdate(this.ownerSearchBoxProps.getHost());
+    this.ownerSearchBoxProps.getHost().requestUpdate();
   }
 
   private updateSuggestionElements(query: string) {
@@ -387,7 +387,7 @@ export class SuggestionManager<SearchBoxController> {
 
   public forceUpdate() {
     this.updateSuggestionElements(this.suggestedQuery);
-    forceUpdate(this.ownerSearchBoxProps.getHost());
+    this.ownerSearchBoxProps.getHost().requestUpdate();
   }
 
   private isPanelInFocus(
