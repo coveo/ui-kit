@@ -41,7 +41,7 @@ export type {
 export type {LoggerOptions} from './app/logger.js';
 
 export type {LogLevel} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 // State
 export type {

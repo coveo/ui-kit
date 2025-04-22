@@ -1,7 +1,7 @@
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
-} from '../../../app/navigatorContextProvider.js';
+} from '../../../app/navigator-context-provider.js';
 import {buildMockPaginatedCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {buildMockCommerceFacetRequest} from '../../../test/mock-commerce-facet-request.js';
 import {buildMockCommerceFacetSlice} from '../../../test/mock-commerce-facet-slice.js';
