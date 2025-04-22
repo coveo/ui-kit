@@ -2,11 +2,11 @@
   <template lwc:if={wasQueryModifierByQueryTrigger}>
     <div class="slds-var-m-vertical_x-small">
       <p class="slds-var-m-*_xx-small">
-        <lightning-formatted-rich-text data-cy="showing-results-for-label"
+        <lightning-formatted-rich-text data-testid="showing-results-for-label"
           value={showingResultsForLabel}></lightning-formatted-rich-text>
       </p>
-      <span data-cy="search-instead-for-label">{labels.searchInsteadFor} </span>
-      <button data-cy="undo-button" class="slds-button" onclick={undo}>
+      <span data-testid="search-instead-for-label">{labels.searchInsteadFor} </span>
+      <button data-testid="undo-button" class="slds-button" onclick={undo}>
         <span class="slds-text-title_bold">{originalTriggeredQuery}</span>
       </button>
     </div>

@@ -18,12 +18,14 @@ import {NextJsAppRouterNavigatorContext} from '../../navigatorContextProvider';
  * The context values are hard-coded to represent a specific user segment (age group 30-45 with a main interest in sports) as the initial context.
  * These values will be added to the payload of the search request when the search page is rendered.
  */
-export default async function Search(url: {
-  searchParams: {[key: string]: string | string[] | undefined};
+export default async function Search({
+  searchParams,
+}: {
+  searchParams: Promise<{[key: string]: string | string[] | undefined}>;
 }) {
   // Convert URL search parameters into a format that Coveo's search engine can understand.
   const {toSearchParameters} = buildSSRSearchParameterSerializer();
-  const searchParameters = toSearchParameters(url.searchParams);
+  const searchParameters = toSearchParameters(await searchParams);
 
   // Defines hard-coded context values to simulate user-specific information.
   const contextValues = {
@@ -32,7 +34,7 @@ export default async function Search(url: {
   };
 
   // Sets the navigator context provider to use the newly created `navigatorContext` before fetching the app static state
-  const navigatorContext = new NextJsAppRouterNavigatorContext(headers());
+  const navigatorContext = new NextJsAppRouterNavigatorContext(await headers());
 
   setNavigatorContextProvider(() => navigatorContext);
 
