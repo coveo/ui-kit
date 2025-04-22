@@ -53,6 +53,7 @@ export default class QuanticInsightInterface extends LightningElement {
   analyticsOriginContext = 'InsightPanel';
 
   disconnectedCallback() {
+    this.unsubscribeInsightInterface?.();
     destroyEngine(this.engineId);
     if (this.ariaLiveEventsBound) {
       this.removeEventListener(
@@ -163,7 +164,6 @@ export default class QuanticInsightInterface extends LightningElement {
           composed: true,
         })
       );
-      this.unsubscribeInsightInterface?.();
       this.initialized = true;
     }
   }

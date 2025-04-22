@@ -184,7 +184,7 @@ describe('c-quantic-insight-interface', () => {
       };
     });
 
-    it('should not dispatch the insight interface initialized event', async () => {
+    it('should dispatch the insight interface initialized event', async () => {
       createTestComponent();
       await flushPromises();
 
