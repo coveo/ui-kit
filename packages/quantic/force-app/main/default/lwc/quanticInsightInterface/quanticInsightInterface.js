@@ -44,6 +44,10 @@ export default class QuanticInsightInterface extends LightningElement {
   hasRendered = false;
   /** @type {boolean} */
   ariaLiveEventsBound = false;
+  /** @type {function} */
+  unsubscribeInsightInterface;
+  /** @type {string} */
+  a;
 
   /** @type {string} */
   analyticsOriginContext = 'InsightPanel';
@@ -159,7 +163,7 @@ export default class QuanticInsightInterface extends LightningElement {
           composed: true,
         })
       );
-      this.unsubscribeInsightInterface();
+      this.unsubscribeInsightInterface?.();
       this.initialized = true;
     }
   }
