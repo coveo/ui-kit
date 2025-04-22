@@ -7,6 +7,7 @@ import {expect, vi} from 'vitest';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
+// TODO: put in separate PR
 let mocks = await vi.hoisted(async () => (await import('./factory')).default());
 
 vi.mock('@coveo/headless/commerce', () => {

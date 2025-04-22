@@ -117,7 +117,6 @@ describe('checkbox', () => {
       'grid',
       'place-items-center',
       'rounded',
-      'no-outline',
       'hover:border-primary-light',
       'focus-visible:border-primary-light'
     );
