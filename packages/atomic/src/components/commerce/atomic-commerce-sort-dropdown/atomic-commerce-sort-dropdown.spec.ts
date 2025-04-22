@@ -1,5 +1,6 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
@@ -27,16 +28,20 @@ const mocks = vi.hoisted(() => {
       isSortedBy: vi.fn(),
       sortBy: vi.fn(),
     },
-    searchOrListing: vi.fn(() => ({
+    listing: vi.fn(() => ({
       sort: vi.fn(),
     })),
+    search: vi.fn(() => ({
+      sort: vi.fn(),
+    })),
+    bindingsType: 'product-listing',
   };
 });
 
 vi.mock('@coveo/headless/commerce', () => {
   return {
-    buildProductListing: mocks.searchOrListing,
-    buildSearch: mocks.searchOrListing,
+    buildProductListing: mocks.listing,
+    buildSearch: mocks.search,
   };
 });
 
@@ -53,11 +58,11 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
             },
           },
           interfaceElement: {
-            type: 'product-listing',
+            type: mocks.bindingsType,
           } as HTMLAtomicCommerceInterfaceElement,
         };
 
-        this.searchOrListing = mocks.searchOrListing;
+        this.searchOrListing = mocks.listing;
         this.sort = mocks.sort;
 
         createTestI18n().then((i18n) => {
@@ -159,5 +164,20 @@ describe('AtomicCommerceSortDropdown', () => {
 
     await expect.element(placeholder()).toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
+  });
+
+  it('should call buildProductListing when interfaceElement is product-listing', async () => {
+    const element = await setupElement();
+    await element.updateComplete;
+
+    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine);
+  });
+
+  it('should call buildSearch when interfaceElement is search', async () => {
+    mocks.bindingsType = 'search';
+    const element = await setupElement();
+    element.initialize();
+
+    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
   });
 });
