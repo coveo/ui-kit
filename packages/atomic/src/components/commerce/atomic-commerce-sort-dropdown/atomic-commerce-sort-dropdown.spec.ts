@@ -111,11 +111,17 @@ describe('AtomicCommerceSortDropdown', () => {
     expect(el).toBeInstanceOf(AtomicCommerceSortDropdown);
   });
 
-  it('renders label and dropdown correctly', async () => {
+  it('renders label correctly', async () => {
     const element = await setupElement();
     await element.updateComplete;
 
     await expect.element(locators.label).toBeInTheDocument();
+  });
+
+  it('renders dropdown select correctly', async () => {
+    const element = await setupElement();
+    await element.updateComplete;
+
     await expect.element(locators.select).toBeInTheDocument();
   });
 
