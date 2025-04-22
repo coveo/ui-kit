@@ -13,26 +13,37 @@ jest.mock('c/quanticUtils', () => ({
   },
   I18nUtils: {
     format: jest.fn(),
-    formatDate: jest.fn(),
+    formatDate: jest.fn(
+      (date) =>
+        `${date.getUTCFullYear()}-${date.getUTCMonth() + 1}-${date.getUTCDate()}`
+    ),
     getShortDatePattern: jest.fn(),
     getLabelNameWithCount: jest.fn(),
   },
-  fromSearchApiDate: jest.fn(),
+  fromSearchApiDate: jest.fn((value) => value),
 }));
 jest.mock('c/quanticHeadlessLoader');
 
 const selectors = {
-  facetContent: '[data-test="facet-content"]',
+  facetContent: '[data-testid="facet-content"]',
+  cardContainer: 'c-quantic-card-container',
   componentError: 'c-quantic-component-error',
   placeholder: 'c-quantic-placeholder',
   datePicker: '[data-testid="facet__date-picker"]',
+  facetValue: 'c-quantic-facet-value',
+  clearSelectionButton: '[data-testid="clear-selection-button"]',
+  facetBody: '[data-testid="facet__body"]',
+  facetCollapseToggle: 'lightning-button-icon',
 };
 
 const exampleFacetId = 'example facet id';
 const exampleField = 'exampleField';
 const exampleFilterId = `${exampleFacetId}_input`;
+const exampleStartDate = '2025-1-1';
+const exampleEndDate = '2025-1-2';
+
 const exampleFacetValues = [
-  {start: '2025-04-06', end: '2025-04-07', numberOfResults: 10},
+  {start: exampleStartDate, end: exampleEndDate, numberOfResults: 10},
 ];
 const exampleEngine = {
   id: 'example engine id',
@@ -63,7 +74,7 @@ const initialSearchStatusState = {
   isLoading: false,
   hasError: false,
   firstSearchExecuted: true,
-  hasResults: false,
+  hasResults: true,
 };
 let searchStatusState = initialSearchStatusState;
 
@@ -73,10 +84,13 @@ const expectedValueError = `The ${exampleField} c-quantic-timeframe-facet requir
 const functionsMocks = {
   buildDateFacet: jest.fn(() => ({
     subscribe: functionsMocks.dateFacetStateSubscriber,
+    toggleSingleSelect: functionsMocks.toggleSingleSelect,
     state: facetState,
+    deselectAll: functionsMocks.deselectAll,
   })),
   buildDateFilter: jest.fn(() => ({
     subscribe: functionsMocks.dateFilterStateSubscriber,
+    clear: functionsMocks.clear,
     state: filterState,
   })),
   stopWatching: jest.fn(),
@@ -103,6 +117,10 @@ const functionsMocks = {
   searchStatusStateUnsubscriber: jest.fn(),
   dateFilterStateUnsubscriber: jest.fn(),
   registerToStore: jest.fn(),
+  eventHandler: jest.fn(),
+  toggleSingleSelect: jest.fn(),
+  deselectAll: jest.fn(),
+  clear: jest.fn(),
 };
 
 const createTestComponent = buildCreateTestComponent(
@@ -398,6 +416,371 @@ describe('c-quantic-timeframe-facet', () => {
           selectors.placeholder
         );
         expect(placeholder).toBeNull();
+      });
+    });
+  });
+
+  describe('when the component is ready', () => {
+    describe('when the facet has values', () => {
+      beforeEach(() => {
+        facetState = {
+          ...initialFacetState,
+          values: exampleFacetValues,
+        };
+      });
+
+      it('should display the facet card when the facet values have results', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const cardContainer = element.shadowRoot.querySelector(
+          selectors.cardContainer
+        );
+        expect(cardContainer).not.toBeNull();
+      });
+
+      it('should not display the facet card when the facet values have no results', async () => {
+        facetState = {
+          ...initialFacetState,
+          values: [
+            {start: '2025-01-01', end: '2025-01-02', numberOfResults: 0},
+          ],
+        };
+        const element = createTestComponent();
+        await flushPromises();
+
+        const cardContainer = element.shadowRoot.querySelector(
+          selectors.cardContainer
+        );
+        expect(cardContainer).toBeNull();
+      });
+
+      it('should display the facet values', async () => {
+        const expectedFacetValues = exampleFacetValues.map((facetValue) => ({
+          ...facetValue,
+          selected: false,
+          key: JSON.stringify([facetValue.start, facetValue.end]),
+        }));
+        const element = createTestComponent();
+        await flushPromises();
+
+        const facetValueElements = element.shadowRoot.querySelectorAll(
+          selectors.facetValue
+        );
+        expect(facetValueElements.length).toBe(exampleFacetValues.length);
+        expectedFacetValues.forEach((facetValue, index) => {
+          expect(facetValueElements[index].item).toEqual(
+            expect.objectContaining(facetValue)
+          );
+          expect(facetValueElements[index].isRangeFacet).toEqual(true);
+          expect(facetValueElements[index].displayAsLink).toEqual(true);
+        });
+      });
+
+      it('should call the controller function toggleSingleSelect when clicked', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+        });
+        const selectedIndex = 0;
+        await flushPromises();
+
+        const facetValueElement = element.shadowRoot.querySelector(
+          selectors.facetValue
+        );
+        const selection = exampleFacetValues[selectedIndex];
+        facetValueElement.dispatchEvent(
+          new CustomEvent('quantic__selectvalue', {
+            bubbles: true,
+            detail: {
+              value: `${exampleStartDate} - ${exampleEndDate}`,
+            },
+          })
+        );
+        await flushPromises();
+
+        expect(functionsMocks.toggleSingleSelect).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.toggleSingleSelect).toHaveBeenCalledWith(
+          expect.objectContaining(selection)
+        );
+      });
+
+      describe('when the facet has active values', () => {
+        beforeEach(() => {
+          facetState = {
+            ...initialFacetState,
+            hasActiveValues: true,
+          };
+        });
+
+        it('should display the clear selection button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearSelectionButton = element.shadowRoot.querySelector(
+            selectors.clearSelectionButton
+          );
+          expect(clearSelectionButton).not.toBeNull();
+        });
+
+        it('should call the deselectAll function of the date facet controller when clicking on the clear selection button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearSelectionButton = element.shadowRoot.querySelector(
+            selectors.clearSelectionButton
+          );
+
+          await clearSelectionButton.click();
+
+          expect(functionsMocks.deselectAll).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe('when the facet has an active range', () => {
+        beforeEach(() => {
+          filterState = {
+            ...initialFilterState,
+            range: {start: exampleStartDate, end: exampleEndDate},
+          };
+        });
+
+        it('should display the clear selection button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearSelectionButton = element.shadowRoot.querySelector(
+            selectors.clearSelectionButton
+          );
+          expect(clearSelectionButton).not.toBeNull();
+        });
+
+        it('should call the clear function of the numeric filter controller when clicking on the clear selection button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearSelectionButton = element.shadowRoot.querySelector(
+            selectors.clearSelectionButton
+          );
+
+          await clearSelectionButton.click();
+
+          expect(functionsMocks.clear).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not display the facet values', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const facetValueElements = element.shadowRoot.querySelectorAll(
+            selectors.facetValue
+          );
+          expect(facetValueElements.length).toBe(0);
+        });
+      });
+
+      describe('when the facet is not collapsed', () => {
+        it('should display the facet body', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const facetBody = element.shadowRoot.querySelector(
+            selectors.facetBody
+          );
+          expect(facetBody).not.toBeNull();
+        });
+
+        it('should correctly display the facet collapse toggle', async () => {
+          const expectedIcon = 'utility:dash';
+          const expectedCSSClass = 'facet__collapse';
+          const element = createTestComponent();
+          await flushPromises();
+
+          const facetCollapseToggle = element.shadowRoot.querySelector(
+            selectors.facetCollapseToggle
+          );
+          expect(facetCollapseToggle).not.toBeNull();
+          expect(facetCollapseToggle.iconName).toBe(expectedIcon);
+          expect(facetCollapseToggle.classList.contains(expectedCSSClass)).toBe(
+            true
+          );
+        });
+      });
+
+      describe('when the facet is collapsed', () => {
+        it('should not display the facet body', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            isCollapsed: true,
+          });
+          await flushPromises();
+
+          const facetBody = element.shadowRoot.querySelector(
+            selectors.facetBody
+          );
+          expect(facetBody).toBeNull();
+        });
+
+        it('should correctly display the facet collapse toggle', async () => {
+          const expectedIcon = 'utility:add';
+          const expectedCSSClass = 'facet__expand';
+
+          const element = createTestComponent({
+            ...defaultOptions,
+            isCollapsed: true,
+          });
+          await flushPromises();
+
+          const facetCollapseToggle = element.shadowRoot.querySelector(
+            selectors.facetCollapseToggle
+          );
+          expect(facetCollapseToggle).not.toBeNull();
+          expect(facetCollapseToggle.iconName).toBe(expectedIcon);
+          expect(facetCollapseToggle.classList.contains(expectedCSSClass)).toBe(
+            true
+          );
+        });
+
+        describe('when a facet value is selected', () => {
+          beforeEach(() => {
+            facetState = {
+              ...initialFacetState,
+              hasActiveValues: true,
+            };
+          });
+
+          it('should display the clear selection button', async () => {
+            const element = createTestComponent({
+              ...defaultOptions,
+              isCollapsed: true,
+            });
+            await flushPromises();
+
+            const clearSelectionButton = element.shadowRoot.querySelector(
+              selectors.clearSelectionButton
+            );
+            expect(clearSelectionButton).not.toBeNull();
+          });
+        });
+      });
+
+      // describe('when a facet range is submitted', () => {
+      //   describe('when one of the inputs is invalid', () => {
+      //     it('should not call the method set range of the numeric filter controller', async () => {
+      //       const element = createTestComponent();
+      //       await flushPromises();
+
+      //       mockInputReportValidity(element);
+      //       // Making the first input invalid
+      //       functionsMocks.reportValidity.mockReturnValueOnce(false);
+
+      //       await submitFacetSearchForm(element);
+      //       expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(1);
+      //       expect(functionsMocks.setRange).not.toHaveBeenCalled();
+      //     });
+      //   });
+
+      //   describe('when the inputs are valid', () => {
+      //     const expectedRange = {start: 1, end: 2};
+      //     beforeEach(() => {
+      //       filterState = {
+      //         ...initialFilterState,
+      //         range: expectedRange,
+      //       };
+      //     });
+
+      //     it('should call the method setRange of the numeric filter controller', async () => {
+      //       const element = createTestComponent();
+      //       await flushPromises();
+
+      //       mockInputReportValidity(element);
+
+      //       await submitFacetSearchForm(element);
+      //       expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(2);
+      //       expect(functionsMocks.setRange).toHaveBeenCalledTimes(1);
+      //       expect(functionsMocks.setRange).toHaveBeenCalledWith(expectedRange);
+      //     });
+
+      //     it('should call the method deselectAllNumericFacetValues of the numeric facet controller', async () => {
+      //       const element = createTestComponent();
+      //       await flushPromises();
+
+      //       mockInputReportValidity(element);
+
+      //       await submitFacetSearchForm(element);
+      //       expect(
+      //         functionsMocks.deselectAllNumericFacetValues
+      //       ).toHaveBeenCalledTimes(1);
+      //       expect(
+      //         functionsMocks.deselectAllNumericFacetValues
+      //       ).toHaveBeenCalledWith(exampleFacetId);
+      //     });
+      //   });
+      // });
+    });
+
+    describe('when the facet has no values', () => {
+      beforeEach(() => {
+        facetState = {
+          ...initialFacetState,
+          values: [],
+        };
+      });
+
+      it('should not display the facet card', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const cardContainer = element.shadowRoot.querySelector(
+          selectors.cardContainer
+        );
+        expect(cardContainer).toBeNull();
+      });
+
+      describe('when a facet range is selected', () => {
+        beforeEach(() => {
+          filterState = {
+            ...initialFilterState,
+            range: {start: '2025/01/01', end: '2025/01/02'},
+          };
+        });
+
+        it('should display the facet card', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const cardContainer = element.shadowRoot.querySelector(
+            selectors.cardContainer
+          );
+          expect(cardContainer).not.toBeNull();
+        });
+      });
+
+      it('should not display the facet card when a facet range is not selected', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const cardContainer = element.shadowRoot.querySelector(
+          selectors.cardContainer
+        );
+        expect(cardContainer).toBeNull();
+      });
+
+      it('should dispatch quantic__renderfacet event', async () => {
+        document.addEventListener(
+          'quantic__renderfacet',
+          // @ts-ignore
+          (event) => functionsMocks.eventHandler(event.detail),
+          {once: true}
+        );
+        createTestComponent();
+
+        await flushPromises();
+
+        expect(functionsMocks.eventHandler).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.eventHandler).toHaveBeenCalledWith({
+          id: exampleFacetId,
+          shouldRenderFacet: false,
+        });
       });
     });
   });
