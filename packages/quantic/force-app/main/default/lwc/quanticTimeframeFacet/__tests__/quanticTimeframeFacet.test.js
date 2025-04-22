@@ -24,6 +24,7 @@ jest.mock('c/quanticHeadlessLoader');
 const selectors = {
   facetContent: '[data-test="facet-content"]',
   componentError: 'c-quantic-component-error',
+  placeholder: 'c-quantic-placeholder',
   datePicker: '[data-testid="facet__date-picker"]',
 };
 
@@ -33,9 +34,17 @@ const exampleFilterId = `${exampleFacetId}_input`;
 const exampleFacetValues = [
   {start: '2025-04-06', end: '2025-04-07', numberOfResults: 10},
 ];
+const exampleEngine = {
+  id: 'example engine id',
+};
 
 const defaultOptions = {
+  engineId: exampleEngine.id,
   field: exampleField,
+  facetId: exampleFacetId,
+  label: 'example label',
+  injectionDepth: 1000,
+  withDatePicker: true,
 };
 
 const initialFacetState = {
@@ -51,6 +60,7 @@ const initialFilterState = {
 let filterState = initialFilterState;
 
 const initialSearchStatusState = {
+  isLoading: false,
   hasError: false,
   firstSearchExecuted: true,
   hasResults: false,
@@ -62,11 +72,11 @@ const expectedValueError = `The ${exampleField} c-quantic-timeframe-facet requir
 
 const functionsMocks = {
   buildDateFacet: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
+    subscribe: functionsMocks.dateFacetStateSubscriber,
     state: facetState,
   })),
   buildDateFilter: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
+    subscribe: functionsMocks.dateFilterStateSubscriber,
     state: filterState,
   })),
   stopWatching: jest.fn(),
@@ -74,9 +84,25 @@ const functionsMocks = {
     stopWatching: functionsMocks.stopWatching,
   })),
   buildSearchStatus: jest.fn(() => ({
-    subscribe: jest.fn((callback) => callback()),
+    subscribe: functionsMocks.searchStatusStateSubscriber,
     state: searchStatusState,
   })),
+  dateFacetStateSubscriber: jest.fn((cb) => {
+    cb();
+    return functionsMocks.dateFacetStateUnsubscriber;
+  }),
+  dateFilterStateSubscriber: jest.fn((cb) => {
+    cb();
+    return functionsMocks.dateFilterStateUnsubscriber;
+  }),
+  searchStatusStateSubscriber: jest.fn((cb) => {
+    cb();
+    return functionsMocks.searchStatusStateUnsubscriber;
+  }),
+  dateFacetStateUnsubscriber: jest.fn(),
+  searchStatusStateUnsubscriber: jest.fn(),
+  dateFilterStateUnsubscriber: jest.fn(),
+  registerToStore: jest.fn(),
 };
 
 const createTestComponent = buildCreateTestComponent(
@@ -84,6 +110,9 @@ const createTestComponent = buildCreateTestComponent(
   'c-quantic-timeframe-facet',
   defaultOptions
 );
+
+// @ts-ignore
+mockHeadlessLoader.registerToStore = functionsMocks.registerToStore;
 
 function prepareHeadlessState() {
   // @ts-ignore
@@ -97,9 +126,6 @@ function prepareHeadlessState() {
   };
 }
 
-const exampleEngine = {
-  id: 'dummy engine',
-};
 let isInitialized = false;
 
 function mockBueno() {
@@ -127,6 +153,15 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
+function mockErroneousHeadlessInitialization() {
+  // @ts-ignore
+  mockHeadlessLoader.initializeWithHeadless = (element) => {
+    if (element instanceof QuanticTimeframeFacet) {
+      element.setInitializationError();
+    }
+  };
+}
+
 describe('c-quantic-timeframe-facet', () => {
   beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
@@ -142,53 +177,156 @@ describe('c-quantic-timeframe-facet', () => {
     isInitialized = false;
   });
 
-  describe('the facet conditions manager', () => {
-    it('should build the controller when the dependsOn property is set', async () => {
-      const exampleFacetDependency = {
-        parentFacetId: 'filetype',
-        expectedValue: 'txt',
-      };
-      createTestComponent({
-        ...defaultOptions,
-        dependsOn: exampleFacetDependency,
-      });
-      await flushPromises();
-
-      expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
-        2
-      );
-      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
-        exampleEngine,
-        {
-          facetId: exampleFacetId,
-        }
-      );
-      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
-        exampleEngine,
-        {
-          facetId: exampleFilterId,
-        }
-      );
-
-      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(2);
-      expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
-        [exampleFacetDependency.parentFacetId]:
-          exampleFacetDependency.expectedValue,
-      });
-    });
-
-    it('should not build the controller when the dependsOn property is not set', async () => {
+  describe('component initialization', () => {
+    it('should initialize the facet controller and the search status controller', async () => {
       createTestComponent();
       await flushPromises();
 
       expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
-      expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledTimes(
-        0
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDateFacet).toHaveBeenCalledWith(
+        exampleEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            field: defaultOptions.field,
+            facetId: defaultOptions.facetId,
+            generateAutomaticRanges: false,
+            sortCriteria: 'descending',
+            injectionDepth: defaultOptions.injectionDepth,
+          }),
+        })
       );
-      expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(0);
+    });
+
+    it('should register the facet to the quantic store', async () => {
+      const expectedFacetType = 'dateFacets';
+      const element = createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.registerToStore).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.registerToStore).toHaveBeenCalledWith(
+        exampleEngine.id,
+        expectedFacetType,
+        expect.objectContaining({
+          label: defaultOptions.label,
+          facetId: defaultOptions.facetId,
+          element: element,
+        })
+      );
+    });
+
+    it('should subscribe to the headless facet state and search status state changes', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.dateFacetStateSubscriber).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
+    });
+
+    describe('the facet conditions manager', () => {
+      it('should build the controller when the dependsOn property is set', async () => {
+        const exampleFacetDependency = {
+          parentFacetId: 'filetype',
+          expectedValue: 'txt',
+        };
+        createTestComponent({
+          ...defaultOptions,
+          dependsOn: exampleFacetDependency,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
+        expect(
+          functionsMocks.buildFacetConditionsManager
+        ).toHaveBeenCalledTimes(2);
+        expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
+          exampleEngine,
+          {
+            facetId: exampleFacetId,
+          }
+        );
+        expect(functionsMocks.buildFacetConditionsManager).toHaveBeenCalledWith(
+          exampleEngine,
+          {
+            facetId: exampleFilterId,
+          }
+        );
+
+        expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(2);
+        expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
+          [exampleFacetDependency.parentFacetId]:
+            exampleFacetDependency.expectedValue,
+        });
+      });
+
+      it('should not build the controller when the dependsOn property is not set', async () => {
+        createTestComponent();
+        await flushPromises();
+
+        expect(functionsMocks.buildDateFacet).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
+        expect(
+          functionsMocks.buildFacetConditionsManager
+        ).toHaveBeenCalledTimes(0);
+        expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(0);
+      });
+    });
+
+    describe('the date filter controller', () => {
+      it('should initialize the date filter controller and subscribe to its state changes when the property withDatePicker is set to true', async () => {
+        createTestComponent({
+          ...defaultOptions,
+          withDatePicker: true,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildDateFilter).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({
+            options: expect.objectContaining({
+              field: defaultOptions.field,
+              facetId: `${defaultOptions.facetId}_input`,
+            }),
+          })
+        );
+        expect(functionsMocks.dateFilterStateSubscriber).toHaveBeenCalledTimes(
+          1
+        );
+      });
+
+      it('should not initialize the date filter controller and subscribe to its state changes when the property withDatePicker is set to false', async () => {
+        createTestComponent({
+          ...defaultOptions,
+          withDatePicker: false,
+        });
+        await flushPromises();
+
+        expect(functionsMocks.buildDateFilter).toHaveBeenCalledTimes(0);
+        expect(functionsMocks.dateFilterStateSubscriber).toHaveBeenCalledTimes(
+          0
+        );
+      });
+    });
+
+    describe('when an initialization error occurs', () => {
+      beforeEach(() => {
+        mockErroneousHeadlessInitialization();
+      });
+
+      it('should display the initialization error component', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const componentError = element.shadowRoot.querySelector(
+          selectors.componentError
+        );
+
+        expect(componentError).not.toBeNull();
+      });
     });
   });
 
@@ -218,6 +356,48 @@ describe('c-quantic-timeframe-facet', () => {
           selectors.facetContent
         );
         expect(facetContent).toBeNull();
+      });
+    });
+  });
+
+  describe('when the component is loading', () => {
+    beforeEach(() => {
+      searchStatusState = {
+        ...initialSearchStatusState,
+        isLoading: true,
+        hasError: false,
+        firstSearchExecuted: false,
+      };
+    });
+
+    it('should display the placeholder component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const placeholder = element.shadowRoot.querySelector(
+        selectors.placeholder
+      );
+      expect(placeholder).not.toBeNull();
+    });
+
+    describe('when the interface has an error', () => {
+      beforeEach(() => {
+        searchStatusState = {
+          ...initialSearchStatusState,
+          isLoading: true,
+          hasError: true,
+          firstSearchExecuted: false,
+        };
+      });
+
+      it('should not display the placeholder component', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const placeholder = element.shadowRoot.querySelector(
+          selectors.placeholder
+        );
+        expect(placeholder).toBeNull();
       });
     });
   });

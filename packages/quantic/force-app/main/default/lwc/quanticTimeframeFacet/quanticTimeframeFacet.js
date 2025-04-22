@@ -507,24 +507,26 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initializeDateFilterController(engine) {
-    const dateFilterId = (this.facetId || this.field) + '_input';
+    if (this.withDatePicker) {
+      const dateFilterId = (this.facetId || this.field) + '_input';
 
-    this.dateFilter = this.headless.buildDateFilter(engine, {
-      options: {
-        field: this.field,
-        facetId: dateFilterId,
-        filterFacetCount: !this.noFilterFacetCount,
-        injectionDepth: Number(this.injectionDepth),
-      },
-    });
-    this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
-      this.updateDateFilterState()
-    );
-    if (this.dependsOn) {
-      this.dateFilterConditionsManager = this.initFacetConditionManager(
-        engine,
-        this.dateFilter.state?.facetId
+      this.dateFilter = this.headless.buildDateFilter(engine, {
+        options: {
+          field: this.field,
+          facetId: dateFilterId,
+          filterFacetCount: !this.noFilterFacetCount,
+          injectionDepth: Number(this.injectionDepth),
+        },
+      });
+      this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
+        this.updateDateFilterState()
       );
+      if (this.dependsOn) {
+        this.dateFilterConditionsManager = this.initFacetConditionManager(
+          engine,
+          this.dateFilter.state?.facetId
+        );
+      }
     }
   }
 
