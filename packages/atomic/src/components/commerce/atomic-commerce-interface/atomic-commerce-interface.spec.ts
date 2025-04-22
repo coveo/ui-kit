@@ -28,11 +28,6 @@ vi.mock('@coveo/headless/commerce', async () => {
   const state: {language: string; query?: string} = {language: 'en'};
   return {
     ...originalModule,
-    Selectors: {
-      ProductListing: {
-        responseIdSelector: vi.fn(() => 'mocked-response-id'),
-      },
-    },
     buildContext: vi.fn(() => {
       const context = {
         state: {...state},
