@@ -60,11 +60,14 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
-        const facetSelectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
+        const expectedFacetData = {
           facetId,
           facetField: field,
           facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
-        });
+        };
+
+        const facetSelectUaRequest =
+          baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
@@ -74,6 +77,9 @@ useCaseTestCases.forEach((useCase) => {
         const {analytics: analyticsForFacetSelect} =
           baseFacet.extractDataFromResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
+        expect(analyticsForFacetSelect.customData).toEqual(
+          expect.objectContaining(expectedFacetData)
+        );
 
         const clearAllUaRequest = baseFacet.waitForFacetClearAllUaAnalytics({
           facetId,
@@ -99,11 +105,14 @@ useCaseTestCases.forEach((useCase) => {
         const exampleMin = '1';
         const exampleMax = '2';
         const {facetId, field} = facetData;
-        const facetSelectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
+        const expectedFacetData = {
           facetId: `${facetId}_input`,
           facetField: field,
           facetValue: `${exampleMin}..${exampleMax}`,
-        });
+        };
+
+        const facetSelectUaRequest =
+          baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.fillFilterMinInput(exampleMin);
@@ -115,6 +124,9 @@ useCaseTestCases.forEach((useCase) => {
         const {analytics: analyticsForFacetSelect} =
           baseFacet.extractDataFromResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
+        expect(analyticsForFacetSelect.customData).toEqual(
+          expect.objectContaining(expectedFacetData)
+        );
       });
     });
 

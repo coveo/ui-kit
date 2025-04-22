@@ -58,7 +58,7 @@ const initialSearchStatusState = {
 let searchStatusState = initialSearchStatusState;
 
 const selectors = {
-  facetContent: '[data-test="facet-content"]',
+  facetContent: '[data-testid="facet-content"]',
   componentError: 'c-quantic-component-error',
   placeholder: 'c-quantic-placeholder',
   cardContainer: 'c-quantic-card-container',
@@ -280,12 +280,9 @@ describe('c-quantic-numeric-facet', () => {
         createTestComponent({
           ...defaultOptions,
           dependsOn: exampleFacetDependency,
-          withInput: true,
         });
         await flushPromises();
 
-        expect(functionsMocks.buildNumericFacet).toHaveBeenCalledTimes(1);
-        expect(functionsMocks.buildNumericFilter).toHaveBeenCalledTimes(1);
         expect(
           functionsMocks.buildFacetConditionsManager
         ).toHaveBeenCalledTimes(2);
@@ -303,17 +300,22 @@ describe('c-quantic-numeric-facet', () => {
         );
 
         expect(generateFacetDependencyConditions).toHaveBeenCalledTimes(2);
-        expect(generateFacetDependencyConditions).toHaveBeenCalledWith({
+        const expectedArg = {
           [exampleFacetDependency.parentFacetId]:
             exampleFacetDependency.expectedValue,
-        });
+        };
+        expect(generateFacetDependencyConditions).toHaveBeenNthCalledWith(
+          1,
+          expectedArg
+        );
+        expect(generateFacetDependencyConditions).toHaveBeenNthCalledWith(
+          2,
+          expectedArg
+        );
       });
 
       it('should not build the controller when the dependsOn property is not set', async () => {
-        createTestComponent({
-          ...defaultOptions,
-          withInput: true,
-        });
+        createTestComponent();
         await flushPromises();
 
         expect(functionsMocks.buildNumericFacet).toHaveBeenCalledTimes(1);
@@ -324,7 +326,7 @@ describe('c-quantic-numeric-facet', () => {
       });
     });
 
-    describe('the numeric filter controller', () => {
+    describe('the withInput property', () => {
       it('should initialize the numeric filter controller and subscribe to its state changes when the property withInput is set', async () => {
         createTestComponent({
           ...defaultOptions,
@@ -412,7 +414,7 @@ describe('c-quantic-numeric-facet', () => {
   describe('when the component is loading', () => {
     beforeEach(() => {
       searchStatusState = {
-        ...initialFacetState,
+        ...initialSearchStatusState,
         isLoading: true,
         hasError: false,
         firstSearchExecuted: false,
@@ -432,7 +434,7 @@ describe('c-quantic-numeric-facet', () => {
     describe('when the interface has an error', () => {
       beforeEach(() => {
         searchStatusState = {
-          ...initialFacetState,
+          ...initialSearchStatusState,
           isLoading: true,
           hasError: true,
           firstSearchExecuted: false,
@@ -490,6 +492,8 @@ describe('c-quantic-numeric-facet', () => {
       ])(
         'when the property displayValuesAs is set to "%s"',
         (propertyValue, expectedFunctionToBeCalled) => {
+          const shouldDisplayValueAsLink = propertyValue === 'link';
+
           test(`should display the facet value as ${propertyValue}`, async () => {
             const expectedFacetValues = exampleFacetValues.map(
               (facetValue) => ({
@@ -512,7 +516,7 @@ describe('c-quantic-numeric-facet', () => {
               expect(facetValueElements[index].item).toEqual(facetValue);
               expect(facetValueElements[index].isRangeFacet).toEqual(true);
               expect(facetValueElements[index].displayAsLink).toEqual(
-                propertyValue === 'link'
+                shouldDisplayValueAsLink
               );
             });
           });
