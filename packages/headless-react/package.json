@@ -33,10 +33,10 @@
     "publish:bump": "npm run-script -w=@coveo/release bump",
     "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
     "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
-    "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
+    "build:typedoc:plugin": "npx tsc -p ../shared-typedoc/tsconfig.json",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
-    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr.typedoc.json",
-    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
+    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ../shared-typedoc/configs/headless-react/ssr.typedoc.json",
+    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ../shared-typedoc/configs/headless-react/ssr-commerce.typedoc.json",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
     "serve:typedoc": "live-server ./docs"
   },

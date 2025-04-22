@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Recommendation",
+  "name": "Insight",
   "readme": "none",
-  "entryPoints": ["../../src/recommendation.index.ts"],
+  "entryPoints": ["../../../headless/src/insight.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["../../dist/index.js"]
 }

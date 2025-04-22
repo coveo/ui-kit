@@ -92,6 +92,7 @@
     "packages/atomic-hosted-page",
     "packages/atomic-react",
     "packages/atomic-angular",
+    "packages/shared-typedoc",
     "packages/atomic-angular/projects/*",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
