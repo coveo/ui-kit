@@ -1,4 +1,5 @@
-import type {Locator, Page} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
+import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
 
 export class SummaryObject {
   private page: Page;
@@ -65,5 +66,11 @@ export class SummaryObject {
       .locator('c-action-next-results')
       .getByRole('button', {name: 'Get next results'})
       .click();
+  }
+
+  async waitForCustomEvent(): Promise<Request> {
+    return this.page.waitForRequest((request) => {
+      return isUaCustomEvent(request);
+    });
   }
 }
