@@ -737,6 +737,7 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
         {[
           <SearchBoxWrapper
             disabled={isDisabled}
+            hasSuggestions={this.shouldShowSuggestions}
             onFocusout={(event) => {
               if (!isFocusingOut(event)) {
                 return;

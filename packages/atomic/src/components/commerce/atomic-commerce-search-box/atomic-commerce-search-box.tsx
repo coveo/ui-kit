@@ -490,6 +490,14 @@ export class AtomicCommerceSearchBox
     this.textAreaRef.dispatchEvent(new window.Event('change'));
   }
 
+  private get shouldShowSuggestions() {
+    return (
+      this.suggestionManager.hasSuggestions &&
+      this.isExpanded &&
+      !this.isSearchDisabledForEndUser(this.searchBoxState.value)
+    );
+  }
+
   private renderSuggestion(
     item: SearchBoxSuggestionElement,
     index: number,
@@ -745,6 +753,7 @@ export class AtomicCommerceSearchBox
         {this.renderAbsolutePositionSpacer()}
         {[
           <SearchBoxWrapper
+            hasSuggestions={this.shouldShowSuggestions}
             disabled={isDisabled}
             onFocusout={(event) => {
               if (!isFocusingOut(event)) {

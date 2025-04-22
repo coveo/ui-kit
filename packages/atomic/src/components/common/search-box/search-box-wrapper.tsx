@@ -3,6 +3,7 @@ import {FunctionalComponent, h} from '@stencil/core';
 interface Props {
   disabled: boolean;
   onFocusout?: (event: FocusEvent) => void;
+  hasSuggestions?: boolean;
 }
 
 export const SearchBoxWrapper: FunctionalComponent<Props> = (
@@ -16,11 +17,19 @@ export const SearchBoxWrapper: FunctionalComponent<Props> = (
       ? 'focus-within:border-disabled focus-within:ring-neutral'
       : 'focus-within:border-primary focus-within:ring-ring-primary';
 
-    return [baseClasses, focusClasses].join(' ');
+    return [
+      baseClasses,
+      focusClasses,
+      props.hasSuggestions ? 'has-suggestions' : '',
+    ].join(' ');
   };
 
   return (
-    <div part="wrapper" class={getClasses()} onFocusout={props.onFocusout}>
+    <div
+      part={`wrapper ${props.hasSuggestions ? 'has-suggestions' : ''}`}
+      class={getClasses()}
+      onFocusout={props.onFocusout}
+    >
       {children}
     </div>
   );

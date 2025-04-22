@@ -253,6 +253,13 @@ export class AtomicInsightSearchBox {
       </div>
     );
   }
+  private shouldRenderSuggestions() {
+    return (
+      this.suggestionManager.hasSuggestions &&
+      this.isExpanded &&
+      this.searchBoxState.value !== ''
+    );
+  }
 
   private renderSuggestions() {
     if (!this.suggestionManager.hasSuggestions) {
@@ -339,6 +346,7 @@ export class AtomicInsightSearchBox {
     return (
       <Host aria-expanded={this.isExpanded.toString()}>
         <SearchBoxWrapper
+          hasSuggestions={this.shouldRenderSuggestions()}
           disabled={this.disableSearch}
           onFocusout={(event) => {
             if (!isFocusingOut(event)) {
