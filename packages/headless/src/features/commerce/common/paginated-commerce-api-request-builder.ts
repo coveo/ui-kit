@@ -1,5 +1,5 @@
 import {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {CommercePaginationSection} from '../../../state/state-sections.js';
 import {
   buildBaseCommerceAPIRequest,

@@ -6,7 +6,7 @@ import {PreprocessRequest} from '../api/preprocess-request.js';
 import {NoopPreprocessRequest} from '../api/preprocess-request.js';
 import {validatePayloadAndThrow} from '../utils/validate-payload.js';
 import {EngineConfiguration} from './engine-configuration.js';
-import {NavigatorContext} from './navigatorContextProvider.js';
+import {NavigatorContext} from './navigator-context-provider.js';
 
 export interface ClientThunkExtraArguments<T, K = GeneratedAnswerAPIClient>
   extends ThunkExtraArguments {

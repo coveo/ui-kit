@@ -2,7 +2,7 @@ import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/qu
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
-} from '../../../app/navigatorContextProvider.js';
+} from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
