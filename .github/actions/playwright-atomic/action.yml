@@ -22,12 +22,21 @@ runs:
       working-directory: packages/atomic
       shell: bash
     - name: Run Playwright tests
+      id: playwright
       run: npx playwright test ${{ inputs.testsToRun }} --shard=${{ inputs.shardIndex }}/${{ inputs.shardTotal }}
       working-directory: packages/atomic
       shell: bash
+      continue-on-error: true
     - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
       if: ${{ inputs.uploadArtifacts == 'true' }}
       with:
         name: blob-report-${{ matrix.shardIndex }}
         path: packages/atomic/blob-report
         retention-days: 5
+    # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#steps-context
+    - run: |
+        if [[ ${{ steps.playwright.outcome}} == 'failure' ]];
+          then exit 1;
+          else exit 0;
+        fi
+      shell: bash

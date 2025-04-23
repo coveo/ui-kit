@@ -7,7 +7,7 @@ import {
   Reducer,
 } from '@reduxjs/toolkit';
 import {logActionMiddleware} from './logger-middlewares.js';
-import {NavigatorContext} from './navigatorContextProvider.js';
+import {NavigatorContext} from './navigator-context-provider.js';
 import {ThunkExtraArguments} from './thunk-extra-arguments.js';
 
 export interface CoreExtraArguments
