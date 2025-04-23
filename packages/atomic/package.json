@@ -49,10 +49,10 @@
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build": "nx build",
-    "build:locales": "npx nx build:locales atomic",
+    "build:locales": "nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "vitest --run && npm run build:locales && stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test": "nx test atomic",
     "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
