@@ -1,4 +1,5 @@
 {
+  "deployment_config_version": 19,
   "product": "ui-kit",
   "team_name": "searchui",
   "general": {
@@ -351,28 +352,34 @@
         "workflow_file": "prod.yml",
         "workflow_reference": "main",
         "workflow_repository": "coveo-platform/ui-kit-cd",
-        "prd": {
-          "disabled": $[IS_NIGHTLY]
-        },
         "extra_parameters": {
           "run-id": "$[GITHUB_RUN_ID]"
-        }
+        },
+        "overrides": [
+          {
+            "environments": ["prd"],
+            "content": {
+              "disabled": $[IS_NIGHTLY]
+            }
+          }
+        ]
       },
       "dependencies": ["smoke"]
     }
   ],
-  "observatory": {
-    "no_endpoint": true
-  },
-  "package_rollout": {
-    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
-    "jira_issues_discovery": {
-      "stop_after_first_issue": true,
-      "branch_name": false,
-      "commit_message": false,
-      "pull_request_title": true,
-      "pull_request_description": true
+  "certifiers": {
+    "observatory": {
+      "no_endpoint": true
+    },
+    "package_rollout": {
+      "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
+      "jira_issues_discovery": {
+        "stop_after_first_issue": true,
+        "branch_name": false,
+        "commit_message": false,
+        "pull_request_title": true,
+        "pull_request_description": true
+      }
     }
-  },
-  "deployment_config_version": 7
+  }
 }

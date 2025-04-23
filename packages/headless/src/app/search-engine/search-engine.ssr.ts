@@ -6,7 +6,7 @@ import type {Controller} from '../../controllers/controller/headless-controller.
 import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
 import {buildLogger} from '../logger.js';
-import {NavigatorContextProvider} from '../navigatorContextProvider.js';
+import {NavigatorContextProvider} from '../navigator-context-provider.js';
 import {
   buildControllerDefinitions,
   composeFunction,

@@ -7,7 +7,7 @@ import {
 import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request.js';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {RecommendationsSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {

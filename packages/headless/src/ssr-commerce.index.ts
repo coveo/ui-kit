@@ -126,7 +126,7 @@ export type {
   NavigatorContext,
   BrowserNavigatorContextProvider,
   NavigatorContextProvider,
-} from './app/navigatorContextProvider.js';
+} from './app/navigator-context-provider.js';
 
 export type {LogLevel} from './app/logger.js';
 
