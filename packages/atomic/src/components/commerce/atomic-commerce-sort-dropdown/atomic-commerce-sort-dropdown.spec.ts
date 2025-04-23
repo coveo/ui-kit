@@ -29,10 +29,10 @@ const mocks = vi.hoisted(() => {
       sortBy: vi.fn(),
     },
     listing: vi.fn(() => ({
-      sort: vi.fn(),
+      sort: vi.fn(() => mocks.sort),
     })),
     search: vi.fn(() => ({
-      sort: vi.fn(),
+      sort: vi.fn(() => mocks.sort),
     })),
     bindingsType: 'product-listing',
   };
@@ -128,6 +128,19 @@ describe('AtomicCommerceSortDropdown', () => {
     await element.updateComplete;
 
     await expect.element(locators.select).toBeInTheDocument();
+  });
+
+  it('should call sort.sortBy when select is changed', async () => {
+    await setupElement();
+    await locators.select.selectOptions('foo');
+    expect(mocks.sort.sortBy).toHaveBeenCalledWith({
+      by: 'fields',
+      fields: [
+        {
+          name: 'foo',
+        },
+      ],
+    });
   });
 
   it('renders nothing when there is an error', async () => {
