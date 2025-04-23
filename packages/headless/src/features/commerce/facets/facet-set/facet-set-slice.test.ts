@@ -922,6 +922,11 @@ describe('commerceFacetSetReducer', () => {
                   ).indexOf(newFacetValue)
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
+                expect(
+                  (
+                    finalState[facetId]?.request.values as FacetValueRequest[]
+                  ).at(-1)?.value
+                ).toBe('idle1');
               });
 
               it('sets #preventAutoSelect to true', () => {
@@ -1206,6 +1211,12 @@ describe('commerceFacetSetReducer', () => {
                   ).indexOf(newFacetValue)
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
+                expect(
+                  (
+                    finalState[facetId]?.request
+                      .values as LocationFacetValueRequest[]
+                  ).at(-1)?.value
+                ).toBe('idle1');
               });
             });
             describe('when there are no idle values', () => {
@@ -1539,6 +1550,11 @@ describe('commerceFacetSetReducer', () => {
                   ).indexOf(newFacetValue)
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
+                expect(
+                  (
+                    finalState[facetId]?.request.values as NumericRangeRequest[]
+                  ).at(-1)?.start
+                ).toBe(16);
               });
             });
             describe('when there are no idle values', () => {
@@ -1888,6 +1904,11 @@ describe('commerceFacetSetReducer', () => {
                   ).indexOf(newFacetValue)
                 ).toBe(2);
                 expect(finalState[facetId]?.request.values.length).toBe(4);
+                expect(
+                  (
+                    finalState[facetId]?.request.values as DateRangeRequest[]
+                  ).at(-1)?.start
+                ).toBe('2026-01-01');
               });
             });
             describe('when there are no idle values', () => {
