@@ -9,9 +9,41 @@ import {createAppLoadedListener} from '../../common/interface/store';
 import './atomic-commerce-pager';
 import {AtomicCommercePager} from './atomic-commerce-pager';
 
-let mocks = await vi.hoisted(async () => {
-  const mockFactory = await import('./spec-mocks');
-  return mockFactory.default;
+const mocks = vi.hoisted(() => {
+  return {
+    pagerState: {
+      page: 0,
+      totalPages: 10,
+      pageSize: 10,
+      totalEntries: 100,
+    },
+    pager: {
+      previousPage: vi.fn(),
+      selectPage: vi.fn(),
+      nextPage: vi.fn(),
+    },
+    searchOrListing: vi.fn(() => ({
+      pagination: vi.fn(() => ({
+        previousPage: vi.fn(),
+        selectPage: vi.fn(),
+        nextPage: vi.fn(),
+      })),
+    })),
+    listing: vi.fn(() => ({
+      pagination: vi.fn(() => ({
+        previousPage: vi.fn(),
+        selectPage: vi.fn(),
+        nextPage: vi.fn(),
+      })),
+    })),
+    search: vi.fn(() => ({
+      pagination: vi.fn(() => ({
+        previousPage: vi.fn(),
+        selectPage: vi.fn(),
+        nextPage: vi.fn(),
+      })),
+    })),
+  };
 });
 
 vi.mock('@/src/components/common/interface/store', () => ({
@@ -82,7 +114,12 @@ vi.mock('@coveo/headless/commerce', () => {
 
 describe('AtomicCommercePager', () => {
   beforeEach(async () => {
-    mocks = (await import('./spec-mocks')).default;
+    mocks.pagerState = {
+      page: 0,
+      totalPages: 10,
+      pageSize: 10,
+      totalEntries: 100,
+    };
   });
 
   let element: AtomicCommercePager;
@@ -116,31 +153,35 @@ describe('AtomicCommercePager', () => {
 
     test('should call buildProductListing with engine when interfaceElement.type is product-listing', () => {
       const paginationMock = {id: 'pager  listing'};
-      const buildProductListingMock = vi
-        .spyOn(headless, 'buildProductListing')
-        .mockReturnValue({pagination: vi.fn(() => paginationMock)} as never);
+      //@ts-expect-error fake type
+      headless.buildProductListing.mockReturnValue({
+        pagination: vi.fn(() => paginationMock),
+      } as never);
       element.bindings.interfaceElement.type = 'product-listing';
 
       element.initialize();
 
-      expect(buildProductListingMock).toHaveBeenCalledWith(
+      expect(headless.buildProductListing).toHaveBeenCalledWith(
         element.bindings.engine
       );
       expect(element.pager).toBe(paginationMock);
     });
 
     test('should call buildSearch with engine when interfaceElement.type is search', () => {
-      const paginationMock = {id: 'pager search'};
-      const buildSearchMock = vi
-        .spyOn(headless, 'buildSearch')
-        .mockReturnValue({
-          pagination: vi.fn(() => paginationMock),
-        } as never);
+      const paginationMock = {
+        id: 'pager search',
+      } as unknown as headless.Pagination;
+      //@ts-expect-error fake type
+      headless.buildSearch.mockReturnValue({
+        pagination: vi.fn(() => paginationMock),
+      } as never);
       element.bindings.interfaceElement.type = 'search';
 
       element.initialize();
 
-      expect(buildSearchMock).toHaveBeenCalledWith(element.bindings.engine);
+      expect(headless.buildSearch).toHaveBeenCalledWith(
+        element.bindings.engine
+      );
       expect(element.pager).toBe(paginationMock);
     });
 
