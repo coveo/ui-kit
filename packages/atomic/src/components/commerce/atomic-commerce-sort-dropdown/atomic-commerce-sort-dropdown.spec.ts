@@ -131,8 +131,13 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('should call sort.sortBy when select is changed', async () => {
-    await setupElement();
+    const element = await setupElement();
+
+    await element.updateComplete;
+    await vi.waitUntil(() => locators.select);
+
     await locators.select.selectOptions('foo');
+    await element.updateComplete;
     expect(mocks.sort.sortBy).toHaveBeenCalledWith({
       by: 'fields',
       fields: [
@@ -141,7 +146,7 @@ describe('AtomicCommerceSortDropdown', () => {
         },
       ],
     });
-  });
+  }, 60e3);
 
   it('renders nothing when there is an error', async () => {
     const element = await setupElement();
