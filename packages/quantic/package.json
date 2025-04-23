@@ -11,7 +11,7 @@
     "url": "git+https://github.com/coveo/ui-kit.git"
   },
   "scripts": {
-    "test": "npm run babel:headless && npm run build:staticresources && npm run lint:check:tests && npm run validate:types && npm run test:unit",
+    "test": "nx test quantic",
     "lint:check:tests": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:fix": "npm run lint:fix:js",
     "lint:fix:js": "eslint --fix force-app/main/default/lwc/ && eslint --fix force-app/examples/main/lwc/ && prettier \"force-app/{,**}/*.js\" --write",
