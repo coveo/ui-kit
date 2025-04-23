@@ -1,5 +1,5 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
@@ -67,7 +67,7 @@ export const renderButton: FunctionalComponentWithChildren<ButtonProps> =
       @mousedown=${(e: MouseEvent) => createRipple(e, {color: rippleColor})}
       @click=${props.onClick}
       ?disabled=${props.disabled}
-      ${ref(props.ref)}
+      ${props.ref ? ref(props.ref) : nothing}
     >
       ${when(
         props.text,
