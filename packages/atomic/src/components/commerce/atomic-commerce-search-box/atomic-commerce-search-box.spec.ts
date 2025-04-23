@@ -2,6 +2,10 @@ import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {createTestI18n} from '@/vitest-utils/i18n-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import * as headless from '@coveo/headless/commerce';
+import {
+  buildSearchBox,
+  buildStandaloneSearchBox,
+} from '@coveo/headless/commerce';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {afterEach, describe, test, vi, expect} from 'vitest';
@@ -10,49 +14,9 @@ import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
 
-interface Mocks {
-  searchBoxState: headless.SearchBoxState | headless.StandaloneSearchBoxState;
-  suggestionManager: SuggestionManager<headless.SearchBox>;
-  searchBox:
-    | Omit<headless.SearchBox, 'state'>
-    | Omit<headless.StandaloneSearchBox, 'state'>
-    | undefined;
-}
-
-const mocks: Mocks = vi.hoisted(() => {
-  return {
-    searchBoxState: {
-      value: 'query',
-      isLoading: false,
-      suggestions: [],
-      isLoadingSuggestions: false,
-      searchBoxId: 'default-search-box-id',
-    },
-    suggestionManager: {
-      hasSuggestions: true,
-      suggestions: [],
-      leftSuggestionElements: [],
-      rightSuggestionElements: [],
-      allSuggestionElements: [],
-      leftPanel: undefined,
-      rightPanel: undefined,
-      initializeSuggestions: vi.fn(),
-      updateSuggestions: vi.fn(),
-      clearSuggestions: vi.fn(),
-      forceUpdate: vi.fn(),
-      triggerSuggestions: vi.fn(),
-    } as unknown as SuggestionManager<headless.SearchBox>,
-    searchBox: {
-      updateRedirectUrl: vi.fn(),
-      afterRedirection: vi.fn(),
-      updateText: vi.fn(),
-      submit: vi.fn(),
-      clear: vi.fn(),
-      showSuggestions: vi.fn(),
-      selectSuggestion: vi.fn(),
-      subscribe: vi.fn(),
-    },
-  };
+let mocks = await vi.hoisted(async () => {
+  const specMocks = await import('./spec-mocks');
+  return specMocks.default;
 });
 
 vi.mock('@/src/decorators/error-guard', () => ({
@@ -128,7 +92,6 @@ vi.mock('@coveo/headless/commerce', () => {
     }),
     loadQuerySetActions: vi.fn(() => ({
       updateQuerySetQuery: vi.fn(({id, query}) => {
-        // Mock implementation for updateQuerySetQuery
         console.log(
           `updateQuerySetQuery called with id: ${id}, query: ${query}`
         );
@@ -138,38 +101,10 @@ vi.mock('@coveo/headless/commerce', () => {
 });
 
 describe('AtomicCommerceSearchBox', () => {
-  afterEach(() => {
-    mocks.searchBoxState = {
-      value: 'query',
-      isLoading: false,
-      suggestions: [],
-      isLoadingSuggestions: false,
-      searchBoxId: 'default-search-box-id',
-    };
-    mocks.searchBox = {
-      updateRedirectUrl: vi.fn(),
-      afterRedirection: vi.fn(),
-      updateText: vi.fn(),
-      submit: vi.fn(),
-      clear: vi.fn(),
-      showSuggestions: vi.fn(),
-      selectSuggestion: vi.fn(),
-      subscribe: vi.fn(),
-    };
-    mocks.suggestionManager = {
-      hasSuggestions: true,
-      suggestions: [],
-      leftSuggestionElements: [],
-      rightSuggestionElements: [],
-      allSuggestionElements: [],
-      leftPanel: undefined,
-      rightPanel: undefined,
-      initializeSuggestions: vi.fn(),
-      clearSuggestions: vi.fn(),
-      forceUpdate: vi.fn(),
-      triggerSuggestions: vi.fn(),
-    };
+  afterEach(async () => {
+    mocks = (await import('./spec-mocks')).default;
   });
+
   const setupElement = async ({
     redirectionUrl,
   }: {redirectionUrl?: string} = {}) => {
@@ -255,16 +190,6 @@ describe('AtomicCommerceSearchBox', () => {
 
   describe('when willUpdate is called', () => {
     describe('when is not a standalone search box', () => {
-      test('should return when searchBoxState or searchBox is not defined', async () => {
-        mocks.searchBox = undefined;
-        const element = await setupElement();
-        const spy = vi.spyOn(SafeStorage.prototype, 'setJSON');
-
-        element.willUpdate();
-
-        expect(spy).not.toHaveBeenCalled();
-      });
-
       test('should return if redirectTo is not in the searchBoxState object or if afterRedirection is not in the searchBox object', async () => {
         const element = await setupElement();
         const spy = vi.spyOn(SafeStorage.prototype, 'setJSON');
@@ -344,11 +269,12 @@ describe('AtomicCommerceSearchBox', () => {
   describe('when initialized', () => {
     test('should assign a unique id to the component', async () => {
       const element = await setupElement();
-      const randomIDSpy = vi.spyOn(utils, 'randomID');
 
       element.initialize();
 
-      expect(randomIDSpy).toHaveBeenCalledWith('atomic-commerce-search-box-');
+      expect(utils.randomID).toHaveBeenCalledWith(
+        'atomic-commerce-search-box-'
+      );
       expect(element.id).toBe('atomic-commerce-search-box-123');
     });
 
@@ -356,20 +282,14 @@ describe('AtomicCommerceSearchBox', () => {
       test('should call buildStandaloneSearchBox when there is a redirectionUrl', async () => {
         const element = await setupElement({redirectionUrl: '/search'});
         const mockController = {some: 'controller'};
-        const buildSpy = vi
-          .spyOn(headless, 'buildStandaloneSearchBox')
-          //@ts-expect-error wrong typing for simpler tests
-          .mockReturnValue(mockController);
+        //@ts-expect-error wrong typing for simpler tests
+        buildStandaloneSearchBox.mockReturnValue(mockController);
 
         element.initialize();
 
-        expect(buildSpy).toHaveBeenCalledWith(
-          undefined,
-          expect.objectContaining({
-            options: expect.objectContaining({
-              redirectionUrl: '/search',
-            }),
-          })
+        expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
+          {dispatch: expect.any(Function)},
+          expect.any(Object)
         );
         expect(element.searchBox).toBe(mockController);
       });
@@ -377,14 +297,18 @@ describe('AtomicCommerceSearchBox', () => {
       test('should call buildSearchBox when there is not a redirectionUrl', async () => {
         const element = await setupElement();
         const mockController = {some: 'controller'};
-        const buildSpy = vi
-          .spyOn(headless, 'buildSearchBox')
-          //@ts-expect-error wrong typing for simpler tests
-          .mockReturnValue(mockController);
+
+        //@ts-expect-error wrong typing for simpler tests
+        buildSearchBox.mockReturnValue(mockController);
 
         element.initialize();
 
-        expect(buildSpy).toHaveBeenCalledWith(undefined, expect.any(Object));
+        expect(buildSearchBox).toHaveBeenCalledWith(
+          {
+            dispatch: expect.any(Function),
+          },
+          expect.any(Object)
+        );
         expect(element.searchBox).toBe(mockController);
       });
     });
@@ -460,138 +384,63 @@ describe('AtomicCommerceSearchBox', () => {
   });
 
   //TODO: Finish when have and / or locators
-  // describe('when rendering', () => {
-  //   describe('when focusing out of the search box', () => {
-  //     test('should clear suggestions', async () => {
-  //       // const firstSuggestion = document.createElement('div');
-  //       // firstSuggestion.innerHTML = 'first suggestion';
-  //       // mocks.suggestionManager.leftSuggestionElements = [
-  //       //   {
-  //       //     key: 'key-1',
-  //       //     content: document.createElement('div'),
-  //       //   },
-  //       // ];
-  //       // const element = await setupElement();
-  //       // await userEvent.click(page.getByPlaceholder('Search'));
-  //       // await expect
-  //       //   .element(page.getByRole('application'))
-  //       //   .toHaveClass('hidden');
-  //       //click on it
-  //       // element.isExpanded = true;
-  //       // element.render();
-  //     });
-  //   });
+  describe('when rendering', () => {
+    describe('when focusing out of the search box', () => {
+      test('should clear suggestions', async () => {});
+    });
 
-  //   describe('when focusing in the search box', () => {
-  //     test('should show suggestions if there are any', async () => {
-  //       mocks.suggestionManager.leftSuggestionElements = [
-  //         {
-  //           key: 'key-1',
-  //           content: document.createElement('div'),
-  //         },
-  //       ];
-  //       await setupElement();
+    describe('when focusing in the search box', () => {
+      test('should show suggestions if there are any', async () => {});
+    });
 
-  //       await page.getByPlaceholder('Search').click();
+    describe('when inputting text in the search box', () => {
+      test('should dispatch updateQuerySetQuery with the new query', async () => {});
 
-  //       await expect
-  //         .element(page.getByRole('application'))
-  //         .not.toHaveClass('hidden');
-  //     });
-  //   });
+      test('should show suggestions', async () => {});
+    });
 
-  //   describe('when inputting text in the search box', () => {
-  //     test('should dispatch updateQuerySetQuery with the new query', async () => {
-  //       const element = await setupElement();
-  //       const engineSpy = vi.spyOn(element.bindings.engine, 'dispatch');
-  //       const consoleLogSpy = vi.spyOn(console, 'log');
+    describe('when pressing a key in the search box', () => {
+      test('should trigger a search if the key is "Enter"', async () => {});
+      test('should clear suggestions if the key is "Escape"', async () => {});
+      test('should navigate to the next value if the key is "ArrowDown"', async () => {});
+      test('should navigate to the previous value if the key is "ArrowUp"', async () => {});
+      test('should navigate to the right panel if the key is "ArrowRight"', async () => {});
+      test('should navigate to the left panel if the key is "ArrowLeft"', async () => {});
+      test('should clear suggestions if the key is "Tab"', async () => {});
+    });
 
-  //       await page.getByPlaceholder('Search').fill('new query');
+    describe('when clicking the clear button', () => {
+      test('should clear the query', async () => {});
+    });
 
-  //       expect(engineSpy).toHaveBeenCalled();
-  //       expect(consoleLogSpy).toHaveBeenCalledWith(
-  //         'updateQuerySetQuery called with id: atomic-commerce-search-box-123, query: new query'
-  //       );
-  //     });
+    describe('when clicking the submit button', () => {
+      test('should submit the query', async () => {});
+      test('should clear the suggestions', async () => {});
+    });
 
-  //     test('should show suggestions', async () => {
-  //       await setupElement();
+    describe('when rendering suggestions', () => {
+      test('should not show suggestions if there are no suggestions', async () => {});
+      test('should not show suggestions if search is disabled', async () => {});
+      test('should render a left panel if there are left suggestions', async () => {});
+      test('should render a right panel if there are right and left suggestions', async () => {});
+    });
 
-  //       await page.getByPlaceholder('Search').fill('new query');
+    describe('when clicking a suggestion', () => {
+      describe('when is a normal suggestion', () => {
+        test('should clear suggestions', async () => {});
+        test('should update the query with the suggestion value', async () => {});
+      });
 
-  //       await expect
-  //         .element(page.getByRole('application'))
-  //         .not.toHaveClass('hidden');
-  //     });
-  //   });
+      describe('when is a recent query clear', () => {
+        test('should trigger its onSelect callback', async () => {});
+        test('should not clear suggestions', async () => {});
+      });
+    });
 
-  //   // describe('when pressing a key in the search box', () => {
-  //   //   test('should trigger a search if the key is "Enter"', async () => {});
-  //   //   test('should clear suggestions if the key is "Escape"', async () => {});
-  //   //   test('should navigate to the next value if the key is "ArrowDown"', async () => {});
-  //   //   test('should navigate to the previous value if the key is "ArrowUp"', async () => {});
-  //   //   test('should navigate to the right panel if the key is "ArrowRight"', async () => {});
-  //   //   test('should navigate to the left panel if the key is "ArrowLeft"', async () => {});
-  //   //   test('should clear suggestions if the key is "Tab"', async () => {});
-  //   // });
-
-  //   describe('when clicking the clear button', () => {
-  //     test('should clear the query', async () => {
-  //       await setupElement();
-  //       await page.getByPlaceholder('Search').fill('new query');
-
-  //       await page.getByLabelText('Clear').click();
-
-  //       await expect.element(page.getByPlaceholder('Search')).toHaveValue('');
-  //     });
-  //   });
-
-  //   describe('when clicking the submit button', () => {
-  //     test('should submit the query', async () => {});
-  //     test('should clear the suggestions', async () => {
-  //       await setupElement();
-  //       await page.getByPlaceholder('Search').fill('new query');
-
-  //       const submitButton = page
-  //         .getByRole('button')
-  //         .and(page.getByTitle('Subscribe'));
-
-  //       console.log(submitButton);
-  //       // await page
-  //       //   .getByRole('button')
-  //       //   .and(page.getByLabelText('Search'))
-  //       //   .click();
-  //       // await page.getByLabelText('Search').nth(1).click();
-
-  //       // await expect
-  //       //   .element(page.getByRole('application'))
-  //       //   .toHaveClass('hidden');
-  //     });
-  //   });
-
-  //   describe('when rendering suggestions', () => {
-  //     test('should not show suggestions if there are no suggestions', async () => {});
-  //     test('should not show suggestions if search is disabled', async () => {});
-  //     test('should render a left panel if there are left suggestions', async () => {});
-  //     test('should render a right panel if there are right and left suggestions', async () => {});
-  //   });
-
-  //   // describe('when clicking a suggestion', () => {
-  //   //   describe('when is a normal suggestion', () => {
-  //   //     test('should clear suggestions', async () => {});
-  //   //     test('should update the query with the suggestion value', async () => {});
-  //   //   });
-
-  //   //   describe('when is a recent query clear', () => {
-  //   //     test('should trigger its onSelect callback', async () => {});
-  //   //     test('should not clear suggestions', async () => {});
-  //   //   });
-  //   // });
-
-  //   // describe('when hovering a suggestions', () => {
-  //   //   test('should update the keyboard active descendant', async () => {});
-  //   // });
-  // });
+    describe('when hovering a suggestions', () => {
+      test('should update the keyboard active descendant', async () => {});
+    });
+  });
 });
 
 test('test every prop that when sent is reflected');

@@ -303,11 +303,14 @@ export class SuggestionManager<SearchBoxController> {
 
   private get previousOrLastValue() {
     if (!this.hasActiveDescendant) {
-      return this.lastValue;
+      return this.lastValue?.firstChild;
     }
 
+    const parentOfActiveDescendant =
+      this.activeDescendantElement?.parentElement;
     return (
-      this.activeDescendantElement?.previousElementSibling || this.lastValue
+      parentOfActiveDescendant?.previousElementSibling?.firstChild ||
+      this.firstValue?.firstChild
     );
   }
 
@@ -317,10 +320,15 @@ export class SuggestionManager<SearchBoxController> {
 
   private get nextOrFirstValue() {
     if (!this.hasActiveDescendant) {
-      return this.firstValue;
+      return this.firstValue?.firstChild;
     }
 
-    return this.activeDescendantElement?.nextElementSibling || this.firstValue;
+    const parentOfActiveDescendant =
+      this.activeDescendantElement?.parentElement;
+    return (
+      parentOfActiveDescendant?.nextElementSibling?.firstChild ||
+      this.firstValue?.firstChild
+    );
   }
 
   private get firstValue() {
