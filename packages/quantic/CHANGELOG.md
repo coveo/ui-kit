@@ -1,3 +1,7 @@
+## <small>3.17.1 (2025-04-23)</small>
+
+- test(quantic): e2e tests and unit tests added for the QuanticDidYouMean component (#5175) ([320e70e](https://github.com/coveo/ui-kit/commits/320e70e)), closes [#5175](https://github.com/coveo/ui-kit/issues/5175)
+
 ## 3.17.0 (2025-04-16)
 
 - test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)

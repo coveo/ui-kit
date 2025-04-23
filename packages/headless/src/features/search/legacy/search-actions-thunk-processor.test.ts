@@ -2,7 +2,7 @@ import {Relay} from '@coveo/relay';
 import {Logger} from 'pino';
 import {Mock} from 'vitest';
 import {SearchAPIClient} from '../../../api/search/search-api-client.js';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {buildMockResult} from '../../../test/mock-result.js';
 import {buildMockSearchRequest} from '../../../test/mock-search-request.js';
 import {buildMockSearchResponse} from '../../../test/mock-search-response.js';

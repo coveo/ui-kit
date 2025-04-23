@@ -1,5 +1,5 @@
 import {QuerySuggestRequest} from '../../../api/commerce/search/query-suggest/query-suggest-request.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {StateNeededByQuerySuggest} from './query-suggest-actions.js';
 
