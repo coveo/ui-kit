@@ -5,7 +5,7 @@ import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
 import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
-import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {InstantResultSection} from '../../state/state-sections.js';
 import {
   requiredNonEmptyString,
