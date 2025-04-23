@@ -8,7 +8,7 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client.js';
-import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {
   ConfigurationSection,
   ContextSection,

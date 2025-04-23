@@ -60,6 +60,9 @@ export default defineConfig({
       instances: [
         {
           browser: 'chromium',
+          context: {
+            actionTimeout: 1000,
+          },
         },
       ],
     },

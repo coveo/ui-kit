@@ -34,10 +34,10 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
@@ -64,7 +64,8 @@ export { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
+
 export namespace Components {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -3580,6 +3581,24 @@ export namespace Components {
         "tabsIncluded": string[] | string;
     }
     /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface AtomicSuggestionRenderer {
+        "i18n": i18n;
+        "id": string;
+        "index": number;
+        "isDoubleList": boolean;
+        "isSelected": boolean;
+        "lastIndex": number;
+        "onClick"?: (e: Event) => void;
+        "onMouseOver"?: (e: Event) => void;
+        "side": 'left' | 'right';
+        "suggestion": SearchBoxSuggestionElement;
+    }
+    /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
      * It must be used as a child of the `atomic-tab-manager` component to function correctly.
      */
@@ -5898,6 +5917,18 @@ declare global {
         new (): HTMLAtomicSortExpressionElement;
     };
     /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
+    }
+    var HTMLAtomicSuggestionRendererElement: {
+        prototype: HTMLAtomicSuggestionRendererElement;
+        new (): HTMLAtomicSuggestionRendererElement;
+    };
+    /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
      * It must be used as a child of the `atomic-tab-manager` component to function correctly.
      */
@@ -6168,6 +6199,7 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
@@ -9576,6 +9608,24 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface AtomicSuggestionRenderer {
+        "i18n": i18n;
+        "id": string;
+        "index": number;
+        "isDoubleList": boolean;
+        "isSelected": boolean;
+        "lastIndex": number;
+        "onClick"?: (e: Event) => void;
+        "onMouseOver"?: (e: Event) => void;
+        "side": 'left' | 'right';
+        "suggestion": SearchBoxSuggestionElement;
+    }
+    /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
      * It must be used as a child of the `atomic-tab-manager` component to function correctly.
      */
@@ -9918,6 +9968,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
@@ -10771,6 +10822,13 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+             * use native Elements.
+             */
+            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             /**
              * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
              * It must be used as a child of the `atomic-tab-manager` component to function correctly.

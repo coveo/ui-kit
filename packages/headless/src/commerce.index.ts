@@ -47,7 +47,7 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration.js';
 export type {LogLevel, LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 export type {
   BaseProduct,
