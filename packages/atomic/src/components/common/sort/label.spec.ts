@@ -29,7 +29,7 @@ describe('renderSortLabel', () => {
     );
   };
 
-  it('renders correctly with default props', async () => {
+  it('renders correctly with valid props', async () => {
     const element = await setupElement({
       id: 'sort-label',
     });

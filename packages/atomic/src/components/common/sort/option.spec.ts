@@ -32,7 +32,7 @@ describe('renderSortOption', () => {
     );
   };
 
-  it('renders correctly with default props', async () => {
+  it('renders correctly with valid props', async () => {
     await setupElement({
       value: 'foo',
       label: 'Foo',
