@@ -1,6 +1,6 @@
 /* eslint-disable no-import-assign */
 import QuanticResultCopyToClipboard from '../quanticResultCopyToClipboard';
-import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
+import {cleanup, buildCreateTestComponent} from 'c/testUtils';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import * as quanticUtils from 'c/quanticUtils';
 
@@ -82,8 +82,7 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-// We need this special flush function to ensure that all promises are resolved for the tooltip setTimeout test.
-async function flushPromisesWithoutTimeout() {
+async function flushPromises() {
   return Promise.resolve();
 }
 
@@ -163,7 +162,6 @@ describe('c-quantic-result-copy-to-clipboard', () => {
         await flushPromises();
 
         element.dispatchEvent(copyToClipboardEvent);
-        await flushPromises();
 
         expect(mockBuildTemplateTextFromResult).toHaveBeenCalledTimes(1);
         expect(mockBuildTemplateTextFromResult).toHaveBeenCalledWith(
@@ -217,8 +215,7 @@ describe('c-quantic-result-copy-to-clipboard', () => {
           );
           expect(resultAction).not.toBeNull();
 
-          element.dispatchEvent(copyToClipboardEvent);
-          await flushPromises();
+          await element.dispatchEvent(copyToClipboardEvent);
 
           expect(functionMocks.logCopyToClipboard).toHaveBeenCalledTimes(1);
           expect(functionMocks.logCopyToClipboard).toHaveBeenCalledWith(
@@ -229,11 +226,13 @@ describe('c-quantic-result-copy-to-clipboard', () => {
         it('should call the copyToClipboard function with the correct parameters when the promise resolved', async () => {
           const mockCopyToClipboard = quanticUtils.copyToClipboard;
           const element = createTestComponent();
+          await flushPromises();
+
           const resultAction = element.shadowRoot.querySelector(
             selectors.quanticResultAction
           );
 
-          element.dispatchEvent(copyToClipboardEvent);
+          await element.dispatchEvent(copyToClipboardEvent);
           await flushPromises();
 
           expect(mockCopyToClipboard).toHaveBeenCalledTimes(1);
@@ -246,6 +245,7 @@ describe('c-quantic-result-copy-to-clipboard', () => {
         it('should log an error in the console when the promise is rejected', async () => {
           const mockCopyToClipboard = quanticUtils.copyToClipboard;
           const element = createTestComponent();
+          await flushPromises();
 
           const resultAction = element.shadowRoot.querySelector(
             selectors.quanticResultAction
@@ -256,7 +256,7 @@ describe('c-quantic-result-copy-to-clipboard', () => {
             Promise.reject(new Error('Copy to clipboard error'))
           );
 
-          element.dispatchEvent(copyToClipboardEvent);
+          await element.dispatchEvent(copyToClipboardEvent);
           await flushPromises();
 
           expect(console.error).toHaveBeenCalledWith(
@@ -277,7 +277,7 @@ describe('c-quantic-result-copy-to-clipboard', () => {
 
           it('should display the success label then reset the initial label after 1000ms', async () => {
             const element = createTestComponent();
-            await flushPromisesWithoutTimeout();
+            await flushPromises();
 
             const resultAction = element.shadowRoot.querySelector(
               selectors.quanticResultAction
@@ -285,12 +285,11 @@ describe('c-quantic-result-copy-to-clipboard', () => {
             expect(resultAction).not.toBeNull();
 
             element.dispatchEvent(copyToClipboardEvent);
-            await flushPromisesWithoutTimeout();
+            await flushPromises();
 
             expect(resultAction.label).toBe(defaultOptions.successLabel);
 
-            jest.advanceTimersByTime(1000);
-            await flushPromisesWithoutTimeout();
+            await jest.advanceTimersByTime(1000);
 
             expect(resultAction.label).toBe(defaultOptions.label);
           });
