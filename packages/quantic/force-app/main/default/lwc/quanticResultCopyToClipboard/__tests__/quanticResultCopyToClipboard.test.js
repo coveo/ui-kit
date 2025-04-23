@@ -289,7 +289,7 @@ describe('c-quantic-result-copy-to-clipboard', () => {
 
             expect(resultAction.label).toBe(defaultOptions.successLabel);
 
-            await jest.advanceTimersByTime(1000);
+            await jest.advanceTimersByTimeAsync(1000);
 
             expect(resultAction.label).toBe(defaultOptions.label);
           });
