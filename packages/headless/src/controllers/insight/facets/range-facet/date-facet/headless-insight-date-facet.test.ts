@@ -1,6 +1,6 @@
 import {updateFacetOptions} from '../../../../../features/facet-options/facet-options-actions.js';
 import {deselectAllFacetValues} from '../../../../../features/facets/facet-set/facet-set-actions.js';
-import {deselectAllDateFacetValues} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
+import * as dateFacetActions from '../../../../../features/facets/range-facets/date-facet-set/date-facet-actions.js';
 import {executeToggleDateFacetSelect} from '../../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions.js';
 import {DateFacetValue} from '../../../../../features/facets/range-facets/date-facet-set/interfaces/response.js';
 import {updateRangeFacetSortCriterion} from '../../../../../features/facets/range-facets/generic/range-facet-actions.js';
@@ -149,8 +149,9 @@ describe('insight date facet', () => {
     testCommonToggleSingleSelect(facetValue);
 
     it('does not dispatch a #deselectAllFacetValues action', () => {
+      const spy = vi.spyOn(dateFacetActions, 'deselectAllDateFacetValues');
       dateFacet.toggleSingleSelect(facetValue());
-      expect(deselectAllDateFacetValues).not.toHaveBeenCalled();
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,7 +1,7 @@
 import {getAnalyticsSource} from '../../../api/analytics/analytics-selectors.js';
 import {getCommerceApiBaseUrl} from '../../../api/commerce/commerce-api-client.js';
 import {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {
   CartSection,
   CommerceConfigurationSection,
