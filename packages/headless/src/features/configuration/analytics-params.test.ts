@@ -4,7 +4,7 @@ import {AnalyticsParam} from '../../api/search/search-api-params.js';
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
-} from '../../app/navigatorContextProvider.js';
+} from '../../app/navigator-context-provider.js';
 import {fromAnalyticsStateToAnalyticsParams} from './analytics-params.js';
 import {AnalyticsState} from './configuration-state.js';
 

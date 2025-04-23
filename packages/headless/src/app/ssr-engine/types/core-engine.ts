@@ -2,7 +2,7 @@ import {AnyAction} from '@reduxjs/toolkit';
 import type {Controller} from '../../../controllers/controller/headless-controller.js';
 import {EngineConfiguration} from '../../engine-configuration.js';
 import {CoreEngine, CoreEngineNext} from '../../engine.js';
-import {NavigatorContextProvider} from '../../navigatorContextProvider.js';
+import {NavigatorContextProvider} from '../../navigator-context-provider.js';
 import {Build} from './build.js';
 import {
   ControllerDefinitionsMap,

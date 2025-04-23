@@ -1,5 +1,5 @@
 import {CategoryFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
 import {
   AnyFacetRequest,

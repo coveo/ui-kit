@@ -39,7 +39,7 @@ import {
   NavigatorContextProvider,
   defaultBrowserNavigatorContextProvider,
   defaultNodeJSNavigatorContextProvider,
-} from './navigatorContextProvider.js';
+} from './navigator-context-provider.js';
 import {createReducerManager, ReducerManager} from './reducer-manager.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 import {stateKey} from './state-key.js';
