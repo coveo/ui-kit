@@ -1,0 +1,18 @@
+<template>
+  <template lwc:if={hasInitializationError}>
+    <c-quantic-component-error component-name={template.host.localName}>
+    </c-quantic-component-error>
+  </template>
+  <template lwc:else>
+    <template if:false={hasError}>
+      <template if:false={showQuerySummary}>
+        <div data-testid="initial-summary-message" class="slds-text-title_bold initial-summary-message slds-var-p-vertical_small slds-var-p-horizontal_medium">{labels.insightRelatedToThisCase}</div>
+      </template>
+      <template if:true={showQuerySummary}>
+        <div class="slds-var-p-vertical_small slds-var-p-horizontal_medium">
+          <c-quantic-summary engine-id={engineId}></c-quantic-summary>
+        </div>
+      </template>
+    </template>
+  </template>
+</template>
