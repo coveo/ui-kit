@@ -55,16 +55,20 @@ function OptanonWrapper() {
   }
 }
 
-function waitForTypeDoc(callback) {
-  return new Promise((resolve) => {
-    if (window.TypeDoc) {
-      resolve();
+async function isTypeDocLoaded() {
+  return new Promise((resolve, reject) =>  {
+    if(window.TypeDoc} {
+      resolve(true);
     } else {
       setTimeout(() => {
-        waitForTypeDoc(callback).then(resolve);
+        resolve(false);
       }, 100);
     }
   });
+}
+
+async function waitForTypeDoc() {
+  while(!(await isTypeDocLoaded())) {}
 }
 
 function setAtomicSearchInterfaceAnalytics(val) {
