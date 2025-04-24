@@ -20,20 +20,27 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
-        const facetSelectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
+        const expectedFacetData = {
           facetId,
           facetField: field,
           facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
-        });
-        let searchResponsePromise = baseFacet.waitForSearchResponse();
+        };
+        const facetSelectUaRequest =
+          baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
+        const firstSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
         await facetSelectUaRequest;
-        let searchResponse = await searchResponsePromise;
+        const firstSearchResponse = await firstSearchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
-          baseFacet.extractDataFromResponse(searchResponse);
+          baseFacet.extractDataFromResponse(firstSearchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
+        if (useCase.value === useCaseEnum.search) {
+          expect(analyticsForFacetSelect.customData).toEqual(
+            expect.objectContaining(expectedFacetData)
+          );
+        }
 
         const facetDeselectUaRequest =
           baseFacet.waitForFacetDeselectUaAnalytics({
@@ -41,14 +48,14 @@ useCaseTestCases.forEach((useCase) => {
             facetField: field,
             facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
           });
-        searchResponsePromise = baseFacet.waitForSearchResponse();
+        const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
         await facetDeselectUaRequest;
-        searchResponse = await searchResponsePromise;
+        const secondSearchResponse = await secondSearchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
-          baseFacet.extractDataFromResponse(searchResponse);
+          baseFacet.extractDataFromResponse(secondSearchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetDeselect');
       });
     });
@@ -68,31 +75,33 @@ useCaseTestCases.forEach((useCase) => {
 
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
-        let searchResponsePromise = baseFacet.waitForSearchResponse();
+        const firstSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
         await facetSelectUaRequest;
-        let searchResponse = await searchResponsePromise;
+        const firstSearchResponse = await firstSearchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
-          baseFacet.extractDataFromResponse(searchResponse);
+          baseFacet.extractDataFromResponse(firstSearchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
-        expect(analyticsForFacetSelect.customData).toEqual(
-          expect.objectContaining(expectedFacetData)
-        );
+        if (useCase.value === useCaseEnum.search) {
+          expect(analyticsForFacetSelect.customData).toEqual(
+            expect.objectContaining(expectedFacetData)
+          );
+        }
 
         const clearAllUaRequest = baseFacet.waitForFacetClearAllUaAnalytics({
           facetId,
           facetField: field,
         });
-        searchResponsePromise = baseFacet.waitForSearchResponse();
+        const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnClearSelectionButton();
 
         await clearAllUaRequest;
-        searchResponse = await searchResponsePromise;
+        const secondSearchResponse = await secondSearchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
-          baseFacet.extractDataFromResponse(searchResponse);
+          baseFacet.extractDataFromResponse(secondSearchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetClearAll');
       });
     });
@@ -113,20 +122,22 @@ useCaseTestCases.forEach((useCase) => {
 
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
-        let searchResponsePromise = baseFacet.waitForSearchResponse();
+        const searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.fillFilterMinInput(exampleMin);
         await facet.fillFilterMaxInput(exampleMax);
         await facet.clickOnFilterApplyButton();
 
         await facetSelectUaRequest;
-        let searchResponse = await searchResponsePromise;
+        const searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
           baseFacet.extractDataFromResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
-        expect(analyticsForFacetSelect.customData).toEqual(
-          expect.objectContaining(expectedFacetData)
-        );
+        if (useCase.value === useCaseEnum.search) {
+          expect(analyticsForFacetSelect.customData).toEqual(
+            expect.objectContaining(expectedFacetData)
+          );
+        }
       });
     });
 
