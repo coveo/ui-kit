@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`button > matches known snaphsot 1`] = `
+exports[`button > matches known snapshot 1`] = `
 <button
   class="btn-primary"
 >
