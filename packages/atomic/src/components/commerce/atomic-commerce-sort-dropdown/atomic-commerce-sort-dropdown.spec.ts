@@ -1,11 +1,9 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
-import '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
-import {
-  buildProductListing,
-  buildSearch,
-  ProductListing,
-  Search,
-} from '@coveo/headless/commerce';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
+import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
@@ -17,44 +15,23 @@ import './atomic-commerce-sort-dropdown';
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceSortDropdown', () => {
-  const stubbedSubscribe = (subscribedFunction: () => void) => {
-    subscribedFunction();
-  };
-  const defaultSearchOrListingState = {
-    responseId: 'some-id',
-    products: [{}],
-    isLoading: false,
-    error: null,
-  };
-  const defaultSortState = {
-    availableSorts: [
-      {by: 'fields', fields: [{name: 'foo'}]},
-      {by: 'fields', fields: [{name: 'bar'}]},
-    ],
-  };
   const mockedSort = vi.fn();
+
   beforeEach(() => {
-    mockedSort.mockImplementation(() => ({
-      state: defaultSortState,
-      subscribe: stubbedSubscribe,
-      sortBy: vi.fn(),
-      isSortedBy: vi.fn(),
-    }));
-    vi.mocked(buildProductListing).mockImplementation(
-      () =>
-        ({
-          state: defaultSearchOrListingState,
-          subscribe: stubbedSubscribe,
+    mockedSort.mockReturnValue(buildFakeSort());
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
           sort: mockedSort,
-        }) as unknown as ProductListing
+        },
+      })
     );
-    vi.mocked(buildSearch).mockImplementation(
-      () =>
-        ({
-          state: defaultSearchOrListingState,
-          subscribe: stubbedSubscribe,
+    vi.mocked(buildSearch).mockReturnValue(
+      buildFakeSearch({
+        implementation: {
           sort: mockedSort,
-        }) as unknown as Search
+        },
+      })
     );
   });
 
@@ -81,15 +58,9 @@ describe('AtomicCommerceSortDropdown', () => {
       await renderInAtomicCommerceInterface<AtomicCommerceSortDropdown>({
         template: html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`,
         selector: 'atomic-commerce-sort-dropdown',
-        bindings: {
-          interfaceElement: {
-            type: interfaceType,
-          } as HTMLAtomicCommerceInterfaceElement,
-          store: {
-            state: {
-              iconAssetsPath: './assets',
-            },
-          } as unknown as CommerceBindings['store'],
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = interfaceType;
+          return bindings;
         },
       });
 
@@ -104,34 +75,26 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders label correctly', async () => {
-    const element = await setupElement();
-    await element.updateComplete;
+    await setupElement();
 
     await expect.element(locators.label).toBeInTheDocument();
   });
 
   it('renders dropdown select correctly', async () => {
-    const element = await setupElement();
-    await element.updateComplete;
+    await setupElement();
 
     await expect.element(locators.select).toBeInTheDocument();
   });
 
   it('should call sort.sortBy when select is changed', async () => {
     const mockedSortBy = vi.fn();
-    mockedSort.mockImplementation(() => ({
-      state: defaultSortState,
-      sortBy: mockedSortBy,
-      isSortedBy: vi.fn(),
-      subscribe: stubbedSubscribe,
-    }));
-
-    const element = await setupElement();
-
-    await element.updateComplete;
-    await vi.waitUntil(() => locators.select);
+    mockedSort.mockReturnValue(
+      buildFakeSort({implementation: {sortBy: mockedSortBy}})
+    );
+    await setupElement();
 
     await locators.select.selectOptions('bar');
+
     expect(mockedSortBy).toHaveBeenCalledWith({
       by: 'fields',
       fields: [
@@ -141,25 +104,25 @@ describe('AtomicCommerceSortDropdown', () => {
       ],
     });
   });
+
   it('renders nothing when there is an error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     const element = await setupElement();
+
     element.error = new Error('Test error');
-    await element.updateComplete;
 
     await expect.element(locators.label).not.toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
   it('renders nothing when there are no products', async () => {
-    vi.mocked(buildProductListing).mockImplementationOnce(
-      () =>
-        ({
-          state: {
-            ...defaultSearchOrListingState,
-            products: [],
-          },
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
           sort: mockedSort,
-        }) as unknown as ProductListing
+        },
+        state: {products: []},
+      })
     );
 
     await setupElement();
@@ -169,11 +132,14 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders nothing when there are no available sorts', async () => {
-    mockedSort.mockImplementationOnce(() => ({
-      state: {
-        ...defaultSortState,
-      },
-    }));
+    mockedSort.mockReturnValue(
+      buildFakeSort({
+        state: {
+          availableSorts: [],
+        },
+      })
+    );
+
     await setupElement();
 
     await expect.element(locators.label).not.toBeInTheDocument();
@@ -181,26 +147,25 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders placeholder when responseId is empty', async () => {
-    vi.mocked(buildProductListing).mockImplementation(
-      () =>
-        ({
-          state: {...defaultSearchOrListingState, responseId: ''},
-          subscribe: stubbedSubscribe,
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
           sort: mockedSort,
-        }) as unknown as ProductListing
+        },
+        state: {
+          responseId: '',
+        },
+      })
     );
+
     const element = await setupElement();
 
-    const placeholder = () => locators.placeholder(element);
-    await vi.waitUntil(placeholder);
-
-    await expect.element(placeholder()).toBeInTheDocument();
+    await expect.element(locators.placeholder(element)).toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
   it('should call buildProductListing when interfaceElement is product-listing', async () => {
     const element = await setupElement();
-    await element.updateComplete;
 
     expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine);
   });
@@ -209,7 +174,6 @@ describe('AtomicCommerceSortDropdown', () => {
     const element = await setupElement({
       interfaceType: 'search',
     });
-    await element.updateComplete;
 
     expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
   });

@@ -1,13 +1,14 @@
-import {InitializeEvent} from '@/src/utils/init-queue.js';
+import type {CommerceStore} from '@/src/components.js';
+import type {InitializeEvent} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import {CommerceBindings} from '../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
-import type {BaseAtomicInterface} from '../../../src/components/common/interface/interface-common.js';
-import {fixture} from '../fixture.js';
-import {createTestI18n} from '../i18n-utils.js';
+import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
+import {fixture} from '../../../fixture.js';
+import {createTestI18n} from '../../../i18n-utils.js';
 
 @customElement('atomic-commerce-interface')
 export class FixtureAtomicCommerceInterface
@@ -66,6 +67,21 @@ export class FixtureAtomicCommerceInterface
     return this.ready ? this.template : nothing;
   }
 }
+
+export const defaultBindings = {
+  interfaceElement: {
+    type: 'product-listing',
+  } as HTMLAtomicCommerceInterfaceElement,
+  store: {
+    state: {
+      iconAssetsPath: './assets',
+    },
+  } as CommerceStore,
+} as const;
+
+defaultBindings satisfies Partial<CommerceBindings>;
+type MinimalBindings = Partial<CommerceBindings> & typeof defaultBindings;
+
 export function renderInAtomicCommerceInterface<T extends LitElement>({
   template,
   selector,
@@ -73,7 +89,9 @@ export function renderInAtomicCommerceInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string;
-  bindings?: Partial<CommerceBindings>;
+  bindings?:
+    | Partial<CommerceBindings>
+    | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: T;
   atomicInterface: FixtureAtomicCommerceInterface;
@@ -85,7 +103,9 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
 }: {
   template: TemplateResult;
   selector?: string | never;
-  bindings?: Partial<CommerceBindings>;
+  bindings?:
+    | Partial<CommerceBindings>
+    | ((bindings: MinimalBindings) => MinimalBindings);
 }): Promise<{
   element: null | T;
   atomicInterface: FixtureAtomicCommerceInterface;
@@ -93,8 +113,13 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   const atomicInterface = await fixture<FixtureAtomicCommerceInterface>(
     html`<atomic-commerce-interface></atomic-commerce-interface>`
   );
-
-  atomicInterface.setBindings(bindings ?? {});
+  if (!bindings) {
+    atomicInterface.setBindings({} as CommerceBindings);
+  } else if (typeof bindings === 'function') {
+    atomicInterface.setBindings(bindings(defaultBindings));
+  } else {
+    atomicInterface.setBindings(bindings);
+  }
   atomicInterface.setRenderTemplate(template);
 
   await atomicInterface.updateComplete;
