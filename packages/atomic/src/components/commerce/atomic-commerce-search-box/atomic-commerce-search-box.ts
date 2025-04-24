@@ -50,7 +50,7 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
 import styles from './atomic-commerce-search-box.tw.css';
 
 /**
- * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+ * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search results page.
  *
  * @slot default - The default slot where you can add child components to the search box.
  *
