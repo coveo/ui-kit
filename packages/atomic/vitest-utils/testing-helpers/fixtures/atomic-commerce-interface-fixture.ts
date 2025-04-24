@@ -2,10 +2,11 @@ import {InitializeEvent} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {type i18n} from 'i18next';
-import {LitElement, nothing, TemplateResult} from 'lit';
+import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {CommerceBindings} from '../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {BaseAtomicInterface} from '../../../src/components/common/interface/interface-common.js';
+import {fixture} from '../fixture.js';
 import {createTestI18n} from '../i18n-utils.js';
 
 @customElement('atomic-commerce-interface')
@@ -65,13 +66,42 @@ export class FixtureAtomicCommerceInterface
     return this.ready ? this.template : nothing;
   }
 }
+export function renderInAtomicCommerceInterface<T extends LitElement>({
+  template,
+  selector,
+  bindings,
+}: {
+  template: TemplateResult;
+  selector?: string;
+  bindings?: Partial<CommerceBindings>;
+}): Promise<{
+  element: T;
+  atomicInterface: FixtureAtomicCommerceInterface;
+}>;
+export async function renderInAtomicCommerceInterface<T extends LitElement>({
+  template,
+  selector,
+  bindings,
+}: {
+  template: TemplateResult;
+  selector?: string | never;
+  bindings?: Partial<CommerceBindings>;
+}): Promise<{
+  element: null | T;
+  atomicInterface: FixtureAtomicCommerceInterface;
+}> {
+  const atomicInterface = await fixture<FixtureAtomicCommerceInterface>(
+    html`<atomic-commerce-interface></atomic-commerce-interface>`
+  );
 
-// export async function renderInAtomicCommerceInterface<T extends LitElement> (
-//   template: TemplateResult, bindings: Partial<CommerceBindings>
-// ): Promise<T> {
-//     const interfaceElement = await fixture<FixtureAtomicCommerceInterface>(
-//         html`<atomic-commerce-interface></atomic-commerce-interface>`
-//     );
-//     interfaceElement.setBindings(bindings);
+  atomicInterface.setBindings(bindings ?? {});
+  atomicInterface.setRenderTemplate(template);
 
-// }
+  await atomicInterface.updateComplete;
+  if (!selector) {
+    return {element: null, atomicInterface};
+  }
+
+  const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  return {element, atomicInterface};
+}

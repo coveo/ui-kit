@@ -1,5 +1,4 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {FixtureAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
 import '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
 import {
   buildProductListing,
@@ -78,28 +77,21 @@ describe('AtomicCommerceSortDropdown', () => {
       interfaceType: 'product-listing',
     }
   ) => {
-    const fixtureInterface = await fixture<FixtureAtomicCommerceInterface>(
-      html`<atomic-commerce-interface></atomic-commerce-interface>`
-    );
-
-    fixtureInterface.setBindings({
-      interfaceElement: {
-        type: interfaceType,
-      } as HTMLAtomicCommerceInterfaceElement,
-      store: {
-        state: {
-          iconAssetsPath: './assets',
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicCommerceSortDropdown>({
+        template: html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`,
+        selector: 'atomic-commerce-sort-dropdown',
+        bindings: {
+          interfaceElement: {
+            type: interfaceType,
+          } as HTMLAtomicCommerceInterfaceElement,
+          store: {
+            state: {
+              iconAssetsPath: './assets',
+            },
+          } as unknown as CommerceBindings['store'],
         },
-      } as unknown as CommerceBindings['store'],
-    });
-    fixtureInterface.setRenderTemplate(
-      html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`
-    );
-
-    await fixtureInterface.updateComplete;
-    const element = fixtureInterface.shadowRoot!.querySelector(
-      'atomic-commerce-sort-dropdown'
-    )!;
+      });
 
     element.initialize();
 
