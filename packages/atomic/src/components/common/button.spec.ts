@@ -21,9 +21,13 @@ describe('button', () => {
   };
 
   it('should render a button in the document', async () => {
-    const props = {};
-    const button = await renderButton(props);
+    const button = await renderButton();
     expect(button).toBeInTheDocument();
+  });
+
+  it('matches known snapshot', async () => {
+    const button = await renderButton();
+    expect(button).toMatchSnapshot();
   });
 
   it('should render a button with the correct style', async () => {
@@ -42,7 +46,6 @@ describe('button', () => {
     };
 
     const button = await renderButton(props);
-
     expect(button.querySelector('span')).toHaveTextContent('Click me');
   });
 

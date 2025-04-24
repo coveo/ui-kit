@@ -48,6 +48,7 @@ export default defineConfig({
       'src/**/search-layout.spec.ts',
     ],
     restoreMocks: true,
+    snapshotSerializers: ['vitest-utils/lit-serializer.ts'],
     setupFiles: ['./vitest-utils/setup.ts'],
     globals: true,
     deps: {
