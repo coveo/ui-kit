@@ -22,7 +22,7 @@ export {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
 } from './components/common/suggestions/suggestions-common';
-export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
+export {RedirectionPayload} from './components/common/search-box/redirection-payload';
 
 export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';
 export {CommerceBindings} from './components/commerce/atomic-commerce-interface/atomic-commerce-interface';
