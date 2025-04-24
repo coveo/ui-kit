@@ -56,8 +56,8 @@ function OptanonWrapper() {
 }
 
 async function isTypeDocLoaded() {
-  return new Promise((resolve, reject) =>  {
-    if(window.TypeDoc} {
+  return new Promise((resolve) => {
+    if (window.TypeDoc) {
       resolve(true);
     } else {
       setTimeout(() => {
@@ -67,8 +67,13 @@ async function isTypeDocLoaded() {
   });
 }
 
-async function waitForTypeDoc() {
-  while(!(await isTypeDocLoaded())) {}
+async function waitForTypeDoc(timeout = 5000) {
+  const start = Date.now();
+  while (!(await isTypeDocLoaded())) {
+    if (Date.now() - start > timeout) {
+      throw new Error('Timed out waiting for Typedoc to load');
+    }
+  }
 }
 
 function setAtomicSearchInterfaceAnalytics(val) {
