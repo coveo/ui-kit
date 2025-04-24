@@ -1,94 +1,64 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
+import {FixtureAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
+import '@/vitest-utils/testing-helpers/fixtures/atomic-commerce-interface-fixture';
+import {
+  buildProductListing,
+  buildSearch,
+  ProductListing,
+  Search,
+} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, vi} from 'vitest';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
-const mocks = vi.hoisted(() => {
-  return {
-    // controller states
-    searchOrListingState: {
-      responseId: 'some-id',
-      products: [{}],
-      isLoading: false,
-      error: null,
-    },
-    sortState: {
-      availableSorts: [
-        {by: 'fields', fields: [{name: 'foo'}]},
-        {by: 'fields', fields: [{name: 'bar'}]},
-      ],
-    },
-    // controllers
-    sort: {
-      isSortedBy: vi.fn(),
-      sortBy: vi.fn(),
-    },
-    listing: vi.fn(() => ({
-      sort: vi.fn(() => mocks.sort),
-    })),
-    search: vi.fn(() => ({
-      sort: vi.fn(() => mocks.sort),
-    })),
-    bindingsType: 'product-listing',
-  };
-});
-
-vi.mock('@coveo/headless/commerce', () => {
-  return {
-    buildProductListing: mocks.listing,
-    buildSearch: mocks.search,
-  };
-});
-
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      constructor(...args: unknown[]) {
-        super(...args);
-
-        const baseBindings = {
-          store: {
-            state: {
-              iconAssetsPath: './assets',
-            },
-          },
-          interfaceElement: {
-            type: mocks.bindingsType,
-          } as HTMLAtomicCommerceInterfaceElement,
-        };
-
-        this.searchOrListing = mocks.listing;
-        this.sort = mocks.sort;
-
-        createTestI18n().then((i18n) => {
-          this.bindings = {...baseBindings, i18n};
-        });
-      }
-    };
-  }),
-}));
-
-vi.mock('@/src/decorators/bind-state', async () => {
-  return {
-    bindStateToController: vi.fn(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (proto: any, stateProperty: string) => {
-        Object.defineProperty(proto, stateProperty, {
-          get() {
-            return mocks[stateProperty as keyof typeof mocks];
-          },
-        });
-      };
-    }),
-  };
-});
+vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceSortDropdown', () => {
+  const stubbedSubscribe = (subscribedFunction: () => void) => {
+    subscribedFunction();
+  };
+  const defaultSearchOrListingState = {
+    responseId: 'some-id',
+    products: [{}],
+    isLoading: false,
+    error: null,
+  };
+  const defaultSortState = {
+    availableSorts: [
+      {by: 'fields', fields: [{name: 'foo'}]},
+      {by: 'fields', fields: [{name: 'bar'}]},
+    ],
+  };
+  const mockedSort = vi.fn();
+  beforeEach(() => {
+    mockedSort.mockImplementation(() => ({
+      state: defaultSortState,
+      subscribe: stubbedSubscribe,
+      sortBy: vi.fn(),
+      isSortedBy: vi.fn(),
+    }));
+    vi.mocked(buildProductListing).mockImplementation(
+      () =>
+        ({
+          state: defaultSearchOrListingState,
+          subscribe: stubbedSubscribe,
+          sort: mockedSort,
+        }) as unknown as ProductListing
+    );
+    vi.mocked(buildSearch).mockImplementation(
+      () =>
+        ({
+          state: defaultSearchOrListingState,
+          subscribe: stubbedSubscribe,
+          sort: mockedSort,
+        }) as unknown as Search
+    );
+  });
+
   const locators = {
     get label() {
       return page.getByText('Sort by');
@@ -101,10 +71,35 @@ describe('AtomicCommerceSortDropdown', () => {
     },
   };
 
-  const setupElement = async () => {
-    const element = await fixture<AtomicCommerceSortDropdown>(
+  const setupElement = async (
+    {
+      interfaceType,
+    }: {interfaceType: CommerceBindings['interfaceElement']['type']} = {
+      interfaceType: 'product-listing',
+    }
+  ) => {
+    const fixtureInterface = await fixture<FixtureAtomicCommerceInterface>(
+      html`<atomic-commerce-interface></atomic-commerce-interface>`
+    );
+
+    fixtureInterface.setBindings({
+      interfaceElement: {
+        type: interfaceType,
+      } as HTMLAtomicCommerceInterfaceElement,
+      store: {
+        state: {
+          iconAssetsPath: './assets',
+        },
+      } as unknown as CommerceBindings['store'],
+    });
+    fixtureInterface.setRenderTemplate(
       html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`
     );
+
+    await fixtureInterface.updateComplete;
+    const element = fixtureInterface.shadowRoot!.querySelector(
+      'atomic-commerce-sort-dropdown'
+    )!;
 
     element.initialize();
 
@@ -131,23 +126,29 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('should call sort.sortBy when select is changed', async () => {
+    const mockedSortBy = vi.fn();
+    mockedSort.mockImplementation(() => ({
+      state: defaultSortState,
+      sortBy: mockedSortBy,
+      isSortedBy: vi.fn(),
+      subscribe: stubbedSubscribe,
+    }));
+
     const element = await setupElement();
 
     await element.updateComplete;
     await vi.waitUntil(() => locators.select);
 
-    await locators.select.selectOptions('foo');
-    await element.updateComplete;
-    expect(mocks.sort.sortBy).toHaveBeenCalledWith({
+    await locators.select.selectOptions('bar');
+    expect(mockedSortBy).toHaveBeenCalledWith({
       by: 'fields',
       fields: [
         {
-          name: 'foo',
+          name: 'bar',
         },
       ],
     });
-  }, 60e3);
-
+  });
   it('renders nothing when there is an error', async () => {
     const element = await setupElement();
     element.error = new Error('Test error');
@@ -158,7 +159,17 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders nothing when there are no products', async () => {
-    mocks.searchOrListingState.products = [];
+    vi.mocked(buildProductListing).mockImplementationOnce(
+      () =>
+        ({
+          state: {
+            ...defaultSearchOrListingState,
+            products: [],
+          },
+          sort: mockedSort,
+        }) as unknown as ProductListing
+    );
+
     await setupElement();
 
     await expect.element(locators.label).not.toBeInTheDocument();
@@ -166,15 +177,26 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders nothing when there are no available sorts', async () => {
-    mocks.sortState.availableSorts = [];
+    mockedSort.mockImplementationOnce(() => ({
+      state: {
+        ...defaultSortState,
+      },
+    }));
     await setupElement();
 
     await expect.element(locators.label).not.toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
-  it('renders placeholder when responseId is undefined', async () => {
-    mocks.searchOrListingState.responseId = '';
+  it('renders placeholder when responseId is empty', async () => {
+    vi.mocked(buildProductListing).mockImplementation(
+      () =>
+        ({
+          state: {...defaultSearchOrListingState, responseId: ''},
+          subscribe: stubbedSubscribe,
+          sort: mockedSort,
+        }) as unknown as ProductListing
+    );
     const element = await setupElement();
 
     const placeholder = () => locators.placeholder(element);
@@ -192,9 +214,10 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('should call buildSearch when interfaceElement is search', async () => {
-    mocks.bindingsType = 'search';
-    const element = await setupElement();
-    element.initialize();
+    const element = await setupElement({
+      interfaceType: 'search',
+    });
+    await element.updateComplete;
 
     expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
   });

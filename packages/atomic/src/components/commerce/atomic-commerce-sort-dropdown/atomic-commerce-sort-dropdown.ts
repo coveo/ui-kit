@@ -72,6 +72,7 @@ export class AtomicCommerceSortDropdown
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
+    console.log('select', select.value);
     this.sort.sortBy(
       getSortByLabel(select.value, this.sortState.availableSorts)
     );
