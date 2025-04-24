@@ -195,14 +195,14 @@ describe('AtomicCommerceInterface', () => {
   });
 
   describe('before being initialized', () => {
-    test('should log an error when calling "executeFirstRequest"', async () => {
+    test('when calling "executeFirstRequest", should log an error', async () => {
       const errorMessage =
         'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
       await element.executeFirstRequest();
       expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
     });
 
-    test('should return error when changing a property too early', async () => {
+    test('when changing a property too early, should return error', async () => {
       const errorMessage =
         'You have to call "initialize" on the atomic-commerce-interface component before modifying the props or calling other public methods.';
       element.language = 'fr';
@@ -228,17 +228,11 @@ describe('AtomicCommerceInterface', () => {
       expect(childElement.initialize).toHaveBeenCalledOnce();
     });
 
-    test('should provide bindings through Lit context', async () => {
-      const contextConsumer = document.createElement(
-        'test-element'
-      ) as TestElement;
-      element.appendChild(contextConsumer);
-      await contextConsumer.updateComplete;
-
-      expect(contextConsumer.bindings).toBeDefined();
-      expect(contextConsumer.bindings.engine).toBe(element.engine);
-      expect(contextConsumer.bindings.i18n).toBe(element.i18n);
-      expect(contextConsumer.bindings.store).toBe(element.store);
+    test('should provide bindings to children', async () => {
+      expect(childElement.bindings).toBeDefined();
+      expect(childElement.bindings.engine).toBe(element.engine);
+      expect(childElement.bindings.i18n).toBe(element.i18n);
+      expect(childElement.bindings.store).toBe(element.store);
     });
 
     test('should set engine after initialization', async () => {
