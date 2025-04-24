@@ -1,70 +1,57 @@
 import {createRipple} from '@/src/utils/ripple';
-import {fireEvent, within} from '@storybook/test';
-import {html, nothing, render} from 'lit';
-import {vi} from 'vitest';
-import {button, ButtonProps} from './button';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture.js';
+import {userEvent} from '@vitest/browser/context';
+import {html, nothing} from 'lit';
+import {vi, expect, describe, it} from 'vitest';
+import {button, ButtonProps} from './button.js';
 
-vi.mock('@/src/utils/ripple', () => ({
-  createRipple: vi.fn(),
-}));
+vi.mock('@/src/utils/ripple', {spy: true});
 
 describe('button', () => {
-  let container: HTMLElement;
-
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
-  });
-
-  const renderButton = (props: Partial<ButtonProps>): HTMLButtonElement => {
-    render(
+  const renderButton = async (props: Partial<ButtonProps> = {}) => {
+    return fixture(
       html`${button({
         props: {
+          text: 'Default test text',
           ...props,
           style: props.style ?? 'primary',
         },
-      })(nothing)}`,
-      container
+      })(nothing)}`
     );
-    return within(container).getByRole('button') as HTMLButtonElement;
   };
 
-  it('should render a button in the document', () => {
+  it('should render a button in the document', async () => {
     const props = {};
-    const button = renderButton(props);
+    const button = await renderButton(props);
     expect(button).toBeInTheDocument();
   });
 
-  it('should render a button with the correct style', () => {
+  it('should render a button with the correct style', async () => {
     const props: Partial<ButtonProps> = {
       style: 'outline-error',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button).toHaveClass('btn-outline-error');
   });
 
-  it('should render a button with the correct text', () => {
+  it('should render a button with the correct text', async () => {
     const props = {
       text: 'Click me',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
-    expect(button.querySelector('span')?.textContent).toBe('Click me');
+    expect(button.querySelector('span')).toHaveTextContent('Click me');
   });
 
-  it('should wrap the button text with a truncate class', () => {
+  it('should wrap the button text with a truncate class', async () => {
     const props = {
       text: 'Click me',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.querySelector('span')).toHaveClass('truncate');
   });
@@ -75,109 +62,110 @@ describe('button', () => {
       onClick: handleClick,
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
-    await fireEvent.click(button);
+    await userEvent.click(button);
 
     expect(handleClick).toHaveBeenCalled();
   });
 
-  it('should apply disabled attribute', () => {
+  it('should apply disabled attribute', async () => {
     const props = {
       disabled: true,
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.hasAttribute('disabled')).toBe(true);
   });
 
-  it('should apply aria attributes', () => {
+  it('should apply aria attributes', async () => {
     const props: Partial<ButtonProps> = {
       ariaLabel: 'button',
       ariaPressed: 'true',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('aria-label')).toBe('button');
     expect(button.getAttribute('aria-pressed')).toBe('true');
   });
 
-  it('should apply custom class', () => {
+  it('should apply custom class', async () => {
     const props = {
       class: 'custom-class',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button).toHaveClass('custom-class');
     expect(button).toHaveClass('btn-primary');
   });
 
-  it('should apply part attribute', () => {
+  it('should apply part attribute', async () => {
     const props = {
       part: 'button-part',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('part')).toBe('button-part');
   });
 
-  it('should apply title attribute', () => {
+  it('should apply title attribute', async () => {
     const props = {
       title: 'Button Title',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('title')).toBe('Button Title');
   });
 
-  it('should apply tabindex attribute', () => {
+  it('should apply tabindex attribute', async () => {
     const props = {
       tabIndex: 1,
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('tabindex')).toBe('1');
   });
 
-  it('should apply role attribute', () => {
+  it('should apply role attribute', async () => {
     const props: Partial<ButtonProps> = {
       role: 'button',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('role')).toBe('button');
   });
 
-  it('should call onMouseDown when the mousedown event is fired on the button', async () => {
-    const props: Partial<ButtonProps> = {};
-    const button = renderButton(props);
-    await fireEvent.mouseDown(button);
-    expect(createRipple).toHaveBeenCalled();
+  it('should create a ripple when clicked', async () => {
+    const button = await renderButton();
+
+    await userEvent.click(button);
+
+    expect(createRipple).toBeCalled();
   });
 
-  it('should apply form attribute', () => {
+  it('should apply form attribute', async () => {
     const props = {
       form: 'form-id',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('form')).toBe('form-id');
   });
 
-  it('should apply type attribute', () => {
+  it('should apply type attribute', async () => {
     const props: Partial<ButtonProps> = {
       type: 'submit',
     };
 
-    const button = renderButton(props);
+    const button = await renderButton(props);
 
     expect(button.getAttribute('type')).toBe('submit');
   });
