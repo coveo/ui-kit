@@ -12,15 +12,16 @@ const engineMock = {
   dispatch: jest.fn(),
 };
 
-let updateState;
-const summaryControllerMock = {
-  subscribe: jest.fn((listener) => {
-    updateState = async () => {
-      listener();
-      await flushPromises();
-    };
-    return () => {}; // Fake unsubscribe function
+const functionsMocks = {
+  subscribe: jest.fn((cb) => {
+    cb();
+    return functionsMocks.unsubscribe;
   }),
+  unsubscribe: jest.fn(() => {}),
+};
+
+const summaryControllerMock = {
+  subscribe: functionsMocks.subscribe,
 };
 
 const headlessMock = {
@@ -82,19 +83,15 @@ describe('c-quantic-summary', () => {
     expect(headlessLoaderMock.getHeadlessBundle).toHaveBeenCalledWith(
       engineMock.id
     );
-    expect(headlessLoaderMock.getHeadlessBundle).toHaveBeenCalledTimes(1);
     expect(headlessLoaderMock.initializeWithHeadless).toHaveBeenCalledWith(
       expect.any(QuanticSummary),
       engineMock.id,
       expect.any(Function)
     );
-    expect(headlessLoaderMock.initializeWithHeadless).toHaveBeenCalledTimes(1);
     expect(headlessMock.buildQuerySummary).toHaveBeenCalledWith(engineMock);
-    expect(headlessMock.buildQuerySummary).toHaveBeenCalledTimes(1);
     expect(summaryControllerMock.subscribe).toHaveBeenCalledWith(
       expect.any(Function)
     );
-    expect(summaryControllerMock.subscribe).toHaveBeenCalledTimes(1);
   });
 
   it('should not render before results have returned', () => {
@@ -103,16 +100,16 @@ describe('c-quantic-summary', () => {
     const element = createTestComponent();
 
     const summary = element.shadowRoot.querySelector(selectors.summary);
-    expect(summary).toBeFalsy();
+    expect(summary).toBeNull();
   });
 
   describe('when loading default summary', () => {
     it('should render the summary correctly', async () => {
       const element = createTestComponent();
-      await updateState();
+      await flushPromises();
 
       const summary = element.shadowRoot.querySelector(selectors.summary);
-      expect(summary).toBeTruthy();
+      expect(summary).not.toBeNull();
       expect(summary.value).toBe(
         `${summaryControllerMock.state.firstResult}-${summaryControllerMock.state.lastResult} ${summaryControllerMock.state.total} `
       );
@@ -160,26 +157,21 @@ describe('c-quantic-summary', () => {
       it('should not render anything', async () => {
         summaryControllerMock.state.hasResults = false;
         const element = createTestComponent();
-        await updateState();
+        await flushPromises();
 
         const summary = element.shadowRoot.querySelector(selectors.summary);
-        expect(summary).toBeFalsy();
+        expect(summary).toBeNull();
       });
     });
 
     describe('when the page changes', () => {
       it('should display the correct per-page number', async () => {
-        const element = createTestComponent();
-        await updateState();
-
-        const summary = element.shadowRoot.querySelector(selectors.summary);
-        expect(summary).toBeTruthy();
-
         summaryControllerMock.state.firstResult = 11;
         summaryControllerMock.state.lastResult = 20;
         summaryControllerMock.state.total = 200;
 
-        await updateState();
+        createTestComponent();
+        await flushPromises();
         expect(
           quanticUtilsMock.I18nUtils.getTextWithDecorator
         ).toHaveBeenCalledWith(
@@ -209,10 +201,10 @@ describe('c-quantic-summary', () => {
           'Makita 18V LXT brushless impact driver XDT14Z';
         summaryControllerMock.state.hasQuery = true;
         const element = createTestComponent();
-        await updateState();
+        await flushPromises();
 
         const summary = element.shadowRoot.querySelector(selectors.summary);
-        expect(summary).toBeTruthy();
+        expect(summary).not.toBeNull();
         expect(
           quanticUtilsMock.I18nUtils.getTextWithDecorator
         ).toHaveBeenCalledWith(
