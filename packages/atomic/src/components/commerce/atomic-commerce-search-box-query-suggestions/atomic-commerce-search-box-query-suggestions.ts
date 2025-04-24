@@ -1,37 +1,38 @@
 import {
-  SearchBox,
-  Suggestion,
-  CommerceEngine,
-  loadQuerySuggestActions,
-} from '@coveo/headless/commerce';
-import {Component, Element, Prop, State, h} from '@stencil/core';
-import SearchIcon from '../../../../images/search.svg';
-import {
   getPartialSearchBoxSuggestionElement,
-  QuerySuggestionContainer,
-  QuerySuggestionIcon,
-  QuerySuggestionText,
-} from '../../../common/suggestions/query-suggestions';
+  renderQuerySuggestion,
+} from '@/src/components/common/suggestions/query-suggestions';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
+} from '@/src/components/common/suggestions/suggestions-common';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {
+  CommerceEngine,
+  loadQuerySuggestActions,
+  SearchBox,
+  Suggestion,
+} from '@coveo/headless/commerce';
+import {html, LitElement} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import SearchIcon from '../../../images/search.svg';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
  * @alpha
  */
-@Component({
-  tag: 'atomic-commerce-search-box-query-suggestions',
-  shadow: true,
-})
-export class AtomicCommerceSearchBoxQuerySuggestions {
-  private bindings!: SearchBoxSuggestionsBindings<SearchBox>;
-  @Element() private host!: HTMLElement;
+@customElement('atomic-commerce-search-box-query-suggestions')
+export class AtomicCommerceSearchBoxQuerySuggestions
+  extends LitElement
+  implements InitializableComponent<CommerceBindings>
+{
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
 
-  @State() public error!: Error;
+  @state() public error!: Error;
 
   /**
    * The SVG icon to display.
@@ -40,29 +41,37 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop() public icon?: string;
+  @property() icon?: string;
 
   /**
    * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
    */
-  @Prop({reflect: true}) public maxWithQuery?: number;
+  @property({type: Number, attribute: 'max-with-query', reflect: true})
+  public maxWithQuery = 3;
+
   /**
    * The maximum number of suggestions that will be displayed initially when the input field is empty.
    */
-  @Prop({reflect: true}) public maxWithoutQuery?: number;
+  @property({type: Number, attribute: 'max-without-query', reflect: true})
+  public maxWithoutQuery?: number;
 
-  componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
     try {
-      dispatchSearchBoxSuggestionsEvent<SearchBox>((bindings) => {
-        this.bindings = bindings;
-        return this.initialize();
-      }, this.host);
+      dispatchSearchBoxSuggestionsEvent<SearchBox, CommerceBindings>(
+        (bindings) => {
+          this.bindings = bindings;
+          return this.initialize();
+        },
+        this,
+        ['atomic-commerce-search-box']
+      );
     } catch (error) {
       this.error = error as Error;
     }
   }
 
-  private initialize(): SearchBoxSuggestions {
+  public initialize(): SearchBoxSuggestions {
     const engine = this.bindings.engine as CommerceEngine<{querySet: string}>;
     const {registerQuerySuggest, fetchQuerySuggestions} =
       loadQuerySuggestActions(engine);
@@ -75,7 +84,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
     );
 
     return {
-      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      position: Array.from(this.parentNode!.children).indexOf(this),
       onInput: () =>
         engine.dispatch(
           fetchQuerySuggestions({
@@ -95,38 +104,38 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
   }
 
   private renderItem(suggestion: Suggestion) {
-    const hasQuery = this.bindings.searchBoxController.state.value !== '';
     const partialItem = getPartialSearchBoxSuggestionElement(
       suggestion,
       this.bindings.i18n
     );
 
+    const icon = this.icon ? this.icon : SearchIcon;
+    const hasQuery = this.bindings.searchBoxController.state.value !== '';
+    const hasMultipleKindOfSuggestions =
+      this.bindings.getSuggestions().length > 1;
+
     return {
       ...partialItem,
-      content: (
-        <QuerySuggestionContainer>
-          <QuerySuggestionIcon
-            icon={this.icon || SearchIcon}
-            hasSuggestion={this.bindings.getSuggestions().length > 1}
-          />
-
-          <QuerySuggestionText suggestion={suggestion} hasQuery={hasQuery} />
-        </QuerySuggestionContainer>
-      ),
+      content: renderQuerySuggestion({
+        icon,
+        hasQuery,
+        suggestion,
+        hasMultipleKindOfSuggestions,
+      }),
       onSelect: () => {
         this.bindings.searchBoxController.selectSuggestion(suggestion.rawValue);
       },
     };
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+  @errorGuard()
+  render() {
+    return html``;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-search-box-query-suggestions': AtomicCommerceSearchBoxQuerySuggestions;
   }
 }
