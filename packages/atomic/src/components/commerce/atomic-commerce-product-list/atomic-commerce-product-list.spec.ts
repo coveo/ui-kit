@@ -347,14 +347,14 @@ describe('AtomicCommerceProductList', () => {
       await element.updateComplete;
 
       expect(
-        element.shadowRoot!.querySelector('atomic-result-placeholder')
+        element.shadowRoot?.querySelector('atomic-result-placeholder')
       ).toBeNull();
 
       callback(false);
       await element.updateComplete;
 
       expect(
-        element.shadowRoot!.querySelector('atomic-result-placeholder')
+        element.shadowRoot?.querySelector('atomic-result-placeholder')
       ).not.toBeNull();
     });
   });
@@ -393,12 +393,14 @@ describe('AtomicCommerceProductList', () => {
     it('when bindings are undefined, should not render', async () => {
       const element = await setupElement({});
 
-      // @ts-expect-error - testing private property
+      // @ts-expect-error - setting private property for the sake of simplicity
       element.bindings = undefined;
 
       await element.updateComplete;
 
-      expect(element.shadowRoot!.querySelectorAll('*')).toHaveLength(0);
+      const renderedElements = element.shadowRoot?.querySelectorAll('*');
+
+      expect(renderedElements).toHaveLength(0);
     });
 
     it('when there is an error, should not render', async () => {
@@ -407,16 +409,21 @@ describe('AtomicCommerceProductList', () => {
       const element = await setupElement({});
       await element.updateComplete;
 
-      expect(element.shadowRoot!.querySelectorAll('*')).toHaveLength(0);
+      const renderedElements = element.shadowRoot?.querySelectorAll('*');
+
+      expect(renderedElements).toHaveLength(0);
     });
 
     it('when no template is registered, should not render', async () => {
       const element = await setupElement({});
-      //@ts-expect-error - mocking would be complex
+
+      //@ts-expect-error - setting private property for the sake of simplicity
       element.resultTemplateRegistered = false;
       await element.updateComplete;
 
-      expect(element.shadowRoot!.querySelectorAll('*')).toHaveLength(0);
+      const renderedElements = element.shadowRoot?.querySelectorAll('*');
+
+      expect(renderedElements).toHaveLength(0);
     });
 
     it('when first request was executed & there are no products, should not render', async () => {
@@ -425,19 +432,25 @@ describe('AtomicCommerceProductList', () => {
       const element = await setupElement({});
       await element.updateComplete;
 
-      expect(element.shadowRoot!.querySelectorAll('*')).toHaveLength(0);
+      const renderedElements = element.shadowRoot?.querySelectorAll('*');
+
+      expect(renderedElements).toHaveLength(0);
     });
 
     describe('when rendering', () => {
       it('when template has error, should render empty slot', async () => {
         const element = await setupElement({});
 
-        //@ts-expect-error - mocking would be needlessly complex here, so we're directly setting the private property
+        //@ts-expect-error - setting private property for the sake of simplicity
         element.templateHasError = true;
         await element.updateComplete;
 
-        expect(element.shadowRoot!.querySelectorAll('*')).toHaveLength(1);
-        expect(element.shadowRoot!.querySelector('slot')).toBeTruthy();
+        const renderedElements = element.shadowRoot?.querySelectorAll('*');
+        const renderedSlotElement = element.shadowRoot?.querySelector('slot');
+
+        expect(renderedElements).toHaveLength(1);
+        expect(renderedSlotElement).toBeTruthy();
+        expect(renderedSlotElement?.children).toHaveLength(0);
       });
 
       describe("when #display is 'table'", () => {
@@ -449,7 +462,7 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const placeholderElements = element.shadowRoot!.querySelectorAll(
+          const placeholderElements = element.shadowRoot?.querySelectorAll(
             'atomic-result-table-placeholder'
           );
 
@@ -483,10 +496,10 @@ describe('AtomicCommerceProductList', () => {
 
             await element.updateComplete;
 
-            const resultTableElement = element.shadowRoot!.querySelector(
+            const resultTableElement = element.shadowRoot?.querySelector(
               '[part="result-table"]'
-            )!;
-            const resultTableLocator = page.elementLocator(resultTableElement);
+            );
+            const resultTableLocator = page.elementLocator(resultTableElement!);
 
             const expectedClass = [
               'display-table',
@@ -505,9 +518,9 @@ describe('AtomicCommerceProductList', () => {
           describe.each<{
             density: ItemDisplayDensity;
           }>([
-            {density: 'normal'},
             {density: 'comfortable'},
             {density: 'compact'},
+            {density: 'normal'},
           ])('when #density is $density', ({density}) => {
             it('should have correct density class', async () => {
               await testWrapperRendering({density});
@@ -515,10 +528,10 @@ describe('AtomicCommerceProductList', () => {
           });
 
           describe.each<{imageSize: ItemDisplayImageSize}>([
-            {imageSize: 'small'},
-            {imageSize: 'large'},
             {imageSize: 'icon'},
+            {imageSize: 'large'},
             {imageSize: 'none'},
+            {imageSize: 'small'},
           ])('when #imageSize is $imageSize', ({imageSize}) => {
             it('should have correct image size class', async () => {
               await testWrapperRendering({imageSize});
@@ -541,9 +554,10 @@ describe('AtomicCommerceProductList', () => {
             display,
             numberOfPlaceholders,
           });
+
           await element.updateComplete;
 
-          const placeholderElements = element.shadowRoot!.querySelectorAll(
+          const placeholderElements = element.shadowRoot?.querySelectorAll(
             'atomic-result-placeholder'
           );
 
@@ -567,10 +581,10 @@ describe('AtomicCommerceProductList', () => {
             await element.updateComplete;
 
             const listWrapperElement =
-              element.shadowRoot!.querySelector('.list-wrapper')!;
-            const listWrapperLocator = page.elementLocator(listWrapperElement);
+              element.shadowRoot?.querySelector('.list-wrapper');
+            const listWrapperLocator = page.elementLocator(listWrapperElement!);
 
-            const listRootElement = listWrapperElement.querySelector(
+            const listRootElement = listWrapperElement!.querySelector(
               '[part="result-list"]'
             )!;
             const listRootLocator = page.elementLocator(listRootElement);
@@ -591,14 +605,12 @@ describe('AtomicCommerceProductList', () => {
             await testWrapperRendering({});
           });
 
-          atomicProductRenderingTestCases(display);
-
           describe.each<{
             density: ItemDisplayDensity;
           }>([
-            {density: 'normal'},
             {density: 'comfortable'},
             {density: 'compact'},
+            {density: 'normal'},
           ])('when the #density prop is $density', ({density}) => {
             it('should have correct density class', async () => {
               await testWrapperRendering({density});
@@ -606,15 +618,17 @@ describe('AtomicCommerceProductList', () => {
           });
 
           describe.each<{imageSize: ItemDisplayImageSize}>([
-            {imageSize: 'small'},
-            {imageSize: 'large'},
             {imageSize: 'icon'},
+            {imageSize: 'large'},
             {imageSize: 'none'},
+            {imageSize: 'small'},
           ])('when the #imageSize prop is $imageSize', ({imageSize}) => {
             it('should have correct image size class', async () => {
               await testWrapperRendering({imageSize});
             });
           });
+
+          atomicProductRenderingTestCases(display);
         });
       });
     });
@@ -634,10 +648,10 @@ describe('AtomicCommerceProductList', () => {
       };
 
       it('should render correct # of atomic-product', async () => {
-        const expectedNumberOfProducts = 9;
+        const numberOfProducts = 9;
 
         vi.spyOn(mocks.searchOrListingState, 'products', 'get').mockReturnValue(
-          Array.from({length: expectedNumberOfProducts}, (_, i) => ({
+          Array.from({length: numberOfProducts}, (_, i) => ({
             permanentid: i + 1,
           }))
         );
@@ -649,10 +663,10 @@ describe('AtomicCommerceProductList', () => {
 
         await element.updateComplete;
 
-        const productElements =
-          element.shadowRoot!.querySelectorAll('atomic-product');
+        const renderedProductElements =
+          element.shadowRoot?.querySelectorAll('atomic-product');
 
-        expect(productElements).toHaveLength(expectedNumberOfProducts);
+        expect(renderedProductElements).toHaveLength(numberOfProducts);
       });
 
       describe('each atomic-product', () => {
@@ -669,36 +683,37 @@ describe('AtomicCommerceProductList', () => {
 
             const element = await setupElement({display});
 
-            const content = document.createDocumentFragment();
-            const template = document.createElement('template');
-            template.innerHTML =
-              '<atomic-table-element label="Test"><div>Test</div></atomic-table-element>';
-            content.appendChild(template.content);
+            const mockTemplate = document.createDocumentFragment();
+            const atomicTableElement = document.createElement(
+              'atomic-table-element'
+            );
+            atomicTableElement.appendChild(document.createElement('div'));
+            mockTemplate.appendChild(atomicTableElement);
 
-            const getTemplateContentSpy = vi
-              .spyOn(
-                // @ts-expect-error - mocking return value of method on private property
-                element.productTemplateProvider,
-                'getTemplateContent'
-              )
-              .mockReturnValue(content);
+            const getTemplateContentSpy = vi.spyOn(
+              // @ts-expect-error - mocking return value of method on private property
+              element.productTemplateProvider,
+              'getTemplateContent'
+            );
+
+            getTemplateContentSpy.mockReturnValueOnce(mockTemplate);
 
             await element.updateComplete;
 
-            const productElements =
-              element.shadowRoot!.querySelectorAll('atomic-product')!;
+            const renderedProductElements =
+              element.shadowRoot?.querySelectorAll('atomic-product');
 
-            expect(getTemplateContentSpy).toHaveBeenCalledTimes(3);
-            expect(getTemplateContentSpy.mock.calls).toEqual([
-              [mockProduct1],
-              [mockProduct1],
-              [mockProduct2],
-            ]);
-            expect(productElements[0].content).toEqual(
-              content.querySelector('atomic-table-element')
+            expect(getTemplateContentSpy.mock.calls[0]).toEqual([mockProduct1]);
+            expect(renderedProductElements?.[0].content).toBe(
+              getTemplateContentSpy.mock.results[0].value.querySelector(
+                'atomic-table-element'
+              )
             );
-            expect(productElements[1].content).toEqual(
-              content.querySelector('atomic-table-element')
+            // Only the template content of the first product is used in table layout
+            expect(renderedProductElements?.[1].content).toBe(
+              getTemplateContentSpy.mock.results[0].value.querySelector(
+                'atomic-table-element'
+              )
             );
           });
         } else {
@@ -727,16 +742,16 @@ describe('AtomicCommerceProductList', () => {
 
             await element.updateComplete;
 
-            const productElements =
-              element.shadowRoot!.querySelectorAll('atomic-product')!;
+            const renderedProductElements =
+              element.shadowRoot?.querySelectorAll('atomic-product');
 
             expect(getTemplateContentSpy).toHaveBeenCalledTimes(2);
             expect(getTemplateContentSpy.mock.calls).toEqual([
               [mockProduct1],
               [mockProduct2],
             ]);
-            expect(productElements[0].content).toBe(mockTemplate);
-            expect(productElements[1].content).toBe(
+            expect(renderedProductElements?.[0].content).toBe(mockTemplate);
+            expect(renderedProductElements?.[1].content).toBe(
               getTemplateContentSpy.mock.results[1].value
             );
           });
@@ -751,10 +766,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.density).toBe(mockDensity);
+          expect(renderedProductElement?.density).toBe(mockDensity);
         });
 
         it('should receive correct #display', async () => {
@@ -763,10 +778,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.display).toBe(display);
+          expect(renderedProductElement?.display).toBe(display);
         });
 
         it('should receive correct #imageSize', async () => {
@@ -779,10 +794,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.imageSize).toBe(mockImageSize);
+          expect(renderedProductElement?.imageSize).toBe(mockImageSize);
         });
 
         it('should receive correct #interactiveProduct', async () => {
@@ -811,18 +826,18 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElements =
-            element.shadowRoot!.querySelectorAll('atomic-product')!;
+          const renderedProductElements =
+            element.shadowRoot?.querySelectorAll('atomic-product');
 
           expect(interactiveProductSpy).toHaveBeenCalledTimes(2);
           expect(interactiveProductSpy.mock.calls).toEqual([
             [{options: {product: mockProduct1}}],
             [{options: {product: mockProduct2}}],
           ]);
-          expect(productElements[0].interactiveProduct).toEqual(
+          expect(renderedProductElements?.[0].interactiveProduct).toBe(
             mockInteractiveProduct
           );
-          expect(productElements[1].interactiveProduct).toEqual(
+          expect(renderedProductElements?.[1].interactiveProduct).toBe(
             interactiveProductSpy.mock.results[1].value
           );
         });
@@ -853,16 +868,18 @@ describe('AtomicCommerceProductList', () => {
 
             await element.updateComplete;
 
-            const productElements =
-              element.shadowRoot!.querySelectorAll('atomic-product')!;
+            const renderedProductElements =
+              element.shadowRoot?.querySelectorAll('atomic-product');
 
             expect(getLinkTemplateContentSpy).toHaveBeenCalledTimes(2);
             expect(getLinkTemplateContentSpy.mock.calls).toEqual([
               [mockProduct1],
               [mockProduct2],
             ]);
-            expect(productElements[0].linkContent).toBe(mockLinkTemplate);
-            expect(productElements[1].linkContent).toBe(
+            expect(renderedProductElements?.[0].linkContent).toBe(
+              mockLinkTemplate
+            );
+            expect(renderedProductElements?.[1].linkContent).toBe(
               getLinkTemplateContentSpy.mock.results[1].value
             );
           });
@@ -889,17 +906,20 @@ describe('AtomicCommerceProductList', () => {
                 element.productTemplateProvider,
                 'getEmptyLinkTemplateContent'
               )
-              .mockReturnValueOnce(mockEmptyLinkTemplate);
+              .mockReturnValue(mockEmptyLinkTemplate);
 
             await element.updateComplete;
 
-            const productElements =
-              element.shadowRoot!.querySelectorAll('atomic-product')!;
+            const renderedProductElements =
+              element.shadowRoot?.querySelectorAll('atomic-product');
 
             expect(getEmptyLinkTemplateContentSpy).toHaveBeenCalledTimes(2);
-            expect(productElements[0].linkContent).toBe(mockEmptyLinkTemplate);
-            expect(productElements[1].linkContent).toBe(
-              getEmptyLinkTemplateContentSpy.mock.results[1].value
+            expect(renderedProductElements?.[0].linkContent).toBe(
+              mockEmptyLinkTemplate
+            );
+            // getEmptyLinkTemplateContent accepts no arguments and always returns the same value
+            expect(renderedProductElements?.[1].linkContent).toBe(
+              mockEmptyLinkTemplate
             );
           });
         }
@@ -917,10 +937,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.loadingFlag).toBe(mockLoadingFlag);
+          expect(renderedProductElement?.loadingFlag).toBe(mockLoadingFlag);
         });
 
         it('should receive correct #product', async () => {
@@ -940,11 +960,11 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelectorAll('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelectorAll('atomic-product');
 
-          expect(productElement[0].product).toEqual(mockProduct1);
-          expect(productElement[1].product).toEqual(mockProduct2);
+          expect(renderedProductElement?.[0].product).toBe(mockProduct1);
+          expect(renderedProductElement?.[1].product).toBe(mockProduct2);
         });
 
         it('should receive correct #renderingFunction', async () => {
@@ -959,10 +979,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.renderingFunction).toEqual(
+          expect(renderedProductElement?.renderingFunction).toBe(
             mockRenderingFunction
           );
         });
@@ -995,10 +1015,10 @@ describe('AtomicCommerceProductList', () => {
 
           await element.updateComplete;
 
-          const productElement =
-            element.shadowRoot!.querySelector('atomic-product')!;
+          const renderedProductElement =
+            element.shadowRoot?.querySelector('atomic-product');
 
-          expect(productElement.store).toEqual(mockStore);
+          expect(renderedProductElement?.store).toBe(mockStore);
         });
       });
     };
