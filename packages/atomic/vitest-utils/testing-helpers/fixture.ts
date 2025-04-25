@@ -19,3 +19,19 @@ export async function fixture<T extends LitElement>(
 
   return element;
 }
+
+/**
+ * Asynchronously renders a Lit template into a parentNode and waits for the element to update.
+ * @param {TemplateResult} template - The Lit template to render.
+ * @param {HTMLElement} [parentNode=document.createElement('div')] - The parent node to render the template into.
+ * @returns {Promise<HTMLElement>} A promise that resolves to the rendered HTML element.
+ */
+export async function renderFunctionFixture(
+  template: TemplateResult,
+  parentNode: HTMLElement = document.createElement('div')
+): Promise<HTMLElement> {
+  const wrapper = fixtureWrapper(parentNode);
+  render(template, wrapper);
+
+  return wrapper;
+}
