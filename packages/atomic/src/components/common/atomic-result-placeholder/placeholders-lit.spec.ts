@@ -26,7 +26,7 @@ describe('renderResultPlaceholders', () => {
     fixtureCleanup();
   });
 
-  test('should render the correct number of atomic-result-placeholder elements', async () => {
+  test('should render correct # of atomic-result-placeholder', async () => {
     const numberOfPlaceholders = 12;
     const element = await setupElement({numberOfPlaceholders});
     const placeholderElements = element.querySelectorAll(
@@ -37,7 +37,7 @@ describe('renderResultPlaceholders', () => {
   });
 
   describe('each atomic-result-placeholder', () => {
-    test('should receive the correct #density', async () => {
+    test('should receive correct #density', async () => {
       const density = 'compact';
       const element = await setupElement({density});
       const placeholderElements = element.querySelectorAll(
@@ -49,7 +49,7 @@ describe('renderResultPlaceholders', () => {
       });
     });
 
-    test('should receive the correct #display', async () => {
+    test('should receive correct #display', async () => {
       const display = 'list';
       const element = await setupElement({display});
       const placeholderElements = element.querySelectorAll(
@@ -61,7 +61,7 @@ describe('renderResultPlaceholders', () => {
       });
     });
 
-    test('should receive the correct #imageSize', async () => {
+    test('should receive correct #imageSize', async () => {
       const imageSize = 'small';
       const element = await setupElement({imageSize});
       const placeholderElements = element.querySelectorAll(
@@ -104,7 +104,7 @@ describe('renderTableResultPlaceholders', () => {
   });
 
   describe('the atomic-result-table-placeholder', () => {
-    test('should receive the correct #density', async () => {
+    test('should receive correct #density', async () => {
       const density = 'compact';
       const element = await setupElement({density});
       const placeholderElement = element.querySelector(
@@ -114,7 +114,7 @@ describe('renderTableResultPlaceholders', () => {
       expect(placeholderElement?.density).toBe(density);
     });
 
-    test('should receive the correct #imageSize', async () => {
+    test('should receive correct #imageSize', async () => {
       const imageSize = 'small';
       const element = await setupElement({imageSize});
       const placeholderElement = element.querySelector(
@@ -124,7 +124,7 @@ describe('renderTableResultPlaceholders', () => {
       expect(placeholderElement?.imageSize).toBe(imageSize);
     });
 
-    test('should receive the correct #rows', async () => {
+    test('should receive correct #rows', async () => {
       const numberOfPlaceholders = 12;
       const element = await setupElement({numberOfPlaceholders});
       const placeholderElement = element.querySelector(
