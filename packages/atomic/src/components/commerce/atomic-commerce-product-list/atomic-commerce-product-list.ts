@@ -32,8 +32,8 @@ import {map} from 'lit/directives/map.js';
 import {ref} from 'lit/directives/ref.js';
 import {when} from 'lit/directives/when.js';
 import {
-  ResultsPlaceholder,
-  TableDisplayResultsPlaceholder,
+  renderResultPlaceholders,
+  renderTableResultPlaceholders,
 } from '../../common/atomic-result-placeholder/placeholders-lit.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {DisplayGrid} from '../../common/item-list/display-grid-lit.js';
@@ -298,7 +298,7 @@ export class AtomicCommerceProductList
         this.isAppLoaded,
         () => this.renderAsTable(),
         () =>
-          TableDisplayResultsPlaceholder({
+          renderTableResultPlaceholders({
             props: {
               density: this.density,
               imageSize: this.imageSize,
@@ -323,7 +323,7 @@ export class AtomicCommerceProductList
               () => this.renderAsList()
             )}`,
           () =>
-            ResultsPlaceholder({
+            renderResultPlaceholders({
               props: {
                 density: this.density,
                 display: this.display,

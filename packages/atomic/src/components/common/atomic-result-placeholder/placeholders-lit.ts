@@ -7,14 +7,14 @@ import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
 
-interface ResultPlaceholderProps {
+export interface ResultPlaceholderProps {
   density: ItemDisplayDensity;
-  imageSize: ItemDisplayImageSize;
   display: ItemDisplayLayout;
+  imageSize: ItemDisplayImageSize;
   numberOfPlaceholders: number;
 }
 
-export const ResultsPlaceholder: FunctionalComponent<
+export const renderResultPlaceholders: FunctionalComponent<
   ResultPlaceholderProps
 > = ({props}) => {
   return Array.from(
@@ -31,10 +31,10 @@ export const ResultsPlaceholder: FunctionalComponent<
   );
 };
 
-export const TableDisplayResultsPlaceholder: FunctionalComponent<
+export const renderTableResultPlaceholders: FunctionalComponent<
   Omit<ResultPlaceholderProps, 'display'>
 > = ({props}) => {
-  return html` <atomic-result-table-placeholder
+  return html`<atomic-result-table-placeholder
     .density=${props.density}
     .imageSize=${props.imageSize}
     .rows=${props.numberOfPlaceholders}
