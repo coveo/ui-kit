@@ -81,15 +81,15 @@ export class AtomicCommerceProductList
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
   public host!: HTMLElement;
-  public itemRenderingFunction: ItemRenderingFunction;
 
+  private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstProductLoaded-');
   private nextNewResultTarget?: FocusTargetController;
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
   private unsubscribeSummary!: () => void;
 
-  constructor() {
+  public constructor() {
     super();
     new BindingController(this);
     const contextRoot = new ContextRoot();
@@ -171,15 +171,11 @@ export class AtomicCommerceProductList
 
   public disconnectedCallback(): void {
     super.disconnectedCallback();
-    this.unsubscribeSummary && this.unsubscribeSummary();
-    try {
-      this.host.removeEventListener(
-        'atomic/selectChildProduct',
-        this.selectChildProductCallback
-      );
-    } catch (e) {
-      // do nothing
-    }
+    this.unsubscribeSummary?.();
+    this.host?.removeEventListener(
+      'atomic/selectChildProduct',
+      this.selectChildProductCallback
+    );
   }
 
   @bindingGuard()
@@ -206,7 +202,9 @@ export class AtomicCommerceProductList
 
   private validateProps() {
     new Schema({
-      density: new StringValue({constrainTo: ['normal', 'compact']}),
+      density: new StringValue({
+        constrainTo: ['normal', 'comfortable', 'compact'],
+      }),
       display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
       imageSize: new StringValue({
         constrainTo: ['small', 'large', 'icon', 'none'],
@@ -371,9 +369,9 @@ export class AtomicCommerceProductList
             .density=${props.density}
             .display=${props.display}
             .imageSize=${props.imageSize}
+            .interactiveProduct=${props.interactiveProduct}
             .linkContent=${props.linkContent}
             .loadingFlag=${props.loadingFlag}
-            .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}
             .renderingFunction=${props.renderingFunction}
             .store=${props.store as never}
@@ -389,6 +387,11 @@ export class AtomicCommerceProductList
       return html`${keyed(
         props.key,
         html`<atomic-product
+          part="outline"
+          ${ref(
+            (element) =>
+              element && this.productListCommon.setNewResultRef(element, index)
+          )}
           .content=${props.content}
           .density=${props.density}
           .display=${props.display}
@@ -396,13 +399,8 @@ export class AtomicCommerceProductList
           .interactiveProduct=${props.interactiveProduct}
           .linkContent=${props.linkContent}
           .loadingFlag=${props.loadingFlag}
-          part="outline"
           .product=${props.product}
           .renderingFunction=${props.renderingFunction}
-          ${ref(
-            (element) =>
-              element && this.productListCommon.setNewResultRef(element, index)
-          )}
           .store=${props.store as never}
         ></atomic-product>`
       )}`;
@@ -453,9 +451,9 @@ export class AtomicCommerceProductList
                         .density=${props.density}
                         .display=${props.display}
                         .imageSize=${props.imageSize}
+                        .interactiveProduct=${props.interactiveProduct}
                         .linkContent=${props.linkContent}
                         .loadingFlag=${props.loadingFlag}
-                        .interactiveProduct=${props.interactiveProduct}
                         .product=${props.product}
                         .renderingFunction=${props.renderingFunction}
                         .store=${props.store as never}
@@ -478,13 +476,11 @@ export class AtomicCommerceProductList
     }
   }
 
-  private getInteractiveProduct(product: Product) {
-    return this.searchOrListing.interactiveProduct({options: {product}});
-  }
-
   private getPropsForAtomicProduct(product: Product) {
     return {
-      interactiveProduct: this.getInteractiveProduct(product),
+      interactiveProduct: this.searchOrListing.interactiveProduct({
+        options: {product},
+      }),
       product,
       renderingFunction: this.itemRenderingFunction,
       loadingFlag: this.loadingFlag,
@@ -516,9 +512,8 @@ export class AtomicCommerceProductList
   private get shouldRender() {
     return (
       !this.summaryState.hasError &&
-      (!this.summaryState.firstRequestExecuted ||
-        this.summaryState.hasProducts) &&
-      this.resultTemplateRegistered
+      this.resultTemplateRegistered &&
+      (!this.summaryState.firstRequestExecuted || this.summaryState.hasProducts)
     );
   }
 }
