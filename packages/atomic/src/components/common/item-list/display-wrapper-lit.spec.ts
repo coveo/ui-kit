@@ -1,5 +1,7 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {html, nothing, TemplateResult} from 'lit';
+import {beforeEach, describe, expect, test} from 'vitest';
 import {
   DisplayWrapperProps,
   renderListRoot,
@@ -18,7 +20,11 @@ describe('renderListWrapper', () => {
     );
   };
 
-  it('should render with correct class', async () => {
+  beforeEach(() => {
+    fixtureCleanup();
+  });
+
+  test('should render with correct class', async () => {
     const props = {listClasses: 'test-class'};
     const element = await setupElement(props);
 
@@ -28,7 +34,7 @@ describe('renderListWrapper', () => {
     expect(renderedElements[0]?.classList).toContain('test-class');
   });
 
-  it('should render children', async () => {
+  test('should render children', async () => {
     const children = html`<div id="test-child"></div>`;
     const element = await setupElement({}, children);
 
@@ -55,7 +61,11 @@ describe('renderListRoot', () => {
     );
   };
 
-  it('should render with correct class', async () => {
+  beforeEach(() => {
+    fixtureCleanup();
+  });
+
+  test('should render with correct class', async () => {
     const props = {listClasses: 'test-class'};
     const element = await setupElement(props);
 
@@ -65,7 +75,7 @@ describe('renderListRoot', () => {
     expect(renderedElements[0]?.classList).toContain('test-class');
   });
 
-  it('should render with correct part', async () => {
+  test('should render with correct part', async () => {
     const element = await setupElement({});
 
     const renderedElement = element.querySelectorAll('*')[0];
@@ -73,7 +83,7 @@ describe('renderListRoot', () => {
     expect(renderedElement?.part.value).toBe('result-list');
   });
 
-  it('should render children', async () => {
+  test('should render children', async () => {
     const children = html`<div id="test-child"></div>`;
     const element = await setupElement({}, children);
 
