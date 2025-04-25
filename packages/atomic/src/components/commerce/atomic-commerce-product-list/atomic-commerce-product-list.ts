@@ -43,8 +43,8 @@ import {
   DisplayTableRow,
 } from '../../common/item-list/display-table-lit.js';
 import {
-  ListWrapperForGridOrListDisplay,
-  ListWrapper,
+  renderListWrapper,
+  renderListRoot,
 } from '../../common/item-list/display-wrapper-lit.js';
 import {
   ItemListCommon,
@@ -293,7 +293,7 @@ export class AtomicCommerceProductList
   }
 
   private renderTable(listClasses: string) {
-    return ListWrapper({props: {listClasses}})(
+    return renderListWrapper({props: {listClasses}})(
       html`${when(
         this.isAppLoaded,
         () => this.renderAsTable(),
@@ -310,28 +310,30 @@ export class AtomicCommerceProductList
   }
 
   private renderGridOrList(listClasses: string) {
-    return ListWrapperForGridOrListDisplay({
-      props: {listClasses},
-    })(html`
-      ${when(
-        this.isAppLoaded,
-        () =>
-          html`${when(
-            this.display === 'grid',
-            () => this.renderAsGrid(),
-            () => this.renderAsList()
-          )}`,
-        () =>
-          ResultsPlaceholder({
-            props: {
-              density: this.density,
-              display: this.display,
-              imageSize: this.imageSize,
-              numberOfPlaceholders: this.numberOfPlaceholders,
-            },
-          })
-      )}
-    `);
+    return renderListWrapper({props: {listClasses}})(
+      renderListRoot({
+        props: {listClasses},
+      })(html`
+        ${when(
+          this.isAppLoaded,
+          () =>
+            html`${when(
+              this.display === 'grid',
+              () => this.renderAsGrid(),
+              () => this.renderAsList()
+            )}`,
+          () =>
+            ResultsPlaceholder({
+              props: {
+                density: this.density,
+                display: this.display,
+                imageSize: this.imageSize,
+                numberOfPlaceholders: this.numberOfPlaceholders,
+              },
+            })
+        )}
+      `)
+    );
   }
 
   private renderAsGrid() {

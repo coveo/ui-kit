@@ -5,7 +5,7 @@ export interface DisplayWrapperProps {
   listClasses: string;
 }
 
-export const ListWrapper: FunctionalComponentWithChildren<
+export const renderListWrapper: FunctionalComponentWithChildren<
   DisplayWrapperProps
 > = ({props}) => {
   const {listClasses} = props;
@@ -14,17 +14,13 @@ export const ListWrapper: FunctionalComponentWithChildren<
     html`<div class="list-wrapper ${listClasses}">${children}</div>`;
 };
 
-export const ListWrapperForGridOrListDisplay: FunctionalComponentWithChildren<
+export const renderListRoot: FunctionalComponentWithChildren<
   DisplayWrapperProps
 > = ({props}) => {
   const {listClasses} = props;
 
   return (children) =>
-    html`${ListWrapper({
-      props: {listClasses},
-    })(
-      html`<div class="list-root ${listClasses}" part="result-list">
-        ${children}
-      </div>`
-    )}`;
+    html`<div class="list-root ${listClasses}" part="result-list">
+      ${children}
+    </div>`;
 };
