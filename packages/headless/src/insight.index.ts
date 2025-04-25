@@ -40,7 +40,7 @@ export type {
 export type {LoggerOptions} from './app/logger.js';
 
 export type {LogLevel} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 // Action loaders
 export * from './features/insight-interface/insight-interface-actions-loader.js';

@@ -15,7 +15,6 @@ import numberInputMinimum from '@salesforce/label/c.quantic_NumberInputMinimum';
 import {
   registerComponentForInit,
   initializeWithHeadless,
-  getHeadlessBindings,
   registerToStore,
   getHeadlessBundle,
   getBueno,
@@ -34,6 +33,7 @@ import {LightningElement, track, api} from 'lwc';
 /** @typedef {import("coveo").NumericFacetValue} NumericFacetValue */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").FacetConditionsManager} FacetConditionsManager */
 /** @typedef {import('../quanticUtils/facetDependenciesUtils').DependsOn} DependsOn */
 /**
@@ -223,6 +223,8 @@ export default class QuanticNumericFacet extends LightningElement {
   numericFacetConditionsManager;
   /** @type {FacetConditionsManager} */
   numericFilterConditionsManager;
+  /** @type {SearchEngine | InsightEngine} */
+  engine;
 
   /** @type {string} */
   start;
@@ -262,9 +264,10 @@ export default class QuanticNumericFacet extends LightningElement {
   }
 
   /**
-   * @param {SearchEngine} engine
+   * @param {SearchEngine | InsightEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.searchStatus = this.headless.buildSearchStatus(engine);
@@ -273,15 +276,11 @@ export default class QuanticNumericFacet extends LightningElement {
     );
 
     if (this.numberOfValues > 0) {
-      this.initializeFacet(engine);
+      this.initializeFacet();
     }
     if (this.withInput) {
-      this.initializeFilter(engine);
+      this.initializeFilter();
     }
-    this.searchStatus = this.headless.buildSearchStatus(engine);
-    this.unsubscribeSearchStatus = this.searchStatus.subscribe(() =>
-      this.updateState()
-    );
     registerToStore(this.engineId, Store.facetTypes.NUMERICFACETS, {
       label: this.label,
       facetId: this.facet?.state.facetId ?? this.field,
@@ -310,11 +309,8 @@ export default class QuanticNumericFacet extends LightningElement {
     }
   }
 
-  /**
-   * @param {import("coveo").SearchEngine} engine
-   */
-  initializeFacet(engine) {
-    this.facet = this.headless.buildNumericFacet(engine, {
+  initializeFacet() {
+    this.facet = this.headless.buildNumericFacet(this.engine, {
       options: {
         field: this.field,
         generateAutomaticRanges: true,
@@ -327,17 +323,14 @@ export default class QuanticNumericFacet extends LightningElement {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
     if (this.dependsOn) {
       this.numericFacetConditionsManager = this.initFacetConditionManager(
-        engine,
+        this.engine,
         this.facet.state?.facetId
       );
     }
   }
 
-  /**
-   * @param {import("coveo").SearchEngine} engine
-   */
-  initializeFilter(engine) {
-    this.numericFilter = this.headless.buildNumericFilter(engine, {
+  initializeFilter() {
+    this.numericFilter = this.headless.buildNumericFilter(this.engine, {
       options: {
         field: this.field,
         facetId: this.facet?.state.facetId
@@ -350,7 +343,7 @@ export default class QuanticNumericFacet extends LightningElement {
     );
     if (this.dependsOn) {
       this.numericFilterConditionsManager = this.initFacetConditionManager(
-        engine,
+        this.engine,
         this.numericFilter.state?.facetId
       );
     }
@@ -580,10 +573,9 @@ export default class QuanticNumericFacet extends LightningElement {
     }
 
     if (this.numberOfValues > 0) {
-      const engine = getHeadlessBindings(this.engineId).engine;
-      engine.dispatch(
+      this.engine.dispatch(
         this.headless
-          .loadNumericFacetSetActions(engine)
+          .loadNumericFacetSetActions(this.engine)
           .deselectAllNumericFacetValues(this.facet.state.facetId)
       );
     }

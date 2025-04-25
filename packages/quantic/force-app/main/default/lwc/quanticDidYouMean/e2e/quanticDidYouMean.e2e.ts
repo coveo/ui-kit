@@ -33,7 +33,7 @@ useCaseTestCases.forEach((useCase) => {
           didYouMean,
           search,
         }) => {
-          await search.mockSearchWithDidYouMeanResponse(didYouMeanData);
+          await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
           const searchResponsePromise = search.waitForSearchResponse();
           const automaticallyCorrectSearchPromise =
             search.waitForSearchResponse();
@@ -110,7 +110,7 @@ useCaseTestCases.forEach((useCase) => {
           didYouMean,
           search,
         }) => {
-          await search.mockSearchWithDidYouMeanResponse(didYouMeanData);
+          await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
           const searchResponsePromise = search.waitForSearchResponse();
           didYouMean.setQuery(expectedOriginalQuery);
           didYouMean.performSearch();

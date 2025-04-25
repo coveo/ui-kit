@@ -1,5 +1,5 @@
 import {
-  DidYouMeanData,
+  DidYouMeanLegacyData,
   DidYouMeanNextData,
   QueryTriggerData,
 } from '../../../../../../playwright/page-object/searchObjectWithDidYouMean';
@@ -8,7 +8,7 @@ const exampleOriginalQuery = 'original query';
 const exampleCorrectedQuery = 'corrected query';
 const exampleQueryTriggered = 'query triggered';
 
-const exampleDidYouMeanData: DidYouMeanData = {
+const exampleDidYouMeanData: DidYouMeanLegacyData = {
   correctedQuery: exampleCorrectedQuery,
   wordCorrections: [
     {

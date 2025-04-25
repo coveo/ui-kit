@@ -40,6 +40,7 @@ const exampleEngine = {
 };
 
 const defaultQueryCorrectionMode = 'legacy';
+const defaultDisableQueryAutoCorrection = false;
 
 const defaultOptions = {
   engineId: exampleEngine.id,
@@ -79,7 +80,9 @@ let queryTriggerState = initialQueryTriggerState;
 
 const functionsMocks = {
   undoQueryTrigger: jest.fn(() => {}),
+  applyCorrection: jest.fn(() => {}),
   buildDidYouMean: jest.fn(() => ({
+    applyCorrection: functionsMocks.applyCorrection,
     state: didYouMeanState,
     subscribe: functionsMocks.subscribeDidYouMean,
   })),
@@ -88,7 +91,6 @@ const functionsMocks = {
     state: queryTriggerState,
     subscribe: functionsMocks.subscribeQueryTrigger,
   })),
-  applyCorrection: jest.fn(() => {}),
   subscribeDidYouMean: jest.fn((cb) => {
     cb();
     return functionsMocks.unsubscribeDidYouMean;
@@ -144,38 +146,18 @@ describe('c-quantic-did-you-mean', () => {
       await flushPromises();
 
       expect(functionsMocks.buildDidYouMean).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildDidYouMean).toHaveBeenCalledWith(
+        exampleEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            queryCorrectionMode: defaultQueryCorrectionMode,
+            automaticallyCorrectQuery: !defaultDisableQueryAutoCorrection,
+          }),
+        })
+      );
       expect(functionsMocks.subscribeDidYouMean).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildQueryTrigger).toHaveBeenCalledTimes(1);
       expect(functionsMocks.subscribeQueryTrigger).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('when hasQueryCorrection is true', () => {
-    beforeEach(() => {
-      mockSuccessfulHeadlessInitialization();
-      prepareHeadlessState();
-    });
-
-    it('should render the didYouMean component template', async () => {
-      const expectedNoResultsLabel = initialDidYouMeanState.originalQuery;
-      const expectedAutomaticQueryCorrectionLabel =
-        initialDidYouMeanState.wasCorrectedTo;
-      const element = createTestComponent();
-      await flushPromises();
-
-      const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
-        selectors.didYouMeanNoResultsLabel
-      );
-      expect(didYouMeanNoResultsLabel).not.toBeNull();
-      expect(didYouMeanNoResultsLabel.value).toContain(expectedNoResultsLabel);
-      const didYouMeanAutomaticQueryCorrectionLabel =
-        element.shadowRoot.querySelector(
-          selectors.didYouMeanAutomaticQueryCorrectionLabel
-        );
-      expect(didYouMeanAutomaticQueryCorrectionLabel).not.toBeNull();
-      expect(didYouMeanAutomaticQueryCorrectionLabel.value).toContain(
-        expectedAutomaticQueryCorrectionLabel
-      );
     });
 
     describe('#disableQueryAutoCorrection property', () => {
@@ -185,9 +167,8 @@ describe('c-quantic-did-you-mean', () => {
       ])(
         'when disableQueryAutoCorrection is %s',
         (disableQueryAutoCorrection, expectedAutomaticallyCorrectQuery) => {
-          it(`should initialize the controller with automaticallyCorrectQuery ${expectedAutomaticallyCorrectQuery}`, async () => {
+          it(`should initialize the controller with automaticallyCorrectQuery set to ${expectedAutomaticallyCorrectQuery}`, async () => {
             createTestComponent({
-              ...defaultOptions,
               disableQueryAutoCorrection,
             });
             await flushPromises();
@@ -229,6 +210,57 @@ describe('c-quantic-did-you-mean', () => {
           });
         }
       );
+    });
+  });
+
+  describe('when hasQueryCorrection is true', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
+    it('should render the didYouMean component template with the auto corrected query', async () => {
+      const expectedNoResultsLabel = initialDidYouMeanState.originalQuery;
+      const expectedAutomaticQueryCorrectionLabel =
+        initialDidYouMeanState.wasCorrectedTo;
+      const element = createTestComponent();
+      await flushPromises();
+
+      const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
+        selectors.didYouMeanNoResultsLabel
+      );
+      expect(didYouMeanNoResultsLabel).not.toBeNull();
+      expect(didYouMeanNoResultsLabel.value).toContain(expectedNoResultsLabel);
+      const didYouMeanAutomaticQueryCorrectionLabel =
+        element.shadowRoot.querySelector(
+          selectors.didYouMeanAutomaticQueryCorrectionLabel
+        );
+      expect(didYouMeanAutomaticQueryCorrectionLabel).not.toBeNull();
+      expect(didYouMeanAutomaticQueryCorrectionLabel.value).toContain(
+        expectedAutomaticQueryCorrectionLabel
+      );
+    });
+
+    describe('when wasAutomaticallyCorrected is false', () => {
+      beforeEach(() => {
+        didYouMeanState.wasAutomaticallyCorrected = false;
+      });
+
+      it('should render the apply correction button to apply the query correct', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const applyCorrectionButton = element.shadowRoot.querySelector(
+          selectors.didYouMeanApplyCorrectionButton
+        );
+        expect(applyCorrectionButton).not.toBeNull();
+        expect(applyCorrectionButton.textContent).toBe(
+          initialDidYouMeanState.queryCorrection.correctedQuery
+        );
+        applyCorrectionButton.click();
+        await flushPromises();
+        expect(functionsMocks.applyCorrection).toHaveBeenCalledTimes(1);
+      });
     });
   });
 
@@ -292,7 +324,6 @@ describe('c-quantic-did-you-mean', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      // Should not render the didYouMean component template
       const didYouMeanNoResultsLabel = element.shadowRoot.querySelector(
         selectors.didYouMeanNoResultsLabel
       );
@@ -303,7 +334,6 @@ describe('c-quantic-did-you-mean', () => {
         );
       expect(didYouMeanAutomaticQueryCorrectionLabel).toBeNull();
 
-      // Should not render the queryTrigger component template
       const queryTriggerShowingResultsForLabel =
         element.shadowRoot.querySelector(
           selectors.queryTriggerShowingResultsForLabel

@@ -3,7 +3,6 @@ export {initializeBindings} from './utils/initialization-utils';
 export {Bindings} from './components/search/atomic-search-interface/atomic-search-interface';
 
 export {Components, JSX} from './components';
-export type {Components as LitComponents} from './lit-components';
 export type {i18n} from 'i18next';
 
 export {bindLogDocumentOpenOnResult} from './utils/result-utils';
@@ -21,7 +20,7 @@ export {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from './components/common/suggestions/stencil-suggestions-common';
+} from './components/common/suggestions/suggestions-common';
 export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
 
 export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';

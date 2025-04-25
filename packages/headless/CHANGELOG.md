@@ -1,3 +1,13 @@
+## <small>3.22.3 (2025-04-23)</small>
+
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+- chore(headless): rename navigator context provider file (#5191) ([e6666c9](https://github.com/coveo/ui-kit/commits/e6666c9)), closes [#5191](https://github.com/coveo/ui-kit/issues/5191)
+- fix(headless): advanced search queries parameters are not passed along (#5173) ([d373646](https://github.com/coveo/ui-kit/commits/d373646)), closes [#5173](https://github.com/coveo/ui-kit/issues/5173)
+
+## <small>3.22.2 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
 ## <small>3.22.1 (2025-04-09)</small>
 
 - fix(generated answer): fix citations not being reset correctly when clearing the query (#5135) ([dae399f](https://github.com/coveo/ui-kit/commits/dae399f)), closes [#5135](https://github.com/coveo/ui-kit/issues/5135)

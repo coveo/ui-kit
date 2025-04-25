@@ -1,6 +1,6 @@
 import {SortParam} from '../../../api/commerce/commerce-api-params.js';
 import {FilterableCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {
   CommerceFacetSetSection,
   CommerceSortSection,

@@ -118,7 +118,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.22.1",
+  "version": "3.22.3",
   "files": [
     "dist/"
   ],
@@ -159,7 +159,7 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.10",
+    "@coveo/bueno": "1.0.12",
     "@coveo/relay": "1.0.0",
     "@coveo/relay-event-types": "14.3.3",
     "@reduxjs/toolkit": "2.6.0",
@@ -182,7 +182,7 @@
     "execa": "9.5.2",
     "ts-node": "10.9.2",
     "typedoc": "0.27.9",
-    "vitest": "2.1.9"
+    "vitest": "3.1.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
