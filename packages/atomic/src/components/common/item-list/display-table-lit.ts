@@ -41,7 +41,7 @@ const getFieldTableColumns = (props: TableColumnsProps) => {
 
 const getFieldTableColumnsFromRenderingFunction = (
   props: Pick<TableColumnsProps, 'itemRenderingFunction' | 'firstItem'>
-): HTMLAtomicTableElementElement[] => {
+): Element[] => {
   const {firstItem, itemRenderingFunction} = props;
 
   const contentOfRenderingFunction = document.createElement('div');
@@ -59,7 +59,7 @@ const getFieldTableColumnsFromRenderingFunction = (
 
 const getFieldTableColumnsFromHTMLTemplate = (
   props: Pick<DisplayTableProps, 'templateContentForFirstItem'>
-): HTMLAtomicTableElementElement[] =>
+): Element[] =>
   Array.from(
     props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
   );
@@ -117,7 +117,7 @@ export const DisplayTableRow: FunctionalComponentWithChildren<
 
 export const DisplayTableData: FunctionalComponent<
   TableDataProps & {
-    renderItem: (content: HTMLAtomicTableElementElement) => TemplateResult;
+    renderItem: (content: Element) => TemplateResult;
   }
 > = ({props}) => {
   const {renderItem} = props;
