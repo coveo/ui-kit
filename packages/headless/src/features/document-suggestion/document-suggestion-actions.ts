@@ -6,7 +6,7 @@ import {AsyncThunkCaseAssistOptions} from '../../api/service/case-assist/case-as
 import {prepareContextFromFields} from '../../api/service/case-assist/case-assist-params.js';
 import {GetDocumentSuggestionsRequest} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-request.js';
 import {GetDocumentSuggestionsResponse} from '../../api/service/case-assist/get-document-suggestions/get-document-suggestions-response.js';
-import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {
   CaseAssistConfigurationSection,
   DocumentSuggestionSection,

@@ -1,6 +1,6 @@
 import {getSearchApiBaseUrl} from '../../../../api/platform-client.js';
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request.js';
-import {NavigatorContext} from '../../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../../app/navigator-context-provider.js';
 import {buildSearchRequest} from '../../../search/search-request.js';
 import {StateNeededForSpecificFacetSearch} from '../generic/generic-facet-search-state.js';
 

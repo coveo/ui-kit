@@ -15,7 +15,7 @@ import {
   SolutionType,
 } from '../commerce-ssr-engine/types/common.js';
 import {EngineDefinition} from '../commerce-ssr-engine/types/core-engine.js';
-import {NavigatorContextProvider} from '../navigatorContextProvider.js';
+import {NavigatorContextProvider} from '../navigator-context-provider.js';
 import {CommerceEngineOptions} from './commerce-engine.js';
 
 export interface CommerceEngineDefinition<

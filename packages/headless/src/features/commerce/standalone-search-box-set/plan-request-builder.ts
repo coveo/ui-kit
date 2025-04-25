@@ -4,7 +4,7 @@ import {
   QueryParam,
 } from '../../../api/commerce/commerce-api-params.js';
 import {BaseCommerceAPIRequest} from '../../../api/commerce/common/request.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {CommerceQuerySection} from '../../../state/state-sections.js';
 import {
   buildBaseCommerceAPIRequest,
