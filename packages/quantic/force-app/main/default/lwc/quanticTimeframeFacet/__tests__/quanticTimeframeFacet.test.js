@@ -20,6 +20,10 @@ jest.mock('c/quanticUtils', () => ({
     getShortDatePattern: jest.fn(),
     getLabelNameWithCount: jest.fn(),
   },
+  DateUtils: {
+    fromLocalIsoDate: jest.fn((value) => value),
+    toLocalSearchApiDate: jest.fn((value) => value),
+  },
   fromSearchApiDate: jest.fn((value) => value),
 }));
 jest.mock('c/quanticHeadlessLoader');
@@ -34,6 +38,7 @@ const selectors = {
   clearSelectionButton: '[data-testid="clear-selection-button"]',
   facetBody: '[data-testid="facet__body"]',
   facetCollapseToggle: 'lightning-button-icon',
+  datePickerForm: '[data-testid="facet__date-picker"]',
 };
 
 const exampleFacetId = 'example facet id';
@@ -45,12 +50,10 @@ const exampleEndDate = '2025-1-2';
 const exampleFacetValues = [
   {start: exampleStartDate, end: exampleEndDate, numberOfResults: 10},
 ];
-const exampleEngine = {
-  id: 'example engine id',
-};
+const exampleEngineId = 'exampleEngineId';
 
 const defaultOptions = {
-  engineId: exampleEngine.id,
+  engineId: exampleEngineId,
   field: exampleField,
   facetId: exampleFacetId,
   label: 'example label',
@@ -91,6 +94,7 @@ const functionsMocks = {
   buildDateFilter: jest.fn(() => ({
     subscribe: functionsMocks.dateFilterStateSubscriber,
     clear: functionsMocks.clear,
+    setRange: functionsMocks.setRange,
     state: filterState,
   })),
   stopWatching: jest.fn(),
@@ -121,6 +125,20 @@ const functionsMocks = {
   toggleSingleSelect: jest.fn(),
   deselectAll: jest.fn(),
   clear: jest.fn(),
+  reportValidity: jest.fn(() => true),
+  checkValidity: jest.fn(() => true),
+  loadDateFacetSetActions: jest.fn(() => ({
+    deselectAllDateFacetValues: functionsMocks.deselectAllDateFacetValues,
+  })),
+  deselectAllDateFacetValues: jest.fn(),
+  dispatch: jest.fn(),
+  buildDateRange: jest.fn(),
+  setRange: jest.fn(),
+};
+
+const exampleEngine = {
+  id: exampleEngineId,
+  dispatch: functionsMocks.dispatch,
 };
 
 const createTestComponent = buildCreateTestComponent(
@@ -140,6 +158,8 @@ function prepareHeadlessState() {
       buildDateFilter: functionsMocks.buildDateFilter,
       buildSearchStatus: functionsMocks.buildSearchStatus,
       buildFacetConditionsManager: functionsMocks.buildFacetConditionsManager,
+      loadDateFacetSetActions: functionsMocks.loadDateFacetSetActions,
+      buildDateRange: functionsMocks.buildDateRange,
     };
   };
 }
@@ -178,6 +198,22 @@ function mockErroneousHeadlessInitialization() {
       element.setInitializationError();
     }
   };
+}
+
+async function submitFacetSearchForm(element) {
+  const form = element.shadowRoot.querySelector(selectors.datePickerForm);
+  form.dispatchEvent(
+    new CustomEvent('submit', {bubbles: true, composed: true})
+  );
+  await flushPromises();
+}
+
+async function mockInputReportValidity(element) {
+  const inputs = [...element.shadowRoot.querySelectorAll('lightning-input')];
+  inputs.forEach((input) => {
+    input.reportValidity = functionsMocks.reportValidity;
+    input.checkValidity = functionsMocks.checkValidity;
+  });
 }
 
 describe('c-quantic-timeframe-facet', () => {
@@ -554,7 +590,7 @@ describe('c-quantic-timeframe-facet', () => {
           expect(clearSelectionButton).not.toBeNull();
         });
 
-        it('should call the clear function of the numeric filter controller when clicking on the clear selection button', async () => {
+        it('should call the clear function of the date filter controller when clicking on the clear selection button', async () => {
           const element = createTestComponent();
           await flushPromises();
 
@@ -663,59 +699,57 @@ describe('c-quantic-timeframe-facet', () => {
         });
       });
 
-      // describe('when a facet range is submitted', () => {
-      //   describe('when one of the inputs is invalid', () => {
-      //     it('should not call the method set range of the numeric filter controller', async () => {
-      //       const element = createTestComponent();
-      //       await flushPromises();
+      describe('when a facet range is submitted', () => {
+        describe('when one of the inputs is invalid', () => {
+          it('should not call the method set range of the date filter controller', async () => {
+            const element = createTestComponent();
+            await flushPromises();
 
-      //       mockInputReportValidity(element);
-      //       // Making the first input invalid
-      //       functionsMocks.reportValidity.mockReturnValueOnce(false);
+            mockInputReportValidity(element);
+            // Making the first input invalid
+            functionsMocks.checkValidity.mockReturnValueOnce(false);
 
-      //       await submitFacetSearchForm(element);
-      //       expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(1);
-      //       expect(functionsMocks.setRange).not.toHaveBeenCalled();
-      //     });
-      //   });
+            await submitFacetSearchForm(element);
+            expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(2);
+            expect(functionsMocks.setRange).not.toHaveBeenCalled();
+          });
+        });
 
-      //   describe('when the inputs are valid', () => {
-      //     const expectedRange = {start: 1, end: 2};
-      //     beforeEach(() => {
-      //       filterState = {
-      //         ...initialFilterState,
-      //         range: expectedRange,
-      //       };
-      //     });
+        describe('when the inputs are valid', () => {
+          beforeEach(() => {
+            filterState = {
+              ...initialFilterState,
+              range: {start: exampleStartDate, end: exampleEndDate},
+            };
+          });
 
-      //     it('should call the method setRange of the numeric filter controller', async () => {
-      //       const element = createTestComponent();
-      //       await flushPromises();
+          it('should call the method setRange of the date filter controller', async () => {
+            const element = createTestComponent();
+            await flushPromises();
 
-      //       mockInputReportValidity(element);
+            mockInputReportValidity(element);
 
-      //       await submitFacetSearchForm(element);
-      //       expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(2);
-      //       expect(functionsMocks.setRange).toHaveBeenCalledTimes(1);
-      //       expect(functionsMocks.setRange).toHaveBeenCalledWith(expectedRange);
-      //     });
+            await submitFacetSearchForm(element);
+            expect(functionsMocks.reportValidity).toHaveBeenCalledTimes(2);
+            expect(functionsMocks.setRange).toHaveBeenCalledTimes(1);
+          });
 
-      //     it('should call the method deselectAllNumericFacetValues of the numeric facet controller', async () => {
-      //       const element = createTestComponent();
-      //       await flushPromises();
+          it('should call the method deselectAllDateFacetValues of the date facet controller', async () => {
+            const element = createTestComponent();
+            await flushPromises();
 
-      //       mockInputReportValidity(element);
+            mockInputReportValidity(element);
 
-      //       await submitFacetSearchForm(element);
-      //       expect(
-      //         functionsMocks.deselectAllNumericFacetValues
-      //       ).toHaveBeenCalledTimes(1);
-      //       expect(
-      //         functionsMocks.deselectAllNumericFacetValues
-      //       ).toHaveBeenCalledWith(exampleFacetId);
-      //     });
-      //   });
-      // });
+            await submitFacetSearchForm(element);
+            expect(
+              functionsMocks.deselectAllDateFacetValues
+            ).toHaveBeenCalledTimes(1);
+            expect(
+              functionsMocks.deselectAllDateFacetValues
+            ).toHaveBeenCalledWith(exampleFacetId);
+          });
+        });
+      });
     });
 
     describe('when the facet has no values', () => {
