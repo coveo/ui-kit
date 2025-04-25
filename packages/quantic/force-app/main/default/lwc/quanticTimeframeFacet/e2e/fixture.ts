@@ -22,7 +22,6 @@ type QuanticFacetE2EFixtures = {
 
 export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {withDatePicker: true},
-  facetResponseMock: undefined,
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, searchRequestRegex));
   },
@@ -37,7 +36,6 @@ export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
 
 export const testInsight = facetBase.extend<QuanticFacetE2EFixtures>({
   options: {withDatePicker: true},
-  facetResponseMock: undefined,
   baseFacet: async ({page}, use) => {
     await use(new BaseFacetObject(page, insightSearchRequestRegex));
   },
