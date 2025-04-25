@@ -23,7 +23,7 @@ export function useInitializeRecentQueries(
 ) {
   useEffect(() => {
     const queries = getStoredRecentQueries();
-    if (updateRecentQueries) {
+    if (updateRecentQueries && queries.length > 0) {
       updateRecentQueries(queries);
     }
   }, [updateRecentQueries]);
