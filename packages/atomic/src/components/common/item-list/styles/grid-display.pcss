@@ -1,6 +1,8 @@
 @import './mixins.pcss';
 
-@mixin atomic-grid-clickable-elements;
-@mixin atomic-grid-display-common;
-@mixin atomic-grid-display-desktop;
-@mixin atomic-grid-display-mobile;
+:host {
+  @apply atomic-grid-clickable-elements;
+  @apply atomic-grid-display-common;
+  @apply atomic-grid-display-desktop;
+  @apply atomic-grid-display-mobile;
+}

@@ -27,7 +27,8 @@ export const CategoryFacetSearchValue: FunctionalComponent<
     : [allCategories];
   const ariaLabel = i18n.t('under', {
     child: i18n.t('facet-value', {
-      numberOfResults: value.count,
+      count: value.count,
+      formattedCount: count,
       value: value.displayValue,
     }),
     parent: localizedPath.join(', '),
@@ -64,7 +65,7 @@ export const CategoryFacetSearchValue: FunctionalComponent<
         style="text-neutral"
         part="search-result"
         onClick={() => onClick()}
-        class="no-outline group flex w-full flex-col truncate px-2 py-2.5"
+        class="group flex w-full flex-col truncate px-2 py-2.5 focus-visible:outline-none"
         aria-label={ariaLabel}
       >
         <div class="flex w-full">

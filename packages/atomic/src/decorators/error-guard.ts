@@ -1,10 +1,13 @@
 import {html, LitElement} from 'lit';
-import {TemplateResultType} from 'lit-html/directive-helpers.js';
-import {GenericRender, RenderGuardDecorator} from './types';
+import {TemplateResultType} from 'lit/directive-helpers.js';
+import '../components/common/atomic-component-error/atomic-component-error';
+import {
+  GenericRender,
+  InitializableComponent,
+  RenderGuardDecorator,
+} from './types';
 
-export interface LitElementWithError extends LitElement {
-  error?: Error;
-}
+type LitElementWithError = Pick<InitializableComponent, 'error'> & LitElement;
 
 /**
  * A decorator that guards the render method of a LitElement component against errors.
@@ -37,13 +40,10 @@ export function errorGuard<
     const originalMethod = descriptor.value;
     descriptor.value = function (this: Component) {
       if (this.error) {
-        console.error(this.error, this);
-        return html` <div class="text-error">
-          <p>
-            <b>${this.nodeName.toLowerCase()} component error</b>
-          </p>
-          <p>Look at the developer console for more information.</p>
-        </div>` as GenericRender<T>;
+        return html`<atomic-component-error
+          .error=${this.error}
+          .element=${this as HTMLElement}
+        ></atomic-component-error>` as GenericRender<T>;
       }
       return originalMethod.call(this);
     };

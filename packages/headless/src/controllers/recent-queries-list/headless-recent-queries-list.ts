@@ -3,6 +3,7 @@ import {
   BooleanValue,
   NumberValue,
   Schema,
+  StringValue,
   isBoolean,
 } from '@coveo/bueno';
 import {SearchEngine} from '../../app/search-engine/search-engine.js';
@@ -105,6 +106,11 @@ export interface RecentQueriesList extends Controller {
    * @param index - The index of the recent query to execute.
    */
   executeRecentQuery(index: number): void;
+  /**
+   * Sets the recent queries list to the specified array of queries.
+   * @param queries - The array of queries to set.
+   */
+  updateRecentQueries(queries: string[]): void;
 }
 
 /**
@@ -205,6 +211,24 @@ export function buildRecentQueriesList(
     clear() {
       dispatch(logClearRecentQueries());
       dispatch(clearRecentQueries());
+    },
+
+    updateRecentQueries(queries: string[]) {
+      const errorMessage = new ArrayValue({
+        required: true,
+        each: new StringValue({required: true}),
+        min: 1,
+      }).validate(queries);
+      if (errorMessage) {
+        throw new Error(errorMessage);
+      }
+
+      dispatch(
+        registerRecentQueries({
+          queries,
+          maxLength: registrationOptions.maxLength,
+        })
+      );
     },
 
     executeRecentQuery(index: number) {

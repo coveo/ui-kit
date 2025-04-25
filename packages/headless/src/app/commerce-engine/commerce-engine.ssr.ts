@@ -15,7 +15,7 @@ import {
   SolutionType,
 } from '../commerce-ssr-engine/types/common.js';
 import {EngineDefinition} from '../commerce-ssr-engine/types/core-engine.js';
-import {NavigatorContextProvider} from '../navigatorContextProvider.js';
+import {NavigatorContextProvider} from '../navigator-context-provider.js';
 import {CommerceEngineOptions} from './commerce-engine.js';
 
 export interface CommerceEngineDefinition<
@@ -67,6 +67,12 @@ export function defineCommerceEngine<
     engineOptions.navigatorContextProvider = navigatorContextProvider;
   };
 
+  const getAccessToken = () => engineOptions.configuration.accessToken;
+
+  const setAccessToken = (accessToken: string) => {
+    engineOptions.configuration.accessToken = accessToken;
+  };
+
   const build = buildFactory<TControllerDefinitions>(
     controllerDefinitions,
     getOptions()
@@ -96,18 +102,24 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.listing),
       hydrateStaticState: hydrateStaticState(SolutionType.listing),
       setNavigatorContextProvider,
+      getAccessToken,
+      setAccessToken,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.listing>,
     searchEngineDefinition: {
       build: build(SolutionType.search),
       fetchStaticState: fetchStaticState(SolutionType.search),
       hydrateStaticState: hydrateStaticState(SolutionType.search),
       setNavigatorContextProvider,
+      getAccessToken,
+      setAccessToken,
     } as CommerceEngineDefinition<TControllerDefinitions, SolutionType.search>,
     recommendationEngineDefinition: {
       build: build(SolutionType.recommendation),
       fetchStaticState: fetchRecommendationStaticState,
       hydrateStaticState: hydrateRecommendationStaticState,
       setNavigatorContextProvider,
+      getAccessToken,
+      setAccessToken,
     } as CommerceEngineDefinition<
       TControllerDefinitions,
       SolutionType.recommendation
@@ -118,6 +130,8 @@ export function defineCommerceEngine<
       fetchStaticState: fetchStaticState(SolutionType.standalone),
       hydrateStaticState: hydrateStaticState(SolutionType.standalone),
       setNavigatorContextProvider,
+      getAccessToken,
+      setAccessToken,
     } as CommerceEngineDefinition<
       TControllerDefinitions,
       SolutionType.standalone

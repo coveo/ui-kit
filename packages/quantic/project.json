@@ -1,17 +1,11 @@
 {
   "name": "quantic",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": [
-      "!{projectRoot}/docs/out",
-      "!{projectRoot}/force-app/main/default/staticresources/coveobueno",
-      "!{projectRoot}/force-app/main/default/staticresources/coveoheadless"
-    ],
-    "negativeNonBuildOutputs": ["!{projectRoot}/reports"]
-  },
   "targets": {
     "release:phase1": {},
-    "cached:build": {
+    "release:phase3": {},
+    "build": {
+      "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/docs/out",
         "{projectRoot}/force-app/main/default/staticresources/coveobueno",
@@ -19,19 +13,15 @@
         "{projectRoot}/force-app/main/default/staticresources/dompurify",
         "{projectRoot}/force-app/main/default/staticresources/marked"
       ],
-      "executor": "nx:run-commands",
+      "cache": true,
       "options": {
         "commands": [
           "npm run babel:headless && npm run build:staticresources",
           "npm run build:doc"
         ],
         "parallel": true,
-        "cwd": "packages/quantic"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     },
     "promote:sfdx": {
       "dependsOn": ["build"],

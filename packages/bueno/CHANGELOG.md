@@ -1,3 +1,23 @@
+## <small>1.0.12 (2025-04-23)</small>
+
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+
+## <small>1.0.11 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
+## <small>1.0.10 (2025-04-02)</small>
+
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+
+## <small>1.0.9 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>1.0.8 (2025-02-26)</small>
+
+- chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
+
 ## <small>1.0.7 (2024-12-04)</small>
 
 - chore(deps): update all dependencies j:kit-282 (#4705) ([34921b9](https://github.com/coveo/ui-kit/commits/34921b9)), closes [#4705](https://github.com/coveo/ui-kit/issues/4705) [#8203](https://github.com/coveo/ui-kit/issues/8203)

@@ -2,7 +2,7 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import {wrapInRecommendationInterface} from '@/storybook-utils/search/recs-interface-wrapper';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit-html/static.js';
+import {html} from 'lit';
 
 const {decorator, play} = wrapInRecommendationInterface();
 

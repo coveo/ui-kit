@@ -6,7 +6,7 @@ import {CommerceEngine} from '../app/commerce-engine/commerce-engine.js';
 import {SSRCommerceEngine} from '../app/commerce-ssr-engine/factories/build-factory.js';
 import type {CoreEngine, CoreEngineNext} from '../app/engine.js';
 import {InsightEngine} from '../app/insight-engine/insight-engine.js';
-import {defaultNodeJSNavigatorContextProvider} from '../app/navigatorContextProvider.js';
+import {defaultNodeJSNavigatorContextProvider} from '../app/navigator-context-provider.js';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine.js';
 import {SearchEngine} from '../app/search-engine/search-engine.js';
 import {SSRSearchEngine} from '../app/search-engine/search-engine.ssr.js';

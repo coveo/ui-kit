@@ -132,6 +132,12 @@ export interface BaseProduct {
   /**
    * The length and offset of each word to highlight in the product excerpt string.
    */
+  excerptHighlights?: HighlightKeyword[];
+  /**
+   * @deprecated Use `excerptHighlights` instead.
+   *
+   * The length and offset of each word to highlight in the product excerpt string.
+   */
   excerptsHighlights?: HighlightKeyword[];
 }
 

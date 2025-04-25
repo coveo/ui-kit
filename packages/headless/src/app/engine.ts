@@ -39,7 +39,7 @@ import {
   NavigatorContextProvider,
   defaultBrowserNavigatorContextProvider,
   defaultNodeJSNavigatorContextProvider,
-} from './navigatorContextProvider.js';
+} from './navigator-context-provider.js';
 import {createReducerManager, ReducerManager} from './reducer-manager.js';
 import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware.js';
 import {stateKey} from './state-key.js';
@@ -410,5 +410,19 @@ class InvalidEngineConfiguration extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'InvalidEngineConfiguration';
+  }
+}
+
+export const nextAnalyticsUsageWithServiceFeatureWarning =
+  '[Warning] A component from the Coveo Headless library has been instantiated with the Analytics Mode: "Next".\n' +
+  'However, this mode is not available for Coveo for Service features, and this configuration may not work as expected.\n' +
+  'Please switch back to the "legacy" analytics mode to ensure proper functionality.\n' +
+  'For more information, refer to the documentation: https://docs.coveo.com/en/o3r90189/build-a-search-ui/event-protocol';
+
+export function warnIfUsingNextAnalyticsModeForServiceFeature(
+  analyticsMode: 'next' | 'legacy'
+) {
+  if (analyticsMode === 'next') {
+    console.warn(nextAnalyticsUsageWithServiceFeatureWarning);
   }
 }

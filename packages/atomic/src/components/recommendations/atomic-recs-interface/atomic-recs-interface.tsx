@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {
   RecommendationEngine,
   RecommendationEngineConfiguration,
@@ -24,10 +25,10 @@ import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
   mismatchedInterfaceAndEnginePropError,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {getAnalyticsConfig} from './analytics-config';
 import {createRecsStore, RecsStore} from './store';
 
@@ -46,10 +47,11 @@ export type RecsBindings = CommonBindings<
  */
 @Component({
   tag: 'atomic-recs-interface',
+  styleUrl: 'atomic-recs-interface.pcss',
   shadow: true,
 })
 export class AtomicRecsInterface
-  implements BaseAtomicInterface<RecommendationEngine>
+  implements StencilBaseAtomicInterface<RecommendationEngine>
 {
   private store = createRecsStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<RecommendationEngine>;
@@ -94,7 +96,7 @@ export class AtomicRecsInterface
   /**
    * The recommendation interface i18next instance.
    */
-  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop() public i18n: i18n;
 
   /**
    * The severity level of the messages to log in the console.
@@ -152,11 +154,22 @@ export class AtomicRecsInterface
    */
   @Prop({reflect: true}) public CspNonce?: string;
 
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
+
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomicRecs'
     );
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   public get bindings(): RecsBindings {
@@ -176,6 +189,7 @@ export class AtomicRecsInterface
     if (this.CspNonce) {
       setNonce(this.CspNonce);
     }
+    this.componentWillLoadResolver();
   }
 
   /**
@@ -254,7 +268,7 @@ export class AtomicRecsInterface
         locale: this.language,
       })
     );
-    this.commonInterfaceHelper.onLanguageChange();
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('analytics')
@@ -276,7 +290,13 @@ export class AtomicRecsInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    await this.updateLanguage();
+    markParentAsReady(this.host);
     this.pipeline = this.engine!.state.pipeline;
     this.searchHub = this.engine!.state.searchHub;
     this.store.unsetLoadingFlag(FirstRecommendationExecutedFlag);

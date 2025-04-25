@@ -9,12 +9,12 @@ import {
   getCommerceApiBaseUrl,
 } from '@coveo/headless/commerce';
 import {Component, h, State} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QueryErrorContainer} from '../../common/query-error/container';
 import {QueryErrorDescription} from '../../common/query-error/description';
 import {QueryErrorDetails} from '../../common/query-error/details';
@@ -43,7 +43,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
   styleUrl: 'atomic-commerce-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError
+export class AtomicCommerceQueryError
   implements InitializableComponent<CommerceBindings>
 {
   @InitializeBindings() public bindings!: CommerceBindings;

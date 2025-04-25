@@ -4,7 +4,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {buildCommerceLayout} from './commerce-layout';
 
@@ -33,8 +33,11 @@ export class AtomicCommerceLayout
   public componentDidLoad() {
     const id = this.host.id || randomID('atomic-commerce-layout-');
     this.host.id = id;
-    const styleTag = this.bindings.createStyleElement();
-    styleTag.innerHTML = buildCommerceLayout(this.host, this.mobileBreakpoint);
-    this.host.appendChild(styleTag);
+
+    const styleSheet = new CSSStyleSheet();
+    styleSheet.replaceSync(
+      buildCommerceLayout(this.host, this.mobileBreakpoint)
+    );
+    this.bindings.addAdoptedStyleSheets(styleSheet);
   }
 }

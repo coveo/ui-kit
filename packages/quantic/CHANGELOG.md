@@ -1,3 +1,83 @@
+## <small>3.17.1 (2025-04-23)</small>
+
+- test(quantic): e2e tests and unit tests added for the QuanticDidYouMean component (#5175) ([320e70e](https://github.com/coveo/ui-kit/commits/320e70e)), closes [#5175](https://github.com/coveo/ui-kit/issues/5175)
+
+## 3.17.0 (2025-04-16)
+
+- test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)
+- test(quantic): e2e tests and unit tests added for quantic facet (#5141) ([0de4aa9](https://github.com/coveo/ui-kit/commits/0de4aa9)), closes [#5141](https://github.com/coveo/ui-kit/issues/5141)
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- feat(quantic): added origin context to quantic insight interface (#5142) ([4cde171](https://github.com/coveo/ui-kit/commits/4cde171)), closes [#5142](https://github.com/coveo/ui-kit/issues/5142)
+
+## <small>3.16.5 (2025-04-09)</small>
+
+- fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
+
+## <small>3.16.4 (2025-04-03)</small>
+
+- chore(quantic): disable debug on jsdoc (#5134) ([6a3e2f5](https://github.com/coveo/ui-kit/commits/6a3e2f5)), closes [#5134](https://github.com/coveo/ui-kit/issues/5134)
+- chore(quantic): ensure directory exist when writing doc (#5136) ([a06dcac](https://github.com/coveo/ui-kit/commits/a06dcac)), closes [#5136](https://github.com/coveo/ui-kit/issues/5136)
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
+## <small>3.16.3 (2025-04-03)</small>
+
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+
+## <small>3.16.2 (2025-04-02)</small>
+
+- test(quantic): quantic placeholder cypress to jest tests (#5104) ([1bddb93](https://github.com/coveo/ui-kit/commits/1bddb93)), closes [#5104](https://github.com/coveo/ui-kit/issues/5104)
+
+## <small>3.16.1 (2025-04-02)</small>
+
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- fix(quantic): handle corner-cases for ResultsPerPage (#5096) ([c006fbe](https://github.com/coveo/ui-kit/commits/c006fbe)), closes [#5096](https://github.com/coveo/ui-kit/issues/5096)
+- fix(quantic): made sure test folders are excluded from quantic npm package (#5108) ([9c01cf6](https://github.com/coveo/ui-kit/commits/9c01cf6)), closes [#5108](https://github.com/coveo/ui-kit/issues/5108)
+- fix(quantic): unneeded key attribute removed from quantic number button element (#5107) ([980d6b5](https://github.com/coveo/ui-kit/commits/980d6b5)), closes [#5107](https://github.com/coveo/ui-kit/issues/5107)
+
+## 3.16.0 (2025-03-26)
+
+- feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
+- feat(headless): replaced searchUid by responseId and adapted to latest genqa analytics schemas (#501 ([2f2c123](https://github.com/coveo/ui-kit/commits/2f2c123)), closes [#5018](https://github.com/coveo/ui-kit/issues/5018)
+- fix(quantic): added origin context to quantic case assist interface (#5091) ([33435f6](https://github.com/coveo/ui-kit/commits/33435f6)), closes [#5091](https://github.com/coveo/ui-kit/issues/5091)
+- fix(quantic): custom no-answer message displayed when search returns no results (#5084) ([1a38e96](https://github.com/coveo/ui-kit/commits/1a38e96)), closes [#5084](https://github.com/coveo/ui-kit/issues/5084)
+- fix(quantic): fixed how the quantic\_\_loadingstatechange event is handled (#5090) ([b874a79](https://github.com/coveo/ui-kit/commits/b874a79)), closes [#5090](https://github.com/coveo/ui-kit/issues/5090)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
+## <small>3.15.4 (2025-03-19)</small>
+
+- fix(quantic): delay caused by recent queries fixed (#5060) ([31a14b9](https://github.com/coveo/ui-kit/commits/31a14b9)), closes [#5060](https://github.com/coveo/ui-kit/issues/5060)
+- fix(quantic): fixed issue with custom facet captions inside the refine modal (#5075) ([d9be647](https://github.com/coveo/ui-kit/commits/d9be647)), closes [#5075](https://github.com/coveo/ui-kit/issues/5075)
+- fix(quanticDocs): answer config id default value (#4970) ([707af1e](https://github.com/coveo/ui-kit/commits/707af1e)), closes [#4970](https://github.com/coveo/ui-kit/issues/4970)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>3.15.3 (2025-03-12)</small>
+
+- fix(atomic): fix generated answer scrollable table overflow when table too small (#5040) ([868c089](https://github.com/coveo/ui-kit/commits/868c089)), closes [#5040](https://github.com/coveo/ui-kit/issues/5040)
+- fix(quantic): citation url in tooltip issue fixed (#5048) ([48b5724](https://github.com/coveo/ui-kit/commits/48b5724)), closes [#5048](https://github.com/coveo/ui-kit/issues/5048)
+- fix(quantic): failing playwright tests for facet manager in quantic (#5054) ([0136764](https://github.com/coveo/ui-kit/commits/0136764)), closes [#5054](https://github.com/coveo/ui-kit/issues/5054)
+- fix(quantic): removing demo code (#5058) ([0102cbb](https://github.com/coveo/ui-kit/commits/0102cbb)), closes [#5058](https://github.com/coveo/ui-kit/issues/5058)
+
+## <small>3.15.2 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
+## 3.15.0 (2025-02-27)
+
+- test(quantic): playwright e2e and unit tests created for quantic case classification component (#496 ([460387c](https://github.com/coveo/ui-kit/commits/460387c)), closes [#4967](https://github.com/coveo/ui-kit/issues/4967)
+- test(quantic): Playwright migration for facet manager E2E tests (#4943) ([37ab740](https://github.com/coveo/ui-kit/commits/37ab740)), closes [#4943](https://github.com/coveo/ui-kit/issues/4943)
+- feat(quantic): Allow RGA component to provide a custom "no answer" message when no answer is shown ( ([068c05a](https://github.com/coveo/ui-kit/commits/068c05a)), closes [#4919](https://github.com/coveo/ui-kit/issues/4919)
+
+## <small>3.14.3 (2025-02-26)</small>
+
+- chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+- fix(deps): update all dependencies j:kit-282 (#5008) ([ae6b710](https://github.com/coveo/ui-kit/commits/ae6b710)), closes [#5008](https://github.com/coveo/ui-kit/issues/5008)
+- test(quantic): fixed quantic timeframe facets e2e cypress test (#4972) ([0a59bf6](https://github.com/coveo/ui-kit/commits/0a59bf6)), closes [#4972](https://github.com/coveo/ui-kit/issues/4972)
+
 ## <small>3.14.1 (2025-02-12)</small>
 
 - fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)

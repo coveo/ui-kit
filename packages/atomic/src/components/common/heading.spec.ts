@@ -19,13 +19,9 @@ describe('heading', () => {
     children?: string
   ): HTMLElement => {
     render(
-      html`${heading(
-        {
-          ...props,
-          level: props.level ?? 1,
-        },
-        html`${children}`
-      )}`,
+      html` ${heading({
+        props: {...props, level: props.level ?? 1},
+      })(html`${children}`)}`,
       container
     );
     return within(container).getByRole(

@@ -1,7 +1,8 @@
 import {SmartSnippet, SmartSnippetFeedback} from '@coveo/headless';
 import {EventEmitter, h} from '@stencil/core';
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
-import {once} from '../../../../utils/utils';
+import {once} from '../../../../utils/stencil-utils';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
 import {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
 
@@ -192,7 +193,7 @@ export class SmartSnippetFeedbackModalCommon {
         container={this.props.getHost()}
         isOpen={this.props.getIsOpen()}
         close={() => this.close()}
-        exportparts="backdrop,container,header,header-wrapper,header-ruler,body,body-wrapper,footer,footer-wrapper,footer-wrapper"
+        exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       >
         {this.renderHeader()}
         {this.renderBody()}

@@ -42,7 +42,7 @@ export default defineConfig({
     ? {
         command:
           process.env.DEPLOYMENT_ENVIRONMENT === 'CDN'
-            ? 'cp -r ../headless/cdn ./dist-storybook/headless/ && cp -r ../bueno/dist/browser ./dist-storybook/bueno/ && npx ws -c ws.config.cjs'
+            ? 'cp -r ../headless/cdn ./dist-storybook/headless/ && cp -r ../bueno/cdn ./dist-storybook/bueno/ && npx ws -c ws.config.cjs'
             : 'npx ws -d ./dist-storybook -p 4400',
         port: 4400,
         timeout: 120 * 1000,

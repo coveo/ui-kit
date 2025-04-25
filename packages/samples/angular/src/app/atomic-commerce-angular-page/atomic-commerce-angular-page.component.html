@@ -1,0 +1,48 @@
+<atomic-commerce-interface type="search" #commerceInterface searchHub="UI_KIT_E2E" pipeline="UI_KIT_E2E">
+  <atomic-commerce-layout>
+    <atomic-layout-section section="search">
+      <atomic-commerce-search-box>
+        <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+        <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+      </atomic-commerce-search-box>
+    </atomic-layout-section>
+    <atomic-layout-section section="facets">
+      <atomic-commerce-facets> </atomic-commerce-facets>
+    </atomic-layout-section>
+
+    <atomic-layout-section section="main">
+      <atomic-layout-section section="status">
+        <atomic-commerce-breadbox></atomic-commerce-breadbox>
+        <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
+        <atomic-commerce-query-error></atomic-commerce-query-error>
+        <atomic-commerce-no-products></atomic-commerce-no-products>
+      </atomic-layout-section>
+      <atomic-layout-section section="products">
+        <atomic-commerce-product-list display="grid" image-size="small">
+          <atomic-product-template>
+            <template>
+              <atomic-product-section-name>
+                <h2>
+                  <atomic-product-link></atomic-product-link>
+                </h2>
+              </atomic-product-section-name>
+              <atomic-product-section-visual>
+                <atomic-product-image></atomic-product-image>
+              </atomic-product-section-visual>
+              <atomic-product-section-emphasized>
+                <atomic-product-price></atomic-product-price>
+              </atomic-product-section-emphasized>
+              <atomic-product-section-description>
+                <atomic-product-description field="ec_description"></atomic-product-description>
+              </atomic-product-section-description>
+            </template>
+          </atomic-product-template>
+        </atomic-commerce-product-list>
+      </atomic-layout-section>
+
+      <atomic-layout-section section="pagination">
+        <atomic-commerce-load-more-products> </atomic-commerce-load-more-products>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>

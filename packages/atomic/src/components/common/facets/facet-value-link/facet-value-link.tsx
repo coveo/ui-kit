@@ -14,6 +14,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: count,
     interpolation: {escapeValue: false},
   });
 
@@ -30,7 +31,7 @@ export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
         style="text-neutral"
         part={part}
         onClick={() => props.onClick()}
-        class="no-outline group flex w-full items-center truncate px-2 py-2.5 text-left"
+        class="group flex w-full items-center truncate px-2 py-2.5 text-left focus-visible:outline-none"
         ariaPressed={props.isSelected.toString()}
         ariaLabel={ariaLabel}
         ref={props.buttonRef}

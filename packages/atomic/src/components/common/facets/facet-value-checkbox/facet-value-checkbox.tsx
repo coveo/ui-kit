@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/stencil-utils';
 import {StencilCheckbox} from '../../stencil-checkbox';
 import {TriStateCheckbox} from '../../triStateCheckbox';
 import {FacetValueProps} from '../facet-common';
@@ -19,6 +19,7 @@ export const FacetValueCheckbox: FunctionalComponent<
   const ariaLabelAttributes = {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: count,
     interpolation: {escapeValue: false},
   };
   const selectedAriaLabel = props.i18n.t('facet-value', ariaLabelAttributes);

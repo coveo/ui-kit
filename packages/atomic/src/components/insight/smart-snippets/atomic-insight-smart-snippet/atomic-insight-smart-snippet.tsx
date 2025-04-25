@@ -9,7 +9,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/stencil-utils';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
@@ -36,7 +36,7 @@ export class AtomicInsightSmartSnippet
 
   @Element() public host!: HTMLElement;
 
-  private id = randomID();
+  private id!: string;
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
   private smartSnippetCommon!: SmartSnippetCommon;
 
@@ -71,6 +71,7 @@ export class AtomicInsightSmartSnippet
   @State() feedbackSent = false;
 
   public initialize() {
+    this.id ||= randomID();
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
     this.smartSnippetCommon = new SmartSnippetCommon({
       id: this.id,

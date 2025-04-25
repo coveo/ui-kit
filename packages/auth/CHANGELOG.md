@@ -1,3 +1,23 @@
+## <small>2.0.13 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
+## <small>2.0.12 (2025-04-02)</small>
+
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+
+## <small>2.0.11 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>2.0.10 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
+## <small>2.0.8 (2025-02-26)</small>
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+
 ## <small>2.0.7 (2025-02-05)</small>
 
 - chore(deps): update dependency vite to v5.4.14 j:kit-282 (#4902) ([e0b448b](https://github.com/coveo/ui-kit/commits/e0b448b)), closes [#4902](https://github.com/coveo/ui-kit/issues/4902)

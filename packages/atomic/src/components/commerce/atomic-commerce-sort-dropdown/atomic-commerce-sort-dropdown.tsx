@@ -14,7 +14,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {SortContainer} from '../../common/sort/container';
 import {SortGuard} from '../../common/sort/guard';
 import {SortLabel} from '../../common/sort/label';
@@ -43,7 +43,7 @@ export class AtomicCommerceSortDropdown
 {
   @InitializeBindings() public bindings!: CommerceBindings;
 
-  private id = randomID('atomic-commerce-sort-dropdown-');
+  private id!: string;
 
   @Element() host!: HTMLElement;
 
@@ -60,6 +60,7 @@ export class AtomicCommerceSortDropdown
   @State() public error!: Error;
 
   public initialize() {
+    this.id ||= randomID('atomic-commerce-sort-dropdown-');
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {

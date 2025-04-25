@@ -1,3 +1,33 @@
+## <small>1.1.14 (2025-04-23)</small>
+
+- fix(autoloader): wrap initial discovery and observer setup in DOMContentLoaded event (#5180) ([58655b4](https://github.com/coveo/ui-kit/commits/58655b4)), closes [#5180](https://github.com/coveo/ui-kit/issues/5180)
+
+## <small>1.1.13 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
+## <small>1.1.10 (2025-04-02)</small>
+
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+
+## <small>1.1.8 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>1.1.7 (2025-03-12)</small>
+
+- chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
+
+## <small>1.1.6 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
+## <small>1.1.3 (2025-02-26)</small>
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(bueno): improve exports, externalize dependencies from bundles (#4987) ([ab8931e](https://github.com/coveo/ui-kit/commits/ab8931e)), closes [#4987](https://github.com/coveo/ui-kit/issues/4987)
+- fix(deps): update all dependencies j:kit-282 (#5008) ([ae6b710](https://github.com/coveo/ui-kit/commits/ae6b710)), closes [#5008](https://github.com/coveo/ui-kit/issues/5008)
+
 ## <small>1.1.1 (2025-02-12)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#4957) ([8302720](https://github.com/coveo/ui-kit/commits/8302720)), closes [#4957](https://github.com/coveo/ui-kit/issues/4957)

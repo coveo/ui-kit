@@ -1,7 +1,7 @@
 import {EventDescription} from 'coveo.analytics';
 import {getAnalyticsSource} from '../../api/analytics/analytics-selectors.js';
 import {AnalyticsParam} from '../../api/search/search-api-params.js';
-import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {AnalyticsState} from './configuration-state.js';
 
 export const fromAnalyticsStateToAnalyticsParams = (
@@ -25,7 +25,9 @@ export const fromAnalyticsStateToAnalyticsParams = (
       ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
       ...(s.deviceId && {deviceId: s.deviceId}),
       ...(s.trackingId && {trackingId: s.trackingId}),
-      ...{capture: true},
+      ...{
+        capture: navigatorContext.capture ?? navigatorContext.clientId !== '',
+      },
       ...{source: getAnalyticsSource(s)},
     },
   };

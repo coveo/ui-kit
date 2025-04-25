@@ -2,7 +2,7 @@
   "name": "@coveo/atomic-react",
   "sideEffects": false,
   "type": "module",
-  "version": "3.2.19",
+  "version": "3.2.34",
   "description": "React specific wrapper for the Atomic component library",
   "repository": {
     "type": "git",
@@ -16,9 +16,9 @@
     "build:fixGeneratedImportPaths": "fix-esm-import-path src/components/stencil-generated",
     "build:bundles": "rollup --config rollup.config.js",
     "build:types": "tsc --project tsconfig.types.json",
-    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod",
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
     "build:assets": "ncp ../atomic/dist/atomic/assets dist/assets && ncp ../atomic/dist/atomic/lang dist/lang "
   },
   "module": "./dist/esm/atomic-react.mjs",
@@ -30,25 +30,27 @@
     "commerce/"
   ],
   "dependencies": {
-    "@coveo/atomic": "3.19.1",
+    "@coveo/atomic": "3.22.7",
     "@lit/react": "1.0.6",
     "lit": "3.2.1"
   },
   "devDependencies": {
-    "@coveo/release": "1.0.0",
+    "@coveo/ci": "1.0.0",
+    "@rollup/plugin-commonjs": "28.0.3",
+    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-typescript": "12.1.2",
-    "@types/node": "22.13.1",
+    "@types/node": "22.13.5",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "fix-esm-import-path": "1.10.1",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "rollup": "4.34.2",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "rollup": "4.34.8",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {
-    "@coveo/headless": "3.16.0",
+    "@coveo/headless": "3.22.3",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },

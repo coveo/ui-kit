@@ -7,16 +7,16 @@ import {
   Summary,
 } from '@coveo/headless/commerce';
 import {Component, h, State, Prop, Element, Fragment} from '@stencil/core';
-import {
-  AriaLiveRegion,
-  FocusTargetController,
-} from '../../../../utils/accessibility-utils';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {
+  AriaLiveRegion,
+  FocusTargetController,
+} from '../../../../utils/stencil-accessibility-utils';
 import {CategoryFacetAllCategoryButton} from '../../../common/facets/category-facet/all-categories-button';
 import {CategoryFacetChildValueLink} from '../../../common/facets/category-facet/child-value-link';
 import {CategoryFacetChildrenAsTreeContainer} from '../../../common/facets/category-facet/children-as-tree-container';
@@ -88,7 +88,9 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
   styleUrl: 'atomic-commerce-category-facet.pcss',
   shadow: true,
 })
-export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
+export class AtomicCommerceCategoryFacet
+  implements InitializableComponent<Bindings>
+{
   @InitializeBindings() public bindings!: Bindings;
   @Element() private host!: HTMLElement;
 
@@ -204,7 +206,7 @@ export class AtomicCategoryFacet implements InitializableComponent<Bindings> {
   public componentShouldUpdate(
     next: unknown,
     prev: unknown,
-    propName: keyof AtomicCategoryFacet
+    propName: keyof AtomicCommerceCategoryFacet
   ) {
     if (
       this.isCategoryFacetState(prev, propName) &&

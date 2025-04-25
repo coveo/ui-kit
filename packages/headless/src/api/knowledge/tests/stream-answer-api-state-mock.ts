@@ -186,6 +186,22 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
     q: 'what is the hardest wood',
     enableQuerySyntax: false,
   },
+  advancedSearchQueries: {
+    aq: 'aq-test-query',
+    aqWasSet: true,
+    cq: 'cq-test-query',
+    cqWasSet: true,
+    dq: 'dq-test-query',
+    dqWasSet: true,
+    lq: 'lq-test-query',
+    lqWasSet: true,
+    defaultFilters: {
+      cq: '',
+      aq: '',
+      lq: '',
+      dq: '',
+    },
+  },
   querySuggest: {},
   querySet: {
     'atomic-search-box-ie7ah': 'what is the hardest wood',
@@ -675,6 +691,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
           status: 'pending' as any,
           endpointName: 'getAnswer',
           requestId: 'ePS46iWmVlz23hfyR8TVQ',
+          //@ts-expect-error - This is a mock
           originalArgs: {
             q: 'what is the hardest wood',
             pipelineRuleParameters: {
@@ -1055,6 +1072,10 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
 
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
+  aq: 'aq-test-query',
+  cq: 'cq-test-query',
+  dq: 'dq-test-query',
+  lq: 'lq-test-query',
   pipelineRuleParameters: {
     mlGenerativeQuestionAnswering: {
       responseFormat: {

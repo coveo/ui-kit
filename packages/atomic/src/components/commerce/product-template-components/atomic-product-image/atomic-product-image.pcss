@@ -2,10 +2,9 @@
 @import '../../../common/item-list/styles/mixins.pcss';
 @import '../../../common/item-list/styles/placeholders.pcss';
 
-@mixin atomic-grid-clickable-elements;
-@mixin atomic-grid-display-common;
-
 :host {
+  @apply atomic-grid-clickable-elements;
+  @apply atomic-grid-display-common;
   display: grid;
   place-items: center;
   grid-template-rows: 100%;

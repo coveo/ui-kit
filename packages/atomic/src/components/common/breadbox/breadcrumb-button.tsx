@@ -24,7 +24,7 @@ export const BreadcrumbButton: FunctionalComponent<BreadcrumbButtonProps> = (
     'px-3',
     'flex',
     'items-center',
-    'btn-pill',
+    'rounded-xl',
     'group',
   ];
 

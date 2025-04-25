@@ -37,7 +37,7 @@ const exampleSalesforceKnowledgeArticleCitation = {
     sfkavid: 'bar',
   },
 };
-const exampleSalesforceLink = 'https://www.example-salesforce.com/';
+const exampleSalesforceLink = 'https://www.example-salesforce.com';
 
 const defaultOptions = {
   citation: exampleCitation,
@@ -53,6 +53,7 @@ const selectors = {
   citationLink: '.citation__link',
   citationTitle: '.citation__title',
   citationTooltip: 'c-quantic-tooltip',
+  citationTooltipUrl: '[data-testid="citation__tooltip-uri"]',
 };
 
 function createTestComponent(options = defaultOptions) {
@@ -211,7 +212,7 @@ describe('c-quantic-citation', () => {
       expect(pageReference.attributes.recordId).toBe(
         exampleSalesforceCitation.fields.sfid
       );
-      expect(link.href).toBe(exampleSalesforceLink);
+      expect(link.href).toBe(`${exampleSalesforceLink}/`);
     });
 
     it('should open the citation link inside Salesforce', async () => {
@@ -231,6 +232,20 @@ describe('c-quantic-citation', () => {
       );
     });
 
+    it('should display the salesforce link inside the tooltip url', async () => {
+      const element = createTestComponent({
+        ...defaultOptions,
+        citation: exampleSalesforceCitation,
+      });
+      await flushPromises();
+
+      const citationTooltipUrl = element.shadowRoot.querySelector(
+        selectors.citationTooltipUrl
+      );
+      expect(citationTooltipUrl).not.toBeNull();
+      expect(citationTooltipUrl.textContent).toBe(exampleSalesforceLink);
+    });
+
     describe('when the result is a knowledge article', () => {
       it('should open the citation link inside Salesforce', async () => {
         const element = createTestComponent({
@@ -247,7 +262,7 @@ describe('c-quantic-citation', () => {
         expect(pageReference.attributes.recordId).toBe(
           exampleSalesforceKnowledgeArticleCitation.fields.sfkavid
         );
-        expect(link.href).toBe(exampleSalesforceLink);
+        expect(link.href).toBe(`${exampleSalesforceLink}/`);
       });
     });
   });

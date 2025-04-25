@@ -25,7 +25,7 @@ jobs:
       id-token: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
@@ -33,16 +33,20 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
+      - name: Generate a token
+        id: generate-token
+        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1
+        with:
+          app-id: ${{ secrets.RELEASER_APP_ID }}
+          private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
+          owner: coveo
+          repository: ui-kit
       - name: Release
         run: npm run release
         env:
           VERSION: ${{ inputs.version }}
           DEBUG: ${{ inputs.debug && '*' || '' }}
-          RELEASER_APP_ID: ${{ secrets.RELEASER_APP_ID }}
-          RELEASER_PRIVATE_KEY: ${{ secrets.RELEASER_PRIVATE_KEY }}
-          RELEASER_CLIENT_ID: ${{ secrets.RELEASER_CLIENT_ID }}
-          RELEASER_CLIENT_SECRET: ${{ secrets.RELEASER_CLIENT_SECRET }}
-          RELEASER_INSTALLATION_ID: ${{ secrets.RELEASER_INSTALLATION_ID }}
+          GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Call ui-kit-cd
@@ -60,7 +64,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
@@ -70,24 +74,6 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Promote NPM package to production
         run: npm run promote:npm:latest
-  docs-prod:
-    needs: release
-    runs-on: ubuntu-latest
-    environment: 'Docs Production'
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          ref: 'release/v3'
-      - uses: ./.github/actions/setup
-      - name: Notify Docs
-        run: npm run notify:docs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   quantic-prod:
     needs: release
     runs-on: ubuntu-latest
@@ -98,7 +84,7 @@ jobs:
       discussions: write
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
@@ -124,7 +110,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
@@ -155,17 +141,16 @@ jobs:
           echo "Copied docs to: typedoc-headless-site/${{ env.version }}/"
 
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
         with:
           name: headless-docs-${{ env.version }}
           path: typedoc-headless-site/
-
   typedoc-headless-react:
     needs: release
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@cb605e52c26070c328afc4562f0b4ada7618a84e # v2.10.4
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
         with:
           egress-policy: audit
 
@@ -196,23 +181,25 @@ jobs:
           echo "Copied docs to: typedoc-headless-react-site/${{ env.version }}/"
 
       - name: Upload documentation artifact
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
         with:
           name: headless-react-docs-${{ env.version }}
           path: typedoc-headless-react-site/
+  docs-prod:
+    needs: release
+    runs-on: ubuntu-latest
+    environment: 'Docs Production'
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
 
-  # TODO KIT-3074 Fix the publication into the GitHub Packages, and uncomment
-  # github-prod:
-  #   needs: release
-  #   runs-on: ubuntu-latest
-  #   environment: 'GitHub Production'
-  #   steps:
-  #     - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
-  #       with:
-  #         registry-url: 'https://npm.pkg.github.com'
-  #         node-version-file: '.nvmrc'
-  #     - name: Publish to GitHub Packages
-  #       run: npm run release:phase4
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         DEBUG: ${{ inputs.debug && '*' || '' }}
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          ref: 'release/v3'
+      - uses: ./.github/actions/setup
+      - name: Notify Docs
+        run: npm run notify:docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

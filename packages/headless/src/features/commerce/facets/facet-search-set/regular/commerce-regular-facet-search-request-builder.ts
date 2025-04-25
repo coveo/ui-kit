@@ -1,6 +1,6 @@
 import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
-import {buildCommerceAPIRequest} from '../../../common/actions.js';
+import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
+import {buildFilterableCommerceAPIRequest} from '../../../common/filterable-commerce-api-request-builder.js';
 import {getFacetIdWithoutCommerceFieldSuggestionNamespace} from '../commerce-facet-search-actions.js';
 import {StateNeededForRegularFacetSearch} from './commerce-regular-facet-search-state.js';
 
@@ -12,7 +12,9 @@ export const buildFacetSearchRequest = (
 ): CommerceFacetSearchRequest => {
   const baseFacetQuery = state.facetSearchSet[facetId]!.options.query;
   const facetQuery = `*${baseFacetQuery}*`;
-  const query = state.commerceQuery?.query;
+  const query = !isFieldSuggestionsRequest
+    ? state.commerceQuery?.query
+    : baseFacetQuery;
 
   const {
     url,
@@ -25,14 +27,14 @@ export const buildFacetSearchRequest = (
     clientId,
     context,
     ...restOfCommerceAPIRequest
-  } = buildCommerceAPIRequest(state, navigatorContext);
+  } = buildFilterableCommerceAPIRequest(state, navigatorContext);
 
   return {
     url,
     accessToken,
     organizationId,
     facetId: getFacetIdWithoutCommerceFieldSuggestionNamespace(facetId),
-    facetQuery,
+    facetQuery: isFieldSuggestionsRequest ? '*' : facetQuery,
     trackingId,
     language,
     country,

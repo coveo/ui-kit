@@ -22,7 +22,7 @@ export const BreadcrumbShowMore: FunctionalComponent<
         ref={props.setRef}
         part="show-more"
         style="outline-primary"
-        class="btn-pill whitespace-nowrap p-2"
+        class="rounded-xl p-2 whitespace-nowrap"
         onClick={props.onShowMore}
         ariaLabel={props.i18n.t('show-n-more-filters', {
           value: props.numberOfCollapsedBreadcrumbs,

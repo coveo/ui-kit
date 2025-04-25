@@ -7,13 +7,13 @@ import {
 } from '@coveo/headless/insight';
 import {Component, Element, h, Prop, State} from '@stencil/core';
 import SearchSlimIcon from '../../../images/search-slim.svg';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {isFocusingOut, randomID} from '../../../utils/utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
+import {isFocusingOut, randomID} from '../../../utils/stencil-utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {
@@ -22,12 +22,11 @@ import {
   QuerySuggestionIcon,
   QuerySuggestionText,
 } from '../../common/suggestions/query-suggestions';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,
   SearchBoxSuggestionElement,
 } from '../../common/suggestions/suggestions-common';
-import {ButtonSearchSuggestion} from '../../search/atomic-search-box/search-suggestion';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -181,8 +180,8 @@ export class AtomicInsightSearchBox {
     }
 
     return (
-      <ButtonSearchSuggestion
-        bindings={this.bindings}
+      <atomic-suggestion-renderer
+        i18n={this.bindings.i18n}
         id={id}
         suggestion={item}
         isSelected={isSelected}
@@ -196,7 +195,7 @@ export class AtomicInsightSearchBox {
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, 'left', id);
         }}
-      ></ButtonSearchSuggestion>
+      ></atomic-suggestion-renderer>
     );
   }
 
@@ -240,7 +239,7 @@ export class AtomicInsightSearchBox {
       <div
         part={'suggestions'}
         ref={setRef}
-        class="flex flex-grow basis-1/2 flex-col"
+        class="flex grow basis-1/2 flex-col"
         onMouseDown={(e) => {
           if (e.target === getRef()) {
             e.preventDefault();
@@ -264,7 +263,7 @@ export class AtomicInsightSearchBox {
       <div
         id={`${this.id}-popup`}
         part="suggestions-wrapper"
-        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
+        class={`bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
           this.suggestionManager.hasSuggestions && this.isExpanded
             ? ''
             : 'hidden'
@@ -350,7 +349,7 @@ export class AtomicInsightSearchBox {
         <atomic-icon
           part="submit-icon"
           icon={SearchSlimIcon}
-          class="my-auto ml-4 mr-0 h-4 w-4"
+          class="my-auto mr-0 ml-4 h-4 w-4"
         />
         <SearchTextArea
           textAreaRef={this.textAreaRef}

@@ -1,24 +1,18 @@
 {
   "name": "atomic-react-samples",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "namedInputs": {
-    "negativeBuildOutputs": ["!{projectRoot}/dist"]
-  },
   "targets": {
-    "cached:build": {
-      "outputs": ["{projectRoot}/dist"],
+    "build": {
       "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
       "options": {
         "commands": [
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then tsc -b; fi",
-          "if [ \"$DEPLOYMENT_ENVIRONMENT\" != \"CDN\" ]; then vite build; fi"
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"tsc -b\"",
+          "npm run-script -w=@coveo/ci if-not-cdn -- \"vite build\""
         ],
-        "cwd": "packages/samples/atomic-react"
+        "cwd": "{projectRoot}"
       }
-    },
-    "build": {
-      "dependsOn": ["cached:build"],
-      "executor": "nx:noop"
     }
   }
 }

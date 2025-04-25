@@ -1,6 +1,6 @@
 import {MockInstance} from 'vitest';
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
-import * as Actions from '../../../../../features/commerce/common/actions.js';
+import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
+import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCategoryFacetSearch} from '../../../../../test/mock-category-facet-search.js';
 import {buildMockCommerceFacetRequest} from '../../../../../test/mock-commerce-facet-request.js';
@@ -21,7 +21,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   let navigatorContext: NavigatorContext;
   const facetId = '1';
   let query: string;
-  let buildCommerceAPIRequestMock: MockInstance;
+  let buildFilterableCommerceAPIRequestMock: MockInstance;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -29,7 +29,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     query = 'test';
     state = buildMockCommerceState();
 
-    state.commerceQuery.query = 'test query';
+    state.commerceQuery.query = query;
 
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch({
       options: {...buildMockFacetSearchRequestOptions(), query},
@@ -39,7 +39,10 @@ describe('#buildCategoryFacetSearchRequest', () => {
       request: buildMockCommerceFacetRequest({type: 'hierarchical'}),
     });
 
-    buildCommerceAPIRequestMock = vi.spyOn(Actions, 'buildCommerceAPIRequest');
+    buildFilterableCommerceAPIRequestMock = vi.spyOn(
+      Actions,
+      'buildFilterableCommerceAPIRequest'
+    );
 
     navigatorContext = buildMockNavigatorContextProvider()();
   });
@@ -170,10 +173,10 @@ describe('#buildCategoryFacetSearchRequest', () => {
     });
   });
 
-  it('when not building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest, plus the #query property', () => {
-    const buildCommerceAPIRequestMock = vi.spyOn(
+  it('when not building a field suggestion request, returned request includes all properties returned by #buildFilterableCommerceAPIRequest, plus the #query property', () => {
+    const buildFilterableCommerceAPIRequestMock = vi.spyOn(
       Actions,
-      'buildCommerceAPIRequest'
+      'buildFilterableCommerceAPIRequest'
     );
 
     const request = buildCategoryFacetSearchRequest(
@@ -184,15 +187,15 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
 
     expect(request).toEqual({
-      ...buildCommerceAPIRequestMock.mock.results[0].value,
+      ...buildFilterableCommerceAPIRequestMock.mock.results[0].value,
       facetId,
       facetQuery: `*${query}*`,
       ignorePaths: [],
-      query: 'test query',
+      query,
     });
   });
 
-  it('when building a field suggestion request, returned request includes all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
+  it('when building a field suggestion request, returned request includes the #query, plus all properties returned by #buildCommerceAPIRequest except the #facets, #page, and #sort properties', () => {
     const request = buildCategoryFacetSearchRequest(
       facetId,
       state,
@@ -201,14 +204,14 @@ describe('#buildCategoryFacetSearchRequest', () => {
     );
 
     const {facets, page, sort, ...expectedBaseRequest} =
-      buildCommerceAPIRequestMock.mock.results[0].value;
+      buildFilterableCommerceAPIRequestMock.mock.results[0].value;
 
     expect(request).toEqual({
       ...expectedBaseRequest,
       facetId,
-      facetQuery: `*${query}*`,
+      facetQuery: '*',
       ignorePaths: [],
-      query: 'test query',
+      query: 'test',
     });
   });
 });

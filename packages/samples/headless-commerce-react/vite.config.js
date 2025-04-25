@@ -45,7 +45,7 @@ export default defineConfig({
       viteStaticCopy({
         targets: [
           {
-            src: '../../bueno/dist/browser/*',
+            src: '../../bueno/cdn/*',
             dest: `./bueno/${buenoVersion}`,
           },
           {

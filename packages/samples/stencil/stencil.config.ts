@@ -1,6 +1,5 @@
 import {Config} from '@stencil/core';
 import {spawnSync} from 'node:child_process';
-//@ts-expect-error will be fixed when @types/node 22.14+ will be released
 import {findPackageJSON} from 'node:module';
 import {dirname, join} from 'node:path';
 import html from 'rollup-plugin-html';
@@ -61,7 +60,7 @@ function coveoResolve() {
 }
 
 function resolveRelay(importer: string) {
-  const relayPackageJSONPath = findPackageJSON('@coveo/relay', importer);
+  const relayPackageJSONPath = findPackageJSON('@coveo/relay', importer)!;
   const relayPackageJSON = require(relayPackageJSONPath);
   const defaultRelativePath = relayPackageJSON.exports.default.default;
   return join(dirname(relayPackageJSONPath), defaultRelativePath);

@@ -7,7 +7,7 @@ import {
 import {Component, Element, State, h, Prop, Method} from '@stencil/core';
 import {InitializableComponent} from '../../../../utils/initialization-utils';
 import {encodeForDomAttribute} from '../../../../utils/string-utils';
-import {ItemRenderingFunction} from '../../../common/item-list/item-list-common';
+import {ItemRenderingFunction} from '../../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

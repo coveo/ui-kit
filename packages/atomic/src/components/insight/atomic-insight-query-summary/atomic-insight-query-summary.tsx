@@ -4,13 +4,13 @@ import {
   QuerySummaryState,
 } from '@coveo/headless/insight';
 import {Component, State, h} from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {QuerySummaryContainer} from '../../common/query-summary/container';
 import {QuerySummaryGuard} from '../../common/query-summary/guard';
 import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
@@ -89,7 +89,7 @@ export class AtomicQuerySummary
     }
 
     return (
-      <div class="bg-[#F1F2FF] px-6 py-4 italic text-[#54698D]">
+      <div class="bg-[#F1F2FF] px-6 py-4 text-[#54698D] italic">
         {this.bindings.i18n.t('insight-related-cases')}
       </div>
     );

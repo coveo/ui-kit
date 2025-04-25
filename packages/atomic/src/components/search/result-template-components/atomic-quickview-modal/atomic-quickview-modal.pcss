@@ -1,5 +1,5 @@
 @import '../../../../global/global.pcss';
-@import '../../../../global/mixins.pcss';
+@import '../../../../utils/tailwind-utilities/link-style.tw.css';
 
 .atomic-quickview-modal {
   &::part(backdrop) {
@@ -32,6 +32,6 @@
   }
 
   a {
-    @mixin link-style;
+    @apply link-style;
   }
 }

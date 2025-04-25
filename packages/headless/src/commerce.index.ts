@@ -47,7 +47,7 @@ export type {
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration.js';
 export type {LogLevel, LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 export type {
   BaseProduct,
@@ -322,10 +322,6 @@ export type {
 export {buildQueryTrigger} from './controllers/commerce/triggers/headless-query-trigger.js';
 
 export type {
-  FieldSuggestions,
-  FieldSuggestionsState,
-} from './controllers/commerce/field-suggestions/headless-field-suggestions.js';
-export type {
   CategoryFieldSuggestions,
   CategoryFieldSuggestionsState,
 } from './controllers/commerce/field-suggestions/headless-category-field-suggestions.js';
@@ -335,6 +331,24 @@ export type {
 } from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.js';
 export type {FieldSuggestionsFacet} from './features/commerce/facets/field-suggestions-order/field-suggestions-order-state.ts';
 export {buildFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.js';
+
+export type {
+  FilterSuggestionsGenerator,
+  GeneratedFilterSuggestionsControllers,
+} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
+export {buildFilterSuggestionsGenerator} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.js';
+
+export type {
+  CategoryFilterSuggestions,
+  CategoryFilterSuggestionsState,
+} from './controllers/commerce/filter-suggestions/headless-category-filter-suggestions.js';
+export {buildCategoryFilterSuggestions} from './controllers/commerce/filter-suggestions/headless-category-filter-suggestions.js';
+
+export type {
+  FilterSuggestions,
+  FilterSuggestionsState,
+} from './controllers/commerce/filter-suggestions/headless-filter-suggestions.js';
+export {buildFilterSuggestions} from './controllers/commerce/filter-suggestions/headless-filter-suggestions.js';
 
 export type {
   ParameterManager,

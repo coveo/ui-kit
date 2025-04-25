@@ -1,3 +1,71 @@
+## <small>3.22.3 (2025-04-23)</small>
+
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+- chore(headless): rename navigator context provider file (#5191) ([e6666c9](https://github.com/coveo/ui-kit/commits/e6666c9)), closes [#5191](https://github.com/coveo/ui-kit/issues/5191)
+- fix(headless): advanced search queries parameters are not passed along (#5173) ([d373646](https://github.com/coveo/ui-kit/commits/d373646)), closes [#5173](https://github.com/coveo/ui-kit/issues/5173)
+
+## <small>3.22.2 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+
+## <small>3.22.1 (2025-04-09)</small>
+
+- fix(generated answer): fix citations not being reset correctly when clearing the query (#5135) ([dae399f](https://github.com/coveo/ui-kit/commits/dae399f)), closes [#5135](https://github.com/coveo/ui-kit/issues/5135)
+
+## 3.22.0 (2025-04-02)
+
+- feat(headless commerce): support triggers in product listing pages (#5117) ([d23dbe9](https://github.com/coveo/ui-kit/commits/d23dbe9)), closes [#5117](https://github.com/coveo/ui-kit/issues/5117)
+
+## 3.21.0 (2025-04-02)
+
+- chore(atomic, headless): make typescript 5 an optional peer dependency (#5126) ([17ed3a2](https://github.com/coveo/ui-kit/commits/17ed3a2)), closes [#5126](https://github.com/coveo/ui-kit/issues/5126)
+- Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- feat(headless): add method to update recent queries (#5097) ([7da4f1a](https://github.com/coveo/ui-kit/commits/7da4f1a)), closes [#5097](https://github.com/coveo/ui-kit/issues/5097)
+
+## 3.20.0 (2025-03-26)
+
+- feat(headless): Augment the parameter used to call logSelectDocumentSuggestion to allow it to proper ([00dce09](https://github.com/coveo/ui-kit/commits/00dce09)), closes [#5034](https://github.com/coveo/ui-kit/issues/5034)
+- feat(headless): replaced searchUid by responseId and adapted to latest genqa analytics schemas (#501 ([2f2c123](https://github.com/coveo/ui-kit/commits/2f2c123)), closes [#5018](https://github.com/coveo/ui-kit/issues/5018)
+- fix(headless): started logging a warning message when event protocol is used for coveo for service f ([a563c24](https://github.com/coveo/ui-kit/commits/a563c24)), closes [#5086](https://github.com/coveo/ui-kit/issues/5086)
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
+## <small>3.19.3 (2025-03-19)</small>
+
+- fix(generated answer): fix citation duplication issue in generated answer (#5053) ([09ca081](https://github.com/coveo/ui-kit/commits/09ca081)), closes [#5053](https://github.com/coveo/ui-kit/issues/5053)
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>3.19.2 (2025-03-12)</small>
+
+- fix(headless): fix recommendation documentOpen event triggering an error for EP (#5050) ([0bb6ae6](https://github.com/coveo/ui-kit/commits/0bb6ae6)), closes [#5050](https://github.com/coveo/ui-kit/issues/5050)
+- chore: build working again on windows (#4954) ([d406941](https://github.com/coveo/ui-kit/commits/d406941)), closes [#4954](https://github.com/coveo/ui-kit/issues/4954)
+
+## <small>3.19.1 (2025-03-06)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+- fix(deps): update dependency @reduxjs/toolkit to v2.6.0 j:kit-282 (#5033) ([30fb327](https://github.com/coveo/ui-kit/commits/30fb327)), closes [#5033](https://github.com/coveo/ui-kit/issues/5033)
+- chore(deps): update dependency typedoc to v0.27.9 j:kit-282 (#5030) ([f8d3d0e](https://github.com/coveo/ui-kit/commits/f8d3d0e)), closes [#5030](https://github.com/coveo/ui-kit/issues/5030)
+- feat(headless SSR commerce): Allow setting analytics 'capture' property through navigator provider ( ([25495db](https://github.com/coveo/ui-kit/commits/25495db)), closes [#4995](https://github.com/coveo/ui-kit/issues/4995)
+- feat(headless): added analytics section to fetch document suggestion call (#5011) ([6c07d5f](https://github.com/coveo/ui-kit/commits/6c07d5f)), closes [#5011](https://github.com/coveo/ui-kit/issues/5011)
+
+## 3.18.0 (2025-02-27)
+
+- feat(headless commerce): re-implement field suggestions as faceted search (#5005) ([dec06a7](https://github.com/coveo/ui-kit/commits/dec06a7)), closes [#5005](https://github.com/coveo/ui-kit/issues/5005)
+
+## 3.17.0 (2025-02-26)
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(deps): update dependency typedoc to v0.27.7 j:kit-282 (#4973) ([a8ed5e9](https://github.com/coveo/ui-kit/commits/a8ed5e9)), closes [#4973](https://github.com/coveo/ui-kit/issues/4973)
+- chore(headless): internalize fetch-event-source (#4986) ([12eeb66](https://github.com/coveo/ui-kit/commits/12eeb66)), closes [#4986](https://github.com/coveo/ui-kit/issues/4986) [#4921](https://github.com/coveo/ui-kit/issues/4921)
+- chore(headless): remove old documentation generation setup (#4964) ([12079f9](https://github.com/coveo/ui-kit/commits/12079f9)), closes [#4964](https://github.com/coveo/ui-kit/issues/4964)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+- fix(headless commerce): add product.excerptHighlights property and deprecate misspelled one (#4991) ([4c261c0](https://github.com/coveo/ui-kit/commits/4c261c0)), closes [#4991](https://github.com/coveo/ui-kit/issues/4991)
+- fix(headless commerce): correctly set cf-facetId when selecting category facet search result (#4992) ([5d97e04](https://github.com/coveo/ui-kit/commits/5d97e04)), closes [#4992](https://github.com/coveo/ui-kit/issues/4992)
+- feat(headless commerce SSR): allow setting / getting the access token on commerce SSR engine definit ([45f04bb](https://github.com/coveo/ui-kit/commits/45f04bb)), closes [#4993](https://github.com/coveo/ui-kit/issues/4993)
+- docs(atomic,headless): update filter facet count documentation (#4980) ([a783022](https://github.com/coveo/ui-kit/commits/a783022)), closes [#4980](https://github.com/coveo/ui-kit/issues/4980)
+- docs(headless): typedoc beta note for ssr-commerce (#4969) ([f082b83](https://github.com/coveo/ui-kit/commits/f082b83)), closes [#4969](https://github.com/coveo/ui-kit/issues/4969)
+
 ## 3.16.0 (2025-02-17)
 
 - feat(headless): add has no answer state to crga state (#4961) ([d1f0e7b](https://github.com/coveo/ui-kit/commits/d1f0e7b)), closes [#4961](https://github.com/coveo/ui-kit/issues/4961)

@@ -17,24 +17,24 @@ import {
   Fragment,
   Watch,
 } from '@stencil/core';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {Carousel} from '../../common/carousel';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
 import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
+import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../common/item-list/item-list-common';
-import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
+} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

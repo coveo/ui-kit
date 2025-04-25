@@ -10,13 +10,12 @@ import {
 import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
-import {FocusTargetController} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/utils';
+import {randomID} from '../../../utils/stencil-utils';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
   PagerNextButton,
@@ -90,7 +89,6 @@ export class AtomicCommercePager
    */
   @Prop({reflect: true}) nextButtonIcon: string = ArrowRightIcon;
 
-  private activePage?: FocusTargetController;
   private radioGroupName = randomID('atomic-commerce-pager-');
 
   public initialize() {
@@ -151,12 +149,6 @@ export class AtomicCommercePager
                   }}
                   page={pageNumber}
                   groupName={this.radioGroupName}
-                  ref={(el) => {
-                    const isSelected = pageNumber === this.pagerState.page;
-                    if (isSelected && el) {
-                      this.focusTarget.setTarget(el);
-                    }
-                  }}
                   text={(pageNumber + 1).toLocaleString(
                     this.bindings.i18n.language
                   )}
@@ -181,12 +173,5 @@ export class AtomicCommercePager
   private async focusOnFirstResultAndScrollToTop() {
     await this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
     this.scrollToTopEvent.emit();
-  }
-
-  private get focusTarget() {
-    if (!this.activePage) {
-      this.activePage = new FocusTargetController(this);
-    }
-    return this.activePage;
   }
 }

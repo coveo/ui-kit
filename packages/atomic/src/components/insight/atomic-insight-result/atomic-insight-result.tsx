@@ -4,13 +4,12 @@ import {
   FoldedResult as InsightFoldedResult,
 } from '@coveo/headless/insight';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
-import {applyFocusVisiblePolyfill} from '../../../utils/initialization-utils';
 import {
   DisplayConfig,
   InteractiveItemContextEvent,
   ItemContextEvent,
 } from '../../common/item-list/item-decorators';
-import {resultComponentClass} from '../../common/item-list/item-list-common';
+import {resultComponentClass} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
   ItemDisplayDensity,
@@ -146,6 +145,5 @@ export class AtomicInsightResult {
     if (this.loadingFlag && this.store) {
       this.store.unsetLoadingFlag(this.loadingFlag);
     }
-    applyFocusVisiblePolyfill(this.host);
   }
 }

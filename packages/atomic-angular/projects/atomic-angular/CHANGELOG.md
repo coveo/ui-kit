@@ -1,3 +1,22 @@
+## <small>3.3.22 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(atomic): improvements for vitest, tailwind & storybook (#5157) ([42d30d7](https://github.com/coveo/ui-kit/commits/42d30d7)), closes [#5157](https://github.com/coveo/ui-kit/issues/5157)
+
+## <small>3.3.20 (2025-04-03)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+
+## <small>3.3.17 (2025-04-02)</small>
+
+- chore(atomic): add component error custom element (#5043) ([de7b876](https://github.com/coveo/ui-kit/commits/de7b876)), closes [#5043](https://github.com/coveo/ui-kit/issues/5043)
+- chore(atomic): fix initialization issues when combining Lit interfaces with Stencil components (#507 ([1190f8c](https://github.com/coveo/ui-kit/commits/1190f8c)), closes [#5070](https://github.com/coveo/ui-kit/issues/5070)
+- chore(atomic): migrate atomic-icon (#4998) ([cace446](https://github.com/coveo/ui-kit/commits/cace446)), closes [#4998](https://github.com/coveo/ui-kit/issues/4998)
+
+## <small>3.3.16 (2025-03-26)</small>
+
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
 ## <small>3.3.8 (2025-02-12)</small>
 
 - fix(answerConfigurationId): remove internal tag (#4922) ([c8dd23b](https://github.com/coveo/ui-kit/commits/c8dd23b)), closes [#4922](https://github.com/coveo/ui-kit/issues/4922)

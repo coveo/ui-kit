@@ -1,7 +1,22 @@
+import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import {defineConfig} from 'vitest/config';
+//@ts-expect-error - normal json import
+import packageJson from './package.json' with {type: 'json'};
+
+const port = 63315;
+const resourceUrl = `http://localhost:${port}/`;
 
 export default defineConfig({
+  define: {
+    'import.meta.env.RESOURCE_URL': `"${resourceUrl}"`,
+    __ATOMIC_VERSION__: `"${packageJson.version}"`,
+    __HEADLESS_VERSION__: `"${packageJson.dependencies['@coveo/headless']}"`,
+    'process.env': {},
+  },
+  server: {
+    port: port,
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './'),
@@ -25,20 +40,31 @@ export default defineConfig({
         return null;
       },
     },
+    tailwindcss(),
   ],
   test: {
-    include: ['src/**/*.spec.ts'],
+    include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
       'src/**/search-layout.spec.ts',
     ],
+    restoreMocks: true,
+    setupFiles: ['./vitest-utils/setup.ts'],
     globals: true,
+    deps: {
+      moduleDirectories: ['node_modules', path.resolve('../../packages')],
+    },
     browser: {
-      enabled: true,
-      name: 'chromium',
       provider: 'playwright',
-      // https://playwright.dev
-      providerOptions: {},
+      enabled: true,
+      instances: [
+        {
+          browser: 'chromium',
+          context: {
+            actionTimeout: 1000,
+          },
+        },
+      ],
     },
   },
 });

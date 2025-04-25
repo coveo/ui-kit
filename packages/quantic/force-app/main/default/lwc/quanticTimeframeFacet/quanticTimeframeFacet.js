@@ -259,13 +259,33 @@ export default class QuanticTimeframeFacet extends LightningElement {
   get showFacet() {
     const facetIsActivated =
       this.hasActiveValues || !!this.dateFilterState?.range;
-    const canRefineWithCustomRange = this.hasResults && this.withDatePicker;
+    const canRefineWithCustomRange =
+      this.hasResults && this.shouldDisplayDatePicker;
     const canRefineWithTimeframes =
       this.hasResults && this.formattedValues.length > 0;
 
     return (
       facetIsActivated || canRefineWithCustomRange || canRefineWithTimeframes
     );
+  }
+
+  /**
+   * Indicates whether to display the date picker.
+   */
+  get shouldDisplayDatePicker() {
+    if (!this.withDatePicker) {
+      return false;
+    }
+    if (this.dateFilterState?.range) {
+      return true;
+    }
+    if (!this.hasResults) {
+      return false;
+    }
+    const atLeastOneValueWithResultsOrActive = this.facetState?.values.some(
+      (value) => value.numberOfResults || value.state === 'selected'
+    );
+    return atLeastOneValueWithResultsOrActive;
   }
 
   /**
@@ -388,9 +408,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @returns {DatepickerElement|null}
    */
   get startDatepicker() {
-    // @ts-ignore
     return this.withDatePicker
-      ? this.template.querySelector('.timeframe-facet__start-input')
+      ? // @ts-ignore
+        this.template.querySelector('.timeframe-facet__start-input')
       : null;
   }
 
@@ -398,9 +418,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @returns {DatepickerElement|null}
    */
   get endDatepicker() {
-    // @ts-ignore
     return this.withDatePicker
-      ? this.template.querySelector('.timeframe-facet__end-input')
+      ? // @ts-ignore
+        this.template.querySelector('.timeframe-facet__end-input')
       : null;
   }
 

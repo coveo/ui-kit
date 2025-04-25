@@ -1,5 +1,4 @@
 import {AriaLabelGenerator} from '../../../../src/components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results';
-import {initializeBindings} from '../../../../src/utils/initialization-utils';
 import {
   SafeStorage,
   StorageItems,
@@ -131,10 +130,17 @@ describe('Instant Results Test Suites', () => {
     >(`@${ariaLabelGeneratorAlias}`).then((stub) =>
       cy
         .get('atomic-search-interface')
-        .then(([searchInterface]) => initializeBindings(searchInterface))
+        .then(([searchInterface]) => {
+          return new Promise((resolve) => {
+            const event = new CustomEvent('atomic/initializeComponent', {
+              detail: (bindings: unknown) => resolve(bindings),
+            });
+            searchInterface.dispatchEvent(event);
+          });
+        })
         .then((expectedBindings) => {
           expect(Object.keys(stub.firstCall.args[0])).to.contain.all.members(
-            Object.keys(expectedBindings)
+            Object.keys(expectedBindings as object)
           );
         })
     );
@@ -172,7 +178,7 @@ describe('Instant Results Test Suites', () => {
     SearchBoxSelectors.textArea().clear({force: true});
 
     SearchBoxSelectors.textArea().type(
-      'Rec{downArrow}{upArrow}{leftArrow}{del}',
+      'Re{downArrow}{upArrow}{leftArrow}{del}',
       delay()
     );
 

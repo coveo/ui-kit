@@ -115,7 +115,7 @@ useCaseTestCases.forEach((useCase) => {
         },
       });
 
-      test('should allow toggeling the generated OFF and ON and log analytics', async ({
+      test('should allow toggling the generated OFF and ON and log analytics', async ({
         generatedAnswer,
       }) => {
         const hideAnswerAnalyticRequestPromise =

@@ -10,19 +10,14 @@ import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
+import {isParentReady, queueEventForParent} from './init-queue';
 import {
   MissingInterfaceParentError,
   InitializeEventHandler,
   initializableElements,
   initializeEventName,
 } from './initialization-lit-stencil-common-utils';
-import {closest} from './utils';
-
-declare global {
-  interface Window {
-    applyFocusVisiblePolyfill?: (shadowRoot: ShadowRoot) => void;
-  }
-}
+import {closest} from './stencil-utils';
 
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
@@ -30,6 +25,7 @@ export type InitializeEvent = CustomEvent<InitializeEventHandler>;
  * Retrieves `Bindings` or `CommerceBindings` on a configured parent interface.
  * @param event - The element on which to dispatch the event, which must be the child of a configured Atomic container element.
  * @returns A promise that resolves upon initialization of the parent container element, and rejects otherwise.
+ * @deprecated should only be used for Stencil components. For Lit components, use `initializeBindings` from @/src/decorators/initialize-bindings.
  */
 export function initializeBindings<
   SpecificBindings extends AnyBindings = Bindings,
@@ -39,10 +35,18 @@ export function initializeBindings<
       initializeEventName,
       (bindings) => resolve(bindings as SpecificBindings)
     );
-    element.dispatchEvent(event);
 
-    if (!closest(element, initializableElements.join(', '))) {
+    const parent = closest(element, initializableElements.join(', '));
+
+    if (!parent) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
+      return;
+    }
+
+    if (isParentReady(parent)) {
+      element.dispatchEvent(event);
+    } else {
+      queueEventForParent(parent, event as InitializeEvent, element);
     }
   });
 }
@@ -71,27 +75,6 @@ export interface InitializableComponent<
   error: Error;
 }
 
-/**
- * Makes Shadow Dom elements compatible with the focus-visible polyfill https://github.com/WICG/focus-visible
- * Necessary for Safari under version 15.4.
- */
-export function applyFocusVisiblePolyfill(element: HTMLElement) {
-  if (!element.shadowRoot) {
-    return;
-  }
-
-  if (window.applyFocusVisiblePolyfill) {
-    window.applyFocusVisiblePolyfill(element.shadowRoot);
-    return;
-  }
-
-  window.addEventListener(
-    'focus-visible-polyfill-ready',
-    () => window.applyFocusVisiblePolyfill?.(element.shadowRoot!),
-    {once: true}
-  );
-}
-
 type InitializeBindingsProps = {
   forceUpdate?: boolean;
 };
@@ -113,6 +96,7 @@ const loadedAttribute = 'data-atomic-loaded';
  * @InitializeBindings() public bindings!: Bindings;
  *
  * For more information and examples, view the "Utilities" section of the readme.
+ * @deprecated To be used for Stencil components. For Lit components, use `BindingController` Reactive Controller from @/mixins/bindings-mixin.ts.
  */
 export function InitializeBindings<SpecificBindings extends AnyBindings>({
   forceUpdate,
@@ -167,16 +151,19 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
           }
         }
       );
-
-      element.dispatchEvent(event);
-
-      if (!closest(element, initializableElements.join(', '))) {
+      const parent = closest(element, initializableElements.join(', '));
+      if (!parent) {
         this.error = new MissingInterfaceParentError(
           element.nodeName.toLowerCase()
         );
         return;
       }
 
+      if (isParentReady(parent)) {
+        element.dispatchEvent(event);
+      } else {
+        queueEventForParent(parent, event as InitializeEvent, element);
+      }
       return componentWillLoad && componentWillLoad.call(this);
     };
 
@@ -215,7 +202,6 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
       componentDidRender && componentDidRender.call(this);
       if (element.getAttribute(loadedAttribute) === 'false') {
         element.setAttribute(loadedAttribute, 'true');
-        applyFocusVisiblePolyfill(getElement(this));
         componentDidLoad && componentDidLoad.call(this);
       }
     };
@@ -235,6 +221,8 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
  *
  * @param controllerProperty The controller property to subscribe to. The controller has to be created inside of the `initialize` method.
  * @param options The configurable `BindStateToController` options.
+ *
+ * @deprecated To be used for Stencil components. For Lit components. use `bindStateToController` from '../decorators/bind-state.ts'
  */
 export function BindStateToController(
   controllerProperty: string,
@@ -319,4 +307,5 @@ export function DeferUntilRender() {
 export type I18nState = Record<string, (variables?: TOptions) => string>;
 export type AtomicInterface = HTMLElement & {
   engine?: CoreEngine;
+  bindings?: Bindings;
 };

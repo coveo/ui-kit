@@ -4,20 +4,20 @@
     "module": "ES2022",
     "target": "ES2021",
     "moduleResolution": "bundler",
-    "lib": ["dom", "ES2023"],
-    "declaration": true,
-    "declarationMap": true,
+    "lib": ["dom", "ES2024"],
+    "declaration": false,
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
     "outDir": "dist/atomic/components",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "typeRoots": ["node_modules/@types", "src/types"]
   },
-
   "files": [
     "src/components/index.ts",
     "src/components/lazy-index.ts",
-    "src/components.d.ts"
+    "src/components.d.ts",
+    "src/lit-components.d.ts"
   ]
 }

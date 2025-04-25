@@ -60,7 +60,7 @@ export class AtomicTabManager {
       return;
     }
 
-    tabElements.forEach((tabElement, index) => {
+    tabElements.forEach((tabElement) => {
       if (!tabElement.name) {
         this.error = new Error(
           'The "name" attribute must be defined on all "atomic-tab" children.'
@@ -73,12 +73,15 @@ export class AtomicTabManager {
           id: tabElement.name,
           clearFiltersOnTabChange: this.clearFiltersOnTabChange,
         },
-        initialState: {isActive: index === 0 ? true : false},
       });
 
       this.tabs.push({
-        label: tabElement.label,
-        name: tabElement.name,
+        label: this.bindings.i18n.t(tabElement.label, {
+          defaultValue: tabElement.label,
+        }),
+        name: this.bindings.i18n.t(tabElement.name, {
+          defaultValue: tabElement.name,
+        }),
         tabController,
       });
     });
@@ -86,13 +89,13 @@ export class AtomicTabManager {
 
   render() {
     return (
-      <Host class="mb-2">
+      <Host>
         <atomic-tab-manager-bar>
           <div
             role="list"
             aria-label="tab-area"
             part="tab-area"
-            class="mb-2 flex w-full flex-row border-b"
+            class="border-neutral mb-2 flex w-full flex-row border-b"
           >
             {this.tabs.map((tab) => (
               <atomic-tab-button

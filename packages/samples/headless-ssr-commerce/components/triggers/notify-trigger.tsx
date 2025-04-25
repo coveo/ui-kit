@@ -1,21 +1,24 @@
 'use client';
 
 import {useNotifyTrigger} from '@/lib/commerce-engine';
-import {useCallback, useEffect} from 'react';
 
-// The notify trigger query example in the searchuisamples org is 'notify me'.
+// Submit the query 'notify me' from the search box to activate the notification trigger.
+// A notification trigger is also automatically activated when accessing the Surf Accessories listing page.
 export default function NotifyTrigger() {
   const {state} = useNotifyTrigger();
 
-  const notify = useCallback(() => {
-    state.notifications.forEach((notification) => {
-      alert(`Notification: ${notification}`);
-    });
-  }, [state.notifications]);
+  if (state.notifications.length === 0) {
+    return null;
+  }
 
-  useEffect(() => {
-    notify();
-  }, [notify]);
-
-  return null;
+  return (
+    <div className="NotifyTrigger">
+      <h3>Notifications:</h3>
+      <ul>
+        {state.notifications.map((notification, index) => (
+          <li key={`${notification}-${index}`}>{notification}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }

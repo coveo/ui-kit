@@ -3,7 +3,7 @@ import {writeFileSync} from 'node:fs';
 import * as prettier from 'prettier';
 
 const isLitDeclaration = (declaration) =>
-  declaration?.superclass?.name === 'LitElement' || declaration?.superclass?.name === 'TailwindLitElement';
+  declaration?.superclass?.name === 'LitElement';
 
 const entries = [
   {
@@ -46,6 +46,12 @@ export const ${declaration.name} = createComponent({
 `;
 
 for (const module of cem.modules) {
+  if (module.declarations.length === 0) {
+    continue;
+  }
+  module.declarations.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
   for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {

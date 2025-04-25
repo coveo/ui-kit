@@ -1,4 +1,5 @@
 {
+  "deployment_config_version": 19,
   "product": "ui-kit",
   "team_name": "searchui",
   "general": {
@@ -21,7 +22,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_PATCH_VERSION]",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -33,7 +34,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_MINOR_VERSION]",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -45,7 +46,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_MAJOR_VERSION]",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -57,7 +58,7 @@
         "disabled": $[IS_NOT_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/bueno/v$[BUENO_MAJOR_VERSION]-nightly",
-        "source": "packages/bueno/dist/browser",
+        "source": "packages/bueno/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -154,6 +155,18 @@
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly",
         "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-major-storybook-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/storybook",
+        "source": "packages/atomic/dist-storybook",
         "parameters": {
           "acl": "public-read"
         }
@@ -310,6 +323,7 @@
         "deploy-atomic-hosted-page-major-to-s3-version",
         "deploy-atomic-hosted-page-nightly-to-s3-version",
         "deploy-atomic-minor-storybook-to-s3-version",
+        "deploy-atomic-major-storybook-to-s3-version",
         "deploy-atomic-nightly-storybook-to-s3-version"
       ]
     },
@@ -338,28 +352,34 @@
         "workflow_file": "prod.yml",
         "workflow_reference": "main",
         "workflow_repository": "coveo-platform/ui-kit-cd",
-        "prd": {
-          "disabled": $[IS_NIGHTLY]
-        },
         "extra_parameters": {
           "run-id": "$[GITHUB_RUN_ID]"
-        }
+        },
+        "overrides": [
+          {
+            "environments": ["prd"],
+            "content": {
+              "disabled": $[IS_NIGHTLY]
+            }
+          }
+        ]
       },
       "dependencies": ["smoke"]
     }
   ],
-  "observatory": {
-    "no_endpoint": true
-  },
-  "package_rollout": {
-    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
-    "jira_issues_discovery": {
-      "stop_after_first_issue": true,
-      "branch_name": false,
-      "commit_message": false,
-      "pull_request_title": true,
-      "pull_request_description": true
+  "certifiers": {
+    "observatory": {
+      "no_endpoint": true
+    },
+    "package_rollout": {
+      "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba",
+      "jira_issues_discovery": {
+        "stop_after_first_issue": true,
+        "branch_name": false,
+        "commit_message": false,
+        "pull_request_title": true,
+        "pull_request_description": true
+      }
     }
-  },
-  "deployment_config_version": 7
+  }
 }

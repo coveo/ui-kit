@@ -1,11 +1,11 @@
 import {Component, Element, Listen, Prop, Watch} from '@stencil/core';
-import {getFirstFocusableDescendant} from '../../utils/accessibility-utils';
+import {getFirstFocusableDescendant} from '../../utils/stencil-accessibility-utils';
 import {
   isAncestorOf,
   defer,
   getFocusedElement,
   getParent,
-} from '../../utils/utils';
+} from '../../utils/stencil-utils';
 
 /**
  * @internal

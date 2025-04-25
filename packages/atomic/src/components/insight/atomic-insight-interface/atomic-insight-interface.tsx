@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {loadFieldActions} from '@coveo/headless/insight';
 import {
   LogLevel as InsightLogLevel,
@@ -10,6 +11,7 @@ import {
   Component,
   Element,
   h,
+  Host,
   Listen,
   Method,
   Prop,
@@ -22,9 +24,9 @@ import {InitializeEvent} from '../../../utils/initialization-utils';
 import {ArrayProp} from '../../../utils/props-utils';
 import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
 import {getAnalyticsConfig} from './analytics-config';
 import {createInsightStore, InsightStore} from './store';
 
@@ -46,7 +48,7 @@ export type InsightBindings = CommonBindings<
   shadow: true,
 })
 export class AtomicInsightInterface
-  implements BaseAtomicInterface<InsightEngine>
+  implements StencilBaseAtomicInterface<InsightEngine>
 {
   private initialized = false;
 
@@ -64,7 +66,7 @@ export class AtomicInsightInterface
   /**
    * The service insight interface i18next instance.
    */
-  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop() public i18n: i18n;
   /**
    * The severity level of the messages to log in the console.
    */
@@ -131,11 +133,22 @@ export class AtomicInsightInterface
   private store = createInsightStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<InsightEngine>;
 
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
+
   public constructor() {
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
       this,
       'CoveoAtomic'
     );
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   public connectedCallback() {
@@ -146,6 +159,7 @@ export class AtomicInsightInterface
     if (this.CspNonce) {
       setNonce(this.CspNonce);
     }
+    this.componentWillLoadResolver();
   }
 
   private initResultsPerPage() {
@@ -212,7 +226,7 @@ export class AtomicInsightInterface
 
   @Watch('language')
   public updateLanguage() {
-    this.commonInterfaceHelper.onLanguageChange();
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('analytics')
@@ -262,7 +276,13 @@ export class AtomicInsightInterface
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    await this.updateLanguage();
+    markParentAsReady(this.host);
     this.store.unsetLoadingFlag(FirstInsightRequestExecutedFlag);
     this.initResultsPerPage();
     this.initialized = true;
@@ -271,10 +291,10 @@ export class AtomicInsightInterface
   render() {
     return (
       this.engine && (
-        <host>
+        <Host>
           <slot name="full-search"></slot>
           <slot></slot>
-        </host>
+        </Host>
       )
     );
   }

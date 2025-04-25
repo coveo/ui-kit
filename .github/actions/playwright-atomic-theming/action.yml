@@ -1,0 +1,24 @@
+name: 'Playwright Atomic Theming'
+description: 'Run Playwright smoke tests for Atomic theming'
+inputs:
+  uploadArtifacts:
+    description: 'Whether to upload artifacts'
+    required: false
+    default: 'true'
+runs:
+  using: composite
+  steps:
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+      working-directory: packages/atomic
+      shell: bash
+    - name: Run Playwright tests
+      run: npx playwright test -c dev
+      working-directory: packages/atomic
+      shell: bash
+    - uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
+      if: ${{ inputs.uploadArtifacts == 'true' }}
+      with:
+        name: atomic-theming-playwright-report
+        path: packages/atomic/playwright-report/
+        retention-days: 5

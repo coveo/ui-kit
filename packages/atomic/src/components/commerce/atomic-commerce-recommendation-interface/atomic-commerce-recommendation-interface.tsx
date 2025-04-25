@@ -1,3 +1,4 @@
+import {markParentAsReady} from '@/src/utils/init-queue.js';
 import {
   CommerceEngine,
   CommerceEngineConfiguration,
@@ -17,11 +18,15 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
 import {
-  BaseAtomicInterface,
+  AdoptedStylesBindings,
+  CommonBindings,
+} from '../../common/interface/bindings';
+import {
+  StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
-} from '../../common/interface/interface-common';
+} from '../../common/interface/interface-common-stencil';
+import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -31,9 +36,9 @@ export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
-  HTMLAtomicCommerceInterfaceElement
+  AtomicCommerceInterface
 > &
-  NonceBindings;
+  AdoptedStylesBindings;
 
 /**
  * @alpha
@@ -46,19 +51,19 @@ export type CommerceBindings = CommonBindings<
   assetsDirs: ['lang'],
 })
 export class AtomicCommerceRecommendationInterface
-  implements BaseAtomicInterface<CommerceEngine>
+  implements StencilBaseAtomicInterface<CommerceEngine>
 {
   private store = createCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @Element() public host!: HTMLAtomicCommerceInterfaceElement;
+  @Element() public host!: AtomicCommerceInterface;
 
   @State() public error?: Error;
 
   /**
    * The commerce interface i18next instance.
    */
-  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop() public i18n: i18n;
 
   /**
    * The commerce interface headless engine.
@@ -117,7 +122,9 @@ export class AtomicCommerceRecommendationInterface
    */
   @Prop({reflect: true}) public analytics = true;
 
-  private i18nClone!: i18n;
+  private i18Initialized: Promise<void>;
+  private componentWillLoadCalledPromise: Promise<void>;
+  private componentWillLoadResolver: () => void;
 
   private contextController!: Context;
 
@@ -126,17 +133,13 @@ export class AtomicCommerceRecommendationInterface
       this,
       'CoveoAtomic'
     );
-  }
-
-  public connectedCallback() {
-    this.i18nClone = this.i18n.cloneInstance();
-    this.i18n.addResourceBundle = (
-      lng: string,
-      ns: string,
-      resources: object,
-      deep?: boolean,
-      overwrite?: boolean
-    ) => this.addResourceBundle(lng, ns, resources, deep, overwrite);
+    ({
+      promise: this.componentWillLoadCalledPromise,
+      resolve: this.componentWillLoadResolver,
+    } = Promise.withResolvers<void>());
+    const {promise, resolve} = Promise.withResolvers<void>();
+    this.i18Initialized = promise;
+    this.i18n = i18next.createInstance(undefined, resolve);
   }
 
   componentWillLoad() {
@@ -144,6 +147,7 @@ export class AtomicCommerceRecommendationInterface
       setNonce(this.CspNonce);
     }
     this.initAriaLive();
+    this.componentWillLoadResolver();
   }
 
   @Watch('analytics')
@@ -163,7 +167,7 @@ export class AtomicCommerceRecommendationInterface
 
     this.contextController.setLanguage(this.language);
 
-    this.commonInterfaceHelper.onLanguageChange();
+    return this.commonInterfaceHelper.onLanguageChange();
   }
 
   @Watch('iconAssetsPath')
@@ -202,19 +206,19 @@ export class AtomicCommerceRecommendationInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
-      createStyleElement: () => {
-        const styleTag = document.createElement('style');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
+      addAdoptedStyleSheets: (stylesheet) => {
+        const parent = this.host.getRootNode();
+        const styleSheet = stylesheet;
+        const isDocumentOrShadowRoot =
+          parent instanceof Document || parent instanceof ShadowRoot;
+
+        if (
+          styleSheet &&
+          isDocumentOrShadowRoot &&
+          !parent.adoptedStyleSheets.includes(styleSheet)
+        ) {
+          parent.adoptedStyleSheets.push(styleSheet);
         }
-        return styleTag;
-      },
-      createScriptElement: () => {
-        const styleTag = document.createElement('script');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
-        }
-        return styleTag;
       },
     };
   }
@@ -237,29 +241,21 @@ export class AtomicCommerceRecommendationInterface
     ) {
       return;
     }
-    this.host.prepend(document.createElement('atomic-aria-live'));
+    const ariaLive = document.createElement('atomic-aria-live');
+    this.host.prepend(ariaLive);
   }
 
   private async internalInitialization(initEngine: () => void) {
-    await this.commonInterfaceHelper.onInitialization(initEngine);
+    await this.componentWillLoadCalledPromise;
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
     this.initContext();
-    this.initLanguage();
-  }
+    await this.updateLanguage();
+    markParentAsReady(this.host);
 
-  private addResourceBundle(
-    lng: string,
-    ns: string,
-    resources: object,
-    deep?: boolean,
-    overwrite?: boolean
-  ) {
-    return this.i18nClone.addResourceBundle(
-      lng,
-      ns,
-      resources,
-      deep,
-      overwrite
-    );
+    this.initLanguage();
   }
 
   public render() {

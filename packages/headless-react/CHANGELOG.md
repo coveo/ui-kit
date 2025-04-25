@@ -1,3 +1,40 @@
+## <small>2.4.19 (2025-04-23)</small>
+
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+
+## <small>2.4.18 (2025-04-16)</small>
+
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
+
+## <small>2.4.16 (2025-04-02)</small>
+
+- docs(headless-react): address broken typedoc links (#5124) ([4cc3445](https://github.com/coveo/ui-kit/commits/4cc3445)), closes [#5124](https://github.com/coveo/ui-kit/issues/5124)
+
+## <small>2.4.15 (2025-04-02)</small>
+
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+- Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
+
+## <small>2.4.14 (2025-03-26)</small>
+
+- chore: bunch o' updates (#5082) ([e036cab](https://github.com/coveo/ui-kit/commits/e036cab)), closes [#5082](https://github.com/coveo/ui-kit/issues/5082)
+
+## <small>2.4.13 (2025-03-19)</small>
+
+- chore: split release:phase1 & release:phase3 in two phases (#5042) ([e00bd41](https://github.com/coveo/ui-kit/commits/e00bd41)), closes [#5042](https://github.com/coveo/ui-kit/issues/5042)
+
+## <small>2.4.11 (2025-03-06)</small>
+
+- chore(deps): update dependency typedoc to v0.27.9 j:kit-282 (#5030) ([f8d3d0e](https://github.com/coveo/ui-kit/commits/f8d3d0e)), closes [#5030](https://github.com/coveo/ui-kit/issues/5030)
+- fix(deps): update all dependencies j:kit-282 (#5032) ([38b18f5](https://github.com/coveo/ui-kit/commits/38b18f5)), closes [#5032](https://github.com/coveo/ui-kit/issues/5032)
+
+## <small>2.4.8 (2025-02-26)</small>
+
+- chore: update vite dependencies (#5010) ([b1f8764](https://github.com/coveo/ui-kit/commits/b1f8764)), closes [#5010](https://github.com/coveo/ui-kit/issues/5010)
+- chore(deps): update dependency typedoc to v0.27.7 j:kit-282 (#4973) ([a8ed5e9](https://github.com/coveo/ui-kit/commits/a8ed5e9)), closes [#4973](https://github.com/coveo/ui-kit/issues/4973)
+- fix(deps): update all dependencies j:kit-282 (#4974) ([0181892](https://github.com/coveo/ui-kit/commits/0181892)), closes [#4974](https://github.com/coveo/ui-kit/issues/4974)
+
 ## <small>2.4.7 (2025-02-17)</small>
 
 - docs(headless,headless-react): typedoc styling update and link fix (#4963) ([22a8bea](https://github.com/coveo/ui-kit/commits/22a8bea)), closes [#4963](https://github.com/coveo/ui-kit/issues/4963)

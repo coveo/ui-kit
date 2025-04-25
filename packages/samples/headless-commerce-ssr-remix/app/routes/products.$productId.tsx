@@ -1,7 +1,6 @@
 import ContextDropdown from '@/app/components/context-dropdown';
 import ProductView from '@/app/components/product-view';
 import {StandaloneProvider} from '@/app/components/providers/providers';
-import StandaloneSearchBox from '@/app/components/standalone-search-box';
 import externalCartService, {
   ExternalCartItem,
 } from '@/external-services/external-cart-service';
@@ -9,16 +8,16 @@ import externalCatalogAPI, {
   ExternalCatalogItem,
 } from '@/external-services/external-catalog-service';
 import externalContextService from '@/external-services/external-context-service';
+import {StandaloneStaticState} from '@/lib/commerce-engine';
 import {
-  standaloneEngineDefinition,
-  StandaloneStaticState,
-} from '@/lib/commerce-engine';
+  getBaseFetchStaticStateConfiguration,
+  getEngineDefinition,
+} from '@/lib/commerce-engine.server';
 import {getNavigatorContext} from '@/lib/navigator-context';
 import {
-  toCoveoCartItems,
-  toCoveoCurrency,
-} from '@/utils/external-api-conversions';
-import {NavigatorContext} from '@coveo/headless-react/ssr-commerce';
+  NavigatorContext,
+  SolutionType,
+} from '@coveo/headless-react/ssr-commerce';
 import {LoaderFunctionArgs} from '@remix-run/node';
 import {useLoaderData} from '@remix-run/react';
 import invariant from 'tiny-invariant';
@@ -30,43 +29,34 @@ export const loader = async ({params, request}: LoaderFunctionArgs) => {
 
   const catalogItem = await externalCatalogAPI.getItem(request.url);
 
-  const {country, currency, language} =
+  const {currency, language} =
     await externalContextService.getContextInformation();
 
   const navigatorContext = await getNavigatorContext(request);
 
-  standaloneEngineDefinition.setNavigatorContextProvider(
-    () => navigatorContext
+  const standaloneEngineDefinition = await getEngineDefinition(
+    navigatorContext,
+    request,
+    SolutionType.standalone
   );
 
-  const staticState = await standaloneEngineDefinition.fetchStaticState({
-    controllers: {
-      cart: {
-        initialState: {
-          items: toCoveoCartItems(await externalCartService.getItems()),
-        },
-      },
-      context: {
-        language,
-        country,
-        currency: toCoveoCurrency(currency),
-        view: {
-          url: `https://sports.barca.group/products/${productId}`,
-        },
-      },
-    },
-  });
+  const baseFetchStaticStateConfiguration =
+    await getBaseFetchStaticStateConfiguration(new URL(request.url).pathname);
+
+  const staticState = await standaloneEngineDefinition.fetchStaticState(
+    baseFetchStaticStateConfiguration
+  );
 
   const cartItem = await externalCartService.getItem(productId);
 
-  return {
+  return Response.json({
     staticState,
     navigatorContext,
     catalogItem,
     cartItem,
     language,
     currency,
-  };
+  });
 };
 
 export default function ProductRoute() {
@@ -93,7 +83,6 @@ export default function ProductRoute() {
       navigatorContext={navigatorContext}
     >
       <ContextDropdown />
-      <StandaloneSearchBox />
       <ProductView
         catalogItem={catalogItem}
         cartItem={cartItem}

@@ -23,10 +23,6 @@ ${components.join(',\n')}
 } from './components';
 `;
 
-const defineCustomElements = `
-import {defineCustomElements} from '@coveo/atomic/loader';
-defineCustomElements(window);\n`;
-
 const declarations = (components: string[]) => `
 const DECLARATIONS = [
 ${components.join(',\n')}
@@ -92,14 +88,13 @@ export function generateAngularModuleDefinition(options: {
       const filteredComponents = buildCtx.components.filter((cmp) => {
         return !cmp.internal;
       });
-      const componentClassNames = filteredComponents.map((component) =>
-        dashToPascalCase(component.tagName)
-      );
+      const componentClassNames = filteredComponents
+        .map((component) => dashToPascalCase(component.tagName))
+        .sort();
       compilerCtx.fs.writeFile(
         options.moduleFile,
         `${imports}
         ${componentImports(componentClassNames)}
-        ${defineCustomElements}
         ${declarations(componentClassNames)}
         ${shimTemplatesPrototype}
         ${provider}

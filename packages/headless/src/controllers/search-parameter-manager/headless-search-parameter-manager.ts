@@ -19,7 +19,6 @@ import {
   SearchParameterManagerInitialState,
   SearchParameterManagerProps,
   SearchParameterManagerState,
-  validateParams,
 } from '../core/search-parameter-manager/headless-core-search-parameter-manager.js';
 
 export type {
@@ -56,10 +55,6 @@ export function buildSearchParameterManager(
       const newParams = enrichParameters(engine, parameters);
 
       if (deepEqualAnyOrder(oldParams, newParams)) {
-        return;
-      }
-
-      if (!validateParams(engine, newParams)) {
         return;
       }
 

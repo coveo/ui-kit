@@ -7,13 +7,13 @@ import {
 import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {CommerceRecommendationsRequest} from '../../../api/commerce/recommendations/recommendations-request.js';
 import {RecommendationsCommerceSuccessResponse} from '../../../api/commerce/recommendations/recommendations-response.js';
-import {NavigatorContext} from '../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../app/navigator-context-provider.js';
 import {RecommendationsSection} from '../../../state/state-sections.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
 import {
-  StateNeededByQueryCommerceAPI,
-  buildBaseCommerceAPIRequest,
-} from '../common/actions.js';
+  buildPaginatedCommerceAPIRequest,
+  StateNeededForPaginatedCommerceAPIRequest,
+} from '../common/paginated-commerce-api-request-builder.js';
 import {getProductsFromCartPurchasedState} from '../context/cart/cart-state.js';
 import {perPageRecommendationSelector} from '../pagination/pagination-selectors.js';
 import {
@@ -27,8 +27,8 @@ export interface QueryRecommendationsCommerceAPIThunkReturn {
   response: RecommendationsCommerceSuccessResponse;
 }
 
-export type StateNeededByFetchRecommendations = StateNeededByQueryCommerceAPI &
-  RecommendationsSection;
+export type StateNeededByFetchRecommendations =
+  StateNeededForPaginatedCommerceAPIRequest & RecommendationsSection;
 
 const buildRecommendationCommerceAPIRequest = (
   slotId: string,
@@ -36,7 +36,7 @@ const buildRecommendationCommerceAPIRequest = (
   navigatorContext: NavigatorContext,
   productId?: string
 ): CommerceRecommendationsRequest => {
-  const commerceAPIRequest = buildBaseCommerceAPIRequest(
+  const commerceAPIRequest = buildPaginatedCommerceAPIRequest(
     state,
     navigatorContext,
     slotId

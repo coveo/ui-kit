@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic-hosted-page",
   "description": "Web Component used to inject a Coveo Hosted Search Page in the DOM.",
-  "version": "1.1.2",
+  "version": "1.1.14",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
@@ -25,22 +25,22 @@
     "build": "nx build",
     "start": "node ./scripts/start.js",
     "e2e": "playwright test",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
-    "publish:npm": "npm run-script -w=@coveo/release npm-publish",
-    "publish:bump": "npm run-script -w=@coveo/release bump",
-    "promote:npm:latest": "npm run-script -w=@coveo/release promote-npm-prod"
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.7",
-    "@coveo/headless": "3.16.0",
+    "@coveo/bueno": "1.0.12",
+    "@coveo/headless": "3.22.3",
     "lit": "3.2.1"
   },
   "devDependencies": {
-    "@coveo/release": "1.0.0",
+    "@coveo/ci": "1.0.0",
     "@playwright/test": "1.50.1",
-    "@types/node": "22.13.1",
-    "rollup": "4.34.2",
-    "vite": "5.4.14",
+    "@types/node": "22.13.5",
+    "rollup": "4.34.8",
+    "rimraf": "3.0.2",
+    "vite": "6.0.11",
     "ncp": "2.0.0"
   },
   "engines": {

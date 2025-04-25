@@ -4,6 +4,13 @@
   @apply pointer-events-none;
 }
 
+article.animate-open {
+  @apply animate-scale-up-modal;
+}
+article.animate-close {
+  @apply animate-slide-down-modal;
+}
+
 atomic-focus-trap {
   @apply contents;
 }
@@ -75,7 +82,7 @@ atomic-focus-trap {
   }
 
   [part='body-wrapper'] {
-    @apply px-6 pb-5 pt-8;
+    @apply px-6 pt-8 pb-5;
   }
 
   [part='footer-wrapper'] {

@@ -4,12 +4,12 @@ import {Mock} from 'vitest';
 import {CommerceAPIClient} from '../../../api/commerce/commerce-api-client.js';
 import {CommerceAPIErrorStatusResponse} from '../../../api/commerce/commerce-api-error-response.js';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
-import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigatorContextProvider.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../../app/navigator-context-provider.js';
 import {CommerceAppState} from '../../../state/commerce-app-state.js';
 import {buildSearchResponse} from '../../../test/mock-commerce-search.js';
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockProduct} from '../../../test/mock-product.js';
-import {buildCommerceAPIRequest} from '../common/actions.js';
+import {buildFilterableCommerceAPIRequest} from '../common/filterable-commerce-api-request-builder.js';
 import {updateQuery} from '../query/query-actions.js';
 import {
   AsyncThunkConfig,
@@ -49,7 +49,7 @@ describe('commerce AsyncSearchThunkProcessor', () => {
       response,
       duration: 123,
       queryExecuted: 'foo',
-      requestExecuted: buildCommerceAPIRequest(
+      requestExecuted: buildFilterableCommerceAPIRequest(
         state,
         config.extra.navigatorContext
       ),

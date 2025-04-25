@@ -18,7 +18,7 @@ exports[`attached results analytics actions > when analyticsMode is \`next\` > l
       "url": "example documentUri",
     },
     "position": 1,
-    "searchUid": "example searchUid",
+    "responseId": "example searchUid",
   },
 ]
 `;

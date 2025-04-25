@@ -10,7 +10,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/stencil-utils';
 import {SmartSnippetSuggestionCommon} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
@@ -54,9 +54,10 @@ export class AtomicInsightSmartSnippetSuggestions
    */
   @Prop() snippetStyle?: string;
 
-  private id = randomID('atomic-smart-snippet-suggestions-');
+  private id!: string;
 
   public initialize() {
+    this.id ||= randomID('atomic-smart-snippet-suggestions-');
     this.smartSnippetQuestionsList = buildInsightSmartSnippetQuestionsList(
       this.bindings.engine
     );

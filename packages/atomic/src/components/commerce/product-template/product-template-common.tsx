@@ -5,7 +5,11 @@ import {
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
 import {intersection} from '../../../utils/set';
-import {aggregate, isElementNode, isVisualNode} from '../../../utils/utils';
+import {
+  aggregate,
+  isElementNode,
+  isVisualNode,
+} from '../../../utils/stencil-utils';
 import {ItemTarget} from '../../common/layout/display-options';
 import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';

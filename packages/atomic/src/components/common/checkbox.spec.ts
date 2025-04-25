@@ -18,9 +18,11 @@ describe('checkbox', () => {
   const renderCheckbox = (props: Partial<CheckboxProps>): HTMLButtonElement => {
     render(
       html`${checkbox({
-        ...props,
-        checked: props.checked ?? false,
-        onToggle: props.onToggle ?? vi.fn(),
+        props: {
+          ...props,
+          checked: props.checked ?? false,
+          onToggle: props.onToggle ?? vi.fn(),
+        },
       })}`,
       container
     );
@@ -80,6 +82,21 @@ describe('checkbox', () => {
     expect(button.classList.contains('selected')).toBe(true);
   });
 
+  it('should not display an icon if not checked', async () => {
+    const button = renderCheckbox({checked: false});
+    const icon = button.querySelector('atomic-icon');
+
+    expect(window.getComputedStyle(icon!).display).toBe('none');
+  });
+
+  it('should display an icon if checked', async () => {
+    const button = renderCheckbox({checked: true});
+    const icon = button.querySelector('atomic-icon');
+    await customElements.whenDefined('atomic-icon');
+
+    expect(window.getComputedStyle(icon!).display).toBe('block');
+  });
+
   it('should not have selected attributes and classes if not checked', async () => {
     const button = renderCheckbox({checked: false});
 
@@ -111,7 +128,6 @@ describe('checkbox', () => {
     expect(button).toHaveClass(
       'w-4',
       // TODO: KIT-3907
-      // @ts-expect-error the typing is incorrect. matchers should be a string[]
       'h-4',
       'grid',
       'place-items-center',

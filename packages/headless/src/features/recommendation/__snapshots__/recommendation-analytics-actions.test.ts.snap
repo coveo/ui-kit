@@ -5,7 +5,7 @@ exports[`recommendation analytics actions > #logRecommendationOpen > when analyt
   {
     "collectionName": "example collectionName",
     "documentAuthor": "unknown",
-    "documentPosition": 1,
+    "documentPosition": 0,
     "documentTitle": "example documentTitle",
     "documentUri": "example documentUri",
     "documentUriHash": "example documentUriHash",
@@ -32,8 +32,8 @@ exports[`recommendation analytics actions > #logRecommendationOpen > when analyt
       "uniqueFieldValue": "example contentIDValue",
       "url": "example documentUrl",
     },
-    "position": 1,
-    "searchUid": "example searchUid",
+    "position": 0,
+    "responseId": "example searchUid",
   },
 ]
 `;

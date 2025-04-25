@@ -10,6 +10,7 @@ import {
   selectAnswerTriggerParams,
   StateNeededByAnswerAPI,
 } from '../../../api/knowledge/stream-answer-api.js';
+import {warnIfUsingNextAnalyticsModeForServiceFeature} from '../../../app/engine.js';
 import {InsightEngine} from '../../../app/insight-engine/insight-engine.js';
 import {SearchEngine} from '../../../app/search-engine/search-engine.js';
 import {
@@ -19,6 +20,7 @@ import {
   updateAnswerConfigurationId,
 } from '../../../features/generated-answer/generated-answer-actions.js';
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
+import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
 import {
   GeneratedAnswerSection,
@@ -140,6 +142,9 @@ export function buildAnswerApiGeneratedAnswer(
   if (!loadAnswerApiReducers(engine)) {
     throw loadReducerError;
   }
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
 
   const {...controller} = buildCoreGeneratedAnswer(
     engine,
@@ -159,7 +164,9 @@ export function buildAnswerApiGeneratedAnswer(
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
-        citations: answerApiState?.citations ?? [],
+        citations: filterOutDuplicatedCitations(
+          answerApiState?.citations ?? []
+        ),
         error: {
           message: answerApiState?.error?.message,
           statusCode: answerApiState?.error?.code,

@@ -126,7 +126,7 @@ export type {
   NavigatorContext,
   BrowserNavigatorContextProvider,
   NavigatorContextProvider,
-} from './app/navigatorContextProvider.js';
+} from './app/navigator-context-provider.js';
 
 export type {LogLevel} from './app/logger.js';
 
@@ -281,16 +281,16 @@ export type {
 export {defineRecentQueriesList} from './controllers/commerce/recent-queries-list/headless-recent-queries-list.ssr.js';
 
 export type {
-  FieldSuggestions,
-  FieldSuggestionsState,
-  CategoryFieldSuggestions,
-  CategoryFieldSuggestionsState,
+  FilterSuggestions,
+  FilterSuggestionsState,
+  CategoryFilterSuggestions,
+  CategoryFilterSuggestionsState,
   FieldSuggestionsFacet,
-  GeneratedFieldSuggestionsControllers,
-  FieldSuggestionsGenerator,
-  FieldSuggestionsGeneratorDefinition,
-} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr.js';
-export {defineFieldSuggestionsGenerator} from './controllers/commerce/field-suggestions/headless-field-suggestions-generator.ssr.js';
+  GeneratedFilterSuggestionsControllers,
+  FilterSuggestionsGenerator,
+  FilterSuggestionsGeneratorDefinition,
+} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
+export {defineFilterSuggestionsGenerator} from './controllers/commerce/filter-suggestions/headless-filter-suggestions-generator.ssr.js';
 
 export type {
   NotifyTrigger,

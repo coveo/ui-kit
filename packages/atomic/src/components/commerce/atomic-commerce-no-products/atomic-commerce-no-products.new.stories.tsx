@@ -1,15 +1,15 @@
 import {
-  playExecuteFirstSearch,
+  playExecuteFirstRequest,
   wrapInCommerceInterface,
 } from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit/static-html.js';
+import {html} from 'lit';
 
-const {play} = wrapInCommerceInterface({skipFirstSearch: true});
+const {play} = wrapInCommerceInterface({skipFirstRequest: true});
 const {decorator, play: preprocessedPlayed} = wrapInCommerceInterface({
-  skipFirstSearch: true,
+  skipFirstRequest: true,
   engineConfig: {
     preprocessRequest: (r) => {
       const parsed = JSON.parse(r.body as string);
@@ -52,7 +52,7 @@ export const Default: Story = {
   ],
   play: async (context) => {
     await preprocessedPlayed(context);
-    await playExecuteFirstSearch(context);
+    await playExecuteFirstRequest(context);
   },
 };
 

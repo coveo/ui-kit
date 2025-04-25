@@ -1,14 +1,14 @@
-import {SchemaDefinition, SchemaValue} from '../schema';
-import {BooleanValue, isBoolean} from './boolean-value';
-import {NumberValue, isNumber} from './number-value';
-import {StringValue, isString} from './string-value';
+import {SchemaDefinition, SchemaValue} from '../schema.js';
+import {BooleanValue, isBoolean} from './boolean-value.js';
+import {NumberValue, isNumber} from './number-value.js';
+import {StringValue, isString} from './string-value.js';
 import {
   PrimitivesValues,
   ValueConfig,
   isNullOrUndefined,
   Value,
   isUndefined,
-} from './value';
+} from './value.js';
 
 type RecordWithPrimitiveValues = Record<string, PrimitivesValues>;
 type ComplexRecord = Record<

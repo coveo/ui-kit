@@ -1,6 +1,6 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {createRipple} from '../../../../utils/ripple';
-import {randomID} from '../../../../utils/utils';
+import {randomID} from '../../../../utils/stencil-utils';
 import {FacetValueProps} from '../../../common/facets/facet-common';
 
 export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
@@ -12,6 +12,7 @@ export const ColorFacetCheckbox: FunctionalComponent<FacetValueProps> = (
   const ariaLabel = props.i18n.t('facet-value', {
     value: props.displayValue,
     count: props.numberOfResults,
+    formattedCount: count,
   });
   const partValue = props.displayValue
     .match(new RegExp('-?[_a-zA-Z]+[_a-zA-Z0-9-]*'))

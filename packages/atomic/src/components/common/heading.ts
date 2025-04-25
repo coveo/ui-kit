@@ -1,4 +1,5 @@
-import {ifDefined} from 'lit-html/directives/if-defined.js';
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {html, literal, unsafeStatic} from 'lit/static-html.js';
 
 export interface HeadingProps {
@@ -18,14 +19,15 @@ export interface HeadingProps {
   part?: string;
 }
 
-export const heading = <T>(
-  {level, class: classname, part}: HeadingProps,
-  children?: T
-) => {
-  const headingTag =
-    level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
+export const heading: FunctionalComponentWithChildren<HeadingProps> =
+  ({props}) =>
+  (children) => {
+    const {level, class: classname, part} = props;
 
-  return html`<${headingTag} class="${ifDefined(classname)}" part="${ifDefined(part)}">
-    ${children}
-  </${headingTag}>`;
-};
+    const headingTag =
+      level > 0 && level <= 6 ? unsafeStatic(`h${level}`) : literal`div`;
+
+    return html`<${headingTag} class="${ifDefined(classname)}" part="${ifDefined(part)}">
+      ${children}
+    </${headingTag}>`;
+  };

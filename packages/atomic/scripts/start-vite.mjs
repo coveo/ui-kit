@@ -67,7 +67,7 @@ const run = async () => {
 
   console.log(`Copying bueno files to ${devPublicDir}/bueno/v${buenoVersion}`);
   await copyFiles(
-    path.join(buenoDir, 'dist/browser'),
+    path.join(buenoDir, 'cdn'),
     `${devPublicDir}/bueno/v${buenoVersion}`
   );
 

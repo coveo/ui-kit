@@ -1,20 +1,10 @@
 import fs from 'fs-extra';
 import handlebars from 'handlebars';
 import path from 'path';
-import prettier from 'prettier';
+import {formatWithPrettier} from './format-with-prettier.mjs';
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 const kebabToPascal = (str) => str.split('-').map(capitalize).join('');
-
-async function formatWithPrettier(content, filePath) {
-  try {
-    const options = await prettier.resolveConfig(filePath);
-    return prettier.format(content, {...options, filepath: filePath});
-  } catch (error) {
-    console.warn(`Failed to format ${filePath} with Prettier`, error);
-    return content;
-  }
-}
 
 async function generateFiles(name, outputDir) {
   const templatesDir = path.resolve(
@@ -34,7 +24,7 @@ async function generateFiles(name, outputDir) {
       template: 'component.new.stories.tsx.hbs',
       output: `${name}.new.stories.tsx`,
     },
-    {template: 'component.css.hbs', output: `${name}.css`},
+    {template: 'component.tw.css.hbs', output: `${name}.tw.css`},
     {template: 'component.spec.ts.hbs', output: `${name}.spec.ts`},
     {template: 'e2e/component.e2e.ts.hbs', output: `e2e/${name}.e2e.ts`},
     {template: 'e2e/fixture.ts.hbs', output: `e2e/fixture.ts`},

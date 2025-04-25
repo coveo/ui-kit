@@ -1,4 +1,3 @@
-import {nxViteTsPaths} from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import type {StorybookConfig} from '@storybook/web-components-vite';
 import path from 'path';
 import {PluginImpl} from 'rollup';
@@ -45,6 +44,8 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 const config: StorybookConfig = {
   stories: ['../src/**/*.new.stories.tsx', '../src/**/*.mdx'],
   staticDirs: [
+    {from: '../dist/atomic/assets', to: '/assets'},
+    {from: '../dist/atomic/lang', to: '/lang'},
     {from: '../dist/atomic', to: './assets'},
     {from: '../dist/atomic/lang', to: './lang'},
   ],
@@ -59,30 +60,49 @@ const config: StorybookConfig = {
     options: {},
   },
 
-  viteFinal: async (config, {configType}) =>
-    mergeConfig(config, {
+  async viteFinal(config, {configType}) {
+    const {default: tailwindcss} = await import('@tailwindcss/vite');
+    return mergeConfig(config, {
       plugins: [
-        nxViteTsPaths(),
-        resolveStorybookUtilsImports(),
+        tailwindcss(),
+        resolvePathAliases(),
+        forceInlineCssImports(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
-    }),
+    });
+  },
 };
 
-const resolveStorybookUtilsImports: PluginImpl = () => {
+const resolvePathAliases: PluginImpl = () => {
   return {
-    name: 'resolve-storybook-utils-imports',
+    name: 'resolve-path-aliases',
     async resolveId(source: string, importer, options) {
-      if (source.startsWith('@/storybook-utils')) {
-        return this.resolve(
-          source.replace(
-            '@/storybook-utils',
-            path.resolve(__dirname, '../storybook-utils')
-          ),
-          importer,
-          options
-        );
+      if (source.startsWith('@/')) {
+        const aliasPath = source.slice(2); // Remove the "@/" prefix
+        const resolvedPath = path.resolve(__dirname, `../${aliasPath}`);
+
+        return this.resolve(resolvedPath, importer, options);
       }
+    },
+  };
+};
+
+const forceInlineCssImports: PluginImpl = () => {
+  return {
+    name: 'force-inline-css-imports',
+    enforce: 'pre',
+    transform(code, id) {
+      if (id.endsWith('.ts')) {
+        return {
+          code: code.replace(
+            /import\s+([^'"]+)\s+from\s+['"]([^'"]+\.css)['"]/g,
+            (_, importName, cssPath) =>
+              `import ${importName} from '${cssPath}?inline'`
+          ),
+          map: null,
+        };
+      }
+      return null;
     },
   };
 };

@@ -5,12 +5,12 @@ import {
 } from '@coveo/headless';
 import {Component, h, State, Fragment, Prop} from '@stencil/core';
 import InfoIcon from '../../../images/info.svg';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {Heading} from '../../common/stencil-heading';
 import {Hidden} from '../../common/stencil-hidden';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
@@ -28,7 +28,7 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
   styleUrl: 'atomic-notifications.pcss',
   shadow: true,
 })
-export class AtomicNotifyTrigger implements InitializableComponent {
+export class AtomicNotifications implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   protected notifyTrigger!: NotifyTrigger;
 
@@ -103,7 +103,7 @@ export class AtomicNotifyTrigger implements InitializableComponent {
 
     return (
       <Fragment>
-        <Heading level={this.headingLevel ?? 0} class="accessibility-only">
+        <Heading level={this.headingLevel ?? 0} class="sr-only">
           {this.bindings.i18n.t('notifications')}
         </Heading>
         {this.renderNotifications()}

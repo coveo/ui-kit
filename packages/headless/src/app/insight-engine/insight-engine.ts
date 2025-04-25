@@ -8,6 +8,7 @@ import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions.js';
 import {setInsightConfiguration} from '../../features/insight-configuration/insight-configuration-actions.js';
 import {insightConfigurationReducer as insightConfiguration} from '../../features/insight-configuration/insight-configuration-slice.js';
+import {fetchInterface} from '../../features/insight-interface/insight-interface-actions.js';
 import {insightInterfaceReducer as insightInterface} from '../../features/insight-interface/insight-interface-slice.js';
 import {executeSearch} from '../../features/insight-search/insight-search-actions.js';
 import {logInsightInterfaceLoad} from '../../features/insight-search/insight-search-analytics-actions.js';
@@ -21,6 +22,7 @@ import {
   CoreEngine,
   EngineOptions,
   ExternalEngineOptions,
+  warnIfUsingNextAnalyticsModeForServiceFeature,
 } from '../engine.js';
 import {InsightThunkExtraArguments} from '../insight-thunk-extra-arguments.js';
 import {buildLogger} from '../logger.js';
@@ -114,6 +116,9 @@ export function buildInsightEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
+  warnIfUsingNextAnalyticsModeForServiceFeature(
+    engine.state.configuration.analytics.analyticsMode
+  );
 
   const {insightId, search} = options.configuration;
 
@@ -122,6 +127,7 @@ export function buildInsightEngine(
       insightId,
     })
   );
+  engine.dispatch(fetchInterface());
 
   if (search) {
     engine.dispatch(updateSearchConfiguration(search));

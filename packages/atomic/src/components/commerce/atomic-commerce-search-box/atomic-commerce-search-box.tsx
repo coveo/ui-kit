@@ -21,7 +21,6 @@ import {
   Watch,
   h,
 } from '@stencil/core';
-import {AriaLiveRegion} from '../../../utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
 import {
   BindStateToController,
@@ -34,16 +33,17 @@ import {
   StorageItems,
 } from '../../../utils/local-storage-utils';
 import {updateBreakpoints} from '../../../utils/replace-breakpoint';
+import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {
   isFocusingOut,
   once,
   randomID,
   spreadProperties,
-} from '../../../utils/utils';
+} from '../../../utils/stencil-utils';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
@@ -51,12 +51,8 @@ import {
   elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
 import {RedirectionPayload} from '../../search/atomic-search-box/redirection-payload';
-import {
-  ButtonSearchSuggestion,
-  SimpleSearchSuggestion,
-} from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/atomic-product-children';
+import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
@@ -217,7 +213,7 @@ export class AtomicCommerceSearchBox
   }
 
   public initialize() {
-    this.id ??= randomID('atomic-commerce-search-box-');
+    this.id ||= randomID('atomic-commerce-search-box-');
 
     this.initializeSearchboxController();
     this.initializeSuggestionManager();
@@ -503,26 +499,10 @@ export class AtomicCommerceSearchBox
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
-    const isButton = item.onSelect || item.query;
-
-    if (!isButton) {
-      return (
-        <SimpleSearchSuggestion
-          bindings={this.bindings}
-          id={id}
-          suggestion={item}
-          isSelected={isSelected}
-          side={side}
-          index={index}
-          lastIndex={lastIndex}
-          isDoubleList={this.suggestionManager.isDoubleList}
-        ></SimpleSearchSuggestion>
-      );
-    }
 
     return (
-      <ButtonSearchSuggestion
-        bindings={this.bindings}
+      <atomic-suggestion-renderer
+        i18n={this.bindings.i18n}
         id={id}
         suggestion={item}
         isSelected={isSelected}
@@ -532,13 +512,17 @@ export class AtomicCommerceSearchBox
         isDoubleList={this.suggestionManager.isDoubleList}
         onClick={(e: Event) => {
           this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
           this.isExpanded = false;
           this.triggerTextAreaChange(item.query ?? '');
         }}
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
-      ></ButtonSearchSuggestion>
+      ></atomic-suggestion-renderer>
     );
   }
 
@@ -556,7 +540,7 @@ export class AtomicCommerceSearchBox
       <div
         part={`suggestions suggestions-${side}`}
         ref={setRef}
-        class="flex flex-grow basis-1/2 flex-col"
+        class="flex grow basis-1/2 flex-col"
         onMouseDown={(e) => {
           if (e.target === getRef()) {
             e.preventDefault();
@@ -583,7 +567,7 @@ export class AtomicCommerceSearchBox
             ? 'suggestions-double-list'
             : 'suggestions-single-list'
         }`}
-        class={`bg-background border-neutral absolute left-0 top-full z-10 flex w-full rounded-md border ${
+        class={`bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
           this.suggestionManager.hasSuggestions &&
           this.isExpanded &&
           !this.isSearchDisabledForEndUser(this.searchBoxState.value)
@@ -625,7 +609,10 @@ export class AtomicCommerceSearchBox
       onInput: (e: Event) =>
         this.onInput((e.target as HTMLTextAreaElement).value),
       onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => this.searchBox.clear(),
+      onClear: () => {
+        this.searchBox.clear();
+        this.suggestionManager.clearSuggestions();
+      },
       popup: {
         id: `${this.id}-popup`,
         activeDescendant: this.suggestionManager.activeDescendant,

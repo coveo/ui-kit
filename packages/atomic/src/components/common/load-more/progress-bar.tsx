@@ -13,7 +13,7 @@ export const LoadMoreProgressBar: FunctionalComponent<
   return (
     <div part="progress-bar" class="bg-neutral relative my-2 h-1 w-72 rounded">
       <div
-        class="progress-bar z-1 absolute left-0 top-0 h-full overflow-hidden rounded bg-gradient-to-r"
+        class="progress-bar absolute top-0 left-0 z-1 h-full overflow-hidden rounded bg-linear-to-r"
         style={{width}}
       ></div>
     </div>
