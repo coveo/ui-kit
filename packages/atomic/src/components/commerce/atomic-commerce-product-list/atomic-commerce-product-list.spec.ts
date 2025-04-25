@@ -1,4 +1,3 @@
-import {createTestI18n} from '@/vitest-utils/i18n-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import * as headless from '@coveo/headless/commerce';
@@ -51,23 +50,8 @@ const mocks = vi.hoisted(() => {
       hasProducts: true,
     },
     searchOrListingState: {
-      products: Array.from({length: 15}, (_, i) => ({permanentid: i + 1})),
-      hasError: false,
-      firstRequestExecuted: true,
-      hasProducts: true,
-      isLoading: false,
-      responseId: 'responseId',
+      products: Array.from({length: 3}, (_, i) => ({permanentid: i + 1})),
     },
-    summary: vi.fn(() => ({
-      subscribe: vi.fn(),
-    })),
-    searchOrListing: vi.fn(() => ({
-      promoteChildToParent: vi.fn(),
-      interactiveProduct: vi.fn(() => vi.fn()),
-      summary: vi.fn(() => ({
-        subscribe: vi.fn(),
-      })),
-    })),
     interfaceElementType: 'product-listing',
   };
 });
@@ -89,8 +73,6 @@ vi.mock('@/src/decorators/bind-state', async () => {
   };
 });
 
-const i18n = await createTestI18n();
-
 vi.mock('@/src/mixins/bindings-mixin', () => ({
   InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
     return class extends superClass {
@@ -99,25 +81,13 @@ vi.mock('@/src/mixins/bindings-mixin', () => ({
         this.bindings = {
           store: {
             setLoadingFlag: vi.fn(),
-            state: {
-              resultList: {
-                focusOnFirstResultAfterNextSearch: () => {},
-              },
-            },
-            onChange: vi.fn(),
-            unsetLoadingFlag: vi.fn(),
+            state: vi.fn(),
           },
-          engine: {
-            subscribe: vi.fn(),
-          },
+          engine: vi.fn(),
           interfaceElement: {
             type: mocks.interfaceElementType,
           },
-          i18n,
         };
-
-        this.searchOrListing = mocks.searchOrListing;
-        this.summary = mocks.summary;
       }
     };
   }),
@@ -136,7 +106,6 @@ vi.mock(import('@coveo/headless/commerce'), async (importOriginal) => {
         id: 'product-listing-summary-controller',
         subscribe: vi.fn(),
       })),
-      subscribe: vi.fn(),
     })),
     buildSearch: vi.fn(() => ({
       id: 'search-controller',
@@ -146,7 +115,6 @@ vi.mock(import('@coveo/headless/commerce'), async (importOriginal) => {
         id: 'search-summary-controller',
         subscribe: vi.fn(),
       })),
-      subscribe: vi.fn(),
     })),
   } as typeof mod & {buildProductListing: Mock; buildSearch: Mock};
 });
@@ -190,8 +158,8 @@ describe('AtomicCommerceProductList', () => {
   });
 
   describe('#constructor', () => {
-    it('should create correct instance', async () => {
-      const element = await setupElement({initialize: false});
+    it('should create instance', async () => {
+      const element = await setupElement({});
 
       expect(element).toBeInstanceOf(AtomicCommerceProductList);
     });
