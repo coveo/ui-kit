@@ -94,7 +94,7 @@ describe('renderTableResultPlaceholders', () => {
     fixtureCleanup();
   });
 
-  test('should render 1 atomic-result-table-placeholder element', async () => {
+  test('should render 1 atomic-result-table-placeholder', async () => {
     const element = await setupElement({});
     const placeholderElements = element.querySelectorAll(
       'atomic-result-table-placeholder'
