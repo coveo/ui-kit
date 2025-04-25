@@ -704,7 +704,7 @@ describe('AtomicCommerceProductList', () => {
             const content = document.createDocumentFragment();
             const template = document.createElement('template');
             template.innerHTML =
-              '<atomic-table-element label="test"><div>Test</div>';
+              '<atomic-table-element label="Test"><div>Test</div></atomic-table-element>';
             content.appendChild(template.content);
 
             const getTemplateContentSpy = vi
