@@ -32,7 +32,7 @@ src/generated
 
 cypress/screenshots/*
 
-headless/
+
 /test-results/
 /playwright-report/
 /blob-report/
