@@ -18,7 +18,7 @@ import {
   AriaLiveRegion,
   FocusTargetController,
 } from '@/src/utils/accessibility-utils';
-import {
+import type {
   ProductListingSummaryState,
   RegularFacet,
   RegularFacetState,
@@ -125,6 +125,7 @@ export class AtomicCommerceFacet
 
   public initialize() {
     if (!this.facet) {
+      // TODO: maybe a validation that throws when facet is not defined
       return;
     }
     this.ensureSubscribed();
@@ -134,6 +135,9 @@ export class AtomicCommerceFacet
 
   public connectedCallback(): void {
     super.connectedCallback();
+    if (!this.facet) {
+      return;
+    }
     this.ensureSubscribed();
   }
 
@@ -159,26 +163,6 @@ export class AtomicCommerceFacet
       );
     }
     return true;
-  }
-
-  @bindingGuard()
-  @errorGuard()
-  protected render() {
-    if (!this.facet) {
-      return html`${nothing}`;
-    }
-    const {hasError, firstRequestExecuted} = this.summaryState;
-    return html`
-      ${facetGuard(
-        {
-          enabled: true,
-          hasError,
-          firstRequestExecuted,
-          hasResults: this.facetState.values.length > 0,
-        },
-        () => facetContainer(html`${this.renderHeader()} ${this.renderBody()}`)
-      )}
-    `;
   }
 
   private renderHeader() {
@@ -222,11 +206,11 @@ export class AtomicCommerceFacet
               this.facet.facetSearch.updateText(value);
               this.facet.facetSearch.search();
             },
-          })}
-          ${shouldDisplaySearchResults(this.facetState.facetSearch)
-            ? [this.renderSearchResults(), this.renderMatches()]
-            : [this.renderValues(), this.renderShowMoreLess()]}`
+          })}`
       )}
+      ${shouldDisplaySearchResults(this.facetState.facetSearch)
+        ? [this.renderSearchResults(), this.renderMatches()]
+        : [this.renderValues(), this.renderShowMoreLess()]}
     `;
   }
 
@@ -421,5 +405,31 @@ export class AtomicCommerceFacet
     this.unsubscribeFacetController = this.facet.subscribe(
       () => (this.facetState = this.facet.state)
     );
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  protected render() {
+    if (!this.facet) {
+      return html`${nothing}`;
+    }
+    const {hasError, firstRequestExecuted} = this.summaryState;
+    return html`
+      ${facetGuard(
+        {
+          enabled: true,
+          hasError,
+          firstRequestExecuted,
+          hasResults: this.facetState.values.length > 0,
+        },
+        () => facetContainer(html`${this.renderHeader()} ${this.renderBody()}`)
+      )}
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-facet': AtomicCommerceFacet;
   }
 }

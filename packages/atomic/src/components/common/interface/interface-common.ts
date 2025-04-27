@@ -4,6 +4,7 @@ import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
+import '../atomic-component-error/atomic-component-error.js';
 import {AnyBindings, AnyEngineType} from './bindings.js';
 import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
 import {init18n} from './i18n.js';

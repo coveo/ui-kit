@@ -1,6 +1,7 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
 import MinusIcon from '../../../../images/minus.svg';
 import PlusIcon from '../../../../images/plus.svg';
 import '../../atomic-icon/atomic-icon';
@@ -36,39 +37,43 @@ export const renderFacetShowMoreLess: FunctionalComponent<
   }
 
   return html`<div class="mt-2">
-    ${renderButton({
-      props: {
-        style: 'text-primary',
-        part: 'show-less',
-        class: `${btnClasses} ${props.canShowLessValues ? '' : 'hidden'}`,
-        ariaLabel: showLessFacetValues,
-        onClick: () => props.onShowLess(),
-        ref: (el) => props.showLessRef?.(el as HTMLButtonElement),
-      },
-    })(
-      html`<atomic-icon
-          part="show-more-less-icon"
-          class=${iconClasses}
-          icon=${MinusIcon}
-        ></atomic-icon>
-        <span class="truncate">${showLess}</span>`
+    ${when(props.canShowLessValues, () =>
+      renderButton({
+        props: {
+          style: 'text-primary',
+          part: 'show-less',
+          class: btnClasses,
+          ariaLabel: showLessFacetValues,
+          onClick: () => props.onShowLess(),
+          ref: (el) => props.showLessRef?.(el as HTMLButtonElement),
+        },
+      })(
+        html`<atomic-icon
+            part="show-more-less-icon"
+            class=${iconClasses}
+            icon=${MinusIcon}
+          ></atomic-icon>
+          <span class="truncate">${showLess}</span>`
+      )
     )}
-    ${renderButton({
-      props: {
-        style: 'text-primary',
-        part: 'show-more',
-        class: `${btnClasses} ${props.canShowMoreValues ? '' : 'hidden'}`,
-        ariaLabel: showMoreFacetValues,
-        onClick: () => props.onShowMore(),
-        ref: (el) => props.showMoreRef?.(el as HTMLButtonElement),
-      },
-    })(
-      html`<atomic-icon
-          part="show-more-less-icon"
-          class=${iconClasses}
-          icon=${PlusIcon}
-        ></atomic-icon>
-        <span class="truncate">${showMore}</span>`
+    ${when(props.canShowMoreValues, () =>
+      renderButton({
+        props: {
+          style: 'text-primary',
+          part: 'show-more',
+          class: btnClasses,
+          ariaLabel: showMoreFacetValues,
+          onClick: () => props.onShowMore(),
+          ref: (el) => props.showMoreRef?.(el as HTMLButtonElement),
+        },
+      })(
+        html`<atomic-icon
+            part="show-more-less-icon"
+            class=${iconClasses}
+            icon=${PlusIcon}
+          ></atomic-icon>
+          <span class="truncate">${showMore}</span>`
+      )
     )}
   </div>`;
 };
