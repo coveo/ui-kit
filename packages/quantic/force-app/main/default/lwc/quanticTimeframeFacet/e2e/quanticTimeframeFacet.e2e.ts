@@ -13,7 +13,7 @@ const exampleField = 'Date';
 
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
-  test.describe(`quantic facet ${useCase.label}`, () => {
+  test.describe(`quantic timeframe facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
