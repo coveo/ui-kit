@@ -1,10 +1,9 @@
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import QuanticNotifications from 'c/quanticNotifications';
-// @ts-ignore
-import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {AriaLiveRegion} from 'c/quanticUtils';
+import {buildCreateTestComponent, cleanup, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock('c/quanticUtils');
@@ -63,19 +62,11 @@ const defaultOptions = {
   engineId: 'exampleEngineId',
 };
 
-function createTestComponent(options = defaultOptions) {
-  prepareHeadlessState();
-
-  const element = createElement('c-quantic-notifications', {
-    is: QuanticNotifications,
-  });
-  for (const [key, value] of Object.entries(options)) {
-    element[key] = value;
-  }
-
-  document.body.appendChild(element);
-  return element;
-}
+const createTestComponent = buildCreateTestComponent(
+  QuanticNotifications,
+  'c-quantic-notifications',
+  defaultOptions
+);
 
 function prepareHeadlessState() {
   // @ts-ignore
@@ -85,12 +76,6 @@ function prepareHeadlessState() {
       buildSearchStatus: functionsMocks.buildSearchStatus,
     };
   };
-}
-
-// Helper function to wait until the microtask queue is empty.
-function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
-  return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function mockSuccessfulHeadlessInitialization() {
@@ -112,22 +97,15 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-function cleanup() {
-  // The jsdom instance is shared across test cases in a single file so reset the DOM
-  while (document.body.firstChild) {
-    document.body.removeChild(document.body.firstChild);
-  }
-  jest.clearAllMocks();
-  isInitialized = false;
-}
-
 describe('c-quantic-notifications', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
+    prepareHeadlessState();
   });
 
   afterEach(() => {
     cleanup();
+    isInitialized = false;
     notificationsState = {
       notifications: exampleNotifications,
     };
@@ -136,10 +114,6 @@ describe('c-quantic-notifications', () => {
   describe('when an error occurs during initialization', () => {
     beforeEach(() => {
       mockErroneousHeadlessInitialization();
-    });
-
-    afterAll(() => {
-      mockSuccessfulHeadlessInitialization();
     });
 
     it('should display the initialization error component', async () => {
