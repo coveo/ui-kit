@@ -11,14 +11,6 @@ import {expect, vi} from 'vitest';
 import {AtomicCommerceFacet} from './atomic-commerce-facet';
 import './atomic-commerce-facet';
 
-// vi.mock('@/src/decorators/binding-guard', () => ({
-//   bindingGuard: vi.fn(),
-// }));
-
-// vi.mock('@/src/decorators/error-guard', () => ({
-//   errorGuard: vi.fn(),
-// }));
-
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceFacet', () => {
@@ -41,14 +33,11 @@ describe('AtomicCommerceFacet', () => {
     getFacetValueButtonByLabel(value: string | RegExp) {
       return page.getByLabelText(`Inclusion filter on ${value}`);
     },
-    get clearFilter() {
-      return page.getByRole('button').filter({hasText: /Clear.*filter/});
-    },
     parts: (element: Element) => {
       const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
+        element.shadowRoot?.querySelector(`[part~="${part}"]`);
       const qsa = (part: string) =>
-        element.shadowRoot?.querySelectorAll(`[part="${part}"]`);
+        element.shadowRoot?.querySelectorAll(`[part~="${part}"]`);
       return {
         facet: qs('facet'),
         placeholder: qs('placeholder'),
@@ -135,15 +124,15 @@ describe('AtomicCommerceFacet', () => {
       locators.getFacetValueButtonByLabel('value-1');
     // const clearFilter = locators.clearFilter; TODO: test when a facet value is selected
 
-    await expect.element(title).toBeInTheDocument();
-    await expect.element(facetValue).toBeInTheDocument();
-    await expect.element(facetValueButton).toBeInTheDocument();
-    await expect.element(facetValueLabel).toBeInTheDocument();
-    await expect.element(facetValueButtonLabel).toBeInTheDocument();
+    await expect.element(title).toBeVisible();
+    await expect.element(facetValue).toBeVisible();
+    await expect.element(facetValueButton).toBeVisible();
+    await expect.element(facetValueLabel).toBeVisible();
+    await expect.element(facetValueButtonLabel).toBeVisible();
     // await expect.element(clearFilter).toBeInTheDocument();
   });
 
-  it('renders correctly all parts', async () => {
+  it('renders parts in the documents', async () => {
     const element = await setupElement();
 
     const parts = locators.parts(element);
@@ -160,7 +149,6 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(parts.valueLabel![0]).toBeInTheDocument();
     await expect.element(parts.valueCount![0]).toBeInTheDocument();
     await expect.element(parts.valueCheckbox![0]).toBeInTheDocument();
-    // await expect.element(parts.valueCheckboxChecked!).toBeInTheDocument();
     await expect.element(parts.valueCheckboxLabel![0]).toBeInTheDocument();
     await expect.element(parts.valueCheckboxIcon![0]).toBeInTheDocument();
     // await expect.element(parts.valueLink!).toBeInTheDocument();
@@ -245,7 +233,7 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(showLess!).not.toBeInTheDocument();
   }, 3e60); // TODO: remove timeout
 
-  it('calls facet.toggleSelect when a value is selected', async () => {
+  it('calls facet.toggleSelect when a value is clicked', async () => {
     mockedFacet = buildFakeRegularFacet({
       implementation: {
         toggleSelect: vi.fn(),
@@ -305,9 +293,6 @@ describe('AtomicCommerceFacet', () => {
 
   it('should render the clear button when there are selected values', async () => {
     mockedFacet = buildFakeRegularFacet({
-      implementation: {
-        toggleSelect: vi.fn(),
-      },
       state: {
         values: [
           {
@@ -324,9 +309,31 @@ describe('AtomicCommerceFacet', () => {
     const element = await setupElement();
     const parts = locators.parts(element);
 
-    await expect.element(parts.clearButton!).toBeInTheDocument();
-    // await expect.element(parts.clearButtonIcon!).toBeInTheDocument();
-  }, 4e60);
+    await expect.element(parts.clearButton!).toBeVisible();
+    await expect.element(parts.clearButton!).toHaveTextContent('Clear filter');
+    await expect.element(parts.clearButtonIcon!).toBeVisible();
+  }, 4e60); // TODO: remove timeout
+
+  it('should render the checkbox as selected', async () => {
+    mockedFacet = buildFakeRegularFacet({
+      state: {
+        values: [
+          {
+            value: 'Value 1',
+            state: 'selected',
+            numberOfResults: 10,
+            isAutoSelected: false,
+            isSuggested: false,
+            moreValuesAvailable: false,
+          },
+        ],
+      },
+    });
+    const element = await setupElement();
+    const parts = locators.parts(element);
+
+    expect(parts.valueCheckboxChecked?.length).toBe(1);
+  }, 4e60); // TODO: remove timeout
 
   it('calls facet.deselectAll when the clear button is clicked', async () => {
     mockedFacet = buildFakeRegularFacet({
@@ -419,17 +426,16 @@ describe('AtomicCommerceFacet', () => {
     });
 
     const element = await setupElement();
-
     const parts = locators.parts(element);
-    // Parts
-    await expect.element(parts.searchClearButton!).toBeInTheDocument();
-    await expect.element(parts.moreMatches!).toBeInTheDocument();
-    await expect.element(parts.matchesQuery!).toBeInTheDocument();
-    await expect.element(parts.searchHighlight!).toBeInTheDocument();
 
+    await expect.element(parts.searchClearButton!).toBeVisible();
+    await expect.element(parts.matchesQuery!).toHaveTextContent('test query');
     await expect
-      .element(page.getByText('More matches for test query'))
-      .toBeInTheDocument();
+      .element(parts.moreMatches!)
+      .toHaveTextContent('More matches for test query');
+    await expect
+      .element(parts.searchHighlight!)
+      .toHaveTextContent('test query');
   });
 
   it('renders "more matches" caption when there are move values available', async () => {
@@ -453,7 +459,7 @@ describe('AtomicCommerceFacet', () => {
     await setupElement();
     await expect
       .element(page.getByText('More matches for test query'))
-      .toBeInTheDocument();
+      .toBeVisible();
   });
 
   it('renders proper part when there are no search results', async () => {
@@ -471,35 +477,9 @@ describe('AtomicCommerceFacet', () => {
     const element = await setupElement();
 
     const parts = locators.parts(element);
-    await expect.element(parts.noMatches!).toBeInTheDocument();
-  }, 1e60); // TODO: remove timeout
-
-  it('renders "no match" caption when there no search results', async () => {
-    mockedFacet = buildFakeRegularFacet({
-      state: {
-        facetSearch: {
-          isLoading: false,
-          query: 'test query',
-          moreValuesAvailable: false,
-          values: [],
-        },
-      },
-    });
-
-    await setupElement();
+    await expect.element(parts.noMatches!).toBeVisible();
     await expect
-      .element(page.getByText('No matches found for test query'))
-      .toBeInTheDocument();
+      .element(parts.noMatches!)
+      .toHaveTextContent('No matches found for test query');
   }, 1e60); // TODO: remove timeout
 });
-
-// TODO:
-// it.todo(
-//   'should deselected all values when the clear button is clicked',
-//   async () => {
-//     const element = await setupElement();
-//     const clearButton = locators.parts(element).clearButton;
-//     await clearButton?.click();
-//     expect(mockedFacet.deselectAll).toHaveBeenCalled();
-//   }
-// );
