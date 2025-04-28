@@ -5,10 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicCommerceSortDropdown,
-AtomicCommerceInterface,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -147,10 +143,6 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
-AtomicCommerceSortDropdown,
-AtomicCommerceInterface,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
