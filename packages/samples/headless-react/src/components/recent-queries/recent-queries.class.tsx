@@ -13,7 +13,7 @@ export class RecentQueriesList extends Component<
   RecentQueriesState
 > {
   static contextType = AppContext;
-  declare context: ContextType<typeof AppContext>;
+  context: ContextType<typeof AppContext> = undefined!;
 
   private controller!: HeadlessRecentQueriesList;
   private unsubscribe: Unsubscribe = () => {};
