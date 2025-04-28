@@ -94,13 +94,13 @@ describe('AtomicCommerceFacet', () => {
     });
   });
 
-  const setupElement = async () => {
+  const setupElement = async ({isCollapsed} = {isCollapsed: false}) => {
     const {element} =
       await renderInAtomicCommerceInterface<AtomicCommerceFacet>({
         template: html`<atomic-commerce-facet
           .facet=${mockedFacet}
           .summary=${mockedSummary}
-          ?isCollapsed=${false}
+          ?isCollapsed=${isCollapsed}
           field="testField"
         ></atomic-commerce-facet>`,
         selector: 'atomic-commerce-facet',
@@ -113,54 +113,129 @@ describe('AtomicCommerceFacet', () => {
     return element;
   };
 
-  it('renders correctly facet elements', async () => {
+  it('renders the title', async () => {
     await setupElement();
-
     const title = locators.title;
-    const facetValue = locators.getFacetValueByPosition(0);
-    const facetValueButton = locators.getFacetValueButtonByPosition(0);
-    const facetValueLabel = locators.getFacetValueByLabel('value-1');
-    const facetValueButtonLabel =
-      locators.getFacetValueButtonByLabel('value-1');
-    // const clearFilter = locators.clearFilter; TODO: test when a facet value is selected
-
     await expect.element(title).toBeVisible();
-    await expect.element(facetValue).toBeVisible();
-    await expect.element(facetValueButton).toBeVisible();
-    await expect.element(facetValueLabel).toBeVisible();
-    await expect.element(facetValueButtonLabel).toBeVisible();
-    // await expect.element(clearFilter).toBeInTheDocument();
   });
 
-  it('renders parts in the documents', async () => {
+  it('renders the first facet value', async () => {
+    await setupElement();
+    const facetValue = locators.getFacetValueByPosition(0);
+    await expect.element(facetValue).toBeVisible();
+  });
+
+  it('renders the first facet value button', async () => {
+    await setupElement();
+    const facetValueButton = locators.getFacetValueButtonByPosition(0);
+    await expect.element(facetValueButton).toBeVisible();
+  });
+
+  it('renders the first facet value label', async () => {
+    await setupElement();
+    const facetValueLabel = locators.getFacetValueByLabel('value-1');
+    await expect.element(facetValueLabel).toBeVisible();
+  });
+
+  it('renders the first facet value button label', async () => {
+    await setupElement();
+    const facetValueButtonLabel =
+      locators.getFacetValueButtonByLabel('value-1');
+    await expect.element(facetValueButtonLabel).toBeVisible();
+  });
+
+  it('renders the label button part', async () => {
     const element = await setupElement();
-
     const parts = locators.parts(element);
-
-    // TODO: add test for other locators
-    // await expect.element(parts.facet!).toBeInTheDocument();
-    // await expect.element(parts.placeholder!).toBeInTheDocument();
     await expect.element(parts.labelButton!).toBeInTheDocument();
-    await expect.element(parts.labelButtonIcon!).toBeInTheDocument();
-    await expect.element(parts.searchWrapper!).toBeInTheDocument();
-    await expect.element(parts.searchInput!).toBeInTheDocument();
-    await expect.element(parts.searchIcon!).toBeInTheDocument();
-    await expect.element(parts.values![0]).toBeInTheDocument();
-    await expect.element(parts.valueLabel![0]).toBeInTheDocument();
-    await expect.element(parts.valueCount![0]).toBeInTheDocument();
-    await expect.element(parts.valueCheckbox![0]).toBeInTheDocument();
-    await expect.element(parts.valueCheckboxLabel![0]).toBeInTheDocument();
-    await expect.element(parts.valueCheckboxIcon![0]).toBeInTheDocument();
-    // await expect.element(parts.valueLink!).toBeInTheDocument();
-    // await expect.element(parts.valueLinkSelected!).toBeInTheDocument();
-    // await expect.element(parts.valueBox!).toBeInTheDocument();
-    // await expect.element(parts.valueBoxSelected!).toBeInTheDocument();
-    // await expect.element(parts.valueExcludeButton!).toBeInTheDocument();
+  });
 
+  it('renders the label button icon part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.labelButtonIcon!).toBeInTheDocument();
+  });
+
+  it('renders the search wrapper part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.searchWrapper!).toBeInTheDocument();
+  });
+
+  it('renders the search input part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.searchInput!).toBeInTheDocument();
+  });
+
+  it('renders the search icon part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.searchIcon!).toBeInTheDocument();
+  });
+
+  it('renders the first value part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.values![0]).toBeInTheDocument();
+  });
+
+  it('renders the first value label part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.valueLabel![0]).toBeInTheDocument();
+  });
+
+  it('renders the first value count part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.valueCount![0]).toBeInTheDocument();
+  });
+
+  it('renders the first value checkbox part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.valueCheckbox![0]).toBeInTheDocument();
+  });
+
+  it('renders the first value checkbox label part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.valueCheckboxLabel![0]).toBeInTheDocument();
+  });
+
+  it('renders the first value checkbox icon part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
+    await expect.element(parts.valueCheckboxIcon![0]).toBeInTheDocument();
+  });
+
+  it('renders the show more button part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
     await expect.element(parts.showMore!).toBeInTheDocument();
+  });
+
+  it('renders the show less button part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
     await expect.element(parts.showLess!).toBeInTheDocument();
+  });
+
+  it('renders the show more/less icon part', async () => {
+    const element = await setupElement();
+    const parts = locators.parts(element);
     await expect.element(parts.showMoreLessIcon!).toBeInTheDocument();
-  }, 4e60);
+  });
+
+  // TODO: Add tests for other locators
+  // it('renders the facet part', async () => { ... });
+  // it('renders the placeholder part', async () => { ... });
+  // it('renders the value link part', async () => { ... });
+  // it('renders the value link selected part', async () => { ... });
+  // it('renders the value box part', async () => { ... });
+  // it('renders the value box selected part', async () => { ... });
+  // it('renders the value exclude button part', async () => { ... });
 
   it('renders nothing when facet is undefined', async () => {
     // @ts-expect-error: mocking facet to be undefined
@@ -312,7 +387,7 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(parts.clearButton!).toBeVisible();
     await expect.element(parts.clearButton!).toHaveTextContent('Clear filter');
     await expect.element(parts.clearButtonIcon!).toBeVisible();
-  }, 4e60); // TODO: remove timeout
+  });
 
   it('should render the checkbox as selected', async () => {
     mockedFacet = buildFakeRegularFacet({
@@ -482,4 +557,37 @@ describe('AtomicCommerceFacet', () => {
       .element(parts.noMatches!)
       .toHaveTextContent('No matches found for test query');
   }, 1e60); // TODO: remove timeout
+
+  it('does not render the body when isCollapsed is true', async () => {
+    const element = await setupElement({isCollapsed: true});
+    const parts = locators.parts(element);
+    const {values, searchInput, showMore} = parts;
+
+    await expect(values?.length).toBe(0);
+    await expect.element(searchInput!).not.toBeInTheDocument();
+    await expect.element(showMore!).not.toBeInTheDocument();
+  });
+
+  it('should toggle collapse when the header is clicked', async () => {
+    const element = await setupElement({isCollapsed: true});
+    const labelButton = locators.parts(element).labelButton!;
+
+    await userEvent.click(labelButton);
+
+    expect(element.isCollapsed).toBe(false);
+  });
+
+  // it('should focus on the header', () => {
+  //   BaseFacetSelector.labelButton().should('be.focused');
+  // });
+  it('should display an error message when facet encounter an error', async () => {
+    const element = await setupElement();
+    element.error = new Error('An error occurred');
+    element.requestUpdate();
+
+    const error = page.getByText(
+      'Look at the developer console for more information'
+    );
+    await expect.element(error).toBeVisible();
+  });
 });
