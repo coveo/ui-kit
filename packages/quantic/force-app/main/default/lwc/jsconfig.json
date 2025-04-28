@@ -38,6 +38,9 @@
       "c/quanticResultList": ["quanticResultList/quanticResultList.js"],
       "c/quanticResultLink": ["quanticResultLink/quanticResultLink.js"],
       "c/quanticSort": ["quanticSort/quanticSort.js"],
+      "c/quanticInsightInterface": [
+        "quanticInsightInterface/quanticInsightInterface.js"
+      ],
       "c/quanticSummary": ["quanticSummary/quanticSummary.js"],
       "c/quanticFacetValue": ["quanticFacetValue/quanticFacetValue.js"],
       "c/quanticNumericFacet": ["quanticNumericFacet/quanticNumericFacet.js"],
