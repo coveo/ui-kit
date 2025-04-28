@@ -68,7 +68,7 @@ describe('renderGridLayout', () => {
   test('when clicked, should click child element matching #selectorForItem', async () => {
     const childClickHandler = vi.fn();
     const children = html`<button
-      @click=${childClickHandler}
+      @click=${childClickHandler as Function}
       id="test-child"
     ></button>`;
     const element = await setupElement(
