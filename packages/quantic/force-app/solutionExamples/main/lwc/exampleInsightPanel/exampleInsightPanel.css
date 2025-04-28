@@ -1,12 +1,18 @@
 .insight-panel_layout {
   background-color: var(--lwc-colorBackgroundAlt, rgb(255, 255, 255));
   border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-  overflow: hidden;
   width: 100%;
   max-width: 500px;
   margin: auto;
   -webkit-box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
   box-shadow: 0 2px 2px 0 rgb(0 0 0 / 10%);
+  padding: 0;
+}
+
+.insight-panel_header,
+.insight-panel_tabs,
+.insight-panel_pager {
+  background-color:  rgb(243, 243, 243);
 }
 
 .insight-panel_search-box {
