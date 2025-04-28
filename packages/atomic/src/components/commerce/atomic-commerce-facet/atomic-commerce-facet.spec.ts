@@ -11,6 +11,7 @@ import {expect, vi} from 'vitest';
 import {AtomicCommerceFacet} from './atomic-commerce-facet';
 import './atomic-commerce-facet';
 
+// TODO: revisit the test so it follows the same pattern as cypress
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceFacet', () => {
@@ -228,6 +229,12 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(parts.showMoreLessIcon!).toBeInTheDocument();
   });
 
+  it('renders the header with the correct label', async () => {
+    const element = await setupElement();
+    const labelButton = locators.parts(element).labelButton;
+
+    await expect.element(labelButton!).toHaveTextContent('some-display-name');
+  });
   // TODO: Add tests for other locators
   // it('renders the facet part', async () => { ... });
   // it('renders the placeholder part', async () => { ... });
@@ -245,11 +252,15 @@ describe('AtomicCommerceFacet', () => {
     expect(element.shadowRoot?.textContent).toBe('');
   });
 
-  it('renders the header with the correct label', async () => {
+  it('should display an error message when facet encounter an error', async () => {
     const element = await setupElement();
-    const labelButton = locators.parts(element).labelButton;
+    element.error = new Error('An error occurred');
+    element.requestUpdate();
 
-    await expect.element(labelButton!).toHaveTextContent('some-display-name');
+    const error = page.getByText(
+      'Look at the developer console for more information'
+    );
+    await expect.element(error).toBeVisible();
   });
 
   it('renders facet values when available', async () => {
@@ -284,6 +295,27 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(valueLabel![1]).toHaveTextContent('Value 2');
   });
 
+  it('should render the checkbox as selected', async () => {
+    mockedFacet = buildFakeRegularFacet({
+      state: {
+        values: [
+          {
+            value: 'Value 1',
+            state: 'selected',
+            numberOfResults: 10,
+            isAutoSelected: false,
+            isSuggested: false,
+            moreValuesAvailable: false,
+          },
+        ],
+      },
+    });
+    const element = await setupElement();
+    const parts = locators.parts(element);
+
+    expect(parts.valueCheckboxChecked?.length).toBe(1);
+  }, 4e60); // TODO: remove timeout
+
   it('does not render the "show more" button when canShowMoreValues is false', async () => {
     mockedFacet = buildFakeRegularFacet({
       state: {
@@ -308,11 +340,8 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(showLess!).not.toBeInTheDocument();
   }, 3e60); // TODO: remove timeout
 
-  it('calls facet.toggleSelect when a value is clicked', async () => {
+  it('should render 1 idle value', async () => {
     mockedFacet = buildFakeRegularFacet({
-      implementation: {
-        toggleSelect: vi.fn(),
-      },
       state: {
         values: [
           {
@@ -326,27 +355,15 @@ describe('AtomicCommerceFacet', () => {
         ],
       },
     });
-
     const element = await setupElement();
-    const valueLabel = locators.parts(element).valueLabel!;
-
-    await userEvent.click(valueLabel[0]);
-
-    expect(mockedFacet.toggleSelect).toHaveBeenCalledWith({
-      value: 'Value 1',
-      state: 'idle',
-      numberOfResults: 10,
-      isAutoSelected: false,
-      isSuggested: false,
-      moreValuesAvailable: false,
-    });
+    const parts = locators.parts(element);
+    const {valueCheckbox, valueCheckboxChecked} = parts;
+    await expect(valueCheckbox?.length).toBe(1);
+    await expect(valueCheckboxChecked?.length).toBe(0);
   });
 
   it('should not render the clear button when there are no selected values', async () => {
     mockedFacet = buildFakeRegularFacet({
-      implementation: {
-        toggleSelect: vi.fn(),
-      },
       state: {
         values: [
           {
@@ -388,27 +405,6 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(parts.clearButton!).toHaveTextContent('Clear filter');
     await expect.element(parts.clearButtonIcon!).toBeVisible();
   });
-
-  it('should render the checkbox as selected', async () => {
-    mockedFacet = buildFakeRegularFacet({
-      state: {
-        values: [
-          {
-            value: 'Value 1',
-            state: 'selected',
-            numberOfResults: 10,
-            isAutoSelected: false,
-            isSuggested: false,
-            moreValuesAvailable: false,
-          },
-        ],
-      },
-    });
-    const element = await setupElement();
-    const parts = locators.parts(element);
-
-    expect(parts.valueCheckboxChecked?.length).toBe(1);
-  }, 4e60); // TODO: remove timeout
 
   it('calls facet.deselectAll when the clear button is clicked', async () => {
     mockedFacet = buildFakeRegularFacet({
@@ -580,14 +576,38 @@ describe('AtomicCommerceFacet', () => {
   // it('should focus on the header', () => {
   //   BaseFacetSelector.labelButton().should('be.focused');
   // });
-  it('should display an error message when facet encounter an error', async () => {
-    const element = await setupElement();
-    element.error = new Error('An error occurred');
-    element.requestUpdate();
 
-    const error = page.getByText(
-      'Look at the developer console for more information'
-    );
-    await expect.element(error).toBeVisible();
+  it('calls facet.toggleSelect when a value is clicked', async () => {
+    mockedFacet = buildFakeRegularFacet({
+      implementation: {
+        toggleSelect: vi.fn(),
+      },
+      state: {
+        values: [
+          {
+            value: 'Value 1',
+            state: 'idle',
+            numberOfResults: 10,
+            isAutoSelected: false,
+            isSuggested: false,
+            moreValuesAvailable: false,
+          },
+        ],
+      },
+    });
+
+    const element = await setupElement();
+    const valueLabel = locators.parts(element).valueLabel!;
+
+    await userEvent.click(valueLabel[0]);
+
+    expect(mockedFacet.toggleSelect).toHaveBeenCalledWith({
+      value: 'Value 1',
+      state: 'idle',
+      numberOfResults: 10,
+      isAutoSelected: false,
+      isSuggested: false,
+      moreValuesAvailable: false,
+    });
   });
 });
