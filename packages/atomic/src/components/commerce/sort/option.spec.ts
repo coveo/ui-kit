@@ -9,6 +9,8 @@ import {
   getSortByLabel,
 } from './option';
 
+vi.mock('../../common/sort/option', {spy: true});
+
 describe('renderCommerceSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
@@ -26,8 +28,7 @@ describe('renderCommerceSortOption', () => {
     });
   };
 
-  // TODO: this test is failing in the CI
-  it.skip('call renderSortOption with the default props for relevance', async () => {
+  it('call renderSortOption with the default props for relevance', async () => {
     const renderSortOptionSpy = vi.spyOn(commonSortOption, 'renderSortOption');
     setupElement();
     expect(renderSortOptionSpy).toHaveBeenCalledWith({
