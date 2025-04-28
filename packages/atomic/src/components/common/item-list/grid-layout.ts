@@ -3,8 +3,8 @@ import {html} from 'lit';
 import {ref as litRef} from 'lit/directives/ref.js';
 
 export interface GridLayoutProps {
-  selectorForItem: string;
   item: {clickUri: string; title: string};
+  selectorForItem: string;
   setRef: (element?: Element) => void;
 }
 

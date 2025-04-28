@@ -11,61 +11,30 @@ import {tableElementTagName} from '../../search/atomic-table-result/table-elemen
 import {AnyItem} from '../interface/item';
 
 interface TableColumnsProps {
-  templateContentForFirstItem: DocumentFragment;
   firstItem: AnyItem;
   itemRenderingFunction?: ItemRenderingFunction;
+  templateContentForFirstItem: DocumentFragment;
 }
 
-export interface DisplayTableProps extends TableColumnsProps {
-  logger: Pick<Console, 'error'>;
+export interface TableLayoutProps extends TableColumnsProps {
   host: HTMLElement;
   listClasses: string;
+  logger: Pick<Console, 'error'>;
 }
 
 export interface TableDataProps extends TableColumnsProps {
   key: string;
+  renderItem: (content: Element) => TemplateResult;
 }
 
-export interface DisplayTableRowProps {
+export interface TableRowProps {
   key: string;
   rowIndex: number;
   setRef: (element?: Element) => void;
 }
 
-const getFieldTableColumns = (props: TableColumnsProps) => {
-  if (props.itemRenderingFunction) {
-    return getFieldTableColumnsFromRenderingFunction(props);
-  }
-  return getFieldTableColumnsFromHTMLTemplate(props);
-};
-
-const getFieldTableColumnsFromRenderingFunction = (
-  props: Pick<TableColumnsProps, 'itemRenderingFunction' | 'firstItem'>
-): Element[] => {
-  const {firstItem, itemRenderingFunction} = props;
-
-  const contentOfRenderingFunction = document.createElement('div');
-
-  const contentOfRenderingFunctionAsString = itemRenderingFunction!(
-    firstItem,
-    document.createElement('div')
-  );
-  contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
-
-  return Array.from(
-    contentOfRenderingFunction.querySelectorAll(tableElementTagName)
-  );
-};
-
-const getFieldTableColumnsFromHTMLTemplate = (
-  props: Pick<DisplayTableProps, 'templateContentForFirstItem'>
-): Element[] =>
-  Array.from(
-    props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
-  );
-
-export const DisplayTable: FunctionalComponentWithChildren<
-  DisplayTableProps
+export const renderTableLayout: FunctionalComponentWithChildren<
+  TableLayoutProps
 > = ({props}) => {
   const {host, listClasses, logger} = props;
 
@@ -97,17 +66,18 @@ export const DisplayTable: FunctionalComponentWithChildren<
     </table>`;
 };
 
-export const DisplayTableRow: FunctionalComponentWithChildren<
-  DisplayTableRowProps
-> = ({props}) => {
+export const renderTableRow: FunctionalComponentWithChildren<TableRowProps> = ({
+  props,
+}) => {
   const {key, rowIndex, setRef} = props;
 
   return (children) =>
     html`${keyed(
       key,
       html`<tr
-        part="result-table-row ${rowIndex % 2 ===
-        1} ? 'result-table-row-even' : 'result-table-row-odd'"
+        .part="result-table-row${rowIndex % 2 === 1
+          ? ' result-table-row-even'
+          : ' result-table-row-odd'}"
         ${ref((element?: Element) => setRef(element))}
       >
         ${children}
@@ -115,11 +85,9 @@ export const DisplayTableRow: FunctionalComponentWithChildren<
     )}`;
 };
 
-export const DisplayTableData: FunctionalComponent<
-  TableDataProps & {
-    renderItem: (content: Element) => TemplateResult;
-  }
-> = ({props}) => {
+export const renderTableData: FunctionalComponent<TableDataProps> = ({
+  props,
+}) => {
   const {renderItem} = props;
   const fieldColumns = getFieldTableColumns(props);
 
@@ -132,3 +100,35 @@ export const DisplayTableData: FunctionalComponent<
       )}`
   )}`;
 };
+
+const getFieldTableColumns = (props: TableColumnsProps) => {
+  if (props.itemRenderingFunction) {
+    return getFieldTableColumnsFromRenderingFunction(props);
+  }
+  return getFieldTableColumnsFromHTMLTemplate(props);
+};
+
+const getFieldTableColumnsFromRenderingFunction = (
+  props: Pick<TableColumnsProps, 'itemRenderingFunction' | 'firstItem'>
+): Element[] => {
+  const {firstItem, itemRenderingFunction} = props;
+
+  const contentOfRenderingFunction = document.createElement('div');
+
+  const contentOfRenderingFunctionAsString = itemRenderingFunction!(
+    firstItem,
+    document.createElement('div')
+  );
+  contentOfRenderingFunction.innerHTML = contentOfRenderingFunctionAsString;
+
+  return Array.from(
+    contentOfRenderingFunction.querySelectorAll(tableElementTagName)
+  );
+};
+
+const getFieldTableColumnsFromHTMLTemplate = (
+  props: Pick<TableLayoutProps, 'templateContentForFirstItem'>
+): Element[] =>
+  Array.from(
+    props.templateContentForFirstItem.querySelectorAll(tableElementTagName)
+  );

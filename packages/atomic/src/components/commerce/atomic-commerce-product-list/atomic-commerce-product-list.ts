@@ -15,7 +15,6 @@ import {NumberValue, Schema, StringValue} from '@coveo/bueno';
 import {
   buildProductListing,
   buildSearch,
-  Product,
   ProductListing,
   ProductListingState,
   ProductListingSummaryState,
@@ -37,11 +36,6 @@ import {
 } from '../../common/atomic-result-placeholder/placeholders-lit.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
 import {
-  DisplayTable,
-  DisplayTableData,
-  DisplayTableRow,
-} from '../../common/item-list/display-table-lit.js';
-import {
   renderListWrapper,
   renderListRoot,
 } from '../../common/item-list/display-wrapper-lit.js';
@@ -50,6 +44,11 @@ import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../common/item-list/item-list-common-lit.js';
+import {
+  renderTableLayout,
+  renderTableData,
+  renderTableRow,
+} from '../../common/item-list/table-layout.js';
 import {
   getItemListDisplayClasses,
   ItemDisplayDensity,
@@ -286,7 +285,6 @@ export class AtomicCommerceProductList
       this.display,
       this.density,
       this.imageSize,
-
       this.searchOrListingState?.isLoading,
       displayPlaceholders
     );
@@ -338,33 +336,40 @@ export class AtomicCommerceProductList
 
   private renderAsGrid() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
-      const props = this.getPropsForAtomicProduct(product);
       return renderGridLayout({
         props: {
-          selectorForItem: 'atomic-product',
           item: {
             ...product,
             title: product.ec_name ?? '',
           },
-          ...props.interactiveProduct,
+          selectorForItem: 'atomic-product',
           setRef: (element) => {
             element && this.productListCommon.setNewResultRef(element, index);
           },
         },
       })(
         html`${keyed(
-          props.key,
+          this.productListCommon.getResultId(
+            product.permanentid,
+            this.searchOrListingState.responseId,
+            this.density,
+            this.imageSize
+          ),
           html`<atomic-product
-            .content=${props.content}
-            .density=${props.density}
-            .display=${props.display}
-            .imageSize=${props.imageSize}
-            .interactiveProduct=${props.interactiveProduct}
-            .linkContent=${props.linkContent}
-            .loadingFlag=${props.loadingFlag}
-            .product=${props.product}
-            .renderingFunction=${props.renderingFunction}
-            .store=${props.store as never}
+            .content=${this.productTemplateProvider.getTemplateContent(product)}
+            .density=${this.density}
+            .display=${this.display}
+            .imageSize=${this.imageSize}
+            .interactiveProduct=${this.searchOrListing.interactiveProduct({
+              options: {product},
+            })}
+            .linkContent=${this.productTemplateProvider.getLinkTemplateContent(
+              product
+            )}
+            .loadingFlag=${this.loadingFlag}
+            .product=${product}
+            .renderingFunction=${this.itemRenderingFunction}
+            .store=${this.bindings.store as never}
           ></atomic-product>`
         )}`
       );
@@ -373,25 +378,31 @@ export class AtomicCommerceProductList
 
   private renderAsList() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
-      const props = this.getPropsForAtomicProduct(product);
       return html`${keyed(
-        props.key,
+        this.productListCommon.getResultId(
+          product.permanentid,
+          this.searchOrListingState.responseId,
+          this.density,
+          this.imageSize
+        ),
         html`<atomic-product
           part="outline"
           ${ref(
             (element) =>
               element && this.productListCommon.setNewResultRef(element, index)
           )}
-          .content=${props.content}
-          .density=${props.density}
-          .display=${props.display}
-          .imageSize=${props.imageSize}
-          .interactiveProduct=${props.interactiveProduct}
-          .linkContent=${props.linkContent}
-          .loadingFlag=${props.loadingFlag}
-          .product=${props.product}
-          .renderingFunction=${props.renderingFunction}
-          .store=${props.store as never}
+          .content=${this.productTemplateProvider.getTemplateContent(product)}
+          .density=${this.density}
+          .display=${this.display}
+          .imageSize=${this.imageSize}
+          .interactiveProduct=${this.searchOrListing.interactiveProduct({
+            options: {product},
+          })}
+          .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+          .loadingFlag=${this.loadingFlag}
+          .product=${product}
+          .renderingFunction=${this.itemRenderingFunction}
+          .store=${this.bindings.store as never}
         ></atomic-product>`
       )}`;
     })}`;
@@ -406,7 +417,7 @@ export class AtomicCommerceProductList
         const templateContentForFirstItem =
           this.productTemplateProvider.getTemplateContent(firstItem);
 
-        return DisplayTable({
+        return renderTableLayout({
           props: {
             firstItem,
             host: this.host,
@@ -416,37 +427,44 @@ export class AtomicCommerceProductList
             templateContentForFirstItem,
           },
         })(
-          html`${map(this.searchOrListingState.products, (item, index) => {
-            const props = this.getPropsForAtomicProduct(item);
+          html`${map(this.searchOrListingState.products, (product, index) => {
+            const key = this.productListCommon.getResultId(
+              product.permanentid,
+              this.searchOrListingState.responseId,
+              this.density,
+              this.imageSize
+            );
 
-            return DisplayTableRow({
+            return renderTableRow({
               props: {
-                key: props.key,
+                key,
                 rowIndex: index,
                 setRef: (element) =>
                   element &&
                   this.productListCommon.setNewResultRef(element, index),
               },
             })(
-              html`${DisplayTableData({
+              html`${renderTableData({
                 props: {
                   firstItem,
-                  key: props.key,
+                  key,
                   templateContentForFirstItem,
                   renderItem: (content) => {
                     return html`${keyed(
-                      props.key,
+                      key,
                       html`<atomic-product
                         .content=${content}
-                        .density=${props.density}
-                        .display=${props.display}
-                        .imageSize=${props.imageSize}
-                        .interactiveProduct=${props.interactiveProduct}
-                        .linkContent=${props.linkContent}
-                        .loadingFlag=${props.loadingFlag}
-                        .product=${props.product}
-                        .renderingFunction=${props.renderingFunction}
-                        .store=${props.store as never}
+                        .density=${this.density}
+                        .display=${this.display}
+                        .imageSize=${this.imageSize}
+                        .interactiveProduct=${this.searchOrListing.interactiveProduct(
+                          {options: {product}}
+                        )}
+                        .linkContent=${this.productTemplateProvider.getEmptyLinkTemplateContent()}
+                        .loadingFlag=${this.loadingFlag}
+                        .product=${product}
+                        .renderingFunction=${this.itemRenderingFunction}
+                        .store=${this.bindings.store as never}
                       ></atomic-product>`
                     )}`;
                   },
@@ -458,32 +476,6 @@ export class AtomicCommerceProductList
       },
       () => nothing
     )}`;
-  }
-
-  private getPropsForAtomicProduct(product: Product) {
-    return {
-      interactiveProduct: this.searchOrListing.interactiveProduct({
-        options: {product},
-      }),
-      product,
-      renderingFunction: this.itemRenderingFunction,
-      loadingFlag: this.loadingFlag,
-      key: this.productListCommon.getResultId(
-        product.permanentid,
-        this.searchOrListingState.responseId,
-        this.density,
-        this.imageSize
-      ),
-      content: this.productTemplateProvider.getTemplateContent(product),
-      linkContent:
-        this.display === 'grid'
-          ? this.productTemplateProvider.getLinkTemplateContent(product)
-          : this.productTemplateProvider.getEmptyLinkTemplateContent(),
-      store: this.bindings.store,
-      density: this.density,
-      imageSize: this.imageSize,
-      display: this.display,
-    };
   }
 
   private get focusTarget() {
