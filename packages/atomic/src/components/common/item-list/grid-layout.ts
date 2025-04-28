@@ -1,8 +1,8 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
-import {createRef, Ref, ref} from 'lit/directives/ref.js';
+import {ref as litRef} from 'lit/directives/ref.js';
 
-export interface DisplayGridProps {
+export interface GridLayoutProps {
   selectorForItem: string;
   item: {clickUri: string; title: string};
   setRef: (element?: Element) => void;
@@ -11,28 +11,26 @@ export interface DisplayGridProps {
   cancelPendingSelect: () => void;
 }
 
-export const DisplayGrid: FunctionalComponentWithChildren<DisplayGridProps> = ({
-  props,
-}) => {
-  const {selectorForItem} = props;
+export const renderGridLayout: FunctionalComponentWithChildren<
+  GridLayoutProps
+> = ({props}) => {
+  const {selectorForItem, setRef} = props;
 
-  const r: Ref<HTMLElement> = createRef();
-
-  const setRef = (element: Element | undefined) => {
-    props.setRef(element);
-    return r;
-  };
+  let ref: Element | undefined;
 
   const handleClick = (event: Event) => {
     event.preventDefault();
-    (r.value?.querySelector(selectorForItem) as HTMLElement)?.click();
+    (ref?.querySelector(selectorForItem) as HTMLElement)?.click();
   };
 
   return (children) =>
     html` <div
       part="result-list-grid-clickable-container outline"
-      ${ref(setRef)}
-      @click="${handleClick}"
+      ${litRef((element) => {
+        ref = element;
+        setRef(element);
+      })}
+      @click=${handleClick}
     >
       ${children}
     </div>`;

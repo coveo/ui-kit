@@ -36,7 +36,6 @@ import {
   renderTableResultPlaceholders,
 } from '../../common/atomic-result-placeholder/placeholders-lit.js';
 import {createAppLoadedListener} from '../../common/interface/store.js';
-import {DisplayGrid} from '../../common/item-list/display-grid-lit.js';
 import {
   DisplayTable,
   DisplayTableData,
@@ -46,6 +45,7 @@ import {
   renderListWrapper,
   renderListRoot,
 } from '../../common/item-list/display-wrapper-lit.js';
+import {renderGridLayout} from '../../common/item-list/grid-layout.js';
 import {
   ItemListCommon,
   ItemRenderingFunction,
@@ -339,7 +339,7 @@ export class AtomicCommerceProductList
   private renderAsGrid() {
     return html`${map(this.searchOrListingState.products, (product, index) => {
       const props = this.getPropsForAtomicProduct(product);
-      return DisplayGrid({
+      return renderGridLayout({
         props: {
           selectorForItem: 'atomic-product',
           item: {
