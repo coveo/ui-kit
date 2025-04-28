@@ -3,8 +3,7 @@ import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import * as headless from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {html} from 'lit';
 import {describe, expect, Mock, MockInstance, vi} from 'vitest';
 import * as store from '../../common/interface/store';
 import {ItemRenderingFunction} from '../../common/item-list/item-list-common-lit';
@@ -16,31 +15,6 @@ import {
 import {CommerceStore} from '../atomic-commerce-interface/store';
 import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
-
-// atomic-product stub
-@customElement('atomic-product')
-export class AtomicProduct extends LitElement {
-  @property({type: Object}) public content: ParentNode = new DocumentFragment();
-  @property() public density: ItemDisplayDensity = 'normal';
-  @property() public display: ItemDisplayLayout = 'list';
-  @property() public imageSize: ItemDisplayImageSize = 'icon';
-  @property({type: Object})
-  public interactiveProduct!: headless.InteractiveProduct;
-  @property({type: Object}) public linkContent: ParentNode =
-    new DocumentFragment();
-  @property() public loadingFlag?: string;
-  @property({type: Object}) public product!: headless.Product;
-  @property() public renderingFunction: ItemRenderingFunction;
-  @property({type: Object}) public store?: CommerceStore;
-
-  constructor() {
-    super();
-  }
-
-  public render() {
-    return html`<div></div>`;
-  }
-}
 
 const mocks = vi.hoisted(() => {
   return {
