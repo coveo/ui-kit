@@ -1,66 +1,40 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
+import {buildFakeSort} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/sort-subcontroller';
+import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, vi} from 'vitest';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
 
-// TODO: put in separate PR
-let mocks = await vi.hoisted(async () => (await import('./factory')).default());
-
-vi.mock('@coveo/headless/commerce', () => {
-  return {
-    buildProductListing: mocks.searchOrListing,
-    buildSearch: mocks.searchOrListing,
-  };
-});
-
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      constructor(...args: unknown[]) {
-        super(...args);
-
-        const baseBindings = {
-          store: {
-            state: {
-              iconAssetsPath: './assets',
-            },
-          },
-          interfaceElement: {
-            type: 'product-listing',
-          } as HTMLAtomicCommerceInterfaceElement,
-        };
-
-        this.searchOrListing = mocks.searchOrListing;
-        this.sort = mocks.sort;
-
-        createTestI18n().then((i18n) => {
-          this.bindings = {...baseBindings, i18n};
-        });
-      }
-    };
-  }),
-}));
-
-vi.mock('@/src/decorators/bind-state', async () => {
-  return {
-    bindStateToController: vi.fn(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (proto: any, stateProperty: string) => {
-        Object.defineProperty(proto, stateProperty, {
-          get() {
-            return mocks[stateProperty as keyof typeof mocks];
-          },
-        });
-      };
-    }),
-  };
-});
+vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceSortDropdown', () => {
+  const mockedSort = vi.fn();
+
+  beforeEach(() => {
+    mockedSort.mockReturnValue(buildFakeSort());
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          sort: mockedSort,
+        },
+      })
+    );
+    vi.mocked(buildSearch).mockReturnValue(
+      buildFakeSearch({
+        implementation: {
+          sort: mockedSort,
+        },
+      })
+    );
+  });
+
   const locators = {
     get label() {
       return page.getByText('Sort by');
@@ -68,52 +42,89 @@ describe('AtomicCommerceSortDropdown', () => {
     get select() {
       return page.getByRole('combobox');
     },
-    get relevanceOption() {
-      return page.getByRole('option', {name: 'bar'});
-    },
     placeholder(element: HTMLElement) {
       return element.shadowRoot!.querySelector('[part="placeholder"]')!;
     },
   };
 
-  const setupElement = async () => {
-    const element = await fixture<AtomicCommerceSortDropdown>(
-      html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`
-    );
+  const setupElement = async (
+    {
+      interfaceType,
+    }: {interfaceType: CommerceBindings['interfaceElement']['type']} = {
+      interfaceType: 'product-listing',
+    }
+  ) => {
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicCommerceSortDropdown>({
+        template: html`<atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>`,
+        selector: 'atomic-commerce-sort-dropdown',
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = interfaceType;
+          return bindings;
+        },
+      });
 
     element.initialize();
 
     return element;
   };
 
-  beforeEach(async () => {
-    mocks = (await import('./factory')).default();
-  });
-
   it('is defined', () => {
     const el = document.createElement('atomic-commerce-sort-dropdown');
     expect(el).toBeInstanceOf(AtomicCommerceSortDropdown);
   });
 
-  it('renders label and dropdown correctly', async () => {
-    const element = await setupElement();
-    await element.updateComplete;
+  it('renders label correctly', async () => {
+    await setupElement();
 
     await expect.element(locators.label).toBeInTheDocument();
+  });
+
+  it('renders dropdown select correctly', async () => {
+    await setupElement();
+
     await expect.element(locators.select).toBeInTheDocument();
   });
 
+  it('should call sort.sortBy when select is changed', async () => {
+    const mockedSortBy = vi.fn();
+    mockedSort.mockReturnValue(
+      buildFakeSort({implementation: {sortBy: mockedSortBy}})
+    );
+    await setupElement();
+
+    await locators.select.selectOptions('bar');
+
+    expect(mockedSortBy).toHaveBeenCalledWith({
+      by: 'fields',
+      fields: [
+        {
+          name: 'bar',
+        },
+      ],
+    });
+  });
+
   it('renders nothing when there is an error', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     const element = await setupElement();
+
     element.error = new Error('Test error');
-    await element.updateComplete;
 
     await expect.element(locators.label).not.toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
   it('renders nothing when there are no products', async () => {
-    mocks.searchOrListingState.products = [];
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          sort: mockedSort,
+        },
+        state: {products: []},
+      })
+    );
+
     await setupElement();
 
     await expect.element(locators.label).not.toBeInTheDocument();
@@ -121,21 +132,49 @@ describe('AtomicCommerceSortDropdown', () => {
   });
 
   it('renders nothing when there are no available sorts', async () => {
-    mocks.sortState.availableSorts = [];
+    mockedSort.mockReturnValue(
+      buildFakeSort({
+        state: {
+          availableSorts: [],
+        },
+      })
+    );
+
     await setupElement();
 
     await expect.element(locators.label).not.toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
   });
 
-  it('renders placeholder when responseId is undefined', async () => {
-    mocks.searchOrListingState.responseId = '';
+  it('renders placeholder when responseId is empty', async () => {
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          sort: mockedSort,
+        },
+        state: {
+          responseId: '',
+        },
+      })
+    );
+
     const element = await setupElement();
 
-    const placeholder = () => locators.placeholder(element);
-    await vi.waitUntil(placeholder);
-
-    await expect.element(placeholder()).toBeInTheDocument();
+    await expect.element(locators.placeholder(element)).toBeInTheDocument();
     await expect.element(locators.select).not.toBeInTheDocument();
+  });
+
+  it('should call buildProductListing when interfaceElement is product-listing', async () => {
+    const element = await setupElement();
+
+    expect(buildProductListing).toHaveBeenCalledWith(element.bindings.engine);
+  });
+
+  it('should call buildSearch when interfaceElement is search', async () => {
+    const element = await setupElement({
+      interfaceType: 'search',
+    });
+
+    expect(buildSearch).toHaveBeenCalledWith(element.bindings.engine);
   });
 });

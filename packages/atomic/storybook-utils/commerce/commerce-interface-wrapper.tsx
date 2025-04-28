@@ -1,3 +1,4 @@
+import {AtomicCommerceInterface} from '@/src/components/commerce/atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
@@ -28,9 +29,7 @@ export const wrapInCommerceInterface = ({
     await customElements.whenDefined('atomic-commerce-interface');
     const canvas = within(canvasElement);
     const commerceInterface =
-      await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
-        'root-interface'
-      );
+      await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
     await step('Render the Commerce Interface', async () => {
       await commerceInterface!.initialize({
         ...getSampleCommerceEngineConfiguration(),
@@ -52,9 +51,7 @@ export const playExecuteFirstRequest: (
   const canvas = within(canvasElement);
 
   const commerceInterface =
-    await canvas.findByTestId<HTMLAtomicCommerceInterfaceElement>(
-      'root-interface'
-    );
+    await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
   await step('Execute the first request', async () => {
     await commerceInterface!.executeFirstRequest();
   });

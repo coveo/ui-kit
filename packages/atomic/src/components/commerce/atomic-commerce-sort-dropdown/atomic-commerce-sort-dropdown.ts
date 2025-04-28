@@ -19,9 +19,9 @@ import {bindingGuard} from '../../../decorators/binding-guard';
 import {errorGuard} from '../../../decorators/error-guard';
 import {InitializableComponent} from '../../../decorators/types';
 import {randomID} from '../../../utils/utils';
-import {sortGuard} from '../../common/sort/guard';
 import {renderSortLabel} from '../../common/sort/label';
 import {renderSortSelect} from '../../common/sort/select';
+import {sortGuard} from '../../common/sort/sort-guard';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {getSortByLabel, renderCommerceSortOption} from '../sort/option';
 import styles from './atomic-commerce-sort-dropdown.tw.css';
@@ -79,8 +79,10 @@ export class AtomicCommerceSortDropdown
 
   private sortLabelTemplate() {
     return renderSortLabel({
-      id: this.dropdownId,
-      i18n: this.bindings.i18n,
+      props: {
+        id: this.dropdownId,
+        i18n: this.bindings.i18n,
+      },
     });
   }
 
@@ -91,25 +93,24 @@ export class AtomicCommerceSortDropdown
     } = this;
 
     return renderSortSelect({
-      i18n,
-      id,
-      onSelect: (evt: Event) => this.select(evt),
-      children: html`${guard([this.sortState], () => {
-        return map(this.sortState.availableSorts, (sort) =>
+      props: {
+        i18n,
+        id,
+        onSelect: (evt: Event) => this.select(evt),
+      },
+    })(
+      html`${guard([this.sortState], () =>
+        map(this.sortState.availableSorts, (sort) =>
           renderCommerceSortOption({
-            i18n,
-            selected: this.sort.isSortedBy(sort),
-            sort,
+            props: {
+              i18n,
+              selected: this.sort.isSortedBy(sort),
+              sort,
+            },
           })
-        );
-      })}`,
-    });
-  }
-
-  private sortContainer() {
-    return html`<div class="text-on-background flex flex-wrap items-center">
-      ${this.sortLabelTemplate()} ${this.sortSelectTemplate()}
-    </div>`;
+        )
+      )}`
+    );
   }
 
   @errorGuard()
@@ -124,7 +125,10 @@ export class AtomicCommerceSortDropdown
           products.length > 0 && this.sortState.availableSorts.length > 1,
         hasError: error !== null,
       },
-      () => this.sortContainer()
+      () =>
+        html`<div class="text-on-background flex flex-wrap items-center">
+          ${this.sortLabelTemplate()} ${this.sortSelectTemplate()}
+        </div>`
     )}`;
   }
 }
