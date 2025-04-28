@@ -18,11 +18,15 @@ import {
 } from '@stencil/core';
 import i18next, {i18n} from 'i18next';
 import {InitializeEvent} from '../../../utils/initialization-utils';
-import {CommonBindings, NonceBindings} from '../../common/interface/bindings';
+import {
+  AdoptedStylesBindings,
+  CommonBindings,
+} from '../../common/interface/bindings';
 import {
   StencilBaseAtomicInterface,
   CommonAtomicInterfaceHelper,
 } from '../../common/interface/interface-common-stencil';
+import {AtomicCommerceInterface} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {
   CommerceRecommendationStore,
   createCommerceRecommendationStore,
@@ -32,9 +36,9 @@ export type CommerceInitializationOptions = CommerceEngineConfiguration;
 export type CommerceBindings = CommonBindings<
   CommerceEngine,
   CommerceRecommendationStore,
-  HTMLAtomicCommerceInterfaceElement
+  AtomicCommerceInterface
 > &
-  NonceBindings;
+  AdoptedStylesBindings;
 
 /**
  * @alpha
@@ -52,7 +56,7 @@ export class AtomicCommerceRecommendationInterface
   private store = createCommerceRecommendationStore();
   private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @Element() public host!: HTMLAtomicCommerceInterfaceElement;
+  @Element() public host!: AtomicCommerceInterface;
 
   @State() public error?: Error;
 
@@ -202,19 +206,19 @@ export class AtomicCommerceRecommendationInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
-      createStyleElement: () => {
-        const styleTag = document.createElement('style');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
+      addAdoptedStyleSheets: (stylesheet) => {
+        const parent = this.host.getRootNode();
+        const styleSheet = stylesheet;
+        const isDocumentOrShadowRoot =
+          parent instanceof Document || parent instanceof ShadowRoot;
+
+        if (
+          styleSheet &&
+          isDocumentOrShadowRoot &&
+          !parent.adoptedStyleSheets.includes(styleSheet)
+        ) {
+          parent.adoptedStyleSheets.push(styleSheet);
         }
-        return styleTag;
-      },
-      createScriptElement: () => {
-        const styleTag = document.createElement('script');
-        if (this.CspNonce) {
-          styleTag.setAttribute('nonce', this.CspNonce);
-        }
-        return styleTag;
       },
     };
   }

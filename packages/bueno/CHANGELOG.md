@@ -1,3 +1,7 @@
+## <small>1.0.12 (2025-04-23)</small>
+
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+
 ## <small>1.0.11 (2025-04-16)</small>
 
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)

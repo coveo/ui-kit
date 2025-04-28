@@ -503,7 +503,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - run: npm run build
-      - uses: ./.github/actions/playwright-headless-ssr-commerce
+      - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
     needs: build

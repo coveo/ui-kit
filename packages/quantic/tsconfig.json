@@ -90,7 +90,8 @@
     "force-app/main/default/lwc",
     "force-app/examples/main/lwc",
     "typings/lwc/**/*.d.ts",
-    "coveo.d.ts"
+    "coveo.d.ts",
+    "force-app/solutionExamples/main/lwc"
   ],
   "exclude": ["**/__tests__/**", "**/e2e/**"],
   "typeAcquisition": {
