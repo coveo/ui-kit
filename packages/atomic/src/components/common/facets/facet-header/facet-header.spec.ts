@@ -87,13 +87,13 @@ describe('facetHeader', () => {
   it('renders the expand icon when the facet is collapsed', async () => {
     await renderComponent({isCollapsed: true});
     await expect.element(locators.expandButtonIcon).toBeInTheDocument();
-    expect(locators.expandButtonIcon).toMatchSnapshot();
+    expect(locators.expandButtonIcon?.getAttribute('icon')).toMatchSnapshot();
   });
 
   it('renders the collapse icon when the facet is expanded', async () => {
     await renderComponent({isCollapsed: false});
     await expect.element(locators.collapseButtonIcon).toBeInTheDocument();
-    expect(locators.collapseButtonIcon).toMatchSnapshot();
+    expect(locators.collapseButtonIcon?.getAttribute('icon')).toMatchSnapshot();
   });
 
   it('renders the collapse filters button when there are active values', async () => {
