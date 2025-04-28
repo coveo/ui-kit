@@ -12,10 +12,7 @@ describe('renderGridLayout', () => {
     return await renderFunctionFixture(
       html`${renderGridLayout({
         props: {
-          beginDelayedSelect: props.beginDelayedSelect || (() => {}),
-          cancelPendingSelect: props.cancelPendingSelect || (() => {}),
           item: props.item || {clickUri: 'uri', title: 'title'},
-          select: props.select || (() => {}),
           selectorForItem: props.selectorForItem || '#test-child',
           setRef: props.setRef || (() => {}),
         },

@@ -350,18 +350,6 @@ export class AtomicCommerceProductList
           setRef: (element) => {
             element && this.productListCommon.setNewResultRef(element, index);
           },
-          select: () => {
-            this.logWarningIfNeeded(props.interactiveProduct.warningMessage);
-            props.interactiveProduct.select();
-          },
-          beginDelayedSelect: () => {
-            this.logWarningIfNeeded(props.interactiveProduct.warningMessage);
-            props.interactiveProduct.beginDelayedSelect();
-          },
-          cancelPendingSelect: () => {
-            this.logWarningIfNeeded(props.interactiveProduct.warningMessage);
-            props.interactiveProduct.cancelPendingSelect();
-          },
         },
       })(
         html`${keyed(
@@ -470,12 +458,6 @@ export class AtomicCommerceProductList
       },
       () => nothing
     )}`;
-  }
-
-  private logWarningIfNeeded(message?: string) {
-    if (message) {
-      this.bindings.engine.logger.warn(message);
-    }
   }
 
   private getPropsForAtomicProduct(product: Product) {

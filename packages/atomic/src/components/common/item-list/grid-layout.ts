@@ -6,9 +6,6 @@ export interface GridLayoutProps {
   selectorForItem: string;
   item: {clickUri: string; title: string};
   setRef: (element?: Element) => void;
-  select: () => void;
-  beginDelayedSelect: () => void;
-  cancelPendingSelect: () => void;
 }
 
 export const renderGridLayout: FunctionalComponentWithChildren<
