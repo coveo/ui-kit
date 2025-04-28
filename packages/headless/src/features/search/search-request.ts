@@ -1,5 +1,5 @@
 import {EventDescription} from 'coveo.analytics';
-import {NavigatorContext} from '../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../app/navigator-context-provider.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {ConfigurationSection} from '../../state/state-sections.js';
 import {sortCriteriaMap, sortFacets} from '../../utils/facet-utils.js';

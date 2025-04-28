@@ -1,6 +1,6 @@
 import {MockInstance} from 'vitest';
 import {CommerceFacetSearchRequest} from '../../../../../api/commerce/facet-search/facet-search-request.js';
-import {NavigatorContext} from '../../../../../app/navigatorContextProvider.js';
+import {NavigatorContext} from '../../../../../app/navigator-context-provider.js';
 import * as Actions from '../../../../../features/commerce/common/filterable-commerce-api-request-builder.js';
 import {CommerceAppState} from '../../../../../state/commerce-app-state.js';
 import {buildMockCommerceState} from '../../../../../test/mock-commerce-state.js';

@@ -1,4 +1,4 @@
-import {nothing, TemplateResult} from 'lit';
+import {VNode} from '@stencil/core';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
@@ -14,8 +14,11 @@ export interface SearchBoxSuggestionElement {
   key: string;
   /**
    * Rendered content of the element.
+   *
+   * @remarks
+   * The `VNode` type will be deprecated in v4 as we are detaching from Stencil.
    */
-  content: TemplateResult | typeof nothing;
+  content: Element | VNode;
   /**
    * Hook called when the selection is selected.
    * @param e DOM event.

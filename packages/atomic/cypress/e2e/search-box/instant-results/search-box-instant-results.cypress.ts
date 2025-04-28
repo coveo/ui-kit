@@ -178,7 +178,7 @@ describe('Instant Results Test Suites', () => {
     SearchBoxSelectors.textArea().clear({force: true});
 
     SearchBoxSelectors.textArea().type(
-      'Rec{downArrow}{upArrow}{leftArrow}{del}',
+      'Re{downArrow}{upArrow}{leftArrow}{del}',
       delay()
     );
 
