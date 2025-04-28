@@ -24,26 +24,33 @@ describe('renderListWrapper', () => {
     fixtureCleanup();
   });
 
-  test('should render with correct class', async () => {
-    const props = {listClasses: 'test-class'};
-    const element = await setupElement(props);
+  test('should render 1 element', async () => {
+    const element = await setupElement({});
 
     const renderedElements = element.querySelectorAll('*');
 
     expect(renderedElements.length).toBe(1);
-    expect(renderedElements[0]?.classList).toContain('test-class');
+  });
+
+  test('should render with correct class', async () => {
+    const props = {listClasses: 'test-class'};
+    const element = await setupElement(props);
+
+    const renderedElement = element.querySelector('*');
+
+    expect(renderedElement?.classList).toContain('test-class');
   });
 
   test('should render children', async () => {
     const children = html`<div id="test-child"></div>`;
     const element = await setupElement({}, children);
 
-    const renderedElement = element.querySelectorAll('*')[0];
+    const renderedElement = element.querySelector('*');
 
-    const renderedChildren = renderedElement.querySelectorAll('*');
+    const renderedChildren = renderedElement?.querySelectorAll('*');
 
-    expect(renderedChildren.length).toBe(1);
-    expect(renderedChildren[0]?.id).toBe('test-child');
+    expect(renderedChildren?.length).toBe(1);
+    expect(renderedChildren?.[0]?.id).toBe('test-child');
   });
 });
 
@@ -65,20 +72,27 @@ describe('renderListRoot', () => {
     fixtureCleanup();
   });
 
-  test('should render with correct class', async () => {
-    const props = {listClasses: 'test-class'};
-    const element = await setupElement(props);
+  test('should render 1 element', async () => {
+    const element = await setupElement({});
 
     const renderedElements = element.querySelectorAll('*');
 
     expect(renderedElements.length).toBe(1);
-    expect(renderedElements[0]?.classList).toContain('test-class');
+  });
+
+  test('should render with correct class', async () => {
+    const props = {listClasses: 'test-class'};
+    const element = await setupElement(props);
+
+    const renderedElement = element.querySelector('*');
+
+    expect(renderedElement?.classList).toContain('test-class');
   });
 
   test('should render with correct part', async () => {
     const element = await setupElement({});
 
-    const renderedElement = element.querySelectorAll('*')[0];
+    const renderedElement = element.querySelector('*');
 
     expect(renderedElement?.part.value).toBe('result-list');
   });
@@ -87,11 +101,11 @@ describe('renderListRoot', () => {
     const children = html`<div id="test-child"></div>`;
     const element = await setupElement({}, children);
 
-    const renderedElement = element.querySelectorAll('*')[0];
+    const renderedElement = element.querySelector('*');
 
-    const renderedChildren = renderedElement.querySelectorAll('*');
+    const renderedChildren = renderedElement?.querySelectorAll('*');
 
-    expect(renderedChildren.length).toBe(1);
-    expect(renderedChildren[0]?.id).toBe('test-child');
+    expect(renderedChildren?.length).toBe(1);
+    expect(renderedChildren?.[0]?.id).toBe('test-child');
   });
 });
