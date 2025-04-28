@@ -12,3 +12,31 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
     api.selectStory(undefined, 'default');
   });
 });
+
+const expandAllButtons = () => {
+  const clickExpandAllButtons = () => {
+    setTimeout(() => {
+      try {
+        const expandAllButtons = document.querySelectorAll(
+          'button[data-action="expand-all"][data-expanded="false"]'
+        );
+        expandAllButtons.forEach((button) => {
+          (button as HTMLButtonElement).click();
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }, 200);
+  };
+
+  const currentStoryId = window.location.hash;
+  if (currentStoryId.includes('introduction')) {
+    clickExpandAllButtons();
+  }
+};
+
+// Run the script when the manager UI is loaded
+addons.register('expand-all-folders-on-intro', () => {
+  console.log('expand-all-folders-on-intro');
+  window.addEventListener('load', expandAllButtons);
+});
