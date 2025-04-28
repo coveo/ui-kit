@@ -21,7 +21,7 @@ import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-comm
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
