@@ -208,7 +208,7 @@ async function submitFacetSearchForm(element) {
   await flushPromises();
 }
 
-async function mockInputReportValidity(element) {
+function mockInputReportValidity(element) {
   const inputs = [...element.shadowRoot.querySelectorAll('lightning-input')];
   inputs.forEach((input) => {
     input.reportValidity = functionsMocks.reportValidity;
