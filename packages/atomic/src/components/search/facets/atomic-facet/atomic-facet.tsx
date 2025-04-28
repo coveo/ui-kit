@@ -43,14 +43,14 @@ import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
-import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {FacetSearchInputGuard} from '../../../common/facets/facet-search/facet-search-input-guard';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
+import {FacetSearchInput} from '../../../common/facets/facet-search/stencil-facet-search-input';
+import {FacetSearchInputGuard} from '../../../common/facets/facet-search/stencil-facet-search-input-guard';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
 import {
   FacetValueProps,
