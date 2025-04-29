@@ -10,7 +10,7 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect} from 'vitest';
+import {describe, vi, expect, MockInstance} from 'vitest';
 import {AtomicCommercePager} from './atomic-commerce-pager';
 import './atomic-commerce-pager';
 
@@ -19,10 +19,14 @@ vi.mock('@coveo/headless/commerce', {spy: true});
 describe('AtomicCommercePager', () => {
   const renderPager = async ({
     numberOfPages,
+    previousButtonIcon,
+    nextButtonIcon,
     interfaceType,
     state,
   }: {
     numberOfPages?: number;
+    previousButtonIcon?: string;
+    nextButtonIcon?: string;
     interfaceType?: 'product-listing' | 'search';
     state?: Partial<PaginationState>;
   } = {}) => {
@@ -46,6 +50,8 @@ describe('AtomicCommercePager', () => {
       await renderInAtomicCommerceInterface<AtomicCommercePager>({
         template: html`<atomic-commerce-pager
           number-of-pages=${ifDefined(numberOfPages)}
+          previous-button-icon=${ifDefined(previousButtonIcon)}
+          next-button-icon=${ifDefined(nextButtonIcon)}
         ></atomic-commerce-pager>`,
         selector: 'atomic-commerce-pager',
         bindings: (bindings) => {
@@ -161,79 +167,99 @@ describe('AtomicCommercePager', () => {
       await expect.element(locators.next).toHaveAttribute('disabled');
     });
 
-    test('should call focusOnFirstResultAfterNextSearch and dispatch atomic/scrollToTop when clicking on the previous button', async () => {
-      const element = await renderPager({state: {page: 2}});
-      const focusSpy = vi.spyOn(
-        element.bindings.store.state.resultList!,
-        'focusOnFirstResultAfterNextSearch'
-      );
-      const eventSpy = vi.spyOn(element, 'dispatchEvent');
+    describe('when clicking on the previous button', () => {
+      let focusSpy: MockInstance;
+      let eventSpy: MockInstance;
+      let previousSpy: MockInstance;
 
-      await locators.previous.click();
+      beforeEach(async () => {
+        const element = await renderPager({state: {page: 2}});
+        focusSpy = vi.spyOn(
+          element.bindings.store.state.resultList!,
+          'focusOnFirstResultAfterNextSearch'
+        );
+        eventSpy = vi.spyOn(element, 'dispatchEvent');
+        previousSpy = vi.spyOn(element.pager, 'previousPage');
 
-      expect(focusSpy).toHaveBeenCalled();
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+        await locators.previous.click();
+      });
+
+      test('should call #focusOnFirstResultAfterNextSearch', async () => {
+        expect(focusSpy).toHaveBeenCalled();
+      });
+
+      test("should dispatch 'atomic/scrollToTop'", async () => {
+        expect(eventSpy).toHaveBeenCalledWith(
+          new CustomEvent('atomic/scrollToTop')
+        );
+      });
+
+      test('should call #pager.previousPage', async () => {
+        expect(previousSpy).toHaveBeenCalled();
+      });
     });
 
-    test('should call previousPage when clicking on the previous button', async () => {
-      const element = await renderPager({state: {page: 2}});
-      const previousSpy = vi.spyOn(element.pager, 'previousPage');
-      const eventSpy = vi.spyOn(element, 'dispatchEvent');
+    describe('when clicking on the next button', () => {
+      let focusSpy: MockInstance;
+      let eventSpy: MockInstance;
+      let nextSpy: MockInstance;
 
-      await locators.previous.click();
+      beforeEach(async () => {
+        const element = await renderPager({state: {page: 2}});
+        focusSpy = vi.spyOn(
+          element.bindings.store.state.resultList!,
+          'focusOnFirstResultAfterNextSearch'
+        );
+        eventSpy = vi.spyOn(element, 'dispatchEvent');
+        nextSpy = vi.spyOn(element.pager, 'nextPage');
 
-      expect(previousSpy).toHaveBeenCalled();
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
+        await locators.next.click();
+      });
+
+      test('should call #focusOnFirstResultAfterNextSearch', async () => {
+        expect(focusSpy).toHaveBeenCalled();
+      });
+
+      test("should dispatch 'atomic/scrollToTop'", async () => {
+        expect(eventSpy).toHaveBeenCalledWith(
+          new CustomEvent('atomic/scrollToTop')
+        );
+      });
+
+      test('should call #pager.nextPage', async () => {
+        expect(nextSpy).toHaveBeenCalled();
+      });
     });
 
-    test('should call focusOnFirstResultAfterNextSearch and dispatch atomic/scrollToTop when clicking on the next button', async () => {
-      const element = await renderPager();
-      const focusSpy = vi.spyOn(
-        element as never,
-        'focusOnFirstResultAndScrollToTop'
-      );
-      const eventSpy = vi.spyOn(element, 'dispatchEvent');
+    describe('when clicking on a page button', () => {
+      let focusSpy: MockInstance;
+      let eventSpy: MockInstance;
+      let selectPageSpy: MockInstance;
 
-      await locators.next.click();
+      beforeEach(async () => {
+        const element = await renderPager();
+        focusSpy = vi.spyOn(
+          element.bindings.store.state.resultList!,
+          'focusOnFirstResultAfterNextSearch'
+        );
+        eventSpy = vi.spyOn(element, 'dispatchEvent');
+        selectPageSpy = vi.spyOn(element.pager, 'selectPage');
+        await locators.page3.click();
+      });
 
-      expect(focusSpy).toHaveBeenCalled();
-      expect(eventSpy).toHaveBeenCalledWith(
-        new CustomEvent('atomic/scrollToTop')
-      );
-    });
+      test('should call #focusOnFirstResultAfterNextSearch', async () => {
+        expect(focusSpy).toHaveBeenCalled();
+      });
 
-    test('should call nextPage when clicking on the next button', async () => {
-      const element = await renderPager();
-      const nextPageSpy = vi.spyOn(element.pager, 'nextPage');
+      test("should dispatch 'atomic/scrollToTop'", async () => {
+        expect(eventSpy).toHaveBeenCalledWith(
+          new CustomEvent('atomic/scrollToTop')
+        );
+      });
 
-      await locators.next.click();
-
-      expect(nextPageSpy).toHaveBeenCalled();
-    });
-
-    test('should call focusOnFirstResultAfterNextSearch and dispatch atomic/scrollToTop when clicking on a page button', async () => {
-      const element = await renderPager();
-      const focusSpy = vi.spyOn(
-        element as never,
-        'focusOnFirstResultAndScrollToTop'
-      );
-
-      await locators.page2.click();
-
-      expect(focusSpy).toHaveBeenCalled();
-    });
-
-    test('should call selectPage when clicking on a page button', async () => {
-      const element = await renderPager();
-      const selectPageSpy = vi.spyOn(element.pager, 'selectPage');
-
-      await locators.page2.click();
-
-      expect(selectPageSpy).toHaveBeenCalled();
+      test('should call #pager.selectPage', async () => {
+        expect(selectPageSpy).toHaveBeenCalled();
+      });
     });
 
     test('should render the proper value on the page buttons', async () => {
@@ -253,6 +279,30 @@ describe('AtomicCommercePager', () => {
       await expect
         .element(locators.page2)
         .toHaveAttribute('part', 'page-button');
+    });
+
+    test('should be able to render a custom icon for the previous button', async () => {
+      const icon = '<svg>random-previous-icon</svg>';
+      const element = await renderPager({
+        previousButtonIcon: icon,
+      });
+
+      const atomicIcon = element.shadowRoot?.querySelector(
+        '[part="previous-button-icon"]'
+      );
+      expect(atomicIcon).toHaveAttribute('icon', icon);
+    });
+
+    test('should be able to render a custom icon for the next button', async () => {
+      const icon = '<svg>random-next-icon</svg>';
+      const element = await renderPager({
+        nextButtonIcon: icon,
+      });
+
+      const atomicIcon = element.shadowRoot?.querySelector(
+        '[part="next-button-icon"]'
+      );
+      expect(atomicIcon).toHaveAttribute('icon', icon);
     });
 
     test('should render every part', async () => {
