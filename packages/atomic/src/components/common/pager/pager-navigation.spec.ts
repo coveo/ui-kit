@@ -61,10 +61,4 @@ describe('pagerNavigation', () => {
       container.querySelector('nav')?.querySelector('div')
     ).toHaveTextContent('children');
   });
-
-  test('should have', () => {
-    expect(
-      container.querySelector('nav')?.querySelector('div')
-    ).toHaveTextContent('children');
-  });
 });
