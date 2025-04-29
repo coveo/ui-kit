@@ -1,3 +1,14 @@
+## 1.1.2 (2025-04-29)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#157](https://github.com/coveo/relay/issues/157)) ([f3e3fa1](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#161](https://github.com/coveo/relay/issues/161)) ([93a8170](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#162](https://github.com/coveo/relay/issues/162)) ([7fe99d1](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#163](https://github.com/coveo/relay/issues/163)) ([dc3cc69](https://github.com/coveo/relay/commits/))
+- **deps:** update all non-major dependencies ([#164](https://github.com/coveo/relay/issues/164)) ([67492e0](https://github.com/coveo/relay/commits/))
+- **deps:** update dependency next to v15.2.4 [security] ([#169](https://github.com/coveo/relay/issues/169)) ([0e2f02f](https://github.com/coveo/relay/commits/))
+
 ## 1.1.1 (2025-02-21)
 
 # 1.1.0 (2025-02-12)

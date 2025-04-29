@@ -1,3 +1,10 @@
+## 2.1.3 (2025-04-29)
+
+### Bug Fixes
+
+- **deps:** update all non-major dependencies ([#164](https://github.com/coveo/relay/issues/164)) ([67492e0](https://github.com/coveo/relay/commits/))
+- **deps:** update dependency next to v15.2.4 [security] ([#169](https://github.com/coveo/relay/issues/169)) ([0e2f02f](https://github.com/coveo/relay/commits/))
+
 ## 2.1.2 (2025-04-02)
 
 ### Bug Fixes
