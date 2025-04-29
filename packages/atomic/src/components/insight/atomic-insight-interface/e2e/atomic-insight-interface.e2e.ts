@@ -1,6 +1,6 @@
 import {test, expect} from './fixture';
 
-const defaultInsightQuerySummaryText = 'Insights related to this case';
+// const defaultInsightQuerySummaryText = 'Insights related to this case';
 
 test.describe('Atomic Insight Panel', () => {
   test.beforeEach(async ({insightInterface}) => {
@@ -18,7 +18,7 @@ test.describe('Atomic Insight Panel', () => {
 
       await expect(insightInterface.insightQuerySummary).toBeVisible();
       await expect(insightInterface.insightQuerySummary).toHaveText(
-        defaultInsightQuerySummaryText
+        'defaultInsightQuerySummaryText'
       );
 
       await expect(insightInterface.insightSearchBox).toBeVisible();
