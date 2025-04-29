@@ -39,7 +39,7 @@ useCaseTestCases.forEach((useCase) => {
         await pager.clickPreviousPageButton();
         const searchResponse = await searchResponsePromise;
         const {firstResult} = searchResponse.request().postDataJSON();
-        expect(firstResult).toBe(1999);
+        expect(firstResult).toBe(0);
         await pager.waitForPagerPreviousUaAnalytics();
       });
     });

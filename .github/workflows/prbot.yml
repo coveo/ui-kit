@@ -276,7 +276,7 @@ jobs:
         uses: ./.github/actions/merge-playwright-reports
         with:
           working-directory: packages/atomic
-          artifact-pattern: blob-report-*
+          artifact-pattern: atomic-blob-report-*
           upload-artifact-name: atomic-playwright-report
 
       - name: Generate a token
