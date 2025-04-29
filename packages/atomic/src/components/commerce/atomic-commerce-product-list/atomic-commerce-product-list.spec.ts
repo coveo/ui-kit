@@ -1,10 +1,12 @@
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import * as headless from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {describe, expect, Mock, MockInstance, vi} from 'vitest';
+import {describe, expect, MockInstance, vi} from 'vitest';
 import * as store from '../../common/interface/store';
 import {ItemRenderingFunction} from '../../common/item-list/item-list-common-lit';
 import {
@@ -16,84 +18,31 @@ import {CommerceStore} from '../atomic-commerce-interface/store';
 import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
 
-const mocks = vi.hoisted(() => {
-  return {
-    summaryState: {
-      hasError: false,
-      firstRequestExecuted: true,
-      hasProducts: true,
-    },
-    searchOrListingState: {
-      products: Array.from({length: 3}, (_, i) => ({permanentid: i + 1})),
-    },
-    interfaceElementType: 'product-listing',
-  };
-});
-
-vi.mock('@/src/components/common/interface/store');
-
-vi.mock('@/src/decorators/bind-state', async () => {
-  return {
-    bindStateToController: vi.fn(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (proto: any, stateProperty: string) => {
-        Object.defineProperty(proto, stateProperty, {
-          get() {
-            return mocks[stateProperty as keyof typeof mocks];
-          },
-        });
-      };
-    }),
-  };
-});
-
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      constructor(...args: unknown[]) {
-        super(...args);
-        this.bindings = {
-          store: {
-            setLoadingFlag: vi.fn(),
-            state: vi.fn(),
-          },
-          engine: vi.fn(),
-          interfaceElement: {
-            type: mocks.interfaceElementType,
-          },
-        };
-      }
-    };
-  }),
-  BindingController: class {},
-}));
-
-vi.mock(import('@coveo/headless/commerce'), async (importOriginal) => {
-  const mod = await importOriginal();
-  return {
-    ...mod,
-    buildProductListing: vi.fn(() => ({
-      id: 'product-listing-controller',
-      promoteChildToParent: vi.fn(),
-      interactiveProduct: vi.fn(() => vi.fn()),
-      summary: vi.fn(() => ({
-        id: 'product-listing-summary-controller',
-        subscribe: vi.fn(),
-      })),
-    })),
-    buildSearch: vi.fn(() => ({
-      id: 'search-controller',
-      promoteChildToParent: vi.fn(),
-      interactiveProduct: vi.fn(() => vi.fn()),
-      summary: vi.fn(() => ({
-        id: 'search-summary-controller',
-        subscribe: vi.fn(),
-      })),
-    })),
-  } as typeof mod & {buildProductListing: Mock; buildSearch: Mock};
-});
+vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceProductList', () => {
+  beforeEach(() => {
+    vi.mocked(headless.buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          interactiveProduct: vi.fn(),
+          promoteChildToParent: vi.fn(),
+          summary: vi.fn(),
+        },
+      })
+    );
+
+    vi.mocked(headless.buildSearch).mockReturnValue(
+      buildFakeSearch({
+        implementation: {
+          interactiveProduct: vi.fn(),
+          promoteChildToParent: vi.fn(),
+          summary: vi.fn(),
+        },
+      })
+    );
+  });
+
   const setupElement = async ({
     display = 'grid',
     density = 'normal',
@@ -101,6 +50,7 @@ describe('AtomicCommerceProductList', () => {
     numberOfPlaceholders = 24,
     isAppLoaded = true,
     initialize = true,
+    interfaceType = 'product-listing',
   }: {
     display?: ItemDisplayLayout;
     density?: ItemDisplayDensity;
@@ -108,15 +58,22 @@ describe('AtomicCommerceProductList', () => {
     numberOfPlaceholders?: number;
     isAppLoaded?: boolean;
     initialize?: boolean;
+    interfaceType?: 'product-listing' | 'search';
   }) => {
-    const element = await fixture<AtomicCommerceProductList>(
-      html`<atomic-commerce-product-list
-        .display=${display}
-        .density=${density}
-        .imageSize=${imageSize}
-        .numberOfPlaceholders=${numberOfPlaceholders}
-      ></atomic-commerce-product-list>`
-    );
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicCommerceProductList>({
+        template: html`<atomic-commerce-product-list
+          .display=${display}
+          .density=${density}
+          .imageSize=${imageSize}
+          .numberOfPlaceholders=${numberOfPlaceholders}
+        ></atomic-commerce-product-list>`,
+        selector: 'atomic-commerce-product-list',
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = interfaceType;
+          return bindings;
+        },
+      });
 
     //@ts-expect-error - mocking would be complex
     element.isAppLoaded = isAppLoaded;
@@ -198,14 +155,19 @@ describe('AtomicCommerceProductList', () => {
       let buildProductListingSpy: MockInstance;
 
       beforeEach(() => {
-        vi.spyOn(mocks, 'interfaceElementType', 'get').mockReturnValue(
-          'product-listing'
-        );
         buildProductListingSpy = vi.spyOn(headless, 'buildProductListing');
       });
 
       it('should initialize #searchOrListing as product listing controller', async () => {
-        const element = await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('product-listing');
+
+        element.initialize();
 
         expect(buildProductListingSpy).toHaveBeenCalledOnce();
         expect(buildProductListingSpy).toHaveBeenCalledWith(
@@ -217,7 +179,15 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should initialize #summary as product listing summary controller', async () => {
-        const element = await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('product-listing');
+
+        element.initialize();
 
         expect(
           buildProductListingSpy.mock.results[0].value.summary
@@ -229,7 +199,15 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should subscribe to summary controller state changes', async () => {
-        await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('product-listing');
+
+        element.initialize();
 
         const summarySubscribeSpy =
           buildProductListingSpy.mock.results[0].value.summary.mock.results[0]
@@ -242,14 +220,19 @@ describe('AtomicCommerceProductList', () => {
     describe("when interface element type is 'search'", () => {
       let buildSearchSpy: MockInstance;
       beforeEach(() => {
-        vi.spyOn(mocks, 'interfaceElementType', 'get').mockReturnValue(
-          'search'
-        );
         buildSearchSpy = vi.spyOn(headless, 'buildSearch');
       });
 
       it('should initialize #searchOrListing as search controller', async () => {
-        const element = await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('search');
+
+        element.initialize();
 
         expect(buildSearchSpy).toHaveBeenCalledOnce();
         expect(buildSearchSpy).toHaveBeenCalledWith(element.bindings.engine);
@@ -259,7 +242,15 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should initialize #summary as search summary controller', async () => {
-        const element = await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('search');
+
+        element.initialize();
 
         expect(
           buildSearchSpy.mock.results[0].value.summary
@@ -270,7 +261,15 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should subscribe to summary controller state changes', async () => {
-        await setupElement({});
+        const element = await setupElement({initialize: false});
+
+        vi.spyOn(
+          element.bindings.interfaceElement,
+          'type',
+          'get'
+        ).mockReturnValue('search');
+
+        element.initialize();
 
         const summarySubscribeSpy =
           buildSearchSpy.mock.results[0].value.summary.mock.results[0].value
@@ -378,9 +377,9 @@ describe('AtomicCommerceProductList', () => {
     });
 
     it('when there is an error, should not render', async () => {
-      vi.spyOn(mocks.summaryState, 'hasError', 'get').mockReturnValue(true);
-
       const element = await setupElement({});
+
+      vi.spyOn(element.summaryState, 'hasError', 'get').mockReturnValue(true);
       await element.updateComplete;
 
       const renderedElements = element.shadowRoot?.querySelectorAll('*');
@@ -401,9 +400,11 @@ describe('AtomicCommerceProductList', () => {
     });
 
     it('when first request was executed & there are no products, should not render', async () => {
-      vi.spyOn(mocks.summaryState, 'hasProducts', 'get').mockReturnValue(false);
-
       const element = await setupElement({});
+
+      vi.spyOn(element.summaryState, 'hasProducts', 'get').mockReturnValue(
+        false
+      );
       await element.updateComplete;
 
       const renderedElements = element.shadowRoot?.querySelectorAll('*');
@@ -624,15 +625,23 @@ describe('AtomicCommerceProductList', () => {
       it('should render correct # of atomic-product', async () => {
         const numberOfProducts = 9;
 
-        vi.spyOn(mocks.searchOrListingState, 'products', 'get').mockReturnValue(
-          Array.from({length: numberOfProducts}, (_, i) => ({
-            permanentid: i + 1,
-          }))
-        );
-
         const element = await setupElement({
           display,
         });
+
+        vi.spyOn(
+          element.searchOrListingState,
+          'products',
+          'get'
+        ).mockReturnValue(
+          Array.from(
+            {length: numberOfProducts},
+            (_, i) =>
+              ({
+                permanentid: i + 1,
+              }) as unknown as headless.Product
+          )
+        );
         display === 'table' && setupTableTemplate(element);
 
         await element.updateComplete;
@@ -646,16 +655,20 @@ describe('AtomicCommerceProductList', () => {
       describe('each atomic-product', () => {
         if (display === 'table') {
           it('should receive correct table template #content', async () => {
-            const mockProduct1 = {permanentid: 123};
-            const mockProduct2 = {permanentid: 456};
+            const mockProduct1 = {
+              permanentid: 123,
+            } as unknown as headless.Product;
+            const mockProduct2 = {
+              permanentid: 456,
+            } as unknown as headless.Product;
+
+            const element = await setupElement({display});
 
             vi.spyOn(
-              mocks.searchOrListingState,
+              element.searchOrListingState,
               'products',
               'get'
             ).mockReturnValue([mockProduct1, mockProduct2]);
-
-            const element = await setupElement({display});
 
             const mockTemplate = document.createDocumentFragment();
             const atomicTableElement = document.createElement(
@@ -692,16 +705,20 @@ describe('AtomicCommerceProductList', () => {
           });
         } else {
           it('should receive correct template #content', async () => {
-            const mockProduct1 = {permanentid: 123};
-            const mockProduct2 = {permanentid: 456};
+            const mockProduct1 = {
+              permanentid: 123,
+            } as unknown as headless.Product;
+            const mockProduct2 = {
+              permanentid: 456,
+            } as unknown as headless.Product;
+
+            const element = await setupElement({display});
 
             vi.spyOn(
-              mocks.searchOrListingState,
+              element.searchOrListingState,
               'products',
               'get'
             ).mockReturnValue([mockProduct1, mockProduct2]);
-
-            const element = await setupElement({display});
 
             const mockTemplate = document.createDocumentFragment();
             mockTemplate.appendChild(document.createElement('div'));
@@ -775,16 +792,21 @@ describe('AtomicCommerceProductList', () => {
         });
 
         it('should receive correct #interactiveProduct', async () => {
-          const mockProduct1 = {permanentid: 123};
-          const mockProduct2 = {permanentid: 456};
+          const mockProduct1 = {
+            permanentid: 123,
+          } as unknown as headless.Product;
+          const mockProduct2 = {
+            permanentid: 456,
+          } as unknown as headless.Product;
+
+          const element = await setupElement({display});
 
           vi.spyOn(
-            mocks.searchOrListingState,
+            element.searchOrListingState,
             'products',
             'get'
           ).mockReturnValue([mockProduct1, mockProduct2]);
 
-          const element = await setupElement({display});
           display === 'table' && setupTableTemplate(element);
 
           const mockInteractiveProduct = {
@@ -818,16 +840,22 @@ describe('AtomicCommerceProductList', () => {
 
         if (display === 'grid') {
           it('should receive correct #linkContent', async () => {
-            const mockProduct1 = {permanentid: 123};
-            const mockProduct2 = {permanentid: 456};
+            const mockProduct1 = {
+              permanentid: 123,
+            } as unknown as headless.Product;
+            const mockProduct2 = {
+              permanentid: 456,
+            } as unknown as headless.Product;
+
+            const element = await setupElement({display});
+
+            console.log(element.bindings);
 
             vi.spyOn(
-              mocks.searchOrListingState,
+              element.searchOrListingState,
               'products',
               'get'
             ).mockReturnValue([mockProduct1, mockProduct2]);
-
-            const element = await setupElement({display});
 
             const mockLinkTemplate = document.createDocumentFragment();
             mockLinkTemplate.appendChild(document.createElement('a'));
@@ -859,16 +887,21 @@ describe('AtomicCommerceProductList', () => {
           });
         } else {
           it('should receive empty #linkContent', async () => {
-            const mockProduct1 = {permanentid: 123};
-            const mockProduct2 = {permanentid: 456};
+            const mockProduct1 = {
+              permanentid: 123,
+            } as unknown as headless.Product;
+            const mockProduct2 = {
+              permanentid: 456,
+            } as unknown as headless.Product;
+
+            const element = await setupElement({display});
 
             vi.spyOn(
-              mocks.searchOrListingState,
+              element.searchOrListingState,
               'products',
               'get'
             ).mockReturnValue([mockProduct1, mockProduct2]);
 
-            const element = await setupElement({display});
             display === 'table' && setupTableTemplate(element);
 
             const mockEmptyLinkTemplate = document.createDocumentFragment();
@@ -918,18 +951,22 @@ describe('AtomicCommerceProductList', () => {
         });
 
         it('should receive correct #product', async () => {
-          const mockProduct1 = {permanentid: 123};
-          const mockProduct2 = {permanentid: 456};
-
-          vi.spyOn(
-            mocks.searchOrListingState,
-            'products',
-            'get'
-          ).mockReturnValue([mockProduct1, mockProduct2]);
+          const mockProduct1 = {
+            permanentid: 123,
+          } as unknown as headless.Product;
+          const mockProduct2 = {
+            permanentid: 456,
+          } as unknown as headless.Product;
 
           const element = await setupElement({
             display,
           });
+
+          vi.spyOn(
+            element.searchOrListingState,
+            'products',
+            'get'
+          ).mockReturnValue([mockProduct1, mockProduct2]);
           display === 'table' && setupTableTemplate(element);
 
           await element.updateComplete;
