@@ -1,3 +1,4 @@
+import * as InsightInterfaceActions from '../../features/insight-interface/insight-interface-actions.js';
 import {getSampleEngineConfiguration} from '../engine-configuration.js';
 import {nextAnalyticsUsageWithServiceFeatureWarning} from '../engine.js';
 import {
@@ -6,6 +7,8 @@ import {
   InsightEngineConfiguration,
   InsightEngineOptions,
 } from './insight-engine.js';
+
+const fetchInterfaceSpy = vi.spyOn(InsightInterfaceActions, 'fetchInterface');
 
 function getSampleInsightEngineConfiguration(): InsightEngineConfiguration {
   return {
@@ -34,6 +37,10 @@ describe('buildInsightEngine', () => {
     };
 
     initEngine();
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
   });
 
   describe('validating the basic configuration', () => {
@@ -140,6 +147,10 @@ describe('buildInsightEngine', () => {
 
   it('sets the locale correctly', () => {
     expect(engine.state.configuration?.search?.locale).toEqual('en-US');
+  });
+
+  it('should dispatch the fetchInterface action', () => {
+    expect(fetchInterfaceSpy).toHaveBeenCalledTimes(1);
   });
 
   it('exposes an #executeFirstSearch method', () => {
