@@ -55,14 +55,15 @@ export class AtomicCommerceSearchBoxQuerySuggestions
   @property({type: Number, attribute: 'max-without-query', reflect: true})
   public maxWithoutQuery?: number;
 
-  willUpdate() {
+  protected willUpdate() {
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, CommerceBindings>(
         (bindings) => {
           this.bindings = bindings;
           return this.initialize();
         },
-        this
+        this,
+        ['atomic-commerce-search-box']
       );
     } catch (error) {
       this.error = error as Error;
