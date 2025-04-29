@@ -1,6 +1,6 @@
 import {
-  AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
+  AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
@@ -8,16 +8,16 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicCommerceProductList = createComponent({
-  tagName: 'atomic-commerce-product-list',
-  react: React,
-  elementClass: LitAtomicCommerceProductList,
-});
-
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceProductList = createComponent({
+  tagName: 'atomic-commerce-product-list',
+  react: React,
+  elementClass: LitAtomicCommerceProductList,
 });
 
 export const AtomicCommerceSortDropdown = createComponent({
