@@ -14,7 +14,7 @@ export class TimeframeFacetObject {
   }
 
   get clearSelectionButton(): Locator {
-    return this.page.getByTestId('clear-selection-button');
+    return this.facet.getByRole('button', {name: /Clear filter/i});
   }
 
   get filterStartInput(): Locator {
@@ -37,15 +37,7 @@ export class TimeframeFacetObject {
     await this.filterEndInput.fill(max);
   }
 
-  async clickOnFilterApplyButton(): Promise<void> {
-    await this.filterApplyButton.click();
-  }
-
   async clickOnFacetValue(index: number): Promise<void> {
     await this.facetValue.nth(index).click();
-  }
-
-  async clickOnClearSelectionButton(): Promise<void> {
-    await this.clearSelectionButton.click();
   }
 }

@@ -89,7 +89,7 @@ useCaseTestCases.forEach((useCase) => {
         });
         searchResponsePromise = baseFacet.waitForSearchResponse();
 
-        await facet.clickOnClearSelectionButton();
+        await facet.clearSelectionButton.click();
 
         await clearAllUaRequest;
         searchResponse = await searchResponsePromise;
@@ -118,7 +118,7 @@ useCaseTestCases.forEach((useCase) => {
 
         await facet.fillFilterStartInput(exampleStart);
         await facet.fillFilterEndInput(exampleEnd);
-        await facet.clickOnFilterApplyButton();
+        await facet.filterApplyButton.click();
 
         await facetSelectUaRequest;
         const searchResponse = await searchResponsePromise;

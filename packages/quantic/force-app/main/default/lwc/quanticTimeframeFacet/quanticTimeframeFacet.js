@@ -438,7 +438,9 @@ export default class QuanticTimeframeFacet extends LightningElement {
     this.headless = getHeadlessBundle(this.engineId);
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
-    this.initializeDateFilterController(engine);
+    if (this.withDatePicker) {
+      this.initializeDateFilterController(engine);
+    }
     registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
@@ -506,26 +508,24 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initializeDateFilterController(engine) {
-    if (this.withDatePicker) {
-      const dateFilterId = (this.facetId || this.field) + '_input';
+    const dateFilterId = (this.facetId || this.field) + '_input';
 
-      this.dateFilter = this.headless.buildDateFilter(engine, {
-        options: {
-          field: this.field,
-          facetId: dateFilterId,
-          filterFacetCount: !this.noFilterFacetCount,
-          injectionDepth: Number(this.injectionDepth),
-        },
-      });
-      this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
-        this.updateDateFilterState()
+    this.dateFilter = this.headless.buildDateFilter(engine, {
+      options: {
+        field: this.field,
+        facetId: dateFilterId,
+        filterFacetCount: !this.noFilterFacetCount,
+        injectionDepth: Number(this.injectionDepth),
+      },
+    });
+    this.unsubscribeDateFilter = this.dateFilter.subscribe(() =>
+      this.updateDateFilterState()
+    );
+    if (this.dependsOn) {
+      this.dateFilterConditionsManager = this.initFacetConditionManager(
+        engine,
+        this.dateFilter.state?.facetId
       );
-      if (this.dependsOn) {
-        this.dateFilterConditionsManager = this.initFacetConditionManager(
-          engine,
-          this.dateFilter.state?.facetId
-        );
-      }
     }
   }
 
