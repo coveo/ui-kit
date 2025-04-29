@@ -54,8 +54,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shardIndex: [1, 2, 3, 4, 5, 6]
-        shardTotal: [6]
+        shardIndex: [1, 2, 3, 4, 5, 6, 7, 8]
+        shardTotal: [8]
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
@@ -69,6 +69,27 @@ jobs:
           shardIndex: ${{ matrix.shardIndex }}
           shardTotal: ${{ matrix.shardTotal }}
           testsToRun: ${{ needs.prepare-playwright-atomic.outputs.testsToRun }}
+  merge-quantic-playwright-reports:
+    name: 'Merge Playwright reports'
+    environment: PR Artifacts
+    if: ${{ !cancelled() }}
+    needs:
+      - 'e2e-quantic-playwright-test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup
+      - name: Merge Playwright reports
+        uses: ./.github/actions/merge-playwright-reports
+        with:
+          working-directory: packages/quantic
+          artifact-pattern: quantic-blob-report-*
+          upload-artifact-name: quantic-playwright-report
   e2e-quantic-cleanup:
     if: cancelled() || failure() || success()
     needs:
