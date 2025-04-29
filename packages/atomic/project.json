@@ -120,6 +120,25 @@
           }
         }
       }
+    },
+    "test": {
+      "executor": "nx:noop",
+      "dependsOn": ["test:stencil", "test:lit"]
+    },
+    "test:stencil": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build:locales"],
+      "options": {
+        "command": "stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:lit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest --run",
+        "cwd": "{projectRoot}"
+      }
     }
   }
 }
