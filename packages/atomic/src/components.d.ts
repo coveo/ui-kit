@@ -5,14 +5,13 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-import { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-import { i18n } from "i18next";
-import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+import { i18n } from "i18next";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
@@ -35,14 +34,15 @@ import { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 import { SearchStore } from "./components/search/atomic-search-interface/store";
 import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
-export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel as LogLevel1, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, LogLevel, NumericFacet, Product, ProductListing, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, Search, SearchSummaryState, Summary } from "@coveo/headless/commerce";
-export { CommerceBindings as Bindings, CommerceInitializationOptions } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
+import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
+export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-export { i18n } from "i18next";
-export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
+export { i18n } from "i18next";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
@@ -65,6 +65,8 @@ export { Bindings as Bindings1 } from "./components/search/atomic-search-interfa
 export { SearchStore } from "./components/search/atomic-search-interface/store";
 export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
+export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
+export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export namespace Components {
     /**
      * The `atomic-aria-live` component notifies screen readers of changes in the search interface.
@@ -362,72 +364,6 @@ export namespace Components {
           * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
          */
         "collapseFacetsAfter": number;
-    }
-    /**
-     * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
-     * (except for `atomic-commerce-recommendation-list`, which must have
-     * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
-     * configurations.
-     */
-    interface AtomicCommerceInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics": boolean;
-        /**
-          * The commerce interface headless engine.
-         */
-        "engine"?: CommerceEngine;
-        /**
-          * Executes the first request after initializing connection to the headless commerce engine.
-         */
-        "executeFirstRequest": () => Promise<void>;
-        /**
-          * the commerce interface i18next instance.
-         */
-        "i18n": i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath": string;
-        /**
-          * Initializes the connection with the headless commerce engine using the specified options.
-         */
-        "initialize": (options: CommerceInitializationOptions) => Promise<void>;
-        /**
-          * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/), as opposed to the `initialize` method, which will internally create a new commerce engine instance. This bypasses the properties set on the component, such as analytics and language.
-         */
-        "initializeWithEngine": (engine: CommerceEngine) => Promise<void>;
-        /**
-          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath": string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel;
-        /**
-          * Whether the state should be reflected in the URL parameters.
-         */
-        "reflectStateInUrl": boolean;
-        /**
-          * The CSS selector for the container where the interface will scroll back to.
-         */
-        "scrollContainer": string;
-        /**
-          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
-         */
-        "type": | 'search'
-    | 'product-listing';
     }
     /**
      * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
@@ -745,12 +681,6 @@ export namespace Components {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -3426,7 +3356,7 @@ export namespace Components {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -3644,6 +3574,24 @@ export namespace Components {
           * The tabs on which the sort expression can be displayed. This property should not be used at the same time as `tabs-excluded`.  Set this property as a stringified JSON array, e.g., ```html  <atomic-sort-expression tabs-included='["tabIDA", "tabIDB"]'></atomic-sort-expression snippet> ``` If you don't set this property, the sort expression can be displayed on any tab. Otherwise, the sort expression can only be displayed on the specified tabs.
          */
         "tabsIncluded": string[] | string;
+    }
+    /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface AtomicSuggestionRenderer {
+        "i18n": i18n;
+        "id": string;
+        "index": number;
+        "isDoubleList": boolean;
+        "isSelected": boolean;
+        "lastIndex": number;
+        "onClick"?: (e: Event) => void;
+        "onMouseOver"?: (e: Event) => void;
+        "side": 'left' | 'right';
+        "suggestion": SearchBoxSuggestionElement;
     }
     /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
@@ -4050,18 +3998,6 @@ declare global {
         new (): HTMLAtomicCommerceFacetsElement;
     };
     /**
-     * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
-     * (except for `atomic-commerce-recommendation-list`, which must have
-     * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
-     * configurations.
-     */
-    interface HTMLAtomicCommerceInterfaceElement extends Components.AtomicCommerceInterface, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceInterfaceElement: {
-        prototype: HTMLAtomicCommerceInterfaceElement;
-        new (): HTMLAtomicCommerceInterfaceElement;
-    };
-    /**
      * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
      */
     interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
@@ -4263,16 +4199,6 @@ declare global {
     var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
         prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-    };
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSortDropdownElement extends Components.AtomicCommerceSortDropdown, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSortDropdownElement: {
-        prototype: HTMLAtomicCommerceSortDropdownElement;
-        new (): HTMLAtomicCommerceSortDropdownElement;
     };
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -5976,6 +5902,18 @@ declare global {
         new (): HTMLAtomicSortExpressionElement;
     };
     /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface HTMLAtomicSuggestionRendererElement extends Components.AtomicSuggestionRenderer, HTMLStencilElement {
+    }
+    var HTMLAtomicSuggestionRendererElement: {
+        prototype: HTMLAtomicSuggestionRendererElement;
+        new (): HTMLAtomicSuggestionRendererElement;
+    };
+    /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
      * It must be used as a child of the `atomic-tab-manager` component to function correctly.
      */
@@ -6072,7 +6010,6 @@ declare global {
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
-        "atomic-commerce-interface": HTMLAtomicCommerceInterfaceElement;
         "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
@@ -6090,7 +6027,6 @@ declare global {
         "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-        "atomic-commerce-sort-dropdown": HTMLAtomicCommerceSortDropdownElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -6247,6 +6183,7 @@ declare global {
         "atomic-smart-snippet-suggestions": HTMLAtomicSmartSnippetSuggestionsElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
+        "atomic-suggestion-renderer": HTMLAtomicSuggestionRendererElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
@@ -6556,60 +6493,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
-     * (except for `atomic-commerce-recommendation-list`, which must have
-     * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
-     * configurations.
-     */
-    interface AtomicCommerceInterface {
-        /**
-          * The value to set the [nonce](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/nonce) attribute to on inline script and style elements generated by this interface and its child components. If your application is served with a Content Security Policy (CSP) that doesn't include the `script-src: 'unsafe-inline'` or `style-src: 'unsafe-inline'` directives, you should ensure that your application server generates a new nonce on every page load and uses the generated value to set this prop and serve the corresponding CSP response headers (i.e., script-src 'nonce-<YOUR_GENERATED_NONCE>' and style-src 'nonce-<YOUR_GENERATED_NONCE>'). Otherwise you may see console errors such as  - Refused to execute inline script because it violates the following Content Security Policy directive: [...]  - Refused to apply inline style because it violates the following Content Security Policy directive: [...].
-          * @example : ```html <script nonce="<YOUR_GENERATED_NONCE>"> import {setNonce} from '@coveo/atomic'; setNonce('<YOUR_GENERATED_NONCE>'); </script> ```
-         */
-        "CspNonce"?: string;
-        /**
-          * Whether analytics should be enabled.
-         */
-        "analytics"?: boolean;
-        /**
-          * The commerce interface headless engine.
-         */
-        "engine"?: CommerceEngine;
-        /**
-          * the commerce interface i18next instance.
-         */
-        "i18n"?: i18n;
-        /**
-          * The icon assets path. By default, this will be a relative URL pointing to `./assets`.  Example: "/mypublicpath/icons"
-         */
-        "iconAssetsPath"?: string;
-        /**
-          * the commerce interface language.  Will default to the value set in the Headless engine context if not provided.
-         */
-        "language"?: string;
-        /**
-          * The language assets path. By default, this will be a relative URL pointing to `./lang`.  Example: "/mypublicpath/languages"
-         */
-        "languageAssetsPath"?: string;
-        /**
-          * The severity level of the messages to log in the console.
-         */
-        "logLevel"?: LogLevel;
-        /**
-          * Whether the state should be reflected in the URL parameters.
-         */
-        "reflectStateInUrl"?: boolean;
-        /**
-          * The CSS selector for the container where the interface will scroll back to.
-         */
-        "scrollContainer"?: string;
-        /**
-          * The type of the interface. - 'search': Indicates that the interface is used for Search. - 'product-listing': Indicates that the interface is used for Product listing.
-         */
-        "type"?: | 'search'
-    | 'product-listing';
-    }
-    /**
      * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
      */
     interface AtomicCommerceLayout {
@@ -6904,12 +6787,6 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-     * @alpha 
-     */
-    interface AtomicCommerceSortDropdown {
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -9476,7 +9353,7 @@ declare namespace LocalJSX {
         /**
           * The severity level of the messages to log in the console.
          */
-        "logLevel"?: LogLevel1;
+        "logLevel"?: LogLevel;
         /**
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).  If the search interface is initialized using [`initializeWithSearchEngine`](https://docs.coveo.com/en/atomic/latest/reference/components/atomic-search-interface/#initializewithsearchengine), the query pipeline should instead be configured in the target engine.
          */
@@ -9709,6 +9586,24 @@ declare namespace LocalJSX {
         "tabsIncluded"?: string[] | string;
     }
     /**
+     * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+     * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+     * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+     * use native Elements.
+     */
+    interface AtomicSuggestionRenderer {
+        "i18n": i18n;
+        "id": string;
+        "index": number;
+        "isDoubleList": boolean;
+        "isSelected": boolean;
+        "lastIndex": number;
+        "onClick"?: (e: Event) => void;
+        "onMouseOver"?: (e: Event) => void;
+        "side": 'left' | 'right';
+        "suggestion": SearchBoxSuggestionElement;
+    }
+    /**
      * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
      * It must be used as a child of the `atomic-tab-manager` component to function correctly.
      */
@@ -9877,7 +9772,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
-        "atomic-commerce-interface": AtomicCommerceInterface;
         "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
@@ -9895,7 +9789,6 @@ declare namespace LocalJSX {
         "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
-        "atomic-commerce-sort-dropdown": AtomicCommerceSortDropdown;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -10052,6 +9945,7 @@ declare namespace LocalJSX {
         "atomic-smart-snippet-suggestions": AtomicSmartSnippetSuggestions;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
+        "atomic-suggestion-renderer": AtomicSuggestionRenderer;
         "atomic-tab": AtomicTab;
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
@@ -10137,13 +10031,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             /**
-             * @alpha The `atomic-commerce-interface` component is the parent to all other atomic commerce components in a commerce page
-             * (except for `atomic-commerce-recommendation-list`, which must have
-             * `atomic-commerce-recommendation-interface` as a parent). It handles the headless commerce engine and localization
-             * configurations.
-             */
-            "atomic-commerce-interface": LocalJSX.AtomicCommerceInterface & JSXBase.HTMLAttributes<HTMLAtomicCommerceInterfaceElement>;
-            /**
              * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
              */
             "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
@@ -10228,11 +10115,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
-            /**
-             * The `atomic-commerce-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting products.
-             * @alpha 
-             */
-            "atomic-commerce-sort-dropdown": LocalJSX.AtomicCommerceSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicCommerceSortDropdownElement>;
             /**
              * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
              */
@@ -10912,6 +10794,13 @@ declare module "@stencil/core" {
              * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
              */
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
+            /**
+             * The `atomic-suggestion-renderer` component is used to render individual suggestions. It was created to isolate
+             * the rendering logic of the 'content' property of the `SearchBoxSuggestionElement` interface. This property can be Stencil
+             * VNode or native Element so there must be a Stencil component to render it. For Lit components using this component, they will
+             * use native Elements.
+             */
+            "atomic-suggestion-renderer": LocalJSX.AtomicSuggestionRenderer & JSXBase.HTMLAttributes<HTMLAtomicSuggestionRendererElement>;
             /**
              * The `atomic-tab` component represents an individual tab within the `atomic-tab-manager` component.
              * It must be used as a child of the `atomic-tab-manager` component to function correctly.

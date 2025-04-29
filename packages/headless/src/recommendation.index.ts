@@ -38,7 +38,7 @@ export type {
 } from './app/engine-configuration.js';
 export type {LoggerOptions} from './app/logger.js';
 export type {LogLevel} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 // Actions
 export * from './features/configuration/configuration-actions-loader.js';

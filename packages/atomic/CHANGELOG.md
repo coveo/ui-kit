@@ -1,3 +1,14 @@
+## <small>3.22.7 (2025-04-23)</small>
+
+- chore(atomic): add internal element for rendering search box suggestion elements (#5178) ([e344191](https://github.com/coveo/ui-kit/commits/e344191)), closes [#5178](https://github.com/coveo/ui-kit/issues/5178)
+- chore(atomic): watch headless in atomic dev mode (#5190) ([e71f7b4](https://github.com/coveo/ui-kit/commits/e71f7b4)), closes [#5190](https://github.com/coveo/ui-kit/issues/5190)
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+- fix(autoloader): wrap initial discovery and observer setup in DOMContentLoaded event (#5180) ([58655b4](https://github.com/coveo/ui-kit/commits/58655b4)), closes [#5180](https://github.com/coveo/ui-kit/issues/5180)
+
+## <small>3.22.6 (2025-04-16)</small>
+
+- fix(autoloader): fix import path for searchElementMap (#5181) ([c209c1e](https://github.com/coveo/ui-kit/commits/c209c1e)), closes [#5181](https://github.com/coveo/ui-kit/issues/5181)
+
 ## <small>3.22.5 (2025-04-16)</small>
 
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)

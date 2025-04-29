@@ -1,7 +1,7 @@
 import {
   NavigatorContext,
   NavigatorContextProvider,
-} from '../app/navigatorContextProvider.js';
+} from '../app/navigator-context-provider.js';
 
 export const buildMockNavigatorContextProvider = (
   context?: Partial<NavigatorContext>

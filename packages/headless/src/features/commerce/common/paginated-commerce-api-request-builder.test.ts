@@ -2,7 +2,7 @@ import {PaginatedCommerceAPIRequest} from '../../../api/commerce/common/request.
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
-} from '../../../app/navigatorContextProvider.js';
+} from '../../../app/navigator-context-provider.js';
 import {buildMockBaseCommerceAPIRequest} from '../../../test/mock-commerce-api-request.js';
 import {getConfigurationInitialState} from '../configuration/configuration-state.js';
 import {getCartInitialState} from '../context/cart/cart-state.js';

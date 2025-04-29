@@ -1,5 +1,5 @@
 //@ts-expect-error TODO: Simplify path to target some kind of index file?
-import searchElementMap from '../components/components/search/lazy-index.js';
+import elementMap from '../components/components/lazy-index.js';
 
 if (typeof window !== 'undefined') {
   /**
@@ -47,7 +47,7 @@ if (typeof window !== 'undefined') {
       return Promise.resolve();
     }
 
-    return searchElementMap[tagName]?.();
+    return elementMap[tagName]?.();
   };
 
   const observer = new MutationObserver((mutations) => {
@@ -59,9 +59,22 @@ if (typeof window !== 'undefined') {
       }
     }
   });
-  // Initial discovery
-  discover(document.body);
-  // Listen for new undefined elements
-  observer.observe(document.documentElement, {subtree: true, childList: true});
-  //# sourceMappingURL=index.js.map
+
+  const initializeDiscovery = () => {
+    // Initial discovery
+    discover(document.body);
+    // Listen for new undefined elements
+    observer.observe(document.documentElement, {
+      subtree: true,
+      childList: true,
+    });
+  };
+
+  // https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event#checking_whether_loading_is_already_complete
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeDiscovery);
+  } else {
+    initializeDiscovery();
+  }
 }
+//# sourceMappingURL=index.js.map

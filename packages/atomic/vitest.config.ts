@@ -1,11 +1,27 @@
-import tailwindcss from '@tailwindcss/vite';
+import {readFileSync} from 'fs';
 import path from 'node:path';
+import {dirname, resolve} from 'path';
 import {defineConfig} from 'vitest/config';
 //@ts-expect-error - normal json import
 import packageJson from './package.json' with {type: 'json'};
 
 const port = 63315;
 const resourceUrl = `http://localhost:${port}/`;
+
+/**
+ * Custom SVG transformer to handle .svg imports.
+ */
+function svgTransform(code, id) {
+  return code.replace(
+    /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
+    (_, importName, importPath) => {
+      const svgContent = readFileSync(resolve(dirname(id), importPath), 'utf8')
+        .replace(/'/g, "\\'")
+        .replace(/\n/g, '');
+      return `const ${importName} = '${svgContent}'`;
+    }
+  );
+}
 
 export default defineConfig({
   define: {
@@ -40,7 +56,20 @@ export default defineConfig({
         return null;
       },
     },
-    tailwindcss(),
+    {
+      name: 'svg-transform',
+      enforce: 'pre',
+      transform(code, id) {
+        if (id.endsWith('.ts')) {
+          const transformedCode = svgTransform(code, id);
+          return {
+            code: transformedCode,
+            map: null,
+          };
+        }
+        return null;
+      },
+    },
   ],
   test: {
     css: true,
@@ -61,6 +90,9 @@ export default defineConfig({
       instances: [
         {
           browser: 'chromium',
+          context: {
+            actionTimeout: 1000,
+          },
         },
       ],
     },

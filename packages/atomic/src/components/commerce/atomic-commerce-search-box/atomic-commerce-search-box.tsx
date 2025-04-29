@@ -49,12 +49,8 @@ import {
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
   elementHasQuery,
-} from '../../common/suggestions/stencil-suggestions-common';
+} from '../../common/suggestions/suggestions-common';
 import {RedirectionPayload} from '../../search/atomic-search-box/redirection-payload';
-import {
-  ButtonSearchSuggestion,
-  SimpleSearchSuggestion,
-} from '../../search/atomic-search-box/search-suggestion';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
@@ -503,26 +499,10 @@ export class AtomicCommerceSearchBox
     if (index === lastIndex && item.hideIfLast) {
       return null;
     }
-    const isButton = item.onSelect || item.query;
-
-    if (!isButton) {
-      return (
-        <SimpleSearchSuggestion
-          bindings={this.bindings}
-          id={id}
-          suggestion={item}
-          isSelected={isSelected}
-          side={side}
-          index={index}
-          lastIndex={lastIndex}
-          isDoubleList={this.suggestionManager.isDoubleList}
-        ></SimpleSearchSuggestion>
-      );
-    }
 
     return (
-      <ButtonSearchSuggestion
-        bindings={this.bindings}
+      <atomic-suggestion-renderer
+        i18n={this.bindings.i18n}
         id={id}
         suggestion={item}
         isSelected={isSelected}
@@ -542,7 +522,7 @@ export class AtomicCommerceSearchBox
         onMouseOver={() => {
           this.suggestionManager.onSuggestionMouseOver(item, side, id);
         }}
-      ></ButtonSearchSuggestion>
+      ></atomic-suggestion-renderer>
     );
   }
 

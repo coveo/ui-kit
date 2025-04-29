@@ -20,7 +20,7 @@ export {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-} from './components/common/suggestions/stencil-suggestions-common';
+} from './components/common/suggestions/suggestions-common';
 export {RedirectionPayload} from './components/search/atomic-search-box/redirection-payload';
 
 export {RecsBindings} from './components/recommendations/atomic-recs-interface/atomic-recs-interface';

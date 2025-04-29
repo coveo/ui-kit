@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.22.5",
+  "version": "3.22.7",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -49,10 +49,10 @@
   "scripts": {
     "clean": "rimraf -rf dist/* dist-storybook/* www/* docs/* playwright-report/*",
     "build": "nx build",
-    "build:locales": "npx nx build:locales atomic",
+    "build:locales": "nx build:locales atomic",
     "start": "nx dev atomic",
     "prod": "npx serve www -l 3333 --no-request-logging",
-    "test": "vitest --run && npm run build:locales && stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+    "test": "nx test atomic",
     "test:watch": "vitest",
     "e2e": "cypress run --browser chrome",
     "e2e:firefox": "cypress run --browser firefox",
@@ -70,8 +70,8 @@
     "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.11",
-    "@coveo/headless": "3.22.2",
+    "@coveo/bueno": "1.0.12",
+    "@coveo/headless": "3.22.3",
     "@lit/context": "1.1.4",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.26.2",
@@ -93,6 +93,8 @@
     "@custom-elements-manifest/analyzer": "0.10.4",
     "@playwright/test": "1.50.1",
     "@rollup/plugin-alias": "5.1.1",
+    "@rollup/plugin-commonjs": "28.0.3",
+    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-replace": "6.0.2",
     "@stencil-community/postcss": "2.2.0",
@@ -117,7 +119,7 @@
     "@types/node": "22.13.5",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
-    "@vitest/browser": "3.0.6",
+    "@vitest/browser": "3.1.1",
     "@whitespace/storybook-addon-html": "6.1.1",
     "axe-core": "4.10.2",
     "chalk": "5.4.1",
@@ -151,12 +153,12 @@
     "ts-node": "10.9.2",
     "typescript": "5.8.2",
     "vite": "6.0.11",
-    "vitest": "3.0.6",
+    "vitest": "3.1.1",
     "wait-on": "8.0.2"
   },
   "peerDependencies": {
-    "@coveo/bueno": "1.0.11",
-    "@coveo/headless": "3.22.2",
+    "@coveo/bueno": "1.0.12",
+    "@coveo/headless": "3.22.3",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

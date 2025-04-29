@@ -14,6 +14,7 @@ export const analyticsSearchesUrlRegex =
 export const analyticsCustomUrlRegex = /\/rest\/v15\/analytics\/custom/;
 export const analyticsClickUrlRegex = /\/rest(\/ua)?\/v15\/analytics\/click/;
 export const analyticsCollectUrlRegex = /\/rest\/v15\/analytics\/collect/;
+export const analyticsEventsUrlRegex = /\/rest\/organizations\/.+?\/events\/v1/;
 export const searchQuickviewRequestRegex = /\/rest\/search\/v2\/html.*/;
 export const insightQuickviewRequestRegex =
   /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/quickview/;
@@ -56,4 +57,22 @@ export function isCollectEvent(request: Request): boolean {
   return (
     request.method() === 'POST' && analyticsCollectUrlRegex.test(request.url())
   );
+}
+
+/**
+ * Indicates whether the specified request corresponds to a Events request.
+ * @param request The request to check.
+ */
+export function isUaEventsEvent(request: Request): boolean {
+  return (
+    request.method() === 'POST' && analyticsEventsUrlRegex.test(request.url())
+  );
+}
+
+/*
+ * Indicates whether the specified request corresponds to a search api request.
+ * @param request The request to check.
+ */
+export function isSearchRequest(request: Request): boolean {
+  return request.method() === 'POST' && searchRequestRegex.test(request.url());
 }

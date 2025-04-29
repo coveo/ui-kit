@@ -53,6 +53,16 @@ const inputFiles = distDirs.flatMap((distDir) => {
     .map((file) => join(distDir, file));
 });
 
+const manualChunksPackages = [
+  '@lit',
+  'dayjs',
+  '@stencil',
+  'dompurify',
+  'lit-element',
+  'lit-html',
+  'lit',
+];
+
 export default {
   input: inputFiles,
   output: {
@@ -64,7 +74,10 @@ export default {
     },
     chunkFileNames: '[name].js',
     manualChunks: (id) => {
-      if (id.includes('node_modules')) {
+      if (
+        id.includes('node_modules') &&
+        manualChunksPackages.some((pkg) => id.includes(pkg))
+      ) {
         return join(
           'atomic',
           'vendor',

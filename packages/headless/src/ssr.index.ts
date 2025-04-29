@@ -105,7 +105,7 @@ export type {SortDefinition} from './controllers/sort/headless-sort.ssr.js';
 export type {StandaloneSearchBoxDefinition} from './controllers/standalone-search-box/headless-standalone-search-box.ssr.js';
 export type {StaticFilterDefinition} from './controllers/static-filter/headless-static-filter.ssr.js';
 export type {TabDefinition} from './controllers/tab/headless-tab.ssr.js';
-export type {NavigatorContextProvider} from './app/navigatorContextProvider.js';
+export type {NavigatorContextProvider} from './app/navigator-context-provider.js';
 
 // export type
 export type {CoreEngine, ExternalEngineOptions} from './app/engine.js';
@@ -132,7 +132,7 @@ export type {
   InferBuildResult,
 } from './app/ssr-engine/types/core-engine.js';
 export type {LoggerOptions} from './app/logger.js';
-export type {NavigatorContext} from './app/navigatorContextProvider.js';
+export type {NavigatorContext} from './app/navigator-context-provider.js';
 
 export type {LogLevel} from './app/logger.js';
 

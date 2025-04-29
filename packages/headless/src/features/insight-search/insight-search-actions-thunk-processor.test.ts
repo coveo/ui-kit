@@ -3,7 +3,7 @@ import {Logger} from 'pino';
 import {Mock} from 'vitest';
 import {InsightAPIClient} from '../../api/service/insight/insight-api-client.js';
 import {InsightQueryRequest} from '../../api/service/insight/query/query-request.js';
-import {defaultNodeJSNavigatorContextProvider} from '../../app/navigatorContextProvider.js';
+import {defaultNodeJSNavigatorContextProvider} from '../../app/navigator-context-provider.js';
 import {buildMockInsightQueryRequest} from '../../test/mock-insight-request.js';
 import {buildMockResult} from '../../test/mock-result.js';
 import {buildMockSearchResponse} from '../../test/mock-search-response.js';
