@@ -66,6 +66,8 @@ describe('AtomicCommerceSortDropdown', () => {
 
     element.initialize();
 
+    await element.updateComplete;
+
     return element;
   };
 
