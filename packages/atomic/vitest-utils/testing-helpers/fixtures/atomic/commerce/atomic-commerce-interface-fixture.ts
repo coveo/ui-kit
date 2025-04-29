@@ -25,16 +25,10 @@ export class FixtureAtomicCommerceInterface
   languageAssetsPath: string = './lang';
   iconAssetsPath: string = './assets';
   host: HTMLElement;
-  #internalBindings!: Exclude<CommerceBindings, 'i18n'>;
   @state()
   template!: TemplateResult;
   @provide({context: bindingsContext})
-  get bindings(): CommerceBindings {
-    return {
-      ...this.#internalBindings,
-      i18n: this.i18n,
-    };
-  }
+  bindings: CommerceBindings = {} as CommerceBindings;
   error?: Error | undefined;
   updateIconAssetsPath(): void {
     throw new Error('Method not implemented.');
@@ -62,7 +56,10 @@ export class FixtureAtomicCommerceInterface
   }
 
   setBindings(bindings: Partial<CommerceBindings>) {
-    this.#internalBindings = bindings as CommerceBindings;
+    this.bindings = {
+      ...bindings,
+      i18n: bindings.i18n ?? this.i18n,
+    } as CommerceBindings;
   }
 
   setRenderTemplate(template: TemplateResult) {
@@ -119,12 +116,10 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   const atomicInterface = await fixture<FixtureAtomicCommerceInterface>(
     html`<atomic-commerce-interface></atomic-commerce-interface>`
   );
-  if (!bindings) {
-    atomicInterface.setBindings({} as CommerceBindings);
-  } else if (typeof bindings === 'function') {
+  if (typeof bindings === 'function') {
     atomicInterface.setBindings(bindings(defaultBindings));
   } else {
-    atomicInterface.setBindings(bindings);
+    atomicInterface.setBindings(bindings ?? defaultBindings);
   }
   atomicInterface.setRenderTemplate(template);
 

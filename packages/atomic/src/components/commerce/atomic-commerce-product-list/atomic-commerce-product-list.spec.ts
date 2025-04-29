@@ -3,6 +3,7 @@ import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fi
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import * as headless from '@coveo/headless/commerce';
+import {buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
@@ -32,7 +33,7 @@ describe('AtomicCommerceProductList', () => {
       })
     );
 
-    vi.mocked(headless.buildSearch).mockReturnValue(
+    vi.mocked(buildSearch).mockReturnValue(
       buildFakeSearch({
         implementation: {
           interactiveProduct: vi.fn(),
@@ -49,7 +50,6 @@ describe('AtomicCommerceProductList', () => {
     imageSize = 'small',
     numberOfPlaceholders = 24,
     isAppLoaded = true,
-    initialize = true,
     interfaceType = 'product-listing',
   }: {
     display?: ItemDisplayLayout;
@@ -78,7 +78,7 @@ describe('AtomicCommerceProductList', () => {
     //@ts-expect-error - mocking would be complex
     element.isAppLoaded = isAppLoaded;
 
-    initialize && element.initialize();
+    // initialize && element.initialize();
 
     return element;
   };
@@ -155,7 +155,7 @@ describe('AtomicCommerceProductList', () => {
       let buildProductListingSpy: MockInstance;
 
       beforeEach(() => {
-        buildProductListingSpy = vi.spyOn(headless, 'buildProductListing');
+        buildProductListingSpy = vi.mocked(headless.buildProductListing);
       });
 
       it('should initialize #searchOrListing as product listing controller', async () => {
@@ -220,19 +220,11 @@ describe('AtomicCommerceProductList', () => {
     describe("when interface element type is 'search'", () => {
       let buildSearchSpy: MockInstance;
       beforeEach(() => {
-        buildSearchSpy = vi.spyOn(headless, 'buildSearch');
+        buildSearchSpy = vi.mocked(buildSearch);
       });
 
       it('should initialize #searchOrListing as search controller', async () => {
-        const element = await setupElement({initialize: false});
-
-        vi.spyOn(
-          element.bindings.interfaceElement,
-          'type',
-          'get'
-        ).mockReturnValue('search');
-
-        element.initialize();
+        const element = await setupElement({interfaceType: 'search'});
 
         expect(buildSearchSpy).toHaveBeenCalledOnce();
         expect(buildSearchSpy).toHaveBeenCalledWith(element.bindings.engine);

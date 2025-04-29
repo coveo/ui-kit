@@ -5,7 +5,6 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {BindingController} from '@/src/mixins/bindings-mixin.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -87,7 +86,6 @@ export class AtomicCommerceProductList
 
   public constructor() {
     super();
-    new BindingController(this);
     const contextRoot = new ContextRoot();
     contextRoot.attach(document.body);
   }
