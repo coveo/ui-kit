@@ -87,6 +87,10 @@ test.describe('Atomic Insight Panel', () => {
   });
 
   test.describe('refine modal', () => {
+    test.beforeEach(async ({insightInterface}) => {
+      await insightInterface.waitForResults();
+    });
+
     test('should open and close', async ({insightInterface}) => {
       await insightInterface.openRefineModal();
       await expect(insightInterface.insightRefineModal).toHaveAttribute(

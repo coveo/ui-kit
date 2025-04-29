@@ -58,6 +58,10 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     return this.insightRefineModal.getByRole('button', {name: 'Close'});
   }
 
+  async waitForResults() {
+    await this.insightResults.first().waitFor({state: 'visible'});
+  }
+
   getTabByName(name: string) {
     return this.insightTabs.filter({
       hasText: name,
