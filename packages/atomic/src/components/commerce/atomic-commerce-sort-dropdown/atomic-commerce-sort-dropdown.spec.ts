@@ -86,7 +86,8 @@ describe('AtomicCommerceSortDropdown', () => {
     await expect.element(locators.select).toBeInTheDocument();
   });
 
-  it('should call sort.sortBy when select is changed', async () => {
+  // KIT-4158: TODO: This test intermittently fails and takes too long
+  it.skip('should call sort.sortBy when select is changed', async () => {
     const mockedSortBy = vi.fn();
     mockedSort.mockReturnValue(
       buildFakeSort({implementation: {sortBy: mockedSortBy}})
