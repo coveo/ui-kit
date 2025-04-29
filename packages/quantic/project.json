@@ -40,6 +40,20 @@
       "options": {
         "script": "promote:sfdx:ci"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/coverage"],
+      "dependsOn": ["build"],
+      "options": {
+        "commands": [
+          "npm run lint:check:tests",
+          "npm run validate:types",
+          "npm run test:unit"
+        ],
+        "parallel": true,
+        "cwd": "{projectRoot}"
+      }
     }
   }
 }

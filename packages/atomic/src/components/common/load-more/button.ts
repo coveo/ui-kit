@@ -1,7 +1,7 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html, nothing} from 'lit';
-import {button, ButtonProps} from '../button';
+import {renderButton, ButtonProps} from '../button';
 
 interface LoadMoreButtonProps {
   i18n: i18n;
@@ -23,7 +23,7 @@ export const loadMoreButton: FunctionalComponent<LoadMoreButtonProps> = ({
     class: 'my-2 p-3 font-bold',
     onClick: () => onClick(),
   };
-  return button({
+  return renderButton({
     props: buttonProps,
   })(html`${i18n.t(label)}`);
 };
