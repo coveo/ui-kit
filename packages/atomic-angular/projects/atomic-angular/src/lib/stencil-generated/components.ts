@@ -2987,7 +2987,7 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 
 @ProxyCmp({
   inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon'],
-  methods: ['initialize', 'initBindings'],
+  methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-pager') || customElements.define('atomic-commerce-pager', LitAtomicCommercePager);}
 })
 @Component({
