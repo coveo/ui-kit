@@ -30,7 +30,7 @@ import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../common/facets/facet-search/facet-search-aria-live';
-import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
   FacetValueProps,
   FacetValue,
