@@ -1,6 +1,6 @@
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
-  AtomicCommercePager as LitAtomicCommercePager,
+  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
 } from '@coveo/atomic/components';
@@ -13,10 +13,10 @@ export const AtomicCommerceInterface = createComponent({
   elementClass: LitAtomicCommerceInterface,
 });
 
-export const AtomicCommercePager = createComponent({
-  tagName: 'atomic-commerce-pager',
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
   react: React,
-  elementClass: LitAtomicCommercePager,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
 
 export const AtomicComponentError = createComponent({
