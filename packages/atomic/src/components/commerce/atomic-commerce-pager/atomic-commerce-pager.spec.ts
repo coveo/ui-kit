@@ -1,7 +1,7 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakePager} from '@/vitest-utils/headless/commerce/pager-subcontroller';
 import {buildFakeProductListing} from '@/vitest-utils/headless/commerce/product-listing-controller';
 import {buildFakeSearch} from '@/vitest-utils/headless/commerce/search-controller';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {
   buildProductListing,
   buildSearch,
@@ -17,17 +17,15 @@ import './atomic-commerce-pager';
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommercePager', () => {
-  const renderPager = async (
-    {
-      numberOfPages,
-      interfaceType,
-      state,
-    }: {
-      numberOfPages?: number;
-      interfaceType?: 'product-listing' | 'search';
-      state?: Partial<PaginationState>;
-    } = {interfaceType: 'product-listing'}
-  ) => {
+  const renderPager = async ({
+    numberOfPages,
+    interfaceType,
+    state,
+  }: {
+    numberOfPages?: number;
+    interfaceType?: 'product-listing' | 'search';
+    state?: Partial<PaginationState>;
+  } = {}) => {
     const mockedPager = vi.fn().mockReturnValue(buildFakePager({state}));
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({
@@ -51,7 +49,7 @@ describe('AtomicCommercePager', () => {
         ></atomic-commerce-pager>`,
         selector: 'atomic-commerce-pager',
         bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
+          bindings.interfaceElement.type = interfaceType ?? 'product-listing';
           bindings.store.onChange = vi.fn();
           bindings.store.state.resultList = {
             focusOnFirstResultAfterNextSearch: vi.fn(),

@@ -7,7 +7,10 @@ import {ContextProvider} from '@lit/context';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import type {
+  AtomicCommerceInterface,
+  CommerceBindings,
+} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
@@ -75,7 +78,7 @@ export class FixtureAtomicCommerceInterface
 export const defaultBindings = {
   interfaceElement: {
     type: 'product-listing',
-  } as HTMLAtomicCommerceInterfaceElement,
+  } as AtomicCommerceInterface,
   store: {
     state: {
       iconAssetsPath: './assets',

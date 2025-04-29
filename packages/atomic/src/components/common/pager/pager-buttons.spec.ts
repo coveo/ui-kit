@@ -1,4 +1,4 @@
-import {createTestI18n} from '@/vitest-utils/i18n-utils';
+import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {describe, test} from 'vitest';

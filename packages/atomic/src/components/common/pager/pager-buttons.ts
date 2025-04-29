@@ -4,7 +4,7 @@ import {
 } from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
-import {button, ButtonProps} from '../button';
+import {renderButton, ButtonProps} from '../button';
 import {radioButton, RadioButtonProps} from '../radio-button';
 
 interface PagerNavigationButtonProps
@@ -16,7 +16,7 @@ interface PagerNavigationButtonProps
 export const pagerPreviousButton: FunctionalComponent<
   PagerNavigationButtonProps
 > = ({props}) => {
-  return button({
+  return renderButton({
     props: {
       ...props,
       ariaLabel: props.i18n.t('previous'),
@@ -36,7 +36,7 @@ export const pagerPreviousButton: FunctionalComponent<
 export const pagerNextButton: FunctionalComponent<
   PagerNavigationButtonProps
 > = ({props}) => {
-  return button({
+  return renderButton({
     props: {
       ...props,
       ariaLabel: props.i18n.t('next'),

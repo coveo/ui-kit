@@ -1,9 +1,9 @@
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {randomID} from '@/src/utils/utils';
 import {NumberValue, Schema} from '@coveo/bueno';
 import {
@@ -46,9 +46,10 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @alpha
  */
 @customElement('atomic-commerce-pager')
+@bindings()
 @withTailwindStyles
 export class AtomicCommercePager
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   @state()
