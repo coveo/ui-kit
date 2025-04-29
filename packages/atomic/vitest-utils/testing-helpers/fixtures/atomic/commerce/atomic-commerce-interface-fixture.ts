@@ -3,11 +3,14 @@ import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import type {InitializeEvent} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
-import {ContextProvider} from '@lit/context';
+import {provide} from '@lit/context';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import type {
+  AtomicCommerceInterface,
+  CommerceBindings,
+} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
@@ -17,7 +20,6 @@ export class FixtureAtomicCommerceInterface
   extends LitElement
   implements BaseAtomicInterface<CommerceEngine>
 {
-  private _provider = new ContextProvider(this, {context: bindingsContext});
   analytics: boolean = false;
   i18n!: i18n;
   languageAssetsPath: string = './lang';
@@ -26,6 +28,7 @@ export class FixtureAtomicCommerceInterface
   #internalBindings!: Exclude<CommerceBindings, 'i18n'>;
   @state()
   template!: TemplateResult;
+  @provide({context: bindingsContext})
   get bindings(): CommerceBindings {
     return {
       ...this.#internalBindings,
@@ -60,7 +63,6 @@ export class FixtureAtomicCommerceInterface
 
   setBindings(bindings: Partial<CommerceBindings>) {
     this.#internalBindings = bindings as CommerceBindings;
-    this._provider.setValue(this.bindings);
   }
 
   setRenderTemplate(template: TemplateResult) {
@@ -75,7 +77,7 @@ export class FixtureAtomicCommerceInterface
 export const defaultBindings = {
   interfaceElement: {
     type: 'product-listing',
-  } as HTMLAtomicCommerceInterfaceElement,
+  } as AtomicCommerceInterface,
   store: {
     state: {
       iconAssetsPath: './assets',
