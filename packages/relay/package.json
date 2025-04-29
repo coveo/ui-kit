@@ -55,7 +55,7 @@
     "rollup": "^4.0.0",
     "ts-jest": "^29.1.1",
     "tsconfig": "workspace:*",
-    "typedoc": "^0.27.0",
+    "typedoc": "^0.28.0",
     "typescript": "^5.1.6"
   },
   "dependencies": {
