@@ -7,7 +7,7 @@ import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, vi} from 'vitest';
+import {beforeEach, expect, vi} from 'vitest';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
