@@ -5,10 +5,7 @@ import {bindings} from '@/src/decorators/bindings.js';
 import {errorGuard} from '@/src/decorators/error-guard.js';
 import {InitializableComponent} from '@/src/decorators/types.js';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {
-  BindingController,
-  InitializeBindingsMixin,
-} from '@/src/mixins/bindings-mixin.js';
+import {BindingController} from '@/src/mixins/bindings-mixin.js';
 import {FocusTargetController} from '@/src/utils/accessibility-utils.js';
 import {randomID} from '@/src/utils/utils.js';
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
@@ -72,7 +69,7 @@ import styles from './atomic-commerce-product-list.tw.css';
 @bindings()
 @withTailwindStyles
 export class AtomicCommerceProductList
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
