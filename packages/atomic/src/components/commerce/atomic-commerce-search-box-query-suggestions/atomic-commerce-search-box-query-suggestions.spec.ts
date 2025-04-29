@@ -1,243 +1,181 @@
-import {buildCustomEvent} from '@/src/utils/event-utils';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {
   defaultBindings,
-  FixtureAtomicCommerceSearchBox,
   renderInAtomicCommerceSearchBox,
-} from '@/vitest-utils/atomic-commerce-search-box-fixture';
+} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-search-box-fixture';
+import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-suggest-actions';
 import {loadQuerySuggestActions} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
-import {html} from 'lit';
-import {describe, test, vi, expect, beforeEach, MockInstance} from 'vitest';
+import {html, LitElement} from 'lit';
+import {describe, it, vi, expect, beforeEach, MockInstance} from 'vitest';
 import './atomic-commerce-search-box-query-suggestions';
-import {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-box-query-suggestions';
 
 vi.mock('@coveo/headless/commerce', {spy: true});
 
 describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
+  let spiedConsoleError: MockInstance<typeof console.error>;
+  let element: LitElement;
   beforeEach(() => {
-    vi.mocked(loadQuerySuggestActions).mockReturnValue({
-      registerQuerySuggest: vi.fn(),
-      fetchQuerySuggestions: vi.fn(),
-      clearQuerySuggest: vi.fn(),
-      selectQuerySuggestion: vi.fn(),
+    vi.mocked(loadQuerySuggestActions).mockReturnValue(
+      buildFakeLoadQuerySuggestActions()
+    );
+    spiedConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {
+      // Ignore console.error;
     });
   });
 
-  describe('when willUpdate is called', () => {
-    let dispatchSpy: MockInstance;
-    let initializeSpy: MockInstance;
-    let element: AtomicCommerceSearchBoxQuerySuggestions;
-    let atomicCommerceSearchBox: FixtureAtomicCommerceSearchBox;
-
-    beforeEach(async () => {
-      dispatchSpy = vi.spyOn(
-        AtomicCommerceSearchBoxQuerySuggestions.prototype,
-        'dispatchEvent'
-      );
-      initializeSpy = vi.spyOn(
-        AtomicCommerceSearchBoxQuerySuggestions.prototype,
-        'initialize'
-      );
-      ({element, atomicCommerceSearchBox} =
-        await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>(
-          {
-            template: html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
-            selector: 'atomic-commerce-search-box-query-suggestions',
-          }
-        ));
-      await atomicCommerceSearchBox.initialize();
-    });
-
-    test('should dispatch the search box suggestions event', async () => {
-      const event = buildCustomEvent(
-        'atomic/searchBoxSuggestion/register',
-        vi.fn()
-      );
-      expect(dispatchSpy).toHaveBeenCalledWith(event);
-    });
-
-    test('should assign the bindings from the event', async () => {
-      expect(element.bindings).toBeDefined();
-      expect(element.bindings).toEqual(
-        expect.objectContaining({
-          ...defaultBindings,
-          i18n: expect.anything(),
-        })
-      );
-    });
-
-    test('should call initialize after assigning bindings', async () => {
-      expect(initializeSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('when initialized', () => {
-    let element: AtomicCommerceSearchBoxQuerySuggestions;
-    let atomicCommerceSearchBox: FixtureAtomicCommerceSearchBox;
-
-    beforeEach(async () => {
-      ({element, atomicCommerceSearchBox} =
-        await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>(
-          {
-            template: html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
-            selector: 'atomic-commerce-search-box-query-suggestions',
-          }
-        ));
-      await atomicCommerceSearchBox.initialize();
-    });
-
-    test('should dispatch registerQuerySuggest with the correct id and count', async () => {
-      expect(
-        loadQuerySuggestActions(element.bindings.engine).registerQuerySuggest
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: element.bindings.id,
-          count: element.bindings.numberOfQueries,
-        })
-      );
-    });
-
-    test('should return a position that is the index of the element', async () => {
-      const object = element.initialize();
-
-      const position = Array.from(atomicCommerceSearchBox.children).indexOf(
-        element
-      );
-      expect(object.position).toBe(position);
-    });
-
-    test('should return a onInput that calls fetchQuerySuggestions', async () => {
-      const object = element.initialize();
-
-      object.onInput?.();
-
-      expect(
-        loadQuerySuggestActions(element.bindings.engine).fetchQuerySuggestions
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: element.bindings.id,
-        })
-      );
-    });
-
-    describe('renderItems', () => {
-      test('should return the correct number of items', async () => {
-        const object = element.initialize();
-        const items = object.renderItems();
-
-        expect(items.length).toBe(
-          element.bindings.searchBoxController.state.suggestions.length
+  describe('when the component is created', () => {
+    describe('when outside of a search box', () => {
+      beforeEach(async () => {
+        element = await fixture(
+          html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`
         );
       });
 
-      test('each item should have the correct properties', async () => {
-        const object = element.initialize();
-        const items = object.renderItems();
+      it('should log an error in the console', async () => {
+        expect(spiedConsoleError).toHaveBeenCalledWith(
+          expect.toSatisfy((maybeError) => {
+            return (
+              maybeError instanceof Error &&
+              maybeError.message ===
+                'The "atomic-commerce-search-box-query-suggestions" component was not handled, as it is not a child of the following elements: atomic-commerce-search-box'
+            );
+          }),
+          element
+        );
+      });
 
-        expect(items[0]).toEqual(
+      it('should display an error component', async () => {
+        expect(
+          page.getByText(
+            'atomic-commerce-search-box-query-suggestions component error'
+          )
+        ).toBeInTheDocument();
+        expect(
+          element.shadowRoot?.querySelector('atomic-component-error')
+        ).toBeTruthy();
+      });
+    });
+
+    describe('when inside a search box', () => {
+      const setupElement = async (
+        bindings: Parameters<
+          typeof renderInAtomicCommerceSearchBox
+        >[0]['bindings'] = defaultBindings
+      ) => {
+        const {element, searchBox} = await renderInAtomicCommerceSearchBox({
+          template: html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
+          bindings,
+          selector: 'atomic-commerce-search-box-query-suggestions',
+        });
+        return {element, searchBox};
+      };
+
+      it('should not log an error in the console', async () => {
+        await setupElement();
+
+        expect(spiedConsoleError).not.toHaveBeenCalled();
+      });
+
+      it('should not display an error component', async () => {
+        const {element} = await setupElement();
+
+        // We cannot use the `getByText` method here because the error component is not rendered
+        expect(
+          element.shadowRoot?.querySelector('atomic-component-error')
+        ).toBeFalsy();
+      });
+
+      it('should register itself with the search box', async () => {
+        const registerQuerySuggest = vi.fn();
+
+        vi.mocked(loadQuerySuggestActions).mockReturnValue(
+          buildFakeLoadQuerySuggestActions({registerQuerySuggest})
+        );
+        const {searchBox} = await setupElement();
+
+        expect(
+          searchBox.searchBoxSuggestionsEventListener
+        ).toHaveBeenCalledTimes(1);
+        expect(registerQuerySuggest).toHaveBeenCalledExactlyOnceWith(
           expect.objectContaining({
-            part: 'query-suggestion-item',
-            query: 'suggestion1',
-            ariaLabel: '“suggestion1”, suggested query',
-            key: 'qs-suggestion1',
+            id: searchBox.bindings.id,
+            count: searchBox.bindings.numberOfQueries,
+          })
+        );
+        expect(loadQuerySuggestActions).toHaveBeenCalledExactlyOnceWith(
+          searchBox.bindings.engine
+        );
+        expect(searchBox.searchBoxSuggestionsEventListener).toHaveReturnedWith(
+          expect.objectContaining({
+            position: 0,
+            onInput: expect.any(Function),
+            renderItems: expect.any(Function),
           })
         );
       });
+      describe('#SearchBoxSuggestions', () => {
+        describe('#position', () => {
+          it.todo(
+            'should return the position of the suggestions within its siblings',
+            async () => {
+              // Add some stubbed elements prior to the query suggestions to bump the index and check the return value
+              const {searchBox} = await setupElement();
+              expect(
+                searchBox.searchBoxSuggestionsEventListener
+              ).toHaveReturnedWith(
+                expect.objectContaining({
+                  position: 1,
+                })
+              );
+            }
+          );
+        });
+        describe('#onInput', () => {
+          it('should return an input handler', async () => {
+            const mockQuerySuggestions = vi.fn();
+            const fetchQuerySuggestions = vi
+              .fn()
+              .mockReturnValue(mockQuerySuggestions);
+            vi.mocked(loadQuerySuggestActions).mockReturnValue(
+              buildFakeLoadQuerySuggestActions({fetchQuerySuggestions})
+            );
+            const {searchBox} = await setupElement();
 
-      test('each item should have the correct content', async () => {
-        const object = element.initialize();
-        const items = object.renderItems();
+            searchBox.searchBoxSuggestionsEventListener.mock.results[0].value.onInput();
 
-        expect(items[0].content).toBeDefined();
-        expect(items[0].content).toBeInstanceOf(HTMLElement);
+            expect(fetchQuerySuggestions).toHaveBeenCalledExactlyOnceWith({
+              id: searchBox.bindings.id,
+            });
+            expect(searchBox.bindings.engine.dispatch).toHaveBeenNthCalledWith(
+              2,
+              mockQuerySuggestions
+            );
+          });
+        });
+        describe('#renderItems', () => {
+          describe('when there is a query', () => {
+            it.todo('should return `max-with-query` rendered suggestions');
+          });
+          describe('when there is no query', () => {
+            it.todo('should return `max-without-query` rendered suggestions');
+          });
+
+          // In those, either:
+          // A: Mock the `getPartialSearchBoxSuggestionElement` and `renderQuerySuggestion` methods
+          // B: Spy the `renderItems` method and check that the `getPartialSearchBoxSuggestionElement` and `renderQuerySuggestion` methods are called with the right parameters
+          // In either case, we need to check that the `renderItems` method returns the right values.
+          it.todo(
+            'calls the `#getPartialSearchBoxSuggestionElement` properly and returns it spread for each suggestion'
+          );
+          it.todo(
+            'calls the `#renderQuerySuggestion` properly and returns it on the `content` prop for each suggestion'
+          );
+          it.todo(
+            'returns an `#onSelect` method that calls the controller properly for each suggestion'
+          );
+        });
       });
-
-      test('each item should have the correct onSelect function', async () => {
-        const object = element.initialize();
-        const items = object.renderItems();
-        const suggestion =
-          element.bindings.searchBoxController.state.suggestions[0].rawValue;
-
-        items[0].onSelect?.(new Event('click'));
-
-        expect(
-          element.bindings.searchBoxController.selectSuggestion
-        ).toHaveBeenCalledWith(suggestion);
-      });
-    });
-  });
-
-  describe('when rendered by the search box', () => {
-    const renderElements = async (bindings: {} = {}) => {
-      const {element, atomicCommerceSearchBox} =
-        await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>(
-          {
-            template: html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
-            selector: 'atomic-commerce-search-box-query-suggestions',
-            bindings,
-          }
-        );
-
-      await atomicCommerceSearchBox.initialize();
-      atomicCommerceSearchBox.requestUpdate();
-
-      return {element, atomicCommerceSearchBox};
-    };
-
-    test('should render an icon if there are multiple kind of suggestions', async () => {
-      const {atomicCommerceSearchBox} = await renderElements({
-        getSuggestions: () => {
-          return [
-            {
-              highlightedValue: 'suggestion1',
-              rawValue: 'suggestion1',
-            },
-            {
-              highlightedValue: 'suggestion2',
-              rawValue: 'suggestion2',
-            },
-          ];
-        },
-      });
-
-      const icon =
-        atomicCommerceSearchBox.shadowRoot?.querySelector('atomic-icon');
-      await expect.element(icon!).toBeInTheDocument();
-    });
-
-    test('should not render an icon if there is only one kind of suggestion', async () => {
-      const {atomicCommerceSearchBox} = await renderElements();
-
-      const icon =
-        atomicCommerceSearchBox.shadowRoot?.querySelector('atomic-icon');
-      expect(icon).not.toBeInTheDocument();
-    });
-
-    test('should render the highlighted value if there is a query', async () => {
-      await renderElements({
-        searchBoxController: {
-          state: {
-            suggestions: [
-              {
-                highlightedValue: 'suggestion1Highlighted',
-                rawValue: 'suggestion1',
-              },
-            ],
-            value: 'query',
-          },
-          selectSuggestion: vi.fn(),
-        },
-      });
-
-      await expect
-        .element(page.getByText('suggestion1Highlighted'))
-        .toBeVisible();
-    });
-
-    test('should render the raw value if there is no query', async () => {
-      await renderElements();
-
-      await expect.element(page.getByText('suggestion1')).toBeVisible();
     });
   });
 });

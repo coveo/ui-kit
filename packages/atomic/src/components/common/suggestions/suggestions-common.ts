@@ -90,7 +90,7 @@ const searchBoxElements = [
   'atomic-search-box',
   'atomic-insight-search-box',
   'atomic-commerce-search-box',
-];
+] as const;
 
 /**
  * The bindings passed from the search box to the suggestions.
@@ -152,15 +152,16 @@ export const dispatchSearchBoxSuggestionsEvent = <
   Bindings = AnyBindings,
 >(
   event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>,
-  element: HTMLElement
+  element: HTMLElement,
+  allowedSearchBoxElements: readonly (typeof searchBoxElements)[number][] = searchBoxElements
 ) => {
   element.dispatchEvent(
     buildCustomEvent('atomic/searchBoxSuggestion/register', event)
   );
 
-  if (!closest(element, searchBoxElements.join(', '))) {
+  if (!closest(element, allowedSearchBoxElements.join(', '))) {
     throw new Error(
-      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of the following elements: ${searchBoxElements.join(
+      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of the following elements: ${allowedSearchBoxElements.join(
         ', '
       )}`
     );
