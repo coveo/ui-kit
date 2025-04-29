@@ -1,18 +1,19 @@
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {SortCriterion} from '@coveo/headless/commerce';
-import {FunctionalComponent, h} from '@stencil/core';
-import {SortOption, SortOptionProps} from '../../common/sort/option';
+import {renderSortOption, SortOptionProps} from '../../common/sort/option';
 
-interface CommerceSortOptionProps
+export interface CommerceSortOptionProps
   extends Omit<SortOptionProps, 'label' | 'value'> {
   sort: SortCriterion;
 }
-export const CommerceSortOption: FunctionalComponent<
+
+export const renderCommerceSortOption: FunctionalComponent<
   CommerceSortOptionProps
-> = (props) => {
+> = ({props}) => {
   const {sort} = props;
   const label = getLabel(sort);
 
-  return <SortOption {...props} label={label} value={label} />;
+  return renderSortOption({props: {...props, label, value: label}});
 };
 
 export function getLabel(sort: SortCriterion) {
