@@ -1,7 +1,7 @@
+import {renderSortOption as renderCommonSortOption} from '@/src/components/common/sort/option';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {SortBy, SortCriterion} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
-import * as commonSortOption from '../../common/sort/option';
 import {
   CommerceSortOptionProps,
   renderCommerceSortOption,
@@ -9,7 +9,7 @@ import {
   getSortByLabel,
 } from './option';
 
-vi.mock('../../common/sort/option', {spy: true});
+vi.mock('@/src/components/common/sort/option', {spy: true});
 
 describe('renderCommerceSortOption', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -29,7 +29,7 @@ describe('renderCommerceSortOption', () => {
   };
 
   it('call renderSortOption with the default props for relevance', async () => {
-    const renderSortOptionSpy = vi.spyOn(commonSortOption, 'renderSortOption');
+    const renderSortOptionSpy = vi.mocked(renderCommonSortOption);
     setupElement();
     expect(renderSortOptionSpy).toHaveBeenCalledWith({
       props: {
