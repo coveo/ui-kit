@@ -1,5 +1,11 @@
+import {readFileSync} from 'node:fs';
+import {dirname, resolve} from 'node:path';
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
+
+const __dirname = dirname(new URL(import.meta.url).pathname).slice(
+  process.platform === 'win32' ? 1 : 0
+);
 
 const isDevMode = process.argv[2] === 'dev';
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
