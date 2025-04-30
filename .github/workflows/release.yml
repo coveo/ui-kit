@@ -40,7 +40,7 @@ jobs:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
-          repositories: [ui-kit]
+          repositories: 'ui-kit'
       - name: Release
         run: npm run release
         env:
