@@ -1,6 +1,6 @@
-import {Product} from '@/src/components';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
+import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {html, nothing, TemplateResult} from 'lit';
 import {vi} from 'vitest';
 import {AnyItem} from '../interface/item';
@@ -22,7 +22,7 @@ describe('renderTableLayout', () => {
     return await renderFunctionFixture(
       html`${renderTableLayout({
         props: {
-          firstItem: createMockProduct(),
+          firstItem: buildFakeProduct(),
           itemRenderingFunction: props.itemRenderingFunction || undefined,
           templateContentForFirstItem:
             props.templateContentForFirstItem ||
@@ -370,7 +370,7 @@ describe('renderTableData', () => {
     return await renderFunctionFixture(
       html`${renderTableData({
         props: {
-          firstItem: props.firstItem || createMockProduct(),
+          firstItem: props.firstItem || buildFakeProduct(),
           itemRenderingFunction: props.itemRenderingFunction || undefined,
           key: props.key || 'key',
           renderItem: props.renderItem || (() => html``),
@@ -491,33 +491,4 @@ describe('renderTableData', () => {
       expect(renderItem.mock.calls[1][0]).toBe(tableElement2);
     });
   });
-});
-
-const createMockProduct = (product?: Partial<Product>): Product => ({
-  clickUri: expect.any(String),
-  additionalFields: expect.any(Object),
-  children: [],
-  ec_brand: 'brand',
-  ec_category: [],
-  ec_color: 'color',
-  ec_description: 'description',
-  ec_gender: 'gender',
-  ec_images: [],
-  ec_name: 'name',
-  ec_price: 0,
-  ec_product_id: 'productId',
-  ec_in_stock: true,
-  ec_item_group_id: 'itemGroupId',
-  ec_listing: 'listing',
-  ec_promo_price: 0,
-  ec_rating: 0,
-  ec_shortdesc: 'shortdesc',
-  ec_thumbnails: [],
-  permanentid: 'permanentId',
-  position: 1,
-  totalNumberOfChildren: 0,
-  excerpt: 'excerpt',
-  excerptHighlights: [],
-  nameHighlights: [],
-  ...product,
 });
