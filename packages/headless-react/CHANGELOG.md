@@ -1,3 +1,8 @@
+## <small>2.4.20 (2025-04-30)</small>
+
+- docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
+- chore: rename headless-ssr-commerce to headless-ssr-commerce-nextjs (#5179) ([44c8956](https://github.com/coveo/ui-kit/commits/44c8956)), closes [#5179](https://github.com/coveo/ui-kit/issues/5179)
+
 ## <small>2.4.19 (2025-04-23)</small>
 
 - chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)

@@ -1,3 +1,15 @@
+## <small>3.22.8 (2025-04-30)</small>
+
+- chore: add missing ref on button render function (#5213) ([7bd99ec](https://github.com/coveo/ui-kit/commits/7bd99ec)), closes [#5213](https://github.com/coveo/ui-kit/issues/5213)
+- chore: skip copy button test suite (#5199) ([1cdc15a](https://github.com/coveo/ui-kit/commits/1cdc15a)), closes [#5199](https://github.com/coveo/ui-kit/issues/5199)
+- chore(atomic): add vitest timeout for playwright locators (#5201) ([8b7d46b](https://github.com/coveo/ui-kit/commits/8b7d46b)), closes [#5201](https://github.com/coveo/ui-kit/issues/5201)
+- chore(atomic): fix init issue for lit components when using initializeBindingsMixin (#5225) ([2c502af](https://github.com/coveo/ui-kit/commits/2c502af)), closes [#5225](https://github.com/coveo/ui-kit/issues/5225)
+- chore(atomic): migrate atomic-commerce-interface to Lit (#5017) ([7f03f9b](https://github.com/coveo/ui-kit/commits/7f03f9b)), closes [#5017](https://github.com/coveo/ui-kit/issues/5017)
+- chore(atomic): migrate atomic-commerce-sort-dropdown (#5127) ([8bac154](https://github.com/coveo/ui-kit/commits/8bac154)), closes [#5127](https://github.com/coveo/ui-kit/issues/5127)
+- test(insight): adds wait for results in refine modal tests (#5211) ([0fddcd3](https://github.com/coveo/ui-kit/commits/0fddcd3)), closes [#5211](https://github.com/coveo/ui-kit/issues/5211)
+- ci: skip flaky test (#5224) ([49fef96](https://github.com/coveo/ui-kit/commits/49fef96)), closes [#5224](https://github.com/coveo/ui-kit/issues/5224)
+- chore(atomic,quantic): move tests scripts orchestrations to nx (#5197) ([22bf157](https://github.com/coveo/ui-kit/commits/22bf157)), closes [#5197](https://github.com/coveo/ui-kit/issues/5197)
+
 ## <small>3.22.7 (2025-04-23)</small>
 
 - chore(atomic): add internal element for rendering search box suggestion elements (#5178) ([e344191](https://github.com/coveo/ui-kit/commits/e344191)), closes [#5178](https://github.com/coveo/ui-kit/issues/5178)
