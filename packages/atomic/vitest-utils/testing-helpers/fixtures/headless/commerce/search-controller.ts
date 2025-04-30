@@ -1,15 +1,15 @@
 import {Search, SearchState} from '@coveo/headless/commerce';
+import {genericSubscribe} from '../common';
+import {buildFakeProduct} from './product';
 
-export const defaultState = {
+export const defaultState: SearchState = {
   responseId: 'some-id',
-  products: [{}],
+  products: [buildFakeProduct()],
   isLoading: false,
   error: null,
 };
-export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+export const defaultImplementation: Partial<Search> = {
+  subscribe: genericSubscribe,
   state: defaultState,
 };
 

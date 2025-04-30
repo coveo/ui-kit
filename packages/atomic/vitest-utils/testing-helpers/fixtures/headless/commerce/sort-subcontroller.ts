@@ -1,17 +1,17 @@
-import {Sort, SortState} from '@coveo/headless/commerce';
+import {Sort, SortBy, SortState} from '@coveo/headless/commerce';
 import {vi} from 'vitest';
+import {genericSubscribe} from '../common';
 
-export const defaultState = {
+export const defaultState: SortState = {
   availableSorts: [
-    {by: 'fields', fields: [{name: 'foo'}]},
-    {by: 'fields', fields: [{name: 'bar'}]},
+    {by: SortBy.Fields, fields: [{name: 'foo'}]},
+    {by: SortBy.Fields, fields: [{name: 'bar'}]},
   ],
+  appliedSort: {by: SortBy.Relevance},
 };
 
-export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+export const defaultImplementation: Partial<Sort> = {
+  subscribe: genericSubscribe,
   state: defaultState,
   sortBy: vi.fn(),
   isSortedBy: vi.fn(),

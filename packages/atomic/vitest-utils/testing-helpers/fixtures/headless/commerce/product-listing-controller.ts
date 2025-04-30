@@ -1,15 +1,15 @@
 import {ProductListing, ProductListingState} from '@coveo/headless/commerce';
+import {genericSubscribe} from '../common';
+import {buildFakeProduct} from './product';
 
-export const defaultState = {
+export const defaultState: ProductListingState = {
   responseId: 'some-id',
-  products: [{}],
+  products: [buildFakeProduct(), buildFakeProduct()],
   isLoading: false,
   error: null,
 };
-export const defaultImplementation = {
-  subscribe: (subscribedFunction: () => void) => {
-    subscribedFunction();
-  },
+export const defaultImplementation: Partial<ProductListing> = {
+  subscribe: genericSubscribe,
   state: defaultState,
 };
 
