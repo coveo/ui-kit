@@ -2,7 +2,7 @@ import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-
 import {html} from 'lit';
 import ArrowRight from '../../images/arrow-right.svg';
 import './atomic-icon/atomic-icon';
-import {button, ButtonProps} from './button';
+import {ButtonProps, renderButton} from './button';
 import {AnyBindings} from './interface/bindings';
 
 export interface CarouselProps {
@@ -26,7 +26,7 @@ export const carousel: FunctionalComponentWithChildren<CarouselProps> =
         onClick: previousPage,
         ariaLabel: props.bindings.i18n.t('previous'),
       };
-      return button({
+      return renderButton({
         props: buttonProps,
       })(
         html`<atomic-icon
@@ -44,7 +44,7 @@ export const carousel: FunctionalComponentWithChildren<CarouselProps> =
         onClick: nextPage,
         ariaLabel: props.bindings.i18n.t('next'),
       };
-      return button({
+      return renderButton({
         props: buttonProps,
       })(
         html`<atomic-icon
