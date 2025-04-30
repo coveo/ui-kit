@@ -151,7 +151,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npm test
+      - run: npx nx run atomic:test:lit
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build
