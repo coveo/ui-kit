@@ -37,7 +37,8 @@
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
     "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr.typedoc.json",
     "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
-    "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json"
+    "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
+    "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
     "@coveo/headless": "3.22.3"
@@ -49,10 +50,11 @@
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-testing-library": "7.1.1",
     "gts": "5.3.1",
+    "live-server": "1.2.2",
     "publint": "0.3.6",
     "rimraf": "6.0.1",
     "typescript": "5.8.2",
-    "typedoc": "0.27.9",
+    "typedoc": "0.28.1",
     "vitest": "3.1.1"
   },
   "peerDependencies": {
