@@ -16,9 +16,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/definitions/index.d.ts",
       "import": "./dist/headless.shopify.esm.js",
-      "require": "./dist/headless.shopify.js",
       "default": "./dist/headless.shopify.esm.js"
     }
   },
@@ -26,7 +24,7 @@
     "dev": "npm run build:bundles -- dev",
     "build": "nx build",
     "build:bundles": "node esbuild.mjs",
-    "clean": "rimraf -rf dist/*",
+    "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
