@@ -40,12 +40,12 @@ jobs:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
-          repository: ui-kit
+          repositories: [ui-kit]
       - name: Release
         run: npm run release
         env:
           VERSION: ${{ inputs.version }}
-          DEBUG: ${{ inputs.debug && '*' || '' }}
+          DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
