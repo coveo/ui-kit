@@ -7,6 +7,7 @@ import {provide} from '@lit/context';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {vi} from 'vitest';
 import type {
   AtomicCommerceInterface,
   CommerceBindings,
@@ -14,6 +15,7 @@ import type {
 import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
+import {genericSubscribe} from '../../headless/common.js';
 
 @customElement('atomic-commerce-interface')
 export class FixtureAtomicCommerceInterface
@@ -78,8 +80,15 @@ export const defaultBindings = {
   store: {
     state: {
       iconAssetsPath: './assets',
-    },
-  } as CommerceStore,
+      loadingFlags: [],
+    } as Partial<CommerceStore['state']>,
+    setLoadingFlag: vi.fn(),
+    unsetLoadingFlag: vi.fn(),
+    onChange: vi.fn(),
+  } as Partial<CommerceStore> as CommerceStore,
+  engine: {
+    subscribe: genericSubscribe,
+  } as Partial<CommerceEngine> as CommerceEngine,
 } as const;
 
 defaultBindings satisfies Partial<CommerceBindings>;
@@ -116,6 +125,9 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   const atomicInterface = await fixture<FixtureAtomicCommerceInterface>(
     html`<atomic-commerce-interface></atomic-commerce-interface>`
   );
+  if (!bindings) {
+    atomicInterface.setBindings({} as CommerceBindings);
+  }
   if (typeof bindings === 'function') {
     atomicInterface.setBindings(bindings(defaultBindings));
   } else {
