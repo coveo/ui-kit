@@ -1,3 +1,15 @@
+## 3.18.0 (2025-04-30)
+
+- test(quantic): added unit tests and e2e for quantic numeric facet component (#5186) ([67ba0ef](https://github.com/coveo/ui-kit/commits/67ba0ef)), closes [#5186](https://github.com/coveo/ui-kit/issues/5186)
+- test(quantic): added unit tests and e2e for quantic timeframe facet (#5208) ([f41ed31](https://github.com/coveo/ui-kit/commits/f41ed31)), closes [#5208](https://github.com/coveo/ui-kit/issues/5208)
+- test(quantic): document suggestion e2e (#5176) ([f855ccd](https://github.com/coveo/ui-kit/commits/f855ccd)), closes [#5176](https://github.com/coveo/ui-kit/issues/5176)
+- test(quantic): Playwright migration for quantic result copy to clipboard E2E tests (#5182) ([76e518c](https://github.com/coveo/ui-kit/commits/76e518c)), closes [#5182](https://github.com/coveo/ui-kit/issues/5182)
+- test(quantic): query summary tests (#5183) ([2e375b7](https://github.com/coveo/ui-kit/commits/2e375b7)), closes [#5183](https://github.com/coveo/ui-kit/issues/5183)
+- chore(atomic,quantic): move tests scripts orchestrations to nx (#5197) ([22bf157](https://github.com/coveo/ui-kit/commits/22bf157)), closes [#5197](https://github.com/coveo/ui-kit/issues/5197)
+- feat(headless, quantic): added logic to automatically fetch insight interface when building an insig ([f34191b](https://github.com/coveo/ui-kit/commits/f34191b)), closes [#5187](https://github.com/coveo/ui-kit/issues/5187)
+- chore(quantic): folder solutionExamples created for a better structure (#5196) ([6da5350](https://github.com/coveo/ui-kit/commits/6da5350)), closes [#5196](https://github.com/coveo/ui-kit/issues/5196)
+- feat(quantic): quantic insight summary component created (#5185) ([5c00d33](https://github.com/coveo/ui-kit/commits/5c00d33)), closes [#5185](https://github.com/coveo/ui-kit/issues/5185)
+
 ## <small>3.17.1 (2025-04-23)</small>
 
 - test(quantic): e2e tests and unit tests added for the QuanticDidYouMean component (#5175) ([320e70e](https://github.com/coveo/ui-kit/commits/320e70e)), closes [#5175](https://github.com/coveo/ui-kit/issues/5175)

@@ -1,3 +1,8 @@
+## <small>3.2.35 (2025-04-30)</small>
+
+- chore(atomic): migrate atomic-commerce-interface to Lit (#5017) ([7f03f9b](https://github.com/coveo/ui-kit/commits/7f03f9b)), closes [#5017](https://github.com/coveo/ui-kit/issues/5017)
+- chore(atomic): migrate atomic-commerce-sort-dropdown (#5127) ([8bac154](https://github.com/coveo/ui-kit/commits/8bac154)), closes [#5127](https://github.com/coveo/ui-kit/issues/5127)
+
 ## <small>3.2.32 (2025-04-16)</small>
 
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
