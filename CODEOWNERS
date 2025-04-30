@@ -23,4 +23,4 @@
 /packages/headless/src/test/**commerce** @coveo/commerce-routemasters
 
 # Owners of the Shopify headless package 
-/packages/headless-shopify/ @coveo/shopify
+/packages/headless-shopify/ @coveo/Shopify
