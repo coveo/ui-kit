@@ -1,7 +1,7 @@
-import {buildFakePager} from '@/vitest-utils/headless/commerce/pager-subcontroller';
-import {buildFakeProductListing} from '@/vitest-utils/headless/commerce/product-listing-controller';
-import {buildFakeSearch} from '@/vitest-utils/headless/commerce/search-controller';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {buildFakePager} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/pager-subcontroller';
+import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
+import {buildFakeSearch} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-controller';
 import {
   buildProductListing,
   buildSearch,
