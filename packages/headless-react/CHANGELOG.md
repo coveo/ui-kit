@@ -1,3 +1,27 @@
+## <small>2.4.22 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- [Version Bump][skip ci]: ui-kit publish ([4c08d65](https://github.com/coveo/ui-kit/commits/4c08d65))
+- [Version Bump][skip ci]: ui-kit publish ([d9abb20](https://github.com/coveo/ui-kit/commits/d9abb20))
+- [Version Bump][skip ci]: ui-kit publish ([ea556e6](https://github.com/coveo/ui-kit/commits/ea556e6))
+- [Version Bump][skip ci]: ui-kit publish ([e8b1c6a](https://github.com/coveo/ui-kit/commits/e8b1c6a))
+- [Version Bump][skip ci]: ui-kit publish ([05f5f59](https://github.com/coveo/ui-kit/commits/05f5f59))
+- docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
+- Fix the tables dark theme issue for Headless Typedoc (#5077) ([cc7d962](https://github.com/coveo/ui-kit/commits/cc7d962)), closes [#5077](https://github.com/coveo/ui-kit/issues/5077)
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore: rename headless-ssr-commerce to headless-ssr-commerce-nextjs (#5179) ([44c8956](https://github.com/coveo/ui-kit/commits/44c8956)), closes [#5179](https://github.com/coveo/ui-kit/issues/5179)
+- chore(deps): update vitest (#5188) ([749ab46](https://github.com/coveo/ui-kit/commits/749ab46)), closes [#5188](https://github.com/coveo/ui-kit/issues/5188)
+- chore(react19): allow react19 w/ `@coveo/headless-react`, bump to 19 everywhereish. (#5171) ([823974d](https://github.com/coveo/ui-kit/commits/823974d)), closes [#5171](https://github.com/coveo/ui-kit/issues/5171)
+- docs(headless-react): address broken typedoc links (#5124) ([4cc3445](https://github.com/coveo/ui-kit/commits/4cc3445)), closes [#5124](https://github.com/coveo/ui-kit/issues/5124)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+
+## <small>2.4.21 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
+- chore: rename headless-ssr-commerce to headless-ssr-commerce-nextjs (#5179) ([44c8956](https://github.com/coveo/ui-kit/commits/44c8956)), closes [#5179](https://github.com/coveo/ui-kit/issues/5179)
+
 ## <small>2.4.20 (2025-04-30)</small>
 
 - docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
