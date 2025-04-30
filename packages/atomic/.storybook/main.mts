@@ -43,6 +43,7 @@ const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
   stories: [
+    './Introduction.stories.tsx',
     '../src/**/*.new.stories.tsx',
     '../src/**/*.mdx',
   ],

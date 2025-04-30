@@ -14,6 +14,7 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
 });
 
 const expandAllButtons = () => {
+  console.log('expandAllButtons');
   const clickExpandAllButtons = () => {
     setTimeout(() => {
       try {
@@ -29,8 +30,8 @@ const expandAllButtons = () => {
     }, 200);
   };
 
-  const currentStoryId = window.location.hash;
-  if (currentStoryId.includes('introduction')) {
+  const currentStoryId = window.location.href;
+  if (currentStoryId.includes('introduction--crawling')) {
     clickExpandAllButtons();
   }
 };

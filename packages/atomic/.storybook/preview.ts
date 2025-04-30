@@ -17,8 +17,8 @@ export const parameters = {
     },
   },
   options: {
-    storySort: {
-      method: 'alphabetical-by-kind',
-    },
+    order: ['Introduction'],
+    method: 'alphabetical',
+    locales: 'en-US',
   },
 };
