@@ -50,7 +50,7 @@ test.describe('default', () => {
       });
 
       test('should update the searchbox input', async ({searchBox}) => {
-        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+        await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
       });
 
       test('should collapse the suggested queries', async ({searchBox}) => {
@@ -70,7 +70,7 @@ test.describe('default', () => {
       });
 
       test('should update the searchbox input', async ({searchBox}) => {
-        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+        await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
       });
 
       test.describe('after pressing Enter', () => {
