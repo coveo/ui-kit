@@ -1,6 +1,9 @@
 import type {CommerceStore} from '@/src/components.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import type {InitializeEvent} from '@/src/utils/init-queue.js';
+import {
+  markParentAsReady,
+  type InitializeEvent,
+} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {ContextProvider} from '@lit/context';
@@ -50,6 +53,7 @@ export class FixtureAtomicCommerceInterface
     super();
     createTestI18n().then((i18n) => {
       this.i18n = i18n;
+      markParentAsReady(this);
     });
     this.host = this;
   }
@@ -135,5 +139,7 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   }
 
   const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  await element.updateComplete;
+
   return {element, atomicInterface};
 }
