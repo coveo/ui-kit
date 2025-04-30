@@ -1,5 +1,5 @@
 import {html, render} from 'lit';
-import {multiClassMap} from './multi-class-map';
+import {multiClassMap, tw} from './multi-class-map';
 
 describe('MultiClassMapDirective', () => {
   let container: HTMLElement;
@@ -77,5 +77,18 @@ describe('MultiClassMapDirective', () => {
 
     const div = container.querySelector('div');
     expect(div?.className.trim()).toBe('');
+  });
+
+  it('renders dynamic classes', () => {
+    const otherClasses = 'other-class another-class';
+    const classMapInput = tw({foo: true, [otherClasses || '']: true});
+
+    render(
+      html`<div class="${multiClassMap(classMapInput)}"></div>`,
+      container
+    );
+
+    const div = container.querySelector('div');
+    expect(div).toHaveClass('other-class', 'another-class', 'foo');
   });
 });
