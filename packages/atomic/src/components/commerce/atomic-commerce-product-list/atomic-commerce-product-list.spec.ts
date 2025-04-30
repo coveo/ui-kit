@@ -14,7 +14,8 @@ import {
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import {html} from 'lit';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {describe, expect, MockInstance, vi} from 'vitest';
 import {
   ItemDisplayDensity,
@@ -24,6 +25,15 @@ import {
 import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
 
+@customElement('atomic-table-element')
+export class AtomicTableElement extends LitElement {
+  /**
+   * The label to display in the header of this column.
+   */
+  @property({type: String})
+  public label!: string;
+}
+
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
 
@@ -31,6 +41,39 @@ describe('AtomicCommerceProductList', () => {
   const interactiveProduct = vi.fn();
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();
+
+  const parts = (element: AtomicCommerceProductList) => {
+    const qs = (part: string, exact = true) =>
+      element.shadowRoot?.querySelectorAll(
+        `[part${exact ? '' : '*'}="${part}"]`
+      );
+
+    return {
+      grid: {
+        outline: qs('outline', false),
+        resultList: qs('result-list'),
+        resultListGridClickableContainer: qs(
+          'result-list-grid-clickable-container',
+          false
+        ),
+      },
+      list: {
+        outline: qs('outline'),
+        resultList: qs('result-list'),
+      },
+      table: {
+        resultTable: qs('result-table'),
+        resultTableHeading: qs('result-table-heading'),
+        resultTableHeadingRow: qs('result-table-heading-row'),
+        resultTableHeadingCell: qs('result-table-heading-cell'),
+        resultTableBody: qs('result-table-body'),
+        resultTableRow: qs('result-table-row', false),
+        resultTableRowEven: qs('result-table-row-even', false),
+        resultTableRowOdd: qs('result-table-row-odd', false),
+        resultTableCell: qs('result-table-cell'),
+      },
+    };
+  };
 
   beforeEach(() => {
     fixtureCleanup();
@@ -374,23 +417,39 @@ describe('AtomicCommerceProductList', () => {
     });
 
     describe('when app is loaded', () => {
-      const testWrapperRendering = async ({
-        density,
-        imageSize,
-      }: {
-        density?: ItemDisplayDensity;
-        imageSize?: ItemDisplayImageSize;
-      } = {}) => {
-        const element = await setupElement({
-          display: 'table',
-          ...(density && {density}),
-          ...(imageSize && {imageSize}),
-        });
+      let element: AtomicCommerceProductList;
+
+      beforeEach(async () => {
+        const numberOfProducts = 9;
+
+        vi.mocked(buildProductListing).mockReturnValue(
+          buildFakeProductListing({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: Array.from({length: numberOfProducts}, (_, i) =>
+                buildFakeProduct({permanentid: i.toString()})
+              ),
+            },
+          })
+        );
 
         const mockTableTemplate = document.createDocumentFragment();
-        mockTableTemplate.appendChild(
-          document.createElement('atomic-table-element')
+        const atomicTableElement1 = document.createElement(
+          'atomic-table-element'
         );
+        atomicTableElement1.setAttribute('label', 'Label 1');
+        const atomicTableElement2 = document.createElement(
+          'atomic-table-element'
+        );
+        atomicTableElement2.setAttribute('label', 'Label 2');
+        mockTableTemplate.appendChild(atomicTableElement1);
+        mockTableTemplate.appendChild(atomicTableElement2);
+
+        element = await setupElement({display: 'table'});
 
         vi.spyOn(
           // @ts-expect-error - mocking method on private property
@@ -400,24 +459,92 @@ describe('AtomicCommerceProductList', () => {
 
         element.requestUpdate();
         await element.updateComplete;
+      });
 
-        const resultTableElement = element.shadowRoot?.querySelector(
-          '[part="result-table"]'
-        );
-        const resultTableLocator = page.elementLocator(resultTableElement!);
+      it('should render list wrapper & table with correct display class', async () => {
+        await testRenderTableLayout();
+      });
 
-        const expectedClass = [
-          'display-table',
-          density ? ` density-${density}` : '',
-          imageSize ? ` image-${imageSize}` : '',
-        ].join('');
+      it('should render 1 atomic-text with correct #value per atomic-table-element in template', async () => {
+        const atomicTextElements =
+          element.shadowRoot?.querySelectorAll('atomic-text');
 
-        await expect.element(resultTableLocator).toBeInTheDocument();
-        await expect.element(resultTableLocator).toHaveClass(expectedClass);
-      };
+        expect(atomicTextElements?.length).toBe(2);
+        expect(atomicTextElements?.[0].value).toBe('Label 1');
+        expect(atomicTextElements?.[1].value).toBe('Label 2');
+      });
 
-      it('should render with correct display class', async () => {
-        await testWrapperRendering();
+      it('should render 1 result-table part', async () => {
+        const tableParts = parts(element).table.resultTable;
+
+        expect(tableParts?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(tableParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading part', async () => {
+        const tableHeadingPart = parts(element).table.resultTableHeading;
+
+        expect(tableHeadingPart?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(tableHeadingPart!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading-row part', async () => {
+        const tableHeadingRowParts = parts(element).table.resultTableHeadingRow;
+
+        expect(tableHeadingRowParts?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(tableHeadingRowParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading-cell part per atomic-table-element in template', async () => {
+        const tableHeadingCellParts =
+          parts(element).table.resultTableHeadingCell;
+
+        expect(tableHeadingCellParts?.length).toBe(2);
+
+        await expect
+          .element(page.elementLocator(tableHeadingCellParts!.item(0)))
+          .toBeInTheDocument();
+
+        await expect
+          .element(page.elementLocator(tableHeadingCellParts!.item(1)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-body part', async () => {
+        const tableBodyPart = parts(element).table.resultTableBody;
+
+        expect(tableBodyPart?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(tableBodyPart!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-row part per product', async () => {
+        const tableRowParts = parts(element).table.resultTableRow;
+
+        expect(tableRowParts?.length).toBe(9);
+      });
+
+      it('should render floor(numberOfProducts / 2) result-table-row-even parts', async () => {
+        const tableRowEvenParts = parts(element).table.resultTableRowEven;
+
+        expect(tableRowEvenParts?.length).toBe(4);
+      });
+
+      it('should render ceil(numberOfProducts / 2) result-table-row-odd parts', async () => {
+        const tableRowOddParts = parts(element).table.resultTableRowOdd;
+
+        expect(tableRowOddParts?.length).toBe(5);
       });
 
       describe.each<{
@@ -425,8 +552,8 @@ describe('AtomicCommerceProductList', () => {
       }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
         'when #density is $density',
         ({density}) => {
-          it('should render with correct density class', async () => {
-            await testWrapperRendering({density});
+          it('should render list wrapper & table with correct density class', async () => {
+            await testRenderTableLayout({density});
           });
         }
       );
@@ -437,13 +564,64 @@ describe('AtomicCommerceProductList', () => {
         {imageSize: 'none'},
         {imageSize: 'small'},
       ])('when #imageSize is $imageSize', ({imageSize}) => {
-        it('should render with correct image size class', async () => {
-          await testWrapperRendering({imageSize});
+        it('should render list wrapper & table with correct image size class', async () => {
+          await testRenderTableLayout({imageSize});
         });
       });
 
-      atomicProductRenderingTestCases('table');
+      testRenderAtomicProduct('table');
     });
+
+    const testRenderTableLayout = async ({
+      density,
+      imageSize,
+    }: {
+      density?: ItemDisplayDensity;
+      imageSize?: ItemDisplayImageSize;
+    } = {}) => {
+      const element = await setupElement({
+        display: 'table',
+        ...(density && {density}),
+        ...(imageSize && {imageSize}),
+      });
+
+      const mockTableTemplate = document.createDocumentFragment();
+      mockTableTemplate.appendChild(
+        document.createElement('atomic-table-element')
+      );
+
+      vi.spyOn(
+        // @ts-expect-error - mocking method on private property
+        element.productTemplateProvider,
+        'getTemplateContent'
+      ).mockReturnValue(mockTableTemplate);
+
+      element.requestUpdate();
+      await element.updateComplete;
+
+      const listWrapperElement =
+        element.shadowRoot?.querySelectorAll('.list-wrapper');
+      const resultTableElements = element.shadowRoot?.querySelectorAll('table');
+
+      const expectedClass = [
+        'display-table',
+        density ? ` density-${density}` : '',
+        imageSize ? ` image-${imageSize}` : '',
+      ].join('');
+
+      expect(listWrapperElement).toHaveLength(1);
+      const listWrapperLocator = page.elementLocator(
+        listWrapperElement!.item(0)
+      );
+      await expect.element(listWrapperLocator).toBeInTheDocument();
+      await expect.element(listWrapperLocator).toHaveClass(expectedClass);
+      expect(resultTableElements).toHaveLength(1);
+      const resultTableLocator = page.elementLocator(
+        resultTableElements!.item(0)
+      );
+      await expect.element(resultTableLocator).toBeInTheDocument();
+      await expect.element(resultTableLocator).toHaveClass(expectedClass);
+    };
   });
 
   describe.each<{display: ItemDisplayLayout}>([
@@ -531,11 +709,11 @@ describe('AtomicCommerceProductList', () => {
         });
       });
 
-      atomicProductRenderingTestCases(display);
+      testRenderAtomicProduct(display);
     });
   });
 
-  const atomicProductRenderingTestCases = (display: ItemDisplayLayout) => {
+  const testRenderAtomicProduct = (display: ItemDisplayLayout) => {
     const setupTableTemplate = (element: AtomicCommerceProductList) => {
       const mockTableTemplate = document.createDocumentFragment();
       mockTableTemplate.appendChild(
@@ -572,16 +750,6 @@ describe('AtomicCommerceProductList', () => {
       const element = await setupElement({
         display,
       });
-
-      vi.spyOn(element.searchOrListingState, 'products', 'get').mockReturnValue(
-        Array.from(
-          {length: numberOfProducts},
-          (_, i) =>
-            ({
-              permanentid: i + 1,
-            }) as unknown as Product
-        )
-      );
 
       display === 'table' && setupTableTemplate(element);
 
