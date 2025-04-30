@@ -1,12 +1,30 @@
 import {
+  AtomicCommerceInterface as LitAtomicCommerceInterface,
+  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
+  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
-  AtomicCommerceInterface as LitAtomicCommerceInterface,
-  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
-  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicCommerceInterface = createComponent({
+  tagName: 'atomic-commerce-interface',
+  react: React,
+  elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-commerce-search-box-query-suggestions',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
+});
+
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
+});
 
 export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',
@@ -18,22 +36,4 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
-});
-
-export const AtomicCommerceInterface = createComponent({
-  tagName: 'atomic-commerce-interface',
-  react: React,
-  elementClass: LitAtomicCommerceInterface,
-});
-
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
-  react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
-});
-
-export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
-  tagName: 'atomic-commerce-search-box-query-suggestions',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
