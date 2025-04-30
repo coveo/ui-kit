@@ -7,7 +7,6 @@ import expandFacet from '@salesforce/label/c.quantic_ExpandFacet';
 import startLabel from '@salesforce/label/c.quantic_StartLabel';
 import timeframeInputApply from '@salesforce/label/c.quantic_TimeframeInputApply';
 import {
-  getHeadlessBindings,
   getHeadlessBundle,
   initializeWithHeadless,
   registerComponentForInit,
@@ -25,6 +24,7 @@ import {
 import {api, LightningElement, track} from 'lwc';
 
 /** @typedef {import("coveo").SearchEngine} SearchEngine */
+/** @typedef {import("coveo").InsightEngine} InsightEngine */
 /** @typedef {import("coveo").SearchStatus} SearchStatus */
 /** @typedef {import("coveo").DateFacet} DateFacet */
 /** @typedef {import("coveo").DateFacetState} DateFacetState */
@@ -214,6 +214,8 @@ export default class QuanticTimeframeFacet extends LightningElement {
   dateFacetConditionsManager;
   /** @type {FacetConditionsManager} */
   dateFilterConditionsManager;
+  /** @type {SearchEngine | InsightEngine} */
+  engine;
 
   _isCollapsed = false;
   _showValues = true;
@@ -257,15 +259,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * Gets whether to show the facet.
    */
   get showFacet() {
-    const facetIsActivated =
-      this.hasActiveValues || !!this.dateFilterState?.range;
     const canRefineWithCustomRange =
       this.hasResults && this.shouldDisplayDatePicker;
     const canRefineWithTimeframes =
       this.hasResults && this.formattedValues.length > 0;
-
     return (
-      facetIsActivated || canRefineWithCustomRange || canRefineWithTimeframes
+      this.hasActiveValues ||
+      canRefineWithCustomRange ||
+      canRefineWithTimeframes
     );
   }
 
@@ -333,7 +334,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   get currentValues() {
     return this.timeframes.map((timeframe) => {
       return timeframe.period === 'past'
-        ? getHeadlessBundle(this.engineId).buildDateRange({
+        ? this.headless.buildDateRange({
             start: {
               period: timeframe.period,
               unit: timeframe.unit,
@@ -341,7 +342,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
             },
             end: {period: 'now'},
           })
-        : getHeadlessBundle(this.engineId).buildDateRange({
+        : this.headless.buildDateRange({
             start: {period: 'now'},
             end: {
               period: timeframe.period,
@@ -386,10 +387,7 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   get hasActiveValues() {
-    return (
-      this.formattedValues.some((v) => v.selected) ||
-      !!this.dateFilterState?.range
-    );
+    return this.facetState?.hasActiveValues || !!this.dateFilterState?.range;
   }
 
   get clearFilterLabel() {
@@ -435,11 +433,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     this.validateDependsOnProperty();
     this.headless = getHeadlessBundle(this.engineId);
     this.initializeSearchStatusController(engine);
     this.initializeFacetController(engine);
-    this.initializeDateFilterController(engine);
+    if (this.withDatePicker) {
+      this.initializeDateFilterController(engine);
+    }
     registerToStore(this.engineId, Store.facetTypes.DATEFACETS, {
       label: this.label,
       facetId: this.facet.state.facetId,
@@ -798,15 +799,14 @@ export default class QuanticTimeframeFacet extends LightningElement {
   }
 
   updateRangeInHeadless(startDate, endDate) {
-    const engine = getHeadlessBindings(this.engineId).engine;
-    engine.dispatch(
-      getHeadlessBundle(this.engineId)
-        .loadDateFacetSetActions(engine)
+    this.engine.dispatch(
+      this.headless
+        .loadDateFacetSetActions(this.engine)
         .deselectAllDateFacetValues(this.facet.state.facetId)
     );
 
     this.dateFilter.setRange(
-      getHeadlessBundle(this.engineId).buildDateRange({
+      this.headless.buildDateRange({
         start: DateUtils.toLocalSearchApiDate(startDate),
         end: DateUtils.toLocalSearchApiDate(endDate),
       })
