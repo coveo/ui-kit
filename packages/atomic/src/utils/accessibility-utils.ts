@@ -80,7 +80,6 @@ export class FocusTargetController {
       ) {
         this.doFocusAfterSearch = false;
         if (this.element) {
-          console.log(this.element);
           const el = this.element;
           // The focus seems to be flaky without deferring, especially on iOS.
           await defer();
