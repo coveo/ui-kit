@@ -1,7 +1,19 @@
 import {build} from '../../scripts/esbuild/build.mjs';
 import {apacheLicense} from '../../scripts/license/apache.mjs';
 
-const devMode = process.argv[2] === 'dev';
+const isDevMode = process.argv[2] === 'dev';
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+const isNightly = process.env.IS_NIGHTLY === 'true';
+
+const buenoJsonPath = resolve(__dirname, '../bueno/package.json');
+const buenoJson = JSON.parse(readFileSync(buenoJsonPath, 'utf-8'));
+
+const buenoVersion = isNightly
+  ? `v${buenoJson.version.split('.').shift()}-nightly`
+  : 'v' + buenoJson.version;
+const buenoPath = isCDN
+  ? `/bueno/${buenoVersion}/bueno.esm.js`
+  : '@coveo/bueno';
 
 /**
  * @type {import('esbuild').BuildOptions}
@@ -26,12 +38,25 @@ function nodeEsm() {
 }
 
 function browserEsm() {
+  const replaceBuenoImport = [
+    {
+      name: 'replace-bueno-import',
+      setup(build) {
+        build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+          return {path: buenoPath, external: true};
+        });
+      },
+    },
+  ];
+
   return build({
     ...base,
     platform: 'browser',
     outfile: 'cdn/headless.shopify.esm.js',
     format: 'esm',
-    watch: devMode,
+    watch: isDevMode,
+    external: [buenoPath],
+    plugins: [isCDN ? replaceBuenoImport : []],
   });
 }
 
