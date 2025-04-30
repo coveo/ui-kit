@@ -21,3 +21,6 @@
 /packages/headless/src/state/commerce-app-state.ts @coveo/commerce-routemasters
 /packages/headless/src/commerce.index.ts @coveo/commerce-routemasters
 /packages/headless/src/test/**commerce** @coveo/commerce-routemasters
+
+# Owners of the Shopify headless package 
+/packages/headless-shopify/ @coveo/shopify
