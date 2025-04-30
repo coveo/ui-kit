@@ -56,7 +56,7 @@ function browserEsm() {
     format: 'esm',
     watch: isDevMode,
     external: [buenoPath],
-    plugins: [isCDN ? replaceBuenoImport : []],
+    plugins: isCDN ? [replaceBuenoImport] : [],
   });
 }
 
