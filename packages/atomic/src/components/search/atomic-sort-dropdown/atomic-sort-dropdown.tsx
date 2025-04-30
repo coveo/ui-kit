@@ -66,6 +66,8 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   public initialize() {
+    throw new Error('error');
+
     this.buildOptions();
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine, {

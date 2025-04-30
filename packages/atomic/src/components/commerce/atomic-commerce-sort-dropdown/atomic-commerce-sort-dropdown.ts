@@ -70,6 +70,7 @@ export class AtomicCommerceSortDropdown
   }
 
   public initialize() {
+    throw new Error('error');
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
