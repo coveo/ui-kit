@@ -151,7 +151,12 @@ export class AtomicCommerceProductList
   }
 
   public initialize() {
-    this.validateProps();
+    try {
+      this.validateProps();
+    } catch (error) {
+      this.error = error as Error;
+      throw error;
+    }
     this.host = this;
     this.initSearchOrListing();
     this.initSummary();
