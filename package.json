@@ -97,6 +97,7 @@
     "packages/atomic-angular/projects/*",
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
+    "packages/headless-shopify/*",
     "utils/*"
   ],
   "config": {
