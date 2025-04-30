@@ -1,5 +1,6 @@
 import {i18n} from 'i18next';
 import {html, nothing} from 'lit';
+import {when} from 'lit/directives/when.js';
 import ArrowBottomIcon from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
@@ -52,8 +53,10 @@ export const facetHeader = (props: FacetHeaderProps) => {
           .icon=${props.isCollapsed ? ArrowBottomIcon : ArrowTopIcon}
         ></atomic-icon>`
     )}
-    ${props.onClearFilters && props.numberOfActiveValues > 0
-      ? html`${renderButton({
+    ${when(
+      props.onClearFilters && props.numberOfActiveValues > 0,
+      () =>
+        html`${renderButton({
           props: {
             part: 'clear-button',
             style: 'text-primary',
@@ -68,7 +71,8 @@ export const facetHeader = (props: FacetHeaderProps) => {
               .icon=${CloseIcon}
             ></atomic-icon>
             <span>${clearFilters}</span>`
-        )}`
-      : nothing}
+        )}`,
+      () => nothing
+    )}
   `;
 };
