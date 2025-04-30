@@ -20,10 +20,6 @@ describe('renderFacetValuesGroup', () => {
     renderFieldsetGroupSpy = vi.mocked(renderCommonFieldsetGroup);
   });
 
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   const renderComponent = (
     props: Partial<FacetValuesGroupProps> = {},
     children = html`<div>Child Content</div>`
