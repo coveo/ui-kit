@@ -1,7 +1,9 @@
 import {directive, Directive} from 'lit/directive.js';
 import {classMap} from 'lit/directives/class-map.js';
 
-export const tw = (rec: Record<string, boolean>) => rec;
+export const tw = <T extends {[x: string]: boolean}>(
+  rec: NoDuplicateWords<T>
+) => rec;
 
 /**
  * A utility type that splits a string `Word` into an array of substrings based on a specified `Separator`.
@@ -37,7 +39,7 @@ export const tw = (rec: Record<string, boolean>) => rec;
 type Split<
   Word extends string,
   Separator extends string,
-  Limit extends number = 3,
+  Limit extends number = 30,
   Count extends unknown[] = [],
 > = Count['length'] extends Limit
   ? ['$$recursion_limit_reached_flag$$']
@@ -105,11 +107,13 @@ type DuplicateWords<T extends Record<string, boolean>> = {
  * Throws a static error if duplicates are found, if the recursion limit is reached, or if any other issue is detected.
  */
 type NoDuplicateWords<T extends Record<string, boolean>> =
-  DuplicateWords<T> extends never
-    ? T
-    : DuplicateWords<T> extends false
-      ? 'Recursion limit reached in class map. Ensure the class list is not too long.'
-      : 'Duplicate class detected in class map. Ensure that no class appears in more than one key.';
+  string extends keyof T // Check if runtime values are being used
+    ? T // Allow runtime values without static checks
+    : DuplicateWords<T> extends never
+      ? T
+      : DuplicateWords<T> extends false
+        ? 'Recursion limit reached in class map. Ensure the class list is not too long.'
+        : 'Duplicate class detected in class map. Ensure that no class appears in more than one key.';
 
 class MultiClassMapDirective extends Directive {
   /**
