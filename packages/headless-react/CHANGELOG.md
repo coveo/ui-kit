@@ -1,3 +1,9 @@
+## <small>2.4.21 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
+- chore: rename headless-ssr-commerce to headless-ssr-commerce-nextjs (#5179) ([44c8956](https://github.com/coveo/ui-kit/commits/44c8956)), closes [#5179](https://github.com/coveo/ui-kit/issues/5179)
+
 ## <small>2.4.20 (2025-04-30)</small>
 
 - docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)

@@ -1,3 +1,7 @@
+## <small>1.1.16 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+
 ## <small>1.1.14 (2025-04-23)</small>
 
 - fix(autoloader): wrap initial discovery and observer setup in DOMContentLoaded event (#5180) ([58655b4](https://github.com/coveo/ui-kit/commits/58655b4)), closes [#5180](https://github.com/coveo/ui-kit/issues/5180)

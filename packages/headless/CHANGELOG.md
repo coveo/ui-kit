@@ -1,3 +1,11 @@
+## <small>3.22.5 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- docs(headless, headless-react): typedoc styling update and nav cookies as functional (#5195) ([7e8c7bf](https://github.com/coveo/ui-kit/commits/7e8c7bf)), closes [#5195](https://github.com/coveo/ui-kit/issues/5195)
+- feat(headless, quantic): added logic to automatically fetch insight interface when building an insig ([f34191b](https://github.com/coveo/ui-kit/commits/f34191b)), closes [#5187](https://github.com/coveo/ui-kit/issues/5187)
+- fix(headless): prevent selected facet search values from replacing idle values (#5194) ([5b797e9](https://github.com/coveo/ui-kit/commits/5b797e9)), closes [#5194](https://github.com/coveo/ui-kit/issues/5194)
+- fix(headless): reverts PR to fix Advanced Search Queries Parameters (#5209) ([a3d7140](https://github.com/coveo/ui-kit/commits/a3d7140)), closes [#5209](https://github.com/coveo/ui-kit/issues/5209)
+
 ## <small>3.22.4 (2025-04-30)</small>
 
 - fix(headless): prevent selected facet search values from replacing idle values (#5194) ([5b797e9](https://github.com/coveo/ui-kit/commits/5b797e9)), closes [#5194](https://github.com/coveo/ui-kit/issues/5194)
