@@ -89,23 +89,7 @@ export const defaultBindings = {
     },
     selectSuggestion: vi.fn(),
   } as unknown as SearchBox | StandaloneSearchBox,
-  getSuggestions: () => {
-    return [
-      {
-        position: 1,
-        renderItems: () => {
-          return [
-            {
-              highlightedValue: 'suggestion1Highlighted',
-              rawValue: 'suggestion1',
-              key: 'suggestion1',
-              content: document.createElement('div'),
-            },
-          ];
-        },
-      },
-    ];
-  },
+  getSuggestions: vi.fn(() => Array(1)),
 };
 
 defaultBindings satisfies Partial<CommerceSearchBoxBindings>;
@@ -133,7 +117,7 @@ export async function renderInAtomicCommerceSearchBox<T extends LitElement>({
   if (typeof bindings === 'function') {
     searchBox.bindings = bindings(defaultBindings);
   } else {
-    searchBox.bindings = bindings ?? defaultBindings;
+    searchBox.bindings = {...defaultBindings, ...bindings};
   }
   searchBox.setRenderTemplate(template);
 
