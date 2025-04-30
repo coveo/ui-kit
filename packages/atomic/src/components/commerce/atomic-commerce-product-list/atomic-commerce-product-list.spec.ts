@@ -656,6 +656,7 @@ describe('AtomicCommerceProductList', () => {
           element.shadowRoot?.querySelector('.list-wrapper');
         const listWrapperLocator = page.elementLocator(listWrapperElement!);
 
+        // TODO: test lengths
         const listRootElement = listWrapperElement!.querySelector(
           '[part="result-list"]'
         )!;
@@ -673,9 +674,11 @@ describe('AtomicCommerceProductList', () => {
         await expect.element(listRootLocator).toHaveClass(expectedClass);
       };
 
-      it('should render with correct display class', async () => {
+      it('should render with list wrapper & root with correct display class', async () => {
         await testWrapperRendering();
       });
+
+      // TODO: test parts!
 
       describe.each<{
         density: ItemDisplayDensity;
