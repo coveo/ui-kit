@@ -90,7 +90,7 @@ export default defineConfig({
         {
           browser: 'chromium',
           context: {
-            actionTimeout: 3000,
+            actionTimeout: 5000,
           },
         },
       ],
