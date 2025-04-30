@@ -1,6 +1,9 @@
 import type {CommerceStore} from '@/src/components.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import type {InitializeEvent} from '@/src/utils/init-queue.js';
+import {
+  markParentAsReady,
+  type InitializeEvent,
+} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {provide} from '@lit/context';
@@ -46,6 +49,7 @@ export class FixtureAtomicCommerceInterface
     super();
     createTestI18n().then((i18n) => {
       this.i18n = i18n;
+      markParentAsReady(this); // TODO remove this when we've finished migrating to Lit and no longer need the bindings mixin.
     });
     this.host = this;
   }
