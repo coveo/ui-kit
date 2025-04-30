@@ -14,11 +14,22 @@ declare global {
 }
 
 export function insertAtomicSearchBox() {
+  const areFunctionalCookiesEnabled = (): boolean => {
+    return document.cookie
+      .split('; ')
+      .some(
+        (cookie) =>
+          cookie.startsWith('OptanonConsent') && cookie.includes('C0003%3A1')
+      );
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     const typedocSearchBox = document.getElementById('tsd-search');
     if (typedocSearchBox) {
       typedocSearchBox.innerHTML = '';
       const searchInterface = document.createElement('atomic-search-interface');
+      const initializeAnalytics = areFunctionalCookiesEnabled();
+      searchInterface.setAttribute('analytics', `${initializeAnalytics}`);
       const searchBox = document.createElement('atomic-search-box');
       searchBox.setAttribute(
         'redirection-url',

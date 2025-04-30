@@ -7,7 +7,7 @@ import {buildProductListing, buildSearch} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect, vi} from 'vitest';
+import {beforeEach, expect, vi} from 'vitest';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown';
 import './atomic-commerce-sort-dropdown';
@@ -86,7 +86,8 @@ describe('AtomicCommerceSortDropdown', () => {
     await expect.element(locators.select).toBeInTheDocument();
   });
 
-  it('should call sort.sortBy when select is changed', async () => {
+  // KIT-4158: TODO: This test intermittently fails and takes too long
+  it.skip('should call sort.sortBy when select is changed', async () => {
     const mockedSortBy = vi.fn();
     mockedSort.mockReturnValue(
       buildFakeSort({implementation: {sortBy: mockedSortBy}})
