@@ -14,8 +14,7 @@ import {
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
-import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {html} from 'lit';
 import {describe, expect, MockInstance, vi} from 'vitest';
 import {
   ItemDisplayDensity,
@@ -24,15 +23,6 @@ import {
 } from '../../common/layout/display-options';
 import './atomic-commerce-product-list';
 import {AtomicCommerceProductList} from './atomic-commerce-product-list';
-
-@customElement('atomic-table-element')
-export class AtomicTableElement extends LitElement {
-  /**
-   * The label to display in the header of this column.
-   */
-  @property({type: String})
-  public label!: string;
-}
 
 vi.mock('@/src/components/common/interface/store', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
@@ -904,6 +894,7 @@ describe('AtomicCommerceProductList', () => {
         const mockProduct1 = buildFakeProduct({permanentid: '123'});
         const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
+        interactiveProduct.mockReset();
         interactiveProduct.mockImplementation(
           (props: InteractiveProductProps) => {
             return {
