@@ -44,16 +44,14 @@ function nodeEsm() {
 }
 
 function browserEsm() {
-  const replaceBuenoImport = [
-    {
-      name: 'replace-bueno-import',
-      setup(build) {
-        build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
-          return {path: buenoPath, external: true};
-        });
-      },
+  const replaceBuenoImport = {
+    name: 'replace-bueno-import',
+    setup(build) {
+      build.onResolve({filter: /^@coveo\/bueno$/}, (args) => {
+        return {path: buenoPath, external: true};
+      });
     },
-  ];
+  };
 
   return build({
     ...base,
