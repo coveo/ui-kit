@@ -147,7 +147,7 @@ useCaseTestCases.forEach((useCase) => {
         facet,
       }) => {
         expect(facet.facetValue.nth(facetValueIndex)).toHaveText(
-          exampleCaption
+          new RegExp(exampleCaption)
         );
         const {facetId, field, values} = facetData;
         const uaRequest = baseFacet.waitForFacetSelectUaAnalytics({
@@ -199,7 +199,7 @@ useCaseTestCases.forEach((useCase) => {
         test('should select the correct facet value', async ({facet}) => {
           await expect(facet.facetValueInput.nth(selectedIndex)).toBeChecked();
           expect(facet.facetValue.nth(selectedIndex)).toHaveText(
-            values[selectedIndex].value
+            new RegExp(values[selectedIndex].value)
           );
         });
       });

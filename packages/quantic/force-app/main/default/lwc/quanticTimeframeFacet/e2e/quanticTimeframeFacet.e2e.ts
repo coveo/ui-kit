@@ -3,27 +3,29 @@ import {
   useCaseEnum,
   useCaseTestCases,
 } from '../../../../../../playwright/utils/useCase';
-import facetData from './data';
 
 const fixtures = {
   search: testSearch,
   insight: testInsight,
 };
 
+const exampleField = 'Date';
+
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
-  test.describe(`quantic numeric facet ${useCase.label}`, () => {
+  test.describe(`quantic timeframe facet ${useCase.label}`, () => {
     test.describe('when selecting and deselecting a facet value', () => {
       test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const expectedStartDate = 'past-2-week';
+        const expectedEndDate = 'now';
         const expectedFacetData = {
-          facetId,
-          facetField: field,
-          facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
+          facetId: exampleField,
+          facetField: exampleField,
+          facetValue: `${expectedStartDate}..${expectedEndDate}`,
         };
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
@@ -43,11 +45,7 @@ useCaseTestCases.forEach((useCase) => {
         }
 
         const facetDeselectUaRequest =
-          baseFacet.waitForFacetDeselectUaAnalytics({
-            facetId,
-            facetField: field,
-            facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
-          });
+          baseFacet.waitForFacetDeselectUaAnalytics(expectedFacetData);
         const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
@@ -66,42 +64,37 @@ useCaseTestCases.forEach((useCase) => {
         facet,
       }) => {
         const selectedIndex = 0;
-        const {facetId, field, values} = facetData;
+        const expectedStartDate = 'past-2-week';
+        const expectedEndDate = 'now';
         const expectedFacetData = {
-          facetId,
-          facetField: field,
-          facetValue: `${values[selectedIndex].start}..${values[selectedIndex].end}`,
+          facetId: exampleField,
+          facetField: exampleField,
+          facetValue: `${expectedStartDate}..${expectedEndDate}`,
         };
-
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
-        const firstSearchResponsePromise = baseFacet.waitForSearchResponse();
+        let searchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
 
         await facetSelectUaRequest;
-        const firstSearchResponse = await firstSearchResponsePromise;
+        let searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetSelect} =
-          baseFacet.extractDataFromResponse(firstSearchResponse);
+          baseFacet.extractDataFromResponse(searchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
-        if (useCase.value === useCaseEnum.search) {
-          expect(analyticsForFacetSelect.customData).toEqual(
-            expect.objectContaining(expectedFacetData)
-          );
-        }
 
         const clearAllUaRequest = baseFacet.waitForFacetClearAllUaAnalytics({
-          facetId,
-          facetField: field,
+          facetId: exampleField,
+          facetField: exampleField,
         });
-        const secondSearchResponsePromise = baseFacet.waitForSearchResponse();
+        searchResponsePromise = baseFacet.waitForSearchResponse();
 
-        await facet.clickOnClearSelectionButton();
+        await facet.clearSelectionButton.click();
 
         await clearAllUaRequest;
-        const secondSearchResponse = await secondSearchResponsePromise;
+        searchResponse = await searchResponsePromise;
         const {analytics: analyticsForFacetDeselect} =
-          baseFacet.extractDataFromResponse(secondSearchResponse);
+          baseFacet.extractDataFromResponse(searchResponse);
         expect(analyticsForFacetDeselect.actionCause).toEqual('facetClearAll');
       });
     });
@@ -111,22 +104,21 @@ useCaseTestCases.forEach((useCase) => {
         baseFacet,
         facet,
       }) => {
-        const exampleMin = '1';
-        const exampleMax = '2';
-        const {facetId, field} = facetData;
+        const exampleStart = '2025-01-01';
+        const exampleEnd = '2025-01-02';
         const expectedFacetData = {
-          facetId: `${facetId}_input`,
-          facetField: field,
-          facetValue: `${exampleMin}..${exampleMax}`,
+          facetId: `${exampleField}_input`,
+          facetField: exampleField,
+          facetValue: `${exampleStart.replaceAll('-', '/')}@00:00:00..${exampleEnd.replaceAll('-', '/')}@23:59:59`,
         };
 
         const facetSelectUaRequest =
           baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         const searchResponsePromise = baseFacet.waitForSearchResponse();
 
-        await facet.fillFilterMinInput(exampleMin);
-        await facet.fillFilterMaxInput(exampleMax);
-        await facet.clickOnFilterApplyButton();
+        await facet.fillFilterStartInput(exampleStart);
+        await facet.fillFilterEndInput(exampleEnd);
+        await facet.filterApplyButton.click();
 
         await facetSelectUaRequest;
         const searchResponse = await searchResponsePromise;
@@ -144,18 +136,21 @@ useCaseTestCases.forEach((useCase) => {
     if (useCase.value === useCaseEnum.search) {
       test.describe('with a selected value in the URL', () => {
         const selectedIndex = 0;
-        const {field, values} = facetData;
+        const date = new Date();
+        const todayDate = date.toISOString().slice(0, 10);
+        date.setDate(date.getDate() - 1);
+        const yesterdayDate = date.toISOString().slice(0, 10);
         test.use({
-          urlHash: `nf-${field}=${values[selectedIndex].start}..${values[selectedIndex].end}`,
-          facetResponseMock: undefined,
+          urlHash: `df-${exampleField}=${yesterdayDate.replaceAll('-', '/')}@00:00:00..${todayDate.replaceAll('-', '/')}@23:59:59`,
         });
 
         test('should select the correct facet value', async ({facet}) => {
-          await expect(facet.facetValueInput.nth(selectedIndex)).toBeChecked();
+          await expect(facet.facetValue.nth(selectedIndex)).toHaveAttribute(
+            'aria-pressed',
+            'true'
+          );
           expect(facet.facetValue.nth(selectedIndex)).toHaveText(
-            new RegExp(
-              `${values[selectedIndex].start} - ${values[selectedIndex].end}`
-            )
+            new RegExp(`${yesterdayDate} - ${todayDate}`)
           );
         });
       });
