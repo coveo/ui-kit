@@ -10,7 +10,7 @@ import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildCustomEvent} from './event-utils';
-import {isParentReady, queueEventForParent} from './init-queue';
+import {enqueueOrDispatchInitializationEvent} from './init-queue';
 import {
   MissingInterfaceParentError,
   InitializeEventHandler,
@@ -43,11 +43,7 @@ export function initializeBindings<
       return;
     }
 
-    if (isParentReady(parent)) {
-      element.dispatchEvent(event);
-    } else {
-      queueEventForParent(parent, event as InitializeEvent, element);
-    }
+    enqueueOrDispatchInitializationEvent(parent, event, element);
   });
 }
 
@@ -158,12 +154,11 @@ export function InitializeBindings<SpecificBindings extends AnyBindings>({
         );
         return;
       }
-
-      if (isParentReady(parent)) {
-        element.dispatchEvent(event);
-      } else {
-        queueEventForParent(parent, event as InitializeEvent, element);
-      }
+      enqueueOrDispatchInitializationEvent(
+        parent,
+        event as InitializeEvent,
+        element
+      );
       return componentWillLoad && componentWillLoad.call(this);
     };
 
