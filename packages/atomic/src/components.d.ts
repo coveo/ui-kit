@@ -1326,6 +1326,10 @@ export namespace Components {
           * The text tooltip to show on the result action icon.
          */
         "tooltip": string;
+        /**
+          * The text tooltip to show on the result action icon for some time after clicking the button.
+         */
+        "tooltipOnClick": string;
     }
     interface AtomicInsightResultActionBar {
     }
@@ -7363,6 +7367,10 @@ declare namespace LocalJSX {
           * The text tooltip to show on the result action icon.
          */
         "tooltip"?: string;
+        /**
+          * The text tooltip to show on the result action icon for some time after clicking the button.
+         */
+        "tooltipOnClick"?: string;
     }
     interface AtomicInsightResultActionBar {
     }
