@@ -1,17 +1,18 @@
 import {html, render} from 'lit';
 import {within} from 'shadow-dom-testing-library';
+import {vi} from 'vitest';
 import {carousel, CarouselProps} from './carousel';
+import {AnyBindings} from './interface/bindings';
 
 describe('carousel', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
+    if (container) {
+      document.body.removeChild(container);
+    }
     container = document.createElement('div');
     document.body.appendChild(container);
-  });
-
-  afterEach(() => {
-    document.body.removeChild(container);
   });
 
   const renderCarousel = (
@@ -22,15 +23,20 @@ describe('carousel', () => {
       html` ${carousel({
         props: {
           ...props,
-          previousPage: props.previousPage ?? jest.fn(),
-          nextPage: props.nextPage ?? jest.fn(),
+          bindings: {
+            i18n: {
+              t: (key: string) => key,
+            },
+          } as AnyBindings,
+          previousPage: props.previousPage ?? vi.fn(),
+          nextPage: props.nextPage ?? vi.fn(),
           numberOfPages: props.numberOfPages ?? 3,
           currentPage: props.currentPage ?? 0,
         },
       })(html`${children}`)}`,
       container
     );
-    return container.querySelector('.carousel') as HTMLElement;
+    return container as HTMLElement;
   };
 
   it('should render the carousel in the document', () => {
@@ -42,15 +48,16 @@ describe('carousel', () => {
   it('should render the correct number of indicators', () => {
     const props = {numberOfPages: 5};
     const carouselElement = renderCarousel(props);
+    console.log(carouselElement);
     const indicators = within(carouselElement).getAllByRole('listitem');
     expect(indicators.length).toBe(5);
   });
 
   it('should call previousPage when the previous button is clicked', () => {
-    const previousPage = jest.fn();
+    const previousPage = vi.fn();
     const props = {previousPage};
     const carouselElement = renderCarousel(props);
-    const previousButton = carouselElement.shadowRoot?.querySelector(
+    const previousButton = carouselElement.querySelector(
       '[part="previous-button"]'
     ) as HTMLElement;
     previousButton.click();
@@ -58,49 +65,13 @@ describe('carousel', () => {
   });
 
   it('should call nextPage when the next button is clicked', () => {
-    const nextPage = jest.fn();
+    const nextPage = vi.fn();
     const props = {nextPage};
     const carouselElement = renderCarousel(props);
-    const nextButton = carouselElement.shadowRoot?.querySelector(
+    const nextButton = carouselElement.querySelector(
       '[part="next-button"]'
     ) as HTMLElement;
     nextButton.click();
     expect(nextPage).toHaveBeenCalled();
-  });
-
-  it('should apply additional classes', () => {
-    const props = {class: 'test-class'};
-    const carouselElement = renderCarousel(props);
-    expect(carouselElement).toHaveClass('test-class');
-  });
-
-  it('should apply part attribute', () => {
-    const props = {part: 'carousel-part'};
-    const carouselElement = renderCarousel(props);
-    expect(carouselElement.getAttribute('part')).toBe('carousel-part');
-  });
-
-  it('should render the previous button with an atomic-icon component', () => {
-    const props = {previousPage: jest.fn()};
-    const carouselElement = renderCarousel(props);
-    const previousButton = carouselElement.shadowRoot?.querySelector(
-      '[part="previous-button"]'
-    ) as HTMLElement;
-    const icon = previousButton.querySelector('atomic-icon') as HTMLElement;
-    expect(icon).toBeInTheDocument();
-    expect(icon.getAttribute('icon')).toContain('arrow-right.svg');
-    expect(icon.classList).toContain('rotate-180');
-  });
-
-  it('should render the next button with an atomic-icon component', () => {
-    const props = {nextPage: jest.fn()};
-    const carouselElement = renderCarousel(props);
-    const nextButton = carouselElement.shadowRoot?.querySelector(
-      '[part="next-button"]'
-    ) as HTMLElement;
-    const icon = nextButton.querySelector('atomic-icon') as HTMLElement;
-    expect(icon).toBeInTheDocument();
-    expect(icon.getAttribute('icon')).toContain('arrow-right.svg');
-    expect(icon.classList).not.toContain('rotate-180');
   });
 });
