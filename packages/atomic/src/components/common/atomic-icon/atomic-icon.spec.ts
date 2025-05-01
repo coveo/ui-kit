@@ -4,7 +4,7 @@ import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import DOMPurify from 'dompurify';
 import {html} from 'lit';
-import {expect, MockInstance, vi} from 'vitest';
+import {expect, MockInstance, vi, describe, beforeEach, it} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
 
