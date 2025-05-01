@@ -1,14 +1,12 @@
 name: Create release
 on:
-  schedule:
-    # At 02:00 (UTC) Wednesday/ 21:00 (ETC) every Tuesday.
-    - cron: '0 2 * * 3'
-  workflow_dispatch:
+  workflow_call:
     inputs:
       version:
         description: '⚠ be sure of yourself ⚠'
         required: false
         default: ''
+        type: string
       debug:
         description: 'Add DEBUG=* to the env if true'
         type: boolean
