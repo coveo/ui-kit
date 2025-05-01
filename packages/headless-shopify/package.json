@@ -33,7 +33,9 @@
     "@coveo/ci": "1.0.0"
   },
   "dependencies": {
-    "@coveo/headless": "3.22.4"
+    "@coveo/headless": "3.22.4",
+    "@coveo/relay": "1.1.3",
+    "uuid": "^11.0.0"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
