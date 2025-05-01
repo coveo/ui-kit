@@ -2,7 +2,7 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi, expect} from 'vitest';
+import {vi, expect, describe, it} from 'vitest';
 import {
   renderTriStateCheckbox,
   TriStateCheckboxProps,

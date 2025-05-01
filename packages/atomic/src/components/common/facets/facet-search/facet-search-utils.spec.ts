@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {highlightSearchResult} from './facet-search-utils';
 
 describe('#highlightSearchResult', () => {

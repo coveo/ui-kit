@@ -2,7 +2,7 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {vi} from 'vitest';
+import {describe, beforeEach, it, expect, vi} from 'vitest';
 import {SafeStorage, StorageItems} from './local-storage-utils';
 
 describe('Safe local storage', () => {
