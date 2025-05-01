@@ -11,6 +11,7 @@ module.exports = {
   ],
   bracketSpacing: false,
   singleQuote: true,
+  tailwindFunctions: ['tw', 'classMap', 'multiClassMap'],
   trailingComma: 'es5',
   endOfLine: 'auto',
   overrides: [
