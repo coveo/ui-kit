@@ -68,3 +68,15 @@ export function queueEventForParent(
   }
   eventQueueMap.get(parent)!.push({event, element});
 }
+
+export function enqueueOrDispatchInitializationEvent(
+  parent: Element,
+  event: InitializeEvent,
+  element: Element
+) {
+  if (isParentReady(parent)) {
+    element.dispatchEvent(event);
+  } else {
+    queueEventForParent(parent, event, element);
+  }
+}

@@ -2,6 +2,8 @@
 export default {
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
+  'atomic-commerce-pager': async () =>
+    await import('./atomic-commerce-pager/atomic-commerce-pager.js'),
   'atomic-commerce-sort-dropdown': async () =>
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'

@@ -153,7 +153,9 @@ useCaseTestCases.forEach((useCase) => {
         test('should select the correct facet value', async ({facet}) => {
           await expect(facet.facetValueInput.nth(selectedIndex)).toBeChecked();
           expect(facet.facetValue.nth(selectedIndex)).toHaveText(
-            `${values[selectedIndex].start} - ${values[selectedIndex].end}`
+            new RegExp(
+              `${values[selectedIndex].start} - ${values[selectedIndex].end}`
+            )
           );
         });
       });

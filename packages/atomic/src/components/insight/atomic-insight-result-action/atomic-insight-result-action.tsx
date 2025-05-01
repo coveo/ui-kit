@@ -92,6 +92,7 @@ export class AtomicInsightResultAction
         this.bindings.engine.dispatch(
           this.actions.logCopyToClipboard(this.result)
         );
+        navigator.clipboard.writeText(this.result?.clickUri);
         break;
       case Actions.PostToFeed:
         this.bindings.engine.dispatch(
