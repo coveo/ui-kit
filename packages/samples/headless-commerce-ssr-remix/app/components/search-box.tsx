@@ -1,3 +1,4 @@
+import {useInitializeRecentQueries} from '@/app/hooks/use-recent-queries';
 import {
   useInstantProducts,
   useRecentQueriesList,
@@ -9,12 +10,16 @@ import RecentQueries from './recent-queries';
 
 export default function SearchBox() {
   const {state, methods} = useSearchBox();
-  const {state: recentQueriesState} = useRecentQueriesList();
+  const {state: recentQueriesState, methods: recentQueriesController} =
+    useRecentQueriesList();
   const {state: instantProductsState, methods: instantProductsController} =
     useInstantProducts();
 
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSelectingSuggestion, setIsSelectingSuggestion] = useState(false);
+
+  // Sync recent queries from localStorage when the component loads
+  useInitializeRecentQueries(recentQueriesController?.updateRecentQueries);
 
   const onSearchBoxInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsSelectingSuggestion(true);

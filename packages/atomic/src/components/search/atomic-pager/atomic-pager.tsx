@@ -21,9 +21,9 @@ import {
   PagerPageButton,
   PagerPageButtons,
   PagerPreviousButton,
-} from '../../common/pager/pager-buttons';
-import {PagerGuard} from '../../common/pager/pager-guard';
-import {PagerNavigation} from '../../common/pager/pager-navigation';
+} from '../../common/pager/stencil-pager-buttons';
+import {PagerGuard} from '../../common/pager/stencil-pager-guard';
+import {PagerNavigation} from '../../common/pager/stencil-pager-navigation';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
