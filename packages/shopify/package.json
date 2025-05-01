@@ -1,9 +1,9 @@
 {
-  "name": "@coveo/headless-shopify",
+  "name": "@coveo/shopify",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coveo/ui-kit.git",
-    "directory": "packages/headless-shopify"
+    "directory": "packages/shopify"
   },
   "main": "./dist/headless.shopify.esm.js",
   "module": "./dist/headless.shopify.esm.js",
