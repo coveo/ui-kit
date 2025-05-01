@@ -1,6 +1,6 @@
 import {multiClassMap} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import {createRipple} from '../../utils/ripple';
@@ -109,6 +109,8 @@ export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
     }
   };
 
+  const radioButtonRef = props.ref ? ref(props.ref) : nothing;
+
   return html`
     <input
       type="radio"
@@ -123,7 +125,7 @@ export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
       @change=${onChange}
       @keydown=${handleKeyDown}
       @mousedown=${onMouseDown}
-      ${ref(props.ref)}
+      ${radioButtonRef}
     />
   `;
 };
