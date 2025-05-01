@@ -42,7 +42,7 @@ import {
   ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {TabGuard} from '../../../common/tab-manager/tab-guard';
+import {TabGuard} from '../../../common/tabs/tab-guard';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

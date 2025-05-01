@@ -56,7 +56,7 @@ import {
   FacetValueProps,
   FacetValue,
 } from '../../../common/facets/facet-value/facet-value';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 

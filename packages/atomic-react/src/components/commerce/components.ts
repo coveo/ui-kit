@@ -1,5 +1,6 @@
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
+  AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
@@ -11,6 +12,12 @@ export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommercePager = createComponent({
+  tagName: 'atomic-commerce-pager',
+  react: React,
+  elementClass: LitAtomicCommercePager,
 });
 
 export const AtomicCommerceSortDropdown = createComponent({

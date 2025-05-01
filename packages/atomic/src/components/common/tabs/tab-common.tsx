@@ -1,4 +1,4 @@
-import {buildCustomEvent} from '../../../utils/event-utils';
+import {buildCustomEvent} from '../../../utils/event-utils.js';
 
 export const tabLoadedEventName = 'atomic/tabRendered';
 
