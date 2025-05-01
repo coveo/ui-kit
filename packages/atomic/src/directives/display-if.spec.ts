@@ -1,6 +1,6 @@
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {describe, beforeEach, test, expect} from 'vitest';
+import {describe, beforeEach, afterEach, test, expect} from 'vitest';
 import {displayIf} from './display-if';
 
 describe('displayIf', () => {
@@ -13,7 +13,7 @@ describe('displayIf', () => {
     render() {
       return html`${displayIf(
         this.shouldDisplay,
-        html`<span id="content">Visible</span>`
+        () => html`<span id="content">Visible</span>`
       )}`;
     }
   }

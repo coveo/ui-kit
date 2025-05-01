@@ -1,7 +1,16 @@
 import i18next from 'i18next';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {Mock, vi} from 'vitest';
+import {
+  Mock,
+  vi,
+  describe,
+  beforeEach,
+  afterEach,
+  it,
+  test,
+  expect,
+} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
