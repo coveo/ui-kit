@@ -1,3 +1,7 @@
+.generated-answer-content__answer {
+  white-space: pre-wrap;
+}
+
 .generated-answer-content__answer--streaming::after {
   content: '';
   width: 0.5rem;
