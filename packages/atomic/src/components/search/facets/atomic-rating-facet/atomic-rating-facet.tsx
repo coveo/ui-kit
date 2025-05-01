@@ -35,7 +35,7 @@ import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../../../common/facets/facet-value-link/facet-value-link';
-import {FacetValuesGroup} from '../../../common/facets/facet-values-group/facet-values-group';
+import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';

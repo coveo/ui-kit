@@ -16,7 +16,7 @@ import {
 export type {DictionaryFieldContextPayload};
 
 /**
- * The `DictionaryFieldContext` controller allows specifying which [dictionary field](https://docs.coveo.com/en/2036/index-content/about-fields#dictionary-fields) keys to retrieve.
+ * The `DictionaryFieldContext` controller allows specifying which [dictionary field](https://docs.coveo.com/en/2036/) keys to retrieve.
  *
  * Example: [dictionary-field-context.fn.ts](https://github.com/coveo/ui-kit/blob/master/packages/samples/headless-react/src/components/dictionary-field-context/dictionary-field-context.fn.ts)
  *
