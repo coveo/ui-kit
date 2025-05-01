@@ -4,7 +4,7 @@ import {buildFakeProduct} from './product';
 
 export const defaultState: ProductListingState = {
   responseId: 'some-id',
-  products: [buildFakeProduct(), buildFakeProduct()],
+  products: [buildFakeProduct()],
   isLoading: false,
   error: null,
 };
