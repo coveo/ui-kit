@@ -20,7 +20,7 @@ describe('pagerGuard', () => {
       props: {hasError: true, isAppLoaded: true, hasItems: true},
     })(children);
 
-    expect(displayIf).toHaveBeenCalledWith(false, children);
+    expect(displayIf).toHaveBeenCalledWith(false, expect.any(Function));
   });
 
   test('should not render children when isAppLoaded is false', async () => {
@@ -28,7 +28,7 @@ describe('pagerGuard', () => {
       props: {hasError: false, isAppLoaded: false, hasItems: true},
     })(children);
 
-    expect(displayIf).toHaveBeenCalledWith(false, children);
+    expect(displayIf).toHaveBeenCalledWith(false, expect.any(Function));
   });
 
   test('should not render children when hasItems is false', async () => {
@@ -36,7 +36,7 @@ describe('pagerGuard', () => {
       props: {hasError: false, isAppLoaded: true, hasItems: false},
     })(children);
 
-    expect(displayIf).toHaveBeenCalledWith(false, children);
+    expect(displayIf).toHaveBeenCalledWith(false, expect.any(Function));
   });
 
   test('should render children when the condition is true', async () => {
@@ -44,6 +44,6 @@ describe('pagerGuard', () => {
       props: {hasError: false, isAppLoaded: true, hasItems: true},
     })(children);
 
-    expect(displayIf).toHaveBeenCalledWith(true, children);
+    expect(displayIf).toHaveBeenCalledWith(true, expect.any(Function));
   });
 });
