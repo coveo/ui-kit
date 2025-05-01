@@ -16,3 +16,17 @@ export const selectActiveTab = createSelector(
     return '';
   }
 );
+
+export const selectActiveTabExpression = createSelector(
+  (state?: TabSetState) => state,
+  (tabSetState?: TabSetState): string => {
+    if (!tabSetState) {
+      return '';
+    }
+    if (!selectActiveTab(tabSetState)) {
+      return '';
+    }
+
+    return tabSetState[selectActiveTab(tabSetState)].expression;
+  }
+);

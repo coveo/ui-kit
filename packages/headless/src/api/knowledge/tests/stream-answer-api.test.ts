@@ -7,7 +7,11 @@ import {
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
+  expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithoutAnyTab,
   streamAnswerAPIStateMock,
+  streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyTab,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -18,6 +22,7 @@ describe('#streamAnswerApi', () => {
     afterAll(() => {
       vi.useRealTimers();
     });
+
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
@@ -37,6 +42,38 @@ describe('#streamAnswerApi', () => {
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('will merge tab expression in request constant query if expression is not a blank string', () => {
+      constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithATabWithAnExpression as any,
+        'select'
+      );
+
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithATabWithAnExpression as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithATabWithAnExpression
+      );
+    });
+
+    it('will not include tab info if there is NO tab', () => {
+      constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyTab as any,
+        'select'
+      );
+
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyTab as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
     });
   });
 
