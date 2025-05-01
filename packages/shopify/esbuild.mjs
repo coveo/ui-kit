@@ -24,26 +24,38 @@ const buenoPath = isCDN
 /**
  * @type {import('esbuild').BuildOptions}
  */
-const base = {
-  entryPoints: ['src/index.ts'],
+
+const entries = [
+  {
+    entryPoint: 'src/headless/index.ts',
+    outfile: 'shopify.headless.esm.js',
+  },
+  {
+    entryPoint: 'src/utils/index.ts',
+    outfile: 'shopify.utils.esm.js',
+  },
+];
+
+const getBase = (entryPoint) => ({
+  entryPoints: [entryPoint],
   bundle: true,
   banner: {js: apacheLicense()},
   define: {
     'process.env.NODE_ENV': JSON.stringify('production'),
   },
-};
+});
 
-function nodeEsm() {
+function nodeEsm(base, outfile) {
   return build({
     ...base,
     platform: 'node',
     packages: 'external',
-    outfile: 'dist/headless.shopify.esm.js',
+    outfile: `dist/${outfile}`,
     format: 'esm',
   });
 }
 
-function browserEsm() {
+function browserEsm(base, outfile) {
   const replaceBuenoImport = {
     name: 'replace-bueno-import',
     setup(build) {
@@ -56,7 +68,7 @@ function browserEsm() {
   return build({
     ...base,
     platform: 'browser',
-    outfile: 'cdn/headless.shopify.esm.js',
+    outfile: `cdn/${outfile}`,
     format: 'esm',
     watch: isDevMode,
     external: [buenoPath],
@@ -65,7 +77,14 @@ function browserEsm() {
 }
 
 async function main() {
-  await Promise.all([nodeEsm(), browserEsm()]);
+  await Promise.all(
+    entries
+      .map(async ({entryPoint, outfile}) => {
+        const base = getBase(entryPoint);
+        return [nodeEsm(base, outfile), browserEsm(base, outfile)];
+      })
+      .flat()
+  );
 }
 
 main();
