@@ -1,5 +1,6 @@
 import '@coveo/atomic/themes/coveo.css';
 import {setCustomElementsManifest} from '@storybook/web-components';
+import {render} from 'lit';
 import customElements from '../custom-elements.json';
 import {defineCustomElements} from '../dist/atomic/loader/index.js';
 
@@ -22,3 +23,34 @@ export const parameters = {
     },
   },
 };
+
+export const decorators = [
+  (Story) => {
+    const story = Story();
+
+    console.log('Story:', story);
+
+    if (story && story._$litType$) {
+      const container = document.createElement('div');
+
+      render(story, container);
+
+      disableAnalytics(container, [
+        'atomic-recs-interface',
+        'atomic-insight-interface',
+        'atomic-search-interface',
+        'atomic-commerce-interface',
+      ]);
+
+      return container;
+    }
+  },
+];
+
+function disableAnalytics(container, selectors) {
+  selectors.forEach((selector) => {
+    container.querySelectorAll(selector).forEach((element) => {
+      element.setAttribute('analytics', 'false');
+    });
+  });
+}

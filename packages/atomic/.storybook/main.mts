@@ -50,6 +50,7 @@ const config: StorybookConfig = {
     {from: '../dist/atomic/lang', to: '/lang'},
     {from: '../dist/atomic', to: './assets'},
     {from: '../dist/atomic/lang', to: './lang'},
+    {from: './public', to: '/'},
   ],
   addons: [
     '@storybook/addon-essentials',
