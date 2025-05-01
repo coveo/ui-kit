@@ -12,5 +12,5 @@ export const pagerGuard: FunctionalComponentGuard<PagerGuardProps> =
   ({props}) =>
   (children) => {
     const condition = !props.hasError && props.isAppLoaded && props.hasItems;
-    return displayIf(condition, html`${children}`);
+    return displayIf(condition, () => html`${children}`);
   };
