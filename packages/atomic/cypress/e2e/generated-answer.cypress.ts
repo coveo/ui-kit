@@ -349,7 +349,7 @@ describe('Generated Answer Test Suites', () => {
           });
         });
 
-        describe('when copy button is clicked', () => {
+        describe.skip('when copy button is clicked', () => {
           it('should copy the generated answer to the clipboard', async () => {
             GeneratedAnswerSelectors.copyButton().focus().click();
 

@@ -231,7 +231,11 @@ async function deployComponents(
   return backOff(async () => {
     await sfdx.deploySource({
       alias: options.scratchOrg.alias,
-      packagePaths: ['force-app/main', 'force-app/examples'],
+      packagePaths: [
+        'force-app/main',
+        'force-app/examples',
+        'force-app/solutionExamples',
+      ],
     });
 
     log('Components deployed.');

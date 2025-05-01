@@ -50,6 +50,13 @@ export interface NonceBindings {
   createScriptElement: () => HTMLScriptElement;
 }
 
+export interface AdoptedStylesBindings {
+  /**
+   * An array of adopted stylesheets to be used in the shadow DOM.
+   */
+  addAdoptedStyleSheets: (stylesheet: CSSStyleSheet) => void;
+}
+
 export type AnyBindings = CommonBindings<AnyEngineType, AnyStore, HTMLElement>;
 
 export type AnyEngineType =
