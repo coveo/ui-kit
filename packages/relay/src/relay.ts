@@ -11,6 +11,8 @@ import {
 } from "./config/config";
 import { createEnvironmentManager } from "./environment/manager/manager";
 import { RelayPayload } from "./relay-payload";
+export { buildBrowserEnvironment } from "./environment/browser/browser";
+export { clientIdKey } from "./constants";
 
 /**
  * Function that detaches an event callback.

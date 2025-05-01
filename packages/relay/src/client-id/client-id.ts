@@ -1,5 +1,6 @@
 import { validate } from "uuid";
 import { EnvironmentManager } from "../environment/manager/manager";
+import { clientIdKey } from "../constants";
 
 export interface ClientIdManager {
   getClientId: () => string;
@@ -10,16 +11,15 @@ export function createClientIdManager(
 ): ClientIdManager {
   return {
     getClientId: () => {
-      const key = "visitorId";
       const environment = environmentManager.get();
       const storage = environment.storage;
 
-      const existingClientId = storage.getItem(key);
+      const existingClientId = storage.getItem(clientIdKey);
       const clientId =
         existingClientId && validate(existingClientId)
           ? existingClientId
           : environment.generateUUID();
-      storage.setItem(key, clientId);
+      storage.setItem(clientIdKey, clientId);
       return clientId;
     },
   };
