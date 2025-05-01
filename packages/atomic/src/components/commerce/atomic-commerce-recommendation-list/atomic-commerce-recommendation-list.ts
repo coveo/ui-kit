@@ -9,6 +9,7 @@ import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {FocusTargetController} from '@/src/utils/accessibility-utils';
 import {randomID} from '@/src/utils/utils';
 import {NumberValue} from '@coveo/bueno';
+import {Schema, StringValue} from '@coveo/bueno';
 import {
   Product,
   Recommendations,
@@ -17,30 +18,21 @@ import {
   Summary,
   buildRecommendations,
 } from '@coveo/headless/commerce';
-import {
-  Component,
-  Element,
-  Fragment,
-  Listen,
-  Method,
-  Prop,
-  State,
-  Watch,
-  h,
-} from '@stencil/core';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
-import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../utils/stencil-utils';
-import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
-import {Carousel} from '../../common/carousel';
+import {ContextRoot} from '@lit/context';
+import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
+import {when} from 'lit/directives/when.js';
+import {renderResultPlaceholders} from '../../common/atomic-result-placeholder/placeholders-lit';
+import {renderCarousel} from '../../common/carousel';
+import {renderHeading} from '../../common/heading';
 import {createAppLoadedListener} from '../../common/interface/store';
-import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
-import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
-import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
+import {
+  renderListWrapper,
+  renderListRoot,
+} from '../../common/item-list/display-wrapper-lit';
+import {renderGridLayout} from '../../common/item-list/grid-layout';
 import {
   ItemListCommon,
   ItemRenderingFunction,
@@ -51,8 +43,7 @@ import {
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
-// TODO: change to atomic-commerce-recommendation-interface when merged
-import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 import styles from './atomic-commerce-recommendation-list.tw.css';
 
@@ -76,7 +67,7 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
 @bindings()
 @withTailwindStyles
 export class AtomicCommerceRecommendationList
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -192,7 +183,7 @@ export class AtomicCommerceRecommendationList
   }
 
   public initialize() {
-    this.validateProductsPerPage();
+    this.validateProps();
     this.validateSlotID();
     this.initRecommendations();
     this.initSummary();
@@ -236,14 +227,22 @@ export class AtomicCommerceRecommendationList
     };
   }
 
-  private validateProductsPerPage() {
-    const msg = new NumberValue({
-      min: 1,
-    }).validate(this.productsPerPage!);
-
-    if (msg) {
-      this.error = new Error(`The "productsPerPage" is invalid: ${msg}`);
-    }
+  private validateProps() {
+    new Schema({
+      density: new StringValue({
+        constrainTo: ['normal', 'comfortable', 'compact'],
+      }),
+      display: new StringValue({constrainTo: ['grid', 'list', 'table']}),
+      imageSize: new StringValue({
+        constrainTo: ['small', 'large', 'icon', 'none'],
+      }),
+      productsPerPage: new NumberValue({min: 0}),
+    }).validate({
+      density: this.density,
+      display: this.display,
+      imageSize: this.imageSize,
+      productsPerPage: this.productsPerPage,
+    });
   }
 
   private validateSlotID() {
@@ -275,13 +274,6 @@ export class AtomicCommerceRecommendationList
     })(html`${this.bindings.i18n.t(this.recommendationsState.headline)}`)}`;
   }
 
-  private get currentIndex() {
-    return Math.abs(
-      (this.currentPage * this.productsPerPage!) %
-        this.recommendationsState.products.length
-    );
-  }
-
   private get subsetRecommendations() {
     if (!this.productsPerPage) {
       return this.recommendationsState.products;
@@ -299,12 +291,11 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private get hasPagination() {
-    return this.numberOfPages > 1;
-  }
-
-  private get shouldRenderWithCarousel() {
-    return this.hasPagination && this.augmentedRecommendationListState.hasItems;
+  private get currentIndex() {
+    return Math.abs(
+      (this.currentPage * this.productsPerPage!) %
+        this.recommendationsState.products.length
+    );
   }
 
   private get hasNoProducts() {
@@ -420,7 +411,7 @@ export class AtomicCommerceRecommendationList
   @bindingGuard()
   @errorGuard()
   render() {
-    return html` ${when(
+    return html`${when(
       this.shouldRender,
       () =>
         html`${when(
@@ -428,21 +419,17 @@ export class AtomicCommerceRecommendationList
           () => html`<slot></slot>`,
           () =>
             html`${this.renderListHeading()}
-            ${this.shouldRenderWithCarousel
-              ? carousel({
-                  props: {
-                    bindings: this.bindings,
-                    previousPage: () => this.previousPage(),
-                    nextPage: () => this.nextPage(),
-                    numberOfPages: this.numberOfPages,
-                    currentPage: this.currentPage,
-                  },
-                })(
-                  html`<div class="px-3">
-                    ${this.renderRecommendationList()}
-                  </div>`
-                )
-              : this.renderRecommendationList()}`
+            ${renderCarousel({
+              props: {
+                bindings: this.bindings,
+                previousPage: () => this.previousPage(),
+                nextPage: () => this.nextPage(),
+                numberOfPages: this.numberOfPages,
+                currentPage: this.currentPage,
+              },
+            })(
+              html`<div class="px-3">${this.renderRecommendationList()}</div>`
+            )}`
         )}`,
       () => nothing
     )}`;
@@ -472,11 +459,13 @@ export class AtomicCommerceRecommendationList
         html`${keyed(
           props.key,
           html`<atomic-product
-            .content=${props.content}
+            .content=${this.productTemplateProvider.getTemplateContent(product)}
             .density=${props.density}
             .display=${props.display}
             .imageSize=${props.imageSize}
-            .linkContent=${props.linkContent}
+            .linkContent=${props.display === 'grid'
+              ? this.productTemplateProvider.getLinkTemplateContent(product)
+              : this.productTemplateProvider.getEmptyLinkTemplateContent()}
             .loadingFlag=${props.loadingFlag}
             .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}
@@ -492,11 +481,7 @@ export class AtomicCommerceRecommendationList
     this.productListCommon.updateBreakpoints();
     const listClasses = this.computeListDisplayClasses();
 
-    if (
-      !this.productTemplateRegistered ||
-      this.productTemplateProvider.hasError ||
-      this.error
-    ) {
+    if (!this.productTemplateRegistered || this.error) {
       return;
     }
     return renderListWrapper({
@@ -525,6 +510,9 @@ export class AtomicCommerceRecommendationList
   }
 
   private get shouldRender() {
+    if (!this.productTemplateRegistered || this.error) {
+      return false;
+    }
     if (this.hasNoProducts) {
       this.bindings.store.unsetLoadingFlag(this.loadingFlag);
       return false;
