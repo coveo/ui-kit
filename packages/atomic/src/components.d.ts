@@ -3638,8 +3638,6 @@ export namespace Components {
          */
         "clearFiltersOnTabChange"?: boolean;
     }
-    interface AtomicTabManagerBar {
-    }
     interface AtomicTabPopover {
         "closePopoverOnFocusOut": (event: FocusEvent) => Promise<void>;
         "setButtonVisibility": (isVisible: boolean) => Promise<void>;
@@ -5946,12 +5944,6 @@ declare global {
         prototype: HTMLAtomicTabManagerElement;
         new (): HTMLAtomicTabManagerElement;
     };
-    interface HTMLAtomicTabManagerBarElement extends Components.AtomicTabManagerBar, HTMLStencilElement {
-    }
-    var HTMLAtomicTabManagerBarElement: {
-        prototype: HTMLAtomicTabManagerBarElement;
-        new (): HTMLAtomicTabManagerBarElement;
-    };
     interface HTMLAtomicTabPopoverElement extends Components.AtomicTabPopover, HTMLStencilElement {
     }
     var HTMLAtomicTabPopoverElement: {
@@ -6188,7 +6180,6 @@ declare global {
         "atomic-tab-bar": HTMLAtomicTabBarElement;
         "atomic-tab-button": HTMLAtomicTabButtonElement;
         "atomic-tab-manager": HTMLAtomicTabManagerElement;
-        "atomic-tab-manager-bar": HTMLAtomicTabManagerBarElement;
         "atomic-tab-popover": HTMLAtomicTabPopoverElement;
         "atomic-table-element": HTMLAtomicTableElementElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -9648,8 +9639,6 @@ declare namespace LocalJSX {
          */
         "clearFiltersOnTabChange"?: boolean;
     }
-    interface AtomicTabManagerBar {
-    }
     interface AtomicTabPopover {
     }
     /**
@@ -9950,7 +9939,6 @@ declare namespace LocalJSX {
         "atomic-tab-bar": AtomicTabBar;
         "atomic-tab-button": AtomicTabButton;
         "atomic-tab-manager": AtomicTabManager;
-        "atomic-tab-manager-bar": AtomicTabManagerBar;
         "atomic-tab-popover": AtomicTabPopover;
         "atomic-table-element": AtomicTableElement;
         "atomic-text": AtomicText;
@@ -10814,7 +10802,6 @@ declare module "@stencil/core" {
              * individual tab within the manager.
              */
             "atomic-tab-manager": LocalJSX.AtomicTabManager & JSXBase.HTMLAttributes<HTMLAtomicTabManagerElement>;
-            "atomic-tab-manager-bar": LocalJSX.AtomicTabManagerBar & JSXBase.HTMLAttributes<HTMLAtomicTabManagerBarElement>;
             "atomic-tab-popover": LocalJSX.AtomicTabPopover & JSXBase.HTMLAttributes<HTMLAtomicTabPopoverElement>;
             /**
              * The `atomic-table-element` element defines a table column in a result list.

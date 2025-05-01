@@ -1,13 +1,19 @@
 import type {CommerceStore} from '@/src/components.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
-import type {InitializeEvent} from '@/src/utils/init-queue.js';
+import {
+  markParentAsReady,
+  type InitializeEvent,
+} from '@/src/utils/init-queue.js';
 import {initializeEventName} from '@/src/utils/initialization-lit-stencil-common-utils.js';
 import type {CommerceEngine} from '@coveo/headless/commerce';
 import {ContextProvider} from '@lit/context';
 import {type i18n} from 'i18next';
 import {html, LitElement, nothing, TemplateResult} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
-import type {CommerceBindings} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
+import type {
+  AtomicCommerceInterface,
+  CommerceBindings,
+} from '../../../../../src/components/commerce/atomic-commerce-interface/atomic-commerce-interface.js';
 import type {BaseAtomicInterface} from '../../../../../src/components/common/interface/interface-common.js';
 import {fixture} from '../../../fixture.js';
 import {createTestI18n} from '../../../i18n-utils.js';
@@ -47,6 +53,7 @@ export class FixtureAtomicCommerceInterface
     super();
     createTestI18n().then((i18n) => {
       this.i18n = i18n;
+      markParentAsReady(this);
     });
     this.host = this;
   }
@@ -75,7 +82,7 @@ export class FixtureAtomicCommerceInterface
 export const defaultBindings = {
   interfaceElement: {
     type: 'product-listing',
-  } as HTMLAtomicCommerceInterfaceElement,
+  } as AtomicCommerceInterface,
   store: {
     state: {
       iconAssetsPath: './assets',
