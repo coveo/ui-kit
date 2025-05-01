@@ -13,7 +13,6 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {randomID} from '../../../utils/stencil-utils';
-import {FieldsetGroup} from '../../common/fieldset-group';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {Choices} from '../../common/items-per-page/choices';
 import {
@@ -26,6 +25,7 @@ import {
   validateInitialChoice,
 } from '../../common/items-per-page/validate';
 import {PagerGuard} from '../../common/pager/stencil-pager-guard';
+import {FieldsetGroup} from '../../common/stencil-fieldset-group';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**

@@ -13,7 +13,7 @@ describe('displayIf', () => {
     render() {
       return html`${displayIf(
         this.shouldDisplay,
-        html`<span id="content">Visible</span>`
+        () => html`<span id="content">Visible</span>`
       )}`;
     }
   }
