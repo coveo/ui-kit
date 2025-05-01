@@ -1,3 +1,4 @@
+import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
@@ -6,7 +7,7 @@ import ArrowTopIcon from '../../../../images/arrow-top-rounded.svg';
 import CloseIcon from '../../../../images/close.svg';
 import '../../atomic-icon/atomic-icon';
 import {renderButton} from '../../button';
-import {heading} from '../../heading';
+import {renderHeading} from '../../heading';
 
 export interface FacetHeaderProps {
   i18n: i18n;
@@ -19,7 +20,9 @@ export interface FacetHeaderProps {
   headerRef?: (element?: HTMLButtonElement) => void;
 }
 
-export const facetHeader = (props: FacetHeaderProps) => {
+export const renderFacetHeader: FunctionalComponent<FacetHeaderProps> = ({
+  props,
+}) => {
   const label = props.i18n.t(props.label);
   const expandFacet = props.i18n.t('expand-facet', {label});
   const collapseFacet = props.i18n.t('collapse-facet', {label});
@@ -44,7 +47,7 @@ export const facetHeader = (props: FacetHeaderProps) => {
         ref: (el) => props.headerRef?.(el as HTMLButtonElement),
       },
     })(
-      html`${heading({
+      html`${renderHeading({
           props: {level: props.headingLevel, class: 'truncate'},
         })(html`${label}`)}
         <atomic-icon

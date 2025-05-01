@@ -3,8 +3,8 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi} from 'vitest';
-import {facetHeader, FacetHeaderProps} from './facet-header';
+import {vi, expect} from 'vitest';
+import {renderFacetHeader, FacetHeaderProps} from './facet-header';
 
 describe('facetHeader', () => {
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
@@ -46,7 +46,9 @@ describe('facetHeader', () => {
       headerRef: vi.fn(),
     };
     const mergedProps = {...defaultProps, ...props};
-    return renderFunctionFixture(html`${facetHeader(mergedProps)}`);
+    return renderFunctionFixture(
+      html`${renderFacetHeader({props: mergedProps})}`
+    );
   };
 
   it('renders the clear button with the correct aria label attribute', async () => {
