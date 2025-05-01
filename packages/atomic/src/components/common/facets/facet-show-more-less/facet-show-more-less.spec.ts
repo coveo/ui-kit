@@ -3,7 +3,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi} from 'vitest';
+import {vi, expect} from 'vitest';
 import {
   FacetShowMoreProps,
   renderFacetShowMoreLess,
@@ -54,7 +54,7 @@ describe('renderFacetShowMoreLess', () => {
 
   it('renders nothing when both canShowLessValues and canShowMoreValues are false', async () => {
     const container = await renderComponent();
-    expect(container.textContent).toBe(''); // TODO: use locators
+    expect(container.textContent).toBe('');
   });
 
   it('renders only the "show more" button when canShowMoreValues is true', async () => {
@@ -97,26 +97,24 @@ describe('renderFacetShowMoreLess', () => {
   it('should have the correct part attribute for the "show more" button', async () => {
     await renderComponent({canShowMoreValues: true});
     const showMoreButton = await locators.showMoreButton.element();
-    expect(showMoreButton).toHaveAttribute('part', 'show-more');
+    await expect.element(showMoreButton).toHaveAttribute('part', 'show-more');
   });
 
   it('should have the correct part attribute for the "show less" button', async () => {
     await renderComponent({canShowLessValues: true});
     const showLessButton = await locators.showLessButton.element();
-    expect(showLessButton).toHaveAttribute('part', 'show-less');
+    await expect.element(showLessButton).toHaveAttribute('part', 'show-less');
   });
 
   it('should have the correct part attribute for the icon', async () => {
     await renderComponent({canShowMoreValues: true});
     await renderComponent({canShowLessValues: true});
-    expect(locators.showLessIcon).toHaveAttribute(
-      'part',
-      'show-more-less-icon'
-    );
-    expect(locators.showMoreIcon).toHaveAttribute(
-      'part',
-      'show-more-less-icon'
-    );
+    await expect
+      .element(locators.showLessIcon)
+      .toHaveAttribute('part', 'show-more-less-icon');
+    await expect
+      .element(locators.showMoreIcon)
+      .toHaveAttribute('part', 'show-more-less-icon');
   });
 
   it('calls #onShowMore when the "show more" button is clicked', async () => {
