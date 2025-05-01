@@ -5,7 +5,7 @@ import atomicReactJson from '../../packages/atomic-react/package.json' with {typ
 import atomicJson from '../../packages/atomic/package.json' with {type: 'json'};
 import headlessJson from '../../packages/headless/package.json' with {type: 'json'};
 import buenoJson from '../../packages/bueno/package.json' with {type: 'json'};
-import headlessShopifyJson from '../../packages/headless-shopify/package.json' with {type: 'json'};
+import headlessShopifyJson from '../../packages/shopify/package.json' with {type: 'json'};
 import rootJson from '../../package.json' with {type: 'json'};
 
 const releaseCommit = execSync('git rev-parse HEAD').toString().trim();
@@ -48,7 +48,7 @@ console.log(execSync(`
     --resolve ATOMIC_HOSTED_PAGE_MAJOR_VERSION=${atomicHostedPage.major} \
     --resolve ATOMIC_HOSTED_PAGE_MINOR_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor} \
     --resolve ATOMIC_HOSTED_PAGE_PATCH_VERSION=${atomicHostedPage.major}.${atomicHostedPage.minor}.${atomicHostedPage.patch} \
-    --resolve HEADLESS_SHOPIFY_MAJOR_VERSION=${headlessShopify.major} \
-    --resolve HEADLESS_SHOPIFY_MINOR_VERSION=${headlessShopify.major}.${headlessShopify.minor} \
-    --resolve HEADLESS_SHOPIFY_PATCH_VERSION=${headlessShopify.major}.${headlessShopify.minor}.${headlessShopify.patch} \
+    --resolve SHOPIFY_MAJOR_VERSION=${headlessShopify.major} \
+    --resolve SHOPIFY_MINOR_VERSION=${headlessShopify.major}.${headlessShopify.minor} \
+    --resolve SHOPIFY_PATCH_VERSION=${headlessShopify.major}.${headlessShopify.minor}.${headlessShopify.patch} \
     --resolve GITHUB_RUN_ID=${process.env.RUN_ID}`.replaceAll(/\s+/g, ' ').trim()).toString());

@@ -1,5 +1,5 @@
 {
-  "name": "headless-shopify",
+  "name": "shopify",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "targets": {
     "release:phase1": {},
