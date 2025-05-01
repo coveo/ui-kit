@@ -55,9 +55,18 @@ describe('bindings decorator', () => {
   let interfaceElement: TestInterfaceElement;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
-  const setupElement = async <T extends LitElement>(tag = 'test-element') => {
-    element = document.createElement(tag) as InitializableComponent<Bindings> &
-      T;
+  const setupElement = async <
+    T extends InitializableComponent<Bindings> & LitElement,
+  >(
+    tag: string = 'test-element',
+    preSetupCallback?: (element: T) => void
+  ) => {
+    element = document.createElement(tag) as T;
+
+    if (preSetupCallback) {
+      preSetupCallback(element as T);
+    }
+
     interfaceElement.appendChild(element);
 
     await element.updateComplete;
@@ -113,5 +122,17 @@ describe('bindings decorator', () => {
     await setupElement();
 
     expect(element.initialize).toHaveBeenCalled();
+  });
+
+  it('should set the error property when an exception occurs during initialization', async () => {
+    const mockError = new Error('Initialization failed');
+
+    await setupElement('test-element', (el) => {
+      vi.spyOn(el as TestElement, 'initialize').mockImplementation(() => {
+        throw mockError;
+      });
+    });
+
+    expect(element.error).toEqual(mockError);
   });
 });

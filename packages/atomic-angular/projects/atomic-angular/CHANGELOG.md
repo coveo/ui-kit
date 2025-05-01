@@ -1,3 +1,34 @@
+## <small>3.3.27 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- [Version Bump][skip ci]: ui-kit publish ([4c08d65](https://github.com/coveo/ui-kit/commits/4c08d65))
+- [Version Bump][skip ci]: ui-kit publish ([d3b46a5](https://github.com/coveo/ui-kit/commits/d3b46a5))
+- [Version Bump][skip ci]: ui-kit publish ([d9abb20](https://github.com/coveo/ui-kit/commits/d9abb20))
+- [Version Bump][skip ci]: ui-kit publish ([ea556e6](https://github.com/coveo/ui-kit/commits/ea556e6))
+- [Version Bump][skip ci]: ui-kit publish ([2110a9e](https://github.com/coveo/ui-kit/commits/2110a9e))
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- [Version Bump][skip ci]: ui-kit publish ([e8b1c6a](https://github.com/coveo/ui-kit/commits/e8b1c6a))
+- [Version Bump][skip ci]: ui-kit publish ([05f5f59](https://github.com/coveo/ui-kit/commits/05f5f59))
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(atomic): add component error custom element (#5043) ([de7b876](https://github.com/coveo/ui-kit/commits/de7b876)), closes [#5043](https://github.com/coveo/ui-kit/issues/5043)
+- chore(atomic): fix initialization issues when combining Lit interfaces with Stencil components (#507 ([1190f8c](https://github.com/coveo/ui-kit/commits/1190f8c)), closes [#5070](https://github.com/coveo/ui-kit/issues/5070)
+- chore(atomic): improvements for vitest, tailwind & storybook (#5157) ([42d30d7](https://github.com/coveo/ui-kit/commits/42d30d7)), closes [#5157](https://github.com/coveo/ui-kit/issues/5157)
+- chore(atomic): migrate atomic-commerce-interface to Lit (#5017) ([7f03f9b](https://github.com/coveo/ui-kit/commits/7f03f9b)), closes [#5017](https://github.com/coveo/ui-kit/issues/5017)
+- chore(atomic): migrate atomic-commerce-sort-dropdown (#5127) ([8bac154](https://github.com/coveo/ui-kit/commits/8bac154)), closes [#5127](https://github.com/coveo/ui-kit/issues/5127)
+- chore(atomic): migrate atomic-icon (#4998) ([cace446](https://github.com/coveo/ui-kit/commits/cace446)), closes [#4998](https://github.com/coveo/ui-kit/issues/4998)
+
+## <small>3.3.26 (2025-04-30)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- chore(atomic): migrate atomic-commerce-interface to Lit (#5017) ([7f03f9b](https://github.com/coveo/ui-kit/commits/7f03f9b)), closes [#5017](https://github.com/coveo/ui-kit/issues/5017)
+- chore(atomic): migrate atomic-commerce-sort-dropdown (#5127) ([8bac154](https://github.com/coveo/ui-kit/commits/8bac154)), closes [#5127](https://github.com/coveo/ui-kit/issues/5127)
+
+## <small>3.3.25 (2025-04-30)</small>
+
+- chore(atomic): migrate atomic-commerce-interface to Lit (#5017) ([7f03f9b](https://github.com/coveo/ui-kit/commits/7f03f9b)), closes [#5017](https://github.com/coveo/ui-kit/issues/5017)
+- chore(atomic): migrate atomic-commerce-sort-dropdown (#5127) ([8bac154](https://github.com/coveo/ui-kit/commits/8bac154)), closes [#5127](https://github.com/coveo/ui-kit/issues/5127)
+
 ## <small>3.3.22 (2025-04-16)</small>
 
 - chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
