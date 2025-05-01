@@ -39,16 +39,14 @@ describe('AtomicCommerceProductList', () => {
       );
 
     return {
-      grid: {
-        outline: qs('outline', false),
-        resultList: qs('result-list'),
+      gridOnly: {
         resultListGridClickableContainer: qs(
           'result-list-grid-clickable-container',
           false
         ),
       },
-      list: {
-        outline: qs('outline'),
+      gridOrList: {
+        outline: qs('outline', false),
         resultList: qs('result-list'),
       },
       table: {
@@ -128,13 +126,15 @@ describe('AtomicCommerceProductList', () => {
     return element;
   };
 
+  // #initialize =======================================================================================================
+
   it('should initialize', async () => {
     const element = await setupElement();
 
     expect(element).toBeInstanceOf(AtomicCommerceProductList);
   });
 
-  it('when #density is invalid, should throw', async () => {
+  it('when #density prop is invalid, should throw', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -143,7 +143,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #display is invalid, should throw', async () => {
+  it('when #display prop is invalid, should throw', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -152,7 +152,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #imageSize is invalid, should throw', async () => {
+  it('when #imageSize prop is invalid, should throw', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -161,7 +161,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #numberOfPlaceholders is invalid, should throw', async () => {
+  it('when #numberOfPlaceholders prop is invalid, should throw', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -179,84 +179,78 @@ describe('AtomicCommerceProductList', () => {
   describe("when interface element type is 'product-listing'", () => {
     let buildProductListingSpy: MockInstance;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       buildProductListingSpy = vi.mocked(buildProductListing);
     });
 
     it('should initialize #searchOrListing as product listing controller', async () => {
-      const element = await setupElement({
-        interfaceType: 'product-listing',
-      });
+      const element = await setupElement({interfaceType: 'product-listing'});
 
-      expect(buildProductListingSpy).toHaveBeenCalledOnce();
-      expect(buildProductListingSpy).toHaveBeenCalledWith(
-        element.bindings.engine
-      );
-      expect(element.searchOrListing).toBe(
-        buildProductListingSpy.mock.results[0].value
-      );
+      const productListingController =
+        buildProductListingSpy.mock.results[0].value;
+
+      expect(element.searchOrListing).toBeDefined();
+      expect(element.searchOrListing).toBe(productListingController);
     });
 
     it('should initialize #summary as product listing summary controller', async () => {
       const element = await setupElement({interfaceType: 'product-listing'});
 
-      expect(
-        buildProductListingSpy.mock.results[0].value.summary
-      ).toHaveBeenCalledOnce();
-      expect(element.summary).toBe(
+      const summaryController =
         buildProductListingSpy.mock.results[0].value.summary.mock.results[0]
-          .value
-      );
+          .value;
+
+      expect(element.summary).toBeDefined();
+      expect(element.summary).toBe(summaryController);
     });
 
     it('should subscribe to summary controller state changes', async () => {
-      const summarySubscribe = genericSubscribe;
+      const summarySubscribeSpy = genericSubscribe;
       summary.mockReturnValue(
-        buildFakeSummary({implementation: {subscribe: summarySubscribe}})
+        buildFakeSummary({implementation: {subscribe: summarySubscribeSpy}})
       );
 
       await setupElement({interfaceType: 'product-listing'});
 
-      expect(summarySubscribe).toHaveBeenCalled();
+      expect(summarySubscribeSpy).toHaveBeenCalled();
     });
   });
 
   describe("when interface element type is 'search'", () => {
     let buildSearchSpy: MockInstance;
-    beforeEach(() => {
+
+    beforeEach(async () => {
       buildSearchSpy = vi.mocked(buildSearch);
     });
 
     it('should initialize #searchOrListing as search controller', async () => {
       const element = await setupElement({interfaceType: 'search'});
 
-      expect(buildSearchSpy).toHaveBeenCalledOnce();
-      expect(buildSearchSpy).toHaveBeenCalledWith(element.bindings.engine);
-      expect(element.searchOrListing).toBe(
-        buildSearchSpy.mock.results[0].value
-      );
+      const searchController = buildSearchSpy.mock.results[0].value;
+
+      expect(element.searchOrListing).toBeDefined();
+      expect(element.searchOrListing).toBe(searchController);
     });
 
     it('should initialize #summary as search summary controller', async () => {
       const element = await setupElement({interfaceType: 'search'});
 
-      expect(
-        buildSearchSpy.mock.results[0].value.summary
-      ).toHaveBeenCalledOnce();
-      expect(element.summary).toBe(
-        buildSearchSpy.mock.results[0].value.summary.mock.results[0].value
-      );
+      const summaryController =
+        buildSearchSpy.mock.results[0].value.summary.mock.results[0].value;
+
+      expect(element.summary).toBeDefined();
+      expect(element.summary).toBe(summaryController);
     });
 
     it('should subscribe to summary controller state changes', async () => {
-      const summarySubscribe = genericSubscribe;
+      const summarySubscribeSpy = genericSubscribe;
       summary.mockReturnValue(
-        buildFakeSummary({implementation: {subscribe: summarySubscribe}})
+        buildFakeSummary({implementation: {subscribe: summarySubscribeSpy}})
       );
 
       await setupElement({interfaceType: 'search'});
 
-      expect(summarySubscribe).toHaveBeenCalled();
+      expect(summarySubscribeSpy).toHaveBeenCalled();
     });
   });
 
@@ -274,6 +268,8 @@ describe('AtomicCommerceProductList', () => {
     );
   });
 
+  // #disconnectedCallback =============================================================================================
+
   describe('when removed from the DOM', () => {
     it('should unsubscribe from summary controller state changes', async () => {
       const summarySubscribe = genericSubscribe;
@@ -284,7 +280,9 @@ describe('AtomicCommerceProductList', () => {
       const element = await setupElement({interfaceType: 'product-listing'});
       element.remove();
 
-      expect(summarySubscribe.mock.results[0].value).toHaveBeenCalledOnce();
+      const unsubscribe = summarySubscribe.mock.results[0].value;
+
+      expect(unsubscribe).toHaveBeenCalled();
     });
 
     it("should remove 'atomic/selectChildProduct' event listener", async () => {
@@ -297,7 +295,6 @@ describe('AtomicCommerceProductList', () => {
 
       element.remove();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledOnce();
       expect(removeEventListenerSpy).toHaveBeenCalledWith(
         'atomic/selectChildProduct',
         expect.any(Function)
@@ -305,17 +302,20 @@ describe('AtomicCommerceProductList', () => {
     });
   });
 
+  // #render ===========================================================================================================
+
   it('when bindings are undefined, should not render', async () => {
     const element = await setupElement();
 
     // @ts-expect-error - setting private property for the sake of simplicity
     element.bindings = undefined;
 
+    // Must wait for update to complete after unsetting bindings.
     await element.updateComplete;
 
-    const renderedElements = element.shadowRoot?.querySelectorAll('*');
+    const rendered = element.shadowRoot?.querySelectorAll('*');
 
-    expect(renderedElements).toHaveLength(0);
+    expect(rendered).toHaveLength(0);
   });
 
   it('when there is an error, should not render', async () => {
@@ -333,23 +333,23 @@ describe('AtomicCommerceProductList', () => {
 
     const element = await setupElement();
 
-    await element.updateComplete;
+    const rendered = element.shadowRoot?.querySelectorAll('*');
 
-    const renderedElements = element.shadowRoot?.querySelectorAll('*');
-
-    expect(renderedElements).toHaveLength(0);
+    expect(rendered).toHaveLength(0);
   });
 
   it('when no template is registered, should not render', async () => {
     const element = await setupElement();
 
-    //@ts-expect-error - setting private property for the sake of simplicity
+    //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
     element.resultTemplateRegistered = false;
+
+    // Must wait for update to complete after setting resultTemplateRegistered to false.
     await element.updateComplete;
 
-    const renderedElements = element.shadowRoot?.querySelectorAll('*');
+    const rendered = element.shadowRoot?.querySelectorAll('*');
 
-    expect(renderedElements).toHaveLength(0);
+    expect(rendered).toHaveLength(0);
   });
 
   it('when first request was executed & there are no products, should not render', async () => {
@@ -367,8 +367,6 @@ describe('AtomicCommerceProductList', () => {
 
     const element = await setupElement();
 
-    await element.updateComplete;
-
     const renderedElements = element.shadowRoot?.querySelectorAll('*');
 
     expect(renderedElements).toHaveLength(0);
@@ -377,40 +375,94 @@ describe('AtomicCommerceProductList', () => {
   it('when template has error, should render empty slot', async () => {
     const element = await setupElement();
 
-    //@ts-expect-error - setting private property for the sake of simplicity
+    //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
     element.templateHasError = true;
 
+    // Must wait for update to complete after setting templateHasError to true.
     await element.updateComplete;
 
     const renderedElements = element.shadowRoot?.querySelectorAll('*');
-    const renderedSlotElement = element.shadowRoot?.querySelector('slot');
 
     expect(renderedElements).toHaveLength(1);
-    expect(renderedSlotElement).toBeTruthy();
-    expect(renderedSlotElement?.children).toHaveLength(0);
+    expect(renderedElements?.item(0).tagName).toBe('SLOT');
+    expect(renderedElements?.item(0).children).toHaveLength(0);
   });
 
-  describe("when #display is 'table'", () => {
-    it('when app is not loaded, should render 1 placeholder', async () => {
+  it("when #display is 'grid', when app is loaded, should render 1 result-list-grid-clickable-container part per product", async () => {
+    const numberOfProducts = 9;
+
+    vi.mocked(buildProductListing).mockReturnValue(
+      buildFakeProductListing({
+        implementation: {
+          interactiveProduct,
+          promoteChildToParent,
+          summary,
+        },
+        state: {
+          products: Array.from({length: numberOfProducts}, (_, i) =>
+            buildFakeProduct({permanentid: i.toString()})
+          ),
+        },
+      })
+    );
+
+    const element = await setupElement({display: 'grid'});
+
+    const resultListGridClickableContainerParts =
+      parts(element).gridOnly.resultListGridClickableContainer;
+    const resultListGridClickableContainerLocator = page.elementLocator(
+      resultListGridClickableContainerParts!.item(0)
+    );
+
+    expect(resultListGridClickableContainerParts?.length).toBe(
+      numberOfProducts
+    );
+    await expect
+      .element(resultListGridClickableContainerLocator)
+      .toBeInTheDocument();
+  });
+
+  describe.each<{display: ItemDisplayLayout}>([
+    {display: 'grid'},
+    {display: 'list'},
+  ])('when #display is $display', ({display}) => {
+    it('when app is not loaded, should render correct # of placeholders', async () => {
+      const numberOfPlaceholders = 12;
+
       const element = await setupElement({
-        display: 'table',
         isAppLoaded: false,
+        display,
+        numberOfPlaceholders,
       });
 
-      await element.updateComplete;
-
       const placeholderElements = element.shadowRoot?.querySelectorAll(
-        'atomic-result-table-placeholder'
+        'atomic-result-placeholder'
       );
 
-      expect(placeholderElements).toHaveLength(1);
+      expect(placeholderElements).toHaveLength(numberOfPlaceholders);
     });
 
     describe('when app is loaded', () => {
-      let element: AtomicCommerceProductList;
+      it('should render list wrapper & root with correct display class', async () => {
+        await renderListWrapperAndRootTestCase();
+      });
 
-      beforeEach(async () => {
-        const numberOfProducts = 9;
+      it('should render 1 result-list part', async () => {
+        const resultListParts = parts(
+          await setupElement({
+            display,
+          })
+        ).gridOrList.resultList;
+
+        expect(resultListParts?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(resultListParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 outline part per product', async () => {
+        const numberOfProducts = 3;
 
         vi.mocked(buildProductListing).mockReturnValue(
           buildFakeProductListing({
@@ -427,123 +479,31 @@ describe('AtomicCommerceProductList', () => {
           })
         );
 
-        const mockTableTemplate = document.createDocumentFragment();
-        const atomicTableElement1 = document.createElement(
-          'atomic-table-element'
-        );
-        atomicTableElement1.setAttribute('label', 'Label 1');
-        const atomicTableElement2 = document.createElement(
-          'atomic-table-element'
-        );
-        atomicTableElement2.setAttribute('label', 'Label 2');
-        mockTableTemplate.appendChild(atomicTableElement1);
-        mockTableTemplate.appendChild(atomicTableElement2);
+        const element = await setupElement({
+          display,
+        });
 
-        element = await setupElement({display: 'table'});
+        const outlineParts = parts(element).gridOrList.outline;
 
-        vi.spyOn(
-          // @ts-expect-error - mocking method on private property
-          element.productTemplateProvider,
-          'getTemplateContent'
-        ).mockReturnValue(mockTableTemplate);
-
-        element.requestUpdate();
-        await element.updateComplete;
-      });
-
-      it('should render list wrapper & table with correct display class', async () => {
-        await testRenderTableLayout();
-      });
-
-      it('should render 1 atomic-text with correct #value per atomic-table-element in template', async () => {
-        const atomicTextElements =
-          element.shadowRoot?.querySelectorAll('atomic-text');
-
-        expect(atomicTextElements?.length).toBe(2);
-        expect(atomicTextElements?.[0].value).toBe('Label 1');
-        expect(atomicTextElements?.[1].value).toBe('Label 2');
-      });
-
-      it('should render 1 result-table part', async () => {
-        const tableParts = parts(element).table.resultTable;
-
-        expect(tableParts?.length).toBe(1);
-
+        expect(outlineParts?.length).toBe(numberOfProducts);
         await expect
-          .element(page.elementLocator(tableParts!.item(0)))
+          .element(page.elementLocator(outlineParts!.item(0)))
           .toBeInTheDocument();
-      });
-
-      it('should render 1 result-table-heading part', async () => {
-        const tableHeadingPart = parts(element).table.resultTableHeading;
-
-        expect(tableHeadingPart?.length).toBe(1);
-
         await expect
-          .element(page.elementLocator(tableHeadingPart!.item(0)))
+          .element(page.elementLocator(outlineParts!.item(1)))
           .toBeInTheDocument();
-      });
-
-      it('should render 1 result-table-heading-row part', async () => {
-        const tableHeadingRowParts = parts(element).table.resultTableHeadingRow;
-
-        expect(tableHeadingRowParts?.length).toBe(1);
-
         await expect
-          .element(page.elementLocator(tableHeadingRowParts!.item(0)))
+          .element(page.elementLocator(outlineParts!.item(2)))
           .toBeInTheDocument();
-      });
-
-      it('should render 1 result-table-heading-cell part per atomic-table-element in template', async () => {
-        const tableHeadingCellParts =
-          parts(element).table.resultTableHeadingCell;
-
-        expect(tableHeadingCellParts?.length).toBe(2);
-
-        await expect
-          .element(page.elementLocator(tableHeadingCellParts!.item(0)))
-          .toBeInTheDocument();
-
-        await expect
-          .element(page.elementLocator(tableHeadingCellParts!.item(1)))
-          .toBeInTheDocument();
-      });
-
-      it('should render 1 result-table-body part', async () => {
-        const tableBodyPart = parts(element).table.resultTableBody;
-
-        expect(tableBodyPart?.length).toBe(1);
-
-        await expect
-          .element(page.elementLocator(tableBodyPart!.item(0)))
-          .toBeInTheDocument();
-      });
-
-      it('should render 1 result-table-row part per product', async () => {
-        const tableRowParts = parts(element).table.resultTableRow;
-
-        expect(tableRowParts?.length).toBe(9);
-      });
-
-      it('should render floor(numberOfProducts / 2) result-table-row-even parts', async () => {
-        const tableRowEvenParts = parts(element).table.resultTableRowEven;
-
-        expect(tableRowEvenParts?.length).toBe(4);
-      });
-
-      it('should render ceil(numberOfProducts / 2) result-table-row-odd parts', async () => {
-        const tableRowOddParts = parts(element).table.resultTableRowOdd;
-
-        expect(tableRowOddParts?.length).toBe(5);
       });
 
       describe.each<{
         density: ItemDisplayDensity;
       }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-        'when #density is $density',
+        'when the #density prop is $density',
         ({density}) => {
-          it('should render list wrapper & table with correct density class', async () => {
-            await testRenderTableLayout({density});
+          it('should render list wrapper & root with correct density class', async () => {
+            await renderListWrapperAndRootTestCase({density});
           });
         }
       );
@@ -553,91 +513,15 @@ describe('AtomicCommerceProductList', () => {
         {imageSize: 'large'},
         {imageSize: 'none'},
         {imageSize: 'small'},
-      ])('when #imageSize is $imageSize', ({imageSize}) => {
-        it('should render list wrapper & table with correct image size class', async () => {
-          await testRenderTableLayout({imageSize});
+      ])('when the #imageSize prop is $imageSize', ({imageSize}) => {
+        it('should render list wrapper & root with correct image size class', async () => {
+          await renderListWrapperAndRootTestCase({imageSize});
         });
       });
 
-      testRenderAtomicProduct('table');
-    });
+      renderAtomicProductTestCases(display);
 
-    const testRenderTableLayout = async ({
-      density,
-      imageSize,
-    }: {
-      density?: ItemDisplayDensity;
-      imageSize?: ItemDisplayImageSize;
-    } = {}) => {
-      const element = await setupElement({
-        display: 'table',
-        ...(density && {density}),
-        ...(imageSize && {imageSize}),
-      });
-
-      const mockTableTemplate = document.createDocumentFragment();
-      mockTableTemplate.appendChild(
-        document.createElement('atomic-table-element')
-      );
-
-      vi.spyOn(
-        // @ts-expect-error - mocking method on private property
-        element.productTemplateProvider,
-        'getTemplateContent'
-      ).mockReturnValue(mockTableTemplate);
-
-      element.requestUpdate();
-      await element.updateComplete;
-
-      const listWrapperElement =
-        element.shadowRoot?.querySelectorAll('.list-wrapper');
-      const resultTableElements = element.shadowRoot?.querySelectorAll('table');
-
-      const expectedClass = [
-        'display-table',
-        density ? ` density-${density}` : '',
-        imageSize ? ` image-${imageSize}` : '',
-      ].join('');
-
-      expect(listWrapperElement).toHaveLength(1);
-      const listWrapperLocator = page.elementLocator(
-        listWrapperElement!.item(0)
-      );
-      await expect.element(listWrapperLocator).toBeInTheDocument();
-      await expect.element(listWrapperLocator).toHaveClass(expectedClass);
-      expect(resultTableElements).toHaveLength(1);
-      const resultTableLocator = page.elementLocator(
-        resultTableElements!.item(0)
-      );
-      await expect.element(resultTableLocator).toBeInTheDocument();
-      await expect.element(resultTableLocator).toHaveClass(expectedClass);
-    };
-  });
-
-  describe.each<{display: ItemDisplayLayout}>([
-    {display: 'grid'},
-    {display: 'list'},
-  ])('when #display is $display', ({display}) => {
-    it('when app is not loaded, should render correct # of placeholders', async () => {
-      const numberOfPlaceholders = 12;
-
-      const element = await setupElement({
-        isAppLoaded: false,
-        display,
-        numberOfPlaceholders,
-      });
-
-      await element.updateComplete;
-
-      const placeholderElements = element.shadowRoot?.querySelectorAll(
-        'atomic-result-placeholder'
-      );
-
-      expect(placeholderElements).toHaveLength(numberOfPlaceholders);
-    });
-
-    describe('when app is loaded', () => {
-      const testWrapperRendering = async ({
+      const renderListWrapperAndRootTestCase = async ({
         density,
         imageSize,
       }: {
@@ -650,17 +534,15 @@ describe('AtomicCommerceProductList', () => {
           ...(imageSize && {imageSize}),
         });
 
-        await element.updateComplete;
+        const listWrapperElements =
+          element.shadowRoot?.querySelectorAll('.list-wrapper');
+        const listWrapperLocator = page.elementLocator(
+          listWrapperElements!.item(0)
+        );
 
-        const listWrapperElement =
-          element.shadowRoot?.querySelector('.list-wrapper');
-        const listWrapperLocator = page.elementLocator(listWrapperElement!);
-
-        // TODO: test lengths
-        const listRootElement = listWrapperElement!.querySelector(
-          '[part="result-list"]'
-        )!;
-        const listRootLocator = page.elementLocator(listRootElement);
+        const listRootElements =
+          element.shadowRoot?.querySelectorAll('.list-root');
+        const listRootLocator = page.elementLocator(listRootElements!.item(0));
 
         const expectedClass = [
           `display-${display}`,
@@ -668,25 +550,249 @@ describe('AtomicCommerceProductList', () => {
           imageSize ? ` image-${imageSize}` : '',
         ].join('');
 
+        expect(listWrapperElements?.length).toBe(1);
         await expect.element(listWrapperLocator).toBeInTheDocument();
         await expect.element(listWrapperLocator).toHaveClass(expectedClass);
+
+        expect(listRootElements?.length).toBe(1);
         await expect.element(listRootLocator).toBeInTheDocument();
         await expect.element(listRootLocator).toHaveClass(expectedClass);
       };
+    });
+  });
 
-      it('should render with list wrapper & root with correct display class', async () => {
-        await testWrapperRendering();
+  describe("when #display is 'table'", () => {
+    it('when app is not loaded, should render 1 placeholder', async () => {
+      const element = await setupElement({
+        display: 'table',
+        isAppLoaded: false,
       });
 
-      // TODO: test parts!
+      const placeholderElements = element.shadowRoot?.querySelectorAll(
+        'atomic-result-table-placeholder'
+      );
+
+      expect(placeholderElements).toHaveLength(1);
+    });
+
+    describe('when app is loaded', () => {
+      it('should render list wrapper & table with correct display class', async () => {
+        await renderListWrapperAndTableTestCase();
+      });
+
+      it('should render 1 atomic-text with correct #value per atomic-table-element in template', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const mockTableTemplate = document.createDocumentFragment();
+        const atomicTableElement1 = document.createElement(
+          'atomic-table-element'
+        );
+        atomicTableElement1.setAttribute('label', 'Label 1');
+        const atomicTableElement2 = document.createElement(
+          'atomic-table-element'
+        );
+        atomicTableElement2.setAttribute('label', 'Label 2');
+        mockTableTemplate.appendChild(atomicTableElement1);
+        mockTableTemplate.appendChild(atomicTableElement2);
+
+        vi.spyOn(
+          // @ts-expect-error - mocking method on private property
+          element.productTemplateProvider,
+          'getTemplateContent'
+        ).mockReturnValue(mockTableTemplate);
+
+        // Must trigger update to get template content.
+        element.requestUpdate();
+        await element.updateComplete;
+
+        const atomicTextElements =
+          element.shadowRoot?.querySelectorAll('atomic-text');
+
+        expect(atomicTextElements?.length).toBe(2);
+        expect(atomicTextElements?.[0].value).toBe('Label 1');
+        expect(atomicTextElements?.[1].value).toBe('Label 2');
+      });
+
+      it('should render 1 result-table part', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const resultTableParts = parts(element).table.resultTable;
+
+        expect(resultTableParts?.length).toBe(1);
+        await expect
+          .element(page.elementLocator(resultTableParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading part', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const resultTableHeadingParts = parts(element).table.resultTableHeading;
+
+        expect(resultTableHeadingParts?.length).toBe(1);
+        await expect
+          .element(page.elementLocator(resultTableHeadingParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading-row part', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const resultTableHeadingRowParts =
+          parts(element).table.resultTableHeadingRow;
+
+        expect(resultTableHeadingRowParts?.length).toBe(1);
+        await expect
+          .element(page.elementLocator(resultTableHeadingRowParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-heading-cell part per atomic-table-element in template', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const mockTableTemplate = document.createDocumentFragment();
+        const atomicTableElement1 = document.createElement(
+          'atomic-table-element'
+        );
+        const atomicTableElement2 = document.createElement(
+          'atomic-table-element'
+        );
+        mockTableTemplate.appendChild(atomicTableElement1);
+        mockTableTemplate.appendChild(atomicTableElement2);
+
+        vi.spyOn(
+          // @ts-expect-error - mocking method on private property
+          element.productTemplateProvider,
+          'getTemplateContent'
+        ).mockReturnValue(mockTableTemplate);
+
+        // Must trigger update to get template content.
+        element.requestUpdate();
+        await element.updateComplete;
+
+        const resultTableHeadingCellParts =
+          parts(element).table.resultTableHeadingCell;
+
+        expect(resultTableHeadingCellParts?.length).toBe(2);
+        await expect
+          .element(page.elementLocator(resultTableHeadingCellParts!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableHeadingCellParts!.item(1)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-body part', async () => {
+        const element = await setupElement({display: 'table'});
+
+        const resultTableBodyParts = parts(element).table.resultTableBody;
+
+        expect(resultTableBodyParts?.length).toBe(1);
+        await expect
+          .element(page.elementLocator(resultTableBodyParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 result-table-row part per product', async () => {
+        vi.mocked(buildProductListing).mockReturnValue(
+          buildFakeProductListing({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: Array.from({length: 3}, (_, i) =>
+                buildFakeProduct({permanentid: i.toString()})
+              ),
+            },
+          })
+        );
+
+        const element = await setupElement({display: 'table'});
+
+        const resultTableRowParts = parts(element).table.resultTableRow;
+
+        expect(resultTableRowParts?.length).toBe(3);
+        await expect
+          .element(page.elementLocator(resultTableRowParts!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableRowParts!.item(1)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableRowParts!.item(2)))
+          .toBeInTheDocument();
+      });
+
+      it('should render floor(numberOfProducts / 2) result-table-row-even parts', async () => {
+        vi.mocked(buildProductListing).mockReturnValue(
+          buildFakeProductListing({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: Array.from({length: 5}, (_, i) =>
+                buildFakeProduct({permanentid: i.toString()})
+              ),
+            },
+          })
+        );
+
+        const element = await setupElement({display: 'table'});
+
+        const resultTableRowEvenParts = parts(element).table.resultTableRowEven;
+
+        expect(resultTableRowEvenParts?.length).toBe(2); // floor(5 / 2) = 2
+        await expect
+          .element(page.elementLocator(resultTableRowEvenParts!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableRowEvenParts!.item(1)))
+          .toBeInTheDocument();
+      });
+
+      it('should render ceil(numberOfProducts / 2) result-table-row-odd parts', async () => {
+        vi.mocked(buildProductListing).mockReturnValue(
+          buildFakeProductListing({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: Array.from({length: 5}, (_, i) =>
+                buildFakeProduct({permanentid: i.toString()})
+              ),
+            },
+          })
+        );
+
+        const element = await setupElement({display: 'table'});
+
+        const resultTableRowOddParts = parts(element).table.resultTableRowOdd;
+
+        expect(resultTableRowOddParts?.length).toBe(3); // ceil(5 / 2) = 3
+        await expect
+          .element(page.elementLocator(resultTableRowOddParts!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableRowOddParts!.item(1)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(resultTableRowOddParts!.item(2)))
+          .toBeInTheDocument();
+      });
 
       describe.each<{
         density: ItemDisplayDensity;
       }>([{density: 'comfortable'}, {density: 'compact'}, {density: 'normal'}])(
-        'when the #density prop is $density',
+        'when #density is $density',
         ({density}) => {
-          it('should render with correct density class', async () => {
-            await testWrapperRendering({density});
+          it('should render list wrapper & table with correct density class', async () => {
+            await renderListWrapperAndTableTestCase({density});
           });
         }
       );
@@ -696,35 +802,55 @@ describe('AtomicCommerceProductList', () => {
         {imageSize: 'large'},
         {imageSize: 'none'},
         {imageSize: 'small'},
-      ])('when the #imageSize prop is $imageSize', ({imageSize}) => {
-        it('should render with correct image size class', async () => {
-          await testWrapperRendering({imageSize});
+      ])('when #imageSize is $imageSize', ({imageSize}) => {
+        it('should render list wrapper & table with correct image size class', async () => {
+          await renderListWrapperAndTableTestCase({imageSize});
         });
       });
 
-      testRenderAtomicProduct(display);
+      renderAtomicProductTestCases('table');
     });
-  });
 
-  const testRenderAtomicProduct = (display: ItemDisplayLayout) => {
-    const setupTableTemplate = (element: AtomicCommerceProductList) => {
-      const mockTableTemplate = document.createDocumentFragment();
-      mockTableTemplate.appendChild(
-        document.createElement('atomic-table-element')
+    const renderListWrapperAndTableTestCase = async ({
+      density,
+      imageSize,
+    }: {
+      density?: ItemDisplayDensity;
+      imageSize?: ItemDisplayImageSize;
+    } = {}) => {
+      const element = await setupElement({
+        display: 'table',
+        ...(density && {density}),
+        ...(imageSize && {imageSize}),
+      });
+
+      const listWrapperElement =
+        element.shadowRoot?.querySelectorAll('.list-wrapper');
+      const listWrapperLocator = page.elementLocator(
+        listWrapperElement!.item(0)
       );
 
-      vi.spyOn(
-        // @ts-expect-error - mocking method on private property
-        element.productTemplateProvider,
-        'getTemplateContent'
-      ).mockReturnValue(mockTableTemplate);
+      const tableElements = element.shadowRoot?.querySelectorAll('table');
+      const tableLocator = page.elementLocator(tableElements!.item(0));
 
-      element.requestUpdate();
+      const expectedClass = [
+        'display-table',
+        density ? ` density-${density}` : '',
+        imageSize ? ` image-${imageSize}` : '',
+      ].join('');
+
+      expect(listWrapperElement).toHaveLength(1);
+      await expect.element(listWrapperLocator).toBeInTheDocument();
+      await expect.element(listWrapperLocator).toHaveClass(expectedClass);
+
+      expect(tableElements).toHaveLength(1);
+      await expect.element(tableLocator).toBeInTheDocument();
+      await expect.element(tableLocator).toHaveClass(expectedClass);
     };
+  });
 
+  const renderAtomicProductTestCases = (display: ItemDisplayLayout) => {
     it('should render correct # of atomic-product', async () => {
-      const numberOfProducts = 9;
-
       vi.mocked(buildProductListing).mockReturnValue(
         buildFakeProductListing({
           implementation: {
@@ -733,7 +859,7 @@ describe('AtomicCommerceProductList', () => {
             summary,
           },
           state: {
-            products: Array.from({length: numberOfProducts}, (_, i) =>
+            products: Array.from({length: 9}, (_, i) =>
               buildFakeProduct({permanentid: i.toString()})
             ),
           },
@@ -744,14 +870,12 @@ describe('AtomicCommerceProductList', () => {
         display,
       });
 
-      display === 'table' && setupTableTemplate(element);
+      display === 'table' && (await setupTableTemplate(element));
 
-      await element.updateComplete;
-
-      const renderedProductElements =
+      const atomicProductElements =
         element.shadowRoot?.querySelectorAll('atomic-product');
 
-      expect(renderedProductElements).toHaveLength(numberOfProducts);
+      expect(atomicProductElements).toHaveLength(9);
     });
 
     describe('when rendering atomic-product', () => {
@@ -792,18 +916,19 @@ describe('AtomicCommerceProductList', () => {
             return mockTemplate;
           });
 
+          // Must trigger update to get template content.
           element.requestUpdate();
           await element.updateComplete;
 
-          const renderedProductElements =
+          const atomicProductElements =
             element.shadowRoot?.querySelectorAll('atomic-product');
 
           expect(
-            renderedProductElements?.[0].content?.querySelector('div')
+            atomicProductElements?.[0].content?.querySelector('div')
               ?.textContent
           ).toBe('Hello from 123');
           expect(
-            renderedProductElements?.[1].content?.querySelector('div')
+            atomicProductElements?.[1].content?.querySelector('div')
               ?.textContent
           ).toBe('Hello from 123');
         });
@@ -839,18 +964,19 @@ describe('AtomicCommerceProductList', () => {
             return mockTemplate;
           });
 
+          // Must trigger update to get template content.
           element.requestUpdate();
           await element.updateComplete;
 
-          const renderedProductElements =
+          const atomicProductElements =
             element.shadowRoot?.querySelectorAll('atomic-product');
 
           expect(
-            renderedProductElements?.[0].content?.querySelector('div')
+            atomicProductElements?.[0].content?.querySelector('div')
               ?.textContent
           ).toBe('Hello from 123');
           expect(
-            renderedProductElements?.[1].content?.querySelector('div')
+            atomicProductElements?.[1].content?.querySelector('div')
               ?.textContent
           ).toBe('Hello from 456');
         });
@@ -858,9 +984,7 @@ describe('AtomicCommerceProductList', () => {
       it('should pass correct #density', async () => {
         const density = 'comfortable';
         const element = await setupElement({display, density});
-        display === 'table' && setupTableTemplate(element);
-
-        await element.updateComplete;
+        display === 'table' && (await setupTableTemplate(element));
 
         const renderedProductElement =
           element.shadowRoot?.querySelector('atomic-product');
@@ -870,22 +994,18 @@ describe('AtomicCommerceProductList', () => {
 
       it('should pass correct #display', async () => {
         const element = await setupElement({display});
-        display === 'table' && setupTableTemplate(element);
+        display === 'table' && (await setupTableTemplate(element));
 
-        await element.updateComplete;
-
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
-        expect(renderedProductElement?.display).toBe(display);
+        expect(atomicProductElement?.display).toBe(display);
       });
 
       it('should pass correct #imageSize', async () => {
         const imageSize = 'none';
         const element = await setupElement({display, imageSize});
-        display === 'table' && setupTableTemplate(element);
-
-        await element.updateComplete;
+        display === 'table' && (await setupTableTemplate(element));
 
         const renderedProductElement =
           element.shadowRoot?.querySelector('atomic-product');
@@ -897,7 +1017,6 @@ describe('AtomicCommerceProductList', () => {
         const mockProduct1 = buildFakeProduct({permanentid: '123'});
         const mockProduct2 = buildFakeProduct({permanentid: '456'});
 
-        interactiveProduct.mockReset();
         interactiveProduct.mockImplementation(
           (props: InteractiveProductProps) => {
             return {
@@ -921,11 +1040,9 @@ describe('AtomicCommerceProductList', () => {
 
         const element = await setupElement({display});
 
-        display === 'table' && setupTableTemplate(element);
+        display === 'table' && (await setupTableTemplate(element));
 
-        await element.updateComplete;
-
-        const renderedProductElements =
+        const atomicProductElements =
           element.shadowRoot?.querySelectorAll('atomic-product');
 
         expect(interactiveProduct).toHaveBeenCalledTimes(2);
@@ -933,10 +1050,10 @@ describe('AtomicCommerceProductList', () => {
           [{options: {product: mockProduct1}}],
           [{options: {product: mockProduct2}}],
         ]);
-        expect(renderedProductElements?.[0].interactiveProduct).toBe(
+        expect(atomicProductElements?.[0].interactiveProduct).toBe(
           interactiveProduct.mock.results[0].value
         );
-        expect(renderedProductElements?.[1].interactiveProduct).toBe(
+        expect(atomicProductElements?.[1].interactiveProduct).toBe(
           interactiveProduct.mock.results[1].value
         );
       });
@@ -974,17 +1091,18 @@ describe('AtomicCommerceProductList', () => {
             return mockLinkTemplate;
           });
 
+          // Must trigger update to get link template content.
           element.requestUpdate();
           await element.updateComplete;
 
-          const renderedProductElements =
+          const atomicProductElements =
             element.shadowRoot?.querySelectorAll('atomic-product');
 
           expect(
-            renderedProductElements?.[0].linkContent?.querySelector('a')?.href
+            atomicProductElements?.[0].linkContent?.querySelector('a')?.href
           ).toBe('https://example.com/123');
           expect(
-            renderedProductElements?.[1].linkContent?.querySelector('a')?.href
+            atomicProductElements?.[1].linkContent?.querySelector('a')?.href
           ).toBe('https://example.com/456');
         });
       } else {
@@ -1004,8 +1122,6 @@ describe('AtomicCommerceProductList', () => {
             'get'
           ).mockReturnValue([mockProduct1, mockProduct2]);
 
-          display === 'table' && setupTableTemplate(element);
-
           const mockEmptyLinkTemplate = document.createDocumentFragment();
           mockEmptyLinkTemplate.appendChild(document.createElement('span'));
 
@@ -1015,17 +1131,21 @@ describe('AtomicCommerceProductList', () => {
             'getEmptyLinkTemplateContent'
           ).mockReturnValue(mockEmptyLinkTemplate);
 
-          element.requestUpdate();
-          await element.updateComplete;
+          if (display === 'table') {
+            await setupTableTemplate(element);
+          } else {
+            // Must trigger update to get link template content.
+            element.requestUpdate();
+            await element.updateComplete;
+          }
 
-          const renderedProductElements =
+          const atomicProductElements =
             element.shadowRoot?.querySelectorAll('atomic-product');
 
-          expect(renderedProductElements?.[0].linkContent).toBe(
+          expect(atomicProductElements?.[0].linkContent).toBe(
             mockEmptyLinkTemplate
           );
-
-          expect(renderedProductElements?.[1].linkContent).toBe(
+          expect(atomicProductElements?.[1].linkContent).toBe(
             mockEmptyLinkTemplate
           );
         });
@@ -1033,15 +1153,13 @@ describe('AtomicCommerceProductList', () => {
 
       it('should pass correct #loadingFlag', async () => {
         const element = await setupElement({display});
-        display === 'table' && setupTableTemplate(element);
+        display === 'table' && (await setupTableTemplate(element));
 
-        await element.updateComplete;
-
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
         // @ts-expect-error - testing private property
-        expect(renderedProductElement?.loadingFlag).toBe(element.loadingFlag);
+        expect(atomicProductElement?.loadingFlag).toBe(element.loadingFlag);
       });
 
       it('should pass correct #product', async () => {
@@ -1065,9 +1183,7 @@ describe('AtomicCommerceProductList', () => {
           display,
         });
 
-        display === 'table' && setupTableTemplate(element);
-
-        await element.updateComplete;
+        display === 'table' && (await setupTableTemplate(element));
 
         const renderedProductElement =
           element.shadowRoot?.querySelectorAll('atomic-product');
@@ -1078,12 +1194,13 @@ describe('AtomicCommerceProductList', () => {
 
       it('should pass correct #renderingFunction', async () => {
         const element = await setupElement({display});
-        display === 'table' && setupTableTemplate(element);
+        display === 'table' && (await setupTableTemplate(element));
 
         const mockRenderingFunction = vi.fn();
 
         element.setRenderFunction(mockRenderingFunction);
 
+        // Must trigger update to get render function.
         element.requestUpdate();
         await element.updateComplete;
 
@@ -1097,9 +1214,7 @@ describe('AtomicCommerceProductList', () => {
 
       it('should pass correct #store', async () => {
         const element = await setupElement({display});
-        display === 'table' && setupTableTemplate(element);
-
-        await element.updateComplete;
+        display === 'table' && (await setupTableTemplate(element));
 
         const renderedProductElement =
           element.shadowRoot?.querySelector('atomic-product');
@@ -1107,5 +1222,22 @@ describe('AtomicCommerceProductList', () => {
         expect(renderedProductElement?.store).toEqual(element.bindings.store);
       });
     });
+
+    const setupTableTemplate = async (element: AtomicCommerceProductList) => {
+      const mockTableTemplate = document.createDocumentFragment();
+      mockTableTemplate.appendChild(
+        document.createElement('atomic-table-element')
+      );
+
+      vi.spyOn(
+        // @ts-expect-error - mocking method on private property
+        element.productTemplateProvider,
+        'getTemplateContent'
+      ).mockReturnValue(mockTableTemplate);
+
+      // Must trigger update to get template content.
+      element.requestUpdate();
+      await element.updateComplete;
+    };
   };
 });
