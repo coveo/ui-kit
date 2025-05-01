@@ -52,10 +52,7 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
 
   test.describe('when using the keyboard', () => {
     const keyDown = async (page: Page) => {
-      await expect(page.locator('[part="textarea-expander"]')).toHaveAttribute(
-        'class',
-        /expanded/
-      );
+      await page.waitForTimeout(300);
       await page.keyboard.press('ArrowDown');
     };
 

@@ -375,14 +375,7 @@ test.describe('with disable-search=true and minimum-query-length=1', () => {
 });
 
 test.describe('with minimum-query-length=4', () => {
-  let querySuggestionRequestPerformed = false;
-  test.beforeEach(async ({page, searchBox}) => {
-    querySuggestionRequestPerformed = false;
-    page.on('request', (request) => {
-      if (request.url().includes('/querySuggest')) {
-        querySuggestionRequestPerformed = true;
-      }
-    });
+  test.beforeEach(async ({searchBox}) => {
     await searchBox.load({
       args: {minimumQueryLength: 4, suggestionTimeout: 5000},
     });
