@@ -313,9 +313,9 @@ describe('AtomicCommerceProductList', () => {
     // Must wait for update to complete after unsetting bindings.
     await element.updateComplete;
 
-    const rendered = element.shadowRoot?.querySelectorAll('*');
+    const renderedElements = element.shadowRoot?.querySelectorAll('*');
 
-    expect(rendered).toHaveLength(0);
+    expect(renderedElements).toHaveLength(0);
   });
 
   it('when there is an error, should not render', async () => {
@@ -333,9 +333,9 @@ describe('AtomicCommerceProductList', () => {
 
     const element = await setupElement();
 
-    const rendered = element.shadowRoot?.querySelectorAll('*');
+    const renderedElements = element.shadowRoot?.querySelectorAll('*');
 
-    expect(rendered).toHaveLength(0);
+    expect(renderedElements).toHaveLength(0);
   });
 
   it('when no template is registered, should not render', async () => {
@@ -347,9 +347,9 @@ describe('AtomicCommerceProductList', () => {
     // Must wait for update to complete after setting resultTemplateRegistered to false.
     await element.updateComplete;
 
-    const rendered = element.shadowRoot?.querySelectorAll('*');
+    const renderedElements = element.shadowRoot?.querySelectorAll('*');
 
-    expect(rendered).toHaveLength(0);
+    expect(renderedElements).toHaveLength(0);
   });
 
   it('when first request was executed & there are no products, should not render', async () => {
@@ -389,8 +389,6 @@ describe('AtomicCommerceProductList', () => {
   });
 
   it("when #display is 'grid', when app is loaded, should render 1 result-list-grid-clickable-container part per product", async () => {
-    const numberOfProducts = 9;
-
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({
         implementation: {
@@ -399,7 +397,7 @@ describe('AtomicCommerceProductList', () => {
           summary,
         },
         state: {
-          products: Array.from({length: numberOfProducts}, (_, i) =>
+          products: Array.from({length: 3}, (_, i) =>
             buildFakeProduct({permanentid: i.toString()})
           ),
         },
@@ -410,15 +408,22 @@ describe('AtomicCommerceProductList', () => {
 
     const resultListGridClickableContainerParts =
       parts(element).gridOnly.resultListGridClickableContainer;
-    const resultListGridClickableContainerLocator = page.elementLocator(
-      resultListGridClickableContainerParts!.item(0)
-    );
 
-    expect(resultListGridClickableContainerParts?.length).toBe(
-      numberOfProducts
-    );
+    expect(resultListGridClickableContainerParts?.length).toBe(3);
     await expect
-      .element(resultListGridClickableContainerLocator)
+      .element(
+        page.elementLocator(resultListGridClickableContainerParts!.item(0))
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        page.elementLocator(resultListGridClickableContainerParts!.item(1))
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        page.elementLocator(resultListGridClickableContainerParts!.item(2))
+      )
       .toBeInTheDocument();
   });
 
@@ -426,7 +431,7 @@ describe('AtomicCommerceProductList', () => {
     {display: 'grid'},
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
-    it('when app is not loaded, should render correct # of placeholders', async () => {
+    it('when app is not loaded, should render correct # of atomic-result-placeholder', async () => {
       const numberOfPlaceholders = 12;
 
       const element = await setupElement({
@@ -435,11 +440,12 @@ describe('AtomicCommerceProductList', () => {
         numberOfPlaceholders,
       });
 
-      const placeholderElements = element.shadowRoot?.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+      const atomicResultPlaceholderElements =
+        element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
 
-      expect(placeholderElements).toHaveLength(numberOfPlaceholders);
+      expect(atomicResultPlaceholderElements).toHaveLength(
+        numberOfPlaceholders
+      );
     });
 
     describe('when app is loaded', () => {
@@ -462,8 +468,6 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should render 1 outline part per product', async () => {
-        const numberOfProducts = 3;
-
         vi.mocked(buildProductListing).mockReturnValue(
           buildFakeProductListing({
             implementation: {
@@ -472,7 +476,7 @@ describe('AtomicCommerceProductList', () => {
               summary,
             },
             state: {
-              products: Array.from({length: numberOfProducts}, (_, i) =>
+              products: Array.from({length: 3}, (_, i) =>
                 buildFakeProduct({permanentid: i.toString()})
               ),
             },
@@ -485,7 +489,7 @@ describe('AtomicCommerceProductList', () => {
 
         const outlineParts = parts(element).gridOrList.outline;
 
-        expect(outlineParts?.length).toBe(numberOfProducts);
+        expect(outlineParts?.length).toBe(3);
         await expect
           .element(page.elementLocator(outlineParts!.item(0)))
           .toBeInTheDocument();
@@ -562,17 +566,16 @@ describe('AtomicCommerceProductList', () => {
   });
 
   describe("when #display is 'table'", () => {
-    it('when app is not loaded, should render 1 placeholder', async () => {
+    it('when app is not loaded, should render 1 atomic-result-table-placeholder', async () => {
       const element = await setupElement({
         display: 'table',
         isAppLoaded: false,
       });
 
-      const placeholderElements = element.shadowRoot?.querySelectorAll(
-        'atomic-result-table-placeholder'
-      );
+      const atomicResultTablePlaceholderElements =
+        element.shadowRoot?.querySelectorAll('atomic-result-table-placeholder');
 
-      expect(placeholderElements).toHaveLength(1);
+      expect(atomicResultTablePlaceholderElements).toHaveLength(1);
     });
 
     describe('when app is loaded', () => {
@@ -986,10 +989,10 @@ describe('AtomicCommerceProductList', () => {
         const element = await setupElement({display, density});
         display === 'table' && (await setupTableTemplate(element));
 
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
-        expect(renderedProductElement?.density).toBe(density);
+        expect(atomicProductElement?.density).toBe(density);
       });
 
       it('should pass correct #display', async () => {
@@ -1185,11 +1188,11 @@ describe('AtomicCommerceProductList', () => {
 
         display === 'table' && (await setupTableTemplate(element));
 
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelectorAll('atomic-product');
 
-        expect(renderedProductElement?.[0].product).toBe(mockProduct1);
-        expect(renderedProductElement?.[1].product).toBe(mockProduct2);
+        expect(atomicProductElement?.[0].product).toBe(mockProduct1);
+        expect(atomicProductElement?.[1].product).toBe(mockProduct2);
       });
 
       it('should pass correct #renderingFunction', async () => {
@@ -1204,10 +1207,10 @@ describe('AtomicCommerceProductList', () => {
         element.requestUpdate();
         await element.updateComplete;
 
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
-        expect(renderedProductElement?.renderingFunction).toBe(
+        expect(atomicProductElement?.renderingFunction).toBe(
           mockRenderingFunction
         );
       });
@@ -1216,10 +1219,10 @@ describe('AtomicCommerceProductList', () => {
         const element = await setupElement({display});
         display === 'table' && (await setupTableTemplate(element));
 
-        const renderedProductElement =
+        const atomicProductElement =
           element.shadowRoot?.querySelector('atomic-product');
 
-        expect(renderedProductElement?.store).toEqual(element.bindings.store);
+        expect(atomicProductElement?.store).toEqual(element.bindings.store);
       });
     });
 
