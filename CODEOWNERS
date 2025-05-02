@@ -1,6 +1,6 @@
 # Default owners for everything in the repo. Later matches take precedence.
 
-- @coveo/search
+* @coveo/search
 
 # Owners of the Quantic package
 
@@ -26,7 +26,7 @@
 /packages/headless/src/app/commerce-engine/ @coveo/commerce-routemasters
 /packages/headless/src/state/commerce-app-state.ts @coveo/commerce-routemasters
 /packages/headless/src/commerce.index.ts @coveo/commerce-routemasters
-/packages/headless/src/test/**commerce\*\* @coveo/commerce-routemasters
+/packages/headless/src/test/**commerce** @coveo/commerce-routemasters
 
 # Owners of the Shopify headless package
 
