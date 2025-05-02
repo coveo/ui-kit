@@ -7,10 +7,10 @@ import {
   clientIdKey,
   CustomEnvironment,
 } from '@coveo/relay';
-import {getClientId} from '../utils';
+import {getClientId} from '../utilities';
 
 export * from '@coveo/headless/commerce';
-export * from '../utils';
+export * from '../utilities';
 
 export interface AppProxyOptions {
   appProxyUrl?: string;

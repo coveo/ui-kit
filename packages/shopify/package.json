@@ -16,16 +16,16 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./dist/shopify.headless.esm.js",
-      "default": "./dist/shopify.headless.esm.js"
+      "import": "./dist/headless.esm.js",
+      "default": "./dist/headless.esm.js"
     },
     "./headless": {
-      "import": "./dist/shopify.headless.esm.js",
-      "default": "./dist/shopify.headless.esm.js"
+      "import": "./dist/headless.esm.js",
+      "default": "./dist/headless.esm.js"
     },
-    "./utils": {
-      "import": "./dist/shopify.utils.esm.js",
-      "default": "./dist/shopify.utils.esm.js"
+    "./utilities": {
+      "import": "./dist/utilities.esm.js",
+      "default": "./dist/utilities.esm.js"
     }
   },
   "scripts": {
