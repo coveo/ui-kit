@@ -1,6 +1,7 @@
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
+import {describe, beforeAll, beforeEach, afterEach, test, expect} from 'vitest';
 import {loadMoreButton} from './button';
 
 describe('loadMoreButton', () => {

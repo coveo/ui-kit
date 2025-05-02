@@ -1,3 +1,4 @@
+import {usePersistQuery} from '@/app/hooks/use-recent-queries';
 import {useParameterManager} from '@/lib/commerce-engine';
 import {buildParameterSerializer} from '@coveo/headless-react/ssr-commerce';
 import {useSearchParams} from '@remix-run/react';
@@ -11,6 +12,10 @@ export default function ParameterManager({url}: {url: string | null}) {
   const initialUrl = useMemo(() => new URL(url ?? ''), [url]);
   const previousUrl = useRef(initialUrl.href);
   const [searchParams] = useSearchParams();
+
+  // Sync the `q` parameter with recent queries in localStorage
+  const query = searchParams.get('q');
+  usePersistQuery(query);
 
   /**
    * When the URL fragment changes, this effect deserializes it and synchronizes it into the
