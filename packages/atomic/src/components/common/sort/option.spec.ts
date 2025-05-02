@@ -3,7 +3,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {expect} from 'vitest';
+import {expect, describe, beforeAll, it} from 'vitest';
 import {renderSortOption, SortOptionProps} from './option';
 
 describe('renderSortOption', () => {
