@@ -56,7 +56,7 @@ describe('#renderSearchBoxTextArea', () => {
 
   it('should have the "textarea-expander" part on the container', async () => {
     const {expander} = await renderComponent();
-    expect(expander!).toBeInTheDocument();
+    expect(expander!).toHaveAttribute('part', 'textarea-expander');
   });
 
   it('should have the right title on the textarea', async () => {
@@ -66,7 +66,7 @@ describe('#renderSearchBoxTextArea', () => {
 
   it('should have the "textarea" part on the textarea', async () => {
     const {textarea} = await renderComponent();
-    expect(textarea!).toBeInTheDocument();
+    expect(textarea!).toHaveAttribute('part', 'textarea');
   });
 
   it('should have the right aria-label on the textarea', async () => {
