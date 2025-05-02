@@ -1,23 +1,33 @@
 # Default owners for everything in the repo. Later matches take precedence.
-* @coveo/search
+
+- @coveo/search
 
 # Owners of the Quantic package
+
 /packages/quantic/ @coveo/salesforce-integration
 /packages/quantic/package.json @coveo/salesforce-integration @coveo/search
 
 # Owners of the Atomic Insight components
+
 /packages/atomic/src/components/insight @coveo/service-core
 
 # Owners of Atomic's Cypress Tests
+
 /packages/atomic/cypress/ @coveo/search @coveo/search-qa
 
 # Owners of Atomic IPX components
+
 /packages/atomic/src/components/ipx @coveo/service-core
 
 # Owners of the Commerce headless sub-package
+
 /packages/headless/commerce/ @coveo/commerce-routemasters
 /packages/headless/src/**/commerce/ @coveo/commerce-routemasters
 /packages/headless/src/app/commerce-engine/ @coveo/commerce-routemasters
 /packages/headless/src/state/commerce-app-state.ts @coveo/commerce-routemasters
 /packages/headless/src/commerce.index.ts @coveo/commerce-routemasters
-/packages/headless/src/test/**commerce** @coveo/commerce-routemasters
+/packages/headless/src/test/**commerce\*\* @coveo/commerce-routemasters
+
+# Owners of the Shopify headless package
+
+/packages/shopify/ @coveo/shopify
