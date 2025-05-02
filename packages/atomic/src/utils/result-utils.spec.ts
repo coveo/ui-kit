@@ -4,7 +4,7 @@ import {
   Raw,
   Result,
 } from '@coveo/headless';
-import {vi} from 'vitest';
+import {vi, describe, it, expect} from 'vitest';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
 import {buildStringTemplateFromResult} from './result-utils';
 

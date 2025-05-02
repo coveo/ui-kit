@@ -1,12 +1,8 @@
-import {useInitializeRecentQueries} from '@/hooks/use-recent-queries';
 import {useInstantProducts, useRecentQueriesList} from '@/lib/commerce-engine';
 
 export default function RecentQueries() {
   const {state, methods} = useRecentQueriesList();
   const {methods: instantProductsController} = useInstantProducts();
-
-  // Sync recent queries from localStorage when the component loads
-  useInitializeRecentQueries(methods?.updateRecentQueries);
 
   return (
     <div>

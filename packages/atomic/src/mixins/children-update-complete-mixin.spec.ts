@@ -1,6 +1,6 @@
 import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {describe, beforeEach, afterEach, it, expect, vi} from 'vitest';
 import {ChildrenUpdateCompleteMixin} from './children-update-complete-mixin';
 
 type StencilTestElement = HTMLElement & {
