@@ -3,7 +3,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef, Ref} from 'lit/directives/ref.js';
-import {vi, expect} from 'vitest';
+import {vi, expect, describe, beforeAll, it} from 'vitest';
 import {renderTextAreaClearButton} from './text-area-clear-button';
 
 describe('#renderTextAreaClearButton', () => {

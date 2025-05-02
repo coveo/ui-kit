@@ -3,7 +3,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
-import {vi, expect} from 'vitest';
+import {vi, expect, describe, it, beforeAll} from 'vitest';
 import {renderSearchBoxTextArea} from './search-text-area';
 
 describe('#renderSearchBoxTextArea', () => {
