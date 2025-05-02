@@ -39,6 +39,7 @@ import {
   randomID,
   spreadProperties,
 } from '../../../utils/stencil-utils';
+import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SubmitButton} from '../../common/search-box/stencil-submit-button';
@@ -50,7 +51,6 @@ import {
   elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
-import {RedirectionPayload} from './redirection-payload';
 
 /**
  * The `atomic-search-box` component creates a search box with built-in support for suggestions.

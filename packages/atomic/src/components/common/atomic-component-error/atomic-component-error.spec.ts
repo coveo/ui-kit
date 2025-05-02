@@ -1,6 +1,6 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html} from 'lit';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import './atomic-component-error';
 import {AtomicComponentError} from './atomic-component-error';
 

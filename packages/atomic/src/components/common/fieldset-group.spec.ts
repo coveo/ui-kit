@@ -1,6 +1,7 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
+import {describe, it, expect} from 'vitest';
 import {GroupProps, renderFieldsetGroup} from './fieldset-group';
 
 describe('renderFieldsetGroup', () => {
