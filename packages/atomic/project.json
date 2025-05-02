@@ -135,7 +135,7 @@
     },
     "test:lit": {
       "executor": "nx:run-commands",
-      "dependsOn": ["build"],
+      "dependsOn": ["^build", "build"],
       "options": {
         "command": "vitest --run",
         "cwd": "{projectRoot}"
