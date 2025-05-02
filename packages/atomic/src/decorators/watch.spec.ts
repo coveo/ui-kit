@@ -1,6 +1,6 @@
 import {LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {watch} from './watch.js';
 
 @customElement('test-element')

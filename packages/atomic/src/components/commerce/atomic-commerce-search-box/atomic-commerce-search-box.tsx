@@ -40,6 +40,7 @@ import {
   randomID,
   spreadProperties,
 } from '../../../utils/stencil-utils';
+import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {SubmitButton} from '../../common/search-box/submit-button';
@@ -50,7 +51,6 @@ import {
   SearchBoxSuggestionsEvent,
   elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
-import {RedirectionPayload} from '../../search/atomic-search-box/redirection-payload';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 

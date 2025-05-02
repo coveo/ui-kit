@@ -1,6 +1,6 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, nothing, noChange, TemplateResult} from 'lit';
-import {expect, vi} from 'vitest';
+import {expect, vi, describe, it} from 'vitest';
 import {sortGuard} from './sort-guard';
 
 describe('sortGuard', () => {
