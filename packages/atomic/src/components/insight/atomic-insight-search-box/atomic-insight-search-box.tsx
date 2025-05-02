@@ -21,7 +21,7 @@ import {
   QuerySuggestionContainer,
   QuerySuggestionIcon,
   QuerySuggestionText,
-} from '../../common/suggestions/query-suggestions';
+} from '../../common/suggestions/stencil-query-suggestions';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   elementHasQuery,

@@ -629,24 +629,6 @@ export namespace Components {
         "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
      * @alpha 
      */
@@ -4140,16 +4122,6 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxInstantProductsElement;
     };
     /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSearchBoxQuerySuggestionsElement extends Components.AtomicCommerceSearchBoxQuerySuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSearchBoxQuerySuggestionsElement: {
-        prototype: HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
-        new (): HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
-    };
-    /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
      * @alpha 
      */
@@ -5977,7 +5949,6 @@ declare global {
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
-        "atomic-commerce-search-box-query-suggestions": HTMLAtomicCommerceSearchBoxQuerySuggestionsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
@@ -6683,24 +6654,6 @@ declare namespace LocalJSX {
           * The expected size of the image displayed in the products.
          */
         "imageSize"?: ItemDisplayImageSize;
-    }
-    /**
-     * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxQuerySuggestions {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions that will be displayed if the user has typed something into the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions that will be displayed initially when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -9720,7 +9673,6 @@ declare namespace LocalJSX {
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
-        "atomic-commerce-search-box-query-suggestions": AtomicCommerceSearchBoxQuerySuggestions;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
@@ -10032,11 +9984,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box-instant-products": LocalJSX.AtomicCommerceSearchBoxInstantProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantProductsElement>;
-            /**
-             * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
-             * @alpha 
-             */
-            "atomic-commerce-search-box-query-suggestions": LocalJSX.AtomicCommerceSearchBoxQuerySuggestions & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxQuerySuggestionsElement>;
             /**
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              * @alpha 
