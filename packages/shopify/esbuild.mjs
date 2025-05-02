@@ -28,11 +28,11 @@ const buenoPath = isCDN
 const entries = [
   {
     entryPoint: 'src/headless/index.ts',
-    outfile: 'shopify.headless.esm.js',
+    outfile: 'headless.esm.js',
   },
   {
-    entryPoint: 'src/utils/index.ts',
-    outfile: 'shopify.utils.esm.js',
+    entryPoint: 'src/utilities/index.ts',
+    outfile: 'utilities.esm.js',
   },
 ];
 
