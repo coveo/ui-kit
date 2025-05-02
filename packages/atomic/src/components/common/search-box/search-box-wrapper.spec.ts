@@ -36,7 +36,6 @@ describe('#renderTextAreaClearButton', () => {
 
   it('should have the correct classes when not disabled', async () => {
     const {wrapper} = await renderComponent({disabled: false});
-
     expect(wrapper).toHaveClass(
       'focus-within:border-primary focus-within:ring-ring-primary'
     );
