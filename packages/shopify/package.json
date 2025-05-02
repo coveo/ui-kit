@@ -5,8 +5,8 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/shopify"
   },
-  "main": "./dist/shopify.headless.esm.js",
-  "module": "./dist/shopify.headless.esm.js",
+  "main": "./dist/headless.esm.js",
+  "module": "./dist/headless.esm.js",
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "0.0.1",
@@ -32,13 +32,15 @@
     "dev": "npm run build:bundles -- dev",
     "build": "nx build",
     "build:bundles": "node esbuild.mjs",
+    "test": "vitest run",
     "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
   "devDependencies": {
-    "@coveo/ci": "1.0.0"
+    "@coveo/ci": "1.0.0",
+    "vitest": "3.1.2"
   },
   "dependencies": {
     "@coveo/headless": "3.22.4",

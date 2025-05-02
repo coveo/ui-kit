@@ -7,10 +7,11 @@ import {
   clientIdKey,
   CustomEnvironment,
 } from '@coveo/relay';
-import {getClientId} from '../utilities';
+import {getClientId} from './utilities';
 
 export * from '@coveo/headless/commerce';
-export * from '../utilities';
+export * from './utilities';
+export const SHOPIFY_COOKIE_KEY = '_shopify_y';
 
 export interface AppProxyOptions {
   appProxyUrl?: string;
@@ -43,9 +44,9 @@ export async function fetchAppProxyConfig({
   return response.json();
 }
 
-interface BuildCommerceEngineForShopifyOptions extends AppProxyOptions {
-  shop: string;
+interface BuildShopifyCommerceEngineOptions {
   commerceEngineOptions: CommerceEngineOptions;
+  shopifyCookie?: string;
   environment?: CustomEnvironment;
 }
 
@@ -58,36 +59,43 @@ interface BuildCommerceEngineForShopifyOptions extends AppProxyOptions {
  * - Storing a client identifier derived from the shop and cookie value in the browser environment's storage.
  * - Building and returning the commerce engine with the provided options.
  *
- * @param shop - The shop identifier or configuration for the Shopify store.
  * @param commerceEngineOptions - Options to configure the commerce engine.
+ * @param shopifyCookie - Optional value of the "_shopify_y" cookie. If not provided, it will attempt to retrieve it from the browser's cookies.
  * @param environment - Optional browser environment; if not provided, a default one is created. Mainly useful when not running in a browser environment.
  * @returns The constructed commerce engine instance.
  * @throws Error if the required "_shopify_y" cookie is not found, ensuring the code runs within a Shopify store.
  */
 export function buildShopifyCommerceEngine({
-  shop,
   commerceEngineOptions,
+  shopifyCookie,
   environment,
-}: BuildCommerceEngineForShopifyOptions) {
+}: BuildShopifyCommerceEngineOptions) {
   const browserEnvironment = environment || buildBrowserEnvironment();
-  const shopifyCookie = getCookie('_shopify_y');
+  const cookie = shopifyCookie || getShopifyCookie();
 
-  if (!shopifyCookie) {
+  if (!cookie) {
     throw new Error(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
     );
   }
 
   // TODO: Once headless is updated to support custom relay environments, we should instead pass in a generateUUID function
-  browserEnvironment.storage.setItem(
-    clientIdKey,
-    getClientId(shop, shopifyCookie)
-  );
+  browserEnvironment.storage.setItem(clientIdKey, getClientId(cookie));
 
   return buildCommerceEngine(commerceEngineOptions);
 }
 
-function getCookie(name: string) {
+/**
+ * Retrieves the value of a specified Shopify cookie by its name.
+ *
+ * @remarks
+ * This function is intended for use in browser environments only, as it relies on the `document.cookie` API.
+ * Attempting to use this function in non-browser environments will result in an error or undefined behavior.
+ *
+ * @param name - The name of the Shopify cookie to retrieve. Defaults to `'_shopify_y'`.
+ * @returns The value of the specified cookie, or `null` if the cookie is not found.
+ */
+export function getShopifyCookie(name: string = SHOPIFY_COOKIE_KEY) {
   const match = document.cookie.match(
     new RegExp('(?:^|;\\s*)' + name + '=([^;]*)')
   );

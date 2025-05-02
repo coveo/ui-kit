@@ -27,7 +27,7 @@ Fetches the app proxy configuration for a given Shopify market.
 #### Parameters
 
 - `marketId` (required): The market identifier.
-- `appProxyUrl` (optional): The URL of the app proxy. Defaults to `'/apps/coveo'`.
+- `appProxyUrl` (optional): The URL of the app proxy. Defaults to `'/apps/coveo'`. Useful if implementing your own custom proxy.
 
 #### Returns
 
@@ -55,8 +55,8 @@ Builds a commerce engine instance configured for Shopify.
 
 #### Parameters
 
-- `shop` (required): The Shopify shop name.
 - `commerceEngineOptions` (required): Options for the commerce engine.
+- `shopifyCookie` (optional): The value of the Shopify `_shopify_y` cookie. If not provided, it will attempt to retrieve it from the browser's cookies.
 - `environment` (optional): A custom environment configuration (useful for testing & SSR).
 
 #### Returns
@@ -69,38 +69,58 @@ A configured commerce engine instance.
 <script type="module">
 import {buildShopifyCommerceEngine, fetchAppProxyConfig} from 'https://static.cloud.coveo.com/shopify/v1/headless.esm.js';
 
-const config = await fetchAppProxyConfig({ marketId: 'market_123432' });
+const config = await fetchAppProxyConfig({marketId: 'market_123432'});
 const engine = buildShopifyCommerceEngine({
-  shop: 'my-shop.shopify.com',
   commerceEngineOptions: {
-    configuration: {
+    configuration : {
       accessToken: config.accessToken,
-        organizationId: config.organizationId,
-        environment: config.environment,
-        analytics: {
-          enabled: true,
-          trackingId: config.trackingId,
+      organizationId: config.organizationId,
+      environment: config.environment,
+      analytics: {
+        enabled: true,
+        trackingId: config.trackingId,
+      },
+      context: {
+        country: {{ localization.country.iso_code | json }},
+        currency: {{  localization.country.currency.iso_code | json }},
+        view: {
+          url: {{ canonical_url | json }},
         },
-        context: {
-          country: {{ localization.country.iso_code | json }},
-          currency: {{  localization.country.currency.iso_code | json }},
-          view: {
-            url: {{ canonical_url | json }},
-          },
-          language: {{ request.locale.iso_code | json }},
-          cart: {{ cart.items | json }}.map(function (item) {
-            return {
-              productId: item.product_id,
-              name: item.title,
-              price: item.final_price,
-              quantity: item.quantity,
-            };
-          }),
-        }
-    },
+        language: {{ request.locale.iso_code | json }},
+        cart: {{ cart.items | json }}.map(function (item) {
+          return {
+            productId: item.product_id,
+            name: item.title,
+            price: item.final_price,
+            quantity: item.quantity,
+          };
+        }),
+      }
   },
 });
+console.log(engine);
 </script>
+```
+
+### `getShopifyCookie`
+
+Retrieves the value of a specified Shopify cookie by its name.
+
+#### Returns
+
+The value of the specified cookie, or `null` if the cookie is not found.
+
+#### Notes
+
+This function is intended for use in **browser environments only**, as it relies on the `document.cookie` API. Attempting to use this function in non-browser environments will result in an error or undefined behavior.
+
+#### Example
+
+```typescript
+import {getShopifyCookie} from '@coveo/shopify';
+
+const shopifyCookie = getShopifyCookie();
+console.log(shopifyCookie);
 ```
 
 ---
