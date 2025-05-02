@@ -1,4 +1,4 @@
-import {CommerceEngine, Selectors} from '@coveo/headless/commerce';
+import type {CommerceEngine, Selectors} from '@coveo/headless/commerce';
 import {describe, test, expect, vi} from 'vitest';
 import {createCommerceStore} from './store';
 

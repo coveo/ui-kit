@@ -1,4 +1,4 @@
-import {
+import type {
   CommerceEngine,
   Selectors,
   ChildProduct,
