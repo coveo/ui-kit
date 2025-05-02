@@ -5,8 +5,8 @@ import {vi, expect, describe, it} from 'vitest';
 import {renderSearchBoxWrapper} from './search-box-wrapper';
 
 describe('#renderTextAreaClearButton', () => {
-  const renderComponent = (overrides = {}) => {
-    return renderFunctionFixture(
+  const renderComponent = async (overrides = {}) => {
+    const element = await renderFunctionFixture(
       html`${renderSearchBoxWrapper({
         props: {
           disabled: false,
@@ -15,36 +15,35 @@ describe('#renderTextAreaClearButton', () => {
         },
       })(html`<input />`)}`
     );
+
+    return {
+      wrapper: () => element.querySelector('[part="wrapper"]'),
+      input: () => element.querySelector('input'),
+    };
   };
 
   it('should have the "wrapper" part', async () => {
-    const element = await renderComponent();
-    const wrapper = element.querySelector('[part="wrapper"]');
-    await expect.element(wrapper).toHaveAttribute('part', 'wrapper');
+    const wrapper = (await renderComponent()).wrapper();
+    expect(wrapper).toHaveAttribute('part', 'wrapper');
   });
 
   it('should have the correct classes when disabled', async () => {
-    const element = await renderComponent({disabled: true});
-    const wrapper = element.querySelector('[part="wrapper"]');
-    await expect
-      .element(wrapper)
-      .toHaveClass('focus-within:border-disabled focus-within:ring-neutral');
+    const wrapper = (await renderComponent({disabled: true})).wrapper();
+    expect(wrapper).toHaveClass(
+      'focus-within:border-disabled focus-within:ring-neutral'
+    );
   });
 
   it('should have the correct classes when not disabled', async () => {
-    const element = await renderComponent({disabled: false});
-    const wrapper = element.querySelector('[part="wrapper"]');
-    await expect
-      .element(wrapper)
-      .toHaveClass(
-        'focus-within:border-primary focus-within:ring-ring-primary'
-      );
+    const wrapper = (await renderComponent({disabled: false})).wrapper();
+    expect(wrapper).toHaveClass(
+      'focus-within:border-primary focus-within:ring-ring-primary'
+    );
   });
 
   it('should call onFocusout when focus is lost', async () => {
     const onFocusout = vi.fn();
-    const element = await renderComponent({onFocusout});
-    const input = element.querySelector('input');
+    const input = (await renderComponent({onFocusout})).input();
 
     await userEvent.click(input!);
     await userEvent.click(document.body);
@@ -52,9 +51,8 @@ describe('#renderTextAreaClearButton', () => {
     expect(onFocusout).toHaveBeenCalled();
   });
 
-  it('should render children correctly', async () => {
-    const element = await renderComponent();
-    const input = element.querySelector('input');
+  it('should render children', async () => {
+    const input = (await renderComponent()).input();
     expect(input).toBeTruthy();
   });
 });
