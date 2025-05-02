@@ -13,8 +13,8 @@ describe('#renderSubmitButton', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = (additionalProps = {}) => {
-    return renderFunctionFixture(
+  const renderComponent = async (additionalProps = {}) => {
+    const element = await renderFunctionFixture(
       html`${renderSubmitButton({
         props: {
           i18n,
@@ -22,36 +22,37 @@ describe('#renderSubmitButton', () => {
         },
       })}`
     );
+    return {
+      element,
+      wrapper: element.querySelector('div'),
+      button: element.querySelector('button'),
+      icon: element.querySelector('atomic-icon'),
+    };
   };
 
   it('should have the "submit-button-wrapper" part on the wrapper', async () => {
-    const element = await renderComponent();
-    const wrapper = element.querySelector('div');
+    const {wrapper} = await renderComponent();
     expect(wrapper).toHaveAttribute('part', 'submit-button-wrapper');
   });
 
   it('should have the "btn-text-primary" class on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button');
+    const {button} = await renderComponent();
     expect(button).toHaveClass('btn-text-primary');
   });
 
   it('should have the "submit-button" part on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button');
+    const {button} = await renderComponent();
     expect(button).toHaveAttribute('part', 'submit-button');
   });
 
   it('should have the right aria-label on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button');
+    const {button} = await renderComponent();
     expect(button).toHaveAttribute('aria-label', 'Search');
   });
 
   it('should trigger the onClick event when clicked', async () => {
     const onClick = vi.fn();
-    const element = await renderComponent({onClick});
-    const button = element.querySelector('button');
+    const {button} = await renderComponent({onClick});
 
     await userEvent.click(button!);
 
@@ -59,14 +60,12 @@ describe('#renderSubmitButton', () => {
   });
 
   it('should have the "submit-icon" part on the atomic-icon', async () => {
-    const element = await renderComponent();
-    const icon = element.querySelector('atomic-icon');
+    const {icon} = await renderComponent();
     expect(icon).toHaveAttribute('part', 'submit-icon');
   });
 
   it('should have an svg icon on the atomic-icon', async () => {
-    const element = await renderComponent();
-    const icon = element.querySelector('atomic-icon');
+    const {icon} = await renderComponent();
     expect(icon?.getAttribute('icon')).toContain('<svg');
   });
 });
