@@ -40,9 +40,9 @@ import {
   spreadProperties,
 } from '../../../utils/stencil-utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
-import {SearchTextArea} from '../../common/search-box/search-text-area';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
-import {SubmitButton} from '../../common/search-box/submit-button';
+import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
+import {SubmitButton} from '../../common/search-box/stencil-submit-button';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   SearchBoxSuggestionElement,
