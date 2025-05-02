@@ -134,7 +134,7 @@ describe('AtomicCommerceProductList', () => {
     expect(element).toBeInstanceOf(AtomicCommerceProductList);
   });
 
-  it('when #density prop is invalid, should throw', async () => {
+  it('should throw when #density prop is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -143,7 +143,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #display prop is invalid, should throw', async () => {
+  it('should throw when #display prop is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -152,7 +152,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #imageSize prop is invalid, should throw', async () => {
+  it('should throw when #imageSize prop is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -161,7 +161,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when #numberOfPlaceholders prop is invalid, should throw', async () => {
+  it('should throw when #numberOfPlaceholders prop is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -170,7 +170,7 @@ describe('AtomicCommerceProductList', () => {
     }).toThrow();
   });
 
-  it('when all props are valid, should not throw', async () => {
+  it('should not throw when all props are valid', async () => {
     const element = await setupElement();
 
     expect(() => element.initialize()).not.toThrow();
@@ -304,7 +304,7 @@ describe('AtomicCommerceProductList', () => {
 
   // #render ===========================================================================================================
 
-  it('when bindings are undefined, should not render', async () => {
+  it('should not render when bindings are undefined', async () => {
     const element = await setupElement();
 
     // @ts-expect-error - setting private property for the sake of simplicity
@@ -318,7 +318,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when there is an error, should not render', async () => {
+  it('should not render when there is an error', async () => {
     summary.mockReturnValue(buildFakeSummary({state: {hasError: true}}));
 
     vi.mocked(buildProductListing).mockReturnValue(
@@ -338,7 +338,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when no template is registered, should not render', async () => {
+  it('should not render when no template is registered', async () => {
     const element = await setupElement();
 
     //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
@@ -352,7 +352,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when first request was executed & there are no products, should not render', async () => {
+  it('should not render when first request was executed & there are no products', async () => {
     summary.mockReturnValue(buildFakeSummary({state: {hasProducts: false}}));
 
     vi.mocked(buildProductListing).mockReturnValue(
@@ -372,7 +372,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when template has error, should render empty slot', async () => {
+  it('should render empty slot when template has error', async () => {
     const element = await setupElement();
 
     //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
@@ -388,7 +388,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements?.item(0).children).toHaveLength(0);
   });
 
-  it("when #display is 'grid', when app is loaded, should render 1 result-list-grid-clickable-container part per product", async () => {
+  it("should render 1 result-list-grid-clickable-container part per product when #display is 'grid' & app is loaded", async () => {
     vi.mocked(buildProductListing).mockReturnValue(
       buildFakeProductListing({
         implementation: {
@@ -431,7 +431,7 @@ describe('AtomicCommerceProductList', () => {
     {display: 'grid'},
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
-    it('when app is not loaded, should render correct # of atomic-result-placeholder', async () => {
+    it('should render correct # of atomic-result-placeholder when app is not loaded', async () => {
       const numberOfPlaceholders = 12;
 
       const element = await setupElement({
@@ -566,7 +566,7 @@ describe('AtomicCommerceProductList', () => {
   });
 
   describe("when #display is 'table'", () => {
-    it('when app is not loaded, should render 1 atomic-result-table-placeholder', async () => {
+    it('should render 1 atomic-result-table-placeholder when app is not loaded', async () => {
       const element = await setupElement({
         display: 'table',
         isAppLoaded: false,
