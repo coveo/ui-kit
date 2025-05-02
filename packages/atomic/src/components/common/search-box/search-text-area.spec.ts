@@ -149,9 +149,7 @@ describe('#renderSearchBoxTextArea', () => {
       loading: false,
       value: 'Test',
     });
-    expect(textarea).not.toBeNull();
-    expect(expander).not.toBeNull();
-    expect(clearButton).not.toBeNull();
+    await userEvent.fill(textarea!, 'Test input');
     expect(expander!).toHaveAttribute('data-replicated-value', 'Test input');
     if (textarea instanceof HTMLTextAreaElement) {
       textarea!.value = '';

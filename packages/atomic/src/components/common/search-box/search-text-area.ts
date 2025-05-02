@@ -31,10 +31,7 @@ interface Props {
 function syncTextWithReplica(ref: Ref<HTMLTextAreaElement>, value?: string) {
   const elem = ref.value;
   const parent = elem?.parentNode as HTMLElement;
-  if (!parent) {
-    return;
-  }
-  if (elem?.value === '\n') {
+  if (!parent || elem?.value === '\n') {
     return;
   }
   parent.dataset.replicatedValue = value ?? elem?.value;
@@ -45,7 +42,6 @@ function resetReplicaText(ref: Ref<HTMLTextAreaElement>) {
 
   const parent = elem?.parentNode as HTMLElement;
   if (parent) {
-    console.log('deleting');
     delete parent.dataset.replicatedValue;
   }
 }
@@ -158,8 +154,6 @@ export const renderSearchBoxTextArea: FunctionalComponent<Props> = ({
             i18n,
             onClick: () => {
               onClear();
-
-              console.log('resetting');
               resetReplicaText(textAreaRef);
             },
           },
