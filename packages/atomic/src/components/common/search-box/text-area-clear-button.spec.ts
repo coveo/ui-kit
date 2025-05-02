@@ -13,8 +13,8 @@ describe('#renderTextAreaClearButton', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = (ref?: Ref<HTMLTextAreaElement>) => {
-    return renderFunctionFixture(
+  const renderComponent = async (ref?: Ref<HTMLTextAreaElement>) => {
+    const element = await renderFunctionFixture(
       html`${renderTextAreaClearButton({
         props: {
           i18n,
@@ -22,24 +22,26 @@ describe('#renderTextAreaClearButton', () => {
         },
       })}`
     );
+    return {
+      element,
+      wrapper: element.querySelector('div[part="clear-button-wrapper"]'),
+      button: element.querySelector('button[part="clear-button"]'),
+      icon: element.querySelector('atomic-icon[part="clear-icon"]'),
+    };
   };
 
   it('should have the "clear-button-wrapper" part on the container', async () => {
-    const element = await renderComponent();
-    const wrapper = element.querySelector('div[part="clear-button-wrapper"]');
+    const {wrapper} = await renderComponent();
     expect(wrapper!).toBeInTheDocument();
   });
 
   it('should have the "clear-button" part on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button[part="clear-button"]');
+    const {button} = await renderComponent();
     expect(button!).toBeInTheDocument();
   });
 
   it('should have the "btn-text-transparent" class on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button[part="clear-button"]');
-
+    const {button} = await renderComponent();
     expect(button!).toHaveClass('btn-text-transparent');
   });
 
@@ -49,29 +51,23 @@ describe('#renderTextAreaClearButton', () => {
         focus: vi.fn(),
       } as unknown as HTMLTextAreaElement,
     };
-    const element = await renderComponent(mockTextAreaRef);
-    const button = element.querySelector('button[part="clear-button"]');
-
+    const {button} = await renderComponent(mockTextAreaRef);
     await userEvent.click(button!);
-
     expect(mockTextAreaRef.value?.focus).toHaveBeenCalled();
   });
 
   it('should have aria-label as "Clear" on the button', async () => {
-    const element = await renderComponent();
-    const button = element.querySelector('button[part="clear-button"]');
+    const {button} = await renderComponent();
     expect(button!).toHaveAttribute('aria-label', 'Clear');
   });
 
   it('should have the "clear-icon" part on the atomic-icon', async () => {
-    const element = await renderComponent();
-    const icon = element.querySelector('atomic-icon[part="clear-icon"]');
+    const {icon} = await renderComponent();
     expect(icon!).toBeInTheDocument();
   });
 
   it('should have an svg icon on the atomic-icon', async () => {
-    const element = await renderComponent();
-    const icon = element.querySelector('atomic-icon[part="clear-icon"]');
+    const {icon} = await renderComponent();
     expect(icon!.getAttribute('icon')).toContain('<svg');
   });
 });
