@@ -32,37 +32,6 @@ describe('AtomicCommerceProductList', () => {
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();
 
-  const parts = (element: AtomicCommerceProductList) => {
-    const qs = (part: string, exact = true) =>
-      element.shadowRoot?.querySelectorAll(
-        `[part${exact ? '' : '*'}="${part}"]`
-      );
-
-    return {
-      gridOnly: {
-        resultListGridClickableContainer: qs(
-          'result-list-grid-clickable-container',
-          false
-        ),
-      },
-      gridOrList: {
-        outline: qs('outline', false),
-        resultList: qs('result-list'),
-      },
-      table: {
-        resultTable: qs('result-table'),
-        resultTableHeading: qs('result-table-heading'),
-        resultTableHeadingRow: qs('result-table-heading-row'),
-        resultTableHeadingCell: qs('result-table-heading-cell'),
-        resultTableBody: qs('result-table-body'),
-        resultTableRow: qs('result-table-row', false),
-        resultTableRowEven: qs('result-table-row-even', false),
-        resultTableRowOdd: qs('result-table-row-odd', false),
-        resultTableCell: qs('result-table-cell'),
-      },
-    };
-  };
-
   beforeEach(() => {
     fixtureCleanup();
 
@@ -88,43 +57,6 @@ describe('AtomicCommerceProductList', () => {
       })
     );
   });
-
-  const setupElement = async ({
-    display = 'grid',
-    density = 'normal',
-    imageSize = 'small',
-    numberOfPlaceholders = 24,
-    isAppLoaded = true,
-    interfaceType = 'product-listing',
-  }: {
-    display?: ItemDisplayLayout;
-    density?: ItemDisplayDensity;
-    imageSize?: ItemDisplayImageSize;
-    numberOfPlaceholders?: number;
-    isAppLoaded?: boolean;
-    interfaceType?: 'product-listing' | 'search';
-  } = {}) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceProductList>({
-        template: html`<atomic-commerce-product-list
-          .display=${display}
-          .density=${density}
-          .imageSize=${imageSize}
-          .numberOfPlaceholders=${numberOfPlaceholders}
-        ></atomic-commerce-product-list>`,
-        selector: 'atomic-commerce-product-list',
-        bindings: (bindings) => {
-          bindings.interfaceElement.type = interfaceType;
-          bindings.store.state.loadingFlags = isAppLoaded
-            ? []
-            : ['loading-flag'];
-          bindings.engine.logger = {error: vi.fn()} as never;
-          return bindings;
-        },
-      });
-
-    return element;
-  };
 
   // #initialize =======================================================================================================
 
@@ -307,7 +239,7 @@ describe('AtomicCommerceProductList', () => {
   it('should not render when bindings are undefined', async () => {
     const element = await setupElement();
 
-    // @ts-expect-error - setting private property for the sake of simplicity
+    // @ts-expect-error - unsetting bindings for the sake of simplicity.
     element.bindings = undefined;
 
     // Must wait for update to complete after unsetting bindings.
@@ -341,7 +273,7 @@ describe('AtomicCommerceProductList', () => {
   it('should not render when no template is registered', async () => {
     const element = await setupElement();
 
-    //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
+    //@ts-expect-error - setting private property: mocking the template provider would be complex.
     element.resultTemplateRegistered = false;
 
     // Must wait for update to complete after setting resultTemplateRegistered to false.
@@ -375,7 +307,7 @@ describe('AtomicCommerceProductList', () => {
   it('should render empty slot when template has error', async () => {
     const element = await setupElement();
 
-    //@ts-expect-error - setting private property for the sake of simplicity (mocking the template provider is complex)
+    //@ts-expect-error - setting private property: mocking the template provider would be complex.
     element.templateHasError = true;
 
     // Must wait for update to complete after setting templateHasError to true.
@@ -407,7 +339,7 @@ describe('AtomicCommerceProductList', () => {
     const element = await setupElement({display: 'grid'});
 
     const resultListGridClickableContainerParts =
-      parts(element).gridOnly.resultListGridClickableContainer;
+      getParts(element).gridOnly.resultListGridClickableContainer;
 
     expect(resultListGridClickableContainerParts?.length).toBe(3);
     await expect
@@ -454,7 +386,7 @@ describe('AtomicCommerceProductList', () => {
       });
 
       it('should render 1 result-list part', async () => {
-        const resultListParts = parts(
+        const resultListParts = getParts(
           await setupElement({
             display,
           })
@@ -487,7 +419,7 @@ describe('AtomicCommerceProductList', () => {
           display,
         });
 
-        const outlineParts = parts(element).gridOrList.outline;
+        const outlineParts = getParts(element).gridOrList.outline;
 
         expect(outlineParts?.length).toBe(3);
         await expect
@@ -599,7 +531,7 @@ describe('AtomicCommerceProductList', () => {
         mockTableTemplate.appendChild(atomicTableElement2);
 
         vi.spyOn(
-          // @ts-expect-error - mocking method on private property
+          // @ts-expect-error -  spying on private property: mocking the template provider would be complex.
           element.productTemplateProvider,
           'getTemplateContent'
         ).mockReturnValue(mockTableTemplate);
@@ -619,7 +551,7 @@ describe('AtomicCommerceProductList', () => {
       it('should render 1 result-table part', async () => {
         const element = await setupElement({display: 'table'});
 
-        const resultTableParts = parts(element).table.resultTable;
+        const resultTableParts = getParts(element).table.resultTable;
 
         expect(resultTableParts?.length).toBe(1);
         await expect
@@ -630,7 +562,8 @@ describe('AtomicCommerceProductList', () => {
       it('should render 1 result-table-heading part', async () => {
         const element = await setupElement({display: 'table'});
 
-        const resultTableHeadingParts = parts(element).table.resultTableHeading;
+        const resultTableHeadingParts =
+          getParts(element).table.resultTableHeading;
 
         expect(resultTableHeadingParts?.length).toBe(1);
         await expect
@@ -642,7 +575,7 @@ describe('AtomicCommerceProductList', () => {
         const element = await setupElement({display: 'table'});
 
         const resultTableHeadingRowParts =
-          parts(element).table.resultTableHeadingRow;
+          getParts(element).table.resultTableHeadingRow;
 
         expect(resultTableHeadingRowParts?.length).toBe(1);
         await expect
@@ -664,7 +597,7 @@ describe('AtomicCommerceProductList', () => {
         mockTableTemplate.appendChild(atomicTableElement2);
 
         vi.spyOn(
-          // @ts-expect-error - mocking method on private property
+          // @ts-expect-error - spying on private property: mocking the template provider would be complex.
           element.productTemplateProvider,
           'getTemplateContent'
         ).mockReturnValue(mockTableTemplate);
@@ -674,7 +607,7 @@ describe('AtomicCommerceProductList', () => {
         await element.updateComplete;
 
         const resultTableHeadingCellParts =
-          parts(element).table.resultTableHeadingCell;
+          getParts(element).table.resultTableHeadingCell;
 
         expect(resultTableHeadingCellParts?.length).toBe(2);
         await expect
@@ -688,7 +621,7 @@ describe('AtomicCommerceProductList', () => {
       it('should render 1 result-table-body part', async () => {
         const element = await setupElement({display: 'table'});
 
-        const resultTableBodyParts = parts(element).table.resultTableBody;
+        const resultTableBodyParts = getParts(element).table.resultTableBody;
 
         expect(resultTableBodyParts?.length).toBe(1);
         await expect
@@ -714,7 +647,7 @@ describe('AtomicCommerceProductList', () => {
 
         const element = await setupElement({display: 'table'});
 
-        const resultTableRowParts = parts(element).table.resultTableRow;
+        const resultTableRowParts = getParts(element).table.resultTableRow;
 
         expect(resultTableRowParts?.length).toBe(3);
         await expect
@@ -746,7 +679,8 @@ describe('AtomicCommerceProductList', () => {
 
         const element = await setupElement({display: 'table'});
 
-        const resultTableRowEvenParts = parts(element).table.resultTableRowEven;
+        const resultTableRowEvenParts =
+          getParts(element).table.resultTableRowEven;
 
         expect(resultTableRowEvenParts?.length).toBe(2); // floor(5 / 2) = 2
         await expect
@@ -775,7 +709,8 @@ describe('AtomicCommerceProductList', () => {
 
         const element = await setupElement({display: 'table'});
 
-        const resultTableRowOddParts = parts(element).table.resultTableRowOdd;
+        const resultTableRowOddParts =
+          getParts(element).table.resultTableRowOdd;
 
         expect(resultTableRowOddParts?.length).toBe(3); // ceil(5 / 2) = 3
         await expect
@@ -903,7 +838,7 @@ describe('AtomicCommerceProductList', () => {
           const element = await setupElement({display});
 
           vi.spyOn(
-            // @ts-expect-error - mocking method on private property
+            // @ts-expect-error - spying on private property: mocking the template provider would be complex.
             element.productTemplateProvider,
             'getTemplateContent'
           ).mockImplementation((product: Product) => {
@@ -956,7 +891,7 @@ describe('AtomicCommerceProductList', () => {
           const element = await setupElement({display});
 
           vi.spyOn(
-            // @ts-expect-error - mocking method on private property
+            // @ts-expect-error - spying on private property: mocking the template provider would be complex.
             element.productTemplateProvider,
             'getTemplateContent'
           ).mockImplementation((product: Product) => {
@@ -1082,7 +1017,7 @@ describe('AtomicCommerceProductList', () => {
           const element = await setupElement({display});
 
           vi.spyOn(
-            // @ts-expect-error - mocking return value of private method
+            // @ts-expect-error - spying on private property: mocking the template provider would be complex.
             element.productTemplateProvider,
             'getLinkTemplateContent'
           ).mockImplementation((product: Product) => {
@@ -1129,7 +1064,7 @@ describe('AtomicCommerceProductList', () => {
           mockEmptyLinkTemplate.appendChild(document.createElement('span'));
 
           vi.spyOn(
-            // @ts-expect-error - mocking method on private property
+            // @ts-expect-error - spying on private property: mocking the template provider would be complex.
             element.productTemplateProvider,
             'getEmptyLinkTemplateContent'
           ).mockReturnValue(mockEmptyLinkTemplate);
@@ -1241,6 +1176,76 @@ describe('AtomicCommerceProductList', () => {
       // Must trigger update to get template content.
       element.requestUpdate();
       await element.updateComplete;
+    };
+  };
+
+  // Fixture utils for this test suite
+
+  const setupElement = async ({
+    display = 'grid',
+    density = 'normal',
+    imageSize = 'small',
+    numberOfPlaceholders = 24,
+    isAppLoaded = true,
+    interfaceType = 'product-listing',
+  }: {
+    display?: ItemDisplayLayout;
+    density?: ItemDisplayDensity;
+    imageSize?: ItemDisplayImageSize;
+    numberOfPlaceholders?: number;
+    isAppLoaded?: boolean;
+    interfaceType?: 'product-listing' | 'search';
+  } = {}) => {
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicCommerceProductList>({
+        template: html`<atomic-commerce-product-list
+          .display=${display}
+          .density=${density}
+          .imageSize=${imageSize}
+          .numberOfPlaceholders=${numberOfPlaceholders}
+        ></atomic-commerce-product-list>`,
+        selector: 'atomic-commerce-product-list',
+        bindings: (bindings) => {
+          bindings.interfaceElement.type = interfaceType;
+          bindings.store.state.loadingFlags = isAppLoaded
+            ? []
+            : ['loading-flag'];
+          bindings.engine.logger = {error: vi.fn()} as never;
+          return bindings;
+        },
+      });
+
+    return element;
+  };
+
+  const getParts = (element: AtomicCommerceProductList) => {
+    const qs = (part: string, exact = true) =>
+      element.shadowRoot?.querySelectorAll(
+        `[part${exact ? '' : '*'}="${part}"]`
+      );
+
+    return {
+      gridOnly: {
+        resultListGridClickableContainer: qs(
+          'result-list-grid-clickable-container',
+          false
+        ),
+      },
+      gridOrList: {
+        outline: qs('outline', false),
+        resultList: qs('result-list'),
+      },
+      table: {
+        resultTable: qs('result-table'),
+        resultTableHeading: qs('result-table-heading'),
+        resultTableHeadingRow: qs('result-table-heading-row'),
+        resultTableHeadingCell: qs('result-table-heading-cell'),
+        resultTableBody: qs('result-table-body'),
+        resultTableRow: qs('result-table-row', false),
+        resultTableRowEven: qs('result-table-row-even', false),
+        resultTableRowOdd: qs('result-table-row-odd', false),
+        resultTableCell: qs('result-table-cell'),
+      },
     };
   };
 });
