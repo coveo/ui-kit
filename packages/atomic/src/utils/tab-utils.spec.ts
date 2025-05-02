@@ -1,3 +1,4 @@
+import {describe, beforeEach, it, expect, test} from 'vitest';
 import {shouldDisplayOnCurrentTab} from './tab-utils';
 
 describe('tab-utils', () => {
