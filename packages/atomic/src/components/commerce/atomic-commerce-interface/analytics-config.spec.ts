@@ -2,6 +2,7 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
+import {describe, expect, it} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
 
 describe('getAnalyticsConfig', () => {

@@ -10,7 +10,7 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, MockInstance} from 'vitest';
+import {describe, vi, expect, MockInstance, test, beforeEach} from 'vitest';
 import {AtomicCommercePager} from './atomic-commerce-pager';
 import './atomic-commerce-pager';
 

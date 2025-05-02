@@ -2,7 +2,7 @@ import {provide} from '@lit/context';
 import i18next from 'i18next';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {bindingsContext} from '../components/context/bindings-context';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindings} from './bindings';

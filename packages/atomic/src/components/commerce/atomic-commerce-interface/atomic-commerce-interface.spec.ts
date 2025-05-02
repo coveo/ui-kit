@@ -16,7 +16,15 @@ import {html} from 'lit';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {within} from 'shadow-dom-testing-library';
-import {describe, test, expect, vi, MockInstance} from 'vitest';
+import {
+  describe,
+  test,
+  expect,
+  vi,
+  MockInstance,
+  beforeEach,
+  afterEach,
+} from 'vitest';
 import {stateKey} from '../../../../../headless/src/app/state-key';
 import {
   AtomicCommerceInterface,
