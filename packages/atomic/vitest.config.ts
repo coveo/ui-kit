@@ -1,7 +1,6 @@
 import {readFileSync} from 'fs';
 import path from 'node:path';
 import {dirname, resolve} from 'path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import {defineConfig} from 'vitest/config';
 //@ts-expect-error - normal json import
 import packageJson from './package.json' with {type: 'json'};
@@ -33,6 +32,11 @@ export default defineConfig({
   },
   server: {
     port: port,
+  },
+  resolve: {
+    alias: {
+      '@/': path.resolve(import.meta.dirname, './') + '/',
+    },
   },
   plugins: [
     {
@@ -66,7 +70,6 @@ export default defineConfig({
         return null;
       },
     },
-    tsconfigPaths(),
   ],
   test: {
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
