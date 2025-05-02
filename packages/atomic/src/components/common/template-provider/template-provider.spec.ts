@@ -1,81 +1,346 @@
-import {TemplatesManager} from '@coveo/headless';
-import {describe, expect, test, vi} from 'vitest';
+import type {TemplatesManager} from '@coveo/headless';
+import {describe, expect, it, vi} from 'vitest';
 import {TemplateProvider, TemplateProviderProps} from './template-provider';
 
-class TestTemplateProvider extends TemplateProvider<unknown> {
-  constructor(
-    props: TemplateProviderProps<unknown>,
-    buildManager: () => TemplatesManager<
+describe('TemplateProvider', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  describe('#constructor', () => {
+    it('should create instance', () => {
+      const instance = createInstance();
+
+      expect(instance).toBeInstanceOf(TestTemplateProvider);
+    });
+
+    it('should call #buildManager', () => {
+      const buildManager = vi.fn(() => ({
+        registerTemplates: vi.fn(),
+        selectTemplate: vi.fn(),
+        selectLinkTemplate: vi.fn(),
+      }));
+
+      createInstance({}, buildManager);
+
+      expect(buildManager).toHaveBeenCalledOnce();
+    });
+
+    it("should call #props.setResultTemplatesRegistered with 'true'", async () => {
+      const setResultTemplateRegistered = vi.fn();
+
+      createInstance({
+        setResultTemplateRegistered,
+      });
+
+      await completeMacrotasks();
+
+      expect(setResultTemplateRegistered).toHaveBeenCalledOnce();
+      expect(setResultTemplateRegistered).toHaveBeenCalledWith(true);
+    });
+
+    describe('when #props.templateElements is not empty', () => {
+      it("should call #props.setTemplateHasError with 'true' when #getTemplate resolves to null on any template element", async () => {
+        const setTemplateHasError = vi.fn();
+
+        createInstance({
+          templateElements: [
+            buildFakeTemplateElement(),
+            buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
+          ],
+          setTemplateHasError,
+        });
+
+        await completeMacrotasks();
+
+        expect(setTemplateHasError).toHaveBeenCalledOnce();
+        expect(setTemplateHasError).toHaveBeenCalledWith(true);
+      });
+
+      it('should not call #props.setTemplateHasError when #getTemplate resolves to a template on every template element', async () => {
+        const setTemplateHasError = vi.fn();
+
+        createInstance({
+          templateElements: [
+            buildFakeTemplateElement(),
+            buildFakeTemplateElement(),
+          ],
+          setTemplateHasError,
+        });
+
+        await completeMacrotasks();
+
+        expect(setTemplateHasError).not.toHaveBeenCalled();
+      });
+
+      it('should register only valid custom templates', async () => {
+        const registerTemplates = vi.fn();
+
+        const buildManager = vi.fn().mockReturnValueOnce({
+          registerTemplates,
+          selectTemplate: vi.fn(),
+          selectLinkTemplate: vi.fn(),
+        });
+
+        const getTemplate1 = vi.fn().mockResolvedValue({
+          content: 'Test Content',
+          linkContent: 'Test Link Content',
+          conditions: [],
+        });
+
+        const getTemplate2 = vi.fn().mockResolvedValue({
+          content: 'Test Content 2',
+          linkContent: 'Test Link Content 2',
+          conditions: [],
+        });
+
+        createInstance(
+          {
+            templateElements: [
+              buildFakeTemplateElement(getTemplate1),
+              buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
+              buildFakeTemplateElement(getTemplate2),
+            ],
+          },
+          buildManager
+        );
+
+        await completeMacrotasks();
+
+        expect(registerTemplates).toHaveBeenCalledOnce();
+        expect(registerTemplates).toHaveBeenCalledWith(
+          getTemplate1.mock.settledResults[0].value,
+          getTemplate2.mock.settledResults[0].value
+        );
+      });
+
+      it("should not register default template when #props.includeDefaultTemplate is 'true'", async () => {
+        const registerTemplates = vi.fn();
+
+        const buildManager = vi.fn().mockReturnValueOnce({
+          registerTemplates,
+          selectTemplate: vi.fn(),
+          selectLinkTemplate: vi.fn(),
+        });
+
+        createInstance(
+          {
+            includeDefaultTemplate: true,
+            templateElements: [
+              buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
+            ],
+          },
+          buildManager
+        );
+
+        await completeMacrotasks();
+
+        expect(registerTemplates).toHaveBeenCalledOnce();
+        expect(registerTemplates).toHaveBeenCalledWith(...[]);
+      });
+    });
+
+    describe('when #props.templateElements is empty', () => {
+      it('should not call #props.setTemplateHasError', async () => {
+        const setTemplateHasError = vi.fn();
+
+        createInstance({
+          templateElements: [],
+          setTemplateHasError,
+        });
+
+        await completeMacrotasks();
+
+        expect(setTemplateHasError).not.toHaveBeenCalled();
+      });
+
+      it("should register default template when #props.includeDefaultTemplate is 'true'", async () => {
+        const registerTemplates = vi.fn();
+
+        const buildManager = vi.fn().mockReturnValueOnce({
+          registerTemplates,
+          selectTemplate: vi.fn(),
+          selectLinkTemplate: vi.fn(),
+        });
+
+        createInstance(
+          {
+            includeDefaultTemplate: true,
+            templateElements: [],
+          },
+          buildManager
+        );
+
+        await completeMacrotasks();
+
+        expect(registerTemplates).toHaveBeenCalledOnce();
+        expect(registerTemplates.mock.lastCall?.[0].content.textContent).toBe(
+          'Default Template'
+        );
+        expect(
+          registerTemplates.mock.lastCall?.[0].linkContent.textContent
+        ).toBe('Default Link Template');
+        expect(registerTemplates.mock.lastCall?.[0].conditions.length).toBe(0);
+      });
+
+      it('should not register default template when #props.includeDefaultTemplate is "false"', async () => {
+        const registerTemplates = vi.fn();
+
+        const buildManager = vi.fn().mockReturnValueOnce({
+          registerTemplates,
+          selectTemplate: vi.fn(),
+          selectLinkTemplate: vi.fn(),
+        });
+
+        createInstance(
+          {
+            includeDefaultTemplate: false,
+            templateElements: [],
+          },
+          buildManager
+        );
+
+        await completeMacrotasks();
+
+        expect(registerTemplates).toHaveBeenCalledOnce();
+        expect(registerTemplates).toHaveBeenCalledWith(...[]);
+      });
+    });
+  });
+
+  describe('#getTemplateContent', () => {
+    it('should call #templateManager.selectTemplate with item', async () => {
+      const item = {id: 'item1'};
+      const buildManager = () => ({
+        registerTemplates: vi.fn(),
+        selectTemplate,
+        selectLinkTemplate: vi.fn(),
+      });
+      const selectTemplate = vi.fn();
+      const fixture = await createInstance({}, buildManager);
+
+      fixture.getTemplateContent(item);
+
+      expect(selectTemplate).toHaveBeenCalledOnce();
+      expect(selectTemplate).toHaveBeenCalledWith(item);
+    });
+  });
+
+  describe('#getLinkTemplateContent', () => {
+    it('should call #templateManager.selectLinkTemplate with item', async () => {
+      const item = {id: 'item1'};
+      const buildManager = () => ({
+        registerTemplates: vi.fn(),
+        selectTemplate: vi.fn(),
+        selectLinkTemplate,
+      });
+      const selectLinkTemplate = vi.fn();
+      const fixture = await createInstance({}, buildManager);
+
+      fixture.getLinkTemplateContent(item);
+
+      expect(selectLinkTemplate).toHaveBeenCalledOnce();
+      expect(selectLinkTemplate).toHaveBeenCalledWith(item);
+    });
+  });
+
+  describe('#getEmptyTemplateContent', () => {
+    it('should return empty DocumentFragment', async () => {
+      const fixture = await createInstance();
+
+      const result = fixture.getEmptyLinkTemplateContent();
+
+      expect(result).toBeInstanceOf(DocumentFragment);
+    });
+  });
+
+  describe('#templatesRegistered', () => {
+    it('should call #props.getResultTemplateRegistered', async () => {
+      const getResultTemplateRegistered = vi.fn();
+      const fixture = await createInstance({getResultTemplateRegistered});
+
+      fixture.templatesRegistered;
+
+      expect(getResultTemplateRegistered).toHaveBeenCalledOnce();
+    });
+  });
+
+  describe('#hasError', () => {
+    it('should call #props.getTemplateHasError', async () => {
+      const getTemplateHasError = vi.fn();
+      const fixture = await createInstance({getTemplateHasError});
+
+      fixture.hasError;
+
+      expect(getTemplateHasError).toHaveBeenCalledOnce();
+    });
+  });
+
+  class TestTemplateProvider extends TemplateProvider<unknown> {
+    constructor(
+      props: TemplateProviderProps<unknown>,
+      buildManager: () => TemplatesManager<
+        unknown,
+        DocumentFragment,
+        DocumentFragment
+      >
+    ) {
+      super(props, buildManager);
+    }
+
+    protected makeDefaultTemplate() {
+      const content = document.createDocumentFragment();
+      content.append(document.createTextNode('Default Template'));
+
+      const linkContent = document.createDocumentFragment();
+      linkContent.append(document.createTextNode('Default Link Template'));
+
+      return {
+        content,
+        linkContent,
+        conditions: [],
+      };
+    }
+  }
+
+  const createInstance = (
+    props?: Partial<TemplateProviderProps<unknown>>,
+    buildManager?: () => TemplatesManager<
       unknown,
       DocumentFragment,
       DocumentFragment
     >
-  ) {
-    super(props, buildManager);
-  }
-
-  protected makeDefaultTemplate() {
-    return {
-      content: document.createDocumentFragment(),
-      linkContent: document.createDocumentFragment(),
-      conditions: [],
-    };
-  }
-}
-
-describe('TemplateProvider', () => {
-  let _fixture: TestTemplateProvider;
-  const buildManager: () => TemplatesManager<
-    unknown,
-    DocumentFragment,
-    DocumentFragment
-  > = vi.fn(() => ({
-    registerTemplates: vi.fn(),
-    selectTemplate: vi.fn(),
-    selectLinkTemplate: vi.fn(),
-  }));
-
-  beforeEach(() => {
-    vi.resetAllMocks();
-
-    _fixture = new TestTemplateProvider(
+  ) => {
+    return new TestTemplateProvider(
       {
-        getResultTemplateRegistered: vi.fn(),
-        getTemplateHasError: vi.fn(),
-        setTemplateHasError: vi.fn(),
-        templateElements: [],
-        includeDefaultTemplate: true,
-        setResultTemplateRegistered: vi.fn(),
+        getResultTemplateRegistered:
+          props?.getResultTemplateRegistered ?? vi.fn(),
+        getTemplateHasError: props?.getTemplateHasError ?? vi.fn(),
+        setTemplateHasError: props?.setTemplateHasError ?? vi.fn(),
+        templateElements: props?.templateElements ?? [],
+        includeDefaultTemplate: props?.includeDefaultTemplate ?? true,
+        setResultTemplateRegistered:
+          props?.setResultTemplateRegistered ?? vi.fn(),
       },
-      buildManager
+      buildManager ??
+        vi.fn(() => ({
+          registerTemplates: vi.fn(),
+          selectTemplate: vi.fn(),
+          selectLinkTemplate: vi.fn(),
+        }))
     );
-  });
+  };
 
-  describe('#constructor', () => {
-    test('should call #buildManager', () => {
-      expect(buildManager).toHaveBeenCalledOnce();
-    });
-    test('should call #getTemplate on each item in #props.templateElements', () => {});
-    test("when #getTemplate is null, should call #props.setTemplateHasError, with 'true'", () => {});
-  });
+  const buildFakeTemplateElement = (
+    getTemplate = vi.fn().mockResolvedValue(expect.any(Object))
+  ) => {
+    return {
+      ...document.createElement('template'),
+      getTemplate,
+    };
+  };
 
-  describe('#getTemplateContent', () => {
-    test('should call #templateManager.selectTemplate with item', () => {});
-  });
-
-  describe('#getLinkTemplateContent', () => {
-    test('should call #templateManager.selectLinkTemplate with item', () => {});
-  });
-
-  describe('#getEmptyTemplateContent', () => {
-    test('should return empty DocumentFragment', () => {});
-  });
-
-  describe('#templatesRegistered', () => {
-    test('should call #props.getResultTemplateRegistered', () => {});
-  });
-
-  describe('#hasError', () => {
-    test('should call #props.getTemplateHasError', () => {});
-  });
+  const completeMacrotasks = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  };
 });
