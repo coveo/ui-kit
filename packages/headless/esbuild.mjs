@@ -159,7 +159,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
   const target = /}\)\(updatedArgs, api, extraOptions\);/g;
 
   const replacement = `
-  fetchFn: (request: Request | String) => {
+  fetchFn: async (request: Request | String) => {
     if (request instanceof String) {
       throw new Error("The provided 'request' must be a Request object.");
     }
@@ -168,7 +168,6 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
     [
       'method',
       'headers',
-      'body',
       'mode',
       'credentials',
       'cache',
@@ -182,6 +181,7 @@ const quanticUmd = Object.entries(quanticUseCaseEntries).map((entry) => {
       options[key] = request[key as keyof Request];
     });
     options.duplex = 'half';
+    options.body = await request.text();
 
     return fetch(url, options);
   },
