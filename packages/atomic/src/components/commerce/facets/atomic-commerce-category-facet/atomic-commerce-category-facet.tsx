@@ -29,7 +29,7 @@ import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-f
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {

@@ -19,7 +19,7 @@ export interface HeadingProps {
   part?: string;
 }
 
-export const heading: FunctionalComponentWithChildren<HeadingProps> =
+export const renderHeading: FunctionalComponentWithChildren<HeadingProps> =
   ({props}) =>
   (children) => {
     const {level, class: classname, part} = props;
