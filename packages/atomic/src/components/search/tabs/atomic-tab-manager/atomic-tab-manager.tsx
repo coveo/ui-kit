@@ -90,7 +90,7 @@ export class AtomicTabManager {
   render() {
     return (
       <Host>
-        <atomic-tab-manager-bar>
+        <atomic-tab-bar>
           <div
             role="list"
             aria-label="tab-area"
@@ -109,7 +109,7 @@ export class AtomicTabManager {
               ></atomic-tab-button>
             ))}
           </div>
-        </atomic-tab-manager-bar>
+        </atomic-tab-bar>
       </Host>
     );
   }

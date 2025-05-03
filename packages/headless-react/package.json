@@ -1,6 +1,6 @@
 {
   "name": "@coveo/headless-react",
-  "version": "2.4.19",
+  "version": "2.4.22",
   "description": "React utilities for SSR (Server Side Rendering) with headless",
   "homepage": "https://docs.coveo.com/en/headless/latest/",
   "repository": {
@@ -41,7 +41,7 @@
     "serve:typedoc": "live-server ./docs"
   },
   "dependencies": {
-    "@coveo/headless": "3.22.3"
+    "@coveo/headless": "3.23.0"
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
@@ -54,8 +54,8 @@
     "publint": "0.3.6",
     "rimraf": "6.0.1",
     "typescript": "5.8.2",
-    "typedoc": "0.28.1",
-    "vitest": "3.1.1"
+    "typedoc": "0.28.3",
+    "vitest": "3.1.2"
   },
   "peerDependencies": {
     "react": "^18 || ^19",

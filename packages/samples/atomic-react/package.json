@@ -10,8 +10,8 @@
     "build": "nx build"
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.2.34",
-    "@coveo/headless": "3.22.3",
+    "@coveo/atomic-react": "3.2.37",
+    "@coveo/headless": "3.23.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
@@ -22,6 +22,6 @@
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.3.4",
     "typescript": "5.8.2",
-    "vite": "6.0.11"
+    "vite": "6.3.3"
   }
 }
