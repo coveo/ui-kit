@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {encodeForDomAttribute} from './string-utils';
 
 describe('encodeForDomAttribute', () => {

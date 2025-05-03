@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {transformMarkdownToHtml} from './markdown-utils.js';
 
 describe('markdownUtils', () => {

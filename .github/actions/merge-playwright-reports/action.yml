@@ -1,22 +1,37 @@
 name: 'Merge Playwright Reports'
 description: 'Merge Playwright reports from different browsers and shards'
+inputs:
+  working-directory:
+    description: 'Package directory where Playwright was run (e.g., packages/atomic)'
+    required: true
+  artifact-pattern:
+    description: Glob-like pattern used to match the names of downloaded Playwright blob report artifacts (e.g., blob-report-shard-*)'
+    required: true
+  upload-artifact-name:
+    description: 'Name for the uploaded artifact'
+    required: true
+  output-folder:
+    description: 'Folder where final merged report will be generated'
+    required: false
+    default: 'playwright-report'
+
 runs:
   using: composite
   steps:
     - name: Download blob reports from GitHub Actions Artifacts
       uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4
       with:
-        path: packages/atomic/all-blob-reports
-        pattern: blob-report-*
+        path: ${{ inputs.working-directory }}/all-blob-reports
+        pattern: ${{ inputs.artifact-pattern }}
         merge-multiple: true
-    - name: Merge into JSON Report
+    - name: Merge into HTML Report
       run: npx playwright merge-reports --reporter html ./all-blob-reports
-      working-directory: packages/atomic
+      working-directory: ${{ inputs.working-directory }}
       shell: bash
 
     - name: Upload HTML report
       uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4
       with:
-        name: atomic-playwright-report
-        path: packages/atomic/playwright-report
+        name: ${{ inputs.upload-artifact-name }}
+        path: ${{ inputs.working-directory }}/${{ inputs.output-folder }}
         retention-days: 5

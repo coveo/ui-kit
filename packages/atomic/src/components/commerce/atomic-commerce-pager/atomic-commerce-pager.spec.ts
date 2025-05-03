@@ -10,7 +10,7 @@ import {
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, vi, expect, MockInstance} from 'vitest';
+import {describe, vi, expect, MockInstance, test, beforeEach} from 'vitest';
 import {AtomicCommercePager} from './atomic-commerce-pager';
 import './atomic-commerce-pager';
 
@@ -133,7 +133,9 @@ describe('AtomicCommercePager', () => {
   });
 
   test('should throw an error when numberOfPages is less than 0', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error');
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     const element = await renderPager({numberOfPages: -1});
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(

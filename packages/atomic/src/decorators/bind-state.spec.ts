@@ -1,7 +1,7 @@
 import {type Controller} from '@coveo/headless';
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindStateToController} from './bind-state';
 import type {InitializableComponent} from './types';
@@ -90,9 +90,9 @@ describe('@bindStateToController decorator', () => {
   };
 
   beforeEach(async () => {
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     controller = new MockController();
-    await await setupElement<TestElement>();
+    await setupElement<TestElement>();
   });
 
   afterEach(() => {
