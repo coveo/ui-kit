@@ -37,7 +37,9 @@ describe('buildStringTemplateFromResult', () => {
   });
 
   it('should snip out objects that cannot be evaluated properly and log a warning', () => {
-    const warnSpy = vi.spyOn(engine.logger, 'warn');
+    const warnSpy = vi
+      .spyOn(engine.logger, 'warn')
+      .mockImplementation(() => {});
     expect(
       buildStringTemplateFromResult(
         '${title}/${raw.notafield}',
