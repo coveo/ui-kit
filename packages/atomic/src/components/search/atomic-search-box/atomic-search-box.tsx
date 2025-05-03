@@ -42,7 +42,7 @@ import {
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
-import {SubmitButton} from '../../common/search-box/submit-button';
+import {SubmitButton} from '../../common/search-box/stencil-submit-button';
 import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
 import {
   SearchBoxSuggestionElement,
