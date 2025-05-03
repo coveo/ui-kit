@@ -133,7 +133,9 @@ describe('AtomicCommercePager', () => {
   });
 
   test('should throw an error when numberOfPages is less than 0', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error');
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     const element = await renderPager({numberOfPages: -1});
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
