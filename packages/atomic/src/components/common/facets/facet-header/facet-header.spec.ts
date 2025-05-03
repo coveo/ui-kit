@@ -3,7 +3,7 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {vi, expect} from 'vitest';
+import {vi, expect, describe, it, beforeAll} from 'vitest';
 import {renderFacetHeader, FacetHeaderProps} from './facet-header';
 
 describe('facetHeader', () => {
