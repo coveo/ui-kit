@@ -30,6 +30,14 @@
         ></c-quantic-result-link>
       </div>
       <div slot="excerpt">{result.Excerpt}</div>
+      <div slot="children">
+        <c-quantic-result-children
+          engine-id={engineId}
+          collection={collection}
+          folded-result-list-controller={foldedResultListController}
+          result-templates-manager={resultTemplatesManager}
+        ></c-quantic-result-children>
+      </div>
       <div slot="actions">
         <template if:true={isHovered}>
           <c-quantic-result-action-bar>
