@@ -1,7 +1,6 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {html} from 'lit';
-import {describe, beforeEach, expect, test} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {
   renderResultPlaceholders,
   renderTableResultPlaceholders,
@@ -9,129 +8,141 @@ import {
 } from './placeholders-lit';
 
 describe('renderResultPlaceholders', () => {
-  const setupElement = async (props: Partial<ResultPlaceholderProps>) => {
+  const resultPlaceholdersFixture = async (
+    props: Partial<ResultPlaceholderProps> = {}
+  ) => {
     return await renderFunctionFixture(
       html`${renderResultPlaceholders({
         props: {
-          density: props.density || 'normal',
-          display: props.display || 'grid',
-          imageSize: props.imageSize || 'large',
-          numberOfPlaceholders: props.numberOfPlaceholders || 2,
+          density: 'normal',
+          display: 'grid',
+          imageSize: 'large',
+          numberOfPlaceholders: 2,
+          ...props,
         },
       })}`
     );
   };
 
-  beforeEach(() => {
-    fixtureCleanup();
-  });
+  it('should render the correct number of atomic-result-placeholder', async () => {
+    const resultPlaceholders = await resultPlaceholdersFixture({
+      numberOfPlaceholders: 12,
+    });
 
-  test('should render correct # of atomic-result-placeholder', async () => {
-    const numberOfPlaceholders = 12;
-    const element = await setupElement({numberOfPlaceholders});
-    const placeholderElements = element.querySelectorAll(
+    const atomicResultPlaceholderElements = resultPlaceholders.querySelectorAll(
       'atomic-result-placeholder'
     );
 
-    expect(placeholderElements.length).toBe(numberOfPlaceholders);
+    expect(atomicResultPlaceholderElements.length).toBe(12);
   });
 
-  describe('each atomic-result-placeholder', () => {
-    test('should receive correct #density', async () => {
-      const density = 'compact';
-      const element = await setupElement({density});
-      const placeholderElements = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+  describe('when rendering an atomic-result-placeholder', () => {
+    it("should pass the correct 'density' attribute", async () => {
+      const resultPlaceholders = await resultPlaceholdersFixture({
+        density: 'compact',
+      });
 
-      placeholderElements.forEach((placeholder) => {
-        expect(placeholder.density).toBe(density);
+      const atomicResultPlaceholderElements =
+        resultPlaceholders.querySelectorAll('atomic-result-placeholder');
+
+      atomicResultPlaceholderElements.forEach((placeholder) => {
+        expect(placeholder.density).toBe('compact');
       });
     });
 
-    test('should receive correct #display', async () => {
-      const display = 'list';
-      const element = await setupElement({display});
-      const placeholderElements = element.querySelectorAll(
-        'atomic-result-placeholder'
-      );
+    it("should pass the correct 'display' attribute", async () => {
+      const resultPlaceholders = await resultPlaceholdersFixture({
+        display: 'list',
+      });
 
-      placeholderElements.forEach((placeholder) => {
-        expect(placeholder.display).toBe(display);
+      const atomicResultPlaceholderElements =
+        resultPlaceholders.querySelectorAll('atomic-result-placeholder');
+
+      atomicResultPlaceholderElements.forEach((placeholder) => {
+        expect(placeholder.display).toBe('list');
       });
     });
 
-    test('should receive correct #imageSize', async () => {
-      const imageSize = 'small';
-      const element = await setupElement({imageSize});
-      const placeholderElements = element.querySelectorAll(
+    it("should pass the correct 'imageSize' attribute", async () => {
+      const resultPlaceholders = await resultPlaceholdersFixture({
+        imageSize: 'small',
+      });
+
+      const atomicPlaceholderElements = resultPlaceholders.querySelectorAll(
         'atomic-result-placeholder'
       );
 
-      placeholderElements.forEach((placeholder) => {
-        expect(placeholder.imageSize).toBe(imageSize);
+      atomicPlaceholderElements.forEach((placeholder) => {
+        expect(placeholder.imageSize).toBe('small');
       });
     });
   });
 });
 
 describe('renderTableResultPlaceholders', () => {
-  const setupElement = async (
-    props: Partial<Omit<ResultPlaceholderProps, 'display'>>
+  const tableResultPlaceholdersFixture = async (
+    props: Partial<Omit<ResultPlaceholderProps, 'display'>> = {}
   ) => {
     return await renderFunctionFixture(
       html`${renderTableResultPlaceholders({
         props: {
-          density: props.density || 'normal',
-          imageSize: props.imageSize || 'large',
-          numberOfPlaceholders: props.numberOfPlaceholders || 2,
+          density: 'normal',
+          imageSize: 'large',
+          numberOfPlaceholders: 2,
+          ...props,
         },
       })}`
     );
   };
 
-  beforeEach(() => {
-    fixtureCleanup();
+  it('should render 1 atomic-result-table-placeholder', async () => {
+    const tableResultPlaceholders = await tableResultPlaceholdersFixture({});
+
+    const atomicResultTablePlaceholderElements =
+      tableResultPlaceholders.querySelectorAll(
+        'atomic-result-table-placeholder'
+      );
+
+    expect(atomicResultTablePlaceholderElements.length).toBe(1);
   });
 
-  test('should render 1 atomic-result-table-placeholder', async () => {
-    const element = await setupElement({});
-    const placeholderElements = element.querySelectorAll(
-      'atomic-result-table-placeholder'
-    );
+  describe('when rendering the atomic-result-table-placeholder element', () => {
+    it("should pass the correct 'density' attribute", async () => {
+      const tableResultPlaceholders = await tableResultPlaceholdersFixture({
+        density: 'compact',
+      });
 
-    expect(placeholderElements.length).toBe(1);
-  });
+      const atomicTableResultPlaceholderElement =
+        tableResultPlaceholders.querySelector(
+          'atomic-result-table-placeholder'
+        );
 
-  describe('the atomic-result-table-placeholder', () => {
-    test('should receive correct #density', async () => {
-      const density = 'compact';
-      const element = await setupElement({density});
-      const placeholderElement = element.querySelector(
-        'atomic-result-table-placeholder'
-      );
-
-      expect(placeholderElement?.density).toBe(density);
+      expect(atomicTableResultPlaceholderElement?.density).toBe('compact');
     });
 
-    test('should receive correct #imageSize', async () => {
-      const imageSize = 'small';
-      const element = await setupElement({imageSize});
-      const placeholderElement = element.querySelector(
-        'atomic-result-table-placeholder'
-      );
+    it("should pass the correct 'imageSize' attribute", async () => {
+      const tableResultPlaceholders = await tableResultPlaceholdersFixture({
+        imageSize: 'small',
+      });
 
-      expect(placeholderElement?.imageSize).toBe(imageSize);
+      const atomicTableResultPlaceholderElement =
+        tableResultPlaceholders.querySelector(
+          'atomic-result-table-placeholder'
+        );
+
+      expect(atomicTableResultPlaceholderElement?.imageSize).toBe('small');
     });
 
-    test('should receive correct #rows', async () => {
-      const numberOfPlaceholders = 12;
-      const element = await setupElement({numberOfPlaceholders});
-      const placeholderElement = element.querySelector(
+    it("should pass the correct 'rows' attribute", async () => {
+      const tableResultPlaceholders = await tableResultPlaceholdersFixture({
+        numberOfPlaceholders: 12,
+      });
+
+      const placeholderElement = tableResultPlaceholders.querySelector(
         'atomic-result-table-placeholder'
       );
 
-      expect(placeholderElement?.rows).toBe(numberOfPlaceholders);
+      expect(placeholderElement?.rows).toBe(12);
     });
   });
 });
