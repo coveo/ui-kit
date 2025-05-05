@@ -7,8 +7,7 @@ import {TabSetState} from './tab-set-state.js';
 describe('Tabset Selectors test suite', () => {
   describe('#selectActiveTab', () => {
     it('should return an empty string when state is undefined', () => {
-      // @ts-expect-error
-      const result = selectActiveTab(undefined as unknown);
+      const result = selectActiveTab(undefined);
       expect(result).toEqual('');
     });
 
@@ -43,8 +42,7 @@ describe('Tabset Selectors test suite', () => {
 
   describe('#selectActiveTabExpression', () => {
     it('should return an empty string when state is undefined', () => {
-      // @ts-ignore
-      const result = selectActiveTabExpression(undefined as unknown);
+      const result = selectActiveTabExpression(undefined);
       expect(result).toEqual('');
     });
 

@@ -279,16 +279,16 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
   return state.pagination.numberOfResults;
 };
 
-const mergeTabConstantQueryExpressionInAdvancedSearchQueryParameters = (
+const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
   state: StateNeededByAnswerAPI
 ) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const currentTabConstantQuery = selectActiveTabExpression(state.tabSet);
+  const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const mergedAdvancedSearchQueryParams = {
     ...advancedSearchQueryParams,
   };
-  if (!isEmptyString(currentTabConstantQuery)) {
-    mergedAdvancedSearchQueryParams.cq = `${currentTabConstantQuery} AND ${advancedSearchQueryParams.cq}`;
+  if (!isEmptyString(activeTabExpression)) {
+    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
   }
   return mergedAdvancedSearchQueryParams;
 };
@@ -300,7 +300,7 @@ export const constructAnswerQueryParams = (
   const q = selectQuery(state)?.q;
 
   const mergedAdvancedSearchQueryParams =
-    mergeTabConstantQueryExpressionInAdvancedSearchQueryParameters(state);
+    mergeActiveTabExpressionInAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
