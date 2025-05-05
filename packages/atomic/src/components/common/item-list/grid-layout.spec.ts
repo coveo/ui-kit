@@ -1,86 +1,79 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
+import {userEvent} from '@vitest/browser/context';
 import {html, nothing, TemplateResult} from 'lit';
-import {beforeEach, describe, expect, test, vi} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {GridLayoutProps, renderGridLayout} from './grid-layout';
 
 describe('renderGridLayout', () => {
-  const setupElement = async (
-    props: Partial<GridLayoutProps>,
+  const gridLayoutFixture = async (
+    props: Partial<GridLayoutProps> = {},
     children?: TemplateResult
   ) => {
-    return await renderFunctionFixture(
+    return await fixture(
       html`${renderGridLayout({
         props: {
-          item: props.item || {clickUri: 'uri', title: 'title'},
-          selectorForItem: props.selectorForItem || '#test-child',
-          setRef: props.setRef || (() => {}),
+          item: {clickUri: 'uri', title: 'title'},
+          selectorForItem: '#test-child',
+          setRef: () => {},
+          ...props,
         },
       })(children || nothing)}`
     );
   };
 
-  beforeEach(() => {
-    fixtureCleanup();
+  it('should render a grid layout element', async () => {
+    const gridLayout = await gridLayoutFixture();
+
+    expect(gridLayout).toBeInTheDocument();
   });
 
-  test('should render 1 element', async () => {
-    const element = await setupElement({});
-
-    const renderedElements = element.querySelectorAll('*');
-
-    expect(renderedElements.length).toBe(1);
-  });
-
-  test('should render with correct part', async () => {
-    const element = await setupElement({});
-
-    const renderedElement = element.querySelector('*');
+  it('should have the correct part', async () => {
+    const gridLayout = await gridLayoutFixture();
 
     expect(
-      renderedElement?.part.contains('result-list-grid-clickable-container')
+      gridLayout.part.contains('result-list-grid-clickable-container')
     ).toBe(true);
 
-    expect(renderedElement?.part.contains('outline')).toBe(true);
+    expect(gridLayout.part.contains('outline')).toBe(true);
   });
 
-  test('should render children', async () => {
-    const children = html`<div id="test-child"></div>`;
-    const element = await setupElement({}, children);
+  it('should render its children', async () => {
+    const gridLayout = await gridLayoutFixture(
+      {},
+      html`<div>Test Child 1</div>
+        <div>Test Child 2</div>`
+    );
 
-    const renderedElement = element.querySelector('*');
-
-    const renderedChildren = renderedElement?.querySelectorAll('*');
-
-    expect(renderedChildren?.length).toBe(1);
-    expect(renderedChildren?.[0]?.id).toBe('test-child');
+    expect(gridLayout.children.length).toBe(2);
+    expect(gridLayout.children.item(0)?.textContent).toBe('Test Child 1');
+    expect(gridLayout.children.item(1)?.textContent).toBe('Test Child 2');
+    expect(gridLayout.children.item(0)).toBeInTheDocument();
+    expect(gridLayout.children.item(1)).toBeInTheDocument();
   });
 
-  test('should call #setRef with rendered element', async () => {
+  it('should call #setRef with the rendered grid layout element', async () => {
     const setRef = vi.fn();
-    const element = await setupElement({setRef});
 
-    const renderedElement = element.querySelector('*');
+    const gridLayout = await gridLayoutFixture({setRef});
 
-    expect(setRef).toHaveBeenCalledWith(renderedElement);
+    expect(setRef).toHaveBeenCalledWith(gridLayout);
   });
 
-  test('when clicked, should click child element matching #selectorForItem', async () => {
-    const childClickHandler = vi.fn();
-    const children = html`<button
-      @click=${childClickHandler as Function}
-      id="test-child"
-    ></button>`;
-    const element = await setupElement(
+  it('should click the child element matching #selectorForItem when clicked', async () => {
+    const testChildHandleClick = vi.fn();
+
+    const gridLayout = await gridLayoutFixture(
       {
         selectorForItem: '#test-child',
       },
-      children
+      html`<button
+        @click=${testChildHandleClick as Function}
+        id="test-child"
+      ></button>`
     );
 
-    const renderedElement = element.querySelector('*');
+    await userEvent.click(gridLayout);
 
-    (renderedElement as HTMLElement).click();
-    expect(childClickHandler).toHaveBeenCalled();
+    expect(testChildHandleClick).toHaveBeenCalled();
   });
 });
