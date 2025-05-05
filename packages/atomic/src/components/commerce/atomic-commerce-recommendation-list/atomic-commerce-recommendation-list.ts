@@ -14,6 +14,8 @@ import {
   Product,
   Recommendations,
   RecommendationsState,
+  RecommendationsSummaryState,
+  Summary,
   buildRecommendations,
 } from '@coveo/headless/commerce';
 import {ContextRoot} from '@lit/context';
@@ -71,18 +73,14 @@ export class AtomicCommerceRecommendationList
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   public recommendations!: Recommendations;
+  public summary!: Summary<RecommendationsSummaryState>;
 
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstRecommendationLoaded-');
   private nextNewProductTarget?: FocusTargetController;
   private productListCommon!: ItemListCommon;
   private productTemplateProvider!: ProductTemplateProvider;
-
-  constructor() {
-    super();
-    const contextRoot = new ContextRoot();
-    contextRoot.attach(document.body);
-  }
+  private unsubscribeSummary!: () => void;
 
   @state()
   bindings!: CommerceBindings;
@@ -98,6 +96,8 @@ export class AtomicCommerceRecommendationList
   @bindStateToController('recommendations')
   @state()
   public recommendationsState!: RecommendationsState;
+  @state()
+  public summaryState!: RecommendationsSummaryState;
 
   @state() private currentPage = 0;
 
@@ -186,6 +186,7 @@ export class AtomicCommerceRecommendationList
     this.validateProps();
     this.validateSlotID();
     this.initRecommendations();
+    this.initSummary();
     this.initProductTemplateProvider();
     this.initProductListCommon();
     this.createSelectChildProductListener();
@@ -196,10 +197,17 @@ export class AtomicCommerceRecommendationList
 
   public disconnectedCallback() {
     super.disconnectedCallback();
+    this.unsubscribeSummary && this.unsubscribeSummary();
     this.removeEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback
     );
+  }
+
+  constructor() {
+    super();
+    const contextRoot = new ContextRoot();
+    contextRoot.attach(document.body);
   }
 
   public get focusTarget() {
@@ -296,6 +304,17 @@ export class AtomicCommerceRecommendationList
       },
     });
     this.recommendations.refresh();
+  }
+
+  // TODO: Remove once atomic-commerce-recommendation-interface is merged
+  private initSummary() {
+    this.summary = this.recommendations.summary();
+    this.unsubscribeSummary = this.summary.subscribe(() => {
+      this.summaryState = this.summary.state;
+      if (this.summaryState.firstRequestExecuted) {
+        this.bindings.store.unsetLoadingFlag(this.loadingFlag);
+      }
+    });
   }
 
   private getAtomicProductProps(product: Product) {

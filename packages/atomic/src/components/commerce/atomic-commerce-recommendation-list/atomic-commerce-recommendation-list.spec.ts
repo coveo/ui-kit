@@ -2,6 +2,7 @@ import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {renderInAtomicCommerceRecommendationInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-recommendation-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller';
+import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller';
 import {
   buildRecommendations,
   InteractiveProduct,
@@ -28,31 +29,10 @@ describe('AtomicCommerceRecommendationList', () => {
   const promoteChildToParent = vi.fn();
   const summary = vi.fn();
 
-  // TODO: test parts!
-  // const parts = (element: AtomicCommerceRecommendationList) => {
-  //   const qs = (part: string, exact = true) =>
-  //     element.shadowRoot?.querySelectorAll(
-  //       `[part${exact ? '' : '*'}="${part}"]`
-  //     );
-
-  //   return {
-  //     grid: {
-  //       outline: qs('outline', false),
-  //       resultList: qs('result-list'),
-  //       resultListGridClickableContainer: qs(
-  //         'result-list-grid-clickable-container',
-  //         false
-  //       ),
-  //     },
-  //     list: {
-  //       outline: qs('outline'),
-  //       resultList: qs('result-list'),
-  //     },
-  //   };
-  // };
-
   beforeEach(() => {
     fixtureCleanup();
+
+    summary.mockReturnValue(buildFakeSummary());
 
     vi.mocked(buildRecommendations).mockReturnValue(
       buildFakeRecommendations({
@@ -96,6 +76,28 @@ describe('AtomicCommerceRecommendationList', () => {
       );
 
     return element;
+  };
+
+  const getParts = (element: AtomicCommerceRecommendationList) => {
+    const qs = (part: string, exact = true) =>
+      element.shadowRoot?.querySelectorAll(
+        `[part${exact ? '' : '*'}="${part}"]`
+      );
+
+    return {
+      grid: {
+        outline: qs('outline', false),
+        resultList: qs('result-list'),
+        resultListGridClickableContainer: qs(
+          'result-list-grid-clickable-container',
+          false
+        ),
+      },
+      list: {
+        outline: qs('outline'),
+        resultList: qs('result-list'),
+      },
+    };
   };
 
   it('should initialize', async () => {
@@ -267,7 +269,7 @@ describe('AtomicCommerceRecommendationList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when template has error, should render empty slot', async () => {
+  it('should render empty slot when template has error', async () => {
     const element = await setupElement();
 
     //@ts-expect-error - setting private property for the sake of simplicity
@@ -287,23 +289,6 @@ describe('AtomicCommerceRecommendationList', () => {
     {display: 'grid'},
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
-    // it('when app is not loaded, should render correct # of placeholders', async () => {
-    //   const numberOfPlaceholders = 12;
-
-    //   const element = await setupElement({
-    //     isAppLoaded: false,
-    //     display,
-    //   });
-
-    //   await element.updateComplete;
-
-    //   const placeholderElements = element.shadowRoot?.querySelectorAll(
-    //     'atomic-result-placeholder'
-    //   );
-
-    //   expect(placeholderElements).toHaveLength(numberOfPlaceholders);
-    // });
-
     describe('when app is loaded', () => {
       const testWrapperRendering = async ({
         density,
@@ -318,17 +303,15 @@ describe('AtomicCommerceRecommendationList', () => {
           ...(imageSize && {imageSize}),
         });
 
-        await element.updateComplete;
+        const listWrapperElements =
+          element.shadowRoot?.querySelectorAll('.list-wrapper');
+        const listWrapperLocator = page.elementLocator(
+          listWrapperElements!.item(0)
+        );
 
-        const listWrapperElement =
-          element.shadowRoot?.querySelector('.list-wrapper');
-        const listWrapperLocator = page.elementLocator(listWrapperElement!);
-
-        // TODO: test lengths
-        const listRootElement = listWrapperElement!.querySelector(
-          '[part="result-list"]'
-        )!;
-        const listRootLocator = page.elementLocator(listRootElement);
+        const listRootElements =
+          element.shadowRoot?.querySelectorAll('.list-root');
+        const listRootLocator = page.elementLocator(listRootElements!.item(0));
 
         const expectedClass = [
           'display-grid',
@@ -336,14 +319,65 @@ describe('AtomicCommerceRecommendationList', () => {
           imageSize ? ` image-${imageSize}` : '',
         ].join('');
 
+        expect(listWrapperElements?.length).toBe(1);
         await expect.element(listWrapperLocator).toBeInTheDocument();
         await expect.element(listWrapperLocator).toHaveClass(expectedClass);
+
+        expect(listRootElements?.length).toBe(1);
         await expect.element(listRootLocator).toBeInTheDocument();
         await expect.element(listRootLocator).toHaveClass(expectedClass);
       };
 
       it('should render with list wrapper & root with correct display class', async () => {
         await testWrapperRendering();
+      });
+
+      it('should render 1 result-list part', async () => {
+        const resultListParts = getParts(
+          await setupElement({
+            display,
+          })
+        )[display].resultList;
+
+        expect(resultListParts?.length).toBe(1);
+
+        await expect
+          .element(page.elementLocator(resultListParts!.item(0)))
+          .toBeInTheDocument();
+      });
+
+      it('should render 1 outline part per product', async () => {
+        vi.mocked(buildRecommendations).mockReturnValue(
+          buildFakeRecommendations({
+            implementation: {
+              interactiveProduct,
+              promoteChildToParent,
+              summary,
+            },
+            state: {
+              products: Array.from({length: 3}, (_, i) =>
+                buildFakeProduct({permanentid: i.toString()})
+              ),
+            },
+          })
+        );
+
+        const element = await setupElement({
+          display,
+        });
+
+        const outlineParts = getParts(element).grid.outline;
+
+        expect(outlineParts?.length).toBe(3);
+        await expect
+          .element(page.elementLocator(outlineParts!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(outlineParts!.item(1)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(outlineParts!.item(2)))
+          .toBeInTheDocument();
       });
 
       describe.each<{

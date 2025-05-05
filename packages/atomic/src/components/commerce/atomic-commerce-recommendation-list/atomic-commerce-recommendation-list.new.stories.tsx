@@ -1,22 +1,41 @@
-import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
+const {decorator, play} = wrapInCommerceRecommendationInterface({});
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
-  title: 'Atomic-Commerce/Atomic Recommendation List',
+  title: 'Atomic-Commerce/Recommendation List',
   id: 'atomic-commerce-recommendation-list',
   render: renderComponent,
   decorators: [decorator],
   parameters,
   play,
+  argTypes: {
+    'attributes-display': {
+      options: ['grid', 'list'],
+      control: {type: 'radio'},
+    },
+    'attributes-density': {
+      options: ['compact', 'comfortable', 'normal'],
+      control: {type: 'radio'},
+    },
+    'attributes-image-size': {
+      options: ['small', 'large', 'icon', 'none'],
+      control: {type: 'radio'},
+    },
+  },
+
   args: {
-    'attributes-slot-id': 'd8118c04-ff59-4f03-baca-2fc5f3b81221',
+    'attributes-display': 'list',
+    'attributes-density': 'normal',
+    'attributes-image-size': 'small',
+    'attributes-slot-id': 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
+
     'slots-default': `<atomic-product-template>
-                  <template>
+                   <template>
                     <atomic-product-section-name>
                       <atomic-product-link class="font-bold"></atomic-product-link>
                     </atomic-product-section-name>
@@ -24,8 +43,13 @@ const meta: Meta = {
                       <atomic-product-image field="ec_thumbnails"></atomic-product-image>
                     </atomic-product-section-visual>
                     <atomic-product-section-metadata>
-                      <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
-                      <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                      <atomic-product-field-condition if-defined="ec_brand">
+                        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+                      </atomic-product-field-condition>
+                      <atomic-product-field-condition if-defined="ec_brand">
+                        <atomic-product-rating field="ec_rating"></atomic-product-rating>
+                        <atomic-product-multi-value-text field="cat_available_sizes"></atomic-product-multi-value-text>
+                      </atomic-product-field-condition>
                     </atomic-product-section-metadata>
                     <atomic-product-section-emphasized>
                       <atomic-product-price currency="USD"></atomic-product-price>
@@ -41,14 +65,9 @@ export default meta;
 
 export const Default: Story = {
   name: 'atomic-commerce-recommendation-list',
-};
-
-const {play: playNoFirstQuery} = wrapInCommerceInterface({
-  skipFirstRequest: true,
-});
-export const BeforeQuery: Story = {
-  tags: ['test'],
-  play: playNoFirstQuery,
+  play: async (context) => {
+    await play(context);
+  },
 };
 
 export const WithFullTemplate: Story = {
