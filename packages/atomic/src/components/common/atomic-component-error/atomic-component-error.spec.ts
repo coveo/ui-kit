@@ -19,7 +19,7 @@ describe('AtomicComponentError', () => {
   };
 
   beforeEach(async () => {
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
