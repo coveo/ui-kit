@@ -1,7 +1,6 @@
-import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, nothing, TemplateResult} from 'lit';
-import {beforeEach, describe, expect, test} from 'vitest';
+import {describe, expect, it} from 'vitest';
 import {
   DisplayWrapperProps,
   renderListRoot,
@@ -9,103 +8,94 @@ import {
 } from './display-wrapper-lit';
 
 describe('renderListWrapper', () => {
-  const setupElement = async (
-    props: Partial<DisplayWrapperProps>,
+  const listWrapperFixture = async (
+    props: Partial<DisplayWrapperProps> = {},
     children?: TemplateResult
   ) => {
-    return await renderFunctionFixture(
-      html`${renderListWrapper({props: {listClasses: props.listClasses || ''}})(
+    return await fixture(
+      html`${renderListWrapper({props: {listClasses: '', ...props}})(
         children || nothing
       )}`
     );
   };
 
-  beforeEach(() => {
-    fixtureCleanup();
+  it('should render a list wrapper element in the document', async () => {
+    const listWrapper = await listWrapperFixture();
+
+    expect(listWrapper).toBeInTheDocument();
   });
 
-  test('should render 1 element', async () => {
-    const element = await setupElement({});
+  it('should render the list wrapper element with the correct classes', async () => {
+    const listWrapper = await listWrapperFixture({
+      listClasses: 'test-class-1 test-class-2',
+    });
 
-    const renderedElements = element.querySelectorAll('*');
-
-    expect(renderedElements.length).toBe(1);
+    expect(listWrapper).toHaveClass('test-class-1');
+    expect(listWrapper).toHaveClass('test-class-2');
   });
 
-  test('should render with correct class', async () => {
-    const props = {listClasses: 'test-class'};
-    const element = await setupElement(props);
+  it('should render its children', async () => {
+    const listWrapper = await listWrapperFixture(
+      {},
+      html`<div>Test Child 1</div>
+        <div>Test Child 2</div>`
+    );
 
-    const renderedElement = element.querySelector('*');
-
-    expect(renderedElement?.classList).toContain('test-class');
-  });
-
-  test('should render children', async () => {
-    const children = html`<div id="test-child"></div>`;
-    const element = await setupElement({}, children);
-
-    const renderedElement = element.querySelector('*');
-
-    const renderedChildren = renderedElement?.querySelectorAll('*');
-
-    expect(renderedChildren?.length).toBe(1);
-    expect(renderedChildren?.[0]?.id).toBe('test-child');
+    expect(listWrapper.children.length).toBe(2);
+    expect(listWrapper.children.item(0)?.textContent).toBe('Test Child 1');
+    expect(listWrapper.children.item(1)?.textContent).toBe('Test Child 2');
+    expect(listWrapper.children.item(0)).toBeInTheDocument();
+    expect(listWrapper.children.item(1)).toBeInTheDocument();
   });
 });
 
 describe('renderListRoot', () => {
-  const setupElement = async (
-    props: Partial<DisplayWrapperProps>,
+  const listRootFixture = async (
+    props: Partial<DisplayWrapperProps> = {},
     children?: TemplateResult
   ) => {
-    return await renderFunctionFixture(
+    return await fixture(
       html`${renderListRoot({
         props: {
-          listClasses: props.listClasses || '',
+          listClasses: '',
+          ...props,
         },
       })(children || nothing)}`
     );
   };
 
-  beforeEach(() => {
-    fixtureCleanup();
+  it('should render a list root element in the document', async () => {
+    const listRoot = await listRootFixture();
+
+    expect(listRoot).toBeInTheDocument();
   });
 
-  test('should render 1 element', async () => {
-    const element = await setupElement({});
+  it('should render the list root element with the correct classes', async () => {
+    const listRoot = await listRootFixture({
+      listClasses: 'test-class-1 test-class-2',
+    });
 
-    const renderedElements = element.querySelectorAll('*');
-
-    expect(renderedElements.length).toBe(1);
+    expect(listRoot).toHaveClass('test-class-1');
+    expect(listRoot).toHaveClass('test-class-2');
   });
 
-  test('should render with correct class', async () => {
-    const props = {listClasses: 'test-class'};
-    const element = await setupElement(props);
+  it('should render the list root element with the correct part', async () => {
+    const listRoot = await listRootFixture();
 
-    const renderedElement = element.querySelector('*');
-
-    expect(renderedElement?.classList).toContain('test-class');
+    expect(listRoot.part.value).toBe('result-list');
   });
 
-  test('should render with correct part', async () => {
-    const element = await setupElement({});
+  it('should render its children', async () => {
+    const listRoot = await listRootFixture(
+      {},
+      html`<div>Test Child 1</div>
+        <div>Test Child 2</div>`
+    );
 
-    const renderedElement = element.querySelector('*');
-
-    expect(renderedElement?.part.value).toBe('result-list');
-  });
-
-  test('should render children', async () => {
-    const children = html`<div id="test-child"></div>`;
-    const element = await setupElement({}, children);
-
-    const renderedElement = element.querySelector('*');
-
-    const renderedChildren = renderedElement?.querySelectorAll('*');
-
-    expect(renderedChildren?.length).toBe(1);
-    expect(renderedChildren?.[0]?.id).toBe('test-child');
+    expect(listRoot.children.length).toBe(2);
+    expect(listRoot.children.item(0)?.textContent).toBe('Test Child 1');
+    expect(listRoot.children.item(1)?.textContent).toBe('Test Child 2');
+    expect(listRoot.children.item(0)).toBeInTheDocument();
+    expect(listRoot.children.item(1)).toBeInTheDocument();
   });
 });
