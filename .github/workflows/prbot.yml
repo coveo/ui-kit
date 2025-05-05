@@ -141,6 +141,7 @@ jobs:
     name: 'Run unit tests'
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
@@ -201,7 +202,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     env:
-      maximumShards: 24
+      maximumShards: 12
     outputs:
       testsToRun: ${{ steps.determine-tests.outputs.testsToRun }}
       shardIndex: ${{ steps.determine-tests.outputs.shardIndex }}
@@ -346,36 +347,6 @@ jobs:
             28,
             29,
             30,
-            31,
-            32,
-            33,
-            34,
-            35,
-            36,
-            37,
-            38,
-            39,
-            40,
-            41,
-            42,
-            43,
-            44,
-            45,
-            46,
-            47,
-            48,
-            49,
-            50,
-            51,
-            52,
-            53,
-            54,
-            55,
-            56,
-            57,
-            58,
-            59,
-            60,
           ]
     steps:
       - name: Harden Runner

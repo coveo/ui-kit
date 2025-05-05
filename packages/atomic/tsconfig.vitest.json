@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ES2022",
+    "target": "ES2021",
+    "moduleResolution": "bundler",
+    "lib": ["dom", "ES2024"],
+    "declaration": false,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["vitest-utils/**/*.ts"]
+}

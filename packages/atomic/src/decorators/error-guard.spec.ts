@@ -26,7 +26,7 @@ describe('@errorGuard decorator', () => {
   };
 
   beforeEach(async () => {
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     await setupElement();
   });
 

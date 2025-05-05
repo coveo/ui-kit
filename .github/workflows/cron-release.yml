@@ -1,0 +1,9 @@
+name: Scheduled Release
+on:
+  schedule:
+    # At 02:00 (UTC) Wednesday/ 21:00 (ETC) every Tuesday.
+    - cron: '0 2 * * 3'
+
+jobs:
+  release:
+    uses: ./.github/workflows/release.yml

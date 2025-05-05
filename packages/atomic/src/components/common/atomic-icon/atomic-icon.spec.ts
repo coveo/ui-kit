@@ -112,6 +112,7 @@ describe('AtomicIcon', () => {
   });
 
   it('handles fetch errors gracefully', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     parseAssetURLMock.mockReturnValue('http://example.com/icon.svg');
     fetchMock.mockRejectedValue(new Error('Network error'));
 
