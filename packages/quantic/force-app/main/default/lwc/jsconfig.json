@@ -92,6 +92,7 @@
       "c/quanticGeneratedAnswer": [
         "quanticGeneratedAnswer/quanticGeneratedAnswer.js"
       ],
+      "c/quanticAriaLive": ["quanticAriaLive/quanticAriaLive.js"],
       "c/*": ["*"]
     }
   },
