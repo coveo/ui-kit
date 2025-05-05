@@ -28,7 +28,6 @@ export const decorators = [
   (Story) => {
     const story = Story();
 
-
     if (story && story._$litType$) {
       const container = document.createElement('div');
 
