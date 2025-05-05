@@ -312,6 +312,7 @@ describe('AtomicCommerceProductList', () => {
     expect(renderedElements).toHaveLength(1);
     expect(renderedElements?.item(0).tagName).toBe('SLOT');
     expect(renderedElements?.item(0).children).toHaveLength(0);
+    expect(renderedElements?.item(0)).toBeInTheDocument();
   });
 
   it("should render 1 result-list-grid-clickable-container part per product when #display is 'grid' & app is loaded", async () => {
@@ -335,7 +336,7 @@ describe('AtomicCommerceProductList', () => {
     const resultListGridClickableContainerParts =
       getParts(element).gridOnly.resultListGridClickableContainer;
 
-    expect(resultListGridClickableContainerParts?.length).toBe(3);
+    expect(resultListGridClickableContainerParts).toHaveLength(3);
     await expect
       .element(
         page.elementLocator(resultListGridClickableContainerParts!.item(0))
@@ -358,20 +359,28 @@ describe('AtomicCommerceProductList', () => {
     {display: 'list'},
   ])('when #display is $display', ({display}) => {
     it('should render correct # of atomic-result-placeholder when app is not loaded', async () => {
-      const numberOfPlaceholders = 12;
-
       const element = await setupElement({
         isAppLoaded: false,
         display,
-        numberOfPlaceholders,
+        numberOfPlaceholders: 4,
       });
 
       const atomicResultPlaceholderElements =
         element.shadowRoot?.querySelectorAll('atomic-result-placeholder');
 
-      expect(atomicResultPlaceholderElements).toHaveLength(
-        numberOfPlaceholders
-      );
+      expect(atomicResultPlaceholderElements).toHaveLength(4);
+      expect(
+        page.elementLocator(atomicResultPlaceholderElements!.item(0))
+      ).toBeInTheDocument();
+      expect(
+        page.elementLocator(atomicResultPlaceholderElements!.item(1))
+      ).toBeInTheDocument();
+      expect(
+        page.elementLocator(atomicResultPlaceholderElements!.item(2))
+      ).toBeInTheDocument();
+      expect(
+        page.elementLocator(atomicResultPlaceholderElements!.item(3))
+      ).toBeInTheDocument();
     });
 
     describe('when app is loaded', () => {
@@ -386,7 +395,7 @@ describe('AtomicCommerceProductList', () => {
           })
         ).gridOrList.resultList;
 
-        expect(resultListParts?.length).toBe(1);
+        expect(resultListParts).toHaveLength(1);
 
         await expect
           .element(page.elementLocator(resultListParts!.item(0)))
@@ -415,7 +424,7 @@ describe('AtomicCommerceProductList', () => {
 
         const outlineParts = getParts(element).gridOrList.outline;
 
-        expect(outlineParts?.length).toBe(3);
+        expect(outlineParts).toHaveLength(3);
         await expect
           .element(page.elementLocator(outlineParts!.item(0)))
           .toBeInTheDocument();
@@ -480,11 +489,11 @@ describe('AtomicCommerceProductList', () => {
           imageSize ? ` image-${imageSize}` : '',
         ].join('');
 
-        expect(listWrapperElements?.length).toBe(1);
+        expect(listWrapperElements).toHaveLength(1);
         await expect.element(listWrapperLocator).toBeInTheDocument();
         await expect.element(listWrapperLocator).toHaveClass(expectedClass);
 
-        expect(listRootElements?.length).toBe(1);
+        expect(listRootElements).toHaveLength(1);
         await expect.element(listRootLocator).toBeInTheDocument();
         await expect.element(listRootLocator).toHaveClass(expectedClass);
       };
@@ -502,6 +511,9 @@ describe('AtomicCommerceProductList', () => {
         element.shadowRoot?.querySelectorAll('atomic-result-table-placeholder');
 
       expect(atomicResultTablePlaceholderElements).toHaveLength(1);
+      expect(
+        page.elementLocator(atomicResultTablePlaceholderElements!.item(0))
+      ).toBeInTheDocument();
     });
 
     describe('when app is loaded', () => {
@@ -537,9 +549,15 @@ describe('AtomicCommerceProductList', () => {
         const atomicTextElements =
           element.shadowRoot?.querySelectorAll('atomic-text');
 
-        expect(atomicTextElements?.length).toBe(2);
-        expect(atomicTextElements?.[0].value).toBe('Label 1');
-        expect(atomicTextElements?.[1].value).toBe('Label 2');
+        expect(atomicTextElements).toHaveLength(2);
+        expect(atomicTextElements?.item(0).value).toBe('Label 1');
+        expect(atomicTextElements?.item(1).value).toBe('Label 2');
+        await expect
+          .element(page.elementLocator(atomicTextElements!.item(0)))
+          .toBeInTheDocument();
+        await expect
+          .element(page.elementLocator(atomicTextElements!.item(1)))
+          .toBeInTheDocument();
       });
 
       it('should render 1 result-table part', async () => {
@@ -547,7 +565,7 @@ describe('AtomicCommerceProductList', () => {
 
         const resultTableParts = getParts(element).table.resultTable;
 
-        expect(resultTableParts?.length).toBe(1);
+        expect(resultTableParts).toHaveLength(1);
         await expect
           .element(page.elementLocator(resultTableParts!.item(0)))
           .toBeInTheDocument();
@@ -559,7 +577,7 @@ describe('AtomicCommerceProductList', () => {
         const resultTableHeadingParts =
           getParts(element).table.resultTableHeading;
 
-        expect(resultTableHeadingParts?.length).toBe(1);
+        expect(resultTableHeadingParts).toHaveLength(1);
         await expect
           .element(page.elementLocator(resultTableHeadingParts!.item(0)))
           .toBeInTheDocument();
@@ -571,7 +589,7 @@ describe('AtomicCommerceProductList', () => {
         const resultTableHeadingRowParts =
           getParts(element).table.resultTableHeadingRow;
 
-        expect(resultTableHeadingRowParts?.length).toBe(1);
+        expect(resultTableHeadingRowParts).toHaveLength(1);
         await expect
           .element(page.elementLocator(resultTableHeadingRowParts!.item(0)))
           .toBeInTheDocument();
@@ -603,7 +621,7 @@ describe('AtomicCommerceProductList', () => {
         const resultTableHeadingCellParts =
           getParts(element).table.resultTableHeadingCell;
 
-        expect(resultTableHeadingCellParts?.length).toBe(2);
+        expect(resultTableHeadingCellParts).toHaveLength(2);
         await expect
           .element(page.elementLocator(resultTableHeadingCellParts!.item(0)))
           .toBeInTheDocument();
@@ -617,7 +635,7 @@ describe('AtomicCommerceProductList', () => {
 
         const resultTableBodyParts = getParts(element).table.resultTableBody;
 
-        expect(resultTableBodyParts?.length).toBe(1);
+        expect(resultTableBodyParts).toHaveLength(1);
         await expect
           .element(page.elementLocator(resultTableBodyParts!.item(0)))
           .toBeInTheDocument();
@@ -643,7 +661,7 @@ describe('AtomicCommerceProductList', () => {
 
         const resultTableRowParts = getParts(element).table.resultTableRow;
 
-        expect(resultTableRowParts?.length).toBe(3);
+        expect(resultTableRowParts).toHaveLength(3);
         await expect
           .element(page.elementLocator(resultTableRowParts!.item(0)))
           .toBeInTheDocument();
@@ -676,7 +694,7 @@ describe('AtomicCommerceProductList', () => {
         const resultTableRowEvenParts =
           getParts(element).table.resultTableRowEven;
 
-        expect(resultTableRowEvenParts?.length).toBe(2); // floor(5 / 2) = 2
+        expect(resultTableRowEvenParts).toHaveLength(2); // floor(5 / 2) = 2
         await expect
           .element(page.elementLocator(resultTableRowEvenParts!.item(0)))
           .toBeInTheDocument();
@@ -706,7 +724,7 @@ describe('AtomicCommerceProductList', () => {
         const resultTableRowOddParts =
           getParts(element).table.resultTableRowOdd;
 
-        expect(resultTableRowOddParts?.length).toBe(3); // ceil(5 / 2) = 3
+        expect(resultTableRowOddParts).toHaveLength(3); // ceil(5 / 2) = 3
         await expect
           .element(page.elementLocator(resultTableRowOddParts!.item(0)))
           .toBeInTheDocument();
