@@ -426,32 +426,6 @@ export namespace Components {
         "previousButtonIcon": string;
     }
     /**
-     * @alpha The `atomic-commerce-product-list-stencil` component is responsible for displaying products.
-     */
-    interface AtomicCommerceProductListStencil {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed for products.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The desired number of placeholders to display while the product list is loading.
-         */
-        "numberOfPlaceholders": number;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param productRenderingFunction
-         */
-        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
-    }
-    /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
      * @alpha 
      */
@@ -4014,15 +3988,6 @@ declare global {
         prototype: HTMLAtomicCommercePagerElement;
         new (): HTMLAtomicCommercePagerElement;
     };
-    /**
-     * @alpha The `atomic-commerce-product-list-stencil` component is responsible for displaying products.
-     */
-    interface HTMLAtomicCommerceProductListStencilElement extends Components.AtomicCommerceProductListStencil, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceProductListStencilElement: {
-        prototype: HTMLAtomicCommerceProductListStencilElement;
-        new (): HTMLAtomicCommerceProductListStencilElement;
-    };
     interface HTMLAtomicCommerceProductsPerPageElementEventMap {
         "atomic/scrollToTop": any;
     }
@@ -5964,7 +5929,6 @@ declare global {
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
         "atomic-commerce-pager": HTMLAtomicCommercePagerElement;
-        "atomic-commerce-product-list-stencil": HTMLAtomicCommerceProductListStencilElement;
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
@@ -6500,27 +6464,6 @@ declare namespace LocalJSX {
           * The SVG icon to use to display the Previous button.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
          */
         "previousButtonIcon"?: string;
-    }
-    /**
-     * @alpha The `atomic-commerce-product-list-stencil` component is responsible for displaying products.
-     */
-    interface AtomicCommerceProductListStencil {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed for products.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The desired number of placeholders to display while the product list is loading.
-         */
-        "numberOfPlaceholders"?: number;
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9687,7 +9630,6 @@ declare namespace LocalJSX {
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
         "atomic-commerce-pager": AtomicCommercePager;
-        "atomic-commerce-product-list-stencil": AtomicCommerceProductListStencil;
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
@@ -9962,10 +9904,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-pager": LocalJSX.AtomicCommercePager & JSXBase.HTMLAttributes<HTMLAtomicCommercePagerElement>;
-            /**
-             * @alpha The `atomic-commerce-product-list-stencil` component is responsible for displaying products.
-             */
-            "atomic-commerce-product-list-stencil": LocalJSX.AtomicCommerceProductListStencil & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListStencilElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
              * @alpha 
