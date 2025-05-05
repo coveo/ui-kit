@@ -1,4 +1,8 @@
 import {Result} from '@coveo/headless';
+import {
+  InsightAnalyticsActionCreators,
+  loadInsightAnalyticsActions,
+} from '@coveo/headless/insight';
 import {Component, Event, EventEmitter, Prop, State, h} from '@stencil/core';
 import AttachIcon from '../../../images/attach.svg';
 import CopyIcon from '../../../images/copy-dark.svg';
@@ -10,8 +14,8 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {IconButton} from '../../common/iconButton';
-import {Bindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../../search/result-template-components/result-template-decorators';
+import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 export interface InsightResultActionClickedEvent {
   action: string;
@@ -33,8 +37,10 @@ export enum Actions {
   tag: 'atomic-insight-result-action',
   styleUrl: 'atomic-insight-result-action.pcss',
 })
-export class AtomicInsightResultAction implements InitializableComponent {
-  @InitializeBindings() public bindings!: Bindings;
+export class AtomicInsightResultAction
+  implements InitializableComponent<InsightBindings>
+{
+  @InitializeBindings() public bindings!: InsightBindings;
   @ResultContext() private result!: Result;
   @State() public error!: Error;
 
@@ -57,11 +63,49 @@ export class AtomicInsightResultAction implements InitializableComponent {
   @Prop({mutable: true}) public tooltip = '';
 
   /**
+   * The text tooltip to show on the result action icon for some time after clicking the button.
+   */
+  @Prop({mutable: true}) public tooltipOnClick = '';
+
+  /**
    * The type of action to perform when the result action is clicked. This will be sent along the event fired when the button is clicked.
    */
   @Prop({mutable: true}) public action: Actions | string = '';
 
+  private actions!: InsightAnalyticsActionCreators;
+
+  public initialize() {
+    this.actions = loadInsightAnalyticsActions(this.bindings.engine);
+  }
+
   private onClick() {
+    if (this.tooltipOnClick) {
+      const originalTooltip = this.tooltip;
+      this.tooltip = this.tooltipOnClick;
+      setTimeout(() => {
+        this.tooltip = originalTooltip;
+      }, 1000);
+    }
+
+    switch (this.action) {
+      case Actions.CopyToClipboard:
+        this.bindings.engine.dispatch(
+          this.actions.logCopyToClipboard(this.result)
+        );
+        navigator.clipboard.writeText(this.result?.clickUri);
+        break;
+      case Actions.PostToFeed:
+        this.bindings.engine.dispatch(
+          this.actions.logFeedItemTextPost(this.result)
+        );
+        break;
+      case Actions.SendAsEmail:
+        this.bindings.engine.dispatch(
+          this.actions.logCaseSendEmail(this.result)
+        );
+        break;
+    }
+
     this.actionClicked.emit({action: this.action, result: this.result});
   }
 

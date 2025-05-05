@@ -2,11 +2,11 @@ import {LitElement, noChange} from 'lit';
 import {directive, Directive, Part, PartType} from 'lit/directive.js';
 
 class DisplayIfDirective extends Directive {
-  render<T>(_condition: boolean, _children: T) {
+  render<T>(_condition: boolean, _children: () => T) {
     return noChange;
   }
 
-  update<T>(part: Part, [displayCondition, children]: [boolean, T]) {
+  update<T>(part: Part, [displayCondition, children]: [boolean, () => T]) {
     if (part.type !== PartType.CHILD) {
       throw new Error(
         `"displayIf" can only be used in child bindings. Expected PartType "${PartType.CHILD}", but received PartType "${part.type}".`
@@ -21,7 +21,7 @@ class DisplayIfDirective extends Directive {
     if (!displayCondition) {
       return;
     }
-    return children;
+    return children();
   }
 }
 
@@ -32,7 +32,7 @@ class DisplayIfDirective extends Directive {
  * ```typescript
  * class MyElement extends LitElement {
  *   render() {
- *     return displayIf(shouldDisplay, html`<children-element></children-element>`);
+ *     return displayIf(shouldDisplay, () => html`<children-element></children-element>`);
  *   }
  * }
  * ```

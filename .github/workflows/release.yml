@@ -1,14 +1,12 @@
 name: Create release
 on:
-  schedule:
-    # At 13:00 (UTC) every Wednesday.
-    - cron: '0 13 * * 3'
-  workflow_dispatch:
+  workflow_call:
     inputs:
       version:
         description: '⚠ be sure of yourself ⚠'
         required: false
         default: ''
+        type: string
       debug:
         description: 'Add DEBUG=* to the env if true'
         type: boolean
@@ -40,12 +38,12 @@ jobs:
           app-id: ${{ secrets.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
           owner: coveo
-          repository: ui-kit
+          repositories: 'ui-kit'
       - name: Release
         run: npm run release
         env:
           VERSION: ${{ inputs.version }}
-          DEBUG: ${{ inputs.debug && '*' || '' }}
+          DEBUG: ${{ inputs.debug && '@coveo/semantic-monorepo-tools:*' || '' }}
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

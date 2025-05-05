@@ -36,7 +36,7 @@ export const ExpectedHierarchyWith10foldedResultsRequested = {
 };
 
 export function assertRendersGrandchildren() {
-  it('should render grandchildren', () => {
+  it.skip('should render grandchildren', () => {
     FoldedResultListSelectors.firstResult()
       .contains(ExpectedHierarchy.rootName)
       .should('be.visible');

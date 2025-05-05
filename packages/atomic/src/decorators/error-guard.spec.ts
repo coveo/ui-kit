@@ -1,7 +1,7 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {errorGuard} from './error-guard';
 
 describe('@errorGuard decorator', () => {
@@ -26,7 +26,7 @@ describe('@errorGuard decorator', () => {
   };
 
   beforeEach(async () => {
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     await setupElement();
   });
 
