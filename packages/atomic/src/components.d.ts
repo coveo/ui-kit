@@ -9,10 +9,10 @@ import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 import { CategoryFacet, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -40,10 +40,10 @@ export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 export { CategoryFacet, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
-export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
-export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
+export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
