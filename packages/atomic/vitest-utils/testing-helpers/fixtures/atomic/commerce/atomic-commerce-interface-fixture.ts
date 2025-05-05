@@ -145,5 +145,7 @@ export async function renderInAtomicCommerceInterface<T extends LitElement>({
   }
 
   const element = atomicInterface.shadowRoot!.querySelector<T>(selector)!;
+  await element.updateComplete;
+
   return {element, atomicInterface};
 }

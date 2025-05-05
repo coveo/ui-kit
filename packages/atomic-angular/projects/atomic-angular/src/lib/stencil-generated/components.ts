@@ -360,32 +360,6 @@ export declare interface AtomicCommerceNumericFacet extends Components.AtomicCom
 
 
 @ProxyCmp({
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
-})
-@Component({
-  selector: 'atomic-commerce-pager',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon'],
-})
-export class AtomicCommercePager {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
-  }
-}
-
-
-export declare interface AtomicCommercePager extends Components.AtomicCommercePager {
-
-  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
-}
-
-
-@ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
   methods: ['setRenderFunction']
 })

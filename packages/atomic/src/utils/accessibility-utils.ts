@@ -1,14 +1,56 @@
 import {LitElement} from 'lit';
+import {ReactiveController, ReactiveControllerHost} from 'lit';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {InitializableComponent} from '../decorators/types';
+import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 
-// const findAriaLiveEventName = 'atomic/accessibility/findAriaLive';
-
-//TODO: Reimplement to fit Lit
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FindAriaLiveEventArgs {
-  // element?: HTMLAtomicAriaLiveElement;
+  element?: HTMLAtomicAriaLiveElement;
+}
+
+export class AriaLiveRegionController implements ReactiveController {
+  private host: ReactiveControllerHost;
+  private regionName: string;
+  private assertive: boolean;
+
+  constructor(
+    host: ReactiveControllerHost,
+    regionName: string,
+    assertive = false
+  ) {
+    this.host = host;
+    this.regionName = regionName;
+    this.assertive = assertive;
+
+    this.host.addController(this);
+  }
+
+  private getAriaLiveElement() {
+    const event = buildCustomEvent<FindAriaLiveEventArgs>(
+      'atomic/accessibility/findAriaLive',
+      {}
+    );
+    document.dispatchEvent(event);
+    const {element} = event.detail;
+    return element;
+  }
+
+  private dispatchMessage(message: string) {
+    this.getAriaLiveElement()?.updateMessage(
+      this.regionName,
+      message,
+      this.assertive
+    );
+  }
+
+  set message(msg: string) {
+    this.dispatchMessage(msg);
+  }
+
+  hostUpdate() {
+    this.getAriaLiveElement()?.registerRegion(this.regionName, this.assertive);
+  }
 }
 
 //TODO: Reimplement to fit Lit

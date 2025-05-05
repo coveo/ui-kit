@@ -48,15 +48,19 @@ export function bindings() {
 
           this.initialized = true;
 
-          this.bindings = value;
-          const updateLanguage = () => this.requestUpdate();
-          this.bindings.i18n.on('languageChanged', updateLanguage);
-          const unsubscribeLanguage = () =>
-            this.bindings?.i18n.off('languageChanged', updateLanguage);
+          try {
+            this.bindings = value;
+            const updateLanguage = () => this.requestUpdate();
+            this.bindings.i18n.on('languageChanged', updateLanguage);
+            const unsubscribeLanguage = () =>
+              this.bindings?.i18n.off('languageChanged', updateLanguage);
 
-          this.initialize?.();
+            this.initialize?.();
 
-          this.unsubscribeLanguage = unsubscribeLanguage;
+            this.unsubscribeLanguage = unsubscribeLanguage;
+          } catch (error) {
+            this.error = error as Error;
+          }
         },
         subscribe: true,
       });

@@ -149,7 +149,7 @@ export interface ContextSection {
 
 export interface DictionaryFieldContextSection {
   /**
-   * Holds the [dictionary field context](https://docs.coveo.com/en/2036/index-content/about-fields#dictionary-fields) information.
+   * Holds the [dictionary field context](https://docs.coveo.com/en/2036/) information.
    */
   dictionaryFieldContext: DictionaryFieldContextState;
 }

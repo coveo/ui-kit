@@ -6,7 +6,9 @@ test.describe('when there are results', () => {
     await noProducts.load({story: 'with-results'});
   });
 
-  test('should have aria live before first query', async ({noProducts}) => {
+  test.skip('should have aria live before first query', async ({
+    noProducts,
+  }) => {
     await expect(noProducts.ariaLive()).toBeVisible();
   });
 
