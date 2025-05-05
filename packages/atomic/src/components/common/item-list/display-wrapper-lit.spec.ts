@@ -25,7 +25,7 @@ describe('renderListWrapper', () => {
     expect(listWrapper).toBeInTheDocument();
   });
 
-  it('should render the list wrapper element with the correct classes', async () => {
+  it('should apply class attribute', async () => {
     const listWrapper = await listWrapperFixture({
       listClasses: 'test-class-1 test-class-2',
     });
@@ -34,7 +34,7 @@ describe('renderListWrapper', () => {
     expect(listWrapper).toHaveClass('test-class-2');
   });
 
-  it('should render its children', async () => {
+  it('should render children', async () => {
     const listWrapper = await listWrapperFixture(
       {},
       html`<div>Test Child 1</div>
@@ -70,7 +70,7 @@ describe('renderListRoot', () => {
     expect(listRoot).toBeInTheDocument();
   });
 
-  it('should render the list root element with the correct classes', async () => {
+  it('should apply class attribute', async () => {
     const listRoot = await listRootFixture({
       listClasses: 'test-class-1 test-class-2',
     });
@@ -79,13 +79,13 @@ describe('renderListRoot', () => {
     expect(listRoot).toHaveClass('test-class-2');
   });
 
-  it('should render the list root element with the correct part', async () => {
+  it('should have the correct part', async () => {
     const listRoot = await listRootFixture();
 
     expect(listRoot.part.value).toBe('result-list');
   });
 
-  it('should render its children', async () => {
+  it('should render children', async () => {
     const listRoot = await listRootFixture(
       {},
       html`<div>Test Child 1</div>
