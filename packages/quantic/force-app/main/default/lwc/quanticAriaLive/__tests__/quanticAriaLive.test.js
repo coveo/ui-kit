@@ -3,7 +3,7 @@ import QuanticAriaLive from 'c/quanticAriaLive';
 
 const createTestComponent = buildCreateTestComponent(
   QuanticAriaLive,
-  'c-quantic-facet'
+  'c-quantic-aria-live'
 );
 
 describe('c-quantic-aria-live', () => {
