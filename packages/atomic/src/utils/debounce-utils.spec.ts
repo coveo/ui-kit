@@ -1,4 +1,4 @@
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {buildDebouncedQueue, DebouncedQueue} from './debounce-utils';
 
 describe('buildDebouncedQueue', () => {

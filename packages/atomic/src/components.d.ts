@@ -12,7 +12,7 @@ import { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { i18n } from "i18next";
-import { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
@@ -43,7 +43,7 @@ export { Range } from "./components/commerce/facets/facet-number-input/atomic-co
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { i18n } from "i18next";
-export { RedirectionPayload } from "./components/search/atomic-search-box/redirection-payload";
+export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -1326,6 +1326,10 @@ export namespace Components {
           * The text tooltip to show on the result action icon.
          */
         "tooltip": string;
+        /**
+          * The text tooltip to show on the result action icon for some time after clicking the button.
+         */
+        "tooltipOnClick": string;
     }
     interface AtomicInsightResultActionBar {
     }
@@ -7363,6 +7367,10 @@ declare namespace LocalJSX {
           * The text tooltip to show on the result action icon.
          */
         "tooltip"?: string;
+        /**
+          * The text tooltip to show on the result action icon for some time after clicking the button.
+         */
+        "tooltipOnClick"?: string;
     }
     interface AtomicInsightResultActionBar {
     }

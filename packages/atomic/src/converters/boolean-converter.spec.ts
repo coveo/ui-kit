@@ -3,10 +3,13 @@ import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {describe, expect, it, vi} from 'vitest';
+import {describe, expect, it, vi, beforeEach} from 'vitest';
 import {booleanConverter} from './boolean-converter';
 
 describe('booleanConverter', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
   @customElement('test-element')
   class TestElement extends LitElement {
     @property({
@@ -57,7 +60,9 @@ describe('booleanConverter', () => {
   });
 
   it('should print a warning when converting "false" to false', async () => {
-    const consoleWarnSpy = vi.spyOn(console, 'warn');
+    const consoleWarnSpy = vi
+      .spyOn(console, 'warn')
+      .mockImplementation(() => {});
     await fixture<TestElement>(
       html`<test-element value="false"></test-element>`
     );

@@ -35,15 +35,15 @@ import {
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
-import {FacetHeader} from '../../../common/facets/facet-header/facet-header';
+import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
 import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
-import {FacetSearchMatches} from '../../../common/facets/facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
+import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
