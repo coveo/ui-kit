@@ -90,9 +90,9 @@ describe('@bindStateToController decorator', () => {
   };
 
   beforeEach(async () => {
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     controller = new MockController();
-    await await setupElement<TestElement>();
+    await setupElement<TestElement>();
   });
 
   afterEach(() => {
