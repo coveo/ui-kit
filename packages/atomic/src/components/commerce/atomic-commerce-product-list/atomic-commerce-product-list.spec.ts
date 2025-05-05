@@ -1,4 +1,3 @@
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
 import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
 import {buildFakeProductListing} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product-listing-controller';
@@ -33,8 +32,6 @@ describe('AtomicCommerceProductList', () => {
   const summary = vi.fn();
 
   beforeEach(() => {
-    fixtureCleanup();
-
     summary.mockReturnValue(buildFakeSummary());
 
     vi.mocked(buildProductListing).mockReturnValue(
@@ -193,7 +190,7 @@ describe('AtomicCommerceProductList', () => {
       detail: {child: 'childProductId'},
     });
 
-    element.host.dispatchEvent(event);
+    element.dispatchEvent(event);
 
     expect(element.searchOrListing.promoteChildToParent).toHaveBeenCalledWith(
       'childProductId'
@@ -220,10 +217,7 @@ describe('AtomicCommerceProductList', () => {
     it("should remove 'atomic/selectChildProduct' event listener", async () => {
       const element = await setupElement();
 
-      const removeEventListenerSpy = vi.spyOn(
-        element.host,
-        'removeEventListener'
-      );
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
       element.remove();
 

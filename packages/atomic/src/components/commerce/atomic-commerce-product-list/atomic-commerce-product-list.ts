@@ -86,7 +86,6 @@ export class AtomicCommerceProductList
 
   public searchOrListing!: Search | ProductListing;
   public summary!: Summary<ProductListingSummaryState | SearchSummaryState>;
-  public host!: HTMLElement;
 
   private itemRenderingFunction: ItemRenderingFunction;
   private loadingFlag = randomID('firstProductLoaded-');
@@ -163,7 +162,6 @@ export class AtomicCommerceProductList
 
   public initialize() {
     this.validateProps();
-    this.host = this;
     this.initSearchOrListing();
     this.initSummary();
     this.initProductTemplateProvider();
@@ -177,7 +175,7 @@ export class AtomicCommerceProductList
   public disconnectedCallback(): void {
     super.disconnectedCallback();
     this.unsubscribeSummary?.();
-    this.host?.removeEventListener(
+    this.removeEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback
     );
@@ -245,7 +243,7 @@ export class AtomicCommerceProductList
     this.productTemplateProvider = new ProductTemplateProvider({
       includeDefaultTemplate: true,
       templateElements: Array.from(
-        this.host?.querySelectorAll('atomic-product-template')
+        this.querySelectorAll('atomic-product-template')
       ),
       getResultTemplateRegistered: () => this.resultTemplateRegistered,
       getTemplateHasError: () => this.templateHasError,
@@ -263,7 +261,7 @@ export class AtomicCommerceProductList
       engineSubscribe: this.bindings.engine.subscribe,
       getCurrentNumberOfItems: () => this.searchOrListingState.products.length,
       getIsLoading: () => this.searchOrListingState.isLoading,
-      host: this.host,
+      host: this,
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
@@ -271,7 +269,7 @@ export class AtomicCommerceProductList
   }
 
   private createSelectChildProductListener() {
-    this.host.addEventListener(
+    this.addEventListener(
       'atomic/selectChildProduct',
       this.selectChildProductCallback
     );
@@ -426,7 +424,7 @@ export class AtomicCommerceProductList
         return renderTableLayout({
           props: {
             firstItem,
-            host: this.host,
+            host: this,
             itemRenderingFunction: this.itemRenderingFunction,
             listClasses,
             logger: this.bindings.engine.logger,
