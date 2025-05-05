@@ -53,10 +53,10 @@ describe('renderDisplayWrapper', () => {
       );
 
       expect(displayWrapper.children.length).toBe(2);
-      expect(displayWrapper.children.item(0)?.textContent).toBe('Test Child 1');
-      expect(displayWrapper.children.item(1)?.textContent).toBe('Test Child 2');
       expect(displayWrapper.children.item(0)).toBeInTheDocument();
+      expect(displayWrapper.children.item(0)?.textContent).toBe('Test Child 1');
       expect(displayWrapper.children.item(1)).toBeInTheDocument();
+      expect(displayWrapper.children.item(1)?.textContent).toBe('Test Child 2');
     });
   });
 
@@ -128,12 +128,12 @@ describe('renderDisplayWrapper', () => {
       const children = displayWrapper.querySelectorAll('.child');
 
       expect(children).toHaveLength(2);
+      expect(children.item(0)).toBeInTheDocument();
       expect(children.item(0).parentElement).toHaveClass('list-root');
       expect(children.item(0).textContent).toBe('Test Child 1');
-      expect(children.item(0)).toBeInTheDocument();
+      expect(children.item(1)).toBeInTheDocument();
       expect(children.item(1).parentElement).toHaveClass('list-root');
       expect(children.item(1).textContent).toBe('Test Child 2');
-      expect(children.item(1)).toBeInTheDocument();
     });
   });
 });
