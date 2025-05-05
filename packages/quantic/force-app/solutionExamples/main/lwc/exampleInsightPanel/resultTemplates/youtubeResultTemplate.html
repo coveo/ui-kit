@@ -1,5 +1,7 @@
 <template>
-  <div class="result-action_container slds-is-relative slds-var-p-horizontal_medium">
+  <div
+    class="result-action_container slds-is-relative slds-var-p-horizontal_medium"
+  >
     <c-quantic-result-template data-id="youtube">
       <div slot="label" class="slds-grid result-labels">
         <c-quantic-colored-result-badge
@@ -18,7 +20,12 @@
         ></c-quantic-result-tag>
       </div>
       <div slot="title" class="slds-grid">
-        <c-quantic-result-link result={result} engine-id={engineId} class="slds-truncate" target="_blank"></c-quantic-result-link>
+        <c-quantic-result-link
+          result={result}
+          engine-id={engineId}
+          class="slds-truncate"
+          target="_blank"
+        ></c-quantic-result-link>
       </div>
       <div
         slot="visual"
@@ -50,11 +57,19 @@
         </template>
       </div>
       <div slot="bottom-metadata">
-        <div class="result-metadata_container slds-grid slds-text-align_left slds-m-top_small">
+        <div
+          class="result-metadata_container slds-grid slds-text-align_left slds-m-top_small"
+        >
           <template if:true={videoTimeSpan}>
             <div class="slds-var-m-right_medium detail__video-time-span">
-              <lightning-icon icon-name="utility:clock" size="xx-small" aria-hidden="true"></lightning-icon>
-              <span class="slds-m-left_xx-small slds-text-body_small">{videoTimeSpan}</span>
+              <lightning-icon
+                icon-name="utility:clock"
+                size="xx-small"
+                aria-hidden="true"
+              ></lightning-icon>
+              <span class="slds-m-left_xx-small slds-text-body_small"
+                >{videoTimeSpan}</span
+              >
             </div>
           </template>
           <c-quantic-result-field
@@ -68,7 +83,9 @@
         </div>
         <template if:true={viewedByCustomerTagIsVisible}>
           <div class="slds-grid slds-var-m-top_xx-small">
-            <c-quantic-viewed-by-customer-badge result={result}></c-quantic-viewed-by-customer-badge>
+            <c-quantic-viewed-by-customer-badge
+              result={result}
+            ></c-quantic-viewed-by-customer-badge>
           </div>
         </template>
       </div>
