@@ -1,4 +1,4 @@
-// The Lit equivalent of this file is item-placeholders.ts
+// The Lit equivalent of this file is item-placeholders.ts. The Lit version doesn't include the placeholder guard.
 import {FunctionalComponent, h} from '@stencil/core';
 import {
   ItemDisplayDensity,
