@@ -527,8 +527,7 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-insight-panel
   e2e-headless-ssr-test-app-dev:
     name: 'Run e2e tests on Headless SSR App router sample in dev mode'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -541,8 +540,7 @@ jobs:
       - uses: ./.github/actions/e2e-headless-ssr-app-dev
   e2e-headless-ssr-test-app-prod:
     name: 'Run e2e tests on Headless SSR App router sample in prod mode'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -555,8 +553,7 @@ jobs:
       - uses: ./.github/actions/e2e-headless-ssr-app-prod
   e2e-headless-ssr-test-pages-dev:
     name: 'Run e2e tests on Headless SSR Pages router sample in dev mode'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -569,8 +566,7 @@ jobs:
       - uses: ./.github/actions/e2e-headless-ssr-pages-dev
   e2e-headless-ssr-test-pages-prod:
     name: 'Run e2e tests on Headless SSR Pages router sample in prod mode'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
