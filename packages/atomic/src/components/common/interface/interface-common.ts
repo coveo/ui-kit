@@ -6,8 +6,8 @@ import {html} from 'lit';
 import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
 import '../atomic-component-error/atomic-component-error.js';
 import {AnyBindings, AnyEngineType} from './bindings.js';
-import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
 import {init18n} from './i18n.js';
+import {i18nBackendOptions, i18nTranslationNamespace} from './i18n.js';
 
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;

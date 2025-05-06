@@ -16,7 +16,6 @@ export interface FunctionalComponentWithChildren<T> {
     props: T;
   }): (children: FunctionalComponentChildren) => TemplateResult;
 }
-
 export interface FunctionalComponentGuard<T> {
   ({
     props,
@@ -24,5 +23,4 @@ export interface FunctionalComponentGuard<T> {
     props: T;
   }): (children: FunctionalComponentChildren) => DirectiveResult;
 }
-
 type FunctionalComponentChildren = TemplateResult | typeof nothing;

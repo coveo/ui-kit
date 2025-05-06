@@ -160,7 +160,7 @@ export class AtomicCommerceInterface
    *
    */
   @property({type: String, attribute: 'language-assets-path', reflect: true})
-  languageAssetsPath = '/lang';
+  languageAssetsPath = './lang';
 
   /**
    * The icon assets path. By default, this will be a relative URL pointing to `./assets`.
@@ -169,7 +169,7 @@ export class AtomicCommerceInterface
    *
    */
   @property({type: String, attribute: 'icon-assets-path', reflect: true})
-  iconAssetsPath = '/assets';
+  iconAssetsPath = './assets';
 
   private i18Initialized: Promise<void>;
 

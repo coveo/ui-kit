@@ -10,26 +10,25 @@ export interface ItemListGuardProps {
   templateHasError: boolean;
 }
 
-export const itemListGuard: FunctionalComponentGuard<ItemListGuardProps> = ({
-  props,
-  children,
-}) => {
-  const {
-    hasError,
-    hasItems,
-    hasTemplate,
-    firstRequestExecuted,
-    templateHasError,
-  } = props;
+export const itemListGuard: FunctionalComponentGuard<ItemListGuardProps> =
+  ({props}) =>
+  (children) => {
+    const {
+      hasError,
+      hasItems,
+      hasTemplate,
+      firstRequestExecuted,
+      templateHasError,
+    } = props;
 
-  const condition = !(
-    hasError ||
-    (firstRequestExecuted && !hasItems) ||
-    !hasTemplate
-  );
+    const condition = !(
+      hasError ||
+      (firstRequestExecuted && !hasItems) ||
+      !hasTemplate
+    );
 
-  return displayIf(
-    condition,
-    html`${templateHasError ? html`<slot></slot>` : ''}${children}`
-  );
-};
+    return displayIf(
+      condition,
+      () => html`${templateHasError ? html`<slot></slot>` : ''}${children}`
+    );
+  };
