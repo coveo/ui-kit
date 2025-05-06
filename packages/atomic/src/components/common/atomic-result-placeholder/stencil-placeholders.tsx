@@ -1,3 +1,4 @@
+// The Lit equivalent of this file is item-placeholders.ts
 import {FunctionalComponent, h} from '@stencil/core';
 import {
   ItemDisplayDensity,
