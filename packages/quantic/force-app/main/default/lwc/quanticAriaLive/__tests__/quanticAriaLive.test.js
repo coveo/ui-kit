@@ -82,7 +82,7 @@ describe('c-quantic-aria-live', () => {
   });
 
   describe('when multiple regions are registered', () => {
-    it('should correctly create the regions', async () => {
+    it('should correctly handle multiple regions', async () => {
       const element = createTestComponent();
       element.registerRegion('region1');
       element.updateMessage('region1', 'Message 1', true);
