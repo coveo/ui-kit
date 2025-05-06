@@ -34,7 +34,7 @@
     "dev": "npm run build:bundles -- dev",
     "build": "nx build",
     "build:bundles": "node esbuild.mjs",
-    "build:definitions": "tsc -p src/tsconfig.build.json",
+    "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
     "test": "vitest run",
     "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
