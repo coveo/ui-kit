@@ -7,7 +7,6 @@
   },
   "main": "./dist/headless.esm.js",
   "module": "./dist/headless.esm.js",
-  "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "0.0.1",
   "files": [
@@ -16,14 +15,17 @@
   "type": "module",
   "exports": {
     ".": {
+      "types": "./dist/headless.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
     "./headless": {
+      "types": "./dist/headless.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
     "./utilities": {
+      "types": "./dist/utilities.d.ts",
       "import": "./dist/utilities.esm.js",
       "default": "./dist/utilities.esm.js"
     }
@@ -32,6 +34,7 @@
     "dev": "npm run build:bundles -- dev",
     "build": "nx build",
     "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json",
     "test": "vitest run",
     "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
