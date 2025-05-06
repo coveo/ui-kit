@@ -16,7 +16,7 @@ describe('renderDisplayWrapper', () => {
     );
   };
 
-  describe('when display is table', () => {
+  describe("when display is 'table'", () => {
     it('should render a list wrapper element in the document', async () => {
       const displayWrapper = await displayWrapperFixture({
         display: 'table',
