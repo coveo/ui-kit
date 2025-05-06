@@ -5,9 +5,9 @@ import {TemplateProvider, TemplateProviderProps} from './template-provider';
 describe('TemplateProvider', () => {
   describe('#constructor', () => {
     it('should create an instance', () => {
-      const instance = createInstance();
+      const templateProvider = templateProviderFixture();
 
-      expect(instance).toBeInstanceOf(TestTemplateProvider);
+      expect(templateProvider).toBeInstanceOf(TestTemplateProvider);
     });
 
     it('should call the received #buildManager function', () => {
@@ -17,7 +17,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate: vi.fn(),
       }));
 
-      createInstance({}, buildManager);
+      templateProviderFixture({}, buildManager);
 
       expect(buildManager).toHaveBeenCalledOnce();
     });
@@ -25,7 +25,7 @@ describe('TemplateProvider', () => {
     it("should call the #props.setResultTemplatesRegistered function with 'true'", async () => {
       const setResultTemplateRegistered = vi.fn();
 
-      createInstance({
+      templateProviderFixture({
         setResultTemplateRegistered,
       });
 
@@ -39,7 +39,7 @@ describe('TemplateProvider', () => {
       it("should call the #props.setTemplateHasError function with 'true' when #getTemplate resolves to null on any template element", async () => {
         const setTemplateHasError = vi.fn();
 
-        createInstance({
+        templateProviderFixture({
           templateElements: [
             buildFakeTemplateElement(),
             buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
@@ -56,7 +56,7 @@ describe('TemplateProvider', () => {
       it('should not call the #props.setTemplateHasError function when #getTemplate resolves to a template on every template element', async () => {
         const setTemplateHasError = vi.fn();
 
-        createInstance({
+        templateProviderFixture({
           templateElements: [
             buildFakeTemplateElement(),
             buildFakeTemplateElement(),
@@ -90,7 +90,7 @@ describe('TemplateProvider', () => {
           conditions: [],
         });
 
-        createInstance(
+        templateProviderFixture(
           {
             templateElements: [
               buildFakeTemplateElement(getTemplate1),
@@ -119,7 +119,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        createInstance(
+        templateProviderFixture(
           {
             includeDefaultTemplate: true,
             templateElements: [
@@ -140,7 +140,7 @@ describe('TemplateProvider', () => {
       it('should not call the #props.setTemplateHasError function', async () => {
         const setTemplateHasError = vi.fn();
 
-        createInstance({
+        templateProviderFixture({
           templateElements: [],
           setTemplateHasError,
         });
@@ -159,7 +159,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        createInstance(
+        templateProviderFixture(
           {
             includeDefaultTemplate: true,
             templateElements: [],
@@ -188,7 +188,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        createInstance(
+        templateProviderFixture(
           {
             includeDefaultTemplate: false,
             templateElements: [],
@@ -213,7 +213,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate: vi.fn(),
       });
       const selectTemplate = vi.fn();
-      const fixture = await createInstance({}, buildManager);
+      const fixture = await templateProviderFixture({}, buildManager);
 
       fixture.getTemplateContent(item);
 
@@ -231,7 +231,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate,
       });
       const selectLinkTemplate = vi.fn();
-      const fixture = createInstance({}, buildManager);
+      const fixture = templateProviderFixture({}, buildManager);
 
       fixture.getLinkTemplateContent(item);
 
@@ -242,7 +242,7 @@ describe('TemplateProvider', () => {
 
   describe('#getEmptyTemplateContent', () => {
     it('should return an empty DocumentFragment', async () => {
-      const fixture = createInstance();
+      const fixture = templateProviderFixture();
 
       const result = fixture.getEmptyLinkTemplateContent();
 
@@ -253,7 +253,7 @@ describe('TemplateProvider', () => {
   describe('#templatesRegistered', () => {
     it('should call the #props.getResultTemplateRegistered function', async () => {
       const getResultTemplateRegistered = vi.fn();
-      const fixture = createInstance({getResultTemplateRegistered});
+      const fixture = templateProviderFixture({getResultTemplateRegistered});
 
       fixture.templatesRegistered;
 
@@ -264,7 +264,7 @@ describe('TemplateProvider', () => {
   describe('#hasError', () => {
     it('should call the #props.getTemplateHasError function', async () => {
       const getTemplateHasError = vi.fn();
-      const fixture = await createInstance({getTemplateHasError});
+      const fixture = await templateProviderFixture({getTemplateHasError});
 
       fixture.hasError;
 
@@ -299,8 +299,8 @@ describe('TemplateProvider', () => {
     }
   }
 
-  const createInstance = (
-    props?: Partial<TemplateProviderProps<unknown>>,
+  const templateProviderFixture = (
+    props: Partial<TemplateProviderProps<unknown>> = {},
     buildManager?: () => TemplatesManager<
       unknown,
       DocumentFragment,
@@ -309,14 +309,13 @@ describe('TemplateProvider', () => {
   ) => {
     return new TestTemplateProvider(
       {
-        getResultTemplateRegistered:
-          props?.getResultTemplateRegistered ?? vi.fn(),
-        getTemplateHasError: props?.getTemplateHasError ?? vi.fn(),
-        setTemplateHasError: props?.setTemplateHasError ?? vi.fn(),
-        templateElements: props?.templateElements ?? [],
-        includeDefaultTemplate: props?.includeDefaultTemplate ?? true,
-        setResultTemplateRegistered:
-          props?.setResultTemplateRegistered ?? vi.fn(),
+        getResultTemplateRegistered: vi.fn(),
+        getTemplateHasError: vi.fn(),
+        setTemplateHasError: vi.fn(),
+        templateElements: [],
+        includeDefaultTemplate: true,
+        setResultTemplateRegistered: vi.fn(),
+        ...props,
       },
       buildManager ??
         vi.fn(() => ({
