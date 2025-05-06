@@ -48,7 +48,7 @@ describe('c-quantic-aria-live', () => {
         '[data-key="testRegion"]'
       );
       expect(region).not.toBeNull();
-      expect(region.getAttribute('aria-live')).toBe('polite'); // Should remain polite
+      expect(region.getAttribute('aria-live')).toBe('polite'); // Should not override the initial aria-live attribute
       expect(region.textContent).toBe('');
     });
   });
