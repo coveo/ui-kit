@@ -77,6 +77,7 @@ export class ItemListCommon {
       return;
     }
 
+    this.indexOfResultToFocus = undefined;
     const elementToFocus = getFirstFocusableDescendant(element) ?? element;
     this.props.nextNewItemTarget.setTarget(elementToFocus);
   }

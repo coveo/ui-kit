@@ -139,6 +139,17 @@ describe('ItemListCommon', () => {
         itemListCommon.focusOnNextNewResult();
       });
 
+      it('should make next #setNewResultRef call return without calling #getFirstFocusableDescendant or #props.nextNewItemTarget.setTarget', () => {
+        const element = document.createElement('span');
+        element.appendChild(document.createElement('div'));
+
+        itemListCommon.setNewResultRef(element, 0);
+        itemListCommon.setNewResultRef(element, 0);
+
+        expect(getFirstFocusableDescendant).toHaveBeenCalledOnce();
+        expect(setTarget).toHaveBeenCalledOnce();
+      });
+
       it('should call #props.nextNewItemTarget.setTarget with #element when #element has no focusable descendants', () => {
         const elementToFocus = document.createElement('span');
         elementToFocus.appendChild(document.createElement('div'));
