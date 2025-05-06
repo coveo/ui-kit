@@ -3,7 +3,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '../../common/layout/display-options';
+} from '../layout/display-options.js';
 
 interface ResultPlaceholderProps {
   density: ItemDisplayDensity;

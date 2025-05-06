@@ -20,7 +20,7 @@ import {
 import {ArrayProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/stencil-utils';
-import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
