@@ -1,3 +1,4 @@
+import {AtomicCommerceRecommendationInterface} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
 import {
   buildCommerceEngine,
   CommerceEngineConfiguration,
@@ -15,9 +16,17 @@ export const wrapInCommerceRecommendationInterface = (
   play: (context: StoryContext) => Promise<void>;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-recommendation-interface data-testid="root-recs-interface">
-      ${story()}
-    </atomic-commerce-recommendation-interface>
+    <section>
+      <atomic-commerce-recommendation-interface
+        data-testid="root-recs-interface"
+      >
+        <atomic-commerce-layout>
+          <atomic-layout-section section="main">
+            ${story()}
+          </atomic-layout-section>
+        </atomic-commerce-layout>
+      </atomic-commerce-recommendation-interface>
+    </section>
   `,
   play: async ({canvasElement, step}) => {
     await customElements.whenDefined(
@@ -25,7 +34,7 @@ export const wrapInCommerceRecommendationInterface = (
     );
     const canvas = within(canvasElement);
     const recommendationInterface =
-      await canvas.findByTestId<HTMLAtomicCommerceRecommendationInterfaceElement>(
+      await canvas.findByTestId<AtomicCommerceRecommendationInterface>(
         'root-recs-interface'
       );
     await step('Render the Recommendation Interface', async () => {
