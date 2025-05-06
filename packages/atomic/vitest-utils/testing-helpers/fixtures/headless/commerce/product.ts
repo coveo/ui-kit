@@ -1,8 +1,8 @@
 import {Product} from '@coveo/headless/commerce';
 
 export const buildFakeProduct = (product?: Partial<Product>): Product => ({
-  clickUri: expect.any(String),
-  additionalFields: expect.any(Object),
+  clickUri: '',
+  additionalFields: {},
   children: [],
   ec_brand: 'brand',
   ec_category: [],
