@@ -5,7 +5,7 @@ import {describe, expect, it} from 'vitest';
 import {
   renderItemPlaceholders,
   ItemPlaceholdersProps,
-} from './item-placeholders.js';
+} from './item-placeholders';
 
 describe('renderItemPlaceholders', () => {
   const itemPlaceholdersFixture = async (
