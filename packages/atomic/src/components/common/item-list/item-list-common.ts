@@ -68,6 +68,7 @@ export class ItemListCommon {
     if (resultIndex === 0) {
       this.firstResultEl = element;
     }
+
     if (resultIndex !== this.indexOfResultToFocus) {
       return;
     }
@@ -76,7 +77,6 @@ export class ItemListCommon {
       return;
     }
 
-    this.indexOfResultToFocus = undefined;
     const elementToFocus = getFirstFocusableDescendant(element) ?? element;
     this.props.nextNewItemTarget.setTarget(elementToFocus);
   }
