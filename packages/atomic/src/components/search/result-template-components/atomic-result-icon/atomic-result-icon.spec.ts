@@ -1,3 +1,5 @@
+import {describe, it} from 'vitest';
+
 describe('AtomicResultIcon', () => {
   describe('when not used inside a result template', () => {
     it.todo('should remove itself');

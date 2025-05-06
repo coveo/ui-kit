@@ -1,23 +1,16 @@
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
+import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
-import type {
-  Decorator,
-  Meta,
-  StoryObj as Story,
-} from '@storybook/web-components';
+import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
-
-const wrapInSearchBox: Decorator = (story) => {
-  return html`
-    <atomic-commerce-search-box>
-      <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-      ${story()}
-    </atomic-commerce-search-box>
-  `;
-};
+const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
+  skipFirstRequest: true,
+});
+const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox(html`
+  <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+`);
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
@@ -25,7 +18,7 @@ const meta: Meta = {
     'Atomic-Commerce/Interface Components/atomic-commerce-search-box-instant-products',
   id: 'atomic-commerce-search-box-instant-products',
   render: renderComponent,
-  decorators: [wrapInSearchBox, decorator],
+  decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters,
   play,
   argTypes: {
