@@ -33,8 +33,6 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should create the right selector when usage is select', () => {
-      constructAnswerQueryParams(streamAnswerAPIStateMock as any, 'select');
-
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
@@ -45,11 +43,6 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should merge tab expression in request constant query when expression is not a blank string', () => {
-      constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithATabWithAnExpression as any,
-        'select'
-      );
-
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithATabWithAnExpression as any,
@@ -62,11 +55,6 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should not include tab info when there is NO tab', () => {
-      constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutAnyTab as any,
-        'select'
-      );
-
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutAnyTab as any,
