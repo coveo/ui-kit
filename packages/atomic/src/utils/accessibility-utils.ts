@@ -1,5 +1,8 @@
-import {ReactiveController, ReactiveControllerHost} from 'lit';
+import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import {AnyBindings} from '../components';
+import {InitializableComponent} from '../decorators/types';
 import {buildCustomEvent} from './event-utils';
+import {defer} from './utils';
 
 export interface FindAriaLiveEventArgs {
   element?: HTMLAtomicAriaLiveElement;
@@ -49,12 +52,81 @@ export class AriaLiveRegionController implements ReactiveController {
   }
 }
 
-//TODO: Reimplement to fit Lit
 export class FocusTargetController {
-  public setTarget(_el: HTMLElement) {}
-  public focusAfterSearch() {}
-  public focusOnNextTarget() {}
-  public async focus() {}
+  private bindings: AnyBindings;
+  private lastSearchId?: string;
+  private element?: HTMLElement;
+  private onFocusCallback?: Function;
+  private doFocusAfterSearch = false;
+  private doFocusOnNextTarget = false;
+
+  constructor(
+    private component: InitializableComponent<AnyBindings> & LitElement
+  ) {
+    this.bindings = component.bindings;
+    this.handleComponentRenderLoop();
+  }
+
+  public setTarget(el: Element | undefined) {
+    if (!el) {
+      return;
+    }
+    this.element = el as HTMLElement;
+    if (this.doFocusOnNextTarget) {
+      this.doFocusOnNextTarget = false;
+      this.focus();
+    }
+  }
+
+  public async focus() {
+    await defer();
+    this.element?.focus();
+    this.onFocusCallback?.();
+  }
+
+  public focusAfterSearch() {
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+      this.bindings.engine
+    );
+    this.doFocusAfterSearch = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public focusOnNextTarget() {
+    this.doFocusOnNextTarget = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public disableForCurrentSearch() {
+    if (
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+      this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+    }
+  }
+
+  private handleComponentRenderLoop() {
+    this.component.updateComplete.then(async () => {
+      if (!this.bindings) {
+        return;
+      }
+      if (
+        this.doFocusAfterSearch &&
+        this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+          this.lastSearchId
+      ) {
+        this.doFocusAfterSearch = false;
+        if (this.element) {
+          const el = this.element;
+          // The focus seems to be flaky without deferring, especially on iOS.
+          await defer();
+          el.focus();
+          this.onFocusCallback?.();
+        }
+      }
+    });
+  }
 }
 
 function isFocusable(element: Element) {
