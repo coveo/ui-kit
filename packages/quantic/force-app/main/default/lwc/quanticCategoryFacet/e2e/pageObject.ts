@@ -21,16 +21,16 @@ export class CategoryFacetObject {
     return this.facet.getByRole('button', {name: /all categories/i});
   }
 
-  get facetValueInput(): Locator {
-    return this.facet.getByRole('checkbox', {name: 'Facet value option'});
-  }
-
   get showMoreFacetValuesButton(): Locator {
-    return this.facet.getByTestId('facet-values__show-more');
+    return this.facet.getByRole('button', {
+      name: /Show more values for the .* facet/i,
+    });
   }
 
   get showLessFacetValuesButton(): Locator {
-    return this.facet.getByTestId('facet-values__show-less');
+    return this.facet.getByRole('button', {
+      name: /Show less values for the .* facet/i,
+    });
   }
 
   get facetSearchBoxInput(): Locator {
@@ -38,11 +38,7 @@ export class CategoryFacetObject {
   }
 
   get facetBreadcrumb(): Locator {
-    return this.page.getByTestId('facet-breadcrumb');
-  }
-
-  get clearSelectionButton(): Locator {
-    return this.page.getByTestId('clear-selection-button');
+    return this.page.getByTestId('category-facet-breadcrumb');
   }
 
   facetBreadcrumbValueByIndex(index: number): Locator {
@@ -53,19 +49,7 @@ export class CategoryFacetObject {
     await this.facetValue.nth(index).click();
   }
 
-  async clickOnShowMoreFacetValuesButton(): Promise<void> {
-    await this.showMoreFacetValuesButton.click();
-  }
-
-  async clickOnShowLessFacetValuesButton(): Promise<void> {
-    await this.showLessFacetValuesButton.click();
-  }
-
   async fillFacetSearchBoxInput(query: string): Promise<void> {
     await this.facetSearchBoxInput.fill(query);
-  }
-
-  async clickOnClearSelectionButton(): Promise<void> {
-    await this.clearSelectionButton.click();
   }
 }

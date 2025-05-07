@@ -20,11 +20,13 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
-        const facetSelectUaRequest = baseFacet.waitForFacetSelectUaAnalytics({
+        const expectedFacetData = {
           facetId,
           facetField: field,
           facetValue: values[selectedIndex].value,
-        });
+        };
+        const facetSelectUaRequest =
+          baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         const firstSearchResponsePromise = baseFacet.waitForSearchResponse();
 
         await facet.clickOnFacetValue(selectedIndex);
@@ -34,6 +36,11 @@ useCaseTestCases.forEach((useCase) => {
         const {analytics: analyticsForFacetSelect} =
           baseFacet.extractDataFromResponse(firstSearchResponse);
         expect(analyticsForFacetSelect.actionCause).toEqual('facetSelect');
+        if (useCase.value === useCaseEnum.search) {
+          expect(analyticsForFacetSelect.customData).toEqual(
+            expect.objectContaining(expectedFacetData)
+          );
+        }
 
         const FacetClearAllUaRequest =
           baseFacet.waitForFacetClearAllUaAnalytics({
@@ -53,6 +60,12 @@ useCaseTestCases.forEach((useCase) => {
     });
 
     test.describe('when expanding and collapsing facet values using Show More/Less buttons', () => {
+      test.use({
+        options: {
+          numberOfValues: 2,
+        },
+      });
+
       test('should fetch additional facet values and send correct UA analytics', async ({
         baseFacet,
         facet,
@@ -111,17 +124,24 @@ useCaseTestCases.forEach((useCase) => {
           new RegExp(exampleCaption)
         );
         const {facetId, field, values} = facetData;
-        const uaRequest = baseFacet.waitForFacetSelectUaAnalytics({
+        const expectedFacetData = {
           facetId,
           facetField: field,
           facetValue: values[facetValueIndex].value,
-        });
+        };
+        const uaRequest =
+          baseFacet.waitForFacetSelectUaAnalytics(expectedFacetData);
         const searchResponsePromise = baseFacet.waitForSearchResponse();
-
         await facet.clickOnFacetValue(facetValueIndex);
-
         await uaRequest;
-        await searchResponsePromise;
+        const searchResponse = await searchResponsePromise;
+        const {analytics} = baseFacet.extractDataFromResponse(searchResponse);
+
+        if (useCase.value === useCaseEnum.search) {
+          expect(analytics.customData).toEqual(
+            expect.objectContaining(expectedFacetData)
+          );
+        }
         expect(facet.facetBreadcrumbValueByIndex(facetValueIndex)).toHaveText(
           exampleCaption
         );

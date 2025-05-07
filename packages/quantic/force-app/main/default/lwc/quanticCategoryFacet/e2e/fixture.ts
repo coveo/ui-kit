@@ -15,6 +15,7 @@ interface FacetOptions {
   value?: string;
   caption?: string;
   withSearch?: boolean;
+  numberOfValues?: number;
 }
 
 type QuanticFacetE2EFixtures = {
@@ -39,7 +40,7 @@ export const testSearch = facetBase.extend<QuanticFacetE2EFixtures>({
     if (facetResponseMock) {
       await baseFacet.mockSearchWithFacetResponse(facetResponseMock);
     }
-    configuration.configure({...options, numberOfValues: 2});
+    configuration.configure(options);
     await baseFacet.waitForSearchResponse();
 
     await use(new CategoryFacetObject(page));
