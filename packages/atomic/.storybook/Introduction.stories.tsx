@@ -9,8 +9,12 @@ export default meta;
 
 export const Default: StoryObj = {
   name: 'Default',
-  render: () => '<h1>Welcome to the Coveo Atomic Storybook</h1>',
-  // Would be nice to hide the panel, but not currently possible
+  render: () => `<h1>Welcome to the Coveo Atomic Storybook</h1>
+  <p>
+    This Storybook showcases interactive documentation for the <a href="https://docs.coveo.com/en/atomic/latest" target="_blank">Coveo Atomic library</a>.
+  </p>
+  `,
+  // It would be nice to hide the panel, but it isn't currently possible
   // https://github.com/storybookjs/storybook/issues/14442
 };
 
