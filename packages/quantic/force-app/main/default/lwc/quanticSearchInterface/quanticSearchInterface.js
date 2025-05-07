@@ -91,11 +91,11 @@ export default class QuanticSearchInterface extends LightningElement {
         if (!getHeadlessBindings(this.engineId)?.engine) {
           getHeadlessConfiguration()
             .then((data) => {
-              const {organizationId, accessToken, ...rest} = JSON.parse(data);
+              const {organizationId, accessTokens, ...rest} = JSON.parse(data);
               this.engineOptions = {
                 configuration: {
                   organizationId,
-                  accessToken,
+                  accessTokens,
                   search: {
                     searchHub: this.searchHub,
                     pipeline: this.pipeline,
@@ -170,6 +170,7 @@ export default class QuanticSearchInterface extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
+    this.engine = engine;
     if (this.initialized) {
       return;
     }
@@ -261,6 +262,16 @@ export default class QuanticSearchInterface extends LightningElement {
   }
 
   onHashChange = () => {
-    this.urlManager.synchronize(this.fragment);
+    const {updateAdvancedSearchQueries} =
+      CoveoHeadless.loadAdvancedSearchQueryActions(this.engine);
+    this.engine.dispatch(
+      updateAdvancedSearchQueries({
+        aq: '@fileType=html',
+        cq: '@fileType=pdf',
+        dq: '',
+        lq: '',
+      })
+    );
+    // this.urlManager.synchronize(this.fragment);
   };
 }

@@ -1,5 +1,6 @@
 /**
  * Simple Apex Controller to fetch data for Headless initialization.
+ * DO NOT MERGE!!!!!!
  */
 global with sharing class HeadlessController {
   /**
@@ -16,5 +17,6 @@ global with sharing class HeadlessController {
      * `return CoveoTokenProvider.getHeadlessConfiguration();`
      */
     return SampleTokenProvider.getHeadlessConfiguration();
+    // return CoveoTokenProvider.getHeadlessConfiguration();
   }
 }
