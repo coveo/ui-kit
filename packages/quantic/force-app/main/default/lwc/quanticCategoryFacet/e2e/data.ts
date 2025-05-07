@@ -1,6 +1,6 @@
 const facetData = {
-  facetId: 'objecttype',
-  field: 'objecttype',
+  facetId: 'geographicalhierarchy',
+  field: 'geographicalhierarchy',
   moreValuesAvailable: true,
   values: [
     {
