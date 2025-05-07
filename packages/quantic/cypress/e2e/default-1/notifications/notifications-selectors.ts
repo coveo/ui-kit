@@ -11,7 +11,7 @@ export const NotificationsSelectors: NotificationsSelector = {
   get: () => cy.get(notificationsComponent),
 
   notifications: () =>
-    NotificationsSelectors.get().find('[data-cy="notification"]'),
+    NotificationsSelectors.get().find('[data-testid="notification"]'),
   notification: (index: number) =>
-    NotificationsSelectors.get().find('[data-cy="notification"]').eq(index),
+    NotificationsSelectors.get().find('[data-testid="notification"]').eq(index),
 };

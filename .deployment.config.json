@@ -293,6 +293,54 @@
       }
     },
     {
+      "id": "deploy-shopify-patch-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_PATCH_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-minor-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MINOR_VERSION]",
+        "source":  "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-major-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-shopify-nightly-to-s3-version",
+      "s3": {
+        "disabled": $[IS_NOT_NIGHTLY],
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/shopify/v$[SHOPIFY_MAJOR_VERSION]-nightly",
+        "source": "packages/shopify/cdn",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "invalidate-cloudfront-cache",
       "terraform": {
         "terragrunt_path": "",
