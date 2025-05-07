@@ -23,7 +23,7 @@ jest.mock('c/quanticUtils', () => ({
 jest.mock('c/quanticHeadlessLoader');
 
 const selectors = {
-  facetContent: '[data-test="facet-content"]',
+  facetContent: '[data-testid="facet-content"]',
   componentError: 'c-quantic-component-error',
   placeholder: 'c-quantic-placeholder',
   cardContainer: 'c-quantic-card-container',
@@ -40,6 +40,8 @@ const selectors = {
   facetSearchMoreMatches: '[data-testid="facet-search__more-matches"]',
   facetValuesShowLess: '[data-testid="facet-values__show-less"]',
   facetValuesShowMore: '[data-testid="facet-values__show-more"]',
+  facetBody: '[data-testid="facet__body"]',
+  facetCollapseToggle: 'lightning-button-icon',
 };
 
 const exampleFacetId = 'example facet id';
@@ -105,6 +107,8 @@ const functionsMocks = {
     state: facetState,
     deselectAll: functionsMocks.deselectAll,
     toggleSelect: functionsMocks.toggleSelect,
+    showLessValues: functionsMocks.showLessValues,
+    showMoreValues: functionsMocks.showMoreValues,
     facetSearch: {
       updateText: functionsMocks.updateText,
       search: functionsMocks.search,
@@ -134,16 +138,10 @@ const functionsMocks = {
   select: jest.fn(),
   registerToStore: jest.fn(),
   eventHandler: jest.fn(),
-  deselectAllNumericFacetValues: jest.fn(),
-  loadNumericFacetSetActions: jest.fn(() => ({
-    deselectAllNumericFacetValues: functionsMocks.deselectAllNumericFacetValues,
-  })),
-  dispatch: jest.fn(),
-  setRange: jest.fn(),
-  clear: jest.fn(),
-  reportValidity: jest.fn(() => true),
   updateText: jest.fn(),
   search: jest.fn(),
+  showLessValues: jest.fn(),
+  showMoreValues: jest.fn(),
 };
 
 // @ts-ignore
@@ -162,7 +160,6 @@ function prepareHeadlessState() {
 
 const exampleEngine = {
   id: exampleEngineId,
-  dispatch: functionsMocks.dispatch,
 };
 
 let isInitialized = false;
@@ -199,6 +196,14 @@ function mockErroneousHeadlessInitialization() {
       element.setInitializationError();
     }
   };
+}
+
+function setupEventDispatchTest(eventName) {
+  const handler = (event) => {
+    functionsMocks.eventHandler(event?.detail);
+    document.removeEventListener(eventName, handler);
+  };
+  document.addEventListener(eventName, handler);
 }
 
 describe('c-quantic-category-facet', () => {
@@ -256,7 +261,7 @@ describe('c-quantic-category-facet', () => {
       );
     });
 
-    it('should subscribe to the headless numeric facet state and search status state changes', async () => {
+    it('should subscribe to the headless category facet state and search status state changes', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -543,7 +548,7 @@ describe('c-quantic-category-facet', () => {
         });
 
         describe('when the non active parent is clicked', () => {
-          it('should call the deselectAll method of the controller', async () => {
+          it('should call the toggleSelect method of the controller', async () => {
             const element = createTestComponent();
             await flushPromises();
 
@@ -925,6 +930,21 @@ describe('c-quantic-category-facet', () => {
           );
           expect(facetValuesShowLess).not.toBeNull();
         });
+
+        it('should call the controller function showLessValues when the facet show less button is clicked', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            withSearch: true,
+          });
+          await flushPromises();
+
+          const facetValuesShowLess = element.shadowRoot.querySelector(
+            selectors.facetValuesShowLess
+          );
+          facetValuesShowLess.click();
+
+          expect(functionsMocks.showLessValues).toHaveBeenCalledTimes(1);
+        });
       });
 
       describe('when canShowMoreValues is set to true in the state', () => {
@@ -947,6 +967,84 @@ describe('c-quantic-category-facet', () => {
           );
           expect(facetValuesShowMore).not.toBeNull();
         });
+
+        it('should call the controller function showMoreValues when the facet show more button is clicked', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            withSearch: true,
+          });
+          await flushPromises();
+
+          const facetValuesShowMore = element.shadowRoot.querySelector(
+            selectors.facetValuesShowMore
+          );
+          facetValuesShowMore.click();
+
+          expect(functionsMocks.showMoreValues).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe('when the facet is not collapsed', () => {
+        it('should display the facet body', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const facetBody = element.shadowRoot.querySelector(
+            selectors.facetBody
+          );
+          expect(facetBody).not.toBeNull();
+        });
+
+        it('should correctly display the facet collapse toggle', async () => {
+          const expectedIcon = 'utility:dash';
+          const expectedCSSClass = 'facet__collapse';
+          const element = createTestComponent();
+          await flushPromises();
+
+          const facetCollapseToggle = element.shadowRoot.querySelector(
+            selectors.facetCollapseToggle
+          );
+          expect(facetCollapseToggle).not.toBeNull();
+          expect(facetCollapseToggle.iconName).toBe(expectedIcon);
+          expect(facetCollapseToggle.classList.contains(expectedCSSClass)).toBe(
+            true
+          );
+        });
+      });
+
+      describe('when the facet is collapsed', () => {
+        it('should not display the facet body', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            isCollapsed: true,
+          });
+          await flushPromises();
+
+          const facetBody = element.shadowRoot.querySelector(
+            selectors.facetBody
+          );
+          expect(facetBody).toBeNull();
+        });
+
+        it('should correctly display the facet collapse toggle', async () => {
+          const expectedIcon = 'utility:add';
+          const expectedCSSClass = 'facet__expand';
+
+          const element = createTestComponent({
+            ...defaultOptions,
+            isCollapsed: true,
+          });
+          await flushPromises();
+
+          const facetCollapseToggle = element.shadowRoot.querySelector(
+            selectors.facetCollapseToggle
+          );
+          expect(facetCollapseToggle).not.toBeNull();
+          expect(facetCollapseToggle.iconName).toBe(expectedIcon);
+          expect(facetCollapseToggle.classList.contains(expectedCSSClass)).toBe(
+            true
+          );
+        });
       });
     });
 
@@ -954,7 +1052,7 @@ describe('c-quantic-category-facet', () => {
       beforeEach(() => {
         facetState = {
           ...initialFacetState,
-          values: [],
+          valuesAsTrees: [],
         };
       });
 
@@ -969,7 +1067,7 @@ describe('c-quantic-category-facet', () => {
       });
 
       it('should dispatch quantic__renderfacet event', async () => {
-        // setupEventDispatchTest('quantic__renderfacet');
+        setupEventDispatchTest('quantic__renderfacet');
         createTestComponent();
 
         await flushPromises();

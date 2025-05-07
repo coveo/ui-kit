@@ -5,7 +5,7 @@
   </template>
   <template lwc:else>
     <template lwc:if={isFacetEnabled}>
-      <div data-test="facet-content">
+      <div data-testid="facet-content">
         <template if:true={showPlaceholder}>
           <c-quantic-placeholder
             variant="card"
@@ -31,7 +31,7 @@
               >
               </lightning-button-icon>
               <template if:false={isCollapsed}>
-                <ul class="slds-has-dividers_around-space slds-m-top_medium">
+                <ul data-testid="facet__body" class="slds-has-dividers_around-space slds-m-top_medium">
                   <template if:true={withSearch}>
                     <div onchange={handleKeyUp} class="slds-size_1-of-1">
                       <lightning-input
