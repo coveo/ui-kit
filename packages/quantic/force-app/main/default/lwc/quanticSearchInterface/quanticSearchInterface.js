@@ -91,11 +91,11 @@ export default class QuanticSearchInterface extends LightningElement {
         if (!getHeadlessBindings(this.engineId)?.engine) {
           getHeadlessConfiguration()
             .then((data) => {
-              const {organizationId, accessToken, ...rest} = JSON.parse(data);
+              const {organizationId, accessTokens, ...rest} = JSON.parse(data);
               this.engineOptions = {
                 configuration: {
                   organizationId,
-                  accessToken,
+                  accessTokens,
                   search: {
                     searchHub: this.searchHub,
                     pipeline: this.pipeline,
