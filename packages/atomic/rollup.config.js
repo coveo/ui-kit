@@ -66,10 +66,10 @@ const manualChunksPackages = [
 export default {
   input: inputFiles,
   output: {
-    dir: 'dist',
+    dir: 'dist/atomic',
     format: 'esm',
     entryFileNames: ({facadeModuleId}) => {
-      const relativePath = relative(resolvePath('dist'), facadeModuleId);
+      const relativePath = relative(resolvePath('dist/atomic'), facadeModuleId);
       return `${relativePath}`;
     },
     chunkFileNames: '[name].js',
