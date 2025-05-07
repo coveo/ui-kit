@@ -1,7 +1,7 @@
 import {
   buildCommerceEngine,
   getSampleCommerceEngineConfiguration,
-} from 'http://localhost:3000/headless/v3.23.0/commerce/headless.esm.js';
+} from 'http://localhost:3000/headless/v0.0.0/commerce/headless.esm.js';
 import {navContent} from './commerce-nav.mjs';
 
 const {context, ...restOfConfiguration} =

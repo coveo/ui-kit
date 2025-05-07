@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic: Custom component example</title>
 
-    <script type="module" src="http://localhost:3000/atomic/v3/atomic.esm.js"></script>
+    <script type="module" src="http://localhost:3000/atomic/v0.0.0/atomic.esm.js"></script>
     <script nomodule src="http:/localhost:3000/atomic/v3/atomic.js"></script>
-    <link rel="stylesheet" href="http://localhost:3000/atomic/v3/themes/coveo.css" />
+    <link rel="stylesheet" href="http://localhost:3000/atomic/v0.0.0/themes/coveo.css" />
 
     <script type="module">
       await customElements.whenDefined('atomic-search-interface');
@@ -21,8 +21,8 @@
     </script>
     <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
-      import {initializeBindings} from 'http://localhost:3000/atomic/v3/index.esm.js';
-      import {buildSearchBox} from 'http://localhost:3000/headless/v3/headless.esm.js';
+      import {initializeBindings} from 'http://localhost:3000/atomic/v0.0.0/index.esm.js';
+      import {buildSearchBox} from 'http://localhost:3000/headless/v0.0.0/headless.esm.js';
 
       class CustomComponent extends HTMLElement {
         constructor() {
@@ -56,7 +56,7 @@
 
     <!-- Custom Atomic Result Template Component using the resultContext method -->
     <script type="module">
-      import {resultContext} from 'http://localhost:3000/atomic/v3/index.esm.js';
+      import {resultContext} from 'http://localhost:3000/atomic/v0.0.0/index.esm.js';
 
       class CustomTemplateComponent extends HTMLElement {
         initialized = false;

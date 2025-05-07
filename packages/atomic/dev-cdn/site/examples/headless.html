@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic: Headless example</title>
 
-    <script type="module" src="http://localhost:3000/atomic/v3/atomic.esm.js"></script>
+    <script type="module" src="http://localhost:3000/atomic/v0.0.0/atomic.esm.js"></script>
     <script nomodule src="http:/localhost:3000/atomic/v3/atomic.js"></script>
-    <link rel="stylesheet" href="http://localhost:3000/atomic/v3/themes/coveo.css" />
+    <link rel="stylesheet" href="http://localhost:3000/atomic/v0.0.0/themes/coveo.css" />
 
     <script type="module">
       import {
         loadAdvancedSearchQueryActions,
         loadContextActions,
-      } from 'http://localhost:3000/headless/v3/headless.esm.js';
+      } from 'http://localhost:3000/headless/v0.0.0/headless.esm.js';
 
-      // CDN example: 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js'
+      // CDN example: 'http://localhost:3000/atomic/v0.0.0/headless/headless.esm.js'
 
       function setExpression(engine) {
         const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
