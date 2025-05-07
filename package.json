@@ -99,7 +99,8 @@
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "packages/shopify",
-    "utils/*"
+    "utils/*",
+    "utils/cdn"
   ],
   "config": {
     "commitizen": {
