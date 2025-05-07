@@ -1,9 +1,8 @@
 <script type="module">
   import {getOptanonConsentCookie, updateCookieSettings, disableBlockedKeys} from './cookieManager.js';
 
-  if (!getOptanonConsentCookie()) {
-    disableBlockedKeys();
-  }
+  updateCookieSettings();
+  disableBlockedKeys();
 
   window.OptanonWrapper = () => {
     updateCookieSettings();
