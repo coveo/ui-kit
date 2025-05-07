@@ -1,3 +1,9 @@
+# 2.2.0 (2025-05-07)
+
+### Features
+
+- **relay:** make storage optional ([#172](https://github.com/coveo/relay/issues/172)) ([1f6a48c](https://github.com/coveo/relay/commits/))
+
 ## 2.1.4 (2025-05-01)
 
 ## 2.1.3 (2025-04-29)
