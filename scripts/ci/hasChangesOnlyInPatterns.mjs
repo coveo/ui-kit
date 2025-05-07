@@ -31,11 +31,14 @@ function getPatterns() {
 }
 
 function everyFileMatchOnePattern(files, patterns) {
-  return files.split(/$/gm).every((file) => {
-    return patterns.some((pattern) => {
-      return minimatch(file.trim(), pattern);
+  return files
+    .trim()
+    .split(/\r?\n/)
+    .every((file) => {
+      return patterns.some((pattern) => {
+        return minimatch(file.trim(), pattern);
+      });
     });
-  });
 }
 
 function getOutputName() {
