@@ -50,8 +50,7 @@ const files = getChangedFiles(base, head);
 const patterns = getPatterns();
 const everyFileIncludedInPatterns = everyFileMatchOnePattern(files, patterns);
 console.log(
-  `Files changed between ${base} and ${head}: ${files}\nPatterns: ${patterns}\nEvery file matches one pattern: ${everyFileIncludedInPatterns}`
+  `Files changed between ${base} and ${head}: ${files.trim()}\nPatterns: ${patterns}\nEvery file matches one pattern: ${everyFileIncludedInPatterns}`
 );
-console.log(`Output: everyFileMatchOnePattern: ${everyFileIncludedInPatterns}`);
 const outputName = getOutputName();
 setOutput(outputName, everyFileIncludedInPatterns);
