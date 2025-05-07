@@ -1,4 +1,4 @@
-import {STORY_MISSING} from '@storybook/core-events';
+import {STORY_MISSING, STORY_RENDERED} from '@storybook/core-events';
 import {addons} from '@storybook/manager-api';
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
@@ -13,31 +13,29 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
   });
 });
 
-const expandAllButtons = () => {
-  console.log('expandAllButtons');
-  const clickExpandAllButtons = () => {
-    setTimeout(() => {
-      try {
-        const expandAllButtons = document.querySelectorAll(
-          'button[data-action="expand-all"][data-expanded="false"]'
-        );
-        expandAllButtons.forEach((button) => {
-          (button as HTMLButtonElement).click();
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }, 200);
-  };
+const observeAndExpandButtons = () => {
+  const observer = new MutationObserver(() => {
+    const buttonsToExpand = document.querySelectorAll(
+      'button[data-action="expand-all"][data-expanded="false"]'
+    );
+    if (buttonsToExpand.length > 0) {
+      buttonsToExpand.forEach((button) =>
+        (button as HTMLButtonElement).click()
+      );
+      observer.disconnect();
+    }
+  });
 
-  const currentStoryId = window.location.href;
-  if (currentStoryId.includes('introduction--crawling')) {
-    clickExpandAllButtons();
-  }
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
 };
 
-// Run the script when the manager UI is loaded
 addons.register('expand-all-folders-on-intro', () => {
-  console.log('expand-all-folders-on-intro');
-  window.addEventListener('load', expandAllButtons);
+  addons.getChannel().on(STORY_RENDERED, (storyId) => {
+    if (storyId === 'introduction--crawling') {
+      observeAndExpandButtons();
+    }
+  });
 });
