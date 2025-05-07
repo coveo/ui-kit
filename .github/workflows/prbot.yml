@@ -279,7 +279,7 @@ jobs:
   merge-atomic-playwright-reports:
     name: 'Merge Playwright reports'
     environment: PR Artifacts
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && !contains(needs.*.result, 'skipped') }}
     needs:
       - 'playwright-atomic'
     runs-on: ubuntu-latest
