@@ -1,0 +1,108 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Custom component example</title>
+
+    <script type="module" src="http://localhost:3000/atomic/v3/atomic.esm.js"></script>
+    <script nomodule src="http:/localhost:3000/atomic/v3/atomic.js"></script>
+    <link rel="stylesheet" href="http://localhost:3000/atomic/v3/themes/coveo.css" />
+
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+      });
+
+      searchInterface.executeFirstSearch();
+    </script>
+    <!-- Custom Atomic Component using the initializeBindings method -->
+    <script type="module">
+      import {initializeBindings} from 'http://localhost:3000/atomic/v3/index.esm.js';
+      import {buildSearchBox} from 'http://localhost:3000/headless/v3/headless.esm.js';
+
+      class CustomComponent extends HTMLElement {
+        constructor() {
+          super();
+          this.initialize();
+        }
+
+        get template() {
+          const template = document.createElement('template');
+          template.innerHTML = '<input type="text" placeholder="Search as you type" />';
+          return template;
+        }
+
+        async initialize() {
+          const bindings = await initializeBindings(this);
+
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template.content.cloneNode(true));
+
+          const searchBox = buildSearchBox(bindings.engine);
+          const input = shadowRoot.querySelector('input');
+          input.addEventListener('input', () => {
+            searchBox.updateText(input.value);
+            searchBox.submit();
+          });
+        }
+      }
+
+      window.customElements.define('custom-component', CustomComponent);
+    </script>
+
+    <!-- Custom Atomic Result Template Component using the resultContext method -->
+    <script type="module">
+      import {resultContext} from 'http://localhost:3000/atomic/v3/index.esm.js';
+
+      class CustomTemplateComponent extends HTMLElement {
+        initialized = false;
+        connectedCallback() {
+          if (this.initialized) {
+            return;
+          }
+
+          this.initialize();
+          this.initialized = true;
+        }
+
+        template(result) {
+          const label = this.getAttribute('label');
+          const template = document.createElement('template');
+          template.innerHTML = `<p>${label}: ${result.title}</p>`;
+          return template;
+        }
+
+        async initialize() {
+          const result = await resultContext(this);
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template(result).content.cloneNode(true));
+        }
+      }
+
+      window.customElements.define('custom-template-component', CustomTemplateComponent);
+    </script>
+  </head>
+
+  <body>
+    <atomic-search-interface>
+      <custom-component></custom-component>
+      <atomic-segmented-facet field="language"></atomic-segmented-facet>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <custom-template-component label="Hello"></custom-template-component>
+            <atomic-field-condition must-not-match-language="Swedish">
+              <custom-template-component label="Hallå"></custom-template-component>
+            </atomic-field-condition>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
+  </body>
+</html>

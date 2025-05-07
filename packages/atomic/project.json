@@ -85,6 +85,13 @@
         "cwd": "{projectRoot}"
       }
     },
+    "web:cdn": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/start-cdn.mjs",
+        "cwd": "{projectRoot}"
+      }
+    },
     "generate-component": {
       "executor": "nx:run-commands",
       "options": {

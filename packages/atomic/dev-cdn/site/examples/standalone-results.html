@@ -1,0 +1,85 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic: Standalone results example</title>
+
+    <script type="module" src="http://localhost:3000/atomic/v3/atomic.esm.js"></script>
+    <script nomodule src="http:/localhost:3000/atomic/v3/atomic.js"></script>
+    <link rel="stylesheet" href="http://localhost:3000/atomic/v3/themes/coveo.css" />
+
+    <script type="module">
+      import {buildTab} from 'http://localhost:3000/headless/v3/headless.esm.js';
+
+      async function main() {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+
+        // Initialization
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        buildTab(searchInterface.engine, {
+          options: {
+            expression: '@filetype==lithiumuser',
+            id: 'other-tab',
+          },
+        });
+        const allTab = buildTab(searchInterface.engine, {
+          options: {
+            expression: '',
+            id: 'all-tab',
+          },
+          initialState: {
+            isActive: true,
+          },
+        });
+
+        // Trigger a first search
+        searchInterface.executeFirstSearch();
+      }
+      main();
+    </script>
+  </head>
+
+  <body>
+    <atomic-search-interface>
+      <atomic-search-layout>
+        <atomic-layout-section section="search">
+          <atomic-search-box></atomic-search-box>
+        </atomic-layout-section>
+        <atomic-layout-section section="facets">
+          <atomic-facet-manager>
+            <atomic-facet field="author" label="Authors"></atomic-facet>
+            <atomic-facet field="source" label="Source" display-values-as="link"></atomic-facet>
+            <atomic-facet field="year" label="Year" display-values-as="box"></atomic-facet>
+          </atomic-facet-manager>
+        </atomic-layout-section>
+        <atomic-layout-section section="main">
+          <atomic-layout-section section="status">
+            <atomic-breadbox></atomic-breadbox>
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-refine-toggle></atomic-refine-toggle>
+            <atomic-sort-dropdown>
+              <atomic-sort-expression label="relevance" expression="relevancy"></atomic-sort-expression>
+              <atomic-sort-expression label="most-recent" expression="date descending"></atomic-sort-expression>
+            </atomic-sort-dropdown>
+            <atomic-did-you-mean></atomic-did-you-mean>
+          </atomic-layout-section>
+          <atomic-layout-section section="results">
+            <atomic-result-list></atomic-result-list>
+            <atomic-query-error></atomic-query-error>
+            <atomic-no-results></atomic-no-results>
+          </atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-load-more-results></atomic-load-more-results>
+          </atomic-layout-section>
+        </atomic-layout-section>
+      </atomic-search-layout>
+    </atomic-search-interface>
+    <script src="../header.js" type="text/javascript"></script>
+  </body>
+</html>

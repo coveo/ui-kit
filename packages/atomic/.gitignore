@@ -32,7 +32,6 @@ src/generated
 
 cypress/screenshots/*
 
-
 /test-results/
 /playwright-report/
 /blob-report/
@@ -42,3 +41,5 @@ dist-storybook/
 
 /dev/bueno/
 /dev/headless/
+/dev/atomic/
+/dev-cdn/static/
