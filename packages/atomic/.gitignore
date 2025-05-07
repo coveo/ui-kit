@@ -33,7 +33,6 @@ src/generated
 
 cypress/screenshots/*
 
-
 /test-results/
 /playwright-report/
 /blob-report/
