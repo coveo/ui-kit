@@ -717,7 +717,7 @@ describe('c-quantic-category-facet', () => {
               });
             });
 
-            it('should not display the facet search no matche label', async () => {
+            it('should not display the facet search no match label', async () => {
               const element = createTestComponent({
                 ...defaultOptions,
                 withSearch: true,
