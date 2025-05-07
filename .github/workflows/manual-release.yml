@@ -25,4 +25,4 @@ jobs:
     needs: approve
     with:
       version: ${{ github.event.inputs.version }}
-      debug: ${{ github.event.inputs.debug }}
+      debug: ${{ fromJSON(github.event.inputs.debug) }}
