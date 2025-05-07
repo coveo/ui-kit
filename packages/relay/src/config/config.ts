@@ -2,13 +2,10 @@ import { Environment } from "../environment/environment";
 
 export type CustomEnvironment = Pick<
   Environment,
-  | "generateUUID"
-  | "getLocation"
-  | "getReferrer"
-  | "getUserAgent"
-  | "send"
-  | "storage"
->;
+  "generateUUID" | "getLocation" | "getReferrer" | "getUserAgent" | "send"
+> & {
+  storage?: Environment["storage"];
+};
 
 /**
  * The `RelayConfig` object defines the configuration options for initializing a Relay instance.

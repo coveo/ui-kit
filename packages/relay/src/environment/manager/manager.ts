@@ -11,16 +11,21 @@ function buildEnvironment(configManager: ConfigManager): Environment {
   const active = configManager.get().mode !== "disabled";
 
   const environmentFromConfig = configManager.get().environment;
+  const nullEnvironment = buildNullEnvironment();
 
   if (active && environmentFromConfig) {
-    return { ...environmentFromConfig, runtime: "custom" };
+    return {
+      storage: nullEnvironment.storage,
+      ...environmentFromConfig,
+      runtime: "custom",
+    };
   }
 
   if (active && isBrowser() && localStorageAvailable()) {
     return buildBrowserEnvironment();
   }
 
-  return buildNullEnvironment();
+  return nullEnvironment;
 }
 
 function isBrowser() {
