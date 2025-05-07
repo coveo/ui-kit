@@ -1,5 +1,6 @@
 /**
  * Simple Apex Controller to fetch data for Headless initialization.
+ * DO NOT MERGE
  */
 global with sharing class HeadlessController {
   /**
