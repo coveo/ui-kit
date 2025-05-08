@@ -7,7 +7,11 @@ import {
 } from '../stream-answer-api.js';
 import {
   expectedStreamAnswerAPIParam,
+  expectedStreamAnswerAPIParamWithATabWithAnExpression,
+  expectedStreamAnswerAPIParamWithoutAnyTab,
   streamAnswerAPIStateMock,
+  streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyTab,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -18,6 +22,7 @@ describe('#streamAnswerApi', () => {
     afterAll(() => {
       vi.useRealTimers();
     });
+
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
@@ -27,9 +32,7 @@ describe('#streamAnswerApi', () => {
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
-    it('will create the right selector with select usage', () => {
-      constructAnswerQueryParams(streamAnswerAPIStateMock as any, 'select');
-
+    it('should create the right selector when usage is select', () => {
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
@@ -37,6 +40,28 @@ describe('#streamAnswerApi', () => {
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge tab expression in request constant query when expression is not a blank string', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithATabWithAnExpression as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithATabWithAnExpression
+      );
+    });
+
+    it('should not include tab info when there is NO tab', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyTab as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
     });
   });
 

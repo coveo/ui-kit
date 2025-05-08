@@ -1,3 +1,7 @@
+## <small>3.2.38 (2025-05-08)</small>
+
+- chore(atomic): migrate atomic-commerce-pager to Lit (#5016) ([3b92750](https://github.com/coveo/ui-kit/commits/3b92750)), closes [#5016](https://github.com/coveo/ui-kit/issues/5016)
+
 ## <small>3.2.37 (2025-04-30)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
