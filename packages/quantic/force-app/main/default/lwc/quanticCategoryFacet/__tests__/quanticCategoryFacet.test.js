@@ -34,7 +34,6 @@ const selectors = {
   facetSearchValue:
     'c-quantic-category-facet-value[data-testid="facet-search-value"]',
   allCategoriesButton: '[data-testid="facet__all-categories__button"]',
-  searchFacetValue: 'c-quantic-category-facet-value[data-testid="facet-value"]',
   facetSearchboxInput: '[data-testid="facet__searchbox-input"]',
   facetSearchNoMatch: '[data-testid="facet-search__no-match"]',
   facetSearchMoreMatches: '[data-testid="facet-search__more-matches"]',
@@ -196,14 +195,6 @@ function mockErroneousHeadlessInitialization() {
       element.setInitializationError();
     }
   };
-}
-
-function setupEventDispatchTest(eventName) {
-  const handler = (event) => {
-    functionsMocks.eventHandler(event?.detail);
-    document.removeEventListener(eventName, handler);
-  };
-  document.addEventListener(eventName, handler);
 }
 
 describe('c-quantic-category-facet', () => {
@@ -416,7 +407,7 @@ describe('c-quantic-category-facet', () => {
         };
       });
 
-      it('should display the facet card when the facet values have results', async () => {
+      it('should display the facet card', async () => {
         const element = createTestComponent();
         await flushPromises();
 
@@ -889,7 +880,7 @@ describe('c-quantic-category-facet', () => {
               expect(facetSearchValueElements.length).toBe(0);
             });
 
-            it('should display the facet search no matche label', async () => {
+            it('should display the facet search no match label', async () => {
               const element = createTestComponent({
                 ...defaultOptions,
                 withSearch: true,
@@ -1067,7 +1058,12 @@ describe('c-quantic-category-facet', () => {
       });
 
       it('should dispatch quantic__renderfacet event', async () => {
-        setupEventDispatchTest('quantic__renderfacet');
+        document.addEventListener(
+          'quantic__renderfacet',
+          // @ts-ignore
+          (event) => functionsMocks.eventHandler(event.detail),
+          {once: true}
+        );
         createTestComponent();
 
         await flushPromises();
