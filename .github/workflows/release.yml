@@ -1,6 +1,9 @@
 name: Create release
 on:
-  workflow_call:
+  schedule:
+    # At 02:00 (UTC) Wednesday/ 21:00 (ETC) every Tuesday.
+    - cron: '0 2 * * 3'
+  workflow_dispatch:
     inputs:
       version:
         description: '⚠ be sure of yourself ⚠'
@@ -14,7 +17,15 @@ on:
         required: false
 
 jobs:
+  approve:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    environment: 'Manual Release'
+    steps:
+      - run: exit 0;
   release:
+    if: ${{ !cancelled() }}
+    needs: approve
     environment: 'Release'
     runs-on: ubuntu-latest
     permissions:
