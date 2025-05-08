@@ -48,7 +48,16 @@ type ParametersKey = keyof CommerceSearchParameters;
 
 export type FacetParameters = keyof Pick<
   Parameters,
-  'f' | 'fExcluded' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
+  | 'f'
+  | 'fExcluded'
+  | 'lf'
+  | 'cf'
+  | 'nf'
+  | 'nfExcluded'
+  | 'df'
+  | 'dfExcluded'
+  | 'mnf'
+  | 'mnfExcluded'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -58,8 +67,11 @@ const supportedFacetParameters: Record<FacetParameters, boolean> = {
   lf: true,
   cf: true,
   nf: true,
+  nfExcluded: true,
   df: true,
+  dfExcluded: true,
   mnf: true,
+  mnfExcluded: true,
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
