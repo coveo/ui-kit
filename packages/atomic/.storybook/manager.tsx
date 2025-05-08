@@ -32,10 +32,18 @@ const observeAndExpandButtons = () => {
   });
 };
 
+const addNoIndexMetaTag = () => {
+  const metaTag = document.createElement('meta');
+  metaTag.name = 'robots';
+  metaTag.content = 'noindex';
+  document.head.appendChild(metaTag);
+};
+
 addons.register('expand-all-folders-on-intro', () => {
   addons.getChannel().on(STORY_RENDERED, (storyId) => {
     if (storyId === 'introduction--crawling') {
       observeAndExpandButtons();
+      addNoIndexMetaTag();
     }
   });
 });
