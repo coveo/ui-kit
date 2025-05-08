@@ -3,6 +3,7 @@ import {ComponentSelector, CypressSelector} from '../../common-selectors';
 export interface Selector extends ComponentSelector {
   searchbox: () => CypressSelector;
   summary: () => CypressSelector;
+  insightSummary: () => CypressSelector;
   facetValue: (value: string) => CypressSelector;
   pager: () => CypressSelector;
   pagerButton: (index: number) => CypressSelector;
@@ -24,6 +25,7 @@ export const SelectorsFactory = (interfaceComponent: string) => {
       Selectors.get().find(
         'c-quantic-summary lightning-formatted-rich-text span'
       ),
+    insightSummary: () => Selectors.get().find('c-quantic-insight-summary'),
     facetValue: (value: string) =>
       Selectors.get().find(
         `c-quantic-facet-value[data-cy="${value}"] input[type="checkbox"]`
