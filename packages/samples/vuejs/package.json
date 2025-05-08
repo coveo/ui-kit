@@ -21,6 +21,6 @@
     "cypress-repeat": "2.3.8",
     "ncp": "2.0.0",
     "typescript": "5.8.2",
-    "vite": "6.3.3"
+    "vite": "6.3.4"
   }
 }

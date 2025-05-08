@@ -17,6 +17,9 @@ jobs:
   approve:
     runs-on: ubuntu-latest
     environment: 'Manual Release'
+    steps:
+      - run: exit 0
+      
   release:
     uses: ./.github/workflows/release.yml
     needs: approve
