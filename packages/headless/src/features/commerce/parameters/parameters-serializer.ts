@@ -27,7 +27,8 @@ import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
-export const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|mnf|lf)-(.+)$/;
+export const commerceFacetsRegex =
+  /^(f|fExcluded|cf|nf|nfExcluded|df|dfExcluded|mnf|mnfExcluded|lf)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
