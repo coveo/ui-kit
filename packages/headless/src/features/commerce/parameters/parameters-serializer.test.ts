@@ -46,7 +46,7 @@ describe('productListingSerializer', () => {
   it('should serialize and deserialize all product listing parameters', () => {
     const parameters: Omit<
       CommerceSearchParameters,
-      'dfExcluded' | 'mnfExcluded' | 'nfExcluded'
+      'dfExcluded' | 'mnfExcluded' | 'nfExcluded' | 'q'
     > = getParameters(false);
 
     const serialized = serialize(parameters);
