@@ -72,7 +72,7 @@ export default {
       const relativePath = relative(resolvePath('dist'), facadeModuleId);
       return `${relativePath}`;
     },
-    chunkFileNames: '[name].js',
+    chunkFileNames: '[name]-[hash].js',
     manualChunks: (id) => {
       if (
         id.includes('node_modules') &&

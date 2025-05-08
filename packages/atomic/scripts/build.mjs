@@ -1,18 +1,21 @@
 import chalk from 'chalk';
-import {dirname, basename, relative} from 'path';
+import {basename, dirname, extname, relative} from 'path';
 import {argv} from 'process';
 import {
-  readConfigFile,
-  getLineAndCharacterOfPosition,
-  sys,
-  parseJsonConfigFileContent,
-  getPreEmitDiagnostics,
+  createCompilerHost,
   createProgram,
-  flattenDiagnosticMessageText,
   DiagnosticCategory,
+  flattenDiagnosticMessageText,
+  getLineAndCharacterOfPosition,
+  getPreEmitDiagnostics,
+  parseJsonConfigFileContent,
+  readConfigFile,
+  sys,
 } from 'typescript';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
+import computeHash from './compute-hash.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
+import hashTransformer from './hash-transformer.mjs';
 import pathTransformer from './path-transform.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
@@ -48,17 +51,41 @@ function loadTsConfig(configPath) {
 function emit(program) {
   const targetSourceFile = undefined;
   const cancellationToken = undefined;
-  const writeFile = undefined;
+  const writeFile = (
+    filePath,
+    fileText,
+    writeByteOrderMark,
+    onError,
+    sourceFiles
+  ) => {
+    if (filePath.includes('index')) {
+      host.writeFile(
+        filePath,
+        fileText,
+        writeByteOrderMark,
+        onError,
+        sourceFiles
+      );
+      return;
+    }
+    // compute hash of the *source file*
+    const hash = computeHash(sourceFiles[0].text);
+    const ext = extname(filePath);
+    const base = filePath.slice(0, -ext.length);
+    const newPath = `${base}.${hash}${ext}`;
+    host.writeFile(newPath, fileText, writeByteOrderMark, onError, sourceFiles);
+  };
   const emitOnlyDtsFiles = false;
   const customTransformers = {
-    before: transformers,
+    before: [hashTransformer(program), ...transformers],
     afterDeclarations: [pathTransformer],
   };
 
+  const host = createCompilerHost(program.getCompilerOptions());
   return program.emit(
     targetSourceFile,
-    cancellationToken,
     writeFile,
+    cancellationToken,
     emitOnlyDtsFiles,
     customTransformers
   );
