@@ -9,7 +9,7 @@
       "outputs": ["{projectRoot}/dist", "{projectRoot}/cdn"],
       "cache": true,
       "options": {
-        "commands": ["npm run build:bundles"],
+        "commands": ["npm run build:bundles", "npm run build:definitions"],
         "parallel": true,
         "cwd": "{projectRoot}"
       }
