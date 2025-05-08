@@ -17,9 +17,12 @@ jobs:
   approve:
     runs-on: ubuntu-latest
     environment: 'Manual Release'
+    steps:
+      - run: exit 0
+
   release:
     uses: ./.github/workflows/release.yml
     needs: approve
     with:
       version: ${{ github.event.inputs.version }}
-      debug: ${{ github.event.inputs.debug }}
+      debug: ${{ fromJSON(github.event.inputs.debug) }}
