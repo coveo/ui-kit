@@ -1,8 +1,6 @@
 import {AdvancedSearchQueriesState} from './advanced-search-queries-state.js';
 import {selectAdvancedSearchQueries} from './advanced-search-query-selectors.js';
 
-type AdvancedSearchQueryParametersSelectedProperty = 'aq' | 'cq' | 'dq' | 'lq';
-
 describe('advancedQuerySearch Selectors test suite', () => {
   describe('#selectAdvancedSearchQueries', () => {
     it('should return an empty object when advancedSearchQueries is undefined', () => {
@@ -31,12 +29,9 @@ describe('advancedQuerySearch Selectors test suite', () => {
 
     test("should return only not empty properties (here: 'aq') from the state", () => {
       const exampleAdvancedSearchQueries: AdvancedSearchQueriesState =
-        createAdvancedSearchQueriesState(
-          'aq' as AdvancedSearchQueryParametersSelectedProperty,
-          'aq-parameter-value'
-        );
+        createAdvancedSearchQueriesState({aq: 'aq'});
       const expectedOutput = {
-        aq: 'aq-parameter-value',
+        aq: 'aq',
       };
       const state = {advancedSearchQueries: exampleAdvancedSearchQueries};
 
@@ -47,12 +42,9 @@ describe('advancedQuerySearch Selectors test suite', () => {
 
     test("should return only not empty properties (here: 'cq') from the state", () => {
       const exampleAdvancedSearchQueries: AdvancedSearchQueriesState =
-        createAdvancedSearchQueriesState(
-          'cq' as AdvancedSearchQueryParametersSelectedProperty,
-          'cq-parameter-value'
-        );
+        createAdvancedSearchQueriesState({cq: 'cq'});
       const expectedOutput = {
-        cq: 'cq-parameter-value',
+        cq: 'cq',
       };
       const state = {advancedSearchQueries: exampleAdvancedSearchQueries};
 
@@ -63,12 +55,9 @@ describe('advancedQuerySearch Selectors test suite', () => {
 
     test("should return only not empty properties (here: 'dq') from the state", () => {
       const exampleAdvancedSearchQueries: AdvancedSearchQueriesState =
-        createAdvancedSearchQueriesState(
-          'dq' as AdvancedSearchQueryParametersSelectedProperty,
-          'dq-parameter-value'
-        );
+        createAdvancedSearchQueriesState({dq: 'dq'});
       const expectedOutput = {
-        dq: 'dq-parameter-value',
+        dq: 'dq',
       };
       const state = {advancedSearchQueries: exampleAdvancedSearchQueries};
 
@@ -79,12 +68,9 @@ describe('advancedQuerySearch Selectors test suite', () => {
 
     test("should return only not empty properties (here: 'lq') from the state", () => {
       const exampleAdvancedSearchQueries: AdvancedSearchQueriesState =
-        createAdvancedSearchQueriesState(
-          'lq' as AdvancedSearchQueryParametersSelectedProperty,
-          'lq-parameter-value'
-        );
+        createAdvancedSearchQueriesState({lq: 'lq'});
       const expectedOutput = {
-        lq: 'lq-parameter-value',
+        lq: 'lq',
       };
       const state = {advancedSearchQueries: exampleAdvancedSearchQueries};
 
@@ -115,27 +101,27 @@ function newExampleAdvancedSearchQueriesStateFixture() {
 }
 
 function createAdvancedSearchQueriesState(
-  propertyUnderTest: AdvancedSearchQueryParametersSelectedProperty,
-  valueSet: string
+  overrides: Partial<AdvancedSearchQueriesState>
 ): AdvancedSearchQueriesState {
-  const state = {
+  const defaultState = {
     aq: '',
     cq: '',
     dq: '',
     lq: '',
-    aqWasSet: false,
+    aqWasSet: true,
     cqWasSet: false,
     dqWasSet: false,
-    lqWasSet: false,
+    lqWasSet: true,
     defaultFilters: {
-      aq: '',
-      cq: '',
-      dq: '',
-      lq: '',
+      aq: 'a-default-aq-parameter-value',
+      cq: 'a-default-cq-parameter-value',
+      dq: 'a-default-dq-parameter-value',
+      lq: 'a-default-lq-parameter-value',
     },
   };
 
-  state[propertyUnderTest] = valueSet;
-
-  return state;
+  return {
+    ...defaultState,
+    ...overrides,
+  };
 }

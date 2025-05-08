@@ -20,13 +20,9 @@ export const selectActiveTab = createSelector(
 export const selectActiveTabExpression = createSelector(
   (state?: TabSetState) => state,
   (tabSetState?: TabSetState): string => {
-    if (!tabSetState) {
-      return '';
-    }
-    if (!selectActiveTab(tabSetState)) {
-      return '';
-    }
-
-    return tabSetState[selectActiveTab(tabSetState)].expression;
+    const activeTabId = selectActiveTab(tabSetState);
+    return activeTabId && tabSetState
+      ? tabSetState[activeTabId].expression
+      : '';
   }
 );

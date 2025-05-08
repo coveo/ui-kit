@@ -299,7 +299,7 @@ export const constructAnswerQueryParams = (
 ) => {
   const q = selectQuery(state)?.q;
 
-  const mergedAdvancedSearchQueryParams =
+  const {aq, cq, dq, lq} =
     mergeActiveTabExpressionInAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
@@ -312,7 +312,10 @@ export const constructAnswerQueryParams = (
 
   return {
     q,
-    ...mergedAdvancedSearchQueryParams,
+    ...(aq && {aq}),
+    ...(cq && {cq}),
+    ...(dq && {dq}),
+    ...(lq && {lq}),
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
         responseFormat: state.generatedAnswer.responseFormat,
