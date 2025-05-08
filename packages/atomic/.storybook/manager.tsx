@@ -45,5 +45,8 @@ addons.register('expand-all-folders-on-intro', () => {
       observeAndExpandButtons();
       addNoIndexMetaTag();
     }
+    if (storyId === 'introduction--default') {
+      addNoIndexMetaTag();
+    }
   });
 });
