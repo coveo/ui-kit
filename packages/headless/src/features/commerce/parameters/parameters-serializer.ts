@@ -27,8 +27,7 @@ import {Parameters} from './parameters-actions.js';
 
 const sortFieldAndDirectionSeparator = ' ';
 const sortFieldsJoiner = ',';
-export const commerceFacetsRegex =
-  /^(f|fExcluded|cf|nf|nfExcluded|df|dfExcluded|mnf|mnfExcluded|lf)-(.+)$/;
+export const commerceFacetsRegex = /^(f|fExcluded|cf|nf|df|mnf|lf)-(.+)$/;
 
 export interface Serializer<T extends Parameters> {
   serialize: (parameters: T) => string;
@@ -45,19 +44,11 @@ export const productListingSerializer = {
   deserialize,
 } as Serializer<ProductListingParameters>;
 
-export type ParametersKey = keyof CommerceSearchParameters;
+type ParametersKey = keyof CommerceSearchParameters;
+
 export type FacetParameters = keyof Pick<
   Parameters,
-  | 'f'
-  | 'fExcluded'
-  | 'lf'
-  | 'cf'
-  | 'nf'
-  | 'nfExcluded'
-  | 'df'
-  | 'dfExcluded'
-  | 'mnf'
-  | 'mnfExcluded'
+  'f' | 'fExcluded' | 'lf' | 'cf' | 'nf' | 'df' | 'mnf'
 >;
 
 type FacetKey = keyof typeof supportedFacetParameters;
@@ -67,15 +58,12 @@ const supportedFacetParameters: Record<FacetParameters, boolean> = {
   lf: true,
   cf: true,
   nf: true,
-  nfExcluded: true,
   df: true,
-  dfExcluded: true,
   mnf: true,
-  mnfExcluded: true,
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
-  return coreSerialize(serializePair)(parameters);
+  return sanitizeNumericFacetParams(coreSerialize(serializePair)(parameters));
 }
 
 function serializePair(pair: [string, unknown]) {
@@ -155,11 +143,17 @@ function isSortCriteriaObject(obj: unknown): obj is SortCriterion | undefined {
   return false;
 }
 
-export function isValidBasicKey(
+function isValidBasicKey(
   key: string
 ): key is Exclude<SearchParameterKey, FacetKey> {
   const supportedBasicParameters: Record<
-    Exclude<keyof CommerceSearchParameters, FacetParameters>,
+    Exclude<
+      keyof Omit<
+        CommerceSearchParameters,
+        'dfExcluded' | 'mnfExcluded' | 'nfExcluded'
+      >,
+      FacetParameters
+    >,
     boolean
   > = {
     q: true,
@@ -253,4 +247,38 @@ export function deserializeSortCriteria(
       ],
     };
   }, buildFieldsSortCriterion([]));
+}
+
+function sanitizeNumericFacetParams(params: string) {
+  const seenNumericFacets = new Set<string>();
+  const dedupedNumericFacets = new Set<string>();
+  const sanitized = [];
+
+  const isManualNumericFacet = (param: string) => param.startsWith('mnf-');
+  const isNumericFacet = (param: string) =>
+    param.startsWith('nf-') || isManualNumericFacet(param);
+
+  for (const param of params.split(delimiter)) {
+    if (!isNumericFacet(param)) {
+      sanitized.push(param);
+      continue;
+    }
+
+    const normalizedParam = param.replace(/^mnf-/, 'nf-');
+    if (seenNumericFacets.has(normalizedParam)) {
+      if (isManualNumericFacet(param)) {
+        // When equivalent mnf and nf parameters are present in the params, prioritize the mnf.
+        dedupedNumericFacets.delete(normalizedParam);
+        dedupedNumericFacets.add(param);
+      }
+      continue;
+    }
+
+    seenNumericFacets.add(normalizedParam);
+    dedupedNumericFacets.add(param);
+  }
+
+  sanitized.push(...Array.from(dedupedNumericFacets));
+
+  return sanitized.join(delimiter);
 }
