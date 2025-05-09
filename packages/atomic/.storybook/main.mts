@@ -44,7 +44,11 @@ const externalizeDependencies: PluginImpl = () => {
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.new.stories.tsx', '../src/**/*.mdx'],
+  stories: [
+    './Introduction.stories.tsx',
+    '../src/**/*.new.stories.tsx',
+    '../src/**/*.mdx',
+  ],
   staticDirs: [
     {from: '../dist/atomic/assets', to: '/assets'},
     {from: '../dist/atomic/lang', to: '/lang'},
