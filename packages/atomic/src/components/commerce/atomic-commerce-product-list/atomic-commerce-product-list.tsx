@@ -29,13 +29,13 @@ import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/placeholders';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
+import {DisplayWrapper} from '../../common/item-list/display-wrapper';
+import {ItemListGuard} from '../../common/item-list/item-list-guard';
 import {
   DisplayTable,
   DisplayTableData,
   DisplayTableRow,
-} from '../../common/item-list/display-table';
-import {DisplayWrapper} from '../../common/item-list/display-wrapper';
-import {ItemListGuard} from '../../common/item-list/item-list-guard';
+} from '../../common/item-list/stencil-display-table';
 import {
   ItemListCommon,
   ItemRenderingFunction,
