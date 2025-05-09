@@ -13,6 +13,14 @@ export class SearchObject {
     return this.page.locator('c-action-perform-search button');
   }
 
+  get searchInput(): Locator {
+    return this.page.locator('c-action-perform-search input');
+  }
+
+  async fillSearchInput(query: string): Promise<void> {
+    await this.searchInput.fill(query);
+  }
+
   async performSearch(): Promise<void> {
     await this.performSearchButton.click();
   }
