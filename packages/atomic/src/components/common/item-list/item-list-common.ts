@@ -68,6 +68,7 @@ export class ItemListCommon {
     if (resultIndex === 0) {
       this.firstResultEl = element;
     }
+
     if (resultIndex !== this.indexOfResultToFocus) {
       return;
     }
