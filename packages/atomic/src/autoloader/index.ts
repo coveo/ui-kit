@@ -31,11 +31,10 @@ if (typeof window !== 'undefined') {
     const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
       el.tagName.toLowerCase().startsWith('atomic-')
     );
-    const tags = allAtomicElements.map((el) => el.tagName.toLowerCase());
 
     // If the root element is an undefined Atomic component, add it to the list
     if (rootIsAtomicElement && !customElements.get(rootTagName)) {
-      tags.push(rootTagName);
+      allAtomicElements.push(root);
     }
     if (rootIsAtomicElement) {
       const childTemplates = root.querySelectorAll('template');
@@ -50,10 +49,12 @@ if (typeof window !== 'undefined') {
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
+    const litRegistrationPromises = [];
     for (const atomicElement of allAtomicElements) {
       const tagName = atomicElement.tagName.toLowerCase();
-      if (tagName in elementMap) {
+      if (tagName in elementMap && !customElements.get(tagName)) {
         // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
+        litRegistrationPromises.push(register(tagName));
         continue;
       }
       if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
@@ -66,11 +67,7 @@ if (typeof window !== 'undefined') {
       }
       observeStencilElementHydration(atomicElement);
     }
-    // Make the list unique
-    const tagsToRegister = [...new Set(tags)];
-    await Promise.allSettled(
-      tagsToRegister.map((tagName) => register(tagName))
-    );
+    await Promise.allSettled(litRegistrationPromises);
     customElements.upgrade(root);
   };
 
