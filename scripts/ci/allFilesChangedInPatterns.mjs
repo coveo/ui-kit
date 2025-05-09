@@ -1,29 +1,10 @@
 #!/usr/bin/env node
 import {setOutput} from '@actions/core';
-import {context} from '@actions/github';
 import {minimatch} from 'minimatch';
-import {execSync} from 'node:child_process';
+import {getBaseHeadSHAs, getChangedFiles} from './git-utils.mjs';
 
-export function getBaseHeadSHAs() {
-  switch (context.eventName) {
-    case 'pull_request':
-      return {
-        base: context.payload.pull_request.base.sha,
-        head: context.payload.pull_request.head.sha,
-      };
-    case 'merge_group':
-      return {
-        base: context.payload.merge_group.base_sha,
-        head: context.payload.merge_group.head_sha,
-      };
-  }
-}
-
-export function getChangedFiles(from, to) {
-  return execSync(`git diff --name-only ${from}..${to}`, {
-    stdio: 'pipe',
-    encoding: 'utf-8',
-  });
+function getOutputName() {
+  return process.argv[2];
 }
 
 function getPatterns() {
@@ -39,10 +20,6 @@ function everyFileMatchOnePattern(files, patterns) {
         return minimatch(file.trim(), pattern);
       });
     });
-}
-
-function getOutputName() {
-  return process.argv[2];
 }
 
 const {base, head} = getBaseHeadSHAs();

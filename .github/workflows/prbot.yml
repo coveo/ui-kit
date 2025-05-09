@@ -199,7 +199,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: node ./scripts/ci/hasChangesOnlyInPatterns.mjs changesOnlyInQuantic 'packages/quantic/**/*'
+      - run: node ./scripts/ci/allFilesChangedInPatterns.mjs changesOnlyInQuantic 'packages/quantic/**/*'
         id: shouldRunAtomice2e
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
@@ -593,7 +593,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: node ./scripts/ci/hasFileChanged.mjs shouldRunQuantic 'packages/quantic/**/*' 'packages/headless/**/*' 'packages/bueno/**/*' package.json package-lock.json
+      - run: node ./scripts/ci/someFilesChangedInPatterns.mjs shouldRunQuantic 'packages/quantic/**/*' 'packages/headless/**/*' 'packages/bueno/**/*' package.json package-lock.json
         id: shouldRunQuantic
   e2e-quantic:
     name: 'Run Quantic E2E tests'
