@@ -15,5 +15,5 @@
     "./temp/insight.json",
     "./temp/recommendation.json"
   ],
-  "plugin": ["./typedoc/dist/index.js"]
+  "plugin": ["../shared-typedoc/dist/index.js"]
 }

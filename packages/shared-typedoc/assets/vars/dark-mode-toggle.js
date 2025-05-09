@@ -37,7 +37,7 @@ const PERMANENT_COLOR_SCHEME = 'permanentcolorscheme';
 const ALL = 'all';
 const NOT_ALL = 'not all';
 const NAME = 'dark-mode-toggle';
-const DEFAULT_URL = '/assets/icons/';
+const DEFAULT_URL = '../assets/icons/';
 
 // See https://html.spec.whatwg.org/multipage/common-dom-interfaces.html ↵
 // #reflecting-content-attributes-in-idl-attributes.

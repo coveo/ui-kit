@@ -15,8 +15,8 @@
     "*"
   ],
   "name": "SSR Search",
-  "readme": "../SEARCHREADME.md",
-  "entryPoints": ["../../src/ssr/index.ts"],
+  "readme": "none",
+  "entryPoints": ["../../../headless/src/ssr.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["../../dist/index.js"]
 }

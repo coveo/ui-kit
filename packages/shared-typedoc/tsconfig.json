@@ -1,0 +1,11 @@
+{
+  "extends": "../headless-react/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "lib",
+    "jsx": "react",
+    "jsxFactory": "JSX.createElement",
+    "jsxFragmentFactory": "JSX.Fragment"
+  },
+  "include": ["lib/**/*.ts", "lib/**/*.tsx"]
+}

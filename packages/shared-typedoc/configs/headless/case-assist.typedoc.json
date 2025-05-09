@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Search",
+  "name": "Case Assist",
   "readme": "none",
-  "entryPoints": ["../../src/index.ts"],
+  "entryPoints": ["../../../headless/src/case-assist.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["../../dist/index.js"]
 }

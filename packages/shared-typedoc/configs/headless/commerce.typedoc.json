@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Case Assist",
+  "name": "Commerce",
   "readme": "none",
-  "entryPoints": ["../../src/case-assist.index.ts"],
+  "entryPoints": ["../../../headless/src/commerce.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["../../dist/index.js"]
 }
