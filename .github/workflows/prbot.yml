@@ -637,28 +637,6 @@ jobs:
           egress-policy: audit
 
       - run: |
-          echo "build: ${{ needs.build.result }}"
-          echo "build-windows: ${{ needs.build-windows.result }}"
-          echo "lint-check: ${{ needs.lint-check.result }}"
-          echo "unit-test: ${{ needs.unit-test.result }}"
-          echo "playwright-atomic: ${{ needs.playwright-atomic.result }}"
-          echo "playwright-atomic-hosted-page-test: ${{ needs.playwright-atomic-hosted-page-test.result }}"
-          echo "playwright-headless-ssr-commerce: ${{ needs.playwright-headless-ssr-commerce.result }}"
-          echo "e2e-atomic-test: ${{ needs.e2e-atomic-test.result }}"
-          echo "e2e-atomic-csp-test: ${{ needs.e2e-atomic-csp-test.result }}"
-          echo "e2e-quantic: ${{ needs.e2e-quantic.result }}"
-          echo "e2e-atomic-screenshots: ${{ needs.e2e-atomic-screenshots.result }}"
-          echo "e2e-atomic-react-test: ${{ needs.e2e-atomic-react-test.result }}"
-          echo "e2e-atomic-react-nextjs-test: ${{ needs.e2e-atomic-react-nextjs-test.result }}"
-          echo "e2e-iife-test: ${{ needs.e2e-iife-test.result }}"
-          echo "e2e-atomic-angular-test: ${{ needs.e2e-atomic-angular-test.result }}"
-          echo "e2e-atomic-vuejs-test: ${{ needs.e2e-atomic-vuejs-test.result }}"
-          echo "e2e-atomic-stencil-test: ${{ needs.e2e-atomic-stencil-test.result }}"
-          echo "e2e-atomic-insight-panel-test: ${{ needs.e2e-atomic-insight-panel-test.result }}"
-          echo "e2e-headless-ssr-test-app-dev: ${{ needs.e2e-headless-ssr-test-app-dev.result }}"
-          echo "e2e-headless-ssr-test-app-prod: ${{ needs.e2e-headless-ssr-test-app-prod.result }}"
-          echo "e2e-headless-ssr-test-pages-dev: ${{ needs.e2e-headless-ssr-test-pages-dev.result }}"
-          echo "e2e-headless-ssr-test-pages-prod: ${{ needs.e2e-headless-ssr-test-pages-prod.result }}"
           success="${{ !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure')}}"
           if [[ $success == "true" ]]; then
             echo "Build is valid"

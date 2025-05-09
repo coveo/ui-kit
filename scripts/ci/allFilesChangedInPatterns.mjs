@@ -26,8 +26,5 @@ const {base, head} = getBaseHeadSHAs();
 const files = getChangedFiles(base, head);
 const patterns = getPatterns();
 const everyFileIncludedInPatterns = everyFileMatchOnePattern(files, patterns);
-console.log(
-  `Files changed between ${base} and ${head}: ${files.trim()}\nPatterns: ${patterns}\nEvery file matches one pattern: ${everyFileIncludedInPatterns}`
-);
 const outputName = getOutputName();
 setOutput(outputName, everyFileIncludedInPatterns);
