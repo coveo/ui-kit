@@ -24,7 +24,6 @@
       "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/dist",
-        "{projectRoot}/cdn",
         "{projectRoot}/docs",
         "{projectRoot}/src/components.d.ts",
         "{projectRoot}/.stencil",
@@ -82,14 +81,6 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "node ./scripts/start-vite.mjs",
-        "cwd": "{projectRoot}"
-      }
-    },
-    "web:cdn": {
-      "dependsOn": ["cdn:deploy"],
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["node ./scripts/start-cdn.mjs"],
         "cwd": "{projectRoot}"
       }
     },
