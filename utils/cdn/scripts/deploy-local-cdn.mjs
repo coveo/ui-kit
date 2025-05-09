@@ -9,7 +9,6 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
     currentDir,
     `../../../packages/${packageName}/package.json`
   );
-  console.log(chalk.blue(`Reading version from ${packageJsonPath}`));
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
@@ -21,9 +20,7 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
         patch: version,
       }[versionType] || version
     );
-  } catch (err) {
-    console.error(chalk.red(`Error reading ${packageJsonPath}: ${err.message}`));
-    process.exit(1);
+  } catch (err) {    throw new Error(`Error reading or parsing ${packageJsonPath}: ${err.message}`);
   }
 };
 
@@ -31,29 +28,45 @@ const preprocessConfig = async (configContent) => {
   const versionPlaceholders = {
     IS_NIGHTLY: 'false',
     IS_NOT_NIGHTLY: 'true',
-    BUENO_PATCH_VERSION: await getVersionFromPackageJson('bueno', 'patch'),
-    BUENO_MINOR_VERSION: await getVersionFromPackageJson('bueno', 'minor'),
-    BUENO_MAJOR_VERSION: await getVersionFromPackageJson('bueno', 'major'),
-    HEADLESS_PATCH_VERSION: await getVersionFromPackageJson(
-      'headless',
-      'patch'
-    ),
-    HEADLESS_MINOR_VERSION: await getVersionFromPackageJson(
-      'headless',
-      'minor'
-    ),
-    HEADLESS_MAJOR_VERSION: await getVersionFromPackageJson(
-      'headless',
-      'major'
-    ),
-    ATOMIC_PATCH_VERSION: await getVersionFromPackageJson('atomic', 'patch'),
-    ATOMIC_MINOR_VERSION: await getVersionFromPackageJson('atomic', 'minor'),
-    ATOMIC_MAJOR_VERSION: await getVersionFromPackageJson('atomic', 'major'),
-    SHOPIFY_MAJOR_VERSION: await getVersionFromPackageJson('shopify', 'major'),
   };
 
+  const versionPlaceholderRegex = /\$\[([A-Z_]+?)_(MAJOR|MINOR|PATCH)_VERSION\]/g;
+  
+  const promises = [];
+  const processedPlaceholderKeys = new Set();
+
+  let match;
+  versionPlaceholderRegex.lastIndex = 0;
+  while ((match = versionPlaceholderRegex.exec(configContent)) !== null) {
+    const placeholderKey = match[0].substring(2, match[0].length - 1); 
+    
+    if (processedPlaceholderKeys.has(placeholderKey)) {
+      continue;
+    }
+    processedPlaceholderKeys.add(placeholderKey);
+
+    const packageIdentifier = match[1]; 
+    const versionTypeIdentifier = match[2]; 
+
+    const packageName = packageIdentifier.replace(/_/g, '-').toLowerCase();
+    const versionType = versionTypeIdentifier.toLowerCase();
+    
+    promises.push(
+      (async () => {
+          const version = await getVersionFromPackageJson(packageName, versionType);
+          versionPlaceholders[placeholderKey] = version;
+
+      })()
+    );
+  }
+
+  await Promise.all(promises);
+
   return configContent.replace(/\$\[([A-Z_]+)\]/g, (_, key) => {
-    return versionPlaceholders[key] || '';
+    if (versionPlaceholders.hasOwnProperty(key)) {
+      return versionPlaceholders[key];
+    }
+    return ''; 
   });
 };
 
@@ -61,7 +74,6 @@ const deploymentConfigPath = path.resolve(
   currentDir,
   '../../../.deployment.config.json'
 );
-console.log(chalk.blue(`Reading config from ${deploymentConfigPath}`));
 const rawConfigContent = await fs.readFile(deploymentConfigPath, 'utf-8');
 const processedConfigContent = await preprocessConfig(rawConfigContent);
 const deploymentConfig = JSON.parse(processedConfigContent);
@@ -72,7 +84,7 @@ const copyFiles = async (source, destination) => {
   return new Promise((resolve, reject) => {
     ncp(source, destination, (err) => {
       if (err) {
-        reject(err);
+        reject(new Error(`NCP error copying from ${source} to ${destination}: ${err ? err.map(e => e.message).join(', ') : 'unknown error'}`));
       } else {
         resolve();
       }
@@ -84,8 +96,7 @@ const ensureDirectoryExists = async (directory) => {
   try {
     await fs.mkdir(directory, {recursive: true});
   } catch (err) {
-    console.error(`Failed to create directory ${directory}:`, err);
-    throw err;
+    throw new Error(`Failed to create directory ${directory}: ${err.message}`);
   }
 };
 
@@ -98,30 +109,24 @@ const copyDagPhaseFiles = async () => {
       );
       const targetPath = path.resolve(devCdnDir, phase.s3.directory);
 
-      console.log(
-        chalk.blue(`Copying files from ${sourcePath} to ${targetPath}`)
-      );
-
       try {
         await ensureDirectoryExists(targetPath);
         await copyFiles(sourcePath, targetPath);
       } catch (err) {
-        console.error(
-          chalk.red(`Failed to copy files for phase ${phase.id}:`),
-          err
-        );
+        throw new Error(`Failed to process phase ${phase.id} (source: ${sourcePath}, target: ${targetPath}): ${err.message}`);
       }
     }
   }
 };
 
 const main = async () => {
+  await fs.rm(devCdnDir, { recursive: true, force: true });
+  await ensureDirectoryExists(devCdnDir); 
 
   await copyDagPhaseFiles();
-
 };
 
 main().catch((err) => {
-  console.error(chalk.red('An error occurred:'), err);
+  console.error(chalk.red('An error occurred during local CDN deployment:'), err.message);
   process.exit(1);
 });

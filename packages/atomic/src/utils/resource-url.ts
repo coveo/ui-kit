@@ -5,7 +5,7 @@ const cdnURLs = [
 ];
 
 // When testing with the CDN build locally (on in the CI), we need add the localhost URL to the list of CDN URLs
-if (process.env.CDN_LOCAL === 'true') {
+if (process?.env?.CDN_LOCAL) {
   cdnURLs.push('http://localhost:3000');
 }
 
