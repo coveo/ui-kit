@@ -49,7 +49,7 @@ if (typeof window !== 'undefined') {
       }
       //TODO: This part should not be necessary: instead, if component-a uses component-b, component-a should be responsible for loading component-b
       if ('shadowRoot' in root && root.shadowRoot) {
-        discover(root);
+        discover(root.shadowRoot);
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
