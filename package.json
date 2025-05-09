@@ -26,7 +26,8 @@
     "release:phase2": "npm run-script -w=@coveo/ci bump:root",
     "release:phase3": "nx run-many --targets=release:phase3 --all --parallel=false --output-style=stream",
     "release:phase4": "npm run-script -w=@coveo/ci reify",
-    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all"
+    "release:phase5": "npm run-script -w=@coveo/ci git-publish-all",
+    "dummy:test": "echo \"This is a dummy test\""
   },
   "devDependencies": {
     "@actions/core": "1.11.1",
