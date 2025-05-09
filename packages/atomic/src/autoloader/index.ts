@@ -62,7 +62,7 @@ if (typeof window !== 'undefined') {
         continue;
       }
       if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
-        discover(atomicElement.shadowRoot);
+        discover(atomicElement);
         continue;
       }
       if (atomicElement.classList.contains('hydrated')) {
