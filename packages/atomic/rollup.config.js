@@ -46,7 +46,6 @@ export default {
     json(),
     replace({
       'process.env.NODE_ENV': JSON.stringify('production'),
-      'process.env.CDN_LOCAL': JSON.stringify(process.env.CDN_LOCAL),
     }),
     copy({
       targets: [

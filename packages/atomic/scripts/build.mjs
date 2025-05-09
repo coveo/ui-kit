@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {dirname, basename, relative} from 'path';
+import {dirname, basename, relative, join} from 'path';
 import {argv} from 'process';
 import {
   readConfigFile,
@@ -14,6 +14,7 @@ import {
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
+import {processCssFiles} from './process-css.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
@@ -118,5 +119,28 @@ function compileWithTransformer() {
   process.exit(exitCode);
 }
 
-await generateLitExports();
-compileWithTransformer();
+async function build() {
+  try {
+    await generateLitExports();
+
+    const {options} = loadTsConfig(tsConfigPath);
+    const srcDir = join(process.cwd(), 'src');
+    const outDir = options.outDir;
+
+    console.log(chalk.blue('Starting build process'));
+
+    console.log(chalk.blue('Starting CSS processing'));
+    await processCssFiles(srcDir, outDir);
+
+    console.log(chalk.blue('Starting TypeScript compilation'));
+    compileWithTransformer();
+  } catch (error) {
+    console.error(chalk.red('Build failed:'), error);
+    process.exit(1);
+  }
+}
+
+build().catch((error) => {
+  console.error(chalk.red('Unhandled error during build:'), error);
+  process.exit(1);
+});
