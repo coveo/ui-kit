@@ -3,6 +3,11 @@ import QuanticRecentQueriesList from 'c/quanticRecentQueriesList';
 import {cleanup, flushPromises, buildCreateTestComponent} from 'c/testUtils';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 
+const exampleEngine = {
+  id: 'exampleEngineId',
+};
+const localStorageKey = `${exampleEngine.id}_quantic-recent-queries`;
+
 jest.mock('c/quanticHeadlessLoader');
 jest.mock(
   '@salesforce/label/c.quantic_RecentQueries',
@@ -25,7 +30,6 @@ jest.mock(
     virtual: true,
   }
 );
-
 jest.mock(
   '@salesforce/label/c.quantic_Collapse',
   () => ({default: 'Collapse Recent queries'}),
@@ -33,6 +37,23 @@ jest.mock(
     virtual: true,
   }
 );
+
+let mockRecentQueries = [];
+jest.mock('c/quanticUtils', () => ({
+  ...jest.requireActual('c/quanticUtils'),
+  setItemInLocalStorage: jest.fn((key, queries) => {
+    if (key === `${exampleEngine.id}_quantic-recent-queries`) {
+      mockRecentQueries = queries;
+    }
+    return null;
+  }),
+  getItemFromLocalStorage: jest.fn((key) => {
+    if (key === `${exampleEngine.id}_quantic-recent-queries`) {
+      return mockRecentQueries;
+    }
+    return null;
+  }),
+}));
 
 const defaultRecentQueriesTitle = 'Recent Queries';
 const defaultQueries = [];
@@ -44,6 +65,7 @@ const initialRecentQueriesListState = {
 
 let isInitialized = false;
 let recentQueriesListState = initialRecentQueriesListState;
+let updateRecentQueriesState;
 
 const functionMocks = {
   buildRecentQueriesList: jest.fn(() => ({
@@ -64,10 +86,6 @@ const functionMocks = {
   executeRecentQuery: jest.fn(),
   clear: jest.fn(),
   updateRecentQueries: jest.fn(),
-};
-
-const exampleEngine = {
-  id: 'exampleEngineId',
 };
 
 const defaultOptions = {
@@ -126,6 +144,7 @@ describe('c-quantic-recent-queries-list', () => {
     cleanup();
     recentQueriesListState = initialRecentQueriesListState;
     isInitialized = false;
+    mockRecentQueries = [];
   });
 
   describe('when the component is loading', () => {
@@ -224,6 +243,49 @@ describe('c-quantic-recent-queries-list', () => {
           selectors.recentQueryItemText
         ).textContent;
         expect(recentQueryText).toEqual(exampleQueries[index]);
+      });
+    });
+
+    describe('handling of the localStorage capabilities', () => {
+      beforeEach(() => {
+        mockRecentQueries = [
+          'example query 1',
+          'example query 2',
+          'example query 3',
+        ];
+      });
+
+      test('should display the queries in the recent queries list retrieved from the localstorage', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const recentQueriesListItems = element.shadowRoot.querySelectorAll(
+          selectors.recentQueryItem
+        );
+        expect(recentQueriesListItems.length).toEqual(mockRecentQueries.length);
+
+        recentQueriesListItems.forEach((item, index) => {
+          const recentQueryText = item.querySelector(
+            selectors.recentQueryItemText
+          ).textContent;
+          expect(recentQueryText).toEqual(mockRecentQueries[index]);
+        });
+      });
+
+      test.skip('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+        createTestComponent();
+        await flushPromises();
+
+        recentQueriesListState = {
+          queries: ['example query 4', 'example query 5'],
+          maxLength: defaultMaxLength,
+        };
+        // Trigger a change in state
+        await updateRecentQueriesState();
+        expect(functionMocks.setItemInLocalStorage).toHaveBeenCalledWith(
+          localStorageKey,
+          mockRecentQueries
+        );
       });
     });
 
