@@ -67,7 +67,8 @@
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod",
-    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
+    "validate:definitions": "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts",
+    "dummy:script": "echo \"// Dummy script to make sure the package is not empty\""
   },
   "dependencies": {
     "@coveo/bueno": "1.0.14",
