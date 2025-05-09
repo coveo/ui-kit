@@ -33,7 +33,11 @@ if (typeof window !== 'undefined') {
     );
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (rootIsAtomicElement && !customElements.get(rootTagName)) {
+    if (
+      rootIsAtomicElement &&
+      root instanceof Element &&
+      !customElements.get(rootTagName)
+    ) {
       allAtomicElements.push(root);
     }
     if (rootIsAtomicElement) {
