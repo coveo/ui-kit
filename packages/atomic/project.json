@@ -24,6 +24,7 @@
       "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/dist",
+        "{projectRoot}/cdn",
         "{projectRoot}/docs",
         "{projectRoot}/src/components.d.ts",
         "{projectRoot}/.stencil",
