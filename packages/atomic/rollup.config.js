@@ -6,8 +6,6 @@ import {resolve as resolvePath} from 'path';
 import copy from 'rollup-plugin-copy';
 import {generateExternalPackageMappings} from './scripts/externalPackageMappings.mjs';
 
-const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-
 const packageMappings = generateExternalPackageMappings(import.meta.dirname);
 
 const externalizeDependenciesPlugin = () => {
@@ -17,10 +15,6 @@ const externalizeDependenciesPlugin = () => {
       const packageMapping = packageMappings[source];
 
       if (packageMapping) {
-        if (!isCDN) {
-          return false;
-        }
-
         return {
           id: packageMapping.cdn,
           external: 'absolute',
@@ -37,6 +31,7 @@ export default {
   output: {
     dir: 'cdn',
     format: 'esm',
+    sourcemap: true,
   },
   external: [/.*\/headless\/v.*/, /.*\/atomic\/v.*/, /.*\/bueno\/v.*/],
   plugins: [

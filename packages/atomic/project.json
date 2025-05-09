@@ -38,7 +38,7 @@
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
           "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
           "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
-          "npm run-script -w=@coveo/ci if-cdn -- \"rollup -c rollup.config.js\"",
+          "rollup -c rollup.config.js",
           "rimraf ./dist/atomic/loader/package.json",
           "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
         ],
