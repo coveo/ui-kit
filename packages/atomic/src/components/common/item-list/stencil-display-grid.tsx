@@ -1,3 +1,4 @@
+// The Lit equivalent of this file is grid-layout.ts
 import {FunctionalComponent, h} from '@stencil/core';
 
 export interface DisplayGridProps {
