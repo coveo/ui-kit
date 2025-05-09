@@ -17,7 +17,6 @@ export class ProductTemplateProvider extends TemplateProvider<Product> {
     super(props, () => buildProductTemplatesManager());
   }
 
-  // TODO: Add JSX support for default template
   protected makeDefaultTemplate(): Template<
     Product,
     DocumentFragment,
