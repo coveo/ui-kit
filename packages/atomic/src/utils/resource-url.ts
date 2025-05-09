@@ -2,6 +2,7 @@ const cdnURLs = [
   'https://staticdev.cloud.coveo.com',
   'https://staticstg.cloud.coveo.com',
   'https://static.cloud.coveo.com',
+  'http://localhost:3000',
 ];
 
 function isCoveoCDN() {
