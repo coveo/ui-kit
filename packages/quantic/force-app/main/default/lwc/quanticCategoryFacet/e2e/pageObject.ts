@@ -1,20 +1,24 @@
 import type {Locator, Page} from '@playwright/test';
 
-export class FacetObject {
+export class CategoryFacetObject {
   constructor(public page: Page) {
     this.page = page;
   }
 
   get facet(): Locator {
-    return this.page.locator('c-quantic-facet');
+    return this.page.locator('c-quantic-category-facet');
   }
 
   get facetValue(): Locator {
-    return this.facet.getByTestId('facet__value');
+    return this.facet.locator('c-quantic-category-facet-value');
   }
 
-  get facetValueInput(): Locator {
-    return this.facet.getByRole('checkbox', {name: 'Facet value option'});
+  get activeParent(): Locator {
+    return this.facet.getByTestId('facet__active-parent');
+  }
+
+  get allCategoriesButton(): Locator {
+    return this.facet.getByRole('button', {name: /all categories/i});
   }
 
   get showMoreFacetValuesButton(): Locator {
@@ -34,11 +38,7 @@ export class FacetObject {
   }
 
   get facetBreadcrumb(): Locator {
-    return this.page.getByTestId('facet-breadcrumb');
-  }
-
-  get clearSelectionButton(): Locator {
-    return this.page.getByTestId('clear-selection-button');
+    return this.page.getByTestId('category-facet-breadcrumb');
   }
 
   facetBreadcrumbValueByIndex(index: number): Locator {
@@ -49,19 +49,7 @@ export class FacetObject {
     await this.facetValue.nth(index).click();
   }
 
-  async clickOnShowMoreFacetValuesButton(): Promise<void> {
-    await this.showMoreFacetValuesButton.click();
-  }
-
-  async clickOnShowLessFacetValuesButton(): Promise<void> {
-    await this.showLessFacetValuesButton.click();
-  }
-
   async fillFacetSearchBoxInput(query: string): Promise<void> {
     await this.facetSearchBoxInput.fill(query);
-  }
-
-  async clickOnClearSelectionButton(): Promise<void> {
-    await this.clearSelectionButton.click();
   }
 }

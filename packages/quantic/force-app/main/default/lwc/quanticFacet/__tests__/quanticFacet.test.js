@@ -154,14 +154,6 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
-function setupEventDispatchTest(eventName) {
-  const handler = (event) => {
-    functionsMocks.eventHandler(event?.detail);
-    document.removeEventListener(eventName, handler);
-  };
-  document.addEventListener(eventName, handler);
-}
-
 function mockErroneousHeadlessInitialization() {
   // @ts-ignore
   mockHeadlessLoader.initializeWithHeadless = (element) => {
@@ -990,7 +982,12 @@ describe('c-quantic-facet', () => {
       });
 
       it('should dispatch quantic__renderfacet event', async () => {
-        setupEventDispatchTest('quantic__renderfacet');
+        document.addEventListener(
+          'quantic__renderfacet',
+          // @ts-ignore
+          (event) => functionsMocks.eventHandler(event.detail),
+          {once: true}
+        );
         createTestComponent();
 
         await flushPromises();
