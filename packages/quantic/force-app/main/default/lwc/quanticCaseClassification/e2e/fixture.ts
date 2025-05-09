@@ -8,6 +8,8 @@ import {
   sfDefaultField,
 } from './data';
 
+type AnalyticsMode = 'ua' | 'ep';
+
 const pageUrl = 's/quantic-case-classification';
 
 interface CaseClassificationOptions {
@@ -21,16 +23,24 @@ type QuanticCaseClassificationE2EFixtures = {
   options: Partial<CaseClassificationOptions>;
 };
 
-export const test = quanticBase.extend<QuanticCaseClassificationE2EFixtures>({
+export const test = quanticBase.extend<
+  QuanticCaseClassificationE2EFixtures & {
+    analyticsMode: AnalyticsMode;
+  }
+>({
   options: {},
+  analyticsMode: ['ua', {option: true}],
   caseAssist: async ({page}, use) => {
     await use(new CaseAssistObject(page));
   },
   caseClassification: async (
-    {page, options, configuration, caseAssist},
+    {page, options, configuration, caseAssist, analyticsMode},
     use
   ) => {
-    const caseClassificationObject = new CaseClassificationObject(page);
+    const caseClassificationObject = new CaseClassificationObject(
+      page,
+      analyticsMode
+    );
     caseClassificationObject.mockSfPicklistValues(sfDefaultField, allOptions);
     caseClassificationObject.mockCaseClassification(
       coveoDefaultField,
