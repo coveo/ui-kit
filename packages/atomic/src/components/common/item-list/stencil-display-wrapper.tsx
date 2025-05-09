@@ -1,5 +1,5 @@
 import {FunctionalComponent, h} from '@stencil/core';
-import {ItemDisplayLayout} from '../layout/display-options';
+import {ItemDisplayLayout} from '../layout/display-options.js';
 
 export interface DisplayWrapperProps {
   display: ItemDisplayLayout;

@@ -34,8 +34,8 @@ import {
   DisplayTableData,
   DisplayTableRow,
 } from '../../common/item-list/display-table';
-import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemListGuard} from '../../common/item-list/item-list-guard';
+import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
