@@ -28,9 +28,9 @@ if (typeof window !== 'undefined') {
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
-    const allAtomicElements = [
-      ...root.querySelectorAll(':not(:defined)'),
-    ].filter((el) => el.tagName.toLowerCase().startsWith('atomic-'));
+    const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
+      el.tagName.toLowerCase().startsWith('atomic-')
+    );
     const tags = allAtomicElements.map((el) => el.tagName.toLowerCase());
 
     // If the root element is an undefined Atomic component, add it to the list
