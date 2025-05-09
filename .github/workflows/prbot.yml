@@ -255,7 +255,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic
-    if: ${{ always() }}
+    if: ${{ success() && !contains(needs.*.result, 'skipped') }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
