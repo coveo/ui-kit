@@ -4,7 +4,14 @@
     </c-quantic-component-error>
   </template>
   <template lwc:elseif={shouldDisplay}>
-    <div>hello world</div>
+    <button
+      class={tabClass}
+      onclick={select}
+      aria-label={label}
+      aria-pressed={isPressed}
+      title={label}
+    >
+      <span class="slds-tabs_default__link">{label}</span>
     </button>
   </template>
 </template>
