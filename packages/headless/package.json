@@ -7,113 +7,50 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/browser/headless.esm.js",
+  "module": "./dist/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
-      "node": {
-        "types": "./dist/definitions/index.d.ts",
-        "import": "./dist/headless.esm.js",
-        "require": "./dist/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/index.d.ts",
-        "import": "./dist/browser/headless.esm.js",
-        "require": "./dist/browser/headless.js"
-      },
-      "import": "./dist/browser/headless.esm.js",
-      "require": "./dist/browser/headless.js"
+      "import": "./dist/headless.esm.js",
+      "require": "./dist/headless.cjs",
+      "default": "./dist/headless.esm.js"
     },
     "./case-assist": {
       "types": "./dist/definitions/case-assist.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/case-assist.index.d.ts",
-        "import": "./dist/case-assist/headless.esm.js",
-        "require": "./dist/case-assist/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/case-assist.index.d.ts",
-        "import": "./dist/browser/case-assist/headless.esm.js",
-        "require": "./dist/browser/case-assist/headless.js"
-      },
-      "import": "./dist/browser/case-assist/headless.esm.js",
-      "require": "./dist/browser/case-assist/headless.js"
+      "import": "./dist/case-assist/headless.esm.js",
+      "require": "./dist/case-assist/headless.cjs",
+      "default": "./dist/case-assist/headless.esm.js"
     },
     "./commerce": {
       "types": "./dist/definitions/commerce.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/commerce.index.d.ts",
-        "import": "./dist/commerce/headless.esm.js",
-        "require": "./dist/commerce/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/commerce.index.d.ts",
-        "import": "./dist/browser/commerce/headless.esm.js",
-        "require": "./dist/browser/commerce/headless.js"
-      },
-      "import": "./dist/browser/commerce/headless.esm.js",
-      "require": "./dist/browser/commerce/headless.js"
+      "import": "./dist/commerce/headless.esm.js",
+      "require": "./dist/commerce/headless.cjs",
+      "default": "./dist/commerce/headless.esm.js"
     },
     "./insight": {
       "types": "./dist/definitions/insight.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/insight.index.d.ts",
-        "import": "./dist/insight/headless.esm.js",
-        "require": "./dist/insight/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/insight.index.d.ts",
-        "import": "./dist/browser/insight/headless.esm.js",
-        "require": "./dist/browser/insight/headless.js"
-      },
-      "import": "./dist/browser/insight/headless.esm.js",
-      "require": "./dist/browser/insight/headless.js"
+      "import": "./dist/insight/headless.esm.js",
+      "require": "./dist/insight/headless.cjs",
+      "default": "./dist/insight/headless.esm.js"
     },
     "./recommendation": {
       "types": "./dist/definitions/recommendation.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/recommendation.index.d.ts",
-        "import": "./dist/recommendation/headless.esm.js",
-        "require": "./dist/recommendation/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/recommendation.index.d.ts",
-        "import": "./dist/browser/recommendation/headless.esm.js",
-        "require": "./dist/browser/recommendation/headless.js"
-      },
-      "import": "./dist/browser/recommendation/headless.esm.js",
-      "require": "./dist/browser/recommendation/headless.js"
+      "import": "./dist/recommendation/headless.esm.js",
+      "require": "./dist/recommendation/headless.cjs",
+      "default": "./dist/recommendation/headless.esm.js"
     },
     "./ssr": {
       "types": "./dist/definitions/ssr.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/ssr.index.d.ts",
-        "import": "./dist/ssr/headless.esm.js",
-        "require": "./dist/ssr/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/ssr.index.d.ts",
-        "import": "./dist/browser/ssr/headless.esm.js",
-        "require": "./dist/browser/ssr/headless.js"
-      },
-      "import": "./dist/browser/ssr/headless.esm.js",
-      "require": "./dist/browser/ssr/headless.js"
+      "import": "./dist/ssr/headless.esm.js",
+      "require": "./dist/ssr/headless.cjs",
+      "default": "./dist/ssr/headless.esm.js"
     },
     "./ssr-commerce": {
       "types": "./dist/definitions/ssr-commerce.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/ssr-commerce.index.d.ts",
-        "import": "./dist/ssr-commerce/headless.esm.js",
-        "require": "./dist/ssr-commerce/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/ssr-commerce.index.d.ts",
-        "import": "./dist/browser/ssr-commerce/headless.esm.js",
-        "require": "./dist/browser/ssr-commerce/headless.js"
-      },
-      "import": "./dist/browser/ssr-commerce/headless.esm.js",
-      "require": "./dist/browser/ssr-commerce/headless.js"
+      "import": "./dist/ssr-commerce/headless.esm.js",
+      "require": "./dist/ssr-commerce/headless.cjs",
+      "default": "./dist/ssr-commerce/headless.esm.js"
     }
   },
   "types": "./dist/definitions/index.d.ts",
