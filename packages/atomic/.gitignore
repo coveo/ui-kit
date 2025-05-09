@@ -42,4 +42,4 @@ dist-storybook/
 /dev/bueno/
 /dev/headless/
 /dev/atomic/
-/dev-cdn/static/
+cdn/
