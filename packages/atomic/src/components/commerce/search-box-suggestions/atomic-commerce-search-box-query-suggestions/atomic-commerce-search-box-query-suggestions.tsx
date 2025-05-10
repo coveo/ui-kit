@@ -51,7 +51,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
    */
   @Prop({reflect: true}) public maxWithoutQuery?: number;
 
-  componentWillLoad() {
+  componentDidLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox>((bindings) => {
         this.bindings = bindings;

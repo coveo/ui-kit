@@ -43,6 +43,7 @@ export const SearchBeforeInit: Story = {
     const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
+    await customElements.whenDefined('atomic-commerce-interface');
     await commerceInterface!.executeFirstRequest();
   },
 };

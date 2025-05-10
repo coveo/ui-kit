@@ -1,7 +1,7 @@
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
 
@@ -17,7 +17,7 @@ const meta: Meta = {
   title:
     'Atomic-Commerce/Interface Components/atomic-commerce-search-box-instant-products',
   id: 'atomic-commerce-search-box-instant-products',
-  render: renderComponent,
+  render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters,
   play,
