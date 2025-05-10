@@ -3,6 +3,7 @@ import {test, expect, setSuggestions, setRecentQueries} from './fixture';
 test.describe('default', () => {
   test.beforeEach(async ({searchBox}) => {
     await searchBox.load({args: {suggestionTimeout: 5000}});
+    await searchBox.hydrated.waitFor();
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
@@ -106,6 +107,9 @@ test.describe('default', () => {
     test.beforeEach(async ({searchBox, page}) => {
       await setRecentQueries(page, 4);
       await setSuggestions(page, 4);
+      // We reload to ensure we load the recent queries from local storage
+      await page.reload();
+      await searchBox.hydrated.waitFor();
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
     });
@@ -200,6 +204,7 @@ test.describe('with instant results & query suggestions', () => {
       args: {suggestionTimeout: 5000},
       story: 'rich-search-box',
     });
+    await searchBox.hydrated.waitFor();
   });
 
   test.describe('with recent queries', () => {
@@ -435,8 +440,8 @@ test.describe('with minimum-query-length=4', () => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 
-    test('should perform requests against the query suggest endpoint', () => {
-      expect(querySuggestionRequestPerformed).toBe(true);
+    test('should perform requests against the query suggest endpoint', async () => {
+      await expect.poll(() => querySuggestionRequestPerformed).toBe(true);
     });
   });
 });
