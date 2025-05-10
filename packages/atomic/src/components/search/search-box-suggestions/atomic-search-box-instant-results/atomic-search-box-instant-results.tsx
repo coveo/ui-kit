@@ -91,7 +91,7 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
    */
   @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
-  public componentWillLoad() {
+  public componentDidLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;
