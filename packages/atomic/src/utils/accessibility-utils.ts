@@ -52,6 +52,7 @@ export class AriaLiveRegionController implements ReactiveController {
   }
 }
 
+// TODO: see if this can be reimplemented as a mixin
 export class FocusTargetController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
@@ -107,10 +108,10 @@ export class FocusTargetController {
   }
 
   private handleComponentRenderLoop() {
-    this.component.updateComplete.then(async () => {
-      if (!this.bindings) {
-        return;
-      }
+    // @ts-expect-error - Acesssing protected method
+    const originalUpdated = this.component.updated;
+    // @ts-expect-error - Overridding protected method
+    this.component.updated = async (_changedProperties) => {
       if (
         this.doFocusAfterSearch &&
         this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
@@ -125,7 +126,8 @@ export class FocusTargetController {
           this.onFocusCallback?.();
         }
       }
-    });
+      originalUpdated(_changedProperties);
+    };
   }
 }
 
