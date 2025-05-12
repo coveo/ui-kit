@@ -20,7 +20,7 @@ import {
 import {ArrayProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/stencil-utils';
-import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
@@ -28,10 +28,10 @@ import {
   DisplayTable,
   DisplayTableRow,
 } from '../../../common/item-list/display-table';
-import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
@@ -42,7 +42,7 @@ import {
   ItemDisplayLayout,
   getItemListDisplayClasses,
 } from '../../../common/layout/display-options';
-import {TabGuard} from '../../../common/tab-manager/tab-guard';
+import {TabGuard} from '../../../common/tabs/tab-guard';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

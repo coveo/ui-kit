@@ -6,7 +6,7 @@
   <template lwc:else>
     <slot><!-- Timeframes --></slot>
     <template lwc:if={isFacetEnabled}>
-      <div data-test="facet-content">
+      <div data-testid="facet-content">
         <template if:true={showPlaceholder}>
           <c-quantic-placeholder
             variant="card"
@@ -34,6 +34,7 @@
 
                 <template if:true={hasActiveValues}>
                   <button
+                    data-testid="clear-selection-button"
                     class="facet__clear-filter slds-button slds-grid slds-grid_vertical-align-center slds-p-horizontal_x-small slds-m-top_small"
                     onclick={clearSelections}
                     title={clearFilterLabel}
@@ -52,95 +53,97 @@
                 </template>
 
                 <template if:false={isCollapsed}>
-                  <template if:true={shouldDisplayDatePicker}>
-                    <div
-                      class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small"
-                    >
-                      <form data-testid="facet__date-picker" onsubmit={handleApply}>
-                        <div class="slds-col slds-grid slds-gutters">
-                          <div
-                            class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small"
-                          >
-                            <span class="timeframe-facet__input-label"
-                              >{labels.startLabel}</span
-                            >
-                          </div>
-                          <div class="slds-col slds-size_4-of-5">
-                            <lightning-input
-                              type="date"
-                              class="timeframe-facet__start-input"
-                              label="Start"
-                              variant="label-hidden"
-                              date-style="short"
-                              min="1401-01-01"
-                              placeholder={datepickerFormat}
-                              value={startDateNoTime}
-                              onchange={handleStartDateChange}
-                              onblur={handleStartDateBlur}
-                            >
-                            </lightning-input>
-                          </div>
-                        </div>
-                        <div
-                          class="slds-col slds-grid slds-gutters slds-p-top_x-small"
-                        >
-                          <div
-                            class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small"
-                          >
-                            <span class="timeframe-facet__input-label"
-                              >{labels.endLabel}</span
-                            >
-                          </div>
-                          <div class="slds-col slds-size_4-of-5">
-                            <lightning-input
-                              type="date"
-                              class="timeframe-facet__end-input"
-                              label="End"
-                              variant="label-hidden"
-                              date-style="short"
-                              placeholder={datepickerFormat}
-                              value={endDateNoTime}
-                              onchange={handleEndDateChange}
-                              onblur={handleEndDateBlur}
-                            >
-                            </lightning-input>
-                          </div>
-                        </div>
-                        <div class="slds-col slds-p-top_x-small">
-                          <button
-                            class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
-                            onblur={resetRangeValidation}
-                            aria-label={ariaLabelValue}
-                          >
-                            {labels.apply}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </template>
-
-                  <template if:true={showValues}>
-                    <fieldset>
-                      <legend class="slds-assistive-text">{field}</legend>
-                      <ul
-                        class="slds-has-dividers_around-space slds-m-top_medium"
+                  <div data-testid="facet__body">
+                    <template if:true={shouldDisplayDatePicker}>
+                      <div
+                        class="slds-grid slds-gutters slds-grid_vertical slds-p-around_x-small"
                       >
-                        <template for:each={formattedValues} for:item="v">
-                          <li class="slds-grid" key={v.key}>
-                            <c-quantic-facet-value
-                              item={v}
-                              is-checked={v.selected}
-                              onquantic__selectvalue={onSelectValue}
-                              formatting-function={formatFacetValue}
-                              display-as-link
-                              is-range-facet
+                        <form data-testid="facet__date-picker" onsubmit={handleApply}>
+                          <div class="slds-col slds-grid slds-gutters">
+                            <div
+                              class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small"
                             >
-                            </c-quantic-facet-value>
-                          </li>
-                        </template>
-                      </ul>
-                    </fieldset>
-                  </template>
+                              <span class="timeframe-facet__input-label"
+                                >{labels.startLabel}</span
+                              >
+                            </div>
+                            <div class="slds-col slds-size_4-of-5">
+                              <lightning-input
+                                type="date"
+                                class="timeframe-facet__start-input"
+                                label="Start"
+                                variant="label-hidden"
+                                date-style="short"
+                                min="1401-01-01"
+                                placeholder={datepickerFormat}
+                                value={startDateNoTime}
+                                onchange={handleStartDateChange}
+                                onblur={handleStartDateBlur}
+                              >
+                              </lightning-input>
+                            </div>
+                          </div>
+                          <div
+                            class="slds-col slds-grid slds-gutters slds-p-top_x-small"
+                          >
+                            <div
+                              class="slds-col slds-size_1-of-5 slds-var-p-top_xx-small slds-var-m-top_xxx-small"
+                            >
+                              <span class="timeframe-facet__input-label"
+                                >{labels.endLabel}</span
+                              >
+                            </div>
+                            <div class="slds-col slds-size_4-of-5">
+                              <lightning-input
+                                type="date"
+                                class="timeframe-facet__end-input"
+                                label="End"
+                                variant="label-hidden"
+                                date-style="short"
+                                placeholder={datepickerFormat}
+                                value={endDateNoTime}
+                                onchange={handleEndDateChange}
+                                onblur={handleEndDateBlur}
+                              >
+                              </lightning-input>
+                            </div>
+                          </div>
+                          <div class="slds-col slds-p-top_x-small">
+                            <button
+                              class="slds-button slds-button_neutral slds-button_stretch timeframe-facet__apply"
+                              onblur={resetRangeValidation}
+                              aria-label={ariaLabelValue}
+                            >
+                              {labels.apply}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </template>
+  
+                    <template if:true={showValues}>
+                      <fieldset>
+                        <legend class="slds-assistive-text">{field}</legend>
+                        <ul
+                          class="slds-has-dividers_around-space slds-m-top_medium"
+                        >
+                          <template for:each={formattedValues} for:item="v">
+                            <li class="slds-grid" key={v.key}>
+                              <c-quantic-facet-value
+                                item={v}
+                                is-checked={v.selected}
+                                onquantic__selectvalue={onSelectValue}
+                                formatting-function={formatFacetValue}
+                                display-as-link
+                                is-range-facet
+                              >
+                              </c-quantic-facet-value>
+                            </li>
+                          </template>
+                        </ul>
+                      </fieldset>
+                    </template>
+                  </div>
                 </template>
               </c-quantic-card-container>
             </div>

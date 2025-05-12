@@ -22,10 +22,10 @@ import {
 import {updateBreakpoints} from '../../../../utils/replace-breakpoint';
 import {once, randomID} from '../../../../utils/stencil-utils';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../../atomic-modal/export-parts';
-import {FieldsetGroup} from '../../fieldset-group';
 import {IconButton} from '../../iconButton';
 import {AnyBindings} from '../../interface/bindings';
 import {Button} from '../../stencil-button';
+import {FieldsetGroup} from '../../stencil-fieldset-group';
 import {RadioButton} from '../../stencil-radio-button';
 
 /**

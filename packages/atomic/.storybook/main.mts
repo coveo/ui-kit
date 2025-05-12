@@ -1,5 +1,7 @@
 import type {StorybookConfig} from '@storybook/web-components-vite';
+import {readFileSync} from 'fs';
 import path from 'path';
+import {resolve, dirname} from 'path';
 import {PluginImpl} from 'rollup';
 import {mergeConfig} from 'vite';
 import {generateExternalPackageMappings} from '../scripts/externalPackageMappings.mjs';
@@ -71,6 +73,7 @@ const config: StorybookConfig = {
         tailwindcss(),
         resolvePathAliases(),
         forceInlineCssImports(),
+        svgTransform(),
         configType === 'PRODUCTION' && isCDN && externalizeDependencies(),
       ],
     });
@@ -105,6 +108,28 @@ const forceInlineCssImports: PluginImpl = () => {
           ),
           map: null,
         };
+      }
+      return null;
+    },
+  };
+};
+
+const svgTransform: PluginImpl = () => {
+  return {
+    name: 'svg-transform',
+    enforce: 'pre',
+    transform(code, id) {
+      if (id.endsWith('.ts')) {
+        return code.replace(
+          /import\s+([a-zA-Z]+)\s+from\s+['"]([^'"]+\.svg)['"]/g,
+          (_, importName, importPath) => {
+            const svgContent = readFileSync(
+              resolve(dirname(id), importPath),
+              'utf8'
+            ).replace(/'/g, "\\'");
+            return `const ${importName} = '${svgContent}';`;
+          }
+        );
       }
       return null;
     },

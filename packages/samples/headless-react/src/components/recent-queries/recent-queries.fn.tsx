@@ -11,7 +11,31 @@ export const RecentQueriesList: React.FunctionComponent<RecentQueriesProps> = (
   const {controller} = props;
   const [state, setState] = useState(controller.state);
 
-  useEffect(() => controller.subscribe(() => setState(controller.state)), []);
+  useEffect(() => {
+    const storedQueries = retrieveLocalStorage();
+    if (storedQueries.length) {
+      controller.state.queries = storedQueries;
+    }
+
+    const unsubscribe = controller.subscribe(() => {
+      setState(controller.state);
+      updateLocalStorage();
+    });
+
+    return () => unsubscribe();
+  }, [controller]);
+
+  const retrieveLocalStorage = () => {
+    const storedQueries = localStorage.getItem('recentQueries');
+    return storedQueries ? JSON.parse(storedQueries) : [];
+  };
+
+  const updateLocalStorage = () => {
+    localStorage.setItem(
+      'recentQueries',
+      JSON.stringify(controller.state.queries)
+    );
+  };
 
   return (
     <div>
