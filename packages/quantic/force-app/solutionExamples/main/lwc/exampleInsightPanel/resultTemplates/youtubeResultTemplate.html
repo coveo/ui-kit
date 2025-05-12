@@ -1,27 +1,94 @@
 <template>
-  <c-quantic-result-template is-any-preview-open={isAnyPreviewOpen} result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}>
-    <c-quantic-colored-result-badge slot="label" label={result.raw.documenttype}></c-quantic-colored-result-badge>
-    <div slot="badges" class="slds-grid slds-grid_vertical-align-center">
-      <div class="slds-m-right_xx-small">
-        <c-quantic-result-tag variant="recommended" result={result}></c-quantic-result-tag>
+  <div
+    class="result-action_container slds-is-relative slds-var-p-horizontal_medium"
+  >
+    <c-quantic-result-template hide-border data-id="youtube">
+      <div slot="label" class="slds-grid result-labels">
+        <c-quantic-colored-result-badge
+          slot="label"
+          label={result.raw.filetype}
+        ></c-quantic-colored-result-badge>
+        <c-quantic-result-tag
+          data-variant="recommended"
+          variant="recommended"
+          result={result}
+        ></c-quantic-result-tag>
+        <c-quantic-result-tag
+          data-variant="featured"
+          variant="featured"
+          result={result}
+        ></c-quantic-result-tag>
       </div>
-      <c-quantic-result-tag variant="featured" result={result}></c-quantic-result-tag>
-    </div>
-    <p slot="date" class="slds-size_xx-small">
-      <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
-    </p>
-    <div slot="title" class="slds-truncate">
-      <c-quantic-result-link result={result} engine-id={engineId}></c-quantic-result-link>
-    </div>
-    <div slot="visual" class="slds-size_1-of-1 slds-medium-size_1-of-4 slds-large-size_1-of-4 slds-p-right_x-small slds-m-top_xx-small slds-m-bottom_x-small">
-      <img loading="lazy" style="border-radius: 4px; border: none;" src={videoThumbnail}></img>
-    </div>
-    <div slot="excerpt">
-      {result.Excerpt}
-    </div>
-    <div slot="bottom-metadata" class="slds-text-align_left slds-m-top_xx-small slds-grid slds-grid_vertical-align-center" style="font-size: 10px">
-      <lightning-icon icon-name="utility:clock" size="xx-small"></lightning-icon>
-      <span class="slds-m-left_xxx-small">{videoTimeSpan}</span>
-    </div>
-  </c-quantic-result-template>
+      <div slot="title" class="slds-grid">
+        <c-quantic-result-link
+          result={result}
+          engine-id={engineId}
+          class="slds-truncate"
+          target="_blank"
+        ></c-quantic-result-link>
+      </div>
+      <div
+        slot="visual"
+        class="slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_5-of-12 slds-p-right_x-small slds-m-top_xx-small slds-m-bottom_x-small"
+      >
+        <img src={videoThumbnail} />
+      </div>
+      <div slot="excerpt">
+        <c-quantic-result-highlighted-text-field
+          engine-id={engineId}
+          result={result}
+          field="excerpt"
+        ></c-quantic-result-highlighted-text-field>
+      </div>
+      <div slot="actions">
+        <template if:true={isHovered}>
+          <c-quantic-result-action-bar>
+            <c-quantic-result-copy-to-clipboard
+              engine-id={engineId}
+              result={result}
+            ></c-quantic-result-copy-to-clipboard>
+            <c-quantic-result-quickview
+              engine-id={engineId}
+              result={result}
+              preview-button-variant="result-action"
+              tooltip="Quick view"
+            ></c-quantic-result-quickview>
+          </c-quantic-result-action-bar>
+        </template>
+      </div>
+      <div slot="bottom-metadata">
+        <div
+          class="result-metadata_container slds-grid slds-text-align_left slds-m-top_small"
+        >
+          <template if:true={videoTimeSpan}>
+            <div class="slds-var-m-right_medium detail__video-time-span">
+              <lightning-icon
+                icon-name="utility:clock"
+                size="xx-small"
+                aria-hidden="true"
+              ></lightning-icon>
+              <span class="slds-m-left_xx-small slds-text-body_small"
+                >{videoTimeSpan}</span
+              >
+            </div>
+          </template>
+          <c-quantic-result-field
+            key={detail.id}
+            result={result}
+            field="date"
+            label="Date"
+            type="date"
+            class="slds-var-m-right_medium slds-truncate"
+          ></c-quantic-result-field>
+        </div>
+        <template if:true={viewedByCustomerTagIsVisible}>
+          <div class="slds-grid slds-var-m-top_xx-small">
+            <c-quantic-viewed-by-customer-badge
+              result={result}
+            ></c-quantic-viewed-by-customer-badge>
+          </div>
+        </template>
+      </div>
+    </c-quantic-result-template>
+  </div>
 </template>
