@@ -199,7 +199,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: ./.github/actions/setup
-      - run: node ./scripts/ci/allFilesChangedInPatterns.mjs changesOnlyInQuantic 'packages/quantic/**/*'
+      - run: node ./scripts/ci/everyFilesChangedMatchPatterns.mjs changesOnlyInQuantic 'packages/quantic/**/*'
         id: shouldRunAtomice2e
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'

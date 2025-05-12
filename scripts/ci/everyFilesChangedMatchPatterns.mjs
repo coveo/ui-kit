@@ -11,7 +11,7 @@ function getPatterns() {
   return process.argv.slice(3);
 }
 
-function everyFileMatchOnePattern(files, patterns) {
+function everyFileMatchesAtLeastOnePattern(files, patterns) {
   return files
     .trim()
     .split(/\r?\n/)
@@ -25,6 +25,9 @@ function everyFileMatchOnePattern(files, patterns) {
 const {base, head} = getBaseHeadSHAs();
 const files = getChangedFiles(base, head);
 const patterns = getPatterns();
-const everyFileIncludedInPatterns = everyFileMatchOnePattern(files, patterns);
+const everyFileIncludedInPatterns = everyFileMatchesAtLeastOnePattern(
+  files,
+  patterns
+);
 const outputName = getOutputName();
 setOutput(outputName, everyFileIncludedInPatterns);
