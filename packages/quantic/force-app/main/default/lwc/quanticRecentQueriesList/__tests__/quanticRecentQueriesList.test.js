@@ -42,13 +42,13 @@ let mockRecentQueries = [];
 jest.mock('c/quanticUtils', () => ({
   ...jest.requireActual('c/quanticUtils'),
   setItemInLocalStorage: jest.fn((key, queries) => {
-    if (key === `${exampleEngine.id}_quantic-recent-queries`) {
+    if (key === localStorageKey) {
       mockRecentQueries = queries;
     }
     return null;
   }),
   getItemFromLocalStorage: jest.fn((key) => {
-    if (key === `${exampleEngine.id}_quantic-recent-queries`) {
+    if (key === localStorageKey) {
       return mockRecentQueries;
     }
     return null;
@@ -78,9 +78,12 @@ const functionMocks = {
     clear: functionMocks.clear,
     updateRecentQueries: functionMocks.updateRecentQueries,
   })),
-  recentQueriesListSubscriber: jest.fn((cb) => {
-    cb();
-    return functionMocks.recentQueriesListUnsubscriber;
+  recentQueriesListSubscriber: jest.fn((callback) => {
+    updateRecentQueriesState = async () => {
+      callback();
+      await flushPromises();
+    };
+    return () => {};
   }),
   recentQueriesListUnsubscriber: jest.fn(),
   executeRecentQuery: jest.fn(),
@@ -272,20 +275,25 @@ describe('c-quantic-recent-queries-list', () => {
         });
       });
 
-      test.skip('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+      test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
         createTestComponent();
         await flushPromises();
 
-        recentQueriesListState = {
-          queries: ['example query 4', 'example query 5'],
-          maxLength: defaultMaxLength,
-        };
-        // Trigger a change in state
+        // Simulate a change in the state
+        recentQueriesListState.queries = [
+          'query1',
+          'query2',
+          'query3',
+          'query4',
+        ];
         await updateRecentQueriesState();
-        expect(functionMocks.setItemInLocalStorage).toHaveBeenCalledWith(
-          localStorageKey,
-          mockRecentQueries
-        );
+
+        // expect(setItemInLocalStorage).toHaveBeenCalledWith(
+        //   `${exampleEngine.id}_quantic-recent-queries`,
+        //   recentQueriesListState.queries
+        // );
+
+        expect(mockRecentQueries).toEqual(recentQueriesListState.queries);
       });
     });
 
