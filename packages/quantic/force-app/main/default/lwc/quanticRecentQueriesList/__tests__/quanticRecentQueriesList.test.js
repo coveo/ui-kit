@@ -193,6 +193,48 @@ describe('c-quantic-recent-queries-list', () => {
       prepareHeadlessState();
     });
 
+    describe('when there are no recent queries', () => {
+      beforeEach(() => {
+        recentQueriesListState = {
+          queries: [],
+          maxLength: defaultMaxLength,
+        };
+      });
+
+      it('should display an empty list when #hideWhenEmpty is set to false', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          hideWhenEmpty: false,
+        });
+        updateRecentQueriesState();
+        await flushPromises();
+
+        const recentQueriesContainer = element.shadowRoot.querySelector(
+          selectors.quanticCardContainer
+        );
+        expect(recentQueriesContainer).not.toBeNull();
+        expect(recentQueriesContainer.title).toEqual(defaultRecentQueriesTitle);
+
+        const recentQueriesListItems = element.shadowRoot.querySelectorAll(
+          selectors.recentQueryItem
+        );
+        expect(recentQueriesListItems.length).toEqual(0);
+      });
+
+      it('should not display the recent queries card when #hideWhenEmpty is set to true', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          hideWhenEmpty: true,
+        });
+        await flushPromises();
+
+        const recentQueriesContainer = element.shadowRoot.querySelector(
+          selectors.quanticCardContainer
+        );
+        expect(recentQueriesContainer).toBeNull();
+      });
+    });
+
     describe('when there are recent queries', () => {
       const exampleQueries = ['query1', 'query2'];
 
@@ -242,7 +284,7 @@ describe('c-quantic-recent-queries-list', () => {
 
       describe('handling of the localStorage capabilities', () => {
         test('should use the correct initial state retrieved from the localstorage', async () => {
-          jest
+          const getItemFromLocalStorageSpy = jest
             .spyOn(utils, 'getItemFromLocalStorage')
             .mockReturnValue(mockRecentQueries);
           createTestComponent();
@@ -256,6 +298,11 @@ describe('c-quantic-recent-queries-list', () => {
               options: {maxLength: defaultMaxLength},
             }
           );
+
+          expect(getItemFromLocalStorageSpy).toHaveBeenCalledWith(
+            localStorageKey
+          );
+          expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
         });
 
         test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
@@ -277,49 +324,8 @@ describe('c-quantic-recent-queries-list', () => {
             localStorageKey,
             exampleQueries
           );
+          expect(setItemInLocalStorageSpy).toHaveBeenCalledTimes(1);
         });
-      });
-    });
-
-    describe('when there are no recent queries', () => {
-      beforeEach(() => {
-        recentQueriesListState = {
-          queries: [],
-          maxLength: defaultMaxLength,
-        };
-      });
-
-      it('should display an empty list when #hideWhenEmpty is set to false', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: false,
-        });
-        updateRecentQueriesState();
-        await flushPromises();
-
-        const recentQueriesContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentQueriesContainer).not.toBeNull();
-        expect(recentQueriesContainer.title).toEqual(defaultRecentQueriesTitle);
-
-        const recentQueriesListItems = element.shadowRoot.querySelectorAll(
-          selectors.recentQueryItem
-        );
-        expect(recentQueriesListItems.length).toEqual(0);
-      });
-
-      it('should not display the recent queries card when #hideWhenEmpty is set to true', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: true,
-        });
-        await flushPromises();
-
-        const recentQueriesContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentQueriesContainer).toBeNull();
       });
     });
 
@@ -329,6 +335,7 @@ describe('c-quantic-recent-queries-list', () => {
         createTestComponent({...defaultOptions, maxLength: customMaxLength});
         await flushPromises();
 
+        expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
         expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
           exampleEngine,
           {
