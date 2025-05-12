@@ -35,7 +35,7 @@ export const decorators = [
 
       const isTestMode =
         typeof window !== 'undefined' &&
-        window.location.href.includes('localhost:4400');
+        window.location.href.includes('localhost');
 
       if (!isTestMode) {
         disableAnalytics(container, [
