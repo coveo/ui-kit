@@ -1,9 +1,10 @@
+// The Lit equivalent of this file is item-placeholders.ts. The Lit version doesn't include the placeholder guard.
 import {FunctionalComponent, h} from '@stencil/core';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
   ItemDisplayLayout,
-} from '../../common/layout/display-options';
+} from '../layout/display-options.js';
 
 interface ResultPlaceholderProps {
   density: ItemDisplayDensity;

@@ -1,38 +1,79 @@
 <template>
-  <c-quantic-result-template
-    is-any-preview-open={isAnyPreviewOpen}
-    result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}
+  <div
+    class="result-action_container slds-is-relative slds-var-p-horizontal_medium"
   >
-    <c-quantic-colored-result-badge
-      slot="label"
-      label={result.raw.filetype}
-    ></c-quantic-colored-result-badge>
-    <div
-      slot="badges"
-      class="slds-grid slds-grid_vertical-align-center slds-m-vertical_xx-small slds-m-right_small"
+    <c-quantic-result-template
+      is-any-preview-open={isAnyPreviewOpen}
+      result-preview-should-not-be-accessible={resultPreviewShouldNotBeAccessible}
     >
-      <div class="slds-m-right_xx-small">
+      <div slot="label" class="slds-grid result-labels slds-wrap">
+        <c-quantic-colored-result-badge
+          slot="label"
+          label={result.raw.filetype}
+        ></c-quantic-colored-result-badge>
         <c-quantic-result-tag
+          data-variant="recommended"
           variant="recommended"
           result={result}
         ></c-quantic-result-tag>
+        <c-quantic-result-tag
+          data-variant="featured"
+          variant="featured"
+          result={result}
+        ></c-quantic-result-tag>
       </div>
-      <c-quantic-result-tag
-        variant="featured"
-        result={result}
-      ></c-quantic-result-tag>
-    </div>
-    <p slot="date" class="slds-size_xx-small">
-      <lightning-formatted-date-time
-        value={result.raw.date}
-      ></lightning-formatted-date-time>
-    </p>
-    <div slot="title" class="slds-truncate">
-      <c-quantic-result-link
-        result={result}
-        engine-id={engineId}
-      ></c-quantic-result-link>
-    </div>
-    <div slot="excerpt">{result.Excerpt}</div>
-  </c-quantic-result-template>
+      <div slot="title" class="slds-truncate">
+        <c-quantic-result-link
+          result={result}
+          engine-id={engineId}
+        ></c-quantic-result-link>
+      </div>
+      <div slot="excerpt">{result.Excerpt}</div>
+      <div slot="children">
+        <c-quantic-result-children
+          engine-id={engineId}
+          collection={collection}
+          folded-result-list-controller={foldedResultListController}
+          result-templates-manager={resultTemplatesManager}
+        ></c-quantic-result-children>
+      </div>
+      <div slot="actions">
+        <template if:true={isHovered}>
+          <c-quantic-result-action-bar>
+            <c-quantic-result-copy-to-clipboard
+              engine-id={engineId}
+              result={result}
+            ></c-quantic-result-copy-to-clipboard>
+            <c-quantic-result-quickview
+              engine-id={engineId}
+              result={result}
+              preview-button-variant="result-action"
+              tooltip="Quick view"
+            ></c-quantic-result-quickview>
+          </c-quantic-result-action-bar>
+        </template>
+      </div>
+      <div slot="bottom-metadata">
+        <div
+          class="result-metadata_container slds-grid slds-text-align_left slds-var-m-top_small slds-wrap"
+        >
+          <c-quantic-result-field
+            key={detail.id}
+            result={result}
+            field="date"
+            label="Date"
+            type="date"
+            class="slds-var-m-right_medium slds-truncate"
+          ></c-quantic-result-field>
+        </div>
+        <template if:true={viewedByCustomerTagIsVisible}>
+          <div class="slds-grid slds-var-m-top_xx-small">
+            <c-quantic-viewed-by-customer-badge
+              result={result}
+            ></c-quantic-viewed-by-customer-badge>
+          </div>
+        </template>
+      </div>
+    </c-quantic-result-template>
+  </div>
 </template>
