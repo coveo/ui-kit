@@ -28,9 +28,9 @@ import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/p
 import {Carousel} from '../../common/carousel';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {DisplayGrid} from '../../common/item-list/display-grid';
-import {DisplayWrapper} from '../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
+import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
