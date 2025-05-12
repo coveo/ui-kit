@@ -1,12 +1,17 @@
 import {test, expect, setSuggestions, setRecentQueries} from './fixture';
 
 test.describe('default', () => {
-  test.beforeEach(async ({searchBox}) => {
+  test.beforeEach(async ({searchBox, browser}) => {
+    await browser.newContext({
+      viewport: {width: 1280, height: 720},
+      screen: {width: 1280, height: 720},
+    });
     await searchBox.load({args: {suggestionTimeout: 5000}});
     await searchBox.hydrated.waitFor();
   });
 
   test('should have an enabled search button', async ({searchBox}) => {
+    await expect(searchBox.searchInput).toBeInViewport();
     await expect(searchBox.submitButton).toBeEnabled();
   });
 
