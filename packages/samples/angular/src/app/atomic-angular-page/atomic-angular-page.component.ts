@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ViewChild} from '@angular/core';
-import {Result, Bindings, AtomicSearchInterface} from '@coveo/atomic-angular';
+import {Result, Bindings, AtomicRecsInterface} from '@coveo/atomic-angular';
 
 @Component({
   standalone: false,
@@ -9,7 +9,7 @@ import {Result, Bindings, AtomicSearchInterface} from '@coveo/atomic-angular';
 })
 export class AtomicAngularPageComponent implements AfterViewInit {
   @ViewChild('searchInterface')
-  searchInterface!: AtomicSearchInterface;
+  searchInterface!: AtomicRecsInterface;
 
   constructor() {}
   async ngAfterViewInit(): Promise<void> {
@@ -22,7 +22,7 @@ export class AtomicAngularPageComponent implements AfterViewInit {
         },
       })
       .then(() => {
-        this.searchInterface.executeFirstSearch();
+        this.searchInterface.getRecommendations();
         this.searchInterface.i18n.addResourceBundle('en', 'translation', {
           'no-ratings-available': 'No ratings available',
         });
