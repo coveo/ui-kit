@@ -33,10 +33,12 @@ const observeAndExpandButtons = () => {
 };
 
 const addNoIndexMetaTag = () => {
-  const metaTag = document.createElement('meta');
-  metaTag.name = 'robots';
-  metaTag.content = 'noindex';
-  document.head.appendChild(metaTag);
+  if (!document.querySelector('meta[name="robots"][content="noindex"]')) {
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'robots';
+    metaTag.content = 'noindex';
+    document.head.appendChild(metaTag);
+  }
 };
 
 addons.register('expand-all-folders-on-intro', () => {
