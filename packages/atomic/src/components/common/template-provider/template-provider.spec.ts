@@ -1,11 +1,19 @@
 import type {TemplatesManager} from '@coveo/headless';
-import {describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {TemplateProvider, TemplateProviderProps} from './template-provider';
 
 describe('TemplateProvider', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   describe('#constructor', () => {
     it('should create an instance', () => {
-      const templateProvider = templateProviderFixture();
+      const templateProvider = setupTemplateProvider();
 
       expect(templateProvider).toBeInstanceOf(TestTemplateProvider);
     });
@@ -17,7 +25,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate: vi.fn(),
       }));
 
-      templateProviderFixture({}, buildManager);
+      setupTemplateProvider({}, buildManager);
 
       expect(buildManager).toHaveBeenCalledOnce();
     });
@@ -25,11 +33,11 @@ describe('TemplateProvider', () => {
     it("should call the #props.setResultTemplatesRegistered function with 'true'", async () => {
       const setResultTemplateRegistered = vi.fn();
 
-      templateProviderFixture({
+      setupTemplateProvider({
         setResultTemplateRegistered,
       });
 
-      await completeMicrotasks();
+      await vi.runAllTimersAsync();
 
       expect(setResultTemplateRegistered).toHaveBeenCalledOnce();
       expect(setResultTemplateRegistered).toHaveBeenCalledWith(true);
@@ -39,7 +47,7 @@ describe('TemplateProvider', () => {
       it("should call the #props.setTemplateHasError function with 'true' when #getTemplate resolves to null on any template element", async () => {
         const setTemplateHasError = vi.fn();
 
-        templateProviderFixture({
+        setupTemplateProvider({
           templateElements: [
             buildFakeTemplateElement(),
             buildFakeTemplateElement(vi.fn().mockResolvedValue(null)),
@@ -47,7 +55,7 @@ describe('TemplateProvider', () => {
           setTemplateHasError,
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(setTemplateHasError).toHaveBeenCalledOnce();
         expect(setTemplateHasError).toHaveBeenCalledWith(true);
@@ -56,7 +64,7 @@ describe('TemplateProvider', () => {
       it('should not call the #props.setTemplateHasError function when #getTemplate resolves to a template on every template element', async () => {
         const setTemplateHasError = vi.fn();
 
-        templateProviderFixture({
+        setupTemplateProvider({
           templateElements: [
             buildFakeTemplateElement(),
             buildFakeTemplateElement(),
@@ -64,7 +72,7 @@ describe('TemplateProvider', () => {
           setTemplateHasError,
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(setTemplateHasError).not.toHaveBeenCalled();
       });
@@ -90,7 +98,7 @@ describe('TemplateProvider', () => {
           conditions: [],
         });
 
-        templateProviderFixture(
+        setupTemplateProvider(
           {
             templateElements: [
               buildFakeTemplateElement(getTemplate1),
@@ -101,7 +109,7 @@ describe('TemplateProvider', () => {
           buildManager
         );
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(registerTemplates).toHaveBeenCalledOnce();
         expect(registerTemplates).toHaveBeenCalledWith(
@@ -119,7 +127,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        templateProviderFixture(
+        setupTemplateProvider(
           {
             includeDefaultTemplate: true,
             templateElements: [
@@ -129,7 +137,7 @@ describe('TemplateProvider', () => {
           buildManager
         );
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(registerTemplates).toHaveBeenCalledOnce();
         expect(registerTemplates).toHaveBeenCalledWith(...[]);
@@ -140,12 +148,12 @@ describe('TemplateProvider', () => {
       it('should not call the #props.setTemplateHasError function', async () => {
         const setTemplateHasError = vi.fn();
 
-        templateProviderFixture({
+        setupTemplateProvider({
           templateElements: [],
           setTemplateHasError,
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(setTemplateHasError).not.toHaveBeenCalled();
       });
@@ -159,7 +167,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        templateProviderFixture(
+        setupTemplateProvider(
           {
             includeDefaultTemplate: true,
             templateElements: [],
@@ -167,7 +175,7 @@ describe('TemplateProvider', () => {
           buildManager
         );
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(registerTemplates).toHaveBeenCalledOnce();
         expect(registerTemplates.mock.lastCall?.[0].content.textContent).toBe(
@@ -188,7 +196,7 @@ describe('TemplateProvider', () => {
           selectLinkTemplate: vi.fn(),
         });
 
-        templateProviderFixture(
+        setupTemplateProvider(
           {
             includeDefaultTemplate: false,
             templateElements: [],
@@ -196,7 +204,7 @@ describe('TemplateProvider', () => {
           buildManager
         );
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         expect(registerTemplates).toHaveBeenCalledOnce();
         expect(registerTemplates).toHaveBeenCalledWith(...[]);
@@ -213,7 +221,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate: vi.fn(),
       });
       const selectTemplate = vi.fn();
-      const fixture = await templateProviderFixture({}, buildManager);
+      const fixture = await setupTemplateProvider({}, buildManager);
 
       fixture.getTemplateContent(item);
 
@@ -231,7 +239,7 @@ describe('TemplateProvider', () => {
         selectLinkTemplate,
       });
       const selectLinkTemplate = vi.fn();
-      const fixture = templateProviderFixture({}, buildManager);
+      const fixture = setupTemplateProvider({}, buildManager);
 
       fixture.getLinkTemplateContent(item);
 
@@ -242,7 +250,7 @@ describe('TemplateProvider', () => {
 
   describe('#getEmptyTemplateContent', () => {
     it('should return an empty DocumentFragment', async () => {
-      const fixture = templateProviderFixture();
+      const fixture = setupTemplateProvider();
 
       const result = fixture.getEmptyLinkTemplateContent();
 
@@ -253,7 +261,7 @@ describe('TemplateProvider', () => {
   describe('#templatesRegistered', () => {
     it('should call the #props.getResultTemplateRegistered function', async () => {
       const getResultTemplateRegistered = vi.fn();
-      const fixture = templateProviderFixture({getResultTemplateRegistered});
+      const fixture = setupTemplateProvider({getResultTemplateRegistered});
 
       fixture.templatesRegistered;
 
@@ -264,7 +272,7 @@ describe('TemplateProvider', () => {
   describe('#hasError', () => {
     it('should call the #props.getTemplateHasError function', async () => {
       const getTemplateHasError = vi.fn();
-      const fixture = await templateProviderFixture({getTemplateHasError});
+      const fixture = await setupTemplateProvider({getTemplateHasError});
 
       fixture.hasError;
 
@@ -299,7 +307,7 @@ describe('TemplateProvider', () => {
     }
   }
 
-  const templateProviderFixture = (
+  const setupTemplateProvider = (
     props: Partial<TemplateProviderProps<unknown>> = {},
     buildManager?: () => TemplatesManager<
       unknown,
@@ -333,9 +341,5 @@ describe('TemplateProvider', () => {
       ...document.createElement('template'),
       getTemplate,
     };
-  };
-
-  const completeMicrotasks = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
   };
 });
