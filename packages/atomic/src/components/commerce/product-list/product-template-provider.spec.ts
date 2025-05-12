@@ -1,5 +1,5 @@
 import {buildProductTemplatesManager, Product} from '@coveo/headless/commerce';
-import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
 import {ItemTarget} from '../../common/layout/display-options';
 import {TemplateProviderProps} from '../../common/template-provider/template-provider';
 import {ProductTemplateProvider} from './product-template-provider';
@@ -31,16 +31,27 @@ describe('ProductTemplateProvider', () => {
     });
 
     describe("when #includeDefaultTemplate is 'true' and #templateElements is empty", () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
       it('should register the default template without conditions', async () => {
         productTemplateProviderFixture({
           includeDefaultTemplate: true,
           templateElements: [],
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
-        expect(registerTemplates).toHaveBeenCalledOnce();
-        expect(registerTemplates.mock.lastCall?.[0].conditions.length).toBe(0);
+        expect(registerTemplates).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            conditions: expect.arrayContaining([]),
+          })
+        );
       });
 
       it('should register the correct default product template', async () => {
@@ -49,10 +60,13 @@ describe('ProductTemplateProvider', () => {
           templateElements: [],
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
-        expect(registerTemplates).toHaveBeenCalledOnce();
-        expect(registerTemplates.mock.lastCall?.[0].conditions.length).toBe(0);
+        expect(registerTemplates).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            conditions: expect.arrayContaining([]),
+          })
+        );
 
         const defaultTemplate = registerTemplates.mock.lastCall?.[0].content;
         expect(defaultTemplate).toBeInstanceOf(DocumentFragment);
@@ -89,7 +103,7 @@ describe('ProductTemplateProvider', () => {
           templateElements: [],
         });
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         const defaultLinkTemplate =
           registerTemplates.mock.lastCall?.[0].linkContent;
@@ -107,7 +121,7 @@ describe('ProductTemplateProvider', () => {
           '_blank'
         );
 
-        await completeMicrotasks();
+        await vi.runAllTimersAsync();
 
         const defaultLinkTemplate =
           registerTemplates.mock.lastCall?.[0].linkContent;
@@ -146,9 +160,5 @@ describe('ProductTemplateProvider', () => {
       },
       gridCellLinkTarget
     );
-  };
-
-  const completeMicrotasks = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
   };
 });
