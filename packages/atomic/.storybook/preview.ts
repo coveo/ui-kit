@@ -33,12 +33,18 @@ export const decorators = [
 
       render(story, container);
 
-      disableAnalytics(container, [
-        'atomic-recs-interface',
-        'atomic-insight-interface',
-        'atomic-search-interface',
-        'atomic-commerce-interface',
-      ]);
+      const isTestMode =
+        typeof window !== 'undefined' &&
+        window.location.href.includes('localhost:4400');
+
+      if (!isTestMode) {
+        disableAnalytics(container, [
+          'atomic-recs-interface',
+          'atomic-insight-interface',
+          'atomic-search-interface',
+          'atomic-commerce-interface',
+        ]);
+      }
 
       return container;
     }
