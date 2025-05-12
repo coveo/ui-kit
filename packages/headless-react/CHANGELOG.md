@@ -1,3 +1,8 @@
+## <small>2.4.23 (2025-05-08)</small>
+
+- chore(deps): update dependency typedoc to v0.28.3 j:kit-282 (#5144) ([c3c313d](https://github.com/coveo/ui-kit/commits/c3c313d)), closes [#5144](https://github.com/coveo/ui-kit/issues/5144)
+- chore(deps): update vite j:kit-282 (#5031) ([532ea61](https://github.com/coveo/ui-kit/commits/532ea61)), closes [#5031](https://github.com/coveo/ui-kit/issues/5031)
+
 ## <small>2.4.22 (2025-04-30)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
