@@ -2,6 +2,7 @@
 import QuanticRecentQueriesList from 'c/quanticRecentQueriesList';
 import {cleanup, flushPromises, buildCreateTestComponent} from 'c/testUtils';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import * as utils from 'c/quanticUtils';
 
 const exampleEngine = {
   id: 'exampleEngineId',
@@ -39,21 +40,6 @@ jest.mock(
 );
 
 let mockRecentQueries = [];
-jest.mock('c/quanticUtils', () => ({
-  ...jest.requireActual('c/quanticUtils'),
-  setItemInLocalStorage: jest.fn((key, queries) => {
-    if (key === localStorageKey) {
-      mockRecentQueries = queries;
-    }
-    return null;
-  }),
-  getItemFromLocalStorage: jest.fn((key) => {
-    if (key === localStorageKey) {
-      return mockRecentQueries;
-    }
-    return null;
-  }),
-}));
 
 const defaultRecentQueriesTitle = 'Recent Queries';
 const defaultQueries = [];
@@ -69,10 +55,7 @@ let updateRecentQueriesState;
 
 const functionMocks = {
   buildRecentQueriesList: jest.fn(() => ({
-    state: {
-      ...recentQueriesListState,
-      queries: recentQueriesListState.queries,
-    },
+    state: recentQueriesListState,
     subscribe: functionMocks.recentQueriesListSubscriber,
     executeRecentQuery: functionMocks.executeRecentQuery,
     clear: functionMocks.clear,
@@ -210,90 +193,91 @@ describe('c-quantic-recent-queries-list', () => {
       prepareHeadlessState();
     });
 
-    it('should no longer display the placeholder component', async () => {
-      const element = createTestComponent();
-      await flushPromises();
-
-      const placeholder = element.shadowRoot.querySelector(
-        selectors.placeholder
-      );
-
-      expect(placeholder).toBeNull();
-    });
-
-    it('should display the recent queries list with the default options', async () => {
+    describe('when there are recent queries', () => {
       const exampleQueries = ['query1', 'query2'];
-      recentQueriesListState = {
-        queries: exampleQueries,
-        maxLength: defaultMaxLength,
-      };
-      const element = createTestComponent();
-      await flushPromises();
 
-      const recentQueriesContainer = element.shadowRoot.querySelector(
-        selectors.quanticCardContainer
-      );
-      expect(recentQueriesContainer).not.toBeNull();
-      expect(recentQueriesContainer.title).toEqual(defaultRecentQueriesTitle);
-
-      const recentQueriesListItems = element.shadowRoot.querySelectorAll(
-        selectors.recentQueryItem
-      );
-      expect(recentQueriesListItems.length).toEqual(exampleQueries.length);
-
-      recentQueriesListItems.forEach((item, index) => {
-        const recentQueryText = item.querySelector(
-          selectors.recentQueryItemText
-        ).textContent;
-        expect(recentQueryText).toEqual(exampleQueries[index]);
-      });
-    });
-
-    describe('handling of the localStorage capabilities', () => {
-      beforeEach(() => {
-        mockRecentQueries = [
-          'example query 1',
-          'example query 2',
-          'example query 3',
-        ];
-      });
-
-      test('should display the queries in the recent queries list retrieved from the localstorage', async () => {
+      it('should no longer display the placeholder component', async () => {
         const element = createTestComponent();
+        recentQueriesListState = {
+          queries: exampleQueries,
+          maxLength: defaultMaxLength,
+        };
+        updateRecentQueriesState();
         await flushPromises();
+
+        const placeholder = element.shadowRoot.querySelector(
+          selectors.placeholder
+        );
+
+        expect(placeholder).toBeNull();
+      });
+
+      it('should display the recent queries list with the default options', async () => {
+        recentQueriesListState = {
+          queries: exampleQueries,
+          maxLength: defaultMaxLength,
+        };
+        const element = createTestComponent();
+        updateRecentQueriesState();
+        await flushPromises();
+
+        const recentQueriesContainer = element.shadowRoot.querySelector(
+          selectors.quanticCardContainer
+        );
+        expect(recentQueriesContainer).not.toBeNull();
+        expect(recentQueriesContainer.title).toEqual(defaultRecentQueriesTitle);
 
         const recentQueriesListItems = element.shadowRoot.querySelectorAll(
           selectors.recentQueryItem
         );
-        expect(recentQueriesListItems.length).toEqual(mockRecentQueries.length);
+        expect(recentQueriesListItems.length).toEqual(exampleQueries.length);
 
         recentQueriesListItems.forEach((item, index) => {
           const recentQueryText = item.querySelector(
             selectors.recentQueryItemText
           ).textContent;
-          expect(recentQueryText).toEqual(mockRecentQueries[index]);
+          expect(recentQueryText).toEqual(exampleQueries[index]);
         });
       });
 
-      test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
-        createTestComponent();
-        await flushPromises();
+      describe('handling of the localStorage capabilities', () => {
+        test('should use the correct initial state retrieved from the localstorage', async () => {
+          jest
+            .spyOn(utils, 'getItemFromLocalStorage')
+            .mockReturnValue(mockRecentQueries);
+          createTestComponent();
+          await flushPromises();
 
-        // Simulate a change in the state
-        recentQueriesListState.queries = [
-          'query1',
-          'query2',
-          'query3',
-          'query4',
-        ];
-        await updateRecentQueriesState();
+          expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
+          expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
+            exampleEngine,
+            {
+              initialState: {queries: mockRecentQueries},
+              options: {maxLength: defaultMaxLength},
+            }
+          );
+        });
 
-        // expect(setItemInLocalStorage).toHaveBeenCalledWith(
-        //   `${exampleEngine.id}_quantic-recent-queries`,
-        //   recentQueriesListState.queries
-        // );
+        test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+          const setItemInLocalStorageSpy = jest.spyOn(
+            utils,
+            'setItemInLocalStorage'
+          );
+          createTestComponent();
+          recentQueriesListState.queries = exampleQueries;
+          updateRecentQueriesState();
+          await flushPromises();
 
-        expect(mockRecentQueries).toEqual(recentQueriesListState.queries);
+          recentQueriesListState = {
+            queries: exampleQueries,
+            maxLength: defaultMaxLength,
+          };
+
+          expect(setItemInLocalStorageSpy).toHaveBeenCalledWith(
+            localStorageKey,
+            exampleQueries
+          );
+        });
       });
     });
 
@@ -310,6 +294,7 @@ describe('c-quantic-recent-queries-list', () => {
           ...defaultOptions,
           hideWhenEmpty: false,
         });
+        updateRecentQueriesState();
         await flushPromises();
 
         const recentQueriesContainer = element.shadowRoot.querySelector(
@@ -361,6 +346,7 @@ describe('c-quantic-recent-queries-list', () => {
           ...defaultOptions,
           label: customLabel,
         });
+        updateRecentQueriesState();
         await flushPromises();
 
         const recentQueriesContainer = element.shadowRoot.querySelector(
@@ -379,6 +365,7 @@ describe('c-quantic-recent-queries-list', () => {
           ...defaultOptions,
           isCollapsed: true,
         });
+        updateRecentQueriesState();
         await flushPromises();
 
         const recentQueriesContainer = element.shadowRoot.querySelector(
@@ -411,6 +398,7 @@ describe('c-quantic-recent-queries-list', () => {
           ...defaultOptions,
           isCollapsed: false,
         });
+        updateRecentQueriesState();
         await flushPromises();
 
         const recentQueriesContainer = element.shadowRoot.querySelector(
