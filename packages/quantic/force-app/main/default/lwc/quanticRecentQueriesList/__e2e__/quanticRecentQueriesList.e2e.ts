@@ -28,10 +28,7 @@ test.describe(`quantic recent queries list`, () => {
       search,
       recentQueriesList,
     }) => {
-      const searchResponsePromise = search.waitForSearchResponse();
-      await search.fillSearchInput(exampleQueries[0]);
-      await search.performSearch();
-      await searchResponsePromise;
+      await triggerSearchWithInput(search, exampleQueries[0]);
 
       const firstRecentQuery =
         await recentQueriesList.recentQueriesListItems.first();
@@ -40,7 +37,7 @@ test.describe(`quantic recent queries list`, () => {
     });
 
     test.describe('when the query is already in the recent queries list', () => {
-      test('should set it as the first recent query and remove the last one', async ({
+      test('should set it as the first recent query and remove the previous one', async ({
         search,
         recentQueriesList,
       }) => {
@@ -62,7 +59,7 @@ test.describe(`quantic recent queries list`, () => {
     });
   });
 
-  test.describe('when passing a q value as parameter in the URL', () => {
+  test.describe('when passing a query value as parameter in the URL', () => {
     test.use({
       urlHash: `q=${exampleQueries[0]}`,
     });
@@ -83,7 +80,6 @@ test.describe(`quantic recent queries list`, () => {
       page,
       recentQueriesList,
     }) => {
-      // Make an initial search to populate the recent queries list
       await triggerSearchWithInput(search, exampleQueries[0]);
 
       const recentQueryClickSearchResponsePromise =
