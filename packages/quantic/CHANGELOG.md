@@ -1,3 +1,10 @@
+## <small>3.20.1 (2025-05-08)</small>
+
+- test(quantic): added unit tests for quantic aria live (#5263) ([6c67544](https://github.com/coveo/ui-kit/commits/6c67544)), closes [#5263](https://github.com/coveo/ui-kit/issues/5263)
+- test(quantic): playwright tests for notify trigger (#5210) ([a2f9cb2](https://github.com/coveo/ui-kit/commits/a2f9cb2)), closes [#5210](https://github.com/coveo/ui-kit/issues/5210)
+- fix(quantic): Generated Answer doesn't display correct formatted answers (#5248) ([7a86cc5](https://github.com/coveo/ui-kit/commits/7a86cc5)), closes [#5248](https://github.com/coveo/ui-kit/issues/5248)
+- chore(quantic): added logic to support sharding (#5212) ([b7dcf2c](https://github.com/coveo/ui-kit/commits/b7dcf2c)), closes [#5212](https://github.com/coveo/ui-kit/issues/5212)
+
 ## 3.20.0 (2025-04-30)
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))

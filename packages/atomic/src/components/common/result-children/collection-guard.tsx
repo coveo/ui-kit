@@ -1,5 +1,5 @@
 import {Fragment, FunctionalComponent, h} from '@stencil/core';
-import {ResultsPlaceholder} from '../atomic-result-placeholder/placeholders';
+import {ResultsPlaceholder} from '../atomic-result-placeholder/stencil-placeholders';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
