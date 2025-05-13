@@ -487,7 +487,7 @@ test.describe('with a facet & clear-filters set to false', () => {
 test.describe('standalone searchbox', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-search-box--standalone-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
+      './iframe.html?id=atomic-commerce-search-box--standalone-search-box&viewMode=story&args=attributes-suggestion-timeout:5000'
     );
   });
 
