@@ -24,7 +24,7 @@ import {
   shadow: true,
 })
 export class AtomicRecsResultTemplate {
-  private resultTemplateCommon: ResultTemplateCommon;
+  private resultTemplateCommon!: ResultTemplateCommon;
 
   @State() public error!: Error;
 
@@ -74,7 +74,9 @@ export class AtomicRecsResultTemplate {
     string[]
   > = {};
 
-  constructor() {
+  constructor() {}
+
+  public componentWillLoad() {
     this.resultTemplateCommon = new ResultTemplateCommon({
       host: this.host,
       setError: (err) => {
@@ -83,9 +85,7 @@ export class AtomicRecsResultTemplate {
       validParents: ['atomic-recs-list', 'atomic-ipx-recs-list'],
       allowEmpty: true,
     });
-  }
 
-  public componentWillLoad() {
     this.conditions = makeDefinedConditions(this.ifDefined, this.ifNotDefined);
     this.resultTemplateCommon.matchConditions = makeMatchConditions(
       this.mustMatch,
