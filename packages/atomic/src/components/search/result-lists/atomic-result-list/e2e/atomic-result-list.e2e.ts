@@ -11,7 +11,7 @@ test.describe('When using a list layout', () => {
     });
 
     test('should not navigate', async ({page}) => {
-      expect(page.url()).toContain('http://localhost:4400/iframe.html');
+      expect(page.url()).toContain('/iframe.html');
     });
   });
 });
