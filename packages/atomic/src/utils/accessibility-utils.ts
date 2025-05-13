@@ -1,6 +1,5 @@
-import {LitElement, ReactiveController, ReactiveControllerHost} from 'lit';
+import {ReactiveController, ReactiveControllerHost} from 'lit';
 import {AnyBindings} from '../components';
-import {InitializableComponent} from '../decorators/types';
 import {buildCustomEvent} from './event-utils';
 import {defer} from './utils';
 
@@ -52,8 +51,7 @@ export class AriaLiveRegionController implements ReactiveController {
   }
 }
 
-// TODO: see if this can be reimplemented as a mixin
-export class FocusTargetController {
+export class FocusTargetController implements ReactiveController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
   private element?: HTMLElement;
@@ -62,17 +60,19 @@ export class FocusTargetController {
   private doFocusOnNextTarget = false;
 
   constructor(
-    private component: InitializableComponent<AnyBindings> & LitElement
+    private host: ReactiveControllerHost,
+    bindings: AnyBindings
   ) {
-    this.bindings = component.bindings;
-    this.handleComponentRenderLoop();
+    this.host = host;
+    this.bindings = bindings;
+    this.host.addController(this);
   }
 
-  public setTarget(el: Element | undefined) {
+  public setTarget(el?: HTMLElement) {
     if (!el) {
       return;
     }
-    this.element = el as HTMLElement;
+    this.element = el;
     if (this.doFocusOnNextTarget) {
       this.doFocusOnNextTarget = false;
       this.focus();
@@ -107,27 +107,22 @@ export class FocusTargetController {
     }
   }
 
-  private handleComponentRenderLoop() {
-    // @ts-expect-error - Acesssing protected method
-    const originalUpdated = this.component.updated;
-    // @ts-expect-error - Overridding protected method
-    this.component.updated = async (_changedProperties) => {
-      if (
-        this.doFocusAfterSearch &&
-        this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
-          this.lastSearchId
-      ) {
-        this.doFocusAfterSearch = false;
-        if (this.element) {
-          const el = this.element;
-          // The focus seems to be flaky without deferring, especially on iOS.
-          await defer();
+  hostUpdated() {
+    if (
+      this.doFocusAfterSearch &&
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+        this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+      if (this.element) {
+        const el = this.element;
+        // The focus seems to be flaky without deferring, especially on iOS.
+        defer().then(() => {
           el.focus();
           this.onFocusCallback?.();
-        }
+        });
       }
-      originalUpdated(_changedProperties);
-    };
+    }
   }
 }
 

@@ -19,10 +19,12 @@ import {
   AriaLiveRegionController,
   FocusTargetController,
 } from './accessibility-utils';
-import {defer} from './stencil-utils';
+import {defer} from './utils';
 
-vi.mock('../utils/stencil-utils', () => ({
-  defer: vi.fn(),
+vi.mock('./utils', () => ({
+  defer: vi.fn(async () => {
+    return new Promise((resolve) => resolve(true));
+  }),
 }));
 
 @customElement('stub-aria-live')
@@ -108,7 +110,10 @@ export class FocusTargetControllerTestComponent
 
   public get focusTargetController() {
     if (!this._focusTargetController) {
-      this._focusTargetController = new FocusTargetController(this);
+      this._focusTargetController = new FocusTargetController(
+        this,
+        this.bindings
+      );
     }
     return this._focusTargetController;
   }
