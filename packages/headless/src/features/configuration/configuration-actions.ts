@@ -197,7 +197,11 @@ export const analyticsConfigurationSchema: SchemaDefinition<
   deviceId: nonEmptyString,
   userDisplayName: nonEmptyString,
   documentLocation: nonEmptyString,
-  trackingId: nonEmptyString,
+  trackingId: new StringValue({
+    required: false,
+    emptyAllowed: false,
+    regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+  }),
   analyticsMode: new StringValue<'legacy' | 'next'>({
     constrainTo: ['legacy', 'next'],
     required: false,

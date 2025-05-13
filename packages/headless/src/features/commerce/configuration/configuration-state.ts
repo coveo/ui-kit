@@ -27,7 +27,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   analytics: {
     enabled: true,
-    trackingId: '',
     source: {},
   },
   commerce: {},

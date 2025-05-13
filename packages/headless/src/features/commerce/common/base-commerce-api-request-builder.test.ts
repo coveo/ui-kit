@@ -132,6 +132,20 @@ describe('#buildBaseCommerceAPIRequest', () => {
     expect(request.trackingId).toBe(trackingId);
   });
 
+  it('sets #trackingId to null if #state.configuration.analytics.trackingId is missing', () => {
+    setState({
+      configuration: {
+        ...state.configuration,
+        analytics: {
+          ...state.configuration.analytics,
+        },
+      },
+    });
+    request = buildBaseCommerceAPIRequest(state, navigatorContext);
+
+    expect(request.trackingId).toBe(null);
+  });
+
   describe('when #state.configuration.analytics.enabled is true', () => {
     beforeEach(() => {
       setState({

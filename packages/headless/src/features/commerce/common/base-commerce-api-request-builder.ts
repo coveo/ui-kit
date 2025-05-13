@@ -30,7 +30,7 @@ export const buildBaseCommerceAPIRequest = (
         state.configuration.environment
       ),
     organizationId: state.configuration.organizationId,
-    trackingId: state.configuration.analytics.trackingId,
+    trackingId: state.configuration.analytics.trackingId ?? null,
     ...restOfContext,
     ...(state.configuration.analytics.enabled
       ? {clientId: navigatorContext.clientId}
