@@ -14,7 +14,7 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic category facet ${useCase.label}`, () => {
     test.describe('when selecting a facet value and clicking the all categories button', () => {
-      test.only('should trigger a new search and log the corresponding UA analytics events', async ({
+      test('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
         page,
