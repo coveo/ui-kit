@@ -1,5 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -24,7 +26,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3333',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -71,12 +73,22 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm start',
-    timeout: 10 * 60e3,
-    port: 5173,
-    reuseExistingServer: !process.env.CI,
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
+  webServer: [
+    {
+      command: 'npm start',
+      timeout: 10 * 60e3,
+      port: 3333,
+      reuseExistingServer: !process.env.CI,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+    isCDN && {
+      command: 'npx nx run cdn:serve',
+      timeout: 10 * 60e3,
+      port: 3000,
+      reuseExistingServer: !process.env.CI,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+  ],
 });
