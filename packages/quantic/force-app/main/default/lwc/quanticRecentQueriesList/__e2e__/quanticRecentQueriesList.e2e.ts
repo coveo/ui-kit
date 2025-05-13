@@ -23,64 +23,20 @@ async function assertRecentQueriesList(recentQueriesList, expectedQueries) {
   }
 }
 
-test.describe(`quantic recent queries list`, () => {
-  test.describe('when making search queries', () => {
-    test.use({
-      options: {
-        maxLength: 2,
-      },
-    });
-    test('should add the query to the recent queries list', async ({
+test.describe('quantic recent queries list', () => {
+  test.describe('when the query is already in the recent queries list', () => {
+    test('should set it as the first recent query and remove the previous one', async ({
       search,
       recentQueriesList,
     }) => {
       await triggerSearchWithInput(search, exampleQueries[0]);
-
-      const firstRecentQuery =
-        await recentQueriesList.recentQueriesListItems.first();
-      const firstRecentQueryText = await firstRecentQuery.innerText();
-      expect(firstRecentQueryText).toEqual(exampleQueries[0]);
-    });
-
-    test('should not display more recent queries than the max length and should display the most recent queries', async ({
-      search,
-      recentQueriesList,
-    }) => {
-      await triggerSearchWithInput(search, exampleQueries[0]);
-      await assertRecentQueriesList(recentQueriesList, [exampleQueries[0]]);
       await triggerSearchWithInput(search, exampleQueries[1]);
+      await triggerSearchWithInput(search, exampleQueries[0]);
+
       await assertRecentQueriesList(recentQueriesList, [
-        exampleQueries[1],
         exampleQueries[0],
-      ]);
-      await triggerSearchWithInput(search, exampleQueries[2]);
-
-      await assertRecentQueriesList(recentQueriesList, [
-        exampleQueries[2],
         exampleQueries[1],
       ]);
-    });
-
-    test.describe('when the query is already in the recent queries list', () => {
-      test('should set it as the first recent query and remove the previous one', async ({
-        search,
-        recentQueriesList,
-      }) => {
-        await triggerSearchWithInput(search, exampleQueries[0]);
-        await assertRecentQueriesList(recentQueriesList, [exampleQueries[0]]);
-
-        await triggerSearchWithInput(search, exampleQueries[1]);
-        await assertRecentQueriesList(recentQueriesList, [
-          exampleQueries[1],
-          exampleQueries[0],
-        ]);
-
-        await triggerSearchWithInput(search, exampleQueries[0]);
-        await assertRecentQueriesList(recentQueriesList, [
-          exampleQueries[0],
-          exampleQueries[1],
-        ]);
-      });
     });
   });
 

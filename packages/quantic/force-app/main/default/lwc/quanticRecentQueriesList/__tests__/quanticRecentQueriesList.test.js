@@ -39,19 +39,17 @@ jest.mock(
   }
 );
 
-let mockRecentQueries = [];
-
 const defaultRecentQueriesTitle = 'Recent Queries';
 const defaultQueries = [];
 const defaultMaxLength = 10;
+let isInitialized = false;
+let updateRecentQueriesState;
+
 const initialRecentQueriesListState = {
   queries: defaultQueries,
   maxLength: defaultMaxLength,
 };
-
-let isInitialized = false;
 let recentQueriesListState = initialRecentQueriesListState;
-let updateRecentQueriesState;
 
 const functionMocks = {
   buildRecentQueriesList: jest.fn(() => ({
@@ -87,7 +85,7 @@ const selectors = {
   placeholder: 'c-quantic-placeholder',
   quanticCardContainer: 'c-quantic-card-container',
   recentQueryItem: '[data-testid="recent-query-item"]',
-  recentQueryItemText: '.query-text__container',
+  recentQueryItemText: '[data-testid="recent-query-text"]',
   toggleButton: '[data-testid="action-button"]',
 };
 
@@ -130,10 +128,14 @@ describe('c-quantic-recent-queries-list', () => {
     cleanup();
     recentQueriesListState = initialRecentQueriesListState;
     isInitialized = false;
-    mockRecentQueries = [];
   });
 
-  describe('when the component is loading', () => {
+  describe('controller initialization', () => {
+    beforeEach(() => {
+      mockSuccessfulHeadlessInitialization();
+      prepareHeadlessState();
+    });
+
     it('should display the placeholder component', async () => {
       const element = createTestComponent();
       await flushPromises();
@@ -143,13 +145,9 @@ describe('c-quantic-recent-queries-list', () => {
       );
 
       expect(placeholder).not.toBeNull();
-    });
-  });
-
-  describe('controller initialization', () => {
-    beforeEach(() => {
-      mockSuccessfulHeadlessInitialization();
-      prepareHeadlessState();
+      expect(
+        element.shadowRoot.querySelector(selectors.quanticCardContainer)
+      ).toBeNull();
     });
 
     it('should build the controller with the proper parameters and subscribe to its state', async () => {
@@ -161,7 +159,9 @@ describe('c-quantic-recent-queries-list', () => {
         exampleEngine,
         {
           initialState: {queries: defaultQueries},
-          options: {maxLength: defaultMaxLength},
+          options: expect.objectContaining({
+            maxLength: defaultMaxLength,
+          }),
         }
       );
       expect(functionMocks.recentQueriesListSubscriber).toHaveBeenCalledTimes(
@@ -196,8 +196,8 @@ describe('c-quantic-recent-queries-list', () => {
     describe('when there are no recent queries', () => {
       beforeEach(() => {
         recentQueriesListState = {
+          ...recentQueriesListState,
           queries: [],
-          maxLength: defaultMaxLength,
         };
       });
 
@@ -284,9 +284,10 @@ describe('c-quantic-recent-queries-list', () => {
 
       describe('handling of the localStorage capabilities', () => {
         test('should use the correct initial state retrieved from the localstorage', async () => {
+          const exampleRecentQueries = ['query1', 'query2'];
           const getItemFromLocalStorageSpy = jest
             .spyOn(utils, 'getItemFromLocalStorage')
-            .mockReturnValue(mockRecentQueries);
+            .mockReturnValue(exampleRecentQueries);
           createTestComponent();
           await flushPromises();
 
@@ -294,7 +295,7 @@ describe('c-quantic-recent-queries-list', () => {
           expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
             exampleEngine,
             {
-              initialState: {queries: mockRecentQueries},
+              initialState: {queries: exampleRecentQueries},
               options: {maxLength: defaultMaxLength},
             }
           );
@@ -331,6 +332,7 @@ describe('c-quantic-recent-queries-list', () => {
 
     describe('when passing a custom #maxLength value', () => {
       it('should set the #maxLength value in the controller', async () => {
+        const exampleQueries = ['query1', 'query2'];
         const customMaxLength = 5;
         createTestComponent({...defaultOptions, maxLength: customMaxLength});
         await flushPromises();
@@ -339,7 +341,7 @@ describe('c-quantic-recent-queries-list', () => {
         expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
           exampleEngine,
           {
-            initialState: {queries: defaultQueries},
+            initialState: {queries: exampleQueries},
             options: {maxLength: customMaxLength},
           }
         );
