@@ -12,6 +12,7 @@ module.exports = {
   ignorePatterns: [
     'src/external-builds/**/*',
     'dist/**/*',
+    'cdn/**/*',
     'www/**/*',
     'docs/**/*',
     'dist-storybook',
