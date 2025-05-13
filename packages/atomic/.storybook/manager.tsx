@@ -1,5 +1,17 @@
+import {IconButton} from '@storybook/components';
 import {STORY_MISSING} from '@storybook/core-events';
-import {addons} from '@storybook/manager-api';
+import {CogIcon} from '@storybook/icons';
+import {addons, types} from '@storybook/manager-api';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React from 'react';
+
+declare global {
+  interface Window {
+    OneTrust: {
+      ToggleInfoDisplay: () => void;
+    };
+  }
+}
 
 addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
   api.once(STORY_MISSING, () => {
@@ -10,5 +22,31 @@ addons.register('SELECT-FIRST-STORY-BY-DEFAULT-ONCE', (api) => {
     // The first parameter expects the PascalCase story ID whereas the second expects the sluggified one.
     // See: https://github.com/storybookjs/storybook/blob/b0052ad9f71f5763dcb25af31bc8832097682d29/code/lib/manager-api/src/modules/stories.ts#L401
     api.selectStory(undefined, 'default');
+  });
+});
+
+addons.register('custom/onetrust-button', () => {
+  addons.add('custom/onetrust-button/toolbar', {
+    type: types.TOOL,
+    title: 'Cookie Preferences',
+    match: ({viewMode}) => viewMode === 'story',
+    render: () => (
+      <IconButton
+        key="onetrust-button"
+        title="Open Cookie Preferences"
+        onClick={() => {
+          if (
+            window.OneTrust &&
+            typeof window.OneTrust.ToggleInfoDisplay === 'function'
+          ) {
+            window.OneTrust.ToggleInfoDisplay();
+          } else {
+            console.warn('OneTrust is not available on this page.');
+          }
+        }}
+      >
+        <CogIcon />
+      </IconButton>
+    ),
   });
 });
