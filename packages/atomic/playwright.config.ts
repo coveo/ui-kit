@@ -1,5 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
+const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
+
 const DEFAULT_DESKTOP_VIEWPORT = {
   width: 1920,
   height: 1080,
@@ -17,6 +19,9 @@ export default defineConfig({
     : [['html'], ['list']],
   use: {
     trace: 'retain-on-failure',
+    baseURL: isCDN
+      ? 'http://localhost:3000/atomic/v3/storybook/'
+      : 'http://localhost:4400',
   },
   projects: [
     {
@@ -40,11 +45,14 @@ export default defineConfig({
   },
   webServer: process.env.CI
     ? {
-        command:
-          process.env.DEPLOYMENT_ENVIRONMENT === 'CDN'
-            ? 'cp -r ../headless/dist/browser ./dist-storybook/headless/ && cp -r ../bueno/cdn ./dist-storybook/bueno/ && npx ws -c ws.config.cjs'
-            : 'npx ws -d ./dist-storybook -p 4400',
-        port: 4400,
+        command: isCDN
+          ? 'npx nx run cdn:serve'
+          : 'npx ws -d ./dist-storybook -p 4400',
+
+        stdout: 'pipe',
+        url: isCDN
+          ? 'http://localhost:3000/atomic/v3/storybook/'
+          : 'http://localhost:4400',
         timeout: 120 * 1000,
         reuseExistingServer: !process.env.CI,
       }
