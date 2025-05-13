@@ -1,0 +1,6 @@
+@import './resultTemplate.css';
+
+.detail__video-time-span {
+  display: flex;
+  align-items: center;
+}

@@ -89,7 +89,7 @@ const engine = buildShopifyCommerceEngine({
         language: {{ request.locale.iso_code | json }},
         cart: {{ cart.items | json }}.map(function (item) {
           return {
-            productId: item.product_id,
+            productId: `gid://shopify/ProductVariant/${item.variant_id}`,
             name: item.title,
             price: item.final_price,
             quantity: item.quantity,
