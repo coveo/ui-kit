@@ -127,7 +127,7 @@
     {
       "id": "deploy-atomic-minor-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
@@ -139,7 +139,7 @@
     {
       "id": "deploy-atomic-major-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
         "source": "packages/atomic/dist/atomic",
@@ -163,7 +163,7 @@
     {
       "id": "deploy-atomic-major-storybook-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]/storybook",
         "source": "packages/atomic/dist-storybook",
@@ -175,7 +175,7 @@
     {
       "id": "deploy-atomic-minor-storybook-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]/storybook",
         "source": "packages/atomic/dist-storybook",
@@ -211,7 +211,7 @@
     {
       "id": "deploy-atomic-react-minor-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MINOR_VERSION]",
         "source": "packages/atomic-react/dist",
@@ -223,7 +223,7 @@
     {
       "id": "deploy-atomic-react-major-to-s3-version",
       "s3": {
-        "disabled": $[IS_NIGHTLY],
+        "disabled": true,
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic-react/v$[ATOMIC_REACT_MAJOR_VERSION]",
         "source": "packages/atomic-react/dist",

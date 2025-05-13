@@ -18,11 +18,15 @@ export class FacetObject {
   }
 
   get showMoreFacetValuesButton(): Locator {
-    return this.facet.getByTestId('facet-values__show-more');
+    return this.facet.getByRole('button', {
+      name: /Show more values for the .* facet/i,
+    });
   }
 
   get showLessFacetValuesButton(): Locator {
-    return this.facet.getByTestId('facet-values__show-less');
+    return this.facet.getByRole('button', {
+      name: /Show less values for the .* facet/i,
+    });
   }
 
   get facetSearchBoxInput(): Locator {
