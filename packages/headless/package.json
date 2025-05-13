@@ -161,7 +161,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "1.0.14",
-    "@coveo/relay": "1.1.1",
+    "@coveo/relay": "1.2.0",
     "@coveo/relay-event-types": "14.3.3",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
