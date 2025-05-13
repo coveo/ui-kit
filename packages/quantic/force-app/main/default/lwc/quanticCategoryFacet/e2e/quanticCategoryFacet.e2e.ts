@@ -13,10 +13,11 @@ const fixtures = {
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic category facet ${useCase.label}`, () => {
-    test.describe('when selecting and deselecting a facet value', () => {
-      test('when selecting a facet value and clicking the all categories button', async ({
+    test.describe('when selecting a facet value and clicking the all categories button', () => {
+      test.only('should trigger a new search and log the corresponding UA analytics events', async ({
         baseFacet,
         facet,
+        page,
       }) => {
         const selectedIndex = 0;
         const {facetId, field, values} = facetData;
@@ -39,6 +40,10 @@ useCaseTestCases.forEach((useCase) => {
         if (useCase.value === useCaseEnum.search) {
           expect(analyticsForFacetSelect.customData).toEqual(
             expect.objectContaining(expectedFacetData)
+          );
+          const url = page.url();
+          expect(decodeURIComponent(url)).toContain(
+            `cf-${field}=${values[selectedIndex].value}`
           );
         }
 
