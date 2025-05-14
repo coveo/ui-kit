@@ -17,7 +17,7 @@ export const renderGridLayout: FunctionalComponentWithChildren<
 
   const handleClick = (event: Event) => {
     event.preventDefault();
-    (ref?.querySelector(selectorForItem) as HTMLElement)?.click();
+    ref?.querySelector<HTMLElement>(selectorForItem)?.click();
   };
 
   return (children) =>
