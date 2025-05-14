@@ -16,6 +16,13 @@ const fixtures = {
   insight: testInsight,
 };
 
+async function triggerSearchWithInput(search, query) {
+  const searchResponsePromise = search.waitForSearchResponse();
+  await search.fillSearchInput(query);
+  await search.performSearch();
+  await searchResponsePromise;
+}
+
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
@@ -34,16 +41,13 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
-          const searchResponsePromise = search.waitForSearchResponse();
           const automaticallyCorrectSearchPromise =
             search.waitForSearchResponse();
           const expectedUaRequestPromise =
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
           await expectedUaRequestPromise;
           await automaticallyCorrectSearchPromise;
 
@@ -73,14 +77,11 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanNextResponse(didYouMeanNextData);
-          const searchResponsePromise = search.waitForSearchResponse();
           const expectedUaRequestPromise =
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
           await expectedUaRequestPromise;
 
           await expect(didYouMean.didYouMeanNoResultsLabel).toBeVisible();
@@ -111,10 +112,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -152,10 +150,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanNextResponse(didYouMeanNextData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -192,10 +187,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
 
           await expect(didYouMean.showingResultsForLabel).toBeVisible();
           await expect(didYouMean.showingResultsForLabel).toContainText(
@@ -212,13 +204,10 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-          const searchResponsePromise = search.waitForSearchResponse();
 
           const queryTriggerCustomUAPromise =
             didYouMean.waitForQueryTriggerCustomAnalytics({});
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await triggerSearchWithInput(search, expectedOriginalQuery);
           await queryTriggerCustomUAPromise;
 
           const undoSearchResponsePromise = search.waitForSearchResponse();
