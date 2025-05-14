@@ -174,15 +174,6 @@ watch('src', {recursive: true}, async (_, filename) => {
   }
 
   await nextTask(
-    'Processing CSS...',
-    'node ./scripts/process-css.mjs --config=tsconfig.lit.json'
-  );
-
-  if (isStopped) {
-    return;
-  }
-
-  await nextTask(
     'Running esbuild for autoloader ESM...',
     'esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js'
   );
