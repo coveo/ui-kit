@@ -192,45 +192,49 @@ describe('c-quantic-recent-queries-list', () => {
       prepareHeadlessState();
     });
 
-    describe('when there are no recent queries', () => {
-      beforeEach(() => {
-        recentQueriesListState = {
-          ...recentQueriesListState,
-          queries: [],
-        };
-      });
-
-      it('should display an empty list when #hideWhenEmpty is set to false', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: false,
+    describe('the #hideWhenEmpty property', () => {
+      describe('when there are no recent queries', () => {
+        beforeEach(() => {
+          recentQueriesListState = {
+            ...recentQueriesListState,
+            queries: [],
+          };
         });
-        updateRecentQueriesState();
-        await flushPromises();
 
-        const recentQueriesContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentQueriesContainer).not.toBeNull();
-        expect(recentQueriesContainer.title).toEqual(defaultRecentQueriesTitle);
+        it('should display an empty list when it is set to false', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideWhenEmpty: false,
+          });
+          updateRecentQueriesState();
+          await flushPromises();
 
-        const recentQueriesListItems = element.shadowRoot.querySelectorAll(
-          selectors.recentQueryItem
-        );
-        expect(recentQueriesListItems.length).toEqual(0);
-      });
+          const recentQueriesContainer = element.shadowRoot.querySelector(
+            selectors.quanticCardContainer
+          );
+          expect(recentQueriesContainer).not.toBeNull();
+          expect(recentQueriesContainer.title).toEqual(
+            defaultRecentQueriesTitle
+          );
 
-      it('should not display the recent queries card when #hideWhenEmpty is set to true', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: true,
+          const recentQueriesListItems = element.shadowRoot.querySelectorAll(
+            selectors.recentQueryItem
+          );
+          expect(recentQueriesListItems.length).toEqual(0);
         });
-        await flushPromises();
 
-        const recentQueriesContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentQueriesContainer).toBeNull();
+        it('should not display the recent queries card when it is set to true', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideWhenEmpty: true,
+          });
+          await flushPromises();
+
+          const recentQueriesContainer = element.shadowRoot.querySelector(
+            selectors.quanticCardContainer
+          );
+          expect(recentQueriesContainer).toBeNull();
+        });
       });
     });
 
@@ -327,7 +331,7 @@ describe('c-quantic-recent-queries-list', () => {
       });
     });
 
-    describe('when passing a custom #maxLength value', () => {
+    describe('with a custom #maxLength value', () => {
       it('should set the #maxLength value in the controller', async () => {
         const exampleQueries = ['query1', 'query2'];
         const customMaxLength = 5;
@@ -345,7 +349,7 @@ describe('c-quantic-recent-queries-list', () => {
       });
     });
 
-    describe('when passing a custom #label value', () => {
+    describe('with a custom #label value', () => {
       it('should display the custom label in the title of the component', async () => {
         const customLabel = 'My Custom Label';
         const element = createTestComponent({

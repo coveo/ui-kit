@@ -16,11 +16,10 @@ async function assertRecentQueriesList(recentQueriesList, expectedQueries) {
     await recentQueriesList.recentQueriesListItems.all();
   expect(recentQueriesListItems.length).toEqual(expectedQueries.length);
 
-  for (let i = 0; i < expectedQueries.length; i++) {
-    // eslint-disable-next-line no-await-in-loop
-    const queryText = await recentQueriesListItems[i].innerText();
-    expect(queryText).toEqual(expectedQueries[i]);
-  }
+expectedQueries.forEach(async (expectedQuery, index) => {
+  // eslint-disable-next-line no-await-in-loop
+  await expect(recentQueriesListItems[index]).toHaveText(expectedQuery);
+});
 }
 
 test.describe('quantic recent queries list', () => {

@@ -11,7 +11,7 @@ export class RecentQueriesListObject {
   }
 
   get recentQueriesListItems(): Locator {
-    return this.recentQueriesList.locator('li');
+    return this.recentQueriesList.getByTestId('recent-query-item');
   }
 
   async waitForRecentQueryClickAnalytics(
