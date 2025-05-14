@@ -17,8 +17,8 @@
   ],
   "name": "SSR Commerce",
   "readme": "../COMMERCEREADME.md",
-  "entryPoints": ["../../src/ssr-commerce/index.ts"],
+  "entryPoints": ["../src/ssr-commerce/index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"],
-  "projectDocuments": ["../documents/*.md"]
+  "plugin": ["@coveo/shared-typedoc"],
+  "projectDocuments": ["../documents/headless-react/*.md"]
 }

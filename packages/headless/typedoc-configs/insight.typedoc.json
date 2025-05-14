@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Case Assist",
+  "name": "Insight",
   "readme": "none",
-  "entryPoints": ["../../src/case-assist.index.ts"],
+  "entryPoints": ["../src/insight.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["@coveo/shared-typedoc"]
 }
