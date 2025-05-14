@@ -3,6 +3,7 @@ import {
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceRecommendationInterface as LitAtomicCommerceRecommendationInterface,
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
@@ -32,6 +33,12 @@ export const AtomicCommerceRecommendationInterface = createComponent({
   tagName: 'atomic-commerce-recommendation-interface',
   react: React,
   elementClass: LitAtomicCommerceRecommendationInterface,
+});
+
+export const AtomicCommerceRecommendationList = createComponent({
+  tagName: 'atomic-commerce-recommendation-list',
+  react: React,
+  elementClass: LitAtomicCommerceRecommendationList,
 });
 
 export const AtomicCommerceSortDropdown = createComponent({
