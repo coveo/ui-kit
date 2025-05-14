@@ -25,7 +25,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
 import {renderResultPlaceholders} from '../../common/atomic-result-placeholder/placeholders-lit';
-import {carousel} from '../../common/carousel';
+import {renderCarousel} from '../../common/carousel';
 import {renderHeading} from '../../common/heading';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
@@ -291,19 +291,11 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  private get hasPagination() {
-    return this.numberOfPages > 1;
-  }
-
   private get currentIndex() {
     return Math.abs(
       (this.currentPage * this.productsPerPage!) %
         this.recommendationsState.products.length
     );
-  }
-
-  private get shouldRenderWithCarousel() {
-    return this.hasPagination && this.augmentedRecommendationListState.hasItems;
   }
 
   private get hasNoProducts() {
@@ -427,21 +419,17 @@ export class AtomicCommerceRecommendationList
           () => html`<slot></slot>`,
           () =>
             html`${this.renderListHeading()}
-            ${this.shouldRenderWithCarousel
-              ? carousel({
-                  props: {
-                    bindings: this.bindings,
-                    previousPage: () => this.previousPage(),
-                    nextPage: () => this.nextPage(),
-                    numberOfPages: this.numberOfPages,
-                    currentPage: this.currentPage,
-                  },
-                })(
-                  html`<div class="px-3">
-                    ${this.renderRecommendationList()}
-                  </div>`
-                )
-              : this.renderRecommendationList()}`
+            ${renderCarousel({
+              props: {
+                bindings: this.bindings,
+                previousPage: () => this.previousPage(),
+                nextPage: () => this.nextPage(),
+                numberOfPages: this.numberOfPages,
+                currentPage: this.currentPage,
+              },
+            })(
+              html`<div class="px-3">${this.renderRecommendationList()}</div>`
+            )}`
         )}`,
       () => nothing
     )}`;
