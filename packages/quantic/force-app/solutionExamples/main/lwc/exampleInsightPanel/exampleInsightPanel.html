@@ -3,9 +3,11 @@
     <c-quantic-insight-interface engine-id={engineId} insight-id={insightId}>
       <c-quantic-aria-live></c-quantic-aria-live>
       <div
-        class="insight-panel_layout slds-box slds-is-relative slds-grid_align-center"
+        class="insight-panel_layout slds-is-relative slds-grid_align-center slds-box"
       >
-        <div class="insight-panel_header slds-var-p-bottom_x-small">
+        <div
+          class="insight-panel_header slds-var-p-horizontal_medium slds-var-p-bottom_x-small slds-var-p-top_medium slds-theme_shade"
+        >
           <div class="slds-grid">
             <div class="insight-panel_search-box">
               <c-quantic-search-box
@@ -13,7 +15,7 @@
                 engine-id={engineId}
               ></c-quantic-search-box>
             </div>
-            
+
             <div class="slds-var-p-left_x-small">
               <c-quantic-refine-toggle
                 engine-id={engineId}
@@ -85,8 +87,8 @@
           ></c-quantic-category-facet>
         </c-quantic-facet-manager>
 
-        <div class="insight-panel_tabs">
-          <c-quantic-tab-bar>
+        <div class="insight-panel_tabs slds-var-p-horizontal_medium">
+          <c-quantic-tab-bar light-theme>
             <c-quantic-tab
               name="All"
               label="All"
@@ -126,12 +128,14 @@
           </c-quantic-tab-bar>
         </div>
 
-        <div class="slds-var-p-top_small">
-          <c-quantic-summary engine-id={engineId}></c-quantic-summary>
-        </div>
+        <c-quantic-insight-summary
+          engine-id={engineId}
+        ></c-quantic-insight-summary>
 
-        <div class="slds-var-m-vertical_small">
-          <c-quantic-generated-answer engine-id={engineId}></c-quantic-generated-answer>
+        <div class="slds-var-p-horizontal_medium">
+          <c-quantic-generated-answer
+            engine-id={engineId}
+          ></c-quantic-generated-answer>
         </div>
 
         <div class="slds-var-p-bottom_medium insight-panel_body">

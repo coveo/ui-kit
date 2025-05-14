@@ -1,0 +1,56 @@
+{
+  "name": "@coveo/shopify",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coveo/ui-kit.git",
+    "directory": "packages/shopify"
+  },
+  "main": "./dist/headless.esm.js",
+  "module": "./dist/headless.esm.js",
+  "license": "Apache-2.0",
+  "version": "1.1.0",
+  "files": [
+    "dist/"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.esm.js",
+      "default": "./dist/headless.esm.js"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.esm.js",
+      "default": "./dist/headless.esm.js"
+    },
+    "./utilities": {
+      "types": "./dist/utilities.d.ts",
+      "import": "./dist/utilities.esm.js",
+      "default": "./dist/utilities.esm.js"
+    }
+  },
+  "scripts": {
+    "dev": "npm run build:bundles -- dev",
+    "build": "nx build",
+    "build:bundles": "node esbuild.mjs",
+    "build:definitions": "tsc -p src/tsconfig.build.json && node ./scripts/copy-types.mjs",
+    "test": "vitest run",
+    "clean": "rimraf -rf dist/* && rimraf -rf cdn/",
+    "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
+    "publish:bump": "npm run-script -w=@coveo/ci bump",
+    "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
+  },
+  "devDependencies": {
+    "@coveo/ci": "1.0.0",
+    "vitest": "3.1.2"
+  },
+  "dependencies": {
+    "@coveo/headless": "3.23.1",
+    "@coveo/relay": "1.2.0",
+    "uuid": "^11.0.0"
+  },
+  "engines": {
+    "node": "^20.9.0 || ^22.11.0"
+  }
+}

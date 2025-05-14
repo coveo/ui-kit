@@ -35,7 +35,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(import.meta.dirname, './'),
+      '@/': path.resolve(import.meta.dirname, './') + '/',
     },
   },
   plugins: [
@@ -79,7 +79,6 @@ export default defineConfig({
     ],
     restoreMocks: true,
     setupFiles: ['./vitest-utils/setup.ts'],
-    globals: true,
     deps: {
       moduleDirectories: ['node_modules', path.resolve('../../packages')],
     },
@@ -90,7 +89,7 @@ export default defineConfig({
         {
           browser: 'chromium',
           context: {
-            actionTimeout: 1000,
+            actionTimeout: 3000,
           },
         },
       ],
