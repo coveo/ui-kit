@@ -42,6 +42,7 @@ test.describe('Atomic Insight Panel', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
       await insightInterface.getTabByName('Videos').click();
+      await insightInterface.waitForNonVideoResultsToBeDetached();
     });
 
     test('attach to case', async ({insightInterface}) => {
@@ -68,8 +69,7 @@ test.describe('Atomic Insight Panel', () => {
       // No further tests because the copy to clipboard action does nothing in Atomic by default.
     });
 
-    //TODO: SFINT-6144
-    test.skip('quickview', async ({insightInterface}) => {
+    test('quickview', async ({insightInterface}) => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
