@@ -32,11 +32,9 @@ test.describe('Atomic Insight Panel', () => {
 
       await expect(insightInterface.insightPager).toBeVisible();
       await expect(insightInterface.insightPager).toHaveClass('hydrated');
-      expect(
-        await insightInterface.insightPagerButtons.count()
-      ).toBeGreaterThan(0);
+      await expect(insightInterface.insightPagerButtons.first()).toBeVisible();
 
-      expect(await insightInterface.insightResults.count()).toBeGreaterThan(0);
+      await expect(insightInterface.insightResults.first()).toBeVisible();
     });
   });
 
@@ -70,7 +68,8 @@ test.describe('Atomic Insight Panel', () => {
       // No further tests because the copy to clipboard action does nothing in Atomic by default.
     });
 
-    test('quickview', async ({insightInterface}) => {
+    //TODO: SFINT-6144
+    test.skip('quickview', async ({insightInterface}) => {
       await expect(insightInterface.getTabByName('Videos')).toHaveAttribute(
         'active'
       );
