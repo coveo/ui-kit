@@ -100,6 +100,9 @@ describe('engine', () => {
 
   it('should not throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
     options.configuration.analytics = {analyticsMode: 'next'};
+    delete options.configuration.analytics.trackingId;
+    initEngine();
+
     const {analytics} = engine.state.configuration;
     expect(analytics.enabled).toBe(true);
     expect(analytics.trackingId).toBeUndefined();
