@@ -20,7 +20,15 @@ export interface AnswerEvaluationPOSTParams {
 
 export const answerEvaluation = answerSlice.injectEndpoints({
   endpoints: (builder) => ({
-    post: builder.mutation<void, AnswerEvaluationPOSTParams>({
+    /**
+     * Based on the RTKQuery documentation, the `query` method is typically utilized for GET requests,
+     * while the `mutation` method is designed for POST requests.
+     * However, in this instance,
+     * we hypothesize that the use of `mutation` is incompatible when paired with an empty response body and an 'application/json' content-type response header.
+     * This should be updated as soon as we can remove the content-type header from the response.
+     * @see https://redux-toolkit.js.org/rtk-query/usage/mutations#mutations
+     */
+    post: builder.query<void, AnswerEvaluationPOSTParams>({
       query: (body) => ({
         url: '/evaluations',
         method: 'POST',

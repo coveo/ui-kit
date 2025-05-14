@@ -146,7 +146,7 @@ useCaseTestCases.forEach((useCase) => {
         const selectedIndex = 0;
         const {field, values} = facetData;
         test.use({
-          urlHash: `nf-${field}=${values[selectedIndex].start}..${values[selectedIndex].end}`,
+          urlHash: `nf-${field}=${values[selectedIndex].start}...${values[selectedIndex].end}`,
           facetResponseMock: undefined,
         });
 
