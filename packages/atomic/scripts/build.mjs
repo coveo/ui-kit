@@ -11,12 +11,16 @@ import {
   flattenDiagnosticMessageText,
   DiagnosticCategory,
 } from 'typescript';
+import {fileURLToPath} from 'url';
 import resourceUrlTransformer from './asset-path-transformer.mjs';
 import {generateLitExports} from './generate-lit-exports.mjs';
 import pathTransformer from './path-transform.mjs';
 import {processCssFiles} from './process-css.mjs';
 import svgTransformer from './svg-transform.mjs';
 import versionTransformer from './version-transform.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const args = argv.slice(2);
 const configArg = args.find((arg) => arg.startsWith('--config='));
@@ -119,28 +123,22 @@ function compileWithTransformer() {
   process.exit(exitCode);
 }
 
-async function build() {
-  try {
-    await generateLitExports();
+try {
+  const {options} = loadTsConfig(tsConfigPath);
 
-    const {options} = loadTsConfig(tsConfigPath);
-    const srcDir = join(process.cwd(), 'src');
-    const outDir = options.outDir;
+  const srcDir = join(__dirname, '../src');
+  const outDir = options.outDir;
 
-    console.log(chalk.blue('Starting build process'));
+  console.log(chalk.blue('Starting build process'));
+  console.log(chalk.blue('Generating Lit exports'));
+  await generateLitExports();
 
-    console.log(chalk.blue('Starting CSS processing'));
-    await processCssFiles(srcDir, outDir);
+  console.log(chalk.blue('Starting CSS processing'));
+  await processCssFiles(srcDir, outDir);
 
-    console.log(chalk.blue('Starting TypeScript compilation'));
-    compileWithTransformer();
-  } catch (error) {
-    console.error(chalk.red('Build failed:'), error);
-    process.exit(1);
-  }
-}
-
-build().catch((error) => {
-  console.error(chalk.red('Unhandled error during build:'), error);
+  console.log(chalk.blue('Starting TypeScript compilation'));
+  compileWithTransformer();
+} catch (error) {
+  console.error(chalk.red('Build failed:'), error);
   process.exit(1);
-});
+}
