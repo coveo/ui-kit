@@ -31,14 +31,14 @@ import {ArrayProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
-import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
