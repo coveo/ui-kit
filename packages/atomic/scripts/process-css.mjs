@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {readdir, mkdir, readFile, writeFile} from 'fs';
+import {readdir, mkdir, readFile, writeFileSync} from 'fs';
 import * as lightningcss from 'lightningcss';
 import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
@@ -90,17 +90,9 @@ function convertCssToJs(srcPath, distPath, file) {
         `;
         const jsPath = distPath + '.js';
 
-        writeFile(jsPath, fileContent, (writeErr) => {
-          if (writeErr) {
-            console.error(chalk.red(`Error writing file: ${jsPath}`));
-            return reject(writeErr);
-          }
-          console.log(
-            chalk.blue('Successfully processed:'),
-            chalk.green(jsPath)
-          );
-          resolve();
-        });
+        writeFileSync(jsPath, fileContent);
+        console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
+        resolve();
       } catch (processError) {
         console.error(
           chalk.red(`Error processing file: ${srcPath}`),
