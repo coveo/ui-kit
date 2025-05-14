@@ -74,7 +74,6 @@ const functionMocks = {
 
 const defaultOptions = {
   engineId: exampleEngine.id,
-  maxLength: 10,
   label: 'Recent Queries',
   hideWhenEmpty: false,
   isCollapsed: false,
@@ -282,51 +281,49 @@ describe('c-quantic-recent-queries-list', () => {
         });
       });
 
-      describe('handling of the localStorage capabilities', () => {
-        test('should use the correct initial state retrieved from the localstorage', async () => {
-          const exampleRecentQueries = ['query1', 'query2'];
-          const getItemFromLocalStorageSpy = jest
-            .spyOn(utils, 'getItemFromLocalStorage')
-            .mockReturnValue(exampleRecentQueries);
-          createTestComponent();
-          await flushPromises();
+      test('should use the correct initial state retrieved from the localstorage', async () => {
+        const exampleRecentQueries = ['query1', 'query2'];
+        const getItemFromLocalStorageSpy = jest
+          .spyOn(utils, 'getItemFromLocalStorage')
+          .mockReturnValue(exampleRecentQueries);
+        createTestComponent();
+        await flushPromises();
 
-          expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
-          expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
-            exampleEngine,
-            {
-              initialState: {queries: exampleRecentQueries},
-              options: {maxLength: defaultMaxLength},
-            }
-          );
+        expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
+        expect(functionMocks.buildRecentQueriesList).toHaveBeenCalledWith(
+          exampleEngine,
+          {
+            initialState: {queries: exampleRecentQueries},
+            options: {maxLength: defaultMaxLength},
+          }
+        );
 
-          expect(getItemFromLocalStorageSpy).toHaveBeenCalledWith(
-            localStorageKey
-          );
-          expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
-        });
+        expect(getItemFromLocalStorageSpy).toHaveBeenCalledWith(
+          localStorageKey
+        );
+        expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
+      });
 
-        test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
-          const setItemInLocalStorageSpy = jest.spyOn(
-            utils,
-            'setItemInLocalStorage'
-          );
-          createTestComponent();
-          recentQueriesListState.queries = exampleQueries;
-          updateRecentQueriesState();
-          await flushPromises();
+      test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+        const setItemInLocalStorageSpy = jest.spyOn(
+          utils,
+          'setItemInLocalStorage'
+        );
+        createTestComponent();
+        recentQueriesListState.queries = exampleQueries;
+        updateRecentQueriesState();
+        await flushPromises();
 
-          recentQueriesListState = {
-            queries: exampleQueries,
-            maxLength: defaultMaxLength,
-          };
+        recentQueriesListState = {
+          queries: exampleQueries,
+          maxLength: defaultMaxLength,
+        };
 
-          expect(setItemInLocalStorageSpy).toHaveBeenCalledWith(
-            localStorageKey,
-            exampleQueries
-          );
-          expect(setItemInLocalStorageSpy).toHaveBeenCalledTimes(1);
-        });
+        expect(setItemInLocalStorageSpy).toHaveBeenCalledWith(
+          localStorageKey,
+          exampleQueries
+        );
+        expect(setItemInLocalStorageSpy).toHaveBeenCalledTimes(1);
       });
     });
 
