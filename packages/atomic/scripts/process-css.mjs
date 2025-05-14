@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {readdir, mkdir, readFile, writeFileSync} from 'fs';
+import {readdir, mkdir, readFileSync, writeFileSync} from 'fs';
 import * as lightningcss from 'lightningcss';
 import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
@@ -50,53 +50,46 @@ const pushImports = (currentFile, importPaths, files) => {
 };
 
 function convertCssToJs(srcPath, distPath, file) {
-  return new Promise((resolve, reject) => {
-    readFile(srcPath, 'utf8', async (err, data) => {
-      if (err) {
-        console.error(chalk.red(`Error reading file: ${srcPath}`));
-        return reject(err);
-      }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = readFileSync(srcPath, 'utf8');
       const files = [file];
 
       console.log(
         chalk.blue('Processing:'),
         chalk.green(`${srcPath} -> ${distPath}`)
       );
-      try {
-        const imports = Array.from(data.matchAll(importMatcher)).flatMap(
-          (match) => match
-        );
-        pushImports(srcPath, imports, files);
-        const cleanedData = data.replace(importWholeLineMatcher, '');
-        const result = await processAndMinifyCss(cleanedData, srcPath);
 
-        let importIndex = 0;
-        const fileContent = dedent`
-        ${imports.length > 0 ? imports.map((importPath) => `import dep${importIndex++} from '${importPath.replace(/\.css$/, '.css.js')}';`).join('\n') : ''}${cssToJs(result)}
-        ${
-          imports.length > 0
-            ? `const allCss = [${imports
-                .map((_, index) => `...dep${index}`)
-                .concat('css')
-                .join(', ')}];
-        export default allCss;
-        `
-            : `export default [css];
+      const imports = Array.from(data.matchAll(importMatcher)).flatMap(
+        (match) => match
+      );
+      pushImports(srcPath, imports, files);
+      const cleanedData = data.replace(importWholeLineMatcher, '');
+      const result = await processAndMinifyCss(cleanedData, srcPath);
+
+      let importIndex = 0;
+      const fileContent = dedent`
+      ${imports.length > 0 ? imports.map((importPath) => `import dep${importIndex++} from '${importPath.replace(/\.css$/, '.css.js')}';`).join('\n') : ''}${cssToJs(result)}
+      ${
+        imports.length > 0
+          ? `const allCss = [${imports
+              .map((_, index) => `...dep${index}`)
+              .concat('css')
+              .join(', ')}];
+      export default allCss;
+      `
+          : `export default [css];
 `
-        }
-        `;
-        const jsPath = distPath + '.js';
-        writeFileSync(jsPath, fileContent);
-        console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
-        resolve();
-      } catch (processError) {
-        console.error(
-          chalk.red(`Error processing file: ${srcPath}`),
-          processError
-        );
-        reject(processError);
       }
-    });
+      `;
+      const jsPath = distPath + '.js';
+      writeFileSync(jsPath, fileContent);
+      console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
+      resolve();
+    } catch (err) {
+      console.error(chalk.red(`Error processing file: ${srcPath}`), err);
+      reject(err);
+    }
   });
 }
 
