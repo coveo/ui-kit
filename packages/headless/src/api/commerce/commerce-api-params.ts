@@ -2,7 +2,7 @@ import {AnyFacetRequest} from '../../features/commerce/facets/facet-set/interfac
 import {SortOption} from './common/sort.js';
 
 export interface TrackingIdParam {
-  trackingId: string | null;
+  trackingId: string;
 }
 
 export interface LanguageParam {
