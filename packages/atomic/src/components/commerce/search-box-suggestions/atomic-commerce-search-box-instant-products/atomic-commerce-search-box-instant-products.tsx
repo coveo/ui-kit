@@ -89,7 +89,7 @@ export class AtomicCommerceSearchBoxInstantProducts
    */
   @Prop() public ariaLabelGenerator?: AriaLabelGenerator;
 
-  public componentWillLoad() {
+  public componentDidLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;

@@ -60,7 +60,7 @@ export class AtomicSearchBoxRecentQueries {
    */
   @Prop({reflect: true}) public maxWithoutQuery?: number;
 
-  componentWillLoad() {
+  componentDidLoad() {
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
         this.bindings = bindings;
