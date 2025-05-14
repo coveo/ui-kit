@@ -21,7 +21,6 @@ import versionTransformer from './version-transform.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 const args = argv.slice(2);
 const configArg = args.find((arg) => arg.startsWith('--config='));
 if (configArg === undefined) {

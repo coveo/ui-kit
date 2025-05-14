@@ -56,21 +56,18 @@ function convertCssToJs(srcPath, distPath, file) {
         console.error(chalk.red(`Error reading file: ${srcPath}`));
         return reject(err);
       }
-
       const files = [file];
 
       console.log(
         chalk.blue('Processing:'),
         chalk.green(`${srcPath} -> ${distPath}`)
       );
-
       try {
         const imports = Array.from(data.matchAll(importMatcher)).flatMap(
           (match) => match
         );
         pushImports(srcPath, imports, files);
         const cleanedData = data.replace(importWholeLineMatcher, '');
-
         const result = await processAndMinifyCss(cleanedData, srcPath);
 
         let importIndex = 0;
@@ -89,7 +86,6 @@ function convertCssToJs(srcPath, distPath, file) {
         }
         `;
         const jsPath = distPath + '.js';
-
         writeFileSync(jsPath, fileContent);
         console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
         resolve();
@@ -137,7 +133,6 @@ export async function processCssFiles(srcDir, distDir) {
                   );
                   return fileReject(mkdirErr);
                 }
-
                 convertCssToJs(srcPath, distPath, file)
                   .then(fileResolve)
                   .catch(fileReject);
