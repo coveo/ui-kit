@@ -1,9 +1,16 @@
 {
-  "name": "shared-typedoc",
+  "private": true,
+  "name": "@coveo/shared-typedoc",
   "type": "module",
+  "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "configs",
+    "tsconfig.json"
   ],
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json"
+  },
   "devDependencies": {
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.0",

@@ -1,11 +1,23 @@
 {
-  "extends": "../headless-react/tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "lib",
     "jsx": "react",
     "jsxFactory": "JSX.createElement",
-    "jsxFragmentFactory": "JSX.Fragment"
+    "jsxFragmentFactory": "JSX.Fragment",
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "declaration": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "lib": ["dom", "ES2023"],
+    "types": ["vitest/globals"]
   },
   "include": ["lib/**/*.ts", "lib/**/*.tsx"]
 }

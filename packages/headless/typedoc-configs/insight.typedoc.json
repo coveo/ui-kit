@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Commerce",
+  "name": "Insight",
   "readme": "none",
-  "entryPoints": ["../../../headless/src/commerce.index.ts"],
+  "entryPoints": ["../src/insight.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../dist/index.js"]
+  "plugin": ["@coveo/shared-typedoc"]
 }

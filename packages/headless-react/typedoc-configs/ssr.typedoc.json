@@ -14,9 +14,9 @@
     "Actions",
     "*"
   ],
-  "name": "SSR Commerce",
-  "readme": "none",
-  "entryPoints": ["../../../headless/src/ssr-commerce.index.ts"],
+  "name": "SSR Search",
+  "readme": "../SEARCHREADME.md",
+  "entryPoints": ["../src/ssr/index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../dist/index.js"]
+  "plugin": ["@coveo/shared-typedoc"]
 }

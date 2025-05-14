@@ -7,18 +7,15 @@
   "categorizeByGroup": true,
   "groupOrder": [
     "Engine",
-    "Providers",
-    "Definers",
     "Controllers",
     "Buildable controllers",
     "Sub-controllers",
     "Actions",
     "*"
   ],
-  "name": "SSR Commerce",
-  "readme": "../../COMMERCEREADME.md",
-  "entryPoints": ["../../../headless-react/src/ssr-commerce/index.ts"],
+  "name": "Search",
+  "readme": "none",
+  "entryPoints": ["../src/index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../dist/index.js"],
-  "projectDocuments": ["../../documents/headless-react/*.md"]
+  "plugin": ["@coveo/shared-typedoc"]
 }

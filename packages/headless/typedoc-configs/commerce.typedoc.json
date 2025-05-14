@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Recommendation",
+  "name": "Commerce",
   "readme": "none",
-  "entryPoints": ["../../../headless/src/recommendation.index.ts"],
+  "entryPoints": ["../src/commerce.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../dist/index.js"]
+  "plugin": ["@coveo/shared-typedoc"]
 }
