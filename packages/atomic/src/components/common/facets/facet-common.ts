@@ -2,7 +2,7 @@ import {FacetValue, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
 import {RefOrCallback} from 'lit/directives/ref.js';
 
-export interface FacetValueProps {
+export interface FacetValuePropsBase {
   i18n: i18n;
   displayValue: string;
   numberOfResults: number;

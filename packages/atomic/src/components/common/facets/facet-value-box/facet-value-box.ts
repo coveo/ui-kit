@@ -2,10 +2,10 @@ import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {renderButton} from '../../button';
-import {FacetValueProps} from '../facet-common';
+import {FacetValuePropsBase} from '../facet-common';
 
 export const renderFacetValueBox: FunctionalComponentWithChildren<
-  FacetValueProps
+  FacetValuePropsBase
 > =
   ({props}) =>
   (children) => {

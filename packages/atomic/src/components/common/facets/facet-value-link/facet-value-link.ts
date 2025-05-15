@@ -2,9 +2,9 @@ import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-
 import {html, TemplateResult} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {renderButton} from '../../button';
-import {FacetValueProps} from '../facet-common';
+import {FacetValuePropsBase} from '../facet-common';
 
-export interface FacetValueLinkProps extends FacetValueProps {
+export interface FacetValueLinkProps extends FacetValuePropsBase {
   subList?: TemplateResult;
 }
 

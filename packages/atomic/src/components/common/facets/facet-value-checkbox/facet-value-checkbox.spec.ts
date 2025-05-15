@@ -8,7 +8,7 @@ import {createRef} from 'lit/directives/ref.js';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {renderCheckbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValueProps} from '../facet-common';
+import {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 import {
   renderFacetValueCheckbox,
@@ -28,10 +28,10 @@ describe('renderFacetValueCheckbox', () => {
   });
 
   const setupElement = async (
-    props?: Partial<FacetValueProps | TriStateFacetValueProps>
+    props?: Partial<FacetValuePropsBase | TriStateFacetValueProps>
   ) => {
     const children: TemplateResult = html`Some Value Label`;
-    const baseProps: FacetValueProps = {
+    const baseProps: FacetValuePropsBase = {
       displayValue: 'Test Value',
       numberOfResults: 42,
       isSelected: false,

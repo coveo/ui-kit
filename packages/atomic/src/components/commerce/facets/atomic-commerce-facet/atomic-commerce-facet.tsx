@@ -40,7 +40,7 @@ import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/fac
 import {
   FacetValueProps,
   FacetValue,
-} from '../../../common/facets/facet-value/facet-value';
+} from '../../../common/facets/facet-value/stencil-facet-value';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';

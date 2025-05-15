@@ -5,16 +5,19 @@ import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
 import {renderCheckbox as checkbox} from '../../checkbox';
 import {renderTriStateCheckbox} from '../../triStateCheckbox';
-import {FacetValueProps} from '../facet-common';
+import {FacetValuePropsBase} from '../facet-common';
 import {renderFacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
 
-export type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
+export type TriStateFacetValueProps = Omit<
+  FacetValuePropsBase,
+  'isSelected'
+> & {
   state: 'idle' | 'selected' | 'excluded';
   onExclude(): void;
 };
 
 export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
-  FacetValueProps | TriStateFacetValueProps
+  FacetValuePropsBase | TriStateFacetValueProps
 > =
   ({props}) =>
   (children) => {
@@ -33,7 +36,7 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
     let labelRef: HTMLLabelElement;
 
     const isTriStateCheckbox = (
-      props: FacetValueProps | TriStateFacetValueProps
+      props: FacetValuePropsBase | TriStateFacetValueProps
     ): props is TriStateFacetValueProps => {
       return 'state' in props && 'isSelected' in props;
     };
