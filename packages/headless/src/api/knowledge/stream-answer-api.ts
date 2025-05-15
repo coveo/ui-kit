@@ -26,12 +26,12 @@ import {
   ConfigurationSection,
   GeneratedAnswerSection,
   InsightConfigurationSection,
+  StaticFilterSection,
   TabSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {isEmptyString} from '../../utils/utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
@@ -284,14 +284,35 @@ const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
 ) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const filterExpressions = getStaticFilterExpressions(
+    state as StaticFilterSection
+  );
   const mergedAdvancedSearchQueryParams = {
     ...advancedSearchQueryParams,
   };
-  if (!isEmptyString(activeTabExpression)) {
-    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
+
+  const expressions = [activeTabExpression, ...filterExpressions]
+    .filter((expression) => !!expression)
+    .join(' AND ');
+
+  if (expressions.length) {
+    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
   }
+
   return mergedAdvancedSearchQueryParams;
 };
+
+function getStaticFilterExpressions(state: StaticFilterSection) {
+  const filters = Object.values(state.staticFilterSet || {});
+  return filters.map((filter) => {
+    const selected = filter.values.filter(
+      (value) => value.state === 'selected' && !!value.expression.trim()
+    );
+
+    const expression = selected.map((value) => value.expression).join(' OR ');
+    return selected.length > 1 ? `(${expression})` : expression;
+  });
+}
 
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,

@@ -1101,6 +1101,28 @@ export const streamAnswerAPIStateMockWithoutAnyTab: StateNeededByAnswerAPI = {
   },
 };
 
+export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {
+      youtube: {
+        id: 'test-static-filter',
+        values: [
+          {
+            caption: 'youtube',
+            expression: '@filetype=="youtubevideo"',
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
+
+// todo: static filter idle
+// todo: empty filters
+// toto: blank string filter
+// todo: both static filters and tabexpressions
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1453,4 +1475,9 @@ export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
 export const expectedStreamAnswerAPIParamWithoutAnyTab = {
   ...expectedStreamAnswerAPIParam,
   tab: '',
+};
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
+  ...expectedStreamAnswerAPIParam,
+  cq: '@filetype=="youtubevideo" AND cq-test-query',
 };

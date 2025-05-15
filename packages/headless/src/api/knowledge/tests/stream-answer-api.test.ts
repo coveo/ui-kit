@@ -9,9 +9,11 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
   streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -63,6 +65,21 @@ describe('#streamAnswerApi', () => {
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
     });
+
+    it('should merge filter expression in request constant query when expression is selected', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersSelected
+      );
+    });
+
+    // it('should not include filter info when there is NO filter', () => {
+    // });
   });
 
   describe('updateCacheWithEvent', () => {
