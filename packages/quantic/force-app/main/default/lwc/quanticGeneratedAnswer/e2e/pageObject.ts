@@ -4,14 +4,6 @@ import {AnalyticsHelper} from '../../../../../../playwright/page-object/analytic
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 
-function removeUnknownFields<T extends Record<string, unknown>>(
-  object: T
-): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(object).filter(([, value]) => value !== 'unknown')
-  ) as Partial<T>;
-}
-
 export class GeneratedAnswerObject {
   private analyticsMode;
   private analytics;
@@ -277,6 +269,12 @@ export class GeneratedAnswerObject {
       );
     }
     const payloadToMatch = removeUnknownFields(expectedPayload);
+    function removeUnknownFields(object: Record<string, unknown>) {
+      return Object.fromEntries(
+        Object.entries(object).filter(([, value]) => value !== 'unknown')
+      );
+    }
+
     return this.analytics.waitForEventProtocolAnalytics(
       'Rga.SubmitFeedback',
       (event) =>
