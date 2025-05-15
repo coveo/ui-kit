@@ -1,6 +1,6 @@
 import {ItemDisplayLayout} from '@/src/components';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {html, nothing, TemplateResult} from 'lit';
+import {html, TemplateResult} from 'lit';
 import {describe, expect, it} from 'vitest';
 import {DisplayWrapperProps, renderDisplayWrapper} from './display-wrapper';
 
@@ -12,7 +12,7 @@ describe('renderDisplayWrapper', () => {
     return await fixture(
       html`${renderDisplayWrapper({
         props: {display: 'grid', listClasses: '', ...props},
-      })(children || nothing)}`
+      })(children)}`
     );
   };
 
