@@ -37,6 +37,25 @@ describe('#getRelayInstanceFromState', () => {
         state.configuration.environment
       ),
       token: state.configuration.accessToken,
+      trackingId: null,
+      source: expect.arrayContaining(['baguette']),
+    });
+    expect(mockedCreateRelay).toHaveReturnedWith(relay);
+  });
+
+  it('creates a Relay client with a trackingId if set and returns it', () => {
+    const state = createMockState();
+    state.configuration.analytics.trackingId = 'trackingId';
+
+    const relay = getRelayInstanceFromState(state);
+
+    expect(mockedCreateRelay).toHaveBeenCalledWith({
+      mode: 'emit',
+      url: getAnalyticsNextApiBaseUrl(
+        state.configuration.organizationId,
+        state.configuration.environment
+      ),
+      token: state.configuration.accessToken,
       trackingId: state.configuration.analytics.trackingId,
       source: expect.arrayContaining(['baguette']),
     });
