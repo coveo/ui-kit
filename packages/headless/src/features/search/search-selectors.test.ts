@@ -11,7 +11,7 @@ describe('search selectors', () => {
     expect(result).toBe(true);
   });
 
-  it(`when the response searchUid is an empty string,
+  it(`when2s the response searchUid is an empty string,
   #firstSearchExecutedSelector returns false`, () => {
     const state = createMockState();
     state.search.response.searchUid = '';
