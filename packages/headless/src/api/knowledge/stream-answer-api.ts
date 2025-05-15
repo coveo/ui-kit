@@ -17,7 +17,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
-import {getStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-expressions.js';
+import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
@@ -285,7 +285,7 @@ const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
 ) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
-  const filterExpressions = getStaticFilterExpressions(
+  const filterExpressions = selectStaticFilterExpressions(
     state as StaticFilterSection
   );
   const mergedAdvancedSearchQueryParams = {

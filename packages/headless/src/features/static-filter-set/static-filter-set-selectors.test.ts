@@ -1,5 +1,5 @@
 import {StaticFilterSection} from '../../state/state-sections.js';
-import {getStaticFilterExpressions} from './static-filter-set-expressions.js';
+import {selectStaticFilterExpressions} from './static-filter-set-selectors.js';
 
 describe('static filter set expressions', () => {
   describe('getStaticFilterExpressions', () => {
@@ -8,7 +8,7 @@ describe('static filter set expressions', () => {
         staticFilterSet: {},
       };
 
-      const result = getStaticFilterExpressions(state);
+      const result = selectStaticFilterExpressions(state);
       expect(result).toEqual([]);
     });
 
@@ -28,7 +28,7 @@ describe('static filter set expressions', () => {
         },
       };
 
-      const result = getStaticFilterExpressions(state);
+      const result = selectStaticFilterExpressions(state);
       expect(result).toEqual(['@filetype=="youtubevideo"']);
     });
 
@@ -58,7 +58,7 @@ describe('static filter set expressions', () => {
         },
       };
 
-      const result = getStaticFilterExpressions(state);
+      const result = selectStaticFilterExpressions(state);
       expect(result).toEqual(['@filetype=="selected"']);
     });
 
@@ -83,7 +83,7 @@ describe('static filter set expressions', () => {
         },
       };
 
-      const result = getStaticFilterExpressions(state);
+      const result = selectStaticFilterExpressions(state);
       expect(result).toEqual([
         '(@filetype=="pdf" OR @filetype=="youtubevideo")',
       ]);
@@ -115,7 +115,7 @@ describe('static filter set expressions', () => {
         },
       };
 
-      const result = getStaticFilterExpressions(state);
+      const result = selectStaticFilterExpressions(state);
       expect(result).toEqual(['@filetype=="youtubevideo"', '@filetype=="pdf"']);
     });
   });
