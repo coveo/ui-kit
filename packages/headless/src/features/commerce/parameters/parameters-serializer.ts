@@ -262,14 +262,14 @@ export function deserializeSortCriteria(
   }, buildFieldsSortCriterion([]));
 }
 
+const isManualNumericFacet = (param: string) => param.startsWith('mnf-');
+const isNumericFacet = (param: string) =>
+  param.startsWith('nf-') || isManualNumericFacet(param);
+
 function sanitizeNumericFacetParams(params: string) {
   const seenNumericFacets = new Set<string>();
   const dedupedNumericFacets = new Set<string>();
   const sanitized = [];
-
-  const isManualNumericFacet = (param: string) => param.startsWith('mnf-');
-  const isNumericFacet = (param: string) =>
-    param.startsWith('nf-') || isManualNumericFacet(param);
 
   for (const param of params.split(delimiter)) {
     if (!isNumericFacet(param)) {
@@ -278,20 +278,19 @@ function sanitizeNumericFacetParams(params: string) {
     }
 
     const normalizedParam = param.replace(/^mnf-/, 'nf-');
-    if (seenNumericFacets.has(normalizedParam)) {
-      if (isManualNumericFacet(param)) {
-        // When equivalent mnf and nf parameters are present in the params, prioritize the mnf.
-        dedupedNumericFacets.delete(normalizedParam);
-        dedupedNumericFacets.add(param);
-      }
+    if (!seenNumericFacets.has(normalizedParam)) {
+      seenNumericFacets.add(normalizedParam);
+      dedupedNumericFacets.add(param);
       continue;
     }
-
-    seenNumericFacets.add(normalizedParam);
-    dedupedNumericFacets.add(param);
+    if (isManualNumericFacet(param)) {
+      // When equivalent mnf and nf parameters are present in the params, prioritize the mnf.
+      dedupedNumericFacets.delete(normalizedParam);
+      dedupedNumericFacets.add(param);
+    }
   }
 
-  sanitized.push(...Array.from(dedupedNumericFacets));
+  sanitized.push(...dedupedNumericFacets);
 
   return sanitized.join(delimiter);
 }
