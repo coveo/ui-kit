@@ -6,7 +6,11 @@
     "release:phase3": {},
     "build": {
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist", "{projectRoot}/temp"],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{projectRoot}/cdn",
+        "{projectRoot}/temp"
+      ],
       "cache": true,
       "options": {
         "commands": ["npm run build:prod"],

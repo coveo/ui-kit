@@ -70,7 +70,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_PATCH_VERSION]",
-        "source": "packages/headless/dist/browser",
+        "source": "packages/headless/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -82,7 +82,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MINOR_VERSION]",
-        "source": "packages/headless/dist/browser",
+        "source": "packages/headless/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -94,7 +94,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]",
-        "source": "packages/headless/dist/browser",
+        "source": "packages/headless/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -106,7 +106,7 @@
         "disabled": $[IS_NOT_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/v$[HEADLESS_MAJOR_VERSION]-nightly",
-        "source": "packages/headless/dist/browser",
+        "source": "packages/headless/cdn",
         "parameters": {
           "acl": "public-read"
         }
