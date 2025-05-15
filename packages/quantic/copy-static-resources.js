@@ -27,7 +27,7 @@ const copyDompurify = async () => {
   });
 
   await copy(
-    '../../node_modules/dompurify/dist/purify.min.js',
+    './node_modules/dompurify/dist/purify.min.js',
     './force-app/main/default/staticresources/dompurify/purify.min.js'
   );
 
