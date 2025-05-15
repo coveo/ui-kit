@@ -42,6 +42,13 @@ function expectations(selector: Selector) {
         .logDetail(`${should(display)} display the summary`);
     },
 
+    displayInsightSummary: (display: boolean) => {
+      selector
+        .insightSummary()
+        .should(display ? 'be.visible' : 'not.be.visible')
+        .logDetail(`${should(display)} display the insight summary`);
+    },
+
     displayRefineToggle: (display: boolean) => {
       selector
         .refineToggle()
@@ -59,6 +66,13 @@ function expectations(selector: Selector) {
     summaryContainsText: (expectedText: string) => {
       selector
         .summary()
+        .should('contain', expectedText)
+        .logDetail(`summary should contain the text '${expectedText}'`);
+    },
+
+    insightSummaryContainsText: (expectedText: string) => {
+      selector
+        .insightSummary()
         .should('contain', expectedText)
         .logDetail(`summary should contain the text '${expectedText}'`);
     },
