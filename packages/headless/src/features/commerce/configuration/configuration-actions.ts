@@ -59,7 +59,11 @@ export const updateAnalyticsConfiguration = createAction(
       enabled: analyticsConfigurationSchema.enabled,
       proxyBaseUrl: analyticsConfigurationSchema.proxyBaseUrl,
       source: analyticsConfigurationSchema.source,
-      trackingId: analyticsConfigurationSchema.trackingId,
+      trackingId: new StringValue({
+        required: true,
+        emptyAllowed: false,
+        regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+      }),
     });
   }
 );
