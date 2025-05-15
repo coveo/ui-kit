@@ -23,7 +23,7 @@ import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
-import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLabelHighlight} from './facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValueLink} from './facet-value-link/stencil-facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
 import {initializePopover} from './popover/popover-type';

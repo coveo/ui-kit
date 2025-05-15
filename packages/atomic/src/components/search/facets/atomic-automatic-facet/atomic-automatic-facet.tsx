@@ -10,7 +10,7 @@ import {FocusTargetController} from '../../../../utils/stencil-accessibility-uti
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/stencil-facet-value-checkbox';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
