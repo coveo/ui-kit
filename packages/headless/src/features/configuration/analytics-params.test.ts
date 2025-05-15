@@ -209,7 +209,7 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
     expect(analyticsParam.analytics?.trackingId).toBe(trackingId);
   });
 
-  it('when #state.trackingId is undefined, does not set #trackingId', () => {
+  it('when #state.trackingId is undefined, it sets #trackingId to null', () => {
     setState({trackingId: undefined});
     analyticsParam = fromAnalyticsStateToAnalyticsParams(
       state,
@@ -217,7 +217,19 @@ describe('#fromAnalyticsStateToAnalyticsParams', () => {
       eventDescription
     );
 
-    expect(analyticsParam.analytics?.trackingId).toBeUndefined();
+    expect(analyticsParam.analytics?.trackingId).toBeNull();
+  });
+
+  it('when #state.trackingId is an empty string, it sends #trackingId as an empty string', () => {
+    const trackingId = 'mock-tracking-id';
+    setState({trackingId});
+    analyticsParam = fromAnalyticsStateToAnalyticsParams(
+      state,
+      navigatorContext,
+      eventDescription
+    );
+
+    expect(analyticsParam.analytics?.trackingId).toBe(trackingId);
   });
 
   it('when #navigatorContext.capture is defined, sets #capture to its value', () => {
