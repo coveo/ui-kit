@@ -9,8 +9,11 @@ import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 import {GeneratedAnswerObject} from './pageObject';
 import genQaData from './data';
 import type {GenQaData} from './data';
+import {AnalyticsMode} from '../../../../../../playwright/utils/analyticsMode';
+import {AnalyticsHelper} from '../../../../../../playwright/page-object/analytics';
 
 const pageUrl = 's/quantic-generated-answer';
+const exampleTrackingId = '1234';
 
 interface GeneratedAnswerOptions {
   fieldsToIncludeInCitations: string;
@@ -31,57 +34,105 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
     insightSetup: InsightSetupObject;
   };
 
-export const testSearch =
-  quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
-    genQaData,
-    options: {},
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
+export const testSearch = quanticBase.extend<
+  QuanticGeneratedAnswerE2ESearchFixtures & {
+    analyticsMode: AnalyticsMode;
+  }
+>({
+  genQaData,
+  options: {},
+  analyticsMode: 'ua',
+  search: async ({page}, use) => {
+    await use(new SearchObject(page, searchRequestRegex));
+  },
+  generatedAnswer: async (
+    {
+      page,
+      options,
+      configuration,
+      search,
+      genQaData: data,
+      baseURL,
+      analyticsMode,
     },
-    generatedAnswer: async (
-      {page, options, configuration, search, genQaData: data},
-      use
-    ) => {
-      const generatedAnswerObject = new GeneratedAnswerObject(
+    use
+  ) => {
+    const generatedAnswerObject = new GeneratedAnswerObject(
+      page,
+      data.streamId,
+      {
+        analyticsMode,
+        trackingId: exampleTrackingId,
+      }
+    );
+    if (analyticsMode === 'ep') {
+      await AnalyticsHelper.setCookieToEnableNextAnalytics(
         page,
-        data.streamId
+        `${baseURL}/${pageUrl}`,
+        exampleTrackingId
       );
-      await page.goto(pageUrl);
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await generatedAnswerObject.mockStreamResponse(data.streams);
-      await configuration.configure(options);
-      await search.waitForSearchResponse();
-      await use(generatedAnswerObject);
-    },
-  });
+    }
+    await page.goto(pageUrl);
+    await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+    await generatedAnswerObject.mockStreamResponse(data.streams);
 
-export const testInsight =
-  quanticBase.extend<QuanticGeneratedAnswerE2EInsightFixtures>({
-    genQaData,
-    options: {},
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, insightSearchRequestRegex));
+    await configuration.configure(options);
+    await search.waitForSearchResponse();
+    await use(generatedAnswerObject);
+  },
+});
+
+export const testInsight = quanticBase.extend<
+  QuanticGeneratedAnswerE2EInsightFixtures & {
+    analyticsMode: AnalyticsMode;
+  }
+>({
+  genQaData,
+  options: {},
+  analyticsMode: 'ua',
+  search: async ({page}, use) => {
+    await use(new SearchObject(page, insightSearchRequestRegex));
+  },
+  insightSetup: async ({page}, use) => {
+    await use(new InsightSetupObject(page));
+  },
+  generatedAnswer: async (
+    {
+      page,
+      options,
+      search,
+      configuration,
+      insightSetup,
+      genQaData: data,
+      analyticsMode,
+      baseURL,
     },
-    insightSetup: async ({page}, use) => {
-      await use(new InsightSetupObject(page));
-    },
-    generatedAnswer: async (
-      {page, options, search, configuration, insightSetup, genQaData: data},
-      use
-    ) => {
-      const generatedAnswerObject = new GeneratedAnswerObject(
+    use
+  ) => {
+    const generatedAnswerObject = new GeneratedAnswerObject(
+      page,
+      data.streamId,
+      {
+        analyticsMode,
+        trackingId: exampleTrackingId,
+      }
+    );
+    if (analyticsMode === 'ep') {
+      await AnalyticsHelper.setCookieToEnableNextAnalytics(
         page,
-        data.streamId
+        `${baseURL}/${pageUrl}`,
+        exampleTrackingId
       );
-      await page.goto(pageUrl);
-      await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
-      await generatedAnswerObject.mockStreamResponse(data.streams);
-      configuration.configure({...options, useCase: useCaseEnum.insight});
-      await insightSetup.waitForInsightInterfaceInitialization();
-      await search.performSearch();
-      await search.waitForSearchResponse();
-      await use(generatedAnswerObject);
-    },
-  });
+    }
+    await page.goto(pageUrl);
+    await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
+    await generatedAnswerObject.mockStreamResponse(data.streams);
+    configuration.configure({...options, useCase: useCaseEnum.insight});
+    await insightSetup.waitForInsightInterfaceInitialization();
+    await search.performSearch();
+    await search.waitForSearchResponse();
+    await use(generatedAnswerObject);
+  },
+});
 
 export {expect} from '@playwright/test';
