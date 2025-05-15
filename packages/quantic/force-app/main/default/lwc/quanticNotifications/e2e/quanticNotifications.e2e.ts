@@ -6,13 +6,6 @@ const fixtures = {
   insight: testInsight,
 };
 
-async function triggerSearchWithInput(search, query) {
-  const searchResponsePromise = search.waitForSearchResponse();
-  await search.fillSearchInput(query);
-  await search.performSearch();
-  await searchResponsePromise;
-}
-
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
@@ -29,7 +22,7 @@ useCaseTestCases.forEach((useCase) => {
           notifications.waitForNotifyTriggerCustomAnalytics(
             notificationsMessages
           );
-        await triggerSearchWithInput(search, notificationsMessages[0]);
+        await search.triggerSearchWithInput(notificationsMessages[0]);
         await expectedUaRequest;
 
         expect((await notifications.notifications).length).toBe(1);
@@ -43,7 +36,7 @@ useCaseTestCases.forEach((useCase) => {
         notifications,
         search,
       }) => {
-        await triggerSearchWithInput(search, '');
+        await search.triggerSearchWithInput('');
 
         expect((await notifications.notifications).length).toBe(0);
         const firstNotification = notifications.getNotification(0);
