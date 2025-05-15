@@ -24,7 +24,7 @@ export const fromAnalyticsStateToAnalyticsParams = (
       }),
       ...(s.userDisplayName && {userDisplayName: s.userDisplayName}),
       ...(s.deviceId && {deviceId: s.deviceId}),
-      trackingId: s.trackingId ?? null,
+      ...(s.trackingId && {trackingId: s.trackingId}),
       ...{
         capture: navigatorContext.capture ?? navigatorContext.clientId !== '',
       },
