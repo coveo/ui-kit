@@ -7,6 +7,9 @@ export interface FacetValueProps {
   displayValue: string;
   numberOfResults: number;
   isSelected: boolean;
+  class?: string;
+  part?: string;
+  additionalPart?: string;
   onClick(): void;
   searchQuery?: string;
   buttonRef?: RefOrCallback;
