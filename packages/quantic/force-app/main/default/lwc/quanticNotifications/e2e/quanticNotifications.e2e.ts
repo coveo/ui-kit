@@ -18,13 +18,11 @@ useCaseTestCases.forEach((useCase) => {
         const notificationsMessages = ['Notification 1'];
 
         await search.mockSearchWithNotifyTriggerResponse(notificationsMessages);
-        const searchResponsePromise = search.waitForSearchResponse();
         const expectedUaRequest =
           notifications.waitForNotifyTriggerCustomAnalytics(
             notificationsMessages
           );
-        notifications.performSearch();
-        await searchResponsePromise;
+        await search.triggerSearchWithInput(notificationsMessages[0]);
         await expectedUaRequest;
 
         expect((await notifications.notifications).length).toBe(1);
@@ -38,9 +36,7 @@ useCaseTestCases.forEach((useCase) => {
         notifications,
         search,
       }) => {
-        const searchResponsePromise = search.waitForSearchResponse();
-        notifications.performSearch();
-        await searchResponsePromise;
+        await search.triggerSearchWithInput('');
 
         expect((await notifications.notifications).length).toBe(0);
         const firstNotification = notifications.getNotification(0);

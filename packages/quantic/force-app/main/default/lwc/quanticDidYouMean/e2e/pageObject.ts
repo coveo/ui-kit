@@ -10,14 +10,6 @@ export class DidYouMeanObject {
     this.page = page;
   }
 
-  get setQueryInput(): Locator {
-    return this.page.locator('c-action-perform-search input');
-  }
-
-  get performSearchButton(): Locator {
-    return this.page.locator('c-action-perform-search button');
-  }
-
   get didYouMeanNoResultsLabel(): Locator {
     return this.page.getByTestId('no-result-label');
   }
@@ -44,14 +36,6 @@ export class DidYouMeanObject {
 
   get undoButton(): Locator {
     return this.page.getByTestId('undo-button');
-  }
-
-  async setQuery(query: string): Promise<void> {
-    await this.setQueryInput.fill(query);
-  }
-
-  async performSearch(): Promise<void> {
-    await this.performSearchButton.click();
   }
 
   async applyCorrection(): Promise<void> {

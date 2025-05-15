@@ -5,6 +5,7 @@ import recentQueriesLabel from '@salesforce/label/c.quantic_RecentQueries';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -94,7 +95,8 @@ export default class QuanticRecentQueriesList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.recentQueriesList = CoveoHeadless.buildRecentQueriesList(engine, {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.recentQueriesList = this.headless.buildRecentQueriesList(engine, {
       initialState: {
         queries: getItemFromLocalStorage(this.localStorageKey) ?? [],
       },
