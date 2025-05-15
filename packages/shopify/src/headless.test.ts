@@ -1,29 +1,15 @@
-import {
-  buildCommerceEngine,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
-import {CommerceEngine} from '@coveo/headless/ssr-commerce';
-import {buildBrowserEnvironment, clientIdKey} from '@coveo/relay';
+import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
+import {buildBrowserEnvironment} from '@coveo/relay';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {fetchAppProxyConfig, buildShopifyCommerceEngine} from './headless';
-import {getClientId} from './utilities';
-
-vi.mock('@coveo/relay', async (importOriginal) => ({
-  ...(await importOriginal()),
-  buildBrowserEnvironment: vi.fn(() => ({
-    storage: {
-      setItem: vi.fn(),
-    },
-  })),
-}));
-
-vi.mock('@coveo/headless/commerce', async (importOriginal) => ({
-  ...(await importOriginal()),
-  buildCommerceEngine: vi.fn(),
-}));
 
 vi.mock('./utilities', () => ({
   getClientId: vi.fn(() => 'mock-client-id'),
+}));
+
+vi.mock('@coveo/relay', async (importOriginal) => ({
+  ...(await importOriginal()),
+  buildBrowserEnvironment: vi.fn(() => ({})),
 }));
 
 describe('fetchAppProxyConfig', () => {
@@ -80,35 +66,35 @@ describe('buildShopifyCommerceEngine', () => {
     );
   });
 
-  it('should store the client ID in the browser environment storage', () => {
-    const mockEnvironment = buildBrowserEnvironment();
+  it('should configure relay to use the correct clientId', () => {
+    const db: Record<string, string> = {};
+    vi.mocked(buildBrowserEnvironment).mockImplementation(() => ({
+      storage: {
+        setItem: vi.fn().mockImplementation((key, value) => {
+          db[key] = value;
+        }),
+        getItem: vi.fn().mockImplementation((key) => {
+          return db[key];
+        }),
+        removeItem: vi.fn().mockImplementation((key) => {
+          delete db[key];
+        }),
+      },
+      generateUUID: vi.fn(() => 'some-uuid'),
+      send: vi.fn(),
+      getUserAgent: vi.fn(),
+      getReferrer: vi.fn(),
+      getLocation: vi.fn(),
+      runtime: 'browser',
+    }));
 
-    buildShopifyCommerceEngine({
+    const engine = buildShopifyCommerceEngine({
       commerceEngineOptions: {
         configuration: getSampleCommerceEngineConfiguration(),
       },
-      environment: mockEnvironment,
     });
 
-    expect(getClientId).toHaveBeenCalledWith('mock-cookie-value');
-    expect(mockEnvironment.storage.setItem).toHaveBeenCalledWith(
-      clientIdKey,
-      'mock-client-id'
-    );
-  });
-
-  it('should return the commerce engine instance', () => {
-    const mockCommerceEngine = {};
-    vi.mocked(buildCommerceEngine).mockReturnValue(
-      mockCommerceEngine as CommerceEngine
-    );
-
-    const result = buildShopifyCommerceEngine({
-      commerceEngineOptions: {
-        configuration: getSampleCommerceEngineConfiguration(),
-      },
-    });
-
-    expect(result).toBe(mockCommerceEngine);
+    expect(engine.relay.getMeta('type').clientId).toEqual('mock-client-id');
+    expect(db).toEqual({});
   });
 });
