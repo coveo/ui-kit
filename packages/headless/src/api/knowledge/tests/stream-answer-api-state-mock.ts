@@ -1118,7 +1118,7 @@ export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAns
     },
   };
 
-export const streamAnswerAPIStateMockWithoutNonValidFilters: StateNeededByAnswerAPI =
+export const streamAnswerAPIStateMockWithNonValidFilters: StateNeededByAnswerAPI =
   {
     ...streamAnswerAPIStateMock,
     staticFilterSet: {

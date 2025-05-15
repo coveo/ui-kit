@@ -15,7 +15,7 @@ import {
   streamAnswerAPIStateMockWithATabWithAnExpression,
   streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
-  streamAnswerAPIStateMockWithoutNonValidFilters,
+  streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
@@ -70,7 +70,7 @@ describe('#streamAnswerApi', () => {
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
     });
 
-    it('should merge filter expression in request constant query when expression is selected', () => {
+    it('should merge filter expressions in request constant query when expression is selected', () => {
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersSelected as any,
@@ -94,7 +94,7 @@ describe('#streamAnswerApi', () => {
     it('should not include non-selected filters and empty filters', () => {
       vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
-        streamAnswerAPIStateMockWithoutNonValidFilters as any,
+        streamAnswerAPIStateMockWithNonValidFilters as any,
         'select'
       );
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
