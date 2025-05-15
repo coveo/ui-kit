@@ -45,7 +45,8 @@ export const productListingSerializer = {
   deserialize,
 } as Serializer<ProductListingParameters>;
 
-export type ParametersKey = keyof CommerceSearchParameters;
+type ParametersKey = keyof CommerceSearchParameters;
+
 export type FacetParameters = keyof Pick<
   Parameters,
   | 'f'
@@ -75,7 +76,7 @@ const supportedFacetParameters: Record<FacetParameters, boolean> = {
 };
 
 function serialize(parameters: CommerceSearchParameters): string {
-  return coreSerialize(serializePair)(parameters);
+  return sanitizeNumericFacetParams(coreSerialize(serializePair)(parameters));
 }
 
 function serializePair(pair: [string, unknown]) {
@@ -155,11 +156,17 @@ function isSortCriteriaObject(obj: unknown): obj is SortCriterion | undefined {
   return false;
 }
 
-export function isValidBasicKey(
+function isValidBasicKey(
   key: string
 ): key is Exclude<SearchParameterKey, FacetKey> {
   const supportedBasicParameters: Record<
-    Exclude<keyof CommerceSearchParameters, FacetParameters>,
+    Exclude<
+      keyof Omit<
+        CommerceSearchParameters,
+        'dfExcluded' | 'mnfExcluded' | 'nfExcluded'
+      >,
+      FacetParameters
+    >,
     boolean
   > = {
     q: true,
@@ -253,4 +260,37 @@ export function deserializeSortCriteria(
       ],
     };
   }, buildFieldsSortCriterion([]));
+}
+
+const isManualNumericFacet = (param: string) => param.startsWith('mnf-');
+const isNumericFacet = (param: string) =>
+  param.startsWith('nf-') || isManualNumericFacet(param);
+
+function sanitizeNumericFacetParams(params: string) {
+  const seenNumericFacets = new Set<string>();
+  const dedupedNumericFacets = new Set<string>();
+  const sanitized = [];
+
+  for (const param of params.split(delimiter)) {
+    if (!isNumericFacet(param)) {
+      sanitized.push(param);
+      continue;
+    }
+
+    const normalizedParam = param.replace(/^mnf-/, 'nf-');
+    if (!seenNumericFacets.has(normalizedParam)) {
+      seenNumericFacets.add(normalizedParam);
+      dedupedNumericFacets.add(param);
+      continue;
+    }
+    if (isManualNumericFacet(param)) {
+      // When equivalent mnf and nf parameters are present in the params, prioritize the mnf.
+      dedupedNumericFacets.delete(normalizedParam);
+      dedupedNumericFacets.add(param);
+    }
+  }
+
+  sanitized.push(...dedupedNumericFacets);
+
+  return sanitized.join(delimiter);
 }
