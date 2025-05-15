@@ -17,6 +17,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
@@ -26,12 +27,12 @@ import {
   ConfigurationSection,
   GeneratedAnswerSection,
   InsightConfigurationSection,
+  StaticFilterSection,
   TabSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {isEmptyString} from '../../utils/utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
@@ -284,12 +285,21 @@ const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
 ) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const filterExpressions = selectStaticFilterExpressions(
+    state as StaticFilterSection
+  );
   const mergedAdvancedSearchQueryParams = {
     ...advancedSearchQueryParams,
   };
-  if (!isEmptyString(activeTabExpression)) {
-    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
+
+  const expressions = [activeTabExpression, ...filterExpressions]
+    .filter((expression) => !!expression)
+    .join(' AND ');
+
+  if (expressions.length) {
+    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
   }
+
   return mergedAdvancedSearchQueryParams;
 };
 

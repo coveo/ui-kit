@@ -9,9 +9,15 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -62,6 +68,47 @@ describe('#streamAnswerApi', () => {
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
+    });
+
+    it('should merge filter expressions in request constant query when expression is selected', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        'select'
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersSelected
+      );
+    });
+
+    it('should not include filter info when there is NO filter', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        'select'
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should not include non-selected filters and empty filters', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithNonValidFilters as any,
+        'select'
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge multiple filter expressions and a tab expression', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        'select'
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
     });
   });
 
