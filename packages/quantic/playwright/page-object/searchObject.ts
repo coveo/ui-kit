@@ -25,6 +25,11 @@ export class SearchObject {
     await this.performSearchButton.click();
   }
 
+  async triggerSearchWithInput(query: string): Promise<void> {
+    await this.fillSearchInput(query);
+    await this.performSearch();
+  }
+
   async waitForSearchResponse(): Promise<Response> {
     return this.page.waitForResponse(this.searchRequestRegex);
   }

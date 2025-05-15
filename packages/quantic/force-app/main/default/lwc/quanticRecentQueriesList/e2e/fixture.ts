@@ -1,9 +1,7 @@
 import {RecentQueriesListObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
-import {
-  searchRequestRegex,
-} from '../../../../../../playwright/utils/requests';
+import {searchRequestRegex} from '../../../../../../playwright/utils/requests';
 
 const pageUrl = 's/quantic-recent-queries-list';
 
@@ -19,6 +17,7 @@ type QuanticRecentQueriesListE2ESearchFixtures = {
   recentQueriesList: RecentQueriesListObject;
   search: SearchObject;
   options: Partial<RecentQueriesListOptions>;
+  urlHash: string;
 };
 
 export const testSearch =
@@ -41,4 +40,3 @@ export const testSearch =
   });
 
 export {expect} from '@playwright/test';
-

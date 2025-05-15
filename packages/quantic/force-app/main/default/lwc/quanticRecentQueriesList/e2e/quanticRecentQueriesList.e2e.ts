@@ -1,25 +1,22 @@
 import {testSearch, expect} from './fixture';
+import {RecentQueriesListObject} from './pageObject';
 
-const exampleQueries = ['gandalf', 'gollum', 'sauron'];
+const exampleQueries = ['homer', 'apu', 'homer'];
 
 let test = testSearch;
 
-async function triggerSearchWithInput(search, query) {
-  const searchResponsePromise = search.waitForSearchResponse();
-  await search.fillSearchInput(query);
-  await search.performSearch();
-  await searchResponsePromise;
-}
-
-async function assertRecentQueriesList(recentQueriesList, expectedQueries) {
+async function assertRecentQueriesList(
+  recentQueriesList: RecentQueriesListObject,
+  expectedQueries: string[]
+) {
   const recentQueriesListItems =
     await recentQueriesList.recentQueriesListItems.all();
   expect(recentQueriesListItems.length).toEqual(expectedQueries.length);
 
-expectedQueries.forEach(async (expectedQuery, index) => {
-  // eslint-disable-next-line no-await-in-loop
-  await expect(recentQueriesListItems[index]).toHaveText(expectedQuery);
-});
+  expectedQueries.forEach(async (expectedQuery: string, index: number) => {
+    // eslint-disable-next-line no-await-in-loop
+    await expect(recentQueriesListItems[index]).toHaveText(expectedQuery);
+  });
 }
 
 test.describe('quantic recent queries list', () => {
@@ -28,9 +25,17 @@ test.describe('quantic recent queries list', () => {
       search,
       recentQueriesList,
     }) => {
-      await triggerSearchWithInput(search, exampleQueries[0]);
-      await triggerSearchWithInput(search, exampleQueries[1]);
-      await triggerSearchWithInput(search, exampleQueries[0]);
+      const firstSearchResponsePromise = search.waitForSearchResponse();
+      await search.triggerSearchWithInput(exampleQueries[0]);
+      await firstSearchResponsePromise;
+
+      const secondSearchResponsePromise = search.waitForSearchResponse();
+      await search.triggerSearchWithInput(exampleQueries[1]);
+      await secondSearchResponsePromise;
+
+      const thirdSearchResponsePromise = search.waitForSearchResponse();
+      await search.triggerSearchWithInput(exampleQueries[0]);
+      await thirdSearchResponsePromise;
 
       await assertRecentQueriesList(recentQueriesList, [
         exampleQueries[0],
@@ -60,7 +65,9 @@ test.describe('quantic recent queries list', () => {
       page,
       recentQueriesList,
     }) => {
-      await triggerSearchWithInput(search, exampleQueries[0]);
+      const searchResponsePromise = search.waitForSearchResponse();
+      await search.triggerSearchWithInput(exampleQueries[0]);
+      await searchResponsePromise;
 
       const recentQueryClickSearchResponsePromise =
         search.waitForSearchResponse();

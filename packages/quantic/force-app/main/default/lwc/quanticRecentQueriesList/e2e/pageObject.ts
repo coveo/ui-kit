@@ -1,4 +1,4 @@
-import type {Locator, Page} from '@playwright/test';
+import type {Locator, Page, Request} from '@playwright/test';
 import {isUaSearchEvent} from '../../../../../../playwright/utils/requests';
 
 export class RecentQueriesListObject {

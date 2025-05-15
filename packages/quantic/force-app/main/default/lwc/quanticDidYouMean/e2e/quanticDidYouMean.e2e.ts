@@ -16,13 +16,6 @@ const fixtures = {
   insight: testInsight,
 };
 
-async function triggerSearchWithInput(search, query) {
-  const searchResponsePromise = search.waitForSearchResponse();
-  await search.fillSearchInput(query);
-  await search.performSearch();
-  await searchResponsePromise;
-}
-
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
@@ -47,7 +40,7 @@ useCaseTestCases.forEach((useCase) => {
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await expectedUaRequestPromise;
           await automaticallyCorrectSearchPromise;
 
@@ -81,7 +74,7 @@ useCaseTestCases.forEach((useCase) => {
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await expectedUaRequestPromise;
 
           await expect(didYouMean.didYouMeanNoResultsLabel).toBeVisible();
@@ -112,7 +105,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -150,7 +143,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanNextResponse(didYouMeanNextData);
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -187,7 +180,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(didYouMean.showingResultsForLabel).toBeVisible();
           await expect(didYouMean.showingResultsForLabel).toContainText(
@@ -207,7 +200,7 @@ useCaseTestCases.forEach((useCase) => {
 
           const queryTriggerCustomUAPromise =
             didYouMean.waitForQueryTriggerCustomAnalytics({});
-          await triggerSearchWithInput(search, expectedOriginalQuery);
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await queryTriggerCustomUAPromise;
 
           const undoSearchResponsePromise = search.waitForSearchResponse();
