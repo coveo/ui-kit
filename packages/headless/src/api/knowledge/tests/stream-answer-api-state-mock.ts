@@ -1118,10 +1118,80 @@ export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAns
     },
   };
 
-// todo: static filter idle
-// todo: empty filters
-// toto: blank string filter
-// todo: both static filters and tabexpressions
+export const streamAnswerAPIStateMockWithoutNonValidFilters: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {
+      idle: {
+        id: 'test-idle-filter',
+        values: [
+          {
+            caption: 'idle',
+            expression: '@filetype=="youtubevideo"',
+            state: 'idle',
+          },
+        ],
+      },
+      exlcuded: {
+        id: 'test-excluded-filter',
+        values: [
+          {
+            caption: 'excluded',
+            expression: '@filetype=="youtubevideo"',
+            state: 'excluded',
+          },
+        ],
+      },
+      empty: {
+        id: 'test-empty-filter',
+        values: [
+          {
+            caption: 'empty',
+            expression: '', // empty expression
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithoutAnyFilters: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {},
+  };
+
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMockWithATabWithAnExpression,
+    staticFilterSet: {
+      firstFilter: {
+        id: 'test-static-filter-1',
+        values: [
+          {
+            caption: 'youtube',
+            expression: '@filetype=="youtubevideo"',
+            state: 'selected',
+          },
+          {
+            caption: 'dropbox',
+            expression: '@filetype=="dropbox"',
+            state: 'selected',
+          },
+        ],
+      },
+      secondFilter: {
+        id: 'test-static-filter-2',
+        values: [
+          {
+            caption: 'html',
+            expression: '@filetype=="tsx"',
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
 
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
@@ -1480,4 +1550,9 @@ export const expectedStreamAnswerAPIParamWithoutAnyTab = {
 export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
   ...expectedStreamAnswerAPIParam,
   cq: '@filetype=="youtubevideo" AND cq-test-query',
+};
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
+  ...expectedStreamAnswerAPIParam,
+  cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx" AND cq-test-query',
 };

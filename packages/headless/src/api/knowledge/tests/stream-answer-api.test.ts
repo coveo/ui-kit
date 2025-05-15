@@ -9,10 +9,14 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithoutNonValidFilters,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
@@ -78,8 +82,34 @@ describe('#streamAnswerApi', () => {
       );
     });
 
-    // it('should not include filter info when there is NO filter', () => {
-    // });
+    it('should not include filter info when there is NO filter', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        'select'
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should not include non-selected filters and empty filters', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutNonValidFilters as any,
+        'select'
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge multiple filter expressions and a tab expression', () => {
+      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        'select'
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
+    });
   });
 
   describe('updateCacheWithEvent', () => {

@@ -17,6 +17,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {getStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-expressions.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
@@ -301,18 +302,6 @@ const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
 
   return mergedAdvancedSearchQueryParams;
 };
-
-function getStaticFilterExpressions(state: StaticFilterSection) {
-  const filters = Object.values(state.staticFilterSet || {});
-  return filters.map((filter) => {
-    const selected = filter.values.filter(
-      (value) => value.state === 'selected' && !!value.expression.trim()
-    );
-
-    const expression = selected.map((value) => value.expression).join(' OR ');
-    return selected.length > 1 ? `(${expression})` : expression;
-  });
-}
 
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,
