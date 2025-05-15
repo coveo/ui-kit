@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.24.0",
-    "@coveo/atomic-react": "3.2.38",
-    "@coveo/headless": "3.23.1",
+    "@coveo/atomic": "3.24.1",
+    "@coveo/atomic-react": "3.2.39",
+    "@coveo/headless": "3.24.0",
     "next": "15.2.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
