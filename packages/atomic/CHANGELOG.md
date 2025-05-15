@@ -1,3 +1,18 @@
+## <small>3.24.1 (2025-05-15)</small>
+
+- fix(atomic): add missing import in atom (#5304) ([dac920d](https://github.com/coveo/ui-kit/commits/dac920d)), closes [#5304](https://github.com/coveo/ui-kit/issues/5304)
+- fix(atomic): ensure **all** custom-elements are scanned (#5302) ([fdeed93](https://github.com/coveo/ui-kit/commits/fdeed93)), closes [#5302](https://github.com/coveo/ui-kit/issues/5302)
+- fix(atomic): ensure cdn files includes a hash (#5306) ([fd03c71](https://github.com/coveo/ui-kit/commits/fd03c71)), closes [#5306](https://github.com/coveo/ui-kit/issues/5306) [#5305](https://github.com/coveo/ui-kit/issues/5305) [#5304](https://github.com/coveo/ui-kit/issues/5304) [#5303](https://github.com/coveo/ui-kit/issues/5303) [#5302](https://github.com/coveo/ui-kit/issues/5302)
+- fix(atomic): ensure context root is declared when context is used (#5305) ([89ff82e](https://github.com/coveo/ui-kit/commits/89ff82e)), closes [#5305](https://github.com/coveo/ui-kit/issues/5305)
+- fix(atomic): fix atomic-recs-result-template rendering error (#5313) ([7b4dd8a](https://github.com/coveo/ui-kit/commits/7b4dd8a)), closes [#5313](https://github.com/coveo/ui-kit/issues/5313) [/github.com/coveo/ui-kit/pull/5070/files#diff-869c29501cc46796f3035d2f9e0b3d564509824dd998c0c24d49efe4f2dd0423](https://github.com//github.com/coveo/ui-kit/pull/5070/files/issues/diff-869c29501cc46796f3035d2f9e0b3d564509824dd998c0c24d49efe4f2dd0423)
+- chore(atomic): add tests for ProductTemplateProvider class (#5276) ([e3734b4](https://github.com/coveo/ui-kit/commits/e3734b4)), closes [#5276](https://github.com/coveo/ui-kit/issues/5276)
+- chore(atomic): add tests for TemplateProvider class (#5275) ([10bc2a7](https://github.com/coveo/ui-kit/commits/10bc2a7)), closes [#5275](https://github.com/coveo/ui-kit/issues/5275)
+- chore(atomic): migrate display-grid.tsx (#5273) ([f0c3ed8](https://github.com/coveo/ui-kit/commits/f0c3ed8)), closes [#5273](https://github.com/coveo/ui-kit/issues/5273)
+- chore(atomic): migrate display-wrapper.tsx (#5266) ([a839b9c](https://github.com/coveo/ui-kit/commits/a839b9c)), closes [#5266](https://github.com/coveo/ui-kit/issues/5266)
+- chore(atomic): migrate placeholders.tsx (#5272) ([fe37143](https://github.com/coveo/ui-kit/commits/fe37143)), closes [#5272](https://github.com/coveo/ui-kit/issues/5272)
+- test(atomic): improve stability around suggestions/sb (#5303) ([99c7a3f](https://github.com/coveo/ui-kit/commits/99c7a3f)), closes [#5303](https://github.com/coveo/ui-kit/issues/5303)
+- docs(atomic): Storybook intro and crawling pages (#5293) ([57bb336](https://github.com/coveo/ui-kit/commits/57bb336)), closes [#5293](https://github.com/coveo/ui-kit/issues/5293)
+
 ## 3.24.0 (2025-05-08)
 
 - chore: add checkbox render function (#5215) ([fdb0da7](https://github.com/coveo/ui-kit/commits/fdb0da7)), closes [#5215](https://github.com/coveo/ui-kit/issues/5215)

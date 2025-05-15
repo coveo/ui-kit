@@ -400,7 +400,9 @@ export default class QuanticCategoryFacet extends LightningElement {
   }
 
   get canShowLess() {
-    return this.facet && this.state?.canShowLessValues;
+    return (
+      this.facet && this.state?.canShowLessValues && !this.isFacetSearchActive
+    );
   }
 
   get hasParents() {
