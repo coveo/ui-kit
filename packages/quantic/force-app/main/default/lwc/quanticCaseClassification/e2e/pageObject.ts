@@ -1,8 +1,6 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {isCollectEvent} from '../../../../../../playwright/utils/requests';
 
-type AnalyticsMode = 'ua' | 'ep';
-
 const elementsSelectors = {
   component: 'c-quantic-case-classification',
   caseClassificationSuggestionTestId: 'case-classification-suggestion',
@@ -12,12 +10,8 @@ const elementsSelectors = {
 };
 
 export class CaseClassificationObject {
-  constructor(
-    public page: Page,
-    public analyticsMode: AnalyticsMode
-  ) {
+  constructor(public page: Page) {
     this.page = page;
-    this.analyticsMode = analyticsMode;
   }
 
   get component(): Locator {
