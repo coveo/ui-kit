@@ -1,18 +1,36 @@
 import type {Locator, Page, Request} from '@playwright/test';
-import {
-  isUaClickEvent,
-  isUaCustomEvent,
-} from '../../../../../../playwright/utils/requests';
+import {AnalyticsMode} from '../../../../../../playwright/utils/analyticsMode';
+import {AnalyticsHelper} from '../../../../../../playwright/page-object/analytics';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 
+function removeUnknownFields<T extends Record<string, unknown>>(
+  object: T
+): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(object).filter(([, value]) => value !== 'unknown')
+  ) as Partial<T>;
+}
+
 export class GeneratedAnswerObject {
+  private analyticsMode;
+  private analytics;
+
   constructor(
-    public page: Page,
-    public streamId: string
+    private page: Page,
+    private streamId: string,
+    private analyticsSettings: {
+      analyticsMode: AnalyticsMode;
+      trackingId: string;
+    }
   ) {
     this.page = page;
     this.streamId = streamId;
+    this.analyticsMode = analyticsSettings.analyticsMode;
+    this.analytics = new AnalyticsHelper(
+      this.page,
+      analyticsSettings.trackingId
+    );
   }
 
   get likeButton(): Locator {
@@ -115,148 +133,212 @@ export class GeneratedAnswerObject {
     await this.toggleButton.click();
   }
 
-  async waitForStreamEndUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerStreamEnd'
-    );
-  }
-
-  async waitForLikeGeneratedAnswerUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics('likeGeneratedAnswer');
-  }
-
-  async waitForDislikeGeneratedAnswerUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'dislikeGeneratedAnswer'
-    );
-  }
-
-  async waitForCopyToClipboardUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerCopyToClipboard'
-    );
-  }
-
-  async waitForShowAnswersUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerShowAnswers'
-    );
-  }
-
-  async waitForHideAnswersUaAnalytics(): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerHideAnswers'
-    );
-  }
-
-  async waitForSourceHoverUaAnalytics(
-    expectedFields: Record<string, any>
-  ): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerSourceHover',
-      (customData: Record<string, any>) => {
-        return Object.keys(expectedFields).every(
-          (key) => customData?.[key] === expectedFields[key]
-        );
-      }
-    );
-  }
-
-  async waitForFeedbackSubmitUaAnalytics(
-    expectedFields: Record<string, any>
-  ): Promise<Request> {
-    return this.waitForGeneratedAnswerCustomUaAnalytics(
-      'generatedAnswerFeedbackSubmitV2',
-      (customData: Record<string, any>) => {
-        return Object.keys(expectedFields).every(
-          (key) => customData?.[key] === expectedFields[key]
-        );
-      }
-    );
-  }
-
-  async waitForCitationClickUaAnalytics(
-    expectedFields: Record<string, any>,
-    expectedCustomFields: Record<string, any>
-  ): Promise<Request> {
-    return this.waitForGeneratedAnswerClickUaAnalytics(
-      'generatedAnswerCitationClick',
-      (data: Record<string, any>, customData: Record<string, any>) => {
-        return (
-          Object.keys(expectedFields).every(
-            (key) => data?.[key] === expectedFields[key]
-          ) &&
-          Object.keys(expectedCustomFields).every(
-            (key) => customData?.[key] === expectedCustomFields[key]
-          )
-        );
-      }
-    );
-  }
-
-  async waitForGeneratedAnswerClickUaAnalytics(
-    actionCause: string,
-    customChecker?: Function
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaClickEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-        const requestData = JSON.parse(requestBody.clickEvent);
-
-        const expectedFields: Record<string, any> = {
-          actionCause,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestData?.[key] === expectedFields[key]
-        );
-
-        const customData = requestData?.customData;
-
-        const matchesGenerativeId =
-          customData?.generativeQuestionAnsweringId === this.streamId;
-
-        return (
-          matchesExpectedFields &&
-          matchesGenerativeId &&
-          (customChecker ? customChecker(requestData, customData) : true)
-        );
-      }
-      return false;
-    });
-    return uaRequest;
-  }
-
-  async waitForGeneratedAnswerCustomUaAnalytics(
-    eventValue: string,
-    customChecker?: Function
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaCustomEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-        const expectedFields: Record<string, any> = {
+  async waitForStreamEndAnalytics(): Promise<Request | boolean> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
           eventType: 'generatedAnswer',
-          eventValue: eventValue,
-        };
+          eventValue: 'generatedAnswerStreamEnd',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerReceived',
+      (event) => event.answerGenerated === true
+    );
+  }
 
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
+  async waitForLikeGeneratedAnswerAnalytics(): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'likeGeneratedAnswer',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerAction',
+      (event) => event.action === 'like'
+    );
+  }
 
-        const customData = requestBody?.customData;
+  async waitForDislikeGeneratedAnswerAnalytics(): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'dislikeGeneratedAnswer',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerAction',
+      (event) => event.action === 'dislike'
+    );
+  }
 
-        const matchesGenerativeId =
-          customData?.generativeQuestionAnsweringId === this.streamId;
+  async waitForCopyToClipboardAnalytics(): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerCopyToClipboard',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerAction',
+      (event) => event.action === 'copyToClipboard'
+    );
+  }
 
-        return (
-          matchesExpectedFields &&
-          matchesGenerativeId &&
-          (customChecker ? customChecker(customData) : true)
-        );
-      }
-      return false;
-    });
-    return uaRequest;
+  async waitForShowAnswersAnalytics(): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerShowAnswers',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerAction',
+      (event) => event.action === 'show'
+    );
+  }
+
+  async waitForHideAnswersAnalytics(): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerHideAnswers',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.AnswerAction',
+      (event) => event.action === 'hide'
+    );
+  }
+
+  async waitForSourceHoverAnalytics(
+    expectedPayload: Record<string, any>
+  ): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerSourceHover',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          Object.keys(expectedPayload).every(
+            (key) => event?.customData?.[key] === expectedPayload[key]
+          )
+      );
+    }
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.CitationHover',
+      (event) =>
+        event.citationId === expectedPayload.citationId &&
+        event.itemMetadata?.uniqueFieldName === 'permanentid' &&
+        event.itemMetadata?.uniqueFieldValue === expectedPayload.permanentId
+    );
+  }
+
+  async waitForFeedbackSubmitAnalytics(
+    expectedPayload: Record<string, any>
+  ): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'generatedAnswer',
+          eventValue: 'generatedAnswerFeedbackSubmitV2',
+        },
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          Object.keys(expectedPayload).every(
+            (key) => event?.customData?.[key] === expectedPayload[key]
+          )
+      );
+    }
+    const payloadToMatch = removeUnknownFields(expectedPayload);
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.SubmitFeedback',
+      (event) =>
+        AnalyticsHelper.isMatchingPayload(
+          {
+            correctTopic: event.details?.correctTopic ? 'yes' : 'no',
+            readable: event.details?.readable ? 'yes' : 'no',
+            hallucinationFree: event.details?.hallucinationFree ? 'yes' : 'no',
+            documented: event.details?.documented ? 'yes' : 'no',
+            helpful: event.helpful,
+            details: event.additionalNotes,
+            documentUrl: event.correctAnswerUrl,
+          },
+          payloadToMatch
+        )
+    );
+  }
+
+  async waitForCitationClickAnalytics(
+    expectedPayload: Record<string, any>
+  ): Promise<Request> {
+    if (this.analyticsMode === 'ua') {
+      return this.analytics.waitForClickUaAnalytics(
+        'generatedAnswerCitationClick',
+        (event) =>
+          event?.customData?.generativeQuestionAnsweringId === this.streamId &&
+          AnalyticsHelper.isMatchingPayload(
+            {
+              documentTitle: event.documentTitle,
+              sourceName: event.sourceName,
+              documentPosition: event.documentPosition,
+              documentUri: event.documentUri,
+              documentUrl: event.documentUrl,
+              citationId: event.customData?.citationId,
+              contentIDKey: event.customData?.documentId?.contentIdKey,
+              contentIDValue: event.customData?.documentId?.contentIdValue,
+            },
+            expectedPayload
+          )
+      );
+    }
+    const payloadToMatch = {
+      citationId: expectedPayload.citationId,
+      uniqueFieldName: expectedPayload.contentIDKey,
+      uniqueFieldValue: expectedPayload.contentIDValue,
+      title: expectedPayload.documentTitle,
+      url: expectedPayload.documentUrl,
+    };
+    return this.analytics.waitForEventProtocolAnalytics(
+      'Rga.CitationClick',
+      (event) =>
+        AnalyticsHelper.isMatchingPayload(
+          {
+            citationId: event.citationId,
+            uniqueFieldName: event.itemMetadata?.uniqueFieldName,
+            uniqueFieldValue: event.itemMetadata?.uniqueFieldValue,
+            title: event.itemMetadata?.title,
+            url: event.itemMetadata?.url,
+          },
+          payloadToMatch
+        )
+    );
   }
 
   async mockStreamResponse(
