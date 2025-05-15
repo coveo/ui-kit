@@ -3,7 +3,7 @@ import {
   renderFunctionFixture,
 } from '@/vitest-utils/testing-helpers/fixture';
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product';
-import {html, TemplateResult} from 'lit';
+import {html, nothing, TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {AnyItem} from '../interface/item';
 import {
@@ -18,7 +18,7 @@ import {
 describe('renderTableLayout', () => {
   const tableLayoutFixture = async (
     props: Partial<TableLayoutProps> = {},
-    children?: TemplateResult
+    children: TemplateResult | typeof nothing = nothing
   ) => {
     return await fixture(
       html`${renderTableLayout({
@@ -286,7 +286,7 @@ describe('renderTableLayout', () => {
 describe('renderTableRow', () => {
   const tableRowFixture = async (
     props: Partial<TableRowProps> = {},
-    children?: TemplateResult
+    children: TemplateResult | typeof nothing = nothing
   ) => {
     return await fixture(
       html`${renderTableRow({
