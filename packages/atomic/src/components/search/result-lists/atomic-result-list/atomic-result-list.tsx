@@ -22,7 +22,6 @@ import {FocusTargetController} from '../../../../utils/stencil-accessibility-uti
 import {randomID} from '../../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {DisplayGrid} from '../../../common/item-list/display-grid';
 import {
   DisplayTableData,
   DisplayTable,
@@ -31,6 +30,7 @@ import {
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
