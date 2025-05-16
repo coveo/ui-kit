@@ -1,5 +1,10 @@
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  defaultNodeJSNavigatorContextProvider,
+  NavigatorContext,
+} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -186,6 +191,19 @@ export const answerApi = answerSlice.injectEndpoints({
           isLoading: true,
         },
       }),
+      serializeQueryArgs: ({endpointName, queryArgs}) => {
+        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
+        // Keys must match, because if anything in the query changes, it's not the same query anymore.
+        // Some fields need to be excluded in the projection though, in this case clientTimestamp, as it will change
+        // during the streaming.
+        const clone = JSON.parse(JSON.stringify(queryArgs));
+        if (clone.analytics) {
+          clone.analytics.clientTimestamp = '';
+        }
+
+        // Standard RTK key, with some fields removed
+        return `${endpointName}(${JSON.stringify(clone)})`;
+      },
       async onCacheEntryAdded(
         args,
         {getState, cacheDataLoaded, updateCachedData, dispatch}
@@ -295,7 +313,8 @@ const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
 
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,
-  usage: 'fetch' | 'select'
+  usage: 'fetch' | 'select',
+  navigatorContext: NavigatorContext
 ) => {
   const q = selectQuery(state)?.q;
 
@@ -348,15 +367,29 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
+    ...fromAnalyticsStateToAnalyticsParams(
+      state.configuration.analytics,
+      navigatorContext
+    ),
   };
 };
 
-export const fetchAnswer = (state: StateNeededByAnswerAPI) =>
+export const fetchAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.initiate(
-    constructAnswerQueryParams(state, 'fetch')
+    constructAnswerQueryParams(state, 'fetch', navigatorContext)
   );
 
-export const selectAnswer = (state: StateNeededByAnswerAPI) =>
+export const selectAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext?: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(state, 'select')
+    constructAnswerQueryParams(
+      state,
+      'select',
+      navigatorContext || defaultNodeJSNavigatorContextProvider()
+    )
   )(state);
