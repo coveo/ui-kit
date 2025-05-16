@@ -3,7 +3,7 @@ import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/stencil-utils';
 import {StencilCheckbox} from '../../stencil-checkbox';
 import {TriStateCheckbox} from '../../stencil-triStateCheckbox';
-import {FacetValueExclude} from '../facet-value-exclude/facet-value-exclude';
+import {FacetValueExclude} from '../facet-value-exclude/stencil-facet-value-exclude';
 import {FacetValueProps} from '../stencil-facet-common';
 
 type TriStateFacetValueProps = Omit<FacetValueProps, 'isSelected'> & {
