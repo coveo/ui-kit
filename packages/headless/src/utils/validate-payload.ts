@@ -48,7 +48,7 @@ export const optionalTrackingId = new StringValue({
 });
 
 export const requiredTrackingId = new StringValue({
-  required: false,
+  required: true,
   emptyAllowed: false,
   regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
 });
