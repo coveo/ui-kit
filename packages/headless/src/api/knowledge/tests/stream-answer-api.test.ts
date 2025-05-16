@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {EventSourceMessage} from '../../../utils/fetch-event-source/parse';
 import {
   constructAnswerQueryParams,
@@ -26,27 +27,28 @@ describe('#streamAnswerApi', () => {
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'fetch'
+        'fetch',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
     it('should create the right selector when usage is select', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
     it('should merge tab expression in request constant query when expression is not a blank string', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithATabWithAnExpression as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(
@@ -55,10 +57,10 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should not include tab info when there is NO tab', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutAnyTab as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
