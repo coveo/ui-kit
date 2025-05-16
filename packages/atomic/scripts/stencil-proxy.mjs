@@ -5,7 +5,7 @@ import {
   readFileSync,
   writeFileSync,
 } from 'node:fs';
-import {join, sep, resolve, relative} from 'node:path';
+import {join, sep, resolve, relative, dirname} from 'node:path';
 
 const headlessVersion = JSON.parse(
   readFileSync('../headless/package.json', 'utf8')
@@ -30,15 +30,25 @@ for (const file of files) {
     renameSync(proxiedFile, prefixFileWithUnderscore(proxiedFile));
     cpSync(proxyFile, proxiedFile, {recursive: true, overwrite: true});
 
-    if (filePath.includes('atomic.esm.js')) {
-      console.log('Adding version exports to atomic.esm.js');
-      let content = readFileSync(proxiedFile, 'utf8');
-
-      // Append version exports at the end of the file so that they can be dynamically imported from the CDN.
-      content += `\nexport const headlessVersion = '${headlessVersion}';\n`;
+    if (filePath.includes('loader.js')) {
+      console.log('Adding version exports ESM');
+      let content = '';
+      content += `export const headlessVersion = '${headlessVersion}';\n`;
       content += `export const atomicVersion = '${atomicVersion}';\n`;
 
-      writeFileSync(proxiedFile, content, 'utf8');
+      const versionFilePath = join(dirname(proxiedFile), 'version.js');
+
+      writeFileSync(versionFilePath, content, 'utf8');
+    }
+    if (filePath.includes('loader.cjs.js')) {
+      console.log('Adding version exports CJS');
+      let content = '';
+      content += `module.exports.headlessVersion = '${headlessVersion}';\n`;
+      content += `module.exports.atomicVersion = '${atomicVersion}';\n`;
+
+      const versionFilePath = join(dirname(proxiedFile), 'version.cjs.js');
+
+      writeFileSync(versionFilePath, content, 'utf8');
     }
   }
 }
