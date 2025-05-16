@@ -16,7 +16,7 @@
     "@coveo/atomic": "3.24.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "5.2.1",
+    "@vitejs/plugin-vue": "5.2.4",
     "cypress": "13.7.3",
     "cypress-repeat": "2.3.8",
     "ncp": "2.0.0",
