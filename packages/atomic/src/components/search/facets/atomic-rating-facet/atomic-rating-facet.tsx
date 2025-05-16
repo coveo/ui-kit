@@ -30,7 +30,7 @@ import {FocusTargetController} from '../../../../utils/stencil-accessibility-uti
 import {Rating} from '../../../common/atomic-rating/atomic-rating';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
