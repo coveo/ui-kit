@@ -11,10 +11,11 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 
+const defaultFieldsToInclude =
+  'date,author,source,language,filetype,documenttype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid,sfparentid';
+
 const defaultOptions = {
   engineId: exampleEngine.id,
-  fieldsToInclude:
-    'date,author,source,language,filetype,documenttype,parents,sfknowledgearticleid,sfid,sfkbid,sfkavid,sfparentid',
 };
 
 const initialResultListState = {
@@ -33,6 +34,7 @@ const selectors = {
   resultList: 'c-quantic-result-list',
   placeholder: 'c-quantic-placeholder',
   initializationError: 'c-quantic-component-error',
+  quanticResult: 'c-quantic-result',
 };
 
 const initialResultsPerPageState = {
@@ -130,7 +132,7 @@ describe('c-quantic-result-list', () => {
       prepareHeadlessState();
     });
 
-    it('should initialize the result list controller and subscribe to the headless states needed', async () => {
+    it('should initialize the result list, search status, results per page, and result templates manager controllers with the correct engine and options', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -139,18 +141,23 @@ describe('c-quantic-result-list', () => {
         exampleEngine,
         {
           options: {
-            fieldsToInclude: defaultOptions.fieldsToInclude.split(','),
+            fieldsToInclude: defaultFieldsToInclude.split(','),
           },
         }
       );
+      expect(functionsMocks.resultsListSubscriber).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
         exampleEngine
+      );
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
       );
       expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledWith(
         exampleEngine
       );
+      expect(functionsMocks.resultsPerPageSubscriber).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildResultTemplatesManager).toHaveBeenCalledTimes(
         1
       );
@@ -171,7 +178,7 @@ describe('c-quantic-result-list', () => {
       expect(jestHandler).toHaveBeenCalledTimes(1);
     });
 
-    it('should unsubscribe from the result list controller when the component is destroyed', async () => {
+    it('should unsubscribe from the result list, searchStatus and resultPerPage controllers when the component is destroyed', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -227,6 +234,9 @@ describe('c-quantic-result-list', () => {
       );
 
       expect(placeholder).not.toBeNull();
+      expect(placeholder.numberOfRows).toBe(
+        resultsPerPageState.numberOfResults
+      );
     });
 
     describe('when the search status has an error', () => {
@@ -309,8 +319,21 @@ describe('c-quantic-result-list', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const results = element.shadowRoot.querySelectorAll('c-quantic-result');
+      const results = element.shadowRoot.querySelectorAll(
+        selectors.quanticResult
+      );
       expect(results.length).toBe(fakeResults.length);
+      results.forEach((resultElement, index) => {
+        expect(resultElement.engineId).toBe(exampleEngine.id);
+        const fakeResult = fakeResults[index];
+        expect(resultElement.result).toEqual({
+          ...fakeResult,
+          keyResultList: `${mockSearchResponseId}_${fakeResult.uniqueId}`,
+        });
+        expect(resultElement.resultTemplateManager).toEqual(
+          functionsMocks.buildResultTemplatesManager()
+        );
+      });
     });
   });
 });
