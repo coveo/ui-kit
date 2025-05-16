@@ -1,5 +1,8 @@
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
-import {NavigatorContext} from '../../app/navigator-context-provider.js';
+import {
+  defaultNodeJSNavigatorContextProvider,
+  NavigatorContext,
+} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {
@@ -368,8 +371,12 @@ export const fetchAnswer = (
 
 export const selectAnswer = (
   state: StateNeededByAnswerAPI,
-  navigatorContext: NavigatorContext
+  navigatorContext?: NavigatorContext
 ) =>
   answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(state, 'select', navigatorContext)
+    constructAnswerQueryParams(
+      state,
+      'select',
+      navigatorContext || defaultNodeJSNavigatorContextProvider()
+    )
   )(state);
