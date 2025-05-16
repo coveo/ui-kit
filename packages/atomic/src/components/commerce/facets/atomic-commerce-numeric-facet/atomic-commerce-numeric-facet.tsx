@@ -16,7 +16,6 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
@@ -24,6 +23,7 @@ import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-hea
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
+import {shouldDisplayInputForFacetRange} from '../../../common/facets/stencil-facet-common';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
