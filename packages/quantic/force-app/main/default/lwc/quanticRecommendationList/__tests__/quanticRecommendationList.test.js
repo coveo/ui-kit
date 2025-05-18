@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-conditional-expect */
 /* eslint-disable no-import-assign */
 // @ts-ignore
 import QuanticRecommendationList from 'c/quanticRecommendationList';
@@ -79,7 +80,7 @@ const exampleEngine = {
   id: 'exampleEngineId',
   dispatch: functionMocks.dispatch,
 };
-const defaultFieldsToInclude = "field1,field2";
+const defaultFieldsToInclude = 'field1,field2';
 
 const defaultOptions = {
   engineId: exampleEngine.id,
@@ -93,11 +94,11 @@ const defaultOptions = {
 
 const selectors = {
   initializationError: 'c-quantic-component-error',
-  gridContainer: '',
-  gridItem: '',
-  carouselContainer: '',
-  carouselItem: '',
+  gridContainer: '[data-testid="recommendations__grid"]',
+  carouselContainer: '[data-testid="recommendations__carousel"]',
+  recommendationListItem: '[data-testid="recommendations__item"]',
   placeholder: 'c-quantic-placeholder',
+  quanticHeading: 'c-quantic-heading',
 };
 
 const createTestComponent = buildCreateTestComponent(
@@ -203,13 +204,16 @@ describe('c-quantic-recommendation-list', () => {
       const element = createTestComponent();
       await flushPromises();
 
-      const event = new CustomEvent('quantic__registerrecommendationtemplates', {
-        bubbles: true,
-        detail: {
-          content: defaultOptions.recommendation,
-          conditions: [],
-        },
-      });
+      const event = new CustomEvent(
+        'quantic__registerrecommendationtemplates',
+        {
+          bubbles: true,
+          detail: {
+            content: defaultOptions.recommendation,
+            conditions: [],
+          },
+        }
+      );
       element.shadowRoot.dispatchEvent(event);
 
       expect(functionMocks.registerTemplates).toHaveBeenCalledTimes(1);
@@ -228,6 +232,27 @@ describe('c-quantic-recommendation-list', () => {
       expect(functionMocks.dispatch).toHaveBeenCalledWith(
         functionMocks.registerFieldsToInclude(expectedFormattedFieldsToInclude)
       );
+    });
+
+    describe('with custom #numberOfRecommendations option', () => {
+      it('should build the buildRecommendationList controller with the custom number of recommendation value', async () => {
+        createTestComponent({
+          ...defaultOptions,
+          numberOfRecommendations: 5,
+        });
+        await flushPromises();
+
+        expect(functionMocks.buildRecommendationList).toHaveBeenCalledTimes(1);
+        expect(functionMocks.buildRecommendationList).toHaveBeenCalledWith(
+          exampleEngine,
+          {
+            options: {
+              id: defaultOptions.recommendation,
+              numberOfRecommendations: Number(5),
+            },
+          }
+        );
+      });
     });
   });
 
@@ -248,30 +273,125 @@ describe('c-quantic-recommendation-list', () => {
     });
   });
 
-  describe.skip('when the component is initialized successfully', () => {
+  describe('when the component is initialized successfully', () => {
     beforeEach(() => {
       mockSuccessfulHeadlessInitialization();
       prepareHeadlessState();
     });
 
     describe('when there are no recommendations', () => {
-      it('should display something', async () => {});
+      it('should not display a recommendation list', async () => {
+        recommendationListState = {
+          isLoading: false,
+          recommendations: [],
+          error: null,
+          searchResponseId: null,
+        };
+        const element = createTestComponent();
+        await flushPromises();
+
+        const recommendationContainer = element.shadowRoot.querySelector(
+          selectors.gridContainer
+        );
+
+        expect(recommendationContainer).toBeNull();
+      });
     });
 
     describe('when there are recommendations', () => {
       describe.each([
-        ['grid', selectors.gridContainer, selectors.gridItem],
-        ['carousel', selectors.carouselContainer, selectors.carouselItem],
+        ['grid', selectors.gridContainer, selectors.recommendationListItem],
+        [
+          'carousel',
+          selectors.carouselContainer,
+          selectors.recommendationListItem,
+        ],
       ])('with %s variant', (variant, containerSelector, itemSelector) => {
-        it('should properly display the recommendations with default options', async () => {});
+        beforeEach(() => {
+          recommendationListState = {
+            isLoading: false,
+            recommendations: recommendationsArray,
+            error: null,
+            searchResponseId: '123',
+          };
+        });
+        it('should properly display the recommendations with default options', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            variant,
+          });
+          await flushPromises();
 
-        it('should properly display the recommendations with custom #recommendationsPerRow option', async () => {});
+          const recommendationContainer =
+            element.shadowRoot.querySelector(containerSelector);
+          const recommendationItems =
+            element.shadowRoot.querySelectorAll(itemSelector);
 
-        it('should properly display the recommendations with custom #label option', async () => {});
-      });
+          expect(recommendationContainer).not.toBeNull();
+          if (variant === 'grid') {
+            expect(recommendationItems.length).toBe(
+              recommendationsArray.length
+            );
+          } else {
+            expect(recommendationContainer.label).toEqual(defaultOptions.label);
+            expect(recommendationContainer.itemsPerPage).toEqual(
+              defaultOptions.recommendationsPerRow
+            );
+          }
+        });
 
-      describe('with custom #numberOfRecommendations option', () => {
-        it('should build the recommendation list controller with the proper parameters', async () => {});
+        describe('with a custom #recommendationsPerRow option', () => {
+          const customRecommendationsPerRow = 2;
+          if (variant === 'grid') {
+            it('should set the width of the recommendation items based on the number of #recommendationsPerRow value', async () => {
+              const expectedRecommendationWidth = `${100 / customRecommendationsPerRow}%`;
+              const element = createTestComponent({
+                ...defaultOptions,
+                variant,
+                recommendationsPerRow: 2,
+              });
+              await flushPromises();
+
+              expect(
+                element.style._values['--recommendationItemWidth']
+              ).toEqual(expectedRecommendationWidth);
+            });
+          } else {
+            it('should pass the #recommendationsPerRow value to the carousel #itemsPerPage property', async () => {
+              const element = createTestComponent({
+                ...defaultOptions,
+                variant,
+                recommendationsPerRow: customRecommendationsPerRow,
+              });
+              await flushPromises();
+              const carousel = element.shadowRoot.querySelector(
+                selectors.carouselContainer
+              );
+
+              expect(carousel).not.toBeNull();
+              expect(carousel.itemsPerPage).toEqual(
+                customRecommendationsPerRow
+              );
+            });
+          }
+        });
+
+        it('should properly pass the custom #label to the heading', async () => {
+          const customLabel = 'Custom label';
+          const element = createTestComponent({
+            ...defaultOptions,
+            variant,
+            label: customLabel,
+          });
+          await flushPromises();
+
+          const headingElement = element.shadowRoot.querySelector(
+            selectors.quanticHeading
+          );
+
+          expect(headingElement).not.toBeNull();
+          expect(headingElement.label).toEqual(customLabel);
+        });
       });
 
       describe('when invalid property values are passed', () => {
