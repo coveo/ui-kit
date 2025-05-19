@@ -23,8 +23,9 @@ export interface RelayConfig {
 
   /**
    * The unique identifier of a web property. See [What's a tracking ID?](https://docs.coveo.com/en/n8tg0567/).
+   * Can be null, in that case events are assigned to an internal default tracking ID.
    */
-  trackingId: string;
+  trackingId: string | null;
 
   /**
    * Defines the library mode. The available modes are `emit` and `disabled`.
