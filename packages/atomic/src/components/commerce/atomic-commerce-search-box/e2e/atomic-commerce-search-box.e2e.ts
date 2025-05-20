@@ -106,6 +106,9 @@ test.describe('default', () => {
     test.beforeEach(async ({searchBox, page}) => {
       await setRecentQueries(page, 4);
       await setSuggestions(page, 4);
+      // We reload to ensure we load the recent queries from local storage
+      await page.reload();
+      await searchBox.hydrated.waitFor();
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
     });
@@ -435,8 +438,8 @@ test.describe('with minimum-query-length=4', () => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 
-    test('should perform requests against the query suggest endpoint', () => {
-      expect(querySuggestionRequestPerformed).toBe(true);
+    test('should perform requests against the query suggest endpoint', async () => {
+      await expect.poll(() => querySuggestionRequestPerformed).toBe(true);
     });
   });
 });

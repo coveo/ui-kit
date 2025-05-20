@@ -10,7 +10,6 @@ import {
   SearchState,
   ProductListingState,
 } from '@coveo/headless/commerce';
-import {ContextRoot} from '@lit/context';
 import {html, CSSResultGroup, unsafeCSS, LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
@@ -62,12 +61,6 @@ export class AtomicCommerceSortDropdown
   @state() error!: Error;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
-
-  constructor() {
-    super();
-    const contextRoot = new ContextRoot();
-    contextRoot.attach(document.body);
-  }
 
   public initialize() {
     if (this.bindings.interfaceElement.type === 'product-listing') {
