@@ -72,6 +72,7 @@ export default defineConfig({
     },
   ],
   test: {
+    isolate: false,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',
