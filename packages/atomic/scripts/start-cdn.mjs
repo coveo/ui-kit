@@ -1,15 +1,16 @@
 import chalk from 'chalk';
 import {spawn} from 'child_process';
 import {readFileSync, readdirSync, statSync, writeFileSync} from 'fs';
+import {findPackageJSON} from 'node:module';
 import path from 'path';
 
 const currentDir = import.meta.dirname;
 const siteDir = path.resolve(currentDir, '../dev-cdn');
 
 const getVersionFromPackageJson = async (packageName, versionType) => {
-  const packageJsonPath = path.resolve(
-    currentDir,
-    `../../../packages/${packageName}/package.json`
+  const packageJsonPath = findPackageJSON(
+    '@coveo/' + packageName,
+    import.meta.url
   );
   console.log(`Reading version from ${packageJsonPath}`);
   try {
