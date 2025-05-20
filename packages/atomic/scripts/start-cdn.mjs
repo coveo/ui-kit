@@ -5,7 +5,7 @@ import {findPackageJSON} from 'node:module';
 import path from 'path';
 
 const currentDir = import.meta.dirname;
-const siteDir = path.resolve(currentDir, '../dev-cdn');
+const siteDir = path.resolve(currentDir, '../dev');
 
 const getVersionFromPackageJson = async (packageName, versionType) => {
   const packageJsonPath = findPackageJSON(
@@ -43,6 +43,8 @@ const updateHtmlVersionsInDirectory = (
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/atomic\/v\d+(\.\d+)?(\.\d+)?/g;
     const headlessRegex =
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/headless\/v\d+(\.\d+)?(\.\d+)?/g;
+    const atomicAssetRegex =
+      /(["'`\(])@coveo\/atomic\/assets\/(.*?)(["'`\)])|@coveo\/atomic\/assets\/(\S+)/g;
 
     const cdnBaseUrl =
       {
@@ -91,12 +93,24 @@ const updateHtmlVersionsInDirectory = (
           headlessRegex,
           `${cdnBaseUrl}/headless/${newHeadlessVersion}`
         );
+        content = content.replace(atomicAssetRegex, (match, p1, p2, p3, p4) => {
+          const assetPath = p2 || p4;
+          if (!assetPath) {
+            return match;
+          }
+          const prefix = p1 || '';
+          const suffix = p3 || '';
+          return `${prefix}${cdnBaseUrl}/atomic/${newAtomicVersion}/assets/${assetPath}${suffix}`;
+        });
         writeFileSync(filePath, content, 'utf-8');
         console.log(
           `Updated atomic version in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}`)}`
         );
         console.log(
           `Updated headless version in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/headless/${newHeadlessVersion}`)}`
+        );
+        console.log(
+          `Updated @coveo/atomic assets in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}/assets/`)}`
         );
       }
     }
@@ -223,11 +237,9 @@ try {
   }
 
   console.log(
-    chalk.cyan(
-      'Starting workspace server on port 3333 for ./dev-cdn directory...'
-    )
+    chalk.cyan('Starting workspace server on port 3333 for ./dev directory...')
   );
-  spawn('npx', ['ws', '--port', '3333', '-d', 'dev-cdn', '--open'], {
+  spawn('npx', ['ws', '--port', '3333', '-d', 'dev', '--open'], {
     stdio: 'inherit',
   });
 } catch (err) {
