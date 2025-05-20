@@ -1,3 +1,18 @@
+## 3.24.0 (2025-05-15)
+
+- fix(answerAPI): post feedback (#5244) ([d35ebef](https://github.com/coveo/ui-kit/commits/d35ebef)), closes [#5244](https://github.com/coveo/ui-kit/issues/5244)
+- fix(atomic): fix legacy analytics mode in hosted search pages (#5314) ([4a5533b](https://github.com/coveo/ui-kit/commits/4a5533b)), closes [#5314](https://github.com/coveo/ui-kit/issues/5314)
+- fix(headless): advanced search queries parameters are not handled correctly when using AnswerApi (#5 ([f69de41](https://github.com/coveo/ui-kit/commits/f69de41)), closes [#5236](https://github.com/coveo/ui-kit/issues/5236)
+- feat(headless): add support for custom relay environments (#5308) ([fc6c0cb](https://github.com/coveo/ui-kit/commits/fc6c0cb)), closes [#5308](https://github.com/coveo/ui-kit/issues/5308)
+
+## <small>3.23.1 (2025-05-08)</small>
+
+- docs(headless,atomic): link updates (#5200) ([27c24d2](https://github.com/coveo/ui-kit/commits/27c24d2)), closes [#5200](https://github.com/coveo/ui-kit/issues/5200)
+- fix(headless, quantic): rga evaluation issue in firefox fixed (#5239) ([98e03b8](https://github.com/coveo/ui-kit/commits/98e03b8)), closes [#5239](https://github.com/coveo/ui-kit/issues/5239) [esbuild.mjs#L162-L187](https://github.com/esbuild.mjs/issues/L162-L187) [/github.com/coveo/ui-kit/blob/7d5d9ac6c4dec46a8d7737dabde340b8237724e8/packages/headless/esbuild.mjs#L162-L187](https://github.com//github.com/coveo/ui-kit/blob/7d5d9ac6c4dec46a8d7737dabde340b8237724e8/packages/headless/esbuild.mjs/issues/L162-L187)
+- chore(deps): update dependency typedoc to v0.28.3 j:kit-282 (#5144) ([c3c313d](https://github.com/coveo/ui-kit/commits/c3c313d)), closes [#5144](https://github.com/coveo/ui-kit/issues/5144)
+- chore(deps): update vite j:kit-282 (#5031) ([532ea61](https://github.com/coveo/ui-kit/commits/532ea61)), closes [#5031](https://github.com/coveo/ui-kit/issues/5031)
+- chore(headless): update relay (#5198) ([8f879cb](https://github.com/coveo/ui-kit/commits/8f879cb)), closes [#5198](https://github.com/coveo/ui-kit/issues/5198)
+
 ## 3.23.0 (2025-04-30)
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))

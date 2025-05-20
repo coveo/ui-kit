@@ -30,6 +30,7 @@ describe('Safe local storage', () => {
   });
 
   it('fails gracefully when local storage throws', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.stubGlobal('localStorage', {
       setItem: vi.fn().mockImplementationOnce(() => {
         throw new Error('🤯');
@@ -42,6 +43,7 @@ describe('Safe local storage', () => {
   });
 
   it('returns fallback object when local storage throws', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.stubGlobal('localStorage', {
       getItem: vi.fn().mockImplementationOnce(() => {
         throw new Error('🤯');

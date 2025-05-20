@@ -33,7 +33,8 @@ export const WithTranslations: Story = {
     const commerceInterface =
       await canvas.findByTestId<AtomicCommerceInterface>('root-interface');
 
-    await context.step('Load translations', () => {
+    await context.step('Load translations', async () => {
+      await customElements.whenDefined('atomic-commerce-interface');
       commerceInterface.i18n.addResourceBundle('en', 'translation', {
         // "translation-key": "A single product"
         [context.args['attributes-value']]: context.args.translationValue,

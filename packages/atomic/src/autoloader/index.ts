@@ -3,19 +3,42 @@ import elementMap from '../components/components/lazy-index.js';
 
 if (typeof window !== 'undefined') {
   /**
+   * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
+   */
+  const observeStencilElementHydration = (atomicElement: Element) => {
+    const attributeObserver = new MutationObserver(() => {
+      if (atomicElement.classList.contains('hydrated')) {
+        attributeObserver.disconnect();
+        if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+          discover(atomicElement);
+        }
+      }
+    });
+
+    attributeObserver.observe(atomicElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  };
+
+  /**
    * Checks a node for undefined elements and attempts to register them.
    */
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
-    const tags = [...root.querySelectorAll(':not(:defined)')]
-      .map((el) => el.tagName.toLowerCase())
-      .filter((tag) => tag.startsWith('atomic-'));
+    const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
+      el.tagName.toLowerCase().startsWith('atomic-')
+    );
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (rootIsAtomicElement && !customElements.get(rootTagName)) {
-      tags.push(rootTagName);
+    if (
+      rootIsAtomicElement &&
+      root instanceof Element &&
+      !customElements.get(rootTagName)
+    ) {
+      allAtomicElements.push(root);
     }
     if (rootIsAtomicElement) {
       const childTemplates = root.querySelectorAll('template');
@@ -30,11 +53,25 @@ if (typeof window !== 'undefined') {
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
-    // Make the list unique
-    const tagsToRegister = [...new Set(tags)];
-    await Promise.allSettled(
-      tagsToRegister.map((tagName) => register(tagName))
-    );
+    const litRegistrationPromises = [];
+    for (const atomicElement of allAtomicElements) {
+      const tagName = atomicElement.tagName.toLowerCase();
+      if (tagName in elementMap && !customElements.get(tagName)) {
+        // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
+        litRegistrationPromises.push(register(tagName));
+        continue;
+      }
+      if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+        discover(atomicElement);
+        continue;
+      }
+      if (atomicElement.classList.contains('hydrated')) {
+        // The element is already hydrated, if there's no shadowRoot, it's a light DOM element, no need to jam the lazy loader in the Shadow DOM.
+        continue;
+      }
+      observeStencilElementHydration(atomicElement);
+    }
+    await Promise.allSettled(litRegistrationPromises);
     customElements.upgrade(root);
   };
 
