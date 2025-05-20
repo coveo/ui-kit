@@ -6,10 +6,16 @@
     <title>Coveo Atomic: Standalone search box example</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <script type="module">
@@ -22,8 +28,9 @@
       });
     </script>
   </head>
+
   <body>
-    <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-search-box redirection-url="/examples/standalone-results.html"></atomic-search-box>
     </atomic-search-interface>
     <script src="../header.js" type="text/javascript"></script>

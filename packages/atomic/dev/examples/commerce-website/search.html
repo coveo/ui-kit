@@ -6,10 +6,16 @@
     <title>Search</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <script type="module">
@@ -30,7 +36,7 @@
     <h1>Search page</h1>
     <main>
       <section>
-        <atomic-commerce-interface type="search" language-assets-path="/lang" icon-assets-path="/assets">
+        <atomic-commerce-interface type="search" language-assets-path="./lang" icon-assets-path="./assets">
           <atomic-commerce-layout>
             <atomic-layout-section section="search">
               <atomic-commerce-search-box>

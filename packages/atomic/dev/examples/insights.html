@@ -6,15 +6,25 @@
     <title>Coveo Atomic: Insight Panel example</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <script type="module">
-      import {initializeBindings} from '@coveo/atomic';
-      import {loadCaseContextActions} from '@coveo/headless/insight';
+      const {initializeBindings} = await (import.meta?.env?.NPM
+        ? import('@coveo/atomic')
+        : import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js'));
+      const {loadCaseContextActions} = await (import.meta?.env?.NPM
+        ? import('@coveo/headless/insight')
+        : import('http://localhost:3000/headless/v0.0.0/insight/headless.esm.js'));
 
       async function main() {
         await customElements.whenDefined('atomic-insight-interface');
@@ -50,12 +60,13 @@
       }
     </style>
   </head>
+
   <body>
     <button id="widget-view">Toggle widget view</button>
     <atomic-insight-interface
       fields-to-include='["sfid", "inat_kingdom", "inat_family", "inat_class"]'
-      language-assets-path="/lang"
-      icon-assets-path="/assets"
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
     >
       <atomic-insight-full-search-button
         slot="full-search"
@@ -116,13 +127,16 @@
                   .salesforce-badge::part(result-badge-element) {
                     background-color: #0092da;
                   }
+
                   .salesforce-badge::part(result-badge-label) {
                     color: white;
                   }
+
                   .field {
                     display: inline-flex;
                     align-items: center;
                   }
+
                   .field-label {
                     font-weight: bold;
                     margin-right: 0.25rem;
@@ -360,12 +374,14 @@
                     flex-basis: 100%;
                     margin-top: 0.5rem;
                   }
+
                   .viewed-by-customer atomic-icon {
                     background-color: var(--atomic-neutral-dark);
                     border-radius: 1rem;
                     width: 0.75rem;
                     height: 0.75rem;
                   }
+
                   .viewed-by-customer atomic-text {
                     font-weight: bold;
                     color: var(--atomic-on-background);

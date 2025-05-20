@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Coveo Atomic Fashion Example With Recommendations & Instant Results</title>
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <script type="module">
-      import {loadPaginationActions} from '@coveo/headless';
+      const {loadPaginationActions} = await (import.meta?.env?.NPM
+        ? import('@coveo/headless')
+        : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       function setNumberOfResults(engine) {
         const action = loadPaginationActions(engine).registerNumberOfResults(6);
@@ -56,6 +64,7 @@
         --atomic-neutral: #e7e3e3;
         --atomic-neutral-light: #f5f2f2;
       }
+
       body {
         margin: 0;
       }
@@ -91,8 +100,8 @@
       pipeline="Search"
       search-hub="MainSearch"
       fields-to-include='["cat_rating_count"]'
-      language-assets-path="/lang"
-      icon-assets-path="/assets"
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
     >
       <atomic-search-layout>
         <div class="header-bg"></div>
@@ -106,10 +115,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;
@@ -182,10 +193,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;
@@ -223,8 +236,8 @@
 
           <atomic-recs-interface
             fields-to-include='["cat_rating_count"]'
-            language-assets-path="/lang"
-            icon-assets-path="/assets"
+            language-assets-path="./lang"
+            icon-assets-path="./assets"
           >
             <atomic-recs-list class="tiles" label="Top clothing for you" display="grid" number-of-recommendations="3">
               <atomic-recs-result-template>
@@ -233,10 +246,12 @@
                     div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
                       height: 120px;
                     }
+
                     .rating-wrapper {
                       display: flex;
                       align-items: center;
                     }
+
                     .rating-wrapper span {
                       margin-left: 5px;
                       color: #8e959d;

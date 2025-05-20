@@ -6,10 +6,16 @@
     <title>Coveo Atomic: External components example</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <style>
@@ -55,6 +61,7 @@
       searchInterface2.executeFirstSearch();
     </script>
   </head>
+
   <body>
     <div class="wrapper">
       <div>
@@ -72,8 +79,8 @@
           pipeline="UI_KIT_E2E"
           search-hub="UI_KIT_E2E"
           reflect-state-in-url="false"
-          language-assets-path="/lang"
-          icon-assets-path="/assets"
+          language-assets-path="./lang"
+          icon-assets-path="./assets"
         >
           <atomic-query-summary></atomic-query-summary>
           <atomic-numeric-facet field="ec_price" label="Cost" with-input="integer">
@@ -85,7 +92,7 @@
       </div>
       <div>
         <h1>Interface #2, linked to url</h1>
-        <atomic-search-interface id="interface-2" language-assets-path="/lang" icon-assets-path="/assets">
+        <atomic-search-interface id="interface-2" language-assets-path="./lang" icon-assets-path="./assets">
           <atomic-query-summary></atomic-query-summary>
           <atomic-result-list></atomic-result-list>
         </atomic-search-interface>

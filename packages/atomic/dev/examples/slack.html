@@ -6,14 +6,22 @@
     <title>Coveo Atomic for Slack</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta?.env?.NPM) {
+        const {defineCustomElements} = import('@coveo/atomic/loader');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
+      }
     </script>
 
     <script type="module">
-      import {loadAdvancedSearchQueryActions} from 'https://static.cloud.coveo.com/atomic/v1/headless/headless.esm.js';
+      const {loadAdvancedSearchQueryActions} = await (import.meta?.env?.NPM
+        ? import('@coveo/headless')
+        : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       function setExpression(engine) {
         const action = loadAdvancedSearchQueryActions(engine).updateAdvancedSearchQueries({
@@ -64,8 +72,8 @@
   <body>
     <atomic-search-interface
       fields-to-include='["slackmessagetype","slackchannelname","slackmessageauthorprofilepicture","slackmessageauthor","slackmessagereplycount"]'
-      language-assets-path="/lang"
-      icon-assets-path="/assets"
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
     >
       <atomic-search-layout>
         <div class="header-bg"></div>
