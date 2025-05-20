@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import {spawn} from 'child_process';
-import fs from 'fs/promises';
+import {readFileSync, readdirSync, statSync, writeFileSync} from 'fs';
 import path from 'path';
 
 const currentDir = import.meta.dirname;
@@ -13,7 +13,7 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
   );
   console.log(`Reading version from ${packageJsonPath}`);
   try {
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
     const [major, minor, patch] = version.split('.');
     return (
@@ -29,7 +29,7 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
   }
 };
 
-const updateHtmlVersionsInDirectory = async (
+const updateHtmlVersionsInDirectory = (
   directoryPath,
   atomicVersion,
   headlessVersion,
@@ -37,7 +37,7 @@ const updateHtmlVersionsInDirectory = async (
   cdnType
 ) => {
   try {
-    const files = await fs.readdir(directoryPath);
+    const files = readdirSync(directoryPath);
     const atomicRegex =
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/atomic\/v\d+(\.\d+)?(\.\d+)?/g;
     const headlessRegex =
@@ -66,10 +66,10 @@ const updateHtmlVersionsInDirectory = async (
 
     for (const file of files) {
       const filePath = path.join(directoryPath, file);
-      const stats = await fs.stat(filePath);
+      const stats = statSync(filePath);
 
       if (stats.isDirectory()) {
-        await updateHtmlVersionsInDirectory(
+        updateHtmlVersionsInDirectory(
           filePath,
           atomicVersion,
           headlessVersion,
@@ -81,7 +81,7 @@ const updateHtmlVersionsInDirectory = async (
         file.endsWith('.js') ||
         file.endsWith('.mjs')
       ) {
-        let content = await fs.readFile(filePath, 'utf-8');
+        let content = readFileSync(filePath, 'utf-8');
         content = content.replace(
           atomicRegex,
           `${cdnBaseUrl}/atomic/${newAtomicVersion}`
@@ -90,7 +90,7 @@ const updateHtmlVersionsInDirectory = async (
           headlessRegex,
           `${cdnBaseUrl}/headless/${newHeadlessVersion}`
         );
-        await fs.writeFile(filePath, content, 'utf-8');
+        writeFileSync(filePath, content, 'utf-8');
         console.log(
           `Updated atomic version in ${chalk.green(filePath)} to ${chalk.blue(`${cdnBaseUrl}/atomic/${newAtomicVersion}`)}`
         );
@@ -168,7 +168,18 @@ const validateArgs = (
   }
 };
 
-const main = async () => {
+const waitForServer = async (url) => {
+  while (true) {
+    try {
+      await fetch(url);
+      return true;
+    } catch {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+};
+
+try {
   const args = parseArgs(process.argv.slice(2));
   const cdnType = args.env;
   const atomicCloudVersion = args.atomic;
@@ -197,6 +208,9 @@ const main = async () => {
     spawn('npx', ['nx', 'run', 'cdn:serve'], {
       stdio: 'inherit',
     });
+
+    console.log(chalk.cyan('Waiting for server on port 3000 to be ready...'));
+    await waitForServer('http://localhost:3000');
   } else {
     await updateHtmlVersionsInDirectory(
       siteDir,
@@ -212,12 +226,10 @@ const main = async () => {
       'Starting workspace server on port 3333 for ./dev-cdn directory...'
     )
   );
-  spawn('npx', ['ws', '--port', '3333', '-d', 'dev-cdn'], {
+  spawn('npx', ['ws', '--port', '3333', '-d', 'dev-cdn', '--open'], {
     stdio: 'inherit',
   });
-};
-
-main().catch((err) => {
+} catch (err) {
   console.error(chalk.red('An error occurred:'), err);
   process.exit(1);
-});
+}
