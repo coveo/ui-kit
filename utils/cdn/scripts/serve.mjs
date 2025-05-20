@@ -1,8 +1,7 @@
-import {execSync, spawn} from 'child_process';
+import {spawn} from 'child_process';
 import chalk from 'chalk';
 
-const main = async () => {
- 
+try{
   console.log(
      // eslint-disable-next-line @cspell/spellchecker
     chalk.cyan('Starting workspace server on port 3000 for ./dist/proda/StaticCDN directory...')
@@ -11,9 +10,10 @@ const main = async () => {
  spawn('npx', ['ws', '--port', '3000', '-d', 'dist/proda/StaticCDN'], {
     stdio: 'inherit',
   });
-};
-
-main().catch((err) => {
-  console.error(chalk.red('An error occurred:'), err);
+}
+catch(err) {
+  console.error(chalk.red('Error starting the server:'), err);
   process.exit(1);
-});
+}
+
+

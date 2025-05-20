@@ -1,16 +1,16 @@
-import fs from 'fs/promises';
+import {readFileSync, mkdirSync, rmSync} from 'fs';
 import ncp from 'ncp';
 import path from 'path';
 import chalk from 'chalk';
 
 const currentDir = import.meta.dirname;
-const getVersionFromPackageJson = async (packageName, versionType) => {
+const getVersionFromPackageJson = (packageName, versionType) => {
   const packageJsonPath = path.resolve(
     currentDir,
     `../../../packages/${packageName}/package.json`
   );
   try {
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
     const [major, minor, patch] = version.split('.');
     return (
@@ -20,11 +20,12 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
         patch: version,
       }[versionType] || version
     );
-  } catch (err) {    throw new Error(`Error reading or parsing ${packageJsonPath}: ${err.message}`);
+  } catch (err) {
+    throw new Error(`Error reading or parsing ${packageJsonPath}: ${err.message}`);
   }
 };
 
-const preprocessConfig = async (configContent) => {
+const preprocessConfig = (configContent) => {
   const versionPlaceholders = {
     IS_NIGHTLY: 'false',
     IS_NOT_NIGHTLY: 'true',
@@ -32,7 +33,6 @@ const preprocessConfig = async (configContent) => {
 
   const versionPlaceholderRegex = /\$\[([A-Z_]+?)_(MAJOR|MINOR|PATCH)_VERSION\]/g;
   
-  const promises = [];
   const processedPlaceholderKeys = new Set();
 
   let match;
@@ -51,16 +51,9 @@ const preprocessConfig = async (configContent) => {
     const packageName = packageIdentifier.replace(/_/g, '-').toLowerCase();
     const versionType = versionTypeIdentifier.toLowerCase();
     
-    promises.push(
-      (async () => {
-          const version = await getVersionFromPackageJson(packageName, versionType);
-          versionPlaceholders[placeholderKey] = version;
-
-      })()
-    );
+    const version = getVersionFromPackageJson(packageName, versionType);
+    versionPlaceholders[placeholderKey] = version;
   }
-
-  await Promise.all(promises);
 
   return configContent.replace(/\$\[([A-Z_]+)\]/g, (_, key) => {
     if (versionPlaceholders.hasOwnProperty(key)) {
@@ -74,13 +67,13 @@ const deploymentConfigPath = path.resolve(
   currentDir,
   '../../../.deployment.config.json'
 );
-const rawConfigContent = await fs.readFile(deploymentConfigPath, 'utf-8');
-const processedConfigContent = await preprocessConfig(rawConfigContent);
+const rawConfigContent = readFileSync(deploymentConfigPath, 'utf-8');
+const processedConfigContent = preprocessConfig(rawConfigContent);
 const deploymentConfig = JSON.parse(processedConfigContent);
 
 const devCdnDir = path.resolve(currentDir, `../dist`);
 
-const copyFiles = async (source, destination) => {
+const copyFiles = (source, destination) => {
   return new Promise((resolve, reject) => {
     ncp(source, destination, (err) => {
       if (err) {
@@ -92,9 +85,9 @@ const copyFiles = async (source, destination) => {
   });
 };
 
-const ensureDirectoryExists = async (directory) => {
+const ensureDirectoryExists = (directory) => {
   try {
-    await fs.mkdir(directory, {recursive: true});
+    mkdirSync(directory, {recursive: true});
   } catch (err) {
     throw new Error(`Failed to create directory ${directory}: ${err.message}`);
   }
@@ -110,7 +103,7 @@ const copyDagPhaseFiles = async () => {
       const targetPath = path.resolve(devCdnDir, phase.s3.directory);
 
       try {
-        await ensureDirectoryExists(targetPath);
+        ensureDirectoryExists(targetPath);
         await copyFiles(sourcePath, targetPath);
       } catch (err) {
         throw new Error(`Failed to process phase ${phase.id} (source: ${sourcePath}, target: ${targetPath}): ${err.message}`);
@@ -119,14 +112,12 @@ const copyDagPhaseFiles = async () => {
   }
 };
 
-const main = async () => {
-  await fs.rm(devCdnDir, { recursive: true, force: true });
-  await ensureDirectoryExists(devCdnDir); 
+try {
+  rmSync(devCdnDir, { recursive: true, force: true });
+  ensureDirectoryExists(devCdnDir); 
 
   await copyDagPhaseFiles();
-};
-
-main().catch((err) => {
-  console.error(chalk.red('An error occurred during local CDN deployment:'), err.message);
+} catch (err) {
+  console.error(chalk.red(`Error during copy process: ${err.message}`));
   process.exit(1);
-});
+}
