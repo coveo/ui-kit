@@ -26,8 +26,8 @@ import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
 import {Carousel} from '../../common/carousel';
 import {createAppLoadedListener} from '../../common/interface/store';
-import {DisplayGrid} from '../../common/item-list/display-grid';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
+import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
 import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
