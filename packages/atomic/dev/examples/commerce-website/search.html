@@ -24,10 +24,107 @@
         commerceInterface.executeFirstRequest();
       })();
     </script>
+
+    <script type="module">
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('atomic-search-interface');
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+      });
+
+      searchInterface.executeFirstSearch();
+    </script>
+    <!-- Custom Atomic Component using the initializeBindings method -->
+    <script type="module">
+      import {initializeBindings} from '@coveo/atomic';
+      import {buildSearchBox} from '@coveo/headless';
+
+      class CustomComponent extends HTMLElement {
+        constructor() {
+          super();
+          this.initialize();
+        }
+
+        get template() {
+          const template = document.createElement('template');
+          template.innerHTML = '<input type="text" placeholder="Search as you type" />';
+          return template;
+        }
+
+        async initialize() {
+          const bindings = await initializeBindings(document.querySelector('atomic-search-interface'));
+          console.log('Bindings:', bindings);
+          const commerceBindings = await initializeBindings(document.querySelector('atomic-commerce-interface'));
+          console.log('Commerce Bindings:', commerceBindings);
+
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template.content.cloneNode(true));
+
+          const searchBox = buildSearchBox(bindings.engine);
+          const input = shadowRoot.querySelector('input');
+          input.addEventListener('input', () => {
+            searchBox.updateText(input.value);
+            searchBox.submit();
+          });
+        }
+      }
+
+      window.customElements.define('custom-component', CustomComponent);
+    </script>
+
+    <!-- Custom Atomic Result Template Component using the resultContext method -->
+    <script type="module">
+      import {resultContext} from '@coveo/atomic';
+
+      class CustomTemplateComponent extends HTMLElement {
+        initialized = false;
+        connectedCallback() {
+          if (this.initialized) {
+            return;
+          }
+
+          this.initialize();
+          this.initialized = true;
+        }
+
+        template(result) {
+          const label = this.getAttribute('label');
+          const template = document.createElement('template');
+          template.innerHTML = `<p>${label}: ${result.title}</p>`;
+          return template;
+        }
+
+        async initialize() {
+          const result = await resultContext(this);
+          const shadowRoot = this.attachShadow({mode: 'closed'});
+          shadowRoot.appendChild(this.template(result).content.cloneNode(true));
+        }
+      }
+
+      window.customElements.define('custom-template-component', CustomTemplateComponent);
+    </script>
   </head>
 
   <body>
     <h1>Search page</h1>
+
+    <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
+      <custom-component></custom-component>
+      <atomic-segmented-facet field="language"></atomic-segmented-facet>
+      <atomic-query-summary></atomic-query-summary>
+      <atomic-result-list>
+        <atomic-result-template>
+          <template>
+            <custom-template-component label="Hello"></custom-template-component>
+            <atomic-field-condition must-not-match-language="Swedish">
+              <custom-template-component label="Hallå"></custom-template-component>
+            </atomic-field-condition>
+          </template>
+        </atomic-result-template>
+      </atomic-result-list>
+    </atomic-search-interface>
+
     <main>
       <section>
         <atomic-commerce-interface type="search" language-assets-path="/lang" icon-assets-path="/assets">

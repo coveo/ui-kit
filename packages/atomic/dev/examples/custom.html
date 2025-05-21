@@ -40,7 +40,8 @@
         }
 
         async initialize() {
-          const bindings = await initializeBindings(this);
+          const bindings = await initializeBindings(document.querySelector('atomic-search-interface'));
+          console.log('Bindings:', bindings);
 
           const shadowRoot = this.attachShadow({mode: 'closed'});
           shadowRoot.appendChild(this.template.content.cloneNode(true));
