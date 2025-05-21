@@ -37,8 +37,9 @@
     </script>
     <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
-      import {initializeBindings} from '@coveo/atomic';
-      import {buildSearchBox} from '@coveo/headless';
+      import {initializeBindings} from 'https://static.cloud.coveo.com/atomic/v3/index.esm.js';
+      import {buildSearchBox} from 'https://static.cloud.coveo.com/headless/v3/headless.esm.js';
+      import {buildSearch} from 'https://static.cloud.coveo.com/shopify/v1/headless.esm.js';
 
       class CustomComponent extends HTMLElement {
         constructor() {
@@ -66,6 +67,32 @@
           input.addEventListener('input', () => {
             searchBox.updateText(input.value);
             searchBox.submit();
+          });
+
+          const newParams = new URLSearchParams();
+
+          const urlString = newParams
+            .toString()
+            .replace(/\+/g, '%20') // Replace plus with %20
+            .replace(/%2C/g, ','); // Replace %2C with ,
+
+          this.commerceController = await buildSearch(commerceBindings?.engine);
+
+          this.commerceUrlManager = this.commerceController.urlManager({
+            initialState: {fragment: urlString},
+          });
+
+          // This subsrribe method is called when the search state is changed, ex: searching something, selecting a facet/sort, pagination.
+          this.commerceUrlManager?.subscribe(() => {
+            this.commerceURL = `${window.location.pathname}?${this.commerceUrlManager.state.fragment}`;
+            console.log('manager state:', this.commerceUrlManager.state);
+            console.log('URL:', this.commerceURL);
+
+            history.pushState(null, '', 'this-is-a-test');
+
+            if (this.selectedTab == 'products') {
+              this.pushStateIfChanged(this.commerceURL);
+            }
           });
         }
       }
@@ -108,9 +135,9 @@
 
   <body>
     <h1>Search page</h1>
+    <custom-component></custom-component>
 
     <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
-      <custom-component></custom-component>
       <atomic-segmented-facet field="language"></atomic-segmented-facet>
       <atomic-query-summary></atomic-query-summary>
       <atomic-result-list>
