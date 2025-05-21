@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {readdir, mkdir, readFileSync, writeFileSync} from 'fs';
+import {readdirSync, mkdirSync, readFileSync, writeFileSync} from 'fs';
 import * as lightningcss from 'lightningcss';
 import {join, dirname, relative} from 'path';
 import postcss from 'postcss';
@@ -37,8 +37,36 @@ function minifyCss(result, filename) {
 
 const cssToJs = (css) => `const css = \`${css}\`;`;
 
-const importMatcher = /(?<=^@import\s+').*\.css(?=';$)/gm;
-const importWholeLineMatcher = /^@import\s+'.*\.css';$/gm;
+function generateFileContent(imports, result) {
+  const cssJs = cssToJs(result);
+  if (imports.length === 0) {
+    return dedent`
+    ${cssJs}
+    export default [css];
+    `;
+  }
+
+  const importStatements = imports
+    .map(
+      (importPath, index) =>
+        `import dep${index} from '${importPath.replace(/\.css$/, '.css.js')}';`
+    )
+    .join('\n');
+
+  const exportStatement = `
+    const allCss = [${imports
+      .map((_, index) => `...dep${index}`)
+      .concat('css')
+      .join(', ')}];
+    export default allCss;
+    `;
+
+  return dedent`
+    ${importStatements}
+    ${cssJs}
+    ${exportStatement}
+    `;
+}
 
 const pushImports = (currentFile, importPaths, files) => {
   for (const importPath of importPaths) {
@@ -49,48 +77,34 @@ const pushImports = (currentFile, importPaths, files) => {
   }
 };
 
-function convertCssToJs(srcPath, distPath, file) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const data = readFileSync(srcPath, 'utf8');
-      const files = [file];
+const importMatcher = /(?<=^@import\s+').*\.css(?=';$)/gm;
+const importWholeLineMatcher = /^@import\s+'.*\.css';$/gm;
 
-      console.log(
-        chalk.blue('Processing:'),
-        chalk.green(`${srcPath} -> ${distPath}`)
-      );
+async function convertCssToJs(srcPath, distPath, file) {
+  try {
+    const data = readFileSync(srcPath, 'utf8');
+    const files = [file];
 
-      const imports = Array.from(data.matchAll(importMatcher)).flatMap(
-        (match) => match
-      );
-      pushImports(srcPath, imports, files);
-      const cleanedData = data.replace(importWholeLineMatcher, '');
-      const result = await processAndMinifyCss(cleanedData, srcPath);
+    console.log(
+      chalk.blue('Processing:'),
+      chalk.green(`${srcPath} -> ${distPath}`)
+    );
 
-      let importIndex = 0;
-      const fileContent = dedent`
-      ${imports.length > 0 ? imports.map((importPath) => `import dep${importIndex++} from '${importPath.replace(/\.css$/, '.css.js')}';`).join('\n') : ''}${cssToJs(result)}
-      ${
-        imports.length > 0
-          ? `const allCss = [${imports
-              .map((_, index) => `...dep${index}`)
-              .concat('css')
-              .join(', ')}];
-      export default allCss;
-      `
-          : `export default [css];
-`
-      }
-      `;
-      const jsPath = distPath + '.js';
-      writeFileSync(jsPath, fileContent);
-      console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
-      resolve();
-    } catch (err) {
-      console.error(chalk.red(`Error processing file: ${srcPath}`), err);
-      reject(err);
-    }
-  });
+    const imports = Array.from(data.matchAll(importMatcher)).flatMap(
+      (match) => match
+    );
+    pushImports(srcPath, imports, files);
+    const cleanedData = data.replace(importWholeLineMatcher, '');
+    const result = await processAndMinifyCss(cleanedData, srcPath);
+
+    const fileContent = generateFileContent(imports, result);
+    const jsPath = distPath + '.js';
+    writeFileSync(jsPath, fileContent);
+    console.log(chalk.blue('Successfully processed:'), chalk.green(jsPath));
+  } catch (err) {
+    console.error(chalk.red(`Error processing file: ${srcPath}`), err);
+    throw err;
+  }
 }
 
 export async function processCssFiles(srcDir, distDir) {
@@ -101,22 +115,16 @@ export async function processCssFiles(srcDir, distDir) {
     console.error(chalk.red(`Error reading directory: ${srcDir}`), err);
     return;
   }
-  await Promise.all(
-    entries.map(async (entry) => {
-      const srcPath = join(srcDir, entry.name);
-      if (entry.isDirectory()) {
-        await processCssFiles(srcPath, join(distDir, entry.name));
-      } else if (entry.isFile() && entry.name.endsWith('.css')) {
-        const relPath = relative(srcDir, srcPath);
-        const distPath = join(distDir, relPath);
-        const targetDir = dirname(distPath);
-        mkdirSync(targetDir, {recursive: true});
-        await convertCssToJs(srcPath, distPath, entry);
-      }
-    })
-  );
-}
-      }
-    });
-  });
+  for (const entry of entries) {
+    const srcPath = join(srcDir, entry.name);
+    if (entry.isDirectory()) {
+      await processCssFiles(srcPath, join(distDir, entry.name));
+    } else if (entry.isFile() && entry.name.endsWith('.css')) {
+      const relPath = relative(srcDir, srcPath);
+      const distPath = join(distDir, relPath);
+      const targetDir = dirname(distPath);
+      mkdirSync(targetDir, {recursive: true});
+      await convertCssToJs(srcPath, distPath, entry);
+    }
+  }
 }
