@@ -6,8 +6,12 @@
     <title>Coveo Atomic: Custom component example</title>
 
     <script type="module">
-      if (import.meta?.env?.NPM) {
-        const {defineCustomElements} = import('@coveo/atomic/loader');
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        const css = await import('@coveo/atomic/themes/coveo.css', {
+          with: {type: 'css'},
+        });
+        document.adoptedStyleSheets.push(css.default);
         defineCustomElements();
       } else {
         import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
@@ -30,10 +34,10 @@
     </script>
     <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
-      const {initializeBindings} = await (import.meta?.env?.NPM
+      const {initializeBindings} = await (import.meta.env
         ? import('@coveo/atomic')
         : import('http://localhost:3000/atomic/v0.0.0/index.esm.js'));
-      const {buildSearchBox} = await (import.meta?.env?.NPM
+      const {buildSearchBox} = await (import.meta.env
         ? import('@coveo/headless')
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
@@ -69,7 +73,7 @@
 
     <!-- Custom Atomic Result Template Component using the resultContext method -->
     <script type="module">
-      const {resultContext} = await (import.meta?.env?.NPM
+      const {resultContext} = await (import.meta.env
         ? import('@coveo/atomic')
         : import('http://localhost:3000/atomic/v0.0.0/index.esm.js'));
 

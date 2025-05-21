@@ -101,8 +101,7 @@ async function startServers() {
     stdio: 'ignore',
   });
 
-  // Script that starts the Vite server and copies files for CDN mode
-  exec('node ./scripts/start-vite.mjs', {stdio: 'ignore'});
+  exec('npx vite serve dev', {stdio: 'ignore'});
 
   // Run headless in dev as well
   exec('nx run headless:dev', {
