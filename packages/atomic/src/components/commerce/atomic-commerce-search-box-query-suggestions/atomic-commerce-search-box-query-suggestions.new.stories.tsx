@@ -8,13 +8,13 @@ import {within} from 'shadow-dom-testing-library';
 
 const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
   wrapInCommerceInterface();
-const {decorator: commerceProductListDecorator} = wrapInCommerceSearchBox();
+const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox();
 const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',
   title: 'Commerce/atomic-commerce-search-box-query-suggestions',
   id: 'atomic-commerce-search-box-query-suggestions',
   render: renderComponent,
-  decorators: [commerceProductListDecorator, commerceInterfaceDecorator],
+  decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters,
   play: async (context) => {
     await commerceInterfacePlay(context);
