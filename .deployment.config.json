@@ -118,7 +118,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_PATCH_VERSION]",
-        "source": "packages/atomic/dist/atomic",
+        "source": "packages/atomic/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -130,7 +130,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MINOR_VERSION]",
-        "source": "packages/atomic/dist/atomic",
+        "source": "packages/atomic/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -142,7 +142,7 @@
         "disabled": $[IS_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]",
-        "source": "packages/atomic/dist/atomic",
+        "source": "packages/atomic/cdn",
         "parameters": {
           "acl": "public-read"
         }
@@ -154,7 +154,7 @@
         "disabled": $[IS_NOT_NIGHTLY],
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/atomic/v$[ATOMIC_MAJOR_VERSION]-nightly",
-        "source": "packages/atomic/dist/atomic",
+        "source": "packages/atomic/cdn",
         "parameters": {
           "acl": "public-read"
         }
