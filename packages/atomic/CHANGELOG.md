@@ -1,3 +1,9 @@
+## <small>3.24.3 (2025-05-21)</small>
+
+- chore(atomic): migrate atomic-commerce-search-box-query-suggestions (#5205) ([1c9df4d](https://github.com/coveo/ui-kit/commits/1c9df4d)), closes [#5205](https://github.com/coveo/ui-kit/issues/5205)
+- chore(atomic): migrate recent-queries.tsx (#5255) ([7af6692](https://github.com/coveo/ui-kit/commits/7af6692)), closes [#5255](https://github.com/coveo/ui-kit/issues/5255)
+- fix(atomic): reduce scope of dispatchSearchBoxSuggestionsEvent to only relevant search boxes (#5253) ([d78ba42](https://github.com/coveo/ui-kit/commits/d78ba42)), closes [#5253](https://github.com/coveo/ui-kit/issues/5253) [#5205](https://github.com/coveo/ui-kit/issues/5205)
+
 ## <small>3.24.2 (2025-05-21)</small>
 
 - chore(atomic): add tests for ItemListCommon class (#5278) ([55e3697](https://github.com/coveo/ui-kit/commits/55e3697)), closes [#5278](https://github.com/coveo/ui-kit/issues/5278)
