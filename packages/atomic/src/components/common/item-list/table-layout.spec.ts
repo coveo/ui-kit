@@ -28,7 +28,9 @@ describe('renderTableLayout', () => {
           templateContentForFirstItem: document.createDocumentFragment(),
           host: document.createElement('div'),
           listClasses: '',
-          logger: console,
+          logger: {
+            error: vi.fn(),
+          },
           ...props,
         },
       })(children)}`
