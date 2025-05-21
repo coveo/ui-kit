@@ -9,6 +9,8 @@ import {
   getSortByLabel,
 } from './option';
 
+vi.mock('@coveo/headless/commerce');
+
 vi.mock('@/src/components/common/sort/option', {spy: true});
 
 describe('renderCommerceSortOption', () => {
