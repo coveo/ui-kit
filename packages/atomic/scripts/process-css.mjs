@@ -94,51 +94,28 @@ function convertCssToJs(srcPath, distPath, file) {
 }
 
 export async function processCssFiles(srcDir, distDir) {
-  return new Promise((resolve, reject) => {
-    readdir(srcDir, {withFileTypes: true}, async (err, files) => {
-      if (err) {
-        console.error(chalk.red(`Error reading directory: ${srcDir}`));
-        return reject(err);
+  let entries;
+  try {
+    entries = readdirSync(srcDir, {withFileTypes: true});
+  } catch (err) {
+    console.error(chalk.red(`Error reading directory: ${srcDir}`), err);
+    return;
+  }
+  await Promise.all(
+    entries.map(async (entry) => {
+      const srcPath = join(srcDir, entry.name);
+      if (entry.isDirectory()) {
+        await processCssFiles(srcPath, join(distDir, entry.name));
+      } else if (entry.isFile() && entry.name.endsWith('.css')) {
+        const relPath = relative(srcDir, srcPath);
+        const distPath = join(distDir, relPath);
+        const targetDir = dirname(distPath);
+        mkdirSync(targetDir, {recursive: true});
+        await convertCssToJs(srcPath, distPath, entry);
       }
-
-      try {
-        const processingPromises = files.map((file) => {
-          return new Promise((fileResolve, fileReject) => {
-            const srcPath = join(srcDir, file.name);
-
-            if (file.isDirectory()) {
-              processCssFiles(srcPath, join(distDir, file.name))
-                .then(fileResolve)
-                .catch(fileReject);
-            } else if (file.isFile() && file.name.endsWith('.css')) {
-              const relPath = relative(srcDir, srcPath);
-              const distPath = join(distDir, relPath);
-              const targetDir = dirname(distPath);
-              console.log(
-                chalk.blue('Processing CSS for:'),
-                chalk.green(srcPath)
-              );
-
-              mkdir(targetDir, {recursive: true}, (mkdirErr) => {
-                if (mkdirErr) {
-                  console.error(
-                    chalk.red(`Error creating directory: ${targetDir}`)
-                  );
-                  return fileReject(mkdirErr);
-                }
-                convertCssToJs(srcPath, distPath, file)
-                  .then(fileResolve)
-                  .catch(fileReject);
-              });
-            } else {
-              fileResolve();
-            }
-          });
-        });
-        await Promise.all(processingPromises);
-        resolve();
-      } catch (error) {
-        reject(error);
+    })
+  );
+}
       }
     });
   });
