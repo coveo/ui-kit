@@ -1,5 +1,6 @@
 <!doctype html>
 <html dir="ltr" lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -7,7 +8,7 @@
 
     <script type="module">
       if (import.meta.env) {
-        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        const { defineCustomElements } = await import('@coveo/atomic/loader');
         import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
@@ -20,7 +21,7 @@
     </script>
 
     <script type="module">
-      const {loadAdvancedSearchQueryActions} = await (import.meta.env
+      const { loadAdvancedSearchQueryActions } = await (import.meta.env
         ? import('@coveo/headless')
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
@@ -73,9 +74,7 @@
   <body>
     <atomic-search-interface
       fields-to-include='["slackmessagetype","slackchannelname","slackmessageauthorprofilepicture","slackmessageauthor","slackmessagereplycount"]'
-      language-assets-path="./lang"
-      icon-assets-path="./assets"
-    >
+      language-assets-path="./lang" icon-assets-path="./assets">
       <atomic-search-layout>
         <div class="header-bg"></div>
         <atomic-layout-section section="search">
@@ -242,20 +241,16 @@
                       <atomic-field-condition must-match-slackmessagetype="Normal">
                         <atomic-result-badge label="MESSAGE" class="slack-badge"></atomic-result-badge>
                         <atomic-text value="&nbsp;&nbsp;in:&nbsp;"></atomic-text>
-                        <atomic-result-link
-                          target="_blank"
-                          href-template="${raw.clickableuri}?id=${raw.slackchannelname}"
-                        >
+                        <atomic-result-link target="_blank"
+                          href-template="${raw.clickableuri}?id=${raw.slackchannelname}">
                           <atomic-result-text class="slack-link" field="slackchannelname"></atomic-result-text>
                         </atomic-result-link>
                       </atomic-field-condition>
                       <atomic-field-condition must-match-slackmessagetype="ThreadStart">
                         <atomic-result-badge label="THREAD" class="slack-badge"></atomic-result-badge>
                         <atomic-text value="&nbsp;&nbsp;in:&nbsp;"></atomic-text>
-                        <atomic-result-link
-                          target="_blank"
-                          href-template="${raw.clickableuri}?id=${raw.slackchannelname}"
-                        >
+                        <atomic-result-link target="_blank"
+                          href-template="${raw.clickableuri}?id=${raw.slackchannelname}">
                           <atomic-result-text class="slack-link" field="slackchannelname"></atomic-result-text>
                         </atomic-result-link>
                       </atomic-field-condition>
@@ -271,10 +266,8 @@
                       <atomic-result-section-title class="slack-msg-result-section-title">
                         <span>
                           <atomic-result-section-visual image-size="small">
-                            <atomic-result-image
-                              field="slackmessageauthorprofilepicture"
-                              aria-hidden="true"
-                            ></atomic-result-image>
+                            <atomic-result-image field="slackmessageauthorprofilepicture"
+                              aria-hidden="true"></atomic-result-image>
                           </atomic-result-section-visual>
                         </span>
                         <div>
@@ -283,11 +276,8 @@
                               <atomic-result-text field="slackmessageauthor"></atomic-result-text>
                             </span>
                             <span>
-                              <atomic-result-date
-                                class="slack-result-date"
-                                field="date"
-                                format="h:mm A - MMMM D, YYYY"
-                              ></atomic-result-date>
+                              <atomic-result-date class="slack-result-date" field="date"
+                                format="h:mm A - MMMM D, YYYY"></atomic-result-date>
                             </span>
                           </div>
                           <div class="slack-result-msg-excerpt">
@@ -303,9 +293,8 @@
                               <atomic-result-section-bottom-metadata>
                                 <atomic-result-fields-list>
                                   <div class="slack-result-thread-bottom-text">
-                                    <span
-                                      ><atomic-result-number field="slackmessagereplycount"></atomic-result-number
-                                    ></span>
+                                    <span><atomic-result-number
+                                        field="slackmessagereplycount"></atomic-result-number></span>
                                     <atomic-field-condition must-match-slackmessagereplycount="1">
                                       <span><atomic-text value="reply"></atomic-text></span>
                                     </atomic-field-condition>
@@ -407,10 +396,8 @@
                               <atomic-result-section-title class="slack-msg-result-section-title">
                                 <span>
                                   <atomic-result-section-visual image-size="small">
-                                    <atomic-result-image
-                                      field="slackmessageauthorprofilepicture"
-                                      aria-hidden="true"
-                                    ></atomic-result-image>
+                                    <atomic-result-image field="slackmessageauthorprofilepicture"
+                                      aria-hidden="true"></atomic-result-image>
                                   </atomic-result-section-visual>
                                 </span>
                                 <div>
@@ -419,11 +406,8 @@
                                       <atomic-result-text field="slackmessageauthor"></atomic-result-text>
                                     </span>
                                     <span>
-                                      <atomic-result-date
-                                        class="slack-result-date"
-                                        field="date"
-                                        format="h:mm A - MMMM D, YYYY"
-                                      ></atomic-result-date>
+                                      <atomic-result-date class="slack-result-date" field="date"
+                                        format="h:mm A - MMMM D, YYYY"></atomic-result-date>
                                     </span>
                                   </div>
                                   <div class="slack-result-replies-excerpt">
@@ -459,4 +443,5 @@
     </atomic-search-interface>
     <script src="../header.js" type="text/javascript"></script>
   </body>
+
 </html>
