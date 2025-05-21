@@ -179,10 +179,6 @@ export const dispatchSearchBoxSuggestionsEvent = <
   element: HTMLElement,
   allowedSearchBoxElements: readonly (typeof searchBoxElements)[number][] = searchBoxElements
 ) => {
-  element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
-  );
-
   const interfaceElement = closest(element, searchBoxElements.join(', '));
   if (!interfaceElement) {
     throw new Error(
