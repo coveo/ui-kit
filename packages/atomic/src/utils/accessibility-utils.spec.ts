@@ -23,7 +23,7 @@ import {defer} from './utils';
 
 vi.mock('./utils', () => ({
   defer: vi.fn(async () => {
-    return new Promise((resolve) => resolve(true));
+    return Promise.resolve();
   }),
 }));
 

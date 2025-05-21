@@ -80,6 +80,7 @@ export class FocusTargetController implements ReactiveController {
   }
 
   public async focus() {
+    // Not sure why this is needed; should be investigated after Lit Migration (KIT-4235)
     await defer();
     this.element?.focus();
     this.onFocusCallback?.();
@@ -116,7 +117,7 @@ export class FocusTargetController implements ReactiveController {
       this.doFocusAfterSearch = false;
       if (this.element) {
         const el = this.element;
-        // The focus seems to be flaky without deferring, especially on iOS.
+        // The focus seems to be flaky without deferring, especially on iOS; should be investigated after Lit Migration (KIT-4235)
         defer().then(() => {
           el.focus();
           this.onFocusCallback?.();
