@@ -53,10 +53,14 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent<SearchBox>((bindings) => {
-        this.bindings = bindings;
-        return this.initialize();
-      }, this.host);
+      dispatchSearchBoxSuggestionsEvent<SearchBox>(
+        (bindings) => {
+          this.bindings = bindings;
+          return this.initialize();
+        },
+        this.host,
+        ['atomic-commerce-search-box']
+      );
     } catch (error) {
       this.error = error as Error;
     }
