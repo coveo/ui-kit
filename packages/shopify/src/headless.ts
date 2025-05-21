@@ -2,11 +2,7 @@ import {
   buildCommerceEngine,
   CommerceEngineOptions,
 } from '@coveo/headless/commerce';
-import {
-  buildBrowserEnvironment,
-  clientIdKey,
-  CustomEnvironment,
-} from '@coveo/relay';
+import {buildBrowserEnvironment, CustomEnvironment} from '@coveo/relay';
 import {getClientId} from './utilities';
 
 export * from '@coveo/headless/commerce';
@@ -44,10 +40,15 @@ export async function fetchAppProxyConfig({
   return response.json();
 }
 
+type ShopifyCustomEnvironment = Omit<
+  CustomEnvironment,
+  'storage' | 'generateUUID'
+>;
+
 interface BuildShopifyCommerceEngineOptions {
   commerceEngineOptions: CommerceEngineOptions;
   shopifyCookie?: string;
-  environment?: CustomEnvironment;
+  environment?: ShopifyCustomEnvironment;
 }
 
 /**
@@ -58,6 +59,11 @@ interface BuildShopifyCommerceEngineOptions {
  * - Retrieving the "_shopify_y" cookie to confirm it is running in a Shopify context.
  * - Storing a client identifier derived from the shop and cookie value in the browser environment's storage.
  * - Building and returning the commerce engine with the provided options.
+ *
+ * @remarks
+ * The `generateUUID` and `storage` properties are omitted from the custom environment for Shopify
+ * to ensure that client IDs are generated consistently across web pixels and storefronts. This is
+ * critical for maintaining a unified tracking and personalization experience.
  *
  * @param commerceEngineOptions - Options to configure the commerce engine.
  * @param shopifyCookie - Optional value of the "_shopify_y" cookie. If not provided, it will attempt to retrieve it from the browser's cookies.
@@ -70,7 +76,8 @@ export function buildShopifyCommerceEngine({
   shopifyCookie,
   environment,
 }: BuildShopifyCommerceEngineOptions) {
-  const browserEnvironment = environment || buildBrowserEnvironment();
+  const customEnvironment =
+    environment ?? getShopifyCustomEnvironment(buildBrowserEnvironment());
   const cookie = shopifyCookie || getShopifyCookie();
 
   if (!cookie) {
@@ -79,10 +86,22 @@ export function buildShopifyCommerceEngine({
     );
   }
 
-  // TODO: Once headless is updated to support custom relay environments, we should instead pass in a generateUUID function
-  browserEnvironment.storage.setItem(clientIdKey, getClientId(cookie));
+  const clientId = getClientId(cookie);
+  const engine = buildCommerceEngine(commerceEngineOptions);
+  engine.relay.updateConfig({
+    environment: {
+      ...customEnvironment,
+      generateUUID: () => clientId,
+    },
+  });
+  return engine;
+}
 
-  return buildCommerceEngine(commerceEngineOptions);
+function getShopifyCustomEnvironment(
+  environment: CustomEnvironment
+): ShopifyCustomEnvironment {
+  const {storage, generateUUID, ...rest} = environment;
+  return rest;
 }
 
 /**
