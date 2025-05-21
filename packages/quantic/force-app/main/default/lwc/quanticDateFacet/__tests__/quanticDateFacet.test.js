@@ -182,6 +182,20 @@ describe('c-quantic-date-facet', () => {
           }),
         })
       );
+      expect(functionsMocks.facetStateSubscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it('should initialize the search status controller', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
     });
 
     it('should register the facet to the quantic store', async () => {
@@ -352,16 +366,6 @@ describe('c-quantic-date-facet', () => {
         };
       });
 
-      it('should display the facet card when the facet values have results', async () => {
-        const element = createTestComponent();
-        await flushPromises();
-
-        const cardContainer = element.shadowRoot.querySelector(
-          selectors.cardContainer
-        );
-        expect(cardContainer).not.toBeNull();
-      });
-
       it('should display the facet values', async () => {
         const expectedFacetValues = exampleFacetValues.map((facetValue) => ({
           ...facetValue,
@@ -374,27 +378,34 @@ describe('c-quantic-date-facet', () => {
         });
         await flushPromises();
 
+        const cardContainer = element.shadowRoot.querySelector(
+          selectors.cardContainer
+        );
         const facetValueElements = element.shadowRoot.querySelectorAll(
           selectors.facetValue
         );
+
+        expect(cardContainer).not.toBeNull();
         expect(facetValueElements.length).toBe(expectedFacetValues.length);
         expectedFacetValues.forEach((facetValue, index) => {
           expect(facetValueElements[index].item).toEqual(facetValue);
         });
       });
 
-      it('should not display the facet card when the facet values have no results', async () => {
-        facetState = {
-          ...facetState,
-          values: [{...exampleFacetValues[0], numberOfResults: 0}],
-        };
-        const element = createTestComponent();
-        await flushPromises();
+      describe('when the facet values have no results', () => {
+        it('should not display the facet card when the facet values have no results', async () => {
+          facetState = {
+            ...facetState,
+            values: [{...exampleFacetValues[0], numberOfResults: 0}],
+          };
+          const element = createTestComponent();
+          await flushPromises();
 
-        const cardContainer = element.shadowRoot.querySelector(
-          selectors.cardContainer
-        );
-        expect(cardContainer).toBeNull();
+          const cardContainer = element.shadowRoot.querySelector(
+            selectors.cardContainer
+          );
+          expect(cardContainer).toBeNull();
+        });
       });
 
       describe('when the facet has active values', () => {
@@ -653,6 +664,25 @@ describe('c-quantic-date-facet', () => {
 
       document.body.removeChild(element);
       expect(functionsMocks.stopWatching).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.facetStateUnsubscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it('should unsubscribe from the facet state', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      document.body.removeChild(element);
+      expect(functionsMocks.facetStateUnsubscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it('should unsubscribe from the searchstatus state', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      document.body.removeChild(element);
+      expect(
+        functionsMocks.searchStatusStateUnsubscriber
+      ).toHaveBeenCalledTimes(1);
     });
   });
 });

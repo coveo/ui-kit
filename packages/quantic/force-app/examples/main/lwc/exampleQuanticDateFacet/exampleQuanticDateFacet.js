@@ -16,6 +16,11 @@ export default class ExampleQuanticTimeframeFacet extends LightningElement {
       defaultValue: 'Date',
     },
     {
+      attribute: 'facetId',
+      label: 'Facet id',
+      description: 'A unique identifier for the facet.',
+    },
+    {
       attribute: 'label',
       label: 'Label',
       description: 'The label to use as the facet title.',
@@ -26,6 +31,12 @@ export default class ExampleQuanticTimeframeFacet extends LightningElement {
       label: 'Is collapsed',
       description: 'Whether the facet is initially collapsed.',
       defaultValue: false,
+    },
+    {
+      attribute: 'numberOfValues',
+      label: 'Number of values',
+      description: 'The number of values to request for this facet.',
+      defaultValue: 8,
     },
     {
       attribute: 'useCase',
