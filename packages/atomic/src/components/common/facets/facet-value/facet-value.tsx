@@ -3,7 +3,7 @@ import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
-import {FacetValueLabelHighlight} from '../facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 
 export interface FacetValueProps {
