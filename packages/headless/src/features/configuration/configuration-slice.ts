@@ -116,11 +116,17 @@ function handleUpdateAnalyticsConfiguration(
   if (!isNullOrUndefined(payload.source)) {
     state.analytics.source = payload.source;
   }
-  const magicCookie = getMagicCookie();
-  if (magicCookie) {
-    state.analytics.analyticsMode = 'next';
-    state.analytics.trackingId = magicCookie;
+
+  try {
+    const magicCookie = getMagicCookie();
+    if (magicCookie) {
+      state.analytics.analyticsMode = 'next';
+      state.analytics.trackingId = magicCookie;
+    }
+  } catch (error) {
+    // Ignore error
   }
+
   if (!isNullOrUndefined(payload.runtimeEnvironment)) {
     state.analytics.runtimeEnvironment = payload.runtimeEnvironment;
   }
