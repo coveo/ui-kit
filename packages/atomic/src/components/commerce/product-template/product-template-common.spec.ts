@@ -9,6 +9,8 @@ import {
 } from 'vitest';
 import {makeMatchConditions} from './product-template-common';
 
+vi.mock('@coveo/headless/commerce');
+
 describe('makeMatchConditions', () => {
   let consoleErrorSpy: MockInstance;
 
