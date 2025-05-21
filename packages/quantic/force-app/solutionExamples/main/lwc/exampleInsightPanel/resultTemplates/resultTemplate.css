@@ -1,0 +1,22 @@
+.result-action_container {
+  transition: 0.4s;
+}
+
+.result-action_container:hover {
+  background-color: #eef4ff;
+}
+
+c-quantic-result-action-bar {
+  position: absolute;
+  top: -1rem;
+  right: 0.75rem;
+}
+
+.result-labels {
+  column-gap: 0.75rem;
+}
+
+.result-metadata_container {
+  font-size: 11px;
+  color: #444444;
+}

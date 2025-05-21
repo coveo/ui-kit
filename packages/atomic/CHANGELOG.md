@@ -1,3 +1,52 @@
+## <small>3.24.2 (2025-05-21)</small>
+
+- chore(atomic): add tests for ItemListCommon class (#5278) ([55e3697](https://github.com/coveo/ui-kit/commits/55e3697)), closes [#5278](https://github.com/coveo/ui-kit/issues/5278)
+- fix(deps): update dependency typescript to v5.8.3 j:kit-282 (#5269) ([83d3475](https://github.com/coveo/ui-kit/commits/83d3475)), closes [#5269](https://github.com/coveo/ui-kit/issues/5269)
+
+## <small>3.24.1 (2025-05-15)</small>
+
+- fix(atomic): add missing import in atom (#5304) ([dac920d](https://github.com/coveo/ui-kit/commits/dac920d)), closes [#5304](https://github.com/coveo/ui-kit/issues/5304)
+- fix(atomic): ensure **all** custom-elements are scanned (#5302) ([fdeed93](https://github.com/coveo/ui-kit/commits/fdeed93)), closes [#5302](https://github.com/coveo/ui-kit/issues/5302)
+- fix(atomic): ensure cdn files includes a hash (#5306) ([fd03c71](https://github.com/coveo/ui-kit/commits/fd03c71)), closes [#5306](https://github.com/coveo/ui-kit/issues/5306) [#5305](https://github.com/coveo/ui-kit/issues/5305) [#5304](https://github.com/coveo/ui-kit/issues/5304) [#5303](https://github.com/coveo/ui-kit/issues/5303) [#5302](https://github.com/coveo/ui-kit/issues/5302)
+- fix(atomic): ensure context root is declared when context is used (#5305) ([89ff82e](https://github.com/coveo/ui-kit/commits/89ff82e)), closes [#5305](https://github.com/coveo/ui-kit/issues/5305)
+- fix(atomic): fix atomic-recs-result-template rendering error (#5313) ([7b4dd8a](https://github.com/coveo/ui-kit/commits/7b4dd8a)), closes [#5313](https://github.com/coveo/ui-kit/issues/5313) [/github.com/coveo/ui-kit/pull/5070/files#diff-869c29501cc46796f3035d2f9e0b3d564509824dd998c0c24d49efe4f2dd0423](https://github.com//github.com/coveo/ui-kit/pull/5070/files/issues/diff-869c29501cc46796f3035d2f9e0b3d564509824dd998c0c24d49efe4f2dd0423)
+- chore(atomic): add tests for ProductTemplateProvider class (#5276) ([e3734b4](https://github.com/coveo/ui-kit/commits/e3734b4)), closes [#5276](https://github.com/coveo/ui-kit/issues/5276)
+- chore(atomic): add tests for TemplateProvider class (#5275) ([10bc2a7](https://github.com/coveo/ui-kit/commits/10bc2a7)), closes [#5275](https://github.com/coveo/ui-kit/issues/5275)
+- chore(atomic): migrate display-grid.tsx (#5273) ([f0c3ed8](https://github.com/coveo/ui-kit/commits/f0c3ed8)), closes [#5273](https://github.com/coveo/ui-kit/issues/5273)
+- chore(atomic): migrate display-wrapper.tsx (#5266) ([a839b9c](https://github.com/coveo/ui-kit/commits/a839b9c)), closes [#5266](https://github.com/coveo/ui-kit/issues/5266)
+- chore(atomic): migrate placeholders.tsx (#5272) ([fe37143](https://github.com/coveo/ui-kit/commits/fe37143)), closes [#5272](https://github.com/coveo/ui-kit/issues/5272)
+- test(atomic): improve stability around suggestions/sb (#5303) ([99c7a3f](https://github.com/coveo/ui-kit/commits/99c7a3f)), closes [#5303](https://github.com/coveo/ui-kit/issues/5303)
+- docs(atomic): Storybook intro and crawling pages (#5293) ([57bb336](https://github.com/coveo/ui-kit/commits/57bb336)), closes [#5293](https://github.com/coveo/ui-kit/issues/5293)
+
+## 3.24.0 (2025-05-08)
+
+- chore: add checkbox render function (#5215) ([fdb0da7](https://github.com/coveo/ui-kit/commits/fdb0da7)), closes [#5215](https://github.com/coveo/ui-kit/issues/5215)
+- chore: add new directive to assign multiple classes to a component (#5214) ([2fff349](https://github.com/coveo/ui-kit/commits/2fff349)), closes [#5214](https://github.com/coveo/ui-kit/issues/5214)
+- chore: migrate facet header render function (#5217) ([c89d263](https://github.com/coveo/ui-kit/commits/c89d263)), closes [#5217](https://github.com/coveo/ui-kit/issues/5217)
+- chore: migrate facet-search-matches (#5221) ([424ec3e](https://github.com/coveo/ui-kit/commits/424ec3e)), closes [#5221](https://github.com/coveo/ui-kit/issues/5221)
+- chore: migrate facet-value-group (#5222) ([6b22990](https://github.com/coveo/ui-kit/commits/6b22990)), closes [#5222](https://github.com/coveo/ui-kit/issues/5222)
+- chore: update vite (#5261) ([5a73a68](https://github.com/coveo/ui-kit/commits/5a73a68)), closes [#5261](https://github.com/coveo/ui-kit/issues/5261)
+- chore(atomic): add commerce-search-box storybook fixture (#5254) ([163dd4b](https://github.com/coveo/ui-kit/commits/163dd4b)), closes [#5254](https://github.com/coveo/ui-kit/issues/5254)
+- chore(atomic): add commerce-search-box vitest fixture (#5252) ([aaaf885](https://github.com/coveo/ui-kit/commits/aaaf885)), closes [#5252](https://github.com/coveo/ui-kit/issues/5252)
+- chore(atomic): fix error handling with bindings decorator (#5227) ([7d5d9ac](https://github.com/coveo/ui-kit/commits/7d5d9ac)), closes [#5227](https://github.com/coveo/ui-kit/issues/5227)
+- chore(atomic): migrate atomic-commerce-pager to Lit (#5016) ([3b92750](https://github.com/coveo/ui-kit/commits/3b92750)), closes [#5016](https://github.com/coveo/ui-kit/issues/5016)
+- chore(atomic): migrate search box text area (#5249) ([410ab08](https://github.com/coveo/ui-kit/commits/410ab08)), closes [#5249](https://github.com/coveo/ui-kit/issues/5249)
+- chore(atomic): migrate search-box-wrapper.tsx (#5246) ([8fe10d3](https://github.com/coveo/ui-kit/commits/8fe10d3)), closes [#5246](https://github.com/coveo/ui-kit/issues/5246)
+- chore(atomic): migrate submit-button.tsx (#5247) ([54cea86](https://github.com/coveo/ui-kit/commits/54cea86)), closes [#5247](https://github.com/coveo/ui-kit/issues/5247)
+- chore(atomic): migrate suggestion-manager for Lit usage (#5242) ([a7bfaa6](https://github.com/coveo/ui-kit/commits/a7bfaa6)), closes [#5242](https://github.com/coveo/ui-kit/issues/5242)
+- chore(atomic): move RedirectionPayload to common (#5241) ([0dddc67](https://github.com/coveo/ui-kit/commits/0dddc67)), closes [#5241](https://github.com/coveo/ui-kit/issues/5241)
+- chore(deps): update vite j:kit-282 (#5031) ([532ea61](https://github.com/coveo/ui-kit/commits/532ea61)), closes [#5031](https://github.com/coveo/ui-kit/issues/5031)
+- fix(atomic): ensure atomic-insight-tab popover buttons get truncated (#5206) ([62da4fc](https://github.com/coveo/ui-kit/commits/62da4fc)), closes [#5206](https://github.com/coveo/ui-kit/issues/5206)
+- fix(atomic): ensure correct path for locales (#5260) ([94b2d80](https://github.com/coveo/ui-kit/commits/94b2d80)), closes [#5260](https://github.com/coveo/ui-kit/issues/5260)
+- fix(atomic): ensure pagination section children are always centered (#5240) ([c359478](https://github.com/coveo/ui-kit/commits/c359478)), closes [#5240](https://github.com/coveo/ui-kit/issues/5240)
+- fix(atomic): ensure Stencil "late" ShadowDOM are observed. (#5267) ([5a292c9](https://github.com/coveo/ui-kit/commits/5a292c9)), closes [#5267](https://github.com/coveo/ui-kit/issues/5267)
+- test: skip no-products flaky test (#5237) ([adc290e](https://github.com/coveo/ui-kit/commits/adc290e)), closes [#5237](https://github.com/coveo/ui-kit/issues/5237)
+- test(atomic): bump vitest timeout to 3 seconds (#5232) ([87522bb](https://github.com/coveo/ui-kit/commits/87522bb)), closes [#5232](https://github.com/coveo/ui-kit/issues/5232)
+- test(atomic): mark fixture interface as ready (#5228) ([9844023](https://github.com/coveo/ui-kit/commits/9844023)), closes [#5228](https://github.com/coveo/ui-kit/issues/5228)
+- test(atomic): remove `globals: true` in vitest config (#5238) ([5557363](https://github.com/coveo/ui-kit/commits/5557363)), closes [#5238](https://github.com/coveo/ui-kit/issues/5238)
+- test(atomic): skip flaky folded result list test (#5258) ([ed9ef9f](https://github.com/coveo/ui-kit/commits/ed9ef9f)), closes [#5258](https://github.com/coveo/ui-kit/issues/5258)
+- feat(insight): add analytics on copyToClipboard and sendToFeed (#5235) ([c94943c](https://github.com/coveo/ui-kit/commits/c94943c)), closes [#5235](https://github.com/coveo/ui-kit/issues/5235)
+
 ## 3.23.0 (2025-04-30)
 
 - [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))

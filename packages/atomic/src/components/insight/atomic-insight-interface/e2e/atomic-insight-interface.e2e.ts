@@ -32,11 +32,9 @@ test.describe('Atomic Insight Panel', () => {
 
       await expect(insightInterface.insightPager).toBeVisible();
       await expect(insightInterface.insightPager).toHaveClass('hydrated');
-      expect(
-        await insightInterface.insightPagerButtons.count()
-      ).toBeGreaterThan(0);
+      await expect(insightInterface.insightPagerButtons.first()).toBeVisible();
 
-      expect(await insightInterface.insightResults.count()).toBeGreaterThan(0);
+      await expect(insightInterface.insightResults.first()).toBeVisible();
     });
   });
 
@@ -44,6 +42,7 @@ test.describe('Atomic Insight Panel', () => {
     test.beforeEach(async ({insightInterface}) => {
       // Video results have better actions to test
       await insightInterface.getTabByName('Videos').click();
+      await insightInterface.waitForNonVideoResultsToBeDetached();
     });
 
     test('attach to case', async ({insightInterface}) => {
