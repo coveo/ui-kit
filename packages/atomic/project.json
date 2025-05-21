@@ -81,7 +81,7 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/start-vite.mjs",
+        "command": "npx vite serve dev",
         "cwd": "{projectRoot}"
       }
     },
