@@ -1,3 +1,8 @@
+## 3.21.0 (2025-05-15)
+
+- test(quantic): unit tests and e2e tests for quantic category facet added (#5281) ([1adaa33](https://github.com/coveo/ui-kit/commits/1adaa33)), closes [#5281](https://github.com/coveo/ui-kit/issues/5281)
+- feat(quantic): aligning styling of example insight panel with the hosted insight panel (#5262) ([2d65609](https://github.com/coveo/ui-kit/commits/2d65609)), closes [#5262](https://github.com/coveo/ui-kit/issues/5262)
+
 ## <small>3.20.1 (2025-05-08)</small>
 
 - test(quantic): added unit tests for quantic aria live (#5263) ([6c67544](https://github.com/coveo/ui-kit/commits/6c67544)), closes [#5263](https://github.com/coveo/ui-kit/issues/5263)

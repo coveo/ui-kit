@@ -28,13 +28,13 @@ import {FocusTargetController} from '../../../utils/stencil-accessibility-utils'
 import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../common/interface/store';
-import {DisplayGrid} from '../../common/item-list/display-grid';
+import {ItemListGuard} from '../../common/item-list/item-list-guard';
+import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
 import {
   DisplayTable,
   DisplayTableData,
   DisplayTableRow,
-} from '../../common/item-list/display-table';
-import {ItemListGuard} from '../../common/item-list/item-list-guard';
+} from '../../common/item-list/stencil-display-table';
 import {DisplayWrapper} from '../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
