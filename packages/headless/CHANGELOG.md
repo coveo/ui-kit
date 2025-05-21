@@ -1,3 +1,14 @@
+## <small>3.24.1 (2025-05-21)</small>
+
+- fix(headless commerce): prioritize mnf if there is an equivalent nf when serializing query params (# ([4f6c0e4](https://github.com/coveo/ui-kit/commits/4f6c0e4)), closes [#5294](https://github.com/coveo/ui-kit/issues/5294)
+
+## 3.24.0 (2025-05-15)
+
+- fix(answerAPI): post feedback (#5244) ([d35ebef](https://github.com/coveo/ui-kit/commits/d35ebef)), closes [#5244](https://github.com/coveo/ui-kit/issues/5244)
+- fix(atomic): fix legacy analytics mode in hosted search pages (#5314) ([4a5533b](https://github.com/coveo/ui-kit/commits/4a5533b)), closes [#5314](https://github.com/coveo/ui-kit/issues/5314)
+- fix(headless): advanced search queries parameters are not handled correctly when using AnswerApi (#5 ([f69de41](https://github.com/coveo/ui-kit/commits/f69de41)), closes [#5236](https://github.com/coveo/ui-kit/issues/5236)
+- feat(headless): add support for custom relay environments (#5308) ([fc6c0cb](https://github.com/coveo/ui-kit/commits/fc6c0cb)), closes [#5308](https://github.com/coveo/ui-kit/issues/5308)
+
 ## <small>3.23.1 (2025-05-08)</small>
 
 - docs(headless,atomic): link updates (#5200) ([27c24d2](https://github.com/coveo/ui-kit/commits/27c24d2)), closes [#5200](https://github.com/coveo/ui-kit/issues/5200)
