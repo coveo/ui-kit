@@ -51,7 +51,7 @@ describe('#getPartialSearchBoxSuggestionElement', () => {
 
 describe('#renderQuerySuggestion', () => {
   const defaultProps: RenderQuerySuggestionOptions = {
-    icon: 'icon',
+    icon: 'fake-icon',
     hasQuery: true,
     suggestion: {highlightedValue: 'highlighted', rawValue: 'raw'},
     hasMultipleKindOfSuggestions: true,
@@ -81,7 +81,7 @@ describe('#renderQuerySuggestion', () => {
 
     expect(icon).toBeInTheDocument();
     expect(icon).toHaveAttribute('part', 'query-suggestion-icon');
-    expect(icon).toHaveAttribute('icon', 'icon');
+    expect(icon).toHaveAttribute('icon', 'fake-icon');
   });
 
   it('should not render the icon if hasMultipleKindOfSuggestions is false', async () => {

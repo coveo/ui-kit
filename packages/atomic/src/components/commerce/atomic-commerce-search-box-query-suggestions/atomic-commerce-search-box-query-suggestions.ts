@@ -16,7 +16,7 @@ import {
   SearchBox,
   Suggestion,
 } from '@coveo/headless/commerce';
-import {html, LitElement} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import SearchIcon from '../../../images/search.svg';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
@@ -130,7 +130,7 @@ export class AtomicCommerceSearchBoxQuerySuggestions
 
   @errorGuard()
   render() {
-    return html``;
+    return html`${nothing}`;
   }
 }
 
