@@ -47,7 +47,7 @@
   "dependencies": {
     "@coveo/bueno": "0.46.4",
     "@coveo/headless": "2.80.6",
-    "dompurify": "3.1.6",
+    "dompurify": "3.2.4",
     "marked": "12.0.2"
   },
   "engines": {
