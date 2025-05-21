@@ -6,20 +6,10 @@
     <title>E2E tests</title>
 
     <script type="module">
-      if (import.meta.env) {
-        const {defineCustomElements} = await import('@coveo/atomic/loader');
-        const css = await import('@coveo/atomic/themes/accessible.css', {
-          with: {type: 'css'},
-        });
-        document.adoptedStyleSheets.push(css.default);
-        defineCustomElements();
-      } else {
-        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
-        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/accessible.css', {
-          with: {type: 'css'},
-        });
-        document.adoptedStyleSheets.push(css.default);
-      }
+      import {defineCustomElements} from '@coveo/atomic/loader';
+      import '@coveo/atomic/themes/accessible.css';
+
+      defineCustomElements();
     </script>
 
     <style>
@@ -28,6 +18,5 @@
       }
     </style>
   </head>
-
   <body></body>
 </html>
