@@ -7,8 +7,18 @@ export function getAnalyticsConfig(
   commerceEngineConfig: CommerceEngineConfiguration,
   enabled: boolean
 ): AnalyticsConfiguration {
-  return {
+  const defaultConfiguration: AnalyticsConfiguration = {
     enabled,
-    ...commerceEngineConfig.analytics,
+    documentLocation: document.location.href,
+    ...(document.referrer && {originLevel3: document.referrer}),
+    analyticsMode: 'next',
   };
+
+  if (commerceEngineConfig.analytics) {
+    return {
+      ...defaultConfiguration,
+      ...commerceEngineConfig.analytics,
+    };
+  }
+  return defaultConfiguration;
 }
