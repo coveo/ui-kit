@@ -4,7 +4,7 @@ import { RelayConfig } from "../../config/config";
 import { version } from "../../version";
 
 /**
- * The `EventConfig` object provides additonal information for the configuration associated with the event.
+ * The `EventConfig` object provides additional information for the configuration associated with the event.
  */
 export interface EventConfig {
   /**

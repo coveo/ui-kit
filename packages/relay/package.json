@@ -4,7 +4,8 @@
   "description": "A library for sending analytics events using Coveo's Event protocol.",
   "type": "module",
   "files": [
-    "lib/npm/*"
+    "lib/npm/*",
+    "lib/docs/*"
   ],
   "types": "./lib/npm/relay.d.ts",
   "exports": {

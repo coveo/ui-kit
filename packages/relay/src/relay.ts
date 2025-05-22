@@ -9,6 +9,8 @@ import {
   RelayConfig,
   CustomEnvironment,
 } from "./config/config";
+import { Environment } from "./environment/environment";
+import { Storage } from "./environment/storage";
 import { createEnvironmentManager } from "./environment/manager/manager";
 import { RelayPayload } from "./relay-payload";
 export { buildBrowserEnvironment } from "./environment/browser/browser";
@@ -132,4 +134,6 @@ export type {
   RelayPayload,
   RelayEvent,
   CustomEnvironment,
+  Environment,
+  Storage,
 };

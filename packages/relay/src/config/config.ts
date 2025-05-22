@@ -1,10 +1,23 @@
 import { Environment } from "../environment/environment";
+import { Storage } from "../environment/storage";
 
+/**
+ * Partial override of the `Environment` interface, used to customize Relay’s behavior
+ * in non-standard browser runtimes.
+ *
+ * This type allows selective replacement of key environment functions without requiring
+ * full control over all `Environment` responsibilities.
+ */
 export type CustomEnvironment = Pick<
   Environment,
   "generateUUID" | "getLocation" | "getReferrer" | "getUserAgent" | "send"
 > & {
-  storage?: Environment["storage"];
+  /**
+   * Optional custom implementation of a storage mechanism (e.g., in-memory, cookie-based).
+   * If not provided, the default storage implementation will be used.
+   * @type {Storage}
+   */
+  storage?: Storage;
 };
 
 /**
@@ -43,7 +56,7 @@ export interface RelayConfig {
   source?: string[];
 
   /**
-   * Specifies a custom environment for Relay, allowing integrations to override the default behavior.
+   * Optionally allows you to specify a custom environment for Relay, allowing integrations to override the default behavior.
    * This is useful when Relay runs in unsupported or specialized contexts that require custom handling.
    */
   environment?: CustomEnvironment;
