@@ -14,7 +14,7 @@ import {
   RecentQueryClear,
   RecentQueryIcon,
   RecentQueryText,
-} from '../../../common/suggestions/recent-queries';
+} from '../../../common/suggestions/stencil-recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -62,10 +62,14 @@ export class AtomicSearchBoxRecentQueries {
 
   componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
-        this.bindings = bindings;
-        return this.initialize();
-      }, this.host);
+      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
+        (bindings) => {
+          this.bindings = bindings;
+          return this.initialize();
+        },
+        this.host,
+        ['atomic-search-box']
+      );
     } catch (error) {
       this.error = error as Error;
     }
