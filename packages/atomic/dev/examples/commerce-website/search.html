@@ -8,17 +8,17 @@
     <script type="module">
       if (import.meta.env) {
         const {defineCustomElements} = await import('@coveo/atomic/loader');
-        const css = await import('@coveo/atomic/themes/coveo.css', {
-          with: {type: 'css'},
-        });
-        document.adoptedStyleSheets.push(css.default);
+        const css = await import('@coveo/atomic/themes/coveo.css');
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(css.default);
+        document.adoptedStyleSheets.push(sheet);
         defineCustomElements();
       } else {
         import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
-        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css', {
-          with: {type: 'css'},
-        });
-        document.adoptedStyleSheets.push(css.default);
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css');
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(css.default);
+        document.adoptedStyleSheets.push(sheet);
       }
     </script>
 
