@@ -2,8 +2,10 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
+
+vi.mock('@coveo/headless/commerce');
 
 describe('getAnalyticsConfig', () => {
   it('should return default configuration when analytics is not defined in commerceEngineConfig', () => {

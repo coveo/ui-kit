@@ -1,3 +1,14 @@
+## <small>3.24.3 (2025-05-21)</small>
+
+- chore(atomic): migrate atomic-commerce-search-box-query-suggestions (#5205) ([1c9df4d](https://github.com/coveo/ui-kit/commits/1c9df4d)), closes [#5205](https://github.com/coveo/ui-kit/issues/5205)
+- chore(atomic): migrate recent-queries.tsx (#5255) ([7af6692](https://github.com/coveo/ui-kit/commits/7af6692)), closes [#5255](https://github.com/coveo/ui-kit/issues/5255)
+- fix(atomic): reduce scope of dispatchSearchBoxSuggestionsEvent to only relevant search boxes (#5253) ([d78ba42](https://github.com/coveo/ui-kit/commits/d78ba42)), closes [#5253](https://github.com/coveo/ui-kit/issues/5253) [#5205](https://github.com/coveo/ui-kit/issues/5205)
+
+## <small>3.24.2 (2025-05-21)</small>
+
+- chore(atomic): add tests for ItemListCommon class (#5278) ([55e3697](https://github.com/coveo/ui-kit/commits/55e3697)), closes [#5278](https://github.com/coveo/ui-kit/issues/5278)
+- fix(deps): update dependency typescript to v5.8.3 j:kit-282 (#5269) ([83d3475](https://github.com/coveo/ui-kit/commits/83d3475)), closes [#5269](https://github.com/coveo/ui-kit/issues/5269)
+
 ## <small>3.24.1 (2025-05-15)</small>
 
 - fix(atomic): add missing import in atom (#5304) ([dac920d](https://github.com/coveo/ui-kit/commits/dac920d)), closes [#5304](https://github.com/coveo/ui-kit/issues/5304)
