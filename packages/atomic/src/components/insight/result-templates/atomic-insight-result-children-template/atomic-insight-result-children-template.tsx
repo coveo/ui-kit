@@ -62,9 +62,11 @@ export class AtomicInsightResultChildrenTemplate {
     string[]
   > = {};
 
-  public resultTemplateCommon: ResultTemplateCommon;
+  public resultTemplateCommon!: ResultTemplateCommon;
 
-  constructor() {
+  constructor() {}
+
+  connectedCallback() {
     this.resultTemplateCommon = new ResultTemplateCommon({
       host: this.host,
       setError: (err) => {
