@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {EventSourceMessage} from '@microsoft/fetch-event-source';
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider';
 import {
   constructAnswerQueryParams,
   GeneratedAnswerStream,
@@ -21,19 +22,25 @@ describe('#streamAnswerApi', () => {
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'fetch'
+        'fetch',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
     it('will create the right selector with select usage', () => {
-      constructAnswerQueryParams(streamAnswerAPIStateMock as any, 'select');
+      constructAnswerQueryParams(
+        streamAnswerAPIStateMock as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
 
-      jest.useFakeTimers().setSystemTime(new Date('2024-01-01'));
+      jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);

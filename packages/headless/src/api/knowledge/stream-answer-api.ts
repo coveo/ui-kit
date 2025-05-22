@@ -4,6 +4,11 @@ import {
 } from '@microsoft/fetch-event-source';
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
+  defaultNodeJSNavigatorContextProvider,
+  NavigatorContext,
+} from '../../app/navigatorContextProvider';
+import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params';
+import {
   setAnswerContentFormat,
   updateCitations,
   updateMessage,
@@ -185,6 +190,19 @@ export const answerApi = answerSlice.injectEndpoints({
           isLoading: true,
         },
       }),
+      serializeQueryArgs: ({endpointName, queryArgs}) => {
+        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
+        // Keys must match, because if anything in the query changes, it's not the same query anymore.
+        // Some fields need to be excluded in the projection though, in this case clientTimestamp, as it will change
+        // during the streaming.
+        const clone = JSON.parse(JSON.stringify(queryArgs));
+        if (clone.analytics) {
+          clone.analytics.clientTimestamp = '';
+        }
+
+        // Standard RTK key, with some fields removed
+        return `${endpointName}(${JSON.stringify(clone)})`;
+      },
       async onCacheEntryAdded(
         args,
         {getState, cacheDataLoaded, updateCachedData, dispatch}
@@ -269,7 +287,8 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
 
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,
-  usage: 'fetch' | 'select'
+  usage: 'fetch' | 'select',
+  navigatorContext: NavigatorContext
 ) => {
   const q = selectQuery(state)?.q;
   const searchHub = selectSearchHub(state);
@@ -314,15 +333,29 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: state.configuration.analytics.originLevel2,
+    ...fromAnalyticsStateToAnalyticsParams(
+      state.configuration.analytics,
+      navigatorContext
+    ),
   };
 };
 
-export const fetchAnswer = (state: StateNeededByAnswerAPI) =>
+export const fetchAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.initiate(
-    constructAnswerQueryParams(state, 'fetch')
+    constructAnswerQueryParams(state, 'fetch', navigatorContext)
   );
 
-export const selectAnswer = (state: StateNeededByAnswerAPI) =>
+export const selectAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext?: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(state, 'select')
+    constructAnswerQueryParams(
+      state,
+      'select',
+      navigatorContext || defaultNodeJSNavigatorContextProvider()
+    )
   )(state);

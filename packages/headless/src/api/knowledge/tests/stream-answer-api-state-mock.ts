@@ -1393,4 +1393,13 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  analytics: {
+    capture: true,
+    clientId: '',
+    clientTimestamp: '2020-01-01T00:00:00.000Z',
+    documentLocation: '',
+    documentReferrer: '',
+    originContext: 'Search',
+    source: ['@coveo/atomic@2.77.0', '@coveo/headless@Test version'],
+  },
 };
