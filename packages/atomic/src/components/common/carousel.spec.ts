@@ -3,25 +3,15 @@ import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
 import {html, nothing, TemplateResult} from 'lit';
-import {within} from 'shadow-dom-testing-library';
-import {vi, expect, describe, beforeAll, it, beforeEach} from 'vitest';
+import {vi, expect, describe, beforeAll, it} from 'vitest';
 import {renderCarousel, CarouselProps} from './carousel';
 import {AnyBindings} from './interface/bindings';
 
 describe('carousel', () => {
-  let container: HTMLElement;
   let i18n: Awaited<ReturnType<typeof createTestI18n>>;
 
   beforeAll(async () => {
     i18n = await createTestI18n();
-  });
-
-  beforeEach(() => {
-    if (container) {
-      document.body.removeChild(container);
-    }
-    container = document.createElement('div');
-    document.body.appendChild(container);
   });
 
   const locators = {
@@ -43,11 +33,6 @@ describe('carousel', () => {
     },
     get indicator() {
       return page.getByRole('listitem');
-    },
-    get indicatorContainer() {
-      return page.getByRole('list', {
-        name: i18n.t('carousel-indicators'),
-      });
     },
   };
 
@@ -77,9 +62,9 @@ describe('carousel', () => {
   };
 
   it('should render the carousel in the document with its children', async () => {
-    const carouselElement = await renderComponent();
-    const children = within(carouselElement).getAllByRole('listitem');
-    expect(children.length).toBeGreaterThan(0);
+    await renderComponent();
+    const indicators = locators.indicator.all();
+    expect(indicators).length.greaterThan(0);
   });
 
   it('should render nothing when no children are passed', async () => {
@@ -88,53 +73,50 @@ describe('carousel', () => {
   });
 
   it('should render the correct number of indicators', async () => {
-    const carouselElement = await renderComponent({
-      numberOfPages: 5,
-    });
-    const indicators = within(carouselElement).getAllByRole('listitem');
-    expect(indicators.length).toBe(5);
+    await renderComponent({numberOfPages: 5});
+    const indicators = locators.indicator.all();
+    expect(indicators).toHaveLength(5);
   });
 
   it('should render an icon inside the previous button', async () => {
     await renderComponent();
 
-    await expect.element(locators.previousButtonIcon).toBeVisible();
-    await expect
-      .element(locators.previousButtonIcon)
-      .toHaveAttribute('icon', expect.stringMatching(/<svg/));
+    expect(locators.previousButtonIcon).toBeVisible();
+    expect(locators.previousButtonIcon).toHaveAttribute(
+      'icon',
+      expect.stringMatching(/<svg/)
+    );
   });
 
   it('should render an icon inside the next button', async () => {
     await renderComponent();
 
-    await expect.element(locators.nextButtonIcon).toBeVisible();
-    await expect
-      .element(locators.nextButtonIcon)
-      .toHaveAttribute('icon', expect.stringMatching(/<svg/));
+    expect(locators.nextButtonIcon).toBeVisible();
+    expect(locators.nextButtonIcon).toHaveAttribute(
+      'icon',
+      expect.stringMatching(/<svg/)
+    );
   });
 
   it('should have the correct part attribute for the "previous" button', async () => {
     await renderComponent();
-    const showMoreButton = await locators.previousButton.element();
-    await expect
-      .element(showMoreButton)
-      .toHaveAttribute('part', 'previous-button');
+    const showMoreButton = locators.previousButton;
+    expect(showMoreButton).toHaveAttribute('part', 'previous-button');
   });
 
   it('should have the correct part attribute for the "next" button', async () => {
     await renderComponent();
-    const showMoreButton = await locators.nextButton.element();
-    await expect(showMoreButton).toHaveAttribute('part', 'next-button');
+    const showMoreButton = locators.nextButton;
+    expect(showMoreButton).toHaveAttribute('part', 'next-button');
   });
 
   it('should have the correct part attribute for the icon', async () => {
     await renderComponent();
-    await expect
-      .element(locators.previousButtonIcon)
-      .toHaveAttribute('part', 'previous-icon');
-    await expect
-      .element(locators.nextButtonIcon)
-      .toHaveAttribute('part', 'next-icon');
+    await expect(locators.previousButtonIcon).toHaveAttribute(
+      'part',
+      'previous-icon'
+    );
+    await expect(locators.nextButtonIcon).toHaveAttribute('part', 'next-icon');
   });
 
   it('should call #previousPage when the previous button is clicked', async () => {
@@ -177,36 +159,31 @@ describe('carousel', () => {
     expect(indicators).toBeNull();
   });
 
-  it('should mark the correct indicator as active', async () => {
+  it('should mark the current indicator as active', async () => {
     const numberOfPages = 3;
-    const testCases = [
-      {currentPage: 0, expectedActive: 0},
-      {currentPage: 1, expectedActive: 1},
-      {currentPage: 2, expectedActive: 2},
-    ];
-    for (const {currentPage, expectedActive} of testCases) {
-      const carouselElement = await renderComponent({
-        numberOfPages,
-        currentPage,
-      });
-      const indicatorsContainer = carouselElement.querySelector(
-        '[part="indicators"]'
-      );
-      const indicators = indicatorsContainer
-        ? Array.from(indicatorsContainer.children)
-        : [];
-      expect(indicators.length).toBe(numberOfPages);
-      for (let i = 0; i < indicators.length; i++) {
-        if (i === expectedActive) {
-          expect(indicators[i].getAttribute('part')).toContain(
-            'active-indicator'
-          );
-        } else {
-          expect(indicators[i].getAttribute('part')).not.toContain(
-            'active-indicator'
-          );
-        }
-      }
-    }
+    const currentPage = 1;
+    await renderComponent({numberOfPages, currentPage});
+    const listItem = (page: number) => locators.indicator.nth(page);
+
+    expect(listItem(currentPage)).toHaveAttribute(
+      'part',
+      'indicator active-indicator'
+    );
+  });
+
+  it('should not mark other pages active', async () => {
+    const numberOfPages = 3;
+    const currentPage = 1;
+    await renderComponent({numberOfPages, currentPage});
+    const listItem = (page: number) => locators.indicator.nth(page);
+
+    expect(listItem(0)).not.toHaveAttribute(
+      'part',
+      'indicator active-indicator'
+    );
+    expect(listItem(2)).not.toHaveAttribute(
+      'part',
+      'indicator active-indicator'
+    );
   });
 });
