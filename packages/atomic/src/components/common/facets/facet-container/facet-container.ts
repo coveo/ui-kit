@@ -10,5 +10,3 @@ export const renderFacetContainer: FunctionalComponentWithChildren =
       ${children}
     </div>
   `;
-
-renderFacetContainer()(html`<div>Child Content</div>`);
