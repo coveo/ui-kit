@@ -25,7 +25,7 @@ import {
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/stencil-utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
-import {Carousel} from '../../common/carousel';
+import {Carousel} from '../../common/carousel-stencil';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {ItemTemplateProvider} from '../../common/item-list/item-template-provider';
