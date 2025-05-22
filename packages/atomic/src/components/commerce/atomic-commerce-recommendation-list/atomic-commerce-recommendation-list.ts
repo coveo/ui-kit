@@ -24,19 +24,19 @@ import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {map} from 'lit/directives/map.js';
 import {when} from 'lit/directives/when.js';
-import {renderResultPlaceholders} from '../../common/atomic-result-placeholder/placeholders-lit';
+import {renderItemPlaceholders} from '../../common/atomic-result-placeholder/item-placeholders';
 import {renderCarousel} from '../../common/carousel';
 import {renderHeading} from '../../common/heading';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {
+  renderDisplayWrapper,
   renderListWrapper,
-  renderListRoot,
-} from '../../common/item-list/display-wrapper-lit';
+} from '../../common/item-list/display-wrapper';
 import {renderGridLayout} from '../../common/item-list/grid-layout';
 import {
   ItemListCommon,
   ItemRenderingFunction,
-} from '../../common/item-list/item-list-common-lit';
+} from '../../common/item-list/item-list-common';
 import {
   ItemDisplayBasicLayout,
   ItemDisplayDensity,
@@ -212,7 +212,10 @@ export class AtomicCommerceRecommendationList
 
   public get focusTarget() {
     if (!this.nextNewProductTarget) {
-      this.nextNewProductTarget = new FocusTargetController(this);
+      this.nextNewProductTarget = new FocusTargetController(
+        this,
+        this.bindings
+      );
     }
     return this.nextNewProductTarget;
   }
@@ -485,16 +488,18 @@ export class AtomicCommerceRecommendationList
       return;
     }
     return renderListWrapper({
-      props: {listClasses},
+      props: {
+        listClasses,
+      },
     })(
-      renderListRoot({
-        props: {listClasses},
+      renderDisplayWrapper({
+        props: {listClasses, display: 'list'},
       })(html`
         ${when(
           this.isAppLoaded,
           () => html`${this.renderAsGrid()}`,
           () =>
-            renderResultPlaceholders({
+            renderItemPlaceholders({
               props: {
                 density: this.density,
                 display: this.display,

@@ -8,17 +8,13 @@ export default {
     await import(
       './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
     ),
-  'atomic-commerce-search-box-query-suggestions': async () =>
-    await import(
-      './atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js'
-    ),
-  'atomic-commerce-recommendation-interface': async () =>
-    await import(
-      './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
-    ),
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
+    ),
+  'atomic-commerce-search-box-query-suggestions': async () =>
+    await import(
+      './atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js'
     ),
   'atomic-commerce-sort-dropdown': async () =>
     await import(
