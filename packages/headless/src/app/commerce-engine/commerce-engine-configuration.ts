@@ -10,6 +10,12 @@ import {
   engineConfigurationDefinitions,
 } from '../engine-configuration.js';
 
+type CommerceAnalyticsConfiguration = Pick<
+  AnalyticsConfiguration,
+  'enabled' | 'proxyBaseUrl' | 'source'
+> &
+  Required<Pick<AnalyticsConfiguration, 'trackingId'>>;
+
 /**
  * The commerce engine configuration.
  */
@@ -17,10 +23,7 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
   /**
    * The commerce analytics configuration.
    */
-  analytics: Pick<
-    AnalyticsConfiguration,
-    'enabled' | 'proxyBaseUrl' | 'source' | 'trackingId'
-  >;
+  analytics: CommerceAnalyticsConfiguration;
   /**
    * The commerce context options.
    */
