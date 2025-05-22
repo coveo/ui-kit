@@ -68,6 +68,7 @@ export class ItemListCommon {
     if (resultIndex === 0) {
       this.firstResultEl = element;
     }
+
     if (resultIndex !== this.indexOfResultToFocus) {
       return;
     }
@@ -86,6 +87,31 @@ export class ItemListCommon {
     this.props.nextNewItemTarget.focusOnNextTarget();
   }
 
+  // TODO - KIT-4227 refactor this method using requestAnimationFrame instead of defer, e.g.,
+  // public async focusOnFirstResultAfterNextSearch2() {
+  //   window.requestAnimationFrame(() => {
+  //     return new Promise<void>((resolve) => {
+  //       if (this.props.getIsLoading()) {
+  //         this.firstResultEl = undefined;
+  //       }
+
+  //       const unsub = this.props.engineSubscribe(async () => {
+  //         window.requestAnimationFrame(() => {
+  //           if (!this.props.getIsLoading() && this.firstResultEl) {
+  //             const elementToFocus =
+  //               getFirstFocusableDescendant(this.firstResultEl) ??
+  //               this.firstResultEl;
+  //             this.props.nextNewItemTarget.setTarget(elementToFocus);
+  //             this.props.nextNewItemTarget.focus();
+  //             this.firstResultEl = undefined;
+  //             unsub();
+  //             resolve();
+  //           }
+  //         });
+  //       });
+  //     });
+  //   });
+  // }
   public async focusOnFirstResultAfterNextSearch() {
     await defer();
     return new Promise<void>((resolve) => {

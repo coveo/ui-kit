@@ -2,7 +2,7 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
 } from '@coveo/headless';
-import {vi} from 'vitest';
+import {describe, beforeEach, it, expect, vi} from 'vitest';
 import {SafeStorage, StorageItems} from './local-storage-utils';
 
 describe('Safe local storage', () => {
@@ -30,6 +30,7 @@ describe('Safe local storage', () => {
   });
 
   it('fails gracefully when local storage throws', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.stubGlobal('localStorage', {
       setItem: vi.fn().mockImplementationOnce(() => {
         throw new Error('🤯');
@@ -42,6 +43,7 @@ describe('Safe local storage', () => {
   });
 
   it('returns fallback object when local storage throws', () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
     vi.stubGlobal('localStorage', {
       getItem: vi.fn().mockImplementationOnce(() => {
         throw new Error('🤯');

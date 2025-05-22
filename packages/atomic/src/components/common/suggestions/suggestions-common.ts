@@ -1,4 +1,6 @@
 import {VNode} from '@stencil/core';
+import {HTMLStencilElement} from '@stencil/core/internal';
+import type {LitElement} from 'lit';
 import {buildCustomEvent} from '../../../utils/event-utils';
 import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
@@ -90,7 +92,7 @@ const searchBoxElements = [
   'atomic-search-box',
   'atomic-insight-search-box',
   'atomic-commerce-search-box',
-];
+] as const;
 
 /**
  * The bindings passed from the search box to the suggestions.
@@ -142,6 +144,28 @@ export type SearchBoxSuggestionsBindings<
   getSuggestionElements(): SearchBoxSuggestionElement[];
 };
 
+const isLitElementLoosely = (candidate: unknown): candidate is LitElement =>
+  'updateComplete' in (candidate as LitElement) &&
+  (candidate as LitElement)['updateComplete'] instanceof Promise;
+
+const dispatchSearchBoxSuggestionsEventEventually = async <
+  SearchBoxController,
+  Bindings = AnyBindings,
+>(
+  interfaceElement: Element,
+  element: HTMLElement,
+  event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>
+) => {
+  if (isLitElementLoosely(interfaceElement)) {
+    await interfaceElement.updateComplete;
+  } else if ('componentOnReady' in interfaceElement) {
+    await (interfaceElement as HTMLStencilElement).componentOnReady();
+  }
+  element.dispatchEvent(
+    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
+  );
+};
+
 /**
  * Dispatches an event which retrieves the `SearchBoxSuggestionsBindings` on a configured parent search box.
  * @param event Event sent from the registered query suggestions to the parent search box.
@@ -152,19 +176,18 @@ export const dispatchSearchBoxSuggestionsEvent = <
   Bindings = AnyBindings,
 >(
   event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>,
-  element: HTMLElement
+  element: HTMLElement,
+  allowedSearchBoxElements: readonly (typeof searchBoxElements)[number][] = searchBoxElements
 ) => {
-  element.dispatchEvent(
-    buildCustomEvent('atomic/searchBoxSuggestion/register', event)
-  );
-
-  if (!closest(element, searchBoxElements.join(', '))) {
+  const interfaceElement = closest(element, searchBoxElements.join(', '));
+  if (!interfaceElement) {
     throw new Error(
-      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of the following elements: ${searchBoxElements.join(
+      `The "${element.nodeName.toLowerCase()}" component was not handled, as it is not a child of the following elements: ${allowedSearchBoxElements.join(
         ', '
       )}`
     );
   }
+  dispatchSearchBoxSuggestionsEventEventually(interfaceElement, element, event);
 };
 
 export function elementHasNoQuery(el: SearchBoxSuggestionElement) {

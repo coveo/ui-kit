@@ -9,6 +9,11 @@ export const selectAdvancedSearchQueries = createSelector(
       return {};
     }
     const {aq, cq, dq, lq} = advancedSearchQueries;
-    return {aq, cq, dq, lq};
+    return {
+      ...(aq && {aq}),
+      ...(cq && {cq}),
+      ...(dq && {dq}),
+      ...(lq && {lq}),
+    };
   }
 );

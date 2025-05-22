@@ -3,15 +3,12 @@ import {renderComponent} from '@/storybook-utils/common/render-component';
 import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-async function initializeSearchInterface(canvasElement: HTMLElement) {
+async function initializeCommerceInterface(canvasElement: HTMLElement) {
   await customElements.whenDefined('atomic-commerce-interface');
-  const searchInterface = canvasElement.querySelector(
+  const commerceInterface = canvasElement.querySelector(
     'atomic-commerce-interface'
   );
-  await searchInterface!.initialize({
-    ...getSampleCommerceEngineConfiguration(),
-    ...{},
-  });
+  await commerceInterface!.initialize(getSampleCommerceEngineConfiguration());
 }
 const meta: Meta = {
   component: 'atomic-commerce-interface',
@@ -20,7 +17,7 @@ const meta: Meta = {
   render: renderComponent,
   parameters,
   play: async (context) => {
-    await initializeSearchInterface(context.canvasElement);
+    await initializeCommerceInterface(context.canvasElement);
     const searchInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
@@ -43,10 +40,11 @@ export const Default: Story = {
 export const SearchBeforeInit: Story = {
   tags: ['commerce', 'test'],
   play: async (context) => {
-    const searchInterface = context.canvasElement.querySelector(
+    const commerceInterface = context.canvasElement.querySelector(
       'atomic-commerce-interface'
     );
-    await searchInterface!.executeFirstRequest();
+    await customElements.whenDefined('atomic-commerce-interface');
+    await commerceInterface!.executeFirstRequest();
   },
 };
 
@@ -75,7 +73,11 @@ export const WithProductList: Story = {
             ></atomic-commerce-product-list>
             <atomic-commerce-query-error></atomic-commerce-query-error>
           </atomic-layout-section>
-          <atomic-layout-section section="pagination"></atomic-layout-section>
+          <atomic-layout-section section="pagination">
+            <atomic-commerce-pager></atomic-commerce-pager>
+            <atomic-commerce-products-per-page>
+            </atomic-commerce-products-per-page>
+          </atomic-layout-section>
         </atomic-layout-section>
       </atomic-commerce-layout>
     `,

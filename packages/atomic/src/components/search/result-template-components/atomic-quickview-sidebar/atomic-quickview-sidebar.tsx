@@ -5,9 +5,9 @@ import ArrowDown from '../../../../images/arrow-bottom-rounded.svg';
 import ArrowUp from '../../../../images/arrow-top-rounded.svg';
 import MinimizeIcon from '../../../../images/menu.svg';
 import Remove from '../../../../images/remove.svg';
-import {FieldsetGroup} from '../../../common/fieldset-group';
 import {IconButton} from '../../../common/iconButton';
 import {StencilCheckbox} from '../../../common/stencil-checkbox';
+import {FieldsetGroup} from '../../../common/stencil-fieldset-group';
 import type {HighlightKeywords} from '../atomic-quickview-modal/atomic-quickview-modal';
 import {QuickviewWordHighlight} from '../quickview-word-highlight/quickview-word-highlight';
 

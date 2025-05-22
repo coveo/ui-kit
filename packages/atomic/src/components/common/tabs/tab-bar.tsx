@@ -19,7 +19,8 @@ export class TabBar {
   private resizeObserver: ResizeObserver | undefined;
 
   private get tabsFromSlot(): TabCommonElement[] {
-    const isTab = (tagName: string) => /atomic-.+-tab$/i.test(tagName);
+    const isTab = (tagName: string) =>
+      /atomic-.+-tab$/i.test(tagName) || /tab-button$/i.test(tagName);
     return Array.from(this.host.querySelectorAll<TabCommonElement>('*')).filter(
       (element) => isTab(element.tagName)
     );
@@ -147,7 +148,7 @@ export class TabBar {
         <Button
           part="popover-tab"
           style="text-transparent"
-          class="truncate rounded px-4 py-2 font-semibold"
+          class="w-full truncate rounded px-4 py-2 text-left font-semibold"
           ariaLabel={tab.label}
           title={tab.label}
           onClick={() => {
@@ -201,7 +202,9 @@ export class TabBar {
     return (
       <Host class="overflow-x-clip overflow-y-visible">
         <slot></slot>
-        <atomic-tab-popover>{this.popoverTabs}</atomic-tab-popover>
+        <atomic-tab-popover exportparts="popover-button, value-label, arrow-icon, backdrop overflow-tabs">
+          {this.popoverTabs}
+        </atomic-tab-popover>
       </Host>
     );
   };

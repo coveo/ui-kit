@@ -50,7 +50,7 @@ test.describe('default', () => {
       });
 
       test('should update the searchbox input', async ({searchBox}) => {
-        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+        await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
       });
 
       test('should collapse the suggested queries', async ({searchBox}) => {
@@ -70,7 +70,7 @@ test.describe('default', () => {
       });
 
       test('should update the searchbox input', async ({searchBox}) => {
-        await expect(searchBox.searchInput).toHaveValue(suggestionText);
+        await expect(searchBox.searchInput).toHaveValue(suggestionText.trim());
       });
 
       test.describe('after pressing Enter', () => {
@@ -106,6 +106,9 @@ test.describe('default', () => {
     test.beforeEach(async ({searchBox, page}) => {
       await setRecentQueries(page, 4);
       await setSuggestions(page, 4);
+      // We reload to ensure we load the recent queries from local storage
+      await page.reload();
+      await searchBox.hydrated.waitFor();
       await searchBox.searchInput.waitFor({state: 'visible'});
       await searchBox.searchInput.click();
     });
@@ -300,7 +303,9 @@ test.describe('with instant results & query suggestions', () => {
         await page.waitForURL(
           '**/iframe.html?id=atomic-commerce-search-box--in-page*'
         );
-        await expect(searchBox.searchInput).toHaveValue(suggestionText ?? '');
+        await expect(searchBox.searchInput).toHaveValue(
+          suggestionText?.trim() ?? ''
+        );
       });
     });
   });
@@ -435,8 +440,8 @@ test.describe('with minimum-query-length=4', () => {
       await expect(searchBox.searchSuggestions().first()).toBeVisible();
     });
 
-    test('should perform requests against the query suggest endpoint', () => {
-      expect(querySuggestionRequestPerformed).toBe(true);
+    test('should perform requests against the query suggest endpoint', async () => {
+      await expect.poll(() => querySuggestionRequestPerformed).toBe(true);
     });
   });
 });
@@ -515,7 +520,9 @@ test.describe('standalone searchbox', () => {
     await page.waitForURL(
       '**/iframe.html?id=atomic-commerce-search-box--in-page*'
     );
-    await expect(searchBox.searchInput).toHaveValue(suggestionText ?? '');
+    await expect(searchBox.searchInput).toHaveValue(
+      suggestionText?.trim() ?? ''
+    );
   });
 
   test('should be A11y compliant', async ({searchBox, makeAxeBuilder}) => {

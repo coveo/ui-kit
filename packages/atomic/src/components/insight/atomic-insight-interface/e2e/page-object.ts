@@ -58,10 +58,22 @@ export class InsightInterfacePageObject extends BasePageObject<'atomic-insight-i
     return this.insightRefineModal.getByRole('button', {name: 'Close'});
   }
 
+  async waitForResults() {
+    await this.insightResults.first().waitFor({state: 'visible'});
+  }
+
   getTabByName(name: string) {
     return this.insightTabs.filter({
       hasText: name,
     });
+  }
+
+  get connectResultLink() {
+    return this.insightResults.getByRole('link', {name: 'Connect'});
+  }
+
+  async waitForNonVideoResultsToBeDetached() {
+    await this.connectResultLink.waitFor({state: 'detached'});
   }
 
   getResultByIndex(index: number) {

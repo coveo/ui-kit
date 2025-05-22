@@ -1,3 +1,4 @@
+import {describe, it, expect} from 'vitest';
 import {filterProtocol} from './xss-utils';
 
 describe('filterProtocol', () => {

@@ -23,7 +23,7 @@ describe('example insight panel', () => {
 
       Expect.displaySearchbox(true);
       Expect.displayRefineToggle(true);
-      Expect.displaySummary(true);
+      Expect.displayInsightSummary(true);
       Expect.displayPager(true);
       Expect.displayResults();
     });
@@ -83,7 +83,18 @@ describe('example insight panel', () => {
   describe('when changing result page', () => {
     it('should request new result page when clicking a specific page in the pager', () => {
       visitInsightPanel();
-      Expect.summaryContainsText('Results 1-5');
+      const exampleQuery = 'Hello world!';
+      Actions.typeInSearchbox(exampleQuery);
+      Actions.submitQuery();
+      Expect.completeSearchRequest(
+        'searchboxSubmit',
+        useCaseEnum.insight,
+        (body) => {
+          expect(body).to.have.property('q', exampleQuery);
+        }
+      );
+
+      Expect.insightSummaryContainsText('Results 1-5');
 
       Actions.selectPagerButton(2);
       Expect.completeSearchRequest(
@@ -93,7 +104,7 @@ describe('example insight panel', () => {
           expect(body).to.have.property('firstResult', 5);
         }
       );
-      Expect.summaryContainsText('Results 6-10');
+      Expect.insightSummaryContainsText('Results 6-10');
     });
   });
 });

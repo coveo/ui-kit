@@ -24,6 +24,7 @@
       "executor": "nx:run-commands",
       "outputs": [
         "{projectRoot}/dist",
+        "{projectRoot}/cdn",
         "{projectRoot}/docs",
         "{projectRoot}/src/components.d.ts",
         "{projectRoot}/.stencil",
@@ -36,9 +37,9 @@
           "node ./scripts/stencil-proxy.mjs",
           "node ./scripts/build.mjs --config=tsconfig.lit.json",
           "node ./scripts/process-css.mjs --config=tsconfig.lit.json ",
-          "npm run-script -w=@coveo/ci if-cdn -- \"rollup -c rollup.config.js\"",
           "esbuild src/autoloader/index.ts --format=esm --outfile=dist/atomic/autoloader/index.esm.js",
           "esbuild src/autoloader/index.ts --format=cjs --outfile=dist/atomic/autoloader/index.cjs.js",
+          "rollup -c rollup.config.js",
           "rimraf ./dist/atomic/loader/package.json",
           "tsc --noEmit --esModuleInterop --skipLibCheck ./dist/types/components.d.ts"
         ],
@@ -119,6 +120,26 @@
             "description": "If you want to rebuild stencil in dev mode"
           }
         }
+      }
+    },
+    "test": {
+      "executor": "nx:noop",
+      "dependsOn": ["test:stencil", "test:lit"]
+    },
+    "test:stencil": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build:locales"],
+      "options": {
+        "command": "stencil test --spec -- src/utils/initialization-utils.spec.ts src/components/search/atomic-layout/search-layout.spec.ts",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:lit": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["^build", "build"],
+      "options": {
+        "command": "vitest --run",
+        "cwd": "{projectRoot}"
       }
     }
   }

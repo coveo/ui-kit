@@ -17,15 +17,21 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {
+  selectActiveTab,
+  selectActiveTabExpression,
+} from '../../features/tab-set/tab-set-selectors.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 import {
   ConfigurationSection,
   GeneratedAnswerSection,
   InsightConfigurationSection,
+  TabSection,
 } from '../../state/state-sections.js';
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
+import {isEmptyString} from '../../utils/utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
@@ -38,7 +44,8 @@ export type StateNeededByAnswerAPI = {
 } & ConfigurationSection &
   Partial<SearchAppState> &
   Partial<InsightConfigurationSection> &
-  GeneratedAnswerSection;
+  GeneratedAnswerSection &
+  Partial<TabSection>;
 
 export interface GeneratedAnswerStream {
   answerId?: string;
@@ -272,12 +279,29 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
   return state.pagination.numberOfResults;
 };
 
+const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
+  state: StateNeededByAnswerAPI
+) => {
+  const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
+  const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const mergedAdvancedSearchQueryParams = {
+    ...advancedSearchQueryParams,
+  };
+  if (!isEmptyString(activeTabExpression)) {
+    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
+  }
+  return mergedAdvancedSearchQueryParams;
+};
+
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,
   usage: 'fetch' | 'select'
 ) => {
   const q = selectQuery(state)?.q;
-  const advancedQueryParams = selectAdvancedSearchQueries(state) ?? {};
+
+  const {aq, cq, dq, lq} =
+    mergeActiveTabExpressionInAdvancedSearchQueryParams(state);
+
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
@@ -288,7 +312,10 @@ export const constructAnswerQueryParams = (
 
   return {
     q,
-    ...advancedQueryParams,
+    ...(aq && {aq}),
+    ...(cq && {cq}),
+    ...(dq && {dq}),
+    ...(lq && {lq}),
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
         responseFormat: state.generatedAnswer.responseFormat,
@@ -320,7 +347,7 @@ export const constructAnswerQueryParams = (
       numberOfResults: getNumberOfResultsWithinIndexLimit(state),
       firstResult: state.pagination.firstResult,
     }),
-    tab: state.configuration.analytics.originLevel2,
+    tab: selectActiveTab(state.tabSet),
   };
 };
 

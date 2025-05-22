@@ -23,7 +23,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 4 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? [['list'], ['github']] : [['html'], ['list']],
+  reporter: process.env.CI ? [['list'], ['blob']] : [['html'], ['list']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
@@ -32,6 +32,7 @@ export default defineConfig({
     screenshot: 'on-first-failure',
     // Record video on failure when not on CI.
     video: process.env.CI ? 'off' : 'retain-on-failure',
+    permissions: ['clipboard-read'],
   },
 
   projects: [

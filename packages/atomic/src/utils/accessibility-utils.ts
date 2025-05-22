@@ -1,9 +1,7 @@
 import {ReactiveController, ReactiveControllerHost} from 'lit';
+import {AnyBindings} from '../components';
 import {buildCustomEvent} from './event-utils';
-
-export interface FindAriaLiveEventArgs {
-  element?: HTMLAtomicAriaLiveElement;
-}
+import {defer} from './utils';
 
 export interface FindAriaLiveEventArgs {
   element?: HTMLAtomicAriaLiveElement;
@@ -36,7 +34,7 @@ export class AriaLiveRegionController implements ReactiveController {
     return element;
   }
 
-  public dispatchMessage(message: string) {
+  private dispatchMessage(message: string) {
     this.getAriaLiveElement()?.updateMessage(
       this.regionName,
       message,
@@ -53,13 +51,80 @@ export class AriaLiveRegionController implements ReactiveController {
   }
 }
 
-//TODO: Reimplement to fit Lit
-export class FocusTargetController {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public setTarget(_el: HTMLElement) {}
-  public focusAfterSearch() {}
-  public focusOnNextTarget() {}
-  public async focus() {}
+export class FocusTargetController implements ReactiveController {
+  private bindings: AnyBindings;
+  private lastSearchId?: string;
+  private element?: HTMLElement;
+  private onFocusCallback?: Function;
+  private doFocusAfterSearch = false;
+  private doFocusOnNextTarget = false;
+
+  constructor(
+    private host: ReactiveControllerHost,
+    bindings: AnyBindings
+  ) {
+    this.host = host;
+    this.bindings = bindings;
+    this.host.addController(this);
+  }
+
+  public setTarget(el?: HTMLElement) {
+    if (!el) {
+      return;
+    }
+    this.element = el;
+    if (this.doFocusOnNextTarget) {
+      this.doFocusOnNextTarget = false;
+      this.focus();
+    }
+  }
+
+  public async focus() {
+    // Not sure why this is needed; should be investigated after Lit Migration (KIT-4235)
+    await defer();
+    this.element?.focus();
+    this.onFocusCallback?.();
+  }
+
+  public focusAfterSearch() {
+    this.lastSearchId = this.bindings.store.getUniqueIDFromEngine(
+      this.bindings.engine
+    );
+    this.doFocusAfterSearch = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public focusOnNextTarget() {
+    this.doFocusOnNextTarget = true;
+    return new Promise((resolve) => (this.onFocusCallback = resolve));
+  }
+
+  public disableForCurrentSearch() {
+    if (
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+      this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+    }
+  }
+
+  hostUpdated() {
+    if (
+      this.doFocusAfterSearch &&
+      this.bindings.store.getUniqueIDFromEngine(this.bindings.engine) !==
+        this.lastSearchId
+    ) {
+      this.doFocusAfterSearch = false;
+      if (this.element) {
+        const el = this.element;
+        // The focus seems to be flaky without deferring, especially on iOS; should be investigated after Lit Migration (KIT-4235)
+        defer().then(() => {
+          el.focus();
+          this.onFocusCallback?.();
+        });
+      }
+    }
+  }
 }
 
 function isFocusable(element: Element) {

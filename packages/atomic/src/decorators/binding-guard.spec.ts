@@ -4,7 +4,7 @@ import {
 } from '@coveo/headless';
 import {LitElement, html} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {vi} from 'vitest';
+import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import type {Bindings} from '../components/search/atomic-search-interface/interfaces';
 import {bindingGuard} from './binding-guard';
 

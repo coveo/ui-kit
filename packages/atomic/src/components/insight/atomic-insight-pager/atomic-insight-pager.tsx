@@ -28,8 +28,8 @@ import {
   PagerPageButton,
   PagerPageButtons,
   PagerPreviousButton,
-} from '../../common/pager/pager-buttons';
-import {PagerNavigation} from '../../common/pager/pager-navigation';
+} from '../../common/pager/stencil-pager-buttons';
+import {PagerNavigation} from '../../common/pager/stencil-pager-navigation';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
 /**

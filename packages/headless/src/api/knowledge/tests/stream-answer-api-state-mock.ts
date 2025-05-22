@@ -590,7 +590,13 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       initialNumberOfValues: 8,
     },
   },
-  tabSet: {},
+  tabSet: {
+    default: {
+      id: 'default',
+      expression: '',
+      isActive: true,
+    },
+  },
   categoryFacetSearchSet: {
     geographicalhierarchy: {
       options: {
@@ -1070,6 +1076,31 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   },
 };
 
+export const streamAnswerAPIStateMockWithATabWithAnExpression: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    tabSet: {
+      ...streamAnswerAPIStateMock.tabSet,
+      default: {
+        id: 'default',
+        expression: '@fileType=html',
+        isActive: true,
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithoutAnyTab: StateNeededByAnswerAPI = {
+  ...streamAnswerAPIStateMock,
+  tabSet: {},
+  configuration: {
+    ...streamAnswerAPIStateMock.configuration,
+    analytics: {
+      ...streamAnswerAPIStateMock.configuration.analytics,
+      originLevel2: '',
+    },
+  },
+};
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1411,4 +1442,15 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+};
+
+export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
+  ...expectedStreamAnswerAPIParam,
+  cq: '@fileType=html AND cq-test-query',
+  tab: 'default',
+};
+
+export const expectedStreamAnswerAPIParamWithoutAnyTab = {
+  ...expectedStreamAnswerAPIParam,
+  tab: '',
 };

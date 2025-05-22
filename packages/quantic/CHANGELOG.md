@@ -1,3 +1,82 @@
+## 3.21.0 (2025-05-15)
+
+- test(quantic): unit tests and e2e tests for quantic category facet added (#5281) ([1adaa33](https://github.com/coveo/ui-kit/commits/1adaa33)), closes [#5281](https://github.com/coveo/ui-kit/issues/5281)
+- feat(quantic): aligning styling of example insight panel with the hosted insight panel (#5262) ([2d65609](https://github.com/coveo/ui-kit/commits/2d65609)), closes [#5262](https://github.com/coveo/ui-kit/issues/5262)
+
+## <small>3.20.1 (2025-05-08)</small>
+
+- test(quantic): added unit tests for quantic aria live (#5263) ([6c67544](https://github.com/coveo/ui-kit/commits/6c67544)), closes [#5263](https://github.com/coveo/ui-kit/issues/5263)
+- test(quantic): playwright tests for notify trigger (#5210) ([a2f9cb2](https://github.com/coveo/ui-kit/commits/a2f9cb2)), closes [#5210](https://github.com/coveo/ui-kit/issues/5210)
+- fix(quantic): Generated Answer doesn't display correct formatted answers (#5248) ([7a86cc5](https://github.com/coveo/ui-kit/commits/7a86cc5)), closes [#5248](https://github.com/coveo/ui-kit/issues/5248)
+- chore(quantic): added logic to support sharding (#5212) ([b7dcf2c](https://github.com/coveo/ui-kit/commits/b7dcf2c)), closes [#5212](https://github.com/coveo/ui-kit/issues/5212)
+
+## 3.20.0 (2025-04-30)
+
+- [Version Bump][skip ci]: ui-kit publish ([084ad17](https://github.com/coveo/ui-kit/commits/084ad17))
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- [Version Bump][skip ci]: ui-kit publish ([4c08d65](https://github.com/coveo/ui-kit/commits/4c08d65))
+- [Version Bump][skip ci]: ui-kit publish ([d9abb20](https://github.com/coveo/ui-kit/commits/d9abb20))
+- [Version Bump][skip ci]: ui-kit publish ([ea556e6](https://github.com/coveo/ui-kit/commits/ea556e6))
+- [Version Bump][skip ci]: ui-kit publish ([2110a9e](https://github.com/coveo/ui-kit/commits/2110a9e))
+- [Version Bump][skip ci]: ui-kit publish ([c2ba448](https://github.com/coveo/ui-kit/commits/c2ba448))
+- [Version Bump][skip ci]: ui-kit publish ([e8b1c6a](https://github.com/coveo/ui-kit/commits/e8b1c6a))
+- [Version Bump][skip ci]: ui-kit publish ([05f5f59](https://github.com/coveo/ui-kit/commits/05f5f59))
+- chore(atomic,quantic): move tests scripts orchestrations to nx (#5197) ([22bf157](https://github.com/coveo/ui-kit/commits/22bf157)), closes [#5197](https://github.com/coveo/ui-kit/issues/5197)
+- feat(headless, quantic): added logic to automatically fetch insight interface when building an insig ([f34191b](https://github.com/coveo/ui-kit/commits/f34191b)), closes [#5187](https://github.com/coveo/ui-kit/issues/5187)
+- fix(headless, atomic): ensure components are enabled/disabled correctly when an invalid tab id is pr ([1a6fc46](https://github.com/coveo/ui-kit/commits/1a6fc46)), closes [#4944](https://github.com/coveo/ui-kit/issues/4944)
+- test(quantic): add playwright tests for result quickview (#5087) ([eb657c0](https://github.com/coveo/ui-kit/commits/eb657c0)), closes [#5087](https://github.com/coveo/ui-kit/issues/5087)
+- test(quantic): added unit tests and e2e for quantic numeric facet component (#5186) ([67ba0ef](https://github.com/coveo/ui-kit/commits/67ba0ef)), closes [#5186](https://github.com/coveo/ui-kit/issues/5186)
+- test(quantic): added unit tests and e2e for quantic timeframe facet (#5208) ([f41ed31](https://github.com/coveo/ui-kit/commits/f41ed31)), closes [#5208](https://github.com/coveo/ui-kit/issues/5208)
+- test(quantic): document suggestion e2e (#5176) ([f855ccd](https://github.com/coveo/ui-kit/commits/f855ccd)), closes [#5176](https://github.com/coveo/ui-kit/issues/5176)
+- test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)
+- test(quantic): e2e tests and unit tests added for quantic facet (#5141) ([0de4aa9](https://github.com/coveo/ui-kit/commits/0de4aa9)), closes [#5141](https://github.com/coveo/ui-kit/issues/5141)
+- test(quantic): e2e tests and unit tests added for the QuanticDidYouMean component (#5175) ([320e70e](https://github.com/coveo/ui-kit/commits/320e70e)), closes [#5175](https://github.com/coveo/ui-kit/issues/5175)
+- test(quantic): Playwright migration for quantic result copy to clipboard E2E tests (#5182) ([76e518c](https://github.com/coveo/ui-kit/commits/76e518c)), closes [#5182](https://github.com/coveo/ui-kit/issues/5182)
+- test(quantic): quantic placeholder cypress to jest tests (#5104) ([1bddb93](https://github.com/coveo/ui-kit/commits/1bddb93)), closes [#5104](https://github.com/coveo/ui-kit/issues/5104)
+- test(quantic): query summary tests (#5183) ([2e375b7](https://github.com/coveo/ui-kit/commits/2e375b7)), closes [#5183](https://github.com/coveo/ui-kit/issues/5183)
+- chore: author & sign generated ci commit (#5149) ([1c22fb1](https://github.com/coveo/ui-kit/commits/1c22fb1)), closes [#5149](https://github.com/coveo/ui-kit/issues/5149)
+- chore(quantic): disable debug on jsdoc (#5134) ([6a3e2f5](https://github.com/coveo/ui-kit/commits/6a3e2f5)), closes [#5134](https://github.com/coveo/ui-kit/issues/5134)
+- chore(quantic): ensure directory exist when writing doc (#5136) ([a06dcac](https://github.com/coveo/ui-kit/commits/a06dcac)), closes [#5136](https://github.com/coveo/ui-kit/issues/5136)
+- chore(quantic): folder solutionExamples created for a better structure (#5196) ([6da5350](https://github.com/coveo/ui-kit/commits/6da5350)), closes [#5196](https://github.com/coveo/ui-kit/issues/5196)
+- feat(quantic): quantic insight summary component created (#5185) ([5c00d33](https://github.com/coveo/ui-kit/commits/5c00d33)), closes [#5185](https://github.com/coveo/ui-kit/issues/5185)
+- feat(quantic): added origin context to quantic insight interface (#5142) ([4cde171](https://github.com/coveo/ui-kit/commits/4cde171)), closes [#5142](https://github.com/coveo/ui-kit/issues/5142)
+- fix(quantic): added name attribute to the Quantic tab component (#5130) ([bbb3096](https://github.com/coveo/ui-kit/commits/bbb3096)), closes [#5130](https://github.com/coveo/ui-kit/issues/5130)
+- fix(quantic): breadcrumb value not displayed for date and numeric filters (#5145) ([dcaf869](https://github.com/coveo/ui-kit/commits/dcaf869)), closes [#5145](https://github.com/coveo/ui-kit/issues/5145) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js#L340-L344](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticNumericFacet/quanticNumericFacet.js/issues/L340-L344) [/github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js#L490-L492](https://github.com//github.com/coveo/ui-kit/blob/bbb30961fedc4168dcae81aad561f5c864d7c4a5/packages/quantic/force-app/main/default/lwc/quanticTimeframeFacet/quanticTimeframeFacet.js/issues/L490-L492)
+- fix(quantic): handle corner-cases for ResultsPerPage (#5096) ([c006fbe](https://github.com/coveo/ui-kit/commits/c006fbe)), closes [#5096](https://github.com/coveo/ui-kit/issues/5096)
+- fix(quantic): improved condition that indicates when to display timeframe facet (#5143) ([591167c](https://github.com/coveo/ui-kit/commits/591167c)), closes [#5143](https://github.com/coveo/ui-kit/issues/5143)
+- fix(quantic): made sure test folders are excluded from quantic npm package (#5108) ([9c01cf6](https://github.com/coveo/ui-kit/commits/9c01cf6)), closes [#5108](https://github.com/coveo/ui-kit/issues/5108)
+- fix(quantic): unneeded key attribute removed from quantic number button element (#5107) ([980d6b5](https://github.com/coveo/ui-kit/commits/980d6b5)), closes [#5107](https://github.com/coveo/ui-kit/issues/5107)
+- ci: more explicit nx build cache (#5051) ([8170c8b](https://github.com/coveo/ui-kit/commits/8170c8b)), closes [#5051](https://github.com/coveo/ui-kit/issues/5051) [/github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json#L48](https://github.com//github.com/coveo/ui-kit/blob/0bb6ae688ed45139dc67cdb21e2691d6ea741e96/nx.json/issues/L48)
+
+## 3.19.0 (2025-04-30)
+
+- [Version Bump][skip ci]: ui-kit publish ([dd9325e](https://github.com/coveo/ui-kit/commits/dd9325e))
+- chore(atomic,quantic): move tests scripts orchestrations to nx (#5197) ([22bf157](https://github.com/coveo/ui-kit/commits/22bf157)), closes [#5197](https://github.com/coveo/ui-kit/issues/5197)
+- feat(headless, quantic): added logic to automatically fetch insight interface when building an insig ([f34191b](https://github.com/coveo/ui-kit/commits/f34191b)), closes [#5187](https://github.com/coveo/ui-kit/issues/5187)
+- test(quantic): added unit tests and e2e for quantic numeric facet component (#5186) ([67ba0ef](https://github.com/coveo/ui-kit/commits/67ba0ef)), closes [#5186](https://github.com/coveo/ui-kit/issues/5186)
+- test(quantic): added unit tests and e2e for quantic timeframe facet (#5208) ([f41ed31](https://github.com/coveo/ui-kit/commits/f41ed31)), closes [#5208](https://github.com/coveo/ui-kit/issues/5208)
+- test(quantic): document suggestion e2e (#5176) ([f855ccd](https://github.com/coveo/ui-kit/commits/f855ccd)), closes [#5176](https://github.com/coveo/ui-kit/issues/5176)
+- test(quantic): Playwright migration for quantic result copy to clipboard E2E tests (#5182) ([76e518c](https://github.com/coveo/ui-kit/commits/76e518c)), closes [#5182](https://github.com/coveo/ui-kit/issues/5182)
+- test(quantic): query summary tests (#5183) ([2e375b7](https://github.com/coveo/ui-kit/commits/2e375b7)), closes [#5183](https://github.com/coveo/ui-kit/issues/5183)
+- chore(quantic): folder solutionExamples created for a better structure (#5196) ([6da5350](https://github.com/coveo/ui-kit/commits/6da5350)), closes [#5196](https://github.com/coveo/ui-kit/issues/5196)
+- feat(quantic): quantic insight summary component created (#5185) ([5c00d33](https://github.com/coveo/ui-kit/commits/5c00d33)), closes [#5185](https://github.com/coveo/ui-kit/issues/5185)
+
+## 3.18.0 (2025-04-30)
+
+- test(quantic): added unit tests and e2e for quantic numeric facet component (#5186) ([67ba0ef](https://github.com/coveo/ui-kit/commits/67ba0ef)), closes [#5186](https://github.com/coveo/ui-kit/issues/5186)
+- test(quantic): added unit tests and e2e for quantic timeframe facet (#5208) ([f41ed31](https://github.com/coveo/ui-kit/commits/f41ed31)), closes [#5208](https://github.com/coveo/ui-kit/issues/5208)
+- test(quantic): document suggestion e2e (#5176) ([f855ccd](https://github.com/coveo/ui-kit/commits/f855ccd)), closes [#5176](https://github.com/coveo/ui-kit/issues/5176)
+- test(quantic): Playwright migration for quantic result copy to clipboard E2E tests (#5182) ([76e518c](https://github.com/coveo/ui-kit/commits/76e518c)), closes [#5182](https://github.com/coveo/ui-kit/issues/5182)
+- test(quantic): query summary tests (#5183) ([2e375b7](https://github.com/coveo/ui-kit/commits/2e375b7)), closes [#5183](https://github.com/coveo/ui-kit/issues/5183)
+- chore(atomic,quantic): move tests scripts orchestrations to nx (#5197) ([22bf157](https://github.com/coveo/ui-kit/commits/22bf157)), closes [#5197](https://github.com/coveo/ui-kit/issues/5197)
+- feat(headless, quantic): added logic to automatically fetch insight interface when building an insig ([f34191b](https://github.com/coveo/ui-kit/commits/f34191b)), closes [#5187](https://github.com/coveo/ui-kit/issues/5187)
+- chore(quantic): folder solutionExamples created for a better structure (#5196) ([6da5350](https://github.com/coveo/ui-kit/commits/6da5350)), closes [#5196](https://github.com/coveo/ui-kit/issues/5196)
+- feat(quantic): quantic insight summary component created (#5185) ([5c00d33](https://github.com/coveo/ui-kit/commits/5c00d33)), closes [#5185](https://github.com/coveo/ui-kit/issues/5185)
+
+## <small>3.17.1 (2025-04-23)</small>
+
+- test(quantic): e2e tests and unit tests added for the QuanticDidYouMean component (#5175) ([320e70e](https://github.com/coveo/ui-kit/commits/320e70e)), closes [#5175](https://github.com/coveo/ui-kit/issues/5175)
+
 ## 3.17.0 (2025-04-16)
 
 - test(quantic): document suggestion jest tests (#5146) ([da8cb20](https://github.com/coveo/ui-kit/commits/da8cb20)), closes [#5146](https://github.com/coveo/ui-kit/issues/5146)
