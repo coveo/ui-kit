@@ -1,5 +1,6 @@
 import {defineCustomElements, atomicVersion, headlessVersion} from './index.js';
 
-window.CoveoAtomic = {version: atomicVersion, headlessVersion: headlessVersion};
+export {atomicVersion, headlessVersion};
 
+window.CoveoAtomic = {version: atomicVersion, headlessVersion: headlessVersion};
 defineCustomElements();
