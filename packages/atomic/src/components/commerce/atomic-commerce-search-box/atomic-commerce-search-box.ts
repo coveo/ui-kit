@@ -27,7 +27,7 @@ import {
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {classMap} from 'lit/directives/class-map.js';
-import {ref, RefOrCallback} from 'lit/directives/ref.js';
+import {createRef, ref, RefOrCallback} from 'lit/directives/ref.js';
 import {
   isFocusingOut,
   once,
@@ -35,9 +35,9 @@ import {
   spreadProperties,
 } from '../../../utils/utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
-import {searchBoxTextArea} from '../../common/search-box/search-box-text-area';
-import {wrapper} from '../../common/search-box/search-box-wrapper';
-import {submitButton} from '../../common/search-box/submit-button';
+import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
+import {renderSubmitButton} from '../../common/search-box/submit-button';
 import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
   elementHasQuery,
@@ -111,7 +111,7 @@ export class AtomicCommerceSearchBox
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
 
   #originalChildren: Array<Element>;
-  private textAreaRef!: HTMLTextAreaElement;
+  private textAreaRef = createRef<HTMLTextAreaElement>();
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
@@ -515,8 +515,8 @@ export class AtomicCommerceSearchBox
   }
 
   private triggerTextAreaChange(value: string) {
-    this.textAreaRef.value = value;
-    this.textAreaRef.dispatchEvent(new window.Event('change'));
+    this.textAreaRef.value!.value = value;
+    this.textAreaRef.value!.dispatchEvent(new window.Event('change'));
   }
 
   private announceNewActiveSuggestionToScreenReader() {
@@ -564,12 +564,9 @@ export class AtomicCommerceSearchBox
   }
 
   private renderTextBox() {
-    return html`${searchBoxTextArea({
+    return html`${renderSearchBoxTextArea({
       props: {
         textAreaRef: this.textAreaRef,
-        ref: (el) => {
-          this.textAreaRef = el as HTMLTextAreaElement;
-        },
         loading: this.searchBoxState.isLoading,
         i18n: this.bindings.i18n,
         value: this.searchBoxState.value,
@@ -715,7 +712,7 @@ export class AtomicCommerceSearchBox
 
     return html`
       ${this.renderAbsolutePositionSpacer()}
-      ${wrapper({
+      ${renderSearchBoxWrapper({
         props: {
           disabled: this.isSearchDisabledForEndUser,
           onFocusout: (event) => {
@@ -728,7 +725,7 @@ export class AtomicCommerceSearchBox
         },
       })(
         html`${this.renderTextBox()}
-        ${submitButton({
+        ${renderSubmitButton({
           props: {
             i18n: this.bindings.i18n,
             disabled: this.isSearchDisabledForEndUser,

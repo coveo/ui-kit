@@ -308,6 +308,7 @@ export class SuggestionManager<SearchBoxController> {
 
     const parentOfActiveDescendant =
       this.activeDescendantElement?.parentElement;
+
     return (
       parentOfActiveDescendant?.previousElementSibling?.firstChild ||
       this.firstValue?.firstChild
