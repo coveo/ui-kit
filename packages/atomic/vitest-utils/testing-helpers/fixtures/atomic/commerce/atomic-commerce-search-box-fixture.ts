@@ -88,8 +88,11 @@ export const defaultBindings = {
       value: '',
     },
     selectSuggestion: vi.fn(),
+    updateText: vi.fn(),
+    submit: vi.fn(),
   } as unknown as SearchBox | StandaloneSearchBox,
   getSuggestions: vi.fn(() => Array(1)),
+  triggerSuggestions: vi.fn(),
 };
 
 defaultBindings satisfies Partial<CommerceSearchBoxBindings>;
