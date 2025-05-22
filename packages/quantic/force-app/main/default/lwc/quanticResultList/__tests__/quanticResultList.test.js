@@ -126,7 +126,7 @@ describe('c-quantic-result-list', () => {
     isInitialized = false;
   });
 
-  describe('constroller initialization', () => {
+  describe('controller initialization', () => {
     beforeEach(() => {
       mockSuccessfulHeadlessInitialization();
       prepareHeadlessState();
@@ -146,6 +146,7 @@ describe('c-quantic-result-list', () => {
         }
       );
       expect(functionsMocks.resultsListSubscriber).toHaveBeenCalledTimes(1);
+
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
         exampleEngine
@@ -153,11 +154,13 @@ describe('c-quantic-result-list', () => {
       expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
         1
       );
+
       expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledTimes(1);
       expect(functionsMocks.buildResultsPerPage).toHaveBeenCalledWith(
         exampleEngine
       );
       expect(functionsMocks.resultsPerPageSubscriber).toHaveBeenCalledTimes(1);
+
       expect(functionsMocks.buildResultTemplatesManager).toHaveBeenCalledTimes(
         1
       );
