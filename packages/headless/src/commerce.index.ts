@@ -34,6 +34,7 @@ export type {
   CommerceEngineOptions,
 } from './app/commerce-engine/commerce-engine.js';
 export {buildCommerceEngine} from './app/commerce-engine/commerce-engine.js';
+export type {CommerceAnalyticsConfiguration as AnalyticsConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 export {getSampleCommerceEngineConfiguration} from './app/commerce-engine/commerce-engine-configuration.js';
 
 export type {
@@ -43,7 +44,6 @@ export type {
 } from './app/engine.js';
 export type {
   EngineConfiguration,
-  AnalyticsConfiguration,
   AnalyticsRuntimeEnvironment,
 } from './app/engine-configuration.js';
 export type {LogLevel, LoggerOptions} from './app/logger.js';

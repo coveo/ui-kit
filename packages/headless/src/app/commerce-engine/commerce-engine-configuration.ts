@@ -10,7 +10,7 @@ import {
   engineConfigurationDefinitions,
 } from '../engine-configuration.js';
 
-type CommerceAnalyticsConfiguration = Pick<
+export type CommerceAnalyticsConfiguration = Pick<
   AnalyticsConfiguration,
   'enabled' | 'proxyBaseUrl' | 'source'
 > &
