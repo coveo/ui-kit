@@ -5,6 +5,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {},
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "devDependencies": {
     "@coveo/atomic": "*",
     "@coveo/atomic-hosted-page": "*",
