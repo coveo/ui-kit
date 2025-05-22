@@ -76,12 +76,8 @@ export class AtomicTabManager {
       });
 
       this.tabs.push({
-        label: this.bindings.i18n.t(tabElement.label, {
-          defaultValue: tabElement.label,
-        }),
-        name: this.bindings.i18n.t(tabElement.name, {
-          defaultValue: tabElement.name,
-        }),
+        label: tabElement.label,
+        name: tabElement.name,
         tabController,
       });
     });
@@ -100,7 +96,9 @@ export class AtomicTabManager {
             {this.tabs.map((tab) => (
               <atomic-tab-button
                 active={this.tabManagerState.activeTab === tab.name}
-                label={tab.label}
+                label={this.bindings.i18n.t(tab.label, {
+                  defaultValue: tab.label,
+                })}
                 select={() => {
                   if (!tab.tabController.state.isActive) {
                     tab.tabController.select();
