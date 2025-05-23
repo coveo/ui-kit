@@ -15,6 +15,11 @@ describe('carousel', () => {
   });
 
   const locators = {
+    get carousel() {
+      return page.getByRole('region', {
+        name: 'carousel',
+      });
+    },
     get previousButton() {
       return page.getByRole('button', {
         name: 'previous',
@@ -54,6 +59,7 @@ describe('carousel', () => {
       nextPage: vi.fn(),
       numberOfPages: 3,
       currentPage: 0,
+      ariaLabel: 'carousel',
     };
     const mergedProps = {...defaultProps, ...props};
     return renderFunctionFixture(
@@ -98,6 +104,11 @@ describe('carousel', () => {
     );
   });
 
+  it('should have the proper aria-label for the carousel container', async () => {
+    await renderComponent();
+    expect(locators.carousel).toHaveAttribute('aria-label', 'carousel');
+  });
+
   it('should have the correct part attribute for the "previous" button', async () => {
     await renderComponent();
     const showMoreButton = locators.previousButton;
@@ -112,11 +123,11 @@ describe('carousel', () => {
 
   it('should have the correct part attribute for the icon', async () => {
     await renderComponent();
-    await expect(locators.previousButtonIcon).toHaveAttribute(
+    expect(locators.previousButtonIcon).toHaveAttribute(
       'part',
       'previous-icon'
     );
-    await expect(locators.nextButtonIcon).toHaveAttribute('part', 'next-icon');
+    expect(locators.nextButtonIcon).toHaveAttribute('part', 'next-icon');
   });
 
   it('should call #previousPage when the previous button is clicked', async () => {
