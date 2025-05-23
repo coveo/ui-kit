@@ -1,7 +1,7 @@
 const {resolve} = require('path');
 
 module.exports = {
-  ignorePatterns: ['dist', 'temp', 'ponyfills', 'src/external-builds/**/*'],
+  ignorePatterns: ['dist', 'cdn', 'temp', 'ponyfills', 'src/external-builds/**/*'],
   plugins: ['canonical'],
   settings: {
     'import/parsers': {
