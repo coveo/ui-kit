@@ -17,7 +17,7 @@ import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
   InstantItemShowAllButton,
-} from '../../../common/suggestions/instant-item';
+} from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
