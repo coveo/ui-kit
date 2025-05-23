@@ -289,23 +289,6 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
   );
 });
 
-const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
-  const [useCase, entryPoint] = entry;
-  const dir = getUseCaseDir('dist/', useCase);
-  const outfile = `${dir}/headless.esm.js`;
-
-  return buildNodeConfig(
-    {
-      entryPoints: [entryPoint],
-      outfile,
-      sourcemap: true,
-      format: 'esm',
-      mainFields: ['module', 'main'],
-    },
-    dir
-  );
-});
-
 /**
  * @param {import('esbuild').BuildOptions} options
  * @returns {Promise<import('esbuild').BuildResult>}
@@ -337,13 +320,7 @@ function outputMetafile(platform, outDir, metafile) {
 }
 
 async function main() {
-  await Promise.all([
-    ...browserEsm,
-    ...browserUmd,
-    ...nodeEsm,
-    ...nodeCjs,
-    ...quanticUmd,
-  ]);
+  await Promise.all([...browserEsm, ...browserUmd, ...nodeCjs, ...quanticUmd]);
 }
 
 main();
