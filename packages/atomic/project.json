@@ -81,7 +81,15 @@
     "web:dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "node ./scripts/start-vite.mjs",
+        "command": "npx vite serve dev",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "web:cdn": {
+      "dependsOn": ["cdn:deploy"],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["node ./scripts/start-cdn.mjs"],
         "cwd": "{projectRoot}"
       }
     },
