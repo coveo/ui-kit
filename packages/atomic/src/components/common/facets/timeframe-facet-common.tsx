@@ -19,7 +19,6 @@ import {randomID} from '../../../utils/stencil-utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';
-import {shouldDisplayInputForFacetRange} from './facet-common';
 import {FacetInfo} from './facet-common-store';
 import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
@@ -28,6 +27,7 @@ import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-valu
 import {FacetValueLink} from './facet-value-link/facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
 import {initializePopover} from './popover/popover-type';
+import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
 
 export interface Timeframe {
   period: RelativeDatePeriod;
