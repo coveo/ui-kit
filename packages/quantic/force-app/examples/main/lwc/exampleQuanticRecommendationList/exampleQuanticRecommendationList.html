@@ -7,6 +7,7 @@
   >
     <div slot="configuration">
       <c-configurator options={options} ontryitnow={handleTryItNow}>
+        <c-action-perform-recommendation-search slot="actions" disabled={notConfigured} engine-id={engineId}></c-action-perform-recommendation-search>
       </c-configurator>
     </div>
 

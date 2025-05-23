@@ -20,21 +20,23 @@ export const RecommendationListSelectors: RecommendationListSelector &
 
   placeholders: () =>
     RecommendationListSelectors.get().find(
-      '[data-cy="recommendations__placeholder"]'
+      '[data-testid="recommendations__placeholder"]'
     ),
   recommendations: () =>
-    RecommendationListSelectors.get().find('[data-cy="recommendations__item"]'),
+    RecommendationListSelectors.get().find(
+      '[data-testid="recommendations__item"]'
+    ),
   label: (headingLevel: number) =>
     RecommendationListSelectors.get().find(
-      `[data-cy="recommendations__label"] h${headingLevel}`
+      `[data-testid="recommendations__label"] h${headingLevel}`
     ),
   recommendationLinks: () =>
     RecommendationListSelectors.get().find(
-      '[data-cy="recommendations__item"] [data-cy="result-link"] a'
+      '[data-testid="recommendations__item"] [data-testid="result-link"] a'
     ),
   carousel: () =>
     RecommendationListSelectors.get().find(
-      '[data-cy="recommendations__carousel"]'
+      '[data-testid="recommendations__carousel"]'
     ),
   componentError: () =>
     RecommendationListSelectors.get().find('c-quantic-component-error'),
