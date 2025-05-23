@@ -429,6 +429,9 @@ export class AtomicCommerceRecommendationList
                 nextPage: () => this.nextPage(),
                 numberOfPages: this.numberOfPages,
                 currentPage: this.currentPage,
+                ariaLabel: this.bindings.i18n.t(
+                  this.recommendationsState.headline
+                ),
               },
             })(
               html`<div class="px-3">${this.renderRecommendationList()}</div>`
