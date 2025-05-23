@@ -27,7 +27,7 @@ import {CategoryFacetSearchResultsContainer} from '../../../common/facets/catego
 import {CategoryFacetSearchValue} from '../../../common/facets/category-facet/search-value';
 import {CategoryFacetTreeValueContainer} from '../../../common/facets/category-facet/value-as-tree-container';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
@@ -37,7 +37,7 @@ import {
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
-import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/facet-show-more-less';
+import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';

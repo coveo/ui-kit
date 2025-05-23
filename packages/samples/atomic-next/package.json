@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@coveo/atomic": "3.24.0",
-    "@coveo/atomic-react": "3.2.38",
-    "@coveo/headless": "3.23.1",
+    "@coveo/atomic": "3.24.3",
+    "@coveo/atomic-react": "3.2.41",
+    "@coveo/headless": "3.24.1",
     "next": "15.2.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -18,7 +18,7 @@
     "cypress": "13.7.3",
     "cypress-repeat": "2.3.8",
     "ncp": "2.0.0",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "scripts": {
     "build": "nx build",

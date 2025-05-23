@@ -13,8 +13,29 @@ export class SearchObject {
     return this.page.locator('c-action-perform-search button');
   }
 
+  get searchInput(): Locator {
+    return this.page.locator('c-action-perform-search input');
+  }
+
+  async fillSearchInput(query: string): Promise<void> {
+    await this.searchInput.fill(query);
+  }
+
   async performSearch(): Promise<void> {
     await this.performSearchButton.click();
+  }
+
+  async triggerSearchWithInput(query: string): Promise<void> {
+    await this.fillSearchInput(query);
+    await this.performSearch();
+  }
+
+  async waitForSearchResponse(): Promise<Response> {
+    return this.page.waitForResponse(this.searchRequestRegex);
+  }
+
+  async waitForSearchRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.searchRequestRegex);
   }
 
   get performRecommendationSearchButton(): Locator {
@@ -25,20 +46,12 @@ export class SearchObject {
     await this.performRecommendationSearchButton.click();
   }
 
-  async waitForSearchResponse(): Promise<Response> {
-    return this.page.waitForResponse(this.searchRequestRegex);
-  }
-
   async interceptSearchIndefinitely(): Promise<() => void> {
     return new Promise((resolve) => {
       this.page.route(this.searchRequestRegex, async (route) => {
         resolve(() => route.continue());
       });
     });
-  }
-
-  async waitForSearchRequest(): Promise<Request> {
-    return this.page.waitForRequest(this.searchRequestRegex);
   }
 
   async mockSearchWithGenerativeQuestionAnsweringId(streamId: string) {

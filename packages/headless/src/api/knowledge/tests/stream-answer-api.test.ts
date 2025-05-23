@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
 import {EventSourceMessage} from '../../../utils/fetch-event-source/parse';
 import {
   constructAnswerQueryParams,
@@ -9,9 +10,15 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -26,27 +33,28 @@ describe('#streamAnswerApi', () => {
     it('returns the correct query params with fetch usage', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'fetch'
+        'fetch',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
     it('should create the right selector when usage is select', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMock as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
     });
 
     it('should merge tab expression in request constant query when expression is not a blank string', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithATabWithAnExpression as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(
@@ -55,13 +63,54 @@ describe('#streamAnswerApi', () => {
     });
 
     it('should not include tab info when there is NO tab', () => {
-      vi.useFakeTimers().setSystemTime(new Date('2024-01-01'));
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithoutAnyTab as any,
-        'select'
+        'select',
+        buildMockNavigatorContextProvider()()
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
+    });
+
+    it('should merge filter expressions in request constant query when expression is selected', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersSelected
+      );
+    });
+
+    it('should not include filter info when there is NO filter', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should not include non-selected filters and empty filters', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithNonValidFilters as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge multiple filter expressions and a tab expression', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
     });
   });
 
