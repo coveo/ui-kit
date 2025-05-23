@@ -16,7 +16,7 @@ export class BasePageObject<
   }
 
   get urlRoot() {
-    return 'http://localhost:4400/iframe.html';
+    return './iframe.html';
   }
 
   async load({
