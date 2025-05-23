@@ -9,7 +9,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "npx tsc -p tsconfig.json"
+    "build": "nx build"
   },
   "devDependencies": {
     "@types/react": "18.3.20",

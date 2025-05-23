@@ -1,0 +1,15 @@
+{
+  "name": "shared-typedoc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true,
+      "options": {
+        "commands": ["tsc -p tsconfig.json"],
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}
