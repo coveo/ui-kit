@@ -42,7 +42,7 @@
     },
     "./ssr": {
       "types": "./dist/definitions/ssr.index.d.ts",
-      "import": "./dist/esm/ssr/index.js",
+      "import": "./dist/esm/ssr.index.js",
       "require": "./dist/cjs/ssr/headless.cjs",
       "default": "./dist/esm/ssr.index.js"
     },
