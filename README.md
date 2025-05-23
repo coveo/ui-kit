@@ -45,6 +45,8 @@ To start Atomic & Headless simultaneously in development (recommended), run:
 npx nx run atomic:dev
 ```
 
+Add the `--stencil` switch if you are changing stencil files.
+
 To start a single project in development (for instance, the `quantic` package), run:
 
 ```sh
