@@ -12,42 +12,49 @@
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
+      "coveoInternalCDN": "./cdn/headless.esm.js",
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/headless.cjs",
       "default": "./dist/esm/index.js"
     },
     "./case-assist": {
       "types": "./dist/definitions/case-assist.index.d.ts",
+      "coveoInternalCDN": "./cdn/case-assist/headless.esm.js",
       "import": "./dist/esm/case-assist.index.js",
       "require": "./dist/cjs/case-assist/headless.cjs",
       "default": "./dist/esm/case-assist.index.js"
     },
     "./commerce": {
       "types": "./dist/definitions/commerce.index.d.ts",
+      "coveoInternalCDN": "./cdn/commerce/headless.esm.js",
       "import": "./dist/esm/commerce.index.js",
       "require": "./dist/cjs/commerce/headless.cjs",
       "default": "./dist/esm/commerce.index.js"
     },
     "./insight": {
       "types": "./dist/definitions/insight.index.d.ts",
+      "coveoInternalCDN": "./cdn/insight/headless.esm.js",
       "import": "./dist/esm/insight.index.js",
       "require": "./dist/cjs/insight/headless.cjs",
       "default": "./dist/esm/insight.index.js"
     },
     "./recommendation": {
       "types": "./dist/definitions/recommendation.index.d.ts",
+      "coveoInternalCDN": "./cdn/recommendation/headless.esm.js",
       "import": "./dist/esm/recommendation.index.js",
       "require": "./dist/cjs/recommendation/headless.cjs",
       "default": "./dist/esm/recommendation.index.js"
     },
     "./ssr": {
       "types": "./dist/definitions/ssr.index.d.ts",
+      "coveoInternalCDN": "./cdn/ssr/headless.esm.js",
       "import": "./dist/esm/ssr.index.js",
       "require": "./dist/cjs/ssr/headless.cjs",
       "default": "./dist/esm/ssr.index.js"
     },
     "./ssr-commerce": {
       "types": "./dist/definitions/ssr-commerce.index.d.ts",
+      "coveoInternalCDN": "./cdn/ssr-commerce/headless.esm.js",
       "import": "./dist/esm/ssr-commerce.index.js",
       "require": "./dist/cjs/ssr-commerce/headless.cjs",
       "default": "./dist/esm/ssr-commerce.index.js"
