@@ -22,7 +22,7 @@ export const renderDisplayWrapper: FunctionalComponentWithChildren<
     );
 };
 
-const renderListWrapper: FunctionalComponentWithChildren<
+export const renderListWrapper: FunctionalComponentWithChildren<
   Pick<DisplayWrapperProps, 'listClasses'>
 > = ({props}) => {
   const {listClasses} = props;
