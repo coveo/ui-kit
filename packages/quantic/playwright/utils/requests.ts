@@ -60,10 +60,10 @@ export function isCollectEvent(request: Request): boolean {
 }
 
 /**
- * Indicates whether the specified request corresponds to a Events request.
+ * Indicates whether the specified request corresponds to an Event Protocol request.
  * @param request The request to check.
  */
-export function isUaEventsEvent(request: Request): boolean {
+export function isEventProtocol(request: Request): boolean {
   return (
     request.method() === 'POST' && analyticsEventsUrlRegex.test(request.url())
   );

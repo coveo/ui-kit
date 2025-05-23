@@ -1,7 +1,7 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {
   isUaClickEvent,
-  isUaEventsEvent,
+  isEventProtocol,
 } from '../../../../../../playwright/utils/requests';
 
 export class DocumentSuggestionObject {
@@ -39,7 +39,7 @@ export class DocumentSuggestionObject {
     return this.page.waitForRequest((request) => {
       return (
         (mode === 'legacy' && isUaClickEvent(request)) ||
-        (mode === 'next' && isUaEventsEvent(request))
+        (mode === 'next' && isEventProtocol(request))
       );
     });
   }
