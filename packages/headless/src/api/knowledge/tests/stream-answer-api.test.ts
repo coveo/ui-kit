@@ -10,9 +10,15 @@ import {
   expectedStreamAnswerAPIParam,
   expectedStreamAnswerAPIParamWithATabWithAnExpression,
   expectedStreamAnswerAPIParamWithoutAnyTab,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
+  expectedStreamAnswerAPIParamWithStaticFiltersSelected,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
+  streamAnswerAPIStateMockWithoutAnyFilters,
   streamAnswerAPIStateMockWithoutAnyTab,
+  streamAnswerAPIStateMockWithNonValidFilters,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+  streamAnswerAPIStateMockWithStaticFiltersSelected,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -64,6 +70,47 @@ describe('#streamAnswerApi', () => {
       );
 
       expect(queryParams).toEqual(expectedStreamAnswerAPIParamWithoutAnyTab);
+    });
+
+    it('should merge filter expressions in request constant query when expression is selected', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersSelected as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersSelected
+      );
+    });
+
+    it('should not include filter info when there is NO filter', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutAnyFilters as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should not include non-selected filters and empty filters', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithNonValidFilters as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(expectedStreamAnswerAPIParam);
+    });
+
+    it('should merge multiple filter expressions and a tab expression', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpression as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
     });
   });
 

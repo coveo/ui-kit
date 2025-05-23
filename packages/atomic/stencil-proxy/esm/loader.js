@@ -6,4 +6,5 @@ const defineCustomElements = function (...args) {
 };
 
 export * from './_loader.js';
+export * from './version.js';
 export {defineCustomElements};

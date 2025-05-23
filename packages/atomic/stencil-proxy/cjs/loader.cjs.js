@@ -34,5 +34,5 @@ exportModule.defineCustomElements = function (...args) {
   );
   originalDefineCustomElements(...args);
 };
-
+Object.assign(exportModule, require('./version.cjs.js'));
 module.exports = exportModule;

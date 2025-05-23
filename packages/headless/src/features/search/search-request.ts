@@ -12,6 +12,7 @@ import {RangeFacetSetState} from '../facets/range-facets/generic/interfaces/rang
 import {maximumNumberOfResultsFromIndex} from '../pagination/pagination-constants.js';
 import {buildSearchAndFoldingLoadCollectionRequest as legacyBuildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/legacy/search-and-folding-request.js';
 import {buildSearchAndFoldingLoadCollectionRequest} from '../search-and-folding/search-and-folding-request.js';
+import {selectStaticFilterExpressions} from '../static-filter-set/static-filter-set-selectors.js';
 import {mapSearchRequest} from './search-mappings.js';
 
 type StateNeededBySearchRequest = ConfigurationSection &
@@ -182,21 +183,9 @@ function buildConstantQuery(state: StateNeededBySearchRequest) {
     (tab) => tab.isActive
   );
   const tabExpression = activeTab?.expression.trim() || '';
-  const filterExpressions = getStaticFilterExpressions(state);
+  const filterExpressions = selectStaticFilterExpressions(state);
 
   return [cq, tabExpression, ...filterExpressions]
     .filter((expression) => !!expression)
     .join(' AND ');
-}
-
-function getStaticFilterExpressions(state: StateNeededBySearchRequest) {
-  const filters = Object.values(state.staticFilterSet || {});
-  return filters.map((filter) => {
-    const selected = filter.values.filter(
-      (value) => value.state === 'selected' && !!value.expression.trim()
-    );
-
-    const expression = selected.map((value) => value.expression).join(' OR ');
-    return selected.length > 1 ? `(${expression})` : expression;
-  });
 }

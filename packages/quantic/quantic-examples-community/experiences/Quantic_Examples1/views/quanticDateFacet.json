@@ -1,0 +1,81 @@
+{
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "componentName": "siteforce:dynamicLayout",
+  "dataProviders": [],
+  "id": "69d39b98-76f7-45fe-af9f-6538e19f0359",
+  "label": "Quantic Date Facet",
+  "regions": [
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "background": "background: rgba(0,0,0,0)",
+            "backgroundOverlay": "rgba(0,0,0,0.5)",
+            "contentAreaWidth": 100,
+            "sectionConfig": {
+              "UUID": "f4871b90-8dd0-4aba-afa3-5a6231e01937",
+              "columns": [
+                {
+                  "UUID": "d8b6959f-b041-4afe-b645-623e92507296",
+                  "columnKey": "1",
+                  "columnName": "Column 1",
+                  "columnWidth": "12",
+                  "seedComponents": []
+                }
+              ]
+            },
+            "sectionHeight": 300
+          },
+          "componentName": "forceCommunity:section",
+          "id": "f4871b90-8dd0-4aba-afa3-5a6231e01937",
+          "regions": [
+            {
+              "components": [
+                {
+                  "componentAttributes": {},
+                  "componentName": "c:exampleQuanticDateFacet",
+                  "id": "1788b608-37e7-492a-8be2-f2a40cc965a6",
+                  "renderPriority": "NEUTRAL",
+                  "renditionMap": {},
+                  "type": "component"
+                }
+              ],
+              "id": "d8b6959f-b041-4afe-b645-623e92507296",
+              "regionLabel": "Column 1",
+              "regionName": "1",
+              "renditionMap": {},
+              "type": "region"
+            }
+          ],
+          "renderPriority": "NEUTRAL",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "67d8b0af-6f91-4b6b-aafb-66c76b8812f9",
+      "regionName": "content",
+      "type": "region"
+    },
+    {
+      "components": [
+        {
+          "componentAttributes": {
+            "customHeadTags": "",
+            "description": "",
+            "title": "Quantic Date Facet"
+          },
+          "componentName": "forceCommunity:seoAssistant",
+          "id": "f41988b5-8917-4097-aeb2-f84c20ab047c",
+          "renditionMap": {},
+          "type": "component"
+        }
+      ],
+      "id": "431fe85c-f09b-4309-bd96-a074a9a0e3ca",
+      "regionName": "sfdcHiddenRegion",
+      "type": "region"
+    }
+  ],
+  "themeLayoutType": "Inner",
+  "type": "view",
+  "viewType": "custom-quantic-date-facet"
+}

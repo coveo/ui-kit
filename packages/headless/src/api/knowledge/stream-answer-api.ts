@@ -22,6 +22,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
@@ -36,7 +37,6 @@ import {
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {isEmptyString} from '../../utils/utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
@@ -297,18 +297,28 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
   return state.pagination.numberOfResults;
 };
 
-const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
-  state: StateNeededByAnswerAPI
-) => {
+const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const expressions = buildExpressionList(state);
+
   const mergedAdvancedSearchQueryParams = {
     ...advancedSearchQueryParams,
   };
-  if (!isEmptyString(activeTabExpression)) {
-    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
+
+  if (expressions.length) {
+    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
   }
+
   return mergedAdvancedSearchQueryParams;
+};
+
+const buildExpressionList = (state: StateNeededByAnswerAPI) => {
+  const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const filterExpressions = selectStaticFilterExpressions(state);
+
+  return [activeTabExpression, ...filterExpressions]
+    .filter((expression) => !!expression)
+    .join(' AND ');
 };
 
 export const constructAnswerQueryParams = (
@@ -318,8 +328,7 @@ export const constructAnswerQueryParams = (
 ) => {
   const q = selectQuery(state)?.q;
 
-  const {aq, cq, dq, lq} =
-    mergeActiveTabExpressionInAdvancedSearchQueryParams(state);
+  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
