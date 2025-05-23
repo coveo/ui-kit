@@ -1,7 +1,5 @@
 import {Config} from '@stencil/core';
 import {spawnSync} from 'node:child_process';
-import {findPackageJSON} from 'node:module';
-import {dirname, join} from 'node:path';
 import html from 'rollup-plugin-html';
 import nodePolyfills from 'rollup-plugin-node-polyfills';
 
@@ -49,21 +47,11 @@ export const config: Config = {
 function coveoResolve() {
   return {
     resolveId(source: string, importer: string) {
-      if (source === '@coveo/relay') {
-        return {id: resolveRelay(importer)};
-      }
       if (source.startsWith('@coveo')) {
         return nodeResolve(source, importer, ['browser', 'default', 'import']);
       }
     },
   };
-}
-
-function resolveRelay(importer: string) {
-  const relayPackageJSONPath = findPackageJSON('@coveo/relay', importer)!;
-  const relayPackageJSON = require(relayPackageJSONPath);
-  const defaultRelativePath = relayPackageJSON.exports.default;
-  return join(dirname(relayPackageJSONPath), defaultRelativePath);
 }
 
 function nodeResolve(
