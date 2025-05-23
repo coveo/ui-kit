@@ -2,50 +2,43 @@ import {
   buildCommerceEngine,
   CommerceEngineOptions,
 } from '@coveo/headless/commerce';
-import {buildBrowserEnvironment, CustomEnvironment} from '@coveo/relay';
-import {getClientId} from './utilities';
+import {buildBrowserEnvironment} from '@coveo/relay';
+import {COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
+import {
+  AppProxyResponse,
+  ShopifyCustomEnvironment,
+  getShopifyCustomEnvironment,
+} from '../types';
+import {getClientId} from '../utilities/clientid';
+import {publishCustomShopifyEvent, CustomEvent} from '../utilities/shopify';
+import {getShopifyCookie} from '../utilities/shopify';
+
+export {SHOPIFY_COOKIE_KEY, COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
 
 export * from '@coveo/headless/commerce';
-export * from './utilities';
-export const SHOPIFY_COOKIE_KEY = '_shopify_y';
+export * from '../utilities';
 
-export interface AppProxyOptions {
-  appProxyUrl?: string;
-  marketId: string;
-}
-
-export interface AppProxyResponse {
-  accessToken: string;
-  organizationId: string;
-  environment: CommerceEngineOptions['configuration']['environment'];
-  trackingId: string;
-}
+export type {
+  AppProxyConfig,
+  AppProxyResponse,
+  ShopifyCustomEnvironment,
+} from '../types';
 
 /**
- * Fetches configuration from the app proxy.
+ * Options for building a Shopify commerce engine.
  *
- * Performs an HTTP GET request to retrieve the app proxy configuration using the provided marketId.
- * The fetched response is parsed as JSON and returned.
+ * @typedef BuildShopifyCommerceEngineOptions
+ * @property {CommerceEngineOptions} commerceEngineOptions - The core options for configuring the commerce engine.
+ * @property {ShopifyCustomEnvironment} [environment] - Optional browser environment; if not provided, a default one is created. Mainly useful when not running in a browser environment.
+ * @property {string} [shopifyCookie] - Optional value of the "_shopify_y" cookie. If not provided, it will attempt to retrieve it from the browser's cookies.
  *
- * @param appProxyUrl - The URL template for the app proxy endpoint. Defaults to '/apps/coveo'.
- * @param marketId - The unique market identifier used as a query parameter.
- * @returns A promise that resolves to an object containing the access token, organization ID,
- *          environment, and tracking ID.
+ * @remarks
+ * The `generateUUID` and `storage` properties are omitted from the custom environment for Shopify
+ * to ensure that client IDs are generated consistently across web pixels and storefronts. This is
+ * critical for maintaining a unified tracking and personalization experience.
+ *
  */
-export async function fetchAppProxyConfig({
-  appProxyUrl = '/apps/coveo',
-  marketId,
-}: AppProxyOptions): Promise<AppProxyResponse> {
-  const response = await fetch(`${appProxyUrl}?marketId=${marketId}]`);
-  return response.json();
-}
-
-type ShopifyCustomEnvironment = Omit<
-  CustomEnvironment,
-  'storage' | 'generateUUID'
->;
-
-interface BuildShopifyCommerceEngineOptions {
+export interface BuildShopifyCommerceEngineOptions {
   commerceEngineOptions: CommerceEngineOptions;
   shopifyCookie?: string;
   environment?: ShopifyCustomEnvironment;
@@ -57,6 +50,7 @@ interface BuildShopifyCommerceEngineOptions {
  * This function initializes a commerce engine instance specific to a Shopify store by:
  * - Creating or using an existing browser environment.
  * - Retrieving the "_shopify_y" cookie to confirm it is running in a Shopify context.
+ * - Emitting a custom event with the app proxy response to enable tracking and analytics with shopify webpixels.
  * - Storing a client identifier derived from the shop and cookie value in the browser environment's storage.
  * - Building and returning the commerce engine with the provided options.
  *
@@ -80,6 +74,18 @@ export function buildShopifyCommerceEngine({
     environment ?? getShopifyCustomEnvironment(buildBrowserEnvironment());
   const cookie = shopifyCookie || getShopifyCookie();
 
+  const appProxyResponse: AppProxyResponse = {
+    accessToken: commerceEngineOptions.configuration.accessToken,
+    organizationId: commerceEngineOptions.configuration.organizationId,
+    environment: commerceEngineOptions.configuration.environment,
+    trackingId: commerceEngineOptions.configuration.analytics.trackingId || '',
+  };
+
+  publishCustomShopifyEvent(
+    COVEO_SHOPIFY_CONFIG_KEY,
+    appProxyResponse as unknown as CustomEvent
+  );
+
   if (!cookie) {
     throw new Error(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
@@ -95,28 +101,4 @@ export function buildShopifyCommerceEngine({
     },
   });
   return engine;
-}
-
-function getShopifyCustomEnvironment(
-  environment: CustomEnvironment
-): ShopifyCustomEnvironment {
-  const {storage, generateUUID, ...rest} = environment;
-  return rest;
-}
-
-/**
- * Retrieves the value of a specified Shopify cookie by its name.
- *
- * @remarks
- * This function is intended for use in browser environments only, as it relies on the `document.cookie` API.
- * Attempting to use this function in non-browser environments will result in an error or undefined behavior.
- *
- * @param name - The name of the Shopify cookie to retrieve. Defaults to `'_shopify_y'`.
- * @returns The value of the specified cookie, or `null` if the cookie is not found.
- */
-export function getShopifyCookie(name: string = SHOPIFY_COOKIE_KEY) {
-  const match = document.cookie.match(
-    new RegExp('(?:^|;\\s*)' + name + '=([^;]*)')
-  );
-  return match ? decodeURIComponent(match[1]) : null;
 }
