@@ -1,0 +1,21 @@
+.THIS {
+  border-width: var(
+    --slds-c-card-sizing-border,
+    var(--sds-c-card-sizing-border, var(--lwc-borderWidthThin, 1px))
+  );
+  border-style: solid;
+  border-color: var(
+    --slds-c-card-color-border,
+    var(
+      --sds-c-card-color-border,
+      var(
+        --slds-g-color-border-base-1,
+        var(--lwc-cardColorBorder, rgb(201, 201, 201))
+      )
+    )
+  );
+  border-radius: var(
+    --slds-c-card-radius-border,
+    var(--sds-c-card-radius-border, var(--lwc-borderRadiusMedium, 0.25rem))
+  );
+}
