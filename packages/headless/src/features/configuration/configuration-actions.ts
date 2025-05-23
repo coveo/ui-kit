@@ -14,6 +14,7 @@ import {
   validatePayload,
   requiredNonEmptyString,
   optionalNonEmptyVersionString,
+  optionalTrackingId,
 } from '../../utils/validate-payload.js';
 import {COVEO_FRAMEWORK, CoveoFramework} from '../../utils/version.js';
 
@@ -197,7 +198,7 @@ export const analyticsConfigurationSchema: SchemaDefinition<
   deviceId: nonEmptyString,
   userDisplayName: nonEmptyString,
   documentLocation: nonEmptyString,
-  trackingId: nonEmptyString,
+  trackingId: optionalTrackingId,
   analyticsMode: new StringValue<'legacy' | 'next'>({
     constrainTo: ['legacy', 'next'],
     required: false,

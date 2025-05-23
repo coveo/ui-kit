@@ -28,7 +28,7 @@ export const getRelayInstanceFromState = createSelector(
       url:
         apiBaseUrl ?? getAnalyticsNextApiBaseUrl(organizationId, environment),
       token,
-      trackingId,
+      trackingId: trackingId ?? null,
       source: source,
     })
 );
