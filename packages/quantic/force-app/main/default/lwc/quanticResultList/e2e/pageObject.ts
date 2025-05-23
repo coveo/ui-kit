@@ -6,10 +6,6 @@ export class ResultListObject {
     this.page = page;
   }
 
-  get performSearchButton(): Locator {
-    return this.page.locator('c-action-perform-search button');
-  }
-
   get resultList(): Locator {
     return this.page.locator('c-quantic-result-list');
   }
@@ -28,10 +24,6 @@ export class ResultListObject {
         event.preventDefault();
       });
     });
-  }
-
-  async performSearch(): Promise<void> {
-    await this.performSearchButton.click();
   }
 
   async clickResultLink(index: number): Promise<void> {
@@ -68,7 +60,6 @@ export class ResultListObject {
       if (isUaClickEvent(request)) {
         const requestBody = request.postDataJSON?.();
         const requestData = JSON.parse(requestBody.clickEvent);
-        console.log(requestData);
 
         const expectedFields: Record<string, any> = {
           actionCause,

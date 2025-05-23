@@ -30,7 +30,7 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const expectedFieldsToInclude = testFieldsToInclude.split(',');
         const searchRequestPromise = search.waitForSearchRequest();
-        await resultList.performSearch();
+        await search.performSearch();
         const requestBody = (await searchRequestPromise).postDataJSON();
         expect(requestBody?.fieldsToInclude).toBeDefined();
         expect(requestBody).toEqual(
