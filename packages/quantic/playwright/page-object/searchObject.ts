@@ -1,4 +1,4 @@
-import {Page, Locator, Response} from '@playwright/test';
+import {Page, Locator, Response, Request} from '@playwright/test';
 
 export class SearchObject {
   constructor(
@@ -17,6 +17,14 @@ export class SearchObject {
     await this.performSearchButton.click();
   }
 
+  get performRecommendationSearchButton(): Locator {
+    return this.page.locator('c-action-perform-recommendation-search button');
+  }
+
+  async performRecommendationSearch(): Promise<void> {
+    await this.performRecommendationSearchButton.click();
+  }
+
   async waitForSearchResponse(): Promise<Response> {
     return this.page.waitForResponse(this.searchRequestRegex);
   }
@@ -27,6 +35,10 @@ export class SearchObject {
         resolve(() => route.continue());
       });
     });
+  }
+
+  async waitForSearchRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.searchRequestRegex);
   }
 
   async mockSearchWithGenerativeQuestionAnsweringId(streamId: string) {
