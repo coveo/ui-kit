@@ -28,11 +28,11 @@ import {
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {BreadcrumbButton} from '../../common/breadbox/breadcrumb-button';
 import {BreadcrumbClearAll} from '../../common/breadbox/breadcrumb-clear-all';
-import {BreadcrumbContainer} from '../../common/breadbox/breadcrumb-container';
 import {BreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {BreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {BreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
 import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
+import {BreadcrumbContainer} from '../../common/breadbox/stencil-breadcrumb-container';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {
   defaultCurrencyFormatter,
