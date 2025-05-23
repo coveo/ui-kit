@@ -9,6 +9,7 @@ interface RecommendationListOptions {
   numberOfRecommendations: number;
   recommendationsPerRow: number;
   variant: string;
+  fieldsToInclude: string;
 }
 
 type QuanticRecommendationListE2EFixtures = {
@@ -17,19 +18,18 @@ type QuanticRecommendationListE2EFixtures = {
   options: Partial<RecommendationListOptions>;
 };
 
-export const testSearch =
-  quanticBase.extend<QuanticRecommendationListE2EFixtures>({
-    options: {},
-    search: async ({page}, use) => {
-      await use(new SearchObject(page, searchRequestRegex));
-    },
-    recommendationList: async ({page, options, configuration, search}, use) => {
-      await page.goto(pageUrl);
-      configuration.configure(options);
-      await search.waitForSearchResponse();
+export const test = quanticBase.extend<QuanticRecommendationListE2EFixtures>({
+  options: {},
+  search: async ({page}, use) => {
+    await use(new SearchObject(page, searchRequestRegex));
+  },
+  recommendationList: async ({page, options, configuration, search}, use) => {
+    await page.goto(pageUrl);
+    configuration.configure(options);
+    await search.waitForSearchResponse();
 
-      await use(new RecommendationListObject(page));
-    },
-  });
+    await use(new RecommendationListObject(page));
+  },
+});
 
 export {expect} from '@playwright/test';

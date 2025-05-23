@@ -14,8 +14,16 @@ export class RecommendationListObject {
     return this.page.locator('c-quantic-result-link a');
   }
 
-  get firstRecommendationLink(): Locator {
-    return this.recommendationLinks.first();
+  getRecommendationLinkByIndex(index: number): Locator {
+    return this.recommendationLinks.nth(index);
+  }
+
+  async captureRecommendationListClickEventWorkaround(): Promise<void> {
+    // Hack(?) to have the request payload in the analytics click event.
+    // Without this the payload is not available in the request.
+    return this.page.route('*analytics*', (route) => {
+      route.continue();
+    });
   }
 
   async waitForRecommendationListClickEvent(

@@ -26,6 +26,17 @@ jest.mock('c/quanticUtils', () => ({
   })),
 }));
 
+jest.mock(
+  '@salesforce/label/c.quantic_InvalidPositiveIntegerProperty',
+  () => ({
+    default:
+      'The value of the {{0}} property must be an integer greater than 0.',
+  }),
+  {
+    virtual: true,
+  }
+);
+
 let isInitialized = false;
 let initialRecommendationListState = {
   isLoading: false,
@@ -88,6 +99,7 @@ const selectors = {
   gridContainer: '[data-testid="recommendations__grid"]',
   carouselContainer: '[data-testid="recommendations__carousel"]',
   recommendationListItem: '[data-testid="recommendations__item"]',
+  recommendationListResult: 'c-quantic-result',
   placeholder: 'c-quantic-placeholder',
   quanticHeading: 'c-quantic-heading',
 };
@@ -161,7 +173,7 @@ describe('c-quantic-recommendation-list', () => {
 
     it('should not display the placeholder component when there is an error in the state', async () => {
       recommendationListState = {
-        isLoading: false,
+        isLoading: true,
         recommendations: [],
         error: {
           statusCode: 500,
@@ -191,9 +203,7 @@ describe('c-quantic-recommendation-list', () => {
         {
           options: {
             id: defaultOptions.recommendation,
-            numberOfRecommendations: Number(
-              defaultOptions.numberOfRecommendations
-            ),
+            numberOfRecommendations: defaultOptions.numberOfRecommendations,
           },
         }
       );
@@ -281,6 +291,8 @@ describe('c-quantic-recommendation-list', () => {
       });
 
       it('should diplay an error message when recommendationsPerRow is a negative number', async () => {
+        const expectedConsoleErrorMessage =
+          'The value of the recommendationsPerRow property must be an integer greater than 0.';
         const element = createTestComponent({
           ...defaultOptions,
           recommendationsPerRow: -1,
@@ -292,6 +304,8 @@ describe('c-quantic-recommendation-list', () => {
         );
 
         expect(initializationError).not.toBeNull();
+        expect(console.error).toHaveBeenCalledTimes(1);
+        expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
       });
     });
   });
@@ -355,11 +369,23 @@ describe('c-quantic-recommendation-list', () => {
             selectors.gridContainer
           );
           const recommendationItems = element.shadowRoot.querySelectorAll(
-            selectors.recommendationListItem
+            selectors.recommendationListResult
           );
 
           expect(recommendationContainer).not.toBeNull();
           expect(recommendationItems.length).toBe(recommendationsArray.length);
+          recommendationItems.forEach((item, index) => {
+            expect(item.result.title).toEqual(
+              recommendationsArray[index].title
+            );
+            expect(item.result.clickUri).toEqual(
+              recommendationsArray[index].clickUri
+            );
+            expect(item.result.excerpt).toEqual(
+              recommendationsArray[index].excerpt
+            );
+            expect(item.engineId).toBe(defaultOptions.engineId);
+          });
         });
 
         describe('with a custom #recommendationsPerRow option', () => {
@@ -393,7 +419,7 @@ describe('c-quantic-recommendation-list', () => {
           );
 
           expect(headingElement).not.toBeNull();
-          expect(headingElement.label).toEqual(customLabel);
+          expect(headingElement.label).toBe(customLabel);
         });
       });
 
@@ -410,10 +436,27 @@ describe('c-quantic-recommendation-list', () => {
           );
 
           expect(recommendationContainer).not.toBeNull();
-          expect(recommendationContainer.label).toEqual(defaultOptions.label);
-          expect(recommendationContainer.itemsPerPage).toEqual(
+          expect(recommendationContainer.label).toBe(defaultOptions.label);
+          expect(recommendationContainer.itemsPerPage).toBe(
             defaultOptions.recommendationsPerRow
           );
+
+          const recommendationItems = element.shadowRoot.querySelectorAll(
+            selectors.recommendationListResult
+          );
+
+          recommendationItems.forEach((item, index) => {
+            expect(item.result.title).toEqual(
+              recommendationsArray[index].title
+            );
+            expect(item.result.clickUri).toEqual(
+              recommendationsArray[index].clickUri
+            );
+            expect(item.result.excerpt).toEqual(
+              recommendationsArray[index].excerpt
+            );
+            expect(item.engineId).toBe(defaultOptions.engineId);
+          });
         });
 
         describe('with a custom #recommendationsPerRow option', () => {
@@ -430,7 +473,7 @@ describe('c-quantic-recommendation-list', () => {
             );
 
             expect(carousel).not.toBeNull();
-            expect(carousel.itemsPerPage).toEqual(customRecommendationsPerRow);
+            expect(carousel.itemsPerPage).toBe(customRecommendationsPerRow);
           });
         });
 
@@ -448,7 +491,7 @@ describe('c-quantic-recommendation-list', () => {
           );
 
           expect(headingElement).not.toBeNull();
-          expect(headingElement.label).toEqual(customLabel);
+          expect(headingElement.label).toBe(customLabel);
         });
       });
     });
