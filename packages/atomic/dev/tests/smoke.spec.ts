@@ -54,6 +54,11 @@ test.describe('style encapsulation', () => {
     test(`style encapsulation for ${url}`, async ({page}) => {
       await page.goto(baseUrl + url);
 
+      const coveoCssLink = page.locator(
+        'link[rel="stylesheet"][href*="coveo.css"]'
+      );
+      await expect(coveoCssLink).toHaveCount(1);
+
       const interfaceComponents = [
         'atomic-search-interface',
         'atomic-recs-interface',

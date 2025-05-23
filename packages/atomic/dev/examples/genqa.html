@@ -15,10 +15,10 @@
         defineCustomElements();
       } else {
         import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
-        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css');
-        const sheet = new CSSStyleSheet();
-        sheet.replaceSync(css.default);
-        document.adoptedStyleSheets.push(sheet);
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
       }
     </script>
 
