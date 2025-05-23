@@ -62,7 +62,7 @@ function coveoResolve() {
 function resolveRelay(importer: string) {
   const relayPackageJSONPath = findPackageJSON('@coveo/relay', importer)!;
   const relayPackageJSON = require(relayPackageJSONPath);
-  const defaultRelativePath = relayPackageJSON.exports.default.default;
+  const defaultRelativePath = relayPackageJSON.exports.default;
   return join(dirname(relayPackageJSONPath), defaultRelativePath);
 }
 
