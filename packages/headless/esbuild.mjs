@@ -283,7 +283,6 @@ const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
       entryPoints: [entryPoint],
       outfile,
       format: 'cjs',
-      tsconfig: './tsconfig.json',
     },
     dir
   );
