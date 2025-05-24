@@ -15,17 +15,27 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/headless.d.ts",
+      "types": "./dist/headless/index.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
     "./headless": {
-      "types": "./dist/headless.d.ts",
+      "types": "./dist/headless/index.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
+    "./headless/commerce": {
+      "types": "./dist/headless/commerce.d.ts",
+      "import": "./dist/headless/commerce.esm.js",
+      "default": "./dist/headless/commerce.esm.js"
+    },
+    "./headless/search": {
+      "types": "./dist/headless/search.d.ts",
+      "import": "./dist/headless/search.esm.js",
+      "default": "./dist/headless/search.esm.js"
+    },
     "./utilities": {
-      "types": "./dist/utilities.d.ts",
+      "types": "./dist/utilities/index.d.ts",
       "import": "./dist/utilities.esm.js",
       "default": "./dist/utilities.esm.js"
     }

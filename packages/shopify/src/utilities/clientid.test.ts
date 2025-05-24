@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {getClientId} from './utilities';
+import {getClientId} from './clientid';
 
 describe('#getClientId', () => {
   it('should generate a valid UUID', () => {
@@ -22,6 +22,7 @@ describe('#getClientId', () => {
 
     expect(clientId1).not.toBe(clientId2);
   });
+
   it('should generate the same UUID for the same input', () => {
     const shopifyCookie = 'shopify_cookie_value';
     const clientId1 = getClientId(shopifyCookie);
