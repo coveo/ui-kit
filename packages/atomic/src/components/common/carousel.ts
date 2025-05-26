@@ -15,6 +15,11 @@ export interface CarouselProps {
   ariaLabel: string;
 }
 
+const commonPaginationClasses =
+  'w-10 h-10 grid justify-center items-center absolute top-1/2 -translate-y-1/2 z-1 shadow-lg group';
+const commonArrowClasses =
+  'w-3.5 align-middle text-on-background group-hover:text-primary group-focus:text-primary-light';
+
 const renderPreviousButton = (
   numberOfPages: number,
   previousPage: () => void,
@@ -26,7 +31,7 @@ const renderPreviousButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'previous-button',
-    class: 'group',
+    class: commonPaginationClasses + ' -translate-x-1/2',
     onClick: previousPage,
     ariaLabel: bindings.i18n.t('previous'),
   };
@@ -35,8 +40,8 @@ const renderPreviousButton = (
   })(
     html`<atomic-icon
       part="previous-icon"
+      class=${`${commonArrowClasses} rotate-180`}
       icon=${ArrowRight}
-      class="carousel-previous min-h-4 min-w-4"
     ></atomic-icon>`
   );
 };
@@ -52,7 +57,7 @@ const renderNextButton = (
   const buttonProps: ButtonProps = {
     style: 'outline-primary',
     part: 'next-button',
-    class: 'group',
+    class: commonPaginationClasses + ' right-0 translate-x-1/2',
     onClick: nextPage,
     ariaLabel: bindings.i18n.t('next'),
   };
@@ -61,8 +66,8 @@ const renderNextButton = (
   })(
     html`<atomic-icon
       part="next-icon"
+      class=${commonArrowClasses}
       icon=${ArrowRight}
-      class="carousel-next min-h-4 min-w-4"
     ></atomic-icon>`
   );
 };
@@ -77,10 +82,10 @@ const renderIndicators = (numberOfPages: number, currentPage: number) => {
         const isActive = index === currentPage % numberOfPages;
         return html`
           <li
-            part=${`indicator ${isActive ? 'active-indicator' : ''}`}
+            part=${`indicator${isActive ? ' active-indicator' : ''}`}
             class=${`h-1 w-12 rounded-md ${
               isActive ? 'bg-primary' : 'bg-neutral'
-            }`}
+            } `}
           ></li>
         `;
       })}
@@ -99,7 +104,8 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
 
     return html`
       <div
-        class="carousel relative"
+        class="relative"
+        part="carousel"
         role="region"
         aria-roledescription="carousel"
         aria-label=${props.ariaLabel}
@@ -110,7 +116,7 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
           props.bindings
         )}${children}
         ${renderNextButton(numberOfPages, nextPage, props.bindings)}
+        ${renderIndicators(numberOfPages, currentPage)}
       </div>
-      ${renderIndicators(numberOfPages, currentPage)}
     `;
   };
