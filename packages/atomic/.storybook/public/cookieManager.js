@@ -10,6 +10,8 @@ const functionalKeys = {
   ],
 };
 
+let originalLocalStorage = window.localStorage;
+
 export const getOptanonConsentCookie = () => {
   return document.cookie.split(';').find((cookie) => {
     return cookie.trim().startsWith('OptanonConsent=');
@@ -33,40 +35,24 @@ export const disableBlockedKeys = () => {
 };
 
 function disableLocalStorageForBlockedKeys(blockedKeys) {
-  const originalLocalStorage = window.localStorage;
+  const proxiedMethods = ['getItem', 'setItem'];
+  const handler = {
+    get(target, prop, receiver) {
+      return proxiedMethods.includes(prop)
+        ? (key) => (blockedKeys.includes(key) ? undefined : target[prop](key))
+        : Reflect.get(target, prop, receiver);
+    },
+  };
 
   Object.defineProperty(window, 'localStorage', {
-    value: {
-      getItem: (key) => {
-        if (blockedKeys.includes(key)) {
-          return null;
-        }
-        return originalLocalStorage.getItem(key);
-      },
-      setItem: (key, value) => {
-        if (blockedKeys.includes(key)) {
-          return;
-        }
-        return originalLocalStorage.setItem(key, value);
-      },
-      removeItem(key) {
-        return originalLocalStorage.removeItem(key);
-      },
-      clear() {
-        return originalLocalStorage.clear();
-      },
-      key(index) {
-        return originalLocalStorage.key(index);
-      },
-      get length() {
-        return originalLocalStorage.length;
-      },
-    },
+    value: new Proxy(originalLocalStorage, handler),
+    configurable: true,
+    writeable: true,
   });
 }
 
 function removeBlockedKeys(blockedLocalStorageKeys) {
   blockedLocalStorageKeys.forEach((key) => {
-    window.localStorage.removeItem(key);
+    originalLocalStorage.removeItem(key);
   });
 }
