@@ -1,28 +1,24 @@
 import type {Locator, Page, Request} from '@playwright/test';
-import {AnalyticsMode} from '../../../../../../playwright/utils/analyticsMode';
-import {AnalyticsHelper} from '../../../../../../playwright/page-object/analytics';
+import {
+  AnalyticsMode,
+  AnalyticsModeEnum,
+} from '../../../../../../playwright/utils/analyticsMode';
+import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 
 const minimumCitationTooltipDisplayDurationMs = 1500;
 
 export class GeneratedAnswerObject {
-  private analyticsMode;
-  private analytics;
+  private analyticsMode: AnalyticsMode;
 
   constructor(
     private page: Page,
     private streamId: string,
-    private analyticsSettings: {
-      analyticsMode: AnalyticsMode;
-      trackingId: string;
-    }
+    private analytics: AnalyticsObject
   ) {
     this.page = page;
     this.streamId = streamId;
-    this.analyticsMode = analyticsSettings.analyticsMode;
-    this.analytics = new AnalyticsHelper(
-      this.page,
-      analyticsSettings.trackingId
-    );
+    this.analytics = analytics;
+    this.analyticsMode = this.analytics.analyticsMode;
   }
 
   get likeButton(): Locator {
@@ -126,7 +122,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForStreamEndAnalytics(): Promise<Request | boolean> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -143,7 +139,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForLikeGeneratedAnswerAnalytics(): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -160,7 +156,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForDislikeGeneratedAnswerAnalytics(): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -177,7 +173,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForCopyToClipboardAnalytics(): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -194,7 +190,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForShowAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -211,7 +207,7 @@ export class GeneratedAnswerObject {
   }
 
   async waitForHideAnswersAnalytics(): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -230,7 +226,7 @@ export class GeneratedAnswerObject {
   async waitForSourceHoverAnalytics(
     expectedPayload: Record<string, any>
   ): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -255,7 +251,7 @@ export class GeneratedAnswerObject {
   async waitForFeedbackSubmitAnalytics(
     expectedPayload: Record<string, any>
   ): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForCustomUaAnalytics(
         {
           eventType: 'generatedAnswer',
@@ -268,17 +264,18 @@ export class GeneratedAnswerObject {
           )
       );
     }
-    const payloadToMatch = removeUnknownFields(expectedPayload);
+
     function removeUnknownFields(object: Record<string, unknown>) {
       return Object.fromEntries(
         Object.entries(object).filter(([, value]) => value !== 'unknown')
       );
     }
+    const payloadToMatch = removeUnknownFields(expectedPayload);
 
     return this.analytics.waitForEventProtocolAnalytics(
       'Rga.SubmitFeedback',
       (event) =>
-        AnalyticsHelper.isMatchingPayload(
+        AnalyticsObject.isMatchingPayload(
           {
             correctTopic: event.details?.correctTopic ? 'yes' : 'no',
             readable: event.details?.readable ? 'yes' : 'no',
@@ -296,12 +293,12 @@ export class GeneratedAnswerObject {
   async waitForCitationClickAnalytics(
     expectedPayload: Record<string, any>
   ): Promise<Request> {
-    if (this.analyticsMode === 'ua') {
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
       return this.analytics.waitForClickUaAnalytics(
         'generatedAnswerCitationClick',
         (event) =>
           event?.customData?.generativeQuestionAnsweringId === this.streamId &&
-          AnalyticsHelper.isMatchingPayload(
+          AnalyticsObject.isMatchingPayload(
             {
               documentTitle: event.documentTitle,
               sourceName: event.sourceName,
@@ -326,7 +323,7 @@ export class GeneratedAnswerObject {
     return this.analytics.waitForEventProtocolAnalytics(
       'Rga.CitationClick',
       (event) =>
-        AnalyticsHelper.isMatchingPayload(
+        AnalyticsObject.isMatchingPayload(
           {
             citationId: event.citationId,
             uniqueFieldName: event.itemMetadata?.uniqueFieldName,

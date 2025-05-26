@@ -5,25 +5,24 @@ import {
   isUaClickEvent,
   isUaCustomEvent,
 } from '../utils/requests';
+import {AnalyticsMode} from '../utils/analyticsMode';
 
-export class AnalyticsHelper {
+const exampleTrackingId = 'quantic_e2e_tracking_id';
+
+export class AnalyticsObject {
   constructor(
     protected page: Page,
-    protected trackingId: string
+    public analyticsMode: AnalyticsMode
   ) {
     this.page = page;
-    this.trackingId = trackingId;
+    this.analyticsMode = analyticsMode;
   }
 
-  static async setCookieToEnableNextAnalytics(
-    page: Page,
-    url: string,
-    trackingId: string
-  ) {
+  static async setCookieToEnableNextAnalytics(page: Page, url: string) {
     const context = page.context();
     await context.addCookies([
-      {name: 'LSKey-c$Coveo-Pendragon', value: trackingId, url},
-      {name: 'Coveo-Pendragon', value: trackingId, url},
+      {name: 'LSKey-c$Coveo-Pendragon', value: exampleTrackingId, url},
+      {name: 'Coveo-Pendragon', value: exampleTrackingId, url},
     ]);
   }
 
@@ -87,7 +86,7 @@ export class AnalyticsHelper {
       if (isEventProtocol(request)) {
         const event = request.postDataJSON?.()?.[0];
         if (event.meta?.type !== expectedEventType) return false;
-        if (event.meta?.config?.trackingId !== this.trackingId) return false;
+        if (event.meta?.config?.trackingId !== exampleTrackingId) return false;
         if (additionalMatch && !additionalMatch(event)) return false;
 
         await this.validateEventWithEventAPI(request.url(), event);
