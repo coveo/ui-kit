@@ -1,4 +1,4 @@
-import {Page, Locator, Response} from '@playwright/test';
+import {Page, Locator, Response, Request} from '@playwright/test';
 
 export class SearchObject {
   constructor(
@@ -32,6 +32,10 @@ export class SearchObject {
 
   async waitForSearchResponse(): Promise<Response> {
     return this.page.waitForResponse(this.searchRequestRegex);
+  }
+
+  async waitForSearchRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.searchRequestRegex);
   }
 
   async interceptSearchIndefinitely(): Promise<() => void> {
