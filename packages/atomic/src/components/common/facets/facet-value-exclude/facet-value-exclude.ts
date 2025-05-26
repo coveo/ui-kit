@@ -28,7 +28,7 @@ export const renderFacetValueExclude: FunctionalComponent<ExcludeProps> = ({
 
   return html`<button
     class=${multiClassMap(classNames)}
-    part=${'value-exclude-button'}
+    part="value-exclude-button"
     ${ref(props.ref)}
     .key=${props.key}
     aria-label=${ifDefined(props.ariaLabel ?? props.text)}
