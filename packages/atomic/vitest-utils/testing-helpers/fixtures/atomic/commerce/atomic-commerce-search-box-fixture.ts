@@ -80,6 +80,10 @@ export const defaultBindings = {
     dispatch: vi.fn(),
   } as unknown as CommerceSearchBoxBindings['engine'],
   id: 'search-box-1',
+  store: {
+    onChange: vi.fn(),
+    isMobile: vi.fn(() => false),
+  } as unknown as CommerceSearchBoxBindings['store'],
   searchBoxController: {
     state: {
       suggestions: [
@@ -88,8 +92,13 @@ export const defaultBindings = {
       value: '',
     },
     selectSuggestion: vi.fn(),
+    updateText: vi.fn(),
+    submit: vi.fn(),
   } as unknown as SearchBox | StandaloneSearchBox,
   getSuggestions: vi.fn(() => Array(1)),
+  getSuggestionElements: vi.fn(() => []),
+  suggestedQuery: vi.fn(() => 'the query'),
+  clearSuggestions: vi.fn(),
 };
 
 defaultBindings satisfies Partial<CommerceSearchBoxBindings>;

@@ -92,16 +92,19 @@ export class AtomicCommerceSearchBoxInstantProducts
    *
    * By default, or if an empty string is returned, `product.ec_name` is used.
    */
-  @property() public ariaLabelGenerator?: AriaLabelGenerator;
+  @property({attribute: 'aria-label-generator'})
+  public ariaLabelGenerator?: AriaLabelGenerator;
 
-  willUpdate() {
+  connectedCallback() {
+    super.connectedCallback();
     try {
       dispatchSearchBoxSuggestionsEvent<SearchBox, CommerceBindings>(
         (bindings) => {
           this.bindings = bindings;
           return this.initialize();
         },
-        this
+        this,
+        ['atomic-commerce-search-box']
       );
     } catch (error) {
       this.error = error as Error;
@@ -128,17 +131,18 @@ export class AtomicCommerceSearchBoxInstantProducts
     hasModifier && setTarget('_blank');
     el.click();
     hasModifier && setTarget(initialTarget || '');
-
-    return true;
   }
 
   private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
+      console.log('the condition');
       return [];
     }
     const products = this.instantProducts.state.products.length
       ? this.instantProducts.state.products
       : this.products;
+
+    console.log(products);
 
     const elements: SearchBoxSuggestionElement[] = products.map(
       (product: Product) => {
