@@ -24,7 +24,7 @@ import {
   FocusTargetController,
 } from '../../../../utils/stencil-accessibility-utils';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';

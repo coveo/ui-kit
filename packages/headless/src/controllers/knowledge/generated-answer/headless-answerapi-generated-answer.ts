@@ -118,7 +118,7 @@ const subscribeToSearchRequest = (
 
     lastTriggerParams = triggerParams;
     engine.dispatch(resetAnswer());
-    engine.dispatch(fetchAnswer(state));
+    engine.dispatch(fetchAnswer(state, engine.navigatorContext));
   };
 
   engine.subscribe(strictListener);
@@ -160,7 +160,10 @@ export function buildAnswerApiGeneratedAnswer(
   return {
     ...controller,
     get state() {
-      const answerApiState = selectAnswer(engine.state).data;
+      const answerApiState = selectAnswer(
+        engine.state,
+        engine.navigatorContext
+      ).data;
       return {
         ...getState().generatedAnswer,
         answer: answerApiState?.answer,
@@ -178,7 +181,7 @@ export function buildAnswerApiGeneratedAnswer(
       };
     },
     retry() {
-      engine.dispatch(fetchAnswer(getState()));
+      engine.dispatch(fetchAnswer(getState(), engine.navigatorContext));
     },
     reset() {
       engine.dispatch(resetAnswer());
@@ -187,7 +190,8 @@ export function buildAnswerApiGeneratedAnswer(
       const args = parseEvaluationArguments({
         query: getState().query.q,
         feedback,
-        answerApiState: selectAnswer(engine.state).data!,
+        answerApiState: selectAnswer(engine.state, engine.navigatorContext)
+          .data!,
       });
       engine.dispatch(answerEvaluation.endpoints.post.initiate(args));
       engine.dispatch(sendGeneratedAnswerFeedback());
