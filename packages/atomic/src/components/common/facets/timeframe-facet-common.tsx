@@ -21,7 +21,7 @@ import {Bindings as SearchBindings} from '../../search/atomic-search-interface/a
 import {Hidden} from '../stencil-hidden';
 import {shouldDisplayInputForFacetRange} from './facet-common';
 import {FacetInfo} from './facet-common-store';
-import {FacetContainer} from './facet-container/facet-container';
+import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/facet-value-label-highlight';

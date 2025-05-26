@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.34",
+  "version": "3.0.37",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -73,7 +73,7 @@
     "react-dom": "19.1.0",
     "rimraf": "6.0.1",
     "semver": "7.7.1",
-    "typescript": "5.8.2",
+    "typescript": "5.8.3",
     "vite": "6.3.4"
   },
   "overrides": {

@@ -1,5 +1,5 @@
 import {IconButton} from '@storybook/components';
-import {STORY_MISSING} from '@storybook/core-events';
+import {STORY_MISSING, STORY_RENDERED} from '@storybook/core-events';
 import {CogIcon} from '@storybook/icons';
 import {addons, types} from '@storybook/manager-api';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -48,5 +48,45 @@ addons.register('custom/onetrust-button', () => {
         <CogIcon />
       </IconButton>
     ),
+  });
+});
+
+const observeAndExpandButtons = () => {
+  const observer = new MutationObserver(() => {
+    const buttonsToExpand = document.querySelectorAll(
+      'button[data-action="expand-all"][data-expanded="false"]'
+    );
+    if (buttonsToExpand.length > 0) {
+      buttonsToExpand.forEach((button) =>
+        (button as HTMLButtonElement).click()
+      );
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+};
+
+const addNoIndexMetaTag = () => {
+  if (!document.querySelector('meta[name="robots"][content="noindex"]')) {
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'robots';
+    metaTag.content = 'noindex';
+    document.head.appendChild(metaTag);
+  }
+};
+
+addons.register('expand-all-folders-on-intro', () => {
+  addons.getChannel().on(STORY_RENDERED, (storyId) => {
+    if (storyId === 'introduction--crawling') {
+      observeAndExpandButtons();
+      addNoIndexMetaTag();
+    }
+    if (storyId === 'introduction--default') {
+      addNoIndexMetaTag();
+    }
   });
 });
