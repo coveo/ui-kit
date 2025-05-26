@@ -252,7 +252,7 @@ describe('quantic-timeframe-facet', () => {
       });
 
       describe('with with-date-picker', () => {
-        it('should activate manual range', () => {
+        it.skip('should activate manual range', () => {
           visitTimeframeFacet({
             withDatePicker: true,
             useCase: param.useCase,

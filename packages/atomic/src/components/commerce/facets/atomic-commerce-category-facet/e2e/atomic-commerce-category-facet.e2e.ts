@@ -15,7 +15,7 @@ test.describe('default', () => {
     categoryFacet,
   }) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     const categoryFacetValueLabel =
       categoryFacet.getFacetValue('Canoes & Kayaks');
@@ -38,7 +38,7 @@ test.describe('default', () => {
     categoryFacet,
   }) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     await categoryFacet.getFacetValue('Canoes').click();
     const classicCanoes = categoryFacet.getFacetValue('Classic');
@@ -50,7 +50,7 @@ test.describe('default', () => {
     categoryFacet,
   }) => {
     await categoryFacet.searchInput.fill('Canoes & Kayaks');
-    await categoryFacet.getSearchResult('Canoes & Kayaks').click();
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
     await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Canoes')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Kayaks')).toBeVisible();

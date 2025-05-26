@@ -17,4 +17,10 @@ export class CategoryFacetPageObject extends AnyFacetPageObject<'atomic-commerce
   getFacetValue(value: string) {
     return this.page.getByLabel(`Inclusion filter on ${value};`);
   }
+
+  facetButton(value: string) {
+    return this.page.getByRole('button', {
+      name: new RegExp(`${value} \\(\\d+\\) in All`),
+    });
+  }
 }
