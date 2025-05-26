@@ -145,8 +145,6 @@ export class AtomicCommerceSearchBoxInstantProducts
       ? this.instantProducts.state.products
       : this.products;
 
-    console.log(products);
-
     const elements: SearchBoxSuggestionElement[] = products.map(
       (product: Product) => {
         const interactiveProduct = this.instantProducts.interactiveProduct({
