@@ -7,10 +7,7 @@
     <script type="module">
       if (import.meta.env) {
         const {defineCustomElements} = await import('@coveo/atomic/loader');
-        const css = await import('@coveo/atomic/themes/coveo.css');
-        const sheet = new CSSStyleSheet();
-        sheet.replaceSync(css.default);
-        document.adoptedStyleSheets.push(sheet);
+        import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
         import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
