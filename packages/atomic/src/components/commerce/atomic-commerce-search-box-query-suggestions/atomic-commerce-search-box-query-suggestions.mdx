@@ -1,0 +1,39 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicCommerceSearchBoxQuerySuggestionsStories from './atomic-commerce-search-box-query-suggestions.new.stories';
+
+<Meta of={AtomicCommerceSearchBoxQuerySuggestionsStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceSearchBoxQuerySuggestionsStories.Default}
+/>
+
+## Usage
+This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display query suggestions as the user types.
+
+By default, atomic-commerce-search-box-query-suggestions is already included.
+You can add it manually to customize its properties.
+```html
+<atomic-commerce-search-box>
+  <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
+</atomic-commerce-search-box>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

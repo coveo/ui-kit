@@ -1,3 +1,7 @@
+## <small>3.24.1 (2025-05-21)</small>
+
+- fix(headless commerce): prioritize mnf if there is an equivalent nf when serializing query params (# ([4f6c0e4](https://github.com/coveo/ui-kit/commits/4f6c0e4)), closes [#5294](https://github.com/coveo/ui-kit/issues/5294)
+
 ## 3.24.0 (2025-05-15)
 
 - fix(answerAPI): post feedback (#5244) ([d35ebef](https://github.com/coveo/ui-kit/commits/d35ebef)), closes [#5244](https://github.com/coveo/ui-kit/issues/5244)
