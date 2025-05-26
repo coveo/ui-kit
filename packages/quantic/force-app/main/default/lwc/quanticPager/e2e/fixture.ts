@@ -43,7 +43,6 @@ export const testSearch = quanticBase.extend<QuanticPagerE2ESearchFixtures>({
 });
 
 export const testInsight = quanticBase.extend<QuanticPagerE2EInsightFixtures>({
-  pageUrl,
   options: {},
   search: async ({page}, use) => {
     await use(new SearchObject(page, insightSearchRequestRegex));
