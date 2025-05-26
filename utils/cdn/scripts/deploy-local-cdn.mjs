@@ -10,7 +10,7 @@ const getVersionFromPackageJson = async (packageName, versionType) => {
   try {
     const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf-8'));
     const version = packageJson.version;
-    const [major, minor, patch] = version.split('.');
+    const [major, minor] = version.split('.');
     return (
       {
         major: major,
