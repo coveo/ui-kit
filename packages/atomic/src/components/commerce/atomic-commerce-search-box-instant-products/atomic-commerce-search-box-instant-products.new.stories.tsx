@@ -2,25 +2,30 @@ import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-inter
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
+import {userEvent} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {html} from 'lit';
+import {within} from 'shadow-dom-testing-library';
 
-const {decorator: commerceInterfaceDecorator, play} = wrapInCommerceInterface({
-  skipFirstRequest: true,
-});
+const {decorator: commerceInterfaceDecorator, play: commerceInterfacePlay} =
+  wrapInCommerceInterface();
 const {decorator: commerceSearchBoxDecorator} = wrapInCommerceSearchBox(html`
   <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
 `);
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box-instant-products',
-  title:
-    'Atomic-Commerce/Interface Components/atomic-commerce-search-box-instant-products',
+  title: 'Commerce/atomic-commerce-search-box-instant-products',
   id: 'atomic-commerce-search-box-instant-products',
   render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters,
-  play,
+  play: async (context) => {
+    await commerceInterfacePlay(context);
+    const canvas = within(context.canvasElement);
+    const searchBox = await canvas.findAllByShadowPlaceholderText('Search');
+    await userEvent.click(searchBox[0]);
+  },
   argTypes: {
     'attributes-density': {
       name: 'density',
@@ -30,12 +35,12 @@ const meta: Meta = {
       name: 'image-size',
       options: ['icon', 'small', 'large', 'none'],
     },
-    'attributes-aria-label-generator': {
-      name: 'aria-label-generator',
-      type: 'function',
-    },
   },
 };
+
+export default meta;
+
+export const Default: Story = {};
 
 export const WithComfortableDensity: Story = {
   tags: ['test'],
@@ -51,10 +56,4 @@ export const WithNoImage: Story = {
   args: {
     'attributes-image-size': 'none',
   },
-};
-
-export default meta;
-
-export const Default: Story = {
-  name: 'atomic-commerce-search-box-instant-product',
 };
