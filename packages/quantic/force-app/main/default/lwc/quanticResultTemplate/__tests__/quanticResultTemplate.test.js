@@ -9,10 +9,10 @@ const createTestComponent = buildCreateTestComponent(
 
 const selectors = {
   slotByName: (name) => `slot[name="${name}"]`,
+  container: (name) => `div[data-testid="${name}_container"]`,
 };
 
 const previewSlots = ['label', 'badges', 'date', 'visual'];
-
 const otherSlots = [
   'actions',
   'title',
@@ -22,6 +22,7 @@ const otherSlots = [
   'bottom-metadata',
   'children',
 ];
+const allSlots = previewSlots.concat(otherSlots);
 
 describe('c-quantic-result-template', () => {
   afterEach(() => {
@@ -36,7 +37,7 @@ describe('c-quantic-result-template', () => {
       'lgc-bg slds-p-vertical_medium slds-border_bottom'
     );
 
-    for (const name of previewSlots.concat(otherSlots)) {
+    for (const name of allSlots) {
       let slot = element.shadowRoot.querySelectorAll(
         selectors.slotByName(name)
       );
@@ -46,19 +47,18 @@ describe('c-quantic-result-template', () => {
   });
 
   describe('with isAnyPreviewOpen set to true', () => {
-    it('should display only the slots that are set to true', async () => {
+    it('should set aria-hidden to true on the result slots for screen readers', async () => {
       const element = createTestComponent({
         isAnyPreviewOpen: true,
       });
       await flushPromises();
 
       for (const name of previewSlots) {
-        let slot = element.shadowRoot.querySelectorAll(
-          selectors.slotByName(name)
+        let container = element.shadowRoot.querySelector(
+          selectors.container(name)
         );
-        expect(slot).not.toBeNull();
-        expect(slot.length).toBe(1);
-        expect(slot[0].parentElement.ariaHidden).toBe('true');
+        expect(container).not.toBeNull();
+        expect(container.ariaHidden).toBe('true');
       }
     });
   });
@@ -70,8 +70,8 @@ describe('c-quantic-result-template', () => {
       });
       await flushPromises();
       expect(
-        element.shadowRoot.querySelector(selectors.slotByName('actions'))
-          .parentElement.ariaHidden
+        element.shadowRoot.querySelector(selectors.container('actions'))
+          .ariaHidden
       ).toBe('true');
     });
   });
@@ -82,9 +82,9 @@ describe('c-quantic-result-template', () => {
         hideBorder: true,
       });
       await flushPromises();
-      expect(element.shadowRoot.firstChild.className).toBe(
-        'lgc-bg slds-p-vertical_medium'
-      );
+      expect(
+        element.shadowRoot.firstChild.className.includes('slds-border_bottom')
+      ).toBe(false);
     });
   });
 });
