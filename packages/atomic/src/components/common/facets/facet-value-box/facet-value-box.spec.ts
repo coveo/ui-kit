@@ -1,7 +1,6 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {renderFacetValueBox} from './facet-value-box';
@@ -80,5 +79,11 @@ describe('renderFacetValueBox', () => {
       'part',
       expect.stringContaining('value-box-selected')
     );
+  });
+
+  it('applies selected class to the button', async () => {
+    await setupElement({isSelected: true});
+    const {button} = locators;
+    await expect(button).toHaveClass('selected');
   });
 });
