@@ -24,30 +24,25 @@ export const renderBreadcrumbContent: FunctionalComponent<
 
   const labelClass = tw({
     'max-w-[30ch] truncate': true,
-    'group-hover:text-error': isExclusion,
-    'group-hover:text-primary': !isExclusion,
-    'group-focus-visible:text-error': isExclusion,
-    'group-focus-visible:text-primary': !isExclusion,
+    'group-hover:text-error group-focus-visible:text-error': isExclusion,
+    'group-hover:text-primary group-focus-visible:text-primary': !isExclusion,
     idle: isIdle,
     selected: isSelected,
     excluded: isExclusion,
   });
 
-  const hasNoContent = !props.breadcrumb.content;
-
   const valueClass = tw({
-    'ml-1': true,
-    'max-w-[30ch] truncate': hasNoContent,
-    idle: isIdle && hasNoContent,
-    selected: isSelected && hasNoContent,
-    excluded: isExclusion && hasNoContent,
+    'ml-1 max-w-[30ch] truncate': true,
+    idle: isIdle,
+    selected: isSelected,
+    excluded: isExclusion,
   });
 
   return html`<span part="breadcrumb-label" class=${multiClassMap(labelClass)}>
+      ${props.i18n.t('with-colon', {text: props.breadcrumb.label})}
     </span>
     <span part="breadcrumb-value" class=${multiClassMap(valueClass)}>
-      //TODO: Make this breadcrumb.content not a V node and instead a
-      TemplateResult ${props.breadcrumb.content ?? value}
+      ${value}
     </span>
     <atomic-icon
       part="breadcrumb-clear"
