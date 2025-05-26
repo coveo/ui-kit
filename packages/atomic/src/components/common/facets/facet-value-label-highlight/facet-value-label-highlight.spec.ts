@@ -28,11 +28,17 @@ describe('renderFacetValueLabelHighlight', () => {
     },
   };
 
-  it('renders the label with correct part and class', async () => {
+  it('renders the label with correct part', async () => {
     await setupElement();
     const {label} = locators;
     await expect(label).toBeInTheDocument();
     await expect(label).toHaveAttribute('part', 'value-label');
+  });
+
+  it('renders the label without bold class', async () => {
+    await setupElement();
+    const {label} = locators;
+    await expect(label).not.toHaveClass('font-bold');
   });
 
   it('sets the title attribute to displayValue', async () => {

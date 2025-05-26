@@ -20,7 +20,7 @@ import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-ins
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';
 import {FacetInfo} from './facet-common-store';
-import {FacetContainer} from './facet-container/facet-container';
+import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/stencil-facet-value-label-highlight';
