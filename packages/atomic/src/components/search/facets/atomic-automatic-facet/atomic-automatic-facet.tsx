@@ -7,7 +7,7 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetValueCheckbox} from '../../../common/facets/facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/stencil-facet-value-label-highlight';

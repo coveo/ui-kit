@@ -33,10 +33,11 @@ describe('renderFacetValueExclude', () => {
     await expect(icon).toBeInTheDocument();
   });
 
-  it('applies the correct class and part attributes', async () => {
+  it('applies the correct part attributes', async () => {
     await setupElement({class: 'custom-class'});
     const {button} = locators;
     expect(button).toHaveAttribute('part', 'value-exclude-button');
+    expect(button).toHaveClass('custom-class');
   });
 
   it('sets aria-label and value attributes from props', async () => {
