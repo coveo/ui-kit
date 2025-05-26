@@ -1,18 +1,28 @@
+import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {
+  getQuestionPart,
+  SmartSnippetSuggestionsAnswerAndSourceWrapper,
+  SmartSnippetSuggestionsFooter,
+  SmartSnippetSuggestionsQuestion,
+  SmartSnippetSuggestionsQuestionWrapper,
+  SmartSnippetSuggestionsWrapper,
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
+import {Hidden} from '@/src/components/common/stencil-hidden';
 import {
   buildSmartSnippetQuestionsList,
   SmartSnippetQuestionsList,
   SmartSnippetQuestionsListState,
   SmartSnippetRelatedQuestion,
 } from '@coveo/headless';
-import {Component, Prop, State, Element} from '@stencil/core';
+import {Component, Prop, State, Element, h} from '@stencil/core';
+import ArrowDown from '../../../../images/arrow-down.svg';
+import ArrowRight from '../../../../images/arrow-right.svg';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {randomID} from '../../../../utils/stencil-utils';
-import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
-import {SmartSnippetSuggestionCommon} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -65,8 +75,6 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
   public error!: Error;
   @Element() public host!: HTMLElement;
 
-  private smartSnippetSuggestionListCommon!: SmartSnippetSuggestionCommon;
-
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the "People also ask" heading over the snippets, from 1 to 5.
    */
@@ -93,36 +101,122 @@ export class AtomicSmartSnippetSuggestions implements InitializableComponent {
     this.smartSnippetQuestionsList = buildSmartSnippetQuestionsList(
       this.bindings.engine
     );
-
-    this.smartSnippetSuggestionListCommon = new SmartSnippetSuggestionCommon({
-      id: this.id,
-      getSourceAnchorAttributes: () =>
-        getAttributesFromLinkSlot(this.host, 'source-anchor-attributes'),
-      getHost: () => this.host,
-      getBindings: () => this.bindings,
-      getHeadingLevel: () => this.headingLevel,
-      getState: () => this.smartSnippetQuestionsListState,
-      getQuestionsList: () => this.smartSnippetQuestionsList,
-      getSnippetStyle: () => this.snippetStyle,
-    });
-
-    this.smartSnippetSuggestionListCommon.hideDuringRender(true);
-    this.bindings.store.waitUntilAppLoaded(() => {
-      this.smartSnippetSuggestionListCommon.hideDuringRender(false);
-    });
-  }
-
-  public renderRelatedQuestion(
-    relatedQuestion: SmartSnippetRelatedQuestion,
-    index: number
-  ) {
-    return this.smartSnippetSuggestionListCommon.renderRelatedQuestion(
-      relatedQuestion,
-      index
-    );
   }
 
   public render() {
-    return this.smartSnippetSuggestionListCommon.render();
+    if (!this.smartSnippetQuestionsListState.questions.length) {
+      return <Hidden></Hidden>;
+    }
+
+    return (
+      <SmartSnippetSuggestionsWrapper
+        headingLevel={this.headingLevel}
+        i18n={this.bindings.i18n}
+      >
+        {this.smartSnippetQuestionsListState.questions.map(
+          (relatedQuestion, i) => this.renderRelatedQuestion(relatedQuestion, i)
+        )}
+      </SmartSnippetSuggestionsWrapper>
+    );
+  }
+
+  private get style() {
+    const styleTag = this.host
+      .querySelector('template')
+      ?.content.querySelector('style');
+    if (!styleTag) {
+      return this.snippetStyle;
+    }
+    return styleTag.innerHTML;
+  }
+
+  private toggleQuestion(relatedQuestion: SmartSnippetRelatedQuestion) {
+    if (relatedQuestion.expanded) {
+      this.smartSnippetQuestionsList.collapse(relatedQuestion.questionAnswerId);
+    } else {
+      this.smartSnippetQuestionsList.expand(relatedQuestion.questionAnswerId);
+    }
+  }
+
+  private renderRelatedQuestion(
+    relatedQuestion: SmartSnippetRelatedQuestion,
+    index: number
+  ) {
+    return (
+      <SmartSnippetSuggestionsQuestionWrapper
+        expanded={relatedQuestion.expanded}
+        key={relatedQuestion.questionAnswerId}
+      >
+        <SmartSnippetSuggestionsQuestion
+          ariaControls={`${this.id}-${index}`}
+          expanded={relatedQuestion.expanded}
+          headingLevel={this.headingLevel}
+          onClick={() => this.toggleQuestion(relatedQuestion)}
+          question={relatedQuestion.question}
+        >
+          <atomic-icon
+            icon={relatedQuestion.expanded ? ArrowDown : ArrowRight}
+            part={getQuestionPart('icon', relatedQuestion.expanded)}
+            class="mr-3 w-2.5 stroke-[1.25]"
+          ></atomic-icon>
+        </SmartSnippetSuggestionsQuestion>
+        {relatedQuestion.expanded && (
+          <SmartSnippetSuggestionsAnswerAndSourceWrapper
+            expanded={relatedQuestion.expanded}
+            id={`${this.id}-${index}`}
+          >
+            <atomic-smart-snippet-answer
+              exportparts="answer"
+              htmlContent={relatedQuestion.answer}
+              innerStyle={this.style}
+              onSelectInlineLink={(e) =>
+                this.smartSnippetQuestionsList.selectInlineLink(
+                  relatedQuestion.questionAnswerId,
+                  e.detail
+                )
+              }
+              onBeginDelayedSelectInlineLink={(e) =>
+                this.smartSnippetQuestionsList.beginDelayedSelectInlineLink(
+                  relatedQuestion.questionAnswerId,
+                  e.detail
+                )
+              }
+              onCancelPendingSelectInlineLink={(e) =>
+                this.smartSnippetQuestionsList.cancelPendingSelectInlineLink(
+                  relatedQuestion.questionAnswerId,
+                  e.detail
+                )
+              }
+            ></atomic-smart-snippet-answer>
+            {relatedQuestion.source && (
+              <SmartSnippetSuggestionsFooter i18n={this.bindings.i18n}>
+                <atomic-smart-snippet-source
+                  anchorAttributes={getAttributesFromLinkSlot(
+                    this.host,
+                    'source-anchor-attributes'
+                  )}
+                  onBeginDelayedSelectSource={() =>
+                    this.smartSnippetQuestionsList.beginDelayedSelectSource(
+                      relatedQuestion.questionAnswerId
+                    )
+                  }
+                  onCancelPendingSelectSource={() =>
+                    this.smartSnippetQuestionsList.cancelPendingSelectSource(
+                      relatedQuestion.questionAnswerId
+                    )
+                  }
+                  onSelectSource={() =>
+                    this.smartSnippetQuestionsList.selectSource(
+                      relatedQuestion.questionAnswerId
+                    )
+                  }
+                  source={relatedQuestion.source}
+                ></atomic-smart-snippet-source>
+              </SmartSnippetSuggestionsFooter>
+            )}
+          </SmartSnippetSuggestionsAnswerAndSourceWrapper>
+        )}
+      </SmartSnippetSuggestionsQuestionWrapper>
+    );
   }
 }
