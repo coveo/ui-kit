@@ -11,7 +11,7 @@
           "componentAttributes": {
             "background": "background: rgba(0,0,0,0)",
             "backgroundOverlay": "rgba(0,0,0,0.5)",
-            "contentAreaWidth": 100,
+            "contentAreaWidth": 45,
             "sectionConfig": {
               "UUID": "d4e37a1c-ad91-4b18-b51d-3cc3d2f0fff1",
               "columns": [

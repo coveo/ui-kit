@@ -19,8 +19,9 @@ export interface CommerceEngineConfiguration extends EngineConfiguration {
    */
   analytics: Pick<
     AnalyticsConfiguration,
-    'enabled' | 'proxyBaseUrl' | 'source' | 'trackingId'
-  >;
+    'enabled' | 'proxyBaseUrl' | 'source'
+  > &
+    Required<Pick<AnalyticsConfiguration, 'trackingId'>>;
   /**
    * The commerce context options.
    */
