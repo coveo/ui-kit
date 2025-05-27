@@ -63,24 +63,4 @@
       @apply border-primary border-2 font-bold;
     }
   }
-
-  .carousel {
-    @apply relative;
-    [part='next-button'],
-    [part='previous-button'] {
-      @apply absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 items-center justify-center shadow-lg;
-
-      svg {
-        @apply text-on-background group-hover:text-primary group-focus:text-primary-light w-3.5 align-middle;
-      }
-    }
-
-    [part='next-button'] {
-      @apply right-0;
-    }
-    [part='previous-button'] {
-      @apply -translate-x-1/2;
-      @apply rotate-180;
-    }
-  }
 }
