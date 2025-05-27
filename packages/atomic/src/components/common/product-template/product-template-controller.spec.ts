@@ -2,8 +2,11 @@ import {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect} from 'vitest';
+import {describe, it, expect, vi} from 'vitest';
+import {getTemplateNodeType} from './product-template-common';
 import {ProductTemplateController} from './product-template-controller';
+
+vi.mock('./product-template-common', {spy: true});
 
 @customElement('test-element')
 class TestElement extends LitElement implements LitElementWithError {
@@ -28,12 +31,10 @@ class EmptyTestElement extends LitElement implements LitElementWithError {
 describe('ProductTemplateController', () => {
   async function setupElement(
     template: TemplateResult<1>,
-    parentNode?: HTMLElement
+    parentNode: HTMLElement = document.createElement('valid-parent')
   ) {
     await fixture(template, parentNode);
-    return document.querySelector('test-element')! as
-      | TestElement
-      | EmptyTestElement;
+    return document.querySelector('test-element')! as TestElement;
   }
 
   describe('when the host has not a valid parent', () => {
@@ -52,10 +53,8 @@ describe('ProductTemplateController', () => {
 
   describe('when the template is missing from the host', () => {
     it('should set an error', async () => {
-      const element = await setupElement(
-        html`<test-element></test-element>`,
-        document.createElement('valid-parent')
-      );
+      const element = await setupElement(html`<test-element></test-element>`);
+
       expect(element.error).toBeInstanceOf(Error);
       expect(element.error.message).toContain('must contain a "template"');
     });
@@ -66,27 +65,76 @@ describe('ProductTemplateController', () => {
       const element = await setupElement(
         html`<test-element>
           <template> </template>
-        </test-element>`,
-        document.createElement('valid-parent')
+        </test-element>`
       );
+
       expect(element.error).toBeInstanceOf(Error);
       expect(element.error.message).toContain('cannot be empty');
     });
 
     it('should not set an error if allowEmpty is true', async () => {
-      const element = await setupElement(
+      await setupElement(
         html`<empty-test-element>
           <template> </template>
-        </empty-test-element>`,
-        document.createElement('valid-parent')
+        </empty-test-element>`
       );
-      expect(element.error).toBeNull();
+
+      const element = document.querySelector(
+        'empty-test-element'
+      ) as EmptyTestElement;
+
+      expect(element.error).toBeUndefined();
     });
   });
 
-  //   //   TODO: warnings
-  //   describe.skip('when the template contains script tags', () => {});
-  //   describe.skip('when the template contains both section and other nodes', () => {});
+  describe('when the template contains script tags', () => {
+    it('should log a warning', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      const element = await setupElement(
+        html`<test-element>
+          <template><script></script></template>
+        </test-element>`
+      );
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('script'),
+        element
+      );
+
+      warnSpy.mockRestore();
+    });
+  });
+
+  describe('when the template contains both section and other nodes', () => {
+    const localSetup = () =>
+      setupElement(
+        html`<test-element>
+          <template>
+            <atomic-result-section-visual>section</atomic-result-section-visual>
+            <span>other</span>
+          </template>
+        </test-element>`
+      );
+
+    it('should call #getTemplateNodeType with the appropriate sections', async () => {
+      const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
+      await localSetup();
+
+      expect(mockedGetTemplateNodeType.mock.calls).toMatchSnapshot();
+    });
+
+    it('should log a warning', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      await localSetup();
+
+      expect(warnSpy).toHaveBeenCalledWith(
+        expect.stringContaining('should only contain section elements'),
+        expect.any(TestElement),
+        expect.objectContaining({})
+      );
+    });
+  });
+
   //   describe.skip('when the template is valid', () => {});
 
   //   beforeEach(async () => {

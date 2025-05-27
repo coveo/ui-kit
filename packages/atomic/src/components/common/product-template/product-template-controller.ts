@@ -33,19 +33,12 @@ export class ProductTemplateController implements ReactiveController {
     sectionMix:
       'Product templates should only contain section elements or non-section elements. Future updates could unpredictably affect this product template.',
   };
-  allowEmpty: boolean;
 
   constructor(
     private host: ProductTemplateHost,
     private validParents: string[],
-    // private allowEmpty: boolean = false
-    allowEmpty?: boolean
+    private allowEmpty: boolean = false
   ) {
-    console.log('*********************');
-    console.log(allowEmpty);
-    console.log('*********************');
-
-    this.allowEmpty = allowEmpty ?? false;
     this.host.addController(this);
   }
 
@@ -59,9 +52,7 @@ export class ProductTemplateController implements ReactiveController {
   }
 
   validateTemplate() {
-    const validParents = this.validParents;
-    const allowEmpty = this.allowEmpty;
-    const hasValidParent = validParents
+    const hasValidParent = this.validParents
       .map((p) => p.toUpperCase())
       .includes(this.parentElement?.nodeName || '');
     const tagName = this.host.nodeName.toLowerCase();
@@ -69,7 +60,10 @@ export class ProductTemplateController implements ReactiveController {
     if (!hasValidParent) {
       this.setError(
         new Error(
-          ProductTemplateController.ERRORS.invalidParent(tagName, validParents)
+          ProductTemplateController.ERRORS.invalidParent(
+            tagName,
+            this.validParents
+          )
         )
       );
       return;
@@ -88,7 +82,7 @@ export class ProductTemplateController implements ReactiveController {
       return;
     }
 
-    if (!allowEmpty && !this.template.innerHTML.trim()) {
+    if (!this.allowEmpty && !this.template.innerHTML.trim()) {
       this.setError(
         new Error(ProductTemplateController.ERRORS.emptyTemplate(tagName))
       );
@@ -99,14 +93,16 @@ export class ProductTemplateController implements ReactiveController {
       console.warn(ProductTemplateController.WARNINGS.scriptTag, this.host);
     }
 
-    const {section: sectionNodes, other: otherNodes} = groupNodesByType(
-      this.template.content.childNodes
-    );
+    const {section, other} = groupNodesByType(this.template.content.childNodes);
 
-    if (sectionNodes?.length && otherNodes?.length) {
+    console.log('*********************');
+    console.log(section);
+    console.log('*********************');
+
+    if (section?.length && other?.length) {
       console.warn(ProductTemplateController.WARNINGS.sectionMix, this.host, {
-        sectionNodes,
-        otherNodes,
+        section,
+        other,
       });
     }
   }
