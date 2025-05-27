@@ -27,13 +27,9 @@ export const BreadcrumbContent: FunctionalComponent<BreadcrumbContentProps> = (
       </span>
       <span
         part="breadcrumb-value"
-        class={`ml-1 ${
-          props.breadcrumb.content
-            ? ''
-            : `max-w-[30ch] truncate ${props.breadcrumb.state}`
-        }`}
+        class={`ml-1 ${`max-w-[30ch] truncate ${props.breadcrumb.state}`}`}
       >
-        {props.breadcrumb.content ?? value}
+        {value}
       </span>
       <atomic-icon
         part="breadcrumb-clear"

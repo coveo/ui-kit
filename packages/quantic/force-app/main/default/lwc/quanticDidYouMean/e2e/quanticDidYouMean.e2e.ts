@@ -34,16 +34,13 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
-          const searchResponsePromise = search.waitForSearchResponse();
           const automaticallyCorrectSearchPromise =
             search.waitForSearchResponse();
           const expectedUaRequestPromise =
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await expectedUaRequestPromise;
           await automaticallyCorrectSearchPromise;
 
@@ -73,14 +70,11 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanNextResponse(didYouMeanNextData);
-          const searchResponsePromise = search.waitForSearchResponse();
           const expectedUaRequestPromise =
             didYouMean.waitForDidYouMeanAutomaticAnalytics({
               queryText: expectedCorrectedQuery,
             });
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await expectedUaRequestPromise;
 
           await expect(didYouMean.didYouMeanNoResultsLabel).toBeVisible();
@@ -111,10 +105,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanLegacyResponse(didYouMeanData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -152,10 +143,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithDidYouMeanNextResponse(didYouMeanNextData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(
             didYouMean.didYouMeanManualCorrectionLabel
@@ -192,10 +180,7 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-          const searchResponsePromise = search.waitForSearchResponse();
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
 
           await expect(didYouMean.showingResultsForLabel).toBeVisible();
           await expect(didYouMean.showingResultsForLabel).toContainText(
@@ -212,13 +197,10 @@ useCaseTestCases.forEach((useCase) => {
           search,
         }) => {
           await search.mockSearchWithQueryTriggerResponse(queryTriggerData);
-          const searchResponsePromise = search.waitForSearchResponse();
 
           const queryTriggerCustomUAPromise =
             didYouMean.waitForQueryTriggerCustomAnalytics({});
-          didYouMean.setQuery(expectedOriginalQuery);
-          didYouMean.performSearch();
-          await searchResponsePromise;
+          await search.triggerSearchWithInput(expectedOriginalQuery);
           await queryTriggerCustomUAPromise;
 
           const undoSearchResponsePromise = search.waitForSearchResponse();
