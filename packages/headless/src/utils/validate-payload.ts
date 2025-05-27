@@ -41,6 +41,18 @@ export const optionalNonEmptyVersionString = new StringValue({
   regex: /^\d+\.\d+\.\d+$/,
 });
 
+export const optionalTrackingId = new StringValue({
+  required: false,
+  emptyAllowed: false,
+  regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+});
+
+export const requiredTrackingId = new StringValue({
+  required: true,
+  emptyAllowed: false,
+  regex: /^[a-zA-Z0-9_\-.]{1,100}$/,
+});
+
 export const serializeSchemaValidationError = ({
   message,
   name,
