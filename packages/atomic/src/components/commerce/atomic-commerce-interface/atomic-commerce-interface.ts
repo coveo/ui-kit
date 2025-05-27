@@ -186,7 +186,6 @@ export class AtomicCommerceInterface
   }
 
   public connectedCallback() {
-    this.initAriaLive();
     super.connectedCallback();
     this.store.setLoadingFlag(FirstRequestExecutedFlag);
 
@@ -334,6 +333,7 @@ export class AtomicCommerceInterface
       this.commonInterfaceHelper.onInitialization(initEngine),
       this.i18Initialized,
     ]);
+    this.initAriaLive();
     this.initContext();
     this.updateLanguage();
     this.bindings = this.getBindings();
