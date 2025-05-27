@@ -22,18 +22,6 @@ import {ProductTemplateController} from '../../common/product-template/product-t
  * @slot default - The default slot where to insert the template element.
  * @slot link - A `template` element that contains a single `atomic-product-link` component.
  */
-
-/**
- * A product template determines the format of the query results, depending on the conditions that are defined for each template.
- *
- * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
- *
- * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
- *
- * @slot default - The default slot where to insert the template element.
- * @slot link - A `template` element that contains a single `atomic-product-link` component.
- */
-
 @customElement('atomic-product-template')
 export class AtomicProductTemplate
   extends LitElement
@@ -61,6 +49,7 @@ export class AtomicProductTemplate
    * @default {}
    */
   @mapProperty({splitValues: true})
+  // @mapProperty({splitValues: true, attribute: 'must-match'}) // TODO: missing attribute parameter
   mustMatch: Record<string, string[]> = {};
 
   /**
@@ -70,7 +59,7 @@ export class AtomicProductTemplate
    * @type {Record<string, string[]>}
    * @default {}
    */
-  @property({attribute: false})
+  @mapProperty({splitValues: true})
   mustNotMatch: Record<string, string[]> = {};
 
   constructor() {
@@ -101,22 +90,17 @@ export class AtomicProductTemplate
    * Gets the product template to apply based on the evaluated conditions.
    */
   public async getTemplate(): Promise<ProductTemplate<DocumentFragment> | null> {
-    console.log('*********************');
-    console.log(this.productTemplateController);
-    console.log('*********************');
-
     return this.productTemplateController.getTemplate(this.conditions);
   }
 
   @errorGuard()
   render() {
-    // return this.productTemplateController.renderIfError() ?? html`${nothing}`;
     return html`${nothing}`;
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'atomic-commerce-product-template': AtomicProductTemplate;
+    'atomic-product-template': AtomicProductTemplate;
   }
 }

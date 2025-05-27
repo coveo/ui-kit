@@ -2947,26 +2947,3 @@ export class AtomicTimeframeFacet {
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
 
-@ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-  methods: ['getTemplate']
-})
-@Component({
-  selector: 'stencil-atomic-product-template',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-})
-export class StencilAtomicProductTemplate {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface StencilAtomicProductTemplate extends Components.StencilAtomicProductTemplate {}
-
-

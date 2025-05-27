@@ -135,8 +135,7 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet,
-StencilAtomicProductTemplate
+AtomicTimeframeFacet
 } from './components';
 
         
@@ -271,8 +270,7 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet,
-StencilAtomicProductTemplate
+AtomicTimeframeFacet
 ]
 
         

@@ -9,10 +9,12 @@ import {getTemplateNodeType} from './product-template-common';
 
 export type TemplateContent = DocumentFragment;
 
+type ProductTemplateHost = ReactiveControllerHost &
+  HTMLElement & {error: Error};
+
 export class ProductTemplateController implements ReactiveController {
   public matchConditions: ProductTemplateCondition[] = [];
   private gridCellLinkTarget?: ItemTarget;
-  private error: Error | null = null;
 
   private static readonly ERRORS = {
     invalidParent: (tagName: string, validParents: string[]) =>
@@ -31,12 +33,19 @@ export class ProductTemplateController implements ReactiveController {
     sectionMix:
       'Product templates should only contain section elements or non-section elements. Future updates could unpredictably affect this product template.',
   };
+  allowEmpty: boolean;
 
   constructor(
-    private host: ReactiveControllerHost & HTMLElement,
+    private host: ProductTemplateHost,
     private validParents: string[],
-    private allowEmpty: boolean = false
+    // private allowEmpty: boolean = false
+    allowEmpty?: boolean
   ) {
+    console.log('*********************');
+    console.log(allowEmpty);
+    console.log('*********************');
+
+    this.allowEmpty = allowEmpty ?? false;
     this.host.addController(this);
   }
 
@@ -45,8 +54,8 @@ export class ProductTemplateController implements ReactiveController {
   }
 
   setError(error: Error) {
-    this.error = error;
-    this.host.requestUpdate(); // TODO: not sure this is required because error is a state variable
+    this.host.error = error;
+    // this.host.requestUpdate(); // TODO: not sure this is required because error is a state variable
   }
 
   validateTemplate() {
@@ -105,7 +114,7 @@ export class ProductTemplateController implements ReactiveController {
   getTemplate(
     conditions: ProductTemplateCondition[]
   ): ProductTemplate<TemplateContent> | null {
-    if (this.error) {
+    if (this.host.error) {
       return null;
     }
     return {
