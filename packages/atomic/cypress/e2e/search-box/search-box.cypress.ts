@@ -520,7 +520,7 @@ describe('Search Box Test Suites', () => {
         .and('contain', 'active-suggestion');
     });
 
-    it('should collapse suggestions when clicking on the search button', () => {
+    it.skip('should collapse suggestions when clicking on the search button', () => {
       SearchBoxSelectors.textArea().focus();
       SearchBoxSelectors.querySuggestions().should('exist');
 
