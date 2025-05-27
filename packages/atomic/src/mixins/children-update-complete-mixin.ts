@@ -1,8 +1,6 @@
 import {HTMLStencilElement} from '@stencil/core/internal';
 import {LitElement} from 'lit';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Constructor<T = {}> = new (...args: any[]) => T;
+import {Constructor} from '../decorators/base';
 
 export const ChildrenUpdateCompleteMixin = <T extends Constructor<LitElement>>(
   superClass: T

@@ -57,5 +57,6 @@ _The `[component-name]` component is designed to [brief description of the compo
 - [ ] 🦥 Slotted Content, public methods and properties are documented
 - [ ] 🔄 The component outputs the same Angular output as before with Stencil
 - [ ] 🏷️ The component declares the component type in the HTMLElementTagNameMap
+- [ ] ✅ The component uses the atomicElement decorator instead of Lit’s customElement decorator
 
 https://coveord.atlassian.net/browse/KIT-[____]
