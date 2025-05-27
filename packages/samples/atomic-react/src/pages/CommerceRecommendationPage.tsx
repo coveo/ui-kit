@@ -1,5 +1,5 @@
 import {
-  AtomicCommerceRecommendationInterface,
+  AtomicCommerceInterface,
   AtomicProductLink,
   AtomicProductText,
   AtomicProductPrice,
@@ -45,7 +45,8 @@ export const CommerceRecommendationPage = () => {
       }
     }`}
       </style>
-      <AtomicCommerceRecommendationInterface engine={engine}>
+      {/* TODO: change to AtomicCommerceRecommendationInterface once merged (KIT-3934) */}
+      <AtomicCommerceInterface engine={engine}>
         <AtomicCommerceLayout mobileBreakpoint="1024px">
           <AtomicLayoutSection section="main">
             <AtomicCommerceRecommendationList
@@ -57,7 +58,7 @@ export const CommerceRecommendationPage = () => {
             ></AtomicCommerceRecommendationList>
           </AtomicLayoutSection>
         </AtomicCommerceLayout>
-      </AtomicCommerceRecommendationInterface>
+      </AtomicCommerceInterface>
     </>
   );
 };
