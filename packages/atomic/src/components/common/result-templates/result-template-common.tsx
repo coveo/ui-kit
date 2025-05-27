@@ -9,7 +9,7 @@ import {
   isElementNode,
   isVisualNode,
 } from '../../../utils/stencil-utils';
-import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {tableElementTagName} from '../../search/atomic-table-result/stencil-table-element-utils';
 import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';
 

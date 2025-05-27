@@ -3,7 +3,7 @@ import {
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {intersection} from '../../../utils/set';
-import {isElementNode, isVisualNode} from '../../../utils/stencil-utils';
+import {isElementNode, isVisualNode} from '../../../utils/utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {isResultSectionNode} from '../layout/sections';
 
