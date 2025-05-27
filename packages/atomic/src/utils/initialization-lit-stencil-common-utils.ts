@@ -1,7 +1,11 @@
 import type {AnyBindings} from '../components/common/interface/bindings';
 import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
-import {enqueueOrDispatchInitializationEvent} from './init-queue';
+import {
+  enqueueOrDispatchInitializationEvent,
+  isParentReady,
+  queueEventForParent,
+} from './init-queue';
 
 export function fetchBindings<SpecificBindings extends AnyBindings>(
   element: Element
@@ -15,6 +19,11 @@ export function fetchBindings<SpecificBindings extends AnyBindings>(
     if (!parent) {
       reject(new MissingInterfaceParentError(element.nodeName.toLowerCase()));
       return;
+    }
+    if (isParentReady(parent)) {
+      element.dispatchEvent(event);
+    } else {
+      queueEventForParent(parent, event, element);
     }
     enqueueOrDispatchInitializationEvent(parent, event, element);
   });
