@@ -24,14 +24,14 @@ test.describe('quantic recommendation list', () => {
     });
   });
 
-  test.describe('fieldsToInclude in the Search API request', () => {
+  test.describe('when getting new recommendations', () => {
     test.use({
       options: {
         fieldsToInclude: testFieldsToInclude,
       },
     });
 
-    test('when performing a search should send the added fieldsToInclude', async ({
+    test('should perform a search request with the correct fieldsToInclude', async ({
       recommendationList,
       search,
     }) => {

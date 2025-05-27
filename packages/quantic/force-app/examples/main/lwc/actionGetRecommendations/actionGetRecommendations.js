@@ -1,13 +1,13 @@
 import {getHeadlessBundle} from 'c/quanticHeadlessLoader';
 import {api, LightningElement} from 'lwc';
 
-export default class ActionPerformRecommendationSearch extends LightningElement {
+export default class ActionGetRecommendations extends LightningElement {
   @api engineId;
   @api disabled;
 
   headless;
 
-  handleRecommendationPerformSearch() {
+  handleGetRecommendations() {
     this.resolveEngine().then((engine) => {
       this.actions = {
         ...this.headless.loadRecommendationActions(engine),

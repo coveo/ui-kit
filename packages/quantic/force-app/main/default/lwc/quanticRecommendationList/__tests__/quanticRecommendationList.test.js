@@ -38,7 +38,8 @@ jest.mock(
 );
 
 let isInitialized = false;
-let initialRecommendationListState = {
+let consoleErrorSpy;
+const initialRecommendationListState = {
   isLoading: false,
   recommendations: recommendationsArray,
   error: null,
@@ -275,6 +276,17 @@ describe('c-quantic-recommendation-list', () => {
     });
 
     describe('when invalid property values are passed', () => {
+      const expectedInvalidPropertyErrorMessage =
+        'The value of the recommendationsPerRow property must be an integer greater than 0.';
+
+      beforeEach(() => {
+        consoleErrorSpy = jest.spyOn(console, 'error');
+      });
+
+      afterEach(() => {
+        consoleErrorSpy.mockRestore();
+      });
+
       it('should diplay an error message when recommendationsPerRow is not a number', async () => {
         const element = createTestComponent({
           ...defaultOptions,
@@ -287,14 +299,13 @@ describe('c-quantic-recommendation-list', () => {
         );
 
         expect(initializationError).not.toBeNull();
+        expect(console.error).toHaveBeenCalledTimes(1);
+        expect(console.error).toHaveBeenCalledWith(
+          expectedInvalidPropertyErrorMessage
+        );
       });
 
       it('should diplay an error message when recommendationsPerRow is a negative number', async () => {
-        const consoleErrorSpy = jest
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
-        const expectedConsoleErrorMessage =
-          'The value of the recommendationsPerRow property must be an integer greater than 0.';
         const element = createTestComponent({
           ...defaultOptions,
           recommendationsPerRow: -1,
@@ -307,8 +318,9 @@ describe('c-quantic-recommendation-list', () => {
 
         expect(initializationError).not.toBeNull();
         expect(console.error).toHaveBeenCalledTimes(1);
-        expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
-        consoleErrorSpy.mockRestore();
+        expect(console.error).toHaveBeenCalledWith(
+          expectedInvalidPropertyErrorMessage
+        );
       });
     });
   });
@@ -352,10 +364,10 @@ describe('c-quantic-recommendation-list', () => {
         );
 
         expect(recommendationContainer).toBeNull();
-        const recommendationListItems = element.shadowRoot.querySelectorAll(
+        const recommendationListElements = element.shadowRoot.querySelectorAll(
           selectors.recommendationListItem
         );
-        expect(recommendationListItems.length).toBe(0);
+        expect(recommendationListElements.length).toBe(0);
       });
     });
 
@@ -378,16 +390,13 @@ describe('c-quantic-recommendation-list', () => {
           expect(recommendationContainer).not.toBeNull();
           expect(recommendationItems.length).toBe(recommendationsArray.length);
           recommendationItems.forEach((item, index) => {
-            expect(item.result.title).toEqual(
-              recommendationsArray[index].title
-            );
-            expect(item.result.clickUri).toEqual(
-              recommendationsArray[index].clickUri
-            );
-            expect(item.result.excerpt).toEqual(
-              recommendationsArray[index].excerpt
+            expect(item.result).toEqual(
+              expect.objectContaining(recommendationsArray[index])
             );
             expect(item.engineId).toBe(defaultOptions.engineId);
+            expect(item.resultTemplatesManager).toEqual(
+              functionMocks.buildResultTemplatesManager()
+            );
           });
         });
 
@@ -398,11 +407,11 @@ describe('c-quantic-recommendation-list', () => {
             const element = createTestComponent({
               ...defaultOptions,
               variant: 'grid',
-              recommendationsPerRow: 2,
+              recommendationsPerRow: customRecommendationsPerRow,
             });
             await flushPromises();
 
-            expect(element.style._values['--recommendationItemWidth']).toEqual(
+            expect(element.style._values['--recommendationItemWidth']).toBe(
               expectedRecommendationWidth
             );
           });
@@ -432,16 +441,13 @@ describe('c-quantic-recommendation-list', () => {
           );
 
           recommendationItems.forEach((item, index) => {
-            expect(item.result.title).toEqual(
-              recommendationsArray[index].title
-            );
-            expect(item.result.clickUri).toEqual(
-              recommendationsArray[index].clickUri
-            );
-            expect(item.result.excerpt).toEqual(
-              recommendationsArray[index].excerpt
+            expect(item.result).toEqual(
+              expect.objectContaining(recommendationsArray[index])
             );
             expect(item.engineId).toBe(defaultOptions.engineId);
+            expect(item.resultTemplatesManager).toEqual(
+              functionMocks.buildResultTemplatesManager()
+            );
           });
         });
 
