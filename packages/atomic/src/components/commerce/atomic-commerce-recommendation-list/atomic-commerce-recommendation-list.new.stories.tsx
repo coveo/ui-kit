@@ -7,7 +7,7 @@ const {decorator, play} = wrapInCommerceRecommendationInterface({});
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
-  title: 'Atomic-Commerce/Recommendation List',
+  title: 'Commerce/atomic-commerce-recommendation-list',
   id: 'atomic-commerce-recommendation-list',
   render: renderComponent,
   decorators: [decorator],
@@ -26,12 +26,17 @@ const meta: Meta = {
       options: ['small', 'large', 'icon', 'none'],
       control: {type: 'radio'},
     },
+    'attributes-products-per-page': {
+      control: {type: 'text'},
+      description: 'The slot ID to use for the product template.',
+    },
   },
 
   args: {
     'attributes-display': 'list',
     'attributes-density': 'normal',
     'attributes-image-size': 'small',
+    'attributes-products-per-page': 3,
     'attributes-slot-id': 'af4fb7ba-6641-4b67-9cf9-be67e9f30174',
 
     'slots-default': `<atomic-product-template>
@@ -107,6 +112,7 @@ export const WithFullTemplate: Story = {
 export const RecsOpeningInNewTab: Story = {
   tags: ['test'],
   args: {
+    'attributes-display': 'grid',
     'slots-default': ` <atomic-product-template>
                 <template slot="link">
                   <atomic-product-link>
