@@ -2993,32 +2993,6 @@ export declare interface AtomicCommerceRecommendationList extends LitAtomicComme
 }
 
 @ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
-  methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box-query-suggestions',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-export class AtomicCommerceSearchBoxQuerySuggestions {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
-
-}
-
-@ProxyCmp({
   inputs: [],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-sort-dropdown') || customElements.define('atomic-commerce-sort-dropdown', LitAtomicCommerceSortDropdown);}
@@ -3041,6 +3015,32 @@ export class AtomicCommerceSortDropdown {
 }
 
 export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSortDropdown {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-query-suggestions',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+})
+export class AtomicCommerceSearchBoxQuerySuggestions {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
 
 }
 

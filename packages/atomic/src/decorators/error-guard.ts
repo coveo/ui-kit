@@ -1,5 +1,6 @@
 import {html, LitElement} from 'lit';
 import {TemplateResultType} from 'lit/directive-helpers.js';
+import '../components/common/atomic-component-error/atomic-component-error';
 import {
   GenericRender,
   InitializableComponent,
