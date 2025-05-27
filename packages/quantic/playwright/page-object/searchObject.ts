@@ -39,7 +39,7 @@ export class SearchObject {
   }
 
   get performRecommendationSearchButton(): Locator {
-    return this.page.locator('c-action-perform-recommendation-search button');
+    return this.page.locator('c-action-get-recommendations button');
   }
 
   async performRecommendationSearch(): Promise<void> {
