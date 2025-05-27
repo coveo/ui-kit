@@ -177,7 +177,7 @@ export class AtomicInsightSmartSnippet
       return;
     }
     const modalRef = document.createElement(
-      'atomic-smart-snippet-feedback-modal'
+      'atomic-insight-smart-snippet-feedback-modal'
     );
     modalRef.addEventListener('feedbackSent', () => {
       this.setFeedbackSent(true);
