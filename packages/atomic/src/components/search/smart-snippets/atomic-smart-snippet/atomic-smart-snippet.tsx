@@ -1,3 +1,4 @@
+import '@/src/components/common/smart-snippets/atomic-smart-snippet-expandable-answer/atomic-smart-snippet-expandable-answer';
 import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-banner';
 import {
   SmartSnippetTruncatedAnswer,
