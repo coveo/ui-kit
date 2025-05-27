@@ -10,9 +10,7 @@ test.describe('quantic recommendation list', () => {
       await recommendationList.captureRecommendationListClickEventWorkaround();
 
       const recommendationClickAnalyticsPromise =
-        recommendationList.waitForRecommendationListClickEvent(
-          'recommendationOpen'
-        );
+        recommendationList.waitForRecommendationListClickEvent();
 
       const firstRecommendationLink =
         recommendationList.getRecommendationLinkByIndex(0);
@@ -38,6 +36,7 @@ test.describe('quantic recommendation list', () => {
       search,
     }) => {
       const expectedFieldsToInclude = testFieldsToInclude.split(',');
+      const expectedRecommendationValue = 'Recommendation';
       const searchRequestPromise = search.waitForSearchRequest();
       await search.performRecommendationSearch();
       const requestBody = (await searchRequestPromise).postDataJSON();
@@ -45,6 +44,7 @@ test.describe('quantic recommendation list', () => {
       expect(requestBody).toEqual(
         expect.objectContaining({
           fieldsToInclude: expect.arrayContaining(expectedFieldsToInclude),
+          recommendation: expectedRecommendationValue,
         })
       );
       expect(recommendationList.recommendationList).toBeVisible();

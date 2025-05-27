@@ -75,7 +75,6 @@ const functionMocks = {
       fieldsToInclude,
     };
   }),
-  eventHandler: jest.fn(),
 };
 
 const exampleEngine = {
@@ -144,7 +143,6 @@ describe('c-quantic-recommendation-list', () => {
   beforeEach(() => {
     mockSuccessfulHeadlessInitialization();
     prepareHeadlessState();
-    console.error = jest.fn();
   });
 
   afterEach(() => {
@@ -193,7 +191,7 @@ describe('c-quantic-recommendation-list', () => {
   });
 
   describe('controller initialization', () => {
-    it('should build the buildRecommendationList controller with the proper parameters and subscribe to its state', async () => {
+    it('should build the RecommendationList controller and subscribe to its state', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -210,7 +208,7 @@ describe('c-quantic-recommendation-list', () => {
       expect(functionMocks.subscribe).toHaveBeenCalledTimes(1);
     });
 
-    it('should build the buildResultTemplatesManager controller with the proper parameters', async () => {
+    it('should build the ResultTemplatesManager controller', async () => {
       createTestComponent();
       await flushPromises();
 
@@ -223,18 +221,19 @@ describe('c-quantic-recommendation-list', () => {
     });
 
     it('should dispatch quantic__registerrecommendationtemplates event', async () => {
+      const mockEventHandler = jest.fn();
       document.addEventListener(
         'quantic__registerrecommendationtemplates',
         // @ts-ignore
-        (event) => functionMocks.eventHandler(event.detail),
+        (event) => mockEventHandler(event.detail),
         {once: true}
       );
       createTestComponent();
 
       await flushPromises();
 
-      expect(functionMocks.eventHandler).toHaveBeenCalledTimes(1);
-      expect(functionMocks.eventHandler).toHaveBeenCalledWith({
+      expect(mockEventHandler).toHaveBeenCalledTimes(1);
+      expect(mockEventHandler).toHaveBeenCalledWith({
         registerTemplates: functionMocks.registerTemplates,
       });
     });
@@ -291,6 +290,9 @@ describe('c-quantic-recommendation-list', () => {
       });
 
       it('should diplay an error message when recommendationsPerRow is a negative number', async () => {
+        const consoleErrorSpy = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
         const expectedConsoleErrorMessage =
           'The value of the recommendationsPerRow property must be an integer greater than 0.';
         const element = createTestComponent({
@@ -306,6 +308,7 @@ describe('c-quantic-recommendation-list', () => {
         expect(initializationError).not.toBeNull();
         expect(console.error).toHaveBeenCalledTimes(1);
         expect(console.error).toHaveBeenCalledWith(expectedConsoleErrorMessage);
+        consoleErrorSpy.mockRestore();
       });
     });
   });
@@ -358,7 +361,7 @@ describe('c-quantic-recommendation-list', () => {
 
     describe('when there are recommendations', () => {
       describe('when the variant value is #grid', () => {
-        it('should properly display the recommendations with default options', async () => {
+        it('should properly display the recommendations as a grid', async () => {
           const element = createTestComponent({
             ...defaultOptions,
             variant: 'grid',
@@ -404,27 +407,10 @@ describe('c-quantic-recommendation-list', () => {
             );
           });
         });
-
-        it('should properly pass the custom #label to the heading', async () => {
-          const customLabel = 'Custom label';
-          const element = createTestComponent({
-            ...defaultOptions,
-            variant: 'grid',
-            label: customLabel,
-          });
-          await flushPromises();
-
-          const headingElement = element.shadowRoot.querySelector(
-            selectors.quanticHeading
-          );
-
-          expect(headingElement).not.toBeNull();
-          expect(headingElement.label).toBe(customLabel);
-        });
       });
 
       describe('when the variant value is #carousel', () => {
-        it('should properly display the recommendations with default options', async () => {
+        it('should properly display the recommendations as a carousel', async () => {
           const element = createTestComponent({
             ...defaultOptions,
             variant: 'carousel',
@@ -476,23 +462,23 @@ describe('c-quantic-recommendation-list', () => {
             expect(carousel.itemsPerPage).toBe(customRecommendationsPerRow);
           });
         });
+      });
 
-        it('should properly pass the custom #label to the heading', async () => {
-          const customLabel = 'Custom label';
-          const element = createTestComponent({
-            ...defaultOptions,
-            variant: 'carousel',
-            label: customLabel,
-          });
-          await flushPromises();
-
-          const headingElement = element.shadowRoot.querySelector(
-            selectors.quanticHeading
-          );
-
-          expect(headingElement).not.toBeNull();
-          expect(headingElement.label).toBe(customLabel);
+      it('should properly pass the custom #label to the heading', async () => {
+        const customLabel = 'Custom label';
+        const element = createTestComponent({
+          ...defaultOptions,
+          variant: 'carousel',
+          label: customLabel,
         });
+        await flushPromises();
+
+        const headingElement = element.shadowRoot.querySelector(
+          selectors.quanticHeading
+        );
+
+        expect(headingElement).not.toBeNull();
+        expect(headingElement.label).toBe(customLabel);
       });
     });
   });

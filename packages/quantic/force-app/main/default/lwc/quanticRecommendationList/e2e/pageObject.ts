@@ -27,26 +27,19 @@ export class RecommendationListObject {
   }
 
   async waitForRecommendationListClickEvent(
-    actionCause: string,
     customChecker?: Function
   ): Promise<Request> {
     const uaRequest = this.page.waitForRequest((request) => {
       if (isUaClickEvent(request)) {
         const requestBody = request.postDataJSON?.();
         const requestData = JSON.parse(requestBody.clickEvent);
-
-        const expectedFields: Record<string, any> = {
-          actionCause,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestData?.[key] === expectedFields[key]
-        );
-
         const customData = requestData?.customData;
 
+        const actionCauseMatches =
+          requestData?.actionCause === 'recommendationOpen';
+
         return (
-          matchesExpectedFields &&
+          actionCauseMatches &&
           (customChecker
             ? customChecker(requestData.customData, customData)
             : true)
