@@ -318,7 +318,7 @@ export class AtomicCommerceRecommendationList
     this.recommendations.refresh();
   }
 
-  // TODO: Remove once atomic-commerce-recommendation-interface is merged
+  // TODO: Remove once atomic-commerce-recommendation-interface is merged (KIT-3934)
   private initSummary() {
     this.summary = this.recommendations.summary();
     this.unsubscribeSummary = this.summary.subscribe(() => {
