@@ -21,6 +21,7 @@ const selectors = {
   modalContent: '.modal__content',
   modalFooter: '.modal__footer',
   renderingError: '.error-message',
+  headerSlot: 'slot[name="header"]',
 };
 
 describe('c-quantic-modal', () => {
@@ -76,40 +77,38 @@ describe('c-quantic-modal', () => {
       expect(modal.classList.contains('modal_hidden')).toBe(true);
     });
 
-    it('should focus on first focusable element when modal opens', async () => {
-      const mockFirstFocusableElement = {focus: jest.fn()};
-      // @ts-ignore
-      getFirstFocusableElement.mockImplementation(
-        () => mockFirstFocusableElement
-      );
+    describe('when the modal is opened', () => {
+      beforeAll(() => {
+        jest.useFakeTimers();
+      });
+      afterAll(() => {
+        jest.useRealTimers();
+      });
 
-      const element = createTestComponent();
-      await flushPromises();
+      it('should focus on first focusable element when modal opens', async () => {
+        const mockFirstFocusableElement = {focus: jest.fn()};
+        // @ts-ignore
+        getFirstFocusableElement.mockImplementation(
+          () => mockFirstFocusableElement
+        );
 
-      const headerSlot = element.shadowRoot.querySelector('slot[name=header]');
-      const contentSlot =
-        element.shadowRoot.querySelector('slot[name=content]');
-      const footerSlot = element.shadowRoot.querySelector('slot[name=footer]');
+        const element = createTestComponent();
 
-      const headerSlotSpy = jest
-        .spyOn(headerSlot, 'assignedElements')
-        .mockImplementation(() => [document.createElement('div')]);
-      const contentSlotSpy = jest
-        .spyOn(contentSlot, 'assignedElements')
-        .mockImplementation(() => [document.createElement('div')]);
-      const footerSlotSpy = jest
-        .spyOn(footerSlot, 'assignedElements')
-        .mockImplementation(() => [document.createElement('div')]);
+        const headerSlot = element.shadowRoot.querySelector(
+          selectors.headerSlot
+        );
 
-      element.openModal();
-      await new Promise((resolve) => setTimeout(resolve, 600)); // jest.runAllTimers does not work
+        const headerSlotSpy = jest
+          .spyOn(headerSlot, 'assignedElements')
+          .mockImplementation(() => [document.createElement('div')]);
 
-      expect(getFirstFocusableElement).toHaveBeenCalled();
-      expect(mockFirstFocusableElement.focus).toHaveBeenCalled();
+        element.openModal();
+        jest.runAllTimers();
+        expect(getFirstFocusableElement).toHaveBeenCalled();
+        expect(mockFirstFocusableElement.focus).toHaveBeenCalled();
 
-      headerSlotSpy.mockRestore();
-      contentSlotSpy.mockRestore();
-      footerSlotSpy.mockRestore();
+        headerSlotSpy.mockRestore();
+      });
     });
   });
 
@@ -169,12 +168,25 @@ describe('c-quantic-modal', () => {
     });
   });
 
+  describe('when setting an invalid fullscreen value', () => {
+    it('should display an error message', async () => {
+      const element = createTestComponent({fullScreen: 'patate'});
+      await flushPromises();
+
+      const errorElement = element.shadowRoot.querySelector(
+        selectors.renderingError
+      );
+      expect(errorElement).not.toBeNull();
+      expect(errorElement.textContent).toContain(
+        `"patate" is an invalid value for the full-screen property`
+      );
+    });
+  });
+
   describe('focus management and accessibility', () => {
     it('should set appropriate ARIA attributes', async () => {
       const element = createTestComponent();
       await flushPromises();
-
-      // Open the modal
       element.openModal();
       await flushPromises();
 
