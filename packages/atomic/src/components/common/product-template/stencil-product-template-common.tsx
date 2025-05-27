@@ -10,9 +10,9 @@ import {
   isElementNode,
   isVisualNode,
 } from '../../../utils/stencil-utils';
-import {ItemTarget} from '../../common/layout/display-options';
-import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {ItemTarget} from '../layout/display-options';
+import {isResultSectionNode} from '../layout/sections';
 
 export type TemplateContent = DocumentFragment;
 

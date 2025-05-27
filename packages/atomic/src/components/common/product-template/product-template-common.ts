@@ -4,8 +4,8 @@ import {
 } from '@coveo/headless/commerce';
 import {intersection} from '../../../utils/set';
 import {isElementNode, isVisualNode} from '../../../utils/stencil-utils';
-import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {isResultSectionNode} from '../layout/sections';
 
 type TemplateNodeType =
   | 'section'

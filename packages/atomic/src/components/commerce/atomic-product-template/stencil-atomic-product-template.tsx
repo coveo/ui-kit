@@ -7,7 +7,7 @@ import {MapProp} from '../../../utils/props-utils';
 import {
   ProductTemplateCommon,
   makeMatchConditions,
-} from './stencil-product-template-common';
+} from '../../common/product-template/stencil-product-template-common';
 
 /**
  * @alpha
