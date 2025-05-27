@@ -49,6 +49,9 @@ function groupNodesByType(nodes: NodeList) {
   return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
 }
 
+/**
+ * @deprecated Use `ProductTemplateController` Reactive controller instead.
+ */
 export class ProductTemplateCommon {
   private host: HTMLDivElement;
   public matchConditions: ProductTemplateCondition[] = [];

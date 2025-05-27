@@ -7,7 +7,7 @@ import {MapProp} from '../../../utils/props-utils';
 import {
   ProductTemplateCommon,
   makeMatchConditions,
-} from './product-template-common';
+} from './stencil-product-template-common';
 
 /**
  * @alpha
@@ -22,7 +22,7 @@ import {
  * @slot link - A `template` element that contains a single `atomic-product-link` component.
  */
 @Component({
-  tag: 'atomic-product-template',
+  tag: 'stencil-atomic-product-template',
   shadow: true,
 })
 export class AtomicProductTemplate {

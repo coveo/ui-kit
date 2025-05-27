@@ -7,7 +7,7 @@ import {
   vi,
   MockInstance,
 } from 'vitest';
-import {makeMatchConditions} from './product-template-common';
+import {makeMatchConditions} from './stencil-product-template-common';
 
 vi.mock('@coveo/headless/commerce');
 

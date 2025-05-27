@@ -1,11 +1,11 @@
 /* eslint-disable */
 /* tslint:disable */
 /* auto-generated react proxies */
-import { createReactComponent } from './react-component-lib/index.js';
+import { createReactComponent } from './react-component-lib';
 
 import type { JSX } from '@coveo/atomic';
 
-import { defineCustomElements } from '@coveo/atomic/loader';
+import { defineCustomElements } from '@coveo/atomic/dist/atomic/loader';
 
 defineCustomElements();
 export const AtomicCommerceBreadbox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceBreadbox, HTMLAtomicCommerceBreadboxElement>('atomic-commerce-breadbox');
@@ -56,3 +56,4 @@ export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicProductText, HTMLAtomicProductTextElement>('atomic-product-text');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
+export const StencilAtomicProductTemplate = /*@__PURE__*/createReactComponent<JSX.StencilAtomicProductTemplate, HTMLStencilAtomicProductTemplateElement>('stencil-atomic-product-template');
