@@ -1,14 +1,26 @@
 import {
+  AtomicComponentError as LitAtomicComponentError,
+  AtomicIcon as LitAtomicIcon,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
-  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
-  AtomicComponentError as LitAtomicComponentError,
-  AtomicIcon as LitAtomicIcon,
+  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
 
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
@@ -28,26 +40,14 @@ export const AtomicCommerceRecommendationList = createComponent({
   elementClass: LitAtomicCommerceRecommendationList,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
-  react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
-});
-
 export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   tagName: 'atomic-commerce-search-box-query-suggestions',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
   react: React,
-  elementClass: LitAtomicComponentError,
-});
-
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
-  react: React,
-  elementClass: LitAtomicIcon,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
