@@ -58,7 +58,7 @@ export const SmartSnippetSuggestionsQuestion: FunctionalComponent<{
       onClick={onClick}
       class="flex items-center px-4"
       ariaExpanded={expanded ? 'true' : undefined}
-      ariaControls={ariaControls}
+      ariaControls={expanded ? ariaControls : undefined}
     >
       {atomicIcon}
       <Heading
