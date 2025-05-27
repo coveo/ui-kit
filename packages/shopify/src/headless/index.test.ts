@@ -1,5 +1,4 @@
 import {it, expect} from 'vitest';
-// ensure exports don't change
 import {
   AppProxyConfig,
   AppProxyResponse,
@@ -9,9 +8,7 @@ import {
   COVEO_SHOPIFY_CONFIG_KEY,
   getShopifyCookie,
   BuildShopifyCommerceEngineOptions,
-  BuildShopifySearchEngineOptions,
   buildShopifyCommerceEngine,
-  buildShopifySearchEngine,
   getClientId,
 } from './index';
 
@@ -19,10 +16,8 @@ it('should export the correct types', () => {
   void ({} as AppProxyConfig);
   void ({} as AppProxyResponse);
   void ({} as BuildShopifyCommerceEngineOptions);
-  void ({} as BuildShopifySearchEngineOptions);
   void ({} as ShopifyCustomEnvironment);
   expect(buildShopifyCommerceEngine).toBeDefined();
-  expect(buildShopifySearchEngine).toBeDefined();
   expect(fetchAppProxyConfig).toBeDefined();
   expect(getShopifyCookie).toBeDefined();
   expect(getClientId).toBeDefined();

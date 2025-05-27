@@ -32,7 +32,14 @@ describe('publishCustomShopifyEvent', () => {
   });
 
   it('should not throw if Shopify.analytics.publish is not a function', () => {
-    window.Shopify = {analytics: {publish: () => {}}};
+    window.Shopify = {
+      analytics: {
+        publish: undefined as unknown as (
+          eventName: string,
+          eventData: CustomEvent
+        ) => void,
+      },
+    };
     expect(() =>
       publishCustomShopifyEvent('event', {foo: 'bar'})
     ).not.toThrow();

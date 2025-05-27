@@ -124,29 +124,6 @@ const clientId = getClientId(shopifyCookie!);
 console.log(clientId);
 ```
 
----
-
-### `getShopifyCookie`
-
-Retrieves the value of a specified Shopify cookie by its name.
-
-#### Returns
-
-The value of the specified cookie, or `null` if the cookie is not found.
-
-#### Notes
-
-This function is intended for use in **browser environments only**, as it relies on the `document.cookie` API. Attempting to use this function in non-browser environments will result in an error or undefined behavior.
-
-#### Example
-
-```typescript
-import {getShopifyCookie} from '@coveo/shopify/utilities';
-
-const shopifyCookie = getShopifyCookie();
-console.log(shopifyCookie);
-```
-
 **Key constants:**
 
 - `SHOPIFY_COOKIE_KEY`: The name of the Shopify cookie used for client identification (`_shopify_y`).

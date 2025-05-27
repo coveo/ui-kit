@@ -74,23 +74,29 @@ export function buildShopifyCommerceEngine({
     environment ?? getShopifyCustomEnvironment(buildBrowserEnvironment());
   const cookie = shopifyCookie || getShopifyCookie();
 
-  const appProxyResponse: AppProxyResponse = {
-    accessToken: commerceEngineOptions.configuration.accessToken,
-    organizationId: commerceEngineOptions.configuration.organizationId,
-    environment: commerceEngineOptions.configuration.environment,
-    trackingId: commerceEngineOptions.configuration.analytics.trackingId || '',
-  };
-
-  publishCustomShopifyEvent(
-    COVEO_SHOPIFY_CONFIG_KEY,
-    appProxyResponse as unknown as CustomEvent
-  );
+  if (!commerceEngineOptions.configuration.analytics.trackingId) {
+    throw new Error(
+      'The configuration for the commerce engine must include an analytics tracking ID.'
+    );
+  }
 
   if (!cookie) {
     throw new Error(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
     );
   }
+
+  const appProxyResponse: AppProxyResponse = {
+    accessToken: commerceEngineOptions.configuration.accessToken,
+    organizationId: commerceEngineOptions.configuration.organizationId,
+    environment: commerceEngineOptions.configuration.environment,
+    trackingId: commerceEngineOptions.configuration.analytics.trackingId,
+  };
+
+  publishCustomShopifyEvent(
+    COVEO_SHOPIFY_CONFIG_KEY,
+    appProxyResponse as unknown as CustomEvent
+  );
 
   const clientId = getClientId(cookie);
   const engine = buildCommerceEngine(commerceEngineOptions);

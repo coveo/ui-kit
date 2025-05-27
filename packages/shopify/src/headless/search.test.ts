@@ -1,7 +1,6 @@
 import {getSampleSearchEngineConfiguration} from '@coveo/headless';
 import {buildBrowserEnvironment} from '@coveo/relay';
 import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
-// ensure exports don't change
 import {
   AppProxyConfig,
   AppProxyResponse,
@@ -14,6 +13,18 @@ import {
   getClientId,
 } from './search';
 import {buildShopifySearchEngine} from './search';
+
+const getSampleSearchEngineConfigurationWithTrackingId = () => ({
+  ...getSampleSearchEngineConfiguration(),
+  analytics: {
+    trackingId: 'mock-tracking-id',
+  },
+});
+
+const getSampleSearchEngineConfigurationWithoutTrackingId = () => ({
+  ...getSampleSearchEngineConfiguration(),
+  analytics: {},
+});
 
 it('should export the correct types', () => {
   void ({} as AppProxyConfig);
@@ -60,11 +71,23 @@ describe('buildShopifySearchEngine', () => {
     expect(() =>
       buildShopifySearchEngine({
         searchEngineOptions: {
-          configuration: getSampleSearchEngineConfiguration(),
+          configuration: getSampleSearchEngineConfigurationWithTrackingId(),
         },
       })
     ).toThrowError(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
+    );
+  });
+
+  it('should throw an error if a tracking id is not provided', () => {
+    expect(() =>
+      buildShopifySearchEngine({
+        searchEngineOptions: {
+          configuration: getSampleSearchEngineConfigurationWithoutTrackingId(),
+        },
+      })
+    ).toThrowError(
+      'The configuration for the search engine must include an analytics tracking ID.'
     );
   });
 
@@ -92,7 +115,7 @@ describe('buildShopifySearchEngine', () => {
 
     const engine = buildShopifySearchEngine({
       searchEngineOptions: {
-        configuration: getSampleSearchEngineConfiguration(),
+        configuration: getSampleSearchEngineConfigurationWithTrackingId(),
       },
     });
 
@@ -127,12 +150,7 @@ describe('buildShopifySearchEngine', () => {
       runtime: 'browser',
     }));
 
-    const configuration = {
-      ...getSampleSearchEngineConfiguration(),
-      analytics: {
-        trackingId: 'mock-tracking-id',
-      },
-    };
+    const configuration = getSampleSearchEngineConfigurationWithTrackingId();
 
     buildShopifySearchEngine({
       searchEngineOptions: {

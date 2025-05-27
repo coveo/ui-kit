@@ -2,7 +2,6 @@ import {getSampleCommerceEngineConfiguration} from '@coveo/headless/commerce';
 import {buildBrowserEnvironment} from '@coveo/relay';
 import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
 import {buildShopifyCommerceEngine} from './commerce';
-// ensure exports don't change
 import {
   AppProxyConfig,
   AppProxyResponse,
@@ -14,6 +13,11 @@ import {
   BuildShopifyCommerceEngineOptions,
   getClientId,
 } from './commerce';
+
+const getSampleCommerceEngineConfigurationWithoutTrackingId = () => ({
+  ...getSampleCommerceEngineConfiguration(),
+  analytics: {},
+});
 
 it('should export the correct types', () => {
   void ({} as AppProxyConfig);
@@ -64,6 +68,19 @@ describe('buildShopifyCommerceEngine', () => {
       })
     ).toThrowError(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
+    );
+  });
+
+  it('should throw an error if a tracking id is not provided', () => {
+    expect(() =>
+      buildShopifyCommerceEngine({
+        commerceEngineOptions: {
+          configuration:
+            getSampleCommerceEngineConfigurationWithoutTrackingId(),
+        },
+      })
+    ).toThrowError(
+      'The configuration for the commerce engine must include an analytics tracking ID.'
     );
   });
 

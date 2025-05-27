@@ -70,6 +70,12 @@ export function buildShopifySearchEngine({
     environment ?? getShopifyCustomEnvironment(buildBrowserEnvironment());
   const cookie = shopifyCookie || getShopifyCookie();
 
+  if (!searchEngineOptions.configuration.analytics?.trackingId) {
+    throw new Error(
+      'The configuration for the search engine must include an analytics tracking ID.'
+    );
+  }
+
   if (!cookie) {
     throw new Error(
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
@@ -80,7 +86,7 @@ export function buildShopifySearchEngine({
     accessToken: searchEngineOptions.configuration.accessToken,
     organizationId: searchEngineOptions.configuration.organizationId,
     environment: searchEngineOptions.configuration.environment,
-    trackingId: searchEngineOptions.configuration.analytics?.trackingId || '',
+    trackingId: searchEngineOptions.configuration.analytics.trackingId,
   };
 
   publishCustomShopifyEvent(
