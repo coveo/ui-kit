@@ -20,6 +20,7 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
+  AtomicCommerceQuerySummary,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,
