@@ -54,11 +54,13 @@ describe('AtomicCommerceRecommendationList', () => {
     display = 'grid',
     density = 'normal',
     imageSize = 'small',
+    productsPerPage = 3,
     isAppLoaded = true,
   }: {
     display?: ItemDisplayBasicLayout;
     density?: ItemDisplayDensity;
     imageSize?: ItemDisplayImageSize;
+    productsPerPage?: number;
     isAppLoaded?: boolean;
   } = {}) => {
     const {element} =
@@ -68,6 +70,7 @@ describe('AtomicCommerceRecommendationList', () => {
             .display=${display}
             .density=${density}
             .imageSize=${imageSize}
+            .productsPerPage=${productsPerPage}
           ></atomic-commerce-recommendation-list>`,
           selector: 'atomic-commerce-recommendation-list',
           bindings: (
@@ -99,6 +102,7 @@ describe('AtomicCommerceRecommendationList', () => {
           'result-list-grid-clickable-container',
           false
         ),
+        resultListGridClickable: qs('result-list-grid-clickable'),
       },
       list: {
         outline: qs('outline'),
@@ -410,6 +414,99 @@ describe('AtomicCommerceRecommendationList', () => {
       });
 
       testRenderAtomicProduct(display);
+
+      describe('parts', () => {
+        it('should render the result-list part', async () => {
+          const element = await setupElement({display});
+          const parts = getParts(element)[display as 'grid' | 'list'];
+          const resultList = parts.resultList?.item(0);
+          expect(resultList).toBeTruthy();
+          expect(resultList).toHaveAttribute('part', 'result-list');
+        });
+
+        if (display === 'grid') {
+          it('should render the result-list-grid-clickable-container part for each product', async () => {
+            const element = await setupElement({display});
+            const parts = getParts(element).grid;
+            const containers = parts.resultListGridClickableContainer;
+            expect(containers?.length).toBe(3);
+            for (let i = 0; i < containers!.length; i++) {
+              expect(containers!.item(i)).toHaveAttribute(
+                'part',
+                'result-list-grid-clickable-container outline'
+              );
+            }
+          });
+        }
+
+        it('should have the correct part for the label', async () => {
+          const element = await setupElement({display});
+          const label = element.shadowRoot?.querySelector('[part="label"]');
+          expect(label).toBeTruthy();
+          expect(label).toHaveAttribute('part', 'label');
+        });
+
+        it('should have the correct part for the carousel previous button', async () => {
+          const element = await setupElement({display, productsPerPage: 2});
+          const previousButton = element.shadowRoot?.querySelector(
+            'button[part="previous-button"]'
+          );
+          expect(previousButton).toBeTruthy();
+          expect(previousButton).toHaveAttribute('part', 'previous-button');
+        });
+        it('should have the correct part for the carousel next button', async () => {
+          const element = await setupElement({display, productsPerPage: 2});
+
+          const nextButton = element.shadowRoot?.querySelector(
+            'button[part="next-button"]'
+          );
+          expect(nextButton).toBeTruthy();
+          expect(nextButton).toHaveAttribute('part', 'next-button');
+        });
+
+        it('should have the correct part for the carousel indicators', async () => {
+          const element = await setupElement({display, productsPerPage: 2});
+          const indicators = element.shadowRoot?.querySelector(
+            '[part="indicators"]'
+          );
+          expect(indicators).toBeTruthy();
+          expect(indicators).toHaveAttribute('part', 'indicators');
+        });
+
+        it('should have the correct part for the carousel indicator', async () => {
+          const element = await setupElement({display, productsPerPage: 2});
+          const indicator =
+            element.shadowRoot?.querySelector('[part="indicator"]');
+          expect(indicator).toBeTruthy();
+          expect(indicator).toHaveAttribute('part', 'indicator');
+        });
+
+        it('should have the correct part for the active carousel indicator', async () => {
+          vi.mocked(buildRecommendations).mockReturnValue(
+            buildFakeRecommendations({
+              implementation: {
+                interactiveProduct,
+                promoteChildToParent,
+                summary,
+              },
+              state: {
+                products: Array.from({length: 6}, (_, i) =>
+                  buildFakeProduct({permanentid: i.toString()})
+                ),
+              },
+            })
+          );
+          const element = await setupElement({display});
+          const activeIndicator = element.shadowRoot?.querySelector(
+            '[part="indicator active-indicator"]'
+          );
+          expect(activeIndicator).toBeTruthy();
+          expect(activeIndicator).toHaveAttribute(
+            'part',
+            'indicator active-indicator'
+          );
+        });
+      });
     });
   });
 
@@ -434,6 +531,7 @@ describe('AtomicCommerceRecommendationList', () => {
 
       const element = await setupElement({
         display,
+        productsPerPage: numberOfProducts,
       });
 
       await element.updateComplete;
