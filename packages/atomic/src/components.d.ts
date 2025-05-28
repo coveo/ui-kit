@@ -6,14 +6,13 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 import { i18n } from "i18next";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-import { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
 import { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -32,19 +31,18 @@ import { RecsInitializationOptions } from "./components/recommendations/atomic-r
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 import { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { SearchStore } from "./components/search/atomic-search-interface/store";
-import { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
+import { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 import { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
 export { i18n } from "i18next";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
-export { AriaLabelGenerator } from "./components/commerce/search-box-suggestions/atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
 export { NumberInputType } from "./components/common/facets/facet-number-input/number-input-type";
@@ -63,7 +61,7 @@ export { RecsInitializationOptions } from "./components/recommendations/atomic-r
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
 export { Bindings as Bindings1 } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { SearchStore } from "./components/search/atomic-search-interface/store";
-export { AriaLabelGenerator as AriaLabelGenerator1 } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
+export { AriaLabelGenerator } from "./components/search/search-box-suggestions/atomic-search-box-instant-results/atomic-search-box-instant-results";
 export { InitializationOptions } from "./components/search/atomic-search-interface/atomic-search-interface";
 export { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 export { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
@@ -602,31 +600,6 @@ export namespace Components {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout": number;
-    }
-    /**
-     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxInstantProducts {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given product so that accessibility tools can fully describe what's visually rendered by a product.  By default, or if an empty string is returned, `product.ec_name` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the products.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param resultRenderingFunction
-         */
-        "setRenderFunction": (resultRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -2202,6 +2175,37 @@ export namespace Components {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface AtomicProductTemplate {
+        /**
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
+         */
+        "conditions": ProductTemplateCondition[];
+        /**
+          * Gets the product template to apply based on the evaluated conditions.
+         */
+        "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
+        /**
+          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
+         */
+        "mustMatch": Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+         */
+        "mustNotMatch": Record<
+    string,
+    string[]
+  >;
+    }
+    /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
      */
     interface AtomicProductText {
@@ -3184,7 +3188,7 @@ export namespace Components {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
-        "ariaLabelGenerator"?: AriaLabelGenerator1;
+        "ariaLabelGenerator"?: AriaLabelGenerator;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
@@ -4077,18 +4081,6 @@ declare global {
     var HTMLAtomicCommerceSearchBoxElement: {
         prototype: HTMLAtomicCommerceSearchBoxElement;
         new (): HTMLAtomicCommerceSearchBoxElement;
-    };
-    /**
-     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSearchBoxInstantProductsElement extends Components.AtomicCommerceSearchBoxInstantProducts, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSearchBoxInstantProductsElement: {
-        prototype: HTMLAtomicCommerceSearchBoxInstantProductsElement;
-        new (): HTMLAtomicCommerceSearchBoxInstantProductsElement;
     };
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -5004,6 +4996,19 @@ declare global {
         new (): HTMLAtomicProductSectionVisualElement;
     };
     /**
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicProductTemplateElement: {
+        prototype: HTMLAtomicProductTemplateElement;
+        new (): HTMLAtomicProductTemplateElement;
+    };
+    /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
      */
     interface HTMLAtomicProductTextElement extends Components.AtomicProductText, HTMLStencilElement {
@@ -5904,7 +5909,6 @@ declare global {
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
-        "atomic-commerce-search-box-instant-products": HTMLAtomicCommerceSearchBoxInstantProductsElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
@@ -5998,6 +6002,7 @@ declare global {
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
+        "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -6589,26 +6594,6 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
-    }
-    /**
-     * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-     * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-     * This component is not supported on mobile.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxInstantProducts {
-        /**
-          * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given product so that accessibility tools can fully describe what's visually rendered by a product.  By default, or if an empty string is returned, `product.ec_name` is used.
-         */
-        "ariaLabelGenerator"?: AriaLabelGenerator;
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The expected size of the image displayed in the products.
-         */
-        "imageSize"?: ItemDisplayImageSize;
     }
     /**
      * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
@@ -8131,6 +8116,33 @@ declare namespace LocalJSX {
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
     }
     /**
+     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+     */
+    interface AtomicProductTemplate {
+        /**
+          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
+         */
+        "conditions"?: ProductTemplateCondition[];
+        /**
+          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
+         */
+        "mustMatch"?: Record<
+    string,
+    string[]
+  >;
+        /**
+          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+         */
+        "mustNotMatch"?: Record<
+    string,
+    string[]
+  >;
+    }
+    /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
      */
     interface AtomicProductText {
@@ -9078,7 +9090,7 @@ declare namespace LocalJSX {
         /**
           * The callback to generate an [`aria-label`](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label) for a given result so that accessibility tools can fully describe what's visually rendered by a result.  By default, or if an empty string is returned, `result.title` is used.
          */
-        "ariaLabelGenerator"?: AriaLabelGenerator1;
+        "ariaLabelGenerator"?: AriaLabelGenerator;
         /**
           * The spacing of various elements in the result list, including the gap between results, the gap between parts of a result, and the font sizes of different parts in a result.
          */
@@ -9600,7 +9612,6 @@ declare namespace LocalJSX {
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
-        "atomic-commerce-search-box-instant-products": AtomicCommerceSearchBoxInstantProducts;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
@@ -9694,6 +9705,7 @@ declare namespace LocalJSX {
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
+        "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
@@ -9904,13 +9916,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
-            /**
-             * The `atomic-commerce-search-box-instant-products` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of instant results behavior.
-             * This component does not support accessibility out-of-the-box. To do so, see [Instant Results Accessibility](https://docs.coveo.com/en/atomic/latest/usage/accessibility/#instant-results-accessibility).
-             * This component is not supported on mobile.
-             * @alpha 
-             */
-            "atomic-commerce-search-box-instant-products": LocalJSX.AtomicCommerceSearchBoxInstantProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxInstantProductsElement>;
             /**
              * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
              * @alpha 
@@ -10215,6 +10220,14 @@ declare module "@stencil/core" {
              * * Always has a 1:1 aspect ratio.
              */
             "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
+            /**
+             * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
+             * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
+             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
+             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
+             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
+             */
+            "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**
              * @alpha The `atomic-product-text` component renders the value of a string product field.
              */
