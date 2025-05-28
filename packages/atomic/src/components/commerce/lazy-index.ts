@@ -4,9 +4,9 @@ export default {
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-pager': async () =>
     await import('./atomic-commerce-pager/atomic-commerce-pager.js'),
-  'atomic-commerce-recommendation-interface': async () =>
+  'atomic-commerce-search-box-instant-products': async () =>
     await import(
-      './atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.js'
+      './atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js'
     ),
   'atomic-commerce-search-box-query-suggestions': async () =>
     await import(

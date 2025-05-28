@@ -38,6 +38,14 @@ export class SearchObject {
     return this.page.waitForRequest(this.searchRequestRegex);
   }
 
+  get performRecommendationSearchButton(): Locator {
+    return this.page.locator('c-action-get-recommendations button');
+  }
+
+  async performRecommendationSearch(): Promise<void> {
+    await this.performRecommendationSearchButton.click();
+  }
+
   async interceptSearchIndefinitely(): Promise<() => void> {
     return new Promise((resolve) => {
       this.page.route(this.searchRequestRegex, async (route) => {
