@@ -20,9 +20,6 @@
     </script>
 
     <script type="module">
-      const {initializeBindings} = await (import.meta.env
-        ? import('@coveo/atomic')
-        : import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js'));
       const {loadCaseContextActions} = await (import.meta.env
         ? import('@coveo/headless/insight')
         : import('http://localhost:3000/headless/v0.0.0/insight/headless.esm.js'));
