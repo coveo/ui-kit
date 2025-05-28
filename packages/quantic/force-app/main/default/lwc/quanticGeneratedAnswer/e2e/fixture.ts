@@ -34,7 +34,7 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
 
 export const testSearch =
   quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
-    pageUrl: pageUrl,
+    pageUrl,
     genQaData,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,

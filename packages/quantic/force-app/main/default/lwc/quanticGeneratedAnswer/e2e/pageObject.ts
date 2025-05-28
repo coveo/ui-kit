@@ -265,11 +265,11 @@ export class GeneratedAnswerObject {
       );
     }
 
-    function removeUnknownFields(object: Record<string, unknown>) {
+    const removeUnknownFields = (object: Record<string, unknown>) => {
       return Object.fromEntries(
         Object.entries(object).filter(([, value]) => value !== 'unknown')
       );
-    }
+    };
     const payloadToMatch = removeUnknownFields(expectedPayload);
 
     return this.analytics.waitForEventProtocolAnalytics(

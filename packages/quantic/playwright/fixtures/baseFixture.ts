@@ -17,7 +17,7 @@ export const quanticBase = base.extend<QuanticBaseE2EFixtures>({
     await use(new ConfigurationObject(page));
   },
   analytics: async ({page, analyticsMode, baseURL, pageUrl}, use) => {
-    if (analyticsMode === 'ep') {
+    if (analyticsMode === AnalyticsModeEnum.next) {
       await AnalyticsObject.setCookieToEnableNextAnalytics(
         page,
         `${baseURL}/${pageUrl}`
