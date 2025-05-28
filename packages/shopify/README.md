@@ -6,7 +6,7 @@ It includes functions to fetch app proxy configurations and build a commerce eng
 
 ## Benefits
 
-Using the `@coveo/shopify` package ensures that the commerce engine will emit events using the same `clientId` both inside and outside Shopify Web Pixels. This provides consistent tracking and analytics across the entire Shopify ecosystem.
+Using the `@coveo/shopify` package ensures that the commerce engine will emit events using the same `clientId` both inside and outside Shopify Web Pixels. This provides consistent tracking and analytics across the entire Shopify ecosystem. When initializing the commerce engine, a custom event is emitted using the `coveo_shopify_config` key. This event enables Shopify Web Pixels to access the app proxy configuration, ensuring consistent tracking and personalization across storefronts and pixels.
 
 ## Installation
 
@@ -41,7 +41,7 @@ A promise that resolves to an object containing:
 #### Example
 
 ```typescript
-import {fetchAppProxyConfig} from '@coveo/shopify/headless';
+import {fetchAppProxyConfig} from '@coveo/shopify/headless/commerce';
 
 const config = await fetchAppProxyConfig({
   marketId: 'market_123432',
@@ -67,7 +67,7 @@ A configured commerce engine instance.
 
 ```typescript
 <script type="module">
-import {buildShopifyCommerceEngine, fetchAppProxyConfig} from 'https://static.cloud.coveo.com/shopify/v1/headless.esm.js';
+import {buildShopifyCommerceEngine, fetchAppProxyConfig} from 'https://static.cloud.coveo.com/shopify/v1/headless/commerce.esm.js';
 
 const config = await fetchAppProxyConfig({marketId: 'market_123432'});
 const engine = buildShopifyCommerceEngine({
@@ -89,7 +89,7 @@ const engine = buildShopifyCommerceEngine({
         language: {{ request.locale.iso_code | json }},
         cart: {{ cart.items | json }}.map(function (item) {
           return {
-            productId: item.product_id,
+            productId: `gid://shopify/ProductVariant/${item.variant_id}`,
             name: item.title,
             price: item.final_price,
             quantity: item.quantity,
@@ -102,25 +102,31 @@ console.log(engine);
 </script>
 ```
 
-### `getShopifyCookie`
+### `getClientId`
 
-Retrieves the value of a specified Shopify cookie by its name.
+Generates a unique client identifier for the Shopify store, based on the value of the Shopify `_shopify_y` cookie. This ensures consistent identification of users across storefronts and Shopify Web Pixels.
+
+#### Parameters
+
+- `shopifyCookie` (required): The value of the Shopify `_shopify_y` cookie.
 
 #### Returns
 
-The value of the specified cookie, or `null` if the cookie is not found.
-
-#### Notes
-
-This function is intended for use in **browser environments only**, as it relies on the `document.cookie` API. Attempting to use this function in non-browser environments will result in an error or undefined behavior.
+A version 5 UUID string uniquely representing the client.
 
 #### Example
 
 ```typescript
-import {getShopifyCookie} from '@coveo/shopify';
+import {getClientId, getShopifyCookie} from '@coveo/shopify/utilities';
 
 const shopifyCookie = getShopifyCookie();
-console.log(shopifyCookie);
+const clientId = getClientId(shopifyCookie!);
+console.log(clientId);
 ```
+
+**Key constants:**
+
+- `SHOPIFY_COOKIE_KEY`: The name of the Shopify cookie used for client identification (`_shopify_y`).
+- `COVEO_SHOPIFY_CONFIG_KEY`: The key for the custom event and cookie used to share app proxy configuration (`coveo_shopify_config`).
 
 ---

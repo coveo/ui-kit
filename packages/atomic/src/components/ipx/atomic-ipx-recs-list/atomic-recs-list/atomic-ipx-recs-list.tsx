@@ -28,13 +28,12 @@ import {
 } from '../../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../../utils/stencil-utils';
-import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/placeholders';
-import {Carousel} from '../../../common/carousel';
+import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
-import {DisplayGrid} from '../../../common/item-list/display-grid';
-import {DisplayWrapper} from '../../../common/item-list/display-wrapper';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
+import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
 import {
   ItemListCommon,
   ItemRenderingFunction,
@@ -45,6 +44,7 @@ import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
 } from '../../../common/layout/display-options';
+import {Carousel} from '../../../common/stencil-carousel';
 import {Heading} from '../../../common/stencil-heading';
 import {RecsBindings} from '../../../recommendations/atomic-recs-interface/atomic-recs-interface';
 

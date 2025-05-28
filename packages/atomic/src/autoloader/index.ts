@@ -1,7 +1,38 @@
 //@ts-expect-error TODO: Simplify path to target some kind of index file?
 import elementMap from '../components/components/lazy-index.js';
 
-if (typeof window !== 'undefined') {
+export function registerAutoloader(
+  roots?:
+    | (Element | ShadowRoot | DocumentFragment)[]
+    | Element
+    | ShadowRoot
+    | DocumentFragment
+) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  roots ??= [document.documentElement];
+  roots = Array.isArray(roots) ? roots : [roots];
+  /**
+   * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
+   */
+  const observeStencilElementHydration = (atomicElement: Element) => {
+    const attributeObserver = new MutationObserver(() => {
+      if (atomicElement.classList.contains('hydrated')) {
+        attributeObserver.disconnect();
+        if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+          discover(atomicElement);
+        }
+      }
+    });
+
+    attributeObserver.observe(atomicElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  };
+
   /**
    * Checks a node for undefined elements and attempts to register them.
    */
@@ -9,13 +40,17 @@ if (typeof window !== 'undefined') {
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
-    const tags = [...root.querySelectorAll(':not(:defined)')]
-      .map((el) => el.tagName.toLowerCase())
-      .filter((tag) => tag.startsWith('atomic-'));
+    const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
+      el.tagName.toLowerCase().startsWith('atomic-')
+    );
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (rootIsAtomicElement && !customElements.get(rootTagName)) {
-      tags.push(rootTagName);
+    if (
+      rootIsAtomicElement &&
+      root instanceof Element &&
+      !customElements.get(rootTagName)
+    ) {
+      allAtomicElements.push(root);
     }
     if (rootIsAtomicElement) {
       const childTemplates = root.querySelectorAll('template');
@@ -30,11 +65,25 @@ if (typeof window !== 'undefined') {
         observer.observe(root.shadowRoot, {subtree: true, childList: true});
       }
     }
-    // Make the list unique
-    const tagsToRegister = [...new Set(tags)];
-    await Promise.allSettled(
-      tagsToRegister.map((tagName) => register(tagName))
-    );
+    const litRegistrationPromises = [];
+    for (const atomicElement of allAtomicElements) {
+      const tagName = atomicElement.tagName.toLowerCase();
+      if (tagName in elementMap && !customElements.get(tagName)) {
+        // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
+        litRegistrationPromises.push(register(tagName));
+        continue;
+      }
+      if ('shadowRoot' in atomicElement && atomicElement.shadowRoot) {
+        discover(atomicElement);
+        continue;
+      }
+      if (atomicElement.classList.contains('hydrated')) {
+        // The element is already hydrated, if there's no shadowRoot, it's a light DOM element, no need to jam the lazy loader in the Shadow DOM.
+        continue;
+      }
+      observeStencilElementHydration(atomicElement);
+    }
+    await Promise.allSettled(litRegistrationPromises);
     customElements.upgrade(root);
   };
 
@@ -61,13 +110,15 @@ if (typeof window !== 'undefined') {
   });
 
   const initializeDiscovery = () => {
-    // Initial discovery
-    discover(document.body);
-    // Listen for new undefined elements
-    observer.observe(document.documentElement, {
-      subtree: true,
-      childList: true,
-    });
+    for (const root of roots) {
+      // Initial discovery
+      discover(root);
+      // Listen for new undefined elements
+      observer.observe(root, {
+        subtree: true,
+        childList: true,
+      });
+    }
   };
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event#checking_whether_loading_is_already_complete

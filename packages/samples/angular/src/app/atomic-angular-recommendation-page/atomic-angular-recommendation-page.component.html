@@ -1,0 +1,56 @@
+<div class="layout">
+  <atomic-recs-interface
+    #recsInterface
+    class="carousel"
+    fields-to-include='["cat_rating_count"]'
+    language-assets-path="/lang"
+    icon-assets-path="/assets"
+  >
+    <atomic-recs-list
+      display="grid"
+      label="Recommendations"
+      number-of-recommendations="9"
+      number-of-recommendations-per-page="3"
+    >
+      <atomic-recs-result-template>
+        <template>
+          <style>
+            div.result-root.with-sections.display-list.image-small atomic-result-section-visual {
+              height: 120px;
+            }
+            .rating-wrapper {
+              display: flex;
+              align-items: center;
+            }
+            .rating-wrapper span {
+              margin-left: 5px;
+              color: #8e959d;
+            }
+          </style>
+          <atomic-result-section-visual>
+            <atomic-result-image field="ec_images" aria-hidden="true"></atomic-result-image>
+          </atomic-result-section-visual>
+          <atomic-result-section-title>
+            <atomic-result-link></atomic-result-link>
+          </atomic-result-section-title>
+          <atomic-result-section-title-metadata>
+            <div class="rating-wrapper">
+              <atomic-result-rating field="ec_rating"></atomic-result-rating>
+              <atomic-field-condition class="field" if-defined="ec_rating">
+                <span> <atomic-result-number field="cat_rating_count"></atomic-result-number> reviews </span>
+              </atomic-field-condition>
+            </div>
+          </atomic-result-section-title-metadata>
+          <atomic-result-section-emphasized>
+            <atomic-result-number field="ec_price">
+              <atomic-format-currency currency="USD"></atomic-format-currency>
+            </atomic-result-number>
+          </atomic-result-section-emphasized>
+          <atomic-result-section-excerpt
+            ><atomic-result-text field="excerpt"></atomic-result-text
+          ></atomic-result-section-excerpt>
+        </template>
+      </atomic-recs-result-template>
+    </atomic-recs-list>
+  </atomic-recs-interface>
+</div>

@@ -29,9 +29,8 @@ import {MapProp} from '../../../utils/props-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
 import {randomID} from '../../../utils/stencil-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
-import {shouldDisplayInputForFacetRange} from '../../common/facets/facet-common';
 import {FacetInfo} from '../../common/facets/facet-common-store';
-import {FacetContainer} from '../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header';
 import {NumberInputType} from '../../common/facets/facet-number-input/number-input-type';
@@ -40,6 +39,7 @@ import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {NumericFacetValueLink} from '../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../common/facets/numeric-facet/values-container';
 import {initializePopover} from '../../common/facets/popover/popover-type';
+import {shouldDisplayInputForFacetRange} from '../../common/facets/stencil-facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
