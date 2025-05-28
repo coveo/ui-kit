@@ -14,10 +14,11 @@ test.describe('default', () => {
   test('should allow to filter by selecting and deselecting a value', async ({
     categoryFacet,
   }) => {
+    await categoryFacet.searchInput.fill('Canoes & Kayaks');
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
+    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     const categoryFacetValueLabel =
       categoryFacet.getFacetValue('Canoes & Kayaks');
-
-    await expect(categoryFacet.allCategoryButton).not.toBeVisible();
 
     await categoryFacetValueLabel.click();
 
@@ -36,7 +37,9 @@ test.describe('default', () => {
   test('should allow to filter by more than one level deep', async ({
     categoryFacet,
   }) => {
-    await categoryFacet.getFacetValue('Canoes & Kayaks').click();
+    await categoryFacet.searchInput.fill('Canoes & Kayaks');
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
+    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     await categoryFacet.getFacetValue('Canoes').click();
     const classicCanoes = categoryFacet.getFacetValue('Classic');
     await classicCanoes.click();
@@ -46,9 +49,9 @@ test.describe('default', () => {
   test('should allow to deselect a filter with the all category button', async ({
     categoryFacet,
   }) => {
-    const categoryFacetValue = categoryFacet.getFacetValue('Canoes & Kayaks');
-
-    await categoryFacetValue.click();
+    await categoryFacet.searchInput.fill('Canoes & Kayaks');
+    await categoryFacet.facetButton('Canoes & Kayaks').click();
+    await expect(categoryFacet.getFacetValue('Canoes & Kayaks')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Canoes')).toBeVisible();
     await expect(categoryFacet.getFacetValue('Kayaks')).toBeVisible();
 
