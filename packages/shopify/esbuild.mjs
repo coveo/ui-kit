@@ -27,11 +27,19 @@ const buenoPath = isCDN
 
 const entries = [
   {
-    entryPoint: 'src/headless.ts',
+    entryPoint: 'src/headless/index.ts',
     outfile: 'headless.esm.js',
   },
   {
-    entryPoint: 'src/utilities.ts',
+    entryPoint: 'src/headless/commerce.ts',
+    outfile: 'headless/commerce.esm.js',
+  },
+  {
+    entryPoint: 'src/headless/search.ts',
+    outfile: 'headless/search.esm.js',
+  },
+  {
+    entryPoint: 'src/utilities/index.ts',
     outfile: 'utilities.esm.js',
   },
 ];

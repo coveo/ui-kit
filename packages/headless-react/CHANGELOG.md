@@ -1,3 +1,8 @@
+## <small>2.4.27 (2025-05-28)</small>
+
+- chore(deps): update dependency eslint-plugin-react to v7.37.5 j:kit-282 (#5268) ([2c46a1e](https://github.com/coveo/ui-kit/commits/2c46a1e)), closes [#5268](https://github.com/coveo/ui-kit/issues/5268)
+- chore(deps): update dependency typedoc to v0.28.4 j:kit-282 (#5362) ([fcb8490](https://github.com/coveo/ui-kit/commits/fcb8490)), closes [#5362](https://github.com/coveo/ui-kit/issues/5362)
+
 ## <small>2.4.25 (2025-05-21)</small>
 
 - fix(deps): update dependency typescript to v5.8.3 j:kit-282 (#5269) ([83d3475](https://github.com/coveo/ui-kit/commits/83d3475)), closes [#5269](https://github.com/coveo/ui-kit/issues/5269)
