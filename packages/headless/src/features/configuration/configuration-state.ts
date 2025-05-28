@@ -175,7 +175,7 @@ export interface CoreAnalyticsState {
    * The unique identifier of the tracking target.
    * @internal
    */
-  trackingId: string;
+  trackingId?: string;
 }
 
 interface KnowledgeState {
@@ -199,7 +199,6 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     deviceId: '',
     userDisplayName: '',
     documentLocation: '',
-    trackingId: '',
     analyticsMode: 'next',
     source: {},
   },

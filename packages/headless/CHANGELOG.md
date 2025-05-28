@@ -1,3 +1,10 @@
+## 3.25.0 (2025-05-28)
+
+- chore(deps): update dependency typedoc to v0.28.4 j:kit-282 (#5362) ([fcb8490](https://github.com/coveo/ui-kit/commits/fcb8490)), closes [#5362](https://github.com/coveo/ui-kit/issues/5362)
+- feat(headless): explicit null trackingId if not specified (#5316) ([b04a573](https://github.com/coveo/ui-kit/commits/b04a573)), closes [#5316](https://github.com/coveo/ui-kit/issues/5316)
+- fix: support static filters search params (#5321) ([8a791ae](https://github.com/coveo/ui-kit/commits/8a791ae)), closes [#5321](https://github.com/coveo/ui-kit/issues/5321)
+- fix(headless): analytics body param not forwarded (#5337) ([6321b51](https://github.com/coveo/ui-kit/commits/6321b51)), closes [#5337](https://github.com/coveo/ui-kit/issues/5337)
+
 ## <small>3.24.1 (2025-05-21)</small>
 
 - fix(headless commerce): prioritize mnf if there is an equivalent nf when serializing query params (# ([4f6c0e4](https://github.com/coveo/ui-kit/commits/4f6c0e4)), closes [#5294](https://github.com/coveo/ui-kit/issues/5294)
