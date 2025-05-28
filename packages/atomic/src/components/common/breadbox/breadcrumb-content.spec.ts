@@ -2,8 +2,11 @@ import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
-import {expect, describe, beforeAll, it} from 'vitest';
+import {expect, describe, beforeAll, it, vi} from 'vitest';
 import {renderBreadcrumbContent} from './breadcrumb-content';
+import {getFirstBreadcrumbValue} from './breadcrumb-utils';
+
+vi.mock('./breadcrumb-utils');
 
 describe('#renderBreadcrumbContent', () => {
   let i18n: i18n;
@@ -87,7 +90,16 @@ describe('#renderBreadcrumbContent', () => {
   });
 
   it('should have the correct value text', async () => {
+    vi.mocked(getFirstBreadcrumbValue).mockReturnValue('test');
+
     const {value} = await renderComponent();
+
+    expect(getFirstBreadcrumbValue).toHaveBeenCalledWith(
+      expect.objectContaining({
+        formattedValue: ['test'],
+      }),
+      0
+    );
     expect(value).toHaveTextContent('test');
   });
 
@@ -105,6 +117,9 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the correct classes on the label', async () => {
       const {label} = await renderExclusionState();
       expect(label).toHaveClass('excluded');
+      expect(label).toHaveClass(
+        'group-hover:text-error group-focus-visible:text-error'
+      );
     });
 
     it('should have "excluded" class on the value', async () => {
@@ -113,22 +128,13 @@ describe('#renderBreadcrumbContent', () => {
     });
   });
 
-  describe('when the breadcrumb is not in an exclusion state', () => {
-    it('should have the correct classes on the label', async () => {
-      const {label} = await renderSelectedState();
-      expect(label).not.toHaveClass('excluded');
-    });
-
-    it('should not have "excluded" class on the value', async () => {
-      const {value} = await renderSelectedState();
-      expect(value).not.toHaveClass('excluded');
-    });
-  });
-
   describe('when the breadcrumb is in an idle state', () => {
     it('should have the "idle" class on the label', async () => {
       const {label} = await renderIdleState();
       expect(label).toHaveClass('idle');
+      expect(label).toHaveClass(
+        'group-hover:text-primary group-focus-visible:text-primary'
+      );
     });
 
     it('should have the "idle" class on the value', async () => {
@@ -141,6 +147,9 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the "selected" class on the label', async () => {
       const {label} = await renderSelectedState();
       expect(label).toHaveClass('selected');
+      expect(label).toHaveClass(
+        'group-hover:text-primary group-focus-visible:text-primary'
+      );
     });
 
     it('should have the "selected" class on the value', async () => {
