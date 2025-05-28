@@ -53,6 +53,7 @@ describe('search parameter manager', () => {
     };
 
     initSearchParameterManager();
+    vi.clearAllMocks();
   });
 
   it('exposes a #subscribe method', () => {
@@ -63,12 +64,41 @@ describe('search parameter manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('dispatches #restoreTab with the correct argument before #restoreSearchParameters on registration when #initialState.parameters.tab is defined', () => {
+  it('dispatches #restoreTab with the correct argument before #restoreSearchParameters on registration when #initialState.parameters.tab is defined tab exists in state', () => {
+    engine = buildMockSearchEngine(
+      createMockState({
+        tabSet: {
+          'some-tab': buildMockTabSlice({id: 'some-tab'}),
+        },
+      })
+    );
+
     props.initialState.parameters = {tab: 'some-tab', q: 'query'};
     initSearchParameterManager();
 
     expect(restoreTab).toHaveBeenCalledWith('some-tab');
     expect(restoreSearchParameters).toHaveBeenCalledWith({q: 'query'});
+  });
+
+  it('does not dispatch #restoreTab on registration when #initialState.parameters.tab is defined but tab does not exist in state', () => {
+    engine = buildMockSearchEngine(
+      createMockState({
+        tabSet: {
+          'some-tab-that-exists': buildMockTabSlice({
+            id: 'some-tab-that-exists',
+          }),
+        },
+      })
+    );
+
+    props.initialState.parameters = {
+      tab: 'some-tab-that-wishes-it-existed',
+      q: 'query',
+    };
+
+    initSearchParameterManager();
+
+    expect(restoreTab).not.toHaveBeenCalled();
   });
 
   it('dispatches #restoreSearchParameters on registration with parameters excluding the tab', () => {
@@ -403,16 +433,48 @@ describe('search parameter manager', () => {
       });
     });
 
-    it('dispatches #restoreTab with the correct argument before #restoreSearchParameters when #parameters.tab is defined', () => {
-      const params = {tab: 'new-tab', q: 'new-query'};
+    it('dispatches #restoreTab with the correct argument before #restoreSearchParameters when #parameters.tab is defined and tab exists in state', () => {
+      engine = buildMockSearchEngine(
+        createMockState({
+          tabSet: {
+            'some-tab': buildMockTabSlice({id: 'some-tab'}),
+            'some-other-tab': buildMockTabSlice({id: 'some-other-tab'}),
+          },
+        })
+      );
+
+      initSearchParameterManager();
+
+      const params = {tab: 'some-other-tab', q: 'new-query'};
+
       manager.synchronize(params);
 
-      expect(restoreTab).toHaveBeenCalledWith('new-tab');
+      expect(restoreTab).toHaveBeenCalledWith('some-other-tab');
       expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialSearchParameterSelector(engine.state),
         q: 'new-query',
         tab: undefined,
       });
+    });
+
+    it('does not dispatch #restoreTab when #parameters.tab is defined but tab does not exists in state', () => {
+      engine = buildMockSearchEngine(
+        createMockState({
+          tabSet: {
+            'some-tab-that-exists': buildMockTabSlice({
+              id: 'some-tab-that-exists',
+            }),
+          },
+        })
+      );
+
+      initSearchParameterManager();
+
+      const params = {tab: 'some-tab-that-wishes-it-existed', q: 'new-query'};
+
+      manager.synchronize(params);
+
+      expect(restoreTab).not.toHaveBeenCalled();
     });
 
     it('dispatches #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
