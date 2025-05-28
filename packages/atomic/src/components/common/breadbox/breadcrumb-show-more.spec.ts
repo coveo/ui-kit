@@ -52,4 +52,17 @@ describe('#renderBreadcrumbShowLess', () => {
     button?.click();
     expect(onShowMore).toHaveBeenCalled();
   });
+
+  describe('when isCollapsed is false', () => {
+    it('should not render the button', async () => {
+      const {button} = await renderComponent({isCollapsed: false});
+      expect(button).toBeNull();
+    });
+  });
+
+  it('should set the ref on the button', async () => {
+    const setRef = vi.fn();
+    const {button} = await renderComponent({setRef});
+    expect(setRef).toHaveBeenCalledWith(button);
+  });
 });
