@@ -2,8 +2,8 @@ import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import CloseIcon from '../../../images/close.svg';
 import {ATOMIC_MODAL_EXPORT_PARTS} from '../atomic-modal/export-parts';
-import {BaseFacetElement} from '../facets/facet-common';
 import {popoverClass} from '../facets/popover/popover-type';
+import {BaseFacetElement} from '../facets/stencil-facet-common';
 import {isRefineModalFacet} from '../interface/store';
 import {Button} from '../stencil-button';
 

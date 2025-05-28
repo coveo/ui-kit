@@ -1,7 +1,19 @@
 //@ts-expect-error TODO: Simplify path to target some kind of index file?
 import elementMap from '../components/components/lazy-index.js';
 
-if (typeof window !== 'undefined') {
+export function registerAutoloader(
+  roots?:
+    | (Element | ShadowRoot | DocumentFragment)[]
+    | Element
+    | ShadowRoot
+    | DocumentFragment
+) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  roots ??= [document.documentElement];
+  roots = Array.isArray(roots) ? roots : [roots];
   /**
    * Observes a stencil element for hydration and discovers its shadowRoot when hydrated.
    */
@@ -98,13 +110,15 @@ if (typeof window !== 'undefined') {
   });
 
   const initializeDiscovery = () => {
-    // Initial discovery
-    discover(document.body);
-    // Listen for new undefined elements
-    observer.observe(document.documentElement, {
-      subtree: true,
-      childList: true,
-    });
+    for (const root of roots) {
+      // Initial discovery
+      discover(root);
+      // Listen for new undefined elements
+      observer.observe(root, {
+        subtree: true,
+        childList: true,
+      });
+    }
   };
 
   // https://developer.mozilla.org/en-US/docs/Web/API/Document/DOMContentLoaded_event#checking_whether_loading_is_already_complete
