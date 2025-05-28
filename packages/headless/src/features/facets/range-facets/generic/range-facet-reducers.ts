@@ -124,7 +124,9 @@ export function handleRangeFacetSearchParameterRestoration<
 
     request.currentValues.forEach((range: Range) => {
       const found = !!findRange(rangesToSelect, range);
-      range.state = found ? 'selected' : 'idle';
+      if (found) {
+        range.state = 'selected';
+      }
       return range;
     });
 

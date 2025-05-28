@@ -1,7 +1,7 @@
 import {Config} from '@stencil/core';
-import {readFileSync} from 'node:fs';
-import {join} from 'path';
+import {spawnSync} from 'node:child_process';
 import html from 'rollup-plugin-html';
+import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 // https://stenciljs.com/docs/config
 
@@ -38,50 +38,34 @@ export const config: Config = {
       html({
         include: 'src/components/**/*.html',
       }),
-      resolveCoveoPaths(),
+      coveoResolve(),
     ],
+    after: [nodePolyfills()],
   },
 };
 
-function resolveCoveoPaths() {
+function coveoResolve() {
   return {
-    name: 'resolve-coveo-paths',
-    resolveId(source: string) {
-      if (
-        source.startsWith('@coveo/atomic/') ||
-        source.startsWith('@coveo/headless/')
-      ) {
-        const nodeModulesLocation = '../../../node_modules';
-        const packageName = source.startsWith('@coveo/atomic/')
-          ? 'atomic'
-          : 'headless';
-
-        const packageJsonPath = join(
-          process.cwd(),
-          nodeModulesLocation,
-          '@coveo',
-          packageName,
-          'package.json'
-        );
-
-        try {
-          const packageJson = JSON.parse(
-            readFileSync(packageJsonPath, 'utf-8')
-          );
-
-          const subPath = './' + source.replace(`@coveo/${packageName}/`, '');
-          const subPathImport = packageJson.exports?.[subPath]?.import;
-
-          if (subPathImport) {
-            return {
-              id: `${nodeModulesLocation}/@coveo/${packageName}/${subPathImport}`,
-            };
-          }
-        } catch (err) {
-          console.error(`Error resolving ${source}:`, err);
-        }
+    resolveId(source: string, importer: string) {
+      if (source.startsWith('@coveo')) {
+        return nodeResolve(source, importer, ['browser', 'default', 'import']);
       }
-      return null;
     },
   };
+}
+
+function nodeResolve(
+  source: string,
+  importer: string,
+  conditions: string[] = []
+) {
+  return spawnSync(
+    process.argv[0],
+    [
+      ...conditions.flatMap((condition) => ['-C', condition]),
+      '-p',
+      `require.resolve('${source}')`,
+    ],
+    {encoding: 'utf-8'}
+  ).stdout.trim();
 }

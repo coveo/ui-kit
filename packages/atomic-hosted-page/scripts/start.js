@@ -63,7 +63,7 @@ const run = async () => {
     `Copying headless files to ${devPublicDir}/headless/v${headlessVersion}`
   );
   await copyFiles(
-    path.join(headlessDir, 'dist/browser'),
+    path.join(headlessDir, 'cdn'),
     `${devPublicDir}/headless/v${headlessVersion}`
   );
 
