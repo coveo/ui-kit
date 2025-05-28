@@ -2,7 +2,7 @@ import {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect, vi} from 'vitest';
+import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {getTemplateNodeType} from './product-template-common';
 import {ProductTemplateController} from './product-template-controller';
 
@@ -22,13 +22,13 @@ class EmptyTestElement extends LitElement implements LitElementWithError {
   controller = new ProductTemplateController(this, ['valid-parent'], true);
 }
 
-// @customElement('valid-parent')
-// class ValidParent extends LitElement {}
-
-// @customElement('invalid-parent')
-// class InvalidParent extends LitElement {}
-
 describe('ProductTemplateController', () => {
+  function fragmentToHTML(fragment: DocumentFragment) {
+    const div = document.createElement('div');
+    div.appendChild(fragment.cloneNode(true));
+    return div.innerHTML.trim();
+  }
+
   async function setupElement(
     template: TemplateResult<1>,
     parentNode: HTMLElement = document.createElement('valid-parent')
@@ -135,81 +135,45 @@ describe('ProductTemplateController', () => {
     });
   });
 
-  //   describe.skip('when the template is valid', () => {});
+  describe('when the template is valid', () => {
+    let result: ReturnType<ProductTemplateController['getTemplate']>;
 
-  //   beforeEach(async () => {
-  //     await fixture(html`<test-element></test-element>`);
-  //   });
+    beforeEach(async () => {
+      const {controller} = await setupElement(
+        html`<test-element>
+          <template data-testId="product-template">
+            <atomic-result-section-visual>section</atomic-result-section-visual>
+          </template>
+        </test-element>`
+      );
+      result = controller.getTemplate([])!;
+    });
 
-  //   it('sets error if missing template', () => {
-  //     host.innerHTML = '';
-  //     host.controller.validateTemplate();
-  //     expect(host.controller['error']).toBeInstanceOf(Error);
-  //     expect(host.controller['error']!.message).toContain(
-  //       'must contain a "template"'
-  //     );
-  //   });
+    it('getTemplate returns a non-null object', () => {
+      expect(result).not.toBeNull();
+    });
 
-  //   it('sets error if template is empty and allowEmpty is false', () => {
-  //     host.innerHTML = '<template>   </template>';
-  //     host.controller.validateTemplate();
-  //     expect(host.controller['error']).toBeInstanceOf(Error);
-  //     expect(host.controller['error']!.message).toContain('cannot be empty');
-  //   });
+    it('getTemplate returns the correct conditions', () => {
+      expect(result).toHaveProperty('conditions', []);
+    });
 
-  //   it('does not set error if template is empty and allowEmpty is true', () => {
-  //     ({host} = createHostWithTemplate({
-  //       template: '<template>   </template>',
-  //       allowEmpty: true,
-  //     }));
-  //     host.controller.validateTemplate();
-  //     expect(host.controller['error']).toBeNull();
-  //   });
+    it('getTemplate returns the correct content', () => {
+      const contentTemplate = document.createElement('template');
+      contentTemplate.innerHTML =
+        '<atomic-result-section-visual>section</atomic-result-section-visual>';
+      expect(result && fragmentToHTML(result.content!)).toBe(
+        fragmentToHTML(contentTemplate.content)
+      );
+    });
 
-  //   it('warns if template contains script', () => {
-  //     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  //     host.innerHTML = '<template><script></script></template>';
-  //     host.controller.validateTemplate();
-  //     expect(warnSpy).toHaveBeenCalledWith(
-  //       expect.stringContaining('script'),
-  //       host
-  //     );
-  //     warnSpy.mockRestore();
-  //   });
+    it('getTemplate returns the correct linkContent', () => {
+      const linkTemplate = document.createElement('template');
+      linkTemplate.innerHTML = '<atomic-product-link></atomic-product-link>';
+      expect(result).toHaveProperty('linkContent', linkTemplate.content);
+    });
 
-  //   it('warns if template contains both section and other nodes', () => {
-  //     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  //     // Mock getTemplateNodeType to alternate between 'section' and 'other'
-  //     vi.mock('./product-template-common', () => ({
-  //       getTemplateNodeType: (node: Node) =>
-  //         node.textContent === 'section' ? 'section' : 'other',
-  //     }));
-  //     host.innerHTML =
-  //       '<template><div>section</div><span>other</span></template>';
-  //     host.controller.validateTemplate();
-  //     expect(warnSpy).toHaveBeenCalledWith(
-  //       expect.stringContaining('should only contain section elements'),
-  //       host,
-  //       expect.objectContaining({
-  //         sectionNodes: expect.any(Array),
-  //         otherNodes: expect.any(Array),
-  //       })
-  //     );
-  //     warnSpy.mockRestore();
-  //   });
-
-  //   it('getTemplate returns null if error is set', () => {
-  //     host.controller['error'] = new Error('fail');
-  //     const result = host.controller.getTemplate([]);
-  //     expect(result).toBeNull();
-  //   });
-
-  //   it('getTemplate returns template object if no error', () => {
-  //     const result = host.controller.getTemplate([]);
-  //     expect(result).not.toBeNull();
-  //     expect(result).toHaveProperty('conditions');
-  //     expect(result).toHaveProperty('content');
-  //     expect(result).toHaveProperty('linkContent');
-  //     expect(result).toHaveProperty('priority');
-  //   });
+    it('getTemplate returns the correct priority', () => {
+      expect(result).toHaveProperty('priority', 1);
+    });
+  });
 });

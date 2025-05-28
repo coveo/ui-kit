@@ -56,4 +56,3 @@ export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.
 export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicProductText, HTMLAtomicProductTextElement>('atomic-product-text');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
-export const StencilAtomicProductTemplate = /*@__PURE__*/createReactComponent<JSX.StencilAtomicProductTemplate, HTMLStencilAtomicProductTemplateElement>('stencil-atomic-product-template');

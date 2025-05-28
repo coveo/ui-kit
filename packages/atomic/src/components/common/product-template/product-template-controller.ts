@@ -95,10 +95,6 @@ export class ProductTemplateController implements ReactiveController {
 
     const {section, other} = groupNodesByType(this.template.content.childNodes);
 
-    console.log('*********************');
-    console.log(section);
-    console.log('*********************');
-
     if (section?.length && other?.length) {
       console.warn(ProductTemplateController.WARNINGS.sectionMix, this.host, {
         section,
