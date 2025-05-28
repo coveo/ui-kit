@@ -1,6 +1,48 @@
 import {getResourceUrl} from './resource-url';
 
-export * from './stencil-utils';
+export {
+  aggregate,
+  camelToKebab,
+  kebabToCamel,
+  snakeToCamel,
+  titleToKebab,
+  randomID,
+  getRandomArbitrary,
+  parseXML,
+  parseHTML,
+  closest,
+  containsVisualElement,
+  defer,
+  getParent,
+  elementHasAncestorTag,
+  getFocusedElement,
+  isAncestorOf,
+  isFocusingOut,
+  isInDocument,
+  isPropValuesEqual,
+  once,
+  sanitizeStyle,
+  sortByDocumentPosition,
+  spreadProperties,
+} from './stencil-utils';
+
+export function isElementNode(node: Node): node is Element {
+  return node.nodeType === Node.ELEMENT_NODE;
+}
+
+export function isTextNode(node: Node): node is Text {
+  return node.nodeType === Node.TEXT_NODE;
+}
+
+export function isVisualNode(node: Node) {
+  if (isElementNode(node)) {
+    return !(node instanceof HTMLStyleElement);
+  }
+  if (isTextNode(node)) {
+    return !!node.textContent?.trim();
+  }
+  return false;
+}
 
 export function getAssetPath(path: string): string {
   const resourceUrl = getResourceUrl();
