@@ -1,3 +1,4 @@
+import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {i18n as I18n} from 'i18next';
 import {describe, beforeAll, it, expect, vi} from 'vitest';
@@ -33,17 +34,10 @@ describe('#getPartialInstantItemElement', () => {
   });
 
   it('should call encodeForDomAttribute with the itemUniqueId', () => {
-    const encodeForDomAttribute = (value: string) => value;
     const itemUniqueId = 'itemUniqueId';
-    const result = getPartialInstantItemElement(
-      i18n,
-      'itemTitle',
-      itemUniqueId
-    );
+    getPartialInstantItemElement(i18n, 'itemTitle', itemUniqueId);
 
-    expect(result.key).toBe(
-      `instant-result-${encodeForDomAttribute(itemUniqueId)}`
-    );
+    expect(encodeForDomAttribute).toHaveBeenCalledWith(itemUniqueId);
   });
 });
 

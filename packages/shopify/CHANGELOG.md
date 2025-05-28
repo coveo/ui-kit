@@ -1,3 +1,7 @@
+## 1.3.0 (2025-05-28)
+
+- feat(shopify): emit custom events & support headless search api (#5353) ([49914cd](https://github.com/coveo/ui-kit/commits/49914cd)), closes [#5353](https://github.com/coveo/ui-kit/issues/5353)
+
 ## 1.2.0 (2025-05-15)
 
 - feat(shopify): support non browser environments (#5312) ([9022ce2](https://github.com/coveo/ui-kit/commits/9022ce2)), closes [#5312](https://github.com/coveo/ui-kit/issues/5312)
