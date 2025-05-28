@@ -10,8 +10,16 @@ export class ProductListObject extends BasePageObject<'atomic-commerce-product-l
     return this.page.locator('atomic-result-placeholder');
   }
 
+  get tablePlaceholders() {
+    return this.page.locator('atomic-result-table-placeholder');
+  }
+
   get products() {
     return this.page.locator('atomic-product');
+  }
+
+  get excerpts() {
+    return this.page.locator('atomic-product-excerpt');
   }
 
   async withNoProducts() {
