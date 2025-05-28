@@ -5,24 +5,17 @@ import {
   getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {buildTemplateTextFromResult} from 'c/quanticUtils';
-import postToFeed from '@salesforce/label/c.PostToFeed';
+import sendAsEmail from '@salesforce/label/c.SendAsEmail';
 import errorWithQuickAction from '@salesforce/label/c.ErrorWithQuickAction';
 import actionIsUnavailable from '@salesforce/label/c.ActionIsUnavailable';
 import {I18nUtils} from 'c/quanticUtils';
 
 /** @typedef {import("coveo").Result} Result */
 
-/**
- * This component implements a Result Action that allows a user to post a Coveo result
- * into the Salesforce Chatter Feed using a Quick Action.
- * It uses the Headless Insight engine to log analytics and dispatches a custom event
- * that can be caught by Aura wrapper to insert the result using the Salesforce Quick Action API.
- */
-export default class ResultPostToFeed extends LightningElement {
-  actionName = 'FeedItem.TextPost';
+export default class ResultSendAsEmail extends LightningElement {
+  actionName = 'Case.SendEmail';
   labels = {
-    postToFeed: postToFeed,
-    errorInsertingTheResultInChatter: 'error',
+    sendAsEmail,
     errorWithQuickAction: I18nUtils.format(
       errorWithQuickAction,
       this.actionName
@@ -37,7 +30,7 @@ export default class ResultPostToFeed extends LightningElement {
    */
   @api engineId;
   /**
-   * The result to post to the chatter feed.
+   * The result to send in the email body.
    * @api
    * @type {Result}
    */
@@ -47,9 +40,9 @@ export default class ResultPostToFeed extends LightningElement {
    * @api
    * @type {string}
    */
-  @api label = this.labels.postToFeed;
+  @api label = this.labels.sendAsEmail;
   /**
-   * The template used to generate the text to insert in the body of the chatter post.
+   * The template used to generate the text to insert in the body of the email.
    * Use references to result [fields](https://docs.coveo.com/en/2036/index-content/about-fields) to get their value.
    * @api
    * @type {string}
@@ -57,12 +50,12 @@ export default class ResultPostToFeed extends LightningElement {
   @api textTemplate =
     '<a href="${clickUri}">${title}</a><br/><br/><quote>${excerpt}</quote>';
 
-  /** @type {string} */
-  iconName = 'utility:share_post';
-  /** @type {string} */
-  eventName = 'insightpanel__posttofeed';
-  /** @type {string} */
-  insertType = 'cursor';
+  iconName = 'utility:email';
+  eventName = 'sfint__sendasemail';
+  insertType = 'replace';
+  defaultErrorTitle = this.labels.errorInsertingTheResultInEmail;
+  genericErrorMessage = this.labels.errorWithQuickAction;
+
   /** @type {boolean} */
   _isLoading = false;
   /** @type {boolean} */
@@ -77,11 +70,11 @@ export default class ResultPostToFeed extends LightningElement {
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
-    this.addEventListener(this.eventName, this.handlePostToFeedClick);
+    this.addEventListener(this.eventName, this.handleSendAsEmailClick);
   }
 
   disconnectedCallback() {
-    this.removeEventListener(this.eventName, this.handlePostToFeedClick);
+    this.removeEventListener(this.eventName, this.handleSendAsEmailClick);
   }
 
   renderedCallback() {
@@ -97,7 +90,7 @@ export default class ResultPostToFeed extends LightningElement {
     };
   };
 
-  postResultToFeed() {
+  sendResultAsEmail() {
     this._isLoading = true;
     this._actionHandled = false;
 
@@ -124,10 +117,10 @@ export default class ResultPostToFeed extends LightningElement {
       }
     }, 2000);
 
-    const postToFeedEvent = new CustomEvent('insightpanel_auraposttofeed', {
+    const sendAsEmailEvent = new CustomEvent('insightpanel_aurasendasemail', {
       detail: {
         targetFields: {
-          Body: {
+          HtmlBody: {
             value: buildTemplateTextFromResult(this.textTemplate, this.result),
             insertType: this.insertType,
           },
@@ -140,13 +133,13 @@ export default class ResultPostToFeed extends LightningElement {
       composed: true,
     });
 
-    this.dispatchEvent(postToFeedEvent);
+    this.dispatchEvent(sendAsEmailEvent);
   }
 
-  handlePostToFeedClick = (event) => {
+  handleSendAsEmailClick = (event) => {
     event.stopPropagation();
-    this.engine.dispatch(this.actions.logFeedItemTextPost(this.result));
-    this.postResultToFeed();
+    this.engine.dispatch(this.actions.logCaseSendEmail(this.result));
+    this.sendResultAsEmail();
   };
 
   handleResultPromiseFailure = (error) => {
@@ -156,7 +149,7 @@ export default class ResultPostToFeed extends LightningElement {
       message = this.labels.actionIsUnavailable;
     } else {
       // Sometimes the error has this format: {errors: ["error message"]};
-      message = error?.errors?.[0] ?? this.labels.errorWithQuickAction;
+      message = error?.errors?.[0] ?? this.genericErrorMessage;
     }
 
     console.error(message);
