@@ -138,7 +138,6 @@ export class AtomicCommerceSearchBoxInstantProducts
 
   private renderItems(): SearchBoxSuggestionElement[] {
     if (!this.bindings.suggestedQuery() || this.bindings.store.isMobile()) {
-      console.log('the condition');
       return [];
     }
     const products = this.instantProducts.state.products.length

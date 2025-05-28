@@ -278,8 +278,4 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
       });
     });
   });
-
-  // describe('about the density property', () => {});
-  // describe('about the imageSize property', () => {});
-  // describe('about the ariaLabelGenerator property', () => {});
 });
