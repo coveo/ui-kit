@@ -23,6 +23,12 @@ class EmptyTestElement extends LitElement implements LitElementWithError {
 }
 
 describe('ProductTemplateController', () => {
+  function buildTemplateHtml(html: string) {
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    return template;
+  }
+
   function fragmentToHTML(fragment: DocumentFragment) {
     const div = document.createElement('div');
     div.appendChild(fragment.cloneNode(true));
@@ -106,6 +112,9 @@ describe('ProductTemplateController', () => {
   });
 
   describe('when the template contains both section and other nodes', () => {
+    const getTemplateFirstNode = (template: HTMLTemplateElement) =>
+      template.content.childNodes[0];
+
     const localSetup = () =>
       setupElement(
         html`<test-element>
@@ -120,7 +129,18 @@ describe('ProductTemplateController', () => {
       const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
       await localSetup();
 
-      expect(mockedGetTemplateNodeType.mock.calls).toMatchSnapshot();
+      const visualSectionTemplate = buildTemplateHtml(
+        '<atomic-result-section-visual>section</atomic-result-section-visual>'
+      );
+      const otherSectionTemplate = buildTemplateHtml('<span>other</span>');
+
+      expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
+        getTemplateFirstNode(visualSectionTemplate)
+      );
+
+      expect(mockedGetTemplateNodeType).toHaveBeenCalledWith(
+        getTemplateFirstNode(otherSectionTemplate)
+      );
     });
 
     it('should log a warning', async () => {
@@ -158,17 +178,18 @@ describe('ProductTemplateController', () => {
     });
 
     it('getTemplate returns the correct content', () => {
-      const contentTemplate = document.createElement('template');
-      contentTemplate.innerHTML =
-        '<atomic-result-section-visual>section</atomic-result-section-visual>';
+      const contentTemplate = buildTemplateHtml(
+        '<atomic-result-section-visual>section</atomic-result-section-visual>'
+      );
       expect(result && fragmentToHTML(result.content!)).toBe(
         fragmentToHTML(contentTemplate.content)
       );
     });
 
     it('getTemplate returns the correct linkContent', () => {
-      const linkTemplate = document.createElement('template');
-      linkTemplate.innerHTML = '<atomic-product-link></atomic-product-link>';
+      const linkTemplate = buildTemplateHtml(
+        '<atomic-product-link></atomic-product-link>'
+      );
       expect(result).toHaveProperty('linkContent', linkTemplate.content);
     });
 
