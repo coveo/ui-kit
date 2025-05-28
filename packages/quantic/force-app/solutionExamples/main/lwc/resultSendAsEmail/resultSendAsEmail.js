@@ -53,8 +53,6 @@ export default class ResultSendAsEmail extends LightningElement {
   iconName = 'utility:email';
   eventName = 'sfint__sendasemail';
   insertType = 'replace';
-  defaultErrorTitle = this.labels.errorInsertingTheResultInEmail;
-  genericErrorMessage = this.labels.errorWithQuickAction;
 
   /** @type {boolean} */
   _isLoading = false;
@@ -113,7 +111,7 @@ export default class ResultSendAsEmail extends LightningElement {
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     this.timeout = setTimeout(() => {
       if (!this._actionHandled) {
-        resultPromiseReject({unavailableAction: true});
+        resultPromiseReject({auraWrapperMissing: true});
       }
     }, 2000);
 
@@ -145,11 +143,11 @@ export default class ResultSendAsEmail extends LightningElement {
   handleResultPromiseFailure = (error) => {
     // The Quick Action promise threw an error from Salesforce.
     let message;
-    if (error?.unavailableAction) {
+    if (error?.auraWrapperMissing) {
       message = this.labels.actionIsUnavailable;
     } else {
       // Sometimes the error has this format: {errors: ["error message"]};
-      message = error?.errors?.[0] ?? this.genericErrorMessage;
+      message = `[${this.actionName}] ${error?.errors?.[0] ?? this.labels.errorWithQuickAction}`;
     }
 
     console.error(message);
