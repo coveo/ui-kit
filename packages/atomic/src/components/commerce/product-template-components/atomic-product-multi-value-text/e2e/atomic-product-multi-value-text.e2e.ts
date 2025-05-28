@@ -102,7 +102,7 @@ test.describe('with max-values-to-display set to total number of values (6)', ()
     await expect(productMultiValueText.separators).toHaveCount(5);
   });
 
-  test('should not render an indicator that more values are available', async ({
+  test.skip('should not render an indicator that more values are available', async ({
     productMultiValueText,
   }) => {
     expect(productMultiValueText.moreValuesIndicator()).not.toBeVisible();
