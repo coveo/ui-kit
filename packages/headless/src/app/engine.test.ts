@@ -98,9 +98,14 @@ describe('engine', () => {
     });
   });
 
-  it('should throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
+  it('should not throw an error if trackingId is not set in the analytics configuration and analyticsMode is next', () => {
     options.configuration.analytics = {analyticsMode: 'next'};
-    expect(() => initEngine()).toThrowErrorMatchingSnapshot();
+    delete options.configuration.analytics.trackingId;
+    initEngine();
+
+    const {analytics} = engine.state.configuration;
+    expect(analytics.enabled).toBe(true);
+    expect(analytics.trackingId).toBeUndefined();
   });
 
   it('calling #enableAnalytics sets #analytics.enabled to true', () => {

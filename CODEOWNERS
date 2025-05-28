@@ -31,3 +31,4 @@
 # Owners of the Shopify headless package
 
 /packages/shopify/ @coveo/shopify
+/packages/shopify/package.json @coveo/shopify @coveo/search
