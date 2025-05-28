@@ -48,7 +48,6 @@ export class ProductTemplateController implements ReactiveController {
 
   setError(error: Error) {
     this.host.error = error;
-    // this.host.requestUpdate(); // TODO: not sure this is required because error is a state variable
   }
 
   validateTemplate() {

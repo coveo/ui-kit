@@ -49,7 +49,6 @@ export class AtomicProductTemplate
    * @default {}
    */
   @mapProperty({splitValues: true})
-  // @mapProperty({splitValues: true, attribute: 'must-match'}) // TODO: missing attribute parameter
   mustMatch: Record<string, string[]> = {};
 
   /**
