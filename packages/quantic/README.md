@@ -54,13 +54,13 @@ This command will create two scratch orgs for you:
 
 - One with LWS disabled.
 
-Each scratch org will have:
+Each scratch org will include:
 
-- All Quantic components deployed.
-
-- The example components deployed.
-
-- The example Quantic community, which includes various component playgrounds and solution examples.
+- All **Quantic components**
+- The **example components**
+- An **example Quantic community** featuring:
+  - 🧪 **Component playgrounds**
+  - 💡 **Solution examples**
 
 To access the links to the created communities, check the generated `.env` file after the script completes.
 
