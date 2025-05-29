@@ -1,7 +1,7 @@
 import {getResourceUrl} from './resource-url';
 
 export {
-  aggregate,
+  once,
   camelToKebab,
   kebabToCamel,
   snakeToCamel,
@@ -10,39 +10,24 @@ export {
   getRandomArbitrary,
   parseXML,
   parseHTML,
-  closest,
+  isElementNode,
+  isTextNode,
+  isVisualNode,
   containsVisualElement,
-  defer,
-  getParent,
   elementHasAncestorTag,
+  sanitizeStyle,
   getFocusedElement,
-  isAncestorOf,
   isFocusingOut,
   isInDocument,
   isPropValuesEqual,
-  once,
-  sanitizeStyle,
-  sortByDocumentPosition,
+  getParent,
+  isAncestorOf,
+  aggregate,
   spreadProperties,
+  closest,
+  defer,
+  sortByDocumentPosition,
 } from './stencil-utils';
-
-export function isElementNode(node: Node): node is Element {
-  return node.nodeType === Node.ELEMENT_NODE;
-}
-
-export function isTextNode(node: Node): node is Text {
-  return node.nodeType === Node.TEXT_NODE;
-}
-
-export function isVisualNode(node: Node) {
-  if (isElementNode(node)) {
-    return !(node instanceof HTMLStyleElement);
-  }
-  if (isTextNode(node)) {
-    return !!node.textContent?.trim();
-  }
-  return false;
-}
 
 export function getAssetPath(path: string): string {
   const resourceUrl = getResourceUrl();

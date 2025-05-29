@@ -2,7 +2,7 @@ import {LitElementWithError} from '@/src/decorators/types';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {html, LitElement, TemplateResult} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
-import {describe, it, expect, vi, beforeEach} from 'vitest';
+import {describe, it, expect, vi, beforeEach, MockInstance} from 'vitest';
 import {getTemplateNodeType} from './product-template-common';
 import {ProductTemplateController} from './product-template-controller';
 
@@ -112,6 +112,7 @@ describe('ProductTemplateController', () => {
   });
 
   describe('when the template contains both section and other nodes', () => {
+    let warnSpy: MockInstance;
     const getTemplateFirstNode = (template: HTMLTemplateElement) =>
       template.content.childNodes[0];
 
@@ -124,6 +125,10 @@ describe('ProductTemplateController', () => {
           </template>
         </test-element>`
       );
+
+    beforeEach(() => {
+      warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
 
     it('should call #getTemplateNodeType with the appropriate sections', async () => {
       const mockedGetTemplateNodeType = vi.mocked(getTemplateNodeType);
@@ -144,7 +149,6 @@ describe('ProductTemplateController', () => {
     });
 
     it('should log a warning', async () => {
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
       await localSetup();
 
       expect(warnSpy).toHaveBeenCalledWith(

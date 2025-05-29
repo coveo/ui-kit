@@ -3,7 +3,7 @@ import {
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
 import {ReactiveController, ReactiveControllerHost} from 'lit';
-import {aggregate} from '../../../utils/stencil-utils';
+import {aggregate} from '../../../utils/utils';
 import {ItemTarget} from '../../common/layout/display-options';
 import {getTemplateNodeType} from './product-template-common';
 
