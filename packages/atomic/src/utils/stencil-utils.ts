@@ -1,5 +1,7 @@
 import {getResourceUrl} from './stencil-resource-url';
 
+export * from './utils';
+
 export function getAssetPath(path: string): string {
   const resourceUrl = getResourceUrl();
   const baseUrl =

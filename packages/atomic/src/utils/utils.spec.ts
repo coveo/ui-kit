@@ -1,12 +1,6 @@
 import {vi, describe, it, expect} from 'vitest';
-import {
-  once,
-  camelToKebab,
-  randomID,
-  kebabToCamel,
-  parseAssetURL,
-  aggregate,
-} from './utils';
+import {parseAssetURL} from './stencil-utils';
+import {once, camelToKebab, randomID, kebabToCamel, aggregate} from './utils';
 
 vi.mock('@stencil/core', () => ({
   getAssetPath: vi.fn((path: string) => {
