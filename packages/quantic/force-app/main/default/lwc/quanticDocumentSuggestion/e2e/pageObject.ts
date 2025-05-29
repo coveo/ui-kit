@@ -1,7 +1,7 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {
   isUaClickEvent,
-  isUaEventsEvent,
+  isEventProtocol,
 } from '../../../../../../playwright/utils/requests';
 
 export class DocumentSuggestionObject {
@@ -41,7 +41,7 @@ export class DocumentSuggestionObject {
         const requestBody = request.postDataJSON?.();
         const event = JSON.parse(requestBody.clickEvent);
         return event.actionCause === 'documentSuggestionClick';
-      } else if (mode === 'next' && isUaEventsEvent(request)) {
+      } else if (mode === 'next' && isEventProtocol(request)) {
         const requestBody = request.postDataJSON?.();
         const requestData = requestBody[0];
         return requestData.meta.type === 'CaseAssist.DocumentSuggestionClick';
