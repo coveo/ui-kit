@@ -1221,7 +1221,7 @@ describe('AtomicCommerceProductList', () => {
           bindings.store.state.loadingFlags = isAppLoaded
             ? []
             : ['loading-flag'];
-          bindings.engine!.logger = {error: vi.fn()} as never;
+          bindings.engine.logger = {error: vi.fn()} as never;
           return bindings;
         },
       });
