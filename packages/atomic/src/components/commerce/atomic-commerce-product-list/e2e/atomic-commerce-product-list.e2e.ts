@@ -6,7 +6,6 @@ test.describe('atomic-commerce-product-list', () => {
       productList,
     }) => {
       await productList.load({story: 'grid-display-before-query'});
-      await productList.hydrated.waitFor();
 
       await expect
         .poll(async () => await productList.placeholders.count())
@@ -58,7 +57,6 @@ test.describe('atomic-commerce-product-list', () => {
       productList,
     }) => {
       await productList.load({story: 'list-display-before-query'});
-      await productList.hydrated.waitFor();
 
       await expect
         .poll(async () => await productList.placeholders.count())
@@ -110,7 +108,6 @@ test.describe('atomic-commerce-product-list', () => {
       productList,
     }) => {
       await productList.load({story: 'table-display-before-query'});
-      await productList.hydrated.waitFor();
 
       await expect
         .poll(async () => await productList.tablePlaceholders.count())
