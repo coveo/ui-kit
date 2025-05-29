@@ -1,5 +1,6 @@
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {ChildrenUpdateCompleteMixin} from '@/src/mixins/children-update-complete-mixin.js';
 import {InitializeEvent, markParentAsReady} from '@/src/utils/init-queue';
 import {
   buildContext,
@@ -41,7 +42,7 @@ export type CommerceBindings = CommonBindings<
 @customElement('atomic-commerce-recommendation-interface')
 @withTailwindStyles
 export class AtomicCommerceRecommendationInterface
-  extends LitElement
+  extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<CommerceEngine>
 {
   public context!: Context;
@@ -96,7 +97,14 @@ export class AtomicCommerceRecommendationInterface
   /**
    * Whether to enable analytics.
    */
-  @property({type: Boolean, reflect: true}) analytics = true;
+  @property({
+    type: Boolean,
+    converter: {
+      fromAttribute: (value) => value !== 'false',
+    },
+    reflect: true,
+  })
+  analytics = true;
 
   private i18Initialized: Promise<void>;
 
