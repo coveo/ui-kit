@@ -12,9 +12,8 @@ import {
   Product,
 } from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
-import {describe, expect, MockInstance, vi} from 'vitest';
+import {beforeEach, describe, expect, it, MockInstance, vi} from 'vitest';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,
