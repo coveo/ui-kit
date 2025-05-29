@@ -15,5 +15,7 @@ export const ResultListSelectors: ResultListSelector = {
     ResultListSelectors.get().find('.placeholder__result-container'),
   results: () => ResultListSelectors.get().find('c-quantic-result'),
   resultLinks: () =>
-    ResultListSelectors.get().find('c-quantic-result [data-cy="result-link"]'),
+    ResultListSelectors.get().find(
+      'c-quantic-result [data-testid="result-link"]'
+    ),
 };

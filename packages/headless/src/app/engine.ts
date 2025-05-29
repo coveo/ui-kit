@@ -215,12 +215,6 @@ function getUpdateAnalyticsConfigurationPayload(
     };
   }
 
-  if (payloadWithURL.analyticsMode === 'next' && !payload.trackingId) {
-    throw new InvalidEngineConfiguration(
-      'analytics.trackingId is required when analytics.analyticsMode="next"'
-    );
-  }
-
   return payloadWithURL;
 }
 
@@ -404,13 +398,6 @@ function createMiddleware<Reducers extends ReducersMapObject>(
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
   ].concat(answerApi.middleware, options.middlewares || []);
-}
-
-class InvalidEngineConfiguration extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'InvalidEngineConfiguration';
-  }
 }
 
 export const nextAnalyticsUsageWithServiceFeatureWarning =
