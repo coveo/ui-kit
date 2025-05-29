@@ -28,7 +28,7 @@ describe('renderFacetValueLabelHighlight', () => {
     },
   };
 
-  it('renders the label with correct part and class', async () => {
+  it('renders the label with correct part', async () => {
     await setupElement();
     const {label} = locators;
     await expect(label).toBeInTheDocument();
