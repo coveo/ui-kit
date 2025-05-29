@@ -2,7 +2,7 @@ import {VNode} from '@stencil/core';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import type {LitElement} from 'lit';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {closest} from '../../../utils/stencil-utils';
+import {closest} from '../../../utils/utils';
 import {AnyBindings} from '../interface/bindings';
 
 /**
