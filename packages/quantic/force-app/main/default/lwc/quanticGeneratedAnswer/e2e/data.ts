@@ -24,7 +24,7 @@ const exampleCitation = {
   title: 'Some Title 1',
   uri: 'https://www.coveo.com',
   permanentid: 'some-permanent-id-1',
-  clickUri: '#',
+  clickUri: 'https://www.coveo.com',
   text: 'example text 1',
   source: 'Some source 1',
 };
