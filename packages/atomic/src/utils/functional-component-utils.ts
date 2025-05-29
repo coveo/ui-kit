@@ -13,6 +13,10 @@ export interface FunctionalComponentWithChildren<T> {
   }): (children: FunctionalComponentChildren) => TemplateResult;
 }
 
+export interface FunctionalComponentWithChildrenNoProps {
+  (): (children: FunctionalComponentChildren) => TemplateResult;
+}
+
 export interface FunctionalComponentGuard<T> {
   ({
     props,
