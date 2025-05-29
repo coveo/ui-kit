@@ -42,11 +42,27 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 - You can also run this command from the command line. `sf org login web --set-default-dev-hub --alias LWC-Hub`
 - Running this command opens a browser to the Salesforce login page. Enter your Salesforce username and password. Authorize only once, not every time you work on your project.
 
-### Single command run
+### Single Command Run
 
 - Make sure you are at the root of `packages/quantic`.
-- Run `npm run scratch:dev`.
-- You should now have a scratch org with Quantic and the test community deployed. Watch your commandline for the url to the examples community.
+
+- Run `npm run setup:examples`.
+
+This command will create two scratch orgs for you:
+
+- One with Lightning Web Security (LWS) enabled.
+
+- One with LWS disabled.
+
+Each scratch org will have:
+
+- All Quantic components deployed.
+
+- The example components deployed.
+
+- The example Quantic community, which includes various component playgrounds and solution examples.
+
+To access the links to the created communities, check the generated `.env` file after the script completes.
 
 Or you can run the individual commands below.
 
