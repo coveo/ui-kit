@@ -41,7 +41,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
     let element: AtomicCommerceSearchBoxInstantProducts;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error');
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture<AtomicCommerceSearchBoxInstantProducts>(
         html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`
       );
