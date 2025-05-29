@@ -1,20 +1,20 @@
 <template>
   <div class={templateClass}>
     <div class={headerCssClass}>
-      <div aria-hidden={isAnyPreviewOpen} class="slds-col slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
+      <div aria-hidden={isAnyPreviewOpen} data-testid="label_container" class="slds-col slds-m-right_small slds-order_2 slds-small-order_2 slds-medium-order_1 slds-large-order_1">
         <slot name="label" onslotchange={handleHeaderSlotChange}></slot>
       </div>
-      <div aria-hidden={isAnyPreviewOpen} class={badgesSlotCssClass}>
+      <div aria-hidden={isAnyPreviewOpen} data-testid="badges_container" class={badgesSlotCssClass}>
         <slot name="badges" onslotchange={handleHeaderSlotChange}></slot>
       </div>
-      <div aria-hidden={resultPreviewShouldNotBeAccessible} class="slds-col slds-order_3 slds-col_bump-left slds-p-right_xx-small">
+      <div aria-hidden={resultPreviewShouldNotBeAccessible} data-testid="actions_container" class="slds-col slds-order_3 slds-col_bump-left slds-p-right_xx-small">
         <slot name="actions" onslotchange={handleHeaderSlotChange}></slot>
       </div>
-      <div aria-hidden={isAnyPreviewOpen} class="date__container slds-truncate slds-col slds-order_4 slds-text-align_right">
+      <div aria-hidden={isAnyPreviewOpen} data-testid="date_container" class="date__container slds-truncate slds-col slds-order_4 slds-text-align_right">
         <slot name="date" onslotchange={handleHeaderSlotChange}></slot>
       </div>
     </div>
-    <div aria-hidden={isAnyPreviewOpen} class="slds-grid slds-size_1-of-1 main-content__container">
+    <div aria-hidden={isAnyPreviewOpen} data-testid="visual_container" class="slds-grid slds-size_1-of-1 main-content__container">
       <slot class="slds-col slds-order_1" name="visual"></slot>
       <div class="slds-col slds-order_2 slds-grid slds-grid_vertical main-content">
         <div class="title__container slds-m-bottom_x-small">
