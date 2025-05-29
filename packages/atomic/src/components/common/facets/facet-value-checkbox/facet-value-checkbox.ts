@@ -85,23 +85,24 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
     return html`
       ${keyed(
         props.displayValue,
-        html`<li class="relative flex items-center">
+        html`<li class="group relative flex items-center">
           ${renderCheckbox()}
           <label
             ${ref((ref) => (labelRef = ref as HTMLLabelElement))}
             .htmlFor=${id}
             part="value-checkbox-label"
-            class="group items-center"
+            class="items-center"
             @mousedown=${(e: MouseEvent) => createRipple(e, {color: 'neutral'})}
             aria-hidden="true"
           >
-            ${children} ${renderExclusion()}
+            ${children}
             <span part="value-count" class="value-count">
               ${props.i18n.t('between-parentheses', {
                 text: count,
               })}
             </span>
           </label>
+          ${renderExclusion()}
         </li>`
       )}
     `;
