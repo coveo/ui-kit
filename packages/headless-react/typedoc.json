@@ -8,6 +8,6 @@
   "categorizeByGroup": true,
   "entryPoints": ["./temp/ssr-commerce.json", "./temp/ssr.json"],
   "gitRevision": "master",
-  "plugin": ["@coveo/shared-typedoc"],
+  "plugin": ["@coveo/documentation"],
   "projectDocuments": ["./README.md"]
 }

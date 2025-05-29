@@ -119,7 +119,7 @@ export function load(app: Application) {
     </>
   ));
 
-  const baseAssetsPath = '../../shared-typedoc/assets';
+  const baseAssetsPath = '../../documentation/assets';
 
   const createFileCopyEntry = (sourcePath: string) => ({
     from: resolve(__dirname, `${baseAssetsPath}/${sourcePath}`),
@@ -150,7 +150,7 @@ export function load(app: Application) {
     });
 
     const darkModeJs = {
-      from: resolve(__dirname, '../../shared-typedoc/dist/dark-mode.js'),
+      from: resolve(__dirname, '../../documentation/dist/dark-mode.js'),
       to: resolve(app.options.getValue('out'), 'assets/vars/dark-mode.js'),
     };
 

@@ -15,5 +15,5 @@
     "./temp/insight.json",
     "./temp/recommendation.json"
   ],
-  "plugin": ["@coveo/shared-typedoc"]
+  "plugin": ["@coveo/documentation"]
 }

@@ -17,5 +17,5 @@
   "readme": "none",
   "entryPoints": ["../src/index.ts"],
   "gitRevision": "master",
-  "plugin": ["@coveo/shared-typedoc"]
+  "plugin": ["@coveo/documentation"]
 }

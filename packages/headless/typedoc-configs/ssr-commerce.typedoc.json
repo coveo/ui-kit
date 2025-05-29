@@ -18,5 +18,5 @@
   "readme": "none",
   "entryPoints": ["../src/ssr-commerce.index.ts"],
   "gitRevision": "master",
-  "plugin": ["@coveo/shared-typedoc"]
+  "plugin": ["@coveo/documentation"]
 }
