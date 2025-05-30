@@ -1,47 +1,26 @@
-import {multiClassMap} from '@/src/directives/multi-class-map';
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {keyed} from 'lit/directives/keyed.js';
-import {ref, RefOrCallback} from 'lit/directives/ref.js';
 import Tick from '../../../../images/clear.svg';
 import '../../atomic-icon/atomic-icon';
 
 export interface ExcludeProps {
   onClick(): void;
-  key?: string | number;
-  class?: string;
-  text?: string;
   ariaLabel?: string;
-  ref?: RefOrCallback;
-  onMouseEnter?(evt: MouseEvent): void;
 }
 
 export const renderFacetValueExclude: FunctionalComponent<ExcludeProps> = ({
   props,
 }) => {
-  const baseClassNames = 'value-exclude-button peer order-last flex ml-auto';
-
-  const classNames = {
-    [baseClassNames]: true,
-    [props.class ?? '']: Boolean(props.class),
-  };
-
-  return html` ${keyed(
-    props.key ?? '',
-    html`<button
-      class=${multiClassMap(classNames)}
-      part="value-exclude-button"
-      ${ref(props.ref)}
-      aria-label=${ifDefined(props.ariaLabel ?? props.text)}
-      value=${ifDefined(props.text)}
-      @click=${() => props.onClick?.()}
-      @mouseenter=${(e: MouseEvent) => props.onMouseEnter?.(e)}
-    >
-      <atomic-icon
-        class="bg-neutral hover:bg-error invisible order-last w-4 rounded p-1 group-hover:visible hover:fill-white"
-        icon=${Tick}
-      ></atomic-icon>
-    </button>`
-  )}`;
+  return html`<button
+    class="value-exclude-button peer invisible absolute right-2 z-1 order-last ml-auto flex group-hover:visible"
+    part="value-exclude-button"
+    aria-label=${ifDefined(props.ariaLabel)}
+    @click=${() => props.onClick?.()}
+  >
+    <atomic-icon
+      class="bg-neutral hover:bg-error order-last w-4 rounded p-1 hover:fill-white"
+      icon=${Tick}
+    ></atomic-icon>
+  </button> `;
 };
