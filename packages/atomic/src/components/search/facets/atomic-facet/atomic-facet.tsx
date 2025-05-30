@@ -49,8 +49,8 @@ import {
   shouldDisplaySearchResults,
   shouldUpdateFacetSearchComponent,
 } from '../../../common/facets/facet-search/facet-search-utils';
-import {FacetSearchValue} from '../../../common/facets/facet-search/facet-search-value';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
+import {FacetSearchValue} from '../../../common/facets/facet-search/stencil-facet-search-value';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {
   FacetValueProps,
