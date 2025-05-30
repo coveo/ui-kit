@@ -71,7 +71,7 @@
     "build": "nx build",
     "build:prod": "npm run build:definitions && npm run build:bundles && npm run build:esm",
     "build:bundles": "node esbuild.mjs",
-    "build:esm": "tsc -p tsconfig.build-esm.json",
+    "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "vitest run --exclude \"src/integration-tests/**\"",
@@ -123,6 +123,7 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
+    "chalk": "5.4.1",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
     "execa": "9.5.2",
