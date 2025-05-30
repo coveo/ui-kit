@@ -121,7 +121,7 @@
     "@types/node": "22.13.5",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
-    "@vitest/browser": "3.1.2",
+    "@vitest/browser": "3.1.4",
     "@whitespace/storybook-addon-html": "6.1.1",
     "axe-core": "4.10.2",
     "chalk": "5.4.1",
@@ -155,8 +155,8 @@
     "ts-lit-plugin": "2.0.2",
     "ts-node": "10.9.2",
     "typescript": "5.8.3",
-    "vite": "6.3.4",
-    "vitest": "3.1.2",
+    "vite": "6.3.5",
+    "vitest": "3.1.4",
     "wait-on": "8.0.2"
   },
   "peerDependencies": {
