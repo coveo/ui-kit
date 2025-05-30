@@ -10,7 +10,9 @@ export interface FunctionalComponentWithChildren<T> {
     props,
   }: {
     props: T;
-  }): (children: FunctionalComponentChildren) => TemplateResult;
+  }): (
+    children: FunctionalComponentChildren
+  ) => TemplateResult | typeof nothing;
 }
 
 export interface FunctionalComponentWithChildrenNoProps {
