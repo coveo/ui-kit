@@ -28,7 +28,7 @@ const meta: Meta = {
     },
     'attributes-products-per-page': {
       control: {type: 'text'},
-      description: 'The slot ID to use for the product template.',
+      description: 'The number of products to display per page.',
     },
   },
 
@@ -51,7 +51,7 @@ const meta: Meta = {
                       <atomic-product-field-condition if-defined="ec_brand">
                         <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
                       </atomic-product-field-condition>
-                      <atomic-product-field-condition if-defined="ec_brand">
+                      <atomic-product-field-condition if-defined="ec_rating">
                         <atomic-product-rating field="ec_rating"></atomic-product-rating>
                         <atomic-product-multi-value-text field="cat_available_sizes"></atomic-product-multi-value-text>
                       </atomic-product-field-condition>
