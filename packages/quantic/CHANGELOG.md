@@ -1,3 +1,12 @@
+## 3.22.0 (2025-05-28)
+
+- test(quantic): added unit test and e2e test for the quantic date facet component (#5331) ([51c2448](https://github.com/coveo/ui-kit/commits/51c2448)), closes [#5331](https://github.com/coveo/ui-kit/issues/5331)
+- test(quantic): exclude some cypress tests that are already migrated to playwright (#5354) ([d801fa5](https://github.com/coveo/ui-kit/commits/d801fa5)), closes [#5354](https://github.com/coveo/ui-kit/issues/5354)
+- test(quantic): Playwright migration for the quanticRecentQueriesList component (#5289) ([bb752b6](https://github.com/coveo/ui-kit/commits/bb752b6)), closes [#5289](https://github.com/coveo/ui-kit/issues/5289)
+- test(quantic): playwright tests for quanticResultList (#5319) ([e593f8f](https://github.com/coveo/ui-kit/commits/e593f8f)), closes [#5319](https://github.com/coveo/ui-kit/issues/5319)
+- test(quantic): result template jest tests (#5332) ([b307a27](https://github.com/coveo/ui-kit/commits/b307a27)), closes [#5332](https://github.com/coveo/ui-kit/issues/5332)
+- feat(quantic): added post to feed result action to the example insight panel (#5336) ([3685abd](https://github.com/coveo/ui-kit/commits/3685abd)), closes [#5336](https://github.com/coveo/ui-kit/issues/5336)
+
 ## 3.21.0 (2025-05-15)
 
 - test(quantic): unit tests and e2e tests for quantic category facet added (#5281) ([1adaa33](https://github.com/coveo/ui-kit/commits/1adaa33)), closes [#5281](https://github.com/coveo/ui-kit/issues/5281)

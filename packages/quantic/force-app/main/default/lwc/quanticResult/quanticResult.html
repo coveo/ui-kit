@@ -14,7 +14,7 @@
       <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
     </p>
     <div slot="title" class="slds-truncate">
-      <c-quantic-result-link result={result} engine-id={engineId} data-cy="result-link"></c-quantic-result-link>
+      <c-quantic-result-link result={result} engine-id={engineId} data-testid="result-link"></c-quantic-result-link>
     </div>
     <div slot="excerpt">
       <c-quantic-result-highlighted-text-field engine-id={engineId} result={result} field="excerpt"></c-quantic-result-highlighted-text-field>

@@ -3,6 +3,7 @@ import {createAction} from '@reduxjs/toolkit';
 import {PlatformEnvironment} from '../../../utils/url-utils.js';
 import {
   nonEmptyString,
+  requiredTrackingId,
   validatePayload,
 } from '../../../utils/validate-payload.js';
 import {
@@ -59,7 +60,7 @@ export const updateAnalyticsConfiguration = createAction(
       enabled: analyticsConfigurationSchema.enabled,
       proxyBaseUrl: analyticsConfigurationSchema.proxyBaseUrl,
       source: analyticsConfigurationSchema.source,
-      trackingId: analyticsConfigurationSchema.trackingId,
+      trackingId: requiredTrackingId,
     });
   }
 );

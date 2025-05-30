@@ -1,4 +1,4 @@
-import {Page, Locator, Response} from '@playwright/test';
+import {Page, Locator, Response, Request} from '@playwright/test';
 
 export class SearchObject {
   constructor(
@@ -13,12 +13,37 @@ export class SearchObject {
     return this.page.locator('c-action-perform-search button');
   }
 
+  get searchInput(): Locator {
+    return this.page.locator('c-action-perform-search input');
+  }
+
+  async fillSearchInput(query: string): Promise<void> {
+    await this.searchInput.fill(query);
+  }
+
   async performSearch(): Promise<void> {
     await this.performSearchButton.click();
   }
 
+  async triggerSearchWithInput(query: string): Promise<void> {
+    await this.fillSearchInput(query);
+    await this.performSearch();
+  }
+
   async waitForSearchResponse(): Promise<Response> {
     return this.page.waitForResponse(this.searchRequestRegex);
+  }
+
+  async waitForSearchRequest(): Promise<Request> {
+    return this.page.waitForRequest(this.searchRequestRegex);
+  }
+
+  get performRecommendationSearchButton(): Locator {
+    return this.page.locator('c-action-get-recommendations button');
+  }
+
+  async performRecommendationSearch(): Promise<void> {
+    await this.performRecommendationSearchButton.click();
   }
 
   async interceptSearchIndefinitely(): Promise<() => void> {
