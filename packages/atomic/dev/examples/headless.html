@@ -1,6 +1,5 @@
 <!doctype html>
 <html dir="ltr" lang="en">
-
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -8,7 +7,7 @@
 
     <script type="module">
       if (import.meta.env) {
-        const { defineCustomElements } = await import('@coveo/atomic/loader');
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
         import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
@@ -21,7 +20,7 @@
     </script>
 
     <script type="module">
-      const { loadAdvancedSearchQueryActions, loadContextActions } = await (import.meta.env
+      const {loadAdvancedSearchQueryActions, loadContextActions} = await (import.meta.env
         ? import('@coveo/headless')
         : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
@@ -68,5 +67,4 @@
     </atomic-search-interface>
     <script src="../header.js" type="text/javascript"></script>
   </body>
-
 </html>
