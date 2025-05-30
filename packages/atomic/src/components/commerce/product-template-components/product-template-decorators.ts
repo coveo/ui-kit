@@ -1,4 +1,4 @@
-import {Product} from '@coveo/headless/commerce';
+import {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {LitElement} from 'lit';
 import {
   InteractiveItemContextController,
@@ -26,17 +26,17 @@ import {fetchItemContext} from '../../common/item-list/fetch-item-context';
  *   @state() product!: Product;
  *
  *   render() {
- *     this.product = this.productController.item as Product;
+ *     this.product = this.productController.item;
  *     return html`<div>${this.product?.ec_name}</div>`;
  *   }
  * }
  * ```
  */
-export function createProductContextController(
+export function createProductContextController<T extends Product = Product>(
   host: LitElement & {error: Error | null},
   options: {folded?: boolean} = {}
-) {
-  return new ItemContextController(host, {
+): ItemContextController<T> {
+  return new ItemContextController<T>(host, {
     parentName: 'atomic-product',
     folded: options.folded ?? false,
   });
@@ -57,20 +57,22 @@ export function createProductContextController(
  *   @state() product!: Product;
  *
  *   render() {
- *     this.product = this.interactiveProductController.item as Product;
+ *     this.product = this.interactiveProductController.interactiveItem;
  *     return html`<div>${this.product?.ec_name}</div>`;
  *   }
  * }
  * ```
  */
-export function createInteractiveProductContextController(
-  host: LitElement & {error: Error}
-) {
-  return new InteractiveItemContextController(host);
+export function createInteractiveProductContextController<
+  T extends InteractiveProduct = InteractiveProduct,
+>(host: LitElement & {error: Error}): InteractiveItemContextController<T> {
+  return new InteractiveItemContextController<T>(host);
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent = InteractiveItemContextEvent;
+export type InteractiveProductContextEvent<
+  T extends InteractiveProduct = InteractiveProduct,
+> = InteractiveItemContextEvent<T>;
 
 /**
  * Retrieves `Product` on a rendered `atomic-product`.

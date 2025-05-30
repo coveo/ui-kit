@@ -1,17 +1,30 @@
 import {
+  AtomicIcon as LitAtomicIcon,
+  AtomicComponentError as LitAtomicComponentError,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
-  AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
-  AtomicComponentError as LitAtomicComponentError,
-  AtomicIcon as LitAtomicIcon,
+  AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
+  AtomicProduct as LitAtomicProduct,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
+
+export const AtomicIcon = createComponent({
+  tagName: 'atomic-icon',
+  react: React,
+  elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
+});
 
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
@@ -49,26 +62,20 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
-export const AtomicCommerceSearchBoxRecentQueries = createComponent({
-  tagName: 'atomic-commerce-search-box-recent-queries',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBoxRecentQueries,
-});
-
 export const AtomicCommerceSortDropdown = createComponent({
   tagName: 'atomic-commerce-sort-dropdown',
   react: React,
   elementClass: LitAtomicCommerceSortDropdown,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicCommerceSearchBoxRecentQueries = createComponent({
+  tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
-  elementClass: LitAtomicComponentError,
+  elementClass: LitAtomicCommerceSearchBoxRecentQueries,
 });
 
-export const AtomicIcon = createComponent({
-  tagName: 'atomic-icon',
+export const AtomicProduct = createComponent({
+  tagName: 'atomic-product',
   react: React,
-  elementClass: LitAtomicIcon,
+  elementClass: LitAtomicProduct,
 });
