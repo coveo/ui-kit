@@ -1,6 +1,5 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {FacetValueProps, renderFacetValue} from '../facet-value/facet-value';
