@@ -1,5 +1,4 @@
 import {configuration} from '../../../app/common-reducers.js';
-import {clearAllCoreFacets} from '../../../features/commerce/facets/core-facet/core-facet-actions.js';
 import {
   registerQuerySetQuery,
   updateQuerySetQuery,
@@ -225,26 +224,20 @@ describe('headless search box', () => {
   });
 
   describe('#submit', () => {
-    beforeEach(() => {
-      searchBox.submit();
-    });
-
     it('dispatches #prepareForSearchWithQuery', () => {
-      expect(prepareForSearchWithQuery).toHaveBeenCalled();
-    });
-
-    it('when clearFilters option is false, does not dispatch #clearAllCoreFacets', () => {
-      vi.resetAllMocks();
-      engine = buildMockCommerceEngine(state);
       searchBox = buildSearchBox(engine, {
         ...props,
         options: {clearFilters: false},
       });
+
       searchBox.submit();
-      expect(clearAllCoreFacets).not.toHaveBeenCalled();
+      expect(prepareForSearchWithQuery).toHaveBeenCalledWith({
+        clearFilters: false,
+      });
     });
 
     it('dispatches #executeSearch', () => {
+      searchBox.submit();
       expect(executeSearch).toHaveBeenCalled();
     });
 

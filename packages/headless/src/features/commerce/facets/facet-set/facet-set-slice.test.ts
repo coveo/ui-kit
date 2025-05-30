@@ -60,6 +60,7 @@ import {
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
   clearAllCoreFacets,
+  deleteAllCoreFacets,
 } from '../core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
@@ -2977,6 +2978,10 @@ describe('commerceFacetSetReducer', () => {
     {
       actionName: '#setView',
       action: setView,
+    },
+    {
+      actionName: '#deleteAllCoreFacets',
+      action: deleteAllCoreFacets,
     },
   ])('$actionName', ({action}: {action: ActionCreator}) => {
     it('clears all facets values', () => {

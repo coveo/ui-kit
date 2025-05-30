@@ -14,6 +14,7 @@ import {
 } from '../facets/category-facet/category-facet-actions.js';
 import {
   clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
   DeselectAllValuesInCoreFacetPayload,
 } from '../facets/core-facet/core-facet-actions.js';
@@ -86,6 +87,8 @@ export const parametersReducer = createReducer(
       )
 
       .addCase(clearAllCoreFacets, (state) => handleClearAllCoreFacets(state))
+
+      .addCase(deleteAllCoreFacets, (state) => handleClearAllCoreFacets(state))
 
       .addCase(deselectAllValuesInCoreFacet, (state, action) =>
         handleDeselectAllValuesInCoreFacet(state, action.payload)
