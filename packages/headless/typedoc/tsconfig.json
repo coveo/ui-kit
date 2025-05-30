@@ -1,8 +1,0 @@
-{
-  "extends": "../tsconfig.typedoc.json",
-  "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "lib"
-  },
-  "include": ["lib/**/*"]
-}

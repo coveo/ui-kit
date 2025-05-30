@@ -15,7 +15,7 @@
   ],
   "name": "Insight",
   "readme": "none",
-  "entryPoints": ["../../src/insight.index.ts"],
+  "entryPoints": ["../src/insight.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["@coveo/documentation"]
 }

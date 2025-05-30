@@ -13,9 +13,9 @@
     "Actions",
     "*"
   ],
-  "name": "Recommendation",
+  "name": "Case Assist",
   "readme": "none",
-  "entryPoints": ["../../src/recommendation.index.ts"],
+  "entryPoints": ["../src/case-assist.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["@coveo/documentation"]
 }

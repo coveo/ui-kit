@@ -7,15 +7,16 @@
   "categorizeByGroup": true,
   "groupOrder": [
     "Engine",
+    "Definers",
     "Controllers",
     "Buildable controllers",
     "Sub-controllers",
     "Actions",
     "*"
   ],
-  "name": "Case Assist",
+  "name": "SSR Commerce",
   "readme": "none",
-  "entryPoints": ["../../src/case-assist.index.ts"],
+  "entryPoints": ["../src/ssr-commerce.index.ts"],
   "gitRevision": "master",
-  "plugin": ["../../typedoc/dist/index.js"]
+  "plugin": ["@coveo/documentation"]
 }
