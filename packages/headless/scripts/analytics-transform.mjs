@@ -1,5 +1,5 @@
 import {createRequire} from 'node:module';
-import {join} from 'node:path';
+import {join} from 'node:path/posix';
 import {
   isImportDeclaration,
   isStringLiteral,
