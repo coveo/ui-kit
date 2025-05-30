@@ -303,6 +303,10 @@ export class AtomicTimeframeFacet implements InitializableComponent {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
