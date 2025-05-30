@@ -12,6 +12,7 @@ import {
   DiagnosticCategory,
 } from 'typescript';
 import {fileURLToPath} from 'url';
+import analyticsTransformer from './analytics-transform.mjs';
 import versionTransformer from './version-transform.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +24,7 @@ if (configArg === undefined) {
 }
 const tsConfigPath = configArg.split('=')[1];
 const isCDN = process.env.DEPLOYMENT_ENVIRONMENT === 'CDN';
-const transformers = [versionTransformer];
+const transformers = [versionTransformer, analyticsTransformer];
 
 function loadTsConfig(configPath) {
   const configFile = readConfigFile(configPath, sys.readFile);
