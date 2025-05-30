@@ -236,7 +236,7 @@ describe('range facet reducers', () => {
       expect(value.state).toBe('selected');
     });
 
-    it('when a request #currentValues range is not found in the payload, it unselects it', () => {
+    it('when a request #currentValues range is not found in the payload, it does not unselect it', () => {
       const value = buildMockNumericFacetValue({
         start: 0,
         end: 10,
@@ -251,7 +251,7 @@ describe('range facet reducers', () => {
       const nf = {};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
-      expect(value.state).toBe('idle');
+      expect(value.state).toBe('selected');
     });
 
     it('when a range in the payload is not found, it adds it to #currentValues', () => {

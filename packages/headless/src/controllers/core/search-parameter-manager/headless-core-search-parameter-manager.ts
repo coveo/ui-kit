@@ -109,7 +109,7 @@ export function buildCoreSearchParameterManager(
   );
   const {tab, ...parametersWithoutTab} = props.initialState.parameters;
 
-  if (tab) {
+  if (tab && engine.state.tabSet?.[tab]) {
     dispatch(restoreTab(tab));
   }
   dispatch(restoreSearchParameters(parametersWithoutTab));
@@ -123,7 +123,7 @@ export function buildCoreSearchParameterManager(
         parameters
       );
 
-      if (tab) {
+      if (tab && engine.state.tabSet?.[tab]) {
         dispatch(restoreTab(tab));
       }
       dispatch(restoreSearchParameters(newParamsWithoutTab));

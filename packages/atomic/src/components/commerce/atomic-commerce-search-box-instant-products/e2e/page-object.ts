@@ -1,13 +1,9 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class InstantProductPageObject extends BasePageObject<'atomic-commerce-search-box-instant-products'> {
+export class InstantProductPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-search-box-instant-products');
-  }
-
-  get component() {
-    return this.page.locator('atomic-commerce-search-box-instant-products');
   }
 
   get instantProducts() {

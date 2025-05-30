@@ -1,3 +1,23 @@
+## 3.25.0 (2025-05-28)
+
+- chore: add facet-container functional component (#5309) ([41f1eb2](https://github.com/coveo/ui-kit/commits/41f1eb2)), closes [#5309](https://github.com/coveo/ui-kit/issues/5309)
+- chore: migrate facet-common (#5325) ([2807727](https://github.com/coveo/ui-kit/commits/2807727)), closes [#5325](https://github.com/coveo/ui-kit/issues/5325)
+- chore: migrate facet-show-more-less (#5220) ([effd0e4](https://github.com/coveo/ui-kit/commits/effd0e4)), closes [#5220](https://github.com/coveo/ui-kit/issues/5220)
+- chore: migrate facet-value-exclude (#5326) ([200b045](https://github.com/coveo/ui-kit/commits/200b045)), closes [#5326](https://github.com/coveo/ui-kit/issues/5326)
+- chore: skip flaky test in cypress search box (#5364) ([c0efe50](https://github.com/coveo/ui-kit/commits/c0efe50)), closes [#5364](https://github.com/coveo/ui-kit/issues/5364)
+- chore(atomic): migrate breadcrumb-button.tsx (#5350) ([6cb2876](https://github.com/coveo/ui-kit/commits/6cb2876)), closes [#5350](https://github.com/coveo/ui-kit/issues/5350)
+- chore(atomic): migrate breadcrumb-container.tsx (#5352) ([e4ba2aa](https://github.com/coveo/ui-kit/commits/e4ba2aa)), closes [#5352](https://github.com/coveo/ui-kit/issues/5352)
+- chore(atomic): migrate carousel (#5343) ([befd28e](https://github.com/coveo/ui-kit/commits/befd28e)), closes [#5343](https://github.com/coveo/ui-kit/issues/5343)
+- chore(atomic): migrate display-table.tsx (#5274) ([9debf19](https://github.com/coveo/ui-kit/commits/9debf19)), closes [#5274](https://github.com/coveo/ui-kit/issues/5274)
+- chore(atomic): migrate FocusTargetController class (#5300) ([1b5c2a8](https://github.com/coveo/ui-kit/commits/1b5c2a8)), closes [#5300](https://github.com/coveo/ui-kit/issues/5300)
+- chore(atomic): migrate instant-item.tsx (#5349) ([7666f0c](https://github.com/coveo/ui-kit/commits/7666f0c)), closes [#5349](https://github.com/coveo/ui-kit/issues/5349)
+- chore(atomic): remove VNode type from breadcrumb interface (#5356) ([4f62235](https://github.com/coveo/ui-kit/commits/4f62235)), closes [#5356](https://github.com/coveo/ui-kit/issues/5356)
+- chore(atomic): simplify build process (#5310) ([edc7f24](https://github.com/coveo/ui-kit/commits/edc7f24)), closes [#5310](https://github.com/coveo/ui-kit/issues/5310)
+- feat(headless): explicit null trackingId if not specified (#5316) ([b04a573](https://github.com/coveo/ui-kit/commits/b04a573)), closes [#5316](https://github.com/coveo/ui-kit/issues/5316)
+- docs(atomic): fix bad link in query-suggestions storybook (#5348) ([e0420ca](https://github.com/coveo/ui-kit/commits/e0420ca)), closes [#5348](https://github.com/coveo/ui-kit/issues/5348)
+- fix(atomic): add back version export everywhere (#5330) ([dc880bb](https://github.com/coveo/ui-kit/commits/dc880bb)), closes [#5330](https://github.com/coveo/ui-kit/issues/5330)
+- fix(atomic): correctly localize tab label and don't localize tab name (#5339) ([6653341](https://github.com/coveo/ui-kit/commits/6653341)), closes [#5339](https://github.com/coveo/ui-kit/issues/5339)
+
 ## <small>3.24.3 (2025-05-21)</small>
 
 - chore(atomic): migrate atomic-commerce-search-box-query-suggestions (#5205) ([1c9df4d](https://github.com/coveo/ui-kit/commits/1c9df4d)), closes [#5205](https://github.com/coveo/ui-kit/issues/5205)
