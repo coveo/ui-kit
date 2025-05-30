@@ -45,6 +45,7 @@ import {
   ItemDisplayLayout,
 } from '../../common/layout/display-options.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
+import '../atomic-product/atomic-product';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
 import styles from './atomic-commerce-product-list.tw.css';
 

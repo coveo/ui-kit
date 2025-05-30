@@ -1,4 +1,4 @@
-import type {CommerceStore} from '@/src/components.js';
+import {CommerceStore} from '@/src/components/commerce/atomic-commerce-interface/store.js';
 import {bindingsContext} from '@/src/components/context/bindings-context.js';
 import {
   markParentAsReady,
