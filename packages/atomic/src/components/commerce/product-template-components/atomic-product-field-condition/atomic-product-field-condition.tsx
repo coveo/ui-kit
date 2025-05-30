@@ -5,7 +5,7 @@ import {
   makeDefinedConditions,
   makeMatchConditions,
 } from '../../product-template/product-template-common';
-import {ProductContext} from '../product-template-decorators';
+import {ProductContext} from '../stencil-product-template-decorators';
 
 /**
  * The `atomic-product-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
