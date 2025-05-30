@@ -1,5 +1,5 @@
 import {createRequire} from 'node:module';
-import {dirname, resolve} from 'node:path';
+import {join} from 'node:path';
 import {
   isImportDeclaration,
   isStringLiteral,
@@ -15,10 +15,7 @@ const require = createRequire(import.meta.url);
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
-  return resolve(
-    dirname(packageJsonPath),
-    packageJson['module'] || packageJson['main']
-  );
+  return join(moduleName, packageJson['module'] || packageJson['main']);
 }
 
 /**
