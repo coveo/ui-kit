@@ -1,37 +1,66 @@
 <template>
-    <div class={listboxCssClass}>
-        <ul id="listbox-id" data-cy="suggestion-list" class="slds-listbox slds-listbox_vertical" tabindex="-1"
-            role="listbox">
-            <template for:each={allOptions} for:item="option">
-                <template lwc:if={option.isClearRecentQueryButton}>
-                    <li id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1"
-                        data-cy="clear-recent-queries" role="option" class="slds-listbox__item"
-                        aria-selected={option.isSelected}>
-                        <div class={clearRecentQueriesOptionCSSClass} data-role="option">
-                            <span class="slds-media__body slds-text-title_bold">
-                                {labels.recentQueries}
-                            </span>
-                            <span class="slds-text-color_weak">{labels.clear}</span>
-                        </div>
-                    </li>
-                </template>
-                <template lwc:else>
-                    <li id={option.id} key={option.key} onmousedown={option.onClick} tabindex="-1"
-                        data-cy="suggestions-option" role="option" class="slds-listbox__item"
-                        data-rawvalue={option.rawValue} aria-selected={option.isSelected}>
-                        <div class={option.containerCSSClass}>
-                            <span class="slds-media__figure slds-listbox__option-icon suggestion-option__icon">
-                                <lightning-icon icon-name={option.icon} size="xx-small"
-                                    alternative-text={option.iconTitle}></lightning-icon>
-                            </span>
-                            <span class="slds-media__body slds-grid">
-                                <lightning-formatted-rich-text class="slds-truncate" data-cy="suggestions-option-text"
-                                    value={option.value} title={option.rawValue}></lightning-formatted-rich-text>
-                            </span>
-                        </div>
-                    </li>
-                </template>
-            </template>
-        </ul>
-    </div>
+  <div class={listboxCssClass}>
+    <ul
+      id="listbox-id"
+      data-cy="suggestion-list"
+      class="slds-listbox slds-listbox_vertical"
+      tabindex="-1"
+      role="listbox"
+    >
+      <template for:each={allOptions} for:item="option">
+        <template lwc:if={option.isClearRecentQueryButton}>
+          <li
+            id={option.id}
+            key={option.key}
+            onmousedown={option.onClick}
+            tabindex="-1"
+            data-testid="clear-recent-queries"
+            role="option"
+            class="slds-listbox__item"
+            aria-selected={option.isSelected}
+          >
+            <div class={clearRecentQueriesOptionCSSClass} data-role="option">
+              <span class="slds-media__body slds-text-title_bold">
+                {labels.recentQueries}
+              </span>
+              <span class="slds-text-color_weak">{labels.clear}</span>
+            </div>
+          </li>
+        </template>
+        <template lwc:else>
+          <li
+            id={option.id}
+            key={option.key}
+            onmousedown={option.onClick}
+            tabindex="-1"
+            data-cy="suggestions-option"
+            role="option"
+            class="slds-listbox__item"
+            data-rawvalue={option.rawValue}
+            aria-selected={option.isSelected}
+          >
+            <div class={option.containerCSSClass}>
+              <span
+                class="slds-media__figure slds-listbox__option-icon suggestion-option__icon"
+              >
+                <lightning-icon
+                  icon-name={option.icon}
+                  size="xx-small"
+                  alternative-text={option.iconTitle}
+                ></lightning-icon>
+              </span>
+              <span class="slds-media__body slds-grid">
+                <lightning-formatted-rich-text
+                  class="slds-truncate"
+                  data-cy="suggestions-option-text"
+                  value={option.value}
+                  title={option.rawValue}
+                ></lightning-formatted-rich-text>
+              </span>
+            </div>
+          </li>
+        </template>
+      </template>
+    </ul>
+  </div>
 </template>

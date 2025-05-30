@@ -31,7 +31,7 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   clearRecentQueriesButton: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="clear-recent-queries"]'
+      'c-quantic-search-box-input [data-testid="clear-recent-queries"]'
     ),
   querySuggestions: () =>
     SearchBoxSelectors.get().find(

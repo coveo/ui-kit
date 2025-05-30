@@ -39,7 +39,7 @@ const selectors = {
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
   suggestionOptionText: '[data-cy="suggestions-option-text"]',
-  clearRecentQueryButton: '[data-cy="clear-recent-queries"]',
+  clearRecentQueryButton: '[data-testid="clear-recent-queries"]',
 };
 
 function setupEventListeners(element) {
