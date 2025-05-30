@@ -1,0 +1,34 @@
+import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
+import {html} from 'lit';
+import {describe, it, expect} from 'vitest';
+import {renderQuerySummaryContainer} from './container';
+
+describe('#renderQuerySummaryContainer', () => {
+  const renderComponent = async (overrides = {}) => {
+    const element = await renderFunctionFixture(
+      html`${renderQuerySummaryContainer({
+        props: {
+          ...overrides,
+        },
+      })(html`<span>Test</span>`)}`
+    );
+
+    return {
+      container: element.querySelector('div[part="container"]'),
+    };
+  };
+
+  it('should render the container with the correct part', async () => {
+    const {container} = await renderComponent();
+    expect(container).toHaveAttribute('part', 'container');
+  });
+
+  describe('when additionalClasses is provided', () => {
+    it('should apply the additional classes to the container', async () => {
+      const {container} = await renderComponent({
+        additionalClasses: 'custom-class',
+      });
+      expect(container).toHaveClass('text-on-background custom-class');
+    });
+  });
+});
