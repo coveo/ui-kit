@@ -377,21 +377,27 @@ describe('c-quantic-recent-queries-list', () => {
       });
     });
 
-    describe.skip('with a custom #target value', () => {
+    describe('with a custom #target value', () => {
       it('should pass the target property to the result link component', async () => {
         const customTarget = '_blank';
+        const exampleResults = mockResults;
+        recentResultsListState = {
+          ...recentResultsListState,
+          results: exampleResults,
+        };
         const element = createTestComponent({
           ...defaultOptions,
           target: customTarget,
         });
-        updateRecentResultsState();
         await flushPromises();
 
         const recentResultLinks = element.shadowRoot.querySelectorAll(
           selectors.recentResultItem
         );
 
-        expect(recentResultLinks[0].target).toEqual(customTarget);
+        recentResultLinks.forEach((link) => {
+          expect(link.getAttribute('target')).toEqual(customTarget);
+        });
       });
     });
 
