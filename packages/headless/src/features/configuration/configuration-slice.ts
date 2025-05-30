@@ -2,7 +2,7 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {restoreTab} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
@@ -49,9 +49,8 @@ export const configurationReducer = createReducer(
       .addCase(updateActiveTab, (state, action) => {
         state.analytics.originLevel2 = action.payload;
       })
-      .addCase(restoreSearchParameters, (state, action) => {
-        state.analytics.originLevel2 =
-          action.payload.tab || state.analytics.originLevel2;
+      .addCase(restoreTab, (state, action) => {
+        state.analytics.originLevel2 = action.payload;
       })
 );
 
@@ -116,11 +115,17 @@ function handleUpdateAnalyticsConfiguration(
   if (!isNullOrUndefined(payload.source)) {
     state.analytics.source = payload.source;
   }
-  const magicCookie = getMagicCookie();
-  if (magicCookie) {
-    state.analytics.analyticsMode = 'next';
-    state.analytics.trackingId = magicCookie;
+
+  try {
+    const magicCookie = getMagicCookie();
+    if (magicCookie) {
+      state.analytics.analyticsMode = 'next';
+      state.analytics.trackingId = magicCookie;
+    }
+  } catch (error) {
+    // Ignore error
   }
+
   if (!isNullOrUndefined(payload.runtimeEnvironment)) {
     state.analytics.runtimeEnvironment = payload.runtimeEnvironment;
   }

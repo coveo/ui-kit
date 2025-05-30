@@ -2,8 +2,10 @@ import {
   CommerceEngineConfiguration,
   getSampleCommerceEngineConfiguration,
 } from '@coveo/headless/commerce';
-import {describe, expect, it} from 'vitest';
+import {describe, expect, it, vi} from 'vitest';
 import {getAnalyticsConfig} from './analytics-config';
+
+vi.mock('@coveo/headless/commerce');
 
 describe('getAnalyticsConfig', () => {
   it('should return default configuration when analytics is not defined in commerceEngineConfig', () => {
@@ -13,9 +15,6 @@ describe('getAnalyticsConfig', () => {
 
     expect(config).toEqual({
       enabled,
-      documentLocation: document.location.href,
-      originLevel3: document.referrer,
-      analyticsMode: 'next',
     });
   });
 
@@ -27,9 +26,6 @@ describe('getAnalyticsConfig', () => {
 
     expect(config).toEqual({
       enabled,
-      documentLocation: document.location.href,
-      analyticsMode: 'next',
-      originLevel3: document.referrer,
       trackingId: commerceEngineConfig.analytics.trackingId,
     });
   });

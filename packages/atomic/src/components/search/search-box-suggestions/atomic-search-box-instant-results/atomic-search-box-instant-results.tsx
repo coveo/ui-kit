@@ -19,7 +19,7 @@ import {
   getPartialInstantItemElement,
   getPartialInstantItemShowAllElement,
   InstantItemShowAllButton,
-} from '../../../common/suggestions/instant-item';
+} from '../../../common/suggestions/stencil-instant-item';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
@@ -93,10 +93,14 @@ export class AtomicSearchBoxInstantResults implements InitializableComponent {
 
   public componentWillLoad() {
     try {
-      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>((bindings) => {
-        this.bindings = bindings;
-        return this.initialize();
-      }, this.host);
+      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
+        (bindings) => {
+          this.bindings = bindings;
+          return this.initialize();
+        },
+        this.host,
+        ['atomic-search-box']
+      );
     } catch (error) {
       this.error = error as Error;
     }

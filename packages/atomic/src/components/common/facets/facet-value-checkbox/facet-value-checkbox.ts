@@ -1,5 +1,6 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
+import {keyed} from 'lit/directives/keyed.js';
 import {ref} from 'lit/directives/ref.js';
 import {createRipple} from '../../../../utils/ripple';
 import {randomID} from '../../../../utils/utils';
@@ -82,23 +83,26 @@ export const renderFacetValueCheckbox: FunctionalComponentWithChildren<
     };
 
     return html`
-      <li .key=${props.displayValue} class="relative flex items-center">
-        ${renderCheckbox()}
-        <label
-          ${ref((ref) => (labelRef = ref as HTMLLabelElement))}
-          .htmlFor=${id}
-          part="value-checkbox-label"
-          class="group items-center"
-          @mousedown=${(e: MouseEvent) => createRipple(e, {color: 'neutral'})}
-          aria-hidden="true"
-        >
-          ${children} ${renderExclusion()}
-          <span part="value-count" class="value-count">
-            ${props.i18n.t('between-parentheses', {
-              text: count,
-            })}
-          </span>
-        </label>
-      </li>
+      ${keyed(
+        props.displayValue,
+        html`<li class="relative flex items-center">
+          ${renderCheckbox()}
+          <label
+            ${ref((ref) => (labelRef = ref as HTMLLabelElement))}
+            .htmlFor=${id}
+            part="value-checkbox-label"
+            class="group items-center"
+            @mousedown=${(e: MouseEvent) => createRipple(e, {color: 'neutral'})}
+            aria-hidden="true"
+          >
+            ${children} ${renderExclusion()}
+            <span part="value-count" class="value-count">
+              ${props.i18n.t('between-parentheses', {
+                text: count,
+              })}
+            </span>
+          </label>
+        </li>`
+      )}
     `;
   };

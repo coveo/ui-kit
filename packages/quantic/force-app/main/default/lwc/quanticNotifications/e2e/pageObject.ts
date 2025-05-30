@@ -6,22 +6,6 @@ export class NotificationsObject {
     this.page = page;
   }
 
-  get setQueryInput(): Locator {
-    return this.page.locator('c-action-perform-search input');
-  }
-
-  get performSearchButton(): Locator {
-    return this.page.locator('c-action-perform-search button');
-  }
-
-  async setQuery(query: string): Promise<void> {
-    await this.setQueryInput.fill(query);
-  }
-
-  async performSearch(): Promise<void> {
-    await this.performSearchButton.click();
-  }
-
   get notifications(): Promise<Array<Locator>> {
     return this.page.getByTestId('notification').all();
   }

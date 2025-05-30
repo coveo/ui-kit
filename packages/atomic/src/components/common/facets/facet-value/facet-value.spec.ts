@@ -1,7 +1,5 @@
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
-import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
 import {html} from 'lit';
 import {
   expect,
@@ -42,20 +40,6 @@ describe('renderFacetValue', () => {
     displayValuesAs: 'checkbox' as const,
     facetSearchQuery: '',
     setRef: vi.fn(),
-  };
-  const locators = {
-    get listItem() {
-      return page.getByRole('listitem');
-    },
-    get button() {
-      return page.getByRole('button');
-    },
-    get valueCount() {
-      return page.getByText('(42)');
-    },
-    get label() {
-      return page.getByText('Test Value');
-    },
   };
 
   beforeAll(async () => {
@@ -143,16 +127,23 @@ describe('renderFacetValue', () => {
     });
   });
 
-  describe.skip('when displayValuesAs is link', () => {
+  describe('when displayValuesAs is link', () => {
     let renderFacetValueLinkSpy: MockedFunction<typeof renderFacetValueLink>;
 
     beforeEach(() => {
       renderFacetValueLinkSpy = vi.mocked(renderFacetValueLink);
     });
 
-    it('calls #renderFacetValueLink when displayValuesAs is link', async () => {
+    it('calls #renderFacetValueLink with the correct arguments', async () => {
       await setupElement({displayValuesAs: 'link'});
-      expect(renderFacetValueLinkSpy).toHaveBeenCalledWith({});
+      expect(renderFacetValueLinkSpy).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          displayValue: 'Test Value',
+          numberOfResults: 42,
+          isSelected: false,
+          searchQuery: '',
+        }),
+      });
     });
 
     it('calls #renderFacetValueLabelHighlight with the correct arguments', async () => {
@@ -171,45 +162,33 @@ describe('renderFacetValue', () => {
   });
 
   describe('when displayValuesAs is box', () => {
-    // TODO: check with facetState
-    it.skip('calls #renderFacetValueBox when displayValuesAs is box', async () => {
+    it('calls #renderFacetValueBox with the correct arguments', async () => {
       await setupElement({displayValuesAs: 'box'});
       const renderFacetValueBoxSpy = vi.mocked(renderFacetValueBox);
-      expect(renderFacetValueBoxSpy).toHaveBeenCalled();
+      expect(renderFacetValueBoxSpy).toHaveBeenCalledWith({
+        props: expect.objectContaining({
+          displayValue: 'Test Value',
+          numberOfResults: 42,
+          isSelected: false,
+          searchQuery: '',
+        }),
+      });
     });
   });
 
-  it.skip('calls #getFieldValueCaption with the correct arguments', async () => {
-    await setupElement({});
-    const renderFacetValueBoxSpy = vi.mocked(renderFacetValueBox);
-    expect(renderFacetValueBoxSpy).toHaveBeenCalled();
-  });
-
-  it.skip('calls onSelect when the button is clicked', async () => {
-    const onSelect = vi.fn();
-    await setupElement({onSelect});
-    const {button} = locators;
-    button.element().dispatchEvent(new MouseEvent('click'));
-    expect(onSelect).toHaveBeenCalled();
-  });
-
-  it.skip('calls onExclude when exclusion is enabled and checkbox is rendered', async () => {
+  it('calls onExclude when exclusion is enabled and checkbox is rendered', async () => {
     const onExclude = vi.fn();
+    const renderFacetValueCheckboxSpy = vi.mocked(renderFacetValueCheckbox);
     await setupElement({
       enableExclusion: true,
       onExclude,
       displayValuesAs: 'checkbox',
       facetState: 'excluded',
     });
-    // The exclude button is rendered as part of the tri-state checkbox, but we can only check that the prop is passed and the function is called if the button is clicked.
-    // This is a minimal check for wiring.
-    // You may want to expand this if you expose the exclude button in the DOM.
-    expect(onExclude).toBeDefined();
+    expect(renderFacetValueCheckboxSpy).toHaveBeenCalledWith({
+      props: expect.objectContaining({
+        onExclude,
+      }),
+    });
   });
-
-  // it.skip('applies aria attributes and pressed state for selected', async () => {
-  //   await setupElement({facetState: 'selected'});
-  //   const {button} = locators;
-  //   await expect(button).toHaveAttribute('aria-pressed', 'true');
-  // });
 });

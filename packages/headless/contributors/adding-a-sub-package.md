@@ -44,19 +44,10 @@ A sub-package groups together exports (i.e. engine, controllers, action loaders,
    "exports": {
      // ...
      "./case-assist": {
-       "types": "./dist/definitions/case-assist.index.d.ts",
-       "node": {
-         "types": "./dist/definitions/case-assist.index.d.ts",
-         "import": "./dist/case-assist/headless.esm.js",
-         "require": "./dist/case-assist/headless.cjs"
-       },
-       "browser": {
-         "types": "./dist/definitions/case-assist.index.d.ts",
-         "import": "./dist/browser/case-assist/headless.esm.js",
-         "require": "./dist/browser/case-assist/headless.js"
-       },
-       "import": "./dist/browser/case-assist/headless.esm.js",
-       "require": "./dist/browser/case-assist/headless.js"
+        "types": "./dist/definitions/case-assist.index.d.ts",
+        "import": "./dist/case-assist/headless.esm.js",
+        "require": "./dist/case-assist/headless.cjs",
+        "default": "./dist/case-assist/headless.esm.js"
      },
      // ...
    }
