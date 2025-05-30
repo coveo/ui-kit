@@ -28,7 +28,6 @@ export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCo
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');
 export const AtomicLayoutSection = /*@__PURE__*/createReactComponent<JSX.AtomicLayoutSection, HTMLAtomicLayoutSectionElement>('atomic-layout-section');
 export const AtomicNumericRange = /*@__PURE__*/createReactComponent<JSX.AtomicNumericRange, HTMLAtomicNumericRangeElement>('atomic-numeric-range');
-export const AtomicProduct = /*@__PURE__*/createReactComponent<JSX.AtomicProduct, HTMLAtomicProductElement>('atomic-product');
 export const AtomicProductChildren = /*@__PURE__*/createReactComponent<JSX.AtomicProductChildren, HTMLAtomicProductChildrenElement>('atomic-product-children');
 export const AtomicProductDescription = /*@__PURE__*/createReactComponent<JSX.AtomicProductDescription, HTMLAtomicProductDescriptionElement>('atomic-product-description');
 export const AtomicProductExcerpt = /*@__PURE__*/createReactComponent<JSX.AtomicProductExcerpt, HTMLAtomicProductExcerptElement>('atomic-product-excerpt');
