@@ -9,6 +9,7 @@ import {html, LitElement, nothing} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
+import '../atomic-product/atomic-product';
 
 /**
  * @alpha
@@ -38,7 +39,7 @@ export class AtomicProductTemplate
    * For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
    */
-  @property({type: Array})
+  @property({attribute: false})
   conditions: ProductTemplateCondition[] = [];
 
   /**
