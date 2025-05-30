@@ -8,6 +8,7 @@ import {
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {
@@ -17,7 +18,7 @@ import {
   Suggestion,
 } from '@coveo/headless/commerce';
 import {html, LitElement, nothing} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import SearchIcon from '../../../images/search.svg';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
@@ -25,7 +26,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
  * The `atomic-commerce-search-box-query-suggestions` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of query suggestion behavior.
  * @alpha
  */
-@customElement('atomic-commerce-search-box-query-suggestions')
+@atomicElement('atomic-commerce-search-box-query-suggestions')
 export class AtomicCommerceSearchBoxQuerySuggestions
   extends LitElement
   implements InitializableComponent<CommerceBindings>

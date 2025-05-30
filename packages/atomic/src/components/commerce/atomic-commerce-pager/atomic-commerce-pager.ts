@@ -1,3 +1,4 @@
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -15,7 +16,7 @@ import {
   Search,
 } from '@coveo/headless/commerce';
 import {html, LitElement} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {createAppLoadedListener} from '../../common/interface/store';
@@ -45,7 +46,7 @@ import {getCurrentPagesRange} from './commerce-pager-utils';
  * @event atomic/scrollToTop - Emitted when the user clicks the next or previous button, or a page button.
  * @alpha
  */
-@customElement('atomic-commerce-pager')
+@atomicElement('atomic-commerce-pager')
 @bindings()
 @withTailwindStyles
 export class AtomicCommercePager

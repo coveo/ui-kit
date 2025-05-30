@@ -1,3 +1,4 @@
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
@@ -7,7 +8,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {parseAssetURL} from '@/src/utils/utils';
 import DOMPurify from 'dompurify';
 import {LitElement, svg, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {unsafeSVG} from 'lit/directives/unsafe-svg.js';
 import {AnyBindings} from '../interface/bindings';
@@ -36,7 +37,7 @@ class IconFetchError extends Error {
  *
  * This component can display an icon from those available in the Atomic package, from a specific location, or as an inline SVG element.
  */
-@customElement('atomic-icon')
+@atomicElement('atomic-icon')
 @injectStylesForNoShadowDOM
 export class AtomicIcon
   extends InitializeBindingsMixin(LitElement)

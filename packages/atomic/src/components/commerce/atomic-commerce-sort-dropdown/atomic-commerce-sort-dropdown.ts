@@ -1,3 +1,4 @@
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {bindings} from '@/src/decorators/bindings';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {
@@ -11,7 +12,7 @@ import {
   ProductListingState,
 } from '@coveo/headless/commerce';
 import {html, CSSResultGroup, unsafeCSS, LitElement} from 'lit';
-import {customElement, state} from 'lit/decorators.js';
+import {state} from 'lit/decorators.js';
 import {guard} from 'lit/directives/guard.js';
 import {map} from 'lit/directives/map.js';
 import {bindStateToController} from '../../../decorators/bind-state';
@@ -37,7 +38,7 @@ import styles from './atomic-commerce-sort-dropdown.tw.css';
  *
  * @alpha
  */
-@customElement('atomic-commerce-sort-dropdown')
+@atomicElement('atomic-commerce-sort-dropdown')
 @bindings()
 @withTailwindStyles
 export class AtomicCommerceSortDropdown

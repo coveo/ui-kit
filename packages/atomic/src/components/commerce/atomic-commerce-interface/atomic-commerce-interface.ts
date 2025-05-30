@@ -1,3 +1,4 @@
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {markParentAsReady} from '@/src/utils/init-queue';
@@ -27,7 +28,7 @@ import {
 import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
-import {customElement, property, state} from 'lit/decorators.js';
+import {property, state} from 'lit/decorators.js';
 import {ChildrenUpdateCompleteMixin} from '../../../mixins/children-update-complete-mixin';
 import {
   AdoptedStylesBindings,
@@ -70,7 +71,7 @@ const FirstRequestExecutedFlag = 'firstRequestExecuted';
  *
  * @slot default - The default slot where you can add child components to the search box.
  */
-@customElement('atomic-commerce-interface')
+@atomicElement('atomic-commerce-interface')
 @withTailwindStyles
 export class AtomicCommerceInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
