@@ -3,8 +3,8 @@
   <lightning:quickActionAPI aura:id="quickActionAPI" />
 
   <article>
-    <c:exampleInsightPanel
-      oninsightpanel_auraposttofeed="{!c.handlePostToFeed}">
+    <c:exampleInsightPanel oninsightpanel_auraposttofeed="{!c.handleQuickAction}"
+      oninsightpanel_aurasendasemail="{!c.handleQuickAction}">
     </c:exampleInsightPanel>
   </article>
 </aura:component>

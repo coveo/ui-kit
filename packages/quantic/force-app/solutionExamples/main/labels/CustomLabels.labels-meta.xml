@@ -21,4 +21,11 @@
     <protected>false</protected>
     <shortDescription>Post to feed</shortDescription>
   </labels>
+  <labels>
+    <fullName>SendAsEmail</fullName>
+    <value>Send as email</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Send as email</shortDescription>
+  </labels>
 </CustomLabels>
