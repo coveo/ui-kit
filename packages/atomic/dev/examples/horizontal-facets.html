@@ -1,6 +1,5 @@
 <!doctype html>
 <html dir="ltr" lang="en">
-
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -8,7 +7,7 @@
 
     <script type="module">
       if (import.meta.env) {
-        const { defineCustomElements } = await import('@coveo/atomic/loader');
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
         import('@coveo/atomic/themes/coveo.css');
         defineCustomElements();
       } else {
@@ -80,8 +79,11 @@
             </atomic-popover>
 
             <atomic-popover>
-              <atomic-numeric-facet field="ytviewcount" label="Youtube Views"
-                with-input="integer"></atomic-numeric-facet>
+              <atomic-numeric-facet
+                field="ytviewcount"
+                label="Youtube Views"
+                with-input="integer"
+              ></atomic-numeric-facet>
             </atomic-popover>
 
             <atomic-popover>
@@ -95,8 +97,8 @@
 
             <atomic-popover>
               <atomic-numeric-facet field="sncost" label="Cost Range (auto)">
-                <atomic-format-currency currency="CAD"></atomic-format-currency>
-              </atomic-numeric-facet></atomic-popover>
+                <atomic-format-currency currency="CAD"></atomic-format-currency> </atomic-numeric-facet
+            ></atomic-popover>
 
             <atomic-popover>
               <atomic-timeframe-facet label="Timeframe" with-date-picker>
@@ -106,20 +108,30 @@
                 <atomic-timeframe unit="month"></atomic-timeframe>
                 <atomic-timeframe unit="quarter"></atomic-timeframe>
                 <atomic-timeframe unit="year"></atomic-timeframe>
-                <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe>
-              </atomic-timeframe-facet></atomic-popover>
+                <atomic-timeframe unit="year" amount="10" period="next"></atomic-timeframe> </atomic-timeframe-facet
+            ></atomic-popover>
 
             <atomic-popover>
-              <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5">
-              </atomic-rating-facet></atomic-popover>
+              <atomic-rating-facet field="snrating" label="Rating" number-of-intervals="5"> </atomic-rating-facet
+            ></atomic-popover>
 
             <atomic-popover>
-              <atomic-rating-range-facet facet-id="snrating_range" field="snrating" label="Rating Range (auto)"
-                number-of-intervals="5">
-              </atomic-rating-range-facet></atomic-popover>
+              <atomic-rating-range-facet
+                facet-id="snrating_range"
+                field="snrating"
+                label="Rating Range (auto)"
+                number-of-intervals="5"
+              >
+              </atomic-rating-range-facet
+            ></atomic-popover>
 
-            <atomic-popover><atomic-color-facet field="filetype" label="Files" number-of-values="6"
-                sort-criteria="occurrences"></atomic-color-facet>
+            <atomic-popover
+              ><atomic-color-facet
+                field="filetype"
+                label="Files"
+                number-of-values="6"
+                sort-criteria="occurrences"
+              ></atomic-color-facet>
             </atomic-popover>
           </atomic-layout-section>
           <atomic-layout-section section="status">
@@ -141,5 +153,4 @@
     </atomic-search-interface>
     <script src="../header.js" type="text/javascript"></script>
   </body>
-
 </html>
