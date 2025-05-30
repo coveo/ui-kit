@@ -6,10 +6,17 @@
     <title>Coveo Atomic: Custom component example</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
+      }
     </script>
 
     <script type="module">
@@ -24,8 +31,12 @@
     </script>
     <!-- Custom Atomic Component using the initializeBindings method -->
     <script type="module">
-      import {initializeBindings} from '@coveo/atomic';
-      import {buildSearchBox} from '@coveo/headless';
+      const {initializeBindings} = await (import.meta.env
+        ? import('@coveo/atomic')
+        : import('http://localhost:3000/atomic/v0.0.0/index.esm.js'));
+      const {buildSearchBox} = await (import.meta.env
+        ? import('@coveo/headless')
+        : import('http://localhost:3000/headless/v0.0.0/headless.esm.js'));
 
       class CustomComponent extends HTMLElement {
         constructor() {
@@ -59,7 +70,9 @@
 
     <!-- Custom Atomic Result Template Component using the resultContext method -->
     <script type="module">
-      import {resultContext} from '@coveo/atomic';
+      const {resultContext} = await (import.meta.env
+        ? import('@coveo/atomic')
+        : import('http://localhost:3000/atomic/v0.0.0/index.esm.js'));
 
       class CustomTemplateComponent extends HTMLElement {
         initialized = false;
@@ -91,7 +104,7 @@
   </head>
 
   <body>
-    <atomic-search-interface language-assets-path="/lang" icon-assets-path="/assets">
+    <atomic-search-interface language-assets-path="./lang" icon-assets-path="./assets">
       <custom-component></custom-component>
       <atomic-segmented-facet field="language"></atomic-segmented-facet>
       <atomic-query-summary></atomic-query-summary>

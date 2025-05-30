@@ -6,10 +6,17 @@
     <title>Coveo Atomic</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const css = await import('http://localhost:3000/atomic/v0.0.0/themes/coveo.css');
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(css.default);
+        document.adoptedStyleSheets.push(sheet);
+      }
     </script>
 
     <link rel="icon" href="data:," />
@@ -64,7 +71,7 @@
 
       /* Example on how to customize the color facet */
       atomic-color-facet::part(default-color-value) {
-        background-image: url('@coveo/atomic/assets/document.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/document.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -72,7 +79,7 @@
       }
 
       atomic-color-facet::part(value-dynamicscrmitem) {
-        background-image: url('@coveo/atomic/assets/email.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/email.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -80,7 +87,7 @@
       }
 
       atomic-color-facet::part(value-lithiumuser) {
-        background-image: url('@coveo/atomic/assets/folder.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/folder.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -88,7 +95,7 @@
       }
 
       atomic-color-facet::part(value-YouTubeVideo) {
-        background-image: url('@coveo/atomic/assets/video.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/video.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -96,7 +103,7 @@
       }
 
       atomic-color-facet::part(value-lithiummessage) {
-        background-image: url('@coveo/atomic/assets/knowledge.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/knowledge.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -104,7 +111,7 @@
       }
 
       atomic-color-facet::part(value-lithiumthread) {
-        background-image: url('@coveo/atomic/assets/post.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/post.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
@@ -112,7 +119,7 @@
       }
 
       atomic-color-facet::part(value-html) {
-        background-image: url('@coveo/atomic/assets/html.svg');
+        background-image: url('http://localhost:3000/atomic/v0.0.0/assets/html.svg');
         background-position: center;
         background-size: contain;
         background-repeat: no-repeat;
