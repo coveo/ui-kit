@@ -3,7 +3,7 @@ import {html, render} from 'lit';
 import {vi, describe, beforeEach, afterEach, it, expect} from 'vitest';
 import {renderCheckbox as checkbox, CheckboxProps} from './checkbox';
 
-describe('checkbox', () => {
+describe('renderCheckbox', () => {
   let container: HTMLElement;
 
   beforeEach(() => {

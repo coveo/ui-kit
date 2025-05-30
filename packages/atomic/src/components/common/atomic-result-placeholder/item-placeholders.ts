@@ -6,6 +6,7 @@ import {
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
 import {keyed} from 'lit/directives/keyed.js';
+import {map} from 'lit/directives/map.js';
 
 export interface ItemPlaceholdersProps {
   density: ItemDisplayDensity;
@@ -28,9 +29,10 @@ export const renderItemPlaceholders: FunctionalComponent<
 const renderGridOrListItemPlaceholders: FunctionalComponent<
   ItemPlaceholdersProps
 > = ({props}) => {
-  return Array.from(
-    {length: props.numberOfPlaceholders},
-    (_, i) =>
+  const placeholders = Array.from({length: props.numberOfPlaceholders});
+  return html`${map(
+    placeholders,
+    (i) =>
       html`${keyed(
         `placeholder-${i}`,
         html`<atomic-result-placeholder
@@ -39,7 +41,7 @@ const renderGridOrListItemPlaceholders: FunctionalComponent<
           .imageSize=${props.imageSize}
         ></atomic-result-placeholder>`
       )}`
-  );
+  )}`;
 };
 
 const renderTableItemPlaceholders: FunctionalComponent<
