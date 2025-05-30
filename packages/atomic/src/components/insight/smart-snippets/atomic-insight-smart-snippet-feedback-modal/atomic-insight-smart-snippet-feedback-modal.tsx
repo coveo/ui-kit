@@ -16,7 +16,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
+import {randomID} from '../../../../utils/utils';
 import {SmartSnippetFeedbackModalCommon} from '../../../common/smart-snippets/atomic-smart-snippet-feedback-modal/smart-snippet-feedback-modal-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 

@@ -1,8 +1,8 @@
+import {closest} from '@/src/utils/dom-utils';
 import {VNode} from '@stencil/core';
 import {HTMLStencilElement} from '@stencil/core/internal';
 import type {LitElement} from 'lit';
 import {buildCustomEvent} from '../../../utils/event-utils';
-import {closest} from '../../../utils/stencil-utils';
 import {AnyBindings} from '../interface/bindings';
 
 /**
