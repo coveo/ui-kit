@@ -50,9 +50,9 @@ Optionally install the [VSCode Salesforce Extension Pack](https://marketplace.vi
 
 This command will create two scratch orgs for you:
 
-- One with Lightning Web Security (LWS) enabled.
+- One with Lightning Web Security (LWS) enabled. (Alias: `Quantic__LWS_enabled`)
 
-- One with LWS disabled.
+- One with LWS disabled, Locker Service enabled. (Alias: `Quantic__LWS_disabled`)
 
 Each scratch org will include:
 
