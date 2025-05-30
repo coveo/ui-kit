@@ -6,8 +6,8 @@ import {ComponentInterface, h} from '@stencil/core';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {AnyBindings, AnyEngineType} from './bindings';
-import {i18nBackendOptions, i18nTranslationNamespace} from './i18n-stencil';
-import {init18n} from './i18n-stencil';
+import {i18nBackendOptions, i18nTranslationNamespace} from './stencil-i18n';
+import {init18n} from './stencil-i18n';
 
 export interface StencilBaseAtomicInterface<EngineType extends AnyEngineType>
   extends ComponentInterface {

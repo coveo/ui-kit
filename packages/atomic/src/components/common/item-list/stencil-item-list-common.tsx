@@ -3,7 +3,7 @@ import {
   FocusTargetController,
   getFirstFocusableDescendant,
 } from '../../../utils/stencil-accessibility-utils';
-import {defer, once} from '../../../utils/stencil-utils';
+import {defer, once} from '../../../utils/utils';
 import {CommerceStore} from '../../commerce/atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../../commerce/atomic-commerce-recommendation-interface/store';
 import {InsightStore} from '../../insight/atomic-insight-interface/store';

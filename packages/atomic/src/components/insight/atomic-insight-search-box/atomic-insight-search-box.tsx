@@ -13,7 +13,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {isFocusingOut, randomID} from '../../../utils/stencil-utils';
+import {isFocusingOut, randomID} from '../../../utils/utils';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
 import {

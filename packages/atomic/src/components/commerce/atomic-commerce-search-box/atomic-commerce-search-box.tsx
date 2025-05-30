@@ -39,7 +39,7 @@ import {
   once,
   randomID,
   spreadProperties,
-} from '../../../utils/stencil-utils';
+} from '../../../utils/utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
 import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
 import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';

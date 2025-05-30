@@ -18,7 +18,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {elementHasAncestorTag} from '../../../../utils/stencil-utils';
+import {elementHasAncestorTag} from '../../../../utils/utils';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {
   ChildTemplatesContext,
