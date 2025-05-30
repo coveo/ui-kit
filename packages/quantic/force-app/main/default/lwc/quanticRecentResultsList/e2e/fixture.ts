@@ -7,7 +7,6 @@ const pageUrl = 's/quantic-recent-results-list';
 
 interface RecentQueriesListOptions {
   engineId: string;
-  // todo: add more options as needed
 }
 
 type QuanticRecentQueriesListE2ESearchFixtures = {
