@@ -196,16 +196,27 @@ describe('c-quantic-recent-queries-list', () => {
     beforeEach(() => {
       mockSuccessfulHeadlessInitialization();
       prepareHeadlessState();
+      jest
+        .spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise')
+        .mockImplementation(() => Promise.resolve(exampleEngine));
+      console.error = jest.fn();
+    });
+
+    afterEach(() => {
+      recentResultsListState = initialRecentResultsListState;
+      jest.clearAllMocks();
     });
 
     describe('when there are recent results', () => {
       const exampleResults = mockResults;
+      beforeEach(() => {
+        recentResultsListState = {
+          ...recentResultsListState,
+          results: exampleResults,
+        };
+      });
 
       it('should no longer display the placeholder component', async () => {
-        recentResultsListState = {
-          results: exampleResults,
-          maxLength: defaultMaxLength,
-        };
         const element = createTestComponent();
         updateRecentResultsState();
         await flushPromises();
@@ -286,6 +297,10 @@ describe('c-quantic-recent-queries-list', () => {
     describe('with a custom #maxLength value', () => {
       it('should set the #maxLength value in the controller', async () => {
         const exampleResults = mockResults;
+        recentResultsListState = {
+          results: exampleResults,
+          maxLength: defaultMaxLength,
+        };
         const customMaxLength = 5;
         createTestComponent({...defaultOptions, maxLength: customMaxLength});
         updateRecentResultsState();
@@ -373,8 +388,9 @@ describe('c-quantic-recent-queries-list', () => {
         await flushPromises();
 
         const recentResultLinks = element.shadowRoot.querySelectorAll(
-          selectors.quanticRecentResultLink
+          selectors.recentResultItem
         );
+
         expect(recentResultLinks[0].target).toEqual(customTarget);
       });
     });
