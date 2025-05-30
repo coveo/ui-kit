@@ -51,7 +51,7 @@ export default class ResultSendAsEmail extends LightningElement {
     '<a href="${clickUri}">${title}</a><br/><br/><quote>${excerpt}</quote>';
 
   iconName = 'utility:email';
-  eventName = 'sfint__sendasemail';
+  eventName = 'insightpanel__posttofeed';
   insertType = 'replace';
 
   /** @type {boolean} */
