@@ -42,7 +42,7 @@ import {Carousel} from '../../common/stencil-carousel';
 import {Heading} from '../../common/stencil-heading';
 import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
-import {ProductTemplateProvider} from '../product-list/product-template-provider';
+import {ProductTemplateProvider} from '../product-list/stencil-product-template-provider';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
 
 /**

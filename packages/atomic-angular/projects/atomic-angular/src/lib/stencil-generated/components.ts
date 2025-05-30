@@ -992,28 +992,6 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 
 @ProxyCmp({
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'interactiveProduct', 'linkContent', 'loadingFlag', 'product', 'renderingFunction', 'stopPropagation', 'store']
-, defineCustomElementFn: defineCustomElementAtomicProduct})
-@Component({standalone:false,
-  selector: 'atomic-product',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'interactiveProduct', 'linkContent', 'loadingFlag', 'product', 'renderingFunction', 'stopPropagation', 'store'],
-})
-export class AtomicProduct {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProduct extends Components.AtomicProduct {}
-
-
-@ProxyCmp({
   inputs: ['fallback', 'field', 'label']
 , defineCustomElementFn: defineCustomElementAtomicProductChildren})
 @Component({standalone:false,
@@ -1418,29 +1396,6 @@ export class AtomicProductSectionVisual {
 
 
 export declare interface AtomicProductSectionVisual extends Components.AtomicProductSectionVisual {}
-
-
-@ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-  methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicProductTemplate})
-@Component({standalone:false,
-  selector: 'atomic-product-template',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-})
-export class AtomicProductTemplate {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductTemplate extends Components.AtomicProductTemplate {}
 
 
 @ProxyCmp({
@@ -3000,32 +2955,6 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
 }
 
 export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
-
-}
-
-@ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
-  methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box-recent-queries',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-export class AtomicCommerceSearchBoxRecentQueries {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
 
 }
 

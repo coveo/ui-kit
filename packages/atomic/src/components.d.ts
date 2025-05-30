@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -22,8 +22,6 @@ import { InsightStore } from "./components/insight/atomic-insight-interface/stor
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
-import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -36,7 +34,7 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -52,8 +50,6 @@ export { InsightStore } from "./components/insight/atomic-insight-interface/stor
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
-export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -1805,64 +1801,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface AtomicProduct {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes": string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveProduct item.
-          * @alpha
-         */
-        "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
-        /**
-          * @alpha
-         */
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-          * @alpha
-         */
-        "renderingFunction": ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-          * @alpha
-         */
-        "store"?: CommerceStore | CommerceRecommendationStore;
-    }
-    /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
      * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
      */
@@ -2120,37 +2058,6 @@ export namespace Components {
           * How large or small the visual section of product using this template should be.
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
-     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicProductTemplate {
-        /**
-          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
-         */
-        "conditions": ProductTemplateCondition[];
-        /**
-          * Gets the product template to apply based on the evaluated conditions.
-         */
-        "getTemplate": () => Promise<ProductTemplate<DocumentFragment> | null>;
-        /**
-          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
-         */
-        "mustMatch": Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-         */
-        "mustNotMatch": Record<
-    string,
-    string[]
-  >;
     }
     /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
@@ -4675,16 +4582,6 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
-    /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
-    }
-    var HTMLAtomicProductElement: {
-        prototype: HTMLAtomicProductElement;
-        new (): HTMLAtomicProductElement;
-    };
     interface HTMLAtomicProductChildrenElementEventMap {
         "atomic/selectChildProduct": SelectChildProductEventArgs;
     }
@@ -4913,19 +4810,6 @@ declare global {
     var HTMLAtomicProductSectionVisualElement: {
         prototype: HTMLAtomicProductSectionVisualElement;
         new (): HTMLAtomicProductSectionVisualElement;
-    };
-    /**
-     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface HTMLAtomicProductTemplateElement extends Components.AtomicProductTemplate, HTMLStencilElement {
-    }
-    var HTMLAtomicProductTemplateElement: {
-        prototype: HTMLAtomicProductTemplateElement;
-        new (): HTMLAtomicProductTemplateElement;
     };
     /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
@@ -5898,7 +5782,6 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
@@ -5918,7 +5801,6 @@ declare global {
         "atomic-product-section-metadata": HTMLAtomicProductSectionMetadataElement;
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
-        "atomic-product-template": HTMLAtomicProductTemplateElement;
         "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -7679,64 +7561,6 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface AtomicProduct {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes"?: string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveProduct item.
-          * @alpha
-         */
-        "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
-        /**
-          * @alpha
-         */
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-          * @alpha
-         */
-        "renderingFunction"?: ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-          * @alpha
-         */
-        "store"?: CommerceStore | CommerceRecommendationStore;
-    }
-    /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
      * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
      */
@@ -7982,33 +7806,6 @@ declare namespace LocalJSX {
           * How large or small the visual section of product using this template should be.
          */
         "imageSize"?: Omit<ItemDisplayImageSize, 'icon'>;
-    }
-    /**
-     * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
-     * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
-     * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
-     * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-     * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-     */
-    interface AtomicProductTemplate {
-        /**
-          * A function that must return true on products for the product template to apply. Set programmatically before initialization, not via attribute.  For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`: `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
-         */
-        "conditions"?: ProductTemplateCondition[];
-        /**
-          * The field and values that define which result items the condition must be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist" `;type: Record<string, string[]> ;default: {}
-         */
-        "mustMatch"?: Record<
-    string,
-    string[]
-  >;
-        /**
-          * The field and values that define which result items the condition must not be applied to. For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-         */
-        "mustNotMatch"?: Record<
-    string,
-    string[]
-  >;
     }
     /**
      * @alpha The `atomic-product-text` component renders the value of a string product field.
@@ -9550,7 +9347,6 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-excerpt": AtomicProductExcerpt;
@@ -9570,7 +9366,6 @@ declare namespace LocalJSX {
         "atomic-product-section-metadata": AtomicProductSectionMetadata;
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
-        "atomic-product-template": AtomicProductTemplate;
         "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
@@ -9945,11 +9740,6 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-             * @alpha 
-             */
-            "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
-            /**
              * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
              * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
              */
@@ -10072,14 +9862,6 @@ declare module "@stencil/core" {
              * * Always has a 1:1 aspect ratio.
              */
             "atomic-product-section-visual": LocalJSX.AtomicProductSectionVisual & JSXBase.HTMLAttributes<HTMLAtomicProductSectionVisualElement>;
-            /**
-             * @alpha * A product template determines the format of the query results, depending on the conditions that are defined for each template.
-             * A `template` element must be the child of an `atomic-product-template`. Furthermore, an `atomic-commerce-product-list`, `atomic-commerce-recommendation-list`, or `atomic-commerce-search-box-instant-products` must be the parent of each `atomic-product-template`.
-             * **Note:** Any `<script>` tags that are defined inside a `<template>` element will not be executed when the products are being rendered.
-             * @MapProp name: mustMatch;attr: must-match;docs: The field and values that must be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`;type: Record<string, string[]> ;default: {}
-             * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
-             */
-            "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
             /**
              * @alpha The `atomic-product-text` component renders the value of a string product field.
              */

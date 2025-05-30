@@ -8,7 +8,6 @@ import {
   TemplateProvider,
   TemplateProviderProps,
 } from '../../common/template-provider/template-provider';
-import '../atomic-product-template/atomic-product-template.js';
 
 export class ProductTemplateProvider extends TemplateProvider<Product> {
   constructor(
