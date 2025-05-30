@@ -67,7 +67,7 @@ describe('InitializeBindingsMixin mixin', () => {
     bindings = mockBindings();
     bindings.i18n.init();
     mockedFetchBindings.mockImplementation(() => Promise.resolve(bindings));
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {

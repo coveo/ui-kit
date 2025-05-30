@@ -9,6 +9,7 @@ import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 import {GeneratedAnswerObject} from './pageObject';
 import genQaData from './data';
 import type {GenQaData} from './data';
+import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
 
 const pageUrl = 's/quantic-generated-answer';
 
@@ -33,22 +34,27 @@ type QuanticGeneratedAnswerE2EInsightFixtures =
 
 export const testSearch =
   quanticBase.extend<QuanticGeneratedAnswerE2ESearchFixtures>({
+    pageUrl,
     genQaData,
     options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
     search: async ({page}, use) => {
       await use(new SearchObject(page, searchRequestRegex));
     },
     generatedAnswer: async (
-      {page, options, configuration, search, genQaData: data},
+      {page, options, configuration, search, genQaData: data, analytics},
       use
     ) => {
       const generatedAnswerObject = new GeneratedAnswerObject(
         page,
-        data.streamId
+        data.streamId,
+        analytics
       );
+
       await page.goto(pageUrl);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);
       await generatedAnswerObject.mockStreamResponse(data.streams);
+
       await configuration.configure(options);
       await search.waitForSearchResponse();
       await use(generatedAnswerObject);
@@ -57,8 +63,10 @@ export const testSearch =
 
 export const testInsight =
   quanticBase.extend<QuanticGeneratedAnswerE2EInsightFixtures>({
+    pageUrl,
     genQaData,
     options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
     },
@@ -66,12 +74,21 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     generatedAnswer: async (
-      {page, options, search, configuration, insightSetup, genQaData: data},
+      {
+        page,
+        options,
+        search,
+        configuration,
+        insightSetup,
+        genQaData: data,
+        analytics,
+      },
       use
     ) => {
       const generatedAnswerObject = new GeneratedAnswerObject(
         page,
-        data.streamId
+        data.streamId,
+        analytics
       );
       await page.goto(pageUrl);
       await search.mockSearchWithGenerativeQuestionAnsweringId(data.streamId);

@@ -46,7 +46,7 @@ import {
 import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
 import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
-import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/facet-value-label-highlight';
+import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
 import {Hidden} from '../../../common/stencil-hidden';

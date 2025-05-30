@@ -44,7 +44,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
     let element: AtomicCommerceSearchBoxQuerySuggestions;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error');
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture(
         html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`
       );

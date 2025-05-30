@@ -1,0 +1,22 @@
+{
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "groupOrder": [
+    "Engine",
+    "Definers",
+    "Controllers",
+    "Buildable controllers",
+    "Sub-controllers",
+    "Actions",
+    "*"
+  ],
+  "name": "SSR Commerce",
+  "readme": "none",
+  "entryPoints": ["../src/ssr-commerce.index.ts"],
+  "gitRevision": "master",
+  "plugin": ["@coveo/documentation"]
+}

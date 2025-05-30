@@ -88,7 +88,7 @@ describe('bindings decorator', () => {
     document.body.appendChild(interfaceElement);
     interfaceElement.initialize();
 
-    consoleErrorSpy = vi.spyOn(console, 'error');
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {

@@ -126,7 +126,9 @@ export class AtomicPopover implements InitializableComponent {
   private renderDropdownButton() {
     const label = this.label;
     const hasActiveValues = !!this.childFacet!.numberOfActiveValues();
-    const count = this.childFacet!.numberOfActiveValues().toLocaleString();
+    const count = this.childFacet!.numberOfActiveValues().toLocaleString(
+      this.bindings.i18n.language
+    );
     const ariaLabel = this.bindings.i18n.t('popover', {label});
 
     return (

@@ -2,20 +2,20 @@
   <template lwc:if={recommendations.length}>
     <div class="slds-text-heading_medium slds-var-p-bottom_x-small">
       <c-quantic-heading
-        data-cy="recommendations__label"
+        data-testid="recommendations__label"
         level={headingLevel}
         label={label}
       ></c-quantic-heading>
     </div>
     <c-quantic-carousel
       label={label}
-      data-cy="recommendations__carousel"
+      data-testid="recommendations__carousel"
       items-per-page={recommendationsPerRow}
     >
       <template for:each={recommendations} for:item="recommendation">
         <div
           slot="carousel-item"
-          data-cy="recommendations__item"
+          data-testid="recommendations__item"
           key={recommendation.uniqueId}
           class={recommendation.class}
           role="group"

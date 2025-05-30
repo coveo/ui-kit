@@ -5,11 +5,7 @@ export interface FunctionalComponent<T> {
   ({props}: {props: T}): TemplateResult | TemplateResult[] | typeof nothing;
 }
 
-export type FunctionalComponentWithChildren<T = null> = T extends null
-  ? FunctionalComponentWithChildrenNoProps
-  : FunctionalComponentWithChildrenWithProps<T>;
-
-interface FunctionalComponentWithChildrenWithProps<T> {
+export interface FunctionalComponentWithChildren<T> {
   ({
     props,
   }: {
@@ -17,7 +13,7 @@ interface FunctionalComponentWithChildrenWithProps<T> {
   }): (children: FunctionalComponentChildren) => TemplateResult;
 }
 
-interface FunctionalComponentWithChildrenNoProps {
+export interface FunctionalComponentWithChildrenNoProps {
   (): (children: FunctionalComponentChildren) => TemplateResult;
 }
 
