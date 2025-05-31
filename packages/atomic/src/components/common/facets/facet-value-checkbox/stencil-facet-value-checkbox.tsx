@@ -67,24 +67,24 @@ export const FacetValueCheckbox: FunctionalComponent<
   };
 
   return (
-    <li key={props.displayValue} class="relative flex items-center">
+    <li key={props.displayValue} class="group relative flex items-center">
       {renderCheckbox()}
       <label
         ref={(ref) => (labelRef = ref!)}
         htmlFor={id}
         part="value-checkbox-label"
-        class="group items-center"
+        class="items-center"
         onMouseDown={(e) => createRipple(e, {color: 'neutral'})}
         aria-hidden="true"
       >
         {children}
-        {renderExclusion()}
         <span part="value-count" class="value-count">
           {props.i18n.t('between-parentheses', {
             text: count,
           })}
         </span>
       </label>
+      {renderExclusion()}
     </li>
   );
 };
