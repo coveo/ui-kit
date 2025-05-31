@@ -4,15 +4,16 @@ import {
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
-import {intersection} from '../../../utils/set';
 import {
   aggregate,
   isElementNode,
   isVisualNode,
 } from '../../../utils/stencil-utils';
-import {ItemTarget} from '../../common/layout/display-options';
-import {isResultSectionNode} from '../../common/layout/sections';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
+import {ItemTarget} from '../layout/display-options';
+import {isResultSectionNode} from '../layout/sections';
+
+export {makeMatchConditions} from './product-template-common';
 
 export type TemplateContent = DocumentFragment;
 
@@ -49,6 +50,9 @@ function groupNodesByType(nodes: NodeList) {
   return aggregate(Array.from(nodes), (node) => getTemplateNodeType(node));
 }
 
+/**
+ * @deprecated Use `ProductTemplateController` Reactive controller instead.
+ */
 export class ProductTemplateCommon {
   private host: HTMLDivElement;
   public matchConditions: ProductTemplateCondition[] = [];
@@ -172,37 +176,6 @@ export class ProductTemplateCommon {
 
 function getTemplateElement(host: HTMLElement) {
   return host.querySelector<HTMLTemplateElement>('template:not([slot])')!;
-}
-
-export function makeMatchConditions(
-  mustMatch: Record<string, string[]>,
-  mustNotMatch: Record<string, string[]>
-): ProductTemplateCondition[] {
-  const conditions: ProductTemplateCondition[] = [];
-  for (const field in mustMatch) {
-    if (mustNotMatch[field]) {
-      const mustNotMatchValues = new Set(mustNotMatch[field]);
-      const mustMatchValues = new Set(mustMatch[field]);
-      const commonValues = intersection(mustNotMatchValues, mustMatchValues);
-      if (commonValues.size > 0) {
-        console.error(
-          `Conflicting match conditions for field ${field}, the template will be ignored.`,
-          commonValues
-        );
-        return [() => false];
-      }
-    }
-    conditions.push(
-      ProductTemplatesHelpers.fieldMustMatch(field, mustMatch[field])
-    );
-  }
-
-  for (const field in mustNotMatch) {
-    conditions.push(
-      ProductTemplatesHelpers.fieldMustNotMatch(field, mustNotMatch[field])
-    );
-  }
-  return conditions;
 }
 
 export function makeDefinedConditions(

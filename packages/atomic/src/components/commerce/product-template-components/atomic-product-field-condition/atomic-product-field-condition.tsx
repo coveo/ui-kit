@@ -4,7 +4,7 @@ import {MapProp} from '../../../../utils/props-utils';
 import {
   makeDefinedConditions,
   makeMatchConditions,
-} from '../../product-template/product-template-common';
+} from '../../../common/product-template/stencil-product-template-common';
 import {ProductContext} from '../product-template-decorators';
 
 /**
