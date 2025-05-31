@@ -86,6 +86,15 @@ export function buildShopifyCommerceEngine({
     );
   }
 
+  if (!commerceEngineOptions.navigatorContextProvider) {
+    commerceEngineOptions.navigatorContextProvider = () => ({
+      clientId: getClientId(cookie),
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      location: window.location.href,
+    });
+  }
+
   const appProxyResponse: AppProxyResponse = {
     accessToken: commerceEngineOptions.configuration.accessToken,
     organizationId: commerceEngineOptions.configuration.organizationId,
