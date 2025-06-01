@@ -1,5 +1,8 @@
 import {CommerceStore} from '@/src/components';
-import {getFirstFocusableDescendant} from '@/src/utils/accessibility-utils';
+import {
+  FocusTargetController,
+  getFirstFocusableDescendant,
+} from '@/src/utils/accessibility-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
 import {defer} from '@/src/utils/utils';
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
@@ -127,7 +130,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget,
-      };
+      } as unknown as FocusTargetController;
 
       beforeEach(() => {
         itemListCommon = itemListCommonFixture({
@@ -199,7 +202,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
-      };
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
         nextNewItemTarget,
@@ -226,7 +229,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
-      };
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
         nextNewItemTarget,
@@ -249,7 +252,7 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
-      };
+      } as unknown as FocusTargetController;
       const itemListCommon = itemListCommonFixture({
         nextNewItemTarget,
       });
@@ -436,7 +439,7 @@ describe('ItemListCommon', () => {
                 focusAfterSearch: vi.fn(),
                 focusOnNextTarget: vi.fn(),
                 setTarget,
-              },
+              } as unknown as FocusTargetController,
             });
 
             itemListCommon.setNewResultRef(document.createElement('div'), 0);
@@ -463,7 +466,7 @@ describe('ItemListCommon', () => {
                 focusAfterSearch: vi.fn(),
                 focusOnNextTarget: vi.fn(),
                 setTarget,
-              },
+              } as unknown as FocusTargetController,
             });
 
             const element = document.createElement('div');
@@ -547,6 +550,7 @@ describe('ItemListCommon', () => {
   });
 
   const itemListCommonFixture = (props: Partial<ItemListCommonProps> = {}) => {
+    const host = document.createElement('div');
     return new ItemListCommon({
       engineSubscribe: vi.fn(),
       getCurrentNumberOfItems: vi.fn(),
@@ -556,8 +560,8 @@ describe('ItemListCommon', () => {
         focusAfterSearch: vi.fn(),
         focusOnNextTarget: vi.fn(),
         setTarget: vi.fn(),
-      },
-      host: document.createElement('div'),
+      } as unknown as FocusTargetController,
+      host,
       loadingFlag: '',
       store: {
         setLoadingFlag: vi.fn(),
