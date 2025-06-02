@@ -1,4 +1,4 @@
-import * as utils from '@/src/utils/utils';
+import * as assetPathUtils from '@/src/utils/asset-path-utils';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import '@vitest/browser/matchers.d.ts';
@@ -8,7 +8,7 @@ import {expect, MockInstance, vi, describe, beforeEach, it} from 'vitest';
 import './atomic-icon';
 import {AtomicIcon} from './atomic-icon';
 
-vi.mock('@/src/utils/utils', () => ({
+vi.mock('@/src/utils/asset-path-utils', () => ({
   parseAssetURL: vi.fn(),
 }));
 
@@ -47,7 +47,7 @@ describe('AtomicIcon', () => {
 
   beforeEach(() => {
     fetchMock = vi.spyOn(window, 'fetch');
-    parseAssetURLMock = vi.mocked(utils.parseAssetURL);
+    parseAssetURLMock = vi.mocked(assetPathUtils.parseAssetURL);
     sanitizeMock = vi.spyOn(DOMPurify, 'sanitize');
   });
 
