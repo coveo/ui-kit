@@ -27,7 +27,6 @@ export const AtomicCommerceRecommendationList = /*@__PURE__*/createReactComponen
 export const AtomicCommerceRefineModal = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineModal, HTMLAtomicCommerceRefineModalElement>('atomic-commerce-refine-modal');
 export const AtomicCommerceRefineToggle = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceRefineToggle, HTMLAtomicCommerceRefineToggleElement>('atomic-commerce-refine-toggle');
 export const AtomicCommerceSearchBox = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBox, HTMLAtomicCommerceSearchBoxElement>('atomic-commerce-search-box');
-export const AtomicCommerceSearchBoxInstantProducts = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxInstantProducts, HTMLAtomicCommerceSearchBoxInstantProductsElement>('atomic-commerce-search-box-instant-products');
 export const AtomicCommerceSearchBoxRecentQueries = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceSearchBoxRecentQueries, HTMLAtomicCommerceSearchBoxRecentQueriesElement>('atomic-commerce-search-box-recent-queries');
 export const AtomicCommerceText = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceText, HTMLAtomicCommerceTextElement>('atomic-commerce-text');
 export const AtomicCommerceTimeframeFacet = /*@__PURE__*/createReactComponent<JSX.AtomicCommerceTimeframeFacet, HTMLAtomicCommerceTimeframeFacetElement>('atomic-commerce-timeframe-facet');

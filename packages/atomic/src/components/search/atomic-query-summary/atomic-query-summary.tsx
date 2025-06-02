@@ -91,7 +91,9 @@ export class AtomicQuerySummary implements InitializableComponent {
               key="in-seconds"
               i18n={this.bindings.i18n}
               params={{
-                count: durationInSeconds.toLocaleString(),
+                count: durationInSeconds.toLocaleString(
+                  this.bindings.i18n.language
+                ),
               }}
             />
           </span>

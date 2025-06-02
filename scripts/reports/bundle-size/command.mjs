@@ -14,7 +14,7 @@ async function buildFiles() {
 
 function readFileSizes() {
   console.log('getting file sizes');
-  const dir = resolve('packages', 'headless', 'dist', 'browser');
+  const dir = resolve('packages', 'headless', 'cdn');
   const entries = getUseCasesAndFilePaths(dir);
 
   const sizeEntries = entries.map((entry) => {
