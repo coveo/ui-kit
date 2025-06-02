@@ -13,6 +13,7 @@ import {
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
   clearAllCoreFacets,
+  deleteAllCoreFacets,
 } from './core-facet-actions.js';
 
 export type {
@@ -31,11 +32,16 @@ export type {
  */
 export interface CoreFacetActionsCreators {
   /**
-   * Clears all facets.
+   * Deselects all values in every facet.
    *
    * @returns A dispatchable action.
    */
   clearAllCoreFacets(): PayloadAction<void>;
+
+  /**
+   * Deletes all facets in the state.
+   */
+  deleteAllCoreFacets(): PayloadAction<void>;
 
   /**
    * Deselects all values in a given facet.
@@ -105,6 +111,7 @@ export function loadCoreFacetActions(
   engine.addReducers({commerceFacetSet});
   return {
     clearAllCoreFacets,
+    deleteAllCoreFacets,
     deselectAllValuesInCoreFacet,
     updateAutoSelectionForAllCoreFacets,
     updateCoreFacetFreezeCurrentValues,
