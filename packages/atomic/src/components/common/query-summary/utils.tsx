@@ -52,10 +52,11 @@ const getQuerySummaryData = (
 ) => {
   const i18nKey = query !== '' ? itemsForQuery : allItems;
 
+  const locale = i18n.language;
   const params = {
-    first: first.toLocaleString(),
-    last: last.toLocaleString(),
-    total: total.toLocaleString(),
+    first: first.toLocaleString(locale),
+    last: last.toLocaleString(locale),
+    total: total.toLocaleString(locale),
     query: query,
     count: last,
   };

@@ -41,7 +41,7 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
     let element: AtomicCommerceSearchBoxInstantProducts;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error');
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture<AtomicCommerceSearchBoxInstantProducts>(
         html`<atomic-commerce-search-box-instant-products></atomic-commerce-search-box-instant-products>`
       );
@@ -108,6 +108,10 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
   });
 
   describe('#initialize', () => {
+    beforeEach(() => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
     it('should create an instant products controller', async () => {
       const {element} = await renderElements();
 
