@@ -5,7 +5,7 @@ import {
   ProductTemplate,
   ProductTemplateCondition,
 } from '@coveo/headless/commerce';
-import {html, LitElement, nothing, PropertyValues} from 'lit';
+import {html, LitElement, nothing} from 'lit';
 import {property, customElement, state} from 'lit/decorators.js';
 import {makeMatchConditions} from '../../common/product-template/product-template-common';
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
@@ -48,8 +48,8 @@ export class AtomicProductTemplate
    * @type {Record<string, string[]>}
    * @default {}
    */
-  @mapProperty({splitValues: true})
-  mustMatch: Record<string, string[]> = {};
+  @mapProperty({splitValues: true, attributePrefix: 'must-match'})
+  mustMatch!: Record<string, string[]>;
 
   /**
    * The field and values that define which result items the condition must not be applied to.
@@ -58,8 +58,8 @@ export class AtomicProductTemplate
    * @type {Record<string, string[]>}
    * @default {}
    */
-  @mapProperty({splitValues: true})
-  mustNotMatch: Record<string, string[]> = {};
+  @mapProperty({splitValues: true, attributePrefix: 'must-not-match'})
+  mustNotMatch!: Record<string, string[]>;
 
   constructor() {
     super();
@@ -76,13 +76,14 @@ export class AtomicProductTemplate
     );
   }
 
-  willUpdate(changedProps: PropertyValues) {
-    if (changedProps.has('mustMatch') || changedProps.has('mustNotMatch')) {
-      this.productTemplateController.matchConditions = makeMatchConditions(
-        this.mustMatch,
-        this.mustNotMatch
-      );
-    }
+  connectedCallback() {
+    super.connectedCallback();
+    // if (changedProps.has('mustMatch') || changedProps.has('mustNotMatch')) {
+    this.productTemplateController.matchConditions = makeMatchConditions(
+      this.mustMatch,
+      this.mustNotMatch
+    );
+    // }
   }
 
   /**
