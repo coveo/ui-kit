@@ -1,13 +1,11 @@
 import {vi, describe, it, expect} from 'vitest';
 import {once, camelToKebab, randomID, kebabToCamel, aggregate} from './utils';
 
-beforeEach(() => {
-  vi.mock('./resource-url', async () => {
-    return {
-      getResourceUrl: vi.fn(() => new URL(import.meta.url).origin),
-    };
-  });
-});
+vi.mock('@stencil/core', () => ({
+  getAssetPath: vi.fn((path: string) => {
+    return path.replace('./', '/');
+  }),
+}));
 
 describe('once', () => {
   it('should call the function only once', () => {
