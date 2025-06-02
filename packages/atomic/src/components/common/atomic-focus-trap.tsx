@@ -5,7 +5,7 @@ import {
   defer,
   getFocusedElement,
   getParent,
-} from '../../utils/stencil-utils';
+} from '../../utils/utils';
 
 /**
  * @internal
