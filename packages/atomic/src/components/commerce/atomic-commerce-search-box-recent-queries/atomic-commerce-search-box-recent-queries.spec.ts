@@ -44,13 +44,13 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
     let element: AtomicCommerceSearchBoxRecentQueries;
 
     beforeEach(async () => {
-      consoleErrorSpy = vi.spyOn(console, 'error');
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       element = await fixture(
         html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>`
       );
     });
 
-    it('should log an error in the console', async () => {
+    it('should log an error in the console', () => {
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         new Error(
           'The "atomic-commerce-search-box-recent-queries" component was not handled, as it is not a child of the following elements: atomic-commerce-search-box'
@@ -87,7 +87,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
       ({element} = await renderElements());
     });
 
-    it('should dispatch the search box suggestions event', async () => {
+    it('should dispatch the searchBoxSuggestion/register event', async () => {
       const event = buildCustomEvent(
         'atomic/searchBoxSuggestion/register',
         vi.fn()
@@ -95,7 +95,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
       expect(dispatchSpy).toHaveBeenCalledWith(event);
     });
 
-    it('should assign the bindings from the event', async () => {
+    it('should assign the bindings from the event', () => {
       expect(element.bindings).toBeDefined();
       expect(element.bindings).toEqual(
         expect.objectContaining({
@@ -105,7 +105,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
       );
     });
 
-    it('should call initialize after assigning bindings', async () => {
+    it('should call initialize after assigning bindings', () => {
       expect(initializeSpy).toHaveBeenCalled();
     });
   });
@@ -181,11 +181,12 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
           items = object.renderItems();
         });
 
-        it('should return the correct number of items', async () => {
+        it('should return the correct number of items', () => {
+          // The first item is the query clear item, followed by the recent queries
           expect(items.length).toBe(4);
         });
 
-        it('the query clear item should have the correct properties', async () => {
+        it('the query clear item should have the correct properties', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'recent-query-title-item suggestion-divider',
@@ -196,7 +197,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
           );
         });
 
-        it('the recent query item should have the correct properties', async () => {
+        it('the recent query item should have the correct properties', () => {
           expect(items[1]).toEqual(
             expect.objectContaining({
               part: 'recent-query-item',
@@ -332,7 +333,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
                 expect(span).toHaveAttribute('part', 'recent-query-text');
               });
 
-              it('should container the highlighted value', async () => {
+              it('should contain the highlighted value', async () => {
                 const content = await setupContent({
                   searchBoxController: {
                     state: {
@@ -341,7 +342,6 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
                     selectSuggestion: vi.fn(),
                   },
                 });
-                console.log(content);
                 const highlightedValue = content.querySelector(
                   'span[part="recent-query-text-highlight"]'
                 );
