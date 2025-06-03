@@ -58,34 +58,38 @@ jest.mock(
   }
 );
 
-jest.mock('c/quanticUtils', () => ({
-  AriaLiveRegion: jest.fn(() => ({
-    dispatchMessage: jest.fn(),
-  })),
-  I18nUtils: {
-    format: jest.fn((template, ...args) => {
-      return template.replace(
-        /\{\{(\d+)\}\}/g,
-        (match, index) => args[index] || match
-      );
-    }),
-    getLabelNameWithCount: jest.fn((baseName, count) => {
-      return count === 1 ? baseName : `${baseName}_plural`;
-    }),
-  },
-  RecentQueryUtils: {
-    formatRecentQuery: jest.fn((query, currentQuery) => {
-      if (!currentQuery) return query;
-      const lowerQuery = query.toLowerCase();
-      const lowerCurrentQuery = currentQuery.toLowerCase();
-      const index = lowerQuery.indexOf(lowerCurrentQuery);
-      if (index === 0) {
-        return `<strong>${query.substring(0, currentQuery.length)}</strong>${query.substring(currentQuery.length)}`;
-      }
-      return query;
-    }),
-  },
-}));
+jest.mock('c/quanticUtils', () => {
+  const ariaDispatchMessageMock = jest.fn();
+  return {
+    AriaLiveRegion: jest.fn().mockImplementation(() => ({
+      dispatchMessage: ariaDispatchMessageMock,
+    })),
+    I18nUtils: {
+      format: jest.fn((template, ...args) => {
+        return template.replace(
+          /\{\{(\d+)\}\}/g,
+          (match, index) => args[index] || match
+        );
+      }),
+      getLabelNameWithCount: jest.fn((baseName, count) => {
+        return count === 1 ? baseName : `${baseName}_plural`;
+      }),
+    },
+    RecentQueryUtils: {
+      formatRecentQuery: jest.fn((query, currentQuery) => {
+        if (!currentQuery) return query;
+        const lowerQuery = query.toLowerCase();
+        const lowerCurrentQuery = currentQuery.toLowerCase();
+        const index = lowerQuery.indexOf(lowerCurrentQuery);
+        if (index === 0) {
+          return `<strong>${query.substring(0, currentQuery.length)}</strong>${query.substring(currentQuery.length)}`;
+        }
+        return query;
+      }),
+    },
+    __ariaDispatchMessageMock: ariaDispatchMessageMock,
+  };
+});
 
 const defaultOptions = {
   maxNumberOfSuggestions: 7,
@@ -253,6 +257,74 @@ describe('c-quantic-search-box-suggestions-list', () => {
             );
           });
       });
+
+      it('should not render duplicates between suggestions and recent queries', async () => {
+        const duplicateQuery = 'test duplicate query';
+        const mockRecentQueriesWithDuplicate = [
+          ...mockRecentQueries,
+          duplicateQuery,
+        ];
+        const mockSuggestionsWithDuplicate = [
+          ...mockSuggestions,
+          {
+            key: 4,
+            value: duplicateQuery,
+            rawValue: duplicateQuery,
+          },
+        ];
+        const mockSuggestionListOptionsWithDuplicate = [
+          ...mockRecentQueriesWithDuplicate.map((query) => ({
+            value: query,
+            rawValue: query,
+            isRecentQuery: true,
+          })),
+          ...mockSuggestionsWithDuplicate.map((suggestion) => ({
+            value: suggestion.value,
+            rawValue: suggestion.rawValue,
+            isRecentQuery: false,
+          })),
+        ];
+        const element = createTestComponent({
+          suggestions: mockSuggestionsWithDuplicate,
+          recentQueries: mockRecentQueriesWithDuplicate,
+        });
+        await flushPromises();
+
+        const options = element.shadowRoot.querySelectorAll(selectors.option);
+        // Should include clear button + recent queries
+        const expectedLength =
+          mockSuggestionListOptionsWithDuplicate.length - 1 + 1; // -1 for duplicate +1 for clear button
+        expect(options.length).toBe(expectedLength);
+        // First option should be the clear button
+        const clearButton = options.item(0);
+        expect(clearButton.querySelector(selectors.lightningIcon)).toBeNull();
+        expect(clearButton.textContent).toContain(labels.recentQueries);
+        // Skip the first option (clear button) and check the rest
+        Array.from(options)
+          .slice(1)
+          .forEach((option, index) => {
+            const lightningRichText = option.querySelector(selectors.richText);
+            expect(lightningRichText.value).toBe(
+              mockSuggestionListOptionsWithDuplicate[index].value
+            );
+            expect(lightningRichText.title).toBe(
+              mockSuggestionListOptionsWithDuplicate[index].rawValue
+            );
+            const expectedIcon = mockSuggestionListOptionsWithDuplicate[index]
+              .isRecentQuery
+              ? 'utility:clock'
+              : 'utility:search';
+            expect(option.querySelector(selectors.lightningIcon).iconName).toBe(
+              expectedIcon
+            );
+          });
+        // Last option should not be the duplicate, since it was already displayed in the recent queries
+        // which appear above the suggestions.
+        const lastOption = options.item(options.length - 1);
+        const lastRichText = lastOption.querySelector(selectors.richText);
+        expect(lastRichText.value).not.toBe(duplicateQuery);
+        expect(lastRichText.title).not.toBe(duplicateQuery);
+      });
     });
   });
 
@@ -292,71 +364,27 @@ describe('c-quantic-search-box-suggestions-list', () => {
 
   describe('maxNumberOfSuggestions property', () => {
     it('should limit the number of suggestions displayed', async () => {
-      const manySuggestions = Array.from({length: 15}, (_, i) => ({
-        key: i,
-        value: `suggestion ${i}`,
-        rawValue: `suggestion ${i}`,
-      }));
-
+      const maxSuggestions = 2;
       const element = createTestComponent({
-        suggestions: manySuggestions,
-        maxNumberOfSuggestions: 5,
+        suggestions: mockSuggestions,
+        maxNumberOfSuggestions: maxSuggestions,
       });
       await flushPromises();
 
       const options = element.shadowRoot.querySelectorAll(selectors.option);
-      expect(options.length).toBe(5);
-    });
-  });
-
-  describe('selection navigation', () => {
-    beforeEach(() => {
-      // Mock the querySelector and getAttribute methods for navigation
-      global.Element.prototype.getAttribute = jest
-        .fn()
-        .mockReturnValue('test-id');
+      expect(options.length).toBe(maxSuggestions);
     });
 
-    it('should move selection down correctly', async () => {
+    it('should limit the number of recent queries displayed', async () => {
+      const maxSuggestions = 2;
       const element = createTestComponent({
-        suggestions: mockSuggestions,
+        recentQueries: mockRecentQueries,
+        maxNumberOfSuggestions: maxSuggestions,
       });
       await flushPromises();
 
-      const result = element.selectionDown();
-      expect(result).toEqual({
-        id: 'test-id',
-        value: mockSuggestions[0].rawValue,
-      });
-    });
-
-    it('should move selection up correctly', async () => {
-      const element = createTestComponent({
-        suggestions: mockSuggestions,
-      });
-      await flushPromises();
-
-      // Move down first, then up
-      element.selectionDown();
-      const result = element.selectionUp();
-      expect(result).toEqual({
-        id: 'test-id',
-        value: mockSuggestions[mockSuggestions.length - 1].rawValue,
-      });
-    });
-
-    it('should wrap around when moving past the end', async () => {
-      const element = createTestComponent({
-        suggestions: [mockSuggestions[0]], // Only one suggestion
-      });
-      await flushPromises();
-
-      element.selectionDown(); // Select first
-      const result = element.selectionDown(); // Should wrap to first again
-      expect(result).toEqual({
-        id: 'test-id',
-        value: mockSuggestions[0].rawValue,
-      });
+      const options = element.shadowRoot.querySelectorAll(selectors.option);
+      expect(options.length).toBe(maxSuggestions + 1); // +1 for clear button
     });
   });
 
@@ -385,95 +413,156 @@ describe('c-quantic-search-box-suggestions-list', () => {
         isRecentQuery: false,
       });
     });
+
+    it('should return the clear recent query button first', async () => {
+      const element = createTestComponent({
+        recentQueries: mockRecentQueries,
+      });
+      await flushPromises();
+
+      element.selectionDown(); // Select first suggestion
+      const result = element.getCurrentSelectedValue();
+      expect(result).toEqual(
+        expect.objectContaining({
+          isClearRecentQueryButton: true,
+        })
+      );
+    });
   });
 
-  describe('event handling', () => {
-    it('should dispatch quantic__selection event when suggestion is selected', async () => {
+  describe('selection navigation', () => {
+    it('should move selection down correctly', async () => {
       const element = createTestComponent({
         suggestions: mockSuggestions,
       });
       await flushPromises();
 
-      const mockEventHandler = jest.fn();
-      element.addEventListener('quantic__selection', mockEventHandler);
-
-      // Simulate clicking on first suggestion
-      const firstOption = element.shadowRoot.querySelector(selectors.option);
-      if (firstOption) {
-        firstOption.click();
-      }
-
-      expect(mockEventHandler).toHaveBeenCalled();
+      const result = element.selectionDown();
+      expect(result).toEqual(
+        expect.objectContaining({
+          value: mockSuggestions[0].rawValue,
+        })
+      );
     });
 
-    it('should dispatch quantic__suggestionlistrender event on render', async () => {
+    it('should move selection up correctly after moving down', async () => {
       const element = createTestComponent({
         suggestions: mockSuggestions,
       });
+      await flushPromises();
 
+      // Move down first, then up
+      element.selectionDown();
+      const result = element.selectionUp();
+      expect(result).toEqual(
+        expect.objectContaining({
+          value: mockSuggestions[mockSuggestions.length - 1].rawValue,
+        })
+      );
+    });
+
+    it('should wrap around when moving past the end', async () => {
+      const element = createTestComponent({
+        suggestions: [mockSuggestions[0]], // Only one suggestion
+      });
+      await flushPromises();
+
+      element.selectionDown(); // Select first
+      const result = element.selectionDown(); // Should wrap to first again
+      expect(result).toEqual(
+        expect.objectContaining({
+          value: mockSuggestions[0].rawValue,
+        })
+      );
+    });
+
+    it('should wrap around when moving selection up past beginning', async () => {
+      const element = createTestComponent({
+        suggestions: mockSuggestions,
+      });
+      await flushPromises();
+
+      // Move down first, then up
+      const result = element.selectionUp();
+      expect(result).toEqual(
+        expect.objectContaining({
+          value: mockSuggestions[mockSuggestions.length - 1].rawValue,
+        })
+      );
+    });
+  });
+
+  describe('event handling', () => {
+    it('should dispatch quantic__suggestionlistrender event on render', async () => {
       const mockEventHandler = jest.fn();
-      element.addEventListener(
+      document.addEventListener(
         'quantic__suggestionlistrender',
         mockEventHandler
       );
 
+      createTestComponent({
+        suggestions: mockSuggestions,
+      });
       await flushPromises();
 
       expect(mockEventHandler).toHaveBeenCalled();
+    });
+
+    it('should dispatch quantic__selection event when suggestion is selected', async () => {
+      const element = createTestComponent({
+        suggestions: mockSuggestions,
+      });
+      const mockEventHandler = jest.fn();
+      element.addEventListener('quantic__selection', (event) =>
+        mockEventHandler(event.detail)
+      );
+      await flushPromises();
+
+      // Simulate clicking on first suggestion
+      const firstOption = element.shadowRoot.querySelector(selectors.option);
+      if (firstOption) {
+        firstOption.dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+      }
+
+      expect(mockEventHandler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          selection: {
+            value: mockSuggestions[0].rawValue,
+            isClearRecentQueryButton: false,
+            isRecentQuery: false,
+          },
+        })
+      );
     });
   });
 
   describe('accessibility', () => {
     it('should announce suggestions with aria live region', async () => {
-      const mockAriaLiveRegion = require('c/quanticUtils').AriaLiveRegion();
-
+      // @ts-ignore
+      const {__ariaDispatchMessageMock} = require('c/quanticUtils');
       createTestComponent({
         suggestions: mockSuggestions,
       });
       await flushPromises();
 
-      expect(mockAriaLiveRegion.dispatchMessage).toHaveBeenCalled();
+      expect(__ariaDispatchMessageMock).toHaveBeenCalledTimes(1);
+      expect(__ariaDispatchMessageMock).toHaveBeenCalledWith(
+        `${mockSuggestions.length} suggestions found`
+      );
     });
 
     it('should announce when no suggestions are found', async () => {
-      const mockAriaLiveRegion = require('c/quanticUtils').AriaLiveRegion();
-
+      // @ts-ignore
+      const {__ariaDispatchMessageMock} = require('c/quanticUtils');
       createTestComponent({
         suggestions: [],
       });
       await flushPromises();
 
-      expect(mockAriaLiveRegion.dispatchMessage).toHaveBeenCalledWith(
+      expect(__ariaDispatchMessageMock).toHaveBeenCalledTimes(1);
+      expect(__ariaDispatchMessageMock).toHaveBeenCalledWith(
         'No suggestions found'
       );
-    });
-  });
-
-  describe('mixed suggestions and recent queries', () => {
-    it('should display both suggestions and recent queries without duplicates', async () => {
-      const element = createTestComponent({
-        suggestions: mockSuggestions,
-        recentQueries: mockRecentQueries,
-        query: 'test',
-      });
-      await flushPromises();
-
-      const options = element.shadowRoot.querySelectorAll(selectors.option);
-      // Should have clear button + recent queries + non-duplicate suggestions
-      expect(options.length).toBeGreaterThan(0);
-    });
-
-    it('should prioritize recent queries over suggestions', async () => {
-      const element = createTestComponent({
-        suggestions: mockSuggestions,
-        recentQueries: ['test query 1'], // Same as first suggestion
-        query: 'test',
-      });
-      await flushPromises();
-
-      // Recent query should appear, suggestion should be filtered out to avoid duplicate
-      const options = element.shadowRoot.querySelectorAll(selectors.option);
-      expect(options.length).toBeGreaterThan(0);
     });
   });
 });
