@@ -1,14 +1,10 @@
+import {aggregate, isElementNode, isVisualNode} from '@/src/utils/utils';
 import {
   ProductTemplate,
   ProductTemplateCondition,
   ProductTemplatesHelpers,
 } from '@coveo/headless/commerce';
 import {h} from '@stencil/core';
-import {
-  aggregate,
-  isElementNode,
-  isVisualNode,
-} from '../../../utils/stencil-utils';
 import {tableElementTagName} from '../../search/atomic-table-result/table-element-utils';
 import {ItemTarget} from '../layout/display-options';
 import {isResultSectionNode} from '../layout/sections';

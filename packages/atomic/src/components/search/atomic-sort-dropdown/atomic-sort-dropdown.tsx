@@ -18,8 +18,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {randomID} from '../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../utils/tab-utils';
+import {randomID} from '../../../utils/utils';
 import {SortContainer} from '../../common/sort/container';
 import {SortGuard} from '../../common/sort/stencil-guard';
 import {SortLabel} from '../../common/sort/stencil-label';
