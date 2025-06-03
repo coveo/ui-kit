@@ -124,7 +124,8 @@ jobs:
           echo "Affected projects: ${{ steps.set.outputs.projects }}"
   cdn-checks:
     name: 'CDN Checks'
-    needs: build-cdn
+    needs: [affected, build-cdn]
+    if: contains(needs.affected.outputs.projects, 'atomic') || contains(needs.affected.outputs.projects, 'headless-commerce-react-samples') || contains(needs.affected.outputs.projects, 'atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
