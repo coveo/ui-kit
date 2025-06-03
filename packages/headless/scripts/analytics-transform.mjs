@@ -9,9 +9,6 @@ import {
 
 const require = createRequire(import.meta.url);
 
-/**
- * @param {string} moduleName
- */
 function resolveEsm(moduleName) {
   const packageJsonPath = require.resolve(`${moduleName}/package.json`);
   const packageJson = require(packageJsonPath);
