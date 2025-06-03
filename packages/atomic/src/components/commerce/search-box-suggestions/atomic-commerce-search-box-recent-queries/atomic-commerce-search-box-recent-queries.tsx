@@ -26,9 +26,6 @@ import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atom
 /**
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
  *
- * @part recent-query-title - The 'Recent queries' title.
- * @part recent-query-clear - The 'Clear' button for clearing recent queries.
- *
  * @alpha
  */
 @Component({
