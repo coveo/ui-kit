@@ -7,7 +7,16 @@ export class Cookie {
       expirationDate.setTime(expirationDate.getTime() + expire);
     }
     const host = window.location.hostname;
-    if (host.indexOf('.') === -1) {
+
+    // Check if it's an IPv4 address
+    const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    // Check if it's an IPv6 address
+    const ipv6Regex = /^([0-9a-fA-F]{0,4}:){2,7}[0-9a-fA-F]{0,4}$/;
+
+    if (ipv4Regex.test(host) || ipv6Regex.test(host)) {
+      // IP address - set cookie without domain
+      writeCookie(name, value, expirationDate);
+    } else if (host.indexOf('.') === -1) {
       // no "." in a domain - single domain name, it's localhost or something similar
       writeCookie(name, value, expirationDate);
     } else {
