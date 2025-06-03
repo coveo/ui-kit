@@ -23,5 +23,5 @@ runs:
         path: .nx/cache
         key: nx-${{ github.sha }}-${{ inputs.cache-suffix }}
     - if: inputs.skip-cache != 'true' && steps.nx-cache.outputs.cache-hit != 'true'
-      run: npm run build
+      run: npx nx affected --target=build --base=origin/master --head=HEAD
       shell: bash

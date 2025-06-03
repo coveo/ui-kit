@@ -48,6 +48,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: ./.github/actions/build
         with:
           skip-cache: true
@@ -64,6 +65,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - uses: ./.github/actions/build
       - name: Check for uncommitted changes
         id: check-changes
@@ -100,6 +102,8 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/build
         with:
           cache-suffix: 'cdn'
@@ -112,7 +116,6 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
-          fetch-tags: true
       - uses: ./.github/actions/setup
       - name: Get affected projects
         id: set
@@ -124,7 +127,8 @@ jobs:
           echo "Affected projects: ${{ steps.set.outputs.projects }}"
   cdn-checks:
     name: 'CDN Checks'
-    needs: build-cdn
+    needs: [build-cdn, affected]
+    if: contains(needs.affected.outputs.projects, 'atomic') || contains(needs.affected.outputs.projects, 'headless-ssr-commerce-nextjs') || contains(needs.affected.outputs.projects, 'atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
@@ -171,7 +175,7 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npm test
+      - run: npx nx affected --target=test --base=origin/master --head=HEAD
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build
