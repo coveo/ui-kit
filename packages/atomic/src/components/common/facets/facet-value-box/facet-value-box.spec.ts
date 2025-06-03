@@ -13,10 +13,12 @@ describe('renderFacetValueBox', () => {
       return page.getByRole('listitem');
     },
     get button() {
-      return page.getByRole('button');
+      return page.getByLabelText(
+        'Inclusion filter on Test Value; 988M results'
+      );
     },
     get valueCount() {
-      return page.getByText('(42)');
+      return page.getByText('(988M)');
     },
   };
 
@@ -30,7 +32,7 @@ describe('renderFacetValueBox', () => {
   ) => {
     const baseProps = {
       displayValue: 'Test Value',
-      numberOfResults: 42,
+      numberOfResults: 987654321,
       isSelected: false,
       i18n,
       onClick: vi.fn(),
@@ -40,7 +42,7 @@ describe('renderFacetValueBox', () => {
     );
   };
 
-  it('renders all elements', async () => {
+  it('should render all elements', async () => {
     await setupElement();
     const {listItem, button, valueCount} = locators;
     await expect(listItem).toBeInTheDocument();
@@ -48,14 +50,14 @@ describe('renderFacetValueBox', () => {
     await expect(valueCount).toBeInTheDocument();
   });
 
-  it('renders the correct value and count', async () => {
+  it('should render the correct value and count', async () => {
     await setupElement();
     const {button, valueCount} = locators;
     await expect(button).toHaveTextContent('Some Value Label');
-    await expect(valueCount).toHaveTextContent('(42)');
+    await expect(valueCount).toHaveTextContent('(988M)');
   });
 
-  it('applies the correct class and part attributes', async () => {
+  it('should apply the correct class and part attributes', async () => {
     await setupElement({class: 'custom-class'});
     const {listItem, button, valueCount} = locators;
     await expect(listItem).toHaveClass('custom-class');
@@ -63,7 +65,7 @@ describe('renderFacetValueBox', () => {
     await expect(valueCount).toHaveAttribute('part', 'value-count');
   });
 
-  it('calls onClick when the button is clicked', async () => {
+  it('should call onClick when the button is clicked', async () => {
     const onClick = vi.fn();
     await setupElement({onClick});
     const {button} = locators;
@@ -71,7 +73,7 @@ describe('renderFacetValueBox', () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it('applies aria attributes and pressed state', async () => {
+  it('should apply aria attributes and pressed state', async () => {
     await setupElement({isSelected: true});
     const {button} = locators;
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -81,7 +83,7 @@ describe('renderFacetValueBox', () => {
     );
   });
 
-  it('applies selected class to the button', async () => {
+  it('should apply selected class to the button', async () => {
     await setupElement({isSelected: true});
     const {button} = locators;
     await expect(button).toHaveClass('selected');

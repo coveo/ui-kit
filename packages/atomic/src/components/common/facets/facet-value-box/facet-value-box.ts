@@ -14,11 +14,10 @@ export const renderFacetValueBox: FunctionalComponentWithChildren<
       notation: 'compact',
     }).format(props.numberOfResults);
 
-    const count = props.numberOfResults.toLocaleString(props.i18n.language);
-
     const ariaLabel = props.i18n.t('facet-value', {
       value: props.displayValue,
       count: props.numberOfResults,
+      formattedCount: compactCount,
     });
 
     return html`
@@ -39,7 +38,6 @@ export const renderFacetValueBox: FunctionalComponentWithChildren<
             },
           })(
             html`${children}<span
-                title=${count}
                 part="value-count"
                 class="value-box-count text-neutral-dark mt-1 w-full truncate text-sm"
               >
