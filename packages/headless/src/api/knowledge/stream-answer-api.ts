@@ -301,15 +301,10 @@ const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
   const expressions = buildExpressionList(state);
 
-  const mergedAdvancedSearchQueryParams = {
+  return {
     ...advancedSearchQueryParams,
+    ...(expressions.length && {cq: expressions}),
   };
-
-  if (expressions.length) {
-    mergedAdvancedSearchQueryParams.cq = `${expressions}`;
-  }
-
-  return mergedAdvancedSearchQueryParams;
 };
 
 const buildExpressionList = (state: StateNeededByAnswerAPI) => {
