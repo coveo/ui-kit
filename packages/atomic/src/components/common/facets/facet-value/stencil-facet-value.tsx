@@ -1,10 +1,10 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {i18n} from 'i18next';
 import {getFieldValueCaption} from '../../../../utils/field-utils';
-import {FacetValueBox} from '../facet-value-box/facet-value-box';
+import {FacetValueBox} from '../facet-value-box/stencil-facet-value-box';
 import {FacetValueCheckbox} from '../facet-value-checkbox/stencil-facet-value-checkbox';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueLink} from '../facet-value-link/stencil-facet-value-link';
 
 export interface FacetValueProps {
   field: string;
