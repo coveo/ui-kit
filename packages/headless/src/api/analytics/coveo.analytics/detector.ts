@@ -23,5 +23,5 @@ export function hasSessionStorage(): boolean {
 }
 
 export function hasCookieStorage(): boolean {
-  return hasNavigator() && navigator.cookieEnabled;
+  return Boolean(hasNavigator() && navigator.cookieEnabled);
 }
