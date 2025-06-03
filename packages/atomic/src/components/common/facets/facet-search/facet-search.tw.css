@@ -1,7 +1,5 @@
 @reference '../../../../utils/coveo.tw.css';
-/* TODO: something is wrong with this file ... it prevent other css to apply*/
 
-/* TODO: check if still need to add @layer */
 input[type='text']:focus-visible ~ .search-icon {
   @apply text-primary;
 }
