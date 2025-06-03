@@ -32,13 +32,13 @@
   "dependencies": {
     "@coveo/bueno": "1.0.14",
     "@coveo/headless": "3.25.0",
-    "lit": "3.2.1"
+    "lit": "3.3.0"
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "@playwright/test": "1.50.1",
-    "@types/node": "22.13.5",
-    "rollup": "4.34.8",
+    "@playwright/test": "1.52.0",
+    "@types/node": "22.15.23",
+    "rollup": "4.41.1",
     "rimraf": "3.0.2",
     "vite": "6.3.5",
     "ncp": "2.0.0"
