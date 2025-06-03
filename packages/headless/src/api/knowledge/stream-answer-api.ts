@@ -306,7 +306,7 @@ const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   };
 
   if (expressions.length) {
-    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
+    mergedAdvancedSearchQueryParams.cq = `${expressions}`;
   }
 
   return mergedAdvancedSearchQueryParams;
@@ -315,8 +315,9 @@ const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
 const buildExpressionList = (state: StateNeededByAnswerAPI) => {
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const filterExpressions = selectStaticFilterExpressions(state);
+  const {cq} = selectAdvancedSearchQueries(state);
 
-  return [activeTabExpression, ...filterExpressions]
+  return [activeTabExpression, ...filterExpressions, cq]
     .filter((expression) => !!expression)
     .join(' AND ');
 };

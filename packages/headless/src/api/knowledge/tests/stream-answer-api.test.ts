@@ -19,6 +19,8 @@ import {
   streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -110,6 +112,16 @@ describe('#streamAnswerApi', () => {
       );
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
+    });
+    it('should not include advanced search queries when there are no advanced search queries', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
       );
     });
   });
