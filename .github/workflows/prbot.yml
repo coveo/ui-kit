@@ -503,7 +503,7 @@ jobs:
   playwright-headless-ssr-commerce:
     name: 'Run e2e tests for Headless Commerce SSR'
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'headless-ssr-commerce-nextjs')
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-commerce-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
