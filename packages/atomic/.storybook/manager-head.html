@@ -1,0 +1,17 @@
+<script type="module">
+  import {getOptanonConsentCookie, updateCookieSettings, disableBlockedKeys} from './cookieManager.js';
+
+  updateCookieSettings();
+  disableBlockedKeys();
+
+  window.OptanonWrapper = () => {
+    updateCookieSettings();
+    disableBlockedKeys();
+  };
+</script>
+<script
+  src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"
+  type="text/javascript"
+  charset="UTF-8"
+  data-domain-script="01966379-8a54-7121-b5b0-1c7621a24bd1-test"
+></script>

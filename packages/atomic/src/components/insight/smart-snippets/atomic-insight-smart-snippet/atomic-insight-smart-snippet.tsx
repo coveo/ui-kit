@@ -9,7 +9,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
+import {randomID} from '../../../../utils/utils';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';

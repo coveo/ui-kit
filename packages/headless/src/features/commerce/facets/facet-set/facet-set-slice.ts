@@ -34,6 +34,7 @@ import {
   updateCoreFacetNumberOfValues,
   updateAutoSelectionForAllCoreFacets,
   clearAllCoreFacets,
+  deleteAllCoreFacets,
 } from '../core-facet/core-facet-actions.js';
 import {
   toggleExcludeDateFacetValue,
@@ -457,6 +458,7 @@ export const commerceFacetSetReducer = createReducer(
         handleDeselectAllFacetValues(request);
       })
       .addCase(clearAllCoreFacets, setAllFacetValuesToIdle)
+      .addCase(deleteAllCoreFacets, clearAllFacetValues)
       .addCase(setContext, clearAllFacetValues)
       .addCase(setView, clearAllFacetValues)
       .addCase(restoreSearchParameters, restoreFromParameters)
