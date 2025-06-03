@@ -1,5 +1,5 @@
-name: 'Headless SSR E2E Pages router tests in dev mode'
-description: 'Runs Cypress tests for Headless SSR Pages router in dev mode'
+name: 'Headless SSR E2E Pages router tests'
+description: 'Runs Cypress tests for Headless SSR Pages router'
 inputs:
   github-token:
     description: The GitHub token for accurately detecting a build vs a re-run build
@@ -15,7 +15,7 @@ runs:
       with:
         browser: chrome
         command-prefix: 'npm run -w @coveo/headless-ssr-samples-pages-router e2e'
-        start: npx nx run headless-ssr-samples-pages-router:dev
+        start: npx nx run headless-ssr-samples-pages-router:prod
         wait-on: 'http://localhost:3000'
         wait-on-timeout: 600000
         install: false
@@ -24,5 +24,5 @@ runs:
     - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       if: failure()
       with:
-        name: ssr-page-dev-screenshots
+        name: ssr-pages-screenshots
         path: packages/samples/headless-ssr/cypress/screenshots

@@ -525,8 +525,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test-app-dev:
-    name: 'Run e2e tests on Headless SSR App router sample in dev mode'
+  e2e-headless-ssr-test-app:
+    name: 'Run e2e tests on Headless SSR App router sample'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -537,9 +537,9 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-dev
-  e2e-headless-ssr-test-app-prod:
-    name: 'Run e2e tests on Headless SSR App router sample in prod mode'
+      - uses: ./.github/actions/e2e-headless-ssr-app
+  e2e-headless-ssr-test-pages:
+    name: 'Run e2e tests on Headless SSR Pages router sample'
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -550,33 +550,7 @@ jobs:
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-prod
-  e2e-headless-ssr-test-pages-dev:
-    name: 'Run e2e tests on Headless SSR Pages router sample in dev mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-dev
-  e2e-headless-ssr-test-pages-prod:
-    name: 'Run e2e tests on Headless SSR Pages router sample in prod mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-prod
+      - uses: ./.github/actions/e2e-headless-ssr-pages
   should-e2e-quantic:
     name: 'Should test Quantic?'
     needs: build
@@ -625,10 +599,8 @@ jobs:
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr-test-app'
+      - 'e2e-headless-ssr-test-pages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
@@ -666,10 +638,8 @@ jobs:
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr-test-app'
+      - 'e2e-headless-ssr-test-pages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
