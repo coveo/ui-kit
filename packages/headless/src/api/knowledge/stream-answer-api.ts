@@ -299,15 +299,15 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
 
 const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const expressions = buildExpressionList(state);
+  const mergedCq = mergeAdvancedCQParams(state);
 
   return {
     ...advancedSearchQueryParams,
-    ...(expressions.length && {cq: expressions}),
+    ...(mergedCq && {cq: mergedCq}),
   };
 };
 
-const buildExpressionList = (state: StateNeededByAnswerAPI) => {
+const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const filterExpressions = selectStaticFilterExpressions(state);
   const {cq} = selectAdvancedSearchQueries(state);
