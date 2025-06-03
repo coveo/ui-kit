@@ -8,6 +8,7 @@ import {
   SmartSnippetSuggestionsWrapper,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
 import {Hidden} from '@/src/components/common/stencil-hidden';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippetQuestionsList,
   Result,
@@ -23,7 +24,6 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**

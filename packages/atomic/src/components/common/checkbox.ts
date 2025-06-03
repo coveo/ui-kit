@@ -28,7 +28,7 @@ export interface CheckboxProps {
   onMouseDown?(evt: MouseEvent): void;
 }
 
-export const checkbox: FunctionalComponent<CheckboxProps> = ({props}) => {
+export const renderCheckbox: FunctionalComponent<CheckboxProps> = ({props}) => {
   const partName = props.part ?? 'checkbox';
 
   const classNames = tw({

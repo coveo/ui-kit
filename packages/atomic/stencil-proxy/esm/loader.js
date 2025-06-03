@@ -1,8 +1,10 @@
-import {defineCustomElements as originalDefineCustomElements} from './_loader.js';
+import {registerAutoloader} from '../atomic/autoloader/index.esm.js';
+import {defineCustomElements as stencilDefineCustomElements} from './_loader.js';
 
-const defineCustomElements = function (...args) {
-  import('../atomic/autoloader/index.esm.js');
-  originalDefineCustomElements(...args);
+const defineCustomElements = async function (...args) {
+  const rootElementAutoloader = args.length > 2 ? args.pop() : undefined;
+  registerAutoloader(rootElementAutoloader);
+  stencilDefineCustomElements(...args);
 };
 
 export * from './_loader.js';

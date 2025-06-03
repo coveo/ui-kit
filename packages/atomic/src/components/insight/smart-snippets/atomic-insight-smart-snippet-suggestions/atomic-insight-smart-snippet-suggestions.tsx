@@ -1,5 +1,6 @@
 import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
 import {Hidden} from '@/src/components/common/stencil-hidden';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippetQuestionsList as buildInsightSmartSnippetQuestionsList,
   SmartSnippetQuestionsList as InsightSmartSnippetQuestionsList,
@@ -15,7 +16,6 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {
   getQuestionPart,
   SmartSnippetSuggestionsAnswerAndSourceWrapper,

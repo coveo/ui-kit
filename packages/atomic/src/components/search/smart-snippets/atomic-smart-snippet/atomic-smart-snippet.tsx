@@ -6,6 +6,7 @@ import {
   SmartSnippetFooter,
   SmartSnippetQuestion,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet,
   buildTabManager,
@@ -22,7 +23,6 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {Hidden} from '../../../common/stencil-hidden';

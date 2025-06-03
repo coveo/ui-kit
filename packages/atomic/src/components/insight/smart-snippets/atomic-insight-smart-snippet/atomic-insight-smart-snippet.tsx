@@ -6,6 +6,7 @@ import {
   SmartSnippetWrapper,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Hidden} from '@/src/components/common/stencil-hidden';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
   SmartSnippet as InsightSmartSnippet,
@@ -17,7 +18,6 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**

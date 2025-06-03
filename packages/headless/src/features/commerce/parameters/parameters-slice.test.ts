@@ -1,3 +1,4 @@
+import {ActionCreatorWithoutPayload} from '@reduxjs/toolkit';
 import {FacetValueState} from '../../facets/facet-api/value.js';
 import {selectCategoryFacetSearchResult} from '../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
@@ -8,6 +9,7 @@ import {setView} from '../context/context-actions.js';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet/category-facet-actions.js';
 import {
   clearAllCoreFacets,
+  deleteAllCoreFacets,
   deselectAllValuesInCoreFacet,
 } from '../facets/core-facet/core-facet-actions.js';
 import {
@@ -298,13 +300,16 @@ describe('commerceParameters slice', () => {
       });
     });
 
-  describe('when #clearAllCoreFacets is dispatched', () => {
+  describe.each<{action: ActionCreatorWithoutPayload; actionName: string}>([
+    {action: clearAllCoreFacets, actionName: 'clearAllCoreFacets'},
+    {action: deleteAllCoreFacets, actionName: 'deleteAllCoreFacets'},
+  ])('when $actionName is dispatched', ({action}) => {
     it('sets state.page to undefined', () => {
       const state = {
         ...initialState,
         page: 5,
       };
-      const finalState = parametersReducer(state, clearAllCoreFacets());
+      const finalState = parametersReducer(state, action());
       expect(finalState.page).toBeUndefined();
     });
 
@@ -357,7 +362,7 @@ describe('commerceParameters slice', () => {
           f: {facetId6: ['value']},
           fExcluded: {facetId7: ['value']},
         },
-        clearAllCoreFacets()
+        action()
       );
       expect(finalState).toEqual(initialState);
     });

@@ -9,6 +9,7 @@ import {
   smartSnippetFeedbackOptions,
 } from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-modal/smart-snippet-feedback-modal-common';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
   SmartSnippet as InsightSmartSnippet,
@@ -29,7 +30,6 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
