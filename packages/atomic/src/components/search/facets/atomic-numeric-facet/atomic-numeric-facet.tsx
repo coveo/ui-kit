@@ -30,7 +30,7 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../../utils/stencil-utils';
+import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
 import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
@@ -319,6 +319,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         generateAutomaticRanges: !this.manualRanges.length,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
@@ -337,6 +341,10 @@ export class AtomicNumericFacet implements InitializableComponent {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 

@@ -7,11 +7,10 @@ import {
 import {ChildProduct} from '../../../api/commerce/common/product.js';
 import {SearchCommerceSuccessResponse} from '../../../api/commerce/search/response.js';
 import {validatePayload} from '../../../utils/validate-payload.js';
-import {deselectAllNonBreadcrumbs} from '../../breadcrumb/breadcrumb-actions.js';
 import {buildBaseCommerceAPIRequest} from '../common/base-commerce-api-request-builder.js';
 import {buildFilterableCommerceAPIRequest} from '../common/filterable-commerce-api-request-builder.js';
 import {
-  clearAllCoreFacets,
+  deleteAllCoreFacets,
   updateAutoSelectionForAllCoreFacets,
 } from '../facets/core-facet/core-facet-actions.js';
 import {selectPage} from '../pagination/pagination-actions.js';
@@ -132,8 +131,7 @@ export const prepareForSearchWithQuery = createAsyncThunk<
   });
 
   if (payload.clearFilters) {
-    dispatch(clearAllCoreFacets());
-    dispatch(deselectAllNonBreadcrumbs());
+    dispatch(deleteAllCoreFacets());
   }
 
   dispatch(updateAutoSelectionForAllCoreFacets({allow: true}));

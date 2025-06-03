@@ -29,8 +29,8 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
+import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {createAppLoadedListener} from '../../../common/interface/store';
