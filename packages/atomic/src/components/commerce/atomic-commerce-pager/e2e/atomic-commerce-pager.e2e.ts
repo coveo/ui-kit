@@ -169,7 +169,7 @@ test.describe('Default', () => {
 test.describe('with a valid page in the hash', () => {
   test.beforeEach(async ({page}) => {
     await page.goto(
-      'http://localhost:4400/iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=2'
+      './iframe.html?id=atomic-commerce-pager--default&viewMode=story#page=2'
     );
   });
 
