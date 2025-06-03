@@ -61,7 +61,7 @@ function emit(program) {
 /**
  * Compiles TypeScript files using a custom transformer.
  *
- * This function mimics the behavior of running `tsc -p tsconfig.json` but applies a custom SVG transformer
+ * This function mimics the behavior of running `tsc -p tsconfig.json` but applies a custom transformer to substitute the version and resolve some import issue with coveo.analytics
  * to all TypeScript files. It loads the TypeScript configuration from the specified `tsconfig.json` file,
  * creates a TypeScript program, and emits the compiled JavaScript files with the custom transformer applied.
  *
