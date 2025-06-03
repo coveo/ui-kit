@@ -56,7 +56,7 @@
     "marked": "12.0.2"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^20.9.0 || ^22.11.0"
   },
   "devDependencies": {
     "@babel/cli": "7.26.4",
