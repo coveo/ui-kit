@@ -5,6 +5,15 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicCommerceInterface,
+AtomicCommercePager,
+AtomicCommerceProductList,
+AtomicCommerceSearchBoxInstantProducts,
+AtomicCommerceSearchBoxQuerySuggestions,
+AtomicCommerceSortDropdown,
+AtomicComponentError,
+AtomicIcon,
+AtomicProduct,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -138,6 +147,15 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
+AtomicCommerceInterface,
+AtomicCommercePager,
+AtomicCommerceProductList,
+AtomicCommerceSearchBoxInstantProducts,
+AtomicCommerceSearchBoxQuerySuggestions,
+AtomicCommerceSortDropdown,
+AtomicComponentError,
+AtomicIcon,
+AtomicProduct,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
