@@ -45,9 +45,9 @@ describe('renderFacetValueBox', () => {
   it('should render all elements', async () => {
     await setupElement();
     const {listItem, button, valueCount} = locators;
-    await expect(listItem).toBeInTheDocument();
-    await expect(button).toBeInTheDocument();
-    await expect(valueCount).toBeInTheDocument();
+    expect(listItem).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+    expect(valueCount).toBeInTheDocument();
   });
 
   it('should render the correct value and count', async () => {
