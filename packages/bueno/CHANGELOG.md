@@ -1,3 +1,7 @@
+## <small>1.0.15 (2025-06-04)</small>
+
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+
 ## <small>1.0.14 (2025-05-08)</small>
 
 - chore(deps): update vite j:kit-282 (#5031) ([532ea61](https://github.com/coveo/ui-kit/commits/532ea61)), closes [#5031](https://github.com/coveo/ui-kit/issues/5031)

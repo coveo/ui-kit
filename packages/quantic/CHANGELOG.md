@@ -1,3 +1,10 @@
+## <small>3.22.1 (2025-06-04)</small>
+
+- fix(quantic): updated section to create scratch org in the readme (#5380) ([2cea093](https://github.com/coveo/ui-kit/commits/2cea093)), closes [#5380](https://github.com/coveo/ui-kit/issues/5380)
+- test(quantic): introducing ep to playwright (#5297) ([33949a9](https://github.com/coveo/ui-kit/commits/33949a9)), closes [#5297](https://github.com/coveo/ui-kit/issues/5297)
+- test(quantic): Playwright tests migration for quanticRecommendationList (#5323) ([9b6f217](https://github.com/coveo/ui-kit/commits/9b6f217)), closes [#5323](https://github.com/coveo/ui-kit/issues/5323)
+- test(quantic): quantic modal jest tests (#5361) ([1739dfc](https://github.com/coveo/ui-kit/commits/1739dfc)), closes [#5361](https://github.com/coveo/ui-kit/issues/5361)
+
 ## 3.22.0 (2025-05-28)
 
 - test(quantic): added unit test and e2e test for the quantic date facet component (#5331) ([51c2448](https://github.com/coveo/ui-kit/commits/51c2448)), closes [#5331](https://github.com/coveo/ui-kit/issues/5331)
