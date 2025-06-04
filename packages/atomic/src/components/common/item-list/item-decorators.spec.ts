@@ -48,7 +48,6 @@ class ParentElement extends LitElement {
   }
 
   public resolveProduct = (event: ProductContextEvent) => {
-    console.log('resolveProduct', this.product);
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.product as unknown as Product);
