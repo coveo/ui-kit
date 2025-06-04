@@ -33,9 +33,16 @@ export type ContextHydratedState<
 export type ContextState<
   TControllers extends ControllerDefinitionsMap<Controller>,
   TSolutionType extends SolutionType,
-> =
-  | ContextStaticState<TControllers, TSolutionType>
-  | ContextHydratedState<TControllers, TSolutionType>;
+> = {
+  engine?: SSRCommerceEngine;
+  controllers:
+    | InferControllersMapFromDefinition<TControllers, TSolutionType>
+    | InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+        TControllers,
+        TSolutionType
+      >;
+  solutionType: TSolutionType;
+};
 
 export type ControllerHook<TController extends Controller> = () => {
   state: TController['state'];
@@ -55,6 +62,9 @@ export type ReactEngineDefinition<
   TEngineOptions,
   TSolutionType extends SolutionType,
 > = EngineDefinition<TControllers, TEngineOptions, TSolutionType> & {
+  /**
+   * @deprecated Use `StateProvider` instead.
+   */
   StaticStateProvider: FunctionComponent<
     PropsWithChildren<{
       controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
@@ -63,6 +73,9 @@ export type ReactEngineDefinition<
       >;
     }>
   >;
+  /**
+   * @deprecated Use `StateProvider` instead.
+   */
   HydratedStateProvider: FunctionComponent<
     PropsWithChildren<{
       engine: SSRCommerceEngine;
@@ -70,6 +83,17 @@ export type ReactEngineDefinition<
         TControllers,
         TSolutionType
       >;
+    }>
+  >;
+  StateProvider: FunctionComponent<
+    PropsWithChildren<{
+      engine?: SSRCommerceEngine;
+      controllers:
+        | InferControllersMapFromDefinition<TControllers, TSolutionType>
+        | InferControllerStaticStateMapFromDefinitionsWithSolutionType<
+            TControllers,
+            TSolutionType
+          >;
     }>
   >;
 };

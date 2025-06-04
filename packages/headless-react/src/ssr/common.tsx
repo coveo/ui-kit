@@ -29,7 +29,7 @@ function isHydratedStateContext<
 >(
   ctx: ContextState<TEngine, TControllers>
 ): ctx is ContextHydratedState<TEngine, TControllers> {
-  return 'engine' in ctx;
+  return 'engine' in ctx && !!ctx.engine;
 }
 
 function buildControllerHook<
@@ -108,6 +108,10 @@ export function buildEngineHook<
   };
 }
 
+/**
+ * @deprecated use `buildStateProvider` instead.
+ * It is isomorphic and can be used for both static and hydrated state.
+ */
 export function buildStaticStateProvider<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
@@ -127,6 +131,10 @@ export function buildStaticStateProvider<
   };
 }
 
+/**
+ * @deprecated use `buildStateProvider` instead.
+ * It is isomorphic and can be used for both static and hydrated state.
+ */
 export function buildHydratedStateProvider<
   TEngine extends CoreEngine,
   TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
@@ -142,6 +150,29 @@ export function buildHydratedStateProvider<
   }: PropsWithChildren<{
     engine: TEngine;
     controllers: InferControllersMapFromDefinition<TControllers>;
+  }>) => {
+    const {Provider} = singletonContext.get();
+    return <Provider value={{engine, controllers}}>{children}</Provider>;
+  };
+}
+
+export function buildStateProvider<
+  TEngine extends CoreEngine,
+  TControllers extends ControllerDefinitionsMap<TEngine, Controller>,
+>(
+  singletonContext: SingletonGetter<
+    Context<ContextState<TEngine, TControllers> | null>
+  >
+) {
+  return ({
+    engine,
+    controllers,
+    children,
+  }: PropsWithChildren<{
+    engine?: TEngine;
+    controllers:
+      | InferControllersMapFromDefinition<TControllers>
+      | InferControllerStaticStateMapFromDefinitions<TControllers>;
   }>) => {
     const {Provider} = singletonContext.get();
     return <Provider value={{engine, controllers}}>{children}</Provider>;

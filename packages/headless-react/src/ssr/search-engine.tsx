@@ -13,6 +13,7 @@ import {
   buildControllerHooks,
   buildEngineHook,
   buildHydratedStateProvider,
+  buildStateProvider,
   buildStaticStateProvider,
 } from './common.js';
 import {ContextState, ReactEngineDefinition} from './types.js';
@@ -44,7 +45,14 @@ export function defineSearchEngine<
     ...defineBaseSearchEngine({...options}),
     useEngine: buildEngineHook(singletonContext),
     controllers: buildControllerHooks(singletonContext, options.controllers),
+    /**
+     * @deprecated Use `StateProvider` instead.
+     */
     StaticStateProvider: buildStaticStateProvider(singletonContext),
+    /**
+     * @deprecated Use `HydratedStateProvider` instead.
+     */
     HydratedStateProvider: buildHydratedStateProvider(singletonContext),
+    StateProvider: buildStateProvider(singletonContext),
   };
 }
