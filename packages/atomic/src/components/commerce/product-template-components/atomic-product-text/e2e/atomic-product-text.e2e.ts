@@ -71,7 +71,7 @@ test.describe('when displaying a field that does not support highlights', async 
   });
 
   test('should render the field value', async ({productText}) => {
-    expect(productText.textContent.first()).toBeVisible();
+    await expect(productText.textContent.first()).toBeVisible();
   });
 
   test('should not highlight the keywords in the excerpt', async ({
@@ -90,6 +90,6 @@ test.describe('when using a non-string field', async () => {
   });
 
   test('should not render the field value', async ({productText}) => {
-    expect(productText.textContent.first()).not.toBeVisible();
+    await expect(productText.textContent.first()).not.toBeVisible();
   });
 });
