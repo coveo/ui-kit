@@ -67,7 +67,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   } = {}) => {
     const element = (await fixture<AtomicCommerceRecommendationInterface>(
       html`<atomic-commerce-recommendation-interface
-        analytics=${ifDefined(analytics)}
+        ?analytics=${analytics}
         icon-assets-path=${ifDefined(iconAssetsPath)}
         language=${ifDefined(language)}
         language-assets-path=${ifDefined(languageAssetsPath)}
