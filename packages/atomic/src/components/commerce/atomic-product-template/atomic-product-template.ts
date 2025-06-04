@@ -78,12 +78,10 @@ export class AtomicProductTemplate
 
   connectedCallback() {
     super.connectedCallback();
-    // if (changedProps.has('mustMatch') || changedProps.has('mustNotMatch')) {
     this.productTemplateController.matchConditions = makeMatchConditions(
       this.mustMatch,
       this.mustNotMatch
     );
-    // }
   }
 
   /**
