@@ -17,7 +17,6 @@ import {getQueryInitialState} from '../../../features/query/query-state.js';
 import {
   restoreSearchParameters,
   SearchParameters,
-  restoreTab,
 } from '../../../features/search-parameters/search-parameter-actions.js';
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
@@ -107,26 +106,16 @@ export function buildCoreSearchParameterManager(
     props.initialState,
     'buildSearchParameterManager'
   );
-  const {tab, ...parametersWithoutTab} = props.initialState.parameters;
 
-  if (tab && engine.state.tabSet?.[tab]) {
-    dispatch(restoreTab(tab));
-  }
-  dispatch(restoreSearchParameters(parametersWithoutTab));
+  dispatch(restoreSearchParameters(props.initialState.parameters));
 
   return {
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const {tab, ...newParamsWithoutTab} = enrichParameters(
-        engine,
-        parameters
-      );
+      const enrichedParameters = enrichParameters(engine, parameters);
 
-      if (tab && engine.state.tabSet?.[tab]) {
-        dispatch(restoreTab(tab));
-      }
-      dispatch(restoreSearchParameters(newParamsWithoutTab));
+      dispatch(restoreSearchParameters(enrichedParameters));
     },
     get state() {
       const parameters = getCoreActiveSearchParameters(engine);
