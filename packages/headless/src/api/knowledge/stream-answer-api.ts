@@ -1,5 +1,10 @@
 /* eslint-disable canonical/no-barrel-import */
-import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createSelector,
+  ThunkDispatch,
+  UnknownAction,
+} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
@@ -8,6 +13,7 @@ import {selectAdvancedSearchQueries} from '../../features/advanced-search-querie
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {selectContext} from '../../features/context/context-selector.js';
 import {
+  resetAnswer,
   setAnswerContentFormat,
   setCannotAnswer,
   updateCitations,
@@ -20,6 +26,7 @@ import {maximumNumberOfResultsFromIndex} from '../../features/pagination/paginat
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
+import {updateSearchAction} from '../../features/search/search-actions.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
@@ -196,11 +203,12 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Some fields need to be excluded in the projection though, in this case clientTimestamp, as it will change
-        // during the streaming.
+        // Some fields need to be excluded in the projection though, in this case some analytics fields,
+        // as they will change during the streaming.
         const clone = JSON.parse(JSON.stringify(queryArgs));
         if (clone.analytics) {
           clone.analytics.clientTimestamp = '';
+          clone.analytics.actionCause = '';
         }
 
         // Standard RTK key, with some fields removed
@@ -381,10 +389,30 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     ...fromAnalyticsStateToAnalyticsParams(
       state.configuration.analytics,
-      navigatorContext
+      navigatorContext,
+      {
+        actionCause: state.search?.searchAction?.actionCause || '',
+      }
     ),
   };
 };
+
+/**
+ * Resets the generated answer state and fetches a new answer based on the current state and navigator context.
+ * Handles all dispatches in a single higher level thunk to avoid multiple dispatches.
+ */
+// TODO: SVCC-5178 Refactor multiple sequential dispatches in stream-api
+export const resetAndFetchAnswer = createAsyncThunk<
+  void,
+  {state: StateNeededByAnswerAPI; navigatorContext: NavigatorContext}
+>(
+  'generatedAnswer/resetAndFetchAnswer',
+  async ({state, navigatorContext}, {dispatch}) => {
+    dispatch(resetAnswer());
+    await dispatch(fetchAnswer(state, navigatorContext));
+    dispatch(updateSearchAction());
+  }
+);
 
 export const fetchAnswer = (
   state: StateNeededByAnswerAPI,

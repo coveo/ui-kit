@@ -87,6 +87,12 @@ describe('knowledge-generated-answer', () => {
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
       },
+      search: {
+        ...initialState.search!,
+        searchAction: {
+          actionCause: 'searchboxSubmit',
+        },
+      },
     });
     return buildMockSearchEngine(state);
   };
@@ -189,7 +195,7 @@ describe('knowledge-generated-answer', () => {
   });
 
   describe('subscribeToSearchRequest', () => {
-    it('triggers a fetchAnswer only when there is a request id, a query, and the request is made with another request than the last one', () => {
+    it('triggers a fetchAnswer only when there is a request id, a query, an action cause, and the request is made with another request than the last one', () => {
       createGeneratedAnswer();
 
       const listener = engine.subscribe.mock.calls[0][0];
