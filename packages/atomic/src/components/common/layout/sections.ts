@@ -1,4 +1,4 @@
-import {isElementNode} from '../../../utils/stencil-utils';
+import {isElementNode} from '../../../utils/utils';
 
 const resultSectionTags = new Set([
   'atomic-result-section-visual',

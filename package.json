@@ -1,7 +1,7 @@
 {
   "name": "ui-kit",
   "private": true,
-  "version": "3.0.38",
+  "version": "3.0.40",
   "scripts": {
     "postinstall": "husky install && patch-package && npx playwright install",
     "reset:install": "git checkout origin/master package-lock.json && npm i",
@@ -99,7 +99,8 @@
     "packages/samples/*",
     "packages/samples/headless-ssr/*",
     "packages/shopify",
-    "utils/*"
+    "utils/cdn",
+    "utils/ci"
   ],
   "config": {
     "commitizen": {
@@ -119,7 +120,7 @@
     ]
   },
   "engines": {
-    "node": "^20.9.0 || ^22.13.1",
+    "node": "^22.14.0",
     "npm": ">=8.6.0"
   },
   "dependencies": {

@@ -55,7 +55,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.25.0",
+  "version": "3.25.2",
   "files": [
     "dist/"
   ],
@@ -96,8 +96,8 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.14",
-    "@coveo/relay": "1.2.0",
+    "@coveo/bueno": "1.0.16",
+    "@coveo/relay": "1.2.1",
     "@coveo/relay-event-types": "14.3.3",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
@@ -119,7 +119,7 @@
     "execa": "9.5.2",
     "live-server": "1.2.2",
     "ts-node": "10.9.2",
-    "typedoc": "0.28.4",
+    "typedoc": "0.28.5",
     "vitest": "3.1.4"
   },
   "engines": {

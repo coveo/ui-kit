@@ -6,10 +6,17 @@
     <title>Coveo Atomic With Generative Question Answering</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
+      }
     </script>
 
     <script type="module">
@@ -47,8 +54,8 @@
   <body>
     <atomic-search-interface
       fields-to-include='["snrating", "sncost"]'
-      language-assets-path="/lang"
-      icon-assets-path="/assets"
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
     >
       <atomic-search-layout>
         <div class="header-bg"></div>

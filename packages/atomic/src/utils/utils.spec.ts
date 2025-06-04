@@ -1,12 +1,5 @@
 import {vi, describe, it, expect} from 'vitest';
-import {
-  once,
-  camelToKebab,
-  randomID,
-  kebabToCamel,
-  parseAssetURL,
-  aggregate,
-} from './stencil-utils';
+import {once, camelToKebab, randomID, kebabToCamel, aggregate} from './utils';
 
 vi.mock('@stencil/core', () => ({
   getAssetPath: vi.fn((path: string) => {
@@ -63,32 +56,6 @@ describe('randomID', () => {
 
   it('when called twice, it returns two different ids', () => {
     expect(randomID()).not.toBe(randomID());
-  });
-});
-
-describe('parseAssetURL', () => {
-  it('works with relative urls', () => {
-    expect(parseAssetURL('../test.svg')).toBe('../test.svg');
-    expect(parseAssetURL('./test.svg')).toBe('./test.svg');
-  });
-
-  it('works with the http(s) protocol urls', () => {
-    expect(parseAssetURL('https://github.com/coveo/ui-kit/test.svg')).toBe(
-      'https://github.com/coveo/ui-kit/test.svg'
-    );
-    expect(parseAssetURL('http://github.com/coveo/ui-kit/test.svg')).toBe(
-      'http://github.com/coveo/ui-kit/test.svg'
-    );
-  });
-
-  it('works with Atomic assets (without .svg)', () => {
-    expect(parseAssetURL('assets://attachment')).toBe('/assets/attachment.svg');
-  });
-
-  it('works with Atomic assets (with .svg)', () => {
-    expect(parseAssetURL('assets://attachment.svg')).toBe(
-      '/assets/attachment.svg'
-    );
   });
 });
 

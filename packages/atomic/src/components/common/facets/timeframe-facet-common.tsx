@@ -15,7 +15,7 @@ import {
 import {h, VNode} from '@stencil/core';
 import {parseDate} from '../../../utils/date-utils';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import {randomID} from '../../../utils/stencil-utils';
+import {randomID} from '../../../utils/utils';
 import {InsightBindings} from '../../insight/atomic-insight-interface/atomic-insight-interface';
 import {Bindings as SearchBindings} from '../../search/atomic-search-interface/atomic-search-interface';
 import {Hidden} from '../stencil-hidden';
@@ -24,7 +24,7 @@ import {FacetContainer} from './facet-container/stencil-facet-container';
 import {FacetHeader} from './facet-header/stencil-facet-header';
 import {FacetPlaceholder} from './facet-placeholder/facet-placeholder';
 import {FacetValueLabelHighlight} from './facet-value-label-highlight/stencil-facet-value-label-highlight';
-import {FacetValueLink} from './facet-value-link/facet-value-link';
+import {FacetValueLink} from './facet-value-link/stencil-facet-value-link';
 import {FacetValuesGroup} from './facet-values-group/stencil-facet-values-group';
 import {initializePopover} from './popover/popover-type';
 import {shouldDisplayInputForFacetRange} from './stencil-facet-common';
