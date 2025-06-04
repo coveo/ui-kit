@@ -18,14 +18,6 @@ const defaultValues: RegularFacetValue[] = [
     isAutoSelected: false,
     isSuggested: false,
   },
-  // {
-  //   value: 'value-3',
-  //   numberOfResults: 20,
-  //   moreValuesAvailable: true, // TODO: test this
-  //   state: 'idle',
-  //   isAutoSelected: false, // TODO: test this
-  //   isSuggested: false, // TODO: test this
-  // },
 ];
 
 export const defaultState: RegularFacetState = {

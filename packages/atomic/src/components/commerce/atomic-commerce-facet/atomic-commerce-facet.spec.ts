@@ -296,25 +296,38 @@ describe('AtomicCommerceFacet', () => {
     await expect.element(valueLabel![1]).toHaveTextContent('Value 2');
   });
 
-  it('should render the checkbox as selected', async () => {
-    mockedFacet = buildFakeRegularFacet({
-      state: {
-        values: [
-          {
-            value: 'Value 1',
-            state: 'selected',
-            numberOfResults: 10,
-            isAutoSelected: false,
-            isSuggested: false,
-            moreValuesAvailable: false,
-          },
-        ],
-      },
+  describe('when a value is selected', () => {
+    beforeEach(() => {
+      mockedFacet = buildFakeRegularFacet({
+        state: {
+          values: [
+            {
+              value: 'Value 1',
+              state: 'selected',
+              numberOfResults: 10,
+              isAutoSelected: false,
+              isSuggested: false,
+              moreValuesAvailable: false,
+            },
+          ],
+        },
+      });
     });
-    const element = await setupElement();
-    const parts = locators.parts(element);
 
-    expect(parts.valueCheckboxChecked?.length).toBe(1);
+    it('should select the "value 1" facet value', async () => {
+      const element = await setupElement();
+      const parts = locators.parts(element);
+
+      expect(parts.valueCheckboxChecked?.length).toBe(1);
+      await expect.element(parts.valueLabel![0]).toHaveTextContent('Value 1');
+    });
+
+    it('should add a bold class to the label', async () => {
+      const element = await setupElement();
+      const parts = locators.parts(element);
+
+      await expect.element(parts.valueLabel![0]).toHaveClass('font-bold');
+    });
   });
 
   it('should not render the "show more" button when canShowMoreValues is false', async () => {
