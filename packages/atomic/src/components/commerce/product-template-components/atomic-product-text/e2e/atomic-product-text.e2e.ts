@@ -18,7 +18,9 @@ test.describe('default', async () => {
       });
       await productText.hydrated.first().waitFor();
 
-      expect(productText.textContent.first()).toContainText('Default Text');
+      await expect(productText.textContent.first()).toContainText(
+        'Default Text'
+      );
     });
   });
 });
@@ -55,7 +57,7 @@ test.describe('when using a field that supports highlights', async () => {
       });
       await productText.hydrated.first().waitFor();
 
-      expect(productText.textContent.first()).toContainText(/kayak/i);
+      await expect(productText.textContent.first()).toContainText(/kayak/i);
 
       const highlightedText =
         await productText.highlightedText.allTextContents();
@@ -78,7 +80,7 @@ test.describe('when displaying a field that does not support highlights', async 
     productText,
   }) => {
     const highlightedText = await productText.highlightedText.allTextContents();
-    expect(productText.textContent.first()).toContainText(/kayak/i);
+    await expect(productText.textContent.first()).toContainText(/kayak/i);
     expect(highlightedText).not.toContain(/kayak/i);
   });
 });
