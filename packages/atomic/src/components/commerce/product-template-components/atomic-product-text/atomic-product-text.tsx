@@ -9,8 +9,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
-import {ItemTextFallback} from '../../../common/item-text/item-text-fallback';
-import {ItemTextHighlighted} from '../../../common/item-text/item-text-highlighted';
+import {ItemTextFallback} from '../../../common/item-text/stencil-item-text-fallback';
+import {ItemTextHighlighted} from '../../../common/item-text/stencil-item-text-highlighted';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import {ProductContext} from '../product-template-decorators';
 import {getStringValueFromProductOrNull} from '../product-utils';
