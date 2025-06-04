@@ -1,5 +1,5 @@
 import {DateFacetValue, NumericFacetValue} from '@coveo/headless';
-import {isInDocument} from '../../../utils/stencil-utils';
+import {isInDocument} from '../../../utils/utils';
 import {
   FacetInfo,
   FacetStore,

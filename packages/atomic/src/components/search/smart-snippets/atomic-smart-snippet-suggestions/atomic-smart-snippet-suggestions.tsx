@@ -10,7 +10,7 @@ import {
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/stencil-utils';
+import {randomID} from '../../../../utils/utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {SmartSnippetSuggestionCommon} from '../../../common/smart-snippets/atomic-smart-snippet-suggestions/smart-snippet-suggestions-common';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';

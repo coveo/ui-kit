@@ -255,7 +255,7 @@ export class AtomicCommerceCategoryFacet
         i18n={this.bindings.i18n}
         label={this.displayName}
         query={this.facetState.facetSearch.query}
-        onChange={(value) => {
+        onChange={(value: string) => {
           if (value === '') {
             this.facet.facetSearch.clear();
             return;
