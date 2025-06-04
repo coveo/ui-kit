@@ -12,7 +12,7 @@ test.describe('when there is no promotional price', async () => {
   });
 
   test('should render the price', async ({productPrice}) => {
-    expect(productPrice.blueLagoonPrice).toBeVisible();
+    await expect(productPrice.blueLagoonPrice).toBeVisible();
   });
 });
 

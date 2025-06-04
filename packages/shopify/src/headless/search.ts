@@ -82,6 +82,15 @@ export function buildShopifySearchEngine({
     );
   }
 
+  if (!searchEngineOptions.navigatorContextProvider) {
+    searchEngineOptions.navigatorContextProvider = () => ({
+      clientId: getClientId(cookie),
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      location: window.location.href,
+    });
+  }
+
   const appProxyResponse: AppProxyResponse = {
     accessToken: searchEngineOptions.configuration.accessToken,
     organizationId: searchEngineOptions.configuration.organizationId,

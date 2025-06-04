@@ -25,7 +25,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../utils/stencil-utils';
+import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {ItemListGuard} from '../../common/item-list/item-list-guard';
