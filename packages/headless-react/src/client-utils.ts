@@ -13,7 +13,6 @@ export type SnapshotGetter<T> = () => T;
  * Determine if the given list of dependencies has changed.
  */
 function useHasDepsChanged(deps: DependencyList) {
-  console.log('anything');
   const ref = useRef<DependencyList | null>(null);
   if (ref.current === null) {
     ref.current = deps;
