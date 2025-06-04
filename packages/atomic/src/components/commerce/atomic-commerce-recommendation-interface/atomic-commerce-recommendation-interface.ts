@@ -45,11 +45,15 @@ export class AtomicCommerceRecommendationInterface
   extends ChildrenUpdateCompleteMixin(LitElement)
   implements BaseAtomicInterface<CommerceEngine>
 {
+  @state()
+  @provide({context: bindingsContext})
+  public bindings: CommerceBindings = {} as CommerceBindings;
+  @state() public error?: Error;
+
   public context!: Context;
   public store: CommerceRecommendationStore;
-  private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
-  @state() public error?: Error;
+  private commonInterfaceHelper: CommonAtomicInterfaceHelper<CommerceEngine>;
 
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
@@ -108,8 +112,6 @@ export class AtomicCommerceRecommendationInterface
 
   private i18Initialized: Promise<void>;
 
-  initialized: boolean = false;
-
   public constructor() {
     super();
     this.commonInterfaceHelper = new CommonAtomicInterfaceHelper(
@@ -135,9 +137,21 @@ export class AtomicCommerceRecommendationInterface
     );
   }
 
+  /**
+   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
+   */
+  public initializeWithEngine(engine: CommerceEngine) {
+    return this.internalInitialization(() => (this.engine = engine));
+  }
+
   @watch('analytics')
   public toggleAnalytics() {
     this.commonInterfaceHelper.onAnalyticsChange();
+  }
+
+  @watch('iconAssetsPath')
+  public updateIconAssetsPath() {
+    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   @watch('language')
@@ -149,13 +163,8 @@ export class AtomicCommerceRecommendationInterface
     ) {
       return;
     }
-    this.context?.setLanguage(this.language);
+    this.context.setLanguage(this.language);
     return this.commonInterfaceHelper.onLanguageChange();
-  }
-
-  @watch('iconAssetsPath')
-  public updateIconAssetsPath() {
-    this.store.state.iconAssetsPath = this.iconAssetsPath;
   }
 
   public disconnectedCallback() {
@@ -175,11 +184,15 @@ export class AtomicCommerceRecommendationInterface
     }
   }
 
+  render() {
+    return html`<slot></slot>`;
+  }
+
   private handleInitialization = (event: InitializeEvent) => {
     this.commonInterfaceHelper.onComponentInitializing(event);
   };
 
-  public scrollToTop() {
+  private scrollToTop() {
     const scrollContainerElement = document.querySelector(this.scrollContainer);
     if (!scrollContainerElement) {
       this.bindings.engine.logger.warn(
@@ -191,18 +204,36 @@ export class AtomicCommerceRecommendationInterface
     scrollContainerElement.scrollIntoView({behavior: 'smooth'});
   }
 
-  /**
-   * Initializes the connection with an already preconfigured [headless commerce engine](https://docs.coveo.com/en/headless/latest/reference/commerce/).
-   */
-  public initializeWithEngine(engine: CommerceEngine) {
-    return this.internalInitialization(() => (this.engine = engine));
+  private async internalInitialization(initEngine: () => void) {
+    await Promise.all([
+      this.commonInterfaceHelper.onInitialization(initEngine),
+      this.i18Initialized,
+    ]);
+    this.initAriaLive();
+    this.initContext();
+    this.updateLanguage();
+    this.bindings = this.getBindings();
+    markParentAsReady(this);
+    this.initLanguage();
   }
 
-  @state()
-  @provide({context: bindingsContext})
-  public bindings: CommerceBindings = {} as CommerceBindings;
+  private initAriaLive() {
+    if (
+      Array.from(this.children).some(
+        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
+      )
+    ) {
+      return;
+    }
+    const ariaLive = document.createElement('atomic-aria-live');
+    this.prepend(ariaLive);
+  }
 
-  public getBindings(): CommerceBindings {
+  private initContext() {
+    this.context = buildContext(this.engine!);
+  }
+
+  private getBindings(): CommerceBindings {
     return {
       engine: this.engine!,
       i18n: this.i18n,
@@ -225,44 +256,10 @@ export class AtomicCommerceRecommendationInterface
     };
   }
 
-  private initContext() {
-    this.context = buildContext(this.engine!);
-  }
-
   private initLanguage() {
     if (!this.language) {
       this.language = this.context.state.language;
     }
-  }
-
-  private initAriaLive() {
-    if (
-      Array.from(this.children).some(
-        (element) => element.tagName === 'ATOMIC-ARIA-LIVE'
-      )
-    ) {
-      return;
-    }
-    const ariaLive = document.createElement('atomic-aria-live');
-    this.prepend(ariaLive);
-  }
-
-  private async internalInitialization(initEngine: () => void) {
-    await Promise.all([
-      this.commonInterfaceHelper.onInitialization(initEngine),
-      this.i18Initialized,
-    ]);
-    this.initAriaLive();
-    this.initContext();
-    this.updateLanguage();
-    this.bindings = this.getBindings();
-    markParentAsReady(this);
-    this.initLanguage();
-    this.initialized = true;
-  }
-
-  render() {
-    return html`<slot></slot>`;
   }
 }
 
