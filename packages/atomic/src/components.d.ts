@@ -602,24 +602,6 @@ export namespace Components {
         "suggestionTimeout": number;
     }
     /**
-     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions to display when the user types in the input field.
-         */
-        "maxWithQuery": number;
-        /**
-          * The maximum number of suggestions to display initially, when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
-    }
-    /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
      */
     interface AtomicCommerceText {
@@ -4052,16 +4034,6 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxElement;
     };
     /**
-     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceSearchBoxRecentQueriesElement extends Components.AtomicCommerceSearchBoxRecentQueries, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceSearchBoxRecentQueriesElement: {
-        prototype: HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-        new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-    };
-    /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
      */
     interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
@@ -5865,7 +5837,6 @@ declare global {
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
-        "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
         "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -6549,24 +6520,6 @@ declare namespace LocalJSX {
           * The timeout for suggestion queries, in milliseconds. If a suggestion query times out, the suggestions from that particular query won't be shown.
          */
         "suggestionTimeout"?: number;
-    }
-    /**
-     * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
-     * @alpha 
-     */
-    interface AtomicCommerceSearchBoxRecentQueries {
-        /**
-          * The SVG icon to display.  - Use a value that starts with `http://`, `https://`, `./`, or `../`, to fetch and display an icon from a given location. - Use a value that starts with `assets://`, to display an icon from the Atomic package. - Use a stringified SVG to display it directly.
-         */
-        "icon"?: string;
-        /**
-          * The maximum number of suggestions to display when the user types in the input field.
-         */
-        "maxWithQuery"?: number;
-        /**
-          * The maximum number of suggestions to display initially, when the input field is empty.
-         */
-        "maxWithoutQuery"?: number;
     }
     /**
      * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
@@ -9540,7 +9493,6 @@ declare namespace LocalJSX {
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
-        "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
         "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -9843,11 +9795,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-search-box": LocalJSX.AtomicCommerceSearchBox & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxElement>;
-            /**
-             * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
-             * @alpha 
-             */
-            "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
             /**
              * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
              */

@@ -1,7 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 import {FacetValueCheckbox} from '../facet-value-checkbox/stencil-facet-value-checkbox';
 import {FacetValueLabelHighlight} from '../facet-value-label-highlight/stencil-facet-value-label-highlight';
-import {FacetValueLink} from '../facet-value-link/facet-value-link';
+import {FacetValueLink} from '../facet-value-link/stencil-facet-value-link';
 import {FormatFacetValueRange, formatHumanReadable} from './formatter';
 
 interface NumericFacetValueLinkProps extends FormatFacetValueRange {

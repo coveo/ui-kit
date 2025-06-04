@@ -1195,6 +1195,15 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StateNee
     },
   };
 
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ =
+  {
+    ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+    advancedSearchQueries: {
+      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries,
+      cq: '',
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1567,3 +1576,9 @@ export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
   ...expectedStreamAnswerAPIParam,
   cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx" AND cq-test-query',
 };
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
+  {
+    ...expectedStreamAnswerAPIParam,
+    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
+  };

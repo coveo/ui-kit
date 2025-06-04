@@ -6,11 +6,13 @@
     <title>Coveo Atomic Hosted UI</title>
 
     <script type="module">
+      const deploymentEnvironment = typeof process != 'undefined' ? process.env.DEPLOYMENT_ENVIRONMENT : 'CDN';
+
       (async () => {
-        if (process.env.DEPLOYMENT_ENVIRONMENT === 'CDN') {
+        if (deploymentEnvironment === 'CDN') {
           const script = document.createElement('script');
           script.type = 'module';
-          script.src = '/atomic-hosted-page/atomic-hosted-page.esm.js';
+          script.src = 'http://localhost:3000/atomic-hosted-page/v1/atomic-hosted-page/atomic-hosted-page.esm.js';
           document.head.appendChild(script);
         } else {
           await import('@coveo/atomic-hosted-page');

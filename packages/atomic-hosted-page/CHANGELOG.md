@@ -1,3 +1,9 @@
+## <small>1.1.22 (2025-06-04)</small>
+
+- chore(atomic): use local CDN setup for CI playwright tests (#5359) ([e6e0296](https://github.com/coveo/ui-kit/commits/e6e0296)), closes [#5359](https://github.com/coveo/ui-kit/issues/5359)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+- chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
+
 ## <small>1.1.18 (2025-05-08)</small>
 
 - chore: update vite (#5261) ([5a73a68](https://github.com/coveo/ui-kit/commits/5a73a68)), closes [#5261](https://github.com/coveo/ui-kit/issues/5261)
