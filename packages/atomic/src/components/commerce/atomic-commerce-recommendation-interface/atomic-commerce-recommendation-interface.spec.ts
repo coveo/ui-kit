@@ -1,82 +1,32 @@
 import {bindings} from '@/src/decorators/bindings';
 import {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
+import {markParentAsReady} from '@/src/utils/init-queue';
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper';
-import {
-  CommerceEngineConfiguration,
-  getSampleCommerceEngineConfiguration,
-} from '@coveo/headless/commerce';
-import {buildCommerceEngine} from '@coveo/headless/commerce';
+import {buildFakeContext} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/context-controller';
+import {buildFakeCommerceEngine} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/engine';
+import * as headless from '@coveo/headless/commerce';
+import i18next from 'i18next';
 import {html} from 'lit';
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
-import {describe, test, expect, vi} from 'vitest';
-import {stateKey} from '../../../../../headless/src/app/state-key';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
+import {CommonAtomicInterfaceHelper} from '../../common/interface/interface-common';
 import {
   AtomicCommerceRecommendationInterface,
   CommerceBindings,
 } from './atomic-commerce-recommendation-interface';
+import {createCommerceRecommendationStore} from './store';
 
-vi.mock('@coveo/headless/commerce', async () => {
-  const originalModule = await vi.importActual('@coveo/headless/commerce');
-  const state: {language: string; query?: string} = {language: 'en'};
-  return {
-    ...originalModule,
-    buildContext: vi.fn(() => {
-      const context = {
-        state: {...state},
-        setLanguage: (language: string) => {
-          context.state.language = language;
-        },
-      };
-      return context;
-    }),
-
-    buildSearch: vi.fn(() => {
-      const mockState = {firstRequestExecuted: true};
-      const mockSubscribe = vi.fn((callback) => {
-        return callback;
-      });
-      return {
-        summary: vi.fn(() => ({subscribe: mockSubscribe, state: mockState})),
-        urlManager: vi.fn(() => ({
-          subscribe: vi.fn(() => ({unsubscribe: vi.fn()})),
-        })),
-        executeFirstSearch: vi.fn(),
-      };
-    }),
-    loadQueryActions: vi.fn(() => ({
-      updateQuery: vi.fn(({query}) => ({
-        type: 'updateQuery',
-        payload: {query},
-      })),
-    })),
-    buildCommerceEngine: vi.fn(
-      (config: {configuration: CommerceEngineConfiguration}) => {
-        return {
-          [stateKey]: state,
-          ...config,
-          dispatch: vi.fn(),
-          addReducers: vi.fn(),
-          disableAnalytics: vi.fn(),
-          enableAnalytics: vi.fn(),
-          logger: {
-            info: vi.fn(),
-            warn: vi.fn(),
-            error: vi.fn(),
-          },
-          subscribe: vi.fn(() => {
-            return {
-              unsubscribe: vi.fn(),
-            };
-          }),
-        };
-      }
-    ),
-  };
-});
+vi.mock('i18next', {spy: true});
+vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock(
+  '@/src/components/commerce/atomic-commerce-recommendation-interface/store',
+  {spy: true}
+);
+vi.mock('@/src/utils/init-queue', {spy: true});
 
 @customElement('test-element')
 @bindings()
@@ -88,241 +38,501 @@ export class TestElement
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
-  public addStyles(styles: string | CSSStyleSheet) {
-    if (typeof styles === 'string') {
-      const styleSheet = new CSSStyleSheet();
-      styleSheet.replaceSync(styles);
-      this.bindings.addAdoptedStyleSheets(styleSheet);
-    } else if (styles instanceof CSSStyleSheet) {
-      this.bindings.addAdoptedStyleSheets(styles);
-    }
-  }
-
-  public initialized = false;
-
   public render() {
     return html`test-element`;
   }
-
-  initialize = vi.fn();
 }
 
-const commerceEngineConfig: CommerceEngineConfiguration =
-  getSampleCommerceEngineConfiguration();
-describe('AtomicCommerceRecommendationInterface', () => {
-  let element: AtomicCommerceRecommendationInterface;
-  let childElement: InitializableComponent<CommerceBindings> & TestElement;
-  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+describe('atomic-commerce-recommendation-interface', () => {
+  beforeEach(async () => {
+    vi.mocked(headless.buildCommerceEngine).mockReturnValue(
+      buildFakeCommerceEngine({})
+    );
+
+    vi.mocked(headless.buildContext).mockReturnValue(buildFakeContext({}));
+  });
+
+  const setupElement = async ({
+    analytics,
+    iconAssetsPath,
+    language,
+    languageAssetsPath,
+    scrollContainer,
+  }: {
+    analytics?: boolean;
+    iconAssetsPath?: string;
+    language?: string;
+    languageAssetsPath?: string;
+    scrollContainer?: string;
+  } = {}) => {
+    const element = (await fixture<AtomicCommerceRecommendationInterface>(
+      html`<atomic-commerce-recommendation-interface
+        analytics=${ifDefined(analytics)}
+        icon-assets-path=${ifDefined(iconAssetsPath)}
+        language=${ifDefined(language)}
+        language-assets-path=${ifDefined(languageAssetsPath)}
+        scroll-container=${ifDefined(scrollContainer)}
+      >
+        <div>atomic-commerce-recommendation-interface</div>
+      </atomic-commerce-recommendation-interface>`
+    )) as AtomicCommerceRecommendationInterface;
+
+    expect(element).toBeInstanceOf(AtomicCommerceRecommendationInterface);
+    return element;
+  };
 
   const addChildElement = async <T extends TestElement>(
+    element: AtomicCommerceRecommendationInterface,
     tag = 'test-element'
   ) => {
-    childElement = document.createElement(
+    const childElement = document.createElement(
       tag
     ) as InitializableComponent<CommerceBindings> & T;
     element.appendChild(childElement);
 
     await childElement.updateComplete;
     expect(childElement).toBeInstanceOf(TestElement);
+
+    return childElement;
   };
+  // #constructor
 
-  const setupElement = async () => {
-    element = (await fixture<AtomicCommerceRecommendationInterface>(
-      html`<atomic-commerce-recommendation-interface
-        ><div>
-          atomic-commerce-recommendation-interface
-        </div></atomic-commerce-recommendation-interface
-      >`
-    )) as AtomicCommerceRecommendationInterface;
+  describe('when created', () => {
+    it('should set #store to the value returned by #createCommerceRecommendationStore', async () => {
+      const createCommerceRecommendationStoreSpy = vi.mocked(
+        createCommerceRecommendationStore
+      );
 
-    await element.updateComplete;
-    expect(element).toBeInstanceOf(AtomicCommerceRecommendationInterface);
-  };
+      const element = await setupElement();
 
-  const teardownElement = async () => {
-    if (element) {
-      element.remove();
-    }
-  };
-
-  beforeEach(async () => {
-    await teardownElement();
-    fixtureCleanup();
-
-    consoleErrorSpy?.mockRestore();
-    await setupElement();
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
-
-  test('should create the store', async () => {
-    expect(element.store).toBeDefined();
-    expect(element.store).toBeInstanceOf(Object);
-  });
-
-  test('should initialize engine with given options', async () => {
-    await element.initializeWithEngine(
-      buildCommerceEngine({
-        configuration: commerceEngineConfig,
-      })
-    );
-    expect(element.engine).toBeTruthy();
-    expect(element.engine?.configuration.organizationId).toBe(
-      commerceEngineConfig.organizationId
-    );
-    expect(element.engine?.configuration.analytics.trackingId).toBe(
-      commerceEngineConfig.analytics.trackingId
-    );
-  });
-
-  describe('before being initialized', () => {
-    test('when changing a property too early, should return error', async () => {
-      const errorMessage =
-        'You have to call "initialize" on the atomic-commerce-recommendation-interface component before modifying the props or calling other public methods.';
-      element.language = 'fr';
-      await element.updateComplete;
-      expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage, element);
-    });
-  });
-
-  describe('when initialized with existing engine', () => {
-    let preconfiguredEngine: ReturnType<typeof buildCommerceEngine>;
-
-    beforeEach(async () => {
-      preconfiguredEngine = buildCommerceEngine({
-        configuration: getSampleCommerceEngineConfiguration(),
-      });
-
-      await element.initializeWithEngine(preconfiguredEngine);
-      await element.updateComplete;
-      await addChildElement();
-      await childElement.updateComplete;
-    });
-
-    test('should render the component and its children', async () => {
-      expect(element.shadowRoot).toBeTruthy();
-      expect(within(element).queryByShadowText('test-element')).toBeTruthy();
-    });
-
-    test('should trigger the initialize method of the child component', async () => {
-      console.log('childElement', childElement);
-      expect(childElement.initialize).toHaveBeenCalledOnce();
-    });
-
-    test('should provide bindings to children', async () => {
-      expect(childElement.bindings).toBeDefined();
-      console.log('childElement.bindings', childElement.bindings);
-      expect(childElement.bindings.engine).toBe(element.engine);
-      expect(childElement.bindings.i18n).toBe(element.i18n);
-      expect(childElement.bindings.store).toBe(element.store);
-    });
-
-    test('should initialize with a preconfigured engine', async () => {
-      expect(element.engine).toBe(preconfiguredEngine);
-    });
-
-    test('should log a warning when scrollContainer is not found', async () => {
-      const mockEngine = element.engine!;
-      const warnSpy = vi.spyOn(mockEngine.logger, 'warn');
-      element.scrollContainer = '.non-existent-container';
-      element.scrollToTop();
-      expect(warnSpy).toHaveBeenCalledWith(
-        `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
+      expect(createCommerceRecommendationStoreSpy).toHaveBeenCalledOnce();
+      expect(element.store).toBeDefined();
+      expect(element.store).toBe(
+        createCommerceRecommendationStoreSpy.mock.results[0].value
       );
     });
 
-    test('should add a stylesheet to adoptedStyleSheets', async () => {
-      const styles = 'body { background-color: red; }';
-      childElement.addStyles(styles);
+    it('should set #i18n to the value returned by #i18next.createInstance', async () => {
+      const i18nextCreateInstanceSpy = vi.mocked(i18next.createInstance);
 
-      const parent = element.getRootNode();
+      const element = await setupElement();
 
-      if (parent instanceof Document || parent instanceof ShadowRoot) {
-        const styleSheet = parent.adoptedStyleSheets.find((sheet) =>
-          sheet.cssRules[0]?.cssText.includes(styles)
-        );
-        expect(styleSheet).toBeDefined();
-      }
+      expect(i18nextCreateInstanceSpy).toHaveBeenCalledOnce();
+      expect(element.i18n).toBeDefined();
+      expect(element.i18n).toBe(i18nextCreateInstanceSpy.mock.results[0].value);
+    });
+  });
+
+  // #connectedCallback
+
+  describe('when added to the DOM', () => {
+    it("should cause #CommonAtomicInterfaceHelper.onComponentInitializing to be called when an 'atomic/initializeComponent' event is dispatched", async () => {
+      const element = await setupElement();
+      const onComponentInitializingSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onComponentInitializing'
+      );
+      const event = new CustomEvent('atomic/initializeComponent');
+
+      element.dispatchEvent(event);
+
+      expect(onComponentInitializingSpy).toHaveBeenCalledExactlyOnceWith(event);
     });
 
-    describe('when properties changes', () => {
-      test('should update language when language property changes', async () => {
+    describe("when an 'atomic/scrollToTop' event is dispatched", () => {
+      it('should cause a warning to be logged when no element in the DOM matches the #scrollContainer selector', async () => {
+        const element = await setupElement({scrollContainer: 'i-do-not-exist'});
+        const warn = vi.fn();
+        const engine = buildFakeCommerceEngine({
+          implementation: {
+            logger: {
+              warn,
+            } as never,
+          },
+        });
+        await element.initializeWithEngine(engine);
+        const event = new CustomEvent('atomic/scrollToTop', {});
+
+        element.dispatchEvent(event);
+
+        expect(warn).toHaveBeenCalledExactlyOnceWith(
+          'Could not find the scroll container with the selector "i-do-not-exist". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option'
+        );
+      });
+
+      it('should cause the element matching the #scrollContainer selector to be smoothly scrolled into view when possible', async () => {
+        const element = await setupElement();
+        const scrollIntoViewSpy = vi.spyOn(element, 'scrollIntoView');
+        const event = new CustomEvent('atomic/scrollToTop', {});
+
+        element.dispatchEvent(event);
+
+        expect(scrollIntoViewSpy).toHaveBeenCalledExactlyOnceWith({
+          behavior: 'smooth',
+        });
+      });
+    });
+  });
+
+  describe('#initializeWithEngine', () => {
+    it('should call #CommonInterfaceHelper.onInitialization with a function that sets #engine', async () => {
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+      const onInitializationSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onInitialization'
+      );
+
+      expect(onInitializationSpy).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(engine);
+
+      expect(onInitializationSpy).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Function)
+      );
+
+      element.engine = undefined;
+      onInitializationSpy.mock.calls[0][0]();
+
+      expect(element.engine).toBe(engine);
+    });
+
+    it('should create an atomic-arial-live element when one does not already exist', async () => {
+      const element = await setupElement();
+      const ariaLiveElement = element.querySelector('atomic-aria-live');
+
+      expect(ariaLiveElement).toBeNull();
+
+      await element.initializeWithEngine(buildFakeCommerceEngine({}));
+
+      expect(element.querySelector('atomic-aria-live')).toBeTruthy();
+
+      await element.initializeWithEngine(buildFakeCommerceEngine({}));
+
+      expect(element.querySelectorAll('atomic-aria-live').length).toBe(1);
+    });
+
+    it('should set #context to a new Headless Context controller instance', async () => {
+      const buildContextSpy = vi.mocked(headless.buildContext);
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(buildContextSpy).not.toHaveBeenCalled();
+      expect(element.context).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(buildContextSpy).toHaveBeenCalledExactlyOnceWith(engine);
+      expect(element.context).toBe(buildContextSpy.mock.results[0].value);
+    });
+
+    it('should update the language', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.context).toBeUndefined();
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.context.setLanguage).toHaveBeenCalledExactlyOnceWith(
+        element.language
+      );
+      expect(onLanguageChangeSpy).toHaveBeenCalledOnce();
+    });
+
+    it('should set #bindings.engine to #engine', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.bindings.engine).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.bindings.engine).toBe(engine);
+    });
+
+    it('should set #bindings.i18n to #i18n', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.bindings.i18n).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.bindings.i18n).toBe(element.i18n);
+    });
+
+    it('should set #bindings.store to #store', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.bindings.store).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.bindings.store).toBe(element.store);
+    });
+
+    it('should set #bindings.interfaceElement to #this', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.bindings.interfaceElement).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.bindings.interfaceElement).toBe(element);
+    });
+
+    it('should set #bindings.addAdoptedStyleSheets to a function that adds stylesheets to the adoptedStyleSheets if not already present', async () => {
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+      await element.initializeWithEngine(engine);
+
+      expect(element.bindings.addAdoptedStyleSheets).toBeDefined();
+      expect(typeof element.bindings.addAdoptedStyleSheets).toBe('function');
+
+      const stylesheet = new CSSStyleSheet({baseURL: '/test'});
+      element.bindings.addAdoptedStyleSheets(stylesheet);
+
+      expect(
+        (element.getRootNode() as Document)?.adoptedStyleSheets
+      ).to.include(stylesheet);
+
+      element.bindings.addAdoptedStyleSheets(stylesheet);
+
+      expect(
+        (element.getRootNode() as Document).adoptedStyleSheets
+      ).toHaveLength(1);
+    });
+
+    it('should call #markParentAsReady with #this', async () => {
+      const markParentAsReadySpy = vi.mocked(markParentAsReady);
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(markParentAsReadySpy).not.toHaveBeenCalled();
+
+      await element.initializeWithEngine(engine);
+
+      expect(markParentAsReadySpy).toHaveBeenCalledExactlyOnceWith(element);
+    });
+
+    it('should set #language to #context.state.language when #language is undefined', async () => {
+      const buildContextMock = vi.mocked(headless.buildContext);
+      buildContextMock.mockReturnValue(
+        buildFakeContext({
+          state: {language: 'de'},
+          implementation: {},
+        })
+      );
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.language).toBeUndefined();
+
+      await element.initializeWithEngine(engine);
+
+      expect(element.language).toBe('de');
+    });
+
+    it('should not set #language to #context.state.language when #language is defined', async () => {
+      // We're updating attributes before calling #initializeWithEngine; this would console.error.
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      const buildContextMock = vi.mocked(headless.buildContext);
+      buildContextMock.mockReturnValue(
+        buildFakeContext({
+          state: {language: 'de'},
+          implementation: {},
+        })
+      );
+      const element = await setupElement();
+      const engine = buildFakeCommerceEngine({});
+
+      expect(element.language).toBeUndefined();
+
+      element.language = 'fr';
+      await element.updateComplete;
+      await element.initializeWithEngine(engine);
+
+      expect(element.language).toBe('fr');
+    });
+  });
+
+  // #toggleAnalytics
+
+  it('should call CommonInterfaceHelper.onAnalyticsChange when the #analytics property changes', async () => {
+    // We're updating attributes before calling #initializeWithEngine; this would console.error.
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const element = await setupElement();
+    const onAnalyticsChangeSpy = vi.spyOn(
+      CommonAtomicInterfaceHelper.prototype,
+      'onAnalyticsChange'
+    );
+
+    expect(onAnalyticsChangeSpy).not.toHaveBeenCalled();
+
+    element.analytics = false;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledOnce();
+
+    element.analytics = true;
+    await element.updateComplete;
+
+    expect(onAnalyticsChangeSpy).toHaveBeenCalledTimes(2);
+  });
+
+  // #updateIconAssetsPath
+
+  it('should set #store.state.iconAssetsPath when the #iconAssetsPath property changes', async () => {
+    // We're updating attributes before calling #initializeWithEngine; this would console.error.
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const element = await setupElement();
+
+    element.iconAssetsPath = '/new/icon/assets/path';
+    await element.updateComplete;
+
+    expect(element.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
+  });
+
+  // #updateLanguage
+
+  describe('when the #language property changes', () => {
+    beforeEach(() => {
+      // We're updating attributes before calling #initializeWithEngine; this would console.error.
+      vi.spyOn(console, 'error').mockImplementation(() => {});
+    });
+
+    it('should do nothing when the engine has not been created', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+
+      element.language = 'fr';
+      await element.updateComplete;
+
+      expect(element.context).toBeUndefined();
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    it('should do nothing when #language is undefined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onLanguageChange'
+      );
+      const element = await setupElement({language: 'en'});
+
+      element.language = undefined;
+      await element.updateComplete;
+
+      expect(element.context).toBeUndefined();
+      expect(onLanguageChangeSpy).not.toHaveBeenCalled();
+    });
+
+    describe('when the engine has been created & #language is defined & #context is defined', () => {
+      it('should call #context.setLanguage with the new language', async () => {
+        const element = await setupElement({language: 'en'});
+        const engine = buildFakeCommerceEngine({});
+        await element.initializeWithEngine(engine);
+        const setLanguageSpy = vi.spyOn(element.context, 'setLanguage');
+
         element.language = 'fr';
         await element.updateComplete;
 
-        const context = element.context;
-        expect(context.state.language).toBe('fr');
+        expect(setLanguageSpy).toHaveBeenCalledExactlyOnceWith('fr');
       });
 
-      test('should update icon assets path when iconAssetsPath property changes', async () => {
-        element.iconAssetsPath = '/new-assets';
-        await element.updateComplete;
-        expect(element.store.state.iconAssetsPath).toBe('/new-assets');
-      });
+      it('should call CommonInterfaceHelper.onLanguageChange', async () => {
+        const element = await setupElement({language: 'en'});
+        const engine = buildFakeCommerceEngine({});
+        await element.initializeWithEngine(engine);
+        const onLanguageChangeSpy = vi.spyOn(
+          CommonAtomicInterfaceHelper.prototype,
+          'onLanguageChange'
+        );
 
-      test('should update languageAssetsPath when property changes', async () => {
-        element.languageAssetsPath = '/new-lang-assets';
+        element.language = 'fr';
         await element.updateComplete;
-        expect(element.languageAssetsPath).toBe('/new-lang-assets');
-      });
 
-      test('should update scrollContainer when property changes', async () => {
-        element.scrollContainer = '.new-scroll-container';
-        await element.updateComplete;
-        expect(element.scrollContainer).toBe('.new-scroll-container');
-      });
-
-      test('should initialize i18n instance after initialization', async () => {
-        expect(element.i18n).toBeDefined();
-        expect(element.i18n.isInitialized).toBeTruthy();
-      });
-
-      test('should toggle analytics when property changes', async () => {
-        const mockEngine = element.engine!;
-        element.analytics = false;
-        await element.updateComplete;
-        expect(mockEngine.disableAnalytics).toHaveBeenCalled();
-
-        element.analytics = true;
-        await element.updateComplete;
-        expect(mockEngine.enableAnalytics).toHaveBeenCalled();
+        expect(onLanguageChangeSpy).toHaveBeenCalledOnce();
       });
     });
   });
 
-  describe('aria-live', () => {
-    test('should add aria-live if no atomic-aria-live element exists', async () => {
-      await element.initializeWithEngine(
-        buildCommerceEngine({
-          configuration: commerceEngineConfig,
-        })
+  // #disconnectedCallback
+
+  describe('when removed from the DOM', () => {
+    it('should remove the atomic/initializeComponent event listener', async () => {
+      const element = await setupElement();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
+
+      element.remove();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/initializeComponent',
+        expect.any(Function)
       );
-      const ariaLiveElement = element.querySelector('atomic-aria-live');
-      expect(ariaLiveElement).toBeTruthy();
     });
 
-    test('should not add aria-live if an atomic-aria-live element already exists', async () => {
-      const existingAriaLive = document.createElement('atomic-aria-live');
-      element.appendChild(existingAriaLive);
+    it('should remove the atomic/scrollToTop event listener', async () => {
+      const element = await setupElement();
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
-      await element.initializeWithEngine(
-        buildCommerceEngine({
-          configuration: commerceEngineConfig,
-        })
-      );
+      element.remove();
 
-      const ariaLiveElements = element.querySelectorAll('atomic-aria-live');
-      expect(ariaLiveElements.length).toBe(1);
-    });
-    test('should remove aria-live on disconnect', async () => {
-      await element.initializeWithEngine(
-        buildCommerceEngine({
-          configuration: commerceEngineConfig,
-        })
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'atomic/scrollToTop',
+        expect.any(Function)
       );
-      await element.updateComplete;
-      element.disconnectedCallback();
-      const ariaLiveElement = element?.querySelector('atomic-aria-live');
-      expect(ariaLiveElement).toBeFalsy();
     });
+
+    it('should remove the aria-live element', async () => {
+      const element = await setupElement();
+      const ariaLiveElement = document.createElement('atomic-aria-live');
+      element.appendChild(ariaLiveElement);
+
+      expect(element.querySelector('atomic-aria-live')).toBeTruthy();
+
+      element.remove();
+
+      expect(element.querySelector('atomic-aria-live')).toBeFalsy();
+    });
+  });
+
+  // #render
+
+  it('should render a slot', async () => {
+    const element = await setupElement();
+
+    expect(element.shadowRoot?.querySelector('slot')).toBeTruthy();
+  });
+
+  it('should render its children', async () => {
+    const element = await setupElement();
+    await addChildElement(element);
+
+    expect(within(element).queryByShadowText('test-element')).toBeTruthy();
+  });
+
+  it('should provide bindings to its children', async () => {
+    const element = await setupElement();
+    const childElement = await addChildElement(element);
+
+    const engine = buildFakeCommerceEngine({});
+    await element.initializeWithEngine(engine);
+
+    expect(childElement.bindings).toBe(element.bindings);
   });
 });
