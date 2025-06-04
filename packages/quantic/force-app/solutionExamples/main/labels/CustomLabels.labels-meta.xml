@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+  <labels>
+    <fullName>ActionIsUnavailable</fullName>
+    <value>[{{0}}] Unable to complete "{{0}}" action: no response received from the Aura layer. Ensure that this component is wrapped inside the "ExampleInsightPanelWrapper" Aura component.</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Unable to complete action.</shortDescription>
+  </labels>
+  <labels>
+    <fullName>ErrorWithQuickAction</fullName>
+    <value>Error with Quick Action {{0}}</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Error with Quick Action FeedItem.TextPost</shortDescription>
+  </labels>
+  <labels>
+    <fullName>PostToFeed</fullName>
+    <value>Post to feed</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Post to feed</shortDescription>
+  </labels>
+  <labels>
+    <fullName>SendAsEmail</fullName>
+    <value>Send as email</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Send as email</shortDescription>
+  </labels>
+</CustomLabels>

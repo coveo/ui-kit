@@ -101,8 +101,7 @@ async function startServers() {
     stdio: 'ignore',
   });
 
-  // Script that starts the Vite server and copies files for CDN mode
-  exec('node ./scripts/start-vite.mjs', {stdio: 'ignore'});
+  exec('npx vite serve dev', {stdio: 'ignore'});
 
   // Run headless in dev as well
   exec('nx run headless:dev', {
@@ -167,15 +166,6 @@ watch('src', {recursive: true}, async (_, filename) => {
   await nextTask(
     'Rebuilding Lit...',
     'node ./scripts/build.mjs --config=tsconfig.lit.json'
-  );
-
-  if (isStopped) {
-    return;
-  }
-
-  await nextTask(
-    'Processing CSS...',
-    'node ./scripts/process-css.mjs --config=tsconfig.lit.json'
   );
 
   if (isStopped) {

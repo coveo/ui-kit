@@ -50,6 +50,8 @@
               preview-button-variant="result-action"
               tooltip="Quick view"
             ></c-quantic-result-quickview>
+            <c-result-post-to-feed result={result} engine-id={engineId}></c-result-post-to-feed>
+            <c-result-send-as-email result={result} engine-id={engineId}></c-result-send-as-email>
           </c-quantic-result-action-bar>
         </template>
       </div>

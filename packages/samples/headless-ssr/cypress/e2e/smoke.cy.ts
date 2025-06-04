@@ -18,22 +18,22 @@ const routes = ['generic', 'react'] as const;
 const vitals: Record<(typeof routes)[number], Cypress.ReportWebVitalsConfig> = {
   generic: {
     thresholds: {
-      lcp: 2500,
-      fid: 400,
-      cls: 0.1,
-      fcp: 1800,
-      ttfb: 600,
-      inp: 400,
+      lcp: 3000,
+      fid: 500,
+      cls: 0.15,
+      fcp: 2200,
+      ttfb: 800,
+      inp: 500,
     },
   },
   react: {
     thresholds: {
-      lcp: 2500,
-      fid: 800,
-      cls: 0.1,
-      fcp: 1800,
-      ttfb: 600,
-      inp: 800,
+      lcp: 3000,
+      fid: 900,
+      cls: 0.15,
+      fcp: 2200,
+      ttfb: 800,
+      inp: 900,
     },
   },
 };

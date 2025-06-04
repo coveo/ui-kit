@@ -9,4 +9,5 @@ export default defineWorkspace([
   './packages/samples/vuejs/vite.config.ts',
   './packages/headless-react/vitest.config.js',
   './packages/atomic/vitest.config.ts',
+  './packages/shopify/vitest.config.ts',
 ]);

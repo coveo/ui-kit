@@ -8,24 +8,34 @@
   "main": "./dist/headless.esm.js",
   "module": "./dist/headless.esm.js",
   "license": "Apache-2.0",
-  "version": "1.2.1",
+  "version": "1.5.0",
   "files": [
     "dist/"
   ],
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/headless.d.ts",
+      "types": "./dist/headless/index.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
     "./headless": {
-      "types": "./dist/headless.d.ts",
+      "types": "./dist/headless/index.d.ts",
       "import": "./dist/headless.esm.js",
       "default": "./dist/headless.esm.js"
     },
+    "./headless/commerce": {
+      "types": "./dist/headless/commerce.d.ts",
+      "import": "./dist/headless/commerce.esm.js",
+      "default": "./dist/headless/commerce.esm.js"
+    },
+    "./headless/search": {
+      "types": "./dist/headless/search.d.ts",
+      "import": "./dist/headless/search.esm.js",
+      "default": "./dist/headless/search.esm.js"
+    },
     "./utilities": {
-      "types": "./dist/utilities.d.ts",
+      "types": "./dist/utilities/index.d.ts",
       "import": "./dist/utilities.esm.js",
       "default": "./dist/utilities.esm.js"
     }
@@ -43,11 +53,11 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.1.2"
+    "vitest": "3.1.4"
   },
   "dependencies": {
-    "@coveo/headless": "3.24.1",
-    "@coveo/relay": "1.2.0",
+    "@coveo/headless": "3.25.2",
+    "@coveo/relay": "1.2.1",
     "uuid": "^11.0.0"
   },
   "engines": {

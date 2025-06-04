@@ -1,4 +1,4 @@
-import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
+import {restoreTab} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
@@ -282,25 +282,14 @@ describe('configuration slice', () => {
     expect(finalState.analytics.originLevel2).toBe('tab');
   });
 
-  describe('#restoreSearchParameters', () => {
-    it('when the #tab property is a non-empty string, it updates the originLevel2', () => {
+  describe('#restoreTab', () => {
+    it('updates the originLevel2 to the tab id', () => {
       const state = getConfigurationInitialState();
       const finalState = configurationReducer(
         state,
-        restoreSearchParameters({tab: 'All'})
+        restoreTab('restoredTabId')
       );
-      expect(finalState.analytics.originLevel2).toBe('All');
-    });
-
-    it('when the #tab property is an empty string, it does nothing', () => {
-      const state = getConfigurationInitialState();
-      state.analytics.originLevel2 = 'default';
-
-      const finalState = configurationReducer(
-        state,
-        restoreSearchParameters({tab: ''})
-      );
-      expect(finalState.analytics.originLevel2).toBe('default');
+      expect(finalState.analytics.originLevel2).toBe('restoredTabId');
     });
   });
 });

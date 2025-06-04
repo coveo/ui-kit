@@ -1,5 +1,8 @@
+/* eslint-disable canonical/no-barrel-import */
 /* eslint-disable @cspell/spellchecker */
 import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
+
+const atomicVersion = '2.77.0';
 
 export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   configuration: {
@@ -24,7 +27,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       trackingId: '',
       analyticsMode: 'next',
       source: {
-        '@coveo/atomic': '2.77.0',
+        '@coveo/atomic': atomicVersion,
       },
     },
     knowledge: {
@@ -34,7 +37,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
   insightConfiguration: {
     insightId: 'insight-id',
   },
-  version: '2.77.0',
+  version: atomicVersion,
   debug: false,
   pipeline: '',
   searchHub: 'jstpierre2 test - Woods test',
@@ -1101,6 +1104,107 @@ export const streamAnswerAPIStateMockWithoutAnyTab: StateNeededByAnswerAPI = {
   },
 };
 
+export const streamAnswerAPIStateMockWithStaticFiltersSelected: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {
+      youtube: {
+        id: 'test-static-filter',
+        values: [
+          {
+            caption: 'youtube',
+            expression: '@filetype=="youtubevideo"',
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithNonValidFilters: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {
+      idle: {
+        id: 'test-idle-filter',
+        values: [
+          {
+            caption: 'idle',
+            expression: '@filetype=="youtubevideo"',
+            state: 'idle',
+          },
+        ],
+      },
+      exlcuded: {
+        id: 'test-excluded-filter',
+        values: [
+          {
+            caption: 'excluded',
+            expression: '@filetype=="youtubevideo"',
+            state: 'excluded',
+          },
+        ],
+      },
+      empty: {
+        id: 'test-empty-filter',
+        values: [
+          {
+            caption: 'empty',
+            expression: '', // empty expression
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithoutAnyFilters: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    staticFilterSet: {},
+  };
+
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMockWithATabWithAnExpression,
+    staticFilterSet: {
+      firstFilter: {
+        id: 'test-static-filter-1',
+        values: [
+          {
+            caption: 'youtube',
+            expression: '@filetype=="youtubevideo"',
+            state: 'selected',
+          },
+          {
+            caption: 'dropbox',
+            expression: '@filetype=="dropbox"',
+            state: 'selected',
+          },
+        ],
+      },
+      secondFilter: {
+        id: 'test-static-filter-2',
+        values: [
+          {
+            caption: 'html',
+            expression: '@filetype=="tsx"',
+            state: 'selected',
+          },
+        ],
+      },
+    },
+  };
+
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ =
+  {
+    ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+    advancedSearchQueries: {
+      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries,
+      cq: '',
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
@@ -1442,6 +1546,15 @@ export const expectedStreamAnswerAPIParam = {
   numberOfResults: 10,
   firstResult: 0,
   tab: 'default',
+  analytics: {
+    capture: false,
+    clientId: '',
+    clientTimestamp: '2020-01-01T00:00:00.000Z',
+    documentLocation: '',
+    documentReferrer: '',
+    originContext: 'Search',
+    source: [`@coveo/atomic@${atomicVersion}`, '@coveo/headless@Test version'],
+  },
 };
 
 export const expectedStreamAnswerAPIParamWithATabWithAnExpression = {
@@ -1454,3 +1567,19 @@ export const expectedStreamAnswerAPIParamWithoutAnyTab = {
   ...expectedStreamAnswerAPIParam,
   tab: '',
 };
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersSelected = {
+  ...expectedStreamAnswerAPIParam,
+  cq: '@filetype=="youtubevideo" AND cq-test-query',
+};
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
+  ...expectedStreamAnswerAPIParam,
+  cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx" AND cq-test-query',
+};
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
+  {
+    ...expectedStreamAnswerAPIParam,
+    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
+  };

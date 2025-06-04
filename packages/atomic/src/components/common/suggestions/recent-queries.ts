@@ -64,7 +64,7 @@ export const renderRecentQuery = ({
       () =>
         html`<span
           part="recent-query-text"
-          class="line-clamp-2 break-all"
+          class="line-clamp-2 break-words"
           .innerHTML=${HighlightUtils.highlightString({
             content: value,
             openingDelimiter:

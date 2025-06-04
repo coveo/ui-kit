@@ -1,0 +1,11 @@
+{
+  "activeViewId": "69d39b98-76f7-45fe-af9f-6538e19f0359",
+  "appPageId": "2199ef25-89a9-44a1-ad69-7cb8bd918245",
+  "configurationTags": [],
+  "id": "e9f634e7-cab8-45ef-a954-cbebbdcc6570",
+  "label": "Quantic Date Facet",
+  "pageAccess": "UseParent",
+  "routeType": "custom-quantic-date-facet",
+  "type": "route",
+  "urlPrefix": "quantic-date-facet"
+}

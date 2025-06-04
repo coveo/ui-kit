@@ -1,5 +1,11 @@
+/* eslint-disable canonical/no-barrel-import */
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
+import {
+  defaultNodeJSNavigatorContextProvider,
+  NavigatorContext,
+} from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
+import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -17,6 +23,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
   selectActiveTabExpression,
@@ -31,7 +38,6 @@ import {
 import {getFacets} from '../../utils/facet-utils.js';
 import {fetchEventSource} from '../../utils/fetch-event-source/fetch.js';
 import {EventSourceMessage} from '../../utils/fetch-event-source/parse.js';
-import {isEmptyString} from '../../utils/utils.js';
 import {GeneratedAnswerCitation} from '../generated-answer/generated-answer-event-payload.js';
 import {getOrganizationEndpoint} from '../platform-client.js';
 import {SearchRequest} from '../search/search/search-request.js';
@@ -186,6 +192,19 @@ export const answerApi = answerSlice.injectEndpoints({
           isLoading: true,
         },
       }),
+      serializeQueryArgs: ({endpointName, queryArgs}) => {
+        // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
+        // Keys must match, because if anything in the query changes, it's not the same query anymore.
+        // Some fields need to be excluded in the projection though, in this case clientTimestamp, as it will change
+        // during the streaming.
+        const clone = JSON.parse(JSON.stringify(queryArgs));
+        if (clone.analytics) {
+          clone.analytics.clientTimestamp = '';
+        }
+
+        // Standard RTK key, with some fields removed
+        return `${endpointName}(${JSON.stringify(clone)})`;
+      },
       async onCacheEntryAdded(
         args,
         {getState, cacheDataLoaded, updateCachedData, dispatch}
@@ -279,28 +298,34 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
   return state.pagination.numberOfResults;
 };
 
-const mergeActiveTabExpressionInAdvancedSearchQueryParams = (
-  state: StateNeededByAnswerAPI
-) => {
+const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const activeTabExpression = selectActiveTabExpression(state.tabSet);
-  const mergedAdvancedSearchQueryParams = {
+  const mergedCq = mergeAdvancedCQParams(state);
+
+  return {
     ...advancedSearchQueryParams,
+    ...(mergedCq && {cq: mergedCq}),
   };
-  if (!isEmptyString(activeTabExpression)) {
-    mergedAdvancedSearchQueryParams.cq = `${activeTabExpression} AND ${advancedSearchQueryParams.cq}`;
-  }
-  return mergedAdvancedSearchQueryParams;
+};
+
+const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
+  const activeTabExpression = selectActiveTabExpression(state.tabSet);
+  const filterExpressions = selectStaticFilterExpressions(state);
+  const {cq} = selectAdvancedSearchQueries(state);
+
+  return [activeTabExpression, ...filterExpressions, cq]
+    .filter((expression) => !!expression)
+    .join(' AND ');
 };
 
 export const constructAnswerQueryParams = (
   state: StateNeededByAnswerAPI,
-  usage: 'fetch' | 'select'
+  usage: 'fetch' | 'select',
+  navigatorContext: NavigatorContext
 ) => {
   const q = selectQuery(state)?.q;
 
-  const {aq, cq, dq, lq} =
-    mergeActiveTabExpressionInAdvancedSearchQueryParams(state);
+  const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
@@ -348,15 +373,29 @@ export const constructAnswerQueryParams = (
       firstResult: state.pagination.firstResult,
     }),
     tab: selectActiveTab(state.tabSet),
+    ...fromAnalyticsStateToAnalyticsParams(
+      state.configuration.analytics,
+      navigatorContext
+    ),
   };
 };
 
-export const fetchAnswer = (state: StateNeededByAnswerAPI) =>
+export const fetchAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.initiate(
-    constructAnswerQueryParams(state, 'fetch')
+    constructAnswerQueryParams(state, 'fetch', navigatorContext)
   );
 
-export const selectAnswer = (state: StateNeededByAnswerAPI) =>
+export const selectAnswer = (
+  state: StateNeededByAnswerAPI,
+  navigatorContext?: NavigatorContext
+) =>
   answerApi.endpoints.getAnswer.select(
-    constructAnswerQueryParams(state, 'select')
+    constructAnswerQueryParams(
+      state,
+      'select',
+      navigatorContext || defaultNodeJSNavigatorContextProvider()
+    )
   )(state);

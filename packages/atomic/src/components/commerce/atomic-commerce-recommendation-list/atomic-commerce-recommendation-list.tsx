@@ -22,9 +22,8 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../utils/stencil-utils';
+import {randomID} from '../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../common/atomic-result-placeholder/stencil-placeholders';
-import {Carousel} from '../../common/carousel';
 import {createAppLoadedListener} from '../../common/interface/store';
 import {ItemDisplayGuard} from '../../common/item-list/item-display-guard';
 import {DisplayGrid} from '../../common/item-list/stencil-display-grid';
@@ -39,6 +38,7 @@ import {
   ItemDisplayImageSize,
   getItemListDisplayClasses,
 } from '../../common/layout/display-options';
+import {Carousel} from '../../common/stencil-carousel';
 import {Heading} from '../../common/stencil-heading';
 import {Hidden} from '../../common/stencil-hidden';
 import {CommerceBindings} from '../atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';

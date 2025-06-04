@@ -30,11 +30,10 @@ import {
 } from '../../../../utils/initialization-utils';
 import {ArrayProp, MapProp} from '../../../../utils/props-utils';
 import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {randomID} from '../../../../utils/stencil-utils';
+import {randomID} from '../../../../utils/utils';
 import {parseDependsOn} from '../../../common/facets/depends-on';
-import {shouldDisplayInputForFacetRange} from '../../../common/facets/facet-common';
 import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../../common/facets/facet-guard';
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {NumberInputType} from '../../../common/facets/facet-number-input/number-input-type';
@@ -43,6 +42,7 @@ import {formatHumanReadable} from '../../../common/facets/numeric-facet/formatte
 import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
 import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
 import {initializePopover} from '../../../common/facets/popover/popover-type';
+import {shouldDisplayInputForFacetRange} from '../../../common/facets/stencil-facet-common';
 import {
   defaultNumberFormatter,
   NumberFormatter,
@@ -319,6 +319,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         generateAutomaticRanges: !this.manualRanges.length,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
@@ -337,6 +341,10 @@ export class AtomicNumericFacet implements InitializableComponent {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 

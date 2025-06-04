@@ -7,118 +7,55 @@
     "directory": "packages/headless"
   },
   "main": "./dist/headless.cjs",
-  "module": "./dist/browser/headless.esm.js",
+  "module": "./dist/headless.esm.js",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
-      "node": {
-        "types": "./dist/definitions/index.d.ts",
-        "import": "./dist/headless.esm.js",
-        "require": "./dist/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/index.d.ts",
-        "import": "./dist/browser/headless.esm.js",
-        "require": "./dist/browser/headless.js"
-      },
-      "import": "./dist/browser/headless.esm.js",
-      "require": "./dist/browser/headless.js"
+      "import": "./dist/headless.esm.js",
+      "require": "./dist/headless.cjs",
+      "default": "./dist/headless.esm.js"
     },
     "./case-assist": {
       "types": "./dist/definitions/case-assist.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/case-assist.index.d.ts",
-        "import": "./dist/case-assist/headless.esm.js",
-        "require": "./dist/case-assist/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/case-assist.index.d.ts",
-        "import": "./dist/browser/case-assist/headless.esm.js",
-        "require": "./dist/browser/case-assist/headless.js"
-      },
-      "import": "./dist/browser/case-assist/headless.esm.js",
-      "require": "./dist/browser/case-assist/headless.js"
+      "import": "./dist/case-assist/headless.esm.js",
+      "require": "./dist/case-assist/headless.cjs",
+      "default": "./dist/case-assist/headless.esm.js"
     },
     "./commerce": {
       "types": "./dist/definitions/commerce.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/commerce.index.d.ts",
-        "import": "./dist/commerce/headless.esm.js",
-        "require": "./dist/commerce/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/commerce.index.d.ts",
-        "import": "./dist/browser/commerce/headless.esm.js",
-        "require": "./dist/browser/commerce/headless.js"
-      },
-      "import": "./dist/browser/commerce/headless.esm.js",
-      "require": "./dist/browser/commerce/headless.js"
+      "import": "./dist/commerce/headless.esm.js",
+      "require": "./dist/commerce/headless.cjs",
+      "default": "./dist/commerce/headless.esm.js"
     },
     "./insight": {
       "types": "./dist/definitions/insight.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/insight.index.d.ts",
-        "import": "./dist/insight/headless.esm.js",
-        "require": "./dist/insight/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/insight.index.d.ts",
-        "import": "./dist/browser/insight/headless.esm.js",
-        "require": "./dist/browser/insight/headless.js"
-      },
-      "import": "./dist/browser/insight/headless.esm.js",
-      "require": "./dist/browser/insight/headless.js"
+      "import": "./dist/insight/headless.esm.js",
+      "require": "./dist/insight/headless.cjs",
+      "default": "./dist/insight/headless.esm.js"
     },
     "./recommendation": {
       "types": "./dist/definitions/recommendation.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/recommendation.index.d.ts",
-        "import": "./dist/recommendation/headless.esm.js",
-        "require": "./dist/recommendation/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/recommendation.index.d.ts",
-        "import": "./dist/browser/recommendation/headless.esm.js",
-        "require": "./dist/browser/recommendation/headless.js"
-      },
-      "import": "./dist/browser/recommendation/headless.esm.js",
-      "require": "./dist/browser/recommendation/headless.js"
+      "import": "./dist/recommendation/headless.esm.js",
+      "require": "./dist/recommendation/headless.cjs",
+      "default": "./dist/recommendation/headless.esm.js"
     },
     "./ssr": {
       "types": "./dist/definitions/ssr.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/ssr.index.d.ts",
-        "import": "./dist/ssr/headless.esm.js",
-        "require": "./dist/ssr/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/ssr.index.d.ts",
-        "import": "./dist/browser/ssr/headless.esm.js",
-        "require": "./dist/browser/ssr/headless.js"
-      },
-      "import": "./dist/browser/ssr/headless.esm.js",
-      "require": "./dist/browser/ssr/headless.js"
+      "import": "./dist/ssr/headless.esm.js",
+      "require": "./dist/ssr/headless.cjs",
+      "default": "./dist/ssr/headless.esm.js"
     },
     "./ssr-commerce": {
       "types": "./dist/definitions/ssr-commerce.index.d.ts",
-      "node": {
-        "types": "./dist/definitions/ssr-commerce.index.d.ts",
-        "import": "./dist/ssr-commerce/headless.esm.js",
-        "require": "./dist/ssr-commerce/headless.cjs"
-      },
-      "browser": {
-        "types": "./dist/definitions/ssr-commerce.index.d.ts",
-        "import": "./dist/browser/ssr-commerce/headless.esm.js",
-        "require": "./dist/browser/ssr-commerce/headless.js"
-      },
-      "import": "./dist/browser/ssr-commerce/headless.esm.js",
-      "require": "./dist/browser/ssr-commerce/headless.js"
+      "import": "./dist/ssr-commerce/headless.esm.js",
+      "require": "./dist/ssr-commerce/headless.cjs",
+      "default": "./dist/ssr-commerce/headless.esm.js"
     }
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.24.1",
+  "version": "3.25.2",
   "files": [
     "dist/"
   ],
@@ -135,17 +72,16 @@
     "integration-test:watch": "vitest --poolOptions.threads.singleThread src/integration-tests/**",
     "publish:npm": "npm run-script -w=@coveo/ci npm-publish",
     "publish:bump": "npm run-script -w=@coveo/ci bump",
-    "build:typedoc": "npm run build:typedoc:plugin && npm run build:typedoc:docs && npm run build:typedoc:merge",
-    "build:typedoc:plugin": "npx tsc -p typedoc/tsconfig.json",
+    "build:typedoc": "npm run build:typedoc:docs && npm run build:typedoc:merge",
     "build:typedoc:docs": "concurrently \"npm run build:typedoc:search\" \"npm run build:typedoc:commerce\" \"npm run build:typedoc:case-assist\" \"npm run build:typedoc:insight\" \"npm run build:typedoc:recommendation\" \"npm run build:typedoc:ssr\" \"npm run build:typedoc:ssr-commerce\"",
     "build:typedoc:merge": "typedoc --tsconfig tsconfig.typedoc.json",
-    "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/index.typedoc.json",
-    "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/commerce.typedoc.json",
-    "build:typedoc:case-assist": "typedoc --json ./temp/case-assist.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/case-assist.typedoc.json",
-    "build:typedoc:insight": "typedoc --json ./temp/insight.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/insight.typedoc.json",
-    "build:typedoc:recommendation": "typedoc --json ./temp/recommendation.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/recommendation.typedoc.json",
-    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/ssr.typedoc.json",
-    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options ./typedoc/configs/ssr-commerce.typedoc.json",
+    "build:typedoc:search": "typedoc --json ./temp/index.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/index.typedoc.json",
+    "build:typedoc:commerce": "typedoc --json ./temp/commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/commerce.typedoc.json",
+    "build:typedoc:case-assist": "typedoc --json ./temp/case-assist.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/case-assist.typedoc.json",
+    "build:typedoc:insight": "typedoc --json ./temp/insight.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/insight.typedoc.json",
+    "build:typedoc:recommendation": "typedoc --json ./temp/recommendation.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/recommendation.typedoc.json",
+    "build:typedoc:ssr": "typedoc --json ./temp/ssr.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr.typedoc.json",
+    "build:typedoc:ssr-commerce": "typedoc --json ./temp/ssr-commerce.json --tsconfig tsconfig.typedoc.json --options typedoc-configs/ssr-commerce.typedoc.json",
     "serve:typedoc": "live-server ./docs",
     "promote:npm:latest": "npm run-script -w=@coveo/ci promote-npm-prod"
   },
@@ -160,9 +96,9 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.14",
-    "@coveo/relay": "1.2.0",
-    "@coveo/relay-event-types": "14.3.3",
+    "@coveo/bueno": "1.0.16",
+    "@coveo/relay": "1.2.1",
+    "@coveo/relay-event-types": "14.7.2",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
@@ -172,7 +108,7 @@
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "3.1.1",
-    "pino": "9.6.0",
+    "pino": "9.7.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
@@ -180,11 +116,11 @@
     "@coveo/ci": "1.0.0",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
-    "execa": "9.5.2",
+    "execa": "9.6.0",
     "live-server": "1.2.2",
     "ts-node": "10.9.2",
-    "typedoc": "0.28.3",
-    "vitest": "3.1.2"
+    "typedoc": "0.28.5",
+    "vitest": "3.1.4"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

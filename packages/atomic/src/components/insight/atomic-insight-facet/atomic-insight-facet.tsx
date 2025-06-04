@@ -25,7 +25,7 @@ import {
 } from '../../../utils/stencil-accessibility-utils';
 import {parseDependsOn} from '../../common/facets/depends-on';
 import {FacetInfo} from '../../common/facets/facet-common-store';
-import {FacetContainer} from '../../common/facets/facet-container/facet-container';
+import {FacetContainer} from '../../common/facets/facet-container/stencil-facet-container';
 import {FacetGuard} from '../../common/facets/facet-guard';
 import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../common/facets/facet-placeholder/facet-placeholder';
@@ -34,7 +34,7 @@ import {FacetShowMoreLess} from '../../common/facets/facet-show-more-less/stenci
 import {
   FacetValueProps,
   FacetValue,
-} from '../../common/facets/facet-value/facet-value';
+} from '../../common/facets/facet-value/stencil-facet-value';
 import {FacetValuesGroup} from '../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../common/facets/popover/popover-type';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
