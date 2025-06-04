@@ -405,7 +405,7 @@ jobs:
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
     needs: affected
-    if: contains(needs.affected.outputs.projects, 'atomic-react')
+    if: contains(needs.affected.outputs.projects, 'atomic-react-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
