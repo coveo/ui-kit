@@ -32,6 +32,7 @@ const selectors = {
   quanticSort: 'c-quantic-sort',
   quanticSortOption: 'c-quantic-sort-option',
   clearActiveFiltersButton: '[data-testid="clear-active-filters-button"]',
+  filtersTitle: '[data-testid="filters-title"]',
 };
 
 const initialSearchStatusState = {
@@ -587,38 +588,121 @@ describe('c-quantic-refine-modal-content', () => {
         });
       });
 
-      // describe('when there are no active filters', () => {
-      //   beforeEach(() => {
-      //     setupMockFacetsDataInQuanticStore({
-      //       filetype: {
-      //         label: 'File Type',
-      //         facetId: 'filetype',
-      //         element: {
-      //           localName: 'c-quantic-facet',
-      //           facetId: 'filetype',
-      //         },
-      //         metadata: {
-      //           customCaptions: [],
-      //         },
-      //       },
-      //     });
-      //     breadcrumbManagerState = {
-      //       ...breadcrumbManagerState,
-      //       hasBreadcrumbs: false,
-      //     };
-      //   });
+      describe('when there are no active filters', () => {
+        beforeEach(() => {
+          setupMockFacetsDataInQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                facetId: 'filetype',
+              },
+              metadata: {
+                customCaptions: [],
+              },
+            },
+          });
+          breadcrumbManagerState = {
+            ...breadcrumbManagerState,
+            hasBreadcrumbs: false,
+          };
+        });
 
-      //   it('should not display the clear all filters button', async () => {
-      //     const element = createTestComponent();
-      //     await flushPromises();
+        it('should not display the clear all filters button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
 
-      //     const clearActiveFiltersButton = element.shadowRoot.querySelector(
-      //       selectors.clearActiveFiltersButton
-      //     );
+          const clearActiveFiltersButton = element.shadowRoot.querySelector(
+            selectors.clearActiveFiltersButton
+          );
 
-      //     expect(clearActiveFiltersButton).toBeNull();
-      //   });
-      // });
+          expect(clearActiveFiltersButton).toBeNull();
+        });
+      });
+    });
+
+    describe('the filters title', () => {
+      beforeEach(() => {
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'File Type',
+            facetId: 'filetype',
+            element: {
+              localName: 'c-quantic-facet',
+              ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
+            },
+          },
+        });
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          hasBreadcrumbs: true,
+        };
+      });
+
+      describe('when hideSort is set to false and a facet is rendered', () => {
+        it('should display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: false,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).not.toBeNull();
+        });
+      });
+
+      describe('when hideSort is set to true and a facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
+        });
+      });
+
+      describe('when no facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
+        });
+      });
     });
   });
 
@@ -1039,6 +1123,94 @@ describe('c-quantic-refine-modal-content', () => {
           );
 
           expect(clearActiveFiltersButton).toBeNull();
+        });
+      });
+    });
+
+    describe('the filters title', () => {
+      beforeEach(() => {
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'File Type',
+            facetId: 'filetype',
+            element: {
+              localName: 'c-quantic-facet',
+              ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
+            },
+          },
+        });
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          hasBreadcrumbs: true,
+        };
+      });
+
+      describe('when hideSort is set to false and a facet is rendered', () => {
+        it('should display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: false,
+            disableDynamicNavigation: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).not.toBeNull();
+        });
+      });
+
+      describe('when hideSort is set to true and a facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: true,
+            disableDynamicNavigation: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
+        });
+      });
+
+      describe('when no facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
         });
       });
     });
