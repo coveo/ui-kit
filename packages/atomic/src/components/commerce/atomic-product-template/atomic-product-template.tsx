@@ -5,9 +5,9 @@ import {
 import {Component, Element, Prop, Method, State} from '@stencil/core';
 import {MapProp} from '../../../utils/props-utils';
 import {
-  ProductTemplateCommon,
   makeMatchConditions,
-} from './product-template-common';
+  ProductTemplateCommon,
+} from '../../common/product-template/stencil-product-template-common';
 
 /**
  * @alpha

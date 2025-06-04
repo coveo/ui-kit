@@ -6,8 +6,8 @@ import {
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
 import {getStringValueFromResultOrNull} from '../../../../utils/result-utils';
-import {ItemTextFallback} from '../../../common/item-text/item-text-fallback';
-import {ItemTextHighlighted} from '../../../common/item-text/item-text-highlighted';
+import {ItemTextFallback} from '../../../common/item-text/stencil-item-text-fallback';
+import {ItemTextHighlighted} from '../../../common/item-text/stencil-item-text-highlighted';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 import {ResultContext} from '../result-template-decorators';
 

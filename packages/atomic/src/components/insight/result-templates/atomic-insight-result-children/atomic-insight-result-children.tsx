@@ -13,17 +13,17 @@ import {
 import {elementHasAncestorTag} from '../../../../utils/stencil-utils';
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {
+  FoldedItemListContext,
+  FoldedItemListStateContext,
+} from '../../../common/item-list/item-list-decorators';
+import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+import {
   ChildTemplatesContext,
   ChildTemplatesContextEvent,
   DisplayConfig,
   ItemContext,
   ItemDisplayConfigContext,
-} from '../../../common/item-list/item-decorators';
-import {
-  FoldedItemListContext,
-  FoldedItemListStateContext,
-} from '../../../common/item-list/item-list-decorators';
-import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
+} from '../../../common/item-list/stencil-item-decorators';
 import {ItemDisplayImageSize} from '../../../common/layout/display-options';
 import {ChildrenWrapper} from '../../../common/result-children/children-wrapper';
 import {CollectionGuard} from '../../../common/result-children/collection-guard';

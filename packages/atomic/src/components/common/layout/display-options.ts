@@ -116,6 +116,7 @@ export class ItemLayout {
       this.density,
       this.getImageSizeFromSections() ?? this.imageSize
     );
+
     if (
       HTMLContent
         ? containsSections(HTMLContent)

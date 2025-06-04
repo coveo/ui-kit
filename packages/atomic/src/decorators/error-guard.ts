@@ -1,13 +1,11 @@
-import {html, LitElement} from 'lit';
+import {html} from 'lit';
 import {TemplateResultType} from 'lit/directive-helpers.js';
 import '../components/common/atomic-component-error/atomic-component-error';
 import {
   GenericRender,
-  InitializableComponent,
+  LitElementWithError,
   RenderGuardDecorator,
 } from './types';
-
-type LitElementWithError = Pick<InitializableComponent, 'error'> & LitElement;
 
 /**
  * A decorator that guards the render method of a LitElement component against errors.

@@ -5,7 +5,7 @@ import {
 } from '@coveo/headless';
 import {h} from '@stencil/core';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
-import {MissingParentError} from '../../common/item-list/item-decorators';
+import {MissingParentError} from '../../common/item-list/stencil-item-decorators';
 import {AtomicResult} from '../atomic-result/atomic-result';
 import {AtomicSearchInterface} from '../atomic-search-interface/atomic-search-interface';
 import {createSearchStore} from '../atomic-search-interface/store';

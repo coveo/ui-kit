@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+import { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 import { i18n } from "i18next";
@@ -22,8 +22,6 @@ import { InsightStore } from "./components/insight/atomic-insight-interface/stor
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
-import { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -36,7 +34,7 @@ import { InitializationOptions } from "./components/search/atomic-search-interfa
 import { StandaloneSearchBoxData } from "./utils/local-storage-utils";
 import { SearchBoxSuggestionElement } from "./components/common/suggestions/suggestions-common";
 export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeRequest, FacetResultsMustMatch, FacetSortCriterion, FoldedResult, GeneratedAnswer, GeneratedAnswerCitation, InlineLink, InteractiveCitation, InteractiveResult, LogLevel, NumericFilter, NumericFilterState, RangeFacetRangeAlgorithm, RangeFacetSortCriterion, RelativeDateUnit, Result, ResultTemplate, ResultTemplateCondition, SearchEngine, SearchStatus } from "@coveo/headless";
-export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
+export { CategoryFacet, CommerceEngine, DateFacet, NumericFacet, ProductListingSummaryState, ProductTemplate, ProductTemplateCondition, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
 export { i18n } from "i18next";
@@ -52,8 +50,6 @@ export { InsightStore } from "./components/insight/atomic-insight-interface/stor
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { CommerceStore } from "./components/commerce/atomic-commerce-interface/store";
-export { CommerceRecommendationStore } from "./components/commerce/atomic-commerce-recommendation-interface/store";
 export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
@@ -592,20 +588,6 @@ export namespace Components {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -1832,64 +1814,6 @@ export namespace Components {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface AtomicProduct {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes": string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The InteractiveProduct item.
-          * @alpha
-         */
-        "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent": ParentNode;
-        /**
-          * @alpha
-         */
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-          * @alpha
-         */
-        "renderingFunction": ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-          * @alpha
-         */
-        "store"?: CommerceStore | CommerceRecommendationStore;
-    }
-    /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
      * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
      */
@@ -2178,23 +2102,6 @@ export namespace Components {
     string,
     string[]
   >;
-    }
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface AtomicProductText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
-         */
-        "shouldHighlight": boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -4058,15 +3965,6 @@ declare global {
         new (): HTMLAtomicCommerceSearchBoxRecentQueriesElement;
     };
     /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface HTMLAtomicCommerceTextElement extends Components.AtomicCommerceText, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceTextElement: {
-        prototype: HTMLAtomicCommerceTextElement;
-        new (): HTMLAtomicCommerceTextElement;
-    };
-    /**
      * A facet is a list of values for a certain field occurring in the results.
      * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
      * @alpha 
@@ -4721,16 +4619,6 @@ declare global {
         prototype: HTMLAtomicPopoverElement;
         new (): HTMLAtomicPopoverElement;
     };
-    /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface HTMLAtomicProductElement extends Components.AtomicProduct, HTMLStencilElement {
-    }
-    var HTMLAtomicProductElement: {
-        prototype: HTMLAtomicProductElement;
-        new (): HTMLAtomicProductElement;
-    };
     interface HTMLAtomicProductChildrenElementEventMap {
         "atomic/selectChildProduct": SelectChildProductEventArgs;
     }
@@ -4972,15 +4860,6 @@ declare global {
     var HTMLAtomicProductTemplateElement: {
         prototype: HTMLAtomicProductTemplateElement;
         new (): HTMLAtomicProductTemplateElement;
-    };
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface HTMLAtomicProductTextElement extends Components.AtomicProductText, HTMLStencilElement {
-    }
-    var HTMLAtomicProductTextElement: {
-        prototype: HTMLAtomicProductTextElement;
-        new (): HTMLAtomicProductTextElement;
     };
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -5874,7 +5753,6 @@ declare global {
         "atomic-commerce-refine-toggle": HTMLAtomicCommerceRefineToggleElement;
         "atomic-commerce-search-box": HTMLAtomicCommerceSearchBoxElement;
         "atomic-commerce-search-box-recent-queries": HTMLAtomicCommerceSearchBoxRecentQueriesElement;
-        "atomic-commerce-text": HTMLAtomicCommerceTextElement;
         "atomic-commerce-timeframe-facet": HTMLAtomicCommerceTimeframeFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-external": HTMLAtomicExternalElement;
@@ -5946,7 +5824,6 @@ declare global {
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-popover": HTMLAtomicPopoverElement;
-        "atomic-product": HTMLAtomicProductElement;
         "atomic-product-children": HTMLAtomicProductChildrenElement;
         "atomic-product-description": HTMLAtomicProductDescriptionElement;
         "atomic-product-excerpt": HTMLAtomicProductExcerptElement;
@@ -5967,7 +5844,6 @@ declare global {
         "atomic-product-section-name": HTMLAtomicProductSectionNameElement;
         "atomic-product-section-visual": HTMLAtomicProductSectionVisualElement;
         "atomic-product-template": HTMLAtomicProductTemplateElement;
-        "atomic-product-text": HTMLAtomicProductTextElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-quickview": HTMLAtomicQuickviewElement;
@@ -6555,20 +6431,6 @@ declare namespace LocalJSX {
           * The maximum number of suggestions to display initially, when the input field is empty.
          */
         "maxWithoutQuery"?: number;
-    }
-    /**
-     * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-     */
-    interface AtomicCommerceText {
-        /**
-          * The count value used for plurals.
-          * @type {number}
-         */
-        "count"?: number;
-        /**
-          * The string key value.
-         */
-        "value": string;
     }
     /**
      * A facet is a list of values for a certain field occurring in the results.
@@ -7754,64 +7616,6 @@ declare namespace LocalJSX {
     interface AtomicPopover {
     }
     /**
-     * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-     * @alpha 
-     */
-    interface AtomicProduct {
-        /**
-          * The classes to add to the product element.
-         */
-        "classes"?: string;
-        /**
-          * The product content to display.
-         */
-        "content"?: ParentNode;
-        /**
-          * How large or small products should be.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * How products should be displayed.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The size of the visual section in product list items.  This is overwritten by the image size defined in the product content, if it exists.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The InteractiveProduct item.
-          * @alpha
-         */
-        "interactiveProduct": InteractiveProduct;
-        /**
-          * The product link to use when the product is clicked in a grid layout.
-          * @default - An `atomic-result-link` without any customization.
-         */
-        "linkContent"?: ParentNode;
-        /**
-          * @alpha
-         */
-        "loadingFlag"?: string;
-        /**
-          * The product item.
-         */
-        "product": Product;
-        /**
-          * Internal function used in advanced setups, which lets you bypass the standard HTML template system. Particularly useful for Atomic React
-          * @alpha
-         */
-        "renderingFunction"?: ItemRenderingFunction;
-        /**
-          * Whether an atomic-product-link inside atomic-product should stop click event propagation.
-         */
-        "stopPropagation"?: boolean;
-        /**
-          * Global Atomic state.
-          * @alpha
-         */
-        "store"?: CommerceStore | CommerceRecommendationStore;
-    }
-    /**
      * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
      * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
      */
@@ -8084,23 +7888,6 @@ declare namespace LocalJSX {
     string,
     string[]
   >;
-    }
-    /**
-     * @alpha The `atomic-product-text` component renders the value of a string product field.
-     */
-    interface AtomicProductText {
-        /**
-          * The locale key for the text to display when the configured field has no value.
-         */
-        "default"?: string;
-        /**
-          * The product field which the component should use. This will look in the Product object first, and then in the product.additionalFields object for the fields.
-         */
-        "field": string;
-        /**
-          * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response. This property only works for the product excerpt and the ec_name field.
-         */
-        "shouldHighlight"?: boolean;
     }
     /**
      * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
@@ -9555,7 +9342,6 @@ declare namespace LocalJSX {
         "atomic-commerce-refine-toggle": AtomicCommerceRefineToggle;
         "atomic-commerce-search-box": AtomicCommerceSearchBox;
         "atomic-commerce-search-box-recent-queries": AtomicCommerceSearchBoxRecentQueries;
-        "atomic-commerce-text": AtomicCommerceText;
         "atomic-commerce-timeframe-facet": AtomicCommerceTimeframeFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-external": AtomicExternal;
@@ -9627,7 +9413,6 @@ declare namespace LocalJSX {
         "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-popover": AtomicPopover;
-        "atomic-product": AtomicProduct;
         "atomic-product-children": AtomicProductChildren;
         "atomic-product-description": AtomicProductDescription;
         "atomic-product-excerpt": AtomicProductExcerpt;
@@ -9648,7 +9433,6 @@ declare namespace LocalJSX {
         "atomic-product-section-name": AtomicProductSectionName;
         "atomic-product-section-visual": AtomicProductSectionVisual;
         "atomic-product-template": AtomicProductTemplate;
-        "atomic-product-text": AtomicProductText;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-quickview": AtomicQuickview;
@@ -9860,10 +9644,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-search-box-recent-queries": LocalJSX.AtomicCommerceSearchBoxRecentQueries & JSXBase.HTMLAttributes<HTMLAtomicCommerceSearchBoxRecentQueriesElement>;
             /**
-             * @alpha The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface.
-             */
-            "atomic-commerce-text": LocalJSX.AtomicCommerceText & JSXBase.HTMLAttributes<HTMLAtomicCommerceTextElement>;
-            /**
              * A facet is a list of values for a certain field occurring in the results.
              * An `atomic-commerce-timeframe-facet` displays a facet of the results for the current query as date intervals.
              * @alpha 
@@ -10031,11 +9811,6 @@ declare module "@stencil/core" {
              */
             "atomic-popover": LocalJSX.AtomicPopover & JSXBase.HTMLAttributes<HTMLAtomicPopoverElement>;
             /**
-             * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
-             * @alpha 
-             */
-            "atomic-product": LocalJSX.AtomicProduct & JSXBase.HTMLAttributes<HTMLAtomicProductElement>;
-            /**
              * @alpha The `atomic-product-children` component renders a section that allows the user to select a nested product (e.g., a color variant of a given product).
              * This component leverages the [product grouping](https://docs.coveo.com/en/l78i2152/) feature.
              */
@@ -10166,10 +9941,6 @@ declare module "@stencil/core" {
              * @MapProp name: mustNotMatch;attr: must-not-match;docs: The field and values that must not be matched by a product item for the template to apply. For example, a template with the following attribute only applies to product items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage";type: Record<string, string[]> ;default: {}
              */
             "atomic-product-template": LocalJSX.AtomicProductTemplate & JSXBase.HTMLAttributes<HTMLAtomicProductTemplateElement>;
-            /**
-             * @alpha The `atomic-product-text` component renders the value of a string product field.
-             */
-            "atomic-product-text": LocalJSX.AtomicProductText & JSXBase.HTMLAttributes<HTMLAtomicProductTextElement>;
             /**
              * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
              */

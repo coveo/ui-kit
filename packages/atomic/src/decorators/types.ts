@@ -1,4 +1,4 @@
-import {TemplateResult} from 'lit';
+import {LitElement, TemplateResult} from 'lit';
 import {TemplateResultType} from 'lit/directive-helpers.js';
 import {AnyBindings} from '../components/common/interface/bindings';
 
@@ -41,3 +41,7 @@ export interface InitializableComponent<
   initialize?: () => void;
   error: Error;
 }
+
+export interface LitElementWithError
+  extends Pick<InitializableComponent, 'error'>,
+    LitElement {}
