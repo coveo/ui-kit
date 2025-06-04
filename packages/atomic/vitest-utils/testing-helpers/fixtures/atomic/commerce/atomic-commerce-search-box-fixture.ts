@@ -96,6 +96,7 @@ export const defaultBindings = {
     submit: vi.fn(),
   } as unknown as SearchBox | StandaloneSearchBox,
   getSuggestions: vi.fn(() => Array(1)),
+  triggerSuggestions: vi.fn(),
   getSuggestionElements: vi.fn(() => []),
   suggestedQuery: vi.fn(() => 'the query'),
   clearSuggestions: vi.fn(),

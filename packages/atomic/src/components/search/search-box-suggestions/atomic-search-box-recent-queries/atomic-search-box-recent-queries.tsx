@@ -25,9 +25,6 @@ import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
 /**
  * The `atomic-search-box-recent-queries` component can be added as a child of an `atomic-search-box` component, allowing for the configuration of recent query suggestions.
- *
- * @part recent-query-title - The 'Recent queries' title.
- * @part recent-query-clear - The 'Clear' button for clearing recent queries    .
  */
 @Component({
   tag: 'atomic-search-box-recent-queries',

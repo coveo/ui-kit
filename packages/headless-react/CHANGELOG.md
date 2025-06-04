@@ -1,3 +1,9 @@
+## <small>2.4.28 (2025-06-04)</small>
+
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+
 ## <small>2.4.27 (2025-05-28)</small>
 
 - chore(deps): update dependency eslint-plugin-react to v7.37.5 j:kit-282 (#5268) ([2c46a1e](https://github.com/coveo/ui-kit/commits/2c46a1e)), closes [#5268](https://github.com/coveo/ui-kit/issues/5268)

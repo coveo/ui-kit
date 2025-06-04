@@ -1,3 +1,8 @@
+## <small>3.2.43 (2025-06-04)</small>
+
+- chore: migrate atomic-commerce-search-box-recent-queries (#5342) ([a535b4e](https://github.com/coveo/ui-kit/commits/a535b4e)), closes [#5342](https://github.com/coveo/ui-kit/issues/5342)
+- chore(atomic): migrate atomic-commerce-search-box-instant-products (#5360) ([1672b15](https://github.com/coveo/ui-kit/commits/1672b15)), closes [#5360](https://github.com/coveo/ui-kit/issues/5360)
+
 ## <small>3.2.41 (2025-05-21)</small>
 
 - chore(atomic): migrate atomic-commerce-search-box-query-suggestions (#5205) ([1c9df4d](https://github.com/coveo/ui-kit/commits/1c9df4d)), closes [#5205](https://github.com/coveo/ui-kit/issues/5205)

@@ -319,6 +319,10 @@ export class AtomicNumericFacet implements InitializableComponent {
         generateAutomaticRanges: !this.manualRanges.length,
         filterFacetCount: this.filterFacetCount,
         injectionDepth: this.injectionDepth,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
@@ -337,6 +341,10 @@ export class AtomicNumericFacet implements InitializableComponent {
       options: {
         facetId: `${this.facetId}_input`,
         field: this.field,
+        tabs: {
+          included: [...this.tabsIncluded],
+          excluded: [...this.tabsExcluded],
+        },
       },
     });
 
