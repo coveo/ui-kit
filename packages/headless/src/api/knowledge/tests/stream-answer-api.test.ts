@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {EventSourceMessage} from '../../../utils/fetch-event-source/parse';
+import {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import {
   constructAnswerQueryParams,
   GeneratedAnswerStream,

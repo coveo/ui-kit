@@ -4,6 +4,7 @@ import {
   NavigatorContext,
 } from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
+import {SearchPageEvents} from '../../features/analytics/search-action-cause.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {
   setAnswerContentFormat,
@@ -378,7 +379,10 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     ...fromAnalyticsStateToAnalyticsParams(
       state.configuration.analytics,
-      navigatorContext
+      navigatorContext,
+      {
+        actionCause: SearchPageEvents.searchboxSubmit,
+      }
     ),
   };
 };
