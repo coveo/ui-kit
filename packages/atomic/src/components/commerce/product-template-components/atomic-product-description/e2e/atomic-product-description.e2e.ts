@@ -95,7 +95,7 @@ test.describe('atomic-product-description', async () => {
           await productDescription.hydrated.first().waitFor();
 
           const descriptionText = productDescription.textContent.first();
-          expect(descriptionText).toHaveClass(expectedClass);
+          await expect(descriptionText).toHaveClass(expectedClass);
         });
 
         test('should show "Show More" button', async ({productDescription}) => {
@@ -115,7 +115,7 @@ test.describe('atomic-product-description', async () => {
 
             test('should expand description', async ({productDescription}) => {
               const descriptionText = productDescription.textContent.first();
-              expect(descriptionText).not.toHaveClass(expectedClass);
+              await expect(descriptionText).not.toHaveClass(expectedClass);
             });
 
             test('should show "Show Less" button', async ({
@@ -131,7 +131,7 @@ test.describe('atomic-product-description', async () => {
               const descriptionText = productDescription.textContent.first();
               await productDescription.showLessButton.first().click();
 
-              expect(descriptionText).toHaveClass(expectedClass);
+              await expect(descriptionText).toHaveClass(expectedClass);
             });
           });
 
@@ -146,7 +146,7 @@ test.describe('atomic-product-description', async () => {
 
             test('should expand description', async ({productDescription}) => {
               const descriptionText = productDescription.textContent.first();
-              expect(descriptionText).not.toHaveClass(expectedClass);
+              await expect(descriptionText).not.toHaveClass(expectedClass);
             });
 
             test('should not show "Show Less" button', async ({

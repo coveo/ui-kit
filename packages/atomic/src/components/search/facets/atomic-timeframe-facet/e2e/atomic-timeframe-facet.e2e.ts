@@ -187,7 +187,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       const parent = facet.page.getByTestId('parent-facet');
       await parent.locator('[part="clear-button"]').click();
 
-      expect(facet.facet).not.toBeVisible();
+      await expect(facet.facet).not.toBeVisible();
     });
 
     test('should clear previously selected dependent facet range', async ({

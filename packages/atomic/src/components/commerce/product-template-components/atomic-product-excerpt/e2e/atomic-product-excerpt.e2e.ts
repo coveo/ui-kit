@@ -67,7 +67,7 @@ test.describe('atomic-product-excerpt', async () => {
           await productExcerpt.hydrated.first().waitFor();
 
           const excerptText = productExcerpt.textContent.first();
-          expect(excerptText).toHaveClass(expectedClass);
+          await expect(excerptText).toHaveClass(expectedClass);
         });
 
         test('should show "Show More" button', async ({productExcerpt}) => {
@@ -87,7 +87,7 @@ test.describe('atomic-product-excerpt', async () => {
 
             test('should expand excerpt', async ({productExcerpt}) => {
               const excerptText = productExcerpt.textContent.first();
-              expect(excerptText).not.toHaveClass(expectedClass);
+              await expect(excerptText).not.toHaveClass(expectedClass);
             });
 
             test('should show "Show Less" button', async ({productExcerpt}) => {
@@ -101,7 +101,7 @@ test.describe('atomic-product-excerpt', async () => {
               const excerptText = productExcerpt.textContent.first();
               await productExcerpt.showLessButton.first().click();
 
-              expect(excerptText).toHaveClass(expectedClass);
+              await expect(excerptText).toHaveClass(expectedClass);
             });
           });
 
@@ -116,7 +116,7 @@ test.describe('atomic-product-excerpt', async () => {
 
             test('should expand excerpt', async ({productExcerpt}) => {
               const excerptText = productExcerpt.textContent.first();
-              expect(excerptText).not.toHaveClass(expectedClass);
+              await expect(excerptText).not.toHaveClass(expectedClass);
             });
 
             test('should not show "Show Less" button', async ({
