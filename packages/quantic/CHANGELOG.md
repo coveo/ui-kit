@@ -1,3 +1,11 @@
+## <small>3.22.2 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- fix(quantic): updated section to create scratch org in the readme (#5380) ([2cea093](https://github.com/coveo/ui-kit/commits/2cea093)), closes [#5380](https://github.com/coveo/ui-kit/issues/5380)
+- test(quantic): introducing ep to playwright (#5297) ([33949a9](https://github.com/coveo/ui-kit/commits/33949a9)), closes [#5297](https://github.com/coveo/ui-kit/issues/5297)
+- test(quantic): Playwright tests migration for quanticRecommendationList (#5323) ([9b6f217](https://github.com/coveo/ui-kit/commits/9b6f217)), closes [#5323](https://github.com/coveo/ui-kit/issues/5323)
+- test(quantic): quantic modal jest tests (#5361) ([1739dfc](https://github.com/coveo/ui-kit/commits/1739dfc)), closes [#5361](https://github.com/coveo/ui-kit/issues/5361)
+
 ## <small>3.22.1 (2025-06-04)</small>
 
 - fix(quantic): updated section to create scratch org in the readme (#5380) ([2cea093](https://github.com/coveo/ui-kit/commits/2cea093)), closes [#5380](https://github.com/coveo/ui-kit/issues/5380)

@@ -1,3 +1,8 @@
+## <small>2.0.17 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+
 ## <small>2.0.16 (2025-06-04)</small>
 
 - chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
