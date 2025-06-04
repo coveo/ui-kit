@@ -29,12 +29,10 @@ export function ItemContext(
   return (component: LitElementWithError, itemVariable: string) => {
     const {connectedCallback, updated, render} = component as any;
     component.connectedCallback = function () {
-      console.log('itemvariable', itemVariable);
       const event = buildCustomEvent(
         itemContextEventName,
         (item: Record<string, unknown>) => {
           (this as any)[itemVariable] = extractFolded(item, opts.folded);
-          //console.log('item variable set', this[itemVariable]);
         }
       );
 
@@ -115,7 +113,6 @@ export function itemContext<T>(element: Element, parentName: string) {
 }
 
 function extractFolded(item: Record<string, unknown>, returnFolded: boolean) {
-  console.log('extractFolded', item, returnFolded);
   if (returnFolded) {
     if ('children' in item) {
       return item;
