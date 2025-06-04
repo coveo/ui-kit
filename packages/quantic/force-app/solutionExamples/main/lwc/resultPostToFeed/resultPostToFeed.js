@@ -151,14 +151,10 @@ export default class ResultPostToFeed extends LightningElement {
 
   handleResultPromiseFailure = (error) => {
     // The Quick Action promise threw an error from Salesforce.
-    let message;
-    if (error?.auraWrapperMissing) {
-      message = this.labels.actionIsUnavailable;
-    } else {
-      // Sometimes the error has this format: {errors: ["error message"]};
-      message = `[${this.actionName}] ${error?.errors?.[0] ?? this.labels.errorWithQuickAction}`;
-    }
-
+    const {auraWrapperMissing} = error;
+    const message = auraWrapperMissing
+      ? this.labels.actionIsUnavailable
+      : `[${this.actionName}] ${error?.errors?.[0] ?? this.labels.errorWithQuickAction}`;
     console.error(message);
   };
 }
