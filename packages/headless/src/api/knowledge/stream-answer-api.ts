@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
@@ -299,24 +300,20 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
 
 const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const expressions = buildExpressionList(state);
+  const mergedCq = mergeAdvancedCQParams(state);
 
-  const mergedAdvancedSearchQueryParams = {
+  return {
     ...advancedSearchQueryParams,
+    ...(mergedCq && {cq: mergedCq}),
   };
-
-  if (expressions.length) {
-    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
-  }
-
-  return mergedAdvancedSearchQueryParams;
 };
 
-const buildExpressionList = (state: StateNeededByAnswerAPI) => {
+const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const filterExpressions = selectStaticFilterExpressions(state);
+  const {cq} = selectAdvancedSearchQueries(state);
 
-  return [activeTabExpression, ...filterExpressions]
+  return [activeTabExpression, ...filterExpressions, cq]
     .filter((expression) => !!expression)
     .join(' AND ');
 };

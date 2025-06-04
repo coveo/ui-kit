@@ -2,8 +2,7 @@ import {createRipple} from '@/src/utils/ripple';
 import {renderFunctionFixture} from '@/vitest-utils/testing-helpers/fixture';
 import {createTestI18n} from '@/vitest-utils/testing-helpers/i18n-utils';
 import {page} from '@vitest/browser/context';
-import '@vitest/browser/matchers.d.ts';
-import {html, TemplateResult} from 'lit';
+import {html} from 'lit';
 import {createRef} from 'lit/directives/ref.js';
 import {expect, vi, describe, beforeAll, it} from 'vitest';
 import {renderCheckbox} from '../../checkbox';
@@ -26,69 +25,55 @@ describe('renderFacetValueCheckbox', () => {
   beforeAll(async () => {
     i18n = await createTestI18n();
   });
-
   const setupElement = async (
     props?: Partial<FacetValuePropsBase | TriStateFacetValueProps>
   ) => {
-    const children: TemplateResult = html`Some Value Label`;
-    const baseProps: FacetValuePropsBase = {
-      displayValue: 'Test Value',
-      numberOfResults: 42,
-      isSelected: false,
-      i18n,
-      onClick: vi.fn(),
-      buttonRef: vi.fn(),
-    };
-
-    return await renderFunctionFixture(
+    const element = await renderFunctionFixture(
       html`${renderFacetValueCheckbox({
-        props: {...baseProps, ...props},
-      })(children)}`
+        props: {
+          displayValue: 'Test Value',
+          numberOfResults: 42,
+          isSelected: false,
+          i18n,
+          onClick: vi.fn(),
+          buttonRef: vi.fn(),
+          ...props,
+        },
+      })(html`Some Value Label`)}`
     );
-  };
-
-  const locators = {
-    get listItem() {
-      return page.getByRole('listitem');
-    },
-    get checkbox() {
-      return page.getByRole('checkbox');
-    },
-    get triStateCheckbox() {
-      return page.getByRole('button');
-    },
-    get label() {
-      return page.getByText('Some Value Label');
-    },
-    get valueCount() {
-      return page.getByText('42');
-    },
+    return {
+      element,
+      listItem: page.getByRole('listitem'),
+      checkbox: page.getByRole('checkbox'),
+      triStateCheckbox: page.getByRole('button'),
+      label: page.getByText('Some Value Label'),
+      valueCount: page.getByText('42'),
+      exclusionButton: page.getByLabelText(
+        'Exclusion filter on Test Value; {{formattedCount}} results'
+      ),
+    };
   };
 
   it('renders all elements', async () => {
-    await setupElement();
-
-    const {listItem, label, valueCount, checkbox} = locators;
-    await expect(listItem).toBeInTheDocument();
-    await expect(label).toBeInTheDocument();
-    await expect(valueCount).toBeInTheDocument();
-    await expect(checkbox).toBeInTheDocument();
+    const {listItem, label, valueCount, checkbox} = await setupElement();
+    expect(listItem).toBeInTheDocument();
+    expect(label).toBeInTheDocument();
+    expect(valueCount).toBeInTheDocument();
+    expect(checkbox).toBeInTheDocument();
   });
 
   it('renders correctly with valid parts', async () => {
-    await setupElement();
+    const {label, valueCount, checkbox} = await setupElement();
 
-    const {label, valueCount, checkbox} = locators;
-
-    await expect(label).toHaveAttribute('part', 'value-checkbox-label');
-    await expect(valueCount).toHaveAttribute('part', 'value-count');
-    await expect(checkbox).toHaveAttribute('part', 'value-checkbox');
+    expect(label).toHaveAttribute('part', 'value-checkbox-label');
+    expect(valueCount).toHaveAttribute('part', 'value-count');
+    expect(checkbox).toHaveAttribute('part', 'value-checkbox');
   });
 
   it('calls onClick when checkbox is toggled', async () => {
     const onClick = vi.fn();
-    await setupElement({onClick});
-    const {checkbox} = locators;
+
+    const {checkbox} = await setupElement({onClick});
 
     checkbox.element().dispatchEvent(new MouseEvent('click'));
 
@@ -97,8 +82,8 @@ describe('renderFacetValueCheckbox', () => {
 
   it('calls createRipple when checkbox is toggled', async () => {
     const createRippleSpy = vi.mocked(createRipple);
-    await setupElement();
-    const {checkbox} = locators;
+
+    const {checkbox} = await setupElement();
 
     checkbox.element().dispatchEvent(new MouseEvent('mousedown'));
 
@@ -146,14 +131,24 @@ describe('renderFacetValueCheckbox', () => {
     });
 
     it('render tri-state checkbox with correct parts', async () => {
-      await setupElement({
+      const {triStateCheckbox} = await setupElement({
         state: 'idle',
         isSelected: false,
       });
+      expect(triStateCheckbox).toBeInTheDocument();
+      expect(triStateCheckbox).toHaveAttribute('part', 'value-checkbox');
+    });
 
-      const {triStateCheckbox} = locators;
-      await expect(triStateCheckbox).toBeInTheDocument();
-      await expect(triStateCheckbox).toHaveAttribute('part', 'value-checkbox');
+    it('should not render the exclusion button inside the aria-hidden label', async () => {
+      const {label, exclusionButton} = await setupElement({
+        state: 'idle',
+        isSelected: false,
+      });
+      const nullExclusionButton = label
+        .element()
+        .querySelector('.value-exclude-button');
+      expect(nullExclusionButton).not.toBeInTheDocument();
+      expect(exclusionButton).toBeInTheDocument();
     });
   });
 

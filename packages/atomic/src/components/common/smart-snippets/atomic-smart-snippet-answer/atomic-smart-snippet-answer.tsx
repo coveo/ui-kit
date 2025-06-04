@@ -9,7 +9,7 @@ import {
   Element,
 } from '@stencil/core';
 import DOMPurify from 'dompurify';
-import {sanitizeStyle} from '../../../../utils/stencil-utils';
+import {sanitizeStyle} from '../../../../utils/utils';
 import {bindAnalyticsToLink} from '../../item-link/item-link';
 
 /**

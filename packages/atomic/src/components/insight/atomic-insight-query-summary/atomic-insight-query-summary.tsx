@@ -11,7 +11,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QuerySummaryContainer} from '../../common/query-summary/container';
+import {QuerySummaryContainer} from '../../common/query-summary/stencil-container';
 import {QuerySummaryGuard} from '../../common/query-summary/stencil-guard';
 import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';

@@ -171,9 +171,6 @@
     }
   ],
   "rangeStrategy": "auto",
-  "lockFileMaintenance": {
-    "enabled": false
-  },
   "commitMessageSuffix": "J:KIT-282",
   "vulnerabilityAlerts": {
     "enabled": false

@@ -113,10 +113,14 @@ export default class ResultPostToFeed extends LightningElement {
       this._isLoading = false;
     });
 
+    // Set a timeout to reject the promise after 2 seconds if no Aura component handles the event.
+    // This helps detect when the LWC is used outside of an Aura wrapper, if nothing catches and resolves/rejects the event,
+    // we assume the event went unhandled and log an appropriate error.
+
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     this.timeout = setTimeout(() => {
       if (!this._actionHandled) {
-        resultPromiseReject({unavailableAction: true});
+        resultPromiseReject({auraWrapperMissing: true});
       }
     }, 2000);
 
@@ -147,14 +151,10 @@ export default class ResultPostToFeed extends LightningElement {
 
   handleResultPromiseFailure = (error) => {
     // The Quick Action promise threw an error from Salesforce.
-    let message;
-    if (error?.unavailableAction) {
-      message = this.labels.actionIsUnavailable;
-    } else {
-      // Sometimes the error has this format: {errors: ["error message"]};
-      message = error?.errors?.[0] ?? this.labels.errorWithQuickAction;
-    }
-
+    const {auraWrapperMissing} = error;
+    const message = auraWrapperMissing
+      ? this.labels.actionIsUnavailable
+      : `[${this.actionName}] ${error?.errors?.[0] ?? this.labels.errorWithQuickAction}`;
     console.error(message);
   };
 }
