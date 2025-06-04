@@ -4,7 +4,7 @@
   "cache": {
     "useCache": true
   },
-  "ignorePaths": ["CHANGELOG.md"],
+  "ignorePaths": ["CHANGELOG.md", ".ai-memory-bank", ".github"],
   "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
   "words": [
     "adjustednumberoflikes",
