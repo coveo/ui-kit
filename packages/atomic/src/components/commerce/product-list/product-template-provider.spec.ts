@@ -80,7 +80,7 @@ describe('ProductTemplateProvider', () => {
         expect(defaultTemplate.children[0].children[0]?.nodeName).toBe(
           'ATOMIC-PRODUCT-LINK'
         );
-        expect(defaultTemplate.children[0].children[0]).toHaveClass(
+        await expect(defaultTemplate.children[0].children[0]).toHaveClass(
           'font-bold'
         );
 

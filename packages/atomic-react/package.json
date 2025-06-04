@@ -32,21 +32,21 @@
   "dependencies": {
     "@coveo/atomic": "3.27.0",
     "@lit/react": "1.0.6",
-    "lit": "3.2.1"
+    "lit": "3.3.0"
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
     "@rollup/plugin-commonjs": "28.0.3",
     "@rollup/plugin-json": "6.1.0",
-    "@rollup/plugin-node-resolve": "16.0.0",
+    "@rollup/plugin-node-resolve": "16.0.1",
     "@rollup/plugin-typescript": "12.1.2",
-    "@types/node": "22.13.5",
+    "@types/node": "22.15.23",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "fix-esm-import-path": "1.10.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "rollup": "4.34.8",
+    "rollup": "4.41.1",
     "rollup-plugin-polyfill-node": "^0.13.0"
   },
   "peerDependencies": {

@@ -14,7 +14,7 @@ test.describe('load more products with products returned by the API', () => {
   test('should display a recap of the amount of products', async ({
     loadMore,
   }) => {
-    await await expect(loadMore.summary()).toBeVisible();
+    await expect(loadMore.summary()).toBeVisible();
   });
 
   test('should display a load more button', async ({loadMore}) => {
