@@ -12,5 +12,6 @@ export const buildMockNavigatorContextProvider = (
     location: context?.location || '',
     clientId: context?.clientId || '',
     capture: context?.capture,
+    forwardedFor: context?.forwardedFor || null,
   });
 };
