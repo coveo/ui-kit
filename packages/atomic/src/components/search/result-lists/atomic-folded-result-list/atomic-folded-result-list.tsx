@@ -1,3 +1,4 @@
+import {FoldedItemListStateContextEvent} from '@/src/components/common/item-list/item-list-decorators';
 import {
   ResultsPerPageState,
   ResultsPerPage,
@@ -35,7 +36,6 @@ import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholde
 import {extractUnfoldedItem} from '../../../common/interface/item';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
-import {FoldedItemListStateContextEvent} from '../../../common/item-list/item-list-decorators';
 import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {DisplayWrapper} from '../../../common/item-list/stencil-display-wrapper';
