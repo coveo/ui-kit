@@ -1,8 +1,15 @@
-import {describe, it, expect, beforeEach} from 'vitest';
+import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {
+  createBaseStore,
+  setLoadingFlag,
+  unsetLoadingFlag,
+} from '../../common/interface/store';
 import {
   createCommerceRecommendationStore,
   CommerceRecommendationStore,
 } from './store';
+
+vi.mock('../../common/interface/store', {spy: true});
 
 describe('#createCommerceRecommendationStore', () => {
   let store: CommerceRecommendationStore;
@@ -11,45 +18,47 @@ describe('#createCommerceRecommendationStore', () => {
     store = createCommerceRecommendationStore();
   });
 
-  it('should initialize with default values', () => {
-    expect(store.state.loadingFlags).toEqual([]);
-    expect(store.state.iconAssetsPath).toBe('');
-    expect(store.state.resultList).toBeUndefined();
+  it('should call #createBaseStore with the correct arguments', () => {
+    expect(store).toBeDefined();
+    expect(createBaseStore).toHaveBeenCalledExactlyOnceWith({
+      loadingFlags: [],
+      iconAssetsPath: '',
+      resultList: undefined,
+    });
   });
 
-  it('should set a loading flag', () => {
-    store.setLoadingFlag('fetching');
-    expect(store.state.loadingFlags).toContain('fetching');
+  it('should include the base store in its returned value', () => {
+    const createBaseStoreSpy = vi.mocked(createBaseStore);
+    const baseStore = createBaseStoreSpy.mock.results[0].value;
+
+    expect(store).toEqual({
+      ...baseStore,
+      unsetLoadingFlag: expect.any(Function),
+      setLoadingFlag: expect.any(Function),
+    });
   });
 
-  it('should not add the same loading flag twice', () => {
-    store.setLoadingFlag('fetching');
-    store.setLoadingFlag('fetching');
-    expect(
-      store.state.loadingFlags.filter((f) => f === 'fetching').length
-    ).toBe(1);
+  it('should return a #setLoadingFlag function that calls the core #setLoadingFlag with the correct arguments', () => {
+    const createBaseStoreSpy = vi.mocked(createBaseStore);
+    const baseStore = createBaseStoreSpy.mock.results[0].value;
+
+    store.setLoadingFlag('testFlag');
+
+    expect(setLoadingFlag).toHaveBeenCalledExactlyOnceWith(
+      baseStore,
+      'testFlag'
+    );
   });
 
-  it('should unset a loading flag', () => {
-    store.setLoadingFlag('fetching');
-    store.unsetLoadingFlag('fetching');
-    expect(store.state.loadingFlags).not.toContain('fetching');
-  });
+  it('should return an #unsetLoadingFlag function that calls the core #setLoadingFlag with the correct arguments', () => {
+    const createBaseStoreSpy = vi.mocked(createBaseStore);
+    const baseStore = createBaseStoreSpy.mock.results[0].value;
 
-  it('should do nothing if unsetting a flag that does not exist', () => {
-    store.setLoadingFlag('fetching');
-    store.unsetLoadingFlag('not-present');
-    expect(store.state.loadingFlags).toContain('fetching');
-  });
+    store.unsetLoadingFlag('testFlag');
 
-  it('should allow updating iconAssetsPath', () => {
-    store.setState({iconAssetsPath: '/icons'});
-    expect(store.state.iconAssetsPath).toBe('/icons');
-  });
-
-  it('should allow updating resultList', () => {
-    const resultList = {results: [], totalCount: 0};
-    store.setState({resultList});
-    expect(store.state.resultList).toBe(resultList);
+    expect(unsetLoadingFlag).toHaveBeenCalledExactlyOnceWith(
+      baseStore,
+      'testFlag'
+    );
   });
 });
