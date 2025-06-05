@@ -1,7 +1,7 @@
 import {Product, InteractiveProduct} from '@coveo/headless/commerce';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {DisplayConfig} from '../../common/item-list/item-decorators';
+import {DisplayConfig} from '../../common/item-list/stencil-item-decorators';
 import {
   ItemRenderingFunction,
   resultComponentClass,
