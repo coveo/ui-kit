@@ -261,7 +261,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic
-    if: ${{ success() && !contains(needs.*.result, 'skipped') }}
+    if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
