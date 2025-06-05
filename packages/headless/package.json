@@ -51,7 +51,8 @@
       "import": "./dist/ssr-commerce/headless.esm.js",
       "require": "./dist/ssr-commerce/headless.cjs",
       "default": "./dist/ssr-commerce/headless.esm.js"
-    }
+    },
+    "./package.json":"./package.json"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
