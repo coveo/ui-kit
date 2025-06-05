@@ -190,7 +190,6 @@ describe('item-context', () => {
           expect(console.error).toHaveBeenCalledWith(
             'Result component is in error and has been removed from the DOM',
             mockComponent.error,
-            mockComponent,
             mockComponent
           );
           expect(originalRender).not.toHaveBeenCalled();

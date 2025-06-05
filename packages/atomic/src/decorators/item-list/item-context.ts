@@ -73,7 +73,6 @@ export function ItemContext(
         console.error(
           'Result component is in error and has been removed from the DOM',
           this.error,
-          this,
           this
         );
         return;
