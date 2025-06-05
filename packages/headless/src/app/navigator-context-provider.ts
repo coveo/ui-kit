@@ -3,7 +3,7 @@
  */
 export interface NavigatorContext {
   /**
-   * The headers of the request, specifically the `X-Forwarded-For` header.
+   * The`X-Forwarded-For` header.
    * This header is used to identify the originating IP address of a client connecting to a web server through an HTTP proxy or load balancer.
    * See [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
    */
