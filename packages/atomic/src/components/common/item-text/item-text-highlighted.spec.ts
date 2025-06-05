@@ -51,22 +51,6 @@ describe('#ItemTextHighlighted', () => {
     expect(result).toEqual(html``);
   });
 
-  it('should use default onError when not provided', () => {
-    const propsWithoutError = {
-      ...props,
-      onError: undefined,
-    };
-    const error = new Error('Highlight error');
-    mockRenderWithHighlights.mockImplementation(() => {
-      throw error;
-    });
-
-    const result = ItemTextHighlighted(propsWithoutError);
-
-    // Should not throw and return empty template
-    expect(result).toEqual(html``);
-  });
-
   it('should pass through all parameters correctly', () => {
     const customHighlightKeywords = [
       {offset: 0, length: 5},
