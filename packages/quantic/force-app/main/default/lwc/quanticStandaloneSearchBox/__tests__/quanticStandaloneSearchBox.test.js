@@ -5,6 +5,7 @@ import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {CurrentPageReference} from 'lightning/navigation';
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
 
 const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
 const defaultHeadlessConfiguration = JSON.stringify({
@@ -33,12 +34,15 @@ const exampleEngine = {
   id: 'engineId',
 };
 
+let updateState;
+let stateMock = {};
 const functionsMocks = {
   buildStandaloneSearchBox: jest.fn(() => ({
-    state: {},
+    state: stateMock,
     subscribe: functionsMocks.subscribe,
   })),
   subscribe: jest.fn((cb) => {
+    updateState = cb;
     cb();
     return functionsMocks.unsubscribe;
   }),
@@ -108,6 +112,112 @@ describe('c-quantic-standalone-search-box', () => {
 
   afterEach(() => {
     cleanup();
+  });
+
+  describe('with default options', () => {
+    it('should create the component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      expect(element).not.toBeNull();
+      const input = element.shadowRoot.querySelector(
+        'c-quantic-search-box-input'
+      );
+      expect(input).not.toBeNull();
+      expect(input.withoutSubmitButton).toBe(false);
+      expect(input.textarea).toBe(false);
+      expect(input.placeholder).toBe(null);
+      expect(input.inputValue).toBe('');
+      expect(input.recentQueries).toBeUndefined();
+      expect(input.maxNumberOfSuggestions).toBe(7);
+    });
+  });
+
+  describe('with custom options', () => {
+    it('should create the component with custom options', async () => {
+      const element = createTestComponent({
+        engineId: exampleEngine.id,
+        placeholder: 'place',
+        withoutSubmitButton: true,
+        numberOfSuggestions: 10,
+        keepFiltersOnSearch: true,
+        redirectUrl: '/custom-search/%40uri',
+        searchHub: 'customHub',
+        pipeline: 'customPipeline',
+        textarea: true,
+        disableRecentQueries: true,
+      });
+      await flushPromises();
+
+      expect(element).not.toBeNull();
+      const input = element.shadowRoot.querySelector(
+        'c-quantic-search-box-input'
+      );
+      expect(input).not.toBeNull();
+      expect(input.withoutSubmitButton).toBe(true);
+      expect(input.textarea).toBe(true);
+      expect(input.placeholder).toBe('place');
+      expect(input.inputValue).toBe('');
+      expect(input.recentQueries).toBeUndefined();
+      expect(input.maxNumberOfSuggestions).toBe(7);
+    });
+  });
+
+  describe('with suggestions', () => {
+    it('should create the component with suggestions', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      stateMock.suggestions = [
+        {
+          rawValue: 'suggestion1',
+          highlightedValue: 'suggestion1',
+        },
+        {
+          rawValue: 'suggestion2',
+          highlightedValue: 'suggestion2',
+        },
+      ];
+      updateState();
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(
+        'c-quantic-search-box-input'
+      );
+      expect(input.suggestions).toStrictEqual([
+        {
+          key: 0,
+          rawValue: 'suggestion1',
+          value: 'suggestion1',
+        },
+        {
+          key: 1,
+          rawValue: 'suggestion2',
+          value: 'suggestion2',
+        },
+      ]);
+
+      expect(
+        localStorage.getItem(STANDALONE_SEARCH_BOX_STORAGE_KEY)
+      ).toBeNull();
+    });
+  });
+
+  describe('with redirect', () => {
+    it('should redirect to the search page when a redirect is triggered', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      stateMock.redirectTo = true;
+      stateMock.value = 'search term';
+      stateMock.analytics = 'analytics babyyyy';
+      updateState();
+      await flushPromises();
+
+      expect(localStorage.getItem(STANDALONE_SEARCH_BOX_STORAGE_KEY)).toBe(
+        JSON.stringify({value: 'search term', analytics: 'analytics babyyyy'})
+      );
+    });
   });
 
   describe('controller initialization', () => {

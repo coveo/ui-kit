@@ -1,0 +1,95 @@
+import {testStandaloneSearchBox as test, expect} from './fixture';
+
+const mockSuggestions = async (page) => {
+  await page.route('**/rest/search/v2/querySuggest*', async (route: any) => {
+    const response = await route.fetch();
+    const json = await response.json();
+    json.completions = [
+      {
+        expression: 'test',
+        highlighted: '[test]',
+      },
+      {
+        expression: 'test 2',
+        highlighted: '[test][2]',
+      },
+    ];
+    json.responseId = 21322434;
+    await route.fulfill({response, json});
+  });
+};
+
+const variants = [
+  {variantName: 'default', isTextArea: false},
+  {variantName: 'expandable', isTextArea: true},
+];
+
+test.describe('quantic-standalone-search-box', () => {
+  variants.forEach(({variantName, isTextArea}) => {
+    test.describe(`variant ${variantName} with default options`, () => {
+      test.use({
+        options: {
+          textarea: isTextArea,
+        },
+      });
+
+      test('should display suggestions and redirect on click', async ({
+        searchBox,
+        page,
+      }) => {
+        await mockSuggestions(page);
+
+        await expect(searchBox.getSearchInputElement(isTextArea)).toBeVisible();
+        await expect(searchBox.searchButton).toBeVisible();
+
+        await expect(
+          searchBox.getSearchInputElement(isTextArea)
+        ).toHaveAttribute('placeholder', 'Search');
+        await expect(searchBox.searchBoxInput).toHaveAttribute(
+          'is-initialized',
+          'true'
+        );
+
+        await searchBox.getSearchInputElement(isTextArea).focus();
+        await page.waitForTimeout(500);
+
+        await expect(searchBox.suggestionsList).toBeVisible();
+        await expect((await searchBox.suggestions.all()).length).toBe(2);
+
+        await searchBox.suggestions.first().click();
+        await expect(page).toHaveURL(/\/global-search\/%40uri#q=test/);
+        const storage = await page.evaluate(() => {
+          return JSON.parse(
+            localStorage.getItem('LSKey[c]coveo-standalone-search-box') || '{}'
+          );
+        });
+        await expect(storage).toMatchObject({
+          analytics: {
+            cause: 'omniboxFromLink',
+            metadata: {suggestions: ['test', 'test 2']},
+          },
+          value: 'test',
+        });
+      });
+
+      test('should redirect on submitting query', async ({searchBox, page}) => {
+        const query = 'another query';
+        await searchBox.getSearchInputElement(isTextArea).fill(query);
+        await expect(searchBox.clearButton).toBeVisible();
+        await searchBox.searchButton.click();
+        await expect(page).toHaveURL(
+          new RegExp(`/global-search/%40uri#q=${encodeURIComponent(query)}`)
+        );
+        const storage = await page.evaluate(() => {
+          return JSON.parse(
+            localStorage.getItem('LSKey[c]coveo-standalone-search-box') || '{}'
+          );
+        });
+        await expect(storage).toMatchObject({
+          analytics: {cause: 'searchFromLink'},
+          value: query,
+        });
+      });
+    });
+  });
+});
