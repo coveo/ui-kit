@@ -12,6 +12,8 @@ import {
 import {buildMockCommerceState} from '../../../test/mock-commerce-state.js';
 import {buildMockSSRCommerceEngine} from '../../../test/mock-engine-v2.js';
 import {getSampleCommerceEngineConfiguration} from '../../commerce-engine/commerce-engine-configuration.js';
+import {LoggerOptions} from '../../logger.js';
+import * as augmentModule from '../../ssr-engine/augment-preprocess-request.js';
 import {
   InferControllersMapFromDefinition,
   SolutionType,
@@ -81,6 +83,34 @@ describe('fetchStaticStateFactory', () => {
     const factory = fetchStaticStateFactory(definition, mockEngineOptions);
     await factory(SolutionType.listing)();
     expect(engineSpy.mock.calls[0][0]).toStrictEqual(definition);
+  });
+
+  it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
+    const spy = vi.spyOn(
+      augmentModule,
+      'augmentPreprocessRequestWithForwardedFor'
+    );
+
+    const mockNavigatorContextProvider = vi.fn();
+    const mockPreprocessRequest = vi.fn(async (req) => req);
+    const options = {
+      configuration: {
+        ...getSampleCommerceEngineConfiguration(),
+        preprocessRequest: mockPreprocessRequest,
+      },
+      navigatorContextProvider: mockNavigatorContextProvider,
+      loggerOptions: {level: 'warn'} as LoggerOptions,
+    };
+
+    const factory = fetchStaticStateFactory(definition, options);
+    await factory(SolutionType.listing)();
+    expect(spy).toHaveBeenCalledWith({
+      loggerOptions: {level: 'warn'},
+      navigatorContextProvider: mockNavigatorContextProvider,
+      preprocessRequest: mockPreprocessRequest,
+    });
+
+    spy.mockRestore();
   });
 
   describe('when solution type is listing', () => {

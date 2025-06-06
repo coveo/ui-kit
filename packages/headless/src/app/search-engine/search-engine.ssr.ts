@@ -7,6 +7,7 @@ import {LegacySearchAction} from '../../features/analytics/analytics-utils.js';
 import {createWaitForActionMiddleware} from '../../utils/utils.js';
 import {buildLogger} from '../logger.js';
 import {NavigatorContextProvider} from '../navigator-context-provider.js';
+import {augmentPreprocessRequestWithForwardedFor} from '../ssr-engine/augment-preprocess-request.js';
 import {
   buildControllerDefinitions,
   composeFunction,
@@ -163,6 +164,14 @@ export function defineSearchEngine<
       const staticState = await fetchStaticState.fromBuildResult({
         buildResult,
       });
+
+      options.configuration.preprocessRequest =
+        augmentPreprocessRequestWithForwardedFor({
+          preprocessRequest: options.configuration.preprocessRequest,
+          navigatorContextProvider: options.navigatorContextProvider,
+          loggerOptions: options.loggerOptions,
+        });
+
       return staticState;
     },
     {

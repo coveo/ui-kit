@@ -28,12 +28,21 @@ export class NextJsNavigatorContext implements NavigatorContext {
     return clientId || crypto.randomUUID();
   }
 
+  get forwardedFor() {
+    return (
+      this.headers.get('x-forwarded-for') ||
+      this.headers.get('x-forwarded-host') ||
+      ''
+    );
+  }
+
   get marshal(): NavigatorContext {
     return {
       clientId: this.clientId,
       location: this.location,
       referrer: this.referrer,
       userAgent: this.userAgent,
+      forwardedFor: this.forwardedFor,
     };
   }
 }
