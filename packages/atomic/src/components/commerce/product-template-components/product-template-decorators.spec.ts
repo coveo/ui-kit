@@ -1,10 +1,8 @@
-import * as interactiveItemContextModule from '@/src/decorators/item-list/interactive-item-context';
 import * as itemContextModule from '@/src/decorators/item-list/item-context';
 import {describe, it, expect, vi} from 'vitest';
 import * as fetchItemContextModule from '../../common/item-list/fetch-item-context';
 import {
   productContext,
-  interactiveProductContext,
   fetchProductContext,
 } from './product-template-decorators';
 
@@ -37,21 +35,6 @@ describe('product-template-decorators', () => {
         parentName: 'atomic-product',
         folded: true,
       });
-    });
-  });
-
-  describe('#InteractiveProductContext', () => {
-    it('should call InteractiveItemContext with no arguments', () => {
-      const mockInteractiveItemContext = vi.fn();
-      vi.mocked(
-        interactiveItemContextModule.interactiveItemContext
-      ).mockReturnValue(mockInteractiveItemContext);
-
-      interactiveProductContext();
-
-      expect(
-        interactiveItemContextModule.interactiveItemContext
-      ).toHaveBeenCalledWith();
     });
   });
 
