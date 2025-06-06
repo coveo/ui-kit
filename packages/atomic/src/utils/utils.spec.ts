@@ -1,4 +1,4 @@
-import {vi, describe, it, expect} from 'vitest';
+import {vi, beforeEach, describe, it, expect} from 'vitest';
 import {once, camelToKebab, randomID, kebabToCamel, aggregate} from './utils';
 
 beforeEach(() => {
