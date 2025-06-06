@@ -13,7 +13,7 @@ import {InitializableComponent} from './types';
  * import {bindings} from './decorators/bindings';
  * import {InitializableComponent} from './decorators/types';
  *
- * @customElement('test-element')
+ * @atomicElement('test-element')
  * @bindings()
  * export class TestElement extends LitElement implements InitializableComponent<Bindings> {
  *

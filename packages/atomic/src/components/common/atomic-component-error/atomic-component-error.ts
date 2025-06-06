@@ -1,11 +1,12 @@
+import {atomicElement} from '@/src/decorators/atomic-element';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles';
 import {html, LitElement} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
+import {property} from 'lit/decorators.js';
 
 /**
  * The `atomic-component-error` component is used by other components to render and log errors.
  */
-@customElement('atomic-component-error')
+@atomicElement('atomic-component-error')
 @withTailwindStyles
 export class AtomicComponentError extends LitElement {
   @property({type: Object}) element!: HTMLElement;
