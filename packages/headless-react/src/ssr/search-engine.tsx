@@ -50,7 +50,7 @@ export function defineSearchEngine<
      */
     StaticStateProvider: buildStaticStateProvider(singletonContext),
     /**
-     * @deprecated Use `HydratedStateProvider` instead.
+     * @deprecated Use `StateProvider` instead.
      */
     HydratedStateProvider: buildHydratedStateProvider(singletonContext),
     StateProvider: buildStateProvider(singletonContext),
