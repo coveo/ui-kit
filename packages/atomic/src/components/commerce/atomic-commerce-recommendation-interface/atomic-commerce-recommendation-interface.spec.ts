@@ -1,3 +1,9 @@
+import {
+  AtomicCommerceRecommendationInterface,
+  CommerceBindings,
+} from '@/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface';
+import {createCommerceRecommendationStore} from '@/src/components/commerce/atomic-commerce-recommendation-interface/store';
+import {CommonAtomicInterfaceHelper} from '@/src/components/common/interface/interface-common';
 import {bindings} from '@/src/decorators/bindings';
 import {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -13,12 +19,6 @@ import {customElement, state} from 'lit/decorators.js';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {within} from 'shadow-dom-testing-library';
 import {beforeEach, describe, expect, it, vi} from 'vitest';
-import {CommonAtomicInterfaceHelper} from '../../common/interface/interface-common';
-import {
-  AtomicCommerceRecommendationInterface,
-  CommerceBindings,
-} from './atomic-commerce-recommendation-interface';
-import {createCommerceRecommendationStore} from './store';
 
 vi.mock('i18next', {spy: true});
 vi.mock('@coveo/headless/commerce', {spy: true});
