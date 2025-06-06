@@ -41,12 +41,22 @@ export class NextJsPagesRouterNavigatorContext implements NavigatorContext {
     return clientId || crypto.randomUUID();
   }
 
+  get forwardedFor() {
+    const forwardedForHeader =
+      this.headers['x-forwarded-for'] || this.headers['x-forwarded-host'];
+    const forwardedFor = Array.isArray(forwardedForHeader)
+      ? forwardedForHeader[0]
+      : forwardedForHeader;
+    return forwardedFor ?? null;
+  }
+
   get marshal(): NavigatorContext {
     return {
       clientId: this.clientId,
       location: this.location,
       referrer: this.referrer,
       userAgent: this.userAgent,
+      forwardedFor: this.forwardedFor,
     };
   }
 }
