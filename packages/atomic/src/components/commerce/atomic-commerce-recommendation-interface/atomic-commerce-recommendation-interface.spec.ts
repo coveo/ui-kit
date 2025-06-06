@@ -538,6 +538,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(within(element).queryByShadowText('test-element')).toBeTruthy();
   });
 
+  // Cursory "integration" test.
   it('should provide bindings to its children', async () => {
     const element = await setupElement();
     const childElement = await addChildElement(element);
