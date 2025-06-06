@@ -50,6 +50,11 @@ export class NextJsNavigatorContext implements NavigatorContext {
     return clientId!;
   }
 
+  /**
+   * Retrieves the forwarded-for header, which may contain the original IP address
+   * of the client making the request.
+   * @returns The forwarded-for IP address if available, otherwise an empty string.
+   */
   get forwardedFor() {
     return (
       this.headers.get('x-forwarded-for') ||
