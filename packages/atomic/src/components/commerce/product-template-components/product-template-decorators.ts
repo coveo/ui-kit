@@ -1,13 +1,11 @@
 import {
-  interactiveItemContext,
+  InteractiveItemContext,
   InteractiveItemContextEvent,
-} from '@/src/decorators/item-list/interactive-item-context';
-import {
   itemContext,
+  ItemContext,
   ItemContextEvent,
-} from '@/src/decorators/item-list/item-context';
+} from '@/src/components/common/item-list/stencil-item-decorators';
 import {Product} from '@coveo/headless/commerce';
-import {fetchItemContext} from '../../common/item-list/fetch-item-context';
 
 /**
  * A [Lit property decorator](https://lit.dev/docs/components/decorators/) to be used for product template components.
@@ -21,11 +19,11 @@ import {fetchItemContext} from '../../common/item-list/fetch-item-context';
  * For more information and examples, view the [Utilities section](https://github.com/coveo/ui-kit/tree/master/packages/atomic#utilities) of the Coveo Atomic README.
  */
 export function ProductContext(opts: {folded: boolean} = {folded: false}) {
-  return itemContext({parentName: 'atomic-product', folded: opts.folded});
+  return ItemContext({parentName: 'atomic-product', folded: opts.folded});
 }
 
 export function InteractiveProductContext() {
-  return interactiveItemContext();
+  return InteractiveItemContext();
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
@@ -42,5 +40,5 @@ export type InteractiveProductContextEvent = InteractiveItemContextEvent;
  * @returns A promise that resolves on initialization of the parent "atomic-product" element, or rejects when there is no parent "atomic-product" element.
  */
 export function productContext<T extends Product>(element: Element) {
-  return fetchItemContext<T>(element, 'atomic-product');
+  return itemContext<T>(element, 'atomic-product');
 }
