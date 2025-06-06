@@ -29,7 +29,7 @@ export function augmentPreprocessRequestWithForwardedFor(
     } else {
       const logger = buildLogger(options.loggerOptions);
       logger.warn(
-        '[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider.'
+        "[WARNING] Unable to set x-forwarded-for header. Make sure to set the 'forwardedFor' property in the navigator context provider."
       );
     }
     request.headers = headers;
