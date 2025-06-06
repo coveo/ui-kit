@@ -16,10 +16,10 @@ export interface SearchBoxSelector extends ComponentSelector {
 export const SearchBoxSelectors: SearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
   quanticSearchBoxInput: () =>
-    SearchBoxSelectors.get().find('[data-cy="quantic-search-box-input"]'),
+    SearchBoxSelectors.get().find('[data-testid="quantic-search-box-input"]'),
   input: (textarea = false) =>
     SearchBoxSelectors.get().find(
-      `c-quantic-search-box-input [data-cy="${textarea ? 'search-box-textarea' : 'search-box-input'}"]`
+      `c-quantic-search-box-input [data-testid="${textarea ? 'search-box-textarea' : 'search-box-input'}"]`
     ),
   suggestionList: () =>
     SearchBoxSelectors.get().find(

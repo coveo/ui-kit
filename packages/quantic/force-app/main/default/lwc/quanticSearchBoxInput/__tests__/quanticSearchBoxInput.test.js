@@ -28,8 +28,8 @@ const defaultOptions = {
 };
 
 const selectors = {
-  searchBoxInput: '[data-cy="search-box-input"]',
-  searchBoxTextArea: '[data-cy="search-box-textarea"]',
+  searchBoxInput: '[data-testid="search-box-input"]',
+  searchBoxTextArea: '[data-testid="search-box-textarea"]',
   searchBoxSubmitBtn: '.searchbox__submit-button',
   searchBoxClearIcon: '.searchbox__clear-button',
   searchBoxSuggestionsList: 'c-quantic-search-box-suggestions-list',
@@ -39,7 +39,7 @@ const selectors = {
   searchBoxSearchIcon: '.searchbox__search-icon',
   suggestionOption: '[data-cy="suggestions-option"]',
   suggestionOptionText: '[data-cy="suggestions-option-text"]',
-  clearRecentQueryButton: '[data-testid="clear-recent-queries"]',
+  clearRecentQueryButton: '[data-testid="clear-recent-queries-button"]',
 };
 
 function setupEventListeners(element) {
@@ -195,7 +195,7 @@ describe('c-quantic-search-box-input', () => {
 
       describe('when the suggestions list is not empty', () => {
         describe('when only query suggestions are displayed', () => {
-          it('should display the suggestions in the suggestions list', async () => {
+          it('should pass the suggestions to the suggestions list', async () => {
             const expectedSuggestionsLabelValues = [
               ...mockSuggestions.map((suggestion) => suggestion.rawValue),
             ];
