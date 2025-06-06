@@ -5,7 +5,7 @@ import {
   ItemContext,
   ItemContextEvent,
   itemContext,
-} from '../../common/item-list/item-decorators';
+} from '../../common/item-list/stencil-item-decorators';
 
 /**
  * A [StencilJS property decorator](https://stenciljs.com/) to be used for product template components.

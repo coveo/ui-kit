@@ -8,7 +8,7 @@ import {
   DisplayConfig,
   InteractiveItemContextEvent,
   ItemContextEvent,
-} from '../../common/item-list/item-decorators';
+} from '../../common/item-list/stencil-item-decorators';
 import {resultComponentClass} from '../../common/item-list/stencil-item-list-common';
 import {
   ItemLayout,
