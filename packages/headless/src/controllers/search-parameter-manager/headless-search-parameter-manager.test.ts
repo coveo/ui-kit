@@ -251,11 +251,13 @@ describe('search parameter manager', () => {
       const params = {q: 'a'};
       manager.synchronize(params);
 
-      const {tab, ...initialParametersWithoutTab} =
-        initialSearchParameterSelector(engine.state);
-
+      const initialParameters = initialSearchParameterSelector(engine.state);
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialParametersWithoutTab,
+        ...initialParameters,
+        ...params,
+      });
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialParameters,
         ...params,
       });
     });

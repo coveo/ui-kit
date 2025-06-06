@@ -1,4 +1,7 @@
-import {restoreTab} from '../search-parameters/search-parameter-actions.js';
+import {
+  restoreSearchParameters,
+  restoreTab,
+} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
@@ -288,6 +291,17 @@ describe('configuration slice', () => {
       const finalState = configurationReducer(
         state,
         restoreTab('restoredTabId')
+      );
+      expect(finalState.analytics.originLevel2).toBe('restoredTabId');
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('updates the originLevel2 to the tab id', () => {
+      const state = getConfigurationInitialState();
+      const finalState = configurationReducer(
+        state,
+        restoreSearchParameters({tab: 'restoredTabId'})
       );
       expect(finalState.analytics.originLevel2).toBe('restoredTabId');
     });

@@ -1,7 +1,10 @@
 import {buildMockTabSlice} from '../../test/mock-tab-state.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
-import {restoreTab} from '../search-parameters/search-parameter-actions.js';
+import {
+  restoreSearchParameters,
+  restoreTab,
+} from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
 import {tabSetReducer} from './tab-set-slice.js';
 
@@ -128,6 +131,23 @@ describe('tab set slice', () => {
       const tab = buildMockTabSlice({id: 'a', isActive: true});
       const finalState = tabSetReducer({a: tab}, restoreTab('b'));
       expect(finalState).toEqual({a: tab});
+    });
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the #tab is defined, it sets the tab as active', () => {
+      const tabA = buildMockTabSlice({id: 'a', isActive: false});
+      const tabB = buildMockTabSlice({id: 'b', isActive: true});
+
+      const finalState = tabSetReducer(
+        {a: tabA, b: tabB},
+        restoreSearchParameters({tab: 'a'})
+      );
+
+      expect(finalState).toEqual({
+        a: {...tabA, isActive: true},
+        b: {...tabB, isActive: false},
+      });
     });
   });
 });

@@ -64,11 +64,10 @@ describe('url manager', () => {
     should restore the right parameters and execute a search`, () => {
       manager.synchronize('q=test');
 
-      const {tab, ...initialParametersWithoutTab} =
-        initialSearchParameterSelector(engine.state);
+      const initialParameters = initialSearchParameterSelector(engine.state);
 
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialParametersWithoutTab,
+        ...initialParameters,
         q: 'test',
       });
       expect(executeSearch).toHaveBeenCalled();
@@ -101,11 +100,10 @@ describe('url manager', () => {
       engine.state.query!.q = 'books';
       manager.synchronize('q=movies');
 
-      const {tab, ...initialParametersWithoutTab} =
-        initialSearchParameterSelector(engine.state);
+      const initialParameters = initialSearchParameterSelector(engine.state);
 
       expect(restoreSearchParameters).toHaveBeenCalledWith({
-        ...initialParametersWithoutTab,
+        ...initialParameters,
         q: 'movies',
       });
 

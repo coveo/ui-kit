@@ -2,7 +2,10 @@ import {isNullOrUndefined} from '@coveo/bueno';
 //@ts-expect-error package is just an alias resolved in esbuild
 import getMagicCookie from '@coveo/pendragon';
 import {createReducer} from '@reduxjs/toolkit';
-import {restoreTab} from '../search-parameters/search-parameter-actions.js';
+import {
+  restoreSearchParameters,
+  restoreTab,
+} from '../search-parameters/search-parameter-actions.js';
 import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   updateBasicConfiguration,
@@ -51,6 +54,11 @@ export const configurationReducer = createReducer(
       })
       .addCase(restoreTab, (state, action) => {
         state.analytics.originLevel2 = action.payload;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        if (!isNullOrUndefined(action.payload.tab)) {
+          state.analytics.originLevel2 = action.payload.tab;
+        }
       })
 );
 

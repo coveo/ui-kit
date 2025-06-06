@@ -1,6 +1,10 @@
+import {isNullOrUndefined} from '@coveo/bueno';
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions.js';
-import {restoreTab} from '../search-parameters/search-parameter-actions.js';
+import {
+  restoreSearchParameters,
+  restoreTab,
+} from '../search-parameters/search-parameter-actions.js';
 import {registerTab, updateActiveTab} from './tab-set-actions.js';
 import {getTabSetInitialState, TabSetState} from './tab-set-state.js';
 
@@ -28,6 +32,14 @@ export const tabSetReducer = createReducer(
       })
       .addCase(change.fulfilled, (state, action) => {
         return action.payload?.tabSet ?? state;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        const id = action.payload.tab;
+        if (!isNullOrUndefined(id)) {
+          Object.keys(state).forEach((tabId) => {
+            state[tabId].isActive = tabId === id;
+          });
+        }
       });
   }
 );
