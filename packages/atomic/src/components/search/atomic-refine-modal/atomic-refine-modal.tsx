@@ -39,7 +39,8 @@ import {
   RefineModalFiltersClearButton,
   RefineModalFiltersSection,
 } from '../../common/refine-modal/filters';
-import {isRefineModalFacet, RefineModal} from '../../common/refine-modal/modal';
+import {RefineModal} from '../../common/refine-modal/modal';
+import {isRefineModalFacet} from '../../common/refine-modal/refine-modal-facet';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';

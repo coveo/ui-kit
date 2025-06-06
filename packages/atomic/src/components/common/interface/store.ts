@@ -6,7 +6,7 @@ import {
   FacetType,
   FacetValueFormat,
 } from '../facets/facet-common-store';
-import {isRefineModalFacet} from '../refine-modal/modal';
+import {isRefineModalFacet} from '../refine-modal/refine-modal-facet';
 import {AnyEngineType} from './bindings';
 
 export type BaseStore<T> = CommonStore<T> & {
