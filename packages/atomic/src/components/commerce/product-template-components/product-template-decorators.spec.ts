@@ -11,6 +11,7 @@ import {
 vi.mock('@/src/decorators/item-list/item-context');
 vi.mock('@/src/decorators/item-list/interactive-item-context');
 vi.mock('../../common/item-list/item-context');
+vi.mock('../../common/item-list/fetch-item-context');
 
 describe('product-template-decorators', () => {
   describe('#ProductContext', () => {
@@ -54,8 +55,8 @@ describe('product-template-decorators', () => {
     });
   });
 
-  describe('#productContext', () => {
-    it('should call itemContext with element and atomic-product parent name', () => {
+  describe('#fetchProductContext', () => {
+    it('should call fetchItemContext with element and atomic-product parent name', () => {
       const mockElement = document.createElement('div');
       const mockPromise = Promise.resolve({});
       vi.mocked(fetchItemContextModule.fetchItemContext).mockReturnValue(
