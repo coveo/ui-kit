@@ -1,4 +1,4 @@
-import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
+import type {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';
 import {
   AutomaticFacetSection,
   CategoryFacetSection,

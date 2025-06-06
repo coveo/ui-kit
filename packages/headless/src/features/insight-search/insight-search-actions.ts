@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {
   SearchOptions,
   isErrorResponse,
@@ -264,7 +264,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
 export const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
+    HistoryStore.getInstance().addElement({
       name: 'Query',
       ...(state.query?.q && {
         value: state.query.q,

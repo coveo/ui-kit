@@ -265,7 +265,6 @@ async function buildBrowserConfig(options, outDir) {
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
         pino: resolveBrowser('pino'),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-browser.js'),
       }),
       ...(isCDN ? replaceBuenoImport : []),
       ...(options.plugins || []),
@@ -277,30 +276,13 @@ async function buildBrowserConfig(options, outDir) {
 
 const nodeCjs = Object.entries(useCaseEntries).map((entry) => {
   const [useCase, entryPoint] = entry;
-  const dir = getUseCaseDir('dist/', useCase);
+  const dir = getUseCaseDir('dist/cjs', useCase);
   const outfile = `${dir}/headless.cjs`;
   return buildNodeConfig(
     {
       entryPoints: [entryPoint],
       outfile,
       format: 'cjs',
-    },
-    dir
-  );
-});
-
-const nodeEsm = Object.entries(useCaseEntries).map((entry) => {
-  const [useCase, entryPoint] = entry;
-  const dir = getUseCaseDir('dist/', useCase);
-  const outfile = `${dir}/headless.esm.js`;
-
-  return buildNodeConfig(
-    {
-      entryPoints: [entryPoint],
-      outfile,
-      sourcemap: true,
-      format: 'esm',
-      mainFields: ['module', 'main'],
     },
     dir
   );
@@ -320,7 +302,6 @@ async function buildNodeConfig(options, outDir) {
     plugins: [
       alias({
         'coveo.analytics': resolveEsm('coveo.analytics'),
-        '@coveo/pendragon': resolve('./ponyfills', 'magic-cookie-node.js'),
       }),
     ],
     ...options,
@@ -337,13 +318,7 @@ function outputMetafile(platform, outDir, metafile) {
 }
 
 async function main() {
-  await Promise.all([
-    ...browserEsm,
-    ...browserUmd,
-    ...nodeEsm,
-    ...nodeCjs,
-    ...quanticUmd,
-  ]);
+  await Promise.all([...browserEsm, ...browserUmd, ...nodeCjs, ...quanticUmd]);
 }
 
 main();

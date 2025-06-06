@@ -3,7 +3,7 @@ import {
   SearchPageClientProvider,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,
@@ -24,10 +24,10 @@ import {getOrganizationEndpoint} from '../platform-client.js';
 import {PreprocessRequest} from '../preprocess-request.js';
 import {BaseAnalyticsProvider} from './base-analytics.js';
 import {
-  historyStore,
   wrapAnalyticsClientSendEventHook,
   wrapPreprocessRequest,
 } from './coveo-analytics-utils.js';
+import HistoryStore from './coveo.analytics/history-store.js';
 
 export type StateNeededBySearchAnalyticsProvider = ConfigurationSection &
   Partial<Omit<SearchAppState, 'configuration'>>;
@@ -345,7 +345,7 @@ export const configureLegacyAnalytics = ({
 };
 
 export const getPageID = () => {
-  const actions = historyStore.getHistory();
+  const actions = HistoryStore.getInstance().getHistory();
   const lastPageView = actions.reverse().find((action) => {
     return action.name === 'PageView' && action.value;
   });

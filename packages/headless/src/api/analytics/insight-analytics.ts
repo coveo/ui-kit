@@ -3,7 +3,7 @@ import {
   InsightClientProvider,
   CoveoInsightClient,
 } from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {Logger} from 'pino';
 import {
   buildFacetStateMetadata,

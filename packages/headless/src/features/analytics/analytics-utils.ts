@@ -20,9 +20,9 @@ import type {
   EventDescription,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
-import {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics.js';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
-import {
+import type {AnalyticsClient} from 'coveo.analytics/dist/definitions/client/analytics.js';
+import type {SearchEventResponse} from 'coveo.analytics/dist/definitions/events.js';
+import type {
   PartialDocumentInformation,
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents.js';

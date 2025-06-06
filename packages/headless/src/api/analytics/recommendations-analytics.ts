@@ -1,5 +1,5 @@
 import {SearchPageClientProvider} from 'coveo.analytics';
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {getQueryInitialState} from '../../features/query/query-state.js';
 import {getRecommendationInitialState} from '../../features/recommendation/recommendation-state.js';
 import {

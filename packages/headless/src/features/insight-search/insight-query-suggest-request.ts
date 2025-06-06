@@ -1,4 +1,4 @@
-import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getOrganizationEndpoint} from '../../api/platform-client.js';
 import {InsightQuerySuggestRequest} from '../../api/service/insight/query-suggest/query-suggest-request.js';
 import {InsightAppState} from '../../state/insight-app-state.js';
@@ -28,7 +28,7 @@ export const buildInsightQuerySuggestRequest = async (
     q: s.querySet?.[id],
     timezone: s.configuration.search.timezone,
     actionsHistory: s.configuration.analytics.enabled
-      ? historyStore.getHistory()
+      ? HistoryStore.getInstance().getHistory()
       : [],
     ...(s.insightCaseContext?.caseContext && {
       context: s.insightCaseContext.caseContext,
