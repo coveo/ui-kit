@@ -421,13 +421,10 @@ export class SuggestionManager<SearchBoxController> {
     const filterOnDuplicate = new Set();
 
     const out = suggestionElements.filter((suggestionElement) => {
-      if (isNullOrUndefined(suggestionElement.query)) {
-        return true;
-      }
-      if (filterOnDuplicate.has(suggestionElement.query)) {
+      if (filterOnDuplicate.has(suggestionElement.key)) {
         return false;
       } else {
-        filterOnDuplicate.add(suggestionElement.query);
+        filterOnDuplicate.add(suggestionElement.key);
         return true;
       }
     });
