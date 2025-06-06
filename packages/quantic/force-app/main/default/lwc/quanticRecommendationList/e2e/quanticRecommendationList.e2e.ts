@@ -47,7 +47,7 @@ test.describe('quantic recommendation list', () => {
           recommendation: expectedRecommendationValue,
         })
       );
-      expect(recommendationList.recommendationList).toBeVisible();
+      await expect(recommendationList.recommendationList).toBeVisible();
     });
   });
 });
