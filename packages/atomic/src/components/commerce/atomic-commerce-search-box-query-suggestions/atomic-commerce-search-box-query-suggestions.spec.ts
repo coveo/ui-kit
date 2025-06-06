@@ -8,6 +8,7 @@ import {buildFakeLoadQuerySuggestActions} from '@/vitest-utils/testing-helpers/f
 import {loadQuerySuggestActions} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, it, vi, expect, beforeEach, MockInstance} from 'vitest';
 import {
   SearchBoxSuggestionElement,
@@ -25,11 +26,16 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
     );
   });
 
-  const renderElements = async (bindings: {} = {}) => {
+  const renderElements = async (
+    bindings: {} = {},
+    maxWithoutQuery?: number
+  ) => {
     const {element, searchBox} =
       await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxQuerySuggestions>(
         {
-          template: html`<atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>`,
+          template: html`<atomic-commerce-search-box-query-suggestions
+            max-without-query=${ifDefined(maxWithoutQuery)}
+          ></atomic-commerce-search-box-query-suggestions>`,
           selector: 'atomic-commerce-search-box-query-suggestions',
           bindings: {
             ...bindings,
@@ -148,24 +154,107 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       );
     });
 
-    describe('renderItems', () => {
+    describe('when returning the renderItems function', () => {
       let element: AtomicCommerceSearchBoxQuerySuggestions;
       let object: SearchBoxSuggestions;
       let items: SearchBoxSuggestionElement[];
+      let content: HTMLElement;
 
-      beforeEach(async () => {
-        ({element} = await renderElements());
+      const setupRenderItemsTest = async (
+        bindings: {} = {},
+        maxWithoutQuery?: number
+      ) => {
+        ({element} = await renderElements(bindings, maxWithoutQuery));
         object = element.initialize();
         items = object.renderItems();
+        content = items[0].content as HTMLElement;
+      };
+
+      it('should return the correct number of items', async () => {
+        await setupRenderItemsTest({
+          searchBoxController: {
+            state: {
+              suggestions: [
+                {
+                  highlightedValue: 'suggestion1Highlighted',
+                  rawValue: 'suggestion1',
+                },
+              ],
+              value: 'query',
+            },
+            selectSuggestion: vi.fn(),
+          },
+        });
+
+        expect(items.length).toBe(1);
       });
 
-      it('should return the correct number of items', () => {
-        expect(items.length).toBe(
-          element.bindings.searchBoxController.state.suggestions.length
+      it('should return the correct number of items when there is more suggestions that the maxWithQuery', async () => {
+        await setupRenderItemsTest({
+          searchBoxController: {
+            state: {
+              suggestions: [
+                {
+                  highlightedValue: 'suggestion1Highlighted',
+                  rawValue: 'suggestion1',
+                },
+                {
+                  highlightedValue: 'suggestion2Highlighted',
+                  rawValue: 'suggestion2',
+                },
+                {
+                  highlightedValue: 'suggestion3Highlighted',
+                  rawValue: 'suggestion3',
+                },
+                {
+                  highlightedValue: 'suggestion4Highlighted',
+                  rawValue: 'suggestion4',
+                },
+              ],
+              value: 'query',
+            },
+            selectSuggestion: vi.fn(),
+          },
+        });
+
+        expect(items.length).toBe(3);
+      });
+
+      it('should return the correct number of items when there is more suggestions than the maxWithoutQuery', async () => {
+        await setupRenderItemsTest(
+          {
+            searchBoxController: {
+              state: {
+                suggestions: [
+                  {
+                    highlightedValue: 'suggestion1Highlighted',
+                    rawValue: 'suggestion1',
+                  },
+                  {
+                    highlightedValue: 'suggestion2Highlighted',
+                    rawValue: 'suggestion2',
+                  },
+                  {
+                    highlightedValue: 'suggestion3Highlighted',
+                    rawValue: 'suggestion3',
+                  },
+                  {
+                    highlightedValue: 'suggestion4Highlighted',
+                    rawValue: 'suggestion4',
+                  },
+                ],
+                value: '',
+              },
+              selectSuggestion: vi.fn(),
+            },
+          },
+          3
         );
+
+        expect(items.length).toBe(3);
       });
 
-      it('each item should have the correct properties', () => {
+      it('should have the correct properties on an item', () => {
         expect(items[0]).toEqual(
           expect.objectContaining({
             part: 'query-suggestion-item',
@@ -176,12 +265,12 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         );
       });
 
-      it('each item should have the correct content', () => {
+      it('should have the correct content on an item', () => {
         expect(items[0].content).toBeDefined();
         expect(items[0].content).toBeInstanceOf(HTMLElement);
       });
 
-      it('each item should have the correct onSelect function', () => {
+      it('should have the correct onSelect function on an item', () => {
         const suggestion =
           element.bindings.searchBoxController.state.suggestions[0].rawValue;
 
@@ -192,16 +281,9 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         ).toHaveBeenCalledWith(suggestion);
       });
 
-      describe('content', () => {
-        const setupContentTest = async (bindings: {}) => {
-          ({element} = await renderElements(bindings));
-          object = element.initialize();
-          items = object.renderItems();
-          return items[0].content as HTMLElement;
-        };
-
+      describe('when rendering the content', () => {
         it('should contain an icon if there are multiple kinds of suggestions', async () => {
-          const content = await setupContentTest({
+          await setupRenderItemsTest({
             getSuggestions: vi.fn(() => Array(2)),
           });
 
@@ -211,7 +293,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         });
 
         it('should not contain an icon if there is only one kind of suggestion', async () => {
-          const content = await setupContentTest({
+          await setupRenderItemsTest({
             getSuggestions: vi.fn(() => Array(1)),
           });
 
@@ -220,7 +302,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         });
 
         it('should contain the highlighted value if there is a query', async () => {
-          const content = await setupContentTest({
+          await setupRenderItemsTest({
             searchBoxController: {
               state: {
                 suggestions: [
@@ -239,7 +321,7 @@ describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
         });
 
         it('should contain the raw value if there is no query', async () => {
-          const content = await setupContentTest({
+          await setupRenderItemsTest({
             searchBoxController: {
               state: {
                 suggestions: [
