@@ -1,4 +1,5 @@
-import {html, TemplateResult} from 'lit';
+import {FunctionalComponent} from '@/src/utils/functional-component-utils.js';
+import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {
   HighlightKeywords,
@@ -26,14 +27,17 @@ export interface ItemTextHighlightedProps {
 }
 
 /**
- * The ItemTextHighlighted functional component renders text with highlighted keywords.
+ * The renderItemTextHighlighted functional component renders text with highlighted keywords.
  */
-export function ItemTextHighlighted({
-  textValue,
-  highlightKeywords,
-  highlightString,
-  onError = () => {},
-}: ItemTextHighlightedProps): TemplateResult {
+export const renderItemTextHighlighted: FunctionalComponent<
+  ItemTextHighlightedProps
+> = ({props}) => {
+  const {
+    textValue,
+    highlightKeywords,
+    highlightString,
+    onError = (error: Error) => console.error(error),
+  } = props;
   try {
     const highlightedValue = renderWithHighlights(
       textValue,
@@ -46,4 +50,4 @@ export function ItemTextHighlighted({
     onError(error as Error);
     return html``;
   }
-}
+};

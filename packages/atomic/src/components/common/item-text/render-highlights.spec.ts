@@ -218,7 +218,7 @@ describe('render-highlights', () => {
           );
 
           for (const highlight of sortedHighlights) {
-            const before /*  */ = result.slice(0, highlight.offset);
+            const before = result.slice(0, highlight.offset);
             const highlighted = result.slice(
               highlight.offset,
               highlight.offset + highlight.length

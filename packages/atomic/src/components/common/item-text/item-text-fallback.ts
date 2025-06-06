@@ -1,5 +1,6 @@
+import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils.js';
 import {isUndefined} from '@coveo/bueno';
-import {html, TemplateResult, nothing} from 'lit';
+import {html, nothing} from 'lit';
 import {possiblyWarnOnBadFieldType} from './field-warning.js';
 
 export interface ItemTextProps<T> {
@@ -11,17 +12,19 @@ export interface ItemTextProps<T> {
   getProperty: (result: T, property: string) => unknown;
 }
 
-export const ItemTextFallback = <T>(
-  {field, host, logger, defaultValue, item, getProperty}: ItemTextProps<T>,
-  children: TemplateResult | TemplateResult[]
-): TemplateResult | typeof nothing | null => {
-  const raw = getProperty(item, field);
-  possiblyWarnOnBadFieldType(field, raw, host, logger);
+export const renderItemTextFallback: FunctionalComponentWithChildren<
+  ItemTextProps<unknown>
+> =
+  ({props}) =>
+  (children) => {
+    const {getProperty, item, field, host, logger, defaultValue} = props;
+    const raw = getProperty(item, field);
+    possiblyWarnOnBadFieldType(field, raw, host, logger);
 
-  if (isUndefined(defaultValue)) {
-    host.remove();
-    return null;
-  } else {
-    return html`${children}`;
-  }
-};
+    if (isUndefined(defaultValue)) {
+      host.remove();
+      return nothing;
+    } else {
+      return html`${children}`;
+    }
+  };

@@ -2,7 +2,7 @@ import {html} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {
-  ItemTextHighlighted,
+  renderItemTextHighlighted,
   ItemTextHighlightedProps,
 } from './item-text-highlighted';
 import {renderWithHighlights} from './render-highlights';
@@ -11,7 +11,7 @@ vi.mock('./render-highlights', () => ({
   renderWithHighlights: vi.fn(),
 }));
 
-describe('#ItemTextHighlighted', () => {
+describe('#renderItemTextHighlighted', () => {
   let props: ItemTextHighlightedProps;
   let mockRenderWithHighlights: ReturnType<typeof vi.fn>;
 
@@ -29,7 +29,7 @@ describe('#ItemTextHighlighted', () => {
     const expectedHighlightedValue = 'Hello <b>world</b>';
     mockRenderWithHighlights.mockReturnValue(expectedHighlightedValue);
 
-    const result = ItemTextHighlighted(props);
+    const result = renderItemTextHighlighted({props});
 
     expect(mockRenderWithHighlights).toHaveBeenCalledWith(
       'Hello world',
@@ -45,7 +45,7 @@ describe('#ItemTextHighlighted', () => {
       throw error;
     });
 
-    const result = ItemTextHighlighted(props);
+    const result = renderItemTextHighlighted({props});
 
     expect(props.onError).toHaveBeenCalledWith(error);
     expect(result).toEqual(html``);
@@ -66,7 +66,7 @@ describe('#ItemTextHighlighted', () => {
 
     mockRenderWithHighlights.mockReturnValue('highlighted content');
 
-    ItemTextHighlighted(customProps);
+    renderItemTextHighlighted({props: customProps});
 
     expect(mockRenderWithHighlights).toHaveBeenCalledWith(
       'Custom text content',
@@ -83,7 +83,7 @@ describe('#ItemTextHighlighted', () => {
 
     mockRenderWithHighlights.mockReturnValue('');
 
-    const result = ItemTextHighlighted(emptyProps);
+    const result = renderItemTextHighlighted({props: emptyProps});
 
     expect(mockRenderWithHighlights).toHaveBeenCalledWith(
       '',
@@ -101,7 +101,7 @@ describe('#ItemTextHighlighted', () => {
 
     mockRenderWithHighlights.mockReturnValue('Hello world');
 
-    const result = ItemTextHighlighted(emptyHighlightsProps);
+    const result = renderItemTextHighlighted({props: emptyHighlightsProps});
 
     expect(mockRenderWithHighlights).toHaveBeenCalledWith(
       'Hello world',

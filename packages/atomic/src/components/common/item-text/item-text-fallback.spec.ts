@@ -1,7 +1,7 @@
 import {isUndefined} from '@coveo/bueno';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
-import {ItemTextFallback, ItemTextProps} from './item-text-fallback';
+import {renderItemTextFallback, ItemTextProps} from './item-text-fallback';
 
 vi.mock('@coveo/bueno', () => ({
   isUndefined: vi.fn(),
@@ -45,20 +45,20 @@ describe('ItemTextFallback', () => {
     mockIsUndefined.mockReturnValue(false);
 
     const children = html`<span>Test content</span>`;
-    const result = ItemTextFallback(props, children);
+    const result = renderItemTextFallback({props})(children);
 
     expect(result).toEqual(html`${children}`);
   });
 
-  it('should remove host and return null when defaultValue is undefined', () => {
+  it('should remove host and return nothing when defaultValue is undefined', () => {
     mockGetProperty.mockReturnValue('fieldValue');
     mockIsUndefined.mockReturnValue(true);
 
     const children = html`<span>Test content</span>`;
-    const result = ItemTextFallback(props, children);
+    const result = renderItemTextFallback({props})(children);
 
     expect(mockHost.remove).toHaveBeenCalled();
-    expect(result).toBe(null);
+    expect(result).toBe(nothing);
   });
 
   it('should handle array of children', () => {
@@ -69,7 +69,7 @@ describe('ItemTextFallback', () => {
       html`<span>First child</span>`,
       html`<span>Second child</span>`,
     ];
-    const result = ItemTextFallback(props, children);
+    const result = renderItemTextFallback({props})(children);
 
     expect(result).toEqual(html`${children}`);
   });
@@ -82,16 +82,16 @@ describe('ItemTextFallback', () => {
 
     it('should remove host element', () => {
       const children = html`<span>Test content</span>`;
-      ItemTextFallback(props, children);
+      renderItemTextFallback({props})(children);
 
       expect(mockHost.remove).toHaveBeenCalledTimes(1);
     });
 
-    it('should return null', () => {
+    it('should return nothing', () => {
       const children = html`<span>Test content</span>`;
-      const result = ItemTextFallback(props, children);
+      const result = renderItemTextFallback({props})(children);
 
-      expect(result).toBe(null);
+      expect(result).toBe(nothing);
     });
   });
 
@@ -102,14 +102,14 @@ describe('ItemTextFallback', () => {
 
     it('should not remove host element', () => {
       const children = html`<span>Test content</span>`;
-      ItemTextFallback(props, children);
+      renderItemTextFallback({props})(children);
 
       expect(mockHost.remove).not.toHaveBeenCalled();
     });
 
     it('should return the provided children', () => {
       const children = html`<span>Test content</span>`;
-      const result = ItemTextFallback(props, children);
+      const result = renderItemTextFallback({props})(children);
 
       expect(result).toEqual(html`${children}`);
     });
