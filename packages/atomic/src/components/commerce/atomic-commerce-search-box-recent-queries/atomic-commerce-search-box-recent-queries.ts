@@ -1,45 +1,44 @@
+import {errorGuard} from '@/src/decorators/error-guard';
+import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
+import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
+import {once} from '@/src/utils/utils';
 import {
-  SearchBox,
-  RecentQueriesList,
   buildRecentQueriesList,
+  RecentQueriesList,
+  SearchBox,
 } from '@coveo/headless/commerce';
-import {Component, Element, Prop, State, h} from '@stencil/core';
-import Clock from '../../../../images/clock.svg';
-import {SafeStorage, StorageItems} from '../../../../utils/local-storage-utils';
-import {once} from '../../../../utils/utils';
+import {html, LitElement, nothing} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import Clock from '../../../images/clock.svg';
 import {
   getPartialRecentQueryClearElement,
   getPartialRecentQueryElement,
-  RecentQueriesContainer,
-  RecentQueryClear,
-  RecentQueryIcon,
-  RecentQueryText,
-} from '../../../common/suggestions/stencil-recent-queries';
+  renderRecentQuery,
+  renderRecentQueryClear,
+} from '../../common/suggestions/recent-queries';
 import {
   dispatchSearchBoxSuggestionsEvent,
   SearchBoxSuggestionElement,
   SearchBoxSuggestions,
   SearchBoxSuggestionsBindings,
-} from '../../../common/suggestions/suggestions-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+} from '../../common/suggestions/suggestions-common';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-search-box-recent-queries` component can be added as a child of an `atomic-commerce-search-box` component, allowing for the configuration of recent query suggestions.
  *
  * @alpha
  */
-@Component({
-  tag: 'atomic-commerce-search-box-recent-queries',
-  shadow: true,
-})
-export class AtomicCommerceSearchBoxRecentQueries {
-  private bindings!: SearchBoxSuggestionsBindings<SearchBox, Bindings>;
+@customElement('atomic-commerce-search-box-recent-queries')
+export class AtomicCommerceSearchBoxRecentQueries
+  extends LitElement
+  implements SearchBoxSuggestionsComponent<CommerceBindings>
+{
+  public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
   private recentQueriesList!: RecentQueriesList;
   private storage!: SafeStorage;
 
-  @Element() private host!: HTMLElement;
-
-  @State() public error!: Error;
+  @state() public error!: Error;
 
   /**
    * The SVG icon to display.
@@ -48,25 +47,28 @@ export class AtomicCommerceSearchBoxRecentQueries {
    * - Use a value that starts with `assets://`, to display an icon from the Atomic package.
    * - Use a stringified SVG to display it directly.
    */
-  @Prop() public icon?: string;
+  @property() public icon?: string;
 
   /**
    * The maximum number of suggestions to display when the user types in the input field.
    */
-  @Prop({reflect: true}) public maxWithQuery = 3;
+  @property({type: Number, attribute: 'max-with-query', reflect: true})
+  public maxWithQuery = 3;
   /**
    * The maximum number of suggestions to display initially, when the input field is empty.
    */
-  @Prop({reflect: true}) public maxWithoutQuery?: number;
+  @property({type: Number, attribute: 'max-without-query', reflect: true})
+  public maxWithoutQuery?: number;
 
-  componentWillLoad() {
+  connectedCallback() {
+    super.connectedCallback();
     try {
-      dispatchSearchBoxSuggestionsEvent<SearchBox, Bindings>(
+      dispatchSearchBoxSuggestionsEvent<SearchBox, CommerceBindings>(
         (bindings) => {
           this.bindings = bindings;
           return this.initialize();
         },
-        this.host,
+        this,
         ['atomic-commerce-search-box']
       );
     } catch (error) {
@@ -74,11 +76,7 @@ export class AtomicCommerceSearchBoxRecentQueries {
     }
   }
 
-  private renderIcon() {
-    return this.icon || Clock;
-  }
-
-  private initialize(): SearchBoxSuggestions {
+  public initialize(): SearchBoxSuggestions {
     this.storage = new SafeStorage();
     this.recentQueriesList = buildRecentQueriesList(this.bindings.engine, {
       initialState: {queries: this.retrieveLocalStorage()},
@@ -88,7 +86,7 @@ export class AtomicCommerceSearchBoxRecentQueries {
     this.recentQueriesList.subscribe(() => this.updateLocalStorage());
 
     return {
-      position: Array.from(this.host.parentNode!.children).indexOf(this.host),
+      position: Array.from(this.parentNode!.children).indexOf(this),
       renderItems: () => this.renderItems(),
     };
   }
@@ -147,7 +145,7 @@ export class AtomicCommerceSearchBoxRecentQueries {
 
     return {
       ...partialItem,
-      content: <RecentQueryClear i18n={this.bindings.i18n} />,
+      content: renderRecentQueryClear({i18n: this.bindings.i18n}),
       onSelect: () => {
         this.recentQueriesList.clear();
         this.bindings.triggerSuggestions();
@@ -160,13 +158,11 @@ export class AtomicCommerceSearchBoxRecentQueries {
     const partialItem = getPartialRecentQueryElement(value, this.bindings.i18n);
     return {
       ...partialItem,
-      content: (
-        <RecentQueriesContainer>
-          <RecentQueryIcon icon={this.renderIcon()} />
-          <RecentQueryText query={query} value={value} />
-        </RecentQueriesContainer>
-      ),
-
+      content: renderRecentQuery({
+        icon: this.icon || Clock,
+        query,
+        value,
+      }),
       onSelect: () => {
         if (this.bindings.isStandalone) {
           this.bindings.searchBoxController.updateText(value);
@@ -181,14 +177,14 @@ export class AtomicCommerceSearchBoxRecentQueries {
     };
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
+  @errorGuard()
+  render() {
+    return html`${nothing}`;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-search-box-recent-queries': AtomicCommerceSearchBoxRecentQueries;
   }
 }

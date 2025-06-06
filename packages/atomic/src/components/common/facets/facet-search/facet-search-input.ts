@@ -1,7 +1,8 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
-import {html, nothing} from 'lit';
+import {html} from 'lit';
 import {createRef, ref} from 'lit/directives/ref.js';
+import {when} from 'lit/directives/when.js';
 import CloseIcon from '../../../../images/close.svg';
 import SearchIcon from '../../../../images/search.svg';
 import '../../atomic-icon/atomic-icon';
@@ -44,27 +45,25 @@ export const renderFacetSearchInput: FunctionalComponent<
         >
           <atomic-icon part="search-icon" .icon=${SearchIcon}></atomic-icon>
         </div>
-        ${props.query !== ''
-          ? html`
-              ${renderButton({
-                props: {
-                  style: 'text-transparent',
-                  title: clear,
-                  class:
-                    'search-clear-button absolute top-px right-px bottom-px inline-flex w-9 items-center justify-center',
-                  onClick: () => {
-                    props.onClear();
-                    inputRef.value?.focus();
-                  },
-                },
-              })(
-                html`<atomic-icon
-                  part="search-clear-button"
-                  .icon=${CloseIcon}
-                ></atomic-icon>`
-              )}
-            `
-          : nothing}
+        ${when(props.query !== '', () =>
+          renderButton({
+            props: {
+              style: 'text-transparent',
+              title: clear,
+              class:
+                'search-clear-button absolute top-px right-px bottom-px inline-flex w-9 items-center justify-center',
+              onClick: () => {
+                props.onClear();
+                inputRef.value?.focus();
+              },
+            },
+          })(
+            html`<atomic-icon
+              part="search-clear-button"
+              .icon=${CloseIcon}
+            ></atomic-icon>`
+          )
+        )}
       </div>
     </div>
   `;

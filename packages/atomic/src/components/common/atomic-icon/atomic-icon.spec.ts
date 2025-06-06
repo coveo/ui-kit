@@ -76,7 +76,7 @@ describe('AtomicIcon', () => {
     await expect.element(locators.svg).toBeInTheDocument();
     await expect
       .element(locators.svg)
-      .toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
+      .toContainHTML('<circle cx="50" cy="50" r="40" />');
   });
 
   it('should sanitizes the SVG content', async () => {
@@ -99,7 +99,7 @@ describe('AtomicIcon', () => {
     expect(fetchMock).toHaveBeenCalledWith('http://example.com/icon.svg');
     await expect
       .element(locators.svg)
-      .toContainHTML('<circle r="40" cy="50" cx="50"></circle>');
+      .toContainHTML('<circle cx="50" cy="50" r="40" />');
   });
 
   it('calls parseAssetURL with the correct arguments', async () => {

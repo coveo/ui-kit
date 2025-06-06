@@ -1,17 +1,23 @@
+import {getAttributesFromLinkSlot} from '@/src/components/common/item-link/attributes-slot';
+import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-banner';
+import {
+  SmartSnippetFooter,
+  SmartSnippetQuestion,
+  SmartSnippetWrapper,
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+import {Hidden} from '@/src/components/common/stencil-hidden';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet as buildInsightSmartSnippet,
   SmartSnippet as InsightSmartSnippet,
   SmartSnippetState as InsightSmartSnippetState,
 } from '@coveo/headless/insight';
-import {Component, Prop, State, Element} from '@stencil/core';
+import {Component, Prop, State, Element, h} from '@stencil/core';
 import {
   InitializableComponent,
   InitializeBindings,
   BindStateToController,
 } from '../../../../utils/initialization-utils';
-import {randomID} from '../../../../utils/utils';
-import {createAppLoadedListener} from '../../../common/interface/store';
-import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {InsightBindings} from '../../atomic-insight-interface/atomic-insight-interface';
 
 /**
@@ -32,13 +38,11 @@ export class AtomicInsightSmartSnippet
   @State()
   public smartSnippetState!: InsightSmartSnippetState;
   public error!: Error;
-  @State() private isAppLoaded = false;
 
   @Element() public host!: HTMLElement;
 
   private id!: string;
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
-  private smartSnippetCommon!: SmartSnippetCommon;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -73,28 +77,6 @@ export class AtomicInsightSmartSnippet
   public initialize() {
     this.id ||= randomID();
     this.smartSnippet = buildInsightSmartSnippet(this.bindings.engine);
-    this.smartSnippetCommon = new SmartSnippetCommon({
-      id: this.id,
-      modalTagName: 'atomic-insight-smart-snippet-feedback-modal',
-      getHost: () => this.host,
-      getBindings: () => this.bindings,
-      getModalRef: () => this.modalRef,
-      getHeadingLevel: () => this.headingLevel,
-      getCollapsedHeight: () => this.collapsedHeight,
-      getMaximumHeight: () => this.maximumHeight,
-      getSmartSnippetState: () => this.smartSnippetState,
-      getSmartSnippet: () => this.smartSnippet,
-      getSnippetStyle: () => this.snippetStyle,
-      getFeedbackSent: () => this.feedbackSent,
-      setModalRef: this.setModalRef.bind(this),
-      setFeedbackSent: this.setFeedbackSent.bind(this),
-    });
-    this.bindings.store.waitUntilAppLoaded(() =>
-      this.smartSnippetCommon.hideDuringRender(false)
-    );
-    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
-      this.isAppLoaded = isAppLoaded;
-    });
   }
 
   private setModalRef(ref: HTMLElement) {
@@ -111,13 +93,96 @@ export class AtomicInsightSmartSnippet
     }
   }
 
-  public componentDidRender() {
-    if (this.isAppLoaded) {
-      this.smartSnippetCommon.hideDuringRender(false);
+  public render() {
+    if (!this.smartSnippetState.answerFound) {
+      return <Hidden></Hidden>;
     }
+
+    const source = this.smartSnippetState.source;
+
+    return (
+      <SmartSnippetWrapper
+        headingLevel={this.headingLevel}
+        i18n={this.bindings.i18n}
+      >
+        <atomic-smart-snippet-collapse-wrapper>
+          <SmartSnippetQuestion
+            headingLevel={this.headingLevel}
+            question={this.smartSnippetState.question}
+          />
+          <atomic-smart-snippet-expandable-answer
+            collapsedHeight={this.collapsedHeight}
+            expanded={this.smartSnippetState.expanded}
+            exportparts="answer,show-more-button,show-less-button,truncated-answer"
+            htmlContent={this.smartSnippetState.answer}
+            maximumHeight={this.maximumHeight}
+            onCollapse={() => this.smartSnippet.collapse()}
+            onExpand={() => this.smartSnippet.expand()}
+            part="body"
+            snippetStyle={this.style}
+          ></atomic-smart-snippet-expandable-answer>
+          <SmartSnippetFooter i18n={this.bindings.i18n}>
+            {source && (
+              <atomic-smart-snippet-source
+                anchorAttributes={getAttributesFromLinkSlot(
+                  this.host,
+                  'source-anchor-attributes'
+                )}
+                onBeginDelayedSelectSource={
+                  this.smartSnippet.beginDelayedSelectSource
+                }
+                onCancelPendingSelectSource={
+                  this.smartSnippet.cancelPendingSelectSource
+                }
+                onSelectSource={this.smartSnippet.selectSource}
+                source={source}
+              ></atomic-smart-snippet-source>
+            )}
+            <SmartSnippetFeedbackBanner
+              disliked={this.smartSnippetState.disliked}
+              explainWhyRef={(button) => {
+                if (this.modalRef) {
+                  this.modalRef.source = button;
+                }
+              }}
+              feedbackSent={this.feedbackSent}
+              id={this.id}
+              i18n={this.bindings.i18n}
+              liked={this.smartSnippetState.liked}
+              onDislike={() => {
+                this.loadModal();
+                this.smartSnippet.dislike();
+              }}
+              onLike={() => this.smartSnippet.like()}
+              onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
+            ></SmartSnippetFeedbackBanner>
+          </SmartSnippetFooter>
+        </atomic-smart-snippet-collapse-wrapper>
+      </SmartSnippetWrapper>
+    );
   }
 
-  public render() {
-    return this.smartSnippetCommon.render();
+  private get style() {
+    const styleTag = this.host
+      .querySelector('template')
+      ?.content.querySelector('style');
+    if (!styleTag) {
+      return this.snippetStyle;
+    }
+    return styleTag.innerHTML;
+  }
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+    const modalRef = document.createElement(
+      'atomic-insight-smart-snippet-feedback-modal'
+    );
+    modalRef.addEventListener('feedbackSent', () => {
+      this.setFeedbackSent(true);
+    });
+    this.setModalRef(modalRef);
+    this.host.insertAdjacentElement('beforebegin', modalRef);
   }
 }
