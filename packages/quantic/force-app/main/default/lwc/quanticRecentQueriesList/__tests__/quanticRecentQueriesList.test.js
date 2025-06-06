@@ -285,7 +285,7 @@ describe('c-quantic-recent-queries-list', () => {
         });
       });
 
-      test('should use the correct initial state retrieved from the localstorage', async () => {
+      it('should use the correct initial state retrieved from the localstorage', async () => {
         const exampleRecentQueries = ['query1', 'query2'];
         const getItemFromLocalStorageSpy = jest
           .spyOn(utils, 'getItemFromLocalStorage')
@@ -308,7 +308,7 @@ describe('c-quantic-recent-queries-list', () => {
         expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
       });
 
-      test('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+      it('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
         const setItemInLocalStorageSpy = jest.spyOn(
           utils,
           'setItemInLocalStorage'
