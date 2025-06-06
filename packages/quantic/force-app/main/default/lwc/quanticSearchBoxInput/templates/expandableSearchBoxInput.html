@@ -16,6 +16,7 @@
                     icon-name="utility:search"
                     size="x-small"
                     data-cy="search-box-search-icon"
+                    data-testid="search-box-search-icon"
                   ></lightning-icon>
                 </div>
               </template>
@@ -36,6 +37,7 @@
                 aria-haspopup="listbox"
                 style="white-space: nowrap"
                 data-cy="search-box-textarea"
+                data-testid="search-box-textarea"
                 data-value={inputValue}
               >
               </textarea>
@@ -56,6 +58,7 @@
                     aria-label={labels.clear}
                     alternative-text={labels.clear}
                     data-cy="search-box-clear-button"
+                    data-testid="search-box-clear-button"
                   ></lightning-button-icon>
                 </div>
               </template>
@@ -66,6 +69,7 @@
                   title={labels.search}
                   onclick={onSubmit}
                   data-cy="search-box-submit-button"
+                  data-testid="search-box-submit-button"
                 >
                   <lightning-icon
                     class="slds-current-color"
