@@ -10,7 +10,6 @@ import {
 import {act, render, renderHook, screen} from '@testing-library/react';
 import {randomUUID} from 'crypto';
 import {PropsWithChildren} from 'react';
-import React from 'react';
 import {
   vi,
   expect,
@@ -58,6 +57,7 @@ describe('Headless react SSR utils', () => {
       build,
       StaticStateProvider,
       HydratedStateProvider,
+      StateProvider,
       setNavigatorContextProvider,
     } = listingEngineDefinition;
 
@@ -68,6 +68,7 @@ describe('Headless react SSR utils', () => {
       useEngine,
       StaticStateProvider,
       HydratedStateProvider,
+      StateProvider,
       setNavigatorContextProvider,
     ];
 
@@ -119,6 +120,7 @@ describe('Headless react SSR utils', () => {
       listingEngineDefinition: {
         HydratedStateProvider,
         StaticStateProvider,
+        StateProvider,
         fetchStaticState,
         hydrateStaticState,
         setNavigatorContextProvider,
@@ -230,6 +232,32 @@ describe('Headless react SSR utils', () => {
       await checkRenderedProductList();
     });
 
+    test('should render with StateProvider using static state', async () => {
+      setNavigatorContextProvider(mockedNavigatorContextProvider);
+      const staticState = await fetchStaticState();
+      render(
+        <StateProvider controllers={staticState.controllers}>
+          <TestProductList />
+        </StateProvider>
+      );
+
+      await checkRenderedProductList();
+    });
+
+    test('should render with StateProvider using hydrated state', async () => {
+      setNavigatorContextProvider(mockedNavigatorContextProvider);
+      const staticState = await fetchStaticState();
+      const {engine, controllers} = await hydrateStaticState(staticState);
+
+      render(
+        <StateProvider engine={engine} controllers={controllers}>
+          <TestProductList />
+        </StateProvider>
+      );
+
+      await checkRenderedProductList();
+    });
+
     describe('hooks', () => {
       const {listingEngineDefinition} = engineDefinition;
       let staticState: InferStaticState<typeof listingEngineDefinition>;
@@ -260,6 +288,29 @@ describe('Headless react SSR utils', () => {
         );
       }
 
+      function stateProviderWrapperWithStaticState({
+        children,
+      }: PropsWithChildren) {
+        return (
+          <StateProvider controllers={staticState.controllers}>
+            {children}
+          </StateProvider>
+        );
+      }
+
+      function stateProviderWrapperWithHydratedState({
+        children,
+      }: PropsWithChildren) {
+        return (
+          <StateProvider
+            engine={hydratedState.engine}
+            controllers={hydratedState.controllers}
+          >
+            {children}
+          </StateProvider>
+        );
+      }
+
       describe('useEngine hook', () => {
         test('should throw error with no context', async () => {
           checkRenderError(
@@ -278,6 +329,20 @@ describe('Headless react SSR utils', () => {
         test('should return engine with hydrated state provider', async () => {
           const {result} = renderHook(() => useEngine(), {
             wrapper: hydratedStateProviderWrapper,
+          });
+          expect(result.current).toStrictEqual(hydratedState.engine);
+        });
+
+        test('should not return engine with StateProvider using static state', async () => {
+          const {result} = renderHook(() => useEngine(), {
+            wrapper: stateProviderWrapperWithStaticState,
+          });
+          expect(result.current).toBeUndefined();
+        });
+
+        test('should return engine with StateProvider using hydrated state', async () => {
+          const {result} = renderHook(() => useEngine(), {
+            wrapper: stateProviderWrapperWithHydratedState,
           });
           expect(result.current).toStrictEqual(hydratedState.engine);
         });
@@ -307,6 +372,39 @@ describe('Headless react SSR utils', () => {
           test('should update state when method is called', () => {
             const {result} = renderHook(() => useSearchBox(), {
               wrapper: hydratedStateProviderWrapper,
+            });
+            const initialState = result.current.state;
+            act(() => {
+              result.current.methods?.updateText('foo');
+            });
+
+            expect(initialState).not.toStrictEqual(result.current.state);
+            expect(result.current.state.value).toBe('foo');
+          });
+        });
+
+        describe('with StateProvider (static state)', () => {
+          test('should define state but not controller', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: stateProviderWrapperWithStaticState,
+            });
+            expect(result.current.state).toBeDefined();
+            expect(result.current?.methods).toBeUndefined();
+          });
+        });
+
+        describe('with StateProvider (hydrated state)', () => {
+          test('should define both state and controller', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: stateProviderWrapperWithHydratedState,
+            });
+            expect(result.current.state).toBeDefined();
+            expect(result.current?.methods).toBeDefined();
+          });
+
+          test('should update state when method is called', () => {
+            const {result} = renderHook(() => useSearchBox(), {
+              wrapper: stateProviderWrapperWithHydratedState,
             });
             const initialState = result.current.state;
             act(() => {

@@ -1,6 +1,6 @@
 import {renderHook} from '@testing-library/react';
 import {vi, expect, describe, test, it} from 'vitest';
-import {useSyncMemoizedStore} from './client-utils';
+import {useSyncMemoizedStore} from './client-utils.js';
 
 describe('useSyncMemoizedStore', () => {
   test('should return the initial snapshot', () => {
