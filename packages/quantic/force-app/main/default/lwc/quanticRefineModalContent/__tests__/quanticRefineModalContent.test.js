@@ -1,32 +1,38 @@
 /* eslint-disable no-import-assign */
-// @ts-ignore
-import {createElement} from 'lwc';
 import QuanticRefineModalContent from 'c/quanticRefineModalContent';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
+import {cleanup, buildCreateTestComponent, flushPromises} from 'c/testUtils';
 
 jest.mock('c/quanticHeadlessLoader');
 
-/** @type {{disableDynamicNavigation: boolean}} */
+const exampleEngine = {
+  id: 'example engine id',
+};
+
 const defaultOptions = {
+  engineId: exampleEngine.id,
   disableDynamicNavigation: false,
 };
 
-function createTestComponent(options = defaultOptions) {
-  const element = createElement('c-quantic-refine-modal-content', {
-    is: QuanticRefineModalContent,
-  });
-  for (const [key, value] of Object.entries(options)) {
-    element[key] = value;
-  }
-
-  document.body.appendChild(element);
-  return element;
-}
+const createTestComponent = buildCreateTestComponent(
+  QuanticRefineModalContent,
+  'c-quantic-refine-modal-content',
+  defaultOptions
+);
 
 const selectors = {
+  initializationError: 'c-quantic-component-error',
   quanticFacet: 'c-quantic-facet',
   quanticCategoryFacet: 'c-quantic-category-facet',
+  quanticNumericFacet: 'c-quantic-numeric-facet',
+  quanticTimeframeFacet: 'c-quantic-timeframe-facet',
+  quanticDateFacet: 'c-quantic-date-facet',
   quanticFacetCaption: 'c-quantic-facet-caption',
+  quanticTimeframe: 'c-quantic-timeframe',
+  quanticSort: 'c-quantic-sort',
+  quanticSortOption: 'c-quantic-sort-option',
+  clearActiveFiltersButton: '[data-testid="clear-active-filters-button"]',
+  filtersTitle: '[data-testid="filters-title"]',
 };
 
 const initialSearchStatusState = {
@@ -59,15 +65,6 @@ const functionsMocks = {
   retry: jest.fn(),
 };
 
-// Helper function to wait until the microtask queue is empty.
-function flushPromises() {
-  // eslint-disable-next-line @lwc/lwc/no-async-operation
-  return new Promise((resolve) => setTimeout(resolve, 0));
-}
-
-const exampleEngine = {
-  id: 'dummy engine',
-};
 let isInitialized = false;
 
 function prepareHeadlessState() {
@@ -80,10 +77,17 @@ function prepareHeadlessState() {
   };
 }
 
-function prepareQuanticStore(facetData) {
+function setupMockFacetsDataInQuanticStore(facetData) {
   // @ts-ignore
   mockHeadlessLoader.getAllFacetsFromStore = () => {
     return facetData;
+  };
+}
+
+function setupMockSortDataInQuanticStore(sortData) {
+  // @ts-ignore
+  mockHeadlessLoader.getAllSortOptionsFromStore = () => {
+    return sortData;
   };
 }
 
@@ -97,46 +101,149 @@ function mockSuccessfulHeadlessInitialization() {
   };
 }
 
-function cleanup() {
-  // The jsdom instance is shared across test cases in a single file so reset the DOM
-  while (document.body.firstChild) {
-    document.body.removeChild(document.body.firstChild);
-  }
-  jest.clearAllMocks();
-  isInitialized = false;
+function mockErroneousHeadlessInitialization() {
+  // @ts-ignore
+  mockHeadlessLoader.initializeWithHeadless = (element) => {
+    if (element instanceof QuanticRefineModalContent) {
+      element.setInitializationError();
+    }
+  };
 }
 
+const exampleFacetAttributes = {
+  facetId: 'filetype',
+  field: 'filetype',
+  label: 'File Type',
+  numberOfValues: '8',
+  sortCriteria: 'occurrences',
+  noSearch: 'true',
+  displayValuesAs: 'link',
+  noFilterFacetCount: 'false',
+  injectionDepth: '1000',
+  customSort: 'YouTubeVideo,PDF,HTML',
+  dependsOn: '',
+};
+
+const exampleCategoryFacetAttributes = {
+  facetId: 'country',
+  field: 'country',
+  label: 'Country',
+  basePath: 'North America',
+  noFilterByBasePath: 'false',
+  noFilterFacetCount: 'false',
+  delimitingCharacter: '>',
+  numberOfValues: '10',
+  sortCriteria: 'alphanumeric',
+  withSearch: 'true',
+  dependsOn: '',
+};
+
+const exampleNumericFacetAttributes = {
+  facetId: 'youtube likes',
+  field: 'youtubelikes',
+  label: 'Youtube Likes',
+  numberOfValues: '8',
+  sortCriteria: 'occurrences',
+  rangeAlgorithm: '',
+  withInput: 'true',
+  dependsOn: '',
+};
+
+const exampleTimeframeFacetAttributes = {
+  facetId: 'date',
+  field: 'date',
+  label: 'Date',
+  noFilterFacetCount: true,
+  injectionDepth: 100,
+  withDatePicker: true,
+  dependsOn: '',
+};
+
+const exampleDateFacetAttributes = {
+  facetId: 'date',
+  field: 'date',
+  label: 'Date',
+  numberOfValues: 8,
+  dependsOn: '',
+};
+
+const exampleTimeframeAttributes = {
+  period: 'past',
+  unit: 'month',
+  amount: 6,
+  label: 'last 6 months',
+};
+
 describe('c-quantic-refine-modal-content', () => {
+  beforeEach(() => {
+    mockSuccessfulHeadlessInitialization();
+    prepareHeadlessState();
+  });
+
   afterEach(() => {
     cleanup();
+    isInitialized = false;
+    searchStatusState = initialSearchStatusState;
+    breadcrumbManagerState = initialBreadcrumbManagerState;
+  });
+
+  describe('when an initialization error occurs', () => {
+    beforeEach(() => {
+      mockErroneousHeadlessInitialization();
+    });
+
+    it('should display the initialization error component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const initializationError = element.shadowRoot.querySelector(
+        selectors.initializationError
+      );
+
+      expect(initializationError).not.toBeNull();
+    });
+  });
+
+  describe('controller initialization', () => {
+    it('should build the breadcrumb manager and search status controllers with the proper parameters', async () => {
+      createTestComponent();
+      await flushPromises();
+      expect(functionsMocks.buildBreadcrumbManager).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildBreadcrumbManager).toHaveBeenCalledWith(
+        exampleEngine
+      );
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.buildSearchStatus).toHaveBeenCalledWith(
+        exampleEngine
+      );
+    });
+
+    it('should subscribe to the headless breadcrumb manager and search status state changes', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      expect(
+        functionsMocks.breadcrumbManagerStateSubscriber
+      ).toHaveBeenCalledTimes(1);
+      expect(functionsMocks.searchStatusStateSubscriber).toHaveBeenCalledTimes(
+        1
+      );
+    });
   });
 
   describe('when the dynamic navigation feature is enabled', () => {
     describe('standard facet', () => {
-      const exampleFacetAttributes = {
-        facetId: 'filetype',
-        field: 'filetype',
-        label: 'File Type',
-        numberOfValues: '8',
-        sortCriteria: 'occurrences',
-        noSearch: 'true',
-        displayValuesAs: 'link',
-        noFilterFacetCount: 'false',
-        injectionDepth: '1000',
-        customSort: 'YouTubeVideo,PDF,HTML',
-        dependsOn: '',
-      };
-
       beforeEach(() => {
-        mockSuccessfulHeadlessInitialization();
-        prepareHeadlessState();
-        prepareQuanticStore({
+        setupMockFacetsDataInQuanticStore({
           filetype: {
             label: 'File Type',
             facetId: 'filetype',
             element: {
               localName: 'c-quantic-facet',
               ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
             },
           },
         });
@@ -149,8 +256,9 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacet = element.shadowRoot.querySelector(
           selectors.quanticFacet
         );
-        expect(quanticFacet).not.toBeNull();
 
+        expect(quanticFacet).not.toBeNull();
+        expect(quanticFacet.engineId).toBe(exampleEngine.id);
         Object.entries(exampleFacetAttributes).forEach(([key, value]) => {
           expect(quanticFacet[key]).toBe(value);
         });
@@ -158,6 +266,7 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
+
         expect(quanticFacetCaption).toBeNull();
       });
 
@@ -168,9 +277,7 @@ describe('c-quantic-refine-modal-content', () => {
         };
 
         beforeEach(() => {
-          mockSuccessfulHeadlessInitialization();
-          prepareHeadlessState();
-          prepareQuanticStore({
+          setupMockFacetsDataInQuanticStore({
             filetype: {
               label: 'File Type',
               facetId: 'filetype',
@@ -192,11 +299,14 @@ describe('c-quantic-refine-modal-content', () => {
           const quanticFacet = element.shadowRoot.querySelector(
             selectors.quanticFacet
           );
+
           expect(quanticFacet).not.toBeNull();
+          expect(quanticFacet.engineId).toBe(exampleEngine.id);
 
           const quanticFacetCaption = element.shadowRoot.querySelector(
             selectors.quanticFacetCaption
           );
+
           expect(quanticFacetCaption).not.toBeNull();
           expect(quanticFacetCaption.value).toBe(exampleCaption.value);
           expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
@@ -205,30 +315,19 @@ describe('c-quantic-refine-modal-content', () => {
     });
 
     describe('category facet', () => {
-      const exampleCategoryFacetAttributes = {
-        facetId: 'country',
-        field: 'country',
-        label: 'Country',
-        basePath: 'North America',
-        noFilterByBasePath: 'false',
-        noFilterFacetCount: 'false',
-        delimitingCharacter: '>',
-        numberOfValues: '10',
-        sortCriteria: 'alphanumeric',
-        withSearch: 'true',
-        dependsOn: '',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
-        prepareQuanticStore({
+        setupMockFacetsDataInQuanticStore({
           country: {
             label: 'Country',
             facetId: 'country',
             element: {
               localName: 'c-quantic-category-facet',
               ...exampleCategoryFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
             },
           },
         });
@@ -241,8 +340,9 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticCategoryFacet = element.shadowRoot.querySelector(
           selectors.quanticCategoryFacet
         );
-        expect(quanticCategoryFacet).not.toBeNull();
 
+        expect(quanticCategoryFacet).not.toBeNull();
+        expect(quanticCategoryFacet.engineId).toBe(exampleEngine.id);
         Object.entries(exampleCategoryFacetAttributes).forEach(
           ([key, value]) => {
             expect(quanticCategoryFacet[key]).toBe(value);
@@ -252,6 +352,7 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
+
         expect(quanticFacetCaption).toBeNull();
       });
 
@@ -264,7 +365,7 @@ describe('c-quantic-refine-modal-content', () => {
         beforeEach(() => {
           mockSuccessfulHeadlessInitialization();
           prepareHeadlessState();
-          prepareQuanticStore({
+          setupMockFacetsDataInQuanticStore({
             country: {
               label: 'Country',
               facetId: 'country',
@@ -286,14 +387,320 @@ describe('c-quantic-refine-modal-content', () => {
           const quanticCategoryFacet = element.shadowRoot.querySelector(
             selectors.quanticCategoryFacet
           );
+
           expect(quanticCategoryFacet).not.toBeNull();
+          expect(quanticCategoryFacet.engineId).toBe(exampleEngine.id);
 
           const quanticFacetCaption = element.shadowRoot.querySelector(
             selectors.quanticFacetCaption
           );
+
           expect(quanticFacetCaption).not.toBeNull();
           expect(quanticFacetCaption.value).toBe(exampleCaption.value);
           expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
+      });
+    });
+
+    describe('numeric facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Youtube Likes',
+            facetId: 'youtubelikes',
+            element: {
+              localName: 'c-quantic-numeric-facet',
+              ...exampleNumericFacetAttributes,
+            },
+          },
+        });
+      });
+
+      it('should display the quantic numeric facet with its attributes', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const quanticNumericFacet = element.shadowRoot.querySelector(
+          selectors.quanticNumericFacet
+        );
+
+        expect(quanticNumericFacet).not.toBeNull();
+        expect(quanticNumericFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleNumericFacetAttributes).forEach(
+          ([key, value]) => {
+            expect(quanticNumericFacet[key]).toBe(value);
+          }
+        );
+      });
+    });
+
+    describe('timeframe facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Date',
+            facetId: 'date',
+            element: {
+              localName: 'c-quantic-timeframe-facet',
+              ...exampleTimeframeFacetAttributes,
+            },
+            metadata: {
+              timeframes: [exampleTimeframeAttributes],
+            },
+          },
+        });
+      });
+
+      it('should display the quantic timeframe facet with its attributes', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const quanticTimeframeFacet = element.shadowRoot.querySelector(
+          selectors.quanticTimeframeFacet
+        );
+
+        expect(quanticTimeframeFacet).not.toBeNull();
+        expect(quanticTimeframeFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleTimeframeFacetAttributes).forEach(
+          ([key, value]) => {
+            expect(quanticTimeframeFacet[key]).toBe(value);
+          }
+        );
+
+        const quanticTimeframe = element.shadowRoot.querySelector(
+          selectors.quanticTimeframe
+        );
+
+        expect(quanticTimeframe).not.toBeNull();
+        Object.entries(exampleTimeframeAttributes).forEach(([key, value]) => {
+          expect(quanticTimeframe[key]).toBe(value);
+        });
+      });
+    });
+
+    describe('date facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Date',
+            facetId: 'date',
+            element: {
+              localName: 'c-quantic-date-facet',
+              ...exampleDateFacetAttributes,
+            },
+          },
+        });
+      });
+
+      it('should display the quantic date facet with its attributes', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const quanticDateFacet = element.shadowRoot.querySelector(
+          selectors.quanticDateFacet
+        );
+
+        expect(quanticDateFacet).not.toBeNull();
+        expect(quanticDateFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleDateFacetAttributes).forEach(([key, value]) => {
+          expect(quanticDateFacet[key]).toBe(value);
+        });
+      });
+    });
+
+    describe('the sort component', () => {
+      const exampleSortOptionAttributes = {
+        label: 'Views Descending',
+        value: '@ytviewcount descending',
+        criterion: {
+          by: 'field',
+          field: 'ytviewcount',
+          order: 'descending',
+        },
+      };
+
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockSortDataInQuanticStore([exampleSortOptionAttributes]);
+      });
+
+      it('should display the quantic sort component with its attributes', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const quanticSort = element.shadowRoot.querySelector(
+          selectors.quanticSort
+        );
+
+        expect(quanticSort).not.toBeNull();
+        expect(quanticSort.engineId).toBe(exampleEngine.id);
+        expect(quanticSort.variant).toBe('wide');
+
+        const quanticSortOption = element.shadowRoot.querySelector(
+          selectors.quanticSortOption
+        );
+
+        expect(quanticSortOption).not.toBeNull();
+        Object.entries(exampleSortOptionAttributes).forEach(([key, value]) => {
+          expect(quanticSortOption[key]).toEqual(value);
+        });
+      });
+    });
+
+    describe('the clear all filters button', () => {
+      describe('when there are active filters', () => {
+        beforeEach(() => {
+          setupMockFacetsDataInQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                ...exampleFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [],
+              },
+            },
+          });
+          breadcrumbManagerState = {
+            ...breadcrumbManagerState,
+            hasBreadcrumbs: true,
+          };
+        });
+
+        it('should display the clear all filters button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearActiveFiltersButton = element.shadowRoot.querySelector(
+            selectors.clearActiveFiltersButton
+          );
+
+          expect(clearActiveFiltersButton).not.toBeNull();
+        });
+      });
+
+      describe('when there are no active filters', () => {
+        beforeEach(() => {
+          setupMockFacetsDataInQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                facetId: 'filetype',
+              },
+              metadata: {
+                customCaptions: [],
+              },
+            },
+          });
+          breadcrumbManagerState = {
+            ...breadcrumbManagerState,
+            hasBreadcrumbs: false,
+          };
+        });
+
+        it('should not display the clear all filters button', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const clearActiveFiltersButton = element.shadowRoot.querySelector(
+            selectors.clearActiveFiltersButton
+          );
+
+          expect(clearActiveFiltersButton).toBeNull();
+        });
+      });
+    });
+
+    describe('the filters title', () => {
+      beforeEach(() => {
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'File Type',
+            facetId: 'filetype',
+            element: {
+              localName: 'c-quantic-facet',
+              ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
+            },
+          },
+        });
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          hasBreadcrumbs: true,
+        };
+      });
+
+      describe('when hideSort is set to false and a facet is rendered', () => {
+        it('should display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: false,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).not.toBeNull();
+        });
+      });
+
+      describe('when hideSort is set to true and a facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
+        });
+      });
+
+      describe('when no facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent();
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
         });
       });
     });
@@ -301,30 +708,19 @@ describe('c-quantic-refine-modal-content', () => {
 
   describe('when the dynamic navigation feature is disabled', () => {
     describe('standard facet', () => {
-      const exampleFacetAttributes = {
-        facetId: 'filetype',
-        field: 'filetype',
-        label: 'File Type',
-        numberOfValues: '8',
-        sortCriteria: 'occurrences',
-        noSearch: 'true',
-        displayValuesAs: 'link',
-        noFilterFacetCount: 'false',
-        injectionDepth: '1000',
-        customSort: 'YouTubeVideo,PDF,HTML',
-        dependsOn: '',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
-        prepareQuanticStore({
+        setupMockFacetsDataInQuanticStore({
           filetype: {
             label: 'File Type',
             facetId: 'filetype',
             element: {
               localName: 'c-quantic-facet',
               ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
             },
           },
         });
@@ -340,8 +736,9 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacet = element.shadowRoot.querySelector(
           selectors.quanticFacet
         );
-        expect(quanticFacet).not.toBeNull();
 
+        expect(quanticFacet).not.toBeNull();
+        expect(quanticFacet.engineId).toBe(exampleEngine.id);
         Object.entries(exampleFacetAttributes).forEach(([key, value]) => {
           expect(quanticFacet[key]).toBe(value);
         });
@@ -349,6 +746,7 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticFacetCaption = element.shadowRoot.querySelector(
           selectors.quanticFacetCaption
         );
+
         expect(quanticFacetCaption).toBeNull();
       });
 
@@ -361,7 +759,7 @@ describe('c-quantic-refine-modal-content', () => {
         beforeEach(() => {
           mockSuccessfulHeadlessInitialization();
           prepareHeadlessState();
-          prepareQuanticStore({
+          setupMockFacetsDataInQuanticStore({
             filetype: {
               label: 'File Type',
               facetId: 'filetype',
@@ -386,11 +784,14 @@ describe('c-quantic-refine-modal-content', () => {
           const quanticFacet = element.shadowRoot.querySelector(
             selectors.quanticFacet
           );
+
           expect(quanticFacet).not.toBeNull();
+          expect(quanticFacet.engineId).toBe(exampleEngine.id);
 
           const quanticFacetCaption = element.shadowRoot.querySelector(
             selectors.quanticFacetCaption
           );
+
           expect(quanticFacetCaption).not.toBeNull();
           expect(quanticFacetCaption.value).toBe(exampleCaption.value);
           expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
@@ -399,30 +800,19 @@ describe('c-quantic-refine-modal-content', () => {
     });
 
     describe('category facet', () => {
-      const exampleCategoryFacetAttributes = {
-        facetId: 'country',
-        field: 'country',
-        label: 'Country',
-        basePath: 'North America',
-        noFilterByBasePath: 'false',
-        noFilterFacetCount: 'false',
-        delimitingCharacter: '>',
-        numberOfValues: '10',
-        sortCriteria: 'alphanumeric',
-        withSearch: 'true',
-        dependsOn: '',
-      };
-
       beforeEach(() => {
         mockSuccessfulHeadlessInitialization();
         prepareHeadlessState();
-        prepareQuanticStore({
+        setupMockFacetsDataInQuanticStore({
           country: {
             label: 'Country',
             facetId: 'country',
             element: {
               localName: 'c-quantic-category-facet',
               ...exampleCategoryFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
             },
           },
         });
@@ -438,8 +828,9 @@ describe('c-quantic-refine-modal-content', () => {
         const quanticCategoryFacet = element.shadowRoot.querySelector(
           selectors.quanticCategoryFacet
         );
-        expect(quanticCategoryFacet).not.toBeNull();
 
+        expect(quanticCategoryFacet).not.toBeNull();
+        expect(quanticCategoryFacet.engineId).toBe(exampleEngine.id);
         Object.entries(exampleCategoryFacetAttributes).forEach(
           ([key, value]) => {
             expect(quanticCategoryFacet[key]).toBe(value);
@@ -461,7 +852,7 @@ describe('c-quantic-refine-modal-content', () => {
         beforeEach(() => {
           mockSuccessfulHeadlessInitialization();
           prepareHeadlessState();
-          prepareQuanticStore({
+          setupMockFacetsDataInQuanticStore({
             country: {
               label: 'Country',
               facetId: 'country',
@@ -486,14 +877,340 @@ describe('c-quantic-refine-modal-content', () => {
           const quanticCategoryFacet = element.shadowRoot.querySelector(
             selectors.quanticCategoryFacet
           );
+
           expect(quanticCategoryFacet).not.toBeNull();
+          expect(quanticCategoryFacet.engineId).toBe(exampleEngine.id);
 
           const quanticFacetCaption = element.shadowRoot.querySelector(
             selectors.quanticFacetCaption
           );
+
           expect(quanticFacetCaption).not.toBeNull();
           expect(quanticFacetCaption.value).toBe(exampleCaption.value);
           expect(quanticFacetCaption.caption).toBe(exampleCaption.caption);
+        });
+      });
+    });
+
+    describe('numeric facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Youtube Likes',
+            facetId: 'youtubelikes',
+            element: {
+              localName: 'c-quantic-numeric-facet',
+              ...exampleNumericFacetAttributes,
+            },
+          },
+        });
+      });
+
+      it('should display the quantic numeric facet with its attributes', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          disableDynamicNavigation: true,
+        });
+        await flushPromises();
+
+        const quanticNumericFacet = element.shadowRoot.querySelector(
+          selectors.quanticNumericFacet
+        );
+
+        expect(quanticNumericFacet).not.toBeNull();
+        expect(quanticNumericFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleNumericFacetAttributes).forEach(
+          ([key, value]) => {
+            expect(quanticNumericFacet[key]).toBe(value);
+          }
+        );
+      });
+    });
+
+    describe('timeframe facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Date',
+            facetId: 'date',
+            element: {
+              localName: 'c-quantic-timeframe-facet',
+              ...exampleTimeframeFacetAttributes,
+            },
+            metadata: {
+              timeframes: [exampleTimeframeAttributes],
+            },
+          },
+        });
+      });
+
+      it('should display the quantic timeframe facet with its attributes', async () => {
+        const element = createTestComponent();
+        await flushPromises();
+
+        const quanticTimeframeFacet = element.shadowRoot.querySelector(
+          selectors.quanticTimeframeFacet
+        );
+
+        expect(quanticTimeframeFacet).not.toBeNull();
+        expect(quanticTimeframeFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleTimeframeFacetAttributes).forEach(
+          ([key, value]) => {
+            expect(quanticTimeframeFacet[key]).toBe(value);
+          }
+        );
+
+        const quanticTimeframe = element.shadowRoot.querySelector(
+          selectors.quanticTimeframe
+        );
+
+        expect(quanticTimeframe).not.toBeNull();
+        Object.entries(exampleTimeframeAttributes).forEach(([key, value]) => {
+          expect(quanticTimeframe[key]).toBe(value);
+        });
+      });
+    });
+
+    describe('date facet', () => {
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'Date',
+            facetId: 'date',
+            element: {
+              localName: 'c-quantic-date-facet',
+              ...exampleDateFacetAttributes,
+            },
+          },
+        });
+      });
+
+      it('should display the quantic date facet with its attributes', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          disableDynamicNavigation: true,
+        });
+        await flushPromises();
+
+        const quanticDateFacet = element.shadowRoot.querySelector(
+          selectors.quanticDateFacet
+        );
+
+        expect(quanticDateFacet).not.toBeNull();
+        expect(quanticDateFacet.engineId).toBe(exampleEngine.id);
+        Object.entries(exampleDateFacetAttributes).forEach(([key, value]) => {
+          expect(quanticDateFacet[key]).toBe(value);
+        });
+      });
+    });
+
+    describe('the sort component', () => {
+      const exampleSortOptionAttributes = {
+        label: 'Views Descending',
+        value: '@ytviewcount descending',
+        criterion: {
+          by: 'field',
+          field: 'ytviewcount',
+          order: 'descending',
+        },
+      };
+
+      beforeEach(() => {
+        mockSuccessfulHeadlessInitialization();
+        prepareHeadlessState();
+        setupMockSortDataInQuanticStore([exampleSortOptionAttributes]);
+      });
+
+      it('should display the quantic sort component with its attributes', async () => {
+        const element = createTestComponent({
+          ...defaultOptions,
+          disableDynamicNavigation: true,
+        });
+        await flushPromises();
+
+        const quanticSort = element.shadowRoot.querySelector(
+          selectors.quanticSort
+        );
+
+        expect(quanticSort).not.toBeNull();
+        expect(quanticSort.engineId).toBe(exampleEngine.id);
+        expect(quanticSort.variant).toBe('wide');
+
+        const quanticSortOption = element.shadowRoot.querySelector(
+          selectors.quanticSortOption
+        );
+
+        expect(quanticSortOption).not.toBeNull();
+        Object.entries(exampleSortOptionAttributes).forEach(([key, value]) => {
+          expect(quanticSortOption[key]).toEqual(value);
+        });
+      });
+    });
+
+    describe('the clear all filters button', () => {
+      describe('when there are active filters', () => {
+        beforeEach(() => {
+          setupMockFacetsDataInQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                ...exampleFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [],
+              },
+            },
+          });
+          breadcrumbManagerState = {
+            ...breadcrumbManagerState,
+            hasBreadcrumbs: true,
+          };
+        });
+
+        it('should display the clear all filters button', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const clearActiveFiltersButton = element.shadowRoot.querySelector(
+            selectors.clearActiveFiltersButton
+          );
+
+          expect(clearActiveFiltersButton).not.toBeNull();
+        });
+      });
+
+      describe('when there are no active filters', () => {
+        beforeEach(() => {
+          setupMockFacetsDataInQuanticStore({
+            filetype: {
+              label: 'File Type',
+              facetId: 'filetype',
+              element: {
+                localName: 'c-quantic-facet',
+                ...exampleFacetAttributes,
+              },
+              metadata: {
+                customCaptions: [],
+              },
+            },
+          });
+          breadcrumbManagerState = {
+            ...breadcrumbManagerState,
+            hasBreadcrumbs: false,
+          };
+        });
+
+        it('should not display the clear all filters button', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const clearActiveFiltersButton = element.shadowRoot.querySelector(
+            selectors.clearActiveFiltersButton
+          );
+
+          expect(clearActiveFiltersButton).toBeNull();
+        });
+      });
+    });
+
+    describe('the filters title', () => {
+      beforeEach(() => {
+        setupMockFacetsDataInQuanticStore({
+          filetype: {
+            label: 'File Type',
+            facetId: 'filetype',
+            element: {
+              localName: 'c-quantic-facet',
+              ...exampleFacetAttributes,
+            },
+            metadata: {
+              customCaptions: [],
+            },
+          },
+        });
+        breadcrumbManagerState = {
+          ...breadcrumbManagerState,
+          hasBreadcrumbs: true,
+        };
+      });
+
+      describe('when hideSort is set to false and a facet is rendered', () => {
+        it('should display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: false,
+            disableDynamicNavigation: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).not.toBeNull();
+        });
+      });
+
+      describe('when hideSort is set to true and a facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideSort: true,
+            disableDynamicNavigation: true,
+          });
+          const renderFacetEvent = new CustomEvent('quantic__renderfacet', {
+            detail: {
+              id: 'filetype',
+              shouldRenderFacet: true,
+            },
+          });
+          element.dispatchEvent(renderFacetEvent);
+
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
+        });
+      });
+
+      describe('when no facet is rendered', () => {
+        it('should not display the filters title', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            disableDynamicNavigation: true,
+          });
+          await flushPromises();
+
+          const filtersTitle = element.shadowRoot.querySelector(
+            selectors.filtersTitle
+          );
+
+          expect(filtersTitle).toBeNull();
         });
       });
     });

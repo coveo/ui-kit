@@ -75,7 +75,7 @@ export const RefineContentSelectors: RefineContentSelector = {
   clearAllFiltersButton: () =>
     RefineContentSelectors.get().find('.filters-header lightning-button'),
   filtersTitle: () =>
-    RefineContentSelectors.get().find('[data-cy="filters-title"]'),
+    RefineContentSelectors.get().find('[data-testid="filters-title"]'),
   refineSort: () => cy.get('c-quantic-refine-modal-content c-quantic-sort'),
   refineSortDropdown: () =>
     RefineContentSelectors.refineSort().find('[data-cy="sort-dropdown"]'),

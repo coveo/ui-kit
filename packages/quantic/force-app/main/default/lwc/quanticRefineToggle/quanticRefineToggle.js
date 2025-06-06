@@ -143,9 +143,6 @@ export default class QuanticRefineToggle extends LightningElement {
     Object.keys(registeredFacets).forEach((facetId) => {
       this.renderedFacets[facetId] = true;
     });
-
-    this.modal.fullScreen = this.fullScreen;
-    this.modalContent.hideSort = this.hideSort;
   };
 
   get refineButtonDisabled() {
