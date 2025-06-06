@@ -47,7 +47,7 @@ export class NextJsPagesRouterNavigatorContext implements NavigatorContext {
     const forwardedFor = Array.isArray(forwardedForHeader)
       ? forwardedForHeader[0]
       : forwardedForHeader;
-    return forwardedFor ?? null;
+    return forwardedFor;
   }
 
   get marshal(): NavigatorContext {
