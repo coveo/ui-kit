@@ -139,32 +139,13 @@ export function buildProviderWithDefinition<
       });
     }, [staticState]);
 
-    if (hydratedState) {
-      return (
-        <definition.HydratedStateProvider
-          engine={hydratedState.engine}
-          controllers={hydratedState.controllers}
-        >
-          {children}
-        </definition.HydratedStateProvider>
-      );
-    }
-
-    const StaticStateProviderWithAnyControllers =
-      definition.StaticStateProvider as React.ComponentType<{
-        controllers: InferControllerStaticStateMapFromDefinitionsWithSolutionType<
-          ControllerDefinitionsMap<Controller>,
-          SolutionType
-        >;
-        children: React.ReactNode;
-      }>;
-
     return (
-      <StaticStateProviderWithAnyControllers
-        controllers={staticState.controllers}
+      <definition.StateProvider
+        engine={hydratedState?.engine}
+        controllers={hydratedState?.controllers || staticState.controllers}
       >
         {children}
-      </StaticStateProviderWithAnyControllers>
+      </definition.StateProvider>
     );
   };
 }

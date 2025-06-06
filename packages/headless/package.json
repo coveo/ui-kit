@@ -52,6 +52,8 @@
       "require": "./dist/cjs/ssr-commerce/headless.cjs",
       "default": "./dist/esm/ssr-commerce.index.js"
     }
+    "./package.json": "./package.json"
+
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
