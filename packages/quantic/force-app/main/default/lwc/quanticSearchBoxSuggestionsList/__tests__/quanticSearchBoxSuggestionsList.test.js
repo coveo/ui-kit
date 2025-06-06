@@ -100,7 +100,7 @@ const selectors = {
   option: 'li[role="option"]',
   richText: 'lightning-formatted-rich-text',
   lightningIcon: 'lightning-icon',
-  clearButton: '[data-testid="clear-recent-queries"]',
+  clearButton: '[data-testid="clear-recent-queries-button"]',
   suggestionOption: '[data-testid="suggestion-option"]',
   recentQueryOption: '[data-testid="recent-query-option"]',
 };

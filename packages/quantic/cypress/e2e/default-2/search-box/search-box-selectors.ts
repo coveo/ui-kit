@@ -31,18 +31,18 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   clearRecentQueriesButton: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-testid="clear-recent-queries"]'
+      'c-quantic-search-box-input [data-testid="clear-recent-queries-button"]'
     ),
   querySuggestions: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="suggestions-option"]'
+      'c-quantic-search-box-input [data-testid="suggestions-option"]'
     ),
   querySuggestionByIndex: (index: number) =>
     SearchBoxSelectors.querySuggestions().eq(index),
   querySuggestionContentByIndex: (index: number) =>
     SearchBoxSelectors.get()
       .find(
-        'c-quantic-search-box-input [data-cy="suggestions-option"] lightning-formatted-rich-text'
+        'c-quantic-search-box-input [data-testid="suggestions-option"] lightning-formatted-rich-text'
       )
       .eq(index),
 };
