@@ -1,12 +1,19 @@
+import '@/src/components/common/atomic-component-error/atomic-component-error.js';
+import type {
+  AnyBindings,
+  AnyEngineType,
+} from '@/src/components/common/interface/bindings.js';
+import {
+  i18nBackendOptions,
+  i18nTranslationNamespace,
+  init18n,
+} from '@/src/components/common/interface/i18n.js';
 import {setCoveoGlobal} from '@/src/global/environment.js';
+import {loadDayjsLocale} from '@/src/utils/dayjs-locales.js';
 import type {LogLevel} from '@coveo/headless';
 import {i18n, TFunction} from 'i18next';
 import Backend from 'i18next-http-backend';
 import {html} from 'lit';
-import {loadDayjsLocale} from '../../../utils/dayjs-locales.js';
-import '../atomic-component-error/atomic-component-error.js';
-import type {AnyBindings, AnyEngineType} from './bindings.js';
-import {i18nBackendOptions, i18nTranslationNamespace, init18n} from './i18n.js';
 
 export type InitializeEventHandler = (bindings: AnyBindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
