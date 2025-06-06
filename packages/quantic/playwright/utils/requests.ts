@@ -8,6 +8,10 @@ export const classifyRequestRegex =
 export const documentsSuggestRequestRegex =
   /\/rest\/organizations\/.*\/caseassists\/.*\/documents\/suggest/;
 export const facetRequestRegex = /\/rest\/search\/v2\/facet\?organizationId=.*/;
+export const querySuggestRegex =
+  /\/rest\/search\/v2\/querySuggest\?organizationId=.*/;
+export const insightQuerySuggestRegex =
+  /\/rest\/organizations\/.*\/insight\/v1\/configs\/.*\/querysuggest/;
 
 export const analyticsSearchesUrlRegex =
   /\/rest(\/ua)?\/v15\/analytics\/search(es)?/;

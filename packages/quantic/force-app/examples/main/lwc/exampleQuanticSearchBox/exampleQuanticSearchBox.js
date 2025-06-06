@@ -1,7 +1,12 @@
 import {LightningElement, track} from 'lwc';
 
+const DEFAULT_ENGINE_ID = 'quantic-search-box-engine';
+const RECENT_QUERIES_STORAGE_KEY_SUFFIX = '_quantic-recent-queries';
+
 export default class ExampleQuanticSearchBox extends LightningElement {
-  @track config = {};
+  @track config = {
+    engineId: DEFAULT_ENGINE_ID,
+  };
   isConfigured = false;
 
   pageTitle = 'Quantic Search Box';
@@ -12,7 +17,7 @@ export default class ExampleQuanticSearchBox extends LightningElement {
       attribute: 'engineId',
       label: 'Engine id',
       description: 'The ID of the engine instance the component registers to.',
-      defaultValue: 'quantic-search-box-engine',
+      defaultValue: DEFAULT_ENGINE_ID,
     },
     {
       attribute: 'useCase',
@@ -60,5 +65,9 @@ export default class ExampleQuanticSearchBox extends LightningElement {
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
+  }
+
+  get recentQueriesStorageKey() {
+    return `${this.config.engineId}${RECENT_QUERIES_STORAGE_KEY_SUFFIX}`;
   }
 }

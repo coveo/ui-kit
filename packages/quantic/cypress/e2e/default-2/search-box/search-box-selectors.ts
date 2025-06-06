@@ -16,10 +16,10 @@ export interface SearchBoxSelector extends ComponentSelector {
 export const SearchBoxSelectors: SearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
   quanticSearchBoxInput: () =>
-    SearchBoxSelectors.get().find('[data-cy="quantic-search-box-input"]'),
+    SearchBoxSelectors.get().find('[data-testid="quantic-search-box-input"]'),
   input: (textarea = false) =>
     SearchBoxSelectors.get().find(
-      `c-quantic-search-box-input [data-cy="${textarea ? 'search-box-textarea' : 'search-box-input'}"]`
+      `c-quantic-search-box-input [data-testid="${textarea ? 'search-box-textarea' : 'search-box-input'}"]`
     ),
   suggestionList: () =>
     SearchBoxSelectors.get().find(
@@ -31,18 +31,18 @@ export const SearchBoxSelectors: SearchBoxSelector = {
     ),
   clearRecentQueriesButton: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="clear-recent-queries"]'
+      'c-quantic-search-box-input [data-testid="clear-recent-queries-button"]'
     ),
   querySuggestions: () =>
     SearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="suggestions-option"]'
+      'c-quantic-search-box-input [data-testid="suggestions-option"]'
     ),
   querySuggestionByIndex: (index: number) =>
     SearchBoxSelectors.querySuggestions().eq(index),
   querySuggestionContentByIndex: (index: number) =>
     SearchBoxSelectors.get()
       .find(
-        'c-quantic-search-box-input [data-cy="suggestions-option"] lightning-formatted-rich-text'
+        'c-quantic-search-box-input [data-testid="suggestions-option"] lightning-formatted-rich-text'
       )
       .eq(index),
 };

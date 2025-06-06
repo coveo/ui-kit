@@ -1,0 +1,27 @@
+<template>
+  <div>
+    <lightning-input
+      label={inputLabel}
+      value={inputValue}
+      data-testid="localstorage-input"
+      onchange={handleInputChange}
+    ></lightning-input>
+    <lightning-button
+      label="Set Value"
+      onclick={handleSetValue}
+      class="slds-var-m-top_small"
+      data-testid="localstorage-set-button"
+    ></lightning-button>
+
+    <lightning-button
+      label="Print Value"
+      onclick={handlePrintValue}
+      class="slds-var-m-top_small slds-var-m-left_small"
+      data-testid="localstorage-get-button"
+    ></lightning-button>
+
+    <p class="slds-var-m-top_medium" data-testid="localstorage-output">
+      {outputValue}
+    </p>
+  </div>
+</template>
