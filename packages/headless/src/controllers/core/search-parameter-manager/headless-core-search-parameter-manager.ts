@@ -147,7 +147,7 @@ export function enrichParameters(
  * We need it to be valid prior to dispatching the `restoreSearchParameters` action since the facet logic relies on the `tab` parameter to determine which facets to show.
  * If the `tab` parameter is invalid, it can lead to unexpected behavior in the facets.
  */
-export function ensureTabIsValid(
+function ensureTabIsValid(
   tabSet: TabSetState | undefined,
   parameters: SearchParameters
 ): SearchParameters {
@@ -158,9 +158,9 @@ export function ensureTabIsValid(
     const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
 
     if (!tabExists && currentActiveTab) {
-      parameters.tab = currentActiveTab.id;
+      return {...parameters, tab: currentActiveTab.id};
     } else if (!tabExists) {
-      parameters.tab = '';
+      return {...parameters, tab: ''};
     }
   }
 

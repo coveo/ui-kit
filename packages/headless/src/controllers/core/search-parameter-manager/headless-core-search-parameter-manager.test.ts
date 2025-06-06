@@ -61,7 +61,7 @@ describe('search parameter manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('should dispatch #restoreSearchParameters with the tab parameter as the active tab when the tab does not exist in the tabSet and there is an active tab', () => {
+  it('should dispatch #restoreSearchParameters with the the active tab as the tab parameter when the tab does not exist in the tabSet and there is an active tab', () => {
     const id1 = 'a';
     const id2 = 'b';
     const tab1 = buildMockTabSlice({id: id1, isActive: false});
@@ -76,7 +76,7 @@ describe('search parameter manager', () => {
     });
   });
 
-  it('should dispatch #restoreSearchParameters with the tab parameter as an empty string when there is no active tab', () => {
+  it('should dispatch #restoreSearchParameters with an empty string as the tab parameter when there is no active tab', () => {
     const id1 = 'a';
     const id2 = 'b';
     const tab1 = buildMockTabSlice({id: id1, isActive: false});
@@ -440,7 +440,7 @@ describe('search parameter manager', () => {
       });
     });
 
-    it('dispatches #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
+    it('should dispatch #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
       const params = {q: 'a'};
       manager.synchronize(params);
 
@@ -452,7 +452,7 @@ describe('search parameter manager', () => {
       });
     });
 
-    it('should dispatches #restoreSearchParameters with the original parameters when there is no tab parameter and no tabSet', () => {
+    it('should dispatch #restoreSearchParameters with the original parameters when there is no tab parameter and no tabSet', () => {
       const params = {q: 'a'};
       engine.state.tabSet = {};
       manager.synchronize(params);
