@@ -27,7 +27,4 @@ export interface FunctionalComponentGuard<T> {
   }): (children: FunctionalComponentChildren) => DirectiveResult;
 }
 
-type FunctionalComponentChildren =
-  | TemplateResult
-  | TemplateResult[]
-  | typeof nothing;
+type FunctionalComponentChildren = TemplateResult | typeof nothing;
