@@ -6,6 +6,7 @@ import {
 } from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
+import {selectContext} from '../../features/context/context-selector.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -327,6 +328,8 @@ export const constructAnswerQueryParams = (
 
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
 
+  const context = selectContext(state);
+
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
   const citationsFieldToInclude = selectFieldsToIncludeInCitation(state) ?? [];
@@ -341,6 +344,9 @@ export const constructAnswerQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(context?.contextValues && {
+      context: context.contextValues,
+    }),
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
         responseFormat: state.generatedAnswer.responseFormat,
