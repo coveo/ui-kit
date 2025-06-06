@@ -6,8 +6,8 @@ import {
   NumberFormatter,
 } from '../../../common/formats/format-common';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import {ProductContext} from '../product-template-decorators';
 import {parseValue} from '../product-utils';
+import {ProductContext} from '../stencil-product-template-decorators';
 
 /**
  * @alpha
