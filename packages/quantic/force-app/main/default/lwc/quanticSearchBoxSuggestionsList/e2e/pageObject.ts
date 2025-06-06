@@ -1,12 +1,20 @@
 import type {Locator, Page, Request} from '@playwright/test';
 import {
-  isUaCustomEvent,
-  isUaSearchEvent,
-} from '../../../../../../playwright/utils/requests';
+  AnalyticsMode,
+  AnalyticsModeEnum,
+} from '../../../../../../playwright/utils/analyticsMode';
+import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 
 export class SearchBoxSuggestionsListObject {
-  constructor(public page: Page) {
+  private analyticsMode: AnalyticsMode;
+
+  constructor(
+    public page: Page,
+    private analytics: AnalyticsObject
+  ) {
     this.page = page;
+    this.analytics = analytics;
+    this.analyticsMode = this.analytics.analyticsMode;
   }
 
   get searchBoxSuggestionsList(): Locator {
@@ -47,97 +55,59 @@ export class SearchBoxSuggestionsListObject {
     await this.page.locator('body').click();
   }
 
-  async waitForQuerySuggestSearchAnalytics(
+  async waitForQuerySuggestSearchLegacyAnalytics(
     expectedFields: Record<string, any>
   ): Promise<Request> {
-    return this.waitForSearchAnalytics(
-      'omniboxAnalytics',
-      (data: Record<string, any>) => {
-        return Object.keys(expectedFields).every(
-          (key) => data?.[key] === expectedFields[key]
-        );
-      }
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForSearchUaAnalytics(
+        'omniboxAnalytics',
+        (data: Record<string, any>) => {
+          return Object.keys(expectedFields).every(
+            (key) => data?.[key] === expectedFields[key]
+          );
+        }
+      );
+    }
+    throw new Error(
+      `Analytics mode ${this.analyticsMode} is not supported for clear recent queries analytics`
     );
   }
 
-  async waitForRecentQuerySearchAnalytics(
+  async waitForRecentQuerySearchLegacyAnalytics(
     expectedFields: Record<string, any>
   ): Promise<Request> {
-    return this.waitForSearchAnalytics(
-      'recentQueriesClick',
-      (data: Record<string, any>) => {
-        return Object.keys(expectedFields).every(
-          (key) => data?.[key] === expectedFields[key]
-        );
-      }
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForSearchUaAnalytics(
+        'recentQueriesClick',
+        (data: Record<string, any>) => {
+          return Object.keys(expectedFields).every(
+            (key) => data?.[key] === expectedFields[key]
+          );
+        }
+      );
+    }
+    throw new Error(
+      `Analytics mode ${this.analyticsMode} is not supported for clear recent queries analytics`
     );
   }
 
   async waitForClearRecentQueriesAnalytics(
     expectedFields: Record<string, any>
   ): Promise<Request> {
-    return this.waitForCustomUARequest(
-      'recentQueries',
-      'clearRecentQueries',
-      (data: Record<string, any>) => {
-        return Object.keys(expectedFields).every(
-          (key) => data?.[key] === expectedFields[key]
-        );
-      }
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'recentQueries',
+          eventValue: 'clearRecentQueries',
+        },
+        (event) =>
+          Object.keys(expectedFields).every(
+            (key) => event?.[key] === expectedFields[key]
+          )
+      );
+    }
+    throw new Error(
+      `Analytics mode ${this.analyticsMode} is not supported for clear recent queries analytics`
     );
-  }
-
-  async waitForSearchAnalytics(
-    actionCause: string,
-    customChecker?: Function
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaSearchEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-
-        const expectedFields: Record<string, any> = {
-          actionCause: actionCause,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
-
-        return (
-          matchesExpectedFields &&
-          (customChecker ? customChecker(requestBody) : true)
-        );
-      }
-      return false;
-    });
-    return uaRequest;
-  }
-
-  async waitForCustomUARequest(
-    eventType: string,
-    eventValue: string,
-    customChecker?: Function
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaCustomEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-
-        const expectedFields: Record<string, any> = {
-          eventType,
-          eventValue,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
-
-        return (
-          matchesExpectedFields &&
-          (customChecker ? customChecker(requestBody) : true)
-        );
-      }
-      return false;
-    });
-    return uaRequest;
   }
 }

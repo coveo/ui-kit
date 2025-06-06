@@ -10,6 +10,7 @@ import {
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 import {useCaseEnum} from '../../../../../../playwright/utils/useCase';
 import {QuerySuggestObject} from '../../../../../../playwright/page-object/querySuggestObject';
+import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMode';
 
 const searchBoxSuggestionsListUrl = 's/quantic-search-box';
 
@@ -37,6 +38,7 @@ type QuanticSearchBoxSuggestionsListE2eInsightFixtures =
 export const testSearch =
   quanticBase.extend<QuanticSearchBoxSuggestionsListE2ESearchFixtures>({
     options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
     recentQueries: [],
     search: async ({page}, use) => {
       await use(new SearchObject(page, searchRequestRegex));
@@ -45,7 +47,15 @@ export const testSearch =
       await use(new QuerySuggestObject(page, querySuggestRegex));
     },
     searchBoxSuggestionsList: async (
-      {page, options, configuration, search, querySuggest, recentQueries},
+      {
+        page,
+        options,
+        configuration,
+        search,
+        analytics,
+        querySuggest,
+        recentQueries,
+      },
       use
     ) => {
       await page.goto(searchBoxSuggestionsListUrl);
@@ -55,13 +65,14 @@ export const testSearch =
 
       configuration.configure(options);
       await search.waitForSearchResponse();
-      await use(new SearchBoxSuggestionsListObject(page));
+      await use(new SearchBoxSuggestionsListObject(page, analytics));
     },
   });
 
 export const testInsight =
   quanticBase.extend<QuanticSearchBoxSuggestionsListE2eInsightFixtures>({
     options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
     recentQueries: [],
     search: async ({page}, use) => {
       await use(new SearchObject(page, insightSearchRequestRegex));
@@ -73,7 +84,15 @@ export const testInsight =
       await use(new InsightSetupObject(page));
     },
     searchBoxSuggestionsList: async (
-      {page, options, configuration, insightSetup, querySuggest, recentQueries},
+      {
+        page,
+        options,
+        configuration,
+        insightSetup,
+        querySuggest,
+        analytics,
+        recentQueries,
+      },
       use
     ) => {
       await page.goto(searchBoxSuggestionsListUrl);
@@ -82,7 +101,7 @@ export const testInsight =
       }
       configuration.configure({...options, useCase: useCaseEnum.insight});
       await insightSetup.waitForInsightInterfaceInitialization();
-      await use(new SearchBoxSuggestionsListObject(page));
+      await use(new SearchBoxSuggestionsListObject(page, analytics));
     },
   });
 
