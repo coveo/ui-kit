@@ -1,13 +1,13 @@
-import {DateFacetValue, NumericFacetValue} from '@coveo/headless';
+import type {DateFacetValue, NumericFacetValue} from '@coveo/headless';
 import {isInDocument} from '../../../utils/utils';
-import {
+import type {
   FacetInfo,
   FacetStore,
   FacetType,
   FacetValueFormat,
 } from '../facets/facet-common-store';
 import {isRefineModalFacet} from '../refine-modal/refine-modal-facet';
-import {AnyEngineType} from './bindings';
+import type {AnyEngineType} from './bindings';
 
 export type BaseStore<T> = CommonStore<T> & {
   getUniqueIDFromEngine(engine: unknown): string | undefined;
