@@ -73,7 +73,6 @@ describe('atomic-commerce-recommendation-interface', () => {
         language-assets-path=${ifDefined(languageAssetsPath)}
         scroll-container=${ifDefined(scrollContainer)}
       >
-        <div>atomic-commerce-recommendation-interface</div>
       </atomic-commerce-recommendation-interface>`
     )) as AtomicCommerceRecommendationInterface;
 
@@ -98,6 +97,19 @@ describe('atomic-commerce-recommendation-interface', () => {
   // #constructor
 
   describe('when created', () => {
+    it('should create an instance of CommonAtomicInterfaceHelper', async () => {
+      const element = await setupElement();
+
+      // Mocking the CommonAtomicInterfaceHelper class would be complex.
+      expect(
+        (
+          element as unknown as {
+            commonInterfaceHelper: CommonAtomicInterfaceHelper<never>;
+          }
+        ).commonInterfaceHelper
+      ).toBeInstanceOf(CommonAtomicInterfaceHelper);
+    });
+
     it('should set #store to the value returned by #createCommerceRecommendationStore', async () => {
       const createCommerceRecommendationStoreSpy = vi.mocked(
         createCommerceRecommendationStore
