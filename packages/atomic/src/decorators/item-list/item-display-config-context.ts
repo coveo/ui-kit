@@ -12,7 +12,7 @@ export type DisplayConfig = {
   imageSize: ItemDisplayImageSize;
 };
 
-export function ItemDisplayConfigContext() {
+export function itemDisplayConfigContext() {
   return (component: typeof LitElement, itemVariable: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {updated} = component as any;

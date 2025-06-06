@@ -1,7 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
-import {ItemContext, MissingParentError} from './item-context';
+import {itemContext, MissingParentError} from './item-context';
 
 const originalConnectedCallback = vi.fn();
 const originalRender = vi.fn(() => '<div>rendered</div>');
@@ -37,7 +37,7 @@ describe('item-context', () => {
 
   describe('#ItemContext', () => {
     it('should return a decorator function', () => {
-      const decorator = ItemContext();
+      const decorator = itemContext();
 
       expect(typeof decorator).toBe('function');
     });
@@ -47,7 +47,7 @@ describe('item-context', () => {
         parentName: 'custom-parent',
         folded: true,
       };
-      const decorator = ItemContext(customOptions);
+      const decorator = itemContext(customOptions);
 
       expect(typeof decorator).toBe('function');
     });
@@ -56,13 +56,13 @@ describe('item-context', () => {
       let mockComponent: TestElement;
       let parentElement: HTMLElement;
 
-      const setupElement = (options?: Parameters<typeof ItemContext>[0]) => {
+      const setupElement = (options?: Parameters<typeof itemContext>[0]) => {
         mockComponent = new TestElement();
 
         vi.spyOn(console, 'error').mockImplementation(() => {});
         vi.spyOn(mockComponent, 'remove').mockImplementation(() => {});
 
-        const decorator = ItemContext(options);
+        const decorator = itemContext(options);
         decorator(mockComponent as never, 'product');
 
         parentElement.appendChild(mockComponent);

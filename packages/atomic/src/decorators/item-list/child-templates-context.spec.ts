@@ -2,7 +2,7 @@ import {ItemTemplateProvider} from '@/src/components/common/item-list/item-templ
 import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
-import {ChildTemplatesContext} from './child-templates-context';
+import {childTemplatesContext} from './child-templates-context';
 
 const originalConnectedCallback = vi.fn();
 const originalRender = vi.fn(() => '<div>rendered</div>');
@@ -34,7 +34,7 @@ describe('child-templates-context', () => {
 
   describe('#ChildTemplatesContext', () => {
     it('should return a decorator function', () => {
-      const decorator = ChildTemplatesContext();
+      const decorator = childTemplatesContext();
 
       expect(typeof decorator).toBe('function');
     });
@@ -63,7 +63,7 @@ describe('child-templates-context', () => {
         vi.spyOn(console, 'error').mockImplementation(() => {});
         vi.spyOn(mockComponent, 'remove').mockImplementation(() => {});
 
-        const decorator = ChildTemplatesContext();
+        const decorator = childTemplatesContext();
         decorator(mockComponent as never, 'itemTemplateProvider');
 
         parentElement.appendChild(mockComponent);

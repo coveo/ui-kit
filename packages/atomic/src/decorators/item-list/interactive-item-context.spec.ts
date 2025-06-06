@@ -1,7 +1,7 @@
 import {LitElement} from 'lit';
 import {customElement} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
-import {InteractiveItemContext} from './interactive-item-context';
+import {interactiveItemContext} from './interactive-item-context';
 
 const originalConnectedCallback = vi.fn();
 const originalRender = vi.fn(() => '<div>rendered</div>');
@@ -24,7 +24,7 @@ describe('InteractiveItemContext', () => {
   });
 
   it('should return a decorator function', () => {
-    const decorator = InteractiveItemContext();
+    const decorator = interactiveItemContext();
 
     expect(typeof decorator).toBe('function');
   });
@@ -43,7 +43,7 @@ describe('InteractiveItemContext', () => {
 
       mockComponent = new TestElement();
 
-      const decorator = InteractiveItemContext();
+      const decorator = interactiveItemContext();
       decorator(mockComponent as never, 'product');
 
       parentElement.appendChild(mockComponent);

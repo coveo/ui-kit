@@ -6,7 +6,7 @@ const itemContextEventName = 'atomic/resolveResult';
 
 type ItemContextEventHandler<T> = (item: T) => void;
 
-export function itemContext<T>(element: Element, parentName: string) {
+export function fetchItemContext<T>(element: Element, parentName: string) {
   return new Promise<T>((resolve, reject) => {
     const event = buildCustomEvent<ItemContextEventHandler<T>>(
       itemContextEventName,

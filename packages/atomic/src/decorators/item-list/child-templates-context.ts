@@ -8,7 +8,7 @@ interface AtomicItemChildren {
   itemTemplateProvider?: ItemTemplateProvider;
 }
 
-export function ChildTemplatesContext() {
+export function childTemplatesContext() {
   return (component: typeof LitElement, itemTemplateProviderProp: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {updated} = component as any;

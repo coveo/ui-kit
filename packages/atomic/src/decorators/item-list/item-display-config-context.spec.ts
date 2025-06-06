@@ -2,7 +2,7 @@ import {LitElement} from 'lit';
 import {customElement, state} from 'lit/decorators.js';
 import {describe, it, expect, beforeEach, afterEach, vi} from 'vitest';
 import {
-  ItemDisplayConfigContext,
+  itemDisplayConfigContext,
   DisplayConfig,
 } from './item-display-config-context';
 
@@ -31,7 +31,7 @@ describe('item-display-config-context', () => {
 
   describe('#ItemDisplayConfigContext', () => {
     it('should return a decorator function', () => {
-      const decorator = ItemDisplayConfigContext();
+      const decorator = itemDisplayConfigContext();
 
       expect(typeof decorator).toBe('function');
     });
@@ -60,7 +60,7 @@ describe('item-display-config-context', () => {
         vi.spyOn(console, 'error').mockImplementation(() => {});
         vi.spyOn(mockComponent, 'remove').mockImplementation(() => {});
 
-        const decorator = ItemDisplayConfigContext();
+        const decorator = itemDisplayConfigContext();
         decorator(mockComponent as never, 'displayConfig');
 
         parentElement.appendChild(mockComponent);

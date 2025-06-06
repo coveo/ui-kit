@@ -2,7 +2,7 @@ import {MissingParentError} from '@/src/decorators/item-list/item-context.js';
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {closest} from '../../../utils/dom-utils.js';
 import {buildCustomEvent} from '../../../utils/event-utils.js';
-import {itemContext} from './item-context.js';
+import {fetchItemContext} from './fetch-item-context.js';
 
 vi.mock('../../../utils/dom-utils.js');
 vi.mock('../../../utils/event-utils.js');
@@ -36,7 +36,7 @@ describe('item-context', () => {
     it('should build a custom event with correct parameters', () => {
       vi.mocked(closest).mockReturnValue(document.createElement('div'));
 
-      itemContext(mockElement, 'parent-element');
+      fetchItemContext(mockElement, 'parent-element');
 
       expect(buildCustomEvent).toHaveBeenCalledWith(
         'atomic/resolveResult',
@@ -47,7 +47,7 @@ describe('item-context', () => {
     it('should dispatch the custom event on the element', () => {
       vi.mocked(closest).mockReturnValue(document.createElement('div'));
 
-      itemContext(mockElement, 'parent-element');
+      fetchItemContext(mockElement, 'parent-element');
 
       expect(mockElement.dispatchEvent).toHaveBeenCalledWith(mockEvent);
     });
@@ -64,7 +64,7 @@ describe('item-context', () => {
         return mockEvent;
       });
 
-      const result = await itemContext<typeof testItem>(
+      const result = await fetchItemContext<typeof testItem>(
         mockElement,
         'parent-element'
       );
@@ -87,7 +87,7 @@ describe('item-context', () => {
       vi.mocked(MissingParentError).mockReturnValue(expectedError);
 
       await expect(
-        itemContext(elementWithUpperCase, 'parent-element')
+        fetchItemContext(elementWithUpperCase, 'parent-element')
       ).rejects.toThrow(expectedError);
 
       expect(MissingParentError).toHaveBeenCalledWith(

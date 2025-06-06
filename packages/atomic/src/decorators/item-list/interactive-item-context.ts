@@ -4,7 +4,7 @@ import {buildCustomEvent} from '../../utils/event-utils.js';
 
 const interactiveItemContextEventName = 'atomic/resolveInteractiveResult';
 
-export function InteractiveItemContext() {
+export function interactiveItemContext() {
   return (component: LitElement, interactiveItemVariable: string) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {connectedCallback} = component as any;

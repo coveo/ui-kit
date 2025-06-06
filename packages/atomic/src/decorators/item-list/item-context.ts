@@ -29,7 +29,7 @@ function extractFolded(item: Record<string, unknown>, returnFolded: boolean) {
   return item;
 }
 
-export function ItemContext(
+export function itemContext(
   opts: {parentName: string; folded: boolean} = {
     parentName: 'atomic-result',
     folded: false,
