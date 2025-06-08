@@ -28,4 +28,39 @@
     <protected>false</protected>
     <shortDescription>Send as email</shortDescription>
   </labels>
+  <labels>
+    <fullName>AttachResult</fullName>
+    <value>Attach result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Attach result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>DetachResult</fullName>
+    <value>Detach result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Detach result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>ErrorAttachingResult</fullName>
+    <value>Error while trying to attach result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Error while trying to attach result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>ErrorDetachingResult</fullName>
+    <value>Error while trying to detach result</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Error while trying to detach result</shortDescription>
+  </labels>
+  <labels>
+    <fullName>ResultIsAttached</fullName>
+    <value>Result is attached</value>
+    <language>en_US</language>
+    <protected>false</protected>
+    <shortDescription>Result is attached</shortDescription>
+  </labels>
 </CustomLabels>
