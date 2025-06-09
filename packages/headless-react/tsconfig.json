@@ -23,6 +23,5 @@
     "lib": ["dom", "ES2023"],
     "types": ["vitest/globals"]
   },
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"],
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
