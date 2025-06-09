@@ -36,6 +36,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-commerce-text': async () =>
+    await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
   'atomic-product-template': async () =>
