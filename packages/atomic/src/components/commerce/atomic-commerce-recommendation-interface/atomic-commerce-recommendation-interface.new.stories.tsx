@@ -40,19 +40,17 @@ export const Default: Story = {
   name: 'atomic-commerce-recommendation-interface',
 };
 
-export const WithProductList: Story = {
+export const WithRecommendationList: Story = {
   tags: ['commerce', 'test'],
   args: {
     'slots-default': `
       <atomic-commerce-layout>
         <atomic-layout-section section="main">
-          <atomic-layout-section section="products">
-            <atomic-commerce-product-list
-              display="grid"
-              density="compact"
-              image-size="small"
-            ></atomic-commerce-product-list>
-          </atomic-layout-section>
+          <atomic-commerce-recommendation-list
+            id="popular_bought"
+            slot-id="af4fb7ba-6641-4b67-9cf9-be67e9f30174"
+            products-per-page="3"
+          ></atomic-commerce-recommendation-list>
         </atomic-layout-section>
       </atomic-commerce-layout>
     `,
