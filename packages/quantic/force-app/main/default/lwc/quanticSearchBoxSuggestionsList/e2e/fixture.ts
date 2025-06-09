@@ -37,6 +37,7 @@ type QuanticSearchBoxSuggestionsListE2eInsightFixtures =
 
 export const testSearch =
   quanticBase.extend<QuanticSearchBoxSuggestionsListE2ESearchFixtures>({
+    pageUrl: searchBoxSuggestionsListUrl,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
     recentQueries: [],
@@ -71,6 +72,7 @@ export const testSearch =
 
 export const testInsight =
   quanticBase.extend<QuanticSearchBoxSuggestionsListE2eInsightFixtures>({
+    pageUrl: searchBoxSuggestionsListUrl,
     options: {},
     analyticsMode: AnalyticsModeEnum.legacy,
     recentQueries: [],

@@ -35,17 +35,6 @@ useCaseTestCases.forEach((useCase) => {
         });
 
         test.describe('search box input interactions', () => {
-          test('should request query suggestions on input focus', async ({
-            searchBoxSuggestionsList,
-            querySuggest,
-          }) => {
-            const querySuggestRequestPromise =
-              querySuggest.waitForQuerySuggestRequest();
-            const searchBoxInput = searchBoxSuggestionsList.searchBoxInput;
-            await searchBoxInput.focus();
-            await querySuggestRequestPromise;
-          });
-
           test('should display suggestions on input focus', async ({
             searchBoxSuggestionsList,
             querySuggest,

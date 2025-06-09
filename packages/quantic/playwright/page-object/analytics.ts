@@ -87,10 +87,8 @@ export class AnalyticsObject {
       if (isUaSearchEvent(request)) {
         const event = request.postDataJSON?.();
         return (
-          (event?.actionCause === actionCause &&
-            additionalMatch &&
-            additionalMatch(event)) ||
-          false
+          event?.actionCause === actionCause &&
+          (additionalMatch ? additionalMatch(event) === true : true)
         );
       }
       return false;

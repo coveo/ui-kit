@@ -100,7 +100,7 @@ const selectors = {
   option: 'li[role="option"]',
   richText: 'lightning-formatted-rich-text',
   lightningIcon: 'lightning-icon',
-  clearButton: '[data-testid="clear-recent-queries-button"]',
+  clearRecentQueriesButton: '[data-testid="clear-recent-queries-button"]',
   suggestionOption: '[data-testid="suggestion-option"]',
   recentQueryOption: '[data-testid="recent-query-option"]',
 };
@@ -116,6 +116,21 @@ const mockRecentQueries = [
   'recent query 2',
   'test recent query',
 ];
+
+const buildMixedOptions = (suggestions, recentQueries) => {
+  return [
+    ...recentQueries.map((query) => ({
+      value: query,
+      rawValue: query,
+      isRecentQuery: true,
+    })),
+    ...suggestions.map((suggestion) => ({
+      value: suggestion.value,
+      rawValue: suggestion.rawValue,
+      isRecentQuery: false,
+    })),
+  ];
+};
 
 const createTestComponent = buildCreateTestComponent(
   QuanticSearchBoxSuggestionsList,
@@ -151,7 +166,7 @@ describe('c-quantic-search-box-suggestions-list', () => {
         expect(options.length).toBe(mockSuggestions.length);
         // Where there's only suggestions, we don't render a clear recent queries button.
         expect(
-          element.shadowRoot.querySelector(selectors.clearButton)
+          element.shadowRoot.querySelector(selectors.clearRecentQueriesButton)
         ).toBeNull();
         options.forEach((option, index) => {
           const lightningRichText = option.querySelector(selectors.richText);
@@ -163,7 +178,7 @@ describe('c-quantic-search-box-suggestions-list', () => {
         });
       });
 
-      it('should handle a non-array suggestions input', async () => {
+      it('should not display suggestions and not crash when the suggestions is not an array', async () => {
         const element = createTestComponent();
         element.suggestions = 'foo';
         await flushPromises();
@@ -199,7 +214,7 @@ describe('c-quantic-search-box-suggestions-list', () => {
           });
       });
 
-      it('should handle a non-array recent queries input', async () => {
+      it('should not display recent queries and not crash when the recentQueries is not an array', async () => {
         const element = createTestComponent();
         element.recentQueries = 'foo';
         await flushPromises();
@@ -211,18 +226,10 @@ describe('c-quantic-search-box-suggestions-list', () => {
 
     describe('when both suggestions and recent queries are provided and query is empty', () => {
       it('should render suggestions and recent queries as options', async () => {
-        const mockSuggestionListOptions = [
-          ...mockRecentQueries.map((query) => ({
-            value: query,
-            rawValue: query,
-            isRecentQuery: true,
-          })),
-          ...mockSuggestions.map((suggestion) => ({
-            value: suggestion.value,
-            rawValue: suggestion.rawValue,
-            isRecentQuery: false,
-          })),
-        ];
+        const mockSuggestionListOptions = buildMixedOptions(
+          mockSuggestions,
+          mockRecentQueries
+        );
         const element = createTestComponent({
           suggestions: mockSuggestions,
           recentQueries: mockRecentQueries,
@@ -242,14 +249,12 @@ describe('c-quantic-search-box-suggestions-list', () => {
         Array.from(options)
           .slice(1)
           .forEach((option, index) => {
+            const {value, rawValue, isRecentQuery} =
+              mockSuggestionListOptions[index];
             const lightningRichText = option.querySelector(selectors.richText);
-            expect(lightningRichText.value).toBe(
-              mockSuggestionListOptions[index].value
-            );
-            expect(lightningRichText.title).toBe(
-              mockSuggestionListOptions[index].rawValue
-            );
-            const expectedIcon = mockSuggestionListOptions[index].isRecentQuery
+            expect(lightningRichText.value).toBe(value);
+            expect(lightningRichText.title).toBe(rawValue);
+            const expectedIcon = isRecentQuery
               ? 'utility:clock'
               : 'utility:search';
             expect(option.querySelector(selectors.lightningIcon).iconName).toBe(
@@ -272,18 +277,10 @@ describe('c-quantic-search-box-suggestions-list', () => {
             rawValue: duplicateQuery,
           },
         ];
-        const mockSuggestionListOptionsWithDuplicate = [
-          ...mockRecentQueriesWithDuplicate.map((query) => ({
-            value: query,
-            rawValue: query,
-            isRecentQuery: true,
-          })),
-          ...mockSuggestionsWithDuplicate.map((suggestion) => ({
-            value: suggestion.value,
-            rawValue: suggestion.rawValue,
-            isRecentQuery: false,
-          })),
-        ];
+        const mockSuggestionListOptionsWithDuplicate = buildMixedOptions(
+          mockSuggestionsWithDuplicate,
+          mockRecentQueriesWithDuplicate
+        );
         const element = createTestComponent({
           suggestions: mockSuggestionsWithDuplicate,
           recentQueries: mockRecentQueriesWithDuplicate,
@@ -344,6 +341,10 @@ describe('c-quantic-search-box-suggestions-list', () => {
       const clearButton = options.item(0);
       expect(clearButton.querySelector(selectors.lightningIcon)).toBeNull();
       expect(clearButton.textContent).toContain(labels.recentQueries);
+      const recentQueryOption = options.item(1);
+      expect(recentQueryOption.querySelector(selectors.richText).value).toBe(
+        'test recent query'
+      );
     });
 
     it('should bold the current query in recent queries', async () => {
@@ -482,7 +483,6 @@ describe('c-quantic-search-box-suggestions-list', () => {
       });
       await flushPromises();
 
-      // Move down first, then up
       const result = element.selectionUp();
       expect(result).toEqual(
         expect.objectContaining({
