@@ -1,5 +1,12 @@
 import {vi, describe, it, expect} from 'vitest';
-import {once, camelToKebab, randomID, kebabToCamel, aggregate} from './utils';
+import {
+  once,
+  camelToKebab,
+  randomID,
+  kebabToCamel,
+  aggregate,
+  isInDocument,
+} from './utils';
 
 vi.mock('@stencil/core', () => ({
   getAssetPath: vi.fn((path: string) => {
@@ -7,76 +14,112 @@ vi.mock('@stencil/core', () => ({
   }),
 }));
 
-describe('once', () => {
-  it('should call the function only once', () => {
-    const myFunction = vi.fn();
-    const executeOnce = once(myFunction);
-    executeOnce();
-    executeOnce();
-    expect(myFunction).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('camelToKebab', () => {
-  it('works with a camel case value', () => {
-    expect(camelToKebab('thisIsATest')).toBe('this-is-a-test');
-  });
-
-  it('works with a camel case value with numerical characters', () => {
-    expect(camelToKebab('coolName2')).toBe('cool-name2');
-  });
-
-  it('works with an already kebab cased value', () => {
-    expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
-  });
-});
-
-describe('kebabToCamel', () => {
-  it('works with a kebab case value', () => {
-    expect(kebabToCamel('this-is-a-test')).toBe('thisIsATest');
-  });
-
-  it('works with a kebab case value with numerical characters', () => {
-    expect(kebabToCamel('cool-name2')).toBe('coolName2');
-  });
-
-  it('works with an already camel cased value', () => {
-    expect(kebabToCamel('fieldsToInclude')).toBe('fieldsToInclude');
-  });
-});
-
-describe('randomID', () => {
-  it('when a string to prepend is passed, it places it at the start of the id', () => {
-    expect(randomID('prefix')).toMatch(/^prefix/);
-  });
-  it('when a string to prepend is not passed, it prefixes id with nothing', () => {
-    expect(randomID()).not.toMatch(/^undefined/);
-    expect(randomID().length).toBe(5);
-  });
-
-  it('when called twice, it returns two different ids', () => {
-    expect(randomID()).not.toBe(randomID());
-  });
-});
-
-describe('aggregate', () => {
-  it('can aggregate based on string keys', () => {
-    const aggregatedValues = aggregate(
-      [
-        {name: 'Apple', category: 'Fruit'},
-        {name: 'Cookie', category: 'Dessert'},
-        {name: 'Watermelon', category: 'Fruit'},
-        {name: 'Carrot', category: 'Vegetable'},
-      ] as const,
-      (value) => value.category
-    );
-    expect(aggregatedValues).toEqual({
-      Fruit: [
-        {name: 'Apple', category: 'Fruit'},
-        {name: 'Watermelon', category: 'Fruit'},
-      ],
-      Dessert: [{name: 'Cookie', category: 'Dessert'}],
-      Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
+describe('utils', () => {
+  describe('#once', () => {
+    it('should call the function only once', () => {
+      const myFunction = vi.fn();
+      const executeOnce = once(myFunction);
+      executeOnce();
+      executeOnce();
+      expect(myFunction).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('#camelToKebab', () => {
+    it('should work with a camel case value', () => {
+      expect(camelToKebab('thisIsATest')).toBe('this-is-a-test');
+    });
+
+    it('should work with a camel case value with numerical characters', () => {
+      expect(camelToKebab('coolName2')).toBe('cool-name2');
+    });
+
+    it('should work with an already kebab cased value', () => {
+      expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
+    });
+  });
+
+  describe('#kebabToCamel', () => {
+    it('should work with a kebab case value', () => {
+      expect(kebabToCamel('this-is-a-test')).toBe('thisIsATest');
+    });
+
+    it('should work with a kebab case value with numerical characters', () => {
+      expect(kebabToCamel('cool-name2')).toBe('coolName2');
+    });
+
+    it('should work with an already camel cased value', () => {
+      expect(kebabToCamel('fieldsToInclude')).toBe('fieldsToInclude');
+    });
+  });
+
+  describe('#randomID', () => {
+    it('should place the string to prepend at the start of the id when passed', () => {
+      expect(randomID('prefix')).toMatch(/^prefix/);
+    });
+    it('should prefix id with nothing when a string to prepend is not passed', () => {
+      expect(randomID()).not.toMatch(/^undefined/);
+      expect(randomID().length).toBe(5);
+    });
+
+    it('should return two different ids when called twice', () => {
+      expect(randomID()).not.toBe(randomID());
+    });
+  });
+
+  describe('#aggregate', () => {
+    it('should aggregate based on string keys', () => {
+      const aggregatedValues = aggregate(
+        [
+          {name: 'Apple', category: 'Fruit'},
+          {name: 'Cookie', category: 'Dessert'},
+          {name: 'Watermelon', category: 'Fruit'},
+          {name: 'Carrot', category: 'Vegetable'},
+        ] as const,
+        (value) => value.category
+      );
+      expect(aggregatedValues).toEqual({
+        Fruit: [
+          {name: 'Apple', category: 'Fruit'},
+          {name: 'Watermelon', category: 'Fruit'},
+        ],
+        Dessert: [{name: 'Cookie', category: 'Dessert'}],
+        Vegetable: [{name: 'Carrot', category: 'Vegetable'}],
+      });
+    });
+  });
+
+  describe('#isInDocument', () => {
+    it('should return true for an element attached to the main document', () => {
+      const el = document.createElement('div');
+      document.body.appendChild(el);
+      expect(isInDocument(el)).toBe(true);
+      document.body.removeChild(el);
+    });
+
+    it('should return true for the descendant of an element attached to the main document', () => {
+      const parent = document.createElement('div');
+      const child = document.createElement('span');
+      parent.appendChild(child);
+      document.body.appendChild(parent);
+      expect(isInDocument(child)).toBe(true);
+    });
+
+    it('should return true for an element inside a shadow DOM attached to the document', () => {
+      const host = document.createElement('div');
+      document.body.appendChild(host);
+      const shadow = host.attachShadow({mode: 'open'});
+      const shadowChild = document.createElement('span');
+      shadow.appendChild(shadowChild);
+      expect(isInDocument(shadowChild)).toBe(true);
+      document.body.removeChild(host);
+    });
+
+    it('should return false for an element not attached to the document', () => {
+      const el = document.createElement('div');
+      expect(isInDocument(el)).toBe(false);
+    });
+  });
+
+  // TODO - KIT-4326:  add tests for all other functions exported from utils.ts.
 });
