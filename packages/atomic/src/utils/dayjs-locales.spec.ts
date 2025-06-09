@@ -72,7 +72,7 @@ describe('#loadDayjsLocale', () => {
     loadDayjsLocale('de');
 
     expect(console.warn).toHaveBeenCalledWith(
-      'Cannot load dayjs locale file file for "de"'
+      'Cannot load dayjs locale file for "de"'
     );
   });
 
@@ -83,7 +83,7 @@ describe('#loadDayjsLocale', () => {
     loadDayjsLocale('fr');
 
     expect(console.warn).toHaveBeenCalledWith(
-      'Cannot load dayjs locale file file for "fr"'
+      'Cannot load dayjs locale file for "fr"'
     );
   });
 });
