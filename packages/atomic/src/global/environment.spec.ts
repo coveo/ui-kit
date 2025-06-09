@@ -4,18 +4,17 @@ import * as env from './environment';
 vi.mock('@coveo/headless', () => ({VERSION: 'HEADLESS_VERSION'}));
 
 describe('environment', () => {
-  const originalCoveoAtomic = (window as Record<string, unknown>)[
-    'COVEO_ATOMIC'
-  ];
+  const globalWindow = window as Record<string, unknown>;
+  const originalCoveoAtomic = globalWindow['COVEO_ATOMIC'];
   const originalEnv = process.env.VERSION;
 
   beforeEach(() => {
-    delete (window as Record<string, unknown>)['COVEO_ATOMIC'];
+    delete globalWindow['COVEO_ATOMIC'];
     process.env.VERSION = 'ATOMIC_VERSION';
   });
 
   afterEach(() => {
-    (window as Record<string, unknown>)['COVEO_ATOMIC'] = originalCoveoAtomic;
+    globalWindow['COVEO_ATOMIC'] = originalCoveoAtomic;
     if (originalEnv !== undefined) {
       process.env.VERSION = originalEnv;
     } else {
