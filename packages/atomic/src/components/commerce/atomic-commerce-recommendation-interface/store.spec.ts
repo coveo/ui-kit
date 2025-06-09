@@ -27,7 +27,7 @@ describe('#createCommerceRecommendationStore', () => {
     });
   });
 
-  it('should include the base store in its returned value', () => {
+  it('should return an object that includes all properties and methods from the base store', () => {
     const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
@@ -38,7 +38,7 @@ describe('#createCommerceRecommendationStore', () => {
     });
   });
 
-  it('should return a #setLoadingFlag function that calls the core #setLoadingFlag with the correct arguments', () => {
+  it('should delegate its #setLoadingFlag to the core #setLoadingFlag with the correct arguments', () => {
     const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
@@ -50,7 +50,7 @@ describe('#createCommerceRecommendationStore', () => {
     );
   });
 
-  it('should return an #unsetLoadingFlag function that calls the core #setLoadingFlag with the correct arguments', () => {
+  it('should delegate its #unsetLoadingFlag to the core #unsetLoadingFlag with the correct arguments', () => {
     const createBaseStoreSpy = vi.mocked(createBaseStore);
     const baseStore = createBaseStoreSpy.mock.results[0].value;
 
