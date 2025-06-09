@@ -117,7 +117,7 @@ describe('AtomicCommerceRecommendationList', () => {
     expect(element).toBeInstanceOf(AtomicCommerceRecommendationList);
   });
 
-  it('when #density is invalid, should throw', async () => {
+  it('should throw when #density is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -126,7 +126,7 @@ describe('AtomicCommerceRecommendationList', () => {
     }).toThrow();
   });
 
-  it('when #display is invalid, should throw', async () => {
+  it('should throw when #display is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -135,7 +135,7 @@ describe('AtomicCommerceRecommendationList', () => {
     }).toThrow();
   });
 
-  it('when #imageSize is invalid, should throw', async () => {
+  it('should throw when #imageSize is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -144,7 +144,7 @@ describe('AtomicCommerceRecommendationList', () => {
     }).toThrow();
   });
 
-  it('when #productsPerPage is invalid, should throw', async () => {
+  it('should throw when #productsPerPage is invalid', async () => {
     const element = await setupElement();
 
     expect(() => {
@@ -153,7 +153,7 @@ describe('AtomicCommerceRecommendationList', () => {
     }).toThrow();
   });
 
-  it('when all props are valid, should not throw', async () => {
+  it('should not throw when all props are valid', async () => {
     const element = await setupElement();
 
     expect(() => element.initialize()).not.toThrow();
@@ -209,7 +209,7 @@ describe('AtomicCommerceRecommendationList', () => {
     });
   });
 
-  it('when bindings are undefined, should not render', async () => {
+  it('should not render when bindings are undefined', async () => {
     const element = await setupElement();
 
     // @ts-expect-error - unsetting bindings for the sake of simplicity.
@@ -222,7 +222,7 @@ describe('AtomicCommerceRecommendationList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when there is an error, should not render', async () => {
+  it('should not render when there is an error', async () => {
     vi.mocked(buildRecommendations).mockReturnValue(
       buildFakeRecommendations({
         implementation: {
@@ -245,7 +245,7 @@ describe('AtomicCommerceRecommendationList', () => {
     expect(renderedElements).toHaveLength(1);
   });
 
-  it('when no template is registered, should not render', async () => {
+  it('should not render when no template is registered', async () => {
     const element = await setupElement();
 
     //@ts-expect-error - setting private property: mocking the template provider would be complex.
@@ -257,7 +257,7 @@ describe('AtomicCommerceRecommendationList', () => {
     expect(renderedElements).toHaveLength(0);
   });
 
-  it('when first request was executed & there are no products, should not render', async () => {
+  it('should not render when first request was executed & there are no products', async () => {
     vi.mocked(buildRecommendations).mockReturnValue(
       buildFakeRecommendations({
         implementation: {
@@ -415,7 +415,7 @@ describe('AtomicCommerceRecommendationList', () => {
 
       testRenderAtomicProduct(display);
 
-      describe('parts', () => {
+      describe('when rendering part attributes', () => {
         it('should render the result-list part', async () => {
           const element = await setupElement({display});
           const parts = getParts(element)[display as 'grid' | 'list'];
