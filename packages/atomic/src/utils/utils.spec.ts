@@ -1,4 +1,4 @@
-import {vi, describe, it, expect} from 'vitest';
+import {beforeEach, describe, expect, it, vi} from 'vitest';
 import {
   once,
   camelToKebab,
@@ -90,6 +90,10 @@ describe('utils', () => {
   });
 
   describe('#isInDocument', () => {
+    beforeEach(() => {
+      document.body.innerHTML = '';
+    });
+
     it('should return true for an element attached to the main document', () => {
       const el = document.createElement('div');
       document.body.appendChild(el);
