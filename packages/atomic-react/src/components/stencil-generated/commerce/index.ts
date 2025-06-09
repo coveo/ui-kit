@@ -40,6 +40,5 @@ export const AtomicProductSectionEmphasized = /*@__PURE__*/createReactComponent<
 export const AtomicProductSectionMetadata = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionMetadata, HTMLAtomicProductSectionMetadataElement>('atomic-product-section-metadata');
 export const AtomicProductSectionName = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionName, HTMLAtomicProductSectionNameElement>('atomic-product-section-name');
 export const AtomicProductSectionVisual = /*@__PURE__*/createReactComponent<JSX.AtomicProductSectionVisual, HTMLAtomicProductSectionVisualElement>('atomic-product-section-visual');
-export const AtomicProductText = /*@__PURE__*/createReactComponent<JSX.AtomicProductText, HTMLAtomicProductTextElement>('atomic-product-text');
 export const AtomicResultLocalizedText = /*@__PURE__*/createReactComponent<JSX.AtomicResultLocalizedText, HTMLAtomicResultLocalizedTextElement>('atomic-result-localized-text');
 export const AtomicTimeframe = /*@__PURE__*/createReactComponent<JSX.AtomicTimeframe, HTMLAtomicTimeframeElement>('atomic-timeframe');
