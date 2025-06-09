@@ -7,17 +7,18 @@ import {vi} from 'vitest';
 
 export const buildFakeCommerceEngine = ({
   implementation,
-  config,
   state,
 }: Partial<{
   implementation?: Partial<CommerceEngine>;
   config?: Partial<CommerceEngineConfiguration>;
   state?: Record<string, unknown>;
-}>): CommerceEngine => {
+}> = {}): CommerceEngine => {
   const defaultState = {language: 'en'};
   const defaultImplementation = {
     addReducers: vi.fn(),
+    disableAnalytics: vi.fn(),
     dispatch: vi.fn(),
+    enableAnalytics: vi.fn(),
     logger: {
       info: vi.fn(),
       warn: vi.fn(),
@@ -28,15 +29,9 @@ export const buildFakeCommerceEngine = ({
     configuration: getSampleCommerceEngineConfiguration(),
   };
 
-  const configuration = {
-    ...getSampleCommerceEngineConfiguration(),
-    ...config,
-  } as CommerceEngineConfiguration;
-
   return {
     ...defaultImplementation,
     ...implementation,
-    ...configuration,
     state: {...defaultState, ...state},
   } as CommerceEngine;
 };

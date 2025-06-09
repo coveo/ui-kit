@@ -144,7 +144,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should call the initialize event #detail function with the atomic interface #bindings when the #engine exists', async () => {
       const atomicInterface = await setupElement();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine =
-        buildFakeCommerceEngine({});
+        buildFakeCommerceEngine();
 
       const helper = new CommonAtomicInterfaceHelper(
         atomicInterface,
@@ -191,9 +191,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
   describe('#onInitialization', () => {
     it('should log a warning and return early when #engine is defined on the atomic interface', async () => {
       const atomicInterface = await setupElement();
-      const engine = buildFakeCommerceEngine({
-        implementation: {logger: {warn: vi.fn()} as never},
-      });
+      const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
       const helper = new CommonAtomicInterfaceHelper(
         atomicInterface,
@@ -330,9 +328,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
       expect(engineIsCreatedSpy).toHaveBeenCalledExactlyOnceWith(undefined);
 
-      const engine = buildFakeCommerceEngine({
-        implementation: {disableAnalytics: vi.fn(), enableAnalytics: vi.fn()},
-      });
+      const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
 
       helper.onAnalyticsChange();
@@ -343,9 +339,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should call the atomic interface #engine.disableAnalytics method when atomic interface #analytics is false', async () => {
       const atomicInterface = await setupElement();
       atomicInterface.analytics = false;
-      const engine = buildFakeCommerceEngine({
-        implementation: {disableAnalytics: vi.fn(), enableAnalytics: vi.fn()},
-      });
+      const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
       const helper = new CommonAtomicInterfaceHelper(
         atomicInterface,
@@ -360,9 +354,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should call the atomic interface #engine.enableAnalytics method when atomic interface #analytics is true', async () => {
       const atomicInterface = await setupElement();
       atomicInterface.analytics = true;
-      const engine = buildFakeCommerceEngine({
-        implementation: {disableAnalytics: vi.fn(), enableAnalytics: vi.fn()},
-      });
+      const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
       const helper = new CommonAtomicInterfaceHelper(
         atomicInterface,
@@ -622,9 +614,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     it('should return true when engine is provided', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error');
       const atomicInterface = await setupElement();
-      const engine = buildFakeCommerceEngine({
-        implementation: {disableAnalytics: vi.fn(), enableAnalytics: vi.fn()},
-      });
+      const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
       const helper = new CommonAtomicInterfaceHelper(
         atomicInterface,
