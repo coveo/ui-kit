@@ -10,7 +10,9 @@ export interface FunctionalComponentWithChildren<T> {
     props,
   }: {
     props: T;
-  }): (children: FunctionalComponentChildren) => TemplateResult;
+  }): (
+    children: FunctionalComponentChildren
+  ) => TemplateResult | typeof nothing;
 }
 
 export interface FunctionalComponentWithChildrenNoProps {
@@ -25,7 +27,4 @@ export interface FunctionalComponentGuard<T> {
   }): (children: FunctionalComponentChildren) => DirectiveResult;
 }
 
-type FunctionalComponentChildren =
-  | TemplateResult
-  | TemplateResult[]
-  | typeof nothing;
+type FunctionalComponentChildren = TemplateResult | typeof nothing;

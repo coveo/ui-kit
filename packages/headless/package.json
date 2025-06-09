@@ -51,7 +51,8 @@
       "import": "./dist/ssr-commerce/headless.esm.js",
       "require": "./dist/ssr-commerce/headless.cjs",
       "default": "./dist/ssr-commerce/headless.esm.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
@@ -120,7 +121,7 @@
     "live-server": "1.2.2",
     "ts-node": "10.9.2",
     "typedoc": "0.28.5",
-    "vitest": "3.1.4"
+    "vitest": "3.2.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"
