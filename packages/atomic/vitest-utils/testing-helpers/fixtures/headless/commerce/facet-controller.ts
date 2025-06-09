@@ -57,7 +57,3 @@ export const buildFakeRegularFacet = ({
     ...implementation,
     ...(state && {state: {...defaultState, ...state}}),
   }) as RegularFacet;
-
-// TODO: Remove since not required
-export const buildFacetFacetValue = (values?: RegularFacetValue[]) =>
-  values === undefined ? defaultValues : values;
