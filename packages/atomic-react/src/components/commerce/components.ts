@@ -1,10 +1,10 @@
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommercePager as LitAtomicCommercePager,
-  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
-  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
+  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
+  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
 } from '@coveo/atomic/components';
@@ -23,28 +23,28 @@ export const AtomicCommercePager = createComponent({
   elementClass: LitAtomicCommercePager,
 });
 
-export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
-  tagName: 'atomic-commerce-search-box-query-suggestions',
-  react: React,
-  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
-});
-
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
   tagName: 'atomic-commerce-search-box-instant-products',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxInstantProducts,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
+export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-commerce-search-box-query-suggestions',
   react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
+  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
+});
+
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
 
 export const AtomicComponentError = createComponent({
