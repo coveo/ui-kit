@@ -1,10 +1,10 @@
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
-import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
 import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
 import {
@@ -96,9 +96,10 @@ import styles from './atomic-commerce-search-box.tw.css';
  * @alpha
  */
 @customElement('atomic-commerce-search-box')
+@bindings()
 @withTailwindStyles
 export class AtomicCommerceSearchBox
-  extends InitializeBindingsMixin(LitElement)
+  extends LitElement
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
@@ -110,7 +111,6 @@ export class AtomicCommerceSearchBox
   @state()
   private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
 
-  #originalChildren: Array<Element>;
   private textAreaRef = createRef<HTMLTextAreaElement>();
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
@@ -194,19 +194,18 @@ export class AtomicCommerceSearchBox
 
   constructor() {
     super();
-    this.#originalChildren = Array.from(this.children);
-    this.replaceChildren();
-
-    this.addEventListener('atomic/selectChildProduct', (event: Event) => {
-      const customEvent = event as CustomEvent<SelectChildProductEventArgs>;
-      customEvent.stopPropagation();
-      this.bindings.store.state.activeProductChild = customEvent.detail.child;
-      this.suggestionManager.forceUpdate();
-    });
   }
 
   connectedCallback() {
     super.connectedCallback();
+
+    if (this.children.length === 0) {
+      this.replaceChildren(
+        document.createElement('atomic-commerce-search-box-recent-queries'),
+        document.createElement('atomic-commerce-search-box-query-suggestions')
+      );
+    }
+
     this.addEventListener(
       'atomic/searchBoxSuggestion/register',
       (event: Event) => {
@@ -216,16 +215,12 @@ export class AtomicCommerceSearchBox
         this.searchBoxSuggestionEventsQueue.push(customEvent);
       }
     );
-    if (this.#originalChildren.length) {
-      this.replaceChildren(
-        ...this.#originalChildren.map((el) => el.cloneNode(true))
-      );
-    } else {
-      this.replaceChildren(
-        document.createElement('atomic-commerce-search-box-recent-queries'),
-        document.createElement('atomic-commerce-search-box-query-suggestions')
-      );
-    }
+    this.addEventListener('atomic/selectChildProduct', (event: Event) => {
+      const customEvent = event as CustomEvent<SelectChildProductEventArgs>;
+      customEvent.stopPropagation();
+      this.bindings.store.state.activeProductChild = customEvent.detail.child;
+      this.suggestionManager.forceUpdate();
+    });
   }
 
   willUpdate() {
