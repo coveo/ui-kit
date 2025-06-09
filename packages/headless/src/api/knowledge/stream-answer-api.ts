@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,

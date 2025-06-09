@@ -51,11 +51,12 @@
       "import": "./dist/ssr-commerce/headless.esm.js",
       "require": "./dist/ssr-commerce/headless.cjs",
       "default": "./dist/ssr-commerce/headless.esm.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.25.1",
+  "version": "3.25.2",
   "files": [
     "dist/"
   ],
@@ -96,9 +97,9 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.15",
+    "@coveo/bueno": "1.0.16",
     "@coveo/relay": "1.2.1",
-    "@coveo/relay-event-types": "14.3.3",
+    "@coveo/relay-event-types": "14.7.2",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
@@ -108,7 +109,7 @@
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "3.1.1",
-    "pino": "9.6.0",
+    "pino": "9.7.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
@@ -116,11 +117,11 @@
     "@coveo/ci": "1.0.0",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
-    "execa": "9.5.2",
+    "execa": "9.6.0",
     "live-server": "1.2.2",
     "ts-node": "10.9.2",
     "typedoc": "0.28.5",
-    "vitest": "3.1.4"
+    "vitest": "3.2.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

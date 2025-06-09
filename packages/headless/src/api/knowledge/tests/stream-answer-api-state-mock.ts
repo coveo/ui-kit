@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 /* eslint-disable @cspell/spellchecker */
 import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 

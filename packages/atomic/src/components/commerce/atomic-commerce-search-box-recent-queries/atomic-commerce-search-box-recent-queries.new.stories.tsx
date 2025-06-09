@@ -1,7 +1,7 @@
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
-import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
+import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {userEvent} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 import {within} from 'shadow-dom-testing-library';
