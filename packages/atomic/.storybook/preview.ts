@@ -45,6 +45,7 @@ export const decorators = [
           'atomic-insight-interface',
           'atomic-search-interface',
           'atomic-commerce-interface',
+          'atomic-commerce-recommendation-interface',
         ]);
       }
 
