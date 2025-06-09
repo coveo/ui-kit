@@ -506,28 +506,6 @@ Example:
 
 
 @ProxyCmp({
-  inputs: ['count', 'value']
-, defineCustomElementFn: defineCustomElementAtomicCommerceText})
-@Component({standalone:false,
-  selector: 'atomic-commerce-text',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'value'],
-})
-export class AtomicCommerceText {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceText extends Components.AtomicCommerceText {}
-
-
-@ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
 , defineCustomElementFn: defineCustomElementAtomicCommerceTimeframeFacet})
 @Component({standalone:false,
