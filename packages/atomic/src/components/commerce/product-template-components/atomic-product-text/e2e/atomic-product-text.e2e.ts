@@ -3,7 +3,6 @@ import {test, expect} from './fixture';
 test.describe('default', async () => {
   test.beforeEach(async ({productText}) => {
     await productText.load();
-    await productText.hydrated.first().waitFor();
   });
 
   test('should be accessible', async ({makeAxeBuilder}) => {
@@ -16,7 +15,6 @@ test.describe('default', async () => {
       await productText.load({
         args: {field: 'nonexistentField', default: 'Default Text'},
       });
-      await productText.hydrated.first().waitFor();
 
       await expect(productText.textContent.first()).toContainText(
         'Default Text'
@@ -32,7 +30,6 @@ test.describe('when using a field that supports highlights', async () => {
     test.describe(`when displaying the ${field}`, async () => {
       test.beforeEach(async ({productText}) => {
         await productText.load({args: {field}});
-        await productText.hydrated.first().waitFor();
       });
 
       test(`should highlight the keywords in the ${field}`, async ({
@@ -55,7 +52,6 @@ test.describe('when using a field that supports highlights', async () => {
       await productText.load({
         args: {field: 'excerpt', shouldHighlight: false},
       });
-      await productText.hydrated.first().waitFor();
 
       await expect(productText.textContent.first()).toContainText(/kayak/i);
 
@@ -69,7 +65,6 @@ test.describe('when using a field that supports highlights', async () => {
 test.describe('when displaying a field that does not support highlights', async () => {
   test.beforeEach(async ({productText}) => {
     await productText.load({args: {field: 'ec_description'}});
-    await productText.hydrated.first().waitFor();
   });
 
   test('should render the field value', async ({productText}) => {
