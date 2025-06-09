@@ -402,25 +402,45 @@ export declare interface AtomicCommerceRefineToggle extends Components.AtomicCom
 
 
 @ProxyCmp({
-  inputs: ['count', 'value']
-, defineCustomElementFn: defineCustomElementAtomicCommerceText})
+  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
+, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBox})
 @Component({standalone:false,
-  selector: 'atomic-commerce-text',
+  selector: 'atomic-commerce-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['count', 'value'],
+  inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout'],
 })
-export class AtomicCommerceText {
+export class AtomicCommerceSearchBox {
   protected el: HTMLElement;
   constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
     c.detach();
     this.el = r.nativeElement;
+    proxyOutputs(this, this.el, ['redirect']);
   }
 }
 
 
-export declare interface AtomicCommerceText extends Components.AtomicCommerceText {}
+import type { RedirectionPayload as IAtomicCommerceSearchBoxRedirectionPayload } from '@coveo/atomic';
+
+export declare interface AtomicCommerceSearchBox extends Components.AtomicCommerceSearchBox {
+  /**
+   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+
+Example:
+```html
+<script>
+  document.querySelector('atomic-commerce-search-box').addEventListener((e) => {
+    e.preventDefault();
+    // handle redirection
+  });
+</script>
+...
+<atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box>
+```
+   */
+  redirect: EventEmitter<CustomEvent<IAtomicCommerceSearchBoxRedirectionPayload>>;
+}
 
 
 @ProxyCmp({
