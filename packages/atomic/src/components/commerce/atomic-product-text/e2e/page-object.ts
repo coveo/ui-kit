@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import {Page} from '@playwright/test';
 
-export class ProductTextPageObject extends BasePageObject<'atomic-product-text'> {
+export class ProductTextPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-product-text');
   }

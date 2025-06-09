@@ -11,6 +11,7 @@ import {makeMatchConditions} from '../../common/product-template/product-templat
 import {ProductTemplateController} from '../../common/product-template/product-template-controller';
 import '../atomic-commerce-text/atomic-commerce-text';
 import '../atomic-product/atomic-product';
+import '../product-template-components/atomic-product-text/atomic-product-text';
 
 /**
  * @alpha
