@@ -43,20 +43,6 @@
     <shortDescription>Detach result</shortDescription>
   </labels>
   <labels>
-    <fullName>ErrorAttachingResult</fullName>
-    <value>Error while trying to attach result</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Error while trying to attach result</shortDescription>
-  </labels>
-  <labels>
-    <fullName>ErrorDetachingResult</fullName>
-    <value>Error while trying to detach result</value>
-    <language>en_US</language>
-    <protected>false</protected>
-    <shortDescription>Error while trying to detach result</shortDescription>
-  </labels>
-  <labels>
     <fullName>ResultIsAttached</fullName>
     <value>Result is attached</value>
     <language>en_US</language>

@@ -8,8 +8,6 @@ import {
 import {buildResultToAttach, buildResultToDetach} from 'c/attachToCaseUtils';
 import attachResult from '@salesforce/label/c.AttachResult';
 import detachResult from '@salesforce/label/c.DetachResult';
-import errorAttachingResult from '@salesforce/label/c.ErrorAttachingResult';
-import errorDetachingResult from '@salesforce/label/c.ErrorDetachingResult';
 import resultIsAttached from '@salesforce/label/c.ResultIsAttached';
 // @ts-ignore
 import {attachToCase, detachFromCase} from 'c/attachToCaseServiceProd';
@@ -49,8 +47,6 @@ export default class ResultAttachToCase extends LightningElement {
   labels = {
     attachResult: attachResult,
     detachResult: detachResult,
-    errorAttachingResult: errorAttachingResult,
-    errorDetachingResult: errorDetachingResult,
     resultIsAttached: resultIsAttached,
   };
 
@@ -118,7 +114,7 @@ export default class ResultAttachToCase extends LightningElement {
         resultToAttach instanceof String
       ) {
         // There was an error with the creation of a result to attach.
-        console.warn(resultToAttach);
+        console.error(resultToAttach);
       } else if (resultToAttach) {
         this.attach(resultToAttach);
       }
@@ -135,11 +131,11 @@ export default class ResultAttachToCase extends LightningElement {
         if (parsedResponse?.succeeded) {
           this.attachToCase.attach();
         } else {
-          this.handleError(parsedResponse?.message);
+          console.error(parsedResponse?.message);
         }
       })
       .catch((error) => {
-        this.handleError(error?.body?.message);
+        console.error(error?.body?.message);
       })
       .finally(() => {
         this._isLoading = false;
@@ -156,18 +152,14 @@ export default class ResultAttachToCase extends LightningElement {
         if (parsedResponse?.succeeded) {
           this.attachToCase.detach();
         } else {
-          this.handleError(parsedResponse?.message);
+          console.error(parsedResponse?.message);
         }
       })
       .catch((error) => {
-        this.handleError(error?.body?.message);
+        console.error(error?.body?.message);
       })
       .finally(() => {
         this._isLoading = false;
       });
-  };
-
-  handleError = (message) => {
-    console.warn(message);
   };
 }

@@ -11,7 +11,7 @@ import youtubeTemplate from './resultTemplates/youtubeResultTemplate.html';
 // @ts-ignore
 import {buildAttachedResultsPayloadHeadless} from 'c/attachToCaseUtils';
 // @ts-ignore
-import {getAllAttachedResults} from 'c/attachToCaseServiceProd';
+import {getAllAttachedResults} from 'c/attachToCaseService';
 
 export default class ExampleInsightPanel extends LightningElement {
   /** @type {string} */
@@ -23,6 +23,7 @@ export default class ExampleInsightPanel extends LightningElement {
 
   /** @type {boolean} */
   isInitAttachedResults = false;
+
   loadAttachedResults() {
     getAllAttachedResults(this.caseId)
       .then((data) => {
