@@ -16,7 +16,11 @@ describe('environment', () => {
 
   afterEach(() => {
     (window as Record<string, unknown>)['COVEO_ATOMIC'] = originalCoveoAtomic;
-    process.env.VERSION = originalEnv;
+    if (originalEnv !== undefined) {
+      process.env.VERSION = originalEnv;
+    } else {
+      delete process.env.VERSION;
+    }
   });
 
   describe('#getAtomicEnvironment', () => {
