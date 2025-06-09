@@ -15,6 +15,10 @@ export class BasePageObject<
     return this.page.locator(`${this.tag}[class*="hydrated"]`);
   }
 
+  get ready() {
+    return this.page.locator(`${this.tag}`);
+  }
+
   get urlRoot() {
     return './iframe.html';
   }

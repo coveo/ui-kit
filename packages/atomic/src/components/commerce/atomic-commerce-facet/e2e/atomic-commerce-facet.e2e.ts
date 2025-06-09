@@ -7,7 +7,7 @@ test.describe('default', () => {
   });
 
   test('should be A11y compliant', async ({facet, makeAxeBuilder}) => {
-    await facet.hydrated.waitFor();
+    await facet.ready.waitFor({state: 'attached'});
     const accessibilityResults = await makeAxeBuilder().analyze();
     expect(accessibilityResults.violations).toEqual([]);
   });
