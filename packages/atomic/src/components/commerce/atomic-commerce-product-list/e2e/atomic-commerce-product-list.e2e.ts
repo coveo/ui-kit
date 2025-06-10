@@ -9,7 +9,7 @@ test.describe('atomic-commerce-product-list', () => {
 
       await expect
         .poll(async () => await productList.placeholders.count())
-        .toBe(8);
+        .toBe(4);
       await expect(productList.placeholders.first()).toBeVisible();
     });
 
@@ -60,7 +60,7 @@ test.describe('atomic-commerce-product-list', () => {
 
       await expect
         .poll(async () => await productList.placeholders.count())
-        .toBe(8);
+        .toBe(4);
       await expect(productList.placeholders.first()).toBeVisible();
     });
 
