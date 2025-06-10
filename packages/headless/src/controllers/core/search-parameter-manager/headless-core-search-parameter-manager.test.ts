@@ -61,13 +61,58 @@ describe('search parameter manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('dispatches #restoreSearchParameters on registration with parameters', () => {
-    props.initialState.parameters = {tab: 'some-tab', q: 'query'};
+  it('should dispatch #restoreSearchParameters with the the active tab as the tab parameter when the tab does not exist in the tabSet and there is an active tab', () => {
+    const id1 = 'a';
+    const id2 = 'b';
+    const tab1 = buildMockTabSlice({id: id1, isActive: false});
+    const tab2 = buildMockTabSlice({id: id2, isActive: true});
+    engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+
+    props.initialState.parameters = {tab: 'c'};
     initSearchParameterManager();
 
     expect(restoreSearchParameters).toHaveBeenCalledWith({
-      tab: 'some-tab',
-      q: 'query',
+      tab: id2,
+    });
+  });
+
+  it('should dispatch #restoreSearchParameters with an empty string as the tab parameter when there is no active tab', () => {
+    const id1 = 'a';
+    const id2 = 'b';
+    const tab1 = buildMockTabSlice({id: id1, isActive: false});
+    const tab2 = buildMockTabSlice({id: id2, isActive: false});
+    engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+
+    props.initialState.parameters = {tab: 'c'};
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
+      tab: '',
+    });
+  });
+
+  it('should dispatch #restoreSearchParameters with the original tab parameter when it exists in the tabSet', () => {
+    const id1 = 'a';
+    const id2 = 'b';
+    const tab1 = buildMockTabSlice({id: id1, isActive: false});
+    const tab2 = buildMockTabSlice({id: id2, isActive: true});
+    engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+
+    props.initialState.parameters = {tab: id2};
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
+      tab: id2,
+    });
+  });
+
+  it('should dispatch #restoreSearchParameters with the original parameters when there is no tab parameter and no tabSet', () => {
+    props.initialState.parameters = {q: 'a'};
+    engine.state.tabSet = {};
+    initSearchParameterManager();
+
+    expect(restoreSearchParameters).toHaveBeenCalledWith({
+      q: 'a',
     });
   });
 
@@ -395,7 +440,7 @@ describe('search parameter manager', () => {
       });
     });
 
-    it('dispatches #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
+    it('should dispatch #restoreSearchParameters with non-specified parameters set to their initial values given partial search parameters excluding the tab', () => {
       const params = {q: 'a'};
       manager.synchronize(params);
 
@@ -404,6 +449,55 @@ describe('search parameter manager', () => {
       expect(restoreSearchParameters).toHaveBeenCalledWith({
         ...initialParameters,
         ...params,
+      });
+    });
+
+    it('should dispatch #restoreSearchParameters with the original parameters when there is no tab parameter and no tabSet', () => {
+      const params = {q: 'a'};
+      engine.state.tabSet = {};
+      manager.synchronize(params);
+
+      const initialParameters = initialSearchParameterSelector(engine.state);
+
+      expect(restoreSearchParameters).toHaveBeenCalledWith({
+        ...initialParameters,
+        ...params,
+      });
+    });
+
+    describe('when there is a tab parameter and a tabSet', () => {
+      it('should dispatches #restoreSearchParameters with the tab parameter as the active tab when the tab does not exist in the tabSet and there is an active tab', () => {
+        const id1 = 'a';
+        const id2 = 'b';
+        const tab1 = buildMockTabSlice({id: id1, isActive: false});
+        const tab2 = buildMockTabSlice({id: id2, isActive: true});
+        engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+
+        const params = {tab: 'c'};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith({
+          ...initialSearchParameterSelector(engine.state),
+          ...params,
+          tab: id2,
+        });
+      });
+
+      it('should dispatches #restoreSearchParameters with the tab parameter as an empty string when there is no active tab', () => {
+        const id1 = 'a';
+        const id2 = 'b';
+        const tab1 = buildMockTabSlice({id: id1, isActive: false});
+        const tab2 = buildMockTabSlice({id: id2, isActive: false});
+        engine.state.tabSet = {[id1]: tab1, [id2]: tab2};
+
+        const params = {tab: 'c'};
+        manager.synchronize(params);
+
+        expect(restoreSearchParameters).toHaveBeenCalledWith({
+          ...initialSearchParameterSelector(engine.state),
+          ...params,
+          tab: '',
+        });
       });
     });
   });

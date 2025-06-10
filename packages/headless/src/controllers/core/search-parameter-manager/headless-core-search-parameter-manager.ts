@@ -21,6 +21,7 @@ import {
 import {searchParametersDefinition} from '../../../features/search-parameters/search-parameter-schema.js';
 import {initialSearchParameterSelector} from '../../../features/search-parameters/search-parameter-selectors.js';
 import {getSortCriteriaInitialState} from '../../../features/sort-criteria/sort-criteria-state.js';
+import {TabSetState} from '../../../features/tab-set/tab-set-state.js';
 import {SearchParametersState} from '../../../state/search-app-state.js';
 import {validateInitialState} from '../../../utils/validate-payload.js';
 import {
@@ -107,15 +108,22 @@ export function buildCoreSearchParameterManager(
     'buildSearchParameterManager'
   );
 
-  dispatch(restoreSearchParameters(props.initialState.parameters));
+  const parametersWithValidTab = ensureTabIsValid(
+    engine.state.tabSet,
+    props.initialState.parameters
+  );
+  dispatch(restoreSearchParameters(parametersWithValidTab));
 
   return {
     ...controller,
 
     synchronize(parameters: SearchParameters) {
-      const enrichedParameters = enrichParameters(engine, parameters);
+      const enrichedParametersWithValidTab = ensureTabIsValid(
+        engine.state.tabSet,
+        enrichParameters(engine, parameters)
+      );
 
-      dispatch(restoreSearchParameters(enrichedParameters));
+      dispatch(restoreSearchParameters(enrichedParametersWithValidTab));
     },
     get state() {
       const parameters = getCoreActiveSearchParameters(engine);
@@ -132,6 +140,31 @@ export function enrichParameters(
     ...initialSearchParameterSelector(engine.state),
     ...parameters,
   };
+}
+
+/**
+ * This function is essential to ensure that the `tab` parameter is valid.
+ * We need it to be valid prior to dispatching the `restoreSearchParameters` action since the facet logic relies on the `tab` parameter to determine which facets to show.
+ * If the `tab` parameter is invalid, it can lead to unexpected behavior in the facets.
+ */
+function ensureTabIsValid(
+  tabSet: TabSetState | undefined,
+  parameters: SearchParameters
+): SearchParameters {
+  if (parameters.tab && tabSet) {
+    const tabExists = Object.values(tabSet).some(
+      (tab) => tab.id === parameters.tab
+    );
+    const currentActiveTab = Object.values(tabSet).find((tab) => tab.isActive);
+
+    if (!tabExists && currentActiveTab) {
+      return {...parameters, tab: currentActiveTab.id};
+    } else if (!tabExists) {
+      return {...parameters, tab: ''};
+    }
+  }
+
+  return parameters;
 }
 
 export function getCoreActiveSearchParameters(
