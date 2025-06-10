@@ -4,6 +4,7 @@ import {
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions.js';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
+import {isFacetVisibleOnTab} from '../../../../features/facet-options/facet-options-utils.js';
 import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
 import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
@@ -16,6 +17,7 @@ import {
 } from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {getObjectHash} from '../../../../utils/utils.js';
+import {buildCoreTabManager} from '../../tab-manager/headless-core-tab-manager.js';
 
 export interface AnyFacetValuesCondition<T extends AnyFacetValueRequest> {
   /**
@@ -73,6 +75,8 @@ export function buildCoreFacetConditionsManager(
     throw loadReducerError;
   }
 
+  const tabManager = buildCoreTabManager(engine);
+
   const isFacetEnabled = (facetId: string) => {
     return engine.state.facetOptions.facets[facetId]?.enabled ?? false;
   };
@@ -97,6 +101,10 @@ export function buildCoreFacetConditionsManager(
               values: getFacetValuesById(parentFacetId),
             }
           : null
+      ),
+      isTabEnabled: isFacetVisibleOnTab(
+        engine.state.facetOptions.facets[props.facetId]?.tabs,
+        tabManager.state.activeTab
       ),
     });
 
@@ -139,7 +147,12 @@ export function buildCoreFacetConditionsManager(
       return;
     }
     const isEnabled = isFacetEnabled(props.facetId);
-    const shouldBeEnabled = areConditionsMet();
+    const conditionsMet = areConditionsMet();
+    const isVisibleOnTab = isFacetVisibleOnTab(
+      engine.state.facetOptions.facets[props.facetId]?.tabs,
+      tabManager.state.activeTab
+    );
+    const shouldBeEnabled = conditionsMet && isVisibleOnTab;
     if (isEnabled !== shouldBeEnabled) {
       engine.dispatch(
         shouldBeEnabled
