@@ -367,7 +367,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
     });
   });
 
-  describe('onLanguageChange', () => {
+  describe('#onLanguageChange', () => {
     it('should call #loadDayjsLocale with the atomic interface language when it is defined', async () => {
       const loadDayjsLocaleSpy = vi.mocked(loadDayjsLocale);
       const atomicInterface = await setupElement();
@@ -612,7 +612,9 @@ describe('#CommonAtomicInterfaceHelper', () => {
 
   describe('#engineIsCreated', () => {
     it('should return true when engine is provided', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error');
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       const atomicInterface = await setupElement();
       const engine = buildFakeCommerceEngine();
       (atomicInterface as BaseAtomicInterface<CommerceEngine>).engine = engine;
