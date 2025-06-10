@@ -1,4 +1,4 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import {Canvas, ArgTypes, Meta, Title, Description, Subtitle} from '@storybook/blocks';
 import * as AtomicCommerceProductListStories from './atomic-commerce-product-list.new.stories';
 
 {/* Storybook provides a number of blocs to construct documentation pages */}
@@ -7,10 +7,85 @@ import * as AtomicCommerceProductListStories from './atomic-commerce-product-lis
 <Meta of={AtomicCommerceProductListStories} />
 
 <Title />
-<Description />
+<Subtitle>
+  <Description />
+</Subtitle>
 
-<Canvas of={AtomicCommerceProductListStories.Default} />
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-product-list/atomic-commerce-product-list.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceProductListStories.Default}
+/>
 
-## Properties
+## Usage
+
+This component is typically placed within the "products" section of the layout.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="products">
+        <atomic-commerce-product-list></atomic-commerce-product-list>
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+By default, the component will render products using a basic template (except in
+table display mode, which has no default template).
+
+You can also [define custom templates](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/#defining-a-result-template).
+
+```html
+
+```
+
+## Examples
+
+### Grid display with custom template
+
+See [Displaying results as a list or grid](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/).
+
+<Canvas of={AtomicCommerceProductListStories.GridDisplayWithTemplate} />
+
+See [Displaying results as a list or grid](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/list-or-grid/).
+
+### List display with custom template
+
+<Canvas of={AtomicCommerceProductListStories.ListDisplayWithTemplate} />
+
+### Table display
+
+See [Displaying results as a table](https://docs.coveo.com/en/atomic/latest/usage/displaying-results/table/).
+
+<Canvas of={AtomicCommerceProductListStories.TableDisplay} />
+
+## Reference
 
 <ArgTypes />
+
+### Methods
+
+#### `setRenderFunction`
+
+Sets a rendering function to bypass the standard HTML template mechanism for rendering results. You can use this function while working with web frameworks that don’t use plain HTML syntax, e.g., React, Angular or Vue.
+
+Do not use this method if you integrate Atomic in a plain HTML deployment.
+
+**Signature:** `setRenderFunction(resultRenderingFunction: ItemRenderingFunction) => Promise<void>`
+
+**Returns:** `Promise<void>`
