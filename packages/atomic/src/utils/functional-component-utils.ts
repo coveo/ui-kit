@@ -2,22 +2,20 @@ import {nothing, TemplateResult} from 'lit';
 import {DirectiveResult} from 'lit/directive.js';
 
 export interface FunctionalComponent<T> {
-  ({props}: {props: T}): TemplateResult | TemplateResult[] | typeof nothing;
+  ({props}: {props: T}): TemplateResult | typeof nothing;
 }
 
-export type FunctionalComponentWithChildren<T = null> = T extends null
-  ? FunctionalComponentWithChildrenNoProps
-  : FunctionalComponentWithChildrenWithProps<T>;
-
-interface FunctionalComponentWithChildrenWithProps<T> {
+export interface FunctionalComponentWithChildren<T> {
   ({
     props,
   }: {
     props: T;
-  }): (children: FunctionalComponentChildren) => TemplateResult;
+  }): (
+    children: FunctionalComponentChildren
+  ) => TemplateResult | typeof nothing;
 }
 
-interface FunctionalComponentWithChildrenNoProps {
+export interface FunctionalComponentWithChildrenNoProps {
   (): (children: FunctionalComponentChildren) => TemplateResult;
 }
 

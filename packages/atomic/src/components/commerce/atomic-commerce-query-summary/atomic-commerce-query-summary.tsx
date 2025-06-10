@@ -14,9 +14,9 @@ import {
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QuerySummaryContainer} from '../../common/query-summary/container';
-import {QuerySummaryGuard} from '../../common/query-summary/guard';
-import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/utils';
+import {QuerySummaryContainer} from '../../common/query-summary/stencil-container';
+import {QuerySummaryGuard} from '../../common/query-summary/stencil-guard';
+import {getProductQuerySummaryI18nParameters} from '../../common/query-summary/stencil-utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**

@@ -1,6 +1,7 @@
+/* eslint-disable canonical/no-barrel-import */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {buildMockNavigatorContextProvider} from '../../../test/mock-navigator-context-provider.js';
-import {EventSourceMessage} from '../../../utils/fetch-event-source/parse';
+import {EventSourceMessage} from '../../../utils/fetch-event-source/parse.js';
 import {
   constructAnswerQueryParams,
   GeneratedAnswerStream,
@@ -19,6 +20,8 @@ import {
   streamAnswerAPIStateMockWithNonValidFilters,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
+  streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -110,6 +113,16 @@ describe('#streamAnswerApi', () => {
       );
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
+      );
+    });
+    it('should not include advanced search queries when there are no advanced search queries', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
       );
     });
   });

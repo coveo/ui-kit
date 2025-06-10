@@ -32,16 +32,14 @@ vi.mock('@coveo/relay');
 
 const mockGetHistory = vi.fn();
 
-vi.mock('coveo.analytics', async () => {
-  const originalModule = await vi.importActual('coveo.analytics');
+vi.mock('./coveo.analytics/history-store.js', async () => {
   return {
-    ...originalModule,
-    history: {
-      HistoryStore: vi.fn().mockImplementation(() => {
+    default: {
+      getInstance: () => {
         return {
-          getHistory: () => mockGetHistory(),
+          getHistory: mockGetHistory,
         };
-      }),
+      },
     },
   };
 });

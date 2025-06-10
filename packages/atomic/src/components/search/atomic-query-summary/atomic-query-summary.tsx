@@ -11,9 +11,9 @@ import {
 } from '../../../utils/initialization-utils';
 import {LocalizedString} from '../../../utils/jsx-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
-import {QuerySummaryContainer} from '../../common/query-summary/container';
-import {QuerySummaryGuard} from '../../common/query-summary/guard';
-import {getQuerySummaryI18nParameters} from '../../common/query-summary/utils';
+import {QuerySummaryContainer} from '../../common/query-summary/stencil-container';
+import {QuerySummaryGuard} from '../../common/query-summary/stencil-guard';
+import {getQuerySummaryI18nParameters} from '../../common/query-summary/stencil-utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
 /**
@@ -91,7 +91,9 @@ export class AtomicQuerySummary implements InitializableComponent {
               key="in-seconds"
               i18n={this.bindings.i18n}
               params={{
-                count: durationInSeconds.toLocaleString(),
+                count: durationInSeconds.toLocaleString(
+                  this.bindings.i18n.language
+                ),
               }}
             />
           </span>

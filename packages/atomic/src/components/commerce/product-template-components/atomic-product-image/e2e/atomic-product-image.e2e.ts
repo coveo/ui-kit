@@ -13,7 +13,7 @@ test.describe('default', async () => {
   });
 
   test('should render the image', async ({productImage}) => {
-    expect(productImage.noCarouselImage).toBeVisible();
+    await expect(productImage.noCarouselImage).toBeVisible();
   });
 
   test('should have a default alt text', async ({productImage}) => {
@@ -241,7 +241,7 @@ test.describe('with an alt text field', async () => {
 
 test.describe('as a carousel', async () => {
   const URL =
-    'http://localhost:4400/iframe.html?id=atomic-product-image--default&viewMode=story#sortCriteria=relevance';
+    '/iframe.html?id=atomic-product-image--default&viewMode=story#sortCriteria=relevance';
   const FIRST_IMAGE =
     'https://images.barca.group/Sports/mj/Trampolines%20%26%20Floats/Huge%20inflatable%20mats/3_Blue/df1a99488425_bottom_right.webp';
   const SECOND_IMAGE =
@@ -289,7 +289,7 @@ test.describe('as a carousel', async () => {
     });
 
     test('should not open the product', async ({page}) => {
-      expect(page.url()).toEqual(URL);
+      expect(page.url()).toContain(URL);
     });
   });
 
@@ -321,7 +321,7 @@ test.describe('as a carousel', async () => {
     });
 
     test('should not open the product', async ({page}) => {
-      expect(page.url()).toEqual(URL);
+      expect(page.url()).toContain(URL);
     });
   });
 

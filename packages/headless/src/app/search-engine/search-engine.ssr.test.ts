@@ -7,7 +7,10 @@ import {
 import {defineResultList} from '../../controllers/result-list/headless-result-list.ssr.js';
 import {loadPaginationActions} from '../../features/pagination/pagination-actions-loader.js';
 import {executeSearch} from '../../features/search/search-actions.js';
+import {buildMockNavigatorContextProvider} from '../../test/mock-navigator-context-provider.js';
 import {buildMockResult} from '../../test/mock-result.js';
+import {LoggerOptions} from '../logger.js';
+import * as augmentModule from '../ssr-engine/augment-preprocess-request.js';
 import {ControllerDefinitionWithoutProps} from '../ssr-engine/types/common.js';
 import {InferHydratedState} from '../ssr-engine/types/core-engine.js';
 import {InferStaticState} from '../ssr-engine/types/core-engine.js';
@@ -93,6 +96,11 @@ function createMockResultsMiddleware(options: {
 }
 
 describe('SSR', () => {
+  const mockNavigatorContextProvider = vi
+    .fn()
+    .mockReturnValue(buildMockNavigatorContextProvider());
+  const mockPreprocessRequest = vi.fn(async (req) => req);
+
   describe('define search engine', () => {
     type StaticState = InferStaticState<typeof engineDefinition>;
     type HydratedState = InferHydratedState<typeof engineDefinition>;
@@ -117,11 +125,14 @@ describe('SSR', () => {
         configuration: {
           ...getSampleSearchEngineConfiguration(),
           analytics: {enabled: false},
+          preprocessRequest: mockPreprocessRequest,
         },
         controllers: {
           engineStateReader: defineCustomEngineStateReader(),
           resultList: defineResultList(),
         },
+        navigatorContextProvider: mockNavigatorContextProvider,
+        loggerOptions: {level: 'warn'} as LoggerOptions,
         middlewares: [createMockResultsMiddleware({defaultNumberOfResults})],
       });
     });
@@ -147,6 +158,23 @@ describe('SSR', () => {
       const staticState = await fetchStaticState();
       expect(staticState).toBeTruthy();
       expect(getResultsPerPage(staticState)).toBe(defaultNumberOfResults);
+    });
+
+    it('should call augmentPreprocessRequestWithForwardedFor when fetchStaticState is invoked', async () => {
+      const spy = vi.spyOn(
+        augmentModule,
+        'augmentPreprocessRequestWithForwardedFor'
+      );
+
+      const fetchStaticState = engineDefinition.fetchStaticState;
+      await fetchStaticState();
+      expect(spy).toHaveBeenCalledWith({
+        loggerOptions: {level: 'warn'},
+        navigatorContextProvider: mockNavigatorContextProvider,
+        preprocessRequest: mockPreprocessRequest,
+      });
+
+      spy.mockRestore();
     });
 
     describe('with a static state', () => {

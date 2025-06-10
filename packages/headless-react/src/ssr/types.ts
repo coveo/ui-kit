@@ -49,15 +49,29 @@ export type ReactEngineDefinition<
 > = EngineDefinition<TEngine, TControllers, TEngineOptions> & {
   controllers: InferControllerHooksMapFromDefinition<TControllers>;
   useEngine(): TEngine | undefined;
+  /**
+   * @deprecated Use `StateProvider` instead.
+   */
   StaticStateProvider: FunctionComponent<
     PropsWithChildren<{
       controllers: InferControllerStaticStateMapFromDefinitions<TControllers>;
     }>
   >;
+  /**
+   * @deprecated Use `StateProvider` instead.
+   */
   HydratedStateProvider: FunctionComponent<
     PropsWithChildren<{
       engine: TEngine;
       controllers: InferControllersMapFromDefinition<TControllers>;
+    }>
+  >;
+  StateProvider: FunctionComponent<
+    PropsWithChildren<{
+      engine?: TEngine;
+      controllers:
+        | InferControllersMapFromDefinition<TControllers>
+        | InferControllerStaticStateMapFromDefinitions<TControllers>;
     }>
   >;
 };

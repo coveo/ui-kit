@@ -133,7 +133,7 @@ useCaseTestCases.forEach((useCase) => {
 
           expect(smartSnippet.dislikeButton).not.toBeNull();
           await smartSnippet.clickDislikeButton();
-          expect(smartSnippet.explainWhyButton).not.toBeVisible();
+          await expect(smartSnippet.explainWhyButton).not.toBeVisible();
         });
       });
 
@@ -160,7 +160,7 @@ useCaseTestCases.forEach((useCase) => {
 
           expect(smartSnippet.dislikeButton).not.toBeNull();
           await smartSnippet.clickDislikeButton();
-          expect(smartSnippet.explainWhyButton).toBeVisible();
+          await expect(smartSnippet.explainWhyButton).toBeVisible();
         });
       });
     });

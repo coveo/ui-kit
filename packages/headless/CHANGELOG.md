@@ -1,3 +1,28 @@
+## <small>3.25.2 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+- fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)
+- fix(headless commerce): remove facets from state when executing query from search box and clearFilte ([a2ecf0a](https://github.com/coveo/ui-kit/commits/a2ecf0a)), closes [#5369](https://github.com/coveo/ui-kit/issues/5369)
+- fix(headless): ensure cq is defined before appending it to expressions (#5401) ([2f1be68](https://github.com/coveo/ui-kit/commits/2f1be68)), closes [#5401](https://github.com/coveo/ui-kit/issues/5401)
+- fix(headless): preserve selected state for filter ranges after restore (#5366) ([6bc8c2a](https://github.com/coveo/ui-kit/commits/6bc8c2a)), closes [#5366](https://github.com/coveo/ui-kit/issues/5366) [#5234](https://github.com/coveo/ui-kit/issues/5234)
+- fix(headless): set 'tab' / 'originLevel2' when restoring tab from url parameters (#5338) ([8d26336](https://github.com/coveo/ui-kit/commits/8d26336)), closes [#5338](https://github.com/coveo/ui-kit/issues/5338)
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+
+## <small>3.25.1 (2025-06-04)</small>
+
+- fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)
+- fix(headless commerce): remove facets from state when executing query from search box and clearFilte ([a2ecf0a](https://github.com/coveo/ui-kit/commits/a2ecf0a)), closes [#5369](https://github.com/coveo/ui-kit/issues/5369)
+- fix(headless): ensure cq is defined before appending it to expressions (#5401) ([2f1be68](https://github.com/coveo/ui-kit/commits/2f1be68)), closes [#5401](https://github.com/coveo/ui-kit/issues/5401)
+- fix(headless): preserve selected state for filter ranges after restore (#5366) ([6bc8c2a](https://github.com/coveo/ui-kit/commits/6bc8c2a)), closes [#5366](https://github.com/coveo/ui-kit/issues/5366) [#5234](https://github.com/coveo/ui-kit/issues/5234)
+- fix(headless): set 'tab' / 'originLevel2' when restoring tab from url parameters (#5338) ([8d26336](https://github.com/coveo/ui-kit/commits/8d26336)), closes [#5338](https://github.com/coveo/ui-kit/issues/5338)
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+- chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+
 ## 3.25.0 (2025-05-28)
 
 - chore(deps): update dependency typedoc to v0.28.4 j:kit-282 (#5362) ([fcb8490](https://github.com/coveo/ui-kit/commits/fcb8490)), closes [#5362](https://github.com/coveo/ui-kit/issues/5362)

@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 /* eslint-disable @cspell/spellchecker */
 import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 
@@ -202,6 +203,11 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       aq: '',
       lq: '',
       dq: '',
+    },
+  },
+  context: {
+    contextValues: {
+      testKey: 'testValue',
     },
   },
   querySuggest: {},
@@ -1195,12 +1201,24 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpression: StateNee
     },
   };
 
+export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ =
+  {
+    ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
+    advancedSearchQueries: {
+      ...streamAnswerAPIStateMockWithStaticFiltersAndTabExpression.advancedSearchQueries,
+      cq: '',
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  context: {
+    testKey: 'testValue',
+  },
   pipelineRuleParameters: {
     mlGenerativeQuestionAnswering: {
       responseFormat: {
@@ -1567,3 +1585,9 @@ export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression = {
   ...expectedStreamAnswerAPIParam,
   cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx" AND cq-test-query',
 };
+
+export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ =
+  {
+    ...expectedStreamAnswerAPIParam,
+    cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
+  };
