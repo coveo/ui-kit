@@ -6,14 +6,12 @@ import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-// TODO KIT-3640 - Add stories for table display
-
 const {decorator, play} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
     preprocessRequest: (request) => {
       const parsed = JSON.parse(request.body as string);
-      parsed.perPage = 8;
+      parsed.perPage = 4;
       request.body = JSON.stringify(parsed);
       return request;
     },
@@ -52,7 +50,7 @@ const meta: Meta = {
     },
   },
   args: {
-    'attributes-number-of-placeholders': 8,
+    'attributes-number-of-placeholders': 4,
     'attributes-display': 'grid',
     'attributes-density': 'normal',
     'attributes-image-size': 'small',
