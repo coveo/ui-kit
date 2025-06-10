@@ -39,14 +39,17 @@ const meta: Meta = {
     'attributes-display': {
       options: ['grid', 'list', 'table'],
       control: {type: 'radio'},
+      name: 'display',
     },
     'attributes-density': {
       options: ['compact', 'comfortable', 'normal'],
       control: {type: 'radio'},
+      name: 'density',
     },
     'attributes-image-size': {
       options: ['small', 'large', 'icon', 'none'],
       control: {type: 'radio'},
+      name: 'image-size',
     },
   },
   args: {
