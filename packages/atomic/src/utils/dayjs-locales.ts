@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {locales} from '../generated/dayjs-locales-data';
 
 const warn = (language: string) =>
-  console.warn(`Cannot load dayjs locale file file for "${language}"`);
+  console.warn(`Cannot load dayjs locale file for "${language}"`);
 
 const resolveLanguage = (languageInput: string) => {
   if (locales[languageInput]) {

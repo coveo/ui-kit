@@ -15,6 +15,7 @@ runs:
     - uses: ./.github/actions/setup
       with:
         load-cache: 'false'
+        save-cache: ${{ inputs.skip-cache != 'true' }}
         cache-suffix: ${{ inputs.cache-suffix }}
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       if: ${{ inputs.skip-cache != 'true' }}

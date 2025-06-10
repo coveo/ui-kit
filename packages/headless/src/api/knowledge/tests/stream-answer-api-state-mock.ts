@@ -205,6 +205,11 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       dq: '',
     },
   },
+  context: {
+    contextValues: {
+      testKey: 'testValue',
+    },
+  },
   querySuggest: {},
   querySet: {
     'atomic-search-box-ie7ah': 'what is the hardest wood',
@@ -1211,6 +1216,9 @@ export const expectedStreamAnswerAPIParam = {
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  context: {
+    testKey: 'testValue',
+  },
   pipelineRuleParameters: {
     mlGenerativeQuestionAnswering: {
       responseFormat: {
