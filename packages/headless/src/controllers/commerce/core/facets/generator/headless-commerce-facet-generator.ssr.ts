@@ -9,6 +9,7 @@ import {
 } from '../../../../../app/commerce-ssr-engine/types/common.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
+import {CategoryFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {
   AnyFacetResponse,
   LocationFacetValue,
@@ -240,7 +241,11 @@ export function buildFacetGenerator(
           case 'hierarchical':
             return getCategoryFacetState(
               createFacetState(facetResponseSelector) as CategoryFacetState,
-              categoryFacetSearchStateSelector(getEngineState(), facetId)
+              categoryFacetSearchStateSelector(getEngineState(), facetId),
+              facetRequestSelector(
+                getEngineState(),
+                facetId
+              ) as CategoryFacetRequest
             );
           case 'dateRange':
             return getDateFacetState(

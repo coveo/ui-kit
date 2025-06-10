@@ -1,11 +1,14 @@
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
-import {CategoryFacetValueRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {defaultNumberOfValuesIncrement} from '../../../../../features/facets/category-facet-set/category-facet-set-actions.js';
+import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
+import {
+  CategoryFacetRequest,
+  CategoryFacetValueRequest,
+} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
 import {findActiveValueAncestry} from '../../../../../features/facets/category-facet-set/category-facet-utils.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {
@@ -102,6 +105,11 @@ export function buildCategoryFacet(
     },
     isForFieldSuggestions: false,
   });
+  const getRequest = () =>
+    facetRequestSelector(
+      engine[stateKey],
+      getFacetId()
+    ) as CategoryFacetRequest;
 
   return {
     deselectAll,
@@ -110,11 +118,20 @@ export function buildCategoryFacet(
     toggleSelect,
 
     showMoreValues() {
+      const request = getRequest();
+      const {values} = coreController.state;
+      const selectedValueAncestry = findActiveValueAncestry(values);
+      const activeValue = selectedValueAncestry.length
+        ? selectedValueAncestry[selectedValueAncestry.length - 1]
+        : undefined;
+      const numberInState = activeValue
+        ? activeValue.numberOfResults
+        : (request?.numberOfValues ?? 0);
+      const initialNumberOfValues = request?.initialNumberOfValues ?? 0;
+      const numberToNextMultipleOfConfigured =
+        initialNumberOfValues - (numberInState % initialNumberOfValues);
+      const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
       const {facetId} = options;
-      const {activeValue, values} = this.state;
-      const numberOfValues =
-        (activeValue?.children.length ?? values.length) +
-        defaultNumberOfValuesIncrement;
 
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(options.fetchProductsActionCreator());
@@ -126,7 +143,7 @@ export function buildCategoryFacet(
       dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues: defaultNumberOfValuesIncrement,
+          numberOfValues: getRequest()?.initialNumberOfValues,
         })
       );
       dispatch(options.fetchProductsActionCreator());
@@ -137,7 +154,8 @@ export function buildCategoryFacet(
     get state() {
       return getCategoryFacetState(
         coreController.state,
-        categoryFacetSearchStateSelector(engine[stateKey], getFacetId())
+        categoryFacetSearchStateSelector(engine[stateKey], getFacetId()),
+        getRequest()
       );
     },
 
@@ -147,19 +165,22 @@ export function buildCategoryFacet(
 
 export const getCategoryFacetState = (
   coreState: CoreCommerceFacetState<CategoryFacetValue>,
-  facetSearchSelector: ReturnType<typeof categoryFacetSearchStateSelector>
+  facetSearchSelector: ReturnType<typeof categoryFacetSearchStateSelector>,
+  request: CategoryFacetRequest | undefined
 ): CategoryFacetState => {
   const {values} = coreState;
   const selectedValueAncestry = findActiveValueAncestry(values);
   const activeValue = selectedValueAncestry.length
     ? selectedValueAncestry[selectedValueAncestry.length - 1]
     : undefined;
+  const initialNumberOfValues = request?.initialNumberOfValues ?? 0;
   const canShowLessValues = activeValue
-    ? activeValue.children.length > defaultNumberOfValuesIncrement
-    : false;
+    ? initialNumberOfValues < activeValue.children.length
+    : initialNumberOfValues < values.length;
   const canShowMoreValues =
     activeValue?.moreValuesAvailable ?? coreState.canShowMoreValues ?? false;
   const hasActiveValues = !!activeValue;
+
   return {
     ...coreState,
     activeValue,

@@ -208,11 +208,26 @@ export const commerceFacetSetReducer = createReducer(
           retrieveCount
         );
 
-        if (children.length) {
-          const lastSelectedParent = children[0];
+        console.log('selection.path', selection.path);
 
-          lastSelectedParent.state = 'selected';
-          lastSelectedParent.children = [];
+        // When selecting a root value
+        if (selection.path.length === 1 && selection.state === 'idle') {
+          let value = request.values.find((v) => v.value === selection.value);
+          if (!value) {
+            value = buildCategoryFacetValueRequest(
+              selection.value,
+              retrieveCount
+            );
+            children.push(value);
+          }
+
+          value.state = 'selected';
+          request.numberOfValues = 1;
+          return;
+        } else if (selection.path.length === 1) {
+          console.log('unselecting root value');
+          request.numberOfValues = request.initialNumberOfValues;
+          request.values = [];
           return;
         }
 
@@ -220,6 +235,7 @@ export const commerceFacetSetReducer = createReducer(
           selection.value,
           retrieveCount
         );
+
         newParent.state = 'selected';
         children.push(newParent);
         request.numberOfValues = 1;
@@ -298,14 +314,23 @@ export const commerceFacetSetReducer = createReducer(
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
         const request = state[facetId]?.request;
+
         if (!request) {
           return;
         }
-        if (!request.values.length) {
-          return handleFacetUpdateNumberOfValues<AnyFacetRequest>(
+
+        if (
+          !request.values.length ||
+          request.values.every(
+            (v) =>
+              !(v as CategoryFacetValue).children.length && v.state === 'idle'
+          )
+        ) {
+          handleFacetUpdateNumberOfValues<AnyFacetRequest>(
             request,
             numberOfValues
           );
+          return;
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
@@ -640,7 +665,7 @@ function getFacetRequestValuesFromFacetResponse(
       return facetResponse.values.every(
         (f) => f.state === 'idle' && f.children.length === 0
       )
-        ? []
+        ? facetResponse.values.map(convertCategoryFacetRootValueToRequest)
         : facetResponse.values.map(convertCategoryFacetValueToRequest);
     case 'regular':
       return facetResponse.values.map(convertFacetValueToRequest);
@@ -649,6 +674,16 @@ function getFacetRequestValuesFromFacetResponse(
     default:
       return;
   }
+}
+
+function convertCategoryFacetRootValueToRequest(
+  responseValue: CategoryFacetValue
+): CategoryFacetValueRequest {
+  return {
+    children: [],
+    state: 'idle',
+    value: responseValue.value,
+  };
 }
 
 export function convertCategoryFacetValueToRequest(
