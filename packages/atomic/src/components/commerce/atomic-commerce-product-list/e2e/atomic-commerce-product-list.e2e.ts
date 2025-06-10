@@ -112,7 +112,7 @@ test.describe('atomic-commerce-product-list', () => {
       await expect
         .poll(async () => await productList.tablePlaceholders.count())
         .toBe(1);
-      await expect(productList.placeholders.first()).toBeVisible();
+      await expect(productList.tablePlaceholders.first()).toBeVisible();
     });
 
     test.describe('when the query returns products', () => {
