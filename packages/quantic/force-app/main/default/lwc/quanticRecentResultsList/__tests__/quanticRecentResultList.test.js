@@ -8,6 +8,7 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 const localStorageKey = `${exampleEngine.id}_quantic-recent-results`;
+let consoleErrorSpy;
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock(
@@ -72,14 +73,13 @@ const functionMocks = {
     };
     return () => {};
   }),
-  recentQueriesListUnsubscriber: jest.fn(),
   clear: jest.fn(),
 };
 
 const defaultOptions = {
   engineId: exampleEngine.id,
   maxLength: defaultMaxLength,
-  label: 'Recent Results',
+  label: defaultRecentResultsTitle,
   hideWhenEmpty: false,
   target: '_self',
   isCollapsed: false,
@@ -128,7 +128,7 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-describe('c-quantic-recent-queries-list', () => {
+describe('c-quantic-recent-result-list', () => {
   afterEach(() => {
     cleanup();
     recentResultsListState = initialRecentResultsListState;
@@ -199,24 +199,30 @@ describe('c-quantic-recent-queries-list', () => {
       jest
         .spyOn(mockHeadlessLoader, 'getHeadlessEnginePromise')
         .mockImplementation(() => Promise.resolve(exampleEngine));
-      console.error = jest.fn();
-    });
-
-    afterEach(() => {
-      recentResultsListState = initialRecentResultsListState;
-      jest.clearAllMocks();
     });
 
     describe('when there are recent results', () => {
       const exampleResults = mockResults;
+
       beforeEach(() => {
         recentResultsListState = {
           ...recentResultsListState,
           results: exampleResults,
         };
+        consoleErrorSpy = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
       });
 
-      it('should no longer display the placeholder component', async () => {
+      afterEach(() => {
+        consoleErrorSpy.mockRestore();
+      });
+
+      it('should display the recent results list with the default options and no longer display the placeholder component', async () => {
+        recentResultsListState = {
+          results: exampleResults,
+          maxLength: defaultMaxLength,
+        };
         const element = createTestComponent();
         updateRecentResultsState();
         await flushPromises();
@@ -226,27 +232,24 @@ describe('c-quantic-recent-queries-list', () => {
         );
 
         expect(placeholder).toBeNull();
-      });
-
-      it('should display the recent results list with the default options', async () => {
-        recentResultsListState = {
-          results: exampleResults,
-          maxLength: defaultMaxLength,
-        };
-        const element = createTestComponent();
-        updateRecentResultsState();
-        await flushPromises();
 
         const recentResultsContainer = element.shadowRoot.querySelector(
           selectors.quanticCardContainer
         );
         expect(recentResultsContainer).not.toBeNull();
-        expect(recentResultsContainer.title).toEqual(defaultRecentResultsTitle);
+        expect(recentResultsContainer.title).toBe(defaultRecentResultsTitle);
 
         const recentResultsListItems = element.shadowRoot.querySelectorAll(
           selectors.recentResultItem
         );
-        expect(recentResultsListItems.length).toEqual(exampleResults.length);
+
+        expect(recentResultsListItems.length).toBe(exampleResults.length);
+        recentResultsListItems.forEach((item, index) => {
+          const resultLink = item.querySelector(
+            selectors.quanticRecentResultLink
+          );
+          expect(resultLink.result).toEqual(mockResults[index]);
+        });
       });
 
       it('should use the correct initial state retrieved from the localstorage', async () => {
@@ -265,13 +268,13 @@ describe('c-quantic-recent-queries-list', () => {
           }
         );
 
+        expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
         expect(getItemFromLocalStorageSpy).toHaveBeenCalledWith(
           localStorageKey
         );
-        expect(getItemFromLocalStorageSpy).toHaveBeenCalledTimes(1);
       });
 
-      it('should call #setItemInLocalStorage function with the proper parameters when the recent queries change in the state', async () => {
+      it('should call #setItemInLocalStorage function with the proper parameters when the recent result change in the state', async () => {
         const setItemInLocalStorageSpy = jest.spyOn(
           utils,
           'setItemInLocalStorage'
@@ -280,11 +283,6 @@ describe('c-quantic-recent-queries-list', () => {
         recentResultsListState.results = exampleResults;
         updateRecentResultsState();
         await flushPromises();
-
-        recentResultsListState = {
-          results: exampleResults,
-          maxLength: defaultMaxLength,
-        };
 
         expect(setItemInLocalStorageSpy).toHaveBeenCalledWith(
           localStorageKey,
@@ -297,10 +295,6 @@ describe('c-quantic-recent-queries-list', () => {
     describe('with a custom #maxLength value', () => {
       it('should set the #maxLength value in the controller', async () => {
         const exampleResults = mockResults;
-        recentResultsListState = {
-          results: exampleResults,
-          maxLength: defaultMaxLength,
-        };
         const customMaxLength = 5;
         createTestComponent({...defaultOptions, maxLength: customMaxLength});
         updateRecentResultsState();
@@ -331,49 +325,79 @@ describe('c-quantic-recent-queries-list', () => {
           selectors.quanticCardContainer
         );
         expect(recentResultsContainer).not.toBeNull();
-        expect(recentResultsContainer.title).toEqual(customLabel);
+        expect(recentResultsContainer.title).toBe(customLabel);
       });
     });
 
-    describe('the #hideWhenEmpty property when there are no recent results', () => {
+    describe('the #hideWhenEmpty property', () => {
       beforeEach(() => {
-        recentResultsListState = {
-          ...recentResultsListState,
-          results: [],
-        };
+        consoleErrorSpy = jest
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
       });
 
-      it('should display an empty list when it is set to false', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: false,
+      afterEach(() => {
+        consoleErrorSpy.mockRestore();
+      });
+      describe('when there are recent results', () => {
+        it('should display the recent results card when set to true', async () => {
+          recentResultsListState = {
+            ...recentResultsListState,
+            results: mockResults,
+          };
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideWhenEmpty: true,
+          });
+          updateRecentResultsState();
+          await flushPromises();
+
+          const recentResultsContainer = element.shadowRoot.querySelector(
+            selectors.quanticCardContainer
+          );
+          expect(recentResultsContainer).not.toBeNull();
         });
-        updateRecentResultsState();
-        await flushPromises();
-
-        const recentResultsContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentResultsContainer).not.toBeNull();
-        expect(recentResultsContainer.title).toEqual(defaultRecentResultsTitle);
-
-        const recentResultsListItems = element.shadowRoot.querySelectorAll(
-          selectors.recentResultItem
-        );
-        expect(recentResultsListItems.length).toEqual(0);
       });
 
-      it('should not display a recent results card when it is set to true', async () => {
-        const element = createTestComponent({
-          ...defaultOptions,
-          hideWhenEmpty: true,
+      describe('when there are no recent results', () => {
+        beforeEach(() => {
+          recentResultsListState = {
+            ...recentResultsListState,
+            results: [],
+          };
         });
-        await flushPromises();
+        it('should display an empty list when it is set to false', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideWhenEmpty: false,
+          });
+          updateRecentResultsState();
+          await flushPromises();
 
-        const recentResultsContainer = element.shadowRoot.querySelector(
-          selectors.quanticCardContainer
-        );
-        expect(recentResultsContainer).toBeNull();
+          const recentResultsContainer = element.shadowRoot.querySelector(
+            selectors.quanticCardContainer
+          );
+          expect(recentResultsContainer).not.toBeNull();
+          expect(recentResultsContainer.title).toBe(defaultRecentResultsTitle);
+
+          const recentResultsListItems = element.shadowRoot.querySelectorAll(
+            selectors.recentResultItem
+          );
+          expect(recentResultsListItems.length).toBe(0);
+        });
+
+        it('should not display a recent results card when it is set to true', async () => {
+          const element = createTestComponent({
+            ...defaultOptions,
+            hideWhenEmpty: true,
+          });
+          await flushPromises();
+
+          const recentResultsContainer = element.shadowRoot.querySelector(
+            selectors.quanticCardContainer
+          );
+          expect(recentResultsContainer).toBeNull();
+        });
       });
     });
 
@@ -396,7 +420,7 @@ describe('c-quantic-recent-queries-list', () => {
         );
 
         recentResultLinks.forEach((link) => {
-          expect(link.getAttribute('target')).toEqual(customTarget);
+          expect(link.getAttribute('target')).toBe(customTarget);
         });
       });
     });
@@ -416,23 +440,21 @@ describe('c-quantic-recent-queries-list', () => {
           selectors.quanticCardContainer
         );
         expect(recentResultsContainer).not.toBeNull();
-        expect(recentResultsContainer.title).toEqual(defaultRecentResultsTitle);
+        expect(recentResultsContainer.title).toBe(defaultRecentResultsTitle);
 
         const toggleButton = element.shadowRoot.querySelector(
           selectors.toggleButton
         );
 
         expect(toggleButton).not.toBeNull();
-        expect(toggleButton.alternativeText).toEqual(
-          collapseRecentResultsLabel
-        );
-        expect(toggleButton.iconName).toEqual(collapseRecentResultsIcon);
+        expect(toggleButton.alternativeText).toBe(collapseRecentResultsLabel);
+        expect(toggleButton.iconName).toBe(collapseRecentResultsIcon);
 
         const recentResultsListItems = element.shadowRoot.querySelectorAll(
           selectors.recentResultItem
         );
 
-        expect(recentResultsListItems.length).toEqual(
+        expect(recentResultsListItems.length).toBe(
           recentResultsListState.results.length
         );
       });
@@ -453,21 +475,21 @@ describe('c-quantic-recent-queries-list', () => {
           selectors.quanticCardContainer
         );
         expect(recentResultsContainer).not.toBeNull();
-        expect(recentResultsContainer.title).toEqual(defaultRecentResultsTitle);
+        expect(recentResultsContainer.title).toBe(defaultRecentResultsTitle);
 
         const toggleButton = element.shadowRoot.querySelector(
           selectors.toggleButton
         );
 
         expect(toggleButton).not.toBeNull();
-        expect(toggleButton.alternativeText).toEqual(expandRecentResultsLabel);
-        expect(toggleButton.iconName).toEqual(expandRecentResultsIcon);
+        expect(toggleButton.alternativeText).toBe(expandRecentResultsLabel);
+        expect(toggleButton.iconName).toBe(expandRecentResultsIcon);
 
         const recentResultsListItems = element.shadowRoot.querySelectorAll(
           selectors.recentQueryItem
         );
         expect(recentResultsListItems[0]).toBeFalsy();
-        expect(recentResultsListItems.length).toEqual(0);
+        expect(recentResultsListItems.length).toBe(0);
       });
     });
   });
