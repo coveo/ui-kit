@@ -22,7 +22,6 @@ import {
   SearchSummaryState,
   Summary,
 } from '@coveo/headless/commerce';
-import {ContextRoot} from '@lit/context';
 import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
@@ -90,8 +89,6 @@ export class AtomicCommerceProductList
 
   public constructor() {
     super();
-    const contextRoot = new ContextRoot();
-    contextRoot.attach(document.body);
   }
 
   @state()
