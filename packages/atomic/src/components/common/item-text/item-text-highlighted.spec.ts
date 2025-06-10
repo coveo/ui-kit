@@ -1,4 +1,4 @@
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {describe, it, expect, vi, beforeEach} from 'vitest';
 import {
@@ -39,7 +39,7 @@ describe('#renderItemTextHighlighted', () => {
     expect(result).toEqual(html`${unsafeHTML(expectedHighlightedValue)}`);
   });
 
-  it('should call onError and return empty template when renderWithHighlights throws', () => {
+  it('should call onError and return nothing when renderWithHighlights throws', () => {
     const error = new Error('Highlight error');
     mockRenderWithHighlights.mockImplementation(() => {
       throw error;
@@ -48,7 +48,7 @@ describe('#renderItemTextHighlighted', () => {
     const result = renderItemTextHighlighted({props});
 
     expect(props.onError).toHaveBeenCalledWith(error);
-    expect(result).toEqual(html``);
+    expect(result).toEqual(nothing);
   });
 
   it('should pass through all parameters correctly', () => {
