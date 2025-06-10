@@ -132,7 +132,7 @@ useCaseTestCases.forEach((useCase) => {
         await breadcrumbManager.clickFirstTimeframeFacetLink();
         await searchResponsePromiseTwo;
 
-        test.expect(breadcrumbManager.clearAllButton).toBeVisible();
+        await test.expect(breadcrumbManager.clearAllButton).toBeVisible();
         const clearAllSearchResponsePromise = search.waitForSearchResponse();
         const clearAllAnalyticsPromise =
           breadcrumbManager.waitForBreadcrumbResetAllUaAnalytics();
