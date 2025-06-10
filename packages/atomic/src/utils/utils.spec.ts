@@ -8,12 +8,6 @@ import {
   isInDocument,
 } from './utils';
 
-vi.mock('@stencil/core', () => ({
-  getAssetPath: vi.fn((path: string) => {
-    return path.replace('./', '/');
-  }),
-}));
-
 describe('utils', () => {
   describe('#once', () => {
     it('should call the function only once', () => {
