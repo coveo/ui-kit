@@ -4,7 +4,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../../../utils/replace-breakpoint';
-import {randomID} from '../../../utils/stencil-utils';
+import {randomID} from '../../../utils/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {buildSearchLayout} from './search-layout';
 

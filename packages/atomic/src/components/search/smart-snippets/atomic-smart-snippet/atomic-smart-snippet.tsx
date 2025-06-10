@@ -1,3 +1,11 @@
+import {SmartSnippetFeedbackBanner} from '@/src/components/common/smart-snippets/atomic-smart-snippet-feedback-banner';
+import {
+  SmartSnippetTruncatedAnswer,
+  SmartSnippetWrapper,
+  SmartSnippetFooter,
+  SmartSnippetQuestion,
+} from '@/src/components/common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
+import {randomID} from '@/src/utils/utils';
 import {
   buildSmartSnippet,
   buildTabManager,
@@ -14,11 +22,8 @@ import {
   BindStateToController,
 } from '../../../../utils/initialization-utils';
 import {ArrayProp} from '../../../../utils/props-utils';
-import {randomID} from '../../../../utils/stencil-utils';
 import {shouldDisplayOnCurrentTab} from '../../../../utils/tab-utils';
-import {createAppLoadedListener} from '../../../common/interface/store';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
-import {SmartSnippetCommon} from '../../../common/smart-snippets/atomic-smart-snippet/smart-snippet-common';
 import {Hidden} from '../../../common/stencil-hidden';
 import {Bindings} from '../../atomic-search-interface/atomic-search-interface';
 
@@ -77,9 +82,8 @@ export class AtomicSmartSnippet implements InitializableComponent {
   @State()
   public tabManagerState!: TabManagerState;
   public error!: Error;
-  @State() private isAppLoaded = false;
 
-  @Element() public host!: HTMLElement;
+  @Element() private host!: HTMLElement;
   private id!: string;
 
   connectedCallback(): void {
@@ -87,8 +91,6 @@ export class AtomicSmartSnippet implements InitializableComponent {
   }
 
   private modalRef?: HTMLAtomicSmartSnippetFeedbackModalElement;
-
-  private smartSnippetCommon!: SmartSnippetCommon;
 
   /**
    * The [heading level](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Heading_Elements) to use for the question at the top of the snippet, from 1 to 5.
@@ -167,56 +169,12 @@ export class AtomicSmartSnippet implements InitializableComponent {
 
   public initialize() {
     this.smartSnippet = buildSmartSnippet(this.bindings.engine);
-    this.smartSnippetCommon = new SmartSnippetCommon({
-      id: this.id,
-      modalTagName: 'atomic-smart-snippet-feedback-modal',
-      getSourceAnchorAttributes: () =>
-        getAttributesFromLinkSlot(this.host, 'source-anchor-attributes'),
-      getHost: () => this.host,
-      getBindings: () => this.bindings,
-      getModalRef: () => this.modalRef,
-      getHeadingLevel: () => this.headingLevel,
-      getCollapsedHeight: () => this.collapsedHeight,
-      getMaximumHeight: () => this.maximumHeight,
-      getSmartSnippetState: () => this.smartSnippetState,
-      getSmartSnippet: () => this.smartSnippet,
-      getSnippetStyle: () => this.snippetStyle,
-      getFeedbackSent: () => this.feedbackSent,
-      getSnippetMaximumHeight: this.snippetMaximumHeight
-        ? () => this.snippetMaximumHeight!
-        : undefined,
-      getSnippetCollapsedHeight: this.snippetCollapsedHeight
-        ? () => this.snippetCollapsedHeight!
-        : undefined,
-      setModalRef: this.setModalRef.bind(this),
-      setFeedbackSent: this.setFeedbackSent.bind(this),
-    });
-    this.bindings.store.waitUntilAppLoaded(() =>
-      this.smartSnippetCommon.hideDuringRender(false)
-    );
     this.tabManager = buildTabManager(this.bindings.engine);
-    createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
-      this.isAppLoaded = isAppLoaded;
-    });
-  }
-
-  private setModalRef(ref: HTMLElement) {
-    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
-  }
-
-  private setFeedbackSent(isSent: boolean) {
-    this.feedbackSent = isSent;
   }
 
   public componentWillUpdate() {
     if (!(this.smartSnippetState.liked || this.smartSnippetState.disliked)) {
       this.setFeedbackSent(false);
-    }
-  }
-
-  public componentDidRender() {
-    if (this.isAppLoaded) {
-      this.smartSnippetCommon.hideDuringRender(false);
     }
   }
 
@@ -230,6 +188,114 @@ export class AtomicSmartSnippet implements InitializableComponent {
     ) {
       return <Hidden></Hidden>;
     }
-    return this.smartSnippetCommon.render();
+
+    if (!this.smartSnippetState.answerFound) {
+      return <Hidden></Hidden>;
+    }
+
+    const source = this.smartSnippetState.source;
+
+    return (
+      <SmartSnippetWrapper
+        headingLevel={this.headingLevel}
+        i18n={this.bindings.i18n}
+      >
+        <atomic-smart-snippet-collapse-wrapper
+          collapsedHeight={this.snippetCollapsedHeight}
+          maximumHeight={this.snippetMaximumHeight}
+        >
+          <SmartSnippetQuestion
+            headingLevel={this.headingLevel}
+            question={this.smartSnippetState.question}
+          />
+          {this.snippetMaximumHeight !== undefined ? (
+            <SmartSnippetTruncatedAnswer
+              answer={this.smartSnippetState.answer}
+              style={this.style}
+            />
+          ) : (
+            <atomic-smart-snippet-expandable-answer
+              collapsedHeight={this.collapsedHeight}
+              expanded={this.smartSnippetState.expanded}
+              exportparts="answer,show-more-button,show-less-button,truncated-answer"
+              htmlContent={this.smartSnippetState.answer}
+              maximumHeight={this.maximumHeight}
+              onCollapse={() => this.smartSnippet.collapse()}
+              onExpand={() => this.smartSnippet.expand()}
+              part="body"
+              snippetStyle={this.style}
+            ></atomic-smart-snippet-expandable-answer>
+          )}
+          <SmartSnippetFooter i18n={this.bindings.i18n}>
+            {source && (
+              <atomic-smart-snippet-source
+                anchorAttributes={getAttributesFromLinkSlot(
+                  this.host,
+                  'source-anchor-attributes'
+                )}
+                onBeginDelayedSelectSource={
+                  this.smartSnippet.beginDelayedSelectSource
+                }
+                onCancelPendingSelectSource={
+                  this.smartSnippet.cancelPendingSelectSource
+                }
+                onSelectSource={this.smartSnippet.selectSource}
+                source={source}
+              ></atomic-smart-snippet-source>
+            )}
+            <SmartSnippetFeedbackBanner
+              disliked={this.smartSnippetState.disliked}
+              explainWhyRef={(button) => {
+                if (this.modalRef) {
+                  this.modalRef.source = button;
+                }
+              }}
+              feedbackSent={this.feedbackSent}
+              id={this.id}
+              i18n={this.bindings.i18n}
+              liked={this.smartSnippetState.liked}
+              onDislike={() => {
+                this.loadModal();
+                this.smartSnippet.dislike();
+              }}
+              onLike={() => this.smartSnippet.like()}
+              onPressExplainWhy={() => (this.modalRef!.isOpen = true)}
+            ></SmartSnippetFeedbackBanner>
+          </SmartSnippetFooter>
+        </atomic-smart-snippet-collapse-wrapper>
+      </SmartSnippetWrapper>
+    );
+  }
+
+  private setModalRef(ref: HTMLElement) {
+    this.modalRef = ref as HTMLAtomicSmartSnippetFeedbackModalElement;
+  }
+
+  private setFeedbackSent(isSent: boolean) {
+    this.feedbackSent = isSent;
+  }
+
+  private get style() {
+    const styleTag = this.host
+      .querySelector('template')
+      ?.content.querySelector('style');
+    if (!styleTag) {
+      return this.snippetStyle;
+    }
+    return styleTag.innerHTML;
+  }
+
+  private loadModal() {
+    if (this.modalRef) {
+      return;
+    }
+    const modalRef = document.createElement(
+      'atomic-smart-snippet-feedback-modal'
+    );
+    modalRef.addEventListener('feedbackSent', () => {
+      this.setFeedbackSent(true);
+    });
+    this.setModalRef(modalRef);
+    this.host.insertAdjacentElement('beforebegin', modalRef);
   }
 }

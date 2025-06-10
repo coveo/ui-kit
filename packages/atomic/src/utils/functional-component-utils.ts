@@ -2,7 +2,7 @@ import {nothing, TemplateResult} from 'lit';
 import {DirectiveResult} from 'lit/directive.js';
 
 export interface FunctionalComponent<T> {
-  ({props}: {props: T}): TemplateResult | TemplateResult[] | typeof nothing;
+  ({props}: {props: T}): TemplateResult | typeof nothing;
 }
 
 export interface FunctionalComponentWithChildren<T> {
@@ -10,7 +10,9 @@ export interface FunctionalComponentWithChildren<T> {
     props,
   }: {
     props: T;
-  }): (children: FunctionalComponentChildren) => TemplateResult;
+  }): (
+    children: FunctionalComponentChildren
+  ) => TemplateResult | typeof nothing;
 }
 
 export interface FunctionalComponentWithChildrenNoProps {

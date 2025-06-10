@@ -18,7 +18,9 @@ test.describe('default', async () => {
       });
       await productText.hydrated.first().waitFor();
 
-      expect(productText.textContent.first()).toContainText('Default Text');
+      await expect(productText.textContent.first()).toContainText(
+        'Default Text'
+      );
     });
   });
 });
@@ -55,7 +57,7 @@ test.describe('when using a field that supports highlights', async () => {
       });
       await productText.hydrated.first().waitFor();
 
-      expect(productText.textContent.first()).toContainText(/kayak/i);
+      await expect(productText.textContent.first()).toContainText(/kayak/i);
 
       const highlightedText =
         await productText.highlightedText.allTextContents();
@@ -71,14 +73,14 @@ test.describe('when displaying a field that does not support highlights', async 
   });
 
   test('should render the field value', async ({productText}) => {
-    expect(productText.textContent.first()).toBeVisible();
+    await expect(productText.textContent.first()).toBeVisible();
   });
 
   test('should not highlight the keywords in the excerpt', async ({
     productText,
   }) => {
     const highlightedText = await productText.highlightedText.allTextContents();
-    expect(productText.textContent.first()).toContainText(/kayak/i);
+    await expect(productText.textContent.first()).toContainText(/kayak/i);
     expect(highlightedText).not.toContain(/kayak/i);
   });
 });
@@ -90,6 +92,6 @@ test.describe('when using a non-string field', async () => {
   });
 
   test('should not render the field value', async ({productText}) => {
-    expect(productText.textContent.first()).not.toBeVisible();
+    await expect(productText.textContent.first()).not.toBeVisible();
   });
 });

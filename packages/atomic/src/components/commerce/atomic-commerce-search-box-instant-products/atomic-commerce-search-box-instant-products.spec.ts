@@ -108,6 +108,10 @@ describe('AtomicCommerceSearchBoxInstantProducts', () => {
   });
 
   describe('#initialize', () => {
+    beforeEach(() => {
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+
     it('should create an instant products controller', async () => {
       const {element} = await renderElements();
 

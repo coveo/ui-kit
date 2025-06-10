@@ -38,14 +38,14 @@ import {FacetContainer} from '../../../common/facets/facet-container/stencil-fac
 import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
 import {FacetPlaceholder} from '../../../common/facets/facet-placeholder/facet-placeholder';
 import {announceFacetSearchResultsWithAriaLive} from '../../../common/facets/facet-search/facet-search-aria-live';
-import {FacetSearchInput} from '../../../common/facets/facet-search/facet-search-input';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../../../common/facets/facet-search/facet-search-utils';
+import {FacetSearchInput} from '../../../common/facets/facet-search/stencil-facet-search-input';
 import {FacetSearchMatches} from '../../../common/facets/facet-search/stencil-facet-search-matches';
 import {FacetShowMoreLess} from '../../../common/facets/facet-show-more-less/stencil-facet-show-more-less';
-import {FacetValueBox} from '../../../common/facets/facet-value-box/facet-value-box';
+import {FacetValueBox} from '../../../common/facets/facet-value-box/stencil-facet-value-box';
 import {FacetValueLabelHighlight} from '../../../common/facets/facet-value-label-highlight/stencil-facet-value-label-highlight';
 import {FacetValuesGroup} from '../../../common/facets/facet-values-group/stencil-facet-values-group';
 import {initializePopover} from '../../../common/facets/popover/popover-type';

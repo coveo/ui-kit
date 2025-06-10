@@ -4,7 +4,7 @@ import {injectStylesForNoShadowDOM} from '@/src/decorators/light-dom';
 import {InitializableComponent} from '@/src/decorators/types';
 import {watch} from '@/src/decorators/watch';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
-import {parseAssetURL} from '@/src/utils/utils';
+import {parseAssetURL} from '@/src/utils/asset-path-utils';
 import DOMPurify from 'dompurify';
 import {LitElement, svg, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';

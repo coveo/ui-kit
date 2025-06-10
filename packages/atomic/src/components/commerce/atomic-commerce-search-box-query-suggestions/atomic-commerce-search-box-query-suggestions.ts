@@ -9,7 +9,7 @@ import {
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {
   CommerceEngine,
   loadQuerySuggestActions,
@@ -28,7 +28,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 @customElement('atomic-commerce-search-box-query-suggestions')
 export class AtomicCommerceSearchBoxQuerySuggestions
   extends LitElement
-  implements InitializableComponent<CommerceBindings>
+  implements SearchBoxSuggestionsComponent<CommerceBindings>
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
 

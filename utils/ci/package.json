@@ -5,14 +5,14 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@coveo/semantic-monorepo-tools": "2.6.2",
-    "@npmcli/arborist": "9.0.0",
-    "@octokit/auth-app": "7.1.5",
+    "@coveo/semantic-monorepo-tools": "2.6.7",
+    "@npmcli/arborist": "9.1.1",
+    "@octokit/auth-app": "7.2.1",
     "async-retry": "1.3.3",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "dependency-graph": "1.0.0",
-    "octokit": "4.1.2",
-    "semver": "7.7.1",
+    "octokit": "4.1.4",
+    "semver": "7.7.2",
     "ts-dedent": "2.2.0"
   },
   "devDependencies": {
@@ -22,7 +22,7 @@
     "typescript": "5.8.3"
   },
   "scripts": {
-    "commit-all": "node ./commit-all.mjs",
+    "add-generated-files": "node ./add-generated-files.mjs",
     "promote-npm-prod": "node ./promote-npm-tag-to-latest.mjs",
     "git-lock": "node ./git-lock.mjs",
     "bump": "node ./bump-package.mjs",
