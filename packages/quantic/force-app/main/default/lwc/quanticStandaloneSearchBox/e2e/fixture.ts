@@ -1,7 +1,11 @@
 import {StandaloneSearchBoxObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
-import {searchRequestRegex} from '../../../../../../playwright/utils/requests';
+import {
+  querySuggestRegex,
+  searchRequestRegex,
+} from '../../../../../../playwright/utils/requests';
+import {QuerySuggestObject} from '../../../../../../playwright/page-object/querySuggestObject';
 
 const standaloneSearchBoxUrl = 's/quantic-standalone-search-box';
 
@@ -20,6 +24,7 @@ interface StandaloneSearchBoxOptions {
 type QuanticStandaloneSearchBoxE2EFixtures = {
   searchBox: StandaloneSearchBoxObject;
   search: SearchObject;
+  querySuggest: QuerySuggestObject;
   options: Partial<StandaloneSearchBoxOptions>;
   urlHash: string;
 };
@@ -30,6 +35,9 @@ export const testStandaloneSearchBox =
     urlHash: '',
     search: async ({page}, use) => {
       await use(new SearchObject(page, searchRequestRegex));
+    },
+    querySuggest: async ({page}, use) => {
+      await use(new QuerySuggestObject(page, querySuggestRegex));
     },
     searchBox: async ({page, options, configuration, urlHash}, use) => {
       await page.goto(

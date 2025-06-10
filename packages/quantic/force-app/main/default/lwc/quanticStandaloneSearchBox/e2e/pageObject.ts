@@ -18,13 +18,13 @@ export class StandaloneSearchBoxObject {
 
   get searchIcon(): Locator {
     return this.component.locator(
-      'c-quantic-search-box-input [data-cy="search-box-search-icon"]'
+      'c-quantic-search-box-input [data-testid="search-box-search-icon"]'
     );
   }
 
   get clearButton(): Locator {
     return this.component.locator(
-      'c-quantic-search-box-input [data-cy="search-box-clear-button"]'
+      'c-quantic-search-box-input [data-testid="search-box-clear-button"]'
     );
   }
 

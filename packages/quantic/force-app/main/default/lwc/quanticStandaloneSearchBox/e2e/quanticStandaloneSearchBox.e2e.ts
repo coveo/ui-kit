@@ -1,24 +1,5 @@
 import {testStandaloneSearchBox as test, expect} from './fixture';
 
-const mockSuggestions = async (page) => {
-  await page.route('**/rest/search/v2/querySuggest*', async (route: any) => {
-    const response = await route.fetch();
-    const json = await response.json();
-    json.completions = [
-      {
-        expression: 'test',
-        highlighted: '[test]',
-      },
-      {
-        expression: 'test 2',
-        highlighted: '[test][2]',
-      },
-    ];
-    json.responseId = 21322434;
-    await route.fulfill({response, json});
-  });
-};
-
 const variants = [
   {variantName: 'default', isTextArea: false},
   {variantName: 'expandable', isTextArea: true},
@@ -36,8 +17,9 @@ test.describe('quantic-standalone-search-box', () => {
       test('should display suggestions and redirect on click', async ({
         searchBox,
         page,
+        querySuggest,
       }) => {
-        await mockSuggestions(page);
+        querySuggest.mockQuerySuggestResponse(['test', 'test 2']);
 
         await expect(searchBox.getSearchInputElement(isTextArea)).toBeVisible();
         await expect(searchBox.searchButton).toBeVisible();
@@ -51,7 +33,6 @@ test.describe('quantic-standalone-search-box', () => {
         );
 
         await searchBox.getSearchInputElement(isTextArea).focus();
-        await page.waitForTimeout(500);
 
         await expect(searchBox.suggestionsList).toBeVisible();
         await expect((await searchBox.suggestions.all()).length).toBe(2);
