@@ -342,8 +342,8 @@ describe('c-quantic-search-box-suggestions-list', () => {
       expect(clearButton.querySelector(selectors.lightningIcon)).toBeNull();
       expect(clearButton.textContent).toContain(labels.recentQueries);
       const recentQueryOption = options.item(1);
-      expect(recentQueryOption.querySelector(selectors.richText).value).toBe(
-        'test recent query'
+      expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
+        expect.stringContaining('<strong>test</strong> recent query')
       );
     });
 
@@ -357,9 +357,9 @@ describe('c-quantic-search-box-suggestions-list', () => {
       const options = element.shadowRoot.querySelectorAll(selectors.option);
       // Skip the first option (clear button)
       const recentQueryOption = options.item(1);
-      expect(
-        recentQueryOption.querySelector(selectors.richText).value
-      ).toContain('<strong>test</strong>');
+      expect(recentQueryOption.querySelector(selectors.richText).value).toEqual(
+        expect.stringContaining('<strong>test</strong>')
+      );
     });
   });
 
