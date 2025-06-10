@@ -9,7 +9,7 @@
       "outputs": ["{projectRoot}/dist"],
       "cache": true,
       "options": {
-        "command": "tsc --project ./tsconfig.json",
+        "command": "tsc --project ./tsconfig.build.json",
         "cwd": "{projectRoot}"
       }
     }

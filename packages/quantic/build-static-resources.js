@@ -70,7 +70,7 @@ const LIBRARY_CONFIG = {
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/recommendation/headless.js`,
       },
       {
-        src: resolveLibraryPath('@coveo/headless', '../dist/definitions'),
+        src: resolveLibraryPath('@coveo/headless', '../../dist/definitions'),
         dest: `${STATIC_RESOURCES_PATH}/coveoheadless/definitions`,
       },
     ],

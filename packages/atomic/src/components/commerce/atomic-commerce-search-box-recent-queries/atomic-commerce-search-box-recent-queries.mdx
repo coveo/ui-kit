@@ -1,0 +1,42 @@
+import {Canvas, ArgTypes, Meta, Title, Description, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicCommerceSearchBoxRecentQueriesStories from './atomic-commerce-search-box-recent-queries.new.stories';
+
+
+<Meta of={AtomicCommerceSearchBoxRecentQueriesStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceSearchBoxRecentQueriesStories.Default}
+/>
+
+## Usage
+This component is placed inside the [atomic-commerce-search-box](/docs/atomic-commerce-search-box--docs) to display recent queries as the user types.
+
+By default, atomic-commerce-search-box-recent-queries is already included.
+You can add it manually to customize its properties.
+```html
+<atomic-commerce-search-box>
+  <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
+</atomic-commerce-search-box>
+```
+
+**Note**: This component requires the analytics to be enabled. It will not display any recent queries if analytics are disabled.
+
+## Examples
+<Stories title={""}/>
+
+## Reference
+<ArgTypes />

@@ -91,7 +91,7 @@ describe('buildShopifySearchEngine', () => {
     );
   });
 
-  it('should configure relay to use the correct clientId', () => {
+  it('should configure engine to use the correct clientId', () => {
     const db: Record<string, string> = {};
     vi.mocked(buildBrowserEnvironment).mockImplementation(() => ({
       storage: {
@@ -120,6 +120,7 @@ describe('buildShopifySearchEngine', () => {
     });
 
     expect(engine.relay.getMeta('type').clientId).toEqual('mock-client-id');
+    expect(engine.navigatorContext.clientId).toEqual('mock-client-id');
     expect(db).toEqual({});
   });
 

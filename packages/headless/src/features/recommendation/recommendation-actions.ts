@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {getSearchApiBaseUrl} from '../../api/platform-client.js';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request.js';
 import {
@@ -95,7 +95,7 @@ export const buildRecommendationRequest = async (
   timezone: s.configuration.search.timezone,
   locale: s.configuration.search.locale,
   actionsHistory: s.configuration.analytics.enabled
-    ? historyStore.getHistory()
+    ? HistoryStore.getInstance().getHistory()
     : [],
   ...(s.advancedSearchQueries && {
     aq: s.advancedSearchQueries.aq,
