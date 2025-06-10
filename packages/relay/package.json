@@ -42,7 +42,7 @@
     "typedoc": "typedoc"
   },
   "devDependencies": {
-    "@octokit/rest": "^21.0.0",
+    "@octokit/rest": "^22.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-replace": "^6.0.0",
     "@rollup/plugin-terser": "^0.4.3",
