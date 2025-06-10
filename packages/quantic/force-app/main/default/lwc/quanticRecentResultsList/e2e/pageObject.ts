@@ -1,9 +1,20 @@
 import type {Locator, Page, Request} from '@playwright/test';
-import {isUaCustomEvent} from '../../../../../../playwright/utils/requests';
+import {
+  AnalyticsMode,
+  AnalyticsModeEnum,
+} from '../../../../../../playwright/utils/analyticsMode';
+import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 
 export class RecentResultListObject {
-  constructor(public page: Page) {
+  private analyticsMode: AnalyticsMode;
+
+  constructor(
+    public page: Page,
+    private analytics: AnalyticsObject
+  ) {
     this.page = page;
+    this.analytics = analytics;
+    this.analyticsMode = this.analytics.analyticsMode;
   }
 
   get recentResultList(): Locator {
@@ -27,44 +38,24 @@ export class RecentResultListObject {
   }
 
   async waitForRecentResultClickAnalytics(
-    expectedFields: Record<string, any>
+    expectedCustomMetadata: Record<string, any>
   ): Promise<Request> {
-    return this.waitForRecentResultListSearchAnalytics(
-      'recentlyClickedDocuments',
-      'recentResultClick',
-      expectedFields.documentTitle,
-      expectedFields.documentUrl
+    if (this.analyticsMode === AnalyticsModeEnum.legacy) {
+      return this.analytics.waitForCustomUaAnalytics(
+        {
+          eventType: 'recentlyClickedDocuments',
+          eventValue: 'recentResultClick',
+        },
+        (event) =>
+          Object.keys(expectedCustomMetadata).every(
+            (key) =>
+              // @ts-ignore
+              event?.customData?.info?.[key] === expectedCustomMetadata[key]
+          )
+      );
+    }
+    throw new Error(
+      `Analytics mode ${this.analyticsMode} is not supported for click recent result analytics`
     );
-  }
-
-  async waitForRecentResultListSearchAnalytics(
-    eventType: string,
-    eventValue: string,
-    documentTitle?: string,
-    documentUrl?: string
-  ): Promise<Request> {
-    const uaRequest = this.page.waitForRequest((request) => {
-      if (isUaCustomEvent(request)) {
-        const requestBody = request.postDataJSON?.();
-        const expectedFields: Record<string, any> = {
-          eventType,
-          eventValue,
-        };
-
-        const matchesExpectedFields = Object.keys(expectedFields).every(
-          (key) => requestBody?.[key] === expectedFields[key]
-        );
-
-        const customData = requestBody?.customData;
-
-        const matchesCustomData =
-          customData?.info?.documentTitle === documentTitle &&
-          customData?.info?.documentUrl === documentUrl;
-
-        return matchesExpectedFields && matchesCustomData;
-      }
-      return false;
-    });
-    return uaRequest;
   }
 }
