@@ -1,5 +1,5 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils.js';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {
   HighlightKeywords,
@@ -48,6 +48,6 @@ export const renderItemTextHighlighted: FunctionalComponent<
     return html`${unsafeHTML(highlightedValue)}`;
   } catch (error) {
     onError(error as Error);
-    return html``;
+    return nothing;
   }
 };
