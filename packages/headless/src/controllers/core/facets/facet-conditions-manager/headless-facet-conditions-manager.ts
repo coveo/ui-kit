@@ -91,6 +91,9 @@ export function buildCoreFacetConditionsManager(
   const isFacetRegistered = (facetId: string) =>
     facetId in engine.state.facetOptions.facets;
 
+  const selectTabSettings = (facetId: string) =>
+    engine.state.facetOptions.facets[facetId]?.tabs;
+
   const getRelevantStateHash = () =>
     getObjectHash({
       isFacetRegistered: isFacetRegistered(props.facetId),
@@ -103,7 +106,7 @@ export function buildCoreFacetConditionsManager(
           : null
       ),
       isTabEnabled: isFacetVisibleOnTab(
-        engine.state.facetOptions.facets[props.facetId]?.tabs,
+        selectTabSettings(props.facetId),
         tabManager.state.activeTab
       ),
     });
@@ -151,7 +154,7 @@ export function buildCoreFacetConditionsManager(
     const isEnabled = isFacetEnabled(props.facetId);
     const conditionsMet = areConditionsMet();
     const isVisibleOnTab = isFacetVisibleOnTab(
-      engine.state.facetOptions.facets[props.facetId]?.tabs,
+      selectTabSettings(props.facetId),
       tabManager.state.activeTab
     );
     const shouldBeEnabled = conditionsMet && isVisibleOnTab;
@@ -164,11 +167,6 @@ export function buildCoreFacetConditionsManager(
       unfreezeFacetValues();
     }
   };
-
-  // TODO: Add tabs support
-  // if (!props.conditions.length) {
-  //   return {stopWatching() {}};
-  // }
 
   let relevantStateHash = getRelevantStateHash();
   const unsubscribe = engine.subscribe(() => {
