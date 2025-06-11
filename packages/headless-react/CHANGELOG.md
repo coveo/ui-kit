@@ -1,3 +1,9 @@
+## <small>2.4.30 (2025-06-11)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(headless-ssr-react): ensure provider's children are not remounted on hydration (#5404) ([d7fca8f](https://github.com/coveo/ui-kit/commits/d7fca8f)), closes [#5404](https://github.com/coveo/ui-kit/issues/5404)
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+
 ## <small>2.4.29 (2025-06-04)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
