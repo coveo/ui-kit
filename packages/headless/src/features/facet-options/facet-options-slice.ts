@@ -87,6 +87,5 @@ function handleRegisterFacetTabs(
     tabs: tabs ?? {},
   };
 
-
   state.facets[facetId] = newFacetState;
 }
