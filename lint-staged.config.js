@@ -3,7 +3,10 @@ module.exports = {
     const filteredFiles = files.filter(
       (file) => !(file.includes('/stencil-generated/') && file.endsWith('.ts'))
     );
-    return `eslint --fix ${filteredFiles.join(' ')}`;
+    return [
+      `npx oxlint --fix ${filteredFiles.join(' ')}`,
+      `eslint --fix ${filteredFiles.join(' ')}`,
+    ];
   },
   '**/*.{scss,css,pcss,html,md,yml,ts,tsx,js,mjs,json}': (files) => {
     return `prettier --write ${files.join(' ')}`;
