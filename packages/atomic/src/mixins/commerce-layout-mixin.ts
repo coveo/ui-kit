@@ -2,7 +2,7 @@ import {CSSResult, LitElement, unsafeCSS} from 'lit';
 import {buildCommerceLayout} from '../components/commerce/atomic-commerce-layout/commerce-layout';
 import {injectStylesForNoShadowDOM} from '../decorators/light-dom';
 import {DEFAULT_MOBILE_BREAKPOINT} from '../utils/replace-breakpoint';
-import {randomID} from '../utils/stencil-utils';
+import {randomID} from '../utils/utils';
 import {Constructor} from './mixin-common';
 
 export const CommerceLayoutMixin = <T extends Constructor<LitElement>>(
