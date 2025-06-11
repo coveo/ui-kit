@@ -61,16 +61,6 @@ export const facetOptionsReducer = createReducer(
         state.facets[action.payload].enabled = false;
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        // if (action.payload.tab) {
-        //   Object.entries(state.facets).forEach(([, facet]) => {
-        //     if (Object.keys(facet.tabs ?? {}).length > 0) {
-        //       facet.enabled = isFacetVisibleOnTab(
-        //         facet.tabs,
-        //         action.payload.tab
-        //       );
-        //     }
-        //   });
-        // }
         [
           ...Object.keys(action.payload.f ?? {}),
           ...Object.keys(action.payload.fExcluded ?? {}),
@@ -97,9 +87,6 @@ function handleRegisterFacetTabs(
     tabs: tabs ?? {},
   };
 
-  // if (tabs && Object.keys(tabs).length > 0) {
-  //   newFacetState.enabled = isFacetVisibleOnTab(tabs, activeTab);
-  // }
 
   state.facets[facetId] = newFacetState;
 }
