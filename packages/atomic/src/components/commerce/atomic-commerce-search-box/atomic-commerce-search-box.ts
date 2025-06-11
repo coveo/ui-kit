@@ -1,3 +1,4 @@
+import {booleanConverter} from '@/src/converters/boolean-converter';
 import {bindStateToController} from '@/src/decorators/bind-state';
 import {bindingGuard} from '@/src/decorators/binding-guard';
 import {bindings} from '@/src/decorators/bindings';
@@ -13,7 +14,6 @@ import {
   StorageItems,
 } from '@/src/utils/local-storage-utils';
 import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
-import {isNullOrUndefined} from '@coveo/bueno';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
@@ -149,7 +149,7 @@ export class AtomicCommerceSearchBox
    * If a query pipeline redirect is triggered, it will redirect to that URL instead
    * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
-  @property({attribute: 'redirection-url', reflect: true})
+  @property({type: String, attribute: 'redirection-url', reflect: true})
   public redirectionUrl?: string;
 
   /**
@@ -175,7 +175,12 @@ export class AtomicCommerceSearchBox
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
-  @property({type: Boolean, attribute: 'disable-search', reflect: true})
+  @property({
+    type: Boolean,
+    attribute: 'disable-search',
+    reflect: true,
+    converter: booleanConverter,
+  })
   public disableSearch = false;
 
   /**
@@ -189,12 +194,13 @@ export class AtomicCommerceSearchBox
    * Whether to clear all active query filters when the end user submits a new query from the search box.
    * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
    */
-  @property({type: Boolean, attribute: 'clear-filters', reflect: true})
+  @property({
+    type: Boolean,
+    attribute: 'clear-filters',
+    reflect: true,
+    converter: booleanConverter,
+  })
   public clearFilters = true;
-
-  constructor() {
-    super();
-  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -233,7 +239,6 @@ export class AtomicCommerceSearchBox
     ) {
       return;
     }
-
     const {redirectTo, value} = this.searchBoxState;
 
     if (redirectTo === '') {
@@ -243,6 +248,7 @@ export class AtomicCommerceSearchBox
       value,
       enableQuerySyntax: false,
     };
+
     const storage = new SafeStorage();
     storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
 
@@ -295,10 +301,6 @@ export class AtomicCommerceSearchBox
 
   @watch('redirectionUrl')
   watchRedirectionUrl() {
-    this.updateRedirectionUrl();
-  }
-
-  private updateRedirectionUrl() {
     if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
       this.searchBox.updateRedirectUrl(this.redirectionUrl);
     } else {
@@ -309,17 +311,12 @@ export class AtomicCommerceSearchBox
   private isStandaloneSearchBox(
     searchBox: SearchBox | StandaloneSearchBox
   ): searchBox is StandaloneSearchBox {
-    return 'redirectTo' in searchBox;
+    return 'updateRedirectUrl' in searchBox;
   }
 
-  //TODO: Migrate this updateBreakpoints function to use lit context
   private updateBreakpoints = once(() => updateBreakpoints(this));
 
   private get isSearchDisabledForEndUser() {
-    if (isNullOrUndefined(this.searchBoxState.value)) {
-      return this.disableSearch;
-    }
-
     if (this.searchBoxState.value.trim().length < this.minimumQueryLength) {
       return true;
     }
@@ -526,6 +523,7 @@ export class AtomicCommerceSearchBox
       this.suggestionManager.allSuggestionElements.filter(
         elementHasQuery
       ).length;
+
     this.searchBoxAriaMessage.message = elsLength
       ? this.bindings.i18n.t(
           this.searchBoxState.value

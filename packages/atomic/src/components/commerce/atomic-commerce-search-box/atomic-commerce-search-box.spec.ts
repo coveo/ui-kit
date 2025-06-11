@@ -1,87 +1,27 @@
-import {createTestI18n} from '@/vitest-utils/i18n-utils';
-import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import * as headless from '@coveo/headless/commerce';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {isMacOS} from '@/src/utils/device-utils';
+import * as replaceBreakpoint from '@/src/utils/replace-breakpoint';
+import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/fake-atomic-commerce-search-box-suggestions-fixture';
+import {buildFakeLoadQuerySetActions} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/query-set-actions';
+import {buildFakeSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/search-box-controller';
+import {buildFakeStandaloneSearchBox} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/standalone-search-box-controller';
 import {
   buildSearchBox,
   buildStandaloneSearchBox,
-  SearchBox,
+  CommerceEngine,
+  loadQuerySetActions,
 } from '@coveo/headless/commerce';
-import {page, userEvent} from '@vitest/browser/context';
+import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {describe, test, vi, expect, beforeEach} from 'vitest';
-import * as utils from '../../../utils/utils';
-import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
+import {describe, it, expect, vi} from 'vitest';
+import {randomID} from '../../../utils/utils';
 import {AtomicCommerceSearchBox} from './atomic-commerce-search-box';
 import './atomic-commerce-search-box';
 
-interface Mocks {
-  searchBoxState: headless.SearchBoxState | headless.StandaloneSearchBoxState;
-  suggestionManager: SuggestionManager<headless.SearchBox>;
-  searchBox:
-    | Omit<headless.SearchBox, 'state'>
-    | Omit<headless.StandaloneSearchBox, 'state'>
-    | undefined;
-}
-
-const mocks: Mocks = vi.hoisted(() => {
-  return {
-    searchBoxState: {
-      value: 'query',
-      isLoading: false,
-      suggestions: [],
-      isLoadingSuggestions: false,
-      searchBoxId: 'default-search-box-id',
-    },
-    searchBox: {
-      updateRedirectUrl: vi.fn(),
-      afterRedirection: vi.fn(),
-      updateText: vi.fn(),
-      submit: vi.fn(),
-      clear: vi.fn(),
-      showSuggestions: vi.fn(),
-      selectSuggestion: vi.fn(),
-      subscribe: vi.fn(),
-    },
-    suggestionManager: {
-      hasSuggestions: true,
-      suggestions: [],
-      leftSuggestionElements: [],
-      rightSuggestionElements: [],
-      allSuggestionElements: [],
-      leftPanel: undefined,
-      rightPanel: undefined,
-      initializeSuggestions: vi.fn(),
-      clearSuggestions: vi.fn(),
-      forceUpdate: vi.fn(),
-      triggerSuggestions: vi.fn(),
-    } as unknown as SuggestionManager<SearchBox>,
-  };
-});
-
-vi.mock('@/src/decorators/error-guard', () => ({
-  errorGuard: vi.fn(),
-}));
-
-vi.mock('@/src/decorators/binding-guard', () => ({
-  bindingGuard: vi.fn(),
-}));
-
-vi.mock('@/src/decorators/bind-state', async () => {
-  return {
-    bindStateToController: vi.fn(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (proto: any, stateProperty: string) => {
-        Object.defineProperty(proto, stateProperty, {
-          get() {
-            return mocks[stateProperty as keyof typeof mocks];
-          },
-        });
-      };
-    }),
-  };
-});
-
+vi.mock('@coveo/headless/commerce', {spy: true});
+vi.mock('@/src/utils/device-utils', {spy: true});
 vi.mock(import('../../../utils/utils'), async (importOriginal) => {
   const mod = await importOriginal();
   return {
@@ -89,455 +29,475 @@ vi.mock(import('../../../utils/utils'), async (importOriginal) => {
     randomID: vi.fn((prefix?: string, _length?: number) => `${prefix}123`),
   };
 });
+vi.mock('@/src/utils/replace-breakpoint', {spy: true});
 
-const i18n = await createTestI18n();
-vi.mock('@/src/mixins/bindings-mixin', () => ({
-  InitializeBindingsMixin: vi.fn().mockImplementation((superClass) => {
-    return class extends superClass {
-      constructor(...args: unknown[]) {
-        super(...args);
-        this.bindings = {
-          store: {
-            state: {
-              activeChildProductId: 's',
-            },
-          },
-          i18n,
-          engine: {
-            dispatch: vi.fn(),
-          },
-        };
-
-        this.searchBox = mocks.searchBox;
-        this.suggestionManager = mocks.suggestionManager;
-      }
-    };
-  }),
-  BindingController: class {},
-}));
-
-vi.mock('@/src/utils/replace-breakpoint', () => {
-  return {
-    updateBreakpoints: vi.fn(),
-  };
-});
-
-vi.mock('@coveo/headless/commerce', () => {
-  return {
-    buildSearchBox: vi.fn(() => {
-      return mocks.searchBox;
-    }),
-    buildStandaloneSearchBox: vi.fn(() => {
-      return mocks.searchBox;
-    }),
-    loadQuerySetActions: vi.fn(() => ({
-      updateQuerySetQuery: vi.fn(({id, query}) => {
-        console.log(
-          `updateQuerySetQuery called with id: ${id}, query: ${query}`
-        );
-      }),
-    })),
-  };
-});
+const commonSearchBoxOptions = {
+  id: 'atomic-commerce-search-box-123',
+  highlightOptions: {
+    notMatchDelimiters: {
+      open: '<span class="font-bold">',
+      close: '</span>',
+    },
+    correctionDelimiters: {
+      open: '<span class="font-normal">',
+      close: '</span>',
+    },
+  },
+  clearFilters: true,
+};
 
 describe('AtomicCommerceSearchBox', () => {
-  beforeEach(() => {
-    mocks.searchBoxState = {
-      value: 'query',
-      isLoading: false,
-      suggestions: [],
-      isLoadingSuggestions: false,
-      searchBoxId: 'default-search-box-id',
-    };
+  const mockedEngine = {
+    dispatch: vi.fn(),
+  } as unknown as CommerceEngine;
+  const afterRedirectionMock = vi.fn();
+  const updateRedirectUrlMock = vi.fn();
+  const submitMock = vi.fn();
+  const clearMock = vi.fn();
 
-    mocks.searchBox = {
-      updateRedirectUrl: vi.fn(),
-      afterRedirection: vi.fn(),
-      updateText: vi.fn(),
-      submit: vi.fn(),
-      clear: vi.fn(),
-      showSuggestions: vi.fn(),
-      selectSuggestion: vi.fn(),
-      subscribe: vi.fn(),
+  const renderSearchBox = async ({
+    searchBoxProps = {},
+    suggestionCount = 3,
+    noSuggestions = false,
+    redirectTo = undefined,
+    searchBoxValue = '',
+  }: {
+    searchBoxProps?: {
+      redirectionUrl?: string;
+      disableSearch?: boolean;
+      minimumQueryLength?: number;
+      numberOfQueries?: number;
+      clearFilters?: boolean;
     };
-
-    mocks.suggestionManager = {
-      hasSuggestions: true,
-      suggestions: [],
-      leftSuggestionElements: [],
-      rightSuggestionElements: [],
-      allSuggestionElements: [],
-      leftPanel: undefined,
-      rightPanel: undefined,
-      initializeSuggestions: vi.fn(),
-      clearSuggestions: vi.fn(),
-      forceUpdate: vi.fn(),
-      triggerSuggestions: vi.fn(),
-      focusNextValue: vi.fn(),
-      focusPreviousValue: vi.fn(),
-      focusPanel: vi.fn(),
-    } as unknown as SuggestionManager<SearchBox>;
-  });
-  const setupElement = async ({
-    redirectionUrl,
-  }: {redirectionUrl?: string} = {}) => {
-    const element = await fixture<AtomicCommerceSearchBox>(
-      html`<atomic-commerce-search-box
-        redirection-url=${ifDefined(redirectionUrl)}
-      ></atomic-commerce-search-box>`
+    suggestionCount?: number;
+    noSuggestions?: boolean;
+    redirectTo?: string;
+    searchBoxValue?: string;
+  } = {}) => {
+    vi.mocked(buildSearchBox).mockReturnValue(
+      buildFakeSearchBox(
+        {
+          value: searchBoxValue,
+        },
+        {
+          submit: submitMock,
+          clear: clearMock,
+        }
+      )
+    );
+    vi.mocked(buildStandaloneSearchBox).mockReturnValue(
+      buildFakeStandaloneSearchBox(
+        {
+          redirectTo,
+        },
+        {
+          afterRedirection: afterRedirectionMock,
+          updateRedirectUrl: updateRedirectUrlMock,
+        }
+      )
+    );
+    vi.mocked(loadQuerySetActions).mockReturnValue(
+      buildFakeLoadQuerySetActions()
     );
 
-    element.initialize();
-    return element;
+    const suggestions = noSuggestions
+      ? ''
+      : html`<fake-atomic-commerce-search-box-suggestions
+          suggestion-count=${suggestionCount}
+        ></fake-atomic-commerce-search-box-suggestions>`;
+    const {
+      redirectionUrl,
+      disableSearch,
+      minimumQueryLength,
+      numberOfQueries,
+      clearFilters,
+    } = searchBoxProps || {};
+    const {element} =
+      await renderInAtomicCommerceInterface<AtomicCommerceSearchBox>({
+        template: html`<atomic-commerce-search-box
+          redirection-url=${ifDefined(redirectionUrl)}
+          ?disable-search=${disableSearch ?? false}
+          minimum-query-length=${ifDefined(minimumQueryLength)}
+          number-of-queries=${ifDefined(numberOfQueries)}
+          clear-filters=${ifDefined(clearFilters)}
+        >
+          ${suggestions}
+        </atomic-commerce-search-box>`,
+        selector: 'atomic-commerce-search-box',
+        bindings: (bindings) => {
+          bindings.engine = mockedEngine;
+
+          return bindings;
+        },
+      });
+
+    return {
+      element,
+      spacer: element.shadowRoot!.querySelector(
+        'textarea[part="textarea-spacer"]'
+      )!,
+      wrapper: element.shadowRoot!.querySelector('div[part="wrapper"]')!,
+      textArea: element.shadowRoot!.querySelector('textarea[part="textarea"]')!,
+      suggestions: () =>
+        element.shadowRoot!.querySelectorAll('atomic-suggestion-renderer'),
+      clearButton: element.shadowRoot!.querySelector(
+        'button[part="clear-button"]'
+      )!,
+      submitButton: element.shadowRoot!.querySelector(
+        'button[part="submit-button"]'
+      )!,
+      suggestionsContainer: element.shadowRoot!.querySelector(
+        'div[part="suggestions-wrapper suggestions-single-list"]'
+      )!,
+    };
   };
 
-  describe('when constructed', () => {
-    test('should call replaceChildren()', () => {
-      const spy = vi.spyOn(
-        AtomicCommerceSearchBox.prototype,
-        'replaceChildren'
-      );
-      new AtomicCommerceSearchBox();
-      expect(spy).toHaveBeenCalled();
-    });
+  it('should replace the children with recent-queries & query-suggestions when there are no children', async () => {
+    const {element} = await renderSearchBox({noSuggestions: true});
+    expect(element.children.length).toBe(2);
+    expect(element.children[0].tagName).toBe(
+      'ATOMIC-COMMERCE-SEARCH-BOX-RECENT-QUERIES'
+    );
+    expect(element.children[1].tagName).toBe(
+      'ATOMIC-COMMERCE-SEARCH-BOX-QUERY-SUGGESTIONS'
+    );
+  });
 
-    test('should add an event listener for "atomic/selectChildProduct"', () => {
-      const spy = vi.spyOn(
-        AtomicCommerceSearchBox.prototype,
-        'addEventListener'
-      );
-      new AtomicCommerceSearchBox();
-      expect(spy).toHaveBeenCalledWith(
-        'atomic/selectChildProduct',
-        expect.any(Function)
+  it('should add the event listener for the "atomic/searchBoxSuggestion/register" event', async () => {
+    const addEventListenerSpy = vi.spyOn(
+      AtomicCommerceSearchBox.prototype,
+      'addEventListener'
+    );
+    await renderSearchBox();
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'atomic/searchBoxSuggestion/register',
+      expect.any(Function)
+    );
+  });
+
+  it('should add the event listener for the "atomic/selectChildProduct" event', async () => {
+    const addEventListenerSpy = vi.spyOn(
+      AtomicCommerceSearchBox.prototype,
+      'addEventListener'
+    );
+    await renderSearchBox();
+    expect(addEventListenerSpy).toHaveBeenCalledWith(
+      'atomic/selectChildProduct',
+      expect.any(Function)
+    );
+  });
+
+  describe('when the search box is not a standalone search box', () => {
+    it('should initialize the search box controller with the correct options', async () => {
+      await renderSearchBox();
+
+      expect(buildSearchBox).toHaveBeenCalledWith(
+        mockedEngine,
+        expect.objectContaining({
+          options: expect.objectContaining({
+            ...commonSearchBoxOptions,
+          }),
+        })
       );
     });
   });
 
-  describe('when connectedCallback is called', () => {
-    test('should add an event listener for "atomic/searchBoxSuggestion/register"', async () => {
-      const element = await setupElement();
-      const spy = vi.spyOn(element, 'addEventListener');
+  it('should set the search box id', async () => {
+    await renderSearchBox();
+    expect(randomID).toHaveBeenCalledWith('atomic-commerce-search-box-');
+  });
 
-      element.connectedCallback();
+  it('should call updateBreakpoints once', async () => {
+    await renderSearchBox();
+    expect(replaceBreakpoint.updateBreakpoints).toHaveBeenCalledTimes(1);
+  });
 
-      expect(spy).toHaveBeenCalledWith(
-        'atomic/searchBoxSuggestion/register',
-        expect.any(Function)
+  it('should render the spacer with the "text-area" part', async () => {
+    const {spacer} = await renderSearchBox();
+    expect(spacer).toBeInstanceOf(HTMLTextAreaElement);
+    expect(spacer?.getAttribute('part')).toBe('textarea-spacer');
+  });
+
+  it('should have the proper disabled class to the wrapper when the search box is disabled', async () => {
+    const {wrapper} = await renderSearchBox({
+      searchBoxProps: {disableSearch: true},
+    });
+    expect(wrapper).toHaveClass(
+      'focus-within:border-disabled focus-within:ring-neutral'
+    );
+  });
+
+  it('should disable the search box when the "disableSearch" property is set to true', async () => {
+    const {wrapper} = await renderSearchBox({
+      searchBoxProps: {disableSearch: true},
+    });
+    expect(wrapper).toBeDisabled();
+  });
+
+  it('should disable the search box when the value is lower than the minimum query length', async () => {
+    const {wrapper, textArea} = await renderSearchBox({
+      searchBoxProps: {minimumQueryLength: 5},
+    });
+    await userEvent.type(textArea, 'test');
+    expect(wrapper).toBeDisabled();
+  });
+
+  it('should clear the suggestions when onFocusout is triggered on the wrapper', async () => {
+    const {element, suggestions} = await renderSearchBox();
+
+    await userEvent.click(element);
+    expect(suggestions()).toHaveLength(3);
+    await userEvent.click(document.body);
+
+    expect(suggestions()).toHaveLength(0);
+  });
+
+  it('should have the "search-disabled" as the aria-label when the search box is disabled', async () => {
+    const {textArea} = await renderSearchBox({
+      searchBoxProps: {disableSearch: true},
+    });
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Enter a query with minimum of 0 character(s) to enable search.'
+    );
+  });
+
+  it('should have the "search-box-with-suggestions-macos" as the aria-label when the device uses macOS', async () => {
+    vi.mocked(isMacOS).mockReturnValue(true);
+
+    const {textArea} = await renderSearchBox();
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Search field with suggestions. Suggestions may be available under this field. To send, press Enter.'
+    );
+  });
+
+  it('should have the "search-box-with-suggestions-keyboardless" as the aria-label when the device does not have a keyboard', async () => {
+    vi.mocked(isMacOS).mockReturnValue(false);
+
+    const {textArea} = await renderSearchBox();
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.'
+    );
+  });
+
+  it('should have the "search-box-with-suggestions" as the aria-label when the device has a keyboard, does not use macOS and when the search box is enabled', async () => {
+    vi.mocked(isMacOS).mockReturnValue(false);
+
+    const {textArea} = await renderSearchBox({
+      searchBoxProps: {disableSearch: false},
+    });
+
+    expect(textArea).toHaveAttribute(
+      'aria-label',
+      'Search field with suggestions. To begin navigating suggestions, while focused, press Down Arrow. To send, press Enter.'
+    );
+  });
+
+  describe('when the search box is focused', () => {
+    it('should show the suggestions', async () => {
+      const {element, suggestions} = await renderSearchBox();
+
+      expect(suggestions()).toHaveLength(0);
+      await userEvent.click(element);
+      expect(suggestions()).toHaveLength(3);
+    });
+
+    it('should announce "x search suggestions are available." to screen readers when there are suggestions', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
+      );
+      const {element} = await renderSearchBox();
+
+      await userEvent.click(element);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        '3 search suggestions are available.'
       );
     });
 
-    test('should replace children with cloned original children if #originalChildren is not empty', async () => {
-      const element = await fixture<AtomicCommerceSearchBox>(
-        html`<atomic-commerce-search-box
-          ><span id="original"></span
-        ></atomic-commerce-search-box>`
+    it('should announce "x search suggestions are available for y." to screen readers when there are suggestions & a query is entered', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
       );
-      const replaceChildrenSpy = vi.spyOn(element, 'replaceChildren');
+      const {element} = await renderSearchBox({searchBoxValue: 'test'});
 
-      element.connectedCallback();
+      await userEvent.click(element);
 
-      const span = document.createElement('span');
-      span.id = 'original';
-      expect(replaceChildrenSpy).toHaveBeenCalledWith(span);
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        '3 search suggestions are available for test.'
+      );
     });
 
-    test('should replace children with default elements if #originalChildren is empty', async () => {
-      const element = await setupElement();
-      const replaceChildrenSpy = vi.spyOn(element, 'replaceChildren');
-
-      element.connectedCallback();
-
-      const recentQueries = document.createElement(
-        'atomic-commerce-search-box-recent-queries'
+    it('should announce "No search suggestions are available." to screen readers when there are no suggestions', async () => {
+      const setMessageSpy = vi.spyOn(
+        AriaLiveRegionController.prototype,
+        'message',
+        'set'
       );
-      const querySuggestions = document.createElement(
-        'atomic-commerce-search-box-query-suggestions'
-      );
-      expect(replaceChildrenSpy).toHaveBeenCalledWith(
-        recentQueries,
-        querySuggestions
+      const {element} = await renderSearchBox({suggestionCount: 0});
+
+      await userEvent.click(element);
+
+      expect(setMessageSpy).toHaveBeenCalledWith(
+        'There are no search suggestions.'
       );
     });
   });
 
-  describe('when initialized', () => {
-    test('should assign a unique id to the component', async () => {
-      const element = await setupElement();
-
-      element.initialize();
-
-      expect(utils.randomID).toHaveBeenCalledWith(
-        'atomic-commerce-search-box-'
-      );
-      expect(element.id).toBe('atomic-commerce-search-box-123');
+  describe('when inputting text in the search box', () => {
+    it('should dispatch the updateQuerySetQuery action from the loadQuerySetActions', async () => {
+      const {textArea} = await renderSearchBox();
+      await userEvent.type(textArea, 'a');
+      expect(loadQuerySetActions).toHaveBeenCalled();
     });
 
-    describe('when initializing the search box controller', () => {
-      test('should call buildStandaloneSearchBox when there is a redirectionUrl', async () => {
-        const element = await setupElement({redirectionUrl: '/search'});
-        const mockController = {some: 'controller'};
-        //@ts-expect-error wrong typing for simpler tests
-        buildStandaloneSearchBox.mockReturnValue(mockController);
-
-        element.initialize();
-
-        expect(buildStandaloneSearchBox).toHaveBeenCalledWith(
-          {dispatch: expect.any(Function)},
-          expect.any(Object)
-        );
-        expect(element.searchBox).toBe(mockController);
+    it('should clear the suggestions when search is disabled', async () => {
+      const {textArea, suggestions} = await renderSearchBox({
+        searchBoxProps: {disableSearch: true},
       });
 
-      test('should call buildSearchBox when there is not a redirectionUrl', async () => {
-        const element = await setupElement();
-        const mockController = {some: 'controller'};
+      await userEvent.type(textArea, 'a');
 
-        //@ts-expect-error wrong typing for simpler tests
-        buildSearchBox.mockReturnValue(mockController);
-
-        element.initialize();
-
-        expect(buildSearchBox).toHaveBeenCalledWith(
-          {
-            dispatch: expect.any(Function),
-          },
-          expect.any(Object)
-        );
-        expect(element.searchBox).toBe(mockController);
-      });
-    });
-
-    describe('when initializing the suggestions manager', () => {
-      test('should not reinitialize if suggestionManager already exists', async () => {
-        const element = await setupElement();
-
-        element.initialize();
-
-        //@ts-expect-error private field
-        const suggestionManager = element.suggestionManager;
-        expect(suggestionManager).toBe(mocks.suggestionManager);
-      });
-
-      test('should create a new SuggestionManager instance if it does not exist', async () => {
-        const element = await setupElement();
-        // @ts-expect-error force it to be undefined
-        element.suggestionManager = undefined;
-
-        element.initialize();
-
-        // @ts-expect-error private field
-        expect(element.suggestionManager).toBeInstanceOf(SuggestionManager);
-      });
+      expect(suggestions()).toHaveLength(0);
     });
   });
 
-  describe('when receiving the atomic/selectChildProduct event', () => {
-    test('should assign the store.state.activeChildProductId to the child from the event', async () => {
-      const element = await setupElement();
+  describe('when specific keys are pressed on the search box', () => {
+    it('should trigger the submit event when the Enter key is pressed', async () => {
+      const {textArea} = await renderSearchBox();
 
-      const event = new CustomEvent('atomic/selectChildProduct', {
-        detail: {
-          child: '123',
-        },
-      });
-      element.dispatchEvent(event);
+      await userEvent.type(textArea, '{enter}');
 
-      expect(element.bindings.store.state.activeProductChild).toBe('123');
+      expect(submitMock).toHaveBeenCalled();
     });
 
-    test('should call suggestionManager.forceUpdate', async () => {
-      const element = await setupElement();
+    it('should clear suggestions when the Escape key is pressed', async () => {
+      const {element, suggestions} = await renderSearchBox();
 
-      //@ts-expect-error private field
-      const spyOnElement = vi.spyOn(element.suggestionManager, 'forceUpdate');
-      const event = new CustomEvent('atomic/selectChildProduct', {
-        detail: {
-          child: '123',
-        },
-      });
-      element.dispatchEvent(event);
+      await userEvent.click(element);
+      expect(suggestions()).toHaveLength(3);
 
-      expect(spyOnElement).toHaveBeenCalled();
+      await userEvent.type(element, '{escape}');
+
+      expect(suggestions()).toHaveLength(0);
     });
-  });
 
-  describe('when receiving the atomic/searchBoxSuggestion/register event', () => {
-    test('should add the event to the event queue', async () => {
-      const element = await setupElement();
+    it('should clear suggestions when the Tab key is pressed', async () => {
+      const {element, suggestions} = await renderSearchBox();
 
-      const event = new CustomEvent('atomic/searchBoxSuggestion/register', {
-        detail: {
-          suggestion: 'suggestion',
-        },
-      });
-      element.dispatchEvent(event);
+      await userEvent.click(element);
+      expect(suggestions()).toHaveLength(3);
 
-      //@ts-expect-error private field
-      expect(element.searchBoxSuggestionEventsQueue).toContain(event);
+      await userEvent.type(element, '{tab}');
+
+      expect(suggestions()).toHaveLength(0);
     });
   });
 
-  describe('when rendering', () => {
-    describe('when focusing in the search box', () => {
-      test('should trigger suggestions', async () => {
-        const element = await setupElement();
+  describe('when clicking the clear button', () => {
+    it('should call the clear method of the search box controller', async () => {
+      const {clearButton} = await renderSearchBox({searchBoxValue: 'test'});
 
-        const triggerSuggestionsSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'triggerSuggestions'
-        );
+      await userEvent.click(clearButton);
 
-        await page.getByPlaceholder('Search').click();
-        expect(triggerSuggestionsSpy).toHaveBeenCalled();
-      });
+      expect(clearMock).toHaveBeenCalled();
     });
 
-    describe('when inputting text in the search box', () => {
-      test('should call suggestionManager.triggerSuggestions', async () => {
-        const element = await setupElement();
-        //@ts-expect-error private field
-        const spy = vi.spyOn(element.suggestionManager, 'triggerSuggestions');
-
-        await page.getByPlaceholder('Search').fill('test');
-
-        expect(spy).toHaveBeenCalled();
-      });
-    });
-
-    describe('when pressing a key in the search box', () => {
-      test('should call submit if the key is "Enter"', async () => {
-        const element = await setupElement();
-        const onSubmitSpy = vi.spyOn(element.searchBox, 'submit');
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[Enter]');
-
-        expect(onSubmitSpy).toHaveBeenCalled();
+    it('should clear the text area', async () => {
+      const {textArea, clearButton} = await renderSearchBox({
+        searchBoxValue: 'test',
       });
 
-      test('should clear suggestions if the key is "Escape"', async () => {
-        const element = await setupElement();
-        const clearSuggestionsSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'clearSuggestions'
-        );
+      await userEvent.click(clearButton);
 
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[Escape]');
-
-        expect(clearSuggestionsSpy).toHaveBeenCalled();
-      });
-
-      test('should call focusNextValue if the key is "ArrowDown"', async () => {
-        const element = await setupElement();
-        const focusNextValueSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'focusNextValue'
-        );
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[ArrowDown]');
-
-        expect(focusNextValueSpy).toHaveBeenCalled();
-      });
-
-      test('should call focusPreviousValue if the key is "ArrowUp"', async () => {
-        const element = await setupElement();
-        const focusPreviousValueSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'focusPreviousValue'
-        );
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[ArrowUp]');
-
-        expect(focusPreviousValueSpy).toHaveBeenCalled();
-      });
-
-      test('should call focusPanel with "right" if the key is "ArrowRight"', async () => {
-        mocks.searchBoxState = {
-          value: '',
-          isLoading: false,
-          suggestions: [],
-          isLoadingSuggestions: false,
-          searchBoxId: 'default-search-box-id',
-        };
-        const element = await setupElement();
-        const focusPanelSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'focusPanel'
-        );
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[ArrowRight]');
-
-        expect(focusPanelSpy).toHaveBeenCalledWith('right');
-      });
-
-      test('should call focusPanel with "left" if the key is "ArrowLeft"', async () => {
-        mocks.searchBoxState = {
-          value: '',
-          isLoading: false,
-          suggestions: [],
-          isLoadingSuggestions: false,
-          searchBoxId: 'default-search-box-id',
-        };
-        const element = await setupElement();
-        const focusPanelSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'focusPanel'
-        );
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[ArrowLeft]');
-
-        expect(focusPanelSpy).toHaveBeenCalledWith('left');
-      });
-
-      test('should clear suggestions if the key is "Tab"', async () => {
-        const element = await setupElement();
-        const clearSuggestionsSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'clearSuggestions'
-        );
-
-        await page.getByPlaceholder('Search').click();
-        await userEvent.keyboard('[Tab]');
-
-        expect(clearSuggestionsSpy).toHaveBeenCalled();
-      });
-    });
-
-    describe('when clicking the clear button', () => {
-      test('should call clear on the search box', async () => {
-        const element = await setupElement();
-        const clearSpy = vi.spyOn(element.searchBox, 'clear');
-
-        await page.getByRole('button', {name: 'Clear'}).click();
-
-        expect(clearSpy).toHaveBeenCalled();
-      });
-
-      test('should call clearSuggestions on the suggestion manager', async () => {
-        const element = await setupElement();
-        const clearSuggestionsSpy = vi.spyOn(
-          //@ts-expect-error private field
-          element.suggestionManager,
-          'clearSuggestions'
-        );
-
-        await page.getByRole('button', {name: 'Clear'}).click();
-
-        expect(clearSuggestionsSpy).toHaveBeenCalled();
-      });
+      expect((textArea as HTMLTextAreaElement).value).toBe('');
     });
   });
+
+  describe('when clicking the submit button', () => {
+    it('should call the submit method of the search box controller', async () => {
+      const {submitButton} = await renderSearchBox();
+
+      await userEvent.click(submitButton);
+
+      expect(submitMock).toHaveBeenCalled();
+    });
+
+    it('should clear the suggestions', async () => {
+      const {element, suggestions, submitButton} = await renderSearchBox();
+
+      await userEvent.click(element);
+      expect(suggestions()).toHaveLength(3);
+
+      await userEvent.click(submitButton);
+
+      expect(suggestions()).toHaveLength(0);
+    });
+  });
+
+  it('should have the "suggestions-wrapper suggestions-single-list" part on the suggestions container', async () => {
+    const {suggestionsContainer, textArea} = await renderSearchBox();
+
+    await userEvent.click(textArea);
+    expect(suggestionsContainer).toHaveAttribute(
+      'part',
+      'suggestions-wrapper suggestions-single-list'
+    );
+  });
+
+  it('should have the correct aria-label on the suggestions container', async () => {
+    const {suggestionsContainer, textArea} = await renderSearchBox();
+
+    await userEvent.click(textArea);
+    expect(suggestionsContainer).toHaveAttribute(
+      'aria-label',
+      'Search suggestions. To navigate between suggestions, press Up Arrow or Down Arrow. To select a suggestion, press Enter.'
+    );
+  });
+
+  it('should render the correct number of suggestions when the numberOfQueries property is set', async () => {
+    const {suggestions, textArea} = await renderSearchBox({
+      searchBoxProps: {numberOfQueries: 2},
+    });
+    await userEvent.click(textArea);
+    expect(suggestions()).toHaveLength(2);
+  });
+
+  it('should call buildSearchBox with clearFilters set to false when clearFilters is set to false', async () => {
+    await renderSearchBox({
+      searchBoxProps: {clearFilters: false},
+    });
+
+    expect(buildSearchBox).toHaveBeenCalledWith(mockedEngine, {
+      options: {
+        ...commonSearchBoxOptions,
+        clearFilters: false,
+      },
+    });
+  });
+});
+
+expect.extend({
+  toBeDisabled(received: Element) {
+    const expectedClass =
+      'focus-within:border-disabled focus-within:ring-neutral';
+    const pass =
+      received.classList.contains('focus-within:border-disabled') &&
+      received.classList.contains('focus-within:ring-neutral');
+
+    return {
+      pass,
+      message: () =>
+        `expected element ${pass ? 'not ' : ''}to have classes "${expectedClass}"`,
+    };
+  },
 });
