@@ -10,7 +10,7 @@ import attachResult from '@salesforce/label/c.AttachResult';
 import detachResult from '@salesforce/label/c.DetachResult';
 import resultIsAttached from '@salesforce/label/c.ResultIsAttached';
 // @ts-ignore
-import {attachToCase, detachFromCase} from 'c/attachToCaseServiceProd';
+import {attachToCase, detachFromCase} from 'c/attachToCaseService';
 
 /** @typedef {import("coveo").AttachToCase} AttachToCase */
 /** @typedef {import("coveo").Result} Result */
