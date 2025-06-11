@@ -6,7 +6,7 @@ import {fetchItemContext} from './fetch-item-context.js';
 
 vi.mock('../../../utils/dom-utils.js');
 vi.mock('../../../utils/event-utils.js');
-vi.mock('@/src/decorators/item-list/item-context.js');
+vi.mock('./context/item-context-controller.js');
 
 describe('item-context', () => {
   let mockElement: Element;
