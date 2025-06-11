@@ -1,4 +1,4 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
 export class AnyFacetPageObject<
@@ -6,7 +6,7 @@ export class AnyFacetPageObject<
     | 'atomic-commerce-category-facet'
     | 'atomic-commerce-facet'
     | 'atomic-commerce-numeric-facet',
-> extends BasePageObject<FacetType> {
+> extends BasePageObject {
   constructor(page: Page, facetType: FacetType) {
     super(page, facetType);
   }
