@@ -6,10 +6,17 @@
     <title>Coveo Atomic: IPX example</title>
 
     <script type="module">
-      import {defineCustomElements} from '@coveo/atomic/loader';
-      import '@coveo/atomic/themes/coveo.css';
-
-      defineCustomElements();
+      if (import.meta.env) {
+        const {defineCustomElements} = await import('@coveo/atomic/loader');
+        import('@coveo/atomic/themes/coveo.css');
+        defineCustomElements();
+      } else {
+        import('http://localhost:3000/atomic/v0.0.0/atomic.esm.js');
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'http://localhost:3000/atomic/v0.0.0/themes/coveo.css';
+        document.head.appendChild(link);
+      }
     </script>
 
     <script>
@@ -179,6 +186,7 @@
         top: 10px;
         left: 5px;
       }
+
       atomic-did-you-mean,
       atomic-notifications,
       atomic-smart-snippet,
@@ -203,8 +211,8 @@
     </div>
     <atomic-search-interface
       fields-to-include='["snrating","sncost"]'
-      language-assets-path="/lang"
-      icon-assets-path="/assets"
+      language-assets-path="./lang"
+      icon-assets-path="./assets"
     >
       <atomic-ipx-modal is-open="true">
         <div slot="header">
@@ -374,7 +382,7 @@
           <atomic-layout-section section="pagination">
             <atomic-load-more-results class="pagination-more-result"></atomic-load-more-results>
           </atomic-layout-section>
-          <atomic-recs-interface fields-to-include="" language-assets-path="/lang" icon-assets-path="/assets">
+          <atomic-recs-interface fields-to-include="" language-assets-path="./lang" icon-assets-path="./assets">
             <atomic-ipx-recs-list label="Recommended articles" number-of-recommendations="10">
               <atomic-recs-result-template>
                 <template>
@@ -483,8 +491,8 @@
     <div id="host-div">
       <atomic-search-interface
         fields-to-include='["snrating","sncost"]'
-        language-assets-path="/lang"
-        icon-assets-path="/assets"
+        language-assets-path="./lang"
+        icon-assets-path="./assets"
       >
         <atomic-ipx-embedded></atomic-ipx-embedded>
       </atomic-search-interface>

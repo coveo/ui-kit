@@ -9,6 +9,7 @@ import {TOptions} from 'i18next';
 import {AnyBindings} from '../components/common/interface/bindings';
 import {Hidden} from '../components/common/stencil-hidden';
 import {Bindings} from '../components/search/atomic-search-interface/atomic-search-interface';
+import {closest} from './dom-utils';
 import {buildCustomEvent} from './event-utils';
 import {enqueueOrDispatchInitializationEvent} from './init-queue';
 import {
@@ -17,7 +18,6 @@ import {
   initializableElements,
   initializeEventName,
 } from './initialization-lit-stencil-common-utils';
-import {closest} from './stencil-utils';
 
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 

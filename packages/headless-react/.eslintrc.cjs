@@ -18,6 +18,7 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'testing-library/no-manual-cleanup': 'off',
   },
   ignorePatterns: ['dist/', '**/*.js'],
 };

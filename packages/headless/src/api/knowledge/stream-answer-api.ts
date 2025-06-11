@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
@@ -5,6 +6,7 @@ import {
 } from '../../app/navigator-context-provider.js';
 import {selectAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-query-selectors.js';
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
+import {selectContext} from '../../features/context/context-selector.js';
 import {
   setAnswerContentFormat,
   setCannotAnswer,
@@ -299,24 +301,20 @@ const getNumberOfResultsWithinIndexLimit = (state: StateNeededByAnswerAPI) => {
 
 const buildAdvancedSearchQueryParams = (state: StateNeededByAnswerAPI) => {
   const advancedSearchQueryParams = selectAdvancedSearchQueries(state);
-  const expressions = buildExpressionList(state);
+  const mergedCq = mergeAdvancedCQParams(state);
 
-  const mergedAdvancedSearchQueryParams = {
+  return {
     ...advancedSearchQueryParams,
+    ...(mergedCq && {cq: mergedCq}),
   };
-
-  if (expressions.length) {
-    mergedAdvancedSearchQueryParams.cq = `${expressions} AND ${advancedSearchQueryParams.cq}`;
-  }
-
-  return mergedAdvancedSearchQueryParams;
 };
 
-const buildExpressionList = (state: StateNeededByAnswerAPI) => {
+const mergeAdvancedCQParams = (state: StateNeededByAnswerAPI) => {
   const activeTabExpression = selectActiveTabExpression(state.tabSet);
   const filterExpressions = selectStaticFilterExpressions(state);
+  const {cq} = selectAdvancedSearchQueries(state);
 
-  return [activeTabExpression, ...filterExpressions]
+  return [activeTabExpression, ...filterExpressions, cq]
     .filter((expression) => !!expression)
     .join(' AND ');
 };
@@ -329,6 +327,8 @@ export const constructAnswerQueryParams = (
   const q = selectQuery(state)?.q;
 
   const {aq, cq, dq, lq} = buildAdvancedSearchQueryParams(state);
+
+  const context = selectContext(state);
 
   const searchHub = selectSearchHub(state);
   const pipeline = selectPipeline(state);
@@ -344,6 +344,9 @@ export const constructAnswerQueryParams = (
     ...(cq && {cq}),
     ...(dq && {dq}),
     ...(lq && {lq}),
+    ...(context?.contextValues && {
+      context: context.contextValues,
+    }),
     pipelineRuleParameters: {
       mlGenerativeQuestionAnswering: {
         responseFormat: state.generatedAnswer.responseFormat,

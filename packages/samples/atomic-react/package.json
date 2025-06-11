@@ -10,18 +10,18 @@
     "build": "nx build"
   },
   "dependencies": {
-    "@coveo/atomic-react": "3.2.42",
-    "@coveo/headless": "3.25.0",
+    "@coveo/atomic-react": "3.2.45",
+    "@coveo/headless": "3.26.0",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.50.1",
-    "@types/node": "22.13.5",
+    "@playwright/test": "1.52.0",
+    "@types/node": "22.15.29",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react": "4.3.4",
     "typescript": "5.8.3",
-    "vite": "6.3.4"
+    "vite": "6.3.5"
   }
 }

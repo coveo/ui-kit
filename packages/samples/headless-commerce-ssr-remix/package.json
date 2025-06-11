@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@coveo/headless-react": "2.4.27",
+    "@coveo/headless-react": "2.4.30",
     "@remix-run/node": "2.16.1",
     "@remix-run/react": "2.16.1",
     "@remix-run/serve": "2.16.1",
@@ -18,12 +18,12 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
-    "@coveo/relay-event-types": "14.3.3",
+    "@coveo/relay-event-types": "14.7.4",
     "@remix-run/dev": "2.16.1",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "typescript": "5.8.3",
-    "vite": "6.3.4",
+    "vite": "6.3.5",
     "vite-tsconfig-paths": "5.1.4"
   }
 }

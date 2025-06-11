@@ -43,14 +43,14 @@ test.describe('Default', () => {
       },
     ].forEach(({facetType, filter, breadcrumbLabel}) => {
       const baseUrl =
-        'http://localhost:4400/iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance';
+        './iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance';
 
       test(`should show the breadcrumb for ${facetType} facet value`, async ({
         page,
         breadbox,
       }) => {
         await page.goto(baseUrl + filter);
-        await page.waitForURL(baseUrl + filter);
+        await breadbox.hydrated.waitFor();
 
         const breadcrumbButton = breadbox.getBreadcrumbButtons(breadcrumbLabel);
 
@@ -64,7 +64,7 @@ test.describe('Default', () => {
     breadbox,
   }) => {
     const baseUrl =
-      'http://localhost:4400/iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance&mnf-ec_price=20..30';
+      './iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance&mnf-ec_price=20..30';
     await page.goto(baseUrl);
 
     const expectedBreadcrumbLabel = 'Price:$20.00 to $30.00';

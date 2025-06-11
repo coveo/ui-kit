@@ -1,6 +1,7 @@
 import {LitElement, TemplateResult} from 'lit';
 import {TemplateResultType} from 'lit/directive-helpers.js';
 import {AnyBindings} from '../components/common/interface/bindings';
+import {SearchBoxSuggestions} from '../components/common/suggestions/suggestions-common';
 
 export type GenericRender<T extends TemplateResultType> = TemplateResult<T>;
 
@@ -15,10 +16,12 @@ export type RenderGuardDecorator<
 ) => Descriptor;
 
 /**
- * Necessary interface an Atomic Component must have to initialize itself correctly.
+ * Base interface for any Atomic component that needs to be initialized with bindings
+ * and supports error handling and cleanup.
  */
-export interface InitializableComponent<
+export interface BaseInitializableComponent<
   SpecificBindings extends AnyBindings = AnyBindings,
+  ReturnType = void,
 > {
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -36,11 +39,31 @@ export interface InitializableComponent<
   unsubscribeLanguage?: () => void;
 
   /**
-   * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
+   * Method called right after the `bindings` property is defined.
+   * Typically where Headless controllers or UI logic are initialized.
    */
-  initialize?: () => void;
+  initialize: () => ReturnType;
+
+  /**
+   * Error encountered during component setup, if any.
+   */
   error: Error;
 }
+
+/**
+ * Interface for an Atomic component whose `initialize` method is called after bindings are initialized with the @bindings decorator.
+ */
+export type InitializableComponent<
+  SpecificBindings extends AnyBindings = AnyBindings,
+> = BaseInitializableComponent<SpecificBindings, void>;
+
+/**
+ * Interface for an Atomic component whose `initialize` method returns `SearchBoxSuggestions`.
+ * Used for search box suggestions components that require specific bindings.
+ */
+export type SearchBoxSuggestionsComponent<
+  SpecificBindings extends AnyBindings = AnyBindings,
+> = BaseInitializableComponent<SpecificBindings, SearchBoxSuggestions>;
 
 export interface LitElementWithError
   extends Pick<InitializableComponent, 'error'>,

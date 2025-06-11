@@ -14,13 +14,13 @@ jobs:
       NODE_OPTIONS: --max_old_space_size=4096
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
-        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: '.nvmrc'
       - run: npm ci
@@ -41,7 +41,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -57,7 +57,7 @@ jobs:
     environment: PR Artifacts
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -76,7 +76,7 @@ jobs:
       - name: Generate a token
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
         id: generate-token
-        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -84,7 +84,7 @@ jobs:
           repositories: 'ui-kit'
       - name: Commit files
         if: ${{ steps.check-changes.outputs.has_changes == 'true' && github.event_name == 'pull_request' }}
-        run: npm run-script -w=@coveo/ci commit-all
+        run: npm run-script -w=@coveo/ci add-generated-files
         env:
           GITHUB_INSTALLATION_TOKEN: ${{ steps.generate-token.outputs.token }}
           DEBUG: '*'
@@ -95,7 +95,7 @@ jobs:
       DEPLOYMENT_ENVIRONMENT: CDN
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -103,15 +103,40 @@ jobs:
       - uses: ./.github/actions/build
         with:
           cache-suffix: 'cdn'
+  affected:
+    name: 'Determine affected projects'
+    runs-on: ubuntu-latest
+    needs: build
+    outputs:
+      projects: ${{ steps.set.outputs.projects }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+      - name: Get affected projects
+        id: set
+        run: |
+          AFFECTED=$(npx nx show projects --affected --base=origin/master | tr '\n' ' ')
+          echo "projects=$AFFECTED" >> "$GITHUB_OUTPUT"
+      - name: Log affected projects
+        run: |
+          echo "Affected projects: ${{ steps.set.outputs.projects }}"
   cdn-checks:
     name: 'CDN Checks'
-    needs: build-cdn
+    needs: [affected, build-cdn]
+    if: contains(needs.affected.outputs.projects, 'atomic') || contains(needs.affected.outputs.projects, 'headless-commerce-react-samples') || contains(needs.affected.outputs.projects, 'atomic-hosted-page')
     env:
       DEPLOYMENT_ENVIRONMENT: CDN
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -130,7 +155,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -144,22 +169,24 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - run: npm test
+      - run: npx nx affected --target=test --base=origin/master --head=HEAD
   package-compatibility:
     name: 'Verify compatibility of packages'
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -168,11 +195,12 @@ jobs:
       - run: npm run package-compatibility
   typedoc:
     name: 'Build typedoc'
-    needs: build
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless') || contains(needs.affected.outputs.projects, 'headless-react')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -184,31 +212,14 @@ jobs:
       - name: 'Build headless-react typedoc'
         run: npm run build:typedoc
         working-directory: packages/headless-react
-  should-e2e-atomic:
-    name: 'Should e2e test Atomic?'
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      changesOnlyInQuantic: ${{ steps.shouldRunAtomice2e.outputs.changesOnlyInQuantic }}
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-      - run: node ./scripts/ci/everyFilesChangedMatchPatterns.mjs changesOnlyInQuantic 'packages/quantic/**/*'
-        id: shouldRunAtomice2e
   e2e-atomic-csp-test:
     name: 'Run e2e tests on Atomic CSP'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -217,8 +228,8 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-csp
   prepare-playwright-atomic:
     name: 'Determine Playwright E2E tests to run'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     env:
       maximumShards: 12
@@ -228,7 +239,7 @@ jobs:
       shardTotal: ${{ steps.determine-tests.outputs.shardTotal }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -255,7 +266,7 @@ jobs:
   playwright-atomic:
     name: 'Run Playwright tests for Atomic'
     needs: prepare-playwright-atomic
-    if: ${{ success() && !contains(needs.*.result, 'skipped') }}
+    if: ${{ needs.prepare-playwright-atomic.outputs.shardIndex != '[0]' && needs.prepare-playwright-atomic.outputs.shardTotal != '[0]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -264,7 +275,7 @@ jobs:
         shardTotal: ${{ fromJson(needs.prepare-playwright-atomic.outputs.shardTotal) }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -285,7 +296,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -302,7 +313,7 @@ jobs:
       - name: Generate a token
         if: ${{ always() && github.event_name == 'pull_request'}}
         id: generate-token
-        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1
+        uses: actions/create-github-app-token@d72941d797fd3113feb6b93fd0dec494b13a2547 # v1
         with:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
@@ -315,12 +326,12 @@ jobs:
           copy: true
   playwright-atomic-theming:
     name: 'Run theming smoke tests for Atomic'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -330,8 +341,8 @@ jobs:
       - uses: ./.github/actions/playwright-atomic-theming
   e2e-atomic-test:
     name: 'Run e2e tests on Atomic'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -371,7 +382,7 @@ jobs:
           ]
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -384,12 +395,12 @@ jobs:
           SPLIT_INDEX: ${{ strategy.job-index }}
   e2e-atomic-screenshots:
     name: 'Run e2e screenshots tests on Atomic'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -398,12 +409,12 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-screenshots
   e2e-atomic-react-test:
     name: 'Run e2e tests on Atomic React'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-react-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -412,12 +423,12 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-react
   e2e-atomic-react-nextjs-test:
     name: 'Run e2e tests on Atomic React NextJS'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-next-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -426,12 +437,12 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-next
   e2e-iife-test:
     name: 'Run e2e tests for IIFE'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'iife-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -441,12 +452,12 @@ jobs:
       # - uses: ./.github/actions/e2e-iife
   e2e-atomic-angular-test:
     name: 'Run e2e tests on Atomic Angular'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-angular-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -455,12 +466,12 @@ jobs:
       - uses: ./.github/actions/e2e-atomic-angular
   e2e-atomic-vuejs-test:
     name: 'Run e2e tests on Vue.js sample'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-vuejs-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -469,12 +480,12 @@ jobs:
       - uses: ./.github/actions/e2e-vuejs
   e2e-atomic-stencil-test:
     name: 'Run e2e tests on Stencil.js sample'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-stencil-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -483,12 +494,12 @@ jobs:
       - uses: ./.github/actions/e2e-stencil
   playwright-atomic-hosted-page-test:
     name: 'Run e2e tests for Atomic Hosted Page'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic-hosted-page')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -498,12 +509,12 @@ jobs:
       - uses: ./.github/actions/playwright-atomic-hosted-pages
   playwright-headless-ssr-commerce:
     name: 'Run e2e tests for Headless Commerce SSR'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-commerce-samples')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -513,92 +524,50 @@ jobs:
       - uses: ./.github/actions/playwright-headless-ssr-commerce-nextjs
   e2e-atomic-insight-panel-test:
     name: 'Run e2e tests on Atomic insight panel'
-    needs: should-e2e-atomic
-    if: ${{ needs.should-e2e-atomic.outputs.changesOnlyInQuantic == 'false' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'atomic')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/e2e-atomic-insight-panel
-  e2e-headless-ssr-test-app-dev:
-    name: 'Run e2e tests on Headless SSR App router sample in dev mode'
-    needs: build
+  e2e-headless-ssr-test-app:
+    name: 'Run e2e tests on Headless SSR App router sample'
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-app-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-dev
-  e2e-headless-ssr-test-app-prod:
-    name: 'Run e2e tests on Headless SSR App router sample in prod mode'
-    needs: build
+      - uses: ./.github/actions/e2e-headless-ssr-app
+  e2e-headless-ssr-test-pages:
+    name: 'Run e2e tests on Headless SSR Pages router sample'
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'headless-ssr-samples-pages-router')
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-app-prod
-  e2e-headless-ssr-test-pages-dev:
-    name: 'Run e2e tests on Headless SSR Pages router sample in dev mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-dev
-  e2e-headless-ssr-test-pages-prod:
-    name: 'Run e2e tests on Headless SSR Pages router sample in prod mode'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-      - uses: ./.github/actions/setup
-      - uses: ./.github/actions/e2e-headless-ssr-pages-prod
-  should-e2e-quantic:
-    name: 'Should test Quantic?'
-    needs: build
-    runs-on: ubuntu-latest
-    outputs:
-      shouldRunQuantic: ${{ steps.shouldRunQuantic.outputs.shouldRunQuantic }}
-    steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
-        with:
-          egress-policy: audit
-
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-        with:
-          fetch-depth: 0
-      - uses: ./.github/actions/setup
-      - run: node ./scripts/ci/someFilesChangedInPatterns.mjs shouldRunQuantic 'packages/quantic/**/*' 'packages/headless/**/*' 'packages/bueno/**/*' package.json package-lock.json
-        id: shouldRunQuantic
+      - uses: ./.github/actions/e2e-headless-ssr-pages
   e2e-quantic:
     name: 'Run Quantic E2E tests'
-    needs: should-e2e-quantic
-    if: ${{ needs.should-e2e-quantic.outputs.shouldRunQuantic == 'true' }}
+    needs: affected
+    if: contains(needs.affected.outputs.projects, 'quantic')
     uses: ./.github/workflows/e2e-quantic.yml
     secrets:
       SFDX_AUTH_CLIENT_ID: ${{ secrets.SFDX_AUTH_CLIENT_ID }}
@@ -625,14 +594,12 @@ jobs:
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr-test-app'
+      - 'e2e-headless-ssr-test-pages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -666,14 +633,12 @@ jobs:
       - 'e2e-atomic-vuejs-test'
       - 'e2e-atomic-stencil-test'
       - 'e2e-atomic-insight-panel-test'
-      - 'e2e-headless-ssr-test-app-dev'
-      - 'e2e-headless-ssr-test-app-prod'
-      - 'e2e-headless-ssr-test-pages-dev'
-      - 'e2e-headless-ssr-test-pages-prod'
+      - 'e2e-headless-ssr-test-app'
+      - 'e2e-headless-ssr-test-pages'
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 
@@ -695,7 +660,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@4d991eb9b905ef189e4c376166672c3f2f230481 # v2.11.0
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0 # v2.12.0
         with:
           egress-policy: audit
 

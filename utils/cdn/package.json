@@ -1,0 +1,19 @@
+{
+  "name": "@coveo/cdn",
+  "private": true,
+  "authors": "Coveo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {},
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "devDependencies": {
+    "@coveo/atomic": "3.27.1",
+    "@coveo/atomic-hosted-page": "1.1.24",
+    "@coveo/atomic-react": "3.2.45",
+    "@coveo/bueno": "1.0.17",
+    "@coveo/headless": "3.26.0",
+    "@coveo/shopify": "1.5.1"
+  }
+}

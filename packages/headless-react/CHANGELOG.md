@@ -1,3 +1,22 @@
+## <small>2.4.30 (2025-06-11)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(headless-ssr-react): ensure provider's children are not remounted on hydration (#5404) ([d7fca8f](https://github.com/coveo/ui-kit/commits/d7fca8f)), closes [#5404](https://github.com/coveo/ui-kit/issues/5404)
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+
+## <small>2.4.29 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+
+## <small>2.4.28 (2025-06-04)</small>
+
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+
 ## <small>2.4.27 (2025-05-28)</small>
 
 - chore(deps): update dependency eslint-plugin-react to v7.37.5 j:kit-282 (#5268) ([2c46a1e](https://github.com/coveo/ui-kit/commits/2c46a1e)), closes [#5268](https://github.com/coveo/ui-kit/issues/5268)
