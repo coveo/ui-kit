@@ -39,12 +39,14 @@ const mockResults = [
     clickUri: 'https://example.com/result1',
     uri: 'https://example.com/result1',
     excerpt: 'This is the first result.',
+    uniqueId: '1',
   },
   {
     title: 'Result 2',
     clickUri: 'https://example.com/result2',
     uri: 'https://example.com/result2',
     excerpt: 'This is the second result.',
+    uniqueId: '2',
   },
 ];
 
@@ -128,7 +130,7 @@ function mockErroneousHeadlessInitialization() {
   };
 }
 
-describe('c-quantic-recent-result-list', () => {
+describe('c-quantic-recent-results-list', () => {
   afterEach(() => {
     cleanup();
     recentResultsListState = initialRecentResultsListState;
@@ -308,6 +310,33 @@ describe('c-quantic-recent-result-list', () => {
             options: {maxLength: customMaxLength},
           }
         );
+      });
+
+      it('should not render more results than the #maxLength value', async () => {
+        const customMaxLength = 1;
+        // The component does not manage the length of the results list, the reducer does. So we need to set the state directly.
+        recentResultsListState = {
+          ...recentResultsListState,
+          results: mockResults.slice(0, customMaxLength),
+        };
+        const element = createTestComponent({
+          ...defaultOptions,
+          maxLength: customMaxLength,
+        });
+        updateRecentResultsState();
+        await flushPromises();
+
+        const recentResultsListItems = element.shadowRoot.querySelectorAll(
+          selectors.recentResultItem
+        );
+
+        expect(recentResultsListItems.length).toBe(customMaxLength);
+        recentResultsListItems.forEach((item, index) => {
+          const resultLink = item.querySelector(
+            selectors.quanticRecentResultLink
+          );
+          expect(resultLink.result).toEqual(mockResults[index]);
+        });
       });
     });
 

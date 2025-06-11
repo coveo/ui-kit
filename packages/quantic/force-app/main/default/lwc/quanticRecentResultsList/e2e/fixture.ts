@@ -1,4 +1,4 @@
-import {RecentResultListObject} from './pageObject';
+import {RecentResultsListObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
 import {searchRequestRegex} from '../../../../../../playwright/utils/requests';
@@ -6,19 +6,19 @@ import {AnalyticsModeEnum} from '../../../../../../playwright/utils/analyticsMod
 
 const pageUrl = 's/quantic-recent-results-list';
 
-interface RecentResultListOptions {
+interface RecentResultsListOptions {
   engineId: string;
 }
 
-type QuanticRecentResultListE2ESearchFixtures = {
-  recentResultList: RecentResultListObject;
+type QuanticRecentResultsListE2ESearchFixtures = {
+  recentResultList: RecentResultsListObject;
   search: SearchObject;
-  options: Partial<RecentResultListOptions>;
+  options: Partial<RecentResultsListOptions>;
   urlHash: string;
 };
 
 export const testSearch =
-  quanticBase.extend<QuanticRecentResultListE2ESearchFixtures>({
+  quanticBase.extend<QuanticRecentResultsListE2ESearchFixtures>({
     options: {},
     pageUrl: pageUrl,
     urlHash: '',
@@ -35,7 +35,7 @@ export const testSearch =
       await configuration.configure(options);
       await searchResponsePromise;
 
-      await use(new RecentResultListObject(page, analytics));
+      await use(new RecentResultsListObject(page, analytics));
     },
   });
 

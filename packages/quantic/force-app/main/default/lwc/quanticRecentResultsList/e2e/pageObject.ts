@@ -5,7 +5,7 @@ import {
 } from '../../../../../../playwright/utils/analyticsMode';
 import {AnalyticsObject} from '../../../../../../playwright/page-object/analytics';
 
-export class RecentResultListObject {
+export class RecentResultsListObject {
   private analyticsMode: AnalyticsMode;
 
   constructor(
@@ -17,8 +17,8 @@ export class RecentResultListObject {
     this.analyticsMode = this.analytics.analyticsMode;
   }
 
-  get recentResultList(): Locator {
-    return this.page.locator('c-quantic-recent-result-list');
+  get recentResultsList(): Locator {
+    return this.page.locator('c-quantic-recent-results-list');
   }
 
   get recentResultListItemLinks(): Locator {
