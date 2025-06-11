@@ -12,5 +12,6 @@ export const getNavigatorContext = async (
     userAgent: request.headers.get('User-Agent') ?? '',
     location: request.url,
     capture: capture && clientId !== '',
+    forwardedFor: request.headers.get('x-forwarded-for') ?? '',
   };
 };

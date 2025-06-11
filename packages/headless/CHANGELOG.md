@@ -1,3 +1,15 @@
+## 3.26.0 (2025-06-11)
+
+- chore: map package.json into the exports (#5414) ([357dfa8](https://github.com/coveo/ui-kit/commits/357dfa8)), closes [#5414](https://github.com/coveo/ui-kit/issues/5414)
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+- chore(headless): deprecate unused `activeTab` facet state value (#5415) ([b0e33ec](https://github.com/coveo/ui-kit/commits/b0e33ec)), closes [#5415](https://github.com/coveo/ui-kit/issues/5415)
+- chore(headless): stop bundling ESM headless for NPM (#5346) ([7de844f](https://github.com/coveo/ui-kit/commits/7de844f)), closes [#5346](https://github.com/coveo/ui-kit/issues/5346)
+- fix(answer): add context to /generate payload (#5426) ([8b77654](https://github.com/coveo/ui-kit/commits/8b77654)), closes [#5426](https://github.com/coveo/ui-kit/issues/5426)
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
+- fix(headless): respect query param tab on page refresh (#5412) ([47413dd](https://github.com/coveo/ui-kit/commits/47413dd)), closes [#5412](https://github.com/coveo/ui-kit/issues/5412)
+- feat(headless SSR): augment request with x-forwarded-for header (#5422) ([77b96b7](https://github.com/coveo/ui-kit/commits/77b96b7)), closes [#5422](https://github.com/coveo/ui-kit/issues/5422)
+
 ## <small>3.25.2 (2025-06-04)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))

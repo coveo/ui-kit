@@ -3,6 +3,14 @@
  */
 export interface NavigatorContext {
   /**
+   * The`X-Forwarded-For` header.
+   * This header is used to identify the originating IP address of a client.
+   * See [X-Forwarded-For](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For)
+   *
+   * **Note:** This property is only relevant for Server-Side Rendering (SSR) use cases.
+   */
+  forwardedFor?: string;
+  /**
    * The URL of the page that referred the user to the current page.
    * See [Referer](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer)
    */
