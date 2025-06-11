@@ -1,3 +1,7 @@
+## <small>2.0.18 (2025-06-11)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+
 ## <small>2.0.17 (2025-06-04)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
