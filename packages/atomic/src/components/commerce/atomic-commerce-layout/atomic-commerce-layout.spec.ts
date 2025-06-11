@@ -1,9 +1,10 @@
-import {renderInAtomicCommerceInterface} from '@/vitest-utils/testing-helpers/fixtures/atomic/commerce/atomic-commerce-interface-fixture';
+import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
-import {beforeEach, describe, expect, it} from 'vitest';
-import {AtomicCommerceLayout} from './atomic-commerce-layout';
+import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import '../atomic-commerce-interface/atomic-commerce-interface';
+import './atomic-commerce-layout';
 
 describe('atomic-commerce-layout', () => {
   const locators = {
@@ -15,29 +16,27 @@ describe('atomic-commerce-layout', () => {
       return page.getByTestId('facets');
     },
 
-    get filterButton() {
-      return page.getByText('Sort & Filter');
+    get main() {
+      return page.getByTestId('main');
     },
   };
 
   const setupElement = async (props?: {mobileBreakpoint?: string}) => {
-    const {element} =
-      await renderInAtomicCommerceInterface<AtomicCommerceLayout>({
-        template: html`<atomic-commerce-layout
+    return fixture(
+      html`<atomic-commerce-interface>
+        <atomic-commerce-layout
           data-testid="atomic-commerce-layout"
           mobile-breakpoint="${ifDefined(props?.mobileBreakpoint)}"
         >
-          <atomic-layout-section
-            data-testid="facets"
-            section="facets"
-          ></atomic-layout-section>
-        </atomic-commerce-layout>`,
-        selector: 'atomic-commerce-layout',
-      });
-
-    return element;
-
-    // expect(element).toBeInstanceOf(AtomicCommerceLayout);
+          <atomic-layout-section data-testid="facets" section="facets">
+            facets...
+          </atomic-layout-section>
+          <atomic-layout-section data-testid="main" section="main">
+            main...
+          </atomic-layout-section>
+        </atomic-commerce-layout>
+      </atomic-commerce-interface>`
+    );
   };
 
   it('should reflects mobileBreakpoint property to attribute', async () => {
@@ -54,32 +53,38 @@ describe('atomic-commerce-layout', () => {
   });
 
   describe('when the viewport is larger than the mobile breakpoint', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await page.viewport(1200, 800);
-      await setupElement({mobileBreakpoint: '900px'});
     });
 
-    it('should not render filter button', async () => {
-      await expect(locators.filterButton).not.toBeVisible();
+    beforeEach(async () => {
+      await setupElement({mobileBreakpoint: '900px'});
     });
 
     it('should render facets section', async () => {
       await expect(locators.facets).toBeVisible();
     });
+
+    it('should always render main section', async () => {
+      await expect(locators.main).toBeVisible();
+    });
   });
 
   describe('when the viewport is smaller than the mobile breakpoint', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
       await page.viewport(800, 600);
-      await setupElement({mobileBreakpoint: '900px'});
     });
 
-    it('should render filter button', async () => {
-      await expect(locators.filterButton).toBeVisible();
+    beforeEach(async () => {
+      await setupElement({mobileBreakpoint: '900px'});
     });
 
     it('should not render facets section', async () => {
       await expect(locators.facets).not.toBeVisible();
+    });
+
+    it('should always render main section', async () => {
+      await expect(locators.main).toBeVisible();
     });
   });
 });
