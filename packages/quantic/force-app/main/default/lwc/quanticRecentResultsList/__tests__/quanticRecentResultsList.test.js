@@ -8,7 +8,6 @@ const exampleEngine = {
   id: 'exampleEngineId',
 };
 const localStorageKey = `${exampleEngine.id}_quantic-recent-results`;
-let consoleErrorSpy;
 
 jest.mock('c/quanticHeadlessLoader');
 jest.mock(
@@ -76,6 +75,7 @@ const functionMocks = {
     return () => {};
   }),
   clear: jest.fn(),
+  buildInteractiveRecentResult: jest.fn(),
 };
 
 const defaultOptions = {
@@ -131,6 +131,13 @@ function mockErroneousHeadlessInitialization() {
 }
 
 describe('c-quantic-recent-results-list', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    global.CoveoHeadless = {
+      buildInteractiveRecentResult: functionMocks.buildInteractiveRecentResult,
+    };
+  });
+
   afterEach(() => {
     cleanup();
     recentResultsListState = initialRecentResultsListState;
@@ -211,13 +218,6 @@ describe('c-quantic-recent-results-list', () => {
           ...recentResultsListState,
           results: exampleResults,
         };
-        consoleErrorSpy = jest
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
-      });
-
-      afterEach(() => {
-        consoleErrorSpy.mockRestore();
       });
 
       it('should display the recent results list with the default options and no longer display the placeholder component', async () => {
@@ -359,15 +359,6 @@ describe('c-quantic-recent-results-list', () => {
     });
 
     describe('the #hideWhenEmpty property', () => {
-      beforeEach(() => {
-        consoleErrorSpy = jest
-          .spyOn(console, 'error')
-          .mockImplementation(() => {});
-      });
-
-      afterEach(() => {
-        consoleErrorSpy.mockRestore();
-      });
       describe('when there are recent results', () => {
         it('should display the recent results card when set to true', async () => {
           recentResultsListState = {
