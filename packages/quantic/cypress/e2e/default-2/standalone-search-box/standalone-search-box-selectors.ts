@@ -15,13 +15,13 @@ export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
   get: () => cy.get(standaloneSearchBoxComponent),
   quanticSearchBoxInput: () =>
     StandaloneSearchBoxSelectors.get().find(
-      '[data-cy="quantic-search-box-input"]'
+      '[data-testid="quantic-search-box-input"]'
     ),
   input: (textarea = false) =>
     StandaloneSearchBoxSelectors.get().find(
       textarea
-        ? 'c-quantic-search-box-input [data-cy="search-box-textarea"]'
-        : 'c-quantic-search-box-input [data-cy="search-box-input"]'
+        ? 'c-quantic-search-box-input [data-testid="search-box-textarea"]'
+        : 'c-quantic-search-box-input [data-testid="search-box-input"]'
     ),
   suggestionList: () =>
     StandaloneSearchBoxSelectors.get().find(
