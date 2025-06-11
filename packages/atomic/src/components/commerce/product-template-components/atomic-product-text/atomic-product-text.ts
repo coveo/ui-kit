@@ -1,4 +1,5 @@
 import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
 import {errorGuard} from '@/src/decorators/error-guard';
 import {InitializableComponent} from '@/src/decorators/types';
 import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
@@ -16,6 +17,7 @@ import {getStringValueFromProductOrNull} from '../product-utils';
 /**
  * The `atomic-product-text` component renders the value of a string product field.
  */
+@bindings()
 @customElement('atomic-product-text')
 export class AtomicProductText
   extends InitializeBindingsMixin(LitElement)
@@ -45,6 +47,8 @@ export class AtomicProductText
   @state() bindings!: CommerceBindings;
 
   @state() error!: Error;
+
+  initialize = () => {};
 
   @bindingGuard()
   @errorGuard()

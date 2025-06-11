@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {InitializableComponent} from '@/src/decorators/types.js';
+import {closest} from '@/src/utils/dom-utils.js';
 import {LitElement} from 'lit';
 import {buildCustomEvent} from '../../../utils/event-utils.js';
-import {closest} from '../../../utils/utils.js';
 import {AnyItem} from '../interface/item.js';
 import {
   ItemDisplayDensity,
