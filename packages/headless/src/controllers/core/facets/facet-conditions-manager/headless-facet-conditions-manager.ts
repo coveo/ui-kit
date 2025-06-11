@@ -118,16 +118,18 @@ export function buildCoreFacetConditionsManager(
   };
 
   const areConditionsMet = () => {
-    return props.conditions.some((condition) => {
-      if (!isFacetEnabled(condition.parentFacetId)) {
-        return false;
-      }
-      const values = getFacetValuesById(condition.parentFacetId);
-      if (values === null) {
-        return false;
-      }
-      return condition.condition(values as AnyFacetValue[]);
-    });
+    return props.conditions.length > 0
+      ? props.conditions.some((condition) => {
+          if (!isFacetEnabled(condition.parentFacetId)) {
+            return false;
+          }
+          const values = getFacetValuesById(condition.parentFacetId);
+          if (values === null) {
+            return false;
+          }
+          return condition.condition(values as AnyFacetValue[]);
+        })
+      : true;
   };
 
   const unfreezeFacetValues = () => {
@@ -163,9 +165,10 @@ export function buildCoreFacetConditionsManager(
     }
   };
 
-  if (!props.conditions.length) {
-    return {stopWatching() {}};
-  }
+  // TODO: Add tabs support
+  // if (!props.conditions.length) {
+  //   return {stopWatching() {}};
+  // }
 
   let relevantStateHash = getRelevantStateHash();
   const unsubscribe = engine.subscribe(() => {
