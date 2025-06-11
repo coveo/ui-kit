@@ -39,9 +39,7 @@ export class FixtureAtomicCommerceInterface
     };
   }
   error?: Error | undefined;
-  updateIconAssetsPath(): void {
-    throw new Error('Method not implemented.');
-  }
+  updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 
   @property({reflect: true, type: Boolean})
