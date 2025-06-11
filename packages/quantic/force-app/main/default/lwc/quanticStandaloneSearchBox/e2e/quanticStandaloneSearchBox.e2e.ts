@@ -39,11 +39,9 @@ test.describe('quantic-standalone-search-box', () => {
 
         await searchBox.suggestions.first().click();
         await expect(page).toHaveURL(/\/global-search\/%40uri#q=test/);
-        const storage = await page.evaluate(() => {
-          return JSON.parse(
-            localStorage.getItem('LSKey[c]coveo-standalone-search-box') || '{}'
-          );
-        });
+
+        await page.goBack();
+        const storage = await searchBox.getLocalStorageData();
         await expect(storage).toMatchObject({
           analytics: {
             cause: 'omniboxFromLink',
@@ -61,11 +59,9 @@ test.describe('quantic-standalone-search-box', () => {
         await expect(page).toHaveURL(
           new RegExp(`/global-search/%40uri#q=${encodeURIComponent(query)}`)
         );
-        const storage = await page.evaluate(() => {
-          return JSON.parse(
-            localStorage.getItem('LSKey[c]coveo-standalone-search-box') || '{}'
-          );
-        });
+
+        await page.goBack();
+        const storage = await searchBox.getLocalStorageData();
         await expect(storage).toMatchObject({
           analytics: {cause: 'searchFromLink'},
           value: query,

@@ -41,4 +41,14 @@ export class StandaloneSearchBoxObject {
       ? this.searchBoxInput.getByTestId('search-box-textarea')
       : this.searchBoxInput.getByTestId('search-box-input');
   }
+
+  async getLocalStorageData() {
+    await this.page.getByTestId('localstorage-input').locator('input').fill('');
+    await this.page.getByTestId('localstorage-get-button').click();
+    const content = await this.page
+      .getByTestId('localstorage-output')
+      .textContent();
+
+    return content ? JSON.parse(content) : null;
+  }
 }
