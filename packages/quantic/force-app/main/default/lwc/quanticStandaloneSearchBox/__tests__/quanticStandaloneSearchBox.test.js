@@ -120,18 +120,20 @@ describe('c-quantic-standalone-search-box', () => {
     cleanup();
   });
   describe('with default options', () => {
-    it('should create the component', async () => {
+    it('should properly render the quantic standalone search box component', async () => {
       const element = createTestComponent();
       await flushPromises();
 
       expect(element).not.toBeNull();
 
-      const interfaceElem = element.shadowRoot.querySelector(
+      const quanticSearchInterface = element.shadowRoot.querySelector(
         selectors.searchInterface
       );
-      expect(interfaceElem).not.toBeNull();
+      expect(quanticSearchInterface).not.toBeNull();
 
-      const input = interfaceElem.querySelector(selectors.searchBoxInput);
+      const input = quanticSearchInterface.querySelector(
+        selectors.searchBoxInput
+      );
       expect(input).not.toBeNull();
       expect(input.withoutSubmitButton).toBe(false);
       expect(input.textarea).toBe(false);
@@ -143,7 +145,7 @@ describe('c-quantic-standalone-search-box', () => {
   });
 
   describe('with custom options', () => {
-    it('should create the component with custom options', async () => {
+    it('should properly render the quantic standalone search box component', async () => {
       const element = createTestComponent({
         engineId: exampleEngine.id,
         placeholder: 'place',
@@ -171,7 +173,7 @@ describe('c-quantic-standalone-search-box', () => {
   });
 
   describe('with suggestions', () => {
-    it('should create the component with suggestions', async () => {
+    it('should render the standalone searchbox component with suggestions', async () => {
       const element = createTestComponent();
       await flushPromises();
 
@@ -248,10 +250,10 @@ describe('c-quantic-standalone-search-box', () => {
 
         const searchBox = element.shadowRoot.querySelector(selectors.searchBox);
         expect(searchBox).not.toBeNull();
-        const interfaceElem = element.shadowRoot.querySelector(
+        const quanticSearchInterface = element.shadowRoot.querySelector(
           selectors.searchInterface
         );
-        expect(interfaceElem).toBeNull();
+        expect(quanticSearchInterface).toBeNull();
       });
 
       it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
