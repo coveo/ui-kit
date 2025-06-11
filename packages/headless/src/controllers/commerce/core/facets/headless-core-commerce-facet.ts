@@ -188,13 +188,11 @@ export function buildCoreCommerceFacet<
     ...controller,
 
     toggleSelect: (selection: ValueRequest) => {
+      console.log('selection', selection);
       dispatch(
         props.options.toggleSelectActionCreator({
           selection,
           facetId,
-          ...('retrieveCount' in selection
-            ? {retrieveCount: selection.retrieveCount}
-            : {}),
         })
       );
       dispatch(props.options.fetchProductsActionCreator());

@@ -41,4 +41,6 @@ export function handleFacetUpdateNumberOfValues<
   }
 
   facetRequest.numberOfValues = numberOfValues;
+  'retrieveCount' in facetRequest &&
+    (facetRequest.retrieveCount = numberOfValues);
 }

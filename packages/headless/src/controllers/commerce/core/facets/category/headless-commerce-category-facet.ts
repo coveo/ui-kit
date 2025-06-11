@@ -125,9 +125,10 @@ export function buildCategoryFacet(
         ? selectedValueAncestry[selectedValueAncestry.length - 1]
         : undefined;
       const numberInState = activeValue
-        ? activeValue.numberOfResults
-        : (request?.numberOfValues ?? 0);
-      const initialNumberOfValues = request?.initialNumberOfValues ?? 0;
+        ? activeValue.children.length
+        : (request?.values.length ?? 1);
+      const initialNumberOfValues =
+        request?.initialNumberOfValues ?? request.numberOfValues ?? 0;
       const numberToNextMultipleOfConfigured =
         initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
@@ -143,7 +144,10 @@ export function buildCategoryFacet(
       dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues: getRequest()?.initialNumberOfValues,
+          numberOfValues:
+            getRequest()?.initialNumberOfValues ??
+            getRequest()?.numberOfValues ??
+            0,
         })
       );
       dispatch(options.fetchProductsActionCreator());

@@ -139,7 +139,7 @@ function restoreCategoryFacets(
         delimitingCharacter: '|',
       } as CategoryFacetRequest,
     };
-    selectPath(state[facetId].request as CategoryFacetRequest, path, 10);
+    selectPath(state[facetId].request as CategoryFacetRequest, path);
   }
 }
 
@@ -151,7 +151,6 @@ function restoreFacet(facetId: string) {
     field: facetId,
     isFieldExpanded: false,
     preventAutoSelect: false,
-    initialNumberOfValues: 10,
   };
 }
 
@@ -162,7 +161,6 @@ function restoreFacetValue() {
     state: 'selected' as FacetValueState,
     isAutoSelected: false,
     isSuggested: false,
-    numberOfResults: 10,
     moreValuesAvailable: true,
   };
 }
@@ -174,27 +172,26 @@ export function buildSelectedFacetValueRequest(rawValue: string) {
 export function selectPath(
   request: CategoryFacetRequest,
   path: string[],
-  initialNumberOfValues: number
+  initialNumberOfValues?: number
 ) {
-  request.values = buildCurrentValuesFromPath(path, initialNumberOfValues);
-  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
+  request.values = buildCurrentValuesFromPath(path);
+  request.numberOfValues = initialNumberOfValues;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (request as unknown as any).retrieveCount = initialNumberOfValues;
   request.preventAutoSelect = true;
 }
 
-export function buildCurrentValuesFromPath(
-  path: string[],
-  retrieveCount: number
-) {
+export function buildCurrentValuesFromPath(path: string[]) {
   if (!path.length) {
     return [];
   }
 
-  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
+  const root = buildCategoryFacetValueRequest(path[0]);
   let curr = root;
 
   const [_first, ...rest] = path;
   for (const segment of rest) {
-    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
+    const next = buildCategoryFacetValueRequest(segment);
     curr.children.push(next);
     curr = next;
   }
@@ -205,13 +202,11 @@ export function buildCurrentValuesFromPath(
 }
 
 export function buildCategoryFacetValueRequest(
-  value: string,
-  retrieveCount: number
+  value: string
 ): CategoryFacetValueRequest {
   return {
     children: [],
     state: 'idle',
     value,
-    retrieveCount,
   };
 }

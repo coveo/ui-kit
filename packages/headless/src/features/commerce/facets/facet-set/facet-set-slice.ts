@@ -5,7 +5,6 @@ import {
   FacetValueRequest,
   NumericRangeRequest,
 } from '../../../../controllers/commerce/core/facets/headless-core-commerce-facet.js';
-import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions.js';
 import {selectCategoryFacetSearchResult} from '../../../facets/facet-search-set/category/category-facet-search-actions.js';
 import {
   excludeFacetSearchResult,
@@ -56,7 +55,6 @@ import {
   toggleExcludeFacetValue,
   toggleSelectFacetValue,
 } from '../regular-facet/regular-facet-actions.js';
-import {handleCategoryFacetNestedNumberOfValuesUpdate} from './facet-set-reducer-helpers.js';
 import {
   buildCategoryFacetValueRequest,
   buildSelectedFacetValueRequest,
@@ -193,52 +191,79 @@ export const commerceFacetSetReducer = createReducer(
         updateExistingFacetValueState(existingValue, 'select');
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
-        const {facetId, selection, retrieveCount} = action.payload;
+        const {facetId, selection} = action.payload;
         const request = state[facetId]?.request;
 
         if (!request || !ensureCategoryFacetRequest(request)) {
           return;
         }
 
-        const {path} = selection;
-        const pathToSelection = path.slice(0, path.length - 1);
-        const children = ensurePathAndReturnChildren(
+        const fullPath = selection.path;
+        const pathToSelection = fullPath.slice(0, fullPath.length - 1);
+        const selectedValueAndSiblings = ensurePathAndReturnChildren(
           request,
-          pathToSelection,
-          retrieveCount
+          pathToSelection
         );
 
-        console.log('selection.path', selection.path);
+        let selectedValue = selectedValueAndSiblings.find(
+          (value) => value.value === selection.value
+        );
 
-        // When selecting a root value
-        if (selection.path.length === 1 && selection.state === 'idle') {
-          let value = request.values.find((v) => v.value === selection.value);
-          if (!value) {
-            value = buildCategoryFacetValueRequest(
-              selection.value,
-              retrieveCount
-            );
-            children.push(value);
-          }
-
-          value.state = 'selected';
-          request.numberOfValues = 1;
-          return;
-        } else if (selection.path.length === 1) {
-          console.log('unselecting root value');
-          request.numberOfValues = request.initialNumberOfValues;
-          request.values = [];
-          return;
+        if (!selectedValue) {
+          selectedValue = buildCategoryFacetValueRequest(selection.value);
+          selectedValueAndSiblings.push(selectedValue);
         }
 
-        const newParent = buildCategoryFacetValueRequest(
-          selection.value,
-          retrieveCount
-        );
+        selectedValue.state =
+          selectedValue.state === 'idle' ? 'selected' : 'idle';
 
-        newParent.state = 'selected';
-        children.push(newParent);
-        request.numberOfValues = 1;
+        if (selectedValue.state === 'selected') {
+          request.numberOfValues = request.initialNumberOfValues;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (request as unknown as any).retrieveCount =
+            request.initialNumberOfValues;
+        }
+
+        // When selecting a root value
+        // if (fullPath.length === 1 && selection.state === 'idle') {
+        //   let value = request.values.find((v) => v.value === selection.value);
+        //   if (!value) {
+        //     value = buildCategoryFacetValueRequest(
+        //       selection.value,
+        //       retrieveCount
+        //     );
+        //     selectedValueAndSiblings.push(value);
+        //   }
+
+        //   value.state = 'selected';
+        //   value.children.map((c) => (c.state = 'idle'));
+        //   request.numberOfValues = 1;
+        //   return;
+        // } else if (selection.path.length === 1) {
+        //   console.log('unselecting root value');
+        //   request.numberOfValues = request.initialNumberOfValues;
+        //   request.values = [];
+        //   return;
+        // }
+
+        // const c = selectedValueAndSiblings.find(
+        //   (c) => c.value === selection.value
+        // );
+
+        // if (c) {
+        //   c.state = c.state === 'idle' ? 'selected' : 'idle';
+        //   request.numberOfValues = 1;
+        //   return;
+        // }
+
+        // const newParent = buildCategoryFacetValueRequest(
+        //   selection.value,
+        //   retrieveCount
+        // );
+
+        // newParent.state = 'selected';
+        // selectedValueAndSiblings.push(newParent);
+        // request.numberOfValues = 1;
       })
       .addCase(toggleExcludeFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -319,20 +344,10 @@ export const commerceFacetSetReducer = createReducer(
           return;
         }
 
-        if (
-          !request.values.length ||
-          request.values.every(
-            (v) =>
-              !(v as CategoryFacetValue).children.length && v.state === 'idle'
-          )
-        ) {
-          handleFacetUpdateNumberOfValues<AnyFacetRequest>(
-            request,
-            numberOfValues
-          );
-          return;
-        }
-        handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
+        handleFacetUpdateNumberOfValues<AnyFacetRequest>(
+          request,
+          numberOfValues
+        );
       })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
@@ -561,10 +576,17 @@ function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   }
 }
 
+/**
+ * Traverses the request values and validates the path, building new values for
+ * missing path segments if needed, then returns the children of the last
+ * visited value.
+ *
+ * Used to navigate to a specific level in the category tree before manipulating
+ * values.
+ */
 function ensurePathAndReturnChildren(
   request: CategoryFacetRequest,
-  path: string[],
-  retrieveCount: number
+  path: string[]
 ) {
   let children = request.values;
 
@@ -573,7 +595,7 @@ function ensurePathAndReturnChildren(
     const missingParent = !parent;
 
     if (missingParent || segment !== parent.value) {
-      parent = buildCategoryFacetValueRequest(segment, retrieveCount);
+      parent = buildCategoryFacetValueRequest(segment);
       children.length = 0;
       children.push(parent);
     }
@@ -584,6 +606,7 @@ function ensurePathAndReturnChildren(
 
   return children;
 }
+
 function updateExistingFacetValueState(
   existingFacetValue: WritableDraft<
     | FacetValueRequest
@@ -622,9 +645,12 @@ function updateStateFromFacetResponse(
   if (!facetRequest) {
     state[facetId] = {request: {} as AnyFacetRequest};
     facetRequest = state[facetId].request;
-    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   } else {
     facetsToRemove.delete(facetId);
+  }
+
+  if (facetRequest.initialNumberOfValues === undefined) {
+    facetRequest.initialNumberOfValues = facetResponse.numberOfValues;
   }
 
   facetRequest.facetId = facetId;
@@ -662,11 +688,7 @@ function getFacetRequestValuesFromFacetResponse(
     case 'dateRange':
       return convertToDateRangeRequests(facetResponse.values);
     case 'hierarchical':
-      return facetResponse.values.every(
-        (f) => f.state === 'idle' && f.children.length === 0
-      )
-        ? facetResponse.values.map(convertCategoryFacetRootValueToRequest)
-        : facetResponse.values.map(convertCategoryFacetValueToRequest);
+      return facetResponse.values.map(convertCategoryFacetValueToRequest);
     case 'regular':
       return facetResponse.values.map(convertFacetValueToRequest);
     case 'location':
@@ -676,30 +698,17 @@ function getFacetRequestValuesFromFacetResponse(
   }
 }
 
-function convertCategoryFacetRootValueToRequest(
-  responseValue: CategoryFacetValue
-): CategoryFacetValueRequest {
-  return {
-    children: [],
-    state: 'idle',
-    value: responseValue.value,
-  };
-}
-
 export function convertCategoryFacetValueToRequest(
   responseValue: CategoryFacetValue
 ): CategoryFacetValueRequest {
-  const children = responseValue.children.every(
-    (c) => c.state === 'idle' && c.children.length === 0
-  )
-    ? []
-    : responseValue.children.map(convertCategoryFacetValueToRequest);
+  const children = responseValue.children.map(
+    convertCategoryFacetValueToRequest
+  );
   const {state, value} = responseValue;
   return {
     children,
     state,
     value,
-    retrieveCount: defaultNumberOfValuesIncrement,
   };
 }
 

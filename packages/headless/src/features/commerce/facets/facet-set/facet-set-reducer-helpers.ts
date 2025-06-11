@@ -5,7 +5,7 @@ export function handleCategoryFacetNestedNumberOfValuesUpdate(
   state: CommerceFacetSetState,
   payload: {facetId: string; numberOfValues: number}
 ) {
-  const {facetId, numberOfValues} = payload;
+  const {facetId} = payload;
   let selectedValue = state[facetId]?.request
     .values[0] as CategoryFacetValueRequest;
   if (!selectedValue) {
@@ -15,5 +15,4 @@ export function handleCategoryFacetNestedNumberOfValuesUpdate(
   while (selectedValue.children.length && selectedValue?.state !== 'selected') {
     selectedValue = selectedValue.children[0];
   }
-  selectedValue.retrieveCount = numberOfValues;
 }

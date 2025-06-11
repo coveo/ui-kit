@@ -64,7 +64,7 @@ export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   displayName?: string;
   type: Type;
   values: Value[];
-  initialNumberOfValues: number;
+  initialNumberOfValues?: number;
   numberOfValues?: number;
 };
 
