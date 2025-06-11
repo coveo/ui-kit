@@ -1,6 +1,6 @@
-import {MissingParentError} from '@/src/decorators/item-list/item-context.js';
 import {closest} from '../../../utils/dom-utils.js';
 import {buildCustomEvent} from '../../../utils/event-utils.js';
+import {MissingParentError} from './context/item-context-controller.js';
 
 const itemContextEventName = 'atomic/resolveResult';
 

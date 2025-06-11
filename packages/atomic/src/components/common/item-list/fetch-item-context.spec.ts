@@ -1,7 +1,7 @@
-import {MissingParentError} from '@/src/decorators/item-list/item-context.js';
 import {describe, it, expect, beforeEach, vi} from 'vitest';
 import {closest} from '../../../utils/dom-utils.js';
 import {buildCustomEvent} from '../../../utils/event-utils.js';
+import {MissingParentError} from './context/item-context-controller.js';
 import {fetchItemContext} from './fetch-item-context.js';
 
 vi.mock('../../../utils/dom-utils.js');
