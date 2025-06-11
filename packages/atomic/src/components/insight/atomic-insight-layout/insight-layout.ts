@@ -57,13 +57,13 @@ export function buildInsightLayout(element: HTMLElement, widget: boolean) {
     }
 
     ${sectionSelector('search')} ${searchBoxSelector} {
-      flex-grow: 1;
+      grow: 1;
       height: 2.6rem;
     }
 
     ${toggleSelectors.map(
       (toggleSelector) => `${sectionSelector('search')} ${toggleSelector} {
-      flex-shrink: 0;
+      shrink: 0;
     }`
     )}
 
