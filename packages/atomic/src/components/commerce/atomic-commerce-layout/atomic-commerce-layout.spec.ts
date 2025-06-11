@@ -3,6 +3,7 @@ import {page} from '@vitest/browser/context';
 import {html} from 'lit';
 import {ifDefined} from 'lit/directives/if-defined.js';
 import {beforeAll, beforeEach, describe, expect, it} from 'vitest';
+import '../../common/atomic-layout-section/atomic-layout-section';
 import '../atomic-commerce-interface/atomic-commerce-interface';
 import './atomic-commerce-layout';
 
