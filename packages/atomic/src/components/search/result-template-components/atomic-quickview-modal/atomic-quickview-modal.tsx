@@ -338,6 +338,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}
+        exportparts="backdrop:atomic-modal-backdrop"
       >
         {this.renderHeader()}
         {this.renderBody()}
