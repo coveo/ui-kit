@@ -7,9 +7,8 @@ import { ProxyCmp, proxyOutputs } from './angular-component-lib/utils';
 import { Components } from '@coveo/atomic';
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicAriaLive})
+@Component({standalone:false,
   selector: 'atomic-aria-live',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -28,9 +27,8 @@ export class AtomicAriaLive {
 export declare interface AtomicAriaLive extends Components.AtomicAriaLive {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicAutomaticFacet})
+@Component({standalone:false,
   selector: 'atomic-automatic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -52,8 +50,8 @@ export declare interface AtomicAutomaticFacet extends Components.AtomicAutomatic
 @ProxyCmp({
   inputs: ['desiredCount', 'numberOfValues'],
   methods: ['updateCollapseFacetsDependingOnFacetsVisibility']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicAutomaticFacetGenerator})
+@Component({standalone:false,
   selector: 'atomic-automatic-facet-generator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -74,8 +72,8 @@ export declare interface AtomicAutomaticFacetGenerator extends Components.Atomic
 
 @ProxyCmp({
   inputs: ['pathLimit']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicBreadbox})
+@Component({standalone:false,
   selector: 'atomic-breadbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -96,8 +94,8 @@ export declare interface AtomicBreadbox extends Components.AtomicBreadbox {}
 
 @ProxyCmp({
   inputs: ['basePath', 'delimitingCharacter', 'dependsOn', 'facetId', 'field', 'filterByBasePath', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCategoryFacet})
+@Component({standalone:false,
   selector: 'atomic-category-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -118,8 +116,8 @@ export declare interface AtomicCategoryFacet extends Components.AtomicCategoryFa
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicColorFacet})
+@Component({standalone:false,
   selector: 'atomic-color-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -140,8 +138,8 @@ export declare interface AtomicColorFacet extends Components.AtomicColorFacet {}
 
 @ProxyCmp({
   inputs: ['pathLimit']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceBreadbox})
+@Component({standalone:false,
   selector: 'atomic-commerce-breadbox',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -162,8 +160,8 @@ export declare interface AtomicCommerceBreadbox extends Components.AtomicCommerc
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceCategoryFacet})
+@Component({standalone:false,
   selector: 'atomic-commerce-category-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -182,9 +180,8 @@ export class AtomicCommerceCategoryFacet {
 export declare interface AtomicCommerceCategoryFacet extends Components.AtomicCommerceCategoryFacet {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceDidYouMean})
+@Component({standalone:false,
   selector: 'atomic-commerce-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -205,8 +202,8 @@ export declare interface AtomicCommerceDidYouMean extends Components.AtomicComme
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceFacet})
+@Component({standalone:false,
   selector: 'atomic-commerce-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -227,8 +224,8 @@ export declare interface AtomicCommerceFacet extends Components.AtomicCommerceFa
 
 @ProxyCmp({
   inputs: ['bindings', 'facet', 'label', 'range']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceFacetNumberInput})
+@Component({standalone:false,
   selector: 'atomic-commerce-facet-number-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -253,8 +250,8 @@ export declare interface AtomicCommerceFacetNumberInput extends Components.Atomi
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceFacets})
+@Component({standalone:false,
   selector: 'atomic-commerce-facets',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -275,8 +272,8 @@ export declare interface AtomicCommerceFacets extends Components.AtomicCommerceF
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceLayout})
+@Component({standalone:false,
   selector: 'atomic-commerce-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -295,9 +292,8 @@ export class AtomicCommerceLayout {
 export declare interface AtomicCommerceLayout extends Components.AtomicCommerceLayout {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceLoadMoreProducts})
+@Component({standalone:false,
   selector: 'atomic-commerce-load-more-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -316,9 +312,8 @@ export class AtomicCommerceLoadMoreProducts {
 export declare interface AtomicCommerceLoadMoreProducts extends Components.AtomicCommerceLoadMoreProducts {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceNoProducts})
+@Component({standalone:false,
   selector: 'atomic-commerce-no-products',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -339,8 +334,8 @@ export declare interface AtomicCommerceNoProducts extends Components.AtomicComme
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceNumericFacet})
+@Component({standalone:false,
   selector: 'atomic-commerce-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -361,8 +356,8 @@ export declare interface AtomicCommerceNumericFacet extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceProductsPerPage})
+@Component({standalone:false,
   selector: 'atomic-commerce-products-per-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -385,9 +380,8 @@ export declare interface AtomicCommerceProductsPerPage extends Components.Atomic
 }
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceQueryError})
+@Component({standalone:false,
   selector: 'atomic-commerce-query-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -406,9 +400,8 @@ export class AtomicCommerceQueryError {
 export declare interface AtomicCommerceQueryError extends Components.AtomicCommerceQueryError {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceQuerySummary})
+@Component({standalone:false,
   selector: 'atomic-commerce-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -430,8 +423,8 @@ export declare interface AtomicCommerceQuerySummary extends Components.AtomicCom
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'scrollContainer'],
   methods: ['initializeWithEngine']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationInterface})
+@Component({standalone:false,
   selector: 'atomic-commerce-recommendation-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -453,8 +446,8 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
 @ProxyCmp({
   inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationList})
+@Component({standalone:false,
   selector: 'atomic-commerce-recommendation-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -475,8 +468,8 @@ export declare interface AtomicCommerceRecommendationList extends Components.Ato
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceRefineModal})
+@Component({standalone:false,
   selector: 'atomic-commerce-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -495,9 +488,8 @@ export class AtomicCommerceRefineModal {
 export declare interface AtomicCommerceRefineModal extends Components.AtomicCommerceRefineModal {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceRefineToggle})
+@Component({standalone:false,
   selector: 'atomic-commerce-refine-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -518,8 +510,8 @@ export declare interface AtomicCommerceRefineToggle extends Components.AtomicCom
 
 @ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceSearchBox})
+@Component({standalone:false,
   selector: 'atomic-commerce-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -560,8 +552,8 @@ Example:
 
 @ProxyCmp({
   inputs: ['facet', 'field', 'isCollapsed', 'summary']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicCommerceTimeframeFacet})
+@Component({standalone:false,
   selector: 'atomic-commerce-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -582,8 +574,8 @@ export declare interface AtomicCommerceTimeframeFacet extends Components.AtomicC
 
 @ProxyCmp({
   inputs: ['automaticallyCorrectQuery', 'queryCorrectionMode']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicDidYouMean})
+@Component({standalone:false,
   selector: 'atomic-did-you-mean',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -604,8 +596,8 @@ export declare interface AtomicDidYouMean extends Components.AtomicDidYouMean {}
 
 @ProxyCmp({
   inputs: ['boundInterface', 'selector']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicExternal})
+@Component({standalone:false,
   selector: 'atomic-external',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -626,8 +618,8 @@ export declare interface AtomicExternal extends Components.AtomicExternal {}
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'displayValuesAs', 'enableExclusion', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'resultsMustMatch', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withSearch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFacet})
+@Component({standalone:false,
   selector: 'atomic-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -648,8 +640,8 @@ export declare interface AtomicFacet extends Components.AtomicFacet {}
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFacetManager})
+@Component({standalone:false,
   selector: 'atomic-facet-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -670,8 +662,8 @@ export declare interface AtomicFacetManager extends Components.AtomicFacetManage
 
 @ProxyCmp({
   inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFieldCondition})
+@Component({standalone:false,
   selector: 'atomic-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -693,8 +685,8 @@ export declare interface AtomicFieldCondition extends Components.AtomicFieldCond
 @ProxyCmp({
   inputs: ['childField', 'collectionField', 'density', 'imageSize', 'numberOfFoldedResults', 'parentField', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFoldedResultList})
+@Component({standalone:false,
   selector: 'atomic-folded-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -715,8 +707,8 @@ export declare interface AtomicFoldedResultList extends Components.AtomicFoldedR
 
 @ProxyCmp({
   inputs: ['currency']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFormatCurrency})
+@Component({standalone:false,
   selector: 'atomic-format-currency',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -737,8 +729,8 @@ export declare interface AtomicFormatCurrency extends Components.AtomicFormatCur
 
 @ProxyCmp({
   inputs: ['maximumFractionDigits', 'maximumSignificantDigits', 'minimumFractionDigits', 'minimumIntegerDigits', 'minimumSignificantDigits']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFormatNumber})
+@Component({standalone:false,
   selector: 'atomic-format-number',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -759,8 +751,8 @@ export declare interface AtomicFormatNumber extends Components.AtomicFormatNumbe
 
 @ProxyCmp({
   inputs: ['unit', 'unitDisplay']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicFormatUnit})
+@Component({standalone:false,
   selector: 'atomic-format-unit',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -781,8 +773,8 @@ export declare interface AtomicFormatUnit extends Components.AtomicFormatUnit {}
 
 @ProxyCmp({
   inputs: ['answerConfigurationId', 'collapsible', 'maxCollapsedHeight', 'tabsExcluded', 'tabsIncluded', 'withToggle']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicGeneratedAnswer})
+@Component({standalone:false,
   selector: 'atomic-generated-answer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -803,8 +795,8 @@ export declare interface AtomicGeneratedAnswer extends Components.AtomicGenerate
 
 @ProxyCmp({
   inputs: ['sanitize', 'value']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicHtml})
+@Component({standalone:false,
   selector: 'atomic-html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -825,8 +817,8 @@ export declare interface AtomicHtml extends Components.AtomicHtml {}
 
 @ProxyCmp({
   inputs: ['maxWidth', 'minWidth', 'section']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicLayoutSection})
+@Component({standalone:false,
   selector: 'atomic-layout-section',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -845,9 +837,8 @@ export class AtomicLayoutSection {
 export declare interface AtomicLayoutSection extends Components.AtomicLayoutSection {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicLoadMoreResults})
+@Component({standalone:false,
   selector: 'atomic-load-more-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -868,8 +859,8 @@ export declare interface AtomicLoadMoreResults extends Components.AtomicLoadMore
 
 @ProxyCmp({
   inputs: ['enableCancelLastAction']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicNoResults})
+@Component({standalone:false,
   selector: 'atomic-no-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -890,8 +881,8 @@ export declare interface AtomicNoResults extends Components.AtomicNoResults {}
 
 @ProxyCmp({
   inputs: ['headingLevel', 'icon']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicNotifications})
+@Component({standalone:false,
   selector: 'atomic-notifications',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -912,8 +903,8 @@ export declare interface AtomicNotifications extends Components.AtomicNotificati
 
 @ProxyCmp({
   inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'numberOfValues', 'rangeAlgorithm', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withInput']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicNumericFacet})
+@Component({standalone:false,
   selector: 'atomic-numeric-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -934,8 +925,8 @@ export declare interface AtomicNumericFacet extends Components.AtomicNumericFace
 
 @ProxyCmp({
   inputs: ['end', 'endInclusive', 'label', 'start']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicNumericRange})
+@Component({standalone:false,
   selector: 'atomic-numeric-range',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -956,8 +947,8 @@ export declare interface AtomicNumericRange extends Components.AtomicNumericRang
 
 @ProxyCmp({
   inputs: ['nextButtonIcon', 'numberOfPages', 'previousButtonIcon']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicPager})
+@Component({standalone:false,
   selector: 'atomic-pager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -980,9 +971,8 @@ export declare interface AtomicPager extends Components.AtomicPager {
 }
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicPopover})
+@Component({standalone:false,
   selector: 'atomic-popover',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1003,8 +993,8 @@ export declare interface AtomicPopover extends Components.AtomicPopover {}
 
 @ProxyCmp({
   inputs: ['fallback', 'field', 'label']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductChildren})
+@Component({standalone:false,
   selector: 'atomic-product-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1031,8 +1021,8 @@ export declare interface AtomicProductChildren extends Components.AtomicProductC
 
 @ProxyCmp({
   inputs: ['field', 'isCollapsible', 'truncateAfter']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductDescription})
+@Component({standalone:false,
   selector: 'atomic-product-description',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1053,8 +1043,8 @@ export declare interface AtomicProductDescription extends Components.AtomicProdu
 
 @ProxyCmp({
   inputs: ['isCollapsible', 'truncateAfter']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductExcerpt})
+@Component({standalone:false,
   selector: 'atomic-product-excerpt',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1075,8 +1065,8 @@ export declare interface AtomicProductExcerpt extends Components.AtomicProductEx
 
 @ProxyCmp({
   inputs: ['ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductFieldCondition})
+@Component({standalone:false,
   selector: 'atomic-product-field-condition',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1098,8 +1088,8 @@ export declare interface AtomicProductFieldCondition extends Components.AtomicPr
 @ProxyCmp({
   inputs: ['fallback', 'field', 'imageAltField'],
   methods: ['previousImage', 'nextImage', 'navigateToImage']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductImage})
+@Component({standalone:false,
   selector: 'atomic-product-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1120,8 +1110,8 @@ export declare interface AtomicProductImage extends Components.AtomicProductImag
 
 @ProxyCmp({
   inputs: ['hrefTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductLink})
+@Component({standalone:false,
   selector: 'atomic-product-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1142,8 +1132,8 @@ export declare interface AtomicProductLink extends Components.AtomicProductLink 
 
 @ProxyCmp({
   inputs: ['delimiter', 'field', 'maxValuesToDisplay']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductMultiValueText})
+@Component({standalone:false,
   selector: 'atomic-product-multi-value-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1164,8 +1154,8 @@ export declare interface AtomicProductMultiValueText extends Components.AtomicPr
 
 @ProxyCmp({
   inputs: ['field']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductNumericFieldValue})
+@Component({standalone:false,
   selector: 'atomic-product-numeric-field-value',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1184,9 +1174,8 @@ export class AtomicProductNumericFieldValue {
 export declare interface AtomicProductNumericFieldValue extends Components.AtomicProductNumericFieldValue {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductPrice})
+@Component({standalone:false,
   selector: 'atomic-product-price',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1207,8 +1196,8 @@ export declare interface AtomicProductPrice extends Components.AtomicProductPric
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'maxValueInIndex', 'ratingDetailsField']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductRating})
+@Component({standalone:false,
   selector: 'atomic-product-rating',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1227,9 +1216,8 @@ export class AtomicProductRating {
 export declare interface AtomicProductRating extends Components.AtomicProductRating {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionActions})
+@Component({standalone:false,
   selector: 'atomic-product-section-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1248,9 +1236,8 @@ export class AtomicProductSectionActions {
 export declare interface AtomicProductSectionActions extends Components.AtomicProductSectionActions {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionBadges})
+@Component({standalone:false,
   selector: 'atomic-product-section-badges',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1269,9 +1256,8 @@ export class AtomicProductSectionBadges {
 export declare interface AtomicProductSectionBadges extends Components.AtomicProductSectionBadges {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionBottomMetadata})
+@Component({standalone:false,
   selector: 'atomic-product-section-bottom-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1290,9 +1276,8 @@ export class AtomicProductSectionBottomMetadata {
 export declare interface AtomicProductSectionBottomMetadata extends Components.AtomicProductSectionBottomMetadata {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionChildren})
+@Component({standalone:false,
   selector: 'atomic-product-section-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1311,9 +1296,8 @@ export class AtomicProductSectionChildren {
 export declare interface AtomicProductSectionChildren extends Components.AtomicProductSectionChildren {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionDescription})
+@Component({standalone:false,
   selector: 'atomic-product-section-description',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1332,9 +1316,8 @@ export class AtomicProductSectionDescription {
 export declare interface AtomicProductSectionDescription extends Components.AtomicProductSectionDescription {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionEmphasized})
+@Component({standalone:false,
   selector: 'atomic-product-section-emphasized',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1353,9 +1336,8 @@ export class AtomicProductSectionEmphasized {
 export declare interface AtomicProductSectionEmphasized extends Components.AtomicProductSectionEmphasized {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionMetadata})
+@Component({standalone:false,
   selector: 'atomic-product-section-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1374,9 +1356,8 @@ export class AtomicProductSectionMetadata {
 export declare interface AtomicProductSectionMetadata extends Components.AtomicProductSectionMetadata {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicProductSectionName})
+@Component({standalone:false,
   selector: 'atomic-product-section-name',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1397,8 +1378,8 @@ export declare interface AtomicProductSectionName extends Components.AtomicProdu
 
 @ProxyCmp({
   inputs: ['imageSize']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductSectionVisual})
+@Component({standalone:false,
   selector: 'atomic-product-section-visual',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1420,8 +1401,8 @@ export declare interface AtomicProductSectionVisual extends Components.AtomicPro
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicProductTemplate})
+@Component({standalone:false,
   selector: 'atomic-product-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1440,9 +1421,8 @@ export class AtomicProductTemplate {
 export declare interface AtomicProductTemplate extends Components.AtomicProductTemplate {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
+@Component({standalone:false,
   selector: 'atomic-query-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1461,9 +1441,8 @@ export class AtomicQueryError {
 export declare interface AtomicQueryError extends Components.AtomicQueryError {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQuerySummary})
+@Component({standalone:false,
   selector: 'atomic-query-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1484,8 +1463,8 @@ export declare interface AtomicQuerySummary extends Components.AtomicQuerySummar
 
 @ProxyCmp({
   inputs: ['sandbox']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicQuickview})
+@Component({standalone:false,
   selector: 'atomic-quickview',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1507,8 +1486,8 @@ export declare interface AtomicQuickview extends Components.AtomicQuickview {}
 @ProxyCmp({
   inputs: ['content', 'current', 'modalCloseCallback', 'result', 'sandbox', 'total'],
   methods: ['reset']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicQuickviewModal})
+@Component({standalone:false,
   selector: 'atomic-quickview-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1535,8 +1514,8 @@ export declare interface AtomicQuickviewModal extends Components.AtomicQuickview
 
 @ProxyCmp({
   inputs: ['dependsOn', 'displayValuesAs', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRatingFacet})
+@Component({standalone:false,
   selector: 'atomic-rating-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1557,8 +1536,8 @@ export declare interface AtomicRatingFacet extends Components.AtomicRatingFacet 
 
 @ProxyCmp({
   inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'icon', 'injectionDepth', 'isCollapsed', 'label', 'maxValueInIndex', 'minValueInIndex', 'numberOfIntervals', 'tabsExcluded', 'tabsIncluded']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRatingRangeFacet})
+@Component({standalone:false,
   selector: 'atomic-rating-range-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1577,9 +1556,8 @@ export class AtomicRatingRangeFacet {
 export declare interface AtomicRatingRangeFacet extends Components.AtomicRatingRangeFacet {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicRecsError})
+@Component({standalone:false,
   selector: 'atomic-recs-error',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1601,8 +1579,8 @@ export declare interface AtomicRecsError extends Components.AtomicRecsError {}
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithRecommendationEngine', 'getRecommendations']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRecsInterface})
+@Component({standalone:false,
   selector: 'atomic-recs-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1624,8 +1602,8 @@ export declare interface AtomicRecsInterface extends Components.AtomicRecsInterf
 @ProxyCmp({
   inputs: ['density', 'display', 'headingLevel', 'imageSize', 'label', 'numberOfRecommendations', 'numberOfRecommendationsPerPage', 'recommendation'],
   methods: ['setRenderFunction', 'previousPage', 'nextPage']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRecsList})
+@Component({standalone:false,
   selector: 'atomic-recs-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1646,8 +1624,8 @@ export declare interface AtomicRecsList extends Components.AtomicRecsList {}
 
 @ProxyCmp({
   inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRecsResult})
+@Component({standalone:false,
   selector: 'atomic-recs-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1669,8 +1647,8 @@ export declare interface AtomicRecsResult extends Components.AtomicRecsResult {}
 @ProxyCmp({
   inputs: ['conditions', 'ifDefined', 'ifNotDefined', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRecsResultTemplate})
+@Component({standalone:false,
   selector: 'atomic-recs-result-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1691,8 +1669,8 @@ export declare interface AtomicRecsResultTemplate extends Components.AtomicRecsR
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRefineModal})
+@Component({standalone:false,
   selector: 'atomic-refine-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1713,8 +1691,8 @@ export declare interface AtomicRefineModal extends Components.AtomicRefineModal 
 
 @ProxyCmp({
   inputs: ['collapseFacetsAfter']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRefineToggle})
+@Component({standalone:false,
   selector: 'atomic-refine-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1735,8 +1713,8 @@ export declare interface AtomicRefineToggle extends Components.AtomicRefineToggl
 
 @ProxyCmp({
   inputs: ['bindings', 'open']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicRelevanceInspector})
+@Component({standalone:false,
   selector: 'atomic-relevance-inspector',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1761,8 +1739,8 @@ export declare interface AtomicRelevanceInspector extends Components.AtomicRelev
 
 @ProxyCmp({
   inputs: ['classes', 'content', 'density', 'display', 'imageSize', 'linkContent', 'result', 'stopPropagation']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResult})
+@Component({standalone:false,
   selector: 'atomic-result',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1783,8 +1761,8 @@ export declare interface AtomicResult extends Components.AtomicResult {}
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'label']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultBadge})
+@Component({standalone:false,
   selector: 'atomic-result-badge',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1805,8 +1783,8 @@ export declare interface AtomicResultBadge extends Components.AtomicResultBadge 
 
 @ProxyCmp({
   inputs: ['imageSize', 'inheritTemplates', 'noResultText']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultChildren})
+@Component({standalone:false,
   selector: 'atomic-result-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1828,8 +1806,8 @@ export declare interface AtomicResultChildren extends Components.AtomicResultChi
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultChildrenTemplate})
+@Component({standalone:false,
   selector: 'atomic-result-children-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1850,8 +1828,8 @@ export declare interface AtomicResultChildrenTemplate extends Components.AtomicR
 
 @ProxyCmp({
   inputs: ['field', 'format', 'relativeTime']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultDate})
+@Component({standalone:false,
   selector: 'atomic-result-date',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1870,9 +1848,8 @@ export class AtomicResultDate {
 export declare interface AtomicResultDate extends Components.AtomicResultDate {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultFieldsList})
+@Component({standalone:false,
   selector: 'atomic-result-fields-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1893,8 +1870,8 @@ export declare interface AtomicResultFieldsList extends Components.AtomicResultF
 
 @ProxyCmp({
   inputs: ['field', 'sanitize']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultHtml})
+@Component({standalone:false,
   selector: 'atomic-result-html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1913,9 +1890,8 @@ export class AtomicResultHtml {
 export declare interface AtomicResultHtml extends Components.AtomicResultHtml {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultIcon})
+@Component({standalone:false,
   selector: 'atomic-result-icon',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1936,8 +1912,8 @@ export declare interface AtomicResultIcon extends Components.AtomicResultIcon {}
 
 @ProxyCmp({
   inputs: ['fallback', 'field', 'imageAltField']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultImage})
+@Component({standalone:false,
   selector: 'atomic-result-image',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1958,8 +1934,8 @@ export declare interface AtomicResultImage extends Components.AtomicResultImage 
 
 @ProxyCmp({
   inputs: ['hrefTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultLink})
+@Component({standalone:false,
   selector: 'atomic-result-link',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -1981,8 +1957,8 @@ export declare interface AtomicResultLink extends Components.AtomicResultLink {}
 @ProxyCmp({
   inputs: ['density', 'display', 'imageSize', 'tabsExcluded', 'tabsIncluded'],
   methods: ['setRenderFunction']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultList})
+@Component({standalone:false,
   selector: 'atomic-result-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2003,8 +1979,8 @@ export declare interface AtomicResultList extends Components.AtomicResultList {}
 
 @ProxyCmp({
   inputs: ['field', 'fieldCount', 'localeKey']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultLocalizedText})
+@Component({standalone:false,
   selector: 'atomic-result-localized-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2025,8 +2001,8 @@ export declare interface AtomicResultLocalizedText extends Components.AtomicResu
 
 @ProxyCmp({
   inputs: ['delimiter', 'field', 'maxValuesToDisplay']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultMultiValueText})
+@Component({standalone:false,
   selector: 'atomic-result-multi-value-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2047,8 +2023,8 @@ export declare interface AtomicResultMultiValueText extends Components.AtomicRes
 
 @ProxyCmp({
   inputs: ['field']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultNumber})
+@Component({standalone:false,
   selector: 'atomic-result-number',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2069,8 +2045,8 @@ export declare interface AtomicResultNumber extends Components.AtomicResultNumbe
 
 @ProxyCmp({
   inputs: ['maxNumberOfParts']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultPrintableUri})
+@Component({standalone:false,
   selector: 'atomic-result-printable-uri',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2091,8 +2067,8 @@ export declare interface AtomicResultPrintableUri extends Components.AtomicResul
 
 @ProxyCmp({
   inputs: ['field', 'icon', 'maxValueInIndex']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultRating})
+@Component({standalone:false,
   selector: 'atomic-result-rating',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2111,9 +2087,8 @@ export class AtomicResultRating {
 export declare interface AtomicResultRating extends Components.AtomicResultRating {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionActions})
+@Component({standalone:false,
   selector: 'atomic-result-section-actions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2132,9 +2107,8 @@ export class AtomicResultSectionActions {
 export declare interface AtomicResultSectionActions extends Components.AtomicResultSectionActions {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBadges})
+@Component({standalone:false,
   selector: 'atomic-result-section-badges',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2153,9 +2127,8 @@ export class AtomicResultSectionBadges {
 export declare interface AtomicResultSectionBadges extends Components.AtomicResultSectionBadges {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionBottomMetadata})
+@Component({standalone:false,
   selector: 'atomic-result-section-bottom-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2174,9 +2147,8 @@ export class AtomicResultSectionBottomMetadata {
 export declare interface AtomicResultSectionBottomMetadata extends Components.AtomicResultSectionBottomMetadata {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionChildren})
+@Component({standalone:false,
   selector: 'atomic-result-section-children',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2195,9 +2167,8 @@ export class AtomicResultSectionChildren {
 export declare interface AtomicResultSectionChildren extends Components.AtomicResultSectionChildren {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionEmphasized})
+@Component({standalone:false,
   selector: 'atomic-result-section-emphasized',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2216,9 +2187,8 @@ export class AtomicResultSectionEmphasized {
 export declare interface AtomicResultSectionEmphasized extends Components.AtomicResultSectionEmphasized {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionExcerpt})
+@Component({standalone:false,
   selector: 'atomic-result-section-excerpt',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2237,9 +2207,8 @@ export class AtomicResultSectionExcerpt {
 export declare interface AtomicResultSectionExcerpt extends Components.AtomicResultSectionExcerpt {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitle})
+@Component({standalone:false,
   selector: 'atomic-result-section-title',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2258,9 +2227,8 @@ export class AtomicResultSectionTitle {
 export declare interface AtomicResultSectionTitle extends Components.AtomicResultSectionTitle {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicResultSectionTitleMetadata})
+@Component({standalone:false,
   selector: 'atomic-result-section-title-metadata',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2281,8 +2249,8 @@ export declare interface AtomicResultSectionTitleMetadata extends Components.Ato
 
 @ProxyCmp({
   inputs: ['imageSize']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultSectionVisual})
+@Component({standalone:false,
   selector: 'atomic-result-section-visual',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2304,8 +2272,8 @@ export declare interface AtomicResultSectionVisual extends Components.AtomicResu
 @ProxyCmp({
   inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultTemplate})
+@Component({standalone:false,
   selector: 'atomic-result-template',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2326,8 +2294,8 @@ export declare interface AtomicResultTemplate extends Components.AtomicResultTem
 
 @ProxyCmp({
   inputs: ['default', 'field', 'shouldHighlight']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultText})
+@Component({standalone:false,
   selector: 'atomic-result-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2348,8 +2316,8 @@ export declare interface AtomicResultText extends Components.AtomicResultText {}
 
 @ProxyCmp({
   inputs: ['field', 'format', 'unit']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultTimespan})
+@Component({standalone:false,
   selector: 'atomic-result-timespan',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2370,8 +2338,8 @@ export declare interface AtomicResultTimespan extends Components.AtomicResultTim
 
 @ProxyCmp({
   inputs: ['choicesDisplayed', 'initialChoice']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicResultsPerPage})
+@Component({standalone:false,
   selector: 'atomic-results-per-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2396,8 +2364,8 @@ export declare interface AtomicResultsPerPage extends Components.AtomicResultsPe
 
 @ProxyCmp({
   inputs: ['clearFilters', 'disableSearch', 'enableQuerySyntax', 'minimumQueryLength', 'numberOfQueries', 'redirectionUrl', 'suggestionDelay', 'suggestionTimeout']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchBox})
+@Component({standalone:false,
   selector: 'atomic-search-box',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2439,8 +2407,8 @@ Example:
 @ProxyCmp({
   inputs: ['ariaLabelGenerator', 'density', 'imageSize', 'maxResultsPerQuery'],
   methods: ['setRenderFunction']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchBoxInstantResults})
+@Component({standalone:false,
   selector: 'atomic-search-box-instant-results',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2461,8 +2429,8 @@ export declare interface AtomicSearchBoxInstantResults extends Components.Atomic
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchBoxQuerySuggestions})
+@Component({standalone:false,
   selector: 'atomic-search-box-query-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2483,8 +2451,8 @@ export declare interface AtomicSearchBoxQuerySuggestions extends Components.Atom
 
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchBoxRecentQueries})
+@Component({standalone:false,
   selector: 'atomic-search-box-recent-queries',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2506,8 +2474,8 @@ export declare interface AtomicSearchBoxRecentQueries extends Components.AtomicS
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'enableRelevanceInspector', 'engine', 'fieldsToInclude', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'logLevel', 'pipeline', 'reflectStateInUrl', 'scrollContainer', 'searchHub', 'timezone'],
   methods: ['initialize', 'initializeWithSearchEngine', 'executeFirstSearch']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchInterface})
+@Component({standalone:false,
   selector: 'atomic-search-interface',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2528,8 +2496,8 @@ export declare interface AtomicSearchInterface extends Components.AtomicSearchIn
 
 @ProxyCmp({
   inputs: ['mobileBreakpoint']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSearchLayout})
+@Component({standalone:false,
   selector: 'atomic-search-layout',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2550,8 +2518,8 @@ export declare interface AtomicSearchLayout extends Components.AtomicSearchLayou
 
 @ProxyCmp({
   inputs: ['allowedValues', 'customSort', 'dependsOn', 'facetId', 'field', 'filterFacetCount', 'injectionDepth', 'label', 'numberOfValues', 'sortCriteria', 'tabsExcluded', 'tabsIncluded']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSegmentedFacet})
+@Component({standalone:false,
   selector: 'atomic-segmented-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2570,9 +2538,8 @@ export class AtomicSegmentedFacet {
 export declare interface AtomicSegmentedFacet extends Components.AtomicSegmentedFacet {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicSegmentedFacetScrollable})
+@Component({standalone:false,
   selector: 'atomic-segmented-facet-scrollable',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2593,8 +2560,8 @@ export declare interface AtomicSegmentedFacetScrollable extends Components.Atomi
 
 @ProxyCmp({
   inputs: ['collapsedHeight', 'headingLevel', 'maximumHeight', 'snippetCollapsedHeight', 'snippetMaximumHeight', 'snippetStyle', 'tabsExcluded', 'tabsIncluded']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSmartSnippet})
+@Component({standalone:false,
   selector: 'atomic-smart-snippet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2615,8 +2582,8 @@ export declare interface AtomicSmartSnippet extends Components.AtomicSmartSnippe
 
 @ProxyCmp({
   inputs: ['isOpen', 'source']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSmartSnippetFeedbackModal})
+@Component({standalone:false,
   selector: 'atomic-smart-snippet-feedback-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2641,8 +2608,8 @@ export declare interface AtomicSmartSnippetFeedbackModal extends Components.Atom
 
 @ProxyCmp({
   inputs: ['headingLevel', 'snippetStyle']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSmartSnippetSuggestions})
+@Component({standalone:false,
   selector: 'atomic-smart-snippet-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2661,9 +2628,8 @@ export class AtomicSmartSnippetSuggestions {
 export declare interface AtomicSmartSnippetSuggestions extends Components.AtomicSmartSnippetSuggestions {}
 
 
-@ProxyCmp({
-})
-@Component({
+@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicSortDropdown})
+@Component({standalone:false,
   selector: 'atomic-sort-dropdown',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2684,8 +2650,8 @@ export declare interface AtomicSortDropdown extends Components.AtomicSortDropdow
 
 @ProxyCmp({
   inputs: ['expression', 'label', 'tabsExcluded', 'tabsIncluded']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicSortExpression})
+@Component({standalone:false,
   selector: 'atomic-sort-expression',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2706,8 +2672,8 @@ export declare interface AtomicSortExpression extends Components.AtomicSortExpre
 
 @ProxyCmp({
   inputs: ['expression', 'label', 'name']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicTab})
+@Component({standalone:false,
   selector: 'atomic-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2728,8 +2694,8 @@ export declare interface AtomicTab extends Components.AtomicTab {}
 
 @ProxyCmp({
   inputs: ['clearFiltersOnTabChange']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicTabManager})
+@Component({standalone:false,
   selector: 'atomic-tab-manager',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2750,8 +2716,8 @@ export declare interface AtomicTabManager extends Components.AtomicTabManager {}
 
 @ProxyCmp({
   inputs: ['label']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicTableElement})
+@Component({standalone:false,
   selector: 'atomic-table-element',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2772,8 +2738,8 @@ export declare interface AtomicTableElement extends Components.AtomicTableElemen
 
 @ProxyCmp({
   inputs: ['count', 'value']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicText})
+@Component({standalone:false,
   selector: 'atomic-text',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2794,8 +2760,8 @@ export declare interface AtomicText extends Components.AtomicText {}
 
 @ProxyCmp({
   inputs: ['amount', 'label', 'period', 'unit']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicTimeframe})
+@Component({standalone:false,
   selector: 'atomic-timeframe',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2816,8 +2782,8 @@ export declare interface AtomicTimeframe extends Components.AtomicTimeframe {}
 
 @ProxyCmp({
   inputs: ['dependsOn', 'facetId', 'field', 'filterFacetCount', 'headingLevel', 'injectionDepth', 'isCollapsed', 'label', 'max', 'min', 'sortCriteria', 'tabsExcluded', 'tabsIncluded', 'withDatePicker']
-})
-@Component({
+, defineCustomElementFn: defineCustomElementAtomicTimeframeFacet})
+@Component({standalone:false,
   selector: 'atomic-timeframe-facet',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
@@ -2835,4 +2801,321 @@ export class AtomicTimeframeFacet {
 
 export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframeFacet {}
 
+//#region Lit Declarations
 
+@ProxyCmp({
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
+  methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'getUpdateComplete'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
+})
+@Component({
+  selector: 'atomic-commerce-interface',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath']
+})
+export class AtomicCommerceInterface {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterface {
+
+}
+
+@ProxyCmp({
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-pager') || customElements.define('atomic-commerce-pager', LitAtomicCommercePager);}
+})
+@Component({
+  selector: 'atomic-commerce-pager',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['numberOfPages', 'previousButtonIcon', 'nextButtonIcon']
+})
+export class AtomicCommercePager {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, ['atomic/scrollToTop']);
+  }
+}
+
+export declare interface AtomicCommercePager extends LitAtomicCommercePager {
+  'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+@ProxyCmp({
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
+  methods: ['setRenderFunction', 'initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
+})
+@Component({
+  selector: 'atomic-commerce-product-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders']
+})
+export class AtomicCommerceProductList {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceProductList extends LitAtomicCommerceProductList {
+
+}
+
+@ProxyCmp({
+  inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
+  methods: ['setRenderFunction', 'initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-instant-products',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'imageSize', 'ariaLabelGenerator']
+})
+export class AtomicCommerceSearchBoxInstantProducts {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxInstantProducts extends LitAtomicCommerceSearchBoxInstantProducts {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-query-suggestions',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+})
+export class AtomicCommerceSearchBoxQuerySuggestions {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-recent-queries',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+})
+export class AtomicCommerceSearchBoxRecentQueries {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
+
+}
+
+@ProxyCmp({
+  inputs: ['value', 'count'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-text') || customElements.define('atomic-commerce-text', LitAtomicCommerceText);}
+})
+@Component({
+  selector: 'atomic-commerce-text',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['value', 'count']
+})
+export class AtomicCommerceText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceText extends LitAtomicCommerceText {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-sort-dropdown') || customElements.define('atomic-commerce-sort-dropdown', LitAtomicCommerceSortDropdown);}
+})
+@Component({
+  selector: 'atomic-commerce-sort-dropdown',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceSortDropdown {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSortDropdown {
+
+}
+
+@ProxyCmp({
+  inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes', 'loadingFlag', 'renderingFunction'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-product') || customElements.define('atomic-product', LitAtomicProduct);}
+})
+@Component({
+  selector: 'atomic-product',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes', 'loadingFlag', 'renderingFunction']
+})
+export class AtomicProduct {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProduct extends LitAtomicProduct {
+
+}
+
+@ProxyCmp({
+  inputs: ['element', 'error'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
+})
+@Component({
+  selector: 'atomic-component-error',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['element', 'error']
+})
+export class AtomicComponentError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicComponentError extends LitAtomicComponentError {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon'],
+  methods: ['updateIcon', 'initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-icon') || customElements.define('atomic-icon', LitAtomicIcon);}
+})
+@Component({
+  selector: 'atomic-icon',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon']
+})
+export class AtomicIcon {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicIcon extends LitAtomicIcon {
+
+}
+
+@ProxyCmp({
+  inputs: ['field', 'shouldHighlight', 'default'],
+  methods: ['initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
+})
+@Component({
+  selector: 'atomic-product-text',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['field', 'shouldHighlight', 'default']
+})
+export class AtomicProductText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductText extends LitAtomicProductText {
+
+}
+
+import {AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicCommerceText as LitAtomicCommerceText, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon, AtomicProduct as LitAtomicProduct, AtomicProductText as LitAtomicProductText} from '@coveo/atomic/components';
+
+import {defineCustomElementAtomicAriaLive, defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicColorFacet, defineCustomElementAtomicCommerceBreadbox, defineCustomElementAtomicCommerceCategoryFacet, defineCustomElementAtomicCommerceDidYouMean, defineCustomElementAtomicCommerceFacet, defineCustomElementAtomicCommerceFacetNumberInput, defineCustomElementAtomicCommerceFacets, defineCustomElementAtomicCommerceLayout, defineCustomElementAtomicCommerceLoadMoreProducts, defineCustomElementAtomicCommerceNoProducts, defineCustomElementAtomicCommerceNumericFacet, defineCustomElementAtomicCommerceProductsPerPage, defineCustomElementAtomicCommerceQueryError, defineCustomElementAtomicCommerceQuerySummary, defineCustomElementAtomicCommerceRecommendationInterface, defineCustomElementAtomicCommerceRecommendationList, defineCustomElementAtomicCommerceRefineModal, defineCustomElementAtomicCommerceRefineToggle, defineCustomElementAtomicCommerceSearchBox, defineCustomElementAtomicCommerceTimeframeFacet, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicHtml, defineCustomElementAtomicLayoutSection, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNotifications, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPager, defineCustomElementAtomicPopover, defineCustomElementAtomicProductChildren, defineCustomElementAtomicProductDescription, defineCustomElementAtomicProductExcerpt, defineCustomElementAtomicProductFieldCondition, defineCustomElementAtomicProductImage, defineCustomElementAtomicProductLink, defineCustomElementAtomicProductMultiValueText, defineCustomElementAtomicProductNumericFieldValue, defineCustomElementAtomicProductPrice, defineCustomElementAtomicProductRating, defineCustomElementAtomicProductSectionActions, defineCustomElementAtomicProductSectionBadges, defineCustomElementAtomicProductSectionBottomMetadata, defineCustomElementAtomicProductSectionChildren, defineCustomElementAtomicProductSectionDescription, defineCustomElementAtomicProductSectionEmphasized, defineCustomElementAtomicProductSectionMetadata, defineCustomElementAtomicProductSectionName, defineCustomElementAtomicProductSectionVisual, defineCustomElementAtomicProductTemplate, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuerySummary, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicRelevanceInspector, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultMultiValueText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultSectionActions, defineCustomElementAtomicResultSectionBadges, defineCustomElementAtomicResultSectionBottomMetadata, defineCustomElementAtomicResultSectionChildren, defineCustomElementAtomicResultSectionEmphasized, defineCustomElementAtomicResultSectionExcerpt, defineCustomElementAtomicResultSectionTitle, defineCustomElementAtomicResultSectionTitleMetadata, defineCustomElementAtomicResultSectionVisual, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicResultsPerPage, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSearchBoxInstantResults, defineCustomElementAtomicSearchBoxQuerySuggestions, defineCustomElementAtomicSearchBoxRecentQueries, defineCustomElementAtomicSearchInterface, defineCustomElementAtomicSearchLayout, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
+//#endregion Lit Declarations

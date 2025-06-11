@@ -59,7 +59,7 @@ export class AtomicProduct extends LitElement {
    * The InteractiveProduct item.
    * @alpha
    */
-  @property({reflect: true, type: Object, attribute: 'interactive-product'})
+  @property({type: Object, attribute: 'interactive-product'})
   interactiveProduct!: InteractiveProduct;
 
   /**
