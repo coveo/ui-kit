@@ -19,7 +19,7 @@ export const renderSortSelect: FunctionalComponentWithChildren<
       <div class="relative" part="select-parent">
         <select
           id=${id}
-          class="btn-outline-neutral h-10 flex-grow cursor-pointer appearance-none pr-24 pl-3"
+          class="btn-outline-neutral h-10 grow cursor-pointer appearance-none pr-24 pl-3"
           part="select"
           aria-label=${i18n.t('sort-by')}
           @change=${onSelect}
