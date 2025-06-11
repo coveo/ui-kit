@@ -1,7 +1,7 @@
 {
   "name": "@coveo/atomic",
   "type": "module",
-  "version": "3.27.0",
+  "version": "3.27.1",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "homepage": "https://docs.coveo.com/en/atomic/latest/",
   "repository": {
@@ -71,8 +71,8 @@
   },
   "dependencies": {
     "@lit/context": "1.1.5",
-    "@coveo/bueno": "1.0.16",
-    "@coveo/headless": "3.25.2",
+    "@coveo/bueno": "1.0.17",
+    "@coveo/headless": "3.26.0",
     "@popperjs/core": "2.11.8",
     "@salesforce-ux/design-system": "2.27.1",
     "@stencil/core": "4.20.0",
@@ -118,7 +118,7 @@
     "@types/escape-html": "1.0.4",
     "@types/jest": "29.5.12",
     "@types/lodash": "4.17.17",
-    "@types/node": "22.15.23",
+    "@types/node": "22.15.29",
     "@types/postcss-import": "14.0.3",
     "@types/puppeteer": "7.0.4",
     "@vitest/browser": "3.2.1",
@@ -140,10 +140,10 @@
     "natural-orderby": "5.0.0",
     "ora": "8.2.0",
     "playwright": "1.52.0",
-    "postcss": "8.5.3",
+    "postcss": "8.5.4",
     "postcss-load-config": "6.0.1",
     "postcss-nested": "7.0.2",
-    "puppeteer": "24.9.0",
+    "puppeteer": "24.10.0",
     "react": "19.1.0",
     "rollup": "4.41.1",
     "rollup-plugin-copy": "3.5.0",
@@ -160,8 +160,8 @@
     "wait-on": "8.0.3"
   },
   "peerDependencies": {
-    "@coveo/bueno": "1.0.16",
-    "@coveo/headless": "3.25.2",
+    "@coveo/bueno": "1.0.17",
+    "@coveo/headless": "3.26.0",
     "typescript": ">=5.0.0"
   },
   "peerDependenciesMeta": {

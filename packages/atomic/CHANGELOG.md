@@ -1,3 +1,23 @@
+## <small>3.27.1 (2025-06-11)</small>
+
+- chore(atomic commerce): add tests for createCommerceRecommendationStore (#5433) ([1c8addd](https://github.com/coveo/ui-kit/commits/1c8addd)), closes [#5433](https://github.com/coveo/ui-kit/issues/5433)
+- chore(atomic commerce): migrate facet search input (#5403) ([5b2a256](https://github.com/coveo/ui-kit/commits/5b2a256)), closes [#5403](https://github.com/coveo/ui-kit/issues/5403)
+- chore(atomic): add tests for getAtomicEnvironment and setCoveoGlobal (#5430) ([8ba4112](https://github.com/coveo/ui-kit/commits/8ba4112)), closes [#5430](https://github.com/coveo/ui-kit/issues/5430)
+- chore(atomic): add tests for isInDocument util function (#5434) ([d285e3c](https://github.com/coveo/ui-kit/commits/d285e3c)), closes [#5434](https://github.com/coveo/ui-kit/issues/5434)
+- chore(atomic): add tests for loadDayjsLocale (#5431) ([ebe472d](https://github.com/coveo/ui-kit/commits/ebe472d)), closes [#5431](https://github.com/coveo/ui-kit/issues/5431)
+- chore(atomic): clearer interface for search box suggestions components (#5417) ([433c88b](https://github.com/coveo/ui-kit/commits/433c88b)), closes [#5417](https://github.com/coveo/ui-kit/issues/5417) [/github.com/coveo/ui-kit/pull/5342#discussion_r2116097327](https://github.com//github.com/coveo/ui-kit/pull/5342/issues/discussion_r2116097327)
+- chore(atomic): migrate item-text utils (#5418) ([3d04b00](https://github.com/coveo/ui-kit/commits/3d04b00)), closes [#5418](https://github.com/coveo/ui-kit/issues/5418)
+- chore(atomic): migrate query-summary/guard.tsx (#5386) ([abd8df2](https://github.com/coveo/ui-kit/commits/abd8df2)), closes [#5386](https://github.com/coveo/ui-kit/issues/5386)
+- chore(atomic): migrate query-summary/utils.tsx (#5388) ([843c24c](https://github.com/coveo/ui-kit/commits/843c24c)), closes [#5388](https://github.com/coveo/ui-kit/issues/5388)
+- chore(atomic): remove TemplateResult[] from Lit interface (#5424) ([83e9572](https://github.com/coveo/ui-kit/commits/83e9572)), closes [#5424](https://github.com/coveo/ui-kit/issues/5424)
+- chore(deps): update tailwind to v4.1.8 j:kit-282 (#5438) ([4667267](https://github.com/coveo/ui-kit/commits/4667267)), closes [#5438](https://github.com/coveo/ui-kit/issues/5438)
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+- chore(headless): stop bundling ESM headless for NPM (#5346) ([7de844f](https://github.com/coveo/ui-kit/commits/7de844f)), closes [#5346](https://github.com/coveo/ui-kit/issues/5346)
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
+- test(atomic): add missing unit tests (#5435) ([823bdcc](https://github.com/coveo/ui-kit/commits/823bdcc)), closes [#5435](https://github.com/coveo/ui-kit/issues/5435)
+- docs(atomic): better spacing for search box suggestions storybook doc (#5416) ([6773038](https://github.com/coveo/ui-kit/commits/6773038)), closes [#5416](https://github.com/coveo/ui-kit/issues/5416)
+
 ## 3.27.0 (2025-06-04)
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
