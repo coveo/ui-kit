@@ -1,6 +1,6 @@
-import {BaseFacetSearchResult} from '../../../../../api/search/facet-search/base/base-facet-search-response.js';
-import {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
-import {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
+import type {BaseFacetSearchResult} from '../../../../../api/search/facet-search/base/base-facet-search-response.js';
+import type {CategoryFacetSearchResult} from '../../../../../api/search/facet-search/category-facet-search/category-facet-search-response.js';
+import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {ensureAtLeastOneSolutionType} from '../../../../../app/commerce-ssr-engine/common.js';
 import {
   ControllerDefinitionOption,
@@ -9,8 +9,8 @@ import {
 } from '../../../../../app/commerce-ssr-engine/types/common.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
-import {CategoryFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
-import {
+import type {CategoryFacetRequest} from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
+import type {
   AnyFacetResponse,
   LocationFacetValue,
   RegularFacetValue,
@@ -19,7 +19,7 @@ import {manualNumericFacetSelector} from '../../../../../features/commerce/facet
 import {manualNumericFacetReducer as manualNumericFacetSet} from '../../../../../features/commerce/facets/numeric-facet/manual-numeric-facet-slice.js';
 import {categoryFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/category/category-facet-search-state-selector.js';
 import {specificFacetSearchStateSelector} from '../../../../../features/facets/facet-search-set/specific/specific-facet-search-state-selector.js';
-import {ManualRangeSection} from '../../../../../state/state-sections.js';
+import type {ManualRangeSection} from '../../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {
   isFacetLoadingResponseSelector as listingIsFacetLoadingResponseSelector,
@@ -31,40 +31,40 @@ import {
   facetResponseSelector as searchFacetResponseSelector,
 } from '../../../search/facets/headless-search-facet-options.js';
 import {buildSearch} from '../../../search/headless-search.js';
-import {
+import type {
   CategoryFacet,
   CategoryFacetState,
-  getCategoryFacetState,
 } from '../category/headless-commerce-category-facet.js';
-import {
+import {getCategoryFacetState} from '../category/headless-commerce-category-facet.js';
+import type {
   DateFacet,
   DateFacetState,
   DateFacetValue,
-  getDateFacetState,
 } from '../date/headless-commerce-date-facet.js';
-import {
+import {getDateFacetState} from '../date/headless-commerce-date-facet.js';
+import type {
   CategoryFacetValue,
   FacetType,
-  getCoreFacetState,
   CoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
-import {
-  getLocationFacetState,
+import {getCoreFacetState} from '../headless-core-commerce-facet.js';
+import type {
   LocationFacet,
   LocationFacetState,
 } from '../location/headless-commerce-location-facet.js';
-import {
-  getNumericFacetState,
+import {getLocationFacetState} from '../location/headless-commerce-location-facet.js';
+import type {
   NumericFacet,
   NumericFacetValue,
   NumericFacetState,
 } from '../numeric/headless-commerce-numeric-facet.js';
-import {
-  getRegularFacetState,
+import {getNumericFacetState} from '../numeric/headless-commerce-numeric-facet.js';
+import type {
   RegularFacet,
   RegularFacetState,
 } from '../regular/headless-commerce-regular-facet.js';
-import {
+import {getRegularFacetState} from '../regular/headless-commerce-regular-facet.js';
+import type {
   FacetGenerator as CSRFacetGenerator,
   MappedGeneratedFacetController,
 } from './headless-commerce-facet-generator.js';
