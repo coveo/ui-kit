@@ -18,11 +18,12 @@ useCaseTestCases.forEach((useCase) => {
         search,
       }) => {
         const searchResponsePromise = search.waitForSearchResponse();
+        const pagerNextUaAnalyticsPromise = pager.waitForPagerNextUaAnalytics();
         await pager.clickNextPageButton();
         const searchResponse = await searchResponsePromise;
         const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(numberOfResultsPerPage);
-        await pager.waitForPagerNextUaAnalytics();
+        await pagerNextUaAnalyticsPromise;
       });
     });
 
@@ -36,11 +37,13 @@ useCaseTestCases.forEach((useCase) => {
         await initialSearchResponsePromise;
 
         const searchResponsePromise = search.waitForSearchResponse();
+        const pagerPreviousUaAnalyticsPromise =
+          pager.waitForPagerPreviousUaAnalytics();
         await pager.clickPreviousPageButton();
         const searchResponse = await searchResponsePromise;
         const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(0);
-        await pager.waitForPagerPreviousUaAnalytics();
+        await pagerPreviousUaAnalyticsPromise;
       });
     });
 
@@ -51,11 +54,13 @@ useCaseTestCases.forEach((useCase) => {
       }) => {
         const examplePage = 3;
         const searchResponsePromise = search.waitForSearchResponse();
+        const pagerPageUaAnalyticsPromise =
+          pager.waitForPagerNumberUaAnalytics();
         await pager.clickPageNumberButton(examplePage);
         const searchResponse = await searchResponsePromise;
         const {firstResult} = searchResponse.request().postDataJSON();
         expect(firstResult).toBe(numberOfResultsPerPage * (examplePage - 1));
-        await pager.waitForPagerNumberUaAnalytics();
+        await pagerPageUaAnalyticsPromise;
       });
     });
 

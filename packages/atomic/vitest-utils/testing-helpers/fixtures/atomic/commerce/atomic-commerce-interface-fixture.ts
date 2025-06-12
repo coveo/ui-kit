@@ -35,9 +35,7 @@ export class FixtureAtomicCommerceInterface
   @provide({context: bindingsContext})
   bindings: CommerceBindings = {} as CommerceBindings;
   error?: Error | undefined;
-  updateIconAssetsPath(): void {
-    throw new Error('Method not implemented.');
-  }
+  updateIconAssetsPath = () => {};
   registerFieldsToInclude?: (() => void) | undefined;
 
   @property({reflect: true, type: Boolean})
