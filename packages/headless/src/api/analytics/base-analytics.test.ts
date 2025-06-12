@@ -1,4 +1,4 @@
-import {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
+import type {SearchEventRequest} from 'coveo.analytics/dist/definitions/events.js';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state.js';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state.js';
 import {buildMockAnalyticsState} from '../../test/mock-analytics-state.js';

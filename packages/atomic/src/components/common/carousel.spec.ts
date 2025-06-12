@@ -87,7 +87,7 @@ describe('carousel', () => {
   it('should render an icon inside the previous button', async () => {
     await renderComponent();
 
-    expect(locators.previousButtonIcon).toBeVisible();
+    await expect(locators.previousButtonIcon).toBeVisible();
     expect(locators.previousButtonIcon).toHaveAttribute(
       'icon',
       expect.stringMatching(/<svg/)

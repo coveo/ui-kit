@@ -16,7 +16,7 @@ import {
   SearchBoxSuggestionsBindings,
 } from '@/src/components/common/suggestions/suggestions-common';
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
 import {encodeForDomAttribute} from '@/src/utils/string-utils';
 import {
@@ -53,7 +53,7 @@ export type AriaLabelGenerator = (
 @withTailwindStyles
 export class AtomicCommerceSearchBoxInstantProducts
   extends LitElement
-  implements InitializableComponent<CommerceBindings>
+  implements SearchBoxSuggestionsComponent<CommerceBindings>
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
   private itemRenderingFunction: ItemRenderingFunction;

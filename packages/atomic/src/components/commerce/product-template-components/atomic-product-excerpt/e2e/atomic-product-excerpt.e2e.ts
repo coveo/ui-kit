@@ -41,7 +41,7 @@ test.describe('atomic-product-excerpt', async () => {
   test('should render excerpt text', async ({productExcerpt}) => {
     await productExcerpt.hydrated.first().waitFor();
 
-    expect(productExcerpt.textContent.first()).toBeVisible();
+    await expect(productExcerpt.textContent.first()).toBeVisible();
   });
 
   test.describe('when excerpt is truncated', async () => {
@@ -67,12 +67,12 @@ test.describe('atomic-product-excerpt', async () => {
           await productExcerpt.hydrated.first().waitFor();
 
           const excerptText = productExcerpt.textContent.first();
-          expect(excerptText).toHaveClass(expectedClass);
+          await expect(excerptText).toHaveClass(expectedClass);
         });
 
         test('should show "Show More" button', async ({productExcerpt}) => {
           const showMoreButton = productExcerpt.showMoreButton.first();
-          expect(showMoreButton).toBeVisible();
+          await expect(showMoreButton).toBeVisible();
         });
 
         test.describe('when clicking the "Show More" button', async () => {
@@ -87,12 +87,12 @@ test.describe('atomic-product-excerpt', async () => {
 
             test('should expand excerpt', async ({productExcerpt}) => {
               const excerptText = productExcerpt.textContent.first();
-              expect(excerptText).not.toHaveClass(expectedClass);
+              await expect(excerptText).not.toHaveClass(expectedClass);
             });
 
             test('should show "Show Less" button', async ({productExcerpt}) => {
               const showLessButton = productExcerpt.showLessButton.first();
-              expect(showLessButton).toBeVisible();
+              await expect(showLessButton).toBeVisible();
             });
 
             test('should collapse excerpt when clicking the "Show Less" button', async ({
@@ -101,7 +101,7 @@ test.describe('atomic-product-excerpt', async () => {
               const excerptText = productExcerpt.textContent.first();
               await productExcerpt.showLessButton.first().click();
 
-              expect(excerptText).toHaveClass(expectedClass);
+              await expect(excerptText).toHaveClass(expectedClass);
             });
           });
 
@@ -116,13 +116,13 @@ test.describe('atomic-product-excerpt', async () => {
 
             test('should expand excerpt', async ({productExcerpt}) => {
               const excerptText = productExcerpt.textContent.first();
-              expect(excerptText).not.toHaveClass(expectedClass);
+              await expect(excerptText).not.toHaveClass(expectedClass);
             });
 
             test('should not show "Show Less" button', async ({
               productExcerpt,
             }) => {
-              expect(productExcerpt.showLessButton).not.toBeVisible();
+              await expect(productExcerpt.showLessButton).not.toBeVisible();
             });
           });
         });
@@ -137,7 +137,7 @@ test.describe('atomic-product-excerpt', async () => {
       });
       await productExcerpt.hydrated.first().waitFor();
 
-      expect(productExcerpt.showMoreButton).not.toBeVisible();
+      await expect(productExcerpt.showMoreButton).not.toBeVisible();
     });
   });
 });
