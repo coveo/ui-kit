@@ -2,6 +2,7 @@ import {
   answerEvaluation,
   AnswerEvaluationPOSTParams,
 } from '../../../api/knowledge/post-answer-evaluation.js';
+import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
@@ -22,7 +23,6 @@ import {
 import {GeneratedAnswerFeedback} from '../../../features/generated-answer/generated-answer-analytics-actions.js';
 import {filterOutDuplicatedCitations} from '../../../features/generated-answer/utils/generated-answer-citation-utils.js';
 import {queryReducer as query} from '../../../features/query/query-slice.js';
-import {updateSearchAction} from '../../../features/search/search-actions.js';
 import {
   GeneratedAnswerSection,
   QuerySection,
@@ -119,10 +119,9 @@ const subscribeToSearchRequest = (
     }
 
     lastTriggerParams = triggerParams;
-    // TODO: SVCC-5178 Refactor multiple sequential dispatches in stream-api
-    engine.dispatch(resetAnswer());
-    engine.dispatch(fetchAnswer(state, engine.navigatorContext));
-    engine.dispatch(updateSearchAction());
+    engine.dispatch(
+      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
+    );
   };
 
   engine.subscribe(strictListener);
