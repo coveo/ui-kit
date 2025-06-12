@@ -200,6 +200,7 @@ export class AtomicCommerceRecommendationList
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () => this.recommendationsState.responseId,
     });
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;

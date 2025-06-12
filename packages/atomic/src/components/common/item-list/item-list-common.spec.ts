@@ -550,6 +550,7 @@ describe('ItemListCommon', () => {
     return new ItemListCommon({
       engineSubscribe: vi.fn(),
       getCurrentNumberOfItems: vi.fn(),
+      getCurrentSearchResponseId: vi.fn(),
       getIsLoading: vi.fn(),
       nextNewItemTarget: {
         focus: vi.fn(),

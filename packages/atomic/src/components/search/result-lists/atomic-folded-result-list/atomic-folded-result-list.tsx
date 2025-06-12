@@ -219,6 +219,8 @@ export class AtomicFoldedResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () =>
+        this.foldedResultListState.searchResponseId,
     });
     this.tabManager = buildTabManager(this.bindings.engine);
 

@@ -202,6 +202,8 @@ export class AtomicIPXRecsList implements InitializableComponent<RecsBindings> {
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () =>
+        this.recommendationListState.searchResponseId,
     });
     this.actionsHistoryActions = loadIPXActionsHistoryActions(
       this.bindings.engine

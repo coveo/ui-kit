@@ -165,6 +165,7 @@ export class AtomicCommerceProductList
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () => this.productState.responseId,
     });
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;

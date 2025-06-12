@@ -38,12 +38,14 @@ export interface ItemListCommonProps {
   getCurrentNumberOfItems: () => number;
   getIsLoading: () => boolean;
   engineSubscribe: (cb: () => void) => () => void;
+  getCurrentSearchResponseId: () => string | undefined;
 }
 
 export class ItemListCommon {
   private indexOfResultToFocus?: number;
   private firstResultEl?: HTMLElement;
   private updateBreakpointsOnce: () => void;
+  private lastSearchId?: string;
 
   constructor(private props: ItemListCommonProps) {
     this.props.store.setLoadingFlag(this.props.loadingFlag);
@@ -65,6 +67,9 @@ export class ItemListCommon {
   }
 
   public setNewResultRef(element: HTMLElement, resultIndex: number) {
+    // Check and reset focus target if this is a new search
+    this.checkAndResetFocusTargetForNewSearch();
+
     if (resultIndex === 0) {
       this.firstResultEl = element;
     }
@@ -107,5 +112,17 @@ export class ItemListCommon {
         }
       });
     });
+  }
+
+  private checkAndResetFocusTargetForNewSearch() {
+    // Get the current search ID to detect if this is a new search
+    const currentSearchId = this.props.getCurrentSearchResponseId();
+
+    // If this is a new search, reset the focus target to prevent
+    // scrolling to a previous "Load More" target
+    if (currentSearchId && currentSearchId !== this.lastSearchId) {
+      this.indexOfResultToFocus = undefined;
+      this.lastSearchId = currentSearchId;
+    }
   }
 }

@@ -198,6 +198,8 @@ export class AtomicRecsList implements InitializableComponent<RecsBindings> {
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () =>
+        this.recommendationListState.searchResponseId,
     });
 
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {

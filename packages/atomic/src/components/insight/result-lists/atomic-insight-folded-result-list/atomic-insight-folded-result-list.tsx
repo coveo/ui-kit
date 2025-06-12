@@ -163,6 +163,8 @@ export class AtomicInsightFoldedResultList
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () =>
+        this.foldedResultListState.searchResponseId,
     });
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;

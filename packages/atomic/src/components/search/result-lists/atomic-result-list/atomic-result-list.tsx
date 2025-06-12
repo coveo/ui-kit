@@ -191,6 +191,7 @@ export class AtomicResultList implements InitializableComponent {
       loadingFlag: this.loadingFlag,
       nextNewItemTarget: this.focusTarget,
       store: this.bindings.store,
+      getCurrentSearchResponseId: () => this.resultListState.searchResponseId,
     });
     createAppLoadedListener(this.bindings.store, (isAppLoaded) => {
       this.isAppLoaded = isAppLoaded;
