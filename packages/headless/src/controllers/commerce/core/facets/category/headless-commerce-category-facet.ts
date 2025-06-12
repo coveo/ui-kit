@@ -97,19 +97,51 @@ export function buildCategoryFacet(
   const {deselectAll, isValueSelected, subscribe, toggleSelect} =
     coreController;
   const {dispatch} = engine;
-  const getFacetId = () => coreController.state.facetId;
+  const {facetId} = options;
   const facetSearch = buildCategoryFacetSearch(engine, {
-    options: {facetId: getFacetId(), ...options.facetSearch},
+    options: {facetId, ...options.facetSearch},
     select: () => {
       dispatch(options.fetchProductsActionCreator());
     },
     isForFieldSuggestions: false,
   });
+
   const getRequest = () =>
-    facetRequestSelector(
-      engine[stateKey],
-      getFacetId()
-    ) as CategoryFacetRequest;
+    facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
+
+  const showMoreRootValues = (request: CategoryFacetRequest) => {
+    const initialNumberOfValues =
+      request.initialNumberOfValues ?? request.numberOfValues ?? 0;
+    const numberToNextMultipleOfConfigured =
+      initialNumberOfValues - (request.values.length % initialNumberOfValues);
+    const numberOfValues =
+      request.values.length + numberToNextMultipleOfConfigured;
+
+    dispatch(
+      updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues,
+      })
+    );
+    dispatch(options.fetchProductsActionCreator());
+  };
+
+  const showMoreChildValues = (activeValue: CategoryFacetValue) => {
+    const initialNumberOfValues = activeValue.children.length ?? 0;
+    const numberToNextMultipleOfConfigured =
+      initialNumberOfValues -
+      (activeValue.children.length % initialNumberOfValues);
+    const numberOfValues =
+      activeValue.children.length + numberToNextMultipleOfConfigured;
+
+    dispatch(
+      updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues,
+      })
+    );
+    dispatch(options.fetchProductsActionCreator());
+  };
 
   return {
     deselectAll,
@@ -124,30 +156,24 @@ export function buildCategoryFacet(
       const activeValue = selectedValueAncestry.length
         ? selectedValueAncestry[selectedValueAncestry.length - 1]
         : undefined;
-      const numberInState = activeValue
-        ? activeValue.children.length
-        : (request?.values.length ?? 1);
-      const initialNumberOfValues =
-        request?.initialNumberOfValues ?? request.numberOfValues ?? 0;
-      const numberToNextMultipleOfConfigured =
-        initialNumberOfValues - (numberInState % initialNumberOfValues);
-      const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
-      const {facetId} = options;
 
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(options.fetchProductsActionCreator());
+      if (activeValue) {
+        showMoreChildValues(activeValue);
+        return;
+      }
+
+      showMoreRootValues(request);
     },
 
     showLessValues() {
-      const {facetId} = options;
+      const request = getRequest();
+      const numberOfValues =
+        request.initialNumberOfValues ?? request.numberOfValues ?? 1;
 
       dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues:
-            getRequest()?.initialNumberOfValues ??
-            getRequest()?.numberOfValues ??
-            0,
+          numberOfValues,
         })
       );
       dispatch(options.fetchProductsActionCreator());
@@ -158,7 +184,7 @@ export function buildCategoryFacet(
     get state() {
       return getCategoryFacetState(
         coreController.state,
-        categoryFacetSearchStateSelector(engine[stateKey], getFacetId()),
+        categoryFacetSearchStateSelector(engine[stateKey], facetId),
         getRequest()
       );
     },
@@ -177,13 +203,20 @@ export const getCategoryFacetState = (
   const activeValue = selectedValueAncestry.length
     ? selectedValueAncestry[selectedValueAncestry.length - 1]
     : undefined;
-  const initialNumberOfValues = request?.initialNumberOfValues ?? 0;
-  const canShowLessValues = activeValue
-    ? initialNumberOfValues < activeValue.children.length
-    : initialNumberOfValues < values.length;
-  const canShowMoreValues =
-    activeValue?.moreValuesAvailable ?? coreState.canShowMoreValues ?? false;
-  const hasActiveValues = !!activeValue;
+
+  const initialNumberOfValues = request?.initialNumberOfValues;
+
+  const canShowLessValues =
+    !!initialNumberOfValues &&
+    (activeValue
+      ? activeValue.children.length > 0 &&
+        initialNumberOfValues < (request?.retrieveCount ?? 0)
+      : initialNumberOfValues <
+        (request?.numberOfValues ?? request?.values.length ?? 0));
+
+  const canShowMoreValues = activeValue
+    ? activeValue?.moreValuesAvailable
+    : coreState.canShowMoreValues;
 
   return {
     ...coreState,
@@ -197,7 +230,7 @@ export const getCategoryFacetState = (
       query: facetSearchSelector?.options.query ?? '',
       values: facetSearchSelector?.response.values ?? [],
     },
-    hasActiveValues,
+    hasActiveValues: !!activeValue,
     selectedValueAncestry,
     type: 'hierarchical',
     values,

@@ -23,12 +23,13 @@ export type CategoryFacetRequest = BaseCommerceFacetRequest<
   'hierarchical'
 > &
   CategoryFacetDelimitingCharacter &
-  FreezableFacetRequestProperties;
+  FreezableFacetRequestProperties & {
+    retrieveCount?: number;
+  };
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   children: CategoryFacetValueRequest[];
   value: string;
-  retrieveCount?: number;
 }
 
 export type DateFacetRequest = BaseCommerceFacetRequest<

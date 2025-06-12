@@ -176,8 +176,6 @@ export function selectPath(
 ) {
   request.values = buildCurrentValuesFromPath(path);
   request.numberOfValues = initialNumberOfValues;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (request as unknown as any).retrieveCount = initialNumberOfValues;
   request.preventAutoSelect = true;
 }
 

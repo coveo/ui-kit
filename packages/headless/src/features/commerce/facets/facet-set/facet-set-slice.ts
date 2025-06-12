@@ -219,51 +219,8 @@ export const commerceFacetSetReducer = createReducer(
 
         if (selectedValue.state === 'selected') {
           request.numberOfValues = request.initialNumberOfValues;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (request as unknown as any).retrieveCount =
-            request.initialNumberOfValues;
+          request.retrieveCount = request.initialNumberOfValues;
         }
-
-        // When selecting a root value
-        // if (fullPath.length === 1 && selection.state === 'idle') {
-        //   let value = request.values.find((v) => v.value === selection.value);
-        //   if (!value) {
-        //     value = buildCategoryFacetValueRequest(
-        //       selection.value,
-        //       retrieveCount
-        //     );
-        //     selectedValueAndSiblings.push(value);
-        //   }
-
-        //   value.state = 'selected';
-        //   value.children.map((c) => (c.state = 'idle'));
-        //   request.numberOfValues = 1;
-        //   return;
-        // } else if (selection.path.length === 1) {
-        //   console.log('unselecting root value');
-        //   request.numberOfValues = request.initialNumberOfValues;
-        //   request.values = [];
-        //   return;
-        // }
-
-        // const c = selectedValueAndSiblings.find(
-        //   (c) => c.value === selection.value
-        // );
-
-        // if (c) {
-        //   c.state = c.state === 'idle' ? 'selected' : 'idle';
-        //   request.numberOfValues = 1;
-        //   return;
-        // }
-
-        // const newParent = buildCategoryFacetValueRequest(
-        //   selection.value,
-        //   retrieveCount
-        // );
-
-        // newParent.state = 'selected';
-        // selectedValueAndSiblings.push(newParent);
-        // request.numberOfValues = 1;
       })
       .addCase(toggleExcludeFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -568,7 +525,8 @@ function handleFieldSuggestionsFulfilled(
 
 function handleDeselectAllFacetValues(request: AnyFacetRequest) {
   if (request.type === 'hierarchical') {
-    request.numberOfValues = request.initialNumberOfValues;
+    request.initialNumberOfValues = undefined;
+    request.numberOfValues = undefined;
     request.values = [];
     request.preventAutoSelect = true;
   } else {
