@@ -114,12 +114,46 @@ describe('CategoryFacet', () => {
     });
   });
 
-  it('#showLessValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
-    facet.showLessValues();
+  describe('#showLessValues', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues from the request', () => {
+      setFacetState({}, false, {initialNumberOfValues: 7});
 
-    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
-      facetId,
-      numberOfValues: 5,
+      facet.showLessValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: 7,
+      });
+    });
+
+    it('should dispatch #updateCategoryFacetNumberOfValues with 1 when initialNumberOfValues is not set', () => {
+      setFacetState({}, false, {initialNumberOfValues: undefined});
+
+      facet.showLessValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: 1,
+      });
+    });
+
+    it('should dispatch #fetchProductsActionCreator after updating number of values', () => {
+      setFacetState({}, false, {initialNumberOfValues: 3});
+
+      facet.showLessValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).toHaveBeenCalled();
+
+      const updateCall = (
+        updateCategoryFacetNumberOfValues as unknown as {
+          mock: {invocationCallOrder: number[]};
+        }
+      ).mock.invocationCallOrder[0];
+      const fetchCall =
+        mockFetchProductsActionCreator.mock.invocationCallOrder[0];
+
+      expect(updateCall).toBeLessThan(fetchCall);
     });
   });
 
@@ -308,37 +342,34 @@ describe('CategoryFacet', () => {
     });
 
     describe('#canShowMoreValues', () => {
-      describe('when no value is selected', () => {
-        it('when there are no more values available, returns false', () => {
-          expect(facet.state.canShowMoreValues).toBe(false);
+      describe('when a value is active in the facet', () => {
+        it('should be true when canShowMoreValues is true on the active value', () => {
+          const activeValue = buildMockCategoryFacetValue({
+            state: 'selected',
+            moreValuesAvailable: true,
+          });
+          setFacetState({values: [activeValue]});
+          expect(facet.state.canShowMoreValues).toBe(true);
         });
 
-        it('when there are more values available, returns true', () => {
-          setFacetState({}, true);
-
-          expect(facet.state.canShowMoreValues).toBe(true);
+        it('should be false when canShowMoreValues is false on the active value', () => {
+          const activeValue = buildMockCategoryFacetValue({
+            state: 'selected',
+            moreValuesAvailable: false,
+          });
+          setFacetState({values: [activeValue]});
+          expect(facet.state.canShowMoreValues).toBe(false);
         });
       });
-
-      describe('when a value is selected', () => {
-        it('when selected values has no more values available, returns false', () => {
-          setFacetState({
-            values: [buildMockCategoryFacetValue({state: 'selected'})],
-          });
-
-          expect(facet.state.canShowMoreValues).toBe(false);
-        });
-        it('when selected value has more values available, returns true', () => {
-          setFacetState({
-            values: [
-              buildMockCategoryFacetValue({
-                state: 'selected',
-                moreValuesAvailable: true,
-              }),
-            ],
-          });
-
+      describe('when no value is active in the facet', () => {
+        it('should be true when canShowMoreValues is true in the core facet state', () => {
+          setFacetState({}, true);
           expect(facet.state.canShowMoreValues).toBe(true);
+        });
+
+        it('should be false when canShowMoreValues is false in the core facet state', () => {
+          setFacetState({}, false);
+          expect(facet.state.canShowMoreValues).toBe(false);
         });
       });
     });
@@ -365,16 +396,16 @@ describe('CategoryFacet', () => {
     });
 
     describe('#hasActiveValues', () => {
-      it('when no value is selected, returns false', () => {
-        expect(facet.state.hasActiveValues).toBe(false);
-      });
-
-      it('when a value is selected, returns true', () => {
+      it('should be true when a value is active in the facet', () => {
         setFacetState({
           values: [buildMockCategoryFacetValue({state: 'selected'})],
         });
 
         expect(facet.state.hasActiveValues).toBe(true);
+      });
+
+      it('should be false when no value is active in the facet', () => {
+        expect(facet.state.hasActiveValues).toBe(false);
       });
     });
 
