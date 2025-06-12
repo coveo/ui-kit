@@ -119,7 +119,9 @@ export function buildCategoryFacet(
     showMoreValues() {
       const {initialNumberOfValues, values} = getRequest();
 
-      const numberOfValues = values.length + (initialNumberOfValues ?? 1);
+      const numberOfValues = initialNumberOfValues
+        ? values.length + initialNumberOfValues
+        : values.length * 2;
 
       dispatch(
         updateCategoryFacetNumberOfValues({
