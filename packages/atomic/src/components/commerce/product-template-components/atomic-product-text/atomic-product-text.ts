@@ -11,7 +11,7 @@ import '../../../common/item-text/item-text-fallback.js';
 import '../../../common/item-text/item-text-highlighted.js';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
 import '../../atomic-commerce-text/atomic-commerce-text';
-import {ProductContext} from '../product-template-decorators';
+import {createProductContextController} from '../product-template-decorators';
 import {getStringValueFromProductOrNull} from '../product-utils';
 
 /**
@@ -42,7 +42,9 @@ export class AtomicProductText
   /**
    * The product object to render from. Must be set by the parent.
    */
-  @ProductContext() product!: Product;
+  @property({type: Object}) product!: Product;
+
+  private productController = createProductContextController(this);
 
   @state() bindings!: CommerceBindings;
 
@@ -53,43 +55,47 @@ export class AtomicProductText
   @bindingGuard()
   @errorGuard()
   render() {
+    if (!this.product && this.productController.item) {
+      this.product = this.productController.item;
+    }
+
+    if (!this.product) {
+      return html`${nothing}`;
+    }
+
     return html`
-      ${!this.product
-        ? nothing
-        : (() => {
-            const productValueAsString = getStringValueFromProductOrNull(
-              this.product,
-              this.field
-            );
+      ${(() => {
+        const productValueAsString = getStringValueFromProductOrNull(
+          this.product,
+          this.field
+        );
 
-            if (productValueAsString === null) {
-              return html`
-                <atomic-commerce-text
-                  .value=${getFieldValueCaption(
-                    this.field,
-                    this.default,
-                    this.bindings.i18n
-                  )}
-                ></atomic-commerce-text>
-              `;
-            }
+        if (productValueAsString === null) {
+          return html`
+            <atomic-commerce-text
+              .value=${getFieldValueCaption(
+                this.field,
+                this.default,
+                this.bindings.i18n
+              )}
+            ></atomic-commerce-text>
+          `;
+        }
 
-            const textValue = `${productValueAsString}`;
-            return html`
-              <atomic-commerce-text
-                .value=${getFieldValueCaption(
-                  this.field,
-                  textValue,
-                  this.bindings.i18n
-                )}
-              ></atomic-commerce-text>
-            `;
-          })()}
+        const textValue = `${productValueAsString}`;
+        return html`
+          <atomic-commerce-text
+            .value=${getFieldValueCaption(
+              this.field,
+              textValue,
+              this.bindings.i18n
+            )}
+          ></atomic-commerce-text>
+        `;
+      })()}
     `;
   }
 }
-
-// Export for type safety
 
 declare global {
   interface HTMLElementTagNameMap {
