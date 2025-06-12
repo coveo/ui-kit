@@ -1,10 +1,10 @@
-import {FacetValueState} from '../../../facets/facet-api/value.js';
-import {FacetValueRequest} from '../../../facets/facet-set/interfaces/request.js';
-import {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request.js';
-import {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
-import {Parameters} from '../../parameters/parameters-actions.js';
-import {CommerceFacetSetState} from './facet-set-state.js';
-import {
+import type {FacetValueState} from '../../../facets/facet-api/value.js';
+import type {FacetValueRequest} from '../../../facets/facet-set/interfaces/request.js';
+import type {DateRangeRequest} from '../../../facets/range-facets/date-facet-set/interfaces/request.js';
+import type {NumericRangeRequest} from '../../../facets/range-facets/numeric-facet-set/interfaces/request.js';
+import type {Parameters} from '../../parameters/parameters-actions.js';
+import type {CommerceFacetSetState} from './facet-set-state.js';
+import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
   DateFacetRequest,
