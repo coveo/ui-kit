@@ -5,7 +5,7 @@ import {
   updateCategoryFacetNumberOfValues,
 } from '../../../../../features/commerce/facets/category-facet/category-facet-actions.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
-import {
+import type {
   CategoryFacetRequest,
   CategoryFacetValueRequest,
 } from '../../../../../features/commerce/facets/facet-set/interfaces/request.js';
@@ -19,7 +19,7 @@ import {
   FacetControllerType,
   buildCoreCommerceFacet,
 } from '../headless-core-commerce-facet.js';
-import {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
+import type {SearchableFacetOptions} from '../searchable/headless-commerce-searchable-facet.js';
 import {
   CategoryFacetSearch,
   CategoryFacetSearchState,
@@ -98,6 +98,7 @@ export function buildCategoryFacet(
     coreController;
   const {dispatch} = engine;
   const {facetId} = options;
+
   const facetSearch = buildCategoryFacetSearch(engine, {
     options: {facetId, ...options.facetSearch},
     select: () => {
@@ -109,40 +110,6 @@ export function buildCategoryFacet(
   const getRequest = () =>
     facetRequestSelector(engine[stateKey], facetId)! as CategoryFacetRequest;
 
-  const showMoreRootValues = (request: CategoryFacetRequest) => {
-    const initialNumberOfValues =
-      request.initialNumberOfValues ?? request.numberOfValues ?? 0;
-    const numberToNextMultipleOfConfigured =
-      initialNumberOfValues - (request.values.length % initialNumberOfValues);
-    const numberOfValues =
-      request.values.length + numberToNextMultipleOfConfigured;
-
-    dispatch(
-      updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues,
-      })
-    );
-    dispatch(options.fetchProductsActionCreator());
-  };
-
-  const showMoreChildValues = (activeValue: CategoryFacetValue) => {
-    const initialNumberOfValues = activeValue.children.length ?? 0;
-    const numberToNextMultipleOfConfigured =
-      initialNumberOfValues -
-      (activeValue.children.length % initialNumberOfValues);
-    const numberOfValues =
-      activeValue.children.length + numberToNextMultipleOfConfigured;
-
-    dispatch(
-      updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues,
-      })
-    );
-    dispatch(options.fetchProductsActionCreator());
-  };
-
   return {
     deselectAll,
     isValueSelected,
@@ -150,25 +117,9 @@ export function buildCategoryFacet(
     toggleSelect,
 
     showMoreValues() {
-      const request = getRequest();
-      const {values} = coreController.state;
-      const selectedValueAncestry = findActiveValueAncestry(values);
-      const activeValue = selectedValueAncestry.length
-        ? selectedValueAncestry[selectedValueAncestry.length - 1]
-        : undefined;
+      const {initialNumberOfValues, values} = getRequest();
 
-      if (activeValue) {
-        showMoreChildValues(activeValue);
-        return;
-      }
-
-      showMoreRootValues(request);
-    },
-
-    showLessValues() {
-      const request = getRequest();
-      const numberOfValues =
-        request.initialNumberOfValues ?? request.numberOfValues ?? 1;
+      const numberOfValues = values.length + (initialNumberOfValues ?? 1);
 
       dispatch(
         updateCategoryFacetNumberOfValues({
@@ -176,6 +127,21 @@ export function buildCategoryFacet(
           numberOfValues,
         })
       );
+
+      dispatch(options.fetchProductsActionCreator());
+    },
+
+    showLessValues() {
+      const request = getRequest();
+      const numberOfValues = request.initialNumberOfValues ?? 1;
+
+      dispatch(
+        updateCategoryFacetNumberOfValues({
+          facetId,
+          numberOfValues,
+        })
+      );
+
       dispatch(options.fetchProductsActionCreator());
     },
 
@@ -203,19 +169,15 @@ export const getCategoryFacetState = (
   const activeValue = selectedValueAncestry.length
     ? selectedValueAncestry[selectedValueAncestry.length - 1]
     : undefined;
+  const initialNumberOfValues = request?.initialNumberOfValues ?? 1;
 
-  const initialNumberOfValues = request?.initialNumberOfValues;
-
-  const canShowLessValues =
-    !!initialNumberOfValues &&
-    (activeValue
-      ? activeValue.children.length > 0 &&
-        initialNumberOfValues < (request?.retrieveCount ?? 0)
-      : initialNumberOfValues <
-        (request?.numberOfValues ?? request?.values.length ?? 0));
+  const canShowLessValues = activeValue
+    ? initialNumberOfValues < activeValue.children.length
+    : initialNumberOfValues <
+      (request?.numberOfValues ?? request?.values.length ?? 0);
 
   const canShowMoreValues = activeValue
-    ? activeValue?.moreValuesAvailable
+    ? activeValue.moreValuesAvailable
     : coreState.canShowMoreValues;
 
   return {
