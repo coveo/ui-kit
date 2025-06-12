@@ -137,6 +137,12 @@ function restoreCategoryFacets(
         // eslint-disable-next-line @cspell/spellchecker
         // TODO CAPI-966: Remove delimitingCharacter
         delimitingCharacter: '|',
+        // In the CAPI, the default retrieveCount is 5, while the default
+        // numberOfValues is 8. We explicitly set retrieveCount to 8 when
+        // restoring category facets to ensure a consistent show more / show
+        // less behavior, given that the retrieveCount is not returned in the
+        // API response.
+        retrieveCount: 8,
       } as CategoryFacetRequest,
     };
     selectPath(state[facetId].request as CategoryFacetRequest, path);
