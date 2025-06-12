@@ -9,16 +9,18 @@ const interactiveItemContextEventName = 'atomic/resolveInteractiveResult';
  * A reactive controller that manages interactive item context data from parent components.
  * Handles fetching interactive item data via custom events.
  */
-export class InteractiveItemContextController implements ReactiveController {
+export class InteractiveItemContextController<T extends AnyItem = AnyItem>
+  implements ReactiveController
+{
   private host: ReactiveControllerHost & LitElementWithError;
-  private _interactiveItem: AnyItem | null = null;
+  private _interactiveItem: T | null = null;
 
   constructor(host: ReactiveControllerHost & LitElementWithError) {
     this.host = host;
     host.addController(this);
   }
 
-  get interactiveItem(): AnyItem | null {
+  get interactiveItem(): T | null {
     return this._interactiveItem;
   }
 
@@ -30,7 +32,7 @@ export class InteractiveItemContextController implements ReactiveController {
     const event = buildCustomEvent(
       interactiveItemContextEventName,
       (item: AnyItem) => {
-        this._interactiveItem = item;
+        this._interactiveItem = item as T;
         this.host.requestUpdate();
       }
     );
@@ -39,6 +41,5 @@ export class InteractiveItemContextController implements ReactiveController {
   }
 }
 
-export type InteractiveItemContextEvent = CustomEvent<
-  (interactiveItem: AnyItem) => void
->;
+export type InteractiveItemContextEvent<T extends AnyItem = AnyItem> =
+  CustomEvent<(interactiveItem: T) => void>;
