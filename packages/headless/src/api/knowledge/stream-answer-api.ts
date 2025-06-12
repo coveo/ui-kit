@@ -1,10 +1,5 @@
 /* eslint-disable canonical/no-barrel-import */
-import {
-  createAsyncThunk,
-  createSelector,
-  ThunkDispatch,
-  UnknownAction,
-} from '@reduxjs/toolkit';
+import {createSelector, ThunkDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {
   defaultNodeJSNavigatorContextProvider,
   NavigatorContext,
@@ -13,7 +8,6 @@ import {selectAdvancedSearchQueries} from '../../features/advanced-search-querie
 import {fromAnalyticsStateToAnalyticsParams} from '../../features/configuration/analytics-params.js';
 import {selectContext} from '../../features/context/context-selector.js';
 import {
-  resetAnswer,
   setAnswerContentFormat,
   setCannotAnswer,
   updateCitations,
@@ -26,7 +20,6 @@ import {maximumNumberOfResultsFromIndex} from '../../features/pagination/paginat
 import {selectPipeline} from '../../features/pipeline/select-pipeline.js';
 import {selectQuery} from '../../features/query/query-selectors.js';
 import {selectSearchHub} from '../../features/search-hub/search-hub-selectors.js';
-import {updateSearchAction} from '../../features/search/search-actions.js';
 import {
   initialSearchMappings,
   mapFacetRequest,
@@ -397,23 +390,6 @@ export const constructAnswerQueryParams = (
     ),
   };
 };
-
-/**
- * Resets the generated answer state and fetches a new answer based on the current state and navigator context.
- * Handles all dispatches in a single higher level thunk to avoid multiple dispatches.
- */
-// TODO: SVCC-5178 Refactor multiple sequential dispatches in stream-api
-export const resetAndFetchAnswer = createAsyncThunk<
-  void,
-  {state: StateNeededByAnswerAPI; navigatorContext: NavigatorContext}
->(
-  'generatedAnswer/resetAndFetchAnswer',
-  async ({state, navigatorContext}, {dispatch}) => {
-    dispatch(resetAnswer());
-    await dispatch(fetchAnswer(state, navigatorContext));
-    dispatch(updateSearchAction());
-  }
-);
 
 export const fetchAnswer = (
   state: StateNeededByAnswerAPI,
