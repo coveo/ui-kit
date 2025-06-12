@@ -2,13 +2,17 @@ import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
 import {html} from 'lit';
 import SearchSlimIcon from '../../../images/search-slim.svg';
-import {renderButton, ButtonProps} from '../button';
+import {renderButton} from '../button';
 
-interface Props extends Partial<ButtonProps> {
+interface Props {
   i18n: i18n;
+  disabled: boolean;
+  onClick: () => void;
+  title: string;
 }
 
 export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
+  const {i18n, disabled, onClick, title} = props;
   return html`<div
     part="submit-button-wrapper"
     class="mr-2 flex items-center justify-center py-2"
@@ -18,10 +22,12 @@ export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
         style: 'text-primary',
         class: 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full',
         part: 'submit-button',
-        ariaLabel: props.i18n.t('search'),
+        ariaLabel: i18n.t('search'),
         onClick: () => {
-          props.onClick?.();
+          onClick?.();
         },
+        disabled,
+        title,
       },
     })(
       html`<atomic-icon

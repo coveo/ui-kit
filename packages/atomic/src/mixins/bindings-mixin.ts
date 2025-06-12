@@ -7,6 +7,7 @@ import type {
 import type {AnyBindings} from '../components/common/interface/bindings';
 import {InitializableComponent} from '../decorators/types';
 import {fetchBindings} from '../utils/initialization-lit-stencil-common-utils';
+import {Constructor} from './mixin-common';
 
 function initializeBindings<
   SpecificBindings extends AnyBindings,
@@ -76,9 +77,6 @@ export class BindingController implements ReactiveController {
     this.unsubscribeLanguage();
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Constructor<T = {}> = new (...args: any[]) => T;
 
 /**
  * Mixin that initializes bindings for a Lit component.

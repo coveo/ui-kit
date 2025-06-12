@@ -1,10 +1,25 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
-import {html, LitElement, unsafeCSS} from 'lit';
+import {css, html, LitElement, unsafeCSS} from 'lit';
 import {describe, beforeEach, it, expect} from 'vitest';
 import {injectStylesForNoShadowDOM} from './light-dom';
 
 describe('injectStylesForNoShadowDOM', () => {
   const styles = 'body { background-color: red; }';
+
+  @injectStylesForNoShadowDOM
+  class ComplexStyledElement extends LitElement {
+    static styles = [
+      unsafeCSS(styles),
+      unsafeCSS(css`
+        div {
+          color: blue;
+        }
+      `),
+    ];
+    render() {
+      return html`<div>children element</div>`;
+    }
+  }
 
   @injectStylesForNoShadowDOM
   class StyledElement extends LitElement {
@@ -45,6 +60,7 @@ describe('injectStylesForNoShadowDOM', () => {
   customElements.define('light-dom-parent-element', LightDomParentElement);
   customElements.define('shadow-dom-parent-element', ShadownDomParentElement);
   customElements.define('styled-element', StyledElement);
+  customElements.define('complex-styled-element', ComplexStyledElement);
   customElements.define('unstyled-element', UnstyledElement);
 
   describe('when the element added in a shadow dom does not contain style', () => {
@@ -92,6 +108,24 @@ describe('injectStylesForNoShadowDOM', () => {
       const styleElement = document?.adoptedStyleSheets || [];
 
       expect(styleElement).toHaveLength(0);
+    });
+  });
+
+  describe('when the element has an array of styles', () => {
+    beforeEach(async () => {
+      await fixture(html`
+        <shadow-dom-parent-element>
+          <complex-styled-element></complex-styled-element>
+        </shadow-dom-parent-element>
+      `);
+    });
+
+    it('should have added 2 stylesheets', async () => {
+      const styleElement =
+        document.querySelector('shadow-dom-parent-element')?.shadowRoot
+          ?.adoptedStyleSheets || [];
+
+      expect(styleElement).toHaveLength(2);
     });
   });
 

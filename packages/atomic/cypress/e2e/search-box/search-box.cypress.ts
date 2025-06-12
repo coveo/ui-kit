@@ -243,6 +243,9 @@ describe('Search Box Test Suites', () => {
 
       describe('with custom suggestions provider', () => {
         beforeEach(() => {
+          // For some reason, the custom elements is never defined in the cypress test environment so calling dispatchSearchBoxSuggestionsEvent makes it fail.
+          cy.stub(window.customElements, 'whenDefined').returns(true);
+
           // Disable "standard" query suggestion components to display only custom ones
           new TestFixture()
             .with(

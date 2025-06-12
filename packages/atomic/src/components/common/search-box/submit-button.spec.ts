@@ -18,6 +18,9 @@ describe('#renderSubmitButton', () => {
       html`${renderSubmitButton({
         props: {
           i18n,
+          disabled: false,
+          onClick: () => {},
+          title: 'search',
           ...additionalProps,
         },
       })}`
@@ -67,5 +70,25 @@ describe('#renderSubmitButton', () => {
   it('should have an svg icon on the atomic-icon', async () => {
     const {icon} = await renderComponent();
     expect(icon?.getAttribute('icon')).toContain('<svg');
+  });
+
+  it('should be disabled when the disabled prop is true', async () => {
+    const {button} = await renderComponent({disabled: true});
+    expect(button).toBeDisabled();
+  });
+
+  it('should trigger the onClick event when the button is clicked', async () => {
+    const onClick = vi.fn();
+    const {button} = await renderComponent({onClick});
+
+    await userEvent.click(button!);
+
+    expect(onClick).toHaveBeenCalled();
+  });
+
+  it('should have the correct title attribute', async () => {
+    const title = 'Search';
+    const {button} = await renderComponent({title});
+    expect(button).toHaveAttribute('title', title);
   });
 });

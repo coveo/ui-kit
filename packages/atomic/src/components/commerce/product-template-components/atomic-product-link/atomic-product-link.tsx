@@ -11,11 +11,11 @@ import {getDefaultSlotFromHost} from '../../../../utils/slot-utils';
 import {getAttributesFromLinkSlot} from '../../../common/item-link/attributes-slot';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
+import {buildStringTemplateFromProduct} from '../product-utils';
 import {
   InteractiveProductContext,
   ProductContext,
-} from '../product-template-decorators';
-import {buildStringTemplateFromProduct} from '../product-utils';
+} from '../stencil-product-template-decorators';
 
 /**
  * @alpha
