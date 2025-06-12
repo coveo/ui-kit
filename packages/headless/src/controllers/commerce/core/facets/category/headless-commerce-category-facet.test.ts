@@ -85,32 +85,79 @@ describe('CategoryFacet', () => {
     initCategoryFacet();
   });
 
-  describe('initialization', () => {
-    it('initializes', () => {
-      expect(facet).toBeTruthy();
-    });
+  it('should initialize', () => {
+    expect(facet).toBeTruthy();
+  });
 
-    it('exposes #subscribe method', () => {
-      expect(facet.subscribe).toBeTruthy();
+  it('should expose a #subscribe method', () => {
+    expect(facet.subscribe).toBeTruthy();
+  });
+
+  describe('#toggleSelect', () => {
+    it('should dispatch #toggleSelectCategoryFacetValue with correct payload', () => {
+      const facetValue = buildMockCategoryFacetValue();
+      facet.toggleSelect(facetValue);
+
+      expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
+        facetId,
+        selection: facetValue,
+      });
     });
   });
 
-  it('#toggleSelect dispatches #toggleSelectCategoryFacetValue with correct payload', () => {
-    const facetValue = buildMockCategoryFacetValue();
-    facet.toggleSelect(facetValue);
+  describe('#showMoreValues', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with initialNumberOfValues + the number of values from the request', () => {
+      setFacetState({}, false, {
+        initialNumberOfValues: 3,
+        values: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
+      });
 
-    expect(toggleSelectCategoryFacetValue).toHaveBeenCalledWith({
-      facetId,
-      selection: facetValue,
+      facet.showMoreValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: 5,
+      });
     });
-  });
 
-  it('#showMoreValues dispatches #updateCategoryFacetNumberOfValues with correct payload', () => {
-    facet.showMoreValues();
+    it('should dispatch #updateCategoryFacetNumberOfValues with twice the current number of values when initialNumberOfValues is undefined', () => {
+      setFacetState({}, false, {
+        initialNumberOfValues: undefined,
+        values: [
+          buildMockCategoryFacetValue(),
+          buildMockCategoryFacetValue(),
+          buildMockCategoryFacetValue(),
+        ],
+      });
 
-    expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
-      facetId,
-      numberOfValues: 5,
+      facet.showMoreValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: 6,
+      });
+    });
+
+    it('should dispatch #fetchProductsActionCreator after updating number of values', () => {
+      setFacetState({}, false, {
+        initialNumberOfValues: 2,
+        values: [buildMockCategoryFacetValue()],
+      });
+
+      facet.showMoreValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).toHaveBeenCalled();
+
+      const updateCall = (
+        updateCategoryFacetNumberOfValues as unknown as {
+          mock: {invocationCallOrder: number[]};
+        }
+      ).mock.invocationCallOrder[0];
+      const fetchCall =
+        mockFetchProductsActionCreator.mock.invocationCallOrder[0];
+
+      expect(updateCall).toBeLessThan(fetchCall);
     });
   });
 
@@ -159,10 +206,10 @@ describe('CategoryFacet', () => {
 
   describe('#state', () => {
     describe('#activeValue', () => {
-      it('when no value is selected, returns undefined', () => {
+      it('should be undefined when no value is active in the facet', () => {
         expect(facet.state.activeValue).toBeUndefined();
       });
-      it('when a value is selected, returns the selected value', () => {
+      it('should be the active value when a value is active in the facet', () => {
         const activeValue = buildMockCategoryFacetValue({
           state: 'selected',
         });
@@ -374,24 +421,26 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('#facetSearch returns the facet search state', () => {
-      const facetSearchState = buildMockCategoryFacetSearch();
-      facetSearchState.isLoading = true;
-      facetSearchState.response.moreValuesAvailable = true;
-      facetSearchState.options.query = 'test';
-      facetSearchState.response.values = [
-        {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
-      ];
-
-      state.categoryFacetSearchSet[facetId] = facetSearchState;
-
-      expect(facet.state.facetSearch).toEqual({
-        isLoading: true,
-        moreValuesAvailable: true,
-        query: 'test',
-        values: [
+    describe('#facetSearch', () => {
+      it('should be the facet search state', () => {
+        const facetSearchState = buildMockCategoryFacetSearch();
+        facetSearchState.isLoading = true;
+        facetSearchState.response.moreValuesAvailable = true;
+        facetSearchState.options.query = 'test';
+        facetSearchState.response.values = [
           {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
-        ],
+        ];
+
+        state.categoryFacetSearchSet[facetId] = facetSearchState;
+
+        expect(facet.state.facetSearch).toEqual({
+          isLoading: true,
+          moreValuesAvailable: true,
+          query: 'test',
+          values: [
+            {count: 1, displayValue: 'test', path: ['test'], rawValue: 'test'},
+          ],
+        });
       });
     });
 
@@ -410,11 +459,11 @@ describe('CategoryFacet', () => {
     });
 
     describe('#selectedValueAncestry', () => {
-      it('when no value is selected, returns empty array', () => {
+      it('should be an empty array when no value is active in the facet', () => {
         expect(facet.state.selectedValueAncestry).toEqual([]);
       });
 
-      it('when a value is selected, returns the selected value ancestry', () => {
+      it('should be the selected value ancestry when a value is active in the facet', () => {
         const activeValue = buildMockCategoryFacetValue({
           value: 'c',
           path: ['a', 'b', 'c'],
@@ -455,7 +504,7 @@ describe('CategoryFacet', () => {
     });
   });
 
-  it('#type returns "hierarchical"', () => {
+  it('#type should be "hierarchical"', () => {
     expect(facet.type).toBe('hierarchical');
   });
 });
