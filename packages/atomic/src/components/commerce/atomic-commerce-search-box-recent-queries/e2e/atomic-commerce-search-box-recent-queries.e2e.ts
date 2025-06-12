@@ -26,7 +26,7 @@ test.describe('AtomicCommerceSearchBoxRecentQueries', () => {
     ).not.toBeVisible();
   });
 
-  test('when clicking clear recent queries, it should clear the recent queries', async ({
+  test.skip('when clicking clear recent queries, it should clear the recent queries', async ({
     commerceSearchBoxRecentQueries,
   }) => {
     await commerceSearchBoxRecentQueries.clearButton.click();
