@@ -169,12 +169,14 @@ export const getCategoryFacetState = (
   const activeValue = selectedValueAncestry.length
     ? selectedValueAncestry[selectedValueAncestry.length - 1]
     : undefined;
-  const initialNumberOfValues = request?.initialNumberOfValues ?? 1;
+  const initialNumberOfValues = request?.initialNumberOfValues;
 
-  const canShowLessValues = activeValue
-    ? initialNumberOfValues < activeValue.children.length
-    : initialNumberOfValues <
-      (request?.numberOfValues ?? request?.values.length ?? 0);
+  const canShowLessValues =
+    !!initialNumberOfValues &&
+    (activeValue
+      ? initialNumberOfValues < activeValue.children.length
+      : initialNumberOfValues <
+        (request!.numberOfValues ?? coreState.values.length));
 
   const canShowMoreValues = activeValue
     ? activeValue.moreValuesAvailable
