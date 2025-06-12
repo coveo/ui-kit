@@ -24,8 +24,18 @@ export const updateCategoryFacetNumberOfValues = createAction(
     })
 );
 
-export type ToggleSelectCategoryFacetValuePayload =
-  ToggleSelectCategoryFacetValueActionCreatorPayload;
+// TODO - KIT-4347 remove the retrieveCount property from the action payload.
+export type ToggleSelectCategoryFacetValuePayload = Omit<
+  ToggleSelectCategoryFacetValueActionCreatorPayload,
+  'retrieveCount'
+> & {
+  /**
+   * The number of child values to display.
+   *
+   * @deprecated This property is no longer used in the commerce category facet and will be removed in the next major version of headless.
+   */
+  retrieveCount?: number;
+};
 
 export const toggleSelectCategoryFacetValue = createAction(
   'commerce/facets/categoryFacet/toggleSelectValue',

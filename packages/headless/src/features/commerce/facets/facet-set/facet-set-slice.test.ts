@@ -25,7 +25,6 @@ import {buildSearchResponse} from '../../../../test/mock-commerce-search.js';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value.js';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result.js';
 import {buildFetchProductListingResponse} from '../../../../test/mock-product-listing.js';
-import {defaultNumberOfValuesIncrement} from '../../../facets/category-facet-set/category-facet-set-actions.js';
 import {
   FacetValueState,
   facetValueStates,
@@ -2063,7 +2062,6 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
-            retrieveCount: 6,
           });
 
           expect(() => commerceFacetSetReducer(state, action)).not.toThrow();
@@ -2088,7 +2086,6 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
-            retrieveCount: 6,
           });
           const finalState = commerceFacetSetReducer(state, action);
           const currentValues = finalState[facetId]?.request.values;
@@ -2098,7 +2095,6 @@ describe('commerceFacetSetReducer', () => {
               value: selection.value,
               state: 'selected',
               children: [],
-              retrieveCount: 6,
             },
           ]);
         });
@@ -2111,7 +2107,6 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
-            retrieveCount: 6,
           });
 
           const finalState = commerceFacetSetReducer(state, action);
@@ -2128,7 +2123,6 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
             const currentValues = finalState[facetId].request.values;
@@ -2178,7 +2172,6 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: defaultNumberOfValuesIncrement,
             });
             finalState = commerceFacetSetReducer(state, action);
           });
@@ -2210,7 +2203,6 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
@@ -2260,7 +2252,6 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: defaultNumberOfValuesIncrement,
             });
             const finalState = commerceFacetSetReducer(state, action);
 
@@ -2290,7 +2281,6 @@ describe('commerceFacetSetReducer', () => {
             const action = toggleSelectCategoryFacetValue({
               facetId,
               selection,
-              retrieveCount: 6,
             });
             finalState = commerceFacetSetReducer(state, action);
           });
@@ -2330,7 +2320,6 @@ describe('commerceFacetSetReducer', () => {
           const action = toggleSelectCategoryFacetValue({
             facetId,
             selection,
-            retrieveCount: 6,
           });
           expect(action.error).toBeDefined();
         });
@@ -2381,30 +2370,6 @@ describe('commerceFacetSetReducer', () => {
         );
 
         expect(spy).toHaveBeenCalledTimes(1);
-      });
-
-      it('sets correct retrieve count to the appropriate number', () => {
-        const request = buildMockCommerceFacetRequest({
-          type: 'hierarchical',
-          values: [
-            convertCategoryFacetValueToRequest(
-              buildMockCategoryFacetValue({
-                value: 'test',
-                state: 'selected',
-              })
-            ),
-          ],
-        });
-
-        state[facetId] = buildMockCommerceFacetSlice({request});
-        const finalState = commerceFacetSetReducer(
-          state,
-          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
-        );
-        expect(
-          (finalState[facetId]?.request.values[0] as CategoryFacetValueRequest)
-            .retrieveCount
-        ).toBe(10);
       });
 
       it('should not throw when facetId does not exist', () => {
