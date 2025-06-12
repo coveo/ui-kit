@@ -31,6 +31,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {selectSearchActionCause} from '../../features/search/search-selectors.js';
 import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
@@ -391,7 +392,7 @@ export const constructAnswerQueryParams = (
       state.configuration.analytics,
       navigatorContext,
       {
-        actionCause: state.search?.searchAction?.actionCause || '',
+        actionCause: selectSearchActionCause(state),
       }
     ),
   };

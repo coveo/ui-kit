@@ -1,7 +1,10 @@
 import {createMockState} from '../../test/mock-state.js';
-import {firstSearchExecutedSelector} from './search-selectors.js';
+import {
+  firstSearchExecutedSelector,
+  selectSearchActionCause,
+} from './search-selectors.js';
 
-describe('search selectors', () => {
+describe('#firstSearchExecutedSelector', () => {
   it(`when the response searchUid is truthy,
   #firstSearchExecutedSelector returns true`, () => {
     const state = createMockState();
@@ -18,5 +21,24 @@ describe('search selectors', () => {
 
     const result = firstSearchExecutedSelector(state);
     expect(result).toBe(false);
+  });
+});
+
+describe('#selectSearchActionCause', () => {
+  it('returns the actionCause when present', () => {
+    const state = createMockState();
+    state.search.searchAction = {actionCause: 'searchBoxSubmit'};
+    expect(selectSearchActionCause(state)).toBe('searchBoxSubmit');
+  });
+
+  it('returns an empty string when SearchState is missing', () => {
+    const state = {};
+    expect(selectSearchActionCause(state)).toBe('');
+  });
+
+  it('returns an empty string when actionCause is missing', () => {
+    const state = createMockState();
+    state.search.searchAction = {actionCause: ''};
+    expect(selectSearchActionCause(state)).toBe('');
   });
 });
