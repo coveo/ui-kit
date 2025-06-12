@@ -11,7 +11,6 @@ import {
   selectFacetSearchResult,
 } from '../../../facets/facet-search-set/specific/specific-facet-search-actions.js';
 import {convertFacetValueToRequest} from '../../../facets/facet-set/facet-set-slice.js';
-import {handleFacetUpdateNumberOfValues} from '../../../facets/generic/facet-reducer-helpers.js';
 import {convertToDateRangeRequests} from '../../../facets/range-facets/date-facet-set/date-facet-set-slice.js';
 import {findExactRangeValue} from '../../../facets/range-facets/generic/range-facet-reducers.js';
 import {convertToNumericRangeRequests} from '../../../facets/range-facets/numeric-facet-set/numeric-facet-set-slice.js';
@@ -194,24 +193,21 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, selection} = action.payload;
         const request = state[facetId]?.request;
 
-        if (!request || !ensureCategoryFacetRequest(request)) {
+        if (!ensureCategoryFacetRequest(request)) {
           return;
         }
 
-        const fullPath = selection.path;
-        const pathToSelection = fullPath.slice(0, fullPath.length - 1);
-        const selectedValueAndSiblings = ensurePathAndReturnChildren(
-          request,
-          pathToSelection
-        );
+        const {path} = selection;
+        const pathToSelection = path.slice(0, path.length - 1);
+        const children = ensurePathAndReturnChildren(request, pathToSelection);
 
-        let selectedValue = selectedValueAndSiblings.find(
+        let selectedValue = children.find(
           (value) => value.value === selection.value
         );
 
         if (!selectedValue) {
           selectedValue = buildCategoryFacetValueRequest(selection.value);
-          selectedValueAndSiblings.push(selectedValue);
+          children.push(selectedValue);
         }
 
         selectedValue.state =
@@ -297,14 +293,11 @@ export const commerceFacetSetReducer = createReducer(
         const {facetId, numberOfValues} = action.payload;
         const request = state[facetId]?.request;
 
-        if (!request) {
+        if (!ensureCategoryFacetRequest(request)) {
           return;
         }
 
-        handleFacetUpdateNumberOfValues<AnyFacetRequest>(
-          request,
-          numberOfValues
-        );
+        handleCategoryFacetUpdateNumberOfValues(request, numberOfValues);
       })
       .addCase(selectFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
@@ -361,21 +354,14 @@ export const commerceFacetSetReducer = createReducer(
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
+        const {request} = state[facetId];
 
-        if (
-          !facetRequest ||
-          !ensureCategoryFacetRequest(facetRequest?.request)
-        ) {
+        if (!ensureCategoryFacetRequest(request)) {
           return;
         }
 
         const path = [...value.path, value.rawValue];
-        selectPath(
-          facetRequest.request,
-          path,
-          facetRequest.request.initialNumberOfValues
-        );
+        selectPath(request, path, request.initialNumberOfValues);
       })
       .addCase(updateNumericFacetValues, (state, action) => {
         const {facetId, values} = action.payload;
@@ -488,9 +474,9 @@ function ensureDateFacetRequest(
 }
 
 function ensureCategoryFacetRequest(
-  facetRequest: AnyFacetRequest
+  facetRequest?: AnyFacetRequest
 ): facetRequest is CategoryFacetRequest {
-  return facetRequest.type === 'hierarchical';
+  return facetRequest?.type === 'hierarchical';
 }
 
 function handleQueryFulfilled(
@@ -706,4 +692,12 @@ function clearAllFacetValues(state: CommerceFacetSetState) {
   Object.values(state).forEach((facet) => {
     facet.request.values = [];
   });
+}
+
+export function handleCategoryFacetUpdateNumberOfValues(
+  facetRequest: CategoryFacetRequest,
+  numberOfValues: number
+) {
+  facetRequest.numberOfValues = numberOfValues;
+  facetRequest.retrieveCount = numberOfValues;
 }
