@@ -5,7 +5,7 @@ import {
   HighlightKeywords,
   HighlightString,
   renderWithHighlights,
-} from './render-highlights';
+} from './render-highlights.js';
 
 export interface ItemTextHighlightedProps {
   /**

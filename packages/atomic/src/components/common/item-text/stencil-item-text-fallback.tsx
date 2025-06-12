@@ -1,6 +1,6 @@
 import {isUndefined} from '@coveo/bueno';
 import {Fragment, FunctionalComponent, VNode, h} from '@stencil/core';
-import {possiblyWarnOnBadFieldType} from './field-warning.js';
+import {possiblyWarnOnBadFieldType} from './field-warning';
 
 export interface ItemTextProps<T> {
   logger: Pick<Console, 'error'>;
