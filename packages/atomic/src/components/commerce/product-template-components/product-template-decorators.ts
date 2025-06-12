@@ -1,4 +1,4 @@
-import {Product} from '@coveo/headless/commerce';
+import {InteractiveProduct, Product} from '@coveo/headless/commerce';
 import {LitElement} from 'lit';
 import {
   InteractiveItemContextController,
@@ -64,14 +64,15 @@ export function createProductContextController<T extends Product = Product>(
  * ```
  */
 export function createInteractiveProductContextController<
-  T extends Product = Product,
+  T extends InteractiveProduct = InteractiveProduct,
 >(host: LitElement & {error: Error}): InteractiveItemContextController<T> {
   return new InteractiveItemContextController<T>(host);
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
-export type InteractiveProductContextEvent<T extends Product = Product> =
-  InteractiveItemContextEvent<T>;
+export type InteractiveProductContextEvent<
+  T extends InteractiveProduct = InteractiveProduct,
+> = InteractiveItemContextEvent<T>;
 
 /**
  * Retrieves `Product` on a rendered `atomic-product`.
