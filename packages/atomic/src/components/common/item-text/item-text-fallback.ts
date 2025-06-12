@@ -1,7 +1,7 @@
 import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-utils.js';
 import {isUndefined} from '@coveo/bueno';
 import {html, nothing} from 'lit';
-import {possiblyWarnOnBadFieldType} from './field-warning';
+import {possiblyWarnOnBadFieldType} from './field-warning.js';
 
 export interface ItemTextProps<T> {
   logger: Pick<Console, 'error'>;

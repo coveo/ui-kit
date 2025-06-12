@@ -6,6 +6,4 @@ export {AtomicCommerceSearchBoxInstantProducts} from './atomic-commerce-search-b
 export {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-box-query-suggestions/atomic-commerce-search-box-query-suggestions.js';
 export {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
-export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
-export {AtomicProductText} from './product-template-components/atomic-product-text/atomic-product-text.js';
