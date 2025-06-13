@@ -1,9 +1,9 @@
-import {wrapInCommerceRecommendationInterface} from '@/storybook-utils/commerce/commerce-recommendation-interface-wrapper';
+import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
 
-const {decorator, play} = wrapInCommerceRecommendationInterface();
+const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
 
 const meta: Meta = {
   component: 'atomic-commerce-recommendation-list',
@@ -43,7 +43,9 @@ export const Default: Story = {
   name: 'atomic-commerce-recommendation-list',
 };
 
-const {play: playNoFirstQuery} = wrapInCommerceRecommendationInterface();
+const {play: playNoFirstQuery} = wrapInCommerceInterface({
+  skipFirstRequest: true,
+});
 export const BeforeQuery: Story = {
   tags: ['test'],
   play: playNoFirstQuery,

@@ -29,7 +29,6 @@ import {html, LitElement, nothing, render} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import '../atomic-product/atomic-product';
 import {ProductTemplateProvider} from '../product-list/product-template-provider';
 
 export type AriaLabelGenerator = (
