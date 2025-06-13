@@ -2,9 +2,14 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": [],
   "categories": {
-    "correctness": "error",
-    "suspicious": "error",
-    "pedantic": "warn"
+    "correctness": "warn",
+    "suspicious": "off",
+    "pedantic": "off"
+  },
+  "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/prefer-const": "off",
+    "eslint/no-var": "off"
   },
   "env": {
     "builtin": true

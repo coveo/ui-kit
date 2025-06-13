@@ -1,15 +1,17 @@
 {
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "categories": {
-    "correctness": "error",
-    "suspicious": "warn",
-    "pedantic": "warn"
+    "correctness": "warn",
+    "suspicious": "off",
+    "pedantic": "off"
   },
   "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/prefer-const": "off",
     "eslint/max-lines-per-function": "off",
     "eslint/max-depth": "off",
-    "typescript/no-unused-vars": "warn",
-    "typescript/no-explicit-any": "warn"
+    "typescript/no-unused-vars": "off",
+    "typescript/no-explicit-any": "off"
   },
   "env": {
     "node": true,

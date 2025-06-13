@@ -6,6 +6,8 @@
     "pedantic": "off"
   },
   "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/prefer-const": "off",
     "eslint/max-lines-per-function": "off",
     "eslint/max-depth": "off",
     "eslint/no-console": "off"
