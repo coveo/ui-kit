@@ -49,7 +49,7 @@ const buildResultToAttach = (result, caseId) => {
   let actualSfkbVersionNumber =
     result.raw.sfkbversionnumber || result.raw.sfversionnumber;
 
-  // If we have an article ... also check articleLanguage and articleVersionNumber
+  // If we have an article, also check articleLanguage and articleVersionNumber
   if (result.raw.sfkbid && actualSfkbVersionNumber) {
     requiredFields.push('articleLanguage');
 
