@@ -201,8 +201,8 @@ export const answerApi = answerSlice.injectEndpoints({
         // as they will change during the streaming.
         const clone = JSON.parse(JSON.stringify(queryArgs));
         if (clone.analytics) {
-          clone.analytics.clientTimestamp = '';
-          clone.analytics.actionCause = '';
+          delete clone.analytics.clientTimestamp;
+          delete clone.analytics.actionCause;
         }
 
         // Standard RTK key, with some fields removed

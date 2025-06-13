@@ -27,8 +27,8 @@ describe('#firstSearchExecutedSelector', () => {
 describe('#selectSearchActionCause', () => {
   it('returns the actionCause when present', () => {
     const state = createMockState();
-    state.search.searchAction = {actionCause: 'searchBoxSubmit'};
-    expect(selectSearchActionCause(state)).toBe('searchBoxSubmit');
+    state.search.searchAction = {actionCause: 'searchboxSubmit'};
+    expect(selectSearchActionCause(state)).toBe('searchboxSubmit');
   });
 
   it('returns an empty string when SearchState is missing', () => {
