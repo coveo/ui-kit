@@ -17,11 +17,8 @@ import {
  * ```
  *
  * For more information and examples, view the [Utilities section](https://github.com/coveo/ui-kit/tree/master/packages/atomic#utilities) of the Coveo Atomic README.
-<<<<<<< Updated upstream
  *
  * @deprecated should only be used for Stencil components. For Lit components, use `ProductContext` from \@/src/components/commerce/product-template-components/product-template-decorators.ts
-=======
->>>>>>> Stashed changes
  */
 export function ProductContext(opts: {folded: boolean} = {folded: false}) {
   return ItemContext({parentName: 'atomic-product', folded: opts.folded});
@@ -43,11 +40,8 @@ export type InteractiveProductContextEvent = InteractiveItemContextEvent;
  *
  * @param element - The element that the event is dispatched to, which must be the child of a rendered "atomic-product".
  * @returns A promise that resolves on initialization of the parent "atomic-product" element, or rejects when there is no parent "atomic-product" element.
-<<<<<<< Updated upstream
  *
  * @deprecated should only be used for Stencil components. For Lit components, use `productContext` from \@/src/components/commerce/product-template-components/product-template-decorators.ts
-=======
->>>>>>> Stashed changes
  */
 export function productContext<T extends Product>(element: Element) {
   return itemContext<T>(element, 'atomic-product');
