@@ -1,16 +1,50 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
 import * as AtomicCommerceBreadboxStories from './atomic-commerce-breadbox.new.stories';
 
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
 
 <Meta of={AtomicCommerceBreadboxStories} />
 
+
 <Title />
-<Description />
+<Subtitle ><Description/></Subtitle>
 
-<Canvas of={AtomicCommerceBreadboxStories.Default} />
 
-## Properties
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-breadbox/atomic-commerce-breadbox.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceBreadboxStories.Default}
+/>
 
+## Usage
+This component is typically placed within the "status" section of the layout.
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-layout>
+    ...
+    <atomic-layout-section section="main">
+      ...
+      <atomic-layout-section section="status">
+        
+        <atomic-commerce-breadbox></atomic-commerce-breadbox>
+
+      </atomic-layout-section>
+    </atomic-layout-section>
+  </atomic-commerce-layout>
+</atomic-commerce-interface>
+```
+
+## Examples
+<Stories title={""}/>
+
+## Reference
 <ArgTypes />

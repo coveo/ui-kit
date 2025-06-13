@@ -34,7 +34,7 @@ import {renderBreadcrumbContainer} from '../../common/breadbox/breadcrumb-contai
 import {renderBreadcrumbContent} from '../../common/breadbox/breadcrumb-content';
 import {renderBreadcrumbShowLess} from '../../common/breadbox/breadcrumb-show-less';
 import {renderBreadcrumbShowMore} from '../../common/breadbox/breadcrumb-show-more';
-// import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
+import {Breadcrumb as BreadboxBreadcrumb} from '../../common/breadbox/breadcrumb-types';
 import {formatHumanReadable} from '../../common/facets/numeric-facet/formatter';
 import {
   defaultCurrencyFormatter,
@@ -49,13 +49,6 @@ type AnyFacetValue =
   | NumericFacetValue
   | DateFacetValue
   | CategoryFacetValue;
-
-export interface BreadboxBreadcrumb {
-  facetId: Breadcrumb<AnyFacetValue>['facetId'];
-  label: Breadcrumb<AnyFacetValue>['facetDisplayName'];
-  formattedValue: string[];
-  deselect: BreadcrumbValue<AnyFacetValue>['deselect'];
-}
 
 /**
  * The `atomic-commerce-breadbox` component creates breadcrumbs that display a summary of the currently active facet values.
@@ -82,24 +75,22 @@ export class AtomicCommerceBreadbox
   implements InitializableComponent<CommerceBindings>
 {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
-  public bindings!: CommerceBindings;
 
   private resizeObserver?: ResizeObserver;
-  //TODO: use createRef
-  private showMore!: HTMLButtonElement;
-  //TODO: use createRef
-  private showLess!: HTMLButtonElement;
   private lastRemovedBreadcrumbIndex = 0;
   private numberOfBreadcrumbs = 0;
   private numberOfCollapsedBreadcrumbs = 0;
   private firstExpandedBreadcrumbIndex?: number;
-  breadcrumbManager!: BreadcrumbManager;
+  private breadcrumbRemovedFocus!: FocusTargetController;
+  private breadcrumbShowMoreFocus!: FocusTargetController;
+  private breadcrumbShowLessFocus!: FocusTargetController;
 
+  public bindings!: CommerceBindings;
+  public breadcrumbManager!: BreadcrumbManager;
   public context!: Context;
   @bindStateToController('context')
   @state()
   public contextState!: ContextState;
-
   public searchOrListing!: Search | ProductListing;
 
   @bindStateToController('breadcrumbManager')
@@ -108,12 +99,7 @@ export class AtomicCommerceBreadbox
 
   @state() public error!: Error;
   @state() private isCollapsed = true;
-
-  private breadcrumbRemovedFocus?: FocusTargetController;
-
-  private breadcrumbShowMoreFocus?: FocusTargetController;
-
-  private breadcrumbShowLessFocus?: FocusTargetController;
+  @state() private showMoreText = '';
 
   /**
    * This prop allows you to control the display depth
@@ -131,22 +117,41 @@ export class AtomicCommerceBreadbox
    */
   @property({type: Number, attribute: 'path-limit'}) pathLimit = 3;
 
+  constructor() {
+    super();
+    this.breadcrumbRemovedFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowMoreFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowLessFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+  }
+
   public initialize() {
     this.validateProps();
-
     if (this.bindings.interfaceElement.type === 'product-listing') {
       this.searchOrListing = buildProductListing(this.bindings.engine);
     } else {
       this.searchOrListing = buildSearch(this.bindings.engine);
     }
-
     this.context = buildContext(this.bindings.engine);
-
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
     if (window.ResizeObserver) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.parentElement!);
+    }
+  }
+
+  updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has('pathLimit')) {
+      this.validateProps();
     }
   }
 
@@ -166,36 +171,22 @@ export class AtomicCommerceBreadbox
     this.resizeObserver?.disconnect();
   }
 
-  private get focusTargets() {
-    if (!this.breadcrumbRemovedFocus) {
-      this.breadcrumbRemovedFocus = new FocusTargetController(
-        this,
-        this.bindings
-      );
-    }
-    if (!this.breadcrumbShowLessFocus) {
-      this.breadcrumbShowLessFocus = new FocusTargetController(
-        this,
-        this.bindings
-      );
-    }
-    if (!this.breadcrumbShowMoreFocus) {
-      this.breadcrumbShowMoreFocus = new FocusTargetController(
-        this,
-        this.bindings
-      );
-    }
-    return {
-      breadcrumbRemovedFocus: this.breadcrumbRemovedFocus,
-      breadcrumbShowLessFocus: this.breadcrumbShowLessFocus,
-      breadcrumbShowMoreFocus: this.breadcrumbShowMoreFocus,
-    };
-  }
-
   private get breadcrumbs() {
     return Array.from(
       this.shadowRoot!.querySelectorAll('li.breadcrumb')
     ) as HTMLElement[];
+  }
+
+  private get showMoreButton() {
+    return this.shadowRoot!.querySelector(
+      'button[part="show-more"]'
+    ) as HTMLButtonElement;
+  }
+
+  private get showLessButton() {
+    return this.shadowRoot!.querySelector(
+      'button[part="show-less"]'
+    ) as HTMLButtonElement;
   }
 
   private hide(element: HTMLElement) {
@@ -208,6 +199,27 @@ export class AtomicCommerceBreadbox
 
   private showAllBreadcrumbs() {
     this.breadcrumbs.forEach((breadcrumb) => this.show(breadcrumb));
+  }
+
+  private adaptBreadcrumbs() {
+    if (!this.breadcrumbs.length) {
+      return;
+    }
+    this.showAllBreadcrumbs();
+
+    if (!this.isCollapsed) {
+      this.updateShowLessDisplay();
+      return;
+    }
+
+    this.hideOverflowingBreadcrumbs();
+  }
+
+  private updateShowLessDisplay() {
+    this.show(this.showLessButton);
+    if (this.showLessButton.offsetTop === 0) {
+      this.hide(this.showLessButton);
+    }
   }
 
   private hideOverflowingBreadcrumbs() {
@@ -223,28 +235,6 @@ export class AtomicCommerceBreadbox
     this.updateShowMoreValue(hiddenBreadcrumbs);
   }
 
-  private updateShowLessDisplay() {
-    this.show(this.showLess);
-    if (this.showLess.offsetTop === 0) {
-      this.hide(this.showLess);
-    }
-  }
-
-  private adaptBreadcrumbs() {
-    if (!this.breadcrumbs.length) {
-      return;
-    }
-    this.showAllBreadcrumbs();
-
-    if (!this.isCollapsed) {
-      this.updateShowLessDisplay();
-      return;
-    }
-
-    this.updateShowMoreValue(this.breadcrumbs.length);
-    this.hideOverflowingBreadcrumbs();
-  }
-
   private get isOverflowing() {
     const listElement = this.shadowRoot!.querySelector('ul');
     if (!listElement) {
@@ -256,19 +246,14 @@ export class AtomicCommerceBreadbox
   private updateShowMoreValue(value: number) {
     this.numberOfCollapsedBreadcrumbs = value;
     if (value === 0) {
-      this.hide(this.showMore);
+      this.hide(this.showMoreButton);
       return;
     }
-    this.show(this.showMore);
-    this.showMore.textContent = `+ ${value.toLocaleString(
+    this.show(this.showMoreButton);
+
+    this.showMoreText = `+ ${value.toLocaleString(
       this.bindings.i18n.language
     )}`;
-    this.showMore.setAttribute(
-      'aria-label',
-      this.bindings.i18n.t('show-n-more-filters', {
-        value,
-      })
-    );
   }
 
   private getNumberFormatter(field: string) {
@@ -357,18 +342,18 @@ export class AtomicCommerceBreadbox
             if (isLastBreadcrumb) {
               this.bindings.store.state.resultList?.focusOnFirstResultAfterNextSearch();
             } else if (this.numberOfBreadcrumbs > 1) {
-              this.focusTargets.breadcrumbRemovedFocus.focusAfterSearch();
+              this.breadcrumbRemovedFocus.focusAfterSearch();
             }
 
             this.lastRemovedBreadcrumbIndex = index;
             breadcrumb.deselect();
           },
-          setRef: (ref) => {
+          refCallback: (ref) => {
             if (this.lastRemovedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbRemovedFocus.setTarget(ref);
+              this.breadcrumbRemovedFocus.setTarget(ref);
             }
             if (this.firstExpandedBreadcrumbIndex === index) {
-              this.focusTargets.breadcrumbShowMoreFocus.setTarget(ref);
+              this.breadcrumbShowMoreFocus.setTarget(ref);
             }
           },
         },
@@ -407,28 +392,28 @@ export class AtomicCommerceBreadbox
       html`${this.renderBreadcrumbs(breadcrumbs)}
       ${renderBreadcrumbShowMore({
         props: {
-          setRef: (el) => {
-            this.focusTargets.breadcrumbShowLessFocus.setTarget(el!);
-            this.showMore = el;
+          refCallback: (el) => {
+            this.breadcrumbShowLessFocus.setTarget(el!);
           },
           onShowMore: () => {
             this.firstExpandedBreadcrumbIndex =
               this.numberOfBreadcrumbs - this.numberOfCollapsedBreadcrumbs;
-            this.focusTargets.breadcrumbShowMoreFocus.focusOnNextTarget();
+            this.breadcrumbShowMoreFocus.focusOnNextTarget();
             this.isCollapsed = false;
           },
           isCollapsed: this.isCollapsed,
           i18n: this.bindings.i18n,
           numberOfCollapsedBreadcrumbs: this.numberOfCollapsedBreadcrumbs,
+          value: this.showMoreText,
+          ariaLabel: this.bindings.i18n.t('show-n-more-filters', {
+            value: this.showMoreText,
+          }),
         },
       })}
       ${renderBreadcrumbShowLess({
         props: {
-          setRef: (el) => {
-            this.showLess = el;
-          },
           onShowLess: () => {
-            this.focusTargets.breadcrumbShowLessFocus.focusOnNextTarget();
+            this.breadcrumbShowLessFocus.focusOnNextTarget();
             this.isCollapsed = true;
           },
           isCollapsed: this.isCollapsed,
@@ -437,13 +422,11 @@ export class AtomicCommerceBreadbox
       })}
       ${renderBreadcrumbClearAll({
         props: {
-          setRef: () => {
+          refCallback: () => {
             const isFocusTarget =
               this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
-            isFocusTarget
-              ? this.focusTargets.breadcrumbRemovedFocus.setTarget
-              : undefined;
+            isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined;
           },
           onClick: () => {
             this.breadcrumbManager.deselectAll();

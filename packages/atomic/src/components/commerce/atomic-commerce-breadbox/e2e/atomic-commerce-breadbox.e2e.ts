@@ -19,27 +19,27 @@ test.describe('Default', () => {
       {
         facetType: 'regular',
         filter: '&f-cat_color=Brown',
-        breadcrumbLabel: 'Color:Brown',
+        breadcrumbLabel: 'Color: Brown',
       },
       {
         facetType: 'numerical range',
         filter: '&nf-ec_price=15..20 ',
-        breadcrumbLabel: 'Price:$15.00 to $20.00',
+        breadcrumbLabel: 'Price: $15.00 to $20.00',
       },
       {
         facetType: 'date range',
         filter: '&df-date=2024/05/27@14:32:01..2025/05/27@14:32:01',
-        breadcrumbLabel: 'Date:2024-05-27 to 2025-05-27',
+        breadcrumbLabel: 'Date: 2024-05-27 to 2025-05-27',
       },
       {
         facetType: 'category',
         filter: '&cf-ec_category=Accessories',
-        breadcrumbLabel: 'Category:Accessories',
+        breadcrumbLabel: 'Category: Accessories',
       },
       {
         facetType: 'category (nested)',
         filter: '&cf-ec_category=Accessories,Surf%20Accessories',
-        breadcrumbLabel: 'Category:Accessories / Surf Accessories',
+        breadcrumbLabel: 'Category: Accessories / Surf Accessories',
       },
     ].forEach(({facetType, filter, breadcrumbLabel}) => {
       const baseUrl =
@@ -67,7 +67,7 @@ test.describe('Default', () => {
       './iframe.html?args=&id=atomic-commerce-breadbox--default&viewMode=story#sortCriteria=relevance&mnf-ec_price=20..30';
     await page.goto(baseUrl);
 
-    const expectedBreadcrumbLabel = 'Price:$20.00 to $30.00';
+    const expectedBreadcrumbLabel = 'Price: $20.00 to $30.00';
 
     const breadcrumbButton = breadbox.getBreadcrumbButtons(
       expectedBreadcrumbLabel
@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Color:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Color: ${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -165,7 +165,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Category:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Category: ${firstValueText}`);
     });
     test.describe('when a nested category facet value is selected', () => {
       let breadcrumbText: string | RegExp;
@@ -220,7 +220,9 @@ test.describe('Default', () => {
       }) => {
         const breadcrumbButton = breadbox.getBreadcrumbButtons().first();
 
-        await expect(breadcrumbButton).toHaveText(`Category:${breadcrumbText}`);
+        await expect(breadcrumbButton).toHaveText(
+          `Category: ${breadcrumbText}`
+        );
       });
     });
   });
@@ -267,7 +269,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
     });
   });
 
@@ -310,7 +312,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Price:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText('Price: ' + firstValueText);
     });
   });
 
@@ -358,7 +360,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText('Date:' + firstValueText);
+      await expect(breadcrumbButton).toHaveText('Date: ' + firstValueText);
     });
   });
 
@@ -438,7 +440,7 @@ test.describe('Default', () => {
       });
 
       test('should update the "Show More" button count', async ({breadbox}) => {
-        await expect(breadbox.getShowMorebutton()).toContainText('+ 5');
+        await expect(breadbox.getShowMorebutton()).toContainText('+ 6');
       });
     });
 
