@@ -46,15 +46,15 @@ export const ${declaration.name} = createComponent({
 `;
 
 // Sort modules by path to ensure deterministic processing order
-const sortedModules = [...cem.modules].sort((a, b) => (a.path || '').localeCompare(b.path || ''));
+const sortedModules = [...cem.modules].toSorted((a, b) => (a.path || '').localeCompare(b.path || ''));
 for (const module of sortedModules) {
   if (module.declarations.length === 0) {
     continue;
   }
-  module.declarations.sort((a, b) =>
+  const sortedDeclarations = module.declarations.toSorted((a, b) =>
     a.name.localeCompare(b.name)
   );
-  for (const declaration of module.declarations) {
+  for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {
         if (
@@ -84,7 +84,7 @@ for (const entry of entries) {
     continue;
   }
   // Sort component imports to ensure deterministic order
-  entry.computedComponentImports.sort();
+  entry.computedComponentImports = entry.computedComponentImports.toSorted();
   writeFileSync(
     entry.path,
     await prettier.format(

@@ -92,10 +92,10 @@ function processNonLitDeclaration(declaration) {
 }
 
 // Sort modules by path to ensure deterministic processing order
-const sortedModules = [...cem.modules].sort((a, b) => (a.path || '').localeCompare(b.path || ''));
+const sortedModules = [...cem.modules].toSorted((a, b) => (a.path || '').localeCompare(b.path || ''));
 for (const module of sortedModules) {
   // Sort declarations by name to ensure deterministic processing order
-  const sortedDeclarations = [...module.declarations].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const sortedDeclarations = [...module.declarations].toSorted((a, b) => (a.name || '').localeCompare(b.name || ''));
   for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
       processLitDeclaration(declaration);
