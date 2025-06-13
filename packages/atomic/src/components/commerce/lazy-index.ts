@@ -24,6 +24,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-product': async () =>
+    await import('./atomic-product/atomic-product.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

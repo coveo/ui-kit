@@ -23,7 +23,6 @@ import {randomID} from '../../../../utils/utils';
 import {ResultsPlaceholdersGuard} from '../../../common/atomic-result-placeholder/stencil-placeholders';
 import {createAppLoadedListener} from '../../../common/interface/store';
 import {ItemDisplayGuard} from '../../../common/item-list/item-display-guard';
-import {ItemListGuard} from '../../../common/item-list/item-list-guard';
 import {ItemTemplateProvider} from '../../../common/item-list/item-template-provider';
 import {DisplayGrid} from '../../../common/item-list/stencil-display-grid';
 import {
@@ -36,6 +35,7 @@ import {
   ItemListCommon,
   ItemRenderingFunction,
 } from '../../../common/item-list/stencil-item-list-common';
+import {ItemListGuard} from '../../../common/item-list/stencil-item-list-guard';
 import {
   ItemDisplayDensity,
   ItemDisplayImageSize,

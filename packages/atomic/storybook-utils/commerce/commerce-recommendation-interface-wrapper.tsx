@@ -7,6 +7,8 @@ import {within} from '@storybook/test';
 import {Decorator, StoryContext} from '@storybook/web-components';
 import {html} from 'lit';
 import type * as _ from '../../src/components.js';
+// TODO: Remove this import once atomic-commerce-recommendation-list is merged;
+import '../../src/components/commerce/atomic-product/atomic-product';
 
 export const wrapInCommerceRecommendationInterface = (
   engineConfig?: Partial<CommerceEngineConfiguration>

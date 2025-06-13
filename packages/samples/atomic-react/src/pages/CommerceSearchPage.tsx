@@ -79,7 +79,7 @@ function MyTemplate() {
       <AtomicProductSectionMetadata>
         <AtomicProductText
           field="ec_brand"
-          class="text-neutral-dark block"
+          className="text-neutral-dark block"
         ></AtomicProductText>
         <AtomicProductRating field="ec_rating"></AtomicProductRating>
       </AtomicProductSectionMetadata>

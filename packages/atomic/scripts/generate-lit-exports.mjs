@@ -69,7 +69,7 @@ async function generateLitExportsForDir(dir) {
          )
          .join('\n  ')}
     } as Record<string, () => Promise<unknown>>;
- 
+
     export type * from './index.js';
   `;
 

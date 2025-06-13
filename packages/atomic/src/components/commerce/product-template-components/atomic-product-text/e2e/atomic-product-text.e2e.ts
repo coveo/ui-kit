@@ -86,9 +86,8 @@ test.describe('when displaying a field that does not support highlights', async 
 });
 
 test.describe('when using a non-string field', async () => {
-  test.beforeEach(async ({productText, product}) => {
+  test.beforeEach(async ({productText}) => {
     await productText.load({args: {field: 'ec_price'}});
-    await product.hydrated.waitFor();
   });
 
   test('should not render the field value', async ({productText}) => {
