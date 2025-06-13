@@ -156,6 +156,7 @@ const dispatchSearchBoxSuggestionsEventEventually = async <
   element: HTMLElement,
   event: SearchBoxSuggestionsEvent<SearchBoxController, Bindings>
 ) => {
+  await customElements.whenDefined(interfaceElement.nodeName.toLowerCase());
   if (isLitElementLoosely(interfaceElement)) {
     await interfaceElement.updateComplete;
   } else if ('componentOnReady' in interfaceElement) {
