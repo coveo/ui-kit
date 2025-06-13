@@ -1,4 +1,4 @@
-import type {NumberValue} from '@coveo/bueno';
+import {NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,

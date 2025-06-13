@@ -3,9 +3,9 @@ import type {CategoryFacetSearchResult} from '../../../../../api/search/facet-se
 import type {CommerceEngine} from '../../../../../app/commerce-engine/commerce-engine.js';
 import {ensureAtLeastOneSolutionType} from '../../../../../app/commerce-ssr-engine/common.js';
 import {
-  ControllerDefinitionOption,
+  type ControllerDefinitionOption,
   SolutionType,
-  SubControllerDefinitionWithoutProps,
+  type SubControllerDefinitionWithoutProps,
 } from '../../../../../app/commerce-ssr-engine/types/common.js';
 import {stateKey} from '../../../../../app/state-key.js';
 import {facetRequestSelector} from '../../../../../features/commerce/facets/facet-set/facet-set-selector.js';
