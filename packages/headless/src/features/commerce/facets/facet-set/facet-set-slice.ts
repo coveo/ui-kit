@@ -340,9 +340,7 @@ export const commerceFacetSetReducer = createReducer(
         facetRequest.preventAutoSelect = true;
 
         const existingValue = facetRequest.values.find(
-          (v) =>
-            (v as FacetValueRequest | CategoryFacetValueRequest).value ===
-            rawValue
+          (v) => v.value === rawValue
         );
 
         if (!existingValue) {
@@ -354,7 +352,7 @@ export const commerceFacetSetReducer = createReducer(
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
         const {facetId, value} = action.payload;
-        const {request} = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!ensureCategoryFacetRequest(request)) {
           return;
