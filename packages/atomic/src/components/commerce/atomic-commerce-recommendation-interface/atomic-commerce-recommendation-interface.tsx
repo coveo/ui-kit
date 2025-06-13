@@ -206,6 +206,7 @@ export class AtomicCommerceRecommendationInterface
       i18n: this.i18n,
       store: this.store,
       interfaceElement: this.host,
+      // TODO: KIT-4333: remove this and use injectStylesForNoShadowDOM decorator instead
       addAdoptedStyleSheets: (stylesheet) => {
         const parent = this.host.getRootNode();
         const styleSheet = stylesheet;

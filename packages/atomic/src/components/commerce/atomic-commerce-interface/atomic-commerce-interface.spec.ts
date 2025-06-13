@@ -116,6 +116,8 @@ export class TestElement
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
+  // TODO: KIT-4333: do not add stylesheet in the bindings
+  // use @injectStylesForNoShadowDOM instead
   public addStyles(styles: string | CSSStyleSheet) {
     if (typeof styles === 'string') {
       const styleSheet = new CSSStyleSheet();
