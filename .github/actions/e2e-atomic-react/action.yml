@@ -10,7 +10,7 @@ runs:
   steps:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-      working-directory: packages/samples/angular
+      working-directory: packages/samples/atomic-react
       shell: bash
     - name: Run Playwright tests
       run: npx playwright test

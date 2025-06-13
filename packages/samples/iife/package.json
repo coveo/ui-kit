@@ -11,11 +11,11 @@
     "e2e": "cypress run --browser chrome"
   },
   "dependencies": {
-    "@babel/standalone": "7.27.3",
-    "@coveo/atomic": "3.27.0",
-    "@coveo/atomic-hosted-page": "1.1.23",
-    "@coveo/atomic-react": "3.2.44",
-    "@coveo/headless": "3.25.2",
+    "@babel/standalone": "7.27.5",
+    "@coveo/atomic": "3.27.1",
+    "@coveo/atomic-hosted-page": "1.1.24",
+    "@coveo/atomic-react": "3.2.45",
+    "@coveo/headless": "3.26.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },

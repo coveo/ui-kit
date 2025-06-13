@@ -259,6 +259,8 @@ export default class QuanticSearchBoxSuggestionsList extends LightningElement {
       iconTitle: suggestion.isRecentQuery
         ? this.labels.recentQueryAriaLabel
         : this.labels.querySuggestionAriaLabel,
+      isClearRecentQueryButton: false,
+      isRecentQuery: !!suggestion.isRecentQuery,
       onClick: (event) => {
         this.handleSelection(event, optionIndex);
       },

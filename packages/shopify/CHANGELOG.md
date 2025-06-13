@@ -1,3 +1,7 @@
+## <small>1.5.1 (2025-06-11)</small>
+
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+
 ## 1.5.0 (2025-06-04)
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
