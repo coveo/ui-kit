@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import type {NumberValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {
   requiredNonEmptyString,
@@ -6,7 +6,7 @@ import {
   validatePayload,
   validatePayloadAndThrow,
 } from '../../../../utils/validate-payload.js';
-import {
+import type {
   ToggleSelectCategoryFacetValueActionCreatorPayload,
   UpdateCategoryFacetNumberOfValuesActionCreatorPayload,
 } from '../../../facets/category-facet-set/category-facet-set-actions.js';

@@ -1,5 +1,5 @@
 import {createReducer, type Draft as WritableDraft} from '@reduxjs/toolkit';
-import {
+import type {
   CategoryFacetValueRequest,
   DateRangeRequest,
   FacetValueRequest,
@@ -20,7 +20,6 @@ import {fetchProductListing} from '../../product-listing/product-listing-actions
 import {fetchQuerySuggestions} from '../../query-suggest/query-suggest-actions.js';
 import {restoreSearchParameters} from '../../search-parameters/search-parameters-actions.js';
 import {executeSearch} from '../../search/search-actions.js';
-import '../category-facet/category-facet-actions.js';
 import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
@@ -61,10 +60,10 @@ import {
   selectPath,
 } from './facet-set-reducers.js';
 import {
-  CommerceFacetSetState,
+  type CommerceFacetSetState,
   getCommerceFacetSetInitialState,
 } from './facet-set-state.js';
-import {
+import type {
   AnyFacetRequest,
   AnyFacetValueRequest,
   RegularFacetRequest,
@@ -74,8 +73,11 @@ import {
   LocationFacetRequest,
   LocationFacetValueRequest,
 } from './interfaces/request.js';
-import {CategoryFacetValue, LocationFacetValue} from './interfaces/response.js';
-import {AnyFacetResponse} from './interfaces/response.js';
+import type {
+  AnyFacetResponse,
+  CategoryFacetValue,
+  LocationFacetValue,
+} from './interfaces/response.js';
 
 export const commerceFacetSetReducer = createReducer(
   getCommerceFacetSetInitialState(),

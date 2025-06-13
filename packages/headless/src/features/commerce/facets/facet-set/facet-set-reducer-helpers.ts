@@ -1,5 +1,5 @@
-import {CommerceFacetSetState} from './facet-set-state.js';
-import {CategoryFacetValueRequest} from './interfaces/request.js';
+import type {CommerceFacetSetState} from './facet-set-state.js';
+import type {CategoryFacetValueRequest} from './interfaces/request.js';
 
 export function handleCategoryFacetNestedNumberOfValuesUpdate(
   state: CommerceFacetSetState,
