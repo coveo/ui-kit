@@ -35,6 +35,7 @@ export const testSearch =
       await page.goto(pageUrl);
       configuration.configure(options);
       await search.waitForSearchResponse();
+      await search.waitForSearchResultsVisible();
       await use(new ResultListObject(page));
     },
   });
@@ -57,6 +58,7 @@ export const testInsight =
       await insightSetup.waitForInsightInterfaceInitialization();
       await search.performSearch();
       await search.waitForSearchResponse();
+      await search.waitForSearchResultsVisible();
       await use(new ResultListObject(page));
     },
   });

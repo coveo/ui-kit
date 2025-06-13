@@ -13,7 +13,7 @@ test.describe('default', async () => {
   });
 
   test('should render the image', async ({productImage}) => {
-    expect(productImage.noCarouselImage).toBeVisible();
+    await expect(productImage.noCarouselImage).toBeVisible();
   });
 
   test('should have a default alt text', async ({productImage}) => {

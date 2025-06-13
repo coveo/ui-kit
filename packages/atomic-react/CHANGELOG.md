@@ -1,3 +1,14 @@
+## <small>3.2.45 (2025-06-11)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
+
+## <small>3.2.44 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- chore: migrate atomic-commerce-search-box-recent-queries (#5342) ([a535b4e](https://github.com/coveo/ui-kit/commits/a535b4e)), closes [#5342](https://github.com/coveo/ui-kit/issues/5342)
+- chore(atomic): migrate atomic-commerce-search-box-instant-products (#5360) ([1672b15](https://github.com/coveo/ui-kit/commits/1672b15)), closes [#5360](https://github.com/coveo/ui-kit/issues/5360)
+
 ## <small>3.2.43 (2025-06-04)</small>
 
 - chore: migrate atomic-commerce-search-box-recent-queries (#5342) ([a535b4e](https://github.com/coveo/ui-kit/commits/a535b4e)), closes [#5342](https://github.com/coveo/ui-kit/issues/5342)

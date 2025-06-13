@@ -1,3 +1,4 @@
+/* eslint-disable canonical/no-barrel-import */
 /* eslint-disable @cspell/spellchecker */
 import {StateNeededByAnswerAPI} from '../stream-answer-api.js';
 
@@ -202,6 +203,11 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       aq: '',
       lq: '',
       dq: '',
+    },
+  },
+  context: {
+    contextValues: {
+      testKey: 'testValue',
     },
   },
   querySuggest: {},
@@ -1210,6 +1216,9 @@ export const expectedStreamAnswerAPIParam = {
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  context: {
+    testKey: 'testValue',
+  },
   pipelineRuleParameters: {
     mlGenerativeQuestionAnswering: {
       responseFormat: {

@@ -50,7 +50,7 @@ test.describe('Default', () => {
         breadbox,
       }) => {
         await page.goto(baseUrl + filter);
-        await page.waitForURL(baseUrl + filter);
+        await breadbox.hydrated.waitFor();
 
         const breadcrumbButton = breadbox.getBreadcrumbButtons(breadcrumbLabel);
 

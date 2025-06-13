@@ -10,7 +10,7 @@ import {
   computeNumberOfStars,
 } from '../../../common/atomic-rating/atomic-rating';
 import {CommerceBindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import {ProductContext} from '../product-template-decorators';
+import {ProductContext} from '../stencil-product-template-decorators';
 
 /**
  * The `atomic-product-rating` element renders a star rating.

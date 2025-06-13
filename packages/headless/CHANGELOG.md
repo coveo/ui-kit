@@ -1,3 +1,28 @@
+## 3.26.0 (2025-06-11)
+
+- chore: map package.json into the exports (#5414) ([357dfa8](https://github.com/coveo/ui-kit/commits/357dfa8)), closes [#5414](https://github.com/coveo/ui-kit/issues/5414)
+- chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)
+- chore(headless): deprecate unused `activeTab` facet state value (#5415) ([b0e33ec](https://github.com/coveo/ui-kit/commits/b0e33ec)), closes [#5415](https://github.com/coveo/ui-kit/issues/5415)
+- chore(headless): stop bundling ESM headless for NPM (#5346) ([7de844f](https://github.com/coveo/ui-kit/commits/7de844f)), closes [#5346](https://github.com/coveo/ui-kit/issues/5346)
+- fix(answer): add context to /generate payload (#5426) ([8b77654](https://github.com/coveo/ui-kit/commits/8b77654)), closes [#5426](https://github.com/coveo/ui-kit/issues/5426)
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
+- fix(headless): respect query param tab on page refresh (#5412) ([47413dd](https://github.com/coveo/ui-kit/commits/47413dd)), closes [#5412](https://github.com/coveo/ui-kit/issues/5412)
+- feat(headless SSR): augment request with x-forwarded-for header (#5422) ([77b96b7](https://github.com/coveo/ui-kit/commits/77b96b7)), closes [#5422](https://github.com/coveo/ui-kit/issues/5422)
+
+## <small>3.25.2 (2025-06-04)</small>
+
+- [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))
+- chore(headless,bueno): externalize all packages on node outputs (#4921) ([bc46996](https://github.com/coveo/ui-kit/commits/bc46996)), closes [#4921](https://github.com/coveo/ui-kit/issues/4921)
+- docs(headless,headless-react): refactor typedoc to central location (#5265) ([3af380a](https://github.com/coveo/ui-kit/commits/3af380a)), closes [#5265](https://github.com/coveo/ui-kit/issues/5265)
+- fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)
+- fix(headless commerce): remove facets from state when executing query from search box and clearFilte ([a2ecf0a](https://github.com/coveo/ui-kit/commits/a2ecf0a)), closes [#5369](https://github.com/coveo/ui-kit/issues/5369)
+- fix(headless): ensure cq is defined before appending it to expressions (#5401) ([2f1be68](https://github.com/coveo/ui-kit/commits/2f1be68)), closes [#5401](https://github.com/coveo/ui-kit/issues/5401)
+- fix(headless): preserve selected state for filter ranges after restore (#5366) ([6bc8c2a](https://github.com/coveo/ui-kit/commits/6bc8c2a)), closes [#5366](https://github.com/coveo/ui-kit/issues/5366) [#5234](https://github.com/coveo/ui-kit/issues/5234)
+- fix(headless): set 'tab' / 'originLevel2' when restoring tab from url parameters (#5338) ([8d26336](https://github.com/coveo/ui-kit/commits/8d26336)), closes [#5338](https://github.com/coveo/ui-kit/issues/5338)
+- chore(deps): update dependency typedoc to v0.28.5 j:kit-282 (#5395) ([56d50ab](https://github.com/coveo/ui-kit/commits/56d50ab)), closes [#5395](https://github.com/coveo/ui-kit/issues/5395)
+- chore(deps): update vite j:kit-282 (#5363) ([eb41b2c](https://github.com/coveo/ui-kit/commits/eb41b2c)), closes [#5363](https://github.com/coveo/ui-kit/issues/5363)
+
 ## <small>3.25.1 (2025-06-04)</small>
 
 - fix(deps): update dependency @coveo/relay to v1.2.1 j:kit-282 (#5396) ([3d9ebf9](https://github.com/coveo/ui-kit/commits/3d9ebf9)), closes [#5396](https://github.com/coveo/ui-kit/issues/5396)

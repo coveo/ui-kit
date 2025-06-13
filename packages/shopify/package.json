@@ -8,7 +8,7 @@
   "main": "./dist/headless.esm.js",
   "module": "./dist/headless.esm.js",
   "license": "Apache-2.0",
-  "version": "1.4.0",
+  "version": "1.5.1",
   "files": [
     "dist/"
   ],
@@ -53,10 +53,10 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.1.4"
+    "vitest": "3.2.1"
   },
   "dependencies": {
-    "@coveo/headless": "3.25.1",
+    "@coveo/headless": "3.26.0",
     "@coveo/relay": "1.2.1",
     "uuid": "^11.0.0"
   },

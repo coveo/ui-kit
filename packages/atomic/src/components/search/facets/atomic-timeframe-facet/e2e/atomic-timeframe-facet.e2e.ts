@@ -179,7 +179,7 @@ test.describe('when a "depends-on" prop is provided', () => {
   test('when the specified dependency is selected in the parent facet, dependent facet should be visible', async ({
     facet,
   }) => {
-    expect(facet.facet).toBeVisible();
+    await expect(facet.facet).toBeVisible();
   });
 
   test.describe('when the specified dependency is cleared from the parent facet', () => {
@@ -187,7 +187,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       const parent = facet.page.getByTestId('parent-facet');
       await parent.locator('[part="clear-button"]').click();
 
-      expect(facet.facet).not.toBeVisible();
+      await expect(facet.facet).not.toBeVisible();
     });
 
     test('should clear previously selected dependent facet range', async ({
@@ -196,13 +196,13 @@ test.describe('when a "depends-on" prop is provided', () => {
       await facet.facetValues.first().click();
 
       const breadbox = facet.page.getByTestId('breadbox');
-      expect(breadbox).toBeVisible();
+      await expect(breadbox).toBeVisible();
 
       const parent = facet.page.getByTestId('parent-facet');
       await parent.locator('[part="clear-button"]').click();
 
       await breadbox.waitFor({state: 'hidden'});
-      expect(breadbox).not.toBeVisible();
+      await expect(breadbox).not.toBeVisible();
     });
     test('should clear previously selected dependent facet input range', async ({
       facet,
@@ -212,13 +212,13 @@ test.describe('when a "depends-on" prop is provided', () => {
       await facet.facetApplyButton.click();
 
       const breadbox = facet.page.getByTestId('breadbox');
-      expect(breadbox).toBeVisible();
+      await expect(breadbox).toBeVisible();
 
       const parent = facet.page.getByTestId('parent-facet');
       await parent.locator('[part="clear-button"]').click();
 
       await breadbox.waitFor({state: 'hidden'});
-      expect(breadbox).not.toBeVisible();
+      await expect(breadbox).not.toBeVisible();
     });
   });
 
@@ -231,7 +231,7 @@ test.describe('when a "depends-on" prop is provided', () => {
         )
         .click();
 
-      expect(facet.facet).not.toBeVisible();
+      await expect(facet.facet).not.toBeVisible();
     });
 
     test('should clear previously selected dependent facet range', async ({
@@ -240,7 +240,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       await facet.facetValues.first().click();
 
       const breadbox = facet.page.getByTestId('breadbox');
-      expect(breadbox).toBeVisible();
+      await expect(breadbox).toBeVisible();
 
       await breadbox
         .getByLabel(
@@ -249,7 +249,7 @@ test.describe('when a "depends-on" prop is provided', () => {
         .click();
 
       await breadbox.waitFor({state: 'hidden'});
-      expect(breadbox).not.toBeVisible();
+      await expect(breadbox).not.toBeVisible();
     });
     test('should clear previously selected dependent facet input range', async ({
       facet,
@@ -259,7 +259,7 @@ test.describe('when a "depends-on" prop is provided', () => {
       await facet.facetApplyButton.click();
 
       const breadbox = facet.page.getByTestId('breadbox');
-      expect(breadbox).toBeVisible();
+      await expect(breadbox).toBeVisible();
 
       await breadbox
         .getByLabel(
@@ -268,7 +268,7 @@ test.describe('when a "depends-on" prop is provided', () => {
         .click();
 
       await breadbox.waitFor({state: 'hidden'});
-      expect(breadbox).not.toBeVisible();
+      await expect(breadbox).not.toBeVisible();
     });
   });
 });

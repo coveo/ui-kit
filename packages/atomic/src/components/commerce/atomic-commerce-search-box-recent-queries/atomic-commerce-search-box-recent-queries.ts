@@ -1,5 +1,5 @@
 import {errorGuard} from '@/src/decorators/error-guard';
-import {InitializableComponent} from '@/src/decorators/types';
+import {SearchBoxSuggestionsComponent} from '@/src/decorators/types';
 import {SafeStorage, StorageItems} from '@/src/utils/local-storage-utils';
 import {once} from '@/src/utils/utils';
 import {
@@ -32,7 +32,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 @customElement('atomic-commerce-search-box-recent-queries')
 export class AtomicCommerceSearchBoxRecentQueries
   extends LitElement
-  implements InitializableComponent<CommerceBindings>
+  implements SearchBoxSuggestionsComponent<CommerceBindings>
 {
   public bindings!: SearchBoxSuggestionsBindings<SearchBox, CommerceBindings>;
   private recentQueriesList!: RecentQueriesList;

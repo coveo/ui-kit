@@ -6,64 +6,66 @@
     "url": "git+https://github.com/coveo/ui-kit.git",
     "directory": "packages/headless"
   },
-  "main": "./dist/headless.cjs",
-  "module": "./dist/headless.esm.js",
+  "main": "./dist/cjs/headless.cjs",
+  "module": "./dist/esm/index.js",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/definitions/index.d.ts",
-      "import": "./dist/headless.esm.js",
-      "require": "./dist/headless.cjs",
-      "default": "./dist/headless.esm.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/headless.cjs",
+      "default": "./dist/esm/index.js"
     },
     "./case-assist": {
       "types": "./dist/definitions/case-assist.index.d.ts",
-      "import": "./dist/case-assist/headless.esm.js",
-      "require": "./dist/case-assist/headless.cjs",
-      "default": "./dist/case-assist/headless.esm.js"
+      "import": "./dist/esm/case-assist.index.js",
+      "require": "./dist/cjs/case-assist/headless.cjs",
+      "default": "./dist/esm/case-assist.index.js"
     },
     "./commerce": {
       "types": "./dist/definitions/commerce.index.d.ts",
-      "import": "./dist/commerce/headless.esm.js",
-      "require": "./dist/commerce/headless.cjs",
-      "default": "./dist/commerce/headless.esm.js"
+      "import": "./dist/esm/commerce.index.js",
+      "require": "./dist/cjs/commerce/headless.cjs",
+      "default": "./dist/esm/commerce.index.js"
     },
     "./insight": {
       "types": "./dist/definitions/insight.index.d.ts",
-      "import": "./dist/insight/headless.esm.js",
-      "require": "./dist/insight/headless.cjs",
-      "default": "./dist/insight/headless.esm.js"
+      "import": "./dist/esm/insight.index.js",
+      "require": "./dist/cjs/insight/headless.cjs",
+      "default": "./dist/esm/insight.index.js"
     },
     "./recommendation": {
       "types": "./dist/definitions/recommendation.index.d.ts",
-      "import": "./dist/recommendation/headless.esm.js",
-      "require": "./dist/recommendation/headless.cjs",
-      "default": "./dist/recommendation/headless.esm.js"
+      "import": "./dist/esm/recommendation.index.js",
+      "require": "./dist/cjs/recommendation/headless.cjs",
+      "default": "./dist/esm/recommendation.index.js"
     },
     "./ssr": {
       "types": "./dist/definitions/ssr.index.d.ts",
-      "import": "./dist/ssr/headless.esm.js",
-      "require": "./dist/ssr/headless.cjs",
-      "default": "./dist/ssr/headless.esm.js"
+      "import": "./dist/esm/ssr.index.js",
+      "require": "./dist/cjs/ssr/headless.cjs",
+      "default": "./dist/esm/ssr.index.js"
     },
     "./ssr-commerce": {
       "types": "./dist/definitions/ssr-commerce.index.d.ts",
-      "import": "./dist/ssr-commerce/headless.esm.js",
-      "require": "./dist/ssr-commerce/headless.cjs",
-      "default": "./dist/ssr-commerce/headless.esm.js"
-    }
+      "import": "./dist/esm/ssr-commerce.index.js",
+      "require": "./dist/cjs/ssr-commerce/headless.cjs",
+      "default": "./dist/esm/ssr-commerce.index.js"
+    },
+    "./package.json": "./package.json"
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "3.25.1",
+  "version": "3.26.0",
   "files": [
     "dist/"
   ],
   "scripts": {
     "dev": "concurrently \"npm run build:definitions -- -w\" \"npm run build:bundles -- dev\"",
     "build": "nx build",
-    "build:prod": "npm run build:definitions && npm run build:bundles",
+    "build:prod": "npm run build:definitions && npm run build:bundles && npm run build:esm",
     "build:bundles": "node esbuild.mjs",
+    "build:esm": "node ./scripts/build.mjs --config=tsconfig.build-esm.json",
     "build:definitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -rf dist/*",
     "test": "vitest run --exclude \"src/integration-tests/**\"",
@@ -96,9 +98,9 @@
     }
   },
   "dependencies": {
-    "@coveo/bueno": "1.0.15",
+    "@coveo/bueno": "1.0.17",
     "@coveo/relay": "1.2.1",
-    "@coveo/relay-event-types": "14.3.3",
+    "@coveo/relay-event-types": "14.7.4",
     "@reduxjs/toolkit": "2.6.0",
     "abortcontroller-polyfill": "1.7.8",
     "coveo.analytics": "2.30.45",
@@ -108,19 +110,20 @@
     "headers-polyfill": "4.0.3",
     "navigator.sendbeacon": "0.0.20",
     "node-abort-controller": "3.1.1",
-    "pino": "9.6.0",
+    "pino": "9.7.0",
     "redux-thunk": "3.1.0",
     "ts-debounce": "4.0.0"
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
+    "chalk": "5.4.1",
     "esbuild-plugin-alias-path": "2.0.2",
     "eslint-plugin-canonical": "4.18.0",
-    "execa": "9.5.2",
+    "execa": "9.6.0",
     "live-server": "1.2.2",
     "ts-node": "10.9.2",
     "typedoc": "0.28.5",
-    "vitest": "3.1.4"
+    "vitest": "3.2.1"
   },
   "engines": {
     "node": "^20.9.0 || ^22.11.0"

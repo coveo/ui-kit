@@ -51,6 +51,19 @@ export class NextJsNavigatorContext implements NavigatorContext {
   }
 
   /**
+   * Retrieves the forwarded-for header, which may contain the original IP address
+   * of the client making the request.
+   * @returns The forwarded-for IP address if available, otherwise an empty string.
+   */
+  get forwardedFor() {
+    return (
+      this.headers.get('x-forwarded-for') ||
+      this.headers.get('x-forwarded-host') ||
+      ''
+    );
+  }
+
+  /**
    * Marshals the navigation context into a format that can be used by Coveo's headless library.
    * @returns An object containing clientId, location, referrer, and userAgent properties.
    */
@@ -60,6 +73,7 @@ export class NextJsNavigatorContext implements NavigatorContext {
       location: this.location,
       referrer: this.referrer,
       userAgent: this.userAgent,
+      forwardedFor: this.forwardedFor,
     };
   }
 }

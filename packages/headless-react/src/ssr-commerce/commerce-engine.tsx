@@ -14,6 +14,7 @@ import {
   buildControllerHooks,
   buildEngineHook,
   buildHydratedStateProvider,
+  buildStateProvider,
   buildStaticStateProvider,
 } from './common.js';
 import {
@@ -103,6 +104,11 @@ export function defineCommerceEngine<
         singletonContext as ListingContext,
         SolutionType.listing
       ),
+
+      StateProvider: buildStateProvider(
+        singletonContext as ListingContext,
+        SolutionType.listing
+      ),
     },
     searchEngineDefinition: {
       ...searchEngineDefinition,
@@ -111,6 +117,10 @@ export function defineCommerceEngine<
         SolutionType.search
       ),
       HydratedStateProvider: buildHydratedStateProvider(
+        singletonContext as SearchContext,
+        SolutionType.search
+      ),
+      StateProvider: buildStateProvider(
         singletonContext as SearchContext,
         SolutionType.search
       ),
@@ -125,6 +135,10 @@ export function defineCommerceEngine<
         singletonContext as StandaloneContext,
         SolutionType.standalone
       ),
+      StateProvider: buildStateProvider(
+        singletonContext as StandaloneContext,
+        SolutionType.standalone
+      ),
     },
     recommendationEngineDefinition: {
       ...recommendationEngineDefinition,
@@ -133,6 +147,10 @@ export function defineCommerceEngine<
         SolutionType.recommendation
       ),
       HydratedStateProvider: buildHydratedStateProvider(
+        singletonContext as RecommendationContext,
+        SolutionType.recommendation
+      ),
+      StateProvider: buildStateProvider(
         singletonContext as RecommendationContext,
         SolutionType.recommendation
       ),
