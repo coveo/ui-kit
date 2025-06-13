@@ -1,4 +1,4 @@
-export const isFacetIncludedOnTab = (
+export const isFacetVisibleOnTab = (
   facetTabs: {excluded?: string[]; included?: string[]} | undefined,
   activeTab: string | undefined
 ) => {

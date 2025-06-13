@@ -13,12 +13,16 @@ describe('#renderTextAreaClearButton', () => {
     i18n = await createTestI18n();
   });
 
-  const renderComponent = async (ref?: Ref<HTMLTextAreaElement>) => {
+  const renderComponent = async (
+    ref?: Ref<HTMLTextAreaElement>,
+    onClick?: () => void
+  ) => {
     const element = await renderFunctionFixture(
       html`${renderTextAreaClearButton({
         props: {
           i18n,
           textAreaRef: ref ?? createRef<HTMLTextAreaElement>(),
+          onClick: onClick ?? (() => {}),
         },
       })}`
     );
@@ -54,6 +58,13 @@ describe('#renderTextAreaClearButton', () => {
     const {button} = await renderComponent(mockTextAreaRef);
     await userEvent.click(button!);
     expect(mockTextAreaRef.value?.focus).toHaveBeenCalled();
+  });
+
+  it('should trigger the onClick callback on click', async () => {
+    const onClick = vi.fn();
+    const {button} = await renderComponent(undefined, onClick);
+    await userEvent.click(button!);
+    expect(onClick).toHaveBeenCalled();
   });
 
   it('should have aria-label as "Clear" on the button', async () => {

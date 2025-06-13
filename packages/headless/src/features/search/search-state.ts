@@ -3,6 +3,7 @@ import {ExtendedResults} from '../../api/search/search/extended-results.js';
 import {QuestionsAnswers} from '../../api/search/search/question-answering.js';
 import {Result} from '../../api/search/search/result.js';
 import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
+import {SearchAction} from './search-actions.js';
 
 export interface SearchState {
   /** The search response. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/
@@ -48,6 +49,10 @@ export interface SearchState {
    * The extended results.
    */
   extendedResults: ExtendedResults;
+  /**
+   * The action that triggered the search request.
+   */
+  searchAction: SearchAction | undefined;
 }
 
 export function emptyQuestionAnswer() {
@@ -90,5 +95,6 @@ export function getSearchInitialState(): SearchState {
     requestId: '',
     questionAnswer: emptyQuestionAnswer(),
     extendedResults: {},
+    searchAction: undefined,
   };
 }

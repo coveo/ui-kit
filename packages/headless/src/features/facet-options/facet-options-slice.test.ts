@@ -4,7 +4,6 @@ import {logSearchEvent} from '../analytics/analytics-actions.js';
 import {change} from '../history/history-actions.js';
 import {getHistoryInitialState} from '../history/history-state.js';
 import {executeSearch} from '../search/search-actions.js';
-import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {updateFacetOptions} from './facet-options-actions.js';
 import {facetOptionsReducer} from './facet-options-slice.js';
 import {
@@ -40,72 +39,6 @@ describe('facet options slice', () => {
 
       expect(finalState.freezeFacetOrder).toBe(true);
     });
-  });
-
-  describe('update facet enabled state on updateActiveTab', () => {
-    const initialState = getFacetOptionsInitialState();
-    initialState.facets = {
-      notIncluded: {
-        enabled: true,
-        tabs: {
-          included: ['tab1'],
-          excluded: [],
-        },
-      },
-      included: {
-        enabled: false,
-        tabs: {
-          included: ['tab2'],
-          excluded: [],
-        },
-      },
-      notExcluded: {
-        enabled: true,
-        tabs: {
-          included: [],
-          excluded: ['tab1'],
-        },
-      },
-      excluded: {
-        enabled: true,
-        tabs: {
-          included: [],
-          excluded: ['tab2'],
-        },
-      },
-      notExcludedNotIncluded: {
-        enabled: true,
-        tabs: {
-          included: ['tab1'],
-          excluded: ['tab1'],
-        },
-      },
-      excludedAndIncluded: {
-        enabled: true,
-        tabs: {
-          included: ['tab2'],
-          excluded: ['tab2'],
-        },
-      },
-    };
-    const action = updateActiveTab('tab2');
-    const finalState = facetOptionsReducer(initialState, action);
-
-    const testCases: [string, boolean][] = [
-      ['notIncluded', false],
-      ['included', true],
-      ['notExcluded', true],
-      ['excluded', false],
-      ['notExcludedNotIncluded', false],
-      ['excludedAndIncluded', false],
-    ];
-
-    test.each(testCases)(
-      '%s facet should have enabled state %s',
-      (facet: string, expectedEnabled: boolean) => {
-        expect(finalState.facets[facet].enabled).toBe(expectedEnabled);
-      }
-    );
   });
 
   it('#executeSearch.fulfilled sets #freezeFacetOrder to false', () => {

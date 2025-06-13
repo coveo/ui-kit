@@ -13,6 +13,8 @@ import {
   expectedStreamAnswerAPIParamWithoutAnyTab,
   expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression,
   expectedStreamAnswerAPIParamWithStaticFiltersSelected,
+  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
+  expectedStreamAnswerAPIParamWithoutSearchAction,
   streamAnswerAPIStateMock,
   streamAnswerAPIStateMockWithATabWithAnExpression,
   streamAnswerAPIStateMockWithoutAnyFilters,
@@ -21,7 +23,7 @@ import {
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpression,
   streamAnswerAPIStateMockWithStaticFiltersSelected,
   streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ,
-  expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ,
+  streamAnswerAPIStateMockWithoutSearchAction,
 } from './stream-answer-api-state-mock.js';
 
 describe('#streamAnswerApi', () => {
@@ -115,6 +117,7 @@ describe('#streamAnswerApi', () => {
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpression
       );
     });
+
     it('should not include advanced search queries when there are no advanced search queries', () => {
       const queryParams = constructAnswerQueryParams(
         streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyCQ as any,
@@ -123,6 +126,18 @@ describe('#streamAnswerApi', () => {
       );
       expect(queryParams).toEqual(
         expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithoutAdvancedCQ
+      );
+    });
+
+    it('should accept an undefined SearchAction', () => {
+      const queryParams = constructAnswerQueryParams(
+        streamAnswerAPIStateMockWithoutSearchAction as any,
+        'select',
+        buildMockNavigatorContextProvider()()
+      );
+
+      expect(queryParams).toEqual(
+        expectedStreamAnswerAPIParamWithoutSearchAction
       );
     });
   });

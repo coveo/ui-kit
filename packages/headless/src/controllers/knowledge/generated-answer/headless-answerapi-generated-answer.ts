@@ -2,6 +2,7 @@ import {
   answerEvaluation,
   AnswerEvaluationPOSTParams,
 } from '../../../api/knowledge/post-answer-evaluation.js';
+import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
@@ -111,14 +112,16 @@ const subscribeToSearchRequest = (
     if (
       triggerParams.q.length === 0 ||
       triggerParams.requestId.length === 0 ||
-      triggerParams.requestId === lastTriggerParams.requestId
+      triggerParams.requestId === lastTriggerParams.requestId ||
+      !state.search?.searchAction?.actionCause
     ) {
       return;
     }
 
     lastTriggerParams = triggerParams;
-    engine.dispatch(resetAnswer());
-    engine.dispatch(fetchAnswer(state, engine.navigatorContext));
+    engine.dispatch(
+      triggerSearchRequest({state, navigatorContext: engine.navigatorContext})
+    );
   };
 
   engine.subscribe(strictListener);

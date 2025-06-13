@@ -19,6 +19,7 @@ export function buildMockSearchState(
     requestId: '',
     questionAnswer: emptyQuestionAnswer(),
     extendedResults: {},
+    searchAction: undefined,
     ...config,
   };
 }

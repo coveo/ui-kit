@@ -4,6 +4,7 @@ import {
   enableFacet,
 } from '../../../../features/facet-options/facet-options-actions.js';
 import {facetOptionsReducer as facetOptions} from '../../../../features/facet-options/facet-options-slice.js';
+import {isFacetVisibleOnTab} from '../../../../features/facet-options/facet-options-utils.js';
 import {updateFreezeCurrentValues} from '../../../../features/facets/facet-set/facet-set-actions.js';
 import {AnyFacetValueRequest} from '../../../../features/facets/generic/interfaces/generic-facet-request.js';
 import {AnyFacetValue} from '../../../../features/facets/generic/interfaces/generic-facet-response.js';
@@ -16,6 +17,7 @@ import {
 } from '../../../../state/state-sections.js';
 import {loadReducerError} from '../../../../utils/errors.js';
 import {getObjectHash} from '../../../../utils/utils.js';
+import {buildCoreTabManager} from '../../tab-manager/headless-core-tab-manager.js';
 
 export interface AnyFacetValuesCondition<T extends AnyFacetValueRequest> {
   /**
@@ -73,6 +75,8 @@ export function buildCoreFacetConditionsManager(
     throw loadReducerError;
   }
 
+  const tabManager = buildCoreTabManager(engine);
+
   const isFacetEnabled = (facetId: string) => {
     return engine.state.facetOptions.facets[facetId]?.enabled ?? false;
   };
@@ -87,6 +91,9 @@ export function buildCoreFacetConditionsManager(
   const isFacetRegistered = (facetId: string) =>
     facetId in engine.state.facetOptions.facets;
 
+  const selectTabSettings = (facetId: string) =>
+    engine.state.facetOptions.facets[facetId]?.tabs;
+
   const getRelevantStateHash = () =>
     getObjectHash({
       isFacetRegistered: isFacetRegistered(props.facetId),
@@ -97,6 +104,10 @@ export function buildCoreFacetConditionsManager(
               values: getFacetValuesById(parentFacetId),
             }
           : null
+      ),
+      isTabEnabled: isFacetVisibleOnTab(
+        selectTabSettings(props.facetId),
+        tabManager.state.activeTab
       ),
     });
 
@@ -110,16 +121,18 @@ export function buildCoreFacetConditionsManager(
   };
 
   const areConditionsMet = () => {
-    return props.conditions.some((condition) => {
-      if (!isFacetEnabled(condition.parentFacetId)) {
-        return false;
-      }
-      const values = getFacetValuesById(condition.parentFacetId);
-      if (values === null) {
-        return false;
-      }
-      return condition.condition(values as AnyFacetValue[]);
-    });
+    return props.conditions.length > 0
+      ? props.conditions.some((condition) => {
+          if (!isFacetEnabled(condition.parentFacetId)) {
+            return false;
+          }
+          const values = getFacetValuesById(condition.parentFacetId);
+          if (values === null) {
+            return false;
+          }
+          return condition.condition(values as AnyFacetValue[]);
+        })
+      : true;
   };
 
   const unfreezeFacetValues = () => {
@@ -139,7 +152,12 @@ export function buildCoreFacetConditionsManager(
       return;
     }
     const isEnabled = isFacetEnabled(props.facetId);
-    const shouldBeEnabled = areConditionsMet();
+    const conditionsMet = areConditionsMet();
+    const isVisibleOnTab = isFacetVisibleOnTab(
+      selectTabSettings(props.facetId),
+      tabManager.state.activeTab
+    );
+    const shouldBeEnabled = conditionsMet && isVisibleOnTab;
     if (isEnabled !== shouldBeEnabled) {
       engine.dispatch(
         shouldBeEnabled
@@ -149,10 +167,6 @@ export function buildCoreFacetConditionsManager(
       unfreezeFacetValues();
     }
   };
-
-  if (!props.conditions.length) {
-    return {stopWatching() {}};
-  }
 
   let relevantStateHash = getRelevantStateHash();
   const unsubscribe = engine.subscribe(() => {

@@ -3,11 +3,12 @@ import {i18n} from 'i18next';
 import {html} from 'lit';
 import {Ref} from 'lit/directives/ref.js';
 import ClearSlim from '../../../images/clear-slim.svg';
-import {renderButton, ButtonProps} from '../button';
+import {renderButton} from '../button';
 
-interface Props extends Partial<ButtonProps> {
+interface Props {
   i18n: i18n;
   textAreaRef: Ref<HTMLTextAreaElement>;
+  onClick: () => void;
 }
 
 export const renderTextAreaClearButton: FunctionalComponent<Props> = ({

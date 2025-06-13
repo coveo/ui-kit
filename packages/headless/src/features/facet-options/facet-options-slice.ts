@@ -6,7 +6,6 @@ import {registerNumericFacet} from '../facets/range-facets/numeric-facet-set/num
 import {change} from '../history/history-actions.js';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions.js';
 import {executeSearch} from '../search/search-actions.js';
-import {updateActiveTab} from '../tab-set/tab-set-actions.js';
 import {
   disableFacet,
   enableFacet,
@@ -17,7 +16,6 @@ import {
   getFacetOptionsInitialState,
   FacetOptionsState,
 } from './facet-options-state.js';
-import {isFacetIncludedOnTab} from './facet-options-utils.js';
 
 export const facetOptionsReducer = createReducer(
   getFacetOptionsInitialState(),
@@ -32,38 +30,29 @@ export const facetOptionsReducer = createReducer(
       .addCase(executeSearch.rejected, (state) => {
         state.freezeFacetOrder = false;
       })
-      .addCase(updateActiveTab, (state, action) => {
-        for (const facetId in state.facets) {
-          const facet = state.facets[facetId];
-
-          if (Object.keys({...facet.tabs}).length > 0) {
-            facet.enabled = isFacetIncludedOnTab(facet.tabs, action.payload);
-          }
-        }
-      })
       .addCase(
         change.fulfilled,
         (state, action) => action.payload?.facetOptions ?? state
       )
       .addCase(registerCategoryFacet, (state, action) => {
-        const {facetId, tabs, activeTab} = action.payload;
+        const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
+        handleRegisterFacetTabs(tabs, state, facetId);
       })
       .addCase(registerFacet, (state, action) => {
-        const {facetId, tabs, activeTab} = action.payload;
+        const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
+        handleRegisterFacetTabs(tabs, state, facetId);
       })
       .addCase(registerDateFacet, (state, action) => {
-        const {facetId, tabs, activeTab} = action.payload;
+        const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
+        handleRegisterFacetTabs(tabs, state, facetId);
       })
       .addCase(registerNumericFacet, (state, action) => {
-        const {facetId, tabs, activeTab} = action.payload;
+        const {facetId, tabs} = action.payload;
 
-        handleRegisterFacetTabs(tabs, activeTab, state, facetId);
+        handleRegisterFacetTabs(tabs, state, facetId);
       })
       .addCase(enableFacet, (state, action) => {
         state.facets[action.payload].enabled = true;
@@ -72,16 +61,6 @@ export const facetOptionsReducer = createReducer(
         state.facets[action.payload].enabled = false;
       })
       .addCase(restoreSearchParameters, (state, action) => {
-        if (action.payload.tab) {
-          Object.entries(state.facets).forEach(([, facet]) => {
-            if (Object.keys(facet.tabs ?? {}).length > 0) {
-              facet.enabled = isFacetIncludedOnTab(
-                facet.tabs,
-                action.payload.tab
-              );
-            }
-          });
-        }
         [
           ...Object.keys(action.payload.f ?? {}),
           ...Object.keys(action.payload.fExcluded ?? {}),
@@ -100,7 +79,6 @@ export const facetOptionsReducer = createReducer(
 
 function handleRegisterFacetTabs(
   tabs: {included?: string[]; excluded?: string[]} | undefined,
-  activeTab: string | undefined,
   state: FacetOptionsState,
   facetId: string
 ) {
@@ -108,10 +86,6 @@ function handleRegisterFacetTabs(
     ...getFacetOptionsSliceInitialState(),
     tabs: tabs ?? {},
   };
-
-  if (tabs && Object.keys(tabs).length > 0) {
-    newFacetState.enabled = isFacetIncludedOnTab(tabs, activeTab);
-  }
 
   state.facets[facetId] = newFacetState;
 }

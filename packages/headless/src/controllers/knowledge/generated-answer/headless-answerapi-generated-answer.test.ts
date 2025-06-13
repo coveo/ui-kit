@@ -1,4 +1,5 @@
 import {answerEvaluation} from '../../../api/knowledge/post-answer-evaluation.js';
+import {triggerSearchRequest} from '../../../api/knowledge/stream-answer-actions.js';
 import {
   answerApi,
   fetchAnswer,
@@ -33,6 +34,7 @@ vi.mock(
   '../../../features/generated-answer/generated-answer-analytics-actions'
 );
 vi.mock('../../../features/search/search-actions');
+vi.mock('../../../api/knowledge/stream-answer-actions.js');
 
 vi.mock('../../../api/knowledge/stream-answer-api', async () => {
   const originalStreamAnswerApi = await vi.importActual(
@@ -86,6 +88,12 @@ describe('knowledge-generated-answer', () => {
       ...initialState,
       generatedAnswer: {
         ...getGeneratedAnswerInitialState(),
+      },
+      search: {
+        ...initialState.search!,
+        searchAction: {
+          actionCause: 'searchboxSubmit',
+        },
       },
     });
     return buildMockSearchEngine(state);
@@ -189,30 +197,30 @@ describe('knowledge-generated-answer', () => {
   });
 
   describe('subscribeToSearchRequest', () => {
-    it('triggers a fetchAnswer only when there is a request id, a query, and the request is made with another request than the last one', () => {
+    it('triggers a triggerSearchRequest only when there is a request id, a query, an action cause, and the request is made with another request than the last one', () => {
       createGeneratedAnswer();
 
       const listener = engine.subscribe.mock.calls[0][0];
 
       // no request id, no call
       listener();
-      expect(fetchAnswer).not.toHaveBeenCalled();
+      expect(triggerSearchRequest).not.toHaveBeenCalled();
 
       // first request id, call
       listener();
-      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
 
       // same request id, no call
       listener();
-      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
 
       // empty query, no call
       listener();
-      expect(fetchAnswer).toHaveBeenCalledTimes(1);
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(1);
 
       // new request id, call
       listener();
-      expect(fetchAnswer).toHaveBeenCalledTimes(2);
+      expect(triggerSearchRequest).toHaveBeenCalledTimes(2);
     });
   });
 

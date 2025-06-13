@@ -1,6 +1,7 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import type {EventDescription} from 'coveo.analytics';
+import {createAction} from '@reduxjs/toolkit';
+import {EventDescription} from 'coveo.analytics';
 import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
 import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
@@ -102,6 +103,10 @@ export interface TransitiveSearchAction {
   next?: SearchAction;
 }
 
+export const updateSearchAction = createAction<SearchAction | undefined>(
+  'search/updateSearchAction'
+);
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
@@ -117,6 +122,8 @@ export const executeSearch = createAsyncThunk<
     const analyticsAction = searchAction.next
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
+
+    config.dispatch(updateSearchAction(searchAction.next));
 
     const request = await buildSearchRequest(
       state,
