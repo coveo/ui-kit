@@ -1,5 +1,7 @@
 import {Decorator} from '@storybook/web-components';
 import {html} from 'lit';
+// TODO: Remove this import once atomic-commerce-recommendation-list is merged;
+import '../../src/components/commerce/atomic-product/atomic-product';
 
 export const wrapInCommerceRecommendationList = (): {
   decorator: Decorator;
