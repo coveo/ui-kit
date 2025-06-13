@@ -38,7 +38,7 @@ const updateHtmlVersionsInDirectory = (
   cdnType
 ) => {
   try {
-    const files = readdirSync(directoryPath);
+    const files = readdirSync(directoryPath).sort();
     const atomicRegex =
       /https?:\/\/(localhost:3000|static(?:dev|stg)?\.cloud\.coveo\.com)\/atomic\/v\d+(\.\d+)?(\.\d+)?/g;
     const headlessRegex =

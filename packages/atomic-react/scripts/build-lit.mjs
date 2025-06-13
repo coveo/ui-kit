@@ -45,7 +45,9 @@ export const ${declaration.name} = createComponent({
 });
 `;
 
-for (const module of cem.modules) {
+// Sort modules by path to ensure deterministic processing order
+const sortedModules = [...cem.modules].sort((a, b) => (a.path || '').localeCompare(b.path || ''));
+for (const module of sortedModules) {
   if (module.declarations.length === 0) {
     continue;
   }
@@ -81,6 +83,8 @@ for (const entry of entries) {
     writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
     continue;
   }
+  // Sort component imports to ensure deterministic order
+  entry.computedComponentImports.sort();
   writeFileSync(
     entry.path,
     await prettier.format(

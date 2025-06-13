@@ -21,6 +21,7 @@ function filterComponentsByUseCaseForReactOutput(useCasePath: string) {
   return readdirSync(useCasePath, {
     recursive: true,
   })
+    .sort() // Sort the filenames to ensure deterministic output
     .map((fileName) => /(atomic-[a-z-]+)\.tsx$/.exec(fileName.toString()))
     .filter((m) => m !== null)
     .flatMap((m) => m![1]);
