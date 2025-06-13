@@ -74,6 +74,18 @@ describe('#renderBreadcrumbContent', () => {
       },
     });
 
+  const renderWithContent = async () =>
+    renderComponent({
+      breadcrumb: {
+        label: 'test',
+        state: 'selected' as const,
+        facetId: 'test-facet',
+        formattedValue: ['test'],
+        content: 'fake content',
+        deselect: () => {},
+      },
+    });
+
   it('should have the "breadcrumb-label" part on the label', async () => {
     const {label} = await renderComponent();
     expect(label).toHaveAttribute('part', 'breadcrumb-label');
@@ -155,6 +167,19 @@ describe('#renderBreadcrumbContent', () => {
     it('should have the "selected" class on the value', async () => {
       const {value} = await renderSelectedState();
       expect(value).toHaveClass('selected');
+    });
+  });
+
+  describe('when the breadcrumb has content', () => {
+    it('should render the content instead of the value', async () => {
+      const {value} = await renderWithContent();
+      expect(value).toHaveTextContent('fake content');
+    });
+
+    it('should have the proper classes on the value', async () => {
+      const {value} = await renderWithContent();
+      expect(value).toHaveClass('ml-1');
+      expect(value).not.toHaveClass('max-w-[30ch] truncate selected');
     });
   });
 });
