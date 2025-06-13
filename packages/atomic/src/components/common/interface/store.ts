@@ -19,6 +19,19 @@ export interface ResultListInfo {
   focusOnFirstResultAfterNextSearch(): Promise<void>;
 }
 
+export function createAppLoadedListener(
+  store: CommonStore<{loadingFlags: string[]}>,
+  callback: (isAppLoaded: boolean) => void
+) {
+  const updateIsAppLoaded = () => {
+    const isAppLoaded = store.state.loadingFlags.length === 0;
+    callback(isAppLoaded);
+  };
+
+  store.onChange('loadingFlags', updateIsAppLoaded);
+  updateIsAppLoaded();
+}
+
 export function createBaseStore<T extends {}>(initialState: T): BaseStore<T> {
   const store = createStore(initialState) as CommonStore<T>;
 
@@ -31,22 +44,6 @@ export function createBaseStore<T extends {}>(initialState: T): BaseStore<T> {
       );
     },
   };
-}
-
-export function unsetLoadingFlag(
-  store: CommonStore<{loadingFlags: string[]}>,
-  loadingFlag: string
-) {
-  const flags = store.state.loadingFlags;
-  store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
-}
-
-export function setLoadingFlag(
-  store: CommonStore<{loadingFlags: string[]}>,
-  loadingFlag: string
-) {
-  const flags = store.state.loadingFlags;
-  store.state.loadingFlags = flags.concat(loadingFlag);
 }
 
 export function registerFacet<T extends FacetType, U extends string>(
@@ -71,6 +68,22 @@ export function registerFacet<T extends FacetType, U extends string>(
   store.state[facetType][data.facetId] = data;
 }
 
+export function setLoadingFlag(
+  store: CommonStore<{loadingFlags: string[]}>,
+  loadingFlag: string
+) {
+  const flags = store.state.loadingFlags;
+  store.state.loadingFlags = flags.concat(loadingFlag);
+}
+
+export function unsetLoadingFlag(
+  store: CommonStore<{loadingFlags: string[]}>,
+  loadingFlag: string
+) {
+  const flags = store.state.loadingFlags;
+  store.state.loadingFlags = flags.filter((value) => value !== loadingFlag);
+}
+
 export function getFacetElements(store: CommonStore<Facets>) {
   return store.state.facetElements.filter((element) => isInDocument(element));
 }
@@ -88,19 +101,6 @@ export function waitUntilAppLoaded(
       }
     });
   }
-}
-
-export function createAppLoadedListener(
-  store: CommonStore<{loadingFlags: string[]}>,
-  callback: (isAppLoaded: boolean) => void
-) {
-  const updateIsAppLoaded = () => {
-    const isAppLoaded = store.state.loadingFlags.length === 0;
-    callback(isAppLoaded);
-  };
-
-  store.onChange('loadingFlags', updateIsAppLoaded);
-  updateIsAppLoaded();
 }
 
 interface CommonStore<StoreData> {
