@@ -2826,58 +2826,6 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 //#region Lit Declarations
 
 @ProxyCmp({
-  inputs: ['icon'],
-  methods: ['updateIcon', 'initialize', 'initBindings'],
-  defineCustomElementFn: () => {customElements.get('atomic-icon') || customElements.define('atomic-icon', LitAtomicIcon);}
-})
-@Component({
-  selector: 'atomic-icon',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon']
-})
-export class AtomicIcon {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicIcon extends LitAtomicIcon {
-
-}
-
-@ProxyCmp({
-  inputs: ['element', 'error'],
-  methods: [],
-  defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
-})
-@Component({
-  selector: 'atomic-component-error',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['element', 'error']
-})
-export class AtomicComponentError {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicComponentError extends LitAtomicComponentError {
-
-}
-
-@ProxyCmp({
   inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
   methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
@@ -3008,6 +2956,32 @@ export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtom
 }
 
 @ProxyCmp({
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-recent-queries',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+})
+export class AtomicCommerceSearchBoxRecentQueries {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
+
+}
+
+@ProxyCmp({
   inputs: [],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-sort-dropdown') || customElements.define('atomic-commerce-sort-dropdown', LitAtomicCommerceSortDropdown);}
@@ -3060,32 +3034,6 @@ export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 }
 
 @ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
-  methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box-recent-queries',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-export class AtomicCommerceSearchBoxRecentQueries {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
-
-}
-
-@ProxyCmp({
   inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes', 'loadingFlag', 'renderingFunction'],
   methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-product') || customElements.define('atomic-product', LitAtomicProduct);}
@@ -3108,6 +3056,58 @@ export class AtomicProduct {
 }
 
 export declare interface AtomicProduct extends LitAtomicProduct {
+
+}
+
+@ProxyCmp({
+  inputs: ['element', 'error'],
+  methods: [],
+  defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
+})
+@Component({
+  selector: 'atomic-component-error',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['element', 'error']
+})
+export class AtomicComponentError {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicComponentError extends LitAtomicComponentError {
+
+}
+
+@ProxyCmp({
+  inputs: ['icon'],
+  methods: ['updateIcon', 'initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-icon') || customElements.define('atomic-icon', LitAtomicIcon);}
+})
+@Component({
+  selector: 'atomic-icon',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['icon']
+})
+export class AtomicIcon {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicIcon extends LitAtomicIcon {
 
 }
 
