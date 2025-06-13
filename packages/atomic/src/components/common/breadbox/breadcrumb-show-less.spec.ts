@@ -17,7 +17,6 @@ describe('#renderBreadcrumbShowLess', () => {
       html`${renderBreadcrumbShowLess({
         props: {
           i18n,
-          setRef: vi.fn(),
           onShowLess: vi.fn(),
           isCollapsed: false,
           ...overrides,
@@ -57,11 +56,5 @@ describe('#renderBreadcrumbShowLess', () => {
       const {button} = await renderComponent({isCollapsed: true});
       expect(button).toBeNull();
     });
-  });
-
-  it('should set the ref on the button', async () => {
-    const setRef = vi.fn();
-    const {button} = await renderComponent({setRef});
-    expect(setRef).toHaveBeenCalledWith(button);
   });
 });
