@@ -15,7 +15,9 @@ export class MissingParentError extends Error {
     );
   }
 }
-
+/**
+ * @deprecated should only be used for Stencil components. For Lit components, use `ItemContext` from \@/src/decorators/item-list/item-context.js.
+ */
 export function ItemContext(
   opts: {parentName: string; folded: boolean} = {
     parentName: 'atomic-result',
@@ -69,6 +71,9 @@ export function ItemContext(
   };
 }
 
+/**
+ * @deprecated should only be used for Stencil components. For Lit components, use `InteractiveItemContext` from \@/src/decorators/item-list/interactive-item-context.js.
+ */
 export function InteractiveItemContext() {
   return (component: ComponentInterface, interactiveItemVariable: string) => {
     const {connectedCallback} = component;
@@ -94,6 +99,9 @@ export type InteractiveItemContextEvent = CustomEvent<
 >;
 const interactiveItemContextEventName = 'atomic/resolveInteractiveResult';
 
+/**
+ * @deprecated should only be used for Stencil components. For Lit components, use `itemContext` from \@/src/components/common/item-list/item-context.js.
+ */
 export function itemContext<T>(element: Element, parentName: string) {
   return new Promise<T>((resolve, reject) => {
     const event = buildCustomEvent<ItemContextEventHandler<T>>(
@@ -138,6 +146,9 @@ interface AtomicItemChildren {
   itemTemplateProvider?: ItemTemplateProvider;
 }
 
+/**
+ * @deprecated should only be used for Stencil components. For Lit components, use `ChildTemplatesContext` from \@/src/decorators/item-list/child-templates-context.js.
+ */
 export function ChildTemplatesContext() {
   return (component: ComponentInterface, itemTemplateProviderProp: string) => {
     const {componentWillRender} = component;
@@ -175,6 +186,9 @@ export type ItemDisplayConfigContextEvent =
   CustomEvent<ItemDisplayConfigContextEventHandler>;
 const itemDisplayConfigContextEventName = 'atomic/resolveResultDisplayConfig';
 
+/**
+ * @deprecated should only be used for Stencil components. For Lit components, use `ItemDisplayConfigContext` from \@/src/decorators/item-list/item-display-config-context.js.
+ */
 export function ItemDisplayConfigContext() {
   return (component: ComponentInterface, itemVariable: string) => {
     const {componentWillRender} = component;

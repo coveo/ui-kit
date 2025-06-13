@@ -1,12 +1,10 @@
 .idea
 node_modules
 npm-debug.log
-.vscode/*
 .ds_store
 dist
 .size-snapshot.json
 reports/*.xml
-!.vscode/extensions.json
 .dccache
 sarifs
 **.cy.ts.mp4
@@ -19,3 +17,8 @@ topology.json
 .git-message
 packages/atomic/custom-elements.json
 .nx
+
+# .vscode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/mcp.json
