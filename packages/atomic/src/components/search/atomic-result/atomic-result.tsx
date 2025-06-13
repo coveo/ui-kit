@@ -1,7 +1,7 @@
 import {FoldedResult, InteractiveResult, Result} from '@coveo/headless';
 import {Component, h, Prop, Element, Listen, Host} from '@stencil/core';
 import {parentNodeToString} from '../../../utils/dom-utils';
-import {DisplayConfig} from '../../common/item-list/item-decorators';
+import {DisplayConfig} from '../../common/item-list/stencil-item-decorators';
 import {
   ItemRenderingFunction,
   resultComponentClass,

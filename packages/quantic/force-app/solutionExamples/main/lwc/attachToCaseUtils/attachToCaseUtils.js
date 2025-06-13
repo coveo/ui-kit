@@ -1,3 +1,10 @@
+/**
+ * Builds an object representing an attached result, mapping fields from the result to a custom structure.
+ *
+ * @param {Object} result - The result object to attach.
+ * @param {string} caseId - The ID of the case the result is being attached to.
+ * @returns {Object} The formatted attached result.
+ */
 const createAttachedResult = (result, caseId) => {
   const isPermanentIdAvailable = !!result.raw.permanentid;
   const identifierKey = isPermanentIdAvailable ? 'permanentId' : 'uriHash';
@@ -24,6 +31,13 @@ const createAttachedResult = (result, caseId) => {
   };
 };
 
+/**
+ * Builds a simplified object representing a result to detach from a case.
+ *
+ * @param {Object} result - The result object to detach.
+ * @param {string} caseId - The ID of the case the result is being detached from.
+ * @returns {Object} The result object with minimal detachment info.
+ */
 const buildResultToDetach = (result, caseId) => {
   const isPermanentIdAvailable = !!result.raw.permanentid;
   return {
@@ -35,6 +49,14 @@ const buildResultToDetach = (result, caseId) => {
   };
 };
 
+/**
+ * Validates and builds a formatted result object to attach to a case.
+ * Returns an error message string if validation fails.
+ *
+ * @param {Object} result - The result object to attach.
+ * @param {string} caseId - The ID of the case.
+ * @returns {Object|string} The result to attach or an error message string.
+ */
 const buildResultToAttach = (result, caseId) => {
   if (!result.raw.permanentid && !result.raw.urihash) {
     const errorMessage =
@@ -49,7 +71,7 @@ const buildResultToAttach = (result, caseId) => {
   let actualSfkbVersionNumber =
     result.raw.sfkbversionnumber || result.raw.sfversionnumber;
 
-  // If we have an article ... also check articleLanguage and articleVersionNumber
+  // If we have an article, also check articleLanguage and articleVersionNumber
   if (result.raw.sfkbid && actualSfkbVersionNumber) {
     requiredFields.push('articleLanguage');
 
@@ -79,6 +101,13 @@ const buildResultToAttach = (result, caseId) => {
   return resultToAttach;
 };
 
+/**
+ * Transforms a list of attached results into a Headless-compatible payload.
+ * Converts articleVersionNumber to string and removes null values.
+ *
+ * @param {Object[]} attachedResults - The list of attached result objects.
+ * @returns {Object[]} The cleaned and transformed payload.
+ */
 const buildAttachedResultsPayloadHeadless = (attachedResults) => {
   /*
    * Mapping between Apex data schema and Headless data schema.

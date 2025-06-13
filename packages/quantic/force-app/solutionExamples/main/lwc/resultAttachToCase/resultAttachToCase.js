@@ -1,4 +1,4 @@
-import {api, LightningElement, track} from 'lwc';
+import {api, LightningElement} from 'lwc';
 import {
   registerComponentForInit,
   initializeWithHeadless,
@@ -50,8 +50,8 @@ export default class ResultAttachToCase extends LightningElement {
     resultIsAttached: resultIsAttached,
   };
 
-  @track _isAttached;
-  @track _isLoading;
+  _isAttached;
+  _isLoading;
 
   /** @type {Function} */
   unsubscribe;
@@ -63,10 +63,7 @@ export default class ResultAttachToCase extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.removeEventListener(
-      'sfint__attachtocase',
-      this.handleAttachClick.bind(this)
-    );
+    this.removeEventListener(this.eventName, this.handleAttachClick.bind(this));
   }
 
   renderedCallback() {
