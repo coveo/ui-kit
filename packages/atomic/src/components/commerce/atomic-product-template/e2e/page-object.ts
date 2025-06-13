@@ -7,7 +7,7 @@ export class ProductTemplateObject extends BasePageObject<'atomic-product-templa
   }
 
   get product() {
-    return this.page.locator('atomic-product').first();
+    return this.page.locator('atomic-product[class*="hydrated"]').first();
   }
 
   get error() {
