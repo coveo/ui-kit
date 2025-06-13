@@ -17,7 +17,7 @@ import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-int
 import {
   InteractiveProductContextEvent,
   ProductContextEvent,
-} from '../product-template-components/product-template-decorators';
+} from '../product-template-components/stencil-product-template-decorators';
 
 /**
  * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
