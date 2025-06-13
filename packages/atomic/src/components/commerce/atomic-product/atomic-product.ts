@@ -17,7 +17,6 @@ import {
 } from '../../common/layout/display-options';
 import {CommerceStore} from '../atomic-commerce-interface/store';
 import {CommerceRecommendationStore} from '../atomic-commerce-recommendation-interface/store';
-import '../product-template-components/atomic-product-text/atomic-product-text.js';
 import {
   InteractiveProductContextEvent,
   ProductContextEvent,
