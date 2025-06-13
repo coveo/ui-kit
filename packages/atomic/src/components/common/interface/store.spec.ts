@@ -10,30 +10,62 @@ import {
   waitUntilAppLoaded,
 } from './store';
 
-type MockFacet = {
-  facetId: string;
-  element: HTMLElement;
-  label: () => string;
-  isHidden: () => boolean;
-  format: (arg?: unknown) => string;
-};
-type MockNumericFacet = MockFacet;
-
-type ViMock = ReturnType<typeof vi.fn>;
-type ViMockFacetStore = {
-  state: {
-    facets: Record<string, MockFacet>;
-    numericFacets: Record<string, MockNumericFacet>;
-    dateFacets: Record<string, MockFacet>;
-    categoryFacets: Record<string, MockFacet>;
-    facetElements: HTMLElement[];
-  };
-  get: ViMock;
-  set: ViMock;
-  onChange: ViMock;
-};
-
 describe('store', () => {
+  describe('#createAppLoadedListener', () => {
+    it("should execute the callback with 'true' when the are no loading flags", () => {
+      const store = {
+        state: {loadingFlags: []},
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const cb = vi.fn();
+
+      createAppLoadedListener(store, cb);
+      expect(cb).toHaveBeenCalledWith(true);
+    });
+
+    it("should execute the callback with 'false' when there are loading flags", () => {
+      const store = {
+        state: {loadingFlags: ['flag1', 'flag2']},
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const cb = vi.fn();
+
+      createAppLoadedListener(store, cb);
+      expect(cb).toHaveBeenCalledWith(false);
+    });
+
+    it('should add a change listener on the loadingFlags property that executes the callback with the correct value', () => {
+      const onChange = vi.fn();
+      const store = {
+        state: {loadingFlags: ['flag1']},
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange,
+      };
+      const cb = vi.fn();
+
+      createAppLoadedListener(store, cb);
+
+      expect(onChange).toHaveBeenCalledWith(
+        'loadingFlags',
+        expect.any(Function)
+      );
+
+      onChange.mock.lastCall?.[1]();
+
+      expect(cb).toHaveBeenCalledWith(false);
+
+      store.state.loadingFlags = [];
+      onChange.mock.lastCall?.[1]();
+
+      expect(cb).toHaveBeenCalledWith(true);
+    });
+  });
+
   describe('#createBaseStore', () => {
     let state: Record<string, unknown> & {
       foo: string;
@@ -119,6 +151,202 @@ describe('store', () => {
     });
   });
 
+  describe('#getFacetElements', () => {
+    it('should return only elements that are in the document', async () => {
+      const inDoc = document.createElement('div');
+      inDoc.setAttribute('facet-id', 'in-doc');
+      document.body.appendChild(inDoc);
+      const notInDoc = document.createElement('div');
+      const store = {
+        state: {
+          facets: {},
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [inDoc, notInDoc],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const {getFacetElements} = await import('./store');
+      const result = getFacetElements(store as never);
+      expect(result).toContain(inDoc);
+      expect(result).not.toContain(notInDoc);
+      document.body.removeChild(inDoc);
+    });
+
+    it('should return an empty array when no elements are in the document', async () => {
+      const notInDoc1 = document.createElement('div');
+      notInDoc1.setAttribute('facet-id', 'not-in-doc-1');
+      const notInDoc2 = document.createElement('div');
+      notInDoc2.setAttribute('facet-id', 'not-in-doc-2');
+      const store = {
+        state: {
+          facets: {},
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [notInDoc1, notInDoc2],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const {getFacetElements} = await import('./store');
+      const result = getFacetElements(store as never);
+      expect(result).toEqual([]);
+    });
+
+    it('should return all elements when all are in the document', async () => {
+      const inDoc1 = document.createElement('div');
+      inDoc1.setAttribute('facet-id', 'in-doc-1');
+      const inDoc2 = document.createElement('div');
+      inDoc2.setAttribute('facet-id', 'in-doc-2');
+      document.body.appendChild(inDoc1);
+      document.body.appendChild(inDoc2);
+      const store = {
+        state: {
+          facets: {},
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [inDoc1, inDoc2],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const {getFacetElements} = await import('./store');
+      const result = getFacetElements(store as never);
+      expect(result).toEqual([inDoc1, inDoc2]);
+      document.body.removeChild(inDoc1);
+      document.body.removeChild(inDoc2);
+    });
+  });
+
+  describe('#registerFacet', () => {
+    it('should add a new facet element and data to the store for the given facet type and facetId', () => {
+      const element = document.createElement('div');
+      element.setAttribute('facet-id', 'facet1');
+      const store = {
+        state: {
+          facets: {} as Record<string, never>,
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const data = {
+        facetId: 'facet1',
+        element,
+        label: () => 'label1',
+        isHidden: () => false,
+        format: () => 'formatted',
+      };
+      registerFacet(store, 'facets', data);
+      expect(store.state.facets['facet1']).toBe(data);
+      expect(store.state.facetElements).toContain(element);
+    });
+
+    it('should not add the element when it has the is-refine-modal attribute', () => {
+      const element = document.createElement('div');
+      element.setAttribute('facet-id', 'facet2');
+      element.setAttribute('is-refine-modal', '');
+      const store = {
+        state: {
+          facets: {} as Record<string, never>,
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const data = {
+        facetId: 'facet2',
+        element,
+        label: () => 'label2',
+        isHidden: () => false,
+        format: () => 'formatted',
+      };
+      registerFacet(store, 'facets', data);
+      expect(store.state.facets['facet2']).toBeUndefined();
+      expect(store.state.facetElements).not.toContain(element);
+    });
+
+    it('should replace an existing facet element with the same facetId', () => {
+      const oldElement = document.createElement('div');
+      oldElement.setAttribute('facet-id', 'facet3');
+      const newElement = document.createElement('div');
+      newElement.setAttribute('facet-id', 'facet3');
+      const store = {
+        state: {
+          facets: {
+            facet3: {
+              facetId: 'facet3',
+              element: oldElement,
+              label: () => 'label3',
+              isHidden: () => false,
+              format: () => 'formatted',
+            },
+          },
+          numericFacets: {},
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [oldElement],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const data = {
+        facetId: 'facet3',
+        element: newElement,
+        label: () => 'label3',
+        isHidden: () => false,
+        format: () => 'formatted',
+      };
+      registerFacet(store, 'facets', data);
+      expect(store.state.facets['facet3']).toBe(data);
+      expect(store.state.facetElements).not.toContain(oldElement);
+      expect(store.state.facetElements).toContain(newElement);
+    });
+
+    it('should add facet data to the correct facet type in the store', () => {
+      const element = document.createElement('div');
+      element.setAttribute('facet-id', 'facet4');
+      const store = {
+        state: {
+          facets: {},
+          numericFacets: {} as Record<string, never>,
+          dateFacets: {},
+          categoryFacets: {},
+          facetElements: [],
+        },
+        get: vi.fn(),
+        set: vi.fn(),
+        onChange: vi.fn(),
+      };
+      const data = {
+        facetId: 'facet4',
+        element,
+        label: () => 'label4',
+        isHidden: () => false,
+        format: () => 'formatted',
+      };
+      registerFacet(store, 'numericFacets', data);
+      expect(store.state.numericFacets['facet4']).toBe(data);
+      expect(store.state.facetElements).toContain(element);
+    });
+  });
+
   describe('#setLoadingFlag', () => {
     it('should add the given loading flag to the #state.loadingFlags array of the given CommonStore object', () => {
       const store = {
@@ -165,275 +393,21 @@ describe('store', () => {
     });
   });
 
-  describe('#createAppLoadedListener', () => {
-    it("should execute the callback with 'true' when the are no loading flags", () => {
-      const store = {
-        state: {loadingFlags: []},
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const cb = vi.fn();
-
-      createAppLoadedListener(store, cb);
-      expect(cb).toHaveBeenCalledWith(true);
-    });
-
-    it("should execute the callback with 'false' when there are loading flags", () => {
-      const store = {
-        state: {loadingFlags: ['flag1', 'flag2']},
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const cb = vi.fn();
-
-      createAppLoadedListener(store, cb);
-      expect(cb).toHaveBeenCalledWith(false);
-    });
-
-    it('should add a change listener on the loadingFlags property that executes the callback with the correct value', () => {
-      const onChange = vi.fn();
-
-      const store = {
-        state: {loadingFlags: ['flag1']},
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange,
-      };
-      const cb = vi.fn();
-      createAppLoadedListener(store, cb);
-      store.state.loadingFlags = [];
-
-      expect(onChange).toHaveBeenCalledWith(
-        'loadingFlags',
-        expect.any(Function)
-      );
-
-      onChange.mock.lastCall?.[1]();
-
-      expect(cb).toHaveBeenCalledWith(false);
-
-      store.state.loadingFlags = [];
-      onChange.mock.lastCall?.[1]();
-
-      expect(cb).toHaveBeenCalledWith(true);
-    });
-  });
-
-  // Only used in Stencil components at the moment.
-  describe('#registerFacet', () => {
-    it('should add a new facet element and data to the store for the given facet type and facetId', () => {
-      const element = document.createElement('div');
-      element.setAttribute('facet-id', 'facet1');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const data: MockFacet = {
-        facetId: 'facet1',
-        element,
-        label: () => 'label1',
-        isHidden: () => false,
-        format: () => 'formatted',
-      };
-      registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet1']).toBe(data);
-      expect(store.state.facetElements).toContain(element);
-    });
-
-    it('should not add the element if it has the is-refine-modal attribute', () => {
-      const element = document.createElement('div');
-      element.setAttribute('facet-id', 'facet2');
-      element.setAttribute('is-refine-modal', '');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const data: MockFacet = {
-        facetId: 'facet2',
-        element,
-        label: () => 'label2',
-        isHidden: () => false,
-        format: () => 'formatted',
-      };
-      registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet2']).toBeUndefined();
-      expect(store.state.facetElements).not.toContain(element);
-    });
-
-    it('should replace an existing facet element with the same facetId', () => {
-      const oldElement = document.createElement('div');
-      oldElement.setAttribute('facet-id', 'facet3');
-      const newElement = document.createElement('div');
-      newElement.setAttribute('facet-id', 'facet3');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {
-            facet3: {
-              facetId: 'facet3',
-              element: oldElement,
-              label: () => 'label3',
-              isHidden: () => false,
-              format: () => 'formatted',
-            },
-          },
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [oldElement],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const data: MockFacet = {
-        facetId: 'facet3',
-        element: newElement,
-        label: () => 'label3',
-        isHidden: () => false,
-        format: () => 'formatted',
-      };
-      registerFacet(store, 'facets', data);
-      expect(store.state.facets['facet3']).toBe(data);
-      expect(store.state.facetElements).not.toContain(oldElement);
-      expect(store.state.facetElements).toContain(newElement);
-    });
-
-    it('should add facet data to the correct facet type in the store', () => {
-      const element = document.createElement('div');
-      element.setAttribute('facet-id', 'facet4');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const data: MockNumericFacet = {
-        facetId: 'facet4',
-        element,
-        label: () => 'label4',
-        isHidden: () => false,
-        format: () => 'formatted',
-      };
-      registerFacet(store, 'numericFacets', data);
-      expect(store.state.numericFacets['facet4']).toBe(data);
-      expect(store.state.facetElements).toContain(element);
-    });
-  });
-
-  // Only used in Stencil components at the moment.
-  describe('#getFacetElements', () => {
-    it('should return only elements that are in the document', async () => {
-      const inDoc = document.createElement('div');
-      inDoc.setAttribute('facet-id', 'in-doc');
-      document.body.appendChild(inDoc);
-      const notInDoc = document.createElement('div');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [inDoc, notInDoc],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const {getFacetElements} = await import('./store');
-      const result = getFacetElements(store as never);
-      expect(result).toContain(inDoc);
-      expect(result).not.toContain(notInDoc);
-      document.body.removeChild(inDoc);
-    });
-
-    it('should return an empty array if no elements are in the document', async () => {
-      const notInDoc1 = document.createElement('div');
-      notInDoc1.setAttribute('facet-id', 'not-in-doc-1');
-      const notInDoc2 = document.createElement('div');
-      notInDoc2.setAttribute('facet-id', 'not-in-doc-2');
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [notInDoc1, notInDoc2],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const {getFacetElements} = await import('./store');
-      const result = getFacetElements(store as never);
-      expect(result).toEqual([]);
-    });
-
-    it('should return all elements if all are in the document', async () => {
-      const inDoc1 = document.createElement('div');
-      inDoc1.setAttribute('facet-id', 'in-doc-1');
-      const inDoc2 = document.createElement('div');
-      inDoc2.setAttribute('facet-id', 'in-doc-2');
-      document.body.appendChild(inDoc1);
-      document.body.appendChild(inDoc2);
-      const store: ViMockFacetStore = {
-        state: {
-          facets: {},
-          numericFacets: {},
-          dateFacets: {},
-          categoryFacets: {},
-          facetElements: [inDoc1, inDoc2],
-        },
-        get: vi.fn(),
-        set: vi.fn(),
-        onChange: vi.fn(),
-      };
-      const {getFacetElements} = await import('./store');
-      const result = getFacetElements(store as never);
-      expect(result).toEqual([inDoc1, inDoc2]);
-      document.body.removeChild(inDoc1);
-      document.body.removeChild(inDoc2);
-    });
-  });
-
-  // Only used in Stencil components at the moment.
   describe('#waitUntilAppLoaded', () => {
-    it('should call the callback immediately if loadingFlags is empty', () => {
+    it('should call the callback and not call the store onChange when loadingFlags is empty in the store', () => {
       const store = {
         state: {loadingFlags: []},
         onChange: vi.fn(),
       };
       const cb = vi.fn();
+
       waitUntilAppLoaded(store as never, cb);
-      expect(cb).toHaveBeenCalledTimes(1);
-      expect(cb).toHaveBeenCalledWith();
+
+      expect(cb).toHaveBeenCalledOnce();
       expect(store.onChange).not.toHaveBeenCalled();
     });
 
-    it('should call the callback when loadingFlags becomes empty', () => {
+    it('should call the callback through the store onChange when loadingFlags becomes empty', () => {
       let listener: ((flags: string[]) => void) | undefined;
       const store = {
         state: {loadingFlags: ['flag1']},
@@ -444,19 +418,22 @@ describe('store', () => {
         }),
       };
       const cb = vi.fn();
+
       waitUntilAppLoaded(store as never, cb);
+
       expect(cb).not.toHaveBeenCalled();
-      expect(store.onChange).toHaveBeenCalledWith(
+      expect(store.onChange).toHaveBeenCalledExactlyOnceWith(
         'loadingFlags',
         expect.any(Function)
       );
+
       // Simulate loadingFlags becoming empty
       listener!([]);
-      expect(cb).toHaveBeenCalledTimes(1);
-      expect(cb).toHaveBeenCalledWith();
+
+      expect(cb).toHaveBeenCalledOnce();
     });
 
-    it('should not call the callback if loadingFlags never becomes empty', () => {
+    it('should not execute the callback when loadingFlags does not become empty', () => {
       let listener: ((flags: string[]) => void) | undefined;
       const store = {
         state: {loadingFlags: ['flag1']},
@@ -467,9 +444,11 @@ describe('store', () => {
         }),
       };
       const cb = vi.fn();
+
       waitUntilAppLoaded(store as never, cb);
       expect(cb).not.toHaveBeenCalled();
-      // Simulate loadingFlags changing but not empty
+
+      // Simulate loadingFlags changing but remaining non-empty
       listener!(['flag2']);
       expect(cb).not.toHaveBeenCalled();
     });
