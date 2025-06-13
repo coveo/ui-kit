@@ -14,6 +14,6 @@ export const triggerSearchRequest = createAsyncThunk<
     // TODO: SVCC-5178 Refactor multiple sequential dispatches into single action
     dispatch(resetAnswer());
     await dispatch(fetchAnswer(state, navigatorContext));
-    dispatch(updateSearchAction());
+    dispatch(updateSearchAction(undefined));
   }
 );
