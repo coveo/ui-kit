@@ -45,8 +45,6 @@ import {
   ItemDisplayLayout,
 } from '../../common/layout/display-options.js';
 import type {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface.js';
-// TODO: Remove this import when the atomic-product-text component is migrated to lit. KIT-4313
-import '../atomic-commerce-text/atomic-commerce-text';
 import '../atomic-product/atomic-product';
 import {ProductTemplateProvider} from '../product-list/product-template-provider.js';
 import styles from './atomic-commerce-product-list.tw.css';

@@ -10,6 +10,7 @@ import {
   AtomicProduct as LitAtomicProduct,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
+  AtomicProductText as LitAtomicProductText,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -78,4 +79,10 @@ export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicProductText = createComponent({
+  tagName: 'atomic-product-text',
+  react: React,
+  elementClass: LitAtomicProductText,
 });

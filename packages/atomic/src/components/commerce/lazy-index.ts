@@ -28,6 +28,10 @@ export default {
     await import('./atomic-commerce-text/atomic-commerce-text.js'),
   'atomic-product': async () =>
     await import('./atomic-product/atomic-product.js'),
+  'atomic-product-text': async () =>
+    await import(
+      './product-template-components/atomic-product-text/atomic-product-text.js'
+    ),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';

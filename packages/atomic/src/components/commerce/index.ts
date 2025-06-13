@@ -8,3 +8,4 @@ export {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
 export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
+export {AtomicProductText} from './product-template-components/atomic-product-text/atomic-product-text.js';
