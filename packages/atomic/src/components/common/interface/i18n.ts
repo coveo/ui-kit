@@ -2,14 +2,10 @@ import {getAssetPath} from '@/src/utils/asset-path-utils';
 import DOMPurify from 'dompurify';
 import Backend, {HttpBackendOptions} from 'i18next-http-backend';
 import availableLocales from '../../../generated/availableLocales.json';
-import {AnyEngineType} from './bindings';
-import {BaseAtomicInterface} from './interface-common';
+import type {AnyEngineType} from './bindings';
+import type {BaseAtomicInterface} from './interface-common';
 
 export const i18nTranslationNamespace = 'translation';
-
-function isI18nLocaleAvailable(locale: string) {
-  return availableLocales.includes(locale.toLowerCase());
-}
 
 export function i18nBackendOptions(
   atomicInterface: BaseAtomicInterface<AnyEngineType>
@@ -63,6 +59,10 @@ export function init18n(atomicInterface: BaseAtomicInterface<AnyEngineType>) {
     },
     compatibilityJSON: 'v4',
   });
+}
+
+function isI18nLocaleAvailable(locale: string) {
+  return availableLocales.includes(locale.toLowerCase());
 }
 
 declare module 'i18next' {

@@ -1,5 +1,12 @@
 import {Page, Locator, Response, Request} from '@playwright/test';
 
+const selectors = {
+  searchResults: 'c-quantic-result',
+  performSearchButton: 'c-action-perform-search button',
+  performSearchInput: 'c-action-perform-search input',
+  performRecommendationSearchButton: 'c-action-get-recommendations button',
+};
+
 export class SearchObject {
   constructor(
     protected page: Page,
@@ -10,11 +17,11 @@ export class SearchObject {
   }
 
   get performSearchButton(): Locator {
-    return this.page.locator('c-action-perform-search button');
+    return this.page.locator(selectors.performSearchButton);
   }
 
   get searchInput(): Locator {
-    return this.page.locator('c-action-perform-search input');
+    return this.page.locator(selectors.performSearchInput);
   }
 
   async fillSearchInput(query: string): Promise<void> {
@@ -34,12 +41,18 @@ export class SearchObject {
     return this.page.waitForResponse(this.searchRequestRegex);
   }
 
+  async waitForSearchResultsVisible(): Promise<void> {
+    await this.page.waitForSelector(selectors.searchResults, {
+      state: 'visible',
+    });
+  }
+
   async waitForSearchRequest(): Promise<Request> {
     return this.page.waitForRequest(this.searchRequestRegex);
   }
 
   get performRecommendationSearchButton(): Locator {
-    return this.page.locator('c-action-get-recommendations button');
+    return this.page.locator(selectors.performRecommendationSearchButton);
   }
 
   async performRecommendationSearch(): Promise<void> {

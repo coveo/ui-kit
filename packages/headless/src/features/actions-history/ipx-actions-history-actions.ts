@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {SearchAppState} from '../../state/search-app-state.js';
 
 export const addPageViewEntryInActionsHistory = createAsyncThunk(
@@ -7,7 +7,7 @@ export const addPageViewEntryInActionsHistory = createAsyncThunk(
   async (itemPermanentId: string, {getState}) => {
     const state = getState() as SearchAppState;
     if (state.configuration.analytics.enabled) {
-      historyStore.addElement({
+      HistoryStore.getInstance().addElement({
         name: 'PageView',
         value: itemPermanentId,
         time: JSON.stringify(new Date()),

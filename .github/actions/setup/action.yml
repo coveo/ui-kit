@@ -1,6 +1,10 @@
 name: 'Setup & build'
 description: 'Setup node, install dependencies & build'
 inputs:
+  save-cache:
+    description: 'Whether to save the cache.'
+    required: false
+    default: 'true'
   load-cache:
     description: 'Whether to restore the Nx cache.'
     required: false
@@ -23,6 +27,7 @@ runs:
       run: npm i -g npm@11.3.0
       shell: bash
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      if: inputs.save-cache == 'true'
       id: npm-cache
       with:
         path: |
@@ -30,9 +35,10 @@ runs:
           !.nx/cache/
         key: npm-${{ hashFiles('package-lock.json', 'patches/*') }}
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
+      if: inputs.save-cache == 'true'
       with:
         path: packages/quantic/force-app/main/default/staticresources
-        key: quantic-${{ hashFiles('package-lock.json') }}}}
+        key: quantic-${{ hashFiles('package-lock.json') }}
     - uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
       with:
         path: ~/.cache/Cypress

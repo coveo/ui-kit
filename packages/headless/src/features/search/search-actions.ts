@@ -1,7 +1,8 @@
 import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction} from '@reduxjs/toolkit';
 import {EventDescription} from 'coveo.analytics';
-import {historyStore} from '../../api/analytics/coveo-analytics-utils.js';
+import HistoryStore from '../../api/analytics/coveo.analytics/history-store.js';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client.js';
 import {SearchResponseSuccess} from '../../api/search/search/search-response.js';
 import {AsyncThunkOptions} from '../../app/async-thunk-options.js';
@@ -102,6 +103,10 @@ export interface TransitiveSearchAction {
   next?: SearchAction;
 }
 
+export const updateSearchAction = createAction<SearchAction | undefined>(
+  'search/updateSearchAction'
+);
+
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   TransitiveSearchAction,
@@ -117,6 +122,8 @@ export const executeSearch = createAsyncThunk<
     const analyticsAction = searchAction.next
       ? buildSearchReduxAction(searchAction.next)
       : undefined;
+
+    config.dispatch(updateSearchAction(searchAction.next));
 
     const request = await buildSearchRequest(
       state,
@@ -345,7 +352,7 @@ const buildFetchFacetValuesRequest = async (
 
 const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {
-    historyStore.addElement({
+    HistoryStore.getInstance().addElement({
       name: 'Query',
       ...(state.query?.q && {
         value: state.query.q,

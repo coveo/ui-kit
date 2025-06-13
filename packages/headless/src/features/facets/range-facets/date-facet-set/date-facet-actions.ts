@@ -47,7 +47,10 @@ export interface RegisterDateFacetActionCreatorPayload {
   tabs?: {included?: string[]; excluded?: string[]};
 
   /**
-   * The currently active tab.
+   * @deprecated - This field is unused and should not be relied on.
+   * If you need the currently active tab, use the TabManager instead.
+   *
+   * This property will be removed in version 4.0.
    */
   activeTab?: string;
 

@@ -4,6 +4,7 @@ import {
   isEventProtocol,
   isUaClickEvent,
   isUaCustomEvent,
+  isUaSearchEvent,
 } from '../utils/requests';
 import {AnalyticsMode} from '../utils/analyticsMode';
 
@@ -68,6 +69,27 @@ export class AnalyticsObject {
         if (additionalMatch && !additionalMatch(event)) return false;
 
         return true;
+      }
+      return false;
+    });
+    return uaRequest;
+  }
+
+  async waitForSearchUaAnalytics(
+    actionCause: string,
+    additionalMatch?: (event: {
+      actionCause: string;
+      customData?: Record<string, string>;
+      [key: string]: unknown;
+    }) => boolean
+  ): Promise<Request> {
+    const uaRequest = this.page.waitForRequest((request) => {
+      if (isUaSearchEvent(request)) {
+        const event = request.postDataJSON?.();
+        return (
+          event?.actionCause === actionCause &&
+          (additionalMatch ? additionalMatch(event) === true : true)
+        );
       }
       return false;
     });
