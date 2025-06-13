@@ -64,7 +64,7 @@ export default class ResultAttachToCase extends LightningElement {
 
   disconnectedCallback() {
     this.removeEventListener(
-      'sfint__attachtocase',
+      this.eventName,
       this.handleAttachClick.bind(this)
     );
   }
