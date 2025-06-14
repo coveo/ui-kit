@@ -5,6 +5,13 @@ import {createElement} from 'lwc';
 import * as mockHeadlessLoader from 'c/quanticHeadlessLoader';
 import {CurrentPageReference} from 'lightning/navigation';
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
+import {STANDALONE_SEARCH_BOX_STORAGE_KEY} from 'c/quanticUtils';
+
+const selectors = {
+  searchBoxInput: 'c-quantic-search-box-input',
+  searchBox: 'c-quantic-search-box',
+  searchInterface: 'c-quantic-search-interface',
+};
 
 const nonStandaloneURL = 'https://www.example.com/global-search/%40uri';
 const defaultHeadlessConfiguration = JSON.stringify({
@@ -33,12 +40,15 @@ const exampleEngine = {
   id: 'engineId',
 };
 
+let updateState;
+let stateMock = {};
 const functionsMocks = {
   buildStandaloneSearchBox: jest.fn(() => ({
-    state: {},
+    state: stateMock,
     subscribe: functionsMocks.subscribe,
   })),
   subscribe: jest.fn((cb) => {
+    updateState = cb;
     cb();
     return functionsMocks.unsubscribe;
   }),
@@ -109,6 +119,109 @@ describe('c-quantic-standalone-search-box', () => {
   afterEach(() => {
     cleanup();
   });
+  describe('with default options', () => {
+    it('should properly render the quantic standalone search box component', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      expect(element).not.toBeNull();
+
+      const quanticSearchInterface = element.shadowRoot.querySelector(
+        selectors.searchInterface
+      );
+      expect(quanticSearchInterface).not.toBeNull();
+
+      const input = quanticSearchInterface.querySelector(
+        selectors.searchBoxInput
+      );
+      expect(input).not.toBeNull();
+      expect(input.withoutSubmitButton).toBe(false);
+      expect(input.textarea).toBe(false);
+      expect(input.placeholder).toBe(null);
+      expect(input.inputValue).toBe('');
+      expect(input.recentQueries).toBeUndefined();
+      expect(input.maxNumberOfSuggestions).toBe(7);
+    });
+  });
+
+  describe('with custom options', () => {
+    it('should properly render the quantic standalone search box component', async () => {
+      const element = createTestComponent({
+        engineId: exampleEngine.id,
+        placeholder: 'place',
+        withoutSubmitButton: true,
+        numberOfSuggestions: 10,
+        keepFiltersOnSearch: true,
+        redirectUrl: '/custom-search/%40uri',
+        searchHub: 'customHub',
+        pipeline: 'customPipeline',
+        textarea: true,
+        disableRecentQueries: true,
+      });
+      await flushPromises();
+      expect(element).not.toBeNull();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input).not.toBeNull();
+      expect(input.withoutSubmitButton).toBe(true);
+      expect(input.textarea).toBe(true);
+      expect(input.placeholder).toBe('place');
+      expect(input.inputValue).toBe('');
+      expect(input.recentQueries).toBeUndefined();
+      expect(input.maxNumberOfSuggestions).toBe(7);
+    });
+  });
+
+  describe('with suggestions', () => {
+    it('should render the standalone searchbox component with suggestions', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      stateMock.suggestions = [
+        {
+          rawValue: 'suggestion1',
+          highlightedValue: 'suggestion1',
+        },
+        {
+          rawValue: 'suggestion2',
+          highlightedValue: 'suggestion2',
+        },
+      ];
+      updateState();
+      await flushPromises();
+
+      const input = element.shadowRoot.querySelector(selectors.searchBoxInput);
+      expect(input.suggestions).toStrictEqual([
+        {
+          key: 0,
+          rawValue: 'suggestion1',
+          value: 'suggestion1',
+        },
+        {
+          key: 1,
+          rawValue: 'suggestion2',
+          value: 'suggestion2',
+        },
+      ]);
+    });
+  });
+
+  describe('with redirect', () => {
+    it('should redirect to the search page when a redirect is triggered', async () => {
+      createTestComponent();
+      await flushPromises();
+
+      stateMock.redirectTo = true;
+      stateMock.value = 'search term';
+      stateMock.analytics = 'analytics babyyyy';
+      updateState();
+      await flushPromises();
+
+      expect(localStorage.getItem(STANDALONE_SEARCH_BOX_STORAGE_KEY)).toBe(
+        JSON.stringify({value: 'search term', analytics: 'analytics babyyyy'})
+      );
+    });
+  });
 
   describe('controller initialization', () => {
     it('should subscribe to the headless state changes', async () => {
@@ -128,6 +241,21 @@ describe('c-quantic-standalone-search-box', () => {
         });
       });
 
+      it('should display the searchbox as a connected component', async () => {
+        const element = createTestComponent();
+
+        // eslint-disable-next-line @lwc/lwc/no-unexpected-wire-adapter-usages
+        CurrentPageReference.emit({url: nonStandaloneURL});
+        await flushPromises();
+
+        const searchBox = element.shadowRoot.querySelector(selectors.searchBox);
+        expect(searchBox).not.toBeNull();
+        const quanticSearchInterface = element.shadowRoot.querySelector(
+          selectors.searchInterface
+        );
+        expect(quanticSearchInterface).toBeNull();
+      });
+
       it('should properly pass the keepFiltersOnSearch property to the quanticSearchBox', async () => {
         const element = createTestComponent({
           ...defaultOptions,
@@ -137,9 +265,7 @@ describe('c-quantic-standalone-search-box', () => {
         CurrentPageReference.emit({url: nonStandaloneURL});
         await flushPromises();
 
-        const searchBox = element.shadowRoot.querySelector(
-          'c-quantic-search-box'
-        );
+        const searchBox = element.shadowRoot.querySelector(selectors.searchBox);
 
         expect(searchBox).not.toBeNull();
         expect(searchBox.keepFiltersOnSearch).toEqual(false);

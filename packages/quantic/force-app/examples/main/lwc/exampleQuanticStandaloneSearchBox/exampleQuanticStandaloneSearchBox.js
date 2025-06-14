@@ -62,6 +62,10 @@ export default class ExampleQuanticStandaloneSearchBox extends LightningElement 
     return !this.isConfigured;
   }
 
+  get standaloneSearchboxStorageKey() {
+    return 'coveo-standalone-search-box';
+  }
+
   handleTryItNow(evt) {
     this.config = evt.detail;
     this.isConfigured = true;
