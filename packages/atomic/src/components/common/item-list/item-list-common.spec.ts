@@ -18,6 +18,13 @@ vi.mock('@/src/utils/utils', async () => {
 });
 
 describe('ItemListCommon', () => {
+  const baseNextNewItemTarget = {
+    focus: vi.fn(),
+    focusAfterSearch: vi.fn(),
+    focusOnNextTarget: vi.fn(),
+    registerFocusCallback: vi.fn(),
+    setTarget: vi.fn(),
+  };
   describe('#constructor', () => {
     it('should create an instance', () => {
       const itemListCommon = itemListCommonFixture();
@@ -123,9 +130,7 @@ describe('ItemListCommon', () => {
       const getCurrentNumberOfItems = vi.fn(() => 0);
       const setTarget = vi.fn();
       const nextNewItemTarget = {
-        focus: vi.fn(),
-        focusAfterSearch: vi.fn(),
-        focusOnNextTarget: vi.fn(),
+        ...baseNextNewItemTarget,
         setTarget,
       };
 
@@ -195,10 +200,7 @@ describe('ItemListCommon', () => {
       );
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
-        focus: vi.fn(),
-        focusAfterSearch: vi.fn(),
-        focusOnNextTarget: vi.fn(),
-        setTarget: vi.fn(),
+        ...baseNextNewItemTarget,
       };
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
@@ -222,10 +224,7 @@ describe('ItemListCommon', () => {
       );
       const getCurrentNumberOfItems = vi.fn(() => 5);
       const nextNewItemTarget = {
-        focus: vi.fn(),
-        focusAfterSearch: vi.fn(),
-        focusOnNextTarget: vi.fn(),
-        setTarget: vi.fn(),
+        ...baseNextNewItemTarget,
       };
       const itemListCommon = itemListCommonFixture({
         getCurrentNumberOfItems,
@@ -245,10 +244,7 @@ describe('ItemListCommon', () => {
 
     it('should call #props.nextNewItemTarget.focusOnNextTarget()', () => {
       const nextNewItemTarget = {
-        focus: vi.fn(),
-        focusAfterSearch: vi.fn(),
-        focusOnNextTarget: vi.fn(),
-        setTarget: vi.fn(),
+        ...baseNextNewItemTarget,
       };
       const itemListCommon = itemListCommonFixture({
         nextNewItemTarget,
@@ -432,9 +428,7 @@ describe('ItemListCommon', () => {
               engineSubscribe,
               getIsLoading: vi.fn(() => false),
               nextNewItemTarget: {
-                focus: vi.fn(),
-                focusAfterSearch: vi.fn(),
-                focusOnNextTarget: vi.fn(),
+                ...baseNextNewItemTarget,
                 setTarget,
               },
             });
@@ -459,9 +453,7 @@ describe('ItemListCommon', () => {
               engineSubscribe,
               getIsLoading: vi.fn(() => false),
               nextNewItemTarget: {
-                focus: vi.fn(),
-                focusAfterSearch: vi.fn(),
-                focusOnNextTarget: vi.fn(),
+                ...baseNextNewItemTarget,
                 setTarget,
               },
             });
@@ -486,10 +478,8 @@ describe('ItemListCommon', () => {
               engineSubscribe,
               getIsLoading: vi.fn(() => false),
               nextNewItemTarget: {
+                ...baseNextNewItemTarget,
                 focus,
-                focusAfterSearch: vi.fn(),
-                focusOnNextTarget: vi.fn(),
-                setTarget: vi.fn(),
               },
             });
 
@@ -552,10 +542,7 @@ describe('ItemListCommon', () => {
       getCurrentNumberOfItems: vi.fn(),
       getIsLoading: vi.fn(),
       nextNewItemTarget: {
-        focus: vi.fn(),
-        focusAfterSearch: vi.fn(),
-        focusOnNextTarget: vi.fn(),
-        setTarget: vi.fn(),
+        ...baseNextNewItemTarget,
       },
       host: document.createElement('div'),
       loadingFlag: '',
