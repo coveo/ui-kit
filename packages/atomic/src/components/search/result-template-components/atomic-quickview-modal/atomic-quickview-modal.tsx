@@ -21,6 +21,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../../utils/initialization-utils';
+import {ATOMIC_MODAL_EXPORT_PARTS} from '../../../common/atomic-modal/export-parts';
 import {IconButton} from '../../../common/iconButton';
 import {LinkWithItemAnalytics} from '../../../common/item-link/item-link';
 import {Button} from '../../../common/stencil-button';
@@ -48,6 +49,15 @@ export interface HighlightKeywords {
  * The modal opened when clicking on a quickview button.
  * Do not use this component directly; use `atomic-quickview` instead.
  *
+ * @part backdrop - The transparent backdrop hiding the content behind the modal.
+ * @part container - The modal's outermost container with the outline and background.
+ * @part header-wrapper - The wrapper around the header.
+ * @part header - The header at the top of the modal.
+ * @part header-ruler - The horizontal ruler underneath the header.
+ * @part body-wrapper - The wrapper around the body.
+ * @part body - The body of the modal, between the header and the footer.
+ * @part footer-wrapper - The wrapper with a shadow or background color around the footer.
+ * @part footer - The footer at the bottom of the modal.
  * @part quickview-modal-header-icon - The close icon of the modal.
  * @part quickview-modal-header-title - The title of the modal.
  */
@@ -338,6 +348,7 @@ export class AtomicQuickviewModal implements InitializableComponent {
         class={'atomic-quickview-modal'}
         isOpen={this.isOpen}
         close={() => this.onClose()}
+        exportparts={ATOMIC_MODAL_EXPORT_PARTS}
       >
         {this.renderHeader()}
         {this.renderBody()}
