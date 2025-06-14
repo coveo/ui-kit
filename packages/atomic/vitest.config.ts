@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import {readFileSync} from 'fs';
 import path from 'node:path';
 import {dirname, resolve} from 'path';
@@ -70,6 +71,7 @@ export default defineConfig({
         return null;
       },
     },
+    tailwindcss(),
     {
       name: 'svg-transform',
       enforce: 'pre',
@@ -86,6 +88,7 @@ export default defineConfig({
     },
   ],
   test: {
+    css: true,
     include: ['src/**/*.spec.ts', 'scripts/stencil-proxy.spec.mjs'],
     exclude: [
       'src/**/initialization-utils.spec.ts',

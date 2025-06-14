@@ -1,13 +1,13 @@
 import {fixture} from '@/vitest-utils/testing-helpers/fixture';
 import {userEvent} from '@vitest/browser/context';
-import {html, TemplateResult} from 'lit';
+import {html, nothing, TemplateResult} from 'lit';
 import {describe, expect, it, vi} from 'vitest';
 import {GridLayoutProps, renderGridLayout} from './grid-layout';
 
 describe('renderGridLayout', () => {
   const gridLayoutFixture = async (
     props: Partial<GridLayoutProps> = {},
-    children?: TemplateResult
+    children: TemplateResult | typeof nothing = nothing
   ) => {
     return await fixture(
       html`${renderGridLayout({

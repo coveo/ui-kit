@@ -5,11 +5,18 @@ import {
 import {parameters} from '@/storybook-utils/common/common-meta-parameters';
 import {renderComponent} from '@/storybook-utils/common/render-component';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
-import {html} from 'lit';
 
-// TODO KIT-3640 - Add stories for table display
-
-const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: false});
+const {decorator, play} = wrapInCommerceInterface({
+  skipFirstRequest: false,
+  engineConfig: {
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
+      parsed.perPage = 4;
+      request.body = JSON.stringify(parsed);
+      return request;
+    },
+  },
+});
 
 const {play: playNoFirstQuery} = wrapInCommerceInterface({
   skipFirstRequest: true,
@@ -18,11 +25,11 @@ const {play: playNoFirstQuery} = wrapInCommerceInterface({
 const {play: playNoProducts} = wrapInCommerceInterface({
   skipFirstRequest: false,
   engineConfig: {
-    preprocessRequest: (r) => {
-      const parsed = JSON.parse(r.body as string);
+    preprocessRequest: (request) => {
+      const parsed = JSON.parse(request.body as string);
       parsed.query = 'show me no products';
-      r.body = JSON.stringify(parsed);
-      return r;
+      request.body = JSON.stringify(parsed);
+      return request;
     },
   },
 });
@@ -32,24 +39,27 @@ const meta: Meta = {
     'attributes-display': {
       options: ['grid', 'list', 'table'],
       control: {type: 'radio'},
+      name: 'display',
     },
     'attributes-density': {
       options: ['compact', 'comfortable', 'normal'],
       control: {type: 'radio'},
+      name: 'density',
     },
     'attributes-image-size': {
       options: ['small', 'large', 'icon', 'none'],
       control: {type: 'radio'},
+      name: 'image-size',
     },
   },
   args: {
-    'attributes-number-of-placeholders': 24,
+    'attributes-number-of-placeholders': 4,
     'attributes-display': 'grid',
     'attributes-density': 'normal',
     'attributes-image-size': 'small',
   },
   component: 'atomic-commerce-product-list',
-  title: 'Atomic-Commerce/ProductList',
+  title: 'Commerce/atomic-commerce-product-list',
   id: 'atomic-commerce-product-list',
   render: renderComponent,
   decorators: [decorator],
@@ -61,10 +71,6 @@ export default meta;
 
 export const Default: Story = {
   name: 'Grid display',
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
-  },
 };
 
 export const GridDisplayWithTemplate: Story = {
@@ -72,21 +78,36 @@ export const GridDisplayWithTemplate: Story = {
   args: {
     'slots-default': `<atomic-product-template>
   <template>
-    <atomic-product-section-name>
+    <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
     </atomic-product-section-name>
     <atomic-product-section-visual>
-      <atomic-product-image></atomic-product-image>
+      <atomic-product-field-condition if-defined="ec_thumbnails">
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-field-condition>
     </atomic-product-section-visual>
     <atomic-product-section-metadata>
       <atomic-product-field-condition if-defined="ec_brand">
-        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+        <atomic-product-text field="ec_brand"></atomic-product-text>
       </atomic-product-field-condition>
-      <atomic-product-rating></atomic-product-rating>
+      <atomic-product-field-condition if-defined="cat_available_sizes">
+        <atomic-product-multi-value-text
+          field="cat_available_sizes"
+        ></atomic-product-multi-value-text>
+      </atomic-product-field-condition>
+      <atomic-product-field-condition if-defined="ec_rating">
+        <atomic-product-rating field="ec_rating"></atomic-product-rating>
+      </atomic-product-field-condition>
+      <atomic-product-field-condition if-defined="concepts">
+        <atomic-product-multi-value-text field="concepts"></atomic-product-multi-value-text>
+      </atomic-product-field-condition>
     </atomic-product-section-metadata>
     <atomic-product-section-emphasized>
-      <atomic-product-price></atomic-product-price>
+      <atomic-product-price currency="USD"></atomic-product-price>
     </atomic-product-section-emphasized>
+    <atomic-product-section-description>
+      <atomic-product-excerpt></atomic-product-excerpt>
+    </atomic-product-section-description>
     <atomic-product-section-children>
       <atomic-product-children></atomic-product-children>
     </atomic-product-section-children>
@@ -104,10 +125,6 @@ export const GridDisplayBeforeQuery: Story = {
 
 export const ListDisplay: Story = {
   name: 'List display',
-  play: async (context) => {
-    await play(context);
-    await playExecuteFirstRequest(context);
-  },
   args: {
     'attributes-display': 'list',
   },
@@ -119,21 +136,36 @@ export const ListDisplayWithTemplate: Story = {
     'attributes-display': 'list',
     'slots-default': `<atomic-product-template>
   <template>
-    <atomic-product-section-name>
+    <atomic-product-section-name id="product-name-section">
       <atomic-product-link class="font-bold"></atomic-product-link>
     </atomic-product-section-name>
     <atomic-product-section-visual>
-      <atomic-product-image></atomic-product-image>
+      <atomic-product-field-condition if-defined="ec_thumbnails">
+        <atomic-product-image field="ec_thumbnails"></atomic-product-image>
+      </atomic-product-field-condition>
     </atomic-product-section-visual>
     <atomic-product-section-metadata>
       <atomic-product-field-condition if-defined="ec_brand">
-        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+        <atomic-product-text field="ec_brand"></atomic-product-text>
       </atomic-product-field-condition>
-      <atomic-product-rating></atomic-product-rating>
+      <atomic-product-field-condition if-defined="cat_available_sizes">
+        <atomic-product-multi-value-text
+          field="cat_available_sizes"
+        ></atomic-product-multi-value-text>
+      </atomic-product-field-condition>
+      <atomic-product-field-condition if-defined="ec_rating">
+        <atomic-product-rating field="ec_rating"></atomic-product-rating>
+      </atomic-product-field-condition>
+      <atomic-product-field-condition if-defined="concepts">
+        <atomic-product-multi-value-text field="concepts"></atomic-product-multi-value-text>
+      </atomic-product-field-condition>
     </atomic-product-section-metadata>
     <atomic-product-section-emphasized>
-      <atomic-product-price></atomic-product-price>
+      <atomic-product-price currency="USD"></atomic-product-price>
     </atomic-product-section-emphasized>
+    <atomic-product-section-description>
+      <atomic-product-excerpt></atomic-product-excerpt>
+    </atomic-product-section-description>
     <atomic-product-section-children>
       <atomic-product-children></atomic-product-children>
     </atomic-product-section-children>
@@ -152,46 +184,45 @@ export const ListDisplayBeforeQuery: Story = {
   },
 };
 
+export const TableDisplay: Story = {
+  name: 'Table display',
+  args: {
+    'attributes-display': 'table',
+    'slots-default': `<atomic-product-template>
+  <template>
+    <atomic-table-element label="Product">
+      <atomic-product-link></atomic-product-link>
+      <atomic-product-field-condition if-defined="ec_brand">
+        <atomic-product-text field="ec_brand" class="text-neutral-dark block"></atomic-product-text>
+      </atomic-product-field-condition>
+    </atomic-table-element>
+    <atomic-table-element label="ID">
+      <atomic-product-text field="permanentid"></atomic-product-text>
+    </atomic-table-element>
+    <atomic-table-element label="Price">
+      <atomic-product-price></atomic-product-price>
+    </atomic-table-element>
+
+  </template>
+</atomic-product-template>`,
+  },
+};
+
+export const TableDisplayBeforeQuery: Story = {
+  name: 'Table display before query',
+  args: {
+    'attributes-display': 'table',
+  },
+  play: async (context) => {
+    await playNoFirstQuery(context);
+  },
+};
+
 export const NoProducts: Story = {
   name: 'No products',
   decorators: [(story) => story()],
   play: async (context) => {
     await playNoProducts(context);
-    await playExecuteFirstRequest(context);
-  },
-};
-
-export const InPage: Story = {
-  name: 'In page',
-  decorators: [
-    (story) =>
-      html` <atomic-commerce-layout>
-        <atomic-layout-section section="search">
-          <atomic-commerce-search-box></atomic-commerce-search-box>
-        </atomic-layout-section>
-        <atomic-layout-section section="facets"
-          ><atomic-commerce-facets></atomic-commerce-facets
-        ></atomic-layout-section>
-        <atomic-layout-section section="main">
-          <atomic-layout-section section="status">
-            <atomic-commerce-breadbox></atomic-commerce-breadbox>
-            <atomic-commerce-query-summary></atomic-commerce-query-summary>
-            <atomic-commerce-sort-dropdown></atomic-commerce-sort-dropdown>
-            <atomic-commerce-did-you-mean></atomic-commerce-did-you-mean>
-            <atomic-commerce-refine-toggle></atomic-commerce-refine-toggle>
-          </atomic-layout-section>
-          <atomic-layout-section section="products">
-            ${story()}
-            <atomic-commerce-query-error></atomic-commerce-query-error>
-          </atomic-layout-section>
-          <atomic-layout-section section="pagination">
-            <atomic-commerce-load-more-products></atomic-commerce-load-more-products>
-          </atomic-layout-section>
-        </atomic-layout-section>
-      </atomic-commerce-layout>`,
-  ],
-  play: async (context) => {
-    await play(context);
     await playExecuteFirstRequest(context);
   },
 };
