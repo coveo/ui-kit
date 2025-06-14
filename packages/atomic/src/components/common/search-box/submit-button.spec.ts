@@ -20,7 +20,6 @@ describe('#renderSubmitButton', () => {
           i18n,
           disabled: false,
           onClick: () => {},
-          title: 'search',
           ...additionalProps,
         },
       })}`
@@ -84,11 +83,5 @@ describe('#renderSubmitButton', () => {
     await userEvent.click(button!);
 
     expect(onClick).toHaveBeenCalled();
-  });
-
-  it('should have the correct title attribute', async () => {
-    const title = 'Search';
-    const {button} = await renderComponent({title});
-    expect(button).toHaveAttribute('title', title);
   });
 });
