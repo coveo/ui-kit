@@ -110,12 +110,13 @@ export const renderCarousel: FunctionalComponentWithChildren<CarouselProps> =
         aria-roledescription="carousel"
         aria-label=${props.ariaLabel}
       >
-        ${renderPreviousButton(
-          numberOfPages,
-          previousPage,
-          props.bindings
-        )}${children}
-        ${renderNextButton(numberOfPages, nextPage, props.bindings)}
+        <div class="carousel-inner relative">
+          <div class="carousel-controls">
+            ${renderPreviousButton(numberOfPages, previousPage, props.bindings)}
+            ${renderNextButton(numberOfPages, nextPage, props.bindings)}
+          </div>
+          <div class="carousel-items">${children}</div>
+        </div>
         ${renderIndicators(numberOfPages, currentPage)}
       </div>
     `;
