@@ -16,7 +16,7 @@ describe('#renderBreadcrumbClearAll', () => {
     const element = await renderFunctionFixture(
       html`${renderBreadcrumbClearAll({
         props: {
-          setRef: () => {},
+          refCallback: () => {},
           onClick: () => {},
           isCollapsed: false,
           i18n,
@@ -30,13 +30,13 @@ describe('#renderBreadcrumbClearAll', () => {
     };
   };
 
-  it('should set the ref', async () => {
-    const setRef = vi.fn();
+  it('should call the refCallback', async () => {
+    const refCallback = vi.fn();
     const {button} = await renderComponent({
-      setRef,
+      refCallback,
     });
 
-    expect(setRef).toHaveBeenCalledWith(button);
+    expect(refCallback).toHaveBeenCalledWith(button);
   });
 
   it('should have the "clear" part', async () => {

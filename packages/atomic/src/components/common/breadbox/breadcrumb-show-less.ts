@@ -6,7 +6,6 @@ import {renderButton} from '../button';
 
 export interface BreadcrumbShowLessProps {
   onShowLess: () => void;
-  setRef: (el: HTMLButtonElement) => void;
   isCollapsed: boolean;
   i18n: i18n;
 }
@@ -24,7 +23,6 @@ export const renderBreadcrumbShowLess: FunctionalComponent<
       <li>
         ${renderButton({
           props: {
-            ref: (el) => props.setRef(el as HTMLButtonElement),
             part: 'show-less',
             style: 'outline-primary',
             text: props.i18n.t('show-less'),

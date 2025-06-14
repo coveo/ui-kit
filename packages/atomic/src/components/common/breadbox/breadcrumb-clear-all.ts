@@ -5,7 +5,7 @@ import {keyed} from 'lit/directives/keyed.js';
 import {renderButton} from '../button';
 
 export interface BreadcrumbClearAllProps {
-  setRef: (el: HTMLButtonElement) => void;
+  refCallback: (el: HTMLButtonElement) => void;
   onClick: ((event?: MouseEvent | undefined) => void) | undefined;
   isCollapsed: boolean;
   i18n: i18n;
@@ -19,7 +19,7 @@ export const renderBreadcrumbClearAll: FunctionalComponent<
     html` <li>
       ${renderButton({
         props: {
-          ref: (el) => props.setRef(el as HTMLButtonElement),
+          ref: (el) => props.refCallback(el as HTMLButtonElement),
           part: 'clear',
           style: 'text-primary',
           text: props.i18n.t('clear'),
