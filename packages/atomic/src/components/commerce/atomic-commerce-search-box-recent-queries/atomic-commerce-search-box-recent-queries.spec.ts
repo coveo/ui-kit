@@ -8,6 +8,7 @@ import {buildFakeRecentQueriesList} from '@/vitest-utils/testing-helpers/fixture
 import {buildRecentQueriesList} from '@coveo/headless/commerce';
 import {page} from '@vitest/browser/context';
 import {html} from 'lit';
+import {ifDefined} from 'lit/directives/if-defined.js';
 import {describe, vi, expect, it, MockInstance, beforeEach} from 'vitest';
 import {
   SearchBoxSuggestionElement,
@@ -25,11 +26,16 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
     );
   });
 
-  const renderElements = async (bindings: {} = {}) => {
+  const renderElements = async (
+    bindings: {} = {},
+    maxWithoutQuery?: number
+  ) => {
     const {element, searchBox} =
       await renderInAtomicCommerceSearchBox<AtomicCommerceSearchBoxRecentQueries>(
         {
-          template: html`<atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>`,
+          template: html`<atomic-commerce-search-box-recent-queries
+            max-without-query=${ifDefined(maxWithoutQuery)}
+          ></atomic-commerce-search-box-recent-queries>`,
           selector: 'atomic-commerce-search-box-recent-queries',
           bindings: {
             ...bindings,
@@ -145,24 +151,22 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
       expect(object.position).toBe(position);
     });
 
-    describe('renderItems', () => {
-      describe('when analytics are disabled', () => {
-        it('should return an empty array', async () => {
-          vi.mocked(buildRecentQueriesList).mockReturnValue(
-            buildFakeRecentQueriesList({analyticsEnabled: false})
-          );
-          const {element} = await renderElements({
-            engine: {
-              logger: {
-                warn: vi.fn(),
-              },
+    describe('when returning the renderItems function', () => {
+      it('should return an empty array when analytics are disabled', async () => {
+        vi.mocked(buildRecentQueriesList).mockReturnValue(
+          buildFakeRecentQueriesList({analyticsEnabled: false})
+        );
+        const {element} = await renderElements({
+          engine: {
+            logger: {
+              warn: vi.fn(),
             },
-          });
-
-          const object = element.initialize();
-
-          expect(object.renderItems()).toEqual([]);
+          },
         });
+
+        const object = element.initialize();
+
+        expect(object.renderItems()).toEqual([]);
       });
 
       describe('when analytics are enabled', () => {
@@ -170,23 +174,57 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
         let object: SearchBoxSuggestions;
         let items: SearchBoxSuggestionElement[];
 
-        beforeEach(async () => {
+        const setupRenderItemsTest = async (
+          bindings: {} = {},
+          maxWithoutQuery?: number
+        ) => {
+          ({element} = await renderElements(bindings, maxWithoutQuery));
+          object = element.initialize();
+          items = object.renderItems();
+        };
+
+        it('should return the correct number of items', async () => {
+          await setupRenderItemsTest();
           vi.mocked(buildRecentQueriesList).mockReturnValue(
             buildFakeRecentQueriesList({
               queries: ['query1', 'query2', 'query3'],
             })
           );
-          ({element} = await renderElements());
-          object = element.initialize();
-          items = object.renderItems();
-        });
 
-        it('should return the correct number of items', () => {
           // The first item is the query clear item, followed by the recent queries
           expect(items.length).toBe(4);
         });
 
-        it('the query clear item should have the correct properties', () => {
+        it('should return the correct number of items when there is more suggestions that the maxWithQuery', async () => {
+          await setupRenderItemsTest();
+          vi.mocked(buildRecentQueriesList).mockReturnValue(
+            buildFakeRecentQueriesList({
+              queries: ['query1', 'query2', 'query3', 'query4', 'query5'],
+            })
+          );
+
+          expect(items.length).toBe(4);
+        });
+
+        it('should return the correct number of items when there is more suggestions that the maxWithoutQuery', async () => {
+          await setupRenderItemsTest({
+            searchBoxController: {
+              state: {
+                value: '',
+              },
+              selectSuggestion: vi.fn(),
+            },
+          });
+          vi.mocked(buildRecentQueriesList).mockReturnValue(
+            buildFakeRecentQueriesList({
+              queries: ['query1', 'query2', 'query3', 'query4', 'query5'],
+            })
+          );
+
+          expect(items.length).toBe(4);
+        });
+
+        it('should have the correct properties on the query clear item', () => {
           expect(items[0]).toEqual(
             expect.objectContaining({
               part: 'recent-query-title-item suggestion-divider',
@@ -197,7 +235,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
           );
         });
 
-        it('the recent query item should have the correct properties', () => {
+        it('should have the correct properties on the recent query item', () => {
           expect(items[1]).toEqual(
             expect.objectContaining({
               part: 'recent-query-item',
@@ -208,56 +246,50 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
           );
         });
 
-        it('each item should have the correct content', () => {
+        it('should have the correct content for each item', () => {
           expect(items[0].content).toBeDefined();
           expect(items[0].content).toBeInstanceOf(HTMLElement);
           expect(items[1].content).toBeDefined();
           expect(items[1].content).toBeInstanceOf(HTMLElement);
         });
 
-        it('the query clear item should have the correct onSelect function', () => {
+        it('should have the correct onSelect function for the query clear item', () => {
           items[0].onSelect?.(new Event('click'));
 
           expect(buildFakeRecentQueriesList().clear).toHaveBeenCalledWith();
           expect(element.bindings.triggerSuggestions).toHaveBeenCalled();
         });
 
-        describe('when the search box is standalone', () => {
-          it('the recent query item should have the correct onSelect function', async () => {
-            items = await renderElements({isStandalone: true}).then(
-              ({element}) => {
-                const object = element.initialize();
-                return object.renderItems();
-              }
-            );
+        it('should have the correct onSelect function for the recent query item when the search box is standalone', async () => {
+          await setupRenderItemsTest({isStandalone: true});
 
-            items[1].onSelect?.(new Event('click'));
+          items[1].onSelect?.(new Event('click'));
 
-            expect(
-              element.bindings.searchBoxController.updateText
-            ).toHaveBeenCalledWith('query1');
-            expect(
-              element.bindings.searchBoxController.submit
-            ).toHaveBeenCalled();
-          });
+          expect(
+            element.bindings.searchBoxController.updateText
+          ).toHaveBeenCalledWith('query1');
+          expect(
+            element.bindings.searchBoxController.submit
+          ).toHaveBeenCalled();
         });
 
-        describe('when the search box is not standalone', () => {
-          it('the recent query item should have the correct onSelect function', () => {
-            items[1].onSelect?.(new Event('click'));
-            expect(
-              buildFakeRecentQueriesList().executeRecentQuery
-            ).toHaveBeenCalled();
-          });
+        it('should have the correct onSelect function for the recent query item when the search box is not standalone', async () => {
+          await setupRenderItemsTest();
+
+          items[1].onSelect?.(new Event('click'));
+
+          expect(
+            buildFakeRecentQueriesList().executeRecentQuery
+          ).toHaveBeenCalled();
         });
 
-        describe('content', () => {
-          describe('query clear item', () => {
+        describe('when rendering the content', () => {
+          describe('when rendering the query clear item', () => {
             const setupContent = () => {
               return items[0].content as HTMLElement;
             };
 
-            it('the outer container should have the correct part', () => {
+            it('should have the correct part on the container', () => {
               const content = setupContent();
               expect(content).toHaveAttribute(
                 'part',
@@ -265,7 +297,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
               );
             });
 
-            it('the recent searches span should have the correct part', () => {
+            it('should have the correct part on the recent searches span ', () => {
               const content = setupContent();
               const recentSearchesSpan = content.querySelector('span');
               expect(recentSearchesSpan).toHaveAttribute(
@@ -274,13 +306,13 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
               );
             });
 
-            it('the recent searches span should have the correct text', () => {
+            it('should have the correct text on the recent searches span', () => {
               const content = setupContent();
               const recentSearchesSpan = content.querySelector('span');
               expect(recentSearchesSpan).toHaveTextContent('Recent searches');
             });
 
-            it('the recent query clear span should have the correct part', () => {
+            it('should have the correct part on the recent query clear span', () => {
               const content = setupContent();
               const recentQueryClearSpan = content.querySelector(
                 'span[part="recent-query-clear"]'
@@ -291,7 +323,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
               );
             });
 
-            it('the recent query clear span should have the correct text', () => {
+            it('should have the correct text on the recent query clear span', () => {
               const content = setupContent();
               const recentQueryClearSpan = content.querySelector(
                 'span[part="recent-query-clear"]'
@@ -300,7 +332,7 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
             });
           });
 
-          describe('recent query item', () => {
+          describe('when rendering the recent query item', () => {
             const setupContent = async (bindings: {} = {}) => {
               ({element} = await renderElements(bindings));
               object = element.initialize();
@@ -308,19 +340,19 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
               return items[1].content as HTMLElement;
             };
 
-            it('outer container should have the correct part', async () => {
+            it('should have the correct part on the container', async () => {
               const content = await setupContent();
               expect(content).toHaveAttribute('part', 'recent-query-content');
             });
 
-            it('icon should have the correct part', async () => {
+            it('should have the correct part on the icon', async () => {
               const content = await setupContent();
               const icon = content.querySelector('atomic-icon');
               expect(icon).toHaveAttribute('part', 'recent-query-icon');
             });
 
             describe('when there is a query', () => {
-              it('span should have the correct part', async () => {
+              it('should have the correct part on the span', async () => {
                 const content = await setupContent({
                   searchBoxController: {
                     state: {
@@ -349,12 +381,10 @@ describe('AtomicCommerceSearchBoxRecentQueries', () => {
               });
             });
 
-            describe('when there is no query', () => {
-              it('span should have the correct part', async () => {
-                const content = await setupContent();
-                const span = content.querySelector('span');
-                expect(span).toHaveAttribute('part', 'recent-query-text');
-              });
+            it('should have the correct part on the span when there is no query', async () => {
+              const content = await setupContent();
+              const span = content.querySelector('span');
+              expect(span).toHaveAttribute('part', 'recent-query-text');
             });
           });
         });
