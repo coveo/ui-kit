@@ -530,7 +530,6 @@ describe('commerceParameters slice', () => {
             numberOfResults: 1,
             path: ['f2v1', 'f2v2'],
           },
-          retrieveCount: 1,
         })
       );
       expect(finalState.page).toBeUndefined();
@@ -554,7 +553,6 @@ describe('commerceParameters slice', () => {
               numberOfResults: 1,
               path: ['f2v1', 'f2v2'],
             },
-            retrieveCount: 1,
           })
         );
         expect(finalState).toEqual(state);
@@ -573,7 +571,6 @@ describe('commerceParameters slice', () => {
               numberOfResults: 1,
               path: ['f1v1'],
             },
-            retrieveCount: 1,
           })
         );
 
@@ -595,7 +592,6 @@ describe('commerceParameters slice', () => {
             numberOfResults: 1,
             path: ['f1v1', 'f1v2', 'f1v3'],
           },
-          retrieveCount: 1,
         })
       );
 

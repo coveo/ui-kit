@@ -115,19 +115,6 @@ describe('CoreCommerceFacet', () => {
       facet.toggleSelect(facetValue());
       expect(fetchProductsActionCreator).toHaveBeenCalled();
     });
-
-    it('sets retrieveCount when provided in selection', () => {
-      const selection = {
-        ...facetValue(),
-        retrieveCount: 30,
-      };
-      facet.toggleSelect(selection);
-      expect(toggleSelectActionCreator).toHaveBeenCalledWith({
-        facetId,
-        selection,
-        retrieveCount: 30,
-      });
-    });
   });
 
   describe('#toggleExclude', () => {
