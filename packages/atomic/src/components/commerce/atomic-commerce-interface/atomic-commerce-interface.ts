@@ -353,6 +353,7 @@ export class AtomicCommerceInterface
       store: this.store,
       interfaceElement: this as AtomicCommerceInterface,
       addAdoptedStyleSheets: (stylesheet) => {
+        // TODO: KIT-4333: remove and only keep decorator
         const parent = this.getRootNode();
         const styleSheet = stylesheet;
         const isDocumentOrShadowRoot =
