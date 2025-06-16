@@ -13,6 +13,10 @@ export interface AppProxyResponse {
   trackingId: string;
 }
 
+export type CoveoShopifyCustomEvent = AppProxyResponse & {
+  clientId: string;
+};
+
 export type ShopifyCustomEnvironment = Omit<
   CustomEnvironment,
   'storage' | 'generateUUID'

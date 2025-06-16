@@ -1,6 +1,5 @@
 import {SHOPIFY_COOKIE_KEY} from '../constants';
-
-export type CustomEvent = Record<string, string>;
+import {CoveoShopifyCustomEvent} from '../types';
 
 /**
  * Retrieves the value of a specified Shopify cookie by its name.
@@ -23,7 +22,10 @@ declare global {
   interface Window {
     Shopify?: {
       analytics: {
-        publish: (eventName: string, eventData: CustomEvent) => void;
+        publish: (
+          eventName: string,
+          eventData: CoveoShopifyCustomEvent
+        ) => void;
       };
     };
   }
@@ -31,7 +33,7 @@ declare global {
 
 export function publishCustomShopifyEvent(
   key: string,
-  customData: CustomEvent
+  customData: CoveoShopifyCustomEvent
 ) {
   if (typeof window.Shopify?.analytics?.publish === 'function') {
     window.Shopify.analytics.publish(key, customData);

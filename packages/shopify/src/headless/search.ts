@@ -7,7 +7,7 @@ import {
   getShopifyCustomEnvironment,
 } from '../types';
 import {getClientId} from '../utilities/clientid';
-import {publishCustomShopifyEvent, CustomEvent} from '../utilities/shopify';
+import {publishCustomShopifyEvent} from '../utilities/shopify';
 import {getShopifyCookie} from '../utilities/shopify';
 
 export {SHOPIFY_COOKIE_KEY, COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
@@ -81,10 +81,11 @@ export function buildShopifySearchEngine({
       'Unable to find the _shopify_y cookie. Please ensure you are running this code in a Shopify store.'
     );
   }
+  const clientId = getClientId(cookie);
 
   if (!searchEngineOptions.navigatorContextProvider) {
     searchEngineOptions.navigatorContextProvider = () => ({
-      clientId: getClientId(cookie),
+      clientId,
       referrer: document.referrer,
       userAgent: navigator.userAgent,
       location: window.location.href,
@@ -97,13 +98,13 @@ export function buildShopifySearchEngine({
     environment: searchEngineOptions.configuration.environment,
     trackingId: searchEngineOptions.configuration.analytics.trackingId,
   };
+  const customEvent = {
+    ...appProxyResponse,
+    clientId,
+  };
 
-  publishCustomShopifyEvent(
-    COVEO_SHOPIFY_CONFIG_KEY,
-    appProxyResponse as unknown as CustomEvent
-  );
+  publishCustomShopifyEvent(COVEO_SHOPIFY_CONFIG_KEY, customEvent);
 
-  const clientId = getClientId(cookie);
   const engine = buildSearchEngine(searchEngineOptions);
   engine.relay.updateConfig({
     environment: {

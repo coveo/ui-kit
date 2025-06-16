@@ -10,7 +10,7 @@ import {
   getShopifyCustomEnvironment,
 } from '../types';
 import {getClientId} from '../utilities/clientid';
-import {publishCustomShopifyEvent, CustomEvent} from '../utilities/shopify';
+import {publishCustomShopifyEvent} from '../utilities/shopify';
 import {getShopifyCookie} from '../utilities/shopify';
 
 export {SHOPIFY_COOKIE_KEY, COVEO_SHOPIFY_CONFIG_KEY} from '../constants';
@@ -86,9 +86,11 @@ export function buildShopifyCommerceEngine({
     );
   }
 
+  const clientId = getClientId(cookie);
+
   if (!commerceEngineOptions.navigatorContextProvider) {
     commerceEngineOptions.navigatorContextProvider = () => ({
-      clientId: getClientId(cookie),
+      clientId,
       referrer: document.referrer,
       userAgent: navigator.userAgent,
       location: window.location.href,
@@ -102,12 +104,13 @@ export function buildShopifyCommerceEngine({
     trackingId: commerceEngineOptions.configuration.analytics.trackingId,
   };
 
-  publishCustomShopifyEvent(
-    COVEO_SHOPIFY_CONFIG_KEY,
-    appProxyResponse as unknown as CustomEvent
-  );
+  const customEvent = {
+    ...appProxyResponse,
+    clientId,
+  };
 
-  const clientId = getClientId(cookie);
+  publishCustomShopifyEvent(COVEO_SHOPIFY_CONFIG_KEY, customEvent);
+
   const engine = buildCommerceEngine(commerceEngineOptions);
   engine.relay.updateConfig({
     environment: {
