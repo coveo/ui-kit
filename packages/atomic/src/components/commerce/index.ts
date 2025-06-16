@@ -9,3 +9,4 @@ export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic
 export {AtomicCommerceText} from './atomic-commerce-text/atomic-commerce-text.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
 export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
+export {AtomicProductText} from './product-template-components/atomic-product-text/atomic-product-text.js';
