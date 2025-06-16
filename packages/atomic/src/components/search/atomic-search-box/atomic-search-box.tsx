@@ -733,7 +733,6 @@ export class AtomicSearchBox implements InitializableComponent<Bindings> {
                 this.searchBox.submit();
                 this.suggestionManager.clearSuggestions();
               }}
-              title={searchLabel}
             />
             {this.renderSuggestions()}
           </SearchBoxWrapper>,
