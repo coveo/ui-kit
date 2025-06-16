@@ -3026,7 +3026,7 @@ export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSor
 }
 
 @ProxyCmp({
-  inputs: [],
+  inputs: ['mustMatch', 'mustNotMatch'],
   methods: ['getTemplate'],
   defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
 })
@@ -3036,7 +3036,7 @@ export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSor
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: []
+  inputs: ['mustMatch', 'mustNotMatch']
 })
 export class AtomicProductTemplate {
   protected readonly el: HTMLElement;
