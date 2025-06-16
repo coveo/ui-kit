@@ -1,5 +1,7 @@
+import {createSelector} from '@reduxjs/toolkit';
 import {SearchSection} from '../../state/state-sections.js';
 import {getResultProperty} from '../result-templates/result-templates-helpers.js';
+import {SearchState} from './search-state.js';
 
 export function firstSearchExecutedSelector(state: SearchSection) {
   return state.search.response.searchUid !== '';
@@ -14,3 +16,10 @@ export function resultFromFieldSelector(
     (result) => getResultProperty(result, contentIdKey) === contentIdValue
   );
 }
+
+export const selectSearchActionCause = createSelector(
+  (state: {search?: SearchState}) => state.search,
+  (state) => {
+    return state?.searchAction?.actionCause || '';
+  }
+);
