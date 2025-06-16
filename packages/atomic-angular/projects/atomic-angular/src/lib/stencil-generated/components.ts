@@ -2881,32 +2881,6 @@ export declare interface AtomicCommerceProductList extends LitAtomicCommerceProd
 }
 
 @ProxyCmp({
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
-  methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box-query-suggestions',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
-})
-export class AtomicCommerceSearchBoxQuerySuggestions {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
-
-}
-
-@ProxyCmp({
   inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
   methods: ['setRenderFunction', 'initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
@@ -2935,17 +2909,17 @@ export declare interface AtomicCommerceSearchBoxInstantProducts extends LitAtomi
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
   methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
 })
 @Component({
-  selector: 'atomic-commerce-search-box-recent-queries',
+  selector: 'atomic-commerce-search-box-query-suggestions',
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
 })
-export class AtomicCommerceSearchBoxRecentQueries {
+export class AtomicCommerceSearchBoxQuerySuggestions {
   protected readonly el: HTMLElement;
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
@@ -2954,7 +2928,7 @@ export class AtomicCommerceSearchBoxRecentQueries {
   }
 }
 
-export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
+export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
 
 }
 
