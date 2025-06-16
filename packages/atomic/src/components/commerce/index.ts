@@ -7,3 +7,4 @@ export {AtomicCommerceSearchBoxQuerySuggestions} from './atomic-commerce-search-
 export {AtomicCommerceSearchBoxRecentQueries} from './atomic-commerce-search-box-recent-queries/atomic-commerce-search-box-recent-queries.js';
 export {AtomicCommerceSortDropdown} from './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js';
 export {AtomicProduct} from './atomic-product/atomic-product.js';
+export {AtomicProductTemplate} from './atomic-product-template/atomic-product-template.js';
