@@ -85,7 +85,7 @@
     <name>quantic_Next</name>
   </customLabels>
   <customLabels>
-    <label>Búsqueda...</label>
+    <label>Buscar...</label>
     <name>quantic_Search</name>
   </customLabels>
   <customLabels>
@@ -161,7 +161,7 @@
     <name>quantic_DisconnectedDesc</name>
   </customLabels>
   <customLabels>
-    <label>La organización de Coveo no tiene un punto final único.</label>
+    <label>La organización de Coveo no tiene un punto de acceso único.</label>
     <name>quantic_NoEndpointsTitle</name>
   </customLabels>
   <customLabels>
@@ -293,7 +293,7 @@
     <name>quantic_PastHour</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} horas pasadas</label>
+    <label>{{0}} últimas horas</label>
     <name>quantic_PastHour_plural</name>
   </customLabels>
   <customLabels>
@@ -301,7 +301,7 @@
     <name>quantic_PastDay</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} días pasados</label>
+    <label>{{0}} últimas días</label>
     <name>quantic_PastDay_plural</name>
   </customLabels>
   <customLabels>
@@ -309,7 +309,7 @@
     <name>quantic_PastWeek</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} semanas pasadas</label>
+    <label>{{0}} últimas semanas</label>
     <name>quantic_PastWeek_plural</name>
   </customLabels>
   <customLabels>
@@ -317,7 +317,7 @@
     <name>quantic_PastMonth</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} meses pasados</label>
+    <label>{{0}} últimos meses</label>
     <name>quantic_PastMonth_plural</name>
   </customLabels>
   <customLabels>
@@ -325,7 +325,7 @@
     <name>quantic_PastQuarter</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} trimestres pasados</label>
+    <label>{{0}} últimos trimestres</label>
     <name>quantic_PastQuarter_plural</name>
   </customLabels>
   <customLabels>
@@ -333,7 +333,7 @@
     <name>quantic_PastYear</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} años pasados</label>
+    <label>{{0}} últimos años</label>
     <name>quantic_PastYear_plural</name>
   </customLabels>
   <customLabels>
@@ -421,7 +421,7 @@
     <name>quantic_MoreTopics</name>
   </customLabels>
   <customLabels>
-    <label>Seleccionar una opción</label>
+    <label>Selecciona una opción</label>
     <name>quantic_SelectOption</name>
   </customLabels>
   <customLabels>
@@ -545,7 +545,7 @@
     <name>quantic_SendFeedback</name>
   </customLabels>
   <customLabels>
-    <label>Requerido antes de enviar.</label>
+    <label>Campo obligatorio.</label>
     <name>quantic_requiredFeedbackQuestion</name>
   </customLabels>
   <customLabels>
@@ -577,15 +577,15 @@
     <name>quantic_PeopleAlsoAsk</name>
   </customLabels>
   <customLabels>
-    <label>Filtro de inclusión en {{0}}; {{1}} resultado</label>
+    <label>Filtro por {{0}}; {{1}} resultado</label>
     <name>quantic_InclusionFilter</name>
   </customLabels>
   <customLabels>
-    <label>Filtro de inclusión en {{0}}; {{1}} resultados</label>
+    <label>Filtro por {{0}}; {{1}} resultados</label>
     <name>quantic_InclusionFilter_plural</name>
   </customLabels>
   <customLabels>
-    <label>Filtro de inclusión en {{0}}; ningún resultado</label>
+    <label>Filtro por {{0}}; ningún resultado</label>
     <name>quantic_InclusionFilter_zero</name>
   </customLabels>
   <customLabels>
@@ -613,7 +613,7 @@
     <name>quantic_NavigateToRecord</name>
   </customLabels>
   <customLabels>
-    <label>Se abre en una pestaña del navegador web</label>
+    <label>Abrir en una pestaña del navegador</label>
     <name>quantic_OpensInBrowserTab</name>
   </customLabels>
   <customLabels>
@@ -621,7 +621,7 @@
     <name>quantic_ComponentError</name>
   </customLabels>
   <customLabels>
-    <label>Consulta la consola del desarrollador para más información.</label>
+    <label>Consulta la Developer Consola del navegador para más información.</label>
     <name>quantic_LookAtDeveloperConsole</name>
   </customLabels>
   <customLabels>
@@ -681,7 +681,7 @@
     <name>quantic_Carousel</name>
   </customLabels>
   <customLabels>
-    <label>Diapositiva</label>
+    <label>Deslizar</label>
     <name>quantic_Slide</name>
   </customLabels>
   <customLabels>
@@ -721,7 +721,7 @@
     <name>quantic_ShowGeneratedAnswer</name>
   </customLabels>
   <customLabels>
-    <label>Fuera de tema</label>
+    <label>Irrelevante</label>
     <name>quantic_Irrelevant</name>
   </customLabels>
   <customLabels>
@@ -733,7 +733,7 @@
     <name>quantic_OutOfDate</name>
   </customLabels>
   <customLabels>
-    <label>Nociva</label>
+    <label>Ofensiva</label>
     <name>quantic_Harmful</name>
   </customLabels>
   <customLabels>
@@ -777,7 +777,7 @@
     <name>quantic_GeneratedAnswerShowLess</name>
   </customLabels>
   <customLabels>
-    <label>La configuración de las opciones de ordenamiento personalizadas no es válida.</label>
+    <label>La configuración del orden personalizado no es válida.</label>
     <name>quantic_InvalidCustomSortConfiguration</name>
   </customLabels>
   <customLabels>
