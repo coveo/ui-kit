@@ -61,7 +61,7 @@
     <name>quantic_ShowMoreFacetValues</name>
   </customLabels>
   <customLabels>
-    <label>Mostrar menos valores para la faceta {{label}}</label>
+    <label>Mostrar menos valores para la faceta {{0}}</label>
     <name>quantic_ShowLessFacetValues</name>
   </customLabels>
   <customLabels>
