@@ -9,19 +9,24 @@ import {
   fetchProductContext,
 } from './product-template-decorators';
 
-vi.mock('../../common/item-list/fetch-item-context');
-vi.mock('../../common/item-list/context/item-context-controller', () => ({
-  ItemContextController: vi.fn().mockImplementation(() => ({})),
-  MissingParentError: vi.fn().mockImplementation((elementName, parentName) => {
-    const error = new Error(
-      `The "${elementName}" element must be the child of an "${parentName}" element.`
-    );
-    error.name = 'MissingParentError';
-    return error;
-  }),
-}));
+vi.mock('@/src/components/common/item-list/fetch-item-context');
 vi.mock(
-  '../../common/item-list/context/interactive-item-context-controller',
+  '@/src/components/common/item-list/context/item-context-controller',
+  () => ({
+    ItemContextController: vi.fn().mockImplementation(() => ({})),
+    MissingParentError: vi
+      .fn()
+      .mockImplementation((elementName, parentName) => {
+        const error = new Error(
+          `The "${elementName}" element must be the child of an "${parentName}" element.`
+        );
+        error.name = 'MissingParentError';
+        return error;
+      }),
+  })
+);
+vi.mock(
+  '@/src/components/common/item-list/context/interactive-item-context-controller',
   () => ({
     InteractiveItemContextController: vi.fn().mockImplementation(() => ({})),
   })
