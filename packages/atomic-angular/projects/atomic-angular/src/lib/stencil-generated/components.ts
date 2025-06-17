@@ -2948,17 +2948,17 @@ export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtom
 @ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
   methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-recent-queries') || customElements.define('atomic-commerce-search-box-recent-queries', LitAtomicCommerceSearchBoxRecentQueries);}
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-text') || customElements.define('atomic-commerce-text', LitAtomicCommerceText);}
 })
 @Component({
-  selector: 'atomic-commerce-search-box-recent-queries',
+  selector: 'atomic-commerce-text',
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery']
+  inputs: ['value', 'count']
 })
-export class AtomicCommerceSearchBoxRecentQueries {
+export class AtomicCommerceText {
   protected readonly el: HTMLElement;
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
@@ -2967,7 +2967,7 @@ export class AtomicCommerceSearchBoxRecentQueries {
   }
 }
 
-export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
+export declare interface AtomicCommerceText extends LitAtomicCommerceText {
 
 }
 
