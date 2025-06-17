@@ -5,11 +5,13 @@ import {keyed} from 'lit/directives/keyed.js';
 import {renderButton} from '../button';
 
 export interface BreadcrumbShowMoreProps {
-  setRef: (el: HTMLButtonElement) => void;
+  refCallback: (el: HTMLButtonElement) => void;
   onShowMore: () => void;
   numberOfCollapsedBreadcrumbs: number;
   isCollapsed: boolean;
   i18n: i18n;
+  value: string;
+  ariaLabel: string;
 }
 
 export const renderBreadcrumbShowMore: FunctionalComponent<
@@ -25,12 +27,11 @@ export const renderBreadcrumbShowMore: FunctionalComponent<
       <li>
         ${renderButton({
           props: {
-            ref: (el) => props.setRef(el as HTMLButtonElement),
+            ref: (el) => props.refCallback(el as HTMLButtonElement),
             part: 'show-more',
             style: 'outline-primary',
-            text: props.i18n.t('show-n-more-filters', {
-              value: props.numberOfCollapsedBreadcrumbs,
-            }),
+            text: props.value,
+            ariaLabel: props.ariaLabel,
             class: 'rounded-xl p-2',
             onClick: props.onShowMore,
           },
