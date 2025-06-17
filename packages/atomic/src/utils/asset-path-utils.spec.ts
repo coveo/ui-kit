@@ -17,14 +17,12 @@ describe('parseAssetURL', () => {
   });
 
   it('works with Atomic assets (without .svg)', () => {
-    expect(parseAssetURL('assets://attachment')).toBe(
-      '/__vitest_test__/__test__/assets/attachment.svg'
-    );
+    expect(parseAssetURL('assets://attachment')).toBe('/assets/attachment.svg');
   });
 
   it('works with Atomic assets (with .svg)', () => {
     expect(parseAssetURL('assets://attachment.svg')).toBe(
-      '/__vitest_test__/__test__/assets/attachment.svg'
+      '/assets/attachment.svg'
     );
   });
 });
