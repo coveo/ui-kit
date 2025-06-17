@@ -80,6 +80,15 @@ describe('#getQuerySummaryI18nParameters', () => {
     expect(highlights[2]).toHaveAttribute('part', 'highlight');
     expect(highlights[3]).toHaveAttribute('part', 'highlight query');
   });
+
+  it('should render highlights as bold text', async () => {
+    const {highlights} = await setup();
+
+    expect(highlights[0]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[1]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[2]).toHaveStyle({fontWeight: 'bold'});
+    expect(highlights[3]).toHaveStyle({fontWeight: 'bold'});
+  });
 });
 
 describe('#getProductQuerySummaryI18nParameters', () => {
