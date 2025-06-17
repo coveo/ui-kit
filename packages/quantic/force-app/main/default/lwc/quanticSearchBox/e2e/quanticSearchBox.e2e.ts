@@ -10,16 +10,19 @@ const fixtures = {
   insight: testInsight,
 };
 
-const variants = [
-  {
-    variantName: 'default',
-    textarea: false,
-  },
-  {
-    variantName: 'expandable',
-    textarea: true,
-  },
-];
+const defaultVariant = {
+  variantName: 'default',
+  textarea: false,
+};
+
+const expandableVariant = {
+  variantName: 'expandable',
+  textarea: true,
+};
+
+const defaultSearchBoxInputHeight = 48;
+const longQuery =
+  'super long queryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy';
 
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
@@ -30,7 +33,7 @@ useCaseTestCases.forEach((useCase) => {
           test.use({
             analyticsMode: analytics.mode,
           });
-          test('should send a search request and corresponding analytics after triggering a search', async ({
+          test('should send a search request and analytics after triggering a search', async ({
             searchBox,
             search,
           }) => {
@@ -72,47 +75,70 @@ useCaseTestCases.forEach((useCase) => {
       });
     });
 
-    variants.forEach(({variantName, textarea}) => {
-      test.describe(`with ${variantName} variant`, () => {
-        test.describe(`when the textarea property is ${textarea}`, () => {
-          test.use({
-            options: {
-              textarea: textarea,
-            },
-          });
-          test(`should ${textarea ? '' : 'not'} expand the search box when a very long string value is typed`, async ({
-            searchBox,
-          }) => {
-            const defaultSearchBoxInputHeight = 48;
-            const longQuery =
-              'super long queryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy';
+    test.describe(`with ${defaultVariant.variantName} variant`, () => {
+      test('should not expand the search box height when a very long query is typed', async ({
+        searchBox,
+      }) => {
+        const searchBoxInput = searchBox.searchBoxInput;
+        await searchBoxInput.fill(longQuery);
 
-            const searchBoxInput =
-              textarea === true
-                ? searchBox.searchBoxTextArea
-                : searchBox.searchBoxInput;
-            await searchBoxInput.fill(longQuery);
+        const searchBoxInputHeight = await searchBoxInput.evaluate(
+          (el) => (el as HTMLElement).offsetHeight
+        );
+        test.expect(searchBoxInput).toBeVisible();
+        test.expect(searchBoxInput.getAttribute('aria-expanded')).toBeTruthy();
+        test.expect(searchBoxInputHeight).toBe(defaultSearchBoxInputHeight);
+      });
+    });
 
-            const searchBoxInputHeight = await searchBoxInput.evaluate(
-              (el) => (el as HTMLElement).offsetHeight
-            );
+    test.describe(`with ${expandableVariant.variantName} variant`, () => {
+      test.use({
+        options: {
+          textarea: true,
+        },
+      });
 
-            if (textarea) {
-              test.expect(searchBoxInput).toBeVisible();
-              test
-                .expect(searchBoxInput.getAttribute('aria-expanded'))
-                .toBeTruthy();
-              test
-                .expect(searchBoxInputHeight)
-                .toBeGreaterThan(defaultSearchBoxInputHeight);
-            } else {
-              test.expect(searchBoxInput).toBeVisible();
-              test
-                .expect(searchBoxInputHeight)
-                .toBe(defaultSearchBoxInputHeight);
-            }
-          });
-        });
+      test('should expand the search box height when a very long query is typed', async ({
+        searchBox,
+      }) => {
+        const searchBoxTextarea = searchBox.searchBoxTextArea;
+        await searchBoxTextarea.fill(longQuery);
+
+        const searchBoxTextareaHeight = await searchBoxTextarea.evaluate(
+          (el) => (el as HTMLElement).offsetHeight
+        );
+        test.expect(searchBoxTextarea).toBeVisible();
+        test
+          .expect(searchBoxTextarea.getAttribute('aria-expanded'))
+          .toBeTruthy();
+        test
+          .expect(searchBoxTextareaHeight)
+          .toBeGreaterThan(defaultSearchBoxInputHeight);
+      });
+
+      test('should collapse back to default height when it is expanded and clicking outside of the search box', async ({
+        searchBox,
+      }) => {
+        const searchBoxTextarea = searchBox.searchBoxTextArea;
+        await searchBoxTextarea.fill(longQuery);
+
+        await searchBox.focusOutsideSearchBox();
+
+        const collapsedSearchBoxTextareaHeight =
+          await searchBoxTextarea.evaluate(
+            (el) => (el as HTMLElement).offsetHeight
+          );
+        test.expect(searchBoxTextarea).toBeVisible();
+        console.log(
+          'aria-expanded',
+          searchBoxTextarea.getAttribute('aria-expanded')
+        );
+        test
+          .expect(await searchBoxTextarea.getAttribute('aria-expanded'))
+          .toBe('false');
+        test
+          .expect(collapsedSearchBoxTextareaHeight)
+          .toBe(defaultSearchBoxInputHeight);
       });
     });
   });

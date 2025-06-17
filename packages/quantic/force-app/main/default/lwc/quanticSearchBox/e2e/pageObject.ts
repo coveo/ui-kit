@@ -26,6 +26,10 @@ export class SearchBoxObject {
     return this.searchBox.getByTestId('search-box-textarea');
   }
 
+  async focusOutsideSearchBox(): Promise<void> {
+    await this.page.locator('body').click();
+  }
+
   async waitForSearchLegacyAnalytics(
     expectedFields: Record<string, any>
   ): Promise<Request> {
