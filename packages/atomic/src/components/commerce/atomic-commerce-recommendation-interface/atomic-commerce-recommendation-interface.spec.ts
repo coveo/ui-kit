@@ -57,7 +57,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   const setupElement = async ({
     analytics,
     iconAssetsPath,
-    language, // TODO - remove this in v4
+    language, // TODO (KIT-4365): remove this in v4
     languageAssetsPath,
     scrollContainer,
   }: {
@@ -357,7 +357,7 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('de');
     });
 
-    // TODO - remove this test in v4
+    // TODO (KIT-4365): remove this test in v4
     it('should call CommonInterfaceHelper.onLanguageChange with no argument when language prop is defined', async () => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
       vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -563,7 +563,7 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(element.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
-  // TODO - remove this in v4
+  // TODO (KIT-4365): remove these tests in v4
   // #updateLanguage
   describe('when the language prop changes', () => {
     beforeEach(() => {

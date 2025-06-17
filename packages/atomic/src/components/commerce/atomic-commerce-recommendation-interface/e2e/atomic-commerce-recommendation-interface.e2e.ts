@@ -33,8 +33,8 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     expect(accessibilityResults.violations).toEqual([]);
   });
 
-  // TODO - remove this test in v4
-  test.only('should support language localization through the #language property', async ({
+  // TODO (KIT-4365): remove this test in v4
+  test('should support language localization through the #language property', async ({
     commerceRecommendationInterface,
   }) => {
     await commerceRecommendationInterface.load({
