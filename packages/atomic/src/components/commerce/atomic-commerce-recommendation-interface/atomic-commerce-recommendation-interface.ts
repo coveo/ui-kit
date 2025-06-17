@@ -39,7 +39,10 @@ export type CommerceBindings = CommonBindings<
 
 /**
  * @alpha
- * The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
+ * The `atomic-commerce-recommendation-interface` component is meant to be used
+ * as the parent of one or more `atomic-commerce-recommendation-list`
+ * components. It handles the headless search engine and localization
+ * configurations.
  */
 @customElement('atomic-commerce-recommendation-interface')
 @withTailwindStyles
@@ -96,7 +99,8 @@ export class AtomicCommerceRecommendationInterface
   /**
    * The commerce interface language.
    *
-   * Will default to the value set in the Headless engine context if not provided.
+   * Will default to the value set in the Headless engine context if not
+   * provided.
    *
    * @deprecated - This property will be removed in the next major version of
    * Atomic (v4). Rather than using this property, set the initial language
@@ -161,9 +165,9 @@ export class AtomicCommerceRecommendationInterface
    * configuration in your Coveo organization, requests made through the
    * commerce engine will start failing.
    *
-   * @param language - (Optional) The new language code. Use a valid IETF tag.
-   * @param country - (Optional) The new country code. Use a valid ISO-3166-1 code.
-   * @param currency - (Optional) The new currency code. Use a valid ISO-4217 code.
+   * @param language - (Optional) The IETF language code tag (e.g., `en`).
+   * @param country - (Optional) The ISO-3166-1 country tag (e.g., `US`).
+   * @param currency - (Optional) The ISO-4217 currency code (e.g., `USD`).
    *
    * @example
    * ```typescript
