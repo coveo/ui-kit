@@ -22,7 +22,7 @@ const renderWrapHighlight: FunctionalComponent<{
   content: string;
 }> = ({props}) => {
   const part = `highlight${props.part ? ` ${props.part}` : ''}`;
-  return html` <span class="front-bold" part="${part}">${props.content}</span>`;
+  return html`<span class="font-bold" part="${part}">${props.content}</span>`;
 };
 
 export const getQuerySummaryI18nParameters = (props: i18nKeyProps) => {

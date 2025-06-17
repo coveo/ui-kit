@@ -53,11 +53,10 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.2.1"
+    "vitest": "3.2.3"
   },
   "dependencies": {
     "@coveo/headless": "3.26.0",
-    "@coveo/relay": "1.2.1",
     "uuid": "^11.0.0"
   },
   "engines": {
