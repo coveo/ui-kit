@@ -1,0 +1,20 @@
+{
+  "$schema": "../../node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "off",
+    "pedantic": "off"
+  },
+  "rules": {
+    "eslint/no-unused-vars": "off",
+    "eslint/prefer-const": "off",
+    "eslint/max-lines-per-function": "off",
+    "eslint/max-depth": "off",
+    "typescript/no-unused-vars": "off",
+    "typescript/no-explicit-any": "off"
+  },
+  "env": {
+    "node": true,
+    "es2022": true
+  }
+}
