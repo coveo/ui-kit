@@ -120,9 +120,10 @@ describe('CategoryFacet', () => {
       });
     });
 
-    it('should dispatch #updateCategoryFacetNumberOfValues with twice the current number of values when initialNumberOfValues is undefined', () => {
+    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values from the request when initialNumberOfValues is undefined', () => {
       setFacetState({}, false, {
         initialNumberOfValues: undefined,
+        numberOfValues: 2,
         values: [
           buildMockCategoryFacetValue(),
           buildMockCategoryFacetValue(),
@@ -134,8 +135,40 @@ describe('CategoryFacet', () => {
 
       expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
         facetId,
-        numberOfValues: 6,
+        numberOfValues: 5,
       });
+    });
+
+    it('should dispatch #updateCategoryFacetNumberOfValues with numberOfValues + the number of values from the request when initialNumberOfValues is undefined', () => {
+      setFacetState({}, false, {
+        initialNumberOfValues: undefined,
+        numberOfValues: 2,
+        values: [
+          buildMockCategoryFacetValue(),
+          buildMockCategoryFacetValue(),
+          buildMockCategoryFacetValue(),
+        ],
+      });
+
+      facet.showMoreValues();
+
+      expect(updateCategoryFacetNumberOfValues).toHaveBeenCalledWith({
+        facetId,
+        numberOfValues: 5,
+      });
+    });
+
+    it('should not dispatch #updateCategoryFacetNumberOfValue or #fetchProductsActionCreator when initialNumberOfValues and numberOfValues are both undefined', () => {
+      setFacetState({}, false, {
+        initialNumberOfValues: undefined,
+        numberOfValues: undefined,
+        values: [buildMockCategoryFacetValue(), buildMockCategoryFacetValue()],
+      });
+
+      facet.showMoreValues();
+
+      expect(updateCategoryFacetNumberOfValues).not.toHaveBeenCalled();
+      expect(mockFetchProductsActionCreator).not.toHaveBeenCalled();
     });
 
     it('should dispatch #fetchProductsActionCreator after updating number of values', () => {

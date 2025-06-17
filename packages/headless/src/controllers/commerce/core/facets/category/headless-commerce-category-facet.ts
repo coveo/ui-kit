@@ -117,16 +117,19 @@ export function buildCategoryFacet(
     toggleSelect,
 
     showMoreValues() {
-      const {initialNumberOfValues, values} = getRequest();
+      const {initialNumberOfValues, values, numberOfValues} = getRequest();
 
-      const numberOfValues = initialNumberOfValues
-        ? values.length + initialNumberOfValues
-        : values.length * 2;
+      if (!initialNumberOfValues && !numberOfValues) {
+        return;
+      }
+
+      const newNumberOfValues =
+        values.length + (initialNumberOfValues ?? numberOfValues)!;
 
       dispatch(
         updateCategoryFacetNumberOfValues({
           facetId,
-          numberOfValues,
+          numberOfValues: newNumberOfValues,
         })
       );
 
