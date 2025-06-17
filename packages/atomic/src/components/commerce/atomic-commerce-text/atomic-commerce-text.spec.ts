@@ -110,30 +110,28 @@ describe('atomic-commerce-text', () => {
     expect(element.value).toBe('new-key');
   });
 
-  describe('#initialize', () => {
-    it('should not set error when value is provided', async () => {
-      const element = await renderComponent({value: 'test-key'});
+  it('should not set error when value is provided', async () => {
+    const element = await renderComponent({value: 'test-key'});
 
-      expect(element.error).toBeUndefined();
-    });
+    expect(element.error).toBeUndefined();
+  });
 
-    it('should set error when value is not provided', async () => {
-      const element = await renderComponent();
+  it('should set error when value is not provided', async () => {
+    const element = await renderComponent();
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toBe(
-        'The "value" attribute must be defined.'
-      );
-    });
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toBe(
+      'The "value" attribute must be defined.'
+    );
+  });
 
-    it('should set error when value is empty string', async () => {
-      const element = await renderComponent({value: ''});
+  it('should set error when value is empty string', async () => {
+    const element = await renderComponent({value: ''});
 
-      expect(element.error).toBeDefined();
-      expect(element.error.message).toBe(
-        'The "value" attribute must be defined.'
-      );
-    });
+    expect(element.error).toBeDefined();
+    expect(element.error.message).toBe(
+      'The "value" attribute must be defined.'
+    );
   });
 
   describe('when error is present', () => {
