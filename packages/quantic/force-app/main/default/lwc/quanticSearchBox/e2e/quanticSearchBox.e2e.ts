@@ -79,6 +79,8 @@ useCaseTestCases.forEach((useCase) => {
       test('should not expand the search box height when a very long query is typed', async ({
         searchBox,
       }) => {
+        const expectedAriaExpandedValue =
+          useCase.value === 'insight' ? null : '0';
         const searchBoxInput = searchBox.searchBoxInput;
         await searchBoxInput.fill(longQuery);
 
@@ -86,7 +88,9 @@ useCaseTestCases.forEach((useCase) => {
           (el) => (el as HTMLElement).offsetHeight
         );
         test.expect(searchBoxInput).toBeVisible();
-        test.expect(searchBoxInput.getAttribute('aria-expanded')).toBeTruthy();
+        test
+          .expect(await searchBoxInput.getAttribute('aria-expanded'))
+          .toBe(expectedAriaExpandedValue);
         test.expect(searchBoxInputHeight).toBe(defaultSearchBoxInputHeight);
       });
     });
