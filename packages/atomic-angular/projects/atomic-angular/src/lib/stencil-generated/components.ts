@@ -2937,32 +2937,6 @@ export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicC
 }
 
 @ProxyCmp({
-  inputs: [],
-  methods: ['initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-sort-dropdown') || customElements.define('atomic-commerce-sort-dropdown', LitAtomicCommerceSortDropdown);}
-})
-@Component({
-  selector: 'atomic-commerce-sort-dropdown',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: []
-})
-export class AtomicCommerceSortDropdown {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSortDropdown {
-
-}
-
-@ProxyCmp({
   inputs: ['value', 'count'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-text') || customElements.define('atomic-commerce-text', LitAtomicCommerceText);}
@@ -2985,6 +2959,32 @@ export class AtomicCommerceText {
 }
 
 export declare interface AtomicCommerceText extends LitAtomicCommerceText {
+
+}
+
+@ProxyCmp({
+  inputs: [],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-sort-dropdown') || customElements.define('atomic-commerce-sort-dropdown', LitAtomicCommerceSortDropdown);}
+})
+@Component({
+  selector: 'atomic-commerce-sort-dropdown',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceSortDropdown {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSortDropdown {
 
 }
 
@@ -3041,6 +3041,32 @@ export declare interface AtomicProductTemplate extends LitAtomicProductTemplate 
 }
 
 @ProxyCmp({
+  inputs: ['field', 'shouldHighlight', 'default', 'product'],
+  methods: ['initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
+})
+@Component({
+  selector: 'atomic-product-text',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['field', 'shouldHighlight', 'default', 'product']
+})
+export class AtomicProductText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductText extends LitAtomicProductText {
+
+}
+
+@ProxyCmp({
   inputs: ['element', 'error'],
   methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
@@ -3089,32 +3115,6 @@ export class AtomicIcon {
 }
 
 export declare interface AtomicIcon extends LitAtomicIcon {
-
-}
-
-@ProxyCmp({
-  inputs: ['field', 'shouldHighlight', 'default', 'product'],
-  methods: ['initBindings'],
-  defineCustomElementFn: () => {customElements.get('atomic-product-text') || customElements.define('atomic-product-text', LitAtomicProductText);}
-})
-@Component({
-  selector: 'atomic-product-text',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['field', 'shouldHighlight', 'default', 'product']
-})
-export class AtomicProductText {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicProductText extends LitAtomicProductText {
 
 }
 
