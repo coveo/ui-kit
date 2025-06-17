@@ -54,7 +54,7 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     ).toHaveAttribute('aria-label', 'Précédent');
   });
 
-  test.only('should support localization through the #updateLocale method', async ({
+  test('should support localization through the #updateLocale method', async ({
     commerceRecommendationInterface,
   }) => {
     await commerceRecommendationInterface.load({
