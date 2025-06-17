@@ -21,18 +21,18 @@ test.describe('quantic-standalone-search-box', () => {
       }) => {
         querySuggest.mockQuerySuggestResponse(['test', 'test 2']);
 
-        await expect(searchBox.getSearchInputElement(isTextArea)).toBeVisible();
+        const searchInputElement = searchBox.getSearchInputElement(isTextArea);
+        await expect(searchInputElement).toBeVisible();
         await expect(searchBox.searchButton).toBeVisible();
-
-        await expect(
-          searchBox.getSearchInputElement(isTextArea)
-        ).toHaveAttribute('placeholder', 'Search');
+        await expect(searchInputElement).toHaveAttribute(
+          'placeholder',
+          'Search'
+        );
         await expect(searchBox.searchBoxInput).toHaveAttribute(
           'is-initialized',
           'true'
         );
-
-        await searchBox.getSearchInputElement(isTextArea).focus();
+        await searchInputElement.focus();
 
         await expect(searchBox.suggestionsList).toBeVisible();
         await expect((await searchBox.suggestions.all()).length).toBe(2);
