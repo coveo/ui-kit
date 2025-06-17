@@ -1,16 +1,39 @@
-import {Canvas, ArgTypes, Meta, Title, Description} from '@storybook/blocks';
+import {
+  Canvas,
+  Markdown,
+  ArgTypes,
+  Meta,
+  Title,
+  Description,
+  Controls,
+  Primary,
+  Stories,
+  Subtitle,
+} from '@storybook/blocks';
 import * as AtomicCommerceRecommendationInterfaceStories from './atomic-commerce-recommendation-interface.new.stories';
-
-{/* Storybook provides a number of blocs to construct documentation pages */}
-{/* https://storybook.js.org/docs/writing-docs/doc-blocks#available-blocks */}
 
 <Meta of={AtomicCommerceRecommendationInterfaceStories} />
 
 <Title />
-<Description />
+<Subtitle>
+  <Description />
+</Subtitle>
 
-<Canvas of={AtomicCommerceRecommendationInterfaceStories.WithRecommendationList} />
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-recommendation-interface/atomic-commerce-recommendation-interface.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceRecommendationInterfaceStories.Default}
+/>
 
-## Properties
+## Reference
 
 <ArgTypes />
