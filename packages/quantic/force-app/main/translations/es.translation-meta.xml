@@ -689,7 +689,7 @@
     <name>quantic_GeneratedAnswerForYou</name>
   </customLabels>
   <customLabels>
-    <label>Esta respuesta no me fue útil</label>
+    <label>Esta respuesta no fue útil</label>
     <name>quantic_ThisAnswerWasNotHelpful</name>
   </customLabels>
   <customLabels>
