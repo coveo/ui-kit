@@ -55,9 +55,15 @@ export class FocusTargetController implements ReactiveController {
   private bindings: AnyBindings;
   private lastSearchId?: string;
   private element?: HTMLElement;
-  private onFocusCallback?: Function;
+  private internalOnFocusCallback?: Function;
+  private publicOnFocusCallbacks: Function[] = [];
   private doFocusAfterSearch = false;
   private doFocusOnNextTarget = false;
+  public registerFocusCallback: (callback: Function) => void = (
+    callback: Function
+  ) => {
+    this.publicOnFocusCallbacks.push(callback);
+  };
 
   constructor(
     private host: ReactiveControllerHost,
@@ -66,6 +72,13 @@ export class FocusTargetController implements ReactiveController {
     this.host = host;
     this.bindings = bindings;
     this.host.addController(this);
+  }
+
+  private clearFocusCallbacks() {
+    this.internalOnFocusCallback?.();
+    while (this.publicOnFocusCallbacks.length) {
+      this.publicOnFocusCallbacks.pop()?.();
+    }
   }
 
   public setTarget(el?: HTMLElement) {
@@ -83,7 +96,7 @@ export class FocusTargetController implements ReactiveController {
     // Not sure why this is needed; should be investigated after Lit Migration (KIT-4235)
     await defer();
     this.element?.focus();
-    this.onFocusCallback?.();
+    this.clearFocusCallbacks();
   }
 
   public focusAfterSearch() {
@@ -91,12 +104,12 @@ export class FocusTargetController implements ReactiveController {
       this.bindings.engine
     );
     this.doFocusAfterSearch = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => (this.internalOnFocusCallback = resolve));
   }
 
   public focusOnNextTarget() {
     this.doFocusOnNextTarget = true;
-    return new Promise((resolve) => (this.onFocusCallback = resolve));
+    return new Promise((resolve) => (this.internalOnFocusCallback = resolve));
   }
 
   public disableForCurrentSearch() {
@@ -120,7 +133,7 @@ export class FocusTargetController implements ReactiveController {
         // The focus seems to be flaky without deferring, especially on iOS; should be investigated after Lit Migration (KIT-4235)
         defer().then(() => {
           el.focus();
-          this.onFocusCallback?.();
+          this.clearFocusCallbacks();
         });
       }
     }
