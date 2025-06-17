@@ -368,7 +368,7 @@ describe('#CommonAtomicInterfaceHelper', () => {
   });
 
   describe('#onLanguageChange', () => {
-    it('should use the provided #newLanguage parameter when it is defined', async () => {
+    it('should use the provided newLanguage parameter when it is defined', async () => {
       const mockReadMethod = vi.fn();
       vi.mocked(Backend).mockImplementation(
         () =>
@@ -388,25 +388,22 @@ describe('#CommonAtomicInterfaceHelper', () => {
         'CoveoAtomic'
       );
 
-      // Call with a new language parameter
       helper.onLanguageChange('it');
 
       expect(mockReadMethod).toHaveBeenCalledExactlyOnceWith(
-        'fr', // Still uses the interface's language for loading translations
+        'it',
         'translation',
         expect.any(Function)
       );
 
-      // Execute the callback that would be called by Backend.read
       const callback = mockReadMethod.mock.calls[0][2];
       const mockData = {key: 'value'};
       callback(null, mockData);
 
-      // Should use the provided newLanguage parameter when changing the language
       expect(changeLanguageSpy).toHaveBeenCalledExactlyOnceWith('it');
     });
 
-    it('should use the atomic interface language when #newLanguage is not provided', async () => {
+    it('should use the atomic interface language when newLanguage is not provided', async () => {
       const mockReadMethod = vi.fn();
       vi.mocked(Backend).mockImplementation(
         () =>
