@@ -694,7 +694,7 @@ function clearAllFacetValues(state: CommerceFacetSetState) {
   });
 }
 
-export function handleCategoryFacetUpdateNumberOfValues(
+function handleCategoryFacetUpdateNumberOfValues(
   facetRequest: CategoryFacetRequest,
   numberOfValues: number
 ) {
