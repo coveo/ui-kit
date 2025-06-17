@@ -10,8 +10,8 @@ import {customElement, property, state} from 'lit/decorators.js';
 import '../../../common/item-text/item-text-fallback.js';
 import '../../../common/item-text/item-text-highlighted.js';
 import {getFieldValueCaption} from '../../../utils/field-utils';
-import '../../atomic-commerce-text/atomic-commerce-text';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import '../atomic-commerce-text/atomic-commerce-text';
 import {getStringValueFromProductOrNull} from '../product-template-component-utils/product-utils.js';
 
 /**

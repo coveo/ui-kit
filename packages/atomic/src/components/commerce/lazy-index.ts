@@ -31,9 +31,7 @@ export default {
   'atomic-product-template': async () =>
     await import('./atomic-product-template/atomic-product-template.js'),
   'atomic-product-text': async () =>
-    await import(
-      './atomic-product-text/atomic-product-text.js'
-    ),
+    await import('./atomic-product-text/atomic-product-text.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
