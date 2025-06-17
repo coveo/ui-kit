@@ -2923,7 +2923,7 @@ export declare interface AtomicCommercePager extends LitAtomicCommercePager {
 
 @ProxyCmp({
   inputs: ['i18n', 'engine', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath', 'language', 'analytics'],
-  methods: ['initializeWithEngine', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'getUpdateComplete'],
+  methods: ['initializeWithEngine', 'updateLocale', 'toggleAnalytics', 'updateIconAssetsPath', 'updateLanguage', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-interface') || customElements.define('atomic-commerce-recommendation-interface', LitAtomicCommerceRecommendationInterface);}
 })
 @Component({
