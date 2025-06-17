@@ -2985,6 +2985,32 @@ export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSor
 }
 
 @ProxyCmp({
+  inputs: ['value', 'count'],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-text') || customElements.define('atomic-commerce-text', LitAtomicCommerceText);}
+})
+@Component({
+  selector: 'atomic-commerce-text',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['value', 'count']
+})
+export class AtomicCommerceText {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceText extends LitAtomicCommerceText {
+
+}
+
+@ProxyCmp({
   inputs: ['stopPropagation', 'product', 'interactiveProduct', 'store', 'content', 'linkContent', 'display', 'density', 'imageSize', 'classes', 'loadingFlag', 'renderingFunction'],
   methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-product') || customElements.define('atomic-product', LitAtomicProduct);}
@@ -3083,12 +3109,6 @@ export class AtomicIcon {
     
   }
 }
-
-export declare interface AtomicIcon extends LitAtomicIcon {
-
-}
-
-import {AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon, AtomicProduct as LitAtomicProduct, AtomicProductTemplate as LitAtomicProductTemplate} from '@coveo/atomic/components';
 
 export declare interface AtomicIcon extends LitAtomicIcon {
 
