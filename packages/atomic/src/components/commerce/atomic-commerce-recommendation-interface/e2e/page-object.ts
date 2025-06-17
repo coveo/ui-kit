@@ -9,4 +9,12 @@ export class AtomicCommerceRecommendationInterfacePageObject extends BasePageObj
   interface() {
     return this.page.locator('atomic-commerce-recommendation-interface');
   }
+
+  recommendationList() {
+    return this.page.locator('atomic-commerce-recommendation-list');
+  }
+
+  previousButton() {
+    return this.page.locator('button[part="previous-button"]');
+  }
 }

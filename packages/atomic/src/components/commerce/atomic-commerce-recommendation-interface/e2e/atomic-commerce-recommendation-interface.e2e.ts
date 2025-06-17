@@ -1,25 +1,20 @@
-/* eslint-disable @cspell/spellchecker */
+import {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
 import {test, expect} from './fixture';
 
-// Happy path: default render
-
 test.describe('AtomicCommerceRecommendationInterface', () => {
-  test('should render the interface', async ({
-    commerceRecommendationInterface,
-  }) => {
+  test('should attach itself', async ({commerceRecommendationInterface}) => {
     await commerceRecommendationInterface.load({story: 'default'});
-    await expect(commerceRecommendationInterface.interface()).toBeVisible();
+    await expect(commerceRecommendationInterface.interface()).toBeAttached();
   });
 
-  test('should render the interface with a recommendation list', async ({
+  test('should render its children', async ({
     commerceRecommendationInterface,
-    page,
   }) => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
     await expect(
-      page.locator('atomic-commerce-recommendation-list')
+      commerceRecommendationInterface.recommendationList()
     ).toBeVisible();
   });
 
@@ -30,20 +25,56 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
-    const axe = await makeAxeBuilder();
-    const results = await axe.analyze();
-    expect(results.violations).toEqual([]);
+    await commerceRecommendationInterface
+      .recommendationList()
+      .waitFor({state: 'visible'});
+
+    const accessibilityResults = await makeAxeBuilder().analyze();
+    expect(accessibilityResults.violations).toEqual([]);
   });
 
-  test('should support localization (French)', async ({
+  test.only('should support localization through language parameter', async ({
     commerceRecommendationInterface,
-    page,
   }) => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
       args: {language: 'fr'},
     });
-    // Example: check for a French label or heading. Adjust selector as needed for your UI.
-    await expect(page.locator('text=Produits recommandés')).toBeVisible();
+
+    await commerceRecommendationInterface
+      .recommendationList()
+      .waitFor({state: 'visible'});
+
+    await commerceRecommendationInterface.previousButton().waitFor();
+
+    await expect(
+      commerceRecommendationInterface.previousButton()
+      // eslint-disable-next-line @cspell/spellchecker
+    ).toHaveAttribute('aria-label', 'Précédent');
+  });
+
+  test.only('should support localization through the #updateLocale method', async ({
+    commerceRecommendationInterface,
+  }) => {
+    await commerceRecommendationInterface.load({
+      story: 'with-recommendation-list',
+    });
+
+    await commerceRecommendationInterface
+      .recommendationList()
+      .waitFor({state: 'visible'});
+
+    commerceRecommendationInterface
+      .interface()
+      .evaluate((el: AtomicCommerceRecommendationInterface) =>
+        el.updateLocale('fr', 'CA', 'CAD')
+      );
+
+    await commerceRecommendationInterface.previousButton().waitFor();
+
+    await expect(
+      commerceRecommendationInterface.previousButton()
+      // eslint-disable-next-line @cspell/spellchecker
+    ).toHaveAttribute('aria-label', 'Précédent');
   });
 });
