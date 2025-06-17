@@ -46,7 +46,7 @@ import {
   SearchBoxSuggestionsEvent,
 } from '../../common/suggestions/suggestions-common';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
+import {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 import styles from './atomic-commerce-search-box.tw.css';
 
 /**
