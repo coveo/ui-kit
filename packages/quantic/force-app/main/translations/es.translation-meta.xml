@@ -301,7 +301,7 @@
     <name>quantic_PastDay</name>
   </customLabels>
   <customLabels>
-    <label>{{0}} últimas días</label>
+    <label>{{0}} últimos días</label>
     <name>quantic_PastDay_plural</name>
   </customLabels>
   <customLabels>
