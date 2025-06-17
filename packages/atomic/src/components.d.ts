@@ -453,12 +453,6 @@ export namespace Components {
     interface AtomicCommerceQueryError {
     }
     /**
-     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     * @alpha 
-     */
-    interface AtomicCommerceQuerySummary {
-    }
-    /**
      * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
      */
     interface AtomicCommerceRecommendationInterface {
@@ -3993,16 +3987,6 @@ declare global {
         new (): HTMLAtomicCommerceQueryErrorElement;
     };
     /**
-     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     * @alpha 
-     */
-    interface HTMLAtomicCommerceQuerySummaryElement extends Components.AtomicCommerceQuerySummary, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceQuerySummaryElement: {
-        prototype: HTMLAtomicCommerceQuerySummaryElement;
-        new (): HTMLAtomicCommerceQuerySummaryElement;
-    };
-    /**
      * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
      */
     interface HTMLAtomicCommerceRecommendationInterfaceElement extends Components.AtomicCommerceRecommendationInterface, HTMLStencilElement {
@@ -5875,7 +5859,6 @@ declare global {
         "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
-        "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
         "atomic-commerce-recommendation-interface": HTMLAtomicCommerceRecommendationInterfaceElement;
         "atomic-commerce-recommendation-list": HTMLAtomicCommerceRecommendationListElement;
         "atomic-commerce-refine-modal": HTMLAtomicCommerceRefineModalElement;
@@ -6429,12 +6412,6 @@ declare namespace LocalJSX {
      * @alpha 
      */
     interface AtomicCommerceQueryError {
-    }
-    /**
-     * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-     * @alpha 
-     */
-    interface AtomicCommerceQuerySummary {
     }
     /**
      * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
@@ -9559,7 +9536,6 @@ declare namespace LocalJSX {
         "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
-        "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
         "atomic-commerce-recommendation-interface": AtomicCommerceRecommendationInterface;
         "atomic-commerce-recommendation-list": AtomicCommerceRecommendationList;
         "atomic-commerce-refine-modal": AtomicCommerceRefineModal;
@@ -9837,11 +9813,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-query-error": LocalJSX.AtomicCommerceQueryError & JSXBase.HTMLAttributes<HTMLAtomicCommerceQueryErrorElement>;
-            /**
-             * The `atomic-commerce-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
-             * @alpha 
-             */
-            "atomic-commerce-query-summary": LocalJSX.AtomicCommerceQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicCommerceQuerySummaryElement>;
             /**
              * @alpha The `atomic-commerce-recommendation-interface` component is meant to be used as the parent of one or more `atomic-commerce-recommendation-list` components. It handles the headless search engine and localization configurations.
              */
