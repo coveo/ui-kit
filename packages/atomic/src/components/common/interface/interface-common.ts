@@ -125,8 +125,9 @@ export class CommonAtomicInterfaceHelper<Engine extends AnyEngineType> {
     engine.enableAnalytics();
   }
 
-  public onLanguageChange() {
-    const {i18n, language} = this.atomicInterface;
+  public onLanguageChange(newLanguage?: string) {
+    const language = newLanguage ?? this.atomicInterface.language;
+    const {i18n} = this.atomicInterface;
 
     loadDayjsLocale(this.language);
     new Backend(i18n.services, i18nBackendOptions(this.atomicInterface)).read(
