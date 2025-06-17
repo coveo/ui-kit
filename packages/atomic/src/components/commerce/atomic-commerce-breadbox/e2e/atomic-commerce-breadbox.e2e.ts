@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Color:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Brand:${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
