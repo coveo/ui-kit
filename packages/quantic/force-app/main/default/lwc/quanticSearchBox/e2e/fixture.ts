@@ -16,7 +16,7 @@ interface SearchBoxOptions {
   placeholder: string;
   withoutSubmitButton: boolean;
   numberOfSuggestions: number;
-  textArea: boolean;
+  textarea: boolean;
   disableRecentQueries: boolean;
   keepFiltersOnSearch: boolean;
 }
@@ -35,49 +35,50 @@ type QuanticSearchBoxE2EInsightFixtures = QuanticSearchBoxE2ESearchFixtures & {
   insightSetup: InsightSetupObject;
 };
 
-export const testSearch = quanticBase.extend<QuanticSearchBoxE2ESearchFixtures>({
-  options: {},
-  pageUrl: pageUrl,
-  urlHash: '',
-  analyticsMode: AnalyticsModeEnum.legacy,
-  search: async ({page}, use) => {
-    await use(new SearchObject(page, searchRequestRegex));
-  },
-  searchBox: async (
-    {page, options, configuration, search, urlHash, analytics},
-    use
-  ) => {
-    await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
-    const searchResponsePromise = search.waitForSearchResponse();
-    await configuration.configure(options);
-    await searchResponsePromise;
+export const testSearch = quanticBase.extend<QuanticSearchBoxE2ESearchFixtures>(
+  {
+    pageUrl: pageUrl,
+    options: {},
+    urlHash: '',
+    analyticsMode: AnalyticsModeEnum.legacy,
+    search: async ({page}, use) => {
+      await use(new SearchObject(page, searchRequestRegex));
+    },
+    searchBox: async (
+      {page, options, configuration, search, urlHash, analytics},
+      use
+    ) => {
+      await page.goto(urlHash ? `${pageUrl}#${urlHash}` : pageUrl);
 
-    await use(new SearchBoxObject(page, analytics));
-  },
-});
+      configuration.configure(options);
+      await search.waitForSearchResponse();
 
-export const testInsight = quanticBase.extend<QuanticSearchBoxE2EInsightFixtures>({
-  pageUrl: pageUrl,
-  options: {},
-  analyticsMode: AnalyticsModeEnum.legacy,
-  search: async ({page}, use) => {
-    await use(new SearchObject(page, insightSearchRequestRegex));
-  },
-  insightSetup: async ({page}, use) => {
-    await use(new InsightSetupObject(page));
-  },
-  searchBox: async (
-    {page, options, search, configuration, insightSetup, analytics},
-    use
-  ) => {
-    await page.goto(pageUrl);
-    configuration.configure({...options, useCase: useCaseEnum.insight});
-    await insightSetup.waitForInsightInterfaceInitialization();
-    const searchResponsePromise = search.waitForSearchResponse();
-    await search.performSearch();
-    await searchResponsePromise;
-    await use(new SearchBoxObject(page, analytics));
-  },
-});
+      await use(new SearchBoxObject(page, analytics));
+    },
+  }
+);
+
+export const testInsight =
+  quanticBase.extend<QuanticSearchBoxE2EInsightFixtures>({
+    pageUrl: pageUrl,
+    options: {},
+    analyticsMode: AnalyticsModeEnum.legacy,
+    search: async ({page}, use) => {
+      await use(new SearchObject(page, insightSearchRequestRegex));
+    },
+    insightSetup: async ({page}, use) => {
+      await use(new InsightSetupObject(page));
+    },
+    searchBox: async (
+      {page, options, configuration, insightSetup, analytics},
+      use
+    ) => {
+      await page.goto(pageUrl);
+
+      configuration.configure({...options, useCase: useCaseEnum.insight});
+      await insightSetup.waitForInsightInterfaceInitialization();
+      await use(new SearchBoxObject(page, analytics));
+    },
+  });
 
 export {expect} from '@playwright/test';
