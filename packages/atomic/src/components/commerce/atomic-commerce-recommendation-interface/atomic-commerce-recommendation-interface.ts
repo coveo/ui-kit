@@ -7,7 +7,9 @@ import {
   CommerceEngine,
   CommerceEngineConfiguration,
   Context,
+  loadContextActions,
 } from '@coveo/headless/commerce';
+import type {CurrencyCodeISO4217} from '@coveo/relay-event-types';
 import {provide} from '@lit/context';
 import i18next, {i18n} from 'i18next';
 import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
@@ -95,6 +97,11 @@ export class AtomicCommerceRecommendationInterface
    * The commerce interface language.
    *
    * Will default to the value set in the Headless engine context if not provided.
+   *
+   * @deprecated - This property will be removed in the next major version of
+   * Atomic (v4). Rather than using this property, set the initial language
+   * through the engine configuration when calling `initializeWithEngine`, and
+   * update the language as needed using the `updateLocale` method.
    */
   @property({type: String, reflect: true}) language?: string;
 
@@ -144,6 +151,51 @@ export class AtomicCommerceRecommendationInterface
     return this.internalInitialization(() => (this.engine = engine));
   }
 
+  /**
+   * Updates the locale settings for the commerce recommendation interface and
+   * headless commerce engine. Only the provided parameters will be updated.
+   *
+   * Calling this method affects the localization of the interface as well as
+   * the catalog configuration being used by the Commerce API. If the resulting
+   * language-country-currency combination matches no existing catalog
+   * configuration in your Coveo organization, requests made through the
+   * commerce engine will start failing.
+   *
+   * @param language - (Optional) The new language code. Use a valid IETF tag.
+   * @param country - (Optional) The new country code. Use a valid ISO-3166-1 code.
+   * @param currency - (Optional) The new currency code. Use a valid ISO-4217 code.
+   *
+   * @example
+   * ```typescript
+   * recommendationInterface.updateLocale('fr', 'CA', 'CAD');
+   * ```
+   */
+  public updateLocale(
+    language?: string,
+    country?: string,
+    currency?: CurrencyCodeISO4217
+  ): void {
+    if (
+      !this.commonInterfaceHelper.engineIsCreated(this.engine) ||
+      !this.context
+    ) {
+      return;
+    }
+
+    language && this.commonInterfaceHelper.onLanguageChange(language);
+
+    const {setContext} = loadContextActions(this.engine);
+
+    this.engine.dispatch(
+      setContext({
+        ...this.context.state,
+        ...(language && {language}),
+        ...(country && {country}),
+        ...(currency && {currency}),
+      })
+    );
+  }
+
   @watch('analytics')
   public toggleAnalytics() {
     this.commonInterfaceHelper.onAnalyticsChange();
@@ -163,7 +215,13 @@ export class AtomicCommerceRecommendationInterface
     ) {
       return;
     }
+
+    this.engine.logger.warn(
+      'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+    );
+
     this.context.setLanguage(this.language);
+
     return this.commonInterfaceHelper.onLanguageChange();
   }
 
@@ -211,7 +269,7 @@ export class AtomicCommerceRecommendationInterface
     ]);
     this.initAriaLive();
     this.initContext();
-    this.updateLanguage();
+    this.language && this.updateLanguage();
     this.bindings = this.getBindings();
     markParentAsReady(this);
     this.initLanguage();
@@ -258,7 +316,7 @@ export class AtomicCommerceRecommendationInterface
 
   private initLanguage() {
     if (!this.language) {
-      this.language = this.context.state.language;
+      this.commonInterfaceHelper.onLanguageChange(this.context.state.language);
     }
   }
 }

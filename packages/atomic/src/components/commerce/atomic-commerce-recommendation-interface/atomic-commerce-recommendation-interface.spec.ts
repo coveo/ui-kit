@@ -38,6 +38,8 @@ export class TestElement
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
+  public initialize() {}
+
   public render() {
     return html`test-element`;
   }
@@ -55,7 +57,7 @@ describe('atomic-commerce-recommendation-interface', () => {
   const setupElement = async ({
     analytics,
     iconAssetsPath,
-    language,
+    language, // TODO - remove this in v4
     languageAssetsPath,
     scrollContainer,
   }: {
@@ -336,7 +338,11 @@ describe('atomic-commerce-recommendation-interface', () => {
       expect(markParentAsReadySpy).toHaveBeenCalledExactlyOnceWith(element);
     });
 
-    it('should set #language to #context.state.language when #language is undefined', async () => {
+    it('should call #CommonAtomicInteraceHelper.onLanguageChange with #context.state.language when #language is undefined', async () => {
+      const onLanguageChangeSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onLanguageChange'
+      );
       const buildContextMock = vi.mocked(headless.buildContext);
       buildContextMock.mockReturnValue(
         buildFakeContext({
@@ -346,18 +352,22 @@ describe('atomic-commerce-recommendation-interface', () => {
       );
       const element = await setupElement();
       const engine = buildFakeCommerceEngine({});
-
-      expect(element.language).toBeUndefined();
 
       await element.initializeWithEngine(engine);
 
-      expect(element.language).toBe('de');
+      expect(element.language).toBeUndefined();
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith('de');
     });
 
-    it('should not set #language to #context.state.language when #language is defined', async () => {
+    // TODO - remove this in v4
+    it('should call #CommonInterfaceHelper.onLanguageChange with no argument when #language is defined', async () => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
       vi.spyOn(console, 'error').mockImplementation(() => {});
 
+      const onLanguageChangeSpy = vi.spyOn(
+        CommonAtomicInterfaceHelper.prototype,
+        'onLanguageChange'
+      );
       const buildContextMock = vi.mocked(headless.buildContext);
       buildContextMock.mockReturnValue(
         buildFakeContext({
@@ -365,22 +375,20 @@ describe('atomic-commerce-recommendation-interface', () => {
           implementation: {},
         })
       );
-      const element = await setupElement();
+      const element = await setupElement({language: 'fr'});
       const engine = buildFakeCommerceEngine({});
 
-      expect(element.language).toBeUndefined();
-
-      element.language = 'fr';
       await element.updateComplete;
       await element.initializeWithEngine(engine);
 
       expect(element.language).toBe('fr');
+      expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
     });
   });
 
   // #toggleAnalytics
 
-  it('should call CommonInterfaceHelper.onAnalyticsChange when the #analytics property changes', async () => {
+  it('should call #CommonInterfaceHelper.onAnalyticsChange when the #analytics property changes', async () => {
     // We're updating attributes before calling #initializeWithEngine; this would console.error.
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -417,8 +425,8 @@ describe('atomic-commerce-recommendation-interface', () => {
     expect(element.store.state.iconAssetsPath).toBe('/new/icon/assets/path');
   });
 
+  // TODO - remove this in v4
   // #updateLanguage
-
   describe('when the #language property changes', () => {
     beforeEach(() => {
       // We're updating attributes before calling #initializeWithEngine; this would console.error.
@@ -454,19 +462,20 @@ describe('atomic-commerce-recommendation-interface', () => {
     });
 
     describe('when the engine has been created & #language is defined & #context is defined', () => {
-      it('should call #context.setLanguage with the new language', async () => {
-        const element = await setupElement({language: 'en'});
-        const engine = buildFakeCommerceEngine({});
+      it('should log a deprecation warning', async () => {
+        const element = await setupElement();
+        const engine = buildFakeCommerceEngine();
         await element.initializeWithEngine(engine);
-        const setLanguageSpy = vi.spyOn(element.context, 'setLanguage');
 
         element.language = 'fr';
         await element.updateComplete;
 
-        expect(setLanguageSpy).toHaveBeenCalledExactlyOnceWith('fr');
+        expect(engine.logger.warn).toHaveBeenCalledExactlyOnceWith(
+          'The `language` property will be removed in the next major version of Atomic (v4). Rather than using this property, set the initial language through the engine configuration when calling `initializeWithEngine`, and update the language as needed using the `updateLocale` method.'
+        );
       });
 
-      it('should call CommonInterfaceHelper.onLanguageChange', async () => {
+      it('should call #CommonInterfaceHelper.onLanguageChange with no argument', async () => {
         const element = await setupElement({language: 'en'});
         const engine = buildFakeCommerceEngine({});
         await element.initializeWithEngine(engine);
@@ -478,7 +487,7 @@ describe('atomic-commerce-recommendation-interface', () => {
         element.language = 'fr';
         await element.updateComplete;
 
-        expect(onLanguageChangeSpy).toHaveBeenCalledOnce();
+        expect(onLanguageChangeSpy).toHaveBeenCalledExactlyOnceWith();
       });
     });
   });
