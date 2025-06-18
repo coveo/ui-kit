@@ -1,9 +1,4 @@
-@import '../../../global/global.pcss';
-@import '../../common/atomic-rating/atomic-rating.pcss';
-
-.max-w-snippet {
-  max-width: 30ch;
-}
+@reference '../../../utils/tailwind.global.tw.css';
 
 [part='breadcrumb-label'].excluded,
 [part='breadcrumb-value'].excluded {
