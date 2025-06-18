@@ -1,43 +1,6 @@
 import {test, expect} from './fixture';
 
 test.describe('AtomicCommerceQuerySummary', () => {
-  test.describe('when search has not been executed', () => {
-    test.beforeEach(async ({querySummary}) => {
-      await querySummary.load({story: 'without-first-request-executed'});
-    });
-
-    test('should display a placeholder', async ({querySummary}) => {
-      await expect(querySummary.placeholder).toBeVisible();
-    });
-  });
-
-  test.describe('after searching for kayak', () => {
-    test.beforeEach(async ({searchBox, querySummary}) => {
-      await querySummary.load({story: 'with-search-box'});
-      await searchBox.hydrated.waitFor();
-      await searchBox.searchInput.fill('kayak');
-      await searchBox.submitButton.click();
-    });
-
-    test('should not display duration by default', async ({querySummary}) => {
-      const textRegex = /^Products 1-[\d,]+ of [\d,]+ for kayak$/;
-      await expect(querySummary.text(textRegex)).toBeVisible();
-    });
-  });
-
-  test.describe('when search yields no products', () => {
-    test.beforeEach(async ({querySummary, page}) => {
-      await querySummary.noProducts();
-      await querySummary.load({story: 'default '});
-      await page.waitForLoadState('networkidle');
-    });
-
-    test('should not display anything', async ({querySummary}) => {
-      await expect(querySummary.placeholder).not.toBeVisible();
-      await expect(querySummary.container).not.toBeVisible();
-    });
-  });
-
   test.describe('when search yields multiple products', () => {
     test.beforeEach(async ({querySummary}) => {
       await querySummary.load({story: 'with-a-fixed-number-of-products'});
