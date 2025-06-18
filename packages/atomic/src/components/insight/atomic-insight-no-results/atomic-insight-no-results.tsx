@@ -14,9 +14,9 @@ import {
 } from '../../../utils/initialization-utils';
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {NoItemsContainer} from '../../common/no-items/container';
-import {NoItemsGuard} from '../../common/no-items/guard';
 import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
+import {NoItemsGuard} from '../../common/no-items/stencil-guard';
 import {SearchTips} from '../../common/no-items/tips';
 import {InsightBindings} from '../atomic-insight-interface/atomic-insight-interface';
 
