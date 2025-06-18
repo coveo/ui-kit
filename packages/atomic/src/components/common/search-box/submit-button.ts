@@ -8,11 +8,10 @@ interface Props {
   i18n: i18n;
   disabled: boolean;
   onClick: () => void;
-  title: string;
 }
 
 export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
-  const {i18n, disabled, onClick, title} = props;
+  const {i18n, disabled, onClick} = props;
   return html`<div
     part="submit-button-wrapper"
     class="mr-2 flex items-center justify-center py-2"
@@ -27,7 +26,6 @@ export const renderSubmitButton: FunctionalComponent<Props> = ({props}) => {
           onClick?.();
         },
         disabled,
-        title,
       },
     })(
       html`<atomic-icon

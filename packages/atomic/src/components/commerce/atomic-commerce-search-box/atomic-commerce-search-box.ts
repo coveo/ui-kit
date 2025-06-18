@@ -726,7 +726,6 @@ export class AtomicCommerceSearchBox
               this.searchBox.submit();
               this.suggestionManager.clearSuggestions();
             },
-            title: this.textAreaLabel,
           },
         })}
         ${this.renderSuggestions()}`
