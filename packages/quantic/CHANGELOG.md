@@ -1,3 +1,19 @@
+## 3.24.0 (2025-06-18)
+
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+- feat(quantic): added attach results feature to the example insight panel (#5432) ([1986dd3](https://github.com/coveo/ui-kit/commits/1986dd3)), closes [#5432](https://github.com/coveo/ui-kit/issues/5432)
+- test(quantic): added unit tests for refine toggle component (#5397) ([cf02a08](https://github.com/coveo/ui-kit/commits/cf02a08)), closes [#5397](https://github.com/coveo/ui-kit/issues/5397)
+- test(quantic): Playwright migration for quanticRecentResultsList component (#5381) ([07052a0](https://github.com/coveo/ui-kit/commits/07052a0)), closes [#5381](https://github.com/coveo/ui-kit/issues/5381)
+
+## 3.23.0 (2025-06-11)
+
+- test(quantic): Tests for QuanticSearchBoxSuggestionsList (#5425) ([ea7abaf](https://github.com/coveo/ui-kit/commits/ea7abaf)), closes [#5425](https://github.com/coveo/ui-kit/issues/5425)
+- fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
+- fix(deps): update all dependencies j:kit-282 (#5437) ([0c87df0](https://github.com/coveo/ui-kit/commits/0c87df0)), closes [#5437](https://github.com/coveo/ui-kit/issues/5437)
+- chore(headless): stop bundling ESM headless for NPM (#5346) ([7de844f](https://github.com/coveo/ui-kit/commits/7de844f)), closes [#5346](https://github.com/coveo/ui-kit/issues/5346)
+- chore(quantic): await playwright floating promises (#5407) ([66ce04d](https://github.com/coveo/ui-kit/commits/66ce04d)), closes [#5407](https://github.com/coveo/ui-kit/issues/5407)
+- feat(quantic): added the send as email result action to the Example Insight Panel (#5371) ([8b318b7](https://github.com/coveo/ui-kit/commits/8b318b7)), closes [#5371](https://github.com/coveo/ui-kit/issues/5371)
+
 ## <small>3.22.2 (2025-06-04)</small>
 
 - [Version Bump][skip ci]: ui-kit publish ([4c36602](https://github.com/coveo/ui-kit/commits/4c36602))

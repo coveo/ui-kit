@@ -12,7 +12,8 @@ export {MissingInterfaceParentError} from './utils/initialization-utils';
 export {PopoverChildFacet} from './components/common/facets/popover/popover-type';
 
 export {resultContext} from './components/search/result-template-components/result-template-decorators';
-export {productContext} from './components/commerce/product-template-components/product-template-decorators';
+export {fetchProductContext} from './components/commerce/product-template-components/product-template-decorators';
+export {productContext} from './components/commerce/product-template-components/stencil-product-template-decorators';
 export {SelectChildProductEventArgs} from './components/commerce/product-template-components/atomic-product-children/select-child-product-event';
 export {
   dispatchSearchBoxSuggestionsEvent,

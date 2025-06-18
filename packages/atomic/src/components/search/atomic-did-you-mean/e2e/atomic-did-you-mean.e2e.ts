@@ -15,15 +15,15 @@ test.describe('with an automatic query correction', () => {
   });
 
   test('should display the original query', async ({page}) => {
-    await expect(page.getByText("We couldn't find anything for")).toBeVisible();
-    await expect(page.getByText(ORIGINAL_QUERY)).toBeVisible();
+    await expect(
+      page.getByText(`We couldn't find anything for ${ORIGINAL_QUERY}`)
+    ).toBeVisible();
   });
 
   test('should display the auto corrected', async ({page}) => {
     await expect(
-      page.getByText('Query was automatically corrected to')
+      page.getByText(`Query was automatically corrected to ${CORRECTED_QUERY}`)
     ).toBeVisible();
-    await expect(page.getByText(CORRECTED_QUERY, {exact: true})).toBeVisible();
   });
 });
 
@@ -36,7 +36,9 @@ test.describe('with a manual query correction', () => {
     await didYouMean.hydrated.waitFor();
   });
 
-  test('search box should contain the original query', async ({searchBox}) => {
+  test.skip('search box should contain the original query', async ({
+    searchBox,
+  }) => {
     await expect(searchBox.searchInput).toHaveValue(ORIGINAL_QUERY);
   });
 

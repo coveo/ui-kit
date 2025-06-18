@@ -35,9 +35,23 @@ export default defineConfig({
     port: port,
   },
   resolve: {
-    alias: {
-      '@/': path.resolve(import.meta.dirname, './') + '/',
-    },
+    alias: [
+      {find: '@/', replacement: path.resolve(import.meta.dirname, './') + '/'},
+      {
+        find: /^@coveo\/headless\/(.*)$/,
+        replacement: path.resolve(
+          import.meta.dirname,
+          '../headless/cdn/$1/headless.esm.js'
+        ),
+      },
+      {
+        find: '@coveo/headless',
+        replacement: path.resolve(
+          import.meta.dirname,
+          '../headless/cdn/headless.esm.js'
+        ),
+      },
+    ],
   },
   plugins: [
     {

@@ -1,9 +1,9 @@
-import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options.js';
 import {AutomaticFacetRequest} from '../../features/facets/automatic-facet-set/interfaces/request.js';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request.js';
 import {GeneratedContentFormat} from '../../features/generated-answer/generated-response-format.js';
 import {URLPath} from '../../utils/url-utils.js';
+import {HistoryElement} from '../analytics/coveo.analytics/history-store.js';
 import {
   HTTPContentType,
   HttpMethods,
@@ -104,7 +104,7 @@ export interface MaximumAgeParam {
 }
 
 export interface ActionsHistoryParam {
-  actionsHistory?: history.HistoryElement[];
+  actionsHistory?: HistoryElement[];
 }
 
 export interface TimezoneParam {

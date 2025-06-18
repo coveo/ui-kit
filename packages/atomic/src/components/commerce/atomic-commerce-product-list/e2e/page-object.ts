@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class ProductListObject extends BasePageObject<'atomic-commerce-product-list'> {
+export class ProductListObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-product-list');
   }
@@ -10,8 +10,16 @@ export class ProductListObject extends BasePageObject<'atomic-commerce-product-l
     return this.page.locator('atomic-result-placeholder');
   }
 
+  get tablePlaceholders() {
+    return this.page.locator('atomic-result-table-placeholder');
+  }
+
   get products() {
     return this.page.locator('atomic-product');
+  }
+
+  get excerpts() {
+    return this.page.locator('atomic-product-excerpt');
   }
 
   async withNoProducts() {

@@ -17,10 +17,12 @@ describe('#renderBreadcrumbShowLess', () => {
       html`${renderBreadcrumbShowMore({
         props: {
           i18n,
-          setRef: vi.fn(),
+          refCallback: vi.fn(),
           onShowMore: vi.fn(),
           isCollapsed: true,
           numberOfCollapsedBreadcrumbs: 2,
+          value: '+ 2',
+          ariaLabel: 'Show more filters',
           ...overrides,
         },
       })}`
@@ -43,7 +45,7 @@ describe('#renderBreadcrumbShowLess', () => {
 
   it('should have the correct text', async () => {
     const {button} = await renderComponent();
-    expect(button).toHaveTextContent('Show 2 more filters');
+    expect(button).toHaveTextContent('+ 2');
   });
 
   it('should call onShowMore when clicked', async () => {
@@ -60,9 +62,14 @@ describe('#renderBreadcrumbShowLess', () => {
     });
   });
 
-  it('should set the ref on the button', async () => {
-    const setRef = vi.fn();
-    const {button} = await renderComponent({setRef});
-    expect(setRef).toHaveBeenCalledWith(button);
+  it('should call the refCallback on the button', async () => {
+    const refCallback = vi.fn();
+    const {button} = await renderComponent({refCallback});
+    expect(refCallback).toHaveBeenCalledWith(button);
+  });
+
+  it('should have the correct aria-label', async () => {
+    const {button} = await renderComponent();
+    expect(button).toHaveAttribute('aria-label', 'Show more filters');
   });
 });

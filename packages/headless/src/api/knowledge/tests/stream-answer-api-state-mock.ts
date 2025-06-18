@@ -87,6 +87,7 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       score: 0,
     },
     extendedResults: {},
+    searchAction: {actionCause: 'searchboxSubmit'},
   },
   fields: {
     fieldsToInclude: [
@@ -203,6 +204,11 @@ export const streamAnswerAPIStateMock: StateNeededByAnswerAPI = {
       aq: '',
       lq: '',
       dq: '',
+    },
+  },
+  context: {
+    contextValues: {
+      testKey: 'testValue',
     },
   },
   querySuggest: {},
@@ -1205,12 +1211,24 @@ export const streamAnswerAPIStateMockWithStaticFiltersAndTabExpressionWithEmptyC
     },
   };
 
+export const streamAnswerAPIStateMockWithoutSearchAction: StateNeededByAnswerAPI =
+  {
+    ...streamAnswerAPIStateMock,
+    search: {
+      ...streamAnswerAPIStateMock.search!,
+      searchAction: undefined,
+    },
+  };
+
 export const expectedStreamAnswerAPIParam = {
   q: 'what is the hardest wood',
   aq: 'aq-test-query',
   cq: 'cq-test-query',
   dq: 'dq-test-query',
   lq: 'lq-test-query',
+  context: {
+    testKey: 'testValue',
+  },
   pipelineRuleParameters: {
     mlGenerativeQuestionAnswering: {
       responseFormat: {
@@ -1547,6 +1565,7 @@ export const expectedStreamAnswerAPIParam = {
   firstResult: 0,
   tab: 'default',
   analytics: {
+    actionCause: 'searchboxSubmit',
     capture: false,
     clientId: '',
     clientTimestamp: '2020-01-01T00:00:00.000Z',
@@ -1583,3 +1602,11 @@ export const expectedStreamAnswerAPIParamWithStaticFiltersAndTabExpressionWithou
     ...expectedStreamAnswerAPIParam,
     cq: '@fileType=html AND (@filetype=="youtubevideo" OR @filetype=="dropbox") AND @filetype=="tsx"',
   };
+
+export const expectedStreamAnswerAPIParamWithoutSearchAction = {
+  ...expectedStreamAnswerAPIParam,
+  analytics: {
+    ...expectedStreamAnswerAPIParam.analytics,
+    actionCause: '',
+  },
+};

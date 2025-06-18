@@ -5,6 +5,7 @@ import recentResultsLabel from '@salesforce/label/c.quantic_RecentResults';
 import {
   registerComponentForInit,
   initializeWithHeadless,
+  getHeadlessBundle,
 } from 'c/quanticHeadlessLoader';
 import {
   I18nUtils,
@@ -106,7 +107,8 @@ export default class QuanticRecentResultsList extends LightningElement {
    * @param {SearchEngine} engine
    */
   initialize = (engine) => {
-    this.recentResultsList = CoveoHeadless.buildRecentResultsList(engine, {
+    this.headless = getHeadlessBundle(this.engineId);
+    this.recentResultsList = this.headless.buildRecentResultsList(engine, {
       initialState: {
         results: getItemFromLocalStorage(this.localStorageKey) ?? [],
       },

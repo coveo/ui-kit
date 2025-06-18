@@ -1,5 +1,4 @@
 import {CommerceEngineOptions} from '@coveo/headless/commerce';
-import {CustomEnvironment} from '@coveo/relay';
 
 export interface AppProxyConfig {
   appProxyUrl?: string;
@@ -13,14 +12,6 @@ export interface AppProxyResponse {
   trackingId: string;
 }
 
-export type ShopifyCustomEnvironment = Omit<
-  CustomEnvironment,
-  'storage' | 'generateUUID'
->;
-
-export function getShopifyCustomEnvironment(
-  environment: CustomEnvironment
-): ShopifyCustomEnvironment {
-  const {storage, generateUUID, ...rest} = environment;
-  return rest;
-}
+export type CoveoShopifyCustomEvent = AppProxyResponse & {
+  clientId: string;
+};

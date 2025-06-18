@@ -38,7 +38,7 @@ useCaseTestCases.forEach((useCase) => {
             fieldsToInclude: expect.arrayContaining(expectedFieldsToInclude),
           })
         );
-        expect(resultList.resultList).toBeVisible();
+        await expect(resultList.resultList).toBeVisible();
       });
     });
 
