@@ -187,7 +187,7 @@ export class AtomicCommerceFacet
               onChange: (value: string) => {
                 if (value === '') {
                   this.facet.facetSearch.clear();
-                  return nothing;
+                  return;
                 }
                 this.facet.facetSearch.updateText(value);
                 this.facet.facetSearch.search();
