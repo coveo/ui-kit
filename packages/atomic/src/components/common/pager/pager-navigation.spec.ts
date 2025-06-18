@@ -2,7 +2,7 @@ import enTranslations from '@/dist/atomic/lang/en.json';
 import i18next, {i18n as I18n} from 'i18next';
 import {html, render} from 'lit';
 import {describe, test, beforeAll, expect} from 'vitest';
-import {pagerNavigation} from './pager-navigation';
+import {renderPagerNavigation} from './pager-navigation';
 
 describe('pagerNavigation', () => {
   let container: HTMLElement;
@@ -22,7 +22,7 @@ describe('pagerNavigation', () => {
     document.body.appendChild(container);
 
     render(
-      html`${pagerNavigation({props: {i18n}})(html`children`)}`,
+      html`${renderPagerNavigation({props: {i18n}})(html`children`)}`,
       container
     );
   });

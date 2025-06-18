@@ -5,10 +5,10 @@ import {describe, test, beforeEach, afterEach, expect} from 'vitest';
 import ArrowLeftIcon from '../../../images/arrow-left-rounded.svg';
 import ArrowRightIcon from '../../../images/arrow-right-rounded.svg';
 import {
-  pagerNextButton,
-  pagerPageButton,
-  pagerPageButtons,
-  pagerPreviousButton,
+  renderPagerNextButton,
+  renderPagerPageButton,
+  renderPageButtons,
+  renderPagerPreviousButton,
 } from './pager-buttons';
 
 describe('pagerButtons', () => {
@@ -22,7 +22,7 @@ describe('pagerButtons', () => {
       document.body.appendChild(container);
 
       render(
-        html`${pagerPreviousButton({
+        html`${renderPagerPreviousButton({
           props: {
             i18n,
             icon: ArrowLeftIcon,
@@ -55,7 +55,7 @@ describe('pagerButtons', () => {
       container = document.createElement('div');
       document.body.appendChild(container);
       render(
-        html`${pagerNextButton({
+        html`${renderPagerNextButton({
           props: {
             i18n,
             icon: ArrowRightIcon,
@@ -95,7 +95,7 @@ describe('pagerButtons', () => {
 
     test('should render the button with the correct attributes', () => {
       render(
-        html`${pagerPageButton({
+        html`${renderPagerPageButton({
           props: {
             groupName: 'pager',
             page: 1,
@@ -115,7 +115,7 @@ describe('pagerButtons', () => {
 
     test('should render with the correct attributes when not selected', () => {
       render(
-        html`${pagerPageButton({
+        html`${renderPagerPageButton({
           props: {
             groupName: 'pager',
             page: 1,
@@ -133,7 +133,7 @@ describe('pagerButtons', () => {
 
     test('should render with the correct attributes when selected', () => {
       render(
-        html`${pagerPageButton({
+        html`${renderPagerPageButton({
           props: {
             groupName: 'pager',
             page: 1,
@@ -156,15 +156,15 @@ describe('pagerButtons', () => {
       container = document.createElement('div');
       document.body.appendChild(container);
       render(
-        html`${pagerPageButtons({
+        html`${renderPageButtons({
           props: {
             i18n,
           },
         })(
-          html`${pagerPageButton({
+          html`${renderPagerPageButton({
             props: {groupName: 'pager', page: 1, isSelected: true, text: '1'},
           })}
-          ${pagerPageButton({
+          ${renderPagerPageButton({
             props: {groupName: 'pager', page: 2, isSelected: false, text: '2'},
           })}`
         )}`,
