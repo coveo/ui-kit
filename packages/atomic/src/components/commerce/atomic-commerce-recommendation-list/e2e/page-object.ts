@@ -1,7 +1,7 @@
-import {BasePageObject} from '@/playwright-utils/base-page-object';
+import {BasePageObject} from '@/playwright-utils/lit-base-page-object';
 import type {Page} from '@playwright/test';
 
-export class AtomicCommerceRecommendationList extends BasePageObject<'atomic-commerce-recommendation-list'> {
+export class AtomicCommerceRecommendationListPageObject extends BasePageObject {
   constructor(page: Page) {
     super(page, 'atomic-commerce-recommendation-list');
   }
@@ -17,7 +17,7 @@ export class AtomicCommerceRecommendationList extends BasePageObject<'atomic-com
   }
 
   get indicators() {
-    return this.page.getByRole('listitem');
+    return this.page.locator('[part="indicators"]').getByRole('listitem');
   }
 
   get nextButton() {
