@@ -30,7 +30,7 @@ const TEMPLATE_EXAMPLE = `<template>
   </atomic-product-section-metadata>
   <atomic-product-section-description>
     <atomic-product-text
-      field="ec_description"
+      field="excerpt"
       class="block text-neutral-dark"
     ></atomic-product-text>
   </atomic-product-section-description>
