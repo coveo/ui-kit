@@ -1,7 +1,7 @@
 import {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
 import {test, expect} from './fixture';
 
-test.only('AtomicCommerceRecommendationInterface', () => {
+test('AtomicCommerceRecommendationInterface', () => {
   test('should attach itself', async ({commerceRecommendationInterface}) => {
     await commerceRecommendationInterface.load({story: 'default'});
     await expect(commerceRecommendationInterface.interface()).toBeAttached();
