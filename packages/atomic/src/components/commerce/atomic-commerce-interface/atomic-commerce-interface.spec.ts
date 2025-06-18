@@ -116,18 +116,6 @@ export class TestElement
   public bindings: CommerceBindings = {} as CommerceBindings;
   @state() public error!: Error;
 
-  // TODO: KIT-4333: do not add stylesheet in the bindings
-  // use @injectStylesForNoShadowDOM instead
-  public addStyles(styles: string | CSSStyleSheet) {
-    if (typeof styles === 'string') {
-      const styleSheet = new CSSStyleSheet();
-      styleSheet.replaceSync(styles);
-      this.bindings.addAdoptedStyleSheets(styleSheet);
-    } else if (styles instanceof CSSStyleSheet) {
-      this.bindings.addAdoptedStyleSheets(styles);
-    }
-  }
-
   public initialized = false;
 
   public render() {
@@ -258,20 +246,6 @@ describe('AtomicCommerceInterface', () => {
       expect(warnSpy).toHaveBeenCalledWith(
         `Could not find the scroll container with the selector "${element.scrollContainer}". This will prevent UX interactions that require a scroll from working correctly. Please review the CSS selector in the scrollContainer option`
       );
-    });
-
-    test('should add a stylesheet to adoptedStyleSheets', async () => {
-      const styles = 'body { background-color: red; }';
-      childElement.addStyles(styles);
-
-      const parent = element.getRootNode();
-
-      if (parent instanceof Document || parent instanceof ShadowRoot) {
-        const styleSheet = parent.adoptedStyleSheets.find((sheet) =>
-          sheet.cssRules[0]?.cssText.includes(styles)
-        );
-        expect(styleSheet).toBeDefined();
-      }
     });
 
     describe('when properties changes', () => {
