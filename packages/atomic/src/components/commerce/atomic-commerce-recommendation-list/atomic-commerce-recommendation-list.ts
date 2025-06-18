@@ -38,7 +38,6 @@ import {
   Summary,
   buildRecommendations,
 } from '@coveo/headless/commerce';
-import {ContextRoot} from '@lit/context';
 import {CSSResultGroup, html, LitElement, nothing, unsafeCSS} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
 import {keyed} from 'lit/directives/keyed.js';
@@ -53,6 +52,7 @@ import styles from './atomic-commerce-recommendation-list.tw.css';
  * @part result-list - The element containing the list of product recommendations.
  * @part result-list-grid-clickable-container - The parent of a recommended product and the clickable link encompassing it.
  * @part result-list-grid-clickable - The clickable link encompassing a recommended product.
+ * @part outline - The outline of a recommended product.
  * @part label - The label of the recommendation list.
  * @part previous-button - The previous button.
  * @part next-button - The next button.
@@ -136,7 +136,7 @@ export class AtomicCommerceRecommendationList
    * The number of products to display per page.
    * The products will be displayed in a carousel if this property is set.
    * This does not affect the display of the list itself, only the number of recommendation pages.
-   * If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-fof-columns` CSS variable to the same value as this property.
+   * If you want to display the recommendations in a carousel with a single row, set the `--atomic-recs-number-of-columns` CSS variable to the same value as this property.
    */
   @property({reflect: true, attribute: 'products-per-page', type: Number})
   public productsPerPage?: number;
@@ -204,13 +204,7 @@ export class AtomicCommerceRecommendationList
     );
   }
 
-  constructor() {
-    super();
-    const contextRoot = new ContextRoot();
-    contextRoot.attach(document.body);
-  }
-
-  public get focusTarget() {
+  private get focusTarget() {
     if (!this.nextNewProductTarget) {
       this.nextNewProductTarget = new FocusTargetController(
         this,

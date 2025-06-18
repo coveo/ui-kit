@@ -1,4 +1,3 @@
-import {fixtureCleanup} from '@/vitest-utils/testing-helpers/fixture-wrapper.js';
 import {
   defaultBindings,
   renderInAtomicCommerceRecommendationInterface,
@@ -6,6 +5,7 @@ import {
 import {buildFakeProduct} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/product.js';
 import {buildFakeRecommendations} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/recommendations-controller.js';
 import {buildFakeSummary} from '@/vitest-utils/testing-helpers/fixtures/headless/commerce/summary-subcontroller.js';
+import {genericSubscribe} from '@/vitest-utils/testing-helpers/fixtures/headless/common.js';
 import {
   buildRecommendations,
   InteractiveProduct,
@@ -35,8 +35,6 @@ describe('AtomicCommerceRecommendationList', () => {
   const summary = vi.fn();
 
   beforeEach(() => {
-    fixtureCleanup();
-
     summary.mockReturnValue(buildFakeSummary());
 
     vi.mocked(buildRecommendations).mockReturnValue(
@@ -103,10 +101,22 @@ describe('AtomicCommerceRecommendationList', () => {
           false
         ),
         resultListGridClickable: qs('result-list-grid-clickable'),
+        label: qs('label'),
+        previousButton: qs('previous-button'),
+        nextButton: qs('next-button'),
+        indicators: qs('indicators'),
+        indicator: qs('indicator'),
+        activeIndicator: qs('active-indicator', false),
       },
       list: {
         outline: qs('outline'),
         resultList: qs('result-list'),
+        label: qs('label'),
+        previousButton: qs('previous-button'),
+        nextButton: qs('next-button'),
+        indicators: qs('indicators'),
+        indicator: qs('indicator'),
+        activeIndicator: qs('active-indicator', false),
       },
     };
   };
@@ -179,6 +189,26 @@ describe('AtomicCommerceRecommendationList', () => {
     );
   });
 
+  it('should initialize #summary as summary subcontroller', async () => {
+    const buildRecommendationsSpy = vi.mocked(buildRecommendations);
+
+    const element = await setupElement();
+
+    expect(buildRecommendationsSpy).toHaveBeenCalledOnce();
+    expect(buildRecommendationsSpy).toHaveBeenCalledWith(
+      element.bindings.engine,
+      {
+        options: {
+          slotId: 'Recommendation',
+          productId: undefined,
+        },
+      }
+    );
+    expect(element.summary).toBe(
+      buildRecommendationsSpy.mock.results[0].value.summary()
+    );
+  });
+
   it("should add 'atomic/selectChildProduct' event listener with correct callback", async () => {
     const element = await setupElement();
 
@@ -206,6 +236,20 @@ describe('AtomicCommerceRecommendationList', () => {
         'atomic/selectChildProduct',
         expect.any(Function)
       );
+    });
+
+    it('should unsubscribe from summary controller state changes', async () => {
+      const summarySubscribe = genericSubscribe;
+      summary.mockReturnValue(
+        buildFakeSummary({implementation: {subscribe: summarySubscribe}})
+      );
+
+      const element = await setupElement();
+      element.remove();
+
+      const unsubscribe = summarySubscribe.mock.results[0].value;
+
+      expect(unsubscribe).toHaveBeenCalled();
     });
   });
 
@@ -239,8 +283,6 @@ describe('AtomicCommerceRecommendationList', () => {
     await element.updateComplete;
 
     const renderedElements = element.shadowRoot?.querySelectorAll('*');
-
-    console.log(renderedElements);
 
     expect(renderedElements).toHaveLength(1);
   });
@@ -348,7 +390,7 @@ describe('AtomicCommerceRecommendationList', () => {
           await setupElement({
             display,
           })
-        )[display as 'grid' | 'list'].resultList;
+        )[display].resultList;
 
         expect(resultListParts?.length).toBe(1);
 
@@ -418,7 +460,7 @@ describe('AtomicCommerceRecommendationList', () => {
       describe('when rendering part attributes', () => {
         it('should render the result-list part', async () => {
           const element = await setupElement({display});
-          const parts = getParts(element)[display as 'grid' | 'list'];
+          const parts = getParts(element)[display];
           const resultList = parts.resultList?.item(0);
           expect(resultList).toBeTruthy();
           expect(resultList).toHaveAttribute('part', 'result-list');
@@ -441,42 +483,39 @@ describe('AtomicCommerceRecommendationList', () => {
 
         it('should have the correct part for the label', async () => {
           const element = await setupElement({display});
-          const label = element.shadowRoot?.querySelector('[part="label"]');
+          const parts = getParts(element).grid;
+          const label = parts.label?.item(0);
           expect(label).toBeTruthy();
           expect(label).toHaveAttribute('part', 'label');
         });
 
         it('should have the correct part for the carousel previous button', async () => {
           const element = await setupElement({display, productsPerPage: 2});
-          const previousButton = element.shadowRoot?.querySelector(
-            'button[part="previous-button"]'
-          );
+          const parts = getParts(element)[display];
+          const previousButton = parts.previousButton?.item(0);
           expect(previousButton).toBeTruthy();
           expect(previousButton).toHaveAttribute('part', 'previous-button');
         });
         it('should have the correct part for the carousel next button', async () => {
           const element = await setupElement({display, productsPerPage: 2});
-
-          const nextButton = element.shadowRoot?.querySelector(
-            'button[part="next-button"]'
-          );
+          const parts = getParts(element)[display];
+          const nextButton = parts.nextButton?.item(0);
           expect(nextButton).toBeTruthy();
           expect(nextButton).toHaveAttribute('part', 'next-button');
         });
 
         it('should have the correct part for the carousel indicators', async () => {
           const element = await setupElement({display, productsPerPage: 2});
-          const indicators = element.shadowRoot?.querySelector(
-            '[part="indicators"]'
-          );
+          const parts = getParts(element)[display];
+          const indicators = parts.indicators?.item(0);
           expect(indicators).toBeTruthy();
           expect(indicators).toHaveAttribute('part', 'indicators');
         });
 
         it('should have the correct part for the carousel indicator', async () => {
           const element = await setupElement({display, productsPerPage: 2});
-          const indicator =
-            element.shadowRoot?.querySelector('[part="indicator"]');
+          const parts = getParts(element)[display];
+          const indicator = parts.indicator?.item(0);
           expect(indicator).toBeTruthy();
           expect(indicator).toHaveAttribute('part', 'indicator');
         });
@@ -497,9 +536,8 @@ describe('AtomicCommerceRecommendationList', () => {
             })
           );
           const element = await setupElement({display});
-          const activeIndicator = element.shadowRoot?.querySelector(
-            '[part="indicator active-indicator"]'
-          );
+          const parts = getParts(element)[display];
+          const activeIndicator = parts.activeIndicator?.item(0);
           expect(activeIndicator).toBeTruthy();
           expect(activeIndicator).toHaveAttribute(
             'part',
