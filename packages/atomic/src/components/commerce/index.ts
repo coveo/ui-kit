@@ -1,4 +1,5 @@
 // Auto-generated file
+export {AtomicCommerceFacet} from './atomic-commerce-facet/atomic-commerce-facet.js';
 export {AtomicCommerceInterface} from './atomic-commerce-interface/atomic-commerce-interface.js';
 export {AtomicCommercePager} from './atomic-commerce-pager/atomic-commerce-pager.js';
 export {AtomicCommerceProductList} from './atomic-commerce-product-list/atomic-commerce-product-list.js';

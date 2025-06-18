@@ -5,6 +5,7 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
+AtomicCommerceFacet,
 AtomicCommerceInterface,
 AtomicCommercePager,
 AtomicCommerceProductList,
@@ -23,7 +24,6 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
 AtomicCommerceLayout,
@@ -147,6 +147,7 @@ AtomicTimeframeFacet
 
         
 const DECLARATIONS = [
+AtomicCommerceFacet,
 AtomicCommerceInterface,
 AtomicCommercePager,
 AtomicCommerceProductList,
@@ -165,7 +166,6 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacet,
 AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
 AtomicCommerceLayout,
