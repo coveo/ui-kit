@@ -364,15 +364,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface AtomicCommerceLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint": string;
-    }
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -3883,15 +3874,6 @@ declare global {
         new (): HTMLAtomicCommerceFacetsElement;
     };
     /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceLayoutElement: {
-        prototype: HTMLAtomicCommerceLayoutElement;
-        new (): HTMLAtomicCommerceLayoutElement;
-    };
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -5817,7 +5799,6 @@ declare global {
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
-        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
@@ -6291,15 +6272,6 @@ declare namespace LocalJSX {
           * The maximum number of facets to expand. Remaining facets are automatically collapsed.  Using the value `0` collapses all facets. Using the value `-1` disables the feature and keeps all facets expanded.
          */
         "collapseFacetsAfter"?: number;
-    }
-    /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface AtomicCommerceLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint"?: string;
     }
     /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
@@ -9472,7 +9444,6 @@ declare namespace LocalJSX {
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
-        "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
@@ -9723,10 +9694,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
-            /**
-             * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-             */
-            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
             /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              * @alpha 
