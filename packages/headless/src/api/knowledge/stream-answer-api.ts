@@ -24,6 +24,7 @@ import {
   initialSearchMappings,
   mapFacetRequest,
 } from '../../features/search/search-mappings.js';
+import {selectSearchActionCause} from '../../features/search/search-selectors.js';
 import {selectStaticFilterExpressions} from '../../features/static-filter-set/static-filter-set-selectors.js';
 import {
   selectActiveTab,
@@ -196,11 +197,12 @@ export const answerApi = answerSlice.injectEndpoints({
       serializeQueryArgs: ({endpointName, queryArgs}) => {
         // RTK Query serialize our endpoints and they're serialized state arguments as the key in the store.
         // Keys must match, because if anything in the query changes, it's not the same query anymore.
-        // Some fields need to be excluded in the projection though, in this case clientTimestamp, as it will change
-        // during the streaming.
+        // Some fields need to be excluded in the projection though, in this case some analytics fields,
+        // as they will change during the streaming.
         const clone = JSON.parse(JSON.stringify(queryArgs));
         if (clone.analytics) {
-          clone.analytics.clientTimestamp = '';
+          delete clone.analytics.clientTimestamp;
+          delete clone.analytics.actionCause;
         }
 
         // Standard RTK key, with some fields removed
@@ -381,7 +383,10 @@ export const constructAnswerQueryParams = (
     tab: selectActiveTab(state.tabSet),
     ...fromAnalyticsStateToAnalyticsParams(
       state.configuration.analytics,
-      navigatorContext
+      navigatorContext,
+      {
+        actionCause: selectSearchActionCause(state),
+      }
     ),
   };
 };
