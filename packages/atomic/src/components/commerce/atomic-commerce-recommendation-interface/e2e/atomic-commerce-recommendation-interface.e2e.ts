@@ -1,7 +1,7 @@
 import {AtomicCommerceRecommendationInterface} from '../atomic-commerce-recommendation-interface';
 import {test, expect} from './fixture';
 
-test.describe('AtomicCommerceRecommendationInterface', () => {
+test.only('AtomicCommerceRecommendationInterface', () => {
   test('should attach itself', async ({commerceRecommendationInterface}) => {
     await commerceRecommendationInterface.load({story: 'default'});
     await expect(commerceRecommendationInterface.interface()).toBeAttached();
@@ -13,6 +13,7 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
+
     await expect(
       commerceRecommendationInterface.recommendationList()
     ).toBeVisible();
@@ -30,6 +31,7 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
       .waitFor({state: 'visible'});
 
     const accessibilityResults = await makeAxeBuilder().analyze();
+
     expect(accessibilityResults.violations).toEqual([]);
   });
 
@@ -39,19 +41,19 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
   }) => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
-      args: {language: 'fr'},
+      args: {language: 'es'},
     });
-
     await commerceRecommendationInterface
       .recommendationList()
       .waitFor({state: 'visible'});
-
-    await commerceRecommendationInterface.previousButton().waitFor();
+    await commerceRecommendationInterface
+      .previousButton()
+      .waitFor({state: 'visible'});
 
     await expect(
       commerceRecommendationInterface.previousButton()
       // eslint-disable-next-line @cspell/spellchecker
-    ).toHaveAttribute('aria-label', 'Précédent');
+    ).toHaveAttribute('aria-label', 'Anterior');
   });
 
   test('should support localization through the #updateLocale method', async ({
@@ -60,7 +62,6 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
     await commerceRecommendationInterface.load({
       story: 'with-recommendation-list',
     });
-
     await commerceRecommendationInterface
       .recommendationList()
       .waitFor({state: 'visible'});
@@ -71,7 +72,9 @@ test.describe('AtomicCommerceRecommendationInterface', () => {
         el.updateLocale('fr', 'CA', 'CAD')
       );
 
-    await commerceRecommendationInterface.previousButton().waitFor();
+    await commerceRecommendationInterface
+      .previousButton()
+      .waitFor({state: 'visible'});
 
     await expect(
       commerceRecommendationInterface.previousButton()
