@@ -1,3 +1,28 @@
+## <small>3.27.2 (2025-06-18)</small>
+
+- chore: add missing props in renderSubmitButton (#5454) ([9f04aeb](https://github.com/coveo/ui-kit/commits/9f04aeb)), closes [#5454](https://github.com/coveo/ui-kit/issues/5454)
+- chore: add proper props for renderTextAreaClearButton (#5453) ([7342eee](https://github.com/coveo/ui-kit/commits/7342eee)), closes [#5453](https://github.com/coveo/ui-kit/issues/5453)
+- chore(atomic commerce): migrate atomic-product-list (#5374) ([39a35b4](https://github.com/coveo/ui-kit/commits/39a35b4)), closes [#5374](https://github.com/coveo/ui-kit/issues/5374)
+- chore(atomic): add commerce-layout mixin (#5443) ([62a69d3](https://github.com/coveo/ui-kit/commits/62a69d3)), closes [#5443](https://github.com/coveo/ui-kit/issues/5443)
+- chore(atomic): add tests for common store (#5467) ([2186f9a](https://github.com/coveo/ui-kit/commits/2186f9a)), closes [#5467](https://github.com/coveo/ui-kit/issues/5467)
+- chore(atomic): add unit for CommonAtomicInterfaceHelper class (#5429) ([5ebb93b](https://github.com/coveo/ui-kit/commits/5ebb93b)), closes [#5429](https://github.com/coveo/ui-kit/issues/5429)
+- chore(atomic): add unit tests for i18n util functions (#5440) ([b9c21e9](https://github.com/coveo/ui-kit/commits/b9c21e9)), closes [#5440](https://github.com/coveo/ui-kit/issues/5440)
+- chore(atomic): adjust breadbox functional components (#5474) ([975b87c](https://github.com/coveo/ui-kit/commits/975b87c)), closes [#5474](https://github.com/coveo/ui-kit/issues/5474)
+- chore(atomic): fix empty space & fontWeight in query-summary higlights (#5481) ([8961300](https://github.com/coveo/ui-kit/commits/8961300)), closes [#5481](https://github.com/coveo/ui-kit/issues/5481)
+- chore(atomic): migrate item-list decorators (#5420) ([8f0f8be](https://github.com/coveo/ui-kit/commits/8f0f8be)), closes [#5420](https://github.com/coveo/ui-kit/issues/5420)
+- chore(atomic): migrate product-template-decorators (#5419) ([6761efc](https://github.com/coveo/ui-kit/commits/6761efc)), closes [#5419](https://github.com/coveo/ui-kit/issues/5419)
+- chore(atomic): migrate trigger-correction.tsx (#5484) ([a555b34](https://github.com/coveo/ui-kit/commits/a555b34)), closes [#5484](https://github.com/coveo/ui-kit/issues/5484)
+- chore(atomic): remove "results" part from query-summary components (#5482) ([f56ad91](https://github.com/coveo/ui-kit/commits/f56ad91)), closes [#5482](https://github.com/coveo/ui-kit/issues/5482)
+- chore(atomic): remove unused argument from parseDate function (#5478) ([4f6717c](https://github.com/coveo/ui-kit/commits/4f6717c)), closes [#5478](https://github.com/coveo/ui-kit/issues/5478)
+- chore(atomic): wait for search box to be defined before dispatching the suggestions (#5455) ([cc490e8](https://github.com/coveo/ui-kit/commits/cc490e8)), closes [#5455](https://github.com/coveo/ui-kit/issues/5455)
+- chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
+- fix: disable flaky test in atomic-commerce-search-box-recent-queries (#5450) ([984ad0c](https://github.com/coveo/ui-kit/commits/984ad0c)), closes [#5450](https://github.com/coveo/ui-kit/issues/5450)
+- fix(atomic): make atomic-modal z-9999 again and add export part (#5442) ([d64c8a4](https://github.com/coveo/ui-kit/commits/d64c8a4)), closes [#5442](https://github.com/coveo/ui-kit/issues/5442) [/github.com/coveo/ui-kit/pull/4923/files#diff-6b031fa24d832d36ac612e09a26a392a945ec26f66d04a49e6f20fb6e746c923](https://github.com//github.com/coveo/ui-kit/pull/4923/files/issues/diff-6b031fa24d832d36ac612e09a26a392a945ec26f66d04a49e6f20fb6e746c923)
+- fix(atomic): rating facet breadcrumb will now properly show as stars (#5462) ([aeffff4](https://github.com/coveo/ui-kit/commits/aeffff4)), closes [#5462](https://github.com/coveo/ui-kit/issues/5462)
+- fix(atomic): remove title from search box submit button (#5456) ([a876bb6](https://github.com/coveo/ui-kit/commits/a876bb6)), closes [#5456](https://github.com/coveo/ui-kit/issues/5456) [/github.com/coveo/ui-kit/pull/5205#issuecomment-2851475812](https://github.com//github.com/coveo/ui-kit/pull/5205/issues/issuecomment-2851475812)
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+- test(atomic): standardize tests for query-suggestions, recent-queries & instant-products (#5421) ([1c726cc](https://github.com/coveo/ui-kit/commits/1c726cc)), closes [#5421](https://github.com/coveo/ui-kit/issues/5421)
+
 ## <small>3.27.1 (2025-06-11)</small>
 
 - chore(atomic commerce): add tests for createCommerceRecommendationStore (#5433) ([1c8addd](https://github.com/coveo/ui-kit/commits/1c8addd)), closes [#5433](https://github.com/coveo/ui-kit/issues/5433)
