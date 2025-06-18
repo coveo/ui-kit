@@ -123,6 +123,7 @@ export default class QuanticSearchBox extends LightningElement {
         },
         options: {
           maxLength: 20,
+          clearFilters: !this.keepFiltersOnSearch,
         },
       });
       this.unsubscribeRecentQueriesList = this.recentQueriesList.subscribe(() =>
