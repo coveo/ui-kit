@@ -11,7 +11,7 @@ AtomicCommercePager,
 AtomicCommerceProductList,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
-AtomicCommerceSearchBoxRecentQueries
+AtomicCommerceSearchBoxRecentQueries,
 AtomicCommerceSortDropdown,
 AtomicComponentError,
 AtomicIcon,
