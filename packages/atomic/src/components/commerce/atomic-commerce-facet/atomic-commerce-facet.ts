@@ -114,12 +114,7 @@ export class AtomicCommerceFacet
   private showMoreFocus!: FocusTargetController;
   private headerFocus!: FocusTargetController;
   private unsubscribeFacetController?: () => void | undefined;
-  private ariaLiveRegion: AriaLiveRegionController;
-
-  constructor() {
-    super();
-    this.ariaLiveRegion = new AriaLiveRegionController(this, 'facet-search');
-  }
+  private ariaLiveRegion = new AriaLiveRegionController(this, 'facet-search');
 
   public initialize() {
     this.validateFacet();
@@ -127,11 +122,6 @@ export class AtomicCommerceFacet
     this.ensureSubscribed();
     this.initAriaLive();
     this.initPopover();
-  }
-
-  public connectedCallback(): void {
-    super.connectedCallback();
-    this.ensureSubscribed();
   }
 
   public disconnectedCallback(): void {
