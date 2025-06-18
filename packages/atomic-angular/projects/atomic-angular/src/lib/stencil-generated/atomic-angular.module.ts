@@ -7,8 +7,8 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 import {
 AtomicCommerceInterface,
 AtomicCommercePager,
-AtomicCommerceRecommendationInterface,
 AtomicCommerceProductList,
+AtomicCommerceRecommendationInterface,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
@@ -149,8 +149,8 @@ AtomicTimeframeFacet
 const DECLARATIONS = [
 AtomicCommerceInterface,
 AtomicCommercePager,
-AtomicCommerceRecommendationInterface,
 AtomicCommerceProductList,
+AtomicCommerceRecommendationInterface,
 AtomicCommerceSearchBoxInstantProducts,
 AtomicCommerceSearchBoxQuerySuggestions,
 AtomicCommerceSearchBoxRecentQueries,
