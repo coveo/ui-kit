@@ -117,22 +117,6 @@ export class AtomicCommerceBreadbox
    */
   @property({type: Number, attribute: 'path-limit'}) pathLimit = 3;
 
-  constructor() {
-    super();
-    this.breadcrumbRemovedFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowMoreFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-    this.breadcrumbShowLessFocus = new FocusTargetController(
-      this,
-      this.bindings
-    );
-  }
-
   public initialize() {
     this.validateProps();
     if (this.bindings.interfaceElement.type === 'product-listing') {
@@ -147,12 +131,26 @@ export class AtomicCommerceBreadbox
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
       this.resizeObserver.observe(this.parentElement!);
     }
+
+    this.breadcrumbRemovedFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowMoreFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
+    this.breadcrumbShowLessFocus = new FocusTargetController(
+      this,
+      this.bindings
+    );
   }
 
   updated(changedProperties: Map<string, unknown>) {
     if (changedProperties.has('pathLimit')) {
       this.validateProps();
     }
+    this.adaptBreadcrumbs();
   }
 
   private validateProps() {

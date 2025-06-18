@@ -413,6 +413,12 @@ test.describe('Default', () => {
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
     });
 
+    test('should uncheck', async ({breadbox}) => {
+      const breadcrumbButtons = breadbox.getBreadcrumbButtons().first();
+      await breadcrumbButtons.click();
+      await expect(breadcrumbButtons).not.toBeChecked();
+    });
+
     test.describe('when clicking on a breadcrumb button', () => {
       let firstButton: Locator;
       let firstButtonText: string | RegExp;
@@ -469,5 +475,25 @@ test.describe('Default', () => {
         await expect(breadbox.getShowLessbutton()).not.toBeVisible();
       });
     });
+  });
+
+  test('should hide the breadcrumb while selecting facets and while viewport does not change', async ({
+    breadbox,
+    page,
+  }) => {
+    await page.setViewportSize({width: 640, height: 480});
+
+    for (let i = 0; i < 4; i++) {
+      await breadbox.getFacetValue('regular').nth(i).click();
+      if (i < 3) {
+        await breadbox
+          .getBreadcrumbButtons()
+          .nth(i)
+          .waitFor({state: 'visible'});
+      }
+    }
+
+    await expect(breadbox.getShowMorebutton()).toBeVisible();
+    await expect(breadbox.getShowMorebutton()).toHaveText('+ 1');
   });
 });
