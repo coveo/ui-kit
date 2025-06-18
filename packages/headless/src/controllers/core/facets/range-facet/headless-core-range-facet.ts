@@ -88,13 +88,13 @@ export function buildCoreRangeFacet<
 
       const sortCriterion = request.sortCriteria;
       const resultsMustMatch = request.resultsMustMatch;
-      const domain = response?.domain;
       const values: R['values'] = response ? response.values : [];
       const isLoading = isFacetLoadingResponseSelector(engine.state);
       const enabled = getIsEnabled();
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );
+      const domain = response?.domain;
 
       return {
         facetId,
@@ -108,19 +108,4 @@ export function buildCoreRangeFacet<
       };
     },
   };
-}
-
-interface AssertRangeFacetOptions {
-  generateAutomaticRanges: boolean;
-  currentValues?: unknown[];
-}
-
-export function assertRangeFacetOptions(
-  options: AssertRangeFacetOptions,
-  controllerName: 'buildNumericFacet' | 'buildDateFacet'
-) {
-  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
-    const message = `currentValues should be specified for ${controllerName} when generateAutomaticRanges is false.`;
-    throw new Error(message);
-  }
 }
