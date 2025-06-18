@@ -71,6 +71,22 @@ describe('range facet', () => {
     expect(rangeFacet.state.values).toEqual(values);
   });
 
+  it('#state.domain holds the response domain', () => {
+    const domain = {start: 10, end: 50};
+    const facet = buildMockNumericFacetResponse({facetId, domain});
+    state.search.response.facets = [facet];
+    initRangeFacet();
+
+    expect(rangeFacet.state.domain).toEqual(domain);
+  });
+
+  it('when no response is available, #state.domain is undefined', () => {
+    state.search.response.facets = [];
+    initRangeFacet();
+
+    expect(rangeFacet.state.domain).toBeUndefined();
+  });
+
   it('when the value is selected, #isValueSelected returns `true`', () => {
     const value = buildMockNumericFacetValue({state: 'selected'});
     expect(rangeFacet.isValueSelected(value)).toBe(true);

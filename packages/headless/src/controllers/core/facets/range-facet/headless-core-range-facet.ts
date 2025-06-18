@@ -88,6 +88,7 @@ export function buildCoreRangeFacet<
 
       const sortCriterion = request.sortCriteria;
       const resultsMustMatch = request.resultsMustMatch;
+      const domain = response?.domain;
       const values: R['values'] = response ? response.values : [];
       const isLoading = isFacetLoadingResponseSelector(engine.state);
       const enabled = getIsEnabled();
@@ -103,6 +104,7 @@ export function buildCoreRangeFacet<
         hasActiveValues,
         isLoading,
         enabled,
+        domain,
       };
     },
   };
