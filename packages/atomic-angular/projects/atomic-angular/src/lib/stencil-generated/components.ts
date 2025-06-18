@@ -422,29 +422,6 @@ export declare interface AtomicCommerceRecommendationInterface extends Component
 
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
-  methods: ['setRenderFunction', 'previousPage', 'nextPage']
-, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationList})
-@Component({standalone:false,
-  selector: 'atomic-commerce-recommendation-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
-})
-export class AtomicCommerceRecommendationList {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceRecommendationList extends Components.AtomicCommerceRecommendationList {}
-
-
-@ProxyCmp({
   inputs: ['collapseFacetsAfter', 'isOpen', 'openButton']
 , defineCustomElementFn: defineCustomElementAtomicCommerceRefineModal})
 @Component({standalone:false,
@@ -2925,6 +2902,32 @@ export class AtomicCommerceProductList {
 }
 
 export declare interface AtomicCommerceProductList extends LitAtomicCommerceProductList {
+
+}
+
+@ProxyCmp({
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel'],
+  methods: ['watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-list') || customElements.define('atomic-commerce-recommendation-list', LitAtomicCommerceRecommendationList);}
+})
+@Component({
+  selector: 'atomic-commerce-recommendation-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel']
+})
+export class AtomicCommerceRecommendationList {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceRecommendationList extends LitAtomicCommerceRecommendationList {
 
 }
 
