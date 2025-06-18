@@ -1,3 +1,8 @@
+## 1.6.0 (2025-06-18)
+
+- feat(shopify): emit clientId in custom event (#5472) ([cc79bee](https://github.com/coveo/ui-kit/commits/cc79bee)), closes [#5472](https://github.com/coveo/ui-kit/issues/5472)
+- chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
+
 ## <small>1.5.1 (2025-06-11)</small>
 
 - chore(deps): update vite to v3.2.1 j:kit-282 (#5410) ([02b0045](https://github.com/coveo/ui-kit/commits/02b0045)), closes [#5410](https://github.com/coveo/ui-kit/issues/5410)

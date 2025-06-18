@@ -9,9 +9,9 @@ import { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 import { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 import { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 import { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+import { i18n } from "i18next";
 import { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 import { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-import { i18n } from "i18next";
 import { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 import { AtomicInterface } from "./utils/initialization-utils";
 import { AnyBindings } from "./components/common/interface/bindings";
@@ -39,9 +39,9 @@ export { AutomaticFacet, CategoryFacetSortCriterion, DateFilterRange, DateRangeR
 export { CategoryFacet, CommerceEngine, DateFacet, InteractiveProduct, NumericFacet, Product, ProductListingSummaryState, RegularFacet, SearchSummaryState, Summary } from "@coveo/headless/commerce";
 export { CommerceBindings as Bindings } from "./components/commerce/atomic-commerce-interface/atomic-commerce-interface";
 export { Range } from "./components/commerce/facets/facet-number-input/atomic-commerce-facet-number-input";
+export { i18n } from "i18next";
 export { ItemDisplayBasicLayout, ItemDisplayDensity, ItemDisplayImageSize, ItemDisplayLayout } from "./components/common/layout/display-options";
 export { ItemRenderingFunction } from "./components/common/item-list/stencil-item-list-common";
-export { i18n } from "i18next";
 export { RedirectionPayload } from "./components/common/search-box/redirection-payload";
 export { AtomicInterface } from "./utils/initialization-utils";
 export { AnyBindings } from "./components/common/interface/bindings";
@@ -364,15 +364,6 @@ export namespace Components {
         "collapseFacetsAfter": number;
     }
     /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface AtomicCommerceLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint": string;
-    }
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -404,32 +395,6 @@ export namespace Components {
           * The Summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
-    interface AtomicCommerceProductList {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density": ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
-         */
-        "display": ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed for products.
-         */
-        "imageSize": ItemDisplayImageSize;
-        /**
-          * The desired number of placeholders to display while the product list is loading.
-         */
-        "numberOfPlaceholders": number;
-        /**
-          * Sets a rendering function to bypass the standard HTML template mechanism for rendering products. You can use this function while working with web frameworks that don't use plain HTML syntax, e.g., React, Angular or Vue.  Do not use this method if you integrate Atomic in a plain HTML deployment.
-          * @param productRenderingFunction
-         */
-        "setRenderFunction": (productRenderingFunction: ItemRenderingFunction) => Promise<void>;
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -3884,15 +3849,6 @@ declare global {
         new (): HTMLAtomicCommerceFacetsElement;
     };
     /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface HTMLAtomicCommerceLayoutElement extends Components.AtomicCommerceLayout, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceLayoutElement: {
-        prototype: HTMLAtomicCommerceLayoutElement;
-        new (): HTMLAtomicCommerceLayoutElement;
-    };
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -3920,15 +3876,6 @@ declare global {
     var HTMLAtomicCommerceNumericFacetElement: {
         prototype: HTMLAtomicCommerceNumericFacetElement;
         new (): HTMLAtomicCommerceNumericFacetElement;
-    };
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
-    interface HTMLAtomicCommerceProductListElement extends Components.AtomicCommerceProductList, HTMLStencilElement {
-    }
-    var HTMLAtomicCommerceProductListElement: {
-        prototype: HTMLAtomicCommerceProductListElement;
-        new (): HTMLAtomicCommerceProductListElement;
     };
     interface HTMLAtomicCommerceProductsPerPageElementEventMap {
         "atomic/scrollToTop": any;
@@ -5824,11 +5771,9 @@ declare global {
         "atomic-commerce-facet": HTMLAtomicCommerceFacetElement;
         "atomic-commerce-facet-number-input": HTMLAtomicCommerceFacetNumberInputElement;
         "atomic-commerce-facets": HTMLAtomicCommerceFacetsElement;
-        "atomic-commerce-layout": HTMLAtomicCommerceLayoutElement;
         "atomic-commerce-load-more-products": HTMLAtomicCommerceLoadMoreProductsElement;
         "atomic-commerce-no-products": HTMLAtomicCommerceNoProductsElement;
         "atomic-commerce-numeric-facet": HTMLAtomicCommerceNumericFacetElement;
-        "atomic-commerce-product-list": HTMLAtomicCommerceProductListElement;
         "atomic-commerce-products-per-page": HTMLAtomicCommerceProductsPerPageElement;
         "atomic-commerce-query-error": HTMLAtomicCommerceQueryErrorElement;
         "atomic-commerce-query-summary": HTMLAtomicCommerceQuerySummaryElement;
@@ -6301,15 +6246,6 @@ declare namespace LocalJSX {
         "collapseFacetsAfter"?: number;
     }
     /**
-     * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-     */
-    interface AtomicCommerceLayout {
-        /**
-          * CSS value that defines where the layout goes from mobile to desktop. e.g., 800px, 65rem.
-         */
-        "mobileBreakpoint"?: string;
-    }
-    /**
      * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
      * @alpha 
      */
@@ -6341,27 +6277,6 @@ declare namespace LocalJSX {
           * The Summary controller instance.
          */
         "summary": Summary<SearchSummaryState | ProductListingSummaryState>;
-    }
-    /**
-     * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-     */
-    interface AtomicCommerceProductList {
-        /**
-          * The spacing of various elements in the product list, including the gap between products, the gap between parts of a product, and the font sizes of different parts in a product.
-         */
-        "density"?: ItemDisplayDensity;
-        /**
-          * The desired layout to use when displaying products. Layouts affect how many products to display per row and how visually distinct they are from each other.
-         */
-        "display"?: ItemDisplayLayout;
-        /**
-          * The expected size of the image displayed for products.
-         */
-        "imageSize"?: ItemDisplayImageSize;
-        /**
-          * The desired number of placeholders to display while the product list is loading.
-         */
-        "numberOfPlaceholders"?: number;
     }
     /**
      * The `atomic-commerce-products-per-page` component determines how many products to display per page.
@@ -9480,11 +9395,9 @@ declare namespace LocalJSX {
         "atomic-commerce-facet": AtomicCommerceFacet;
         "atomic-commerce-facet-number-input": AtomicCommerceFacetNumberInput;
         "atomic-commerce-facets": AtomicCommerceFacets;
-        "atomic-commerce-layout": AtomicCommerceLayout;
         "atomic-commerce-load-more-products": AtomicCommerceLoadMoreProducts;
         "atomic-commerce-no-products": AtomicCommerceNoProducts;
         "atomic-commerce-numeric-facet": AtomicCommerceNumericFacet;
-        "atomic-commerce-product-list": AtomicCommerceProductList;
         "atomic-commerce-products-per-page": AtomicCommerceProductsPerPage;
         "atomic-commerce-query-error": AtomicCommerceQueryError;
         "atomic-commerce-query-summary": AtomicCommerceQuerySummary;
@@ -9733,10 +9646,6 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-facets": LocalJSX.AtomicCommerceFacets & JSXBase.HTMLAttributes<HTMLAtomicCommerceFacetsElement>;
             /**
-             * @alpha The `atomic-commerce-layout` helps organize elements in the commerce page.
-             */
-            "atomic-commerce-layout": LocalJSX.AtomicCommerceLayout & JSXBase.HTMLAttributes<HTMLAtomicCommerceLayoutElement>;
-            /**
              * The `atomic-commerce-load-more-products` component allows the user to load additional products if more are available.
              * @alpha 
              */
@@ -9750,10 +9659,6 @@ declare module "@stencil/core" {
              * @alpha 
              */
             "atomic-commerce-numeric-facet": LocalJSX.AtomicCommerceNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicCommerceNumericFacetElement>;
-            /**
-             * @alpha The `atomic-commerce-product-list` component is responsible for displaying products.
-             */
-            "atomic-commerce-product-list": LocalJSX.AtomicCommerceProductList & JSXBase.HTMLAttributes<HTMLAtomicCommerceProductListElement>;
             /**
              * The `atomic-commerce-products-per-page` component determines how many products to display per page.
              * @alpha 
