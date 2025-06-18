@@ -11,7 +11,7 @@ import {
 
 export interface BreadcrumbButtonProps {
   onSelectBreadcrumb: () => void;
-  setRef: (el?: HTMLButtonElement) => void;
+  refCallback: (el?: HTMLButtonElement) => void;
   pathLimit: number;
   breadcrumb: Breadcrumb;
   i18n: i18n;
@@ -33,7 +33,7 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
         html`<li class="breadcrumb">
           ${renderButton({
             props: {
-              ref: (el) => props.setRef(el as HTMLButtonElement),
+              ref: (el) => props.refCallback(el as HTMLButtonElement),
               part: 'breadcrumb-button',
               style: isExclusion ? 'outline-error' : 'outline-bg-neutral',
               class: 'py-2 px-3 flex items-center rounded-xl group',
@@ -48,7 +48,7 @@ export const renderBreadcrumbButton: FunctionalComponentWithChildren<
               ),
               onClick: props.onSelectBreadcrumb,
             },
-          })(html`${children}`)}
+          })(children)}
         </li>`
       )}
     `;

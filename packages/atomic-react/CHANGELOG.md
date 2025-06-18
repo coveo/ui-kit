@@ -1,3 +1,8 @@
+## <small>3.2.46 (2025-06-18)</small>
+
+- chore(atomic commerce): migrate atomic-product-list (#5374) ([39a35b4](https://github.com/coveo/ui-kit/commits/39a35b4)), closes [#5374](https://github.com/coveo/ui-kit/issues/5374)
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+
 ## <small>3.2.45 (2025-06-11)</small>
 
 - fix(deps): update all dependencies j:kit-282 (#5068) ([2a0d833](https://github.com/coveo/ui-kit/commits/2a0d833)), closes [#5068](https://github.com/coveo/ui-kit/issues/5068)
