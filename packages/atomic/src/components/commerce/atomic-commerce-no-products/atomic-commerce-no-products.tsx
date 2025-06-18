@@ -14,8 +14,8 @@ import {
 import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
 import {NoItemsContainer} from '../../common/no-items/container';
 import {NoItemsGuard} from '../../common/no-items/guard';
-import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
+import {MagnifyingGlass} from '../../common/no-items/stencil-magnifying-glass';
 import {SearchTips} from '../../common/no-items/tips';
 import {getSummary} from '../../common/no-items/utils';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
