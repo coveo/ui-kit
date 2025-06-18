@@ -2825,32 +2825,6 @@ export declare interface AtomicTimeframeFacet extends Components.AtomicTimeframe
 //#region Lit Declarations
 
 @ProxyCmp({
-  inputs: ['mobileBreakpoint'],
-  methods: ['styles'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
-})
-@Component({
-  selector: 'atomic-commerce-layout',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['mobileBreakpoint']
-})
-export class AtomicCommerceLayout {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceLayout extends LitAtomicCommerceLayout {
-
-}
-
-@ProxyCmp({
   inputs: ['type', 'analytics', 'logLevel', 'i18n', 'language', 'engine', 'reflectStateInUrl', 'scrollContainer', 'languageAssetsPath', 'iconAssetsPath'],
   methods: ['toggleAnalytics', 'updateLanguage', 'updateIconAssetsPath', 'scrollToTop', 'initialize', 'initializeWithEngine', 'executeFirstRequest', 'getUpdateComplete'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-interface') || customElements.define('atomic-commerce-interface', LitAtomicCommerceInterface);}
@@ -2877,19 +2851,19 @@ export declare interface AtomicCommerceInterface extends LitAtomicCommerceInterf
 }
 
 @ProxyCmp({
-  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
-  methods: ['setRenderFunction', 'initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
+  inputs: ['mobileBreakpoint'],
+  methods: ['styles'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-layout') || customElements.define('atomic-commerce-layout', LitAtomicCommerceLayout);}
 })
 @Component({
-  selector: 'atomic-commerce-product-list',
+  selector: 'atomic-commerce-layout',
   standalone: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders']
+  inputs: ['mobileBreakpoint']
 })
-export class AtomicCommerceProductList {
+export class AtomicCommerceLayout {
   protected readonly el: HTMLElement;
   constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
     c.detach();
@@ -2898,7 +2872,7 @@ export class AtomicCommerceProductList {
   }
 }
 
-export declare interface AtomicCommerceProductList extends LitAtomicCommerceProductList {
+export declare interface AtomicCommerceLayout extends LitAtomicCommerceLayout {
 
 }
 
@@ -2926,6 +2900,32 @@ export class AtomicCommercePager {
 
 export declare interface AtomicCommercePager extends LitAtomicCommercePager {
   'atomic/scrollToTop': EventEmitter<CustomEvent<any>>;
+}
+
+@ProxyCmp({
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders'],
+  methods: ['setRenderFunction', 'initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-product-list') || customElements.define('atomic-commerce-product-list', LitAtomicCommerceProductList);}
+})
+@Component({
+  selector: 'atomic-commerce-product-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'display', 'imageSize', 'numberOfPlaceholders']
+})
+export class AtomicCommerceProductList {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceProductList extends LitAtomicCommerceProductList {
+
 }
 
 @ProxyCmp({
