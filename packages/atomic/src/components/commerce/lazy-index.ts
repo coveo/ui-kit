@@ -8,6 +8,8 @@ export default {
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
     ),
+  'atomic-commerce-search-box': async () =>
+    await import('./atomic-commerce-search-box/atomic-commerce-search-box.js'),
   'atomic-commerce-search-box-instant-products': async () =>
     await import(
       './atomic-commerce-search-box-instant-products/atomic-commerce-search-box-instant-products.js'
