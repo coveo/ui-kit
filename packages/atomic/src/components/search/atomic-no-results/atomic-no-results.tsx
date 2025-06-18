@@ -20,7 +20,7 @@ import {NoItemsContainer} from '../../common/no-items/container';
 import {NoItemsGuard} from '../../common/no-items/guard';
 import {MagnifyingGlass} from '../../common/no-items/magnifying-glass';
 import {NoItems} from '../../common/no-items/no-items';
-import {SearchTips} from '../../common/no-items/tips';
+import {SearchTips} from '../../common/no-items/stencil-tips';
 import {getSummary} from '../../common/no-items/utils';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
