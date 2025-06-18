@@ -39,7 +39,7 @@ export class AtomicProductTemplate
    * For example, the following targets a template and sets a condition to make it apply only to products whose `ec_name` contains `singapore`:
    * `document.querySelector('#target-template').conditions = [(product) => /singapore/i.test(product.ec_name)];`
    */
-  @property({attribute: false})
+  @property({type: Array})
   conditions: ProductTemplateCondition[] = [];
 
   /**
