@@ -20,7 +20,7 @@ import {
   ChoiceIsNaNError,
   InitialChoiceNotInChoicesError,
 } from '../../common/items-per-page/error';
-import {Label} from '../../common/items-per-page/label';
+import {Label} from '../../common/items-per-page/stencil-label';
 import {
   convertChoicesToNumbers,
   validateInitialChoice,

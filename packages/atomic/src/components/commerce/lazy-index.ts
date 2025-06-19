@@ -2,11 +2,17 @@
 export default {
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
+  'atomic-commerce-layout': async () =>
+    await import('./atomic-commerce-layout/atomic-commerce-layout.js'),
   'atomic-commerce-pager': async () =>
     await import('./atomic-commerce-pager/atomic-commerce-pager.js'),
   'atomic-commerce-product-list': async () =>
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
+    ),
+  'atomic-commerce-recommendation-list': async () =>
+    await import(
+      './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
     ),
   'atomic-commerce-search-box-instant-products': async () =>
     await import(
@@ -24,6 +30,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-product-template': async () =>
+    await import('./atomic-product-template/atomic-product-template.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
