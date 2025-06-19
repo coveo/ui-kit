@@ -12,8 +12,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {AutoCorrection} from '../../common/query-correction/auto-correction';
-import {Correction} from '../../common/query-correction/correction';
+import {AutoCorrection} from '../../common/query-correction/stencil-auto-correction';
+import {Correction} from '../../common/query-correction/stencil-correction';
 import {QueryCorrectionGuard} from '../../common/query-correction/stencil-guard';
 import {TriggerCorrection} from '../../common/query-correction/stencil-trigger-correction';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';

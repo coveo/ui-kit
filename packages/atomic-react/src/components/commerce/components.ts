@@ -5,8 +5,10 @@ import {
   AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
-  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
+  AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
+  AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
+  AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicComponentError as LitAtomicComponentError,
@@ -37,16 +39,28 @@ export const AtomicCommerceProductList = createComponent({
   elementClass: LitAtomicCommerceProductList,
 });
 
-export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
-  tagName: 'atomic-commerce-search-box-query-suggestions',
+export const AtomicCommerceQuerySummary = createComponent({
+  tagName: 'atomic-commerce-query-summary',
   react: React,
-  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
+  elementClass: LitAtomicCommerceQuerySummary,
+});
+
+export const AtomicCommerceRecommendationList = createComponent({
+  tagName: 'atomic-commerce-recommendation-list',
+  react: React,
+  elementClass: LitAtomicCommerceRecommendationList,
 });
 
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({
   tagName: 'atomic-commerce-search-box-instant-products',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxInstantProducts,
+});
+
+export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
+  tagName: 'atomic-commerce-search-box-query-suggestions',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
