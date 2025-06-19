@@ -70,6 +70,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   const toggleSelectFacetValue = (value: CategoryFacetValue) => {
     if (controller?.isValueSelected(value)) {
       controller.deselectAll();
+      return;
     }
     controller?.toggleSelect(value);
   };
@@ -87,7 +88,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
           id="facetSearchInput"
           onChange={onChangeFacetSearchInput}
           ref={facetSearchInputRef}
-          value={state.facetSearch.query}
+          value={state.facetSearch.query ?? ''}
         ></input>
         <button
           aria-label="Clear facet search query"
@@ -175,7 +176,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
               key={`${ancestryValue.value}-ancestry`}
             >
               <input
-                checked={controller?.isValueSelected(ancestryValue)}
+                checked={controller?.isValueSelected(ancestryValue) ?? false}
                 className="FacetValueCheckbox"
                 disabled={!controller}
                 id={checkboxId}
