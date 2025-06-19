@@ -3046,7 +3046,7 @@ export declare interface AtomicProduct extends LitAtomicProduct {
 }
 
 @ProxyCmp({
-  inputs: ['mustMatch', 'mustNotMatch'],
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
   methods: ['getTemplate'],
   defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
 })
@@ -3056,7 +3056,7 @@ export declare interface AtomicProduct extends LitAtomicProduct {
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content></ng-content>',
   // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['mustMatch', 'mustNotMatch']
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch']
 })
 export class AtomicProductTemplate {
   protected readonly el: HTMLElement;
