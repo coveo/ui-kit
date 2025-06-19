@@ -1333,28 +1333,6 @@ export class AtomicProductSectionVisual {
 export declare interface AtomicProductSectionVisual extends Components.AtomicProductSectionVisual {}
 
 
-@ProxyCmp({
-  inputs: ['default', 'field', 'shouldHighlight']
-, defineCustomElementFn: defineCustomElementAtomicProductText})
-@Component({standalone:false,
-  selector: 'atomic-product-text',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['default', 'field', 'shouldHighlight'],
-})
-export class AtomicProductText {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductText extends Components.AtomicProductText {}
-
-
 @ProxyCmp({defineCustomElementFn: defineCustomElementAtomicQueryError})
 @Component({standalone:false,
   selector: 'atomic-query-error',
