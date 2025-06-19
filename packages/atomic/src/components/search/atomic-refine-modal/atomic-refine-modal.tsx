@@ -41,7 +41,7 @@ import {
   RefineModalFiltersSection,
 } from '../../common/refine-modal/filters';
 import {RefineModal} from '../../common/refine-modal/modal';
-import {RefineModalSortSection} from '../../common/refine-modal/sort';
+import {RefineModalSortSection} from '../../common/refine-modal/stencil-sort';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 
