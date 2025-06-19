@@ -35,9 +35,9 @@ import {
   collapseFacetsAfter,
 } from '../../common/facets/stencil-facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
-import {RefineModalBody} from '../../common/refine-modal/body';
 import {RefineModal} from '../../common/refine-modal/modal';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
+import {RefineModalBody} from '../../common/refine-modal/stencil-body';
 import {
   RefineModalFiltersClearButton,
   RefineModalFiltersSection,
