@@ -20,6 +20,7 @@ import {
   AtomicProductSectionEmphasized,
   AtomicProductSectionMetadata,
   AtomicProductSectionName,
+  AtomicCommerceQuerySummary,
 } from '@coveo/atomic-react/commerce';
 import {
   buildCommerceEngine,
@@ -51,6 +52,7 @@ export const CommerceSearchPage = () => {
         </AtomicLayoutSection>
         <AtomicLayoutSection section="main">
           <AtomicLayoutSection section="status">
+            <AtomicCommerceQuerySummary />
             <AtomicCommerceSortDropdown />
           </AtomicLayoutSection>
           <AtomicLayoutSection section="products">

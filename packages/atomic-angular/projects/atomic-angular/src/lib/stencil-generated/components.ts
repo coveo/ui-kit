@@ -378,26 +378,6 @@ export class AtomicCommerceQueryError {
 export declare interface AtomicCommerceQueryError extends Components.AtomicCommerceQueryError {}
 
 
-@ProxyCmp({defineCustomElementFn: defineCustomElementAtomicCommerceQuerySummary})
-@Component({standalone:false,
-  selector: 'atomic-commerce-query-summary',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: [],
-})
-export class AtomicCommerceQuerySummary {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceQuerySummary extends Components.AtomicCommerceQuerySummary {}
-
-
 @ProxyCmp({
   inputs: ['CspNonce', 'analytics', 'engine', 'i18n', 'iconAssetsPath', 'language', 'languageAssetsPath', 'scrollContainer'],
   methods: ['initializeWithEngine']
@@ -419,29 +399,6 @@ export class AtomicCommerceRecommendationInterface {
 
 
 export declare interface AtomicCommerceRecommendationInterface extends Components.AtomicCommerceRecommendationInterface {}
-
-
-@ProxyCmp({
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
-  methods: ['setRenderFunction', 'previousPage', 'nextPage']
-, defineCustomElementFn: defineCustomElementAtomicCommerceRecommendationList})
-@Component({standalone:false,
-  selector: 'atomic-commerce-recommendation-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'display', 'headingLevel', 'imageSize', 'productId', 'productsPerPage', 'slotId'],
-})
-export class AtomicCommerceRecommendationList {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicCommerceRecommendationList extends Components.AtomicCommerceRecommendationList {}
 
 
 @ProxyCmp({
@@ -1418,29 +1375,6 @@ export class AtomicProductSectionVisual {
 
 
 export declare interface AtomicProductSectionVisual extends Components.AtomicProductSectionVisual {}
-
-
-@ProxyCmp({
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-  methods: ['getTemplate']
-, defineCustomElementFn: defineCustomElementAtomicProductTemplate})
-@Component({standalone:false,
-  selector: 'atomic-product-template',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
-})
-export class AtomicProductTemplate {
-  protected el: HTMLElement;
-  constructor(c: ChangeDetectorRef, r: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = r.nativeElement;
-  }
-}
-
-
-export declare interface AtomicProductTemplate extends Components.AtomicProductTemplate {}
 
 
 @ProxyCmp({
@@ -2952,6 +2886,58 @@ export declare interface AtomicCommerceProductList extends LitAtomicCommerceProd
 }
 
 @ProxyCmp({
+  inputs: [],
+  methods: ['initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-query-summary') || customElements.define('atomic-commerce-query-summary', LitAtomicCommerceQuerySummary);}
+})
+@Component({
+  selector: 'atomic-commerce-query-summary',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: []
+})
+export class AtomicCommerceQuerySummary {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceQuerySummary extends LitAtomicCommerceQuerySummary {
+
+}
+
+@ProxyCmp({
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel'],
+  methods: ['watchNumberOfRecommendationsPerPage', 'setRenderFunction', 'previousPage', 'nextPage', 'initialize', 'initBindings'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-recommendation-list') || customElements.define('atomic-commerce-recommendation-list', LitAtomicCommerceRecommendationList);}
+})
+@Component({
+  selector: 'atomic-commerce-recommendation-list',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['slotId', 'productId', 'display', 'density', 'imageSize', 'productsPerPage', 'headingLevel']
+})
+export class AtomicCommerceRecommendationList {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceRecommendationList extends LitAtomicCommerceRecommendationList {
+
+}
+
+@ProxyCmp({
   inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
   methods: ['setRenderFunction', 'initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
@@ -3056,6 +3042,32 @@ export declare interface AtomicCommerceSortDropdown extends LitAtomicCommerceSor
 }
 
 @ProxyCmp({
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch'],
+  methods: ['getTemplate'],
+  defineCustomElementFn: () => {customElements.get('atomic-product-template') || customElements.define('atomic-product-template', LitAtomicProductTemplate);}
+})
+@Component({
+  selector: 'atomic-product-template',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['conditions', 'mustMatch', 'mustNotMatch']
+})
+export class AtomicProductTemplate {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicProductTemplate extends LitAtomicProductTemplate {
+
+}
+
+@ProxyCmp({
   inputs: ['element', 'error'],
   methods: [],
   defineCustomElementFn: () => {customElements.get('atomic-component-error') || customElements.define('atomic-component-error', LitAtomicComponentError);}
@@ -3107,7 +3119,7 @@ export declare interface AtomicIcon extends LitAtomicIcon {
 
 }
 
-import {AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommerceLayout as LitAtomicCommerceLayout, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon} from '@coveo/atomic/components';
+import {AtomicCommerceInterface as LitAtomicCommerceInterface, AtomicCommerceLayout as LitAtomicCommerceLayout, AtomicCommercePager as LitAtomicCommercePager, AtomicCommerceProductList as LitAtomicCommerceProductList, AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary, AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList, AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts, AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions, AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries, AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown, AtomicComponentError as LitAtomicComponentError, AtomicIcon as LitAtomicIcon, AtomicProductTemplate as LitAtomicProductTemplate} from '@coveo/atomic/components';
 
-import {defineCustomElementAtomicAriaLive, defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicColorFacet, defineCustomElementAtomicCommerceBreadbox, defineCustomElementAtomicCommerceCategoryFacet, defineCustomElementAtomicCommerceDidYouMean, defineCustomElementAtomicCommerceFacet, defineCustomElementAtomicCommerceFacetNumberInput, defineCustomElementAtomicCommerceFacets, defineCustomElementAtomicCommerceLoadMoreProducts, defineCustomElementAtomicCommerceNoProducts, defineCustomElementAtomicCommerceNumericFacet, defineCustomElementAtomicCommerceProductsPerPage, defineCustomElementAtomicCommerceQueryError, defineCustomElementAtomicCommerceQuerySummary, defineCustomElementAtomicCommerceRecommendationInterface, defineCustomElementAtomicCommerceRecommendationList, defineCustomElementAtomicCommerceRefineModal, defineCustomElementAtomicCommerceRefineToggle, defineCustomElementAtomicCommerceSearchBox, defineCustomElementAtomicCommerceText, defineCustomElementAtomicCommerceTimeframeFacet, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicHtml, defineCustomElementAtomicLayoutSection, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNotifications, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPager, defineCustomElementAtomicPopover, defineCustomElementAtomicProduct, defineCustomElementAtomicProductChildren, defineCustomElementAtomicProductDescription, defineCustomElementAtomicProductExcerpt, defineCustomElementAtomicProductFieldCondition, defineCustomElementAtomicProductImage, defineCustomElementAtomicProductLink, defineCustomElementAtomicProductMultiValueText, defineCustomElementAtomicProductNumericFieldValue, defineCustomElementAtomicProductPrice, defineCustomElementAtomicProductRating, defineCustomElementAtomicProductSectionActions, defineCustomElementAtomicProductSectionBadges, defineCustomElementAtomicProductSectionBottomMetadata, defineCustomElementAtomicProductSectionChildren, defineCustomElementAtomicProductSectionDescription, defineCustomElementAtomicProductSectionEmphasized, defineCustomElementAtomicProductSectionMetadata, defineCustomElementAtomicProductSectionName, defineCustomElementAtomicProductSectionVisual, defineCustomElementAtomicProductTemplate, defineCustomElementAtomicProductText, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuerySummary, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicRelevanceInspector, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultMultiValueText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultSectionActions, defineCustomElementAtomicResultSectionBadges, defineCustomElementAtomicResultSectionBottomMetadata, defineCustomElementAtomicResultSectionChildren, defineCustomElementAtomicResultSectionEmphasized, defineCustomElementAtomicResultSectionExcerpt, defineCustomElementAtomicResultSectionTitle, defineCustomElementAtomicResultSectionTitleMetadata, defineCustomElementAtomicResultSectionVisual, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicResultsPerPage, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSearchBoxInstantResults, defineCustomElementAtomicSearchBoxQuerySuggestions, defineCustomElementAtomicSearchBoxRecentQueries, defineCustomElementAtomicSearchInterface, defineCustomElementAtomicSearchLayout, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
+import {defineCustomElementAtomicAriaLive, defineCustomElementAtomicAutomaticFacet, defineCustomElementAtomicAutomaticFacetGenerator, defineCustomElementAtomicBreadbox, defineCustomElementAtomicCategoryFacet, defineCustomElementAtomicColorFacet, defineCustomElementAtomicCommerceBreadbox, defineCustomElementAtomicCommerceCategoryFacet, defineCustomElementAtomicCommerceDidYouMean, defineCustomElementAtomicCommerceFacet, defineCustomElementAtomicCommerceFacetNumberInput, defineCustomElementAtomicCommerceFacets, defineCustomElementAtomicCommerceLoadMoreProducts, defineCustomElementAtomicCommerceNoProducts, defineCustomElementAtomicCommerceNumericFacet, defineCustomElementAtomicCommerceProductsPerPage, defineCustomElementAtomicCommerceQueryError, defineCustomElementAtomicCommerceRecommendationInterface, defineCustomElementAtomicCommerceRefineModal, defineCustomElementAtomicCommerceRefineToggle, defineCustomElementAtomicCommerceSearchBox, defineCustomElementAtomicCommerceText, defineCustomElementAtomicCommerceTimeframeFacet, defineCustomElementAtomicDidYouMean, defineCustomElementAtomicExternal, defineCustomElementAtomicFacet, defineCustomElementAtomicFacetManager, defineCustomElementAtomicFieldCondition, defineCustomElementAtomicFoldedResultList, defineCustomElementAtomicFormatCurrency, defineCustomElementAtomicFormatNumber, defineCustomElementAtomicFormatUnit, defineCustomElementAtomicGeneratedAnswer, defineCustomElementAtomicHtml, defineCustomElementAtomicLayoutSection, defineCustomElementAtomicLoadMoreResults, defineCustomElementAtomicNoResults, defineCustomElementAtomicNotifications, defineCustomElementAtomicNumericFacet, defineCustomElementAtomicNumericRange, defineCustomElementAtomicPager, defineCustomElementAtomicPopover, defineCustomElementAtomicProduct, defineCustomElementAtomicProductChildren, defineCustomElementAtomicProductDescription, defineCustomElementAtomicProductExcerpt, defineCustomElementAtomicProductFieldCondition, defineCustomElementAtomicProductImage, defineCustomElementAtomicProductLink, defineCustomElementAtomicProductMultiValueText, defineCustomElementAtomicProductNumericFieldValue, defineCustomElementAtomicProductPrice, defineCustomElementAtomicProductRating, defineCustomElementAtomicProductSectionActions, defineCustomElementAtomicProductSectionBadges, defineCustomElementAtomicProductSectionBottomMetadata, defineCustomElementAtomicProductSectionChildren, defineCustomElementAtomicProductSectionDescription, defineCustomElementAtomicProductSectionEmphasized, defineCustomElementAtomicProductSectionMetadata, defineCustomElementAtomicProductSectionName, defineCustomElementAtomicProductSectionVisual, defineCustomElementAtomicProductText, defineCustomElementAtomicQueryError, defineCustomElementAtomicQuerySummary, defineCustomElementAtomicQuickview, defineCustomElementAtomicQuickviewModal, defineCustomElementAtomicRatingFacet, defineCustomElementAtomicRatingRangeFacet, defineCustomElementAtomicRecsError, defineCustomElementAtomicRecsInterface, defineCustomElementAtomicRecsList, defineCustomElementAtomicRecsResult, defineCustomElementAtomicRecsResultTemplate, defineCustomElementAtomicRefineModal, defineCustomElementAtomicRefineToggle, defineCustomElementAtomicRelevanceInspector, defineCustomElementAtomicResult, defineCustomElementAtomicResultBadge, defineCustomElementAtomicResultChildren, defineCustomElementAtomicResultChildrenTemplate, defineCustomElementAtomicResultDate, defineCustomElementAtomicResultFieldsList, defineCustomElementAtomicResultHtml, defineCustomElementAtomicResultIcon, defineCustomElementAtomicResultImage, defineCustomElementAtomicResultLink, defineCustomElementAtomicResultList, defineCustomElementAtomicResultLocalizedText, defineCustomElementAtomicResultMultiValueText, defineCustomElementAtomicResultNumber, defineCustomElementAtomicResultPrintableUri, defineCustomElementAtomicResultRating, defineCustomElementAtomicResultSectionActions, defineCustomElementAtomicResultSectionBadges, defineCustomElementAtomicResultSectionBottomMetadata, defineCustomElementAtomicResultSectionChildren, defineCustomElementAtomicResultSectionEmphasized, defineCustomElementAtomicResultSectionExcerpt, defineCustomElementAtomicResultSectionTitle, defineCustomElementAtomicResultSectionTitleMetadata, defineCustomElementAtomicResultSectionVisual, defineCustomElementAtomicResultTemplate, defineCustomElementAtomicResultText, defineCustomElementAtomicResultTimespan, defineCustomElementAtomicResultsPerPage, defineCustomElementAtomicSearchBox, defineCustomElementAtomicSearchBoxInstantResults, defineCustomElementAtomicSearchBoxQuerySuggestions, defineCustomElementAtomicSearchBoxRecentQueries, defineCustomElementAtomicSearchInterface, defineCustomElementAtomicSearchLayout, defineCustomElementAtomicSegmentedFacet, defineCustomElementAtomicSegmentedFacetScrollable, defineCustomElementAtomicSmartSnippet, defineCustomElementAtomicSmartSnippetFeedbackModal, defineCustomElementAtomicSmartSnippetSuggestions, defineCustomElementAtomicSortDropdown, defineCustomElementAtomicSortExpression, defineCustomElementAtomicTab, defineCustomElementAtomicTabManager, defineCustomElementAtomicTableElement, defineCustomElementAtomicText, defineCustomElementAtomicTimeframe, defineCustomElementAtomicTimeframeFacet} from '@coveo/atomic/components';
 //#endregion Lit Declarations
