@@ -116,7 +116,6 @@ module.exports = {
 
 ### Atomic Package (Stencil Components)
 
-- **Files**: 903 TypeScript files
 - **Configuration**: Warn-level rules to handle large codebase
 - **Specific rules**: Disabled max-lines-per-function for complex components
 
@@ -128,7 +127,6 @@ module.exports = {
 
 ### Quantic Package (Salesforce LWC)
 
-- **Files**: 1,594 TypeScript files
 - **Configuration**: Platform-specific constraints
 - **Specific rules**: Salesforce development patterns and limitations
 
