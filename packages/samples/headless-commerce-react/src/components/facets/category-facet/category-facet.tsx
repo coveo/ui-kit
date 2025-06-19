@@ -66,6 +66,7 @@ export default function CategoryFacet(props: ICategoryFacetProps) {
   const toggleSelectFacetValue = (value: CategoryFacetValue) => {
     if (controller.isValueSelected(value)) {
       controller.deselectAll();
+      return;
     }
     controller.toggleSelect(value);
   };
