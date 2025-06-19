@@ -210,12 +210,34 @@ npm run lint:check  # Check linting and formatting (~1.1s)
 npm run lint:fix    # Fix auto-fixable issues (~1.5s)
 ```
 
-### Direct Biome Usage (If Needed)
+### Direct Terminal Usage
 ```bash
+# Use npx when running directly in terminal/CI
 npx @biomejs/biome check .           # Check all files
 npx @biomejs/biome check . --apply   # Fix all files  
 npx @biomejs/biome format --write .  # Format only
+
+# Or if you want to install globally
+npm install -g @biomejs/biome
+biome check .                        # After global install
 ```
+
+### Package.json Scripts (No npx needed)
+```json
+{
+  "scripts": {
+    "lint:check": "biome check .",          // ✅ Correct
+    "lint:fix": "biome check --write .",    // ✅ Correct  
+    "format": "biome format --write .",     // ✅ Correct
+    "ci:lint": "biome ci ."                 // ✅ Correct
+  }
+}
+```
+
+**Why no npx in scripts?** 
+- npm automatically looks in `node_modules/.bin/` for binaries
+- Using `npx` in package.json scripts is redundant and slower
+- The binary name is `biome`, not `@biomejs/biome`
 
 ### VS Code Integration
 - **Extension:** Biome (biomejs.biome) - auto-installed
@@ -233,9 +255,22 @@ npx @biomejs/biome format --write .  # Format only
 
 ### Debug Commands
 ```bash
-npx @biomejs/biome check . --verbose     # See which files processed
-npx @biomejs/biome check path/file.js    # Test specific file
+# Terminal usage (use npx)
+npx @biomejs/biome check . --verbose          # See which files processed
+npx @biomejs/biome check path/file.js         # Test specific file
+npx @biomejs/biome --help                     # See all options
+
+# Package.json script debugging (no npx)
+npm run lint:check -- --verbose              # Pass flags to biome via npm
+npm run lint:fix -- --reporter=json          # Custom reporter
 ```
+
+### Quick Reference
+| Context | Command | Why |
+|---------|---------|-----|
+| **Terminal** | `npx @biomejs/biome check .` | Downloads/finds package as needed |
+| **npm script** | `"lint": "biome check ."` | npm resolves from node_modules/.bin |
+| **Global install** | `biome check .` | After `npm install -g @biomejs/biome` |
 
 ---
 

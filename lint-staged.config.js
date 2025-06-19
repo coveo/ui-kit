@@ -5,7 +5,7 @@ module.exports = {
         !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
         !file.includes('/packages/quantic/')
     );
-    return `npx @biomejs/biome check --write ${filteredFiles.join(' ')}`;
+    return `biome check --write ${filteredFiles.join(' ')}`;
   },
   '**/*.md': (files) => {
     return `cspell --no-progress --show-suggestions --show-context --no-must-find-files ${files.join(
