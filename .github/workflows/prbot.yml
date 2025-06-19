@@ -36,8 +36,6 @@ jobs:
       - run: npm run pr:report
         env:
           GITHUB_CREDENTIALS: ${{ steps.generate-token.outputs.token }}
-  # TODO: KIT-4396 - https://coveord.atlassian.net/browse/KIT-4396 This action takes currently over 50 minutes to run, which is too long for a PR workflow.
-  # Fix it and make it run in around 15 minutes like before.
   build-windows:
     name: 'Build Windows'
     runs-on: windows-latest
@@ -50,9 +48,19 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: ./.github/actions/build
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          skip-cache: true
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: '.nvmrc'
+      - name: Install npm
+        run: npm i -g npm@11.3.0
+        shell: bash
+      - name: Install dependencies
+        run: npm ci
+        shell: bash
+      - name: Build packages
+        run: npm run build
+        shell: bash
   build:
     name: 'Build'
     runs-on: ubuntu-latest
