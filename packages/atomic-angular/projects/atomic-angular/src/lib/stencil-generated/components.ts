@@ -2952,32 +2952,6 @@ export declare interface AtomicCommerceProductList extends LitAtomicCommerceProd
 }
 
 @ProxyCmp({
-  inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
-  methods: ['setRenderFunction', 'initialize'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box-instant-products',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['density', 'imageSize', 'ariaLabelGenerator']
-})
-export class AtomicCommerceSearchBoxInstantProducts {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    
-  }
-}
-
-export declare interface AtomicCommerceSearchBoxInstantProducts extends LitAtomicCommerceSearchBoxInstantProducts {
-
-}
-
-@ProxyCmp({
   inputs: ['icon', 'maxWithQuery', 'maxWithoutQuery'],
   methods: ['initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-query-suggestions') || customElements.define('atomic-commerce-search-box-query-suggestions', LitAtomicCommerceSearchBoxQuerySuggestions);}
@@ -3000,6 +2974,32 @@ export class AtomicCommerceSearchBoxQuerySuggestions {
 }
 
 export declare interface AtomicCommerceSearchBoxQuerySuggestions extends LitAtomicCommerceSearchBoxQuerySuggestions {
+
+}
+
+@ProxyCmp({
+  inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
+  methods: ['setRenderFunction', 'initialize'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box-instant-products',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['density', 'imageSize', 'ariaLabelGenerator']
+})
+export class AtomicCommerceSearchBoxInstantProducts {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    
+  }
+}
+
+export declare interface AtomicCommerceSearchBoxInstantProducts extends LitAtomicCommerceSearchBoxInstantProducts {
 
 }
 
