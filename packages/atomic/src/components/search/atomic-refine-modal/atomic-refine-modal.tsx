@@ -36,12 +36,12 @@ import {
 } from '../../common/facets/stencil-facet-common';
 import {isRefineModalFacet} from '../../common/interface/store';
 import {RefineModalBody} from '../../common/refine-modal/body';
+import {RefineModal} from '../../common/refine-modal/modal';
+import {RefineModalSortSection} from '../../common/refine-modal/sort';
 import {
   RefineModalFiltersClearButton,
   RefineModalFiltersSection,
-} from '../../common/refine-modal/filters';
-import {RefineModal} from '../../common/refine-modal/modal';
-import {RefineModalSortSection} from '../../common/refine-modal/sort';
+} from '../../common/refine-modal/stencil-filters';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 import {SortDropdownOption} from '../atomic-search-interface/store';
 
