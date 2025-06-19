@@ -3,7 +3,7 @@ import {
   FunctionalComponentWithChildren,
 } from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {when} from 'lit/directives/when.js';
 import {renderButton} from '../button';
 
@@ -52,5 +52,5 @@ export const renderRefineModalFiltersClearButton: FunctionalComponent<
       class: 'px-2 py-1',
       part: 'filter-clear-all',
     },
-  })(html``)}`;
+  })(nothing)}`;
 };
