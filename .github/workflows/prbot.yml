@@ -48,9 +48,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           ref: ${{ github.head_ref }}
-      - uses: ./.github/actions/build
-        with:
-          skip-cache: true
+      - uses: ./.github/actions/build-windows
   build:
     name: 'Build'
     runs-on: ubuntu-latest
