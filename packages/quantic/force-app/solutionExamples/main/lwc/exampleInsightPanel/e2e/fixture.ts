@@ -1,9 +1,7 @@
 import {InsightPanelObject} from './pageObject';
 import {quanticBase} from '../../../../../../playwright/fixtures/baseFixture';
 import {SearchObject} from '../../../../../../playwright/page-object/searchObject';
-import {
-  insightSearchRequestRegex,
-} from '../../../../../../playwright/utils/requests';
+import {insightSearchRequestRegex} from '../../../../../../playwright/utils/requests';
 import {InsightSetupObject} from '../../../../../../playwright/page-object/insightSetupObject';
 
 const pageUrl = 's/insight-panel-example';
@@ -22,10 +20,7 @@ export const testInsight = quanticBase.extend<InsightPanelE2EFixtures>({
   insightSetup: async ({page}, use) => {
     await use(new InsightSetupObject(page));
   },
-  insightPanel: async (
-    {page, insightSetup},
-    use
-  ) => {
+  insightPanel: async ({page, insightSetup}, use) => {
     await page.goto(pageUrl);
 
     await insightSetup.waitForInsightInterfaceInitialization();

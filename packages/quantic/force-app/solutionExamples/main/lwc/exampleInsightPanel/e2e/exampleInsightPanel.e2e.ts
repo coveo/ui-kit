@@ -4,7 +4,9 @@ let test = testInsight;
 
 test.describe('Example Insight Panel E2E Tests', () => {
   test.describe('when loading the Insight Panel', () => {
-    test('should render correctly and load results automatically', async ({insightPanel, search}) => {
+    test('should render correctly and load results automatically', async ({
+      insightPanel,
+    }) => {
       expect(insightPanel.insightPanel).toBeVisible();
       expect(insightPanel.searchbox).toBeVisible();
       expect(insightPanel.refineToggle).toBeVisible();
@@ -23,7 +25,10 @@ test.describe('Example Insight Panel E2E Tests', () => {
   });
 
   test.describe('the happy path:', () => {
-    test('should allow the user to search, select a facet, change the tab, change the page and clear the filters', async ({insightPanel, search}) => {
+    test('should allow the user to search, select a facet, change the tab, change the page and clear the filters', async ({
+      insightPanel,
+      search,
+    }) => {
       // Trigger a search
       const exampleQuery = 'Test';
       const searchRequestPromise = search.waitForSearchRequest();
@@ -72,8 +77,10 @@ test.describe('Example Insight Panel E2E Tests', () => {
       ).postDataJSON();
 
       const selectedFacetMatchesExpectedFacet =
-      searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]?.value === 'Knowledge' &&
-      searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]?.state === 'selected';
+        searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]
+          ?.value === 'Knowledge' &&
+        searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]
+          ?.state === 'selected';
       expect(selectedFacetMatchesExpectedFacet).toBe(true);
 
       // Clear the filters
@@ -85,11 +92,13 @@ test.describe('Example Insight Panel E2E Tests', () => {
 
       const facetsFromRequest = searchRequestBodyAfterClearFilters?.facets;
       // Check that all facets are in 'idle' state (non-selected)
-      facetsFromRequest.forEach((facet: {currentValues: Array<{state: string}>}) => {
-        facet.currentValues.forEach((value: {state: string}) => {
-          expect(value.state).toBe('idle');
-        });
-      })
+      facetsFromRequest.forEach(
+        (facet: {currentValues: Array<{state: string}>}) => {
+          facet.currentValues.forEach((value: {state: string}) => {
+            expect(value.state).toBe('idle');
+          });
+        }
+      );
     });
   });
 });
