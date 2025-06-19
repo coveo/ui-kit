@@ -1,6 +1,6 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {i18n} from 'i18next';
-import {html} from 'lit';
+import {html, nothing} from 'lit';
 import {RefOrCallback} from 'lit/directives/ref.js';
 import {renderButton} from '../button';
 
@@ -22,5 +22,5 @@ export const renderRefineToggleButton: FunctionalComponent<
       ref: props.setRef,
       part: 'button',
     },
-  })(html``)}`;
+  })(nothing)}`;
 };
