@@ -22,8 +22,8 @@ import {
   RefineModalFiltersClearButton,
   RefineModalFiltersSection,
 } from '../../common/refine-modal/filters';
-import {RefineModal} from '../../common/refine-modal/modal';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
+import {RefineModal} from '../../common/refine-modal/stencil-modal';
 import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {CommerceSortOption, getSortByLabel} from '../sort/stencil-option';
 
