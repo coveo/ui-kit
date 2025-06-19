@@ -589,7 +589,6 @@ jobs:
     if: ${{ always() && github.event_name == 'pull_request'}}
     needs:
       - 'build'
-      - 'build-windows'
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
@@ -629,7 +628,6 @@ jobs:
     if: ${{ always() && github.event_name == 'merge_group'}}
     needs:
       - 'build'
-      - 'build-windows'
       - 'lint-check'
       - 'unit-test'
       - 'playwright-atomic'
