@@ -22,8 +22,9 @@ import { InsightStore } from "./components/insight/atomic-insight-interface/stor
 import { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 import { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 import { Section } from "./components/common/atomic-layout-section/sections";
-import { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
+import { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 import { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+import { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 import { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 import { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 import { RecsStore } from "./components/recommendations/atomic-recs-interface/store";
@@ -50,8 +51,9 @@ export { InsightStore } from "./components/insight/atomic-insight-interface/stor
 export { Actions, InsightResultActionClickedEvent } from "./components/insight/atomic-insight-result-action/atomic-insight-result-action";
 export { InsightResultAttachToCaseEvent } from "./components/insight/atomic-insight-result-attach-to-case-action/atomic-insight-result-attach-to-case-action";
 export { Section } from "./components/common/atomic-layout-section/sections";
-export { SelectChildProductEventArgs } from "./components/commerce/product-template-components/atomic-product-children/select-child-product-event";
+export { SelectChildProductEventArgs } from "./components/commerce/atomic-product-children/select-child-product-event";
 export { TruncateAfter } from "./components/common/expandable-text/expandable-text";
+export { ItemDisplayImageSize as ItemDisplayImageSize1 } from "./components.d";
 export { RecommendationEngine, InteractiveResult as RecsInteractiveResult, LogLevel as RecsLogLevel, Result as RecsResult, ResultTemplate as RecsResultTemplate, ResultTemplateCondition as RecsResultTemplateCondition } from "@coveo/headless/recommendation";
 export { RecsInitializationOptions } from "./components/recommendations/atomic-recs-interface/atomic-recs-interface";
 export { RecsStore } from "./components/recommendations/atomic-recs-interface/store";

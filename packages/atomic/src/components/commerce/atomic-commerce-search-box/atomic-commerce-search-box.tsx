@@ -52,7 +52,7 @@ import {
   elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
 import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
-import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
+import {SelectChildProductEventArgs} from '../atomic-product-children/select-child-product-event';
 
 /**
  * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
