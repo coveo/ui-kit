@@ -1,0 +1,70 @@
+import {Canvas, Markdown, ArgTypes, Meta, Title, Description, Controls, Primary, Stories, Subtitle} from '@storybook/blocks';
+import * as AtomicCommerceTextStories from './atomic-commerce-text.new.stories';
+
+<Meta of={AtomicCommerceTextStories} />
+
+<Title />
+<Subtitle><Description/></Subtitle>
+
+<Canvas
+  additionalActions={[
+    {
+      title: 'Open in GitHub',
+      onClick: () => {
+        window.open(
+          'https://github.com/coveo/ui-kit/blob/master/packages/atomic/src/components/commerce/atomic-commerce-text/atomic-commerce-text.ts',
+          '_blank'
+        );
+      },
+    },
+  ]}
+  of={AtomicCommerceTextStories.Default}
+/>
+
+## Usage
+
+The `atomic-commerce-text` component leverages the I18n translation module through the atomic-commerce-interface. It is used to display internationalized text content within your commerce interface.
+
+This component is typically used within product templates or other parts of your commerce interface where you need to display translatable text.
+
+```html
+<atomic-commerce-interface>
+  ...
+  <atomic-commerce-text value="product-name"></atomic-commerce-text>
+  ...
+</atomic-commerce-interface>
+```
+
+### Basic Usage
+
+```html
+<atomic-commerce-text value="your-translation-key"></atomic-commerce-text>
+```
+
+### With Pluralization
+
+For text that needs to change based on count (e.g., "1 item" vs "5 items"), you can use the `count` attribute:
+
+```html
+<atomic-commerce-text value="items-count" count="1"></atomic-commerce-text>
+<atomic-commerce-text value="items-count" count="5"></atomic-commerce-text>
+```
+
+Make sure your translation resources include both singular and plural forms:
+
+```javascript
+{
+  "items-count": "{{count}} item",
+  "items-count_other": "{{count}} items"
+}
+```
+
+## Examples
+
+### With Translations
+
+<Canvas of={AtomicCommerceTextStories.WithTranslations} />
+
+## Reference
+
+<ArgTypes />
