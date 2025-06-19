@@ -8,7 +8,7 @@ interface PagerGuardProps {
   hasItems: boolean;
 }
 
-export const pagerGuard: FunctionalComponentGuard<PagerGuardProps> =
+export const renderPagerGuard: FunctionalComponentGuard<PagerGuardProps> =
   ({props}) =>
   (children) => {
     const condition = !props.hasError && props.isAppLoaded && props.hasItems;

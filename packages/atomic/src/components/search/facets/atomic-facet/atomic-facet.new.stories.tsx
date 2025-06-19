@@ -71,7 +71,6 @@ export const CustomSort: Story = {
   decorators: [
     facetDecorator,
     (_Story, context) => {
-      console.log(context);
       return html`<atomic-facet
         field=${context.args['attributes-field']}
         custom-sort=${context.args['attributes-custom-sort']}
