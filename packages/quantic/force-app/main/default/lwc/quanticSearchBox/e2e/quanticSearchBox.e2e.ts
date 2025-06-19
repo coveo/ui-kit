@@ -1,4 +1,4 @@
-import {testSearch, testInsight} from './fixture';
+import {testSearch, testInsight, expect} from './fixture';
 import {
   AnalyticsModeEnum,
   analyticsModeTest,
@@ -27,50 +27,50 @@ const longQuery =
 useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
   test.describe(`quantic search box ${useCase.label}`, () => {
-    test.describe('analytics-related tests', () => {
-      analyticsModeTest.forEach((analytics) => {
-        test.describe(analytics.label, () => {
-          test.use({
-            analyticsMode: analytics.mode,
-          });
-          test('should send a search request and analytics after triggering a search', async ({
-            searchBox,
-            search,
-          }) => {
-            const testQuery = 'test';
-            const expectedOriginContext =
-              useCase.value === 'insight' ? 'InsightPanel' : 'Search';
-            const searchBoxInput = searchBox.searchBoxInput;
-            const searchRequestPromise = search.waitForSearchRequest();
+    analyticsModeTest.forEach((analytics) => {
+      test.describe(`${analytics.label} related tests`, () => {
+        test.use({
+          analyticsMode: analytics.mode,
+        });
+        test('should send a search request and analytics after triggering a search', async ({
+          searchBox,
+          search,
+        }) => {
+          const testQuery = 'test';
+          const expectedOriginContext =
+            useCase.value === 'insight' ? 'InsightPanel' : 'Search';
+          const searchBoxInput = searchBox.searchBoxInput;
+          const searchRequestPromise = search.waitForSearchRequest();
 
-            await searchBoxInput.fill(testQuery);
-            await searchBoxInput.press('Enter');
+          await searchBoxInput.fill(testQuery);
+          await searchBoxInput.press('Enter');
 
-            if (analytics.mode === AnalyticsModeEnum.legacy) {
-              const searchLegacyAnalyticsPromise =
-                searchBox.waitForSearchLegacyAnalytics({
-                  queryText: testQuery,
+          if (analytics.mode === AnalyticsModeEnum.legacy) {
+            const searchLegacyAnalyticsPromise =
+              searchBox.waitForSearchLegacyAnalytics({
+                queryText: testQuery,
+                originContext: expectedOriginContext,
+              });
+
+            await searchRequestPromise;
+            await searchLegacyAnalyticsPromise;
+          } else {
+            await searchRequestPromise;
+            const searchRequestBody = (
+              await searchRequestPromise
+            ).postDataJSON();
+
+            expect(searchRequestBody).toEqual(
+              expect.objectContaining({
+                q: testQuery,
+                analytics: expect.objectContaining({
+                  actionCause: 'searchboxSubmit',
                   originContext: expectedOriginContext,
-                });
-
-              await searchRequestPromise;
-              await searchLegacyAnalyticsPromise;
-            } else {
-              await searchRequestPromise;
-              const searchRequestBody = (
-                await searchRequestPromise
-              ).postDataJSON();
-
-              test.expect(searchRequestBody.q).toBe(testQuery);
-              test
-                .expect(searchRequestBody?.analytics?.actionCause)
-                .toBe('searchboxSubmit');
-              test
-                .expect(searchRequestBody?.analytics?.originContext)
-                .toBe(expectedOriginContext);
-              test.expect(searchRequestBody?.analytics?.capture).toBe(true);
-            }
-          });
+                  capture: true,
+                }),
+              })
+            );
+          }
         });
       });
     });
@@ -79,26 +79,30 @@ useCaseTestCases.forEach((useCase) => {
       test('should not expand the search box height when a very long query is typed', async ({
         searchBox,
       }) => {
-        const expectedAriaExpandedValue =
-          useCase.value === 'insight' ? null : '0';
         const searchBoxInput = searchBox.searchBoxInput;
         await searchBoxInput.fill(longQuery);
 
         const searchBoxInputHeight = await searchBoxInput.evaluate(
           (el) => (el as HTMLElement).offsetHeight
         );
-        test.expect(searchBoxInput).toBeVisible();
-        test
-          .expect(await searchBoxInput.getAttribute('aria-expanded'))
-          .toBe(expectedAriaExpandedValue);
-        test.expect(searchBoxInputHeight).toBe(defaultSearchBoxInputHeight);
+        expect(searchBoxInput).toBeVisible();
+        expect(searchBoxInputHeight).toBe(defaultSearchBoxInputHeight);
+        const whiteSpace = await searchBoxInput.evaluate(
+          (el) => window.getComputedStyle(el).whiteSpace
+        );
+        const overflow = await searchBoxInput.evaluate(
+          (el) => window.getComputedStyle(el).overflow
+        );
+
+        expect(whiteSpace).toBe('normal');
+        expect(overflow).toBe('clip');
       });
     });
 
     test.describe(`with ${expandableVariant.variantName} variant`, () => {
       test.use({
         options: {
-          textarea: true,
+          textarea: expandableVariant.textarea,
         },
       });
 
@@ -111,13 +115,19 @@ useCaseTestCases.forEach((useCase) => {
         const searchBoxTextareaHeight = await searchBoxTextarea.evaluate(
           (el) => (el as HTMLElement).offsetHeight
         );
-        test.expect(searchBoxTextarea).toBeVisible();
-        test
-          .expect(searchBoxTextarea.getAttribute('aria-expanded'))
-          .toBeTruthy();
-        test
-          .expect(searchBoxTextareaHeight)
-          .toBeGreaterThan(defaultSearchBoxInputHeight);
+        expect(searchBoxTextarea).toBeVisible();
+        expect(searchBoxTextareaHeight).toBeGreaterThan(
+          defaultSearchBoxInputHeight
+        );
+        const whiteSpace = await searchBoxTextarea.evaluate(
+          (el) => window.getComputedStyle(el).whiteSpace
+        );
+        const overflow = await searchBoxTextarea.evaluate(
+          (el) => window.getComputedStyle(el).overflow
+        );
+
+        expect(whiteSpace).toBe('pre-wrap');
+        expect(overflow).toBe('auto');
       });
 
       test('should collapse back to default height when it is expanded and clicking outside of the search box', async ({
@@ -132,17 +142,17 @@ useCaseTestCases.forEach((useCase) => {
           await searchBoxTextarea.evaluate(
             (el) => (el as HTMLElement).offsetHeight
           );
-        test.expect(searchBoxTextarea).toBeVisible();
+        expect(searchBoxTextarea).toBeVisible();
         console.log(
           'aria-expanded',
           searchBoxTextarea.getAttribute('aria-expanded')
         );
-        test
-          .expect(await searchBoxTextarea.getAttribute('aria-expanded'))
-          .toBe('false');
-        test
-          .expect(collapsedSearchBoxTextareaHeight)
-          .toBe(defaultSearchBoxInputHeight);
+        expect(await searchBoxTextarea.getAttribute('aria-expanded')).toBe(
+          'false'
+        );
+        expect(collapsedSearchBoxTextareaHeight).toBe(
+          defaultSearchBoxInputHeight
+        );
       });
     });
   });
