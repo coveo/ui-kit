@@ -4,9 +4,9 @@ import {describe, it, expect} from 'vitest';
 import {renderRefineModalBody} from './body';
 
 describe('#renderRefineModalBody', () => {
-  const renderComponent = async (children = html`<div>Test content</div>`) => {
+  const renderComponent = async () => {
     const element = await renderFunctionFixture(
-      html`${renderRefineModalBody()(children)}`
+      html`${renderRefineModalBody()(html`<div>Test content</div>`)}`
     );
 
     return {
@@ -28,9 +28,8 @@ describe('#renderRefineModalBody', () => {
   });
 
   it('should render children content', async () => {
-    const testContent = html`<p>Custom test content</p>`;
-    const {content} = await renderComponent(testContent);
+    const {content} = await renderComponent();
 
-    expect(content).toContain('Custom test content');
+    expect(content).toContain('Test content');
   });
 });
