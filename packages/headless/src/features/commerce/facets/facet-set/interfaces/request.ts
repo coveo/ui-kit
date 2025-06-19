@@ -23,12 +23,13 @@ export type CategoryFacetRequest = BaseCommerceFacetRequest<
   'hierarchical'
 > &
   CategoryFacetDelimitingCharacter &
-  FreezableFacetRequestProperties;
+  FreezableFacetRequestProperties & {
+    retrieveCount?: number;
+  };
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   children: CategoryFacetValueRequest[];
   value: string;
-  retrieveCount?: number;
 }
 
 export type DateFacetRequest = BaseCommerceFacetRequest<
@@ -64,7 +65,7 @@ export type BaseCommerceFacetRequest<Value, Type extends FacetType> = Pick<
   displayName?: string;
   type: Type;
   values: Value[];
-  initialNumberOfValues: number;
+  initialNumberOfValues?: number;
   numberOfValues?: number;
 };
 
