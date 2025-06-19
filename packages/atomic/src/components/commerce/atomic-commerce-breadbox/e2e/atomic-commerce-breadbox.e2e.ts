@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Color:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Brand:${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -317,7 +317,8 @@ test.describe('Default', () => {
   test.describe('when a date range facet value is selected', () => {
     let firstValueText: string | RegExp;
 
-    test.beforeEach(async ({breadbox}) => {
+    test.beforeEach(async ({breadbox, page}) => {
+      await page.getByRole('button', {name: 'Expand the Date facet'}).click();
       await breadbox.getFacetValue('dateRange').first().click();
       firstValueText = (await breadbox
         .getFacetValue('dateRange')
