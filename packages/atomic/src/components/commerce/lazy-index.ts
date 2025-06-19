@@ -10,6 +10,10 @@ export default {
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
     ),
+  'atomic-commerce-query-summary': async () =>
+    await import(
+      './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
+    ),
   'atomic-commerce-recommendation-list': async () =>
     await import(
       './atomic-commerce-recommendation-list/atomic-commerce-recommendation-list.js'
@@ -30,6 +34,8 @@ export default {
     await import(
       './atomic-commerce-sort-dropdown/atomic-commerce-sort-dropdown.js'
     ),
+  'atomic-product-template': async () =>
+    await import('./atomic-product-template/atomic-product-template.js'),
 } as Record<string, () => Promise<unknown>>;
 
 export type * from './index.js';
