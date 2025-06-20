@@ -1,6 +1,6 @@
 import {FunctionalComponent} from '@/src/utils/functional-component-utils';
 import {html} from 'lit';
-import {radioButton} from '../radio-button';
+import {renderRadioButton} from '../radio-button';
 
 interface ChoicesProps {
   label: string;
@@ -49,7 +49,7 @@ export const renderChoices: FunctionalComponent<ChoicesProps> = ({props}) => {
           parts.push('active-button');
         }
         const text = choice.toLocaleString(lang);
-        return radioButton({
+        return renderRadioButton({
           props: {
             key: 'choice',
             groupName,
