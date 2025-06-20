@@ -21,7 +21,7 @@ module.exports = {
     jest: true,
     es6: true,
   },
-  extends: ['plugin:prettier/recommended'],
+  extends: ['plugin:prettier/recommended', 'plugin:oxlint/recommended'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
