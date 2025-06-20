@@ -14,8 +14,8 @@ import {
 import {createAppLoadedListener} from '../../common/interface/store';
 import {LoadMoreContainer} from '../../common/load-more/container';
 import {LoadMoreGuard} from '../../common/load-more/guard';
-import {LoadMoreProgressBar} from '../../common/load-more/progress-bar';
 import {LoadMoreButton} from '../../common/load-more/stencil-button';
+import {LoadMoreProgressBar} from '../../common/load-more/stencil-progress-bar';
 import {LoadMoreSummary} from '../../common/load-more/summary';
 import {Bindings} from '../atomic-search-interface/atomic-search-interface';
 
