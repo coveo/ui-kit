@@ -17,9 +17,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
-import {RefineModalBody} from '../../common/refine-modal/body';
 import {RefineModal} from '../../common/refine-modal/modal';
 import {RefineModalSortSection} from '../../common/refine-modal/sort';
+import {RefineModalBody} from '../../common/refine-modal/stencil-body';
 import {
   RefineModalFiltersClearButton,
   RefineModalFiltersSection,

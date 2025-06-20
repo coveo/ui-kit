@@ -31,10 +31,8 @@ import {
 import {loadReducerError} from '../../../../../utils/errors.js';
 import {Controller} from '../../../../controller/headless-controller.js';
 import {determineFacetId} from '../../_common/facet-id-determinor.js';
-import {
-  assertRangeFacetOptions,
-  buildCoreRangeFacet,
-} from '../headless-core-range-facet.js';
+import {assertRangeFacetOptions} from '../core-range-facet-utils.js';
+import {buildCoreRangeFacet} from '../headless-core-range-facet.js';
 import {
   DateRangeOptions,
   DateRangeInput,
