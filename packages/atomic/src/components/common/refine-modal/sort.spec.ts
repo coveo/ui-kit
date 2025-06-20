@@ -109,4 +109,10 @@ describe('#renderRefineModalSortSection', () => {
 
     expect(selectIcon?.tagName).toBe('ATOMIC-ICON');
   });
+
+  it('should set the icon source to SortIcon', async () => {
+    const {selectIcon} = await renderComponent();
+
+    expect(selectIcon?.getAttribute('icon')).toMatch(/<svg/);
+  });
 });
