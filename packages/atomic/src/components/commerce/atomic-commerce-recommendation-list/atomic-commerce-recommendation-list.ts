@@ -463,9 +463,11 @@ export class AtomicCommerceRecommendationList
             .density=${props.density}
             .display=${props.display}
             .imageSize=${props.imageSize}
-            .linkContent=${props.display === 'grid'
-              ? this.productTemplateProvider.getLinkTemplateContent(product)
-              : this.productTemplateProvider.getEmptyLinkTemplateContent()}
+            .linkContent=${
+              props.display === 'grid'
+                ? this.productTemplateProvider.getLinkTemplateContent(product)
+                : this.productTemplateProvider.getEmptyLinkTemplateContent()
+            }
             .loadingFlag=${props.loadingFlag}
             .interactiveProduct=${props.interactiveProduct}
             .product=${props.product}

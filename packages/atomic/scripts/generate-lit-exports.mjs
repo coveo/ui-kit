@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
-import {formatWithPrettier} from './format-with-prettier.mjs';
+import {formatWithBiome} from './format-with-biome.mjs';
 
 const baseComponentsDir = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -73,11 +73,8 @@ async function generateLitExportsForDir(dir) {
     export type * from './index.js';
   `;
 
-  indexFileContent = await formatWithPrettier(
-    indexFileContent,
-    outputIndexFile
-  );
-  lazyIndexFileContent = await formatWithPrettier(
+  indexFileContent = await formatWithBiome(indexFileContent, outputIndexFile);
+  lazyIndexFileContent = await formatWithBiome(
     lazyIndexFileContent,
     outputLazyIndexFile
   );

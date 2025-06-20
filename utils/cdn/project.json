@@ -16,6 +16,6 @@
               "command": "node ./scripts/serve.mjs",
               "cwd": "{projectRoot}"
             }
-        },
+        }
     }
 }

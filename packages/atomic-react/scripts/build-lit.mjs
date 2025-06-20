@@ -1,6 +1,6 @@
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 import {writeFileSync} from 'node:fs';
-import * as prettier from 'prettier';
+import {execSync} from 'node:child_process';
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -73,24 +73,21 @@ for (const module of cem.modules) {
 }
 
 for (const entry of entries) {
-  const prettierConfig = {
-    ...(await prettier.resolveConfig(entry.path)),
-    parser: 'typescript'
-  };
   if(entry.computedComponentImports.length===0) {
-    writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
+    writeFileSync(entry.path, 'export {}');
+    // Format with Biome
+    execSync(`biome format --write "${entry.path}"`, {stdio: 'pipe'});
     continue;
   }
   writeFileSync(
     entry.path,
-    await prettier.format(
-      [
-        `import {createComponent} from '@lit/react';`,
-        `import React from 'react';`,
-        `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
-        entry.content
-      ].join('\n'),
-      prettierConfig
-    )
-  )
+    [
+      `import {createComponent} from '@lit/react';`,
+      `import React from 'react';`,
+      `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
+      entry.content
+    ].join('\n')
+  );
+  // Format with Biome
+  execSync(`biome format --write "${entry.path}"`, {stdio: 'pipe'});
 }

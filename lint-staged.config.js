@@ -1,12 +1,11 @@
 module.exports = {
-  '**/*.{ts?(x),?(m)js}': (files) => {
+  '**/*.{ts?(x),?(m)js,json,css,pcss,html,md,yml}': (files) => {
     const filteredFiles = files.filter(
-      (file) => !(file.includes('/stencil-generated/') && file.endsWith('.ts'))
+      (file) =>
+        !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
+        !file.includes('/packages/quantic/')
     );
-    return `eslint --fix ${filteredFiles.join(' ')}`;
-  },
-  '**/*.{scss,css,pcss,html,md,yml,ts,tsx,js,mjs,json}': (files) => {
-    return `prettier --write ${files.join(' ')}`;
+    return `biome check --write ${filteredFiles.join(' ')}`;
   },
   '**/*.md': (files) => {
     return `cspell --no-progress --show-suggestions --show-context --no-must-find-files ${files.join(

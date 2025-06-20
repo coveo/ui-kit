@@ -1,9 +1,9 @@
+import {createComponent} from '@lit/react';
+import React from 'react';
 import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
 } from '@coveo/atomic/components';
-import {createComponent} from '@lit/react';
-import React from 'react';
 
 export const AtomicComponentError = createComponent({
   tagName: 'atomic-component-error',

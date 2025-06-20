@@ -2,7 +2,8 @@ import {FunctionalComponentWithChildren} from '@/src/utils/functional-component-
 import {html} from 'lit';
 
 export const renderLabel: FunctionalComponentWithChildren<{}> =
-  () => (children) => html`
+  () => (children) =>
+    html`
     <span
       part="label"
       class="text-on-background mr-3 self-start text-lg leading-10"
