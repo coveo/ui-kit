@@ -110,7 +110,9 @@ async function convertCssToJs(srcPath, distPath, file) {
 export async function processCssFiles(srcDir, distDir) {
   let entries;
   try {
-    entries = readdirSync(srcDir, {withFileTypes: true});
+    entries = readdirSync(srcDir, {withFileTypes: true}).toSorted((a, b) =>
+      a.name.localeCompare(b.name)
+    );
   } catch (err) {
     console.error(chalk.red(`Error reading directory: ${srcDir}`), err);
     return;
