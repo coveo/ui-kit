@@ -7,8 +7,10 @@ export const wrapInCommerceSearchBox = (
   decorator: Decorator;
 } => ({
   decorator: (story) => html`
-    <atomic-commerce-search-box suggestion-timeout="5000" id="code-root">
-      ${extra} ${story()}
-    </atomic-commerce-search-box>
+    <div id="code-root">
+      <atomic-commerce-search-box suggestion-timeout="5000">
+        ${extra} ${story()}
+      </atomic-commerce-search-box>
+    </div>
   `,
 });

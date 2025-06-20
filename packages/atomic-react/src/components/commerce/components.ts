@@ -5,6 +5,7 @@ import {
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
   AtomicCommerceRecommendationList as LitAtomicCommerceRecommendationList,
+  AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
@@ -49,6 +50,12 @@ export const AtomicCommerceRecommendationList = createComponent({
   tagName: 'atomic-commerce-recommendation-list',
   react: React,
   elementClass: LitAtomicCommerceRecommendationList,
+});
+
+export const AtomicCommerceSearchBox = createComponent({
+  tagName: 'atomic-commerce-search-box',
+  react: React,
+  elementClass: LitAtomicCommerceSearchBox,
 });
 
 export const AtomicCommerceSearchBoxInstantProducts = createComponent({

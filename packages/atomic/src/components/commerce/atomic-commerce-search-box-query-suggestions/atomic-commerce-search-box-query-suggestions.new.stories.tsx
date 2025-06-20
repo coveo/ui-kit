@@ -1,6 +1,6 @@
 import {wrapInCommerceInterface} from '@/storybook-utils/commerce/commerce-interface-wrapper';
 import {wrapInCommerceSearchBox} from '@/storybook-utils/commerce/commerce-search-box-wrapper';
-import {renderComponent} from '@/storybook-utils/common/render-component';
+import {renderComponentWithoutCodeRoot} from '@/storybook-utils/common/render-component';
 import {parameters} from '@/storybook-utils/common/search-box-suggestions-parameters';
 import {userEvent} from '@storybook/test';
 import type {Meta, StoryObj as Story} from '@storybook/web-components';
@@ -13,7 +13,7 @@ const meta: Meta = {
   component: 'atomic-commerce-search-box-query-suggestions',
   title: 'Commerce/atomic-commerce-search-box-query-suggestions',
   id: 'atomic-commerce-search-box-query-suggestions',
-  render: renderComponent,
+  render: renderComponentWithoutCodeRoot,
   decorators: [commerceSearchBoxDecorator, commerceInterfaceDecorator],
   parameters,
   play: async (context) => {

@@ -1,39 +1,33 @@
-import {isNullOrUndefined} from '@coveo/bueno';
-import {
-  SearchBoxOptions,
-  StandaloneSearchBoxState,
-  StandaloneSearchBox,
-  SearchBox,
-  SearchBoxState,
-  buildSearchBox,
-  buildStandaloneSearchBox,
-  loadQuerySetActions,
-} from '@coveo/headless/commerce';
-import {
-  Component,
-  Element,
-  Event,
-  EventEmitter,
-  Host,
-  Listen,
-  Prop,
-  State,
-  Watch,
-  h,
-} from '@stencil/core';
-import {hasKeyboard, isMacOS} from '../../../utils/device-utils';
-import {
-  BindStateToController,
-  InitializableComponent,
-  InitializeBindings,
-} from '../../../utils/initialization-utils';
+import {booleanConverter} from '@/src/converters/boolean-converter';
+import {bindStateToController} from '@/src/decorators/bind-state';
+import {bindingGuard} from '@/src/decorators/binding-guard';
+import {bindings} from '@/src/decorators/bindings';
+import {errorGuard} from '@/src/decorators/error-guard';
+import {InitializableComponent} from '@/src/decorators/types';
+import {watch} from '@/src/decorators/watch';
+import {withTailwindStyles} from '@/src/decorators/with-tailwind-styles.js';
+import {AriaLiveRegionController} from '@/src/utils/accessibility-utils';
+import {hasKeyboard, isMacOS} from '@/src/utils/device-utils';
 import {
   SafeStorage,
   StandaloneSearchBoxData,
   StorageItems,
-} from '../../../utils/local-storage-utils';
-import {updateBreakpoints} from '../../../utils/replace-breakpoint';
-import {AriaLiveRegion} from '../../../utils/stencil-accessibility-utils';
+} from '@/src/utils/local-storage-utils';
+import {updateBreakpoints} from '@/src/utils/replace-breakpoint';
+import {
+  buildSearchBox,
+  buildStandaloneSearchBox,
+  loadQuerySetActions,
+  SearchBox,
+  SearchBoxOptions,
+  SearchBoxState,
+  StandaloneSearchBox,
+  StandaloneSearchBoxState,
+} from '@coveo/headless/commerce';
+import {CSSResultGroup, html, LitElement, unsafeCSS} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+import {classMap} from 'lit/directives/class-map.js';
+import {createRef, ref, RefOrCallback} from 'lit/directives/ref.js';
 import {
   isFocusingOut,
   once,
@@ -41,21 +35,22 @@ import {
   spreadProperties,
 } from '../../../utils/utils';
 import {RedirectionPayload} from '../../common/search-box/redirection-payload';
-import {SearchBoxWrapper} from '../../common/search-box/stencil-search-box-wrapper';
-import {SearchTextArea} from '../../common/search-box/stencil-search-text-area';
-import {SubmitButton} from '../../common/search-box/stencil-submit-button';
-import {SuggestionManager} from '../../common/suggestions/stencil-suggestion-manager';
+import {renderSearchBoxWrapper} from '../../common/search-box/search-box-wrapper';
+import {renderSearchBoxTextArea} from '../../common/search-box/search-text-area';
+import {renderSubmitButton} from '../../common/search-box/submit-button';
+import {SuggestionManager} from '../../common/suggestions/suggestion-manager';
 import {
+  elementHasQuery,
   SearchBoxSuggestionElement,
   SearchBoxSuggestionsBindings,
   SearchBoxSuggestionsEvent,
-  elementHasQuery,
 } from '../../common/suggestions/suggestions-common';
-import type {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 import {SelectChildProductEventArgs} from '../product-template-components/atomic-product-children/select-child-product-event';
+import styles from './atomic-commerce-search-box.tw.css';
 
 /**
- * The `atomic-commerce-search-box` component creates a search box with built-in support for suggestions.
+ * The `atomic-commerce-search-box` component enables users to perform product searches with built-in query suggestions and optional redirection to a search results page.
  *
  * @slot default - The default slot where you can add child components to the search box.
  *
@@ -96,34 +91,45 @@ import {SelectChildProductEventArgs} from '../product-template-components/atomic
  * @part instant-results-show-all - The clickable suggestion to show all items for the current instant results search rendered by an `atomic-commerce-search-box-instant-products` component.
  * @part instant-results-show-all-button - The button inside the clickable suggestion from the `atomic-commerce-search-box-instant-products` component.
  *
+ * @event redirect - Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
+ *
  * @alpha
  */
-@Component({
-  tag: 'atomic-commerce-search-box',
-  styleUrl: 'atomic-commerce-search-box.pcss',
-  shadow: true,
-})
+@customElement('atomic-commerce-search-box')
+@bindings()
+@withTailwindStyles
 export class AtomicCommerceSearchBox
-  implements InitializableComponent<Bindings>
+  extends LitElement
+  implements InitializableComponent<CommerceBindings>
 {
-  @InitializeBindings() public bindings!: Bindings;
-  private searchBox!: SearchBox | StandaloneSearchBox;
+  static styles: CSSResultGroup = [unsafeCSS(styles)];
+
+  @state() bindings!: CommerceBindings;
+  @state() error!: Error;
+  @state() isExpanded = false;
+  @bindStateToController('searchBox')
+  @state()
+  private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
+
+  private textAreaRef = createRef<HTMLTextAreaElement>();
   private searchBoxSuggestionEventsQueue: CustomEvent<
     SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
   >[] = [];
-  private id!: string;
-  private textAreaRef!: HTMLTextAreaElement;
   private suggestionManager!: SuggestionManager<
     SearchBox | StandaloneSearchBox
   >;
+  public searchBox!: SearchBox | StandaloneSearchBox;
 
-  @Element() private host!: HTMLElement;
+  protected searchBoxAriaMessage = new AriaLiveRegionController(
+    this,
+    'search-box'
+  );
 
-  @BindStateToController('searchBox')
-  @State()
-  private searchBoxState!: SearchBoxState | StandaloneSearchBoxState;
-  @State() public error!: Error;
-  @State() private isExpanded = false;
+  protected suggestionsAriaMessage = new AriaLiveRegionController(
+    this,
+    'search-suggestions',
+    true
+  );
 
   /**
    * The amount of queries displayed when the user interacts with the search box.
@@ -132,7 +138,8 @@ export class AtomicCommerceSearchBox
    *  - atomic-commerce-search-box-query-suggestions
    *  - atomic-commerce-search-box-recent-queries
    */
-  @Prop({reflect: true}) public numberOfQueries = 8;
+  @property({type: Number, attribute: 'number-of-queries', reflect: true})
+  numberOfQueries = 8;
 
   /**
    * Defining this option makes the search box standalone (see [Use a
@@ -142,13 +149,15 @@ export class AtomicCommerceSearchBox
    * If a query pipeline redirect is triggered, it will redirect to that URL instead
    * (see [query pipeline triggers](https://docs.coveo.com/en/1458)).
    */
-  @Prop({reflect: true}) public redirectionUrl?: string;
+  @property({type: String, attribute: 'redirection-url', reflect: true})
+  public redirectionUrl?: string;
 
   /**
    * The timeout for suggestion queries, in milliseconds.
    * If a suggestion query times out, the suggestions from that particular query won't be shown.
    */
-  @Prop() public suggestionTimeout = 400;
+  @property({type: Number, attribute: 'suggestion-timeout'})
+  public suggestionTimeout = 400;
 
   /**
    * The delay for suggestion queries on input, in milliseconds.
@@ -158,78 +167,105 @@ export class AtomicCommerceSearchBox
    * This delay is used to avoid sending too many requests to the Coveo Platform when the user is typing, as well as reducing potential input lag on low end devices.
    * A higher delay will reduce input lag, at the cost of suggestions freshness.
    */
-  @Prop() public suggestionDelay = 0;
+  @property({type: Number, attribute: 'suggestion-delay'})
+  public suggestionDelay = 0;
 
   /**
    * Whether to prevent the user from triggering searches and query suggestions from the component.
    * Perfect for use cases where you need to disable the search conditionally.
    * For the specific case when you need to disable the search based on the length of the query, refer to {@link minimumQueryLength}.
    */
-  @Prop({reflect: true}) public disableSearch = false;
+  @property({
+    type: Boolean,
+    attribute: 'disable-search',
+    reflect: true,
+    converter: booleanConverter,
+  })
+  public disableSearch = false;
 
   /**
    * The minimum query length required to enable search.
    * For example, to disable the search for empty queries, set this to `1`.
    */
-  @Prop({reflect: true}) public minimumQueryLength = 0;
+  @property({type: Number, attribute: 'minimum-query-length', reflect: true})
+  public minimumQueryLength = 0;
 
   /**
    * Whether to clear all active query filters when the end user submits a new query from the search box.
    * Setting this option to "false" is not recommended & can lead to an increasing number of queries returning no results.
    */
-  @Prop({reflect: true}) public clearFilters = true;
-
-  /**
-   * Event that is emitted when a standalone search box redirection is triggered. By default, the search box will directly change the URL and redirect accordingly, so if you want to handle the redirection differently, use this event.
-   *
-   * Example:
-   * ```html
-   * <script>
-   *   document.querySelector('atomic-commerce-search-box').addEventListener((e) => {
-   *     e.preventDefault();
-   *     // handle redirection
-   *   });
-   * </script>
-   * ...
-   * <atomic-commerce-search-box redirection-url="/search"></atomic-commerce-search-box>
-   * ```
-   */
-  @Event({
-    eventName: 'redirect',
+  @property({
+    type: Boolean,
+    attribute: 'clear-filters',
+    reflect: true,
+    converter: booleanConverter,
   })
-  public redirect!: EventEmitter<RedirectionPayload>;
+  public clearFilters = true;
 
-  @AriaLiveRegion('search-box')
-  protected searchBoxAriaMessage!: string;
+  connectedCallback() {
+    super.connectedCallback();
 
-  @AriaLiveRegion('search-suggestions', true)
-  protected suggestionsAriaMessage!: string;
-  public disconnectedCallback = () => {};
+    if (this.children.length === 0) {
+      this.replaceChildren(
+        document.createElement('atomic-commerce-search-box-recent-queries'),
+        document.createElement('atomic-commerce-search-box-query-suggestions')
+      );
+    }
 
-  private isStandaloneSearchBox(
-    searchBox: SearchBox | StandaloneSearchBox
-  ): searchBox is StandaloneSearchBox {
-    return 'redirectTo' in searchBox;
+    this.addEventListener(
+      'atomic/searchBoxSuggestion/register',
+      (event: Event) => {
+        const customEvent = event as CustomEvent<
+          SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
+        >;
+        this.searchBoxSuggestionEventsQueue.push(customEvent);
+      }
+    );
+    this.addEventListener('atomic/selectChildProduct', (event: Event) => {
+      const customEvent = event as CustomEvent<SelectChildProductEventArgs>;
+      customEvent.stopPropagation();
+      this.bindings.store.state.activeProductChild = customEvent.detail.child;
+      this.suggestionManager.forceUpdate();
+    });
   }
 
-  public initialize() {
-    this.id ||= randomID('atomic-commerce-search-box-');
+  willUpdate() {
+    if (!this.searchBoxState || !this.searchBox) {
+      return;
+    }
+    if (
+      !('redirectTo' in this.searchBoxState) ||
+      !('afterRedirection' in this.searchBox)
+    ) {
+      return;
+    }
+    const {redirectTo, value} = this.searchBoxState;
 
-    this.initializeSearchboxController();
-    this.initializeSuggestionManager();
-  }
+    if (redirectTo === '') {
+      return;
+    }
+    const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
+      value,
+      enableQuerySyntax: false,
+    };
 
-  private updateRedirectionUrl() {
-    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
-      this.searchBox.updateRedirectUrl(this.redirectionUrl);
-    } else {
-      this.registerNewSearchBoxController();
+    const storage = new SafeStorage();
+    storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
+
+    this.searchBox.afterRedirection();
+
+    const event = new CustomEvent<RedirectionPayload>('redirect');
+    this.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      window.location.href = redirectTo;
     }
   }
 
-  private registerNewSearchBoxController() {
-    this.disconnectedCallback();
-    this.initialize();
+  public initialize() {
+    this.id = randomID('atomic-commerce-search-box-');
+
+    this.initializeSearchboxController();
+    this.initializeSuggestionManager();
   }
 
   private initializeSearchboxController() {
@@ -246,71 +282,6 @@ export class AtomicCommerceSearchBox
         });
   }
 
-  public componentWillUpdate() {
-    if (
-      !('redirectTo' in this.searchBoxState) ||
-      !('afterRedirection' in this.searchBox)
-    ) {
-      return;
-    }
-
-    const {redirectTo, value} = this.searchBoxState;
-
-    if (redirectTo === '') {
-      return;
-    }
-    const data: Omit<StandaloneSearchBoxData, 'analytics'> = {
-      value,
-      enableQuerySyntax: false,
-    };
-    const storage = new SafeStorage();
-    storage.setJSON(StorageItems.STANDALONE_SEARCH_BOX_DATA, data);
-
-    this.searchBox.afterRedirection();
-    const event = this.redirect.emit({redirectTo, value});
-    if (!event.defaultPrevented) {
-      window.location.href = redirectTo;
-    }
-  }
-
-  @Listen('atomic/searchBoxSuggestion/register')
-  public registerSuggestions(
-    event: CustomEvent<
-      SearchBoxSuggestionsEvent<SearchBox | StandaloneSearchBox>
-    >
-  ) {
-    if (!this.bindings) {
-      this.searchBoxSuggestionEventsQueue.push(event);
-    } else {
-      this.suggestionManager.registerSuggestionsFromEvent(
-        event,
-        this.suggestionBindings
-      );
-    }
-  }
-
-  @Listen('atomic/selectChildProduct')
-  public onSelectChildProduct(event: CustomEvent<SelectChildProductEventArgs>) {
-    event.stopPropagation();
-    this.bindings.store.state.activeProductChild = event.detail.child;
-    this.suggestionManager.forceUpdate();
-  }
-
-  private registerSearchboxSuggestionEvents() {
-    this.searchBoxSuggestionEventsQueue.forEach((evt) => {
-      this.suggestionManager.registerSuggestionsFromEvent(
-        evt,
-        this.suggestionBindings
-      );
-    });
-    this.searchBoxSuggestionEventsQueue = [];
-  }
-
-  @Watch('redirectionUrl')
-  watchRedirectionUrl() {
-    this.updateRedirectionUrl();
-  }
-
   private initializeSuggestionManager() {
     if (this.suggestionManager) {
       return;
@@ -322,10 +293,51 @@ export class AtomicCommerceSearchBox
       getSearchBoxValue: () => this.searchBoxState.value,
       getSuggestionTimeout: () => this.suggestionTimeout,
       getSuggestionDelay: () => this.suggestionDelay,
-      getHost: () => this.host,
+      getHost: () => this,
       getLogger: () => this.bindings.engine.logger,
     });
     this.suggestionManager.initializeSuggestions(this.suggestionBindings);
+  }
+
+  @watch('redirectionUrl')
+  watchRedirectionUrl() {
+    if (this.isStandaloneSearchBox(this.searchBox) && this.redirectionUrl) {
+      this.searchBox.updateRedirectUrl(this.redirectionUrl);
+    } else {
+      this.registerNewSearchBoxController();
+    }
+  }
+
+  private isStandaloneSearchBox(
+    searchBox: SearchBox | StandaloneSearchBox
+  ): searchBox is StandaloneSearchBox {
+    return 'updateRedirectUrl' in searchBox;
+  }
+
+  private updateBreakpoints = once(() => updateBreakpoints(this));
+
+  private get isSearchDisabledForEndUser() {
+    if (this.searchBoxState.value.trim().length < this.minimumQueryLength) {
+      return true;
+    }
+
+    return this.disableSearch;
+  }
+
+  private get textAreaLabel() {
+    if (this.isSearchDisabledForEndUser) {
+      return this.bindings.i18n.t('search-disabled', {
+        length: this.minimumQueryLength,
+      });
+    }
+
+    if (isMacOS()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-macos');
+    }
+    if (!hasKeyboard()) {
+      return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
+    }
+    return this.bindings.i18n.t('search-box-with-suggestions');
   }
 
   private get suggestionBindings(): SearchBoxSuggestionsBindings<
@@ -397,12 +409,25 @@ export class AtomicCommerceSearchBox
     };
   }
 
-  private updateBreakpoints = once(() => updateBreakpoints(this.host));
+  private registerNewSearchBoxController() {
+    this.disconnectedCallback();
+    this.initialize();
+  }
+
+  private registerSearchboxSuggestionEvents() {
+    this.searchBoxSuggestionEventsQueue.forEach((evt) => {
+      this.suggestionManager.registerSuggestionsFromEvent(
+        evt,
+        this.suggestionBindings
+      );
+    });
+    this.searchBoxSuggestionEventsQueue = [];
+  }
 
   private async onInput(value: string) {
     this.updateQueryWithoutQuerySuggestionTrigger(value);
 
-    if (this.isSearchDisabledForEndUser(value)) {
+    if (this.isSearchDisabledForEndUser) {
       this.suggestionManager.clearSuggestions();
       return;
     }
@@ -415,7 +440,7 @@ export class AtomicCommerceSearchBox
     if (this.isExpanded) {
       return;
     }
-    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
+    if (this.isSearchDisabledForEndUser) {
       return;
     }
     this.isExpanded = true;
@@ -434,7 +459,7 @@ export class AtomicCommerceSearchBox
   }
 
   private onKeyDown(e: KeyboardEvent) {
-    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
+    if (this.isSearchDisabledForEndUser) {
       return;
     }
 
@@ -458,7 +483,7 @@ export class AtomicCommerceSearchBox
       case 'ArrowRight':
         if (
           this.suggestionManager.hasActiveDescendant ||
-          !this.searchBox.state.value
+          !this.searchBoxState.value
         ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('right');
@@ -468,7 +493,7 @@ export class AtomicCommerceSearchBox
       case 'ArrowLeft':
         if (
           this.suggestionManager.hasActiveDescendant ||
-          !this.searchBox.state.value
+          !this.searchBoxState.value
         ) {
           e.preventDefault();
           this.suggestionManager.focusPanel('left');
@@ -482,201 +507,14 @@ export class AtomicCommerceSearchBox
   }
 
   private triggerTextAreaChange(value: string) {
-    this.textAreaRef.value = value;
-    this.textAreaRef.dispatchEvent(new window.Event('change'));
-  }
-
-  private renderSuggestion(
-    item: SearchBoxSuggestionElement,
-    index: number,
-    lastIndex: number,
-    side: 'left' | 'right'
-  ) {
-    const id = `${this.id}-${side}-suggestion-${item.key}`;
-
-    const isSelected = id === this.suggestionManager.activeDescendant;
-
-    if (index === lastIndex && item.hideIfLast) {
-      return null;
-    }
-
-    return (
-      <atomic-suggestion-renderer
-        i18n={this.bindings.i18n}
-        id={id}
-        suggestion={item}
-        isSelected={isSelected}
-        side={side}
-        index={index}
-        lastIndex={lastIndex}
-        isDoubleList={this.suggestionManager.isDoubleList}
-        onClick={(e: Event) => {
-          this.suggestionManager.onSuggestionClick(item, e);
-          if (item.key === 'recent-query-clear') {
-            return;
-          }
-
-          this.isExpanded = false;
-          this.triggerTextAreaChange(item.query ?? '');
-        }}
-        onMouseOver={() => {
-          this.suggestionManager.onSuggestionMouseOver(item, side, id);
-        }}
-      ></atomic-suggestion-renderer>
-    );
-  }
-
-  private renderPanel(
-    side: 'left' | 'right',
-    elements: SearchBoxSuggestionElement[],
-    setRef: (el: HTMLElement | undefined) => void,
-    getRef: () => HTMLElement | undefined
-  ) {
-    if (!elements.length) {
-      return null;
-    }
-
-    return (
-      <div
-        part={`suggestions suggestions-${side}`}
-        ref={setRef}
-        class="flex grow basis-1/2 flex-col"
-        onMouseDown={(e) => {
-          if (e.target === getRef()) {
-            e.preventDefault();
-          }
-        }}
-      >
-        {elements.map((suggestion, index) =>
-          this.renderSuggestion(suggestion, index, elements.length - 1, side)
-        )}
-      </div>
-    );
-  }
-
-  private renderSuggestions() {
-    if (!this.suggestionManager.hasSuggestions) {
-      return null;
-    }
-
-    return (
-      <div
-        id={`${this.id}-popup`}
-        part={`suggestions-wrapper ${
-          this.suggestionManager.isDoubleList
-            ? 'suggestions-double-list'
-            : 'suggestions-single-list'
-        }`}
-        class={`bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border ${
-          this.suggestionManager.hasSuggestions &&
-          this.isExpanded &&
-          !this.isSearchDisabledForEndUser(this.searchBoxState.value)
-            ? ''
-            : 'hidden'
-        }`}
-        role="application"
-        aria-label={this.bindings.i18n.t(
-          this.suggestionManager.isDoubleList
-            ? 'search-suggestions-double-list'
-            : 'search-suggestions-single-list'
-        )}
-        aria-activedescendant={this.suggestionManager.activeDescendant}
-      >
-        {this.renderPanel(
-          'left',
-          this.suggestionManager.leftSuggestionElements,
-          (el) => (this.suggestionManager.leftPanel = el),
-          () => this.suggestionManager.leftPanel
-        )}
-        {this.renderPanel(
-          'right',
-          this.suggestionManager.rightSuggestionElements,
-          (el) => (this.suggestionManager.rightPanel = el),
-          () => this.suggestionManager.rightPanel
-        )}
-      </div>
-    );
-  }
-
-  private renderTextBox = (searchLabel: string) => {
-    const props = {
-      loading: this.searchBoxState.isLoading,
-      bindings: this.bindings,
-      value: this.searchBoxState.value,
-      title: searchLabel,
-      ariaLabel: searchLabel,
-      onFocus: () => this.onFocus(),
-      onInput: (e: Event) =>
-        this.onInput((e.target as HTMLTextAreaElement).value),
-      onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
-      onClear: () => {
-        this.searchBox.clear();
-        this.suggestionManager.clearSuggestions();
-      },
-      popup: {
-        id: `${this.id}-popup`,
-        activeDescendant: this.suggestionManager.activeDescendant,
-        expanded: this.isExpanded,
-        hasSuggestions: this.suggestionManager.hasSuggestions,
-      },
-    };
-
-    return (
-      <SearchTextArea
-        textAreaRef={this.textAreaRef}
-        ref={(el) => (this.textAreaRef = el as HTMLTextAreaElement)}
-        {...props}
-        onClear={() => {
-          props.onClear();
-          this.triggerTextAreaChange('');
-        }}
-      />
-    );
-  };
-
-  private renderAbsolutePositionSpacer() {
-    return (
-      <textarea
-        aria-hidden
-        part="textarea-spacer"
-        class="invisible w-full px-4 py-3.5 text-lg"
-        rows={1}
-      ></textarea>
-    );
-  }
-
-  private isSearchDisabledForEndUser(queryValue?: string) {
-    if (isNullOrUndefined(queryValue)) {
-      return this.disableSearch;
-    }
-
-    if (queryValue.trim().length < this.minimumQueryLength) {
-      return true;
-    }
-
-    return this.disableSearch;
-  }
-
-  private getSearchInputLabel(minimumQueryLength = 0) {
-    if (this.isSearchDisabledForEndUser(this.searchBoxState.value)) {
-      return this.bindings.i18n.t('search-disabled', {
-        length: minimumQueryLength,
-      });
-    }
-
-    if (isMacOS()) {
-      return this.bindings.i18n.t('search-box-with-suggestions-macos');
-    }
-    if (!hasKeyboard()) {
-      return this.bindings.i18n.t('search-box-with-suggestions-keyboardless');
-    }
-    return this.bindings.i18n.t('search-box-with-suggestions');
+    this.textAreaRef.value!.value = value;
+    this.textAreaRef.value!.dispatchEvent(new window.Event('change'));
   }
 
   private announceNewActiveSuggestionToScreenReader() {
     const ariaLabel = this.suggestionManager.activeDescendantElement?.ariaLabel;
     if (isMacOS() && ariaLabel) {
-      this.suggestionsAriaMessage = ariaLabel;
+      this.suggestionsAriaMessage.message = ariaLabel;
     }
   }
 
@@ -685,7 +523,8 @@ export class AtomicCommerceSearchBox
       this.suggestionManager.allSuggestionElements.filter(
         elementHasQuery
       ).length;
-    this.searchBoxAriaMessage = elsLength
+
+    this.searchBoxAriaMessage.message = elsLength
       ? this.bindings.i18n.t(
           this.searchBoxState.value
             ? 'query-suggestions-available'
@@ -708,51 +547,195 @@ export class AtomicCommerceSearchBox
     );
   }
 
-  public render() {
+  private renderAbsolutePositionSpacer() {
+    return html`<textarea
+      aria-hidden="true"
+      part="textarea-spacer"
+      class="invisible w-full p-3.5 px-4 text-lg"
+      rows="1"
+    ></textarea>`;
+  }
+
+  private renderTextBox() {
+    return html`${renderSearchBoxTextArea({
+      props: {
+        textAreaRef: this.textAreaRef,
+        loading: this.searchBoxState.isLoading,
+        i18n: this.bindings.i18n,
+        value: this.searchBoxState.value,
+        title: this.textAreaLabel,
+        ariaLabel: this.textAreaLabel,
+        onFocus: () => this.onFocus(),
+        onInput: (e: Event) =>
+          this.onInput((e.target as HTMLTextAreaElement).value),
+        onKeyDown: (e: KeyboardEvent) => this.onKeyDown(e),
+        onClear: () => {
+          this.searchBox.clear();
+          this.suggestionManager.clearSuggestions();
+          this.triggerTextAreaChange('');
+        },
+        popup: {
+          id: `${this.id}-popup`,
+          activeDescendant: this.suggestionManager.activeDescendant,
+          expanded: this.isExpanded,
+          hasSuggestions: this.suggestionManager.hasSuggestions,
+        },
+      },
+    })}`;
+  }
+
+  private renderSuggestions() {
+    const part = `suggestions-wrapper ${
+      this.suggestionManager.isDoubleList
+        ? 'suggestions-double-list'
+        : 'suggestions-single-list'
+    }`;
+
+    const isVisible =
+      this.suggestionManager.hasSuggestions &&
+      this.isExpanded &&
+      !this.isSearchDisabledForEndUser;
+
+    const classes = {
+      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border':
+        true,
+      hidden: !isVisible,
+    };
+
+    return html`<div
+      id="${this.id}-popup"
+      part=${part}
+      class=${classMap(classes)}
+      role="application"
+      aria-label=${this.bindings.i18n.t(
+        this.suggestionManager.isDoubleList
+          ? 'search-suggestions-double-list'
+          : 'search-suggestions-single-list'
+      )}
+      aria-activedescendant=${this.suggestionManager.activeDescendant}
+    >
+      ${this.renderPanel(
+        'left',
+        this.suggestionManager.leftSuggestionElements,
+        (el) => (this.suggestionManager.leftPanel = el),
+        () => this.suggestionManager.leftPanel
+      )}
+      ${this.renderPanel(
+        'right',
+        this.suggestionManager.rightSuggestionElements,
+        (el) => (this.suggestionManager.rightPanel = el),
+        () => this.suggestionManager.rightPanel
+      )}
+    </div>`;
+  }
+
+  private renderPanel(
+    side: 'left' | 'right',
+    elements: SearchBoxSuggestionElement[],
+    setRef: (el: HTMLElement | undefined) => void,
+    getRef: () => HTMLElement | undefined
+  ) {
+    if (!elements.length) {
+      return null;
+    }
+
+    return html`<div
+      part="suggestions suggestions-${side}"
+      ${ref(setRef as RefOrCallback<Element>)}
+      class="flex grow basis-1/2 flex-col"
+      @mousedown=${(e: MouseEvent) => {
+        if (e.target === getRef()) {
+          e.preventDefault();
+        }
+      }}
+    >
+      ${elements.map((suggestion, index) =>
+        this.renderSuggestion(suggestion, index, elements.length - 1, side)
+      )}
+    </div>`;
+  }
+
+  private renderSuggestion(
+    item: SearchBoxSuggestionElement,
+    index: number,
+    lastIndex: number,
+    side: 'left' | 'right'
+  ) {
+    const id = `${this.id}-${side}-suggestion-${item.key}`;
+
+    const isSelected = id === this.suggestionManager.activeDescendant;
+
+    if (index === lastIndex && item.hideIfLast) {
+      return null;
+    }
+    return html`
+      <atomic-suggestion-renderer
+        .i18n=${this.bindings.i18n}
+        .id=${id}
+        .suggestion=${item}
+        .isSelected=${isSelected}
+        .side=${side}
+        .index=${index}
+        .lastIndex=${lastIndex}
+        .isDoubleList=${this.suggestionManager.isDoubleList}
+        .onClick=${(e: Event) => {
+          this.suggestionManager.onSuggestionClick(item, e);
+          if (item.key === 'recent-query-clear') {
+            return;
+          }
+
+          this.isExpanded = false;
+          this.triggerTextAreaChange(item.query ?? '');
+        }}
+        .onMouseOver=${() => {
+          this.suggestionManager.onSuggestionMouseOver(item, side, id);
+        }}
+      ></atomic-suggestion-renderer>
+    `;
+  }
+
+  @bindingGuard()
+  @errorGuard()
+  render() {
     this.updateBreakpoints();
 
-    const searchLabel = this.getSearchInputLabel(this.minimumQueryLength);
-    const Submit = SubmitButton;
-    const isDisabled = this.isSearchDisabledForEndUser(
-      this.searchBoxState.value
-    );
     if (!this.suggestionManager.suggestions.length) {
       this.registerSearchboxSuggestionEvents();
     }
 
-    return (
-      <Host>
-        {this.renderAbsolutePositionSpacer()}
-        {[
-          <SearchBoxWrapper
-            disabled={isDisabled}
-            onFocusout={(event) => {
-              if (!isFocusingOut(event)) {
-                return;
-              }
+    return html`
+      ${this.renderAbsolutePositionSpacer()}
+      ${renderSearchBoxWrapper({
+        props: {
+          disabled: this.isSearchDisabledForEndUser,
+          onFocusout: (event) => {
+            if (!isFocusingOut(event)) {
+              return;
+            }
+            this.suggestionManager.clearSuggestions();
+            this.isExpanded = false;
+          },
+        },
+      })(
+        html`${this.renderTextBox()}
+        ${renderSubmitButton({
+          props: {
+            i18n: this.bindings.i18n,
+            disabled: this.isSearchDisabledForEndUser,
+            onClick: () => {
+              this.searchBox.submit();
               this.suggestionManager.clearSuggestions();
-              this.isExpanded = false;
-            }}
-          >
-            {this.renderTextBox(searchLabel)}
-            <Submit
-              bindings={this.bindings}
-              disabled={isDisabled}
-              onClick={() => {
-                this.searchBox.submit();
-                this.suggestionManager.clearSuggestions();
-              }}
-            />
-            {this.renderSuggestions()}
-          </SearchBoxWrapper>,
-          !this.suggestionManager.suggestions.length && (
-            <slot>
-              <atomic-commerce-search-box-recent-queries></atomic-commerce-search-box-recent-queries>
-              <atomic-commerce-search-box-query-suggestions></atomic-commerce-search-box-query-suggestions>
-            </slot>
-          ),
-        ]}
-      </Host>
-    );
+            },
+          },
+        })}
+        ${this.renderSuggestions()}`
+      )}
+    `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-search-box': AtomicCommerceSearchBox;
   }
 }
