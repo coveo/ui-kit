@@ -53,7 +53,7 @@
   },
   "devDependencies": {
     "@coveo/ci": "1.0.0",
-    "vitest": "3.2.3"
+    "vitest": "3.2.1"
   },
   "dependencies": {
     "@coveo/headless": "3.26.1",
