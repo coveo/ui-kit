@@ -184,7 +184,7 @@ describe('c-quantic-search-box', () => {
     });
 
     describe('the #keepFiltersOnSearch property', () => {
-      it('should build the searchbox controller with clear filters enabled when keepFiltersOnSearch is false (default)', async () => {
+      it('should build the controllers with clear filters enabled when keepFiltersOnSearch is false (default)', async () => {
         createTestComponent();
         await flushPromises();
 
@@ -195,9 +195,16 @@ describe('c-quantic-search-box', () => {
             options: expect.objectContaining({clearFilters: true}),
           })
         );
+        expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({
+            options: expect.objectContaining({clearFilters: true}),
+          })
+        );
       });
 
-      it('should build the searchbox controller with clear filters disabled when keepFiltersOnSearch is true', async () => {
+      it('should build the controllers with clear filters disabled when keepFiltersOnSearch is true', async () => {
         createTestComponent({
           ...defaultOptions,
           keepFiltersOnSearch: true,
@@ -206,6 +213,13 @@ describe('c-quantic-search-box', () => {
 
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledTimes(1);
         expect(functionsMocks.buildSearchBox).toHaveBeenCalledWith(
+          exampleEngine,
+          expect.objectContaining({
+            options: expect.objectContaining({clearFilters: false}),
+          })
+        );
+        expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledTimes(1);
+        expect(functionsMocks.buildRecentQueriesList).toHaveBeenCalledWith(
           exampleEngine,
           expect.objectContaining({
             options: expect.objectContaining({clearFilters: false}),
