@@ -10,9 +10,11 @@ import {
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
   AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
-  AtomicComponentError as LitAtomicComponentError,
-  AtomicIcon as LitAtomicIcon,
+  AtomicCommerceText as LitAtomicCommerceText,
   AtomicProduct as LitAtomicProduct,
+  AtomicProductText as LitAtomicProductText,
+  AtomicIcon as LitAtomicIcon,
+  AtomicComponentError as LitAtomicComponentError,
 } from '@coveo/atomic/components';
 import {createComponent} from '@lit/react';
 import React from 'react';
@@ -89,14 +91,20 @@ export const AtomicProduct = createComponent({
   elementClass: LitAtomicProduct,
 });
 
-export const AtomicComponentError = createComponent({
-  tagName: 'atomic-component-error',
+export const AtomicProductText = createComponent({
+  tagName: 'atomic-product-text',
   react: React,
-  elementClass: LitAtomicComponentError,
+  elementClass: LitAtomicProductText,
 });
 
 export const AtomicIcon = createComponent({
   tagName: 'atomic-icon',
   react: React,
   elementClass: LitAtomicIcon,
+});
+
+export const AtomicComponentError = createComponent({
+  tagName: 'atomic-component-error',
+  react: React,
+  elementClass: LitAtomicComponentError,
 });
