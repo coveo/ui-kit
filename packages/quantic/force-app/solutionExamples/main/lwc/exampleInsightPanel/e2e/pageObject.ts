@@ -9,6 +9,10 @@ export class InsightPanelObject {
     return this.page.locator('c-example-insight-panel');
   }
 
+  get errorComponent(): Locator {
+    return this.insightPanel.locator('c-quantic-error');
+  }
+
   get searchbox(): Locator {
     return this.insightPanel.locator('c-quantic-search-box');
   }
@@ -66,7 +70,7 @@ export class InsightPanelObject {
   }
 
   get firstFacetsContainer(): Locator {
-    return this.insightPanel.locator('c-quantic-card-container').nth(0);
+    return this.page.getByTestId('card-container__header').nth(0);
   }
 
   async clickOnFirstFacetsContainer(): Promise<void> {
@@ -74,9 +78,7 @@ export class InsightPanelObject {
   }
 
   async getFacetValueByIndex(index: number): Promise<Locator> {
-    return this.firstFacetsContainer
-      .getByTestId('facet__value-checkbox')
-      .nth(index);
+    return this.page.getByTestId('facet__value').nth(index);
   }
 
   get clearFiltersButton(): Locator {
