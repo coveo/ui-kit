@@ -18,13 +18,13 @@ useCaseTestCases.forEach((useCase) => {
   let test = fixtures[useCase.value];
 
   test.describe(`quantic folded result list ${useCase.label}`, () => {
-    test.describe('fieldsToInclude in the Search API request', () => {
+    test.describe('when performing a search', () => {
       test.use({
         options: {
           fieldsToInclude: testFieldsToInclude,
         },
       });
-      test('when performing a search should send the added fieldsToInclude', async ({
+      test('should send the added fieldsToInclude in the Search API request', async ({
         resultList,
         search,
       }) => {

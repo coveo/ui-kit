@@ -23,6 +23,44 @@ jest.mock('c/quanticUtils', () => ({
   },
 }));
 
+const mockSearchResponseId = 'mockSearchResponseId';
+const fakeCollections = [
+  {
+    result: {
+      uniqueId: 'foo',
+      title: 'Foo',
+      excerpt: 'Foo',
+      raw: {
+        foo: 'foo',
+      },
+    },
+    children: [
+      {
+        result: {
+          uniqueId: 'Baz',
+          title: 'Baz',
+          excerpt: 'Baz',
+          raw: {
+            foo: 'baz',
+          },
+        },
+        children: [],
+      },
+    ],
+  },
+  {
+    result: {
+      uniqueId: 'Bar',
+      title: 'Bar',
+      excerpt: 'Bar',
+      raw: {
+        foo: 'bar',
+      },
+    },
+    children: [],
+  },
+];
+
 let isInitialized = false;
 
 const defaultOptions = {
@@ -123,6 +161,27 @@ describe('c-quantic-folded-result-list', () => {
     jest.clearAllMocks();
   });
 
+  describe('when the component is loading', () => {
+    beforeEach(() => {
+      foldedResultsListState = {
+        isLoading: true,
+        hasError: false,
+        firstSearchExecuted: false,
+        hasResults: false,
+      };
+    });
+
+    it('should render placeholders', async () => {
+      const element = createTestComponent();
+      await flushPromises();
+
+      const placeholder = element.shadowRoot.querySelector(
+        selectors.placeholder
+      );
+      expect(placeholder).not.toBeNull();
+    });
+  });
+
   describe('component initialization', () => {
     describe('when an initialization error occurs', () => {
       beforeEach(() => {
@@ -131,7 +190,6 @@ describe('c-quantic-folded-result-list', () => {
 
       it('should display the initialization error component', async () => {
         const element = createTestComponent();
-        document.body.appendChild(element);
         await flushPromises();
         const errorComponent = element.shadowRoot.querySelector(
           selectors.error
@@ -141,9 +199,8 @@ describe('c-quantic-folded-result-list', () => {
     });
 
     describe('successful initialization', () => {
-      it('should initialize the folded result list and subscribe to its state', async () => {
-        const element = createTestComponent();
-        document.body.appendChild(element);
+      it('should build the folded result list, the results per page and the template manager controllers, and subscribe to state changes', async () => {
+        createTestComponent();
         await flushPromises();
 
         expect(functionsMocks.buildFoldedResultList).toHaveBeenCalledTimes(1);
@@ -186,15 +243,14 @@ describe('c-quantic-folded-result-list', () => {
           'quantic__registerresulttemplates',
           jestHandler
         );
-        const element = createTestComponent();
-        document.body.appendChild(element);
+        createTestComponent();
         await flushPromises();
 
         expect(jestHandler).toHaveBeenCalledTimes(1);
       });
     });
 
-    describe('custom options', () => {
+    describe('with custom options', () => {
       it('should initialize the folded result list with custom options', async () => {
         const customOptions = {
           collectionField: 'customCollectionField',
@@ -202,8 +258,7 @@ describe('c-quantic-folded-result-list', () => {
           childField: 'customChildField',
           numberOfFoldedResults: 5,
         };
-        const element = createTestComponent(customOptions);
-        document.body.appendChild(element);
+        createTestComponent(customOptions);
         await flushPromises();
 
         expect(functionsMocks.buildFoldedResultList).toHaveBeenCalledWith(
@@ -223,91 +278,8 @@ describe('c-quantic-folded-result-list', () => {
     });
   });
 
-  describe('placeholder rendering', () => {
-    describe('when the component is loading', () => {
-      beforeEach(() => {
-        foldedResultsListState = {
-          isLoading: true,
-          hasError: false,
-          firstSearchExecuted: false,
-          hasResults: false,
-        };
-      });
-
-      it('should render placeholders', async () => {
-        const element = createTestComponent();
-        document.body.appendChild(element);
-        await flushPromises();
-
-        const placeholder = element.shadowRoot.querySelector(
-          selectors.placeholder
-        );
-        expect(placeholder).not.toBeNull();
-      });
-    });
-
-    describe('when the component has results', () => {
-      beforeEach(() => {
-        foldedResultsListState = {
-          isLoading: false,
-          hasError: false,
-          firstSearchExecuted: true,
-          hasResults: true,
-        };
-      });
-
-      it('should not render placeholders when the component has results', async () => {
-        const element = createTestComponent();
-        document.body.appendChild(element);
-        await flushPromises();
-
-        const placeholder = element.shadowRoot.querySelector(
-          selectors.placeholder
-        );
-        expect(placeholder).toBeNull();
-      });
-    });
-  });
-
   describe('results rendering', () => {
-    it('should render results when state has results', async () => {
-      const mockSearchResponseId = 'mockSearchResponseId';
-      const fakeCollections = [
-        {
-          result: {
-            uniqueId: 'foo',
-            title: 'Foo',
-            excerpt: 'Foo',
-            raw: {
-              foo: 'foo',
-            },
-          },
-          children: [
-            {
-              result: {
-                uniqueId: 'Baz',
-                title: 'Baz',
-                excerpt: 'Baz',
-                raw: {
-                  foo: 'baz',
-                },
-              },
-              children: [],
-            },
-          ],
-        },
-        {
-          result: {
-            uniqueId: 'Bar',
-            title: 'Bar',
-            excerpt: 'Bar',
-            raw: {
-              foo: 'bar',
-            },
-          },
-          children: [],
-        },
-      ];
+    beforeEach(() => {
       foldedResultsListState = {
         isLoading: false,
         hasError: false,
@@ -316,8 +288,19 @@ describe('c-quantic-folded-result-list', () => {
         results: fakeCollections,
         searchResponseId: mockSearchResponseId,
       };
+    });
+    it('should not render placeholders when state has results', async () => {
       const element = createTestComponent();
-      document.body.appendChild(element);
+      await flushPromises();
+
+      const placeholder = element.shadowRoot.querySelector(
+        selectors.placeholder
+      );
+      expect(placeholder).toBeNull();
+    });
+
+    it('should render results when state has results', async () => {
+      const element = createTestComponent();
       await flushPromises();
 
       const results = element.shadowRoot.querySelectorAll(selectors.result);
