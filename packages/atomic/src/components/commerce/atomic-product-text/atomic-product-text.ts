@@ -7,6 +7,7 @@ import {InitializeBindingsMixin} from '@/src/mixins/bindings-mixin';
 import {Product} from '@coveo/headless/commerce';
 import {LitElement, html, nothing} from 'lit';
 import {customElement, property, state} from 'lit/decorators.js';
+import {when} from 'lit/directives/when.js';
 import {getFieldValueCaption} from '../../../utils/field-utils';
 import '../../common/item-text/item-text-fallback.js';
 import '../../common/item-text/item-text-highlighted.js';
@@ -15,7 +16,7 @@ import '../atomic-commerce-text/atomic-commerce-text';
 import {getStringValueFromProductOrNull} from '../product-template-component-utils/product-utils.js';
 
 /**
- * The `atomic-product-text` component renders the value of a string product field.
+ * The `atomic-product-text` component renders the value of a string field for a given product.
  */
 @bindings()
 @customElement('atomic-product-text')
@@ -24,25 +25,23 @@ export class AtomicProductText
   implements InitializableComponent<CommerceBindings>
 {
   /**
-   * The product field which the component should use.
-   * This will look in the Product object first, and then in the product.additionalFields object for the fields.
+   * The string field whose value the component should render.
+   * The component will look for the specified field in the product's properties first, and then in the product's `additionalFields` property.
    */
   @property({type: String, reflect: true}) field = '';
   /**
-   * When this is set to `true`, the component attempts to highlight text based on the highlighting properties provided by the search API response.
-   * This property only works for the product excerpt and the ec_name field.
+   * Whether to highlight the string field value.
+   *
+   * Only works if the `field` property is set to `excerpt` or `ec_name`.
    */
   @property({type: Boolean, attribute: 'should-highlight', reflect: true})
   shouldHighlight = true;
   /**
-   * The locale key for the text to display when the configured field has no value.
+   * The locale key to use for displaying default text when the specified field has no value for the product.
    */
   @property({type: String, reflect: true}) default = '';
 
-  /**
-   * The product object to render from. Must be set by the parent.
-   */
-  @property({type: Object}) product!: Product;
+  @state() private product!: Product;
 
   private productController = createProductContextController(this);
 
@@ -52,6 +51,17 @@ export class AtomicProductText
 
   initialize = () => {};
 
+  private get textValue(): string {
+    const productValueAsString = getStringValueFromProductOrNull(
+      this.product,
+      this.field
+    );
+
+    return productValueAsString !== null
+      ? `${productValueAsString}`
+      : this.default;
+  }
+
   @bindingGuard()
   @errorGuard()
   render() {
@@ -59,40 +69,20 @@ export class AtomicProductText
       this.product = this.productController.item;
     }
 
-    if (!this.product) {
-      return html`${nothing}`;
-    }
-
     return html`
-      ${(() => {
-        const productValueAsString = getStringValueFromProductOrNull(
-          this.product,
-          this.field
-        );
-
-        if (productValueAsString === null) {
-          return html`
-            <atomic-commerce-text
-              .value=${getFieldValueCaption(
-                this.field,
-                this.default,
-                this.bindings.i18n
-              )}
-            ></atomic-commerce-text>
-          `;
-        }
-
-        const textValue = `${productValueAsString}`;
-        return html`
+      ${when(
+        this.product,
+        () => html`
           <atomic-commerce-text
             .value=${getFieldValueCaption(
               this.field,
-              textValue,
+              this.textValue,
               this.bindings.i18n
             )}
           ></atomic-commerce-text>
-        `;
-      })()}
+        `,
+        () => nothing
+      )}
     `;
   }
 }
