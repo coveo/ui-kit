@@ -32,11 +32,11 @@ import {fetchItemContext} from '../../common/item-list/fetch-item-context';
  * }
  * ```
  */
-export function createProductContextController<T extends Product = Product>(
+export function createProductContextController(
   host: LitElement & {error: Error | null},
   options: {folded?: boolean} = {}
-): ItemContextController<T> {
-  return new ItemContextController<T>(host, {
+): ItemContextController<Product> {
+  return new ItemContextController<Product>(host, {
     parentName: 'atomic-product',
     folded: options.folded ?? false,
   });
@@ -63,10 +63,10 @@ export function createProductContextController<T extends Product = Product>(
  * }
  * ```
  */
-export function createInteractiveProductContextController<
-  T extends InteractiveProduct = InteractiveProduct,
->(host: LitElement & {error: Error}): InteractiveItemContextController<T> {
-  return new InteractiveItemContextController<T>(host);
+export function createInteractiveProductContextController(
+  host: LitElement & {error: Error}
+): InteractiveItemContextController<InteractiveProduct> {
+  return new InteractiveItemContextController<InteractiveProduct>(host);
 }
 
 export type ProductContextEvent<T = Product> = ItemContextEvent<T>;
