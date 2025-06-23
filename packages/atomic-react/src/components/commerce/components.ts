@@ -1,6 +1,6 @@
 import {
-  AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommerceInterface as LitAtomicCommerceInterface,
+  AtomicCommerceLayout as LitAtomicCommerceLayout,
   AtomicCommercePager as LitAtomicCommercePager,
   AtomicCommerceProductList as LitAtomicCommerceProductList,
   AtomicCommerceQuerySummary as LitAtomicCommerceQuerySummary,
@@ -8,8 +8,8 @@ import {
   AtomicCommerceSearchBox as LitAtomicCommerceSearchBox,
   AtomicCommerceSearchBoxInstantProducts as LitAtomicCommerceSearchBoxInstantProducts,
   AtomicCommerceSearchBoxQuerySuggestions as LitAtomicCommerceSearchBoxQuerySuggestions,
-  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicCommerceSearchBoxRecentQueries as LitAtomicCommerceSearchBoxRecentQueries,
+  AtomicCommerceSortDropdown as LitAtomicCommerceSortDropdown,
   AtomicProduct as LitAtomicProduct,
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
@@ -17,16 +17,16 @@ import {
 import {createComponent} from '@lit/react';
 import React from 'react';
 
-export const AtomicCommerceLayout = createComponent({
-  tagName: 'atomic-commerce-layout',
-  react: React,
-  elementClass: LitAtomicCommerceLayout,
-});
-
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',
   react: React,
   elementClass: LitAtomicCommerceInterface,
+});
+
+export const AtomicCommerceLayout = createComponent({
+  tagName: 'atomic-commerce-layout',
+  react: React,
+  elementClass: LitAtomicCommerceLayout,
 });
 
 export const AtomicCommercePager = createComponent({
@@ -65,16 +65,16 @@ export const AtomicCommerceSearchBoxQuerySuggestions = createComponent({
   elementClass: LitAtomicCommerceSearchBoxQuerySuggestions,
 });
 
-export const AtomicCommerceSortDropdown = createComponent({
-  tagName: 'atomic-commerce-sort-dropdown',
-  react: React,
-  elementClass: LitAtomicCommerceSortDropdown,
-});
-
 export const AtomicCommerceSearchBoxRecentQueries = createComponent({
   tagName: 'atomic-commerce-search-box-recent-queries',
   react: React,
   elementClass: LitAtomicCommerceSearchBoxRecentQueries,
+});
+
+export const AtomicCommerceSortDropdown = createComponent({
+  tagName: 'atomic-commerce-sort-dropdown',
+  react: React,
+  elementClass: LitAtomicCommerceSortDropdown,
 });
 
 export const AtomicProduct = createComponent({
