@@ -30,7 +30,6 @@ test.describe('Example Search Page E2E Tests', () => {
     test('should allow the user to search, sort, change the result page, change the tab, select a facet and clear filters', async ({
       searchPage,
       search,
-      page,
     }) => {
       // Trigger a search query
       const exampleQuery = 'test';
@@ -83,11 +82,11 @@ test.describe('Example Search Page E2E Tests', () => {
         await tabClickSearchRequestPromise
       ).postDataJSON();
       expect(searchRequestBodyAfterTabClick?.tab).toBe(expectedTabName);
+      await search.waitForSearchResponse();
 
       // Select a facet value
       const facetSelectSearchRequestPromise = search.waitForSearchRequest();
       const firstFacetValue = await searchPage.getFacetValueByIndex(0);
-      await page.waitForTimeout(1000); // Wait for the facets to load after selecting it
       await firstFacetValue.click();
 
       expect(firstFacetValue).not.toBeNull();
