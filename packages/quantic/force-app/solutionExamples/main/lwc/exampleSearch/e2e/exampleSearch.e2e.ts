@@ -19,7 +19,6 @@ test.describe('Example Search Page E2E Tests', () => {
       expect(searchPage.recentResultsList).toBeVisible();
 
       const firstResult = searchPage.results.first();
-      expect(firstResult).toBeVisible();
       expect(await firstResult.textContent()).not.toBeNull();
 
       const resultsCount = searchPage.results.count();
@@ -31,6 +30,7 @@ test.describe('Example Search Page E2E Tests', () => {
     test('should allow the user to search, sort, change the result page, change the tab, select a facet and clear filters', async ({
       searchPage,
       search,
+      page,
     }) => {
       // Trigger a search query
       const exampleQuery = 'test';
@@ -46,13 +46,9 @@ test.describe('Example Search Page E2E Tests', () => {
       await expect(searchPage.summary).toContainText(exampleQuery);
 
       const recentQueriesListItems =
-        await searchPage.recentQueriesListItems.all();
+        await searchPage.recentQueriesListItems.allInnerTexts();
       expect(recentQueriesListItems.length).toEqual(1);
-      const expectedQueries = [exampleQuery];
-      expectedQueries.forEach(async (expectedQuery: string, index: number) => {
-        // eslint-disable-next-line no-await-in-loop
-        await expect(recentQueriesListItems[index]).toHaveText(expectedQuery);
-      });
+      expect(recentQueriesListItems[0]).toBe(exampleQuery);
 
       // Change the sort order
       const sortClickSearchRequestPromise = search.waitForSearchRequest();
@@ -72,20 +68,17 @@ test.describe('Example Search Page E2E Tests', () => {
       // Change the result page
       const pagerClickSearchRequestPromise = search.waitForSearchRequest();
       await searchPage.clickOnPagerButtonByIndex(2);
-
       const searchRequestBodyAfterPagerClick = (
         await pagerClickSearchRequestPromise
       ).postDataJSON();
-
       expect(searchRequestBodyAfterPagerClick?.firstResult).toBe(10);
 
       // Change the tab
-      const expectedTabName = 'Articles';
-      const tabClickSearchRequestPromise = search.waitForSearchRequest();
-
       const secondTab = await searchPage.getTabByIndex(1);
+      const expectedTabName = await secondTab.textContent();
+      const tabClickSearchRequestPromise = search.waitForSearchRequest();
       await secondTab.click();
-
+      await tabClickSearchRequestPromise;
       const searchRequestBodyAfterTabClick = (
         await tabClickSearchRequestPromise
       ).postDataJSON();
@@ -93,21 +86,23 @@ test.describe('Example Search Page E2E Tests', () => {
 
       // Select a facet value
       const facetSelectSearchRequestPromise = search.waitForSearchRequest();
-      await searchPage.clickOnFirstFacetsContainer();
       const firstFacetValue = await searchPage.getFacetValueByIndex(0);
-      await firstFacetValue.click({force: true});
+      await page.waitForTimeout(1000); // Wait for the facets to load after selecting it
+      await firstFacetValue.click();
 
       expect(firstFacetValue).not.toBeNull();
       const searchRequestBodyAfterFacetSelect = (
         await facetSelectSearchRequestPromise
       ).postDataJSON();
 
-      const selectedFacetMatchesExpectedFacet =
-        searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]
-          ?.value === 'FAQ' &&
-        searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues?.[0]
-          ?.state === 'selected';
-      expect(selectedFacetMatchesExpectedFacet).toBe(false);
+      const selectedFacet =
+        searchRequestBodyAfterFacetSelect?.facets?.[0]?.currentValues.find(
+          (facet: any) => facet.state === 'selected'
+        );
+      const cleanedFirstFacetValue = (
+        await firstFacetValue.textContent()
+      )?.replace('Facet value option', '');
+      expect(cleanedFirstFacetValue).toContain(selectedFacet?.value);
 
       // Clear the filters
       const clearFiltersSearchRequestPromise = search.waitForSearchRequest();

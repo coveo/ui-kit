@@ -70,9 +70,8 @@ export class SearchPageObject {
     return this.page.locator('c-quantic-summary');
   }
 
-  // First in the facetsManager targets the one on the search page instead of the ones in the refine toggle modal.
   get facetsManager(): Locator {
-    return this.page.locator('c-quantic-facet-manager').first();
+    return this.page.getByTestId('facet-manager');
   }
 
   // First in the facets targets the ones on the search page instead of the ones in the refine toggle modal.
@@ -129,13 +128,7 @@ export class SearchPageObject {
     return this.page.locator('c-quantic-card-container').nth(0);
   }
 
-  async clickOnFirstFacetsContainer(): Promise<void> {
-    await this.firstFacetsContainer.click();
-  }
-
   async getFacetValueByIndex(index: number): Promise<Locator> {
-    return this.firstFacetsContainer
-      .getByTestId('facet__value-checkbox')
-      .nth(index);
+    return this.firstFacetsContainer.getByTestId('facet__value').nth(index);
   }
 }
