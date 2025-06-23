@@ -9,6 +9,10 @@ export class SearchPageObject {
     return this.page.locator('c-quantic-search-box');
   }
 
+  get errorComponent(): Locator {
+    return this.page.locator('c-quantic-error');
+  }
+
   get searchboxInput(): Locator {
     return this.searchbox.getByTestId('search-box-input');
   }

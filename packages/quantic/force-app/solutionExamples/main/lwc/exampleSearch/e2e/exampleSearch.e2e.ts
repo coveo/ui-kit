@@ -6,7 +6,18 @@ test.describe('Example Search Page E2E Tests', () => {
   test.describe('when loading the search page', () => {
     test('should render correctly and load results automatically', async ({
       searchPage,
+      page,
     }) => {
+      const consoleErrors = [];
+
+      // Listen for console error messages
+      page.on('console', (msg) => {
+        if (msg.type() === 'error') {
+          consoleErrors.push(msg.text());
+        }
+      });
+
+      await expect(searchPage.errorComponent).not.toBeVisible();
       expect(searchPage.searchbox).toBeVisible();
       expect(searchPage.facetsManager).toBeVisible();
       expect(searchPage.facets).toBeVisible();
