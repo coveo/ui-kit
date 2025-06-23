@@ -67,15 +67,6 @@ describe('atomic-commerce-component', () => {
   const locators = {
     mainButton: page.getByRole('button'),
     specificElement: page.getByLabelText('Label Text'),
-    // Use parts for shadow DOM elements
-    parts: (element: AtomicCommerceComponent) => {
-      const qs = (part: string) =>
-        element.shadowRoot?.querySelector(`[part="${part}"]`);
-      return {
-        mainButton: qs('main-button'),
-        secondaryButton: qs('secondary-button'),
-      };
-    },
   };
 
   const renderComponent = async (options = {}) => {
@@ -103,7 +94,20 @@ describe('atomic-commerce-component', () => {
         },
       });
 
-    return element;
+    return {
+      element,
+      locators: {
+        get mainButton() {
+          return page.getByRole('button');
+        },
+        get specificElement() {
+          return page.getByRole('bla');
+        },
+        get boom() {
+          return element.shadowRoot?.querySelector('div[part="sds"]');
+        },
+      },
+    };
   };
 
   // Test cases here

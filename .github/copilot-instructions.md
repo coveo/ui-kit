@@ -33,7 +33,6 @@ Highlight risky or questionable code, especially when it includes:
 
 When encountering problematic code, prefer to:
 
-- Suggest adding comments to clarify intent or assumptions
 - Recommend safer alternatives
 - Point out potential issues or improvements
 - Avoid making assumptions about the user's intent or context
@@ -56,11 +55,6 @@ When encountering problematic code, prefer to:
 - When there's a trade-off between compact/clever code and clarity, choose clarity
 
 ## Examples of Good Behavior
-
-### Variable Safety
-
-- **Instead of:** Completing code that assumes a variable is always defined
-- **Prefer:** Adding a comment like `// Consider checking if x is defined before use`
 
 ### Logic Validation
 
