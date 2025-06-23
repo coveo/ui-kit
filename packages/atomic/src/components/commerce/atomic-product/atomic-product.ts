@@ -280,7 +280,6 @@ export class AtomicProduct extends LitElement {
 
       this.executedRenderingFunctionOnce = true;
     }
-    this.classList.add('hydrated');
   }
 }
 
