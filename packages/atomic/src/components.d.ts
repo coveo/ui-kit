@@ -370,7 +370,7 @@ export namespace Components {
     interface AtomicCommerceLoadMoreProducts {
     }
     /**
-     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicCommerceNoProducts {
     }
@@ -3806,7 +3806,7 @@ declare global {
         new (): HTMLAtomicCommerceLoadMoreProductsElement;
     };
     /**
-     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
      */
     interface HTMLAtomicCommerceNoProductsElement extends Components.AtomicCommerceNoProducts, HTMLStencilElement {
     }
@@ -6177,7 +6177,7 @@ declare namespace LocalJSX {
     interface AtomicCommerceLoadMoreProducts {
     }
     /**
-     * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+     * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
      */
     interface AtomicCommerceNoProducts {
     }
@@ -9534,7 +9534,7 @@ declare module "@stencil/core" {
              */
             "atomic-commerce-load-more-products": LocalJSX.AtomicCommerceLoadMoreProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceLoadMoreProductsElement>;
             /**
-             * @alpha The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+             * @alpha The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
              */
             "atomic-commerce-no-products": LocalJSX.AtomicCommerceNoProducts & JSXBase.HTMLAttributes<HTMLAtomicCommerceNoProductsElement>;
             /**
