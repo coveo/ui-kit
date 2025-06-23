@@ -193,9 +193,9 @@ it('should throw error when required prop is missing', async () => {
 ```typescript
 it('should handle click when button is pressed', async () => {
   await renderComponent();
-  const button = locators.button;
+  const button = locators.mainButton;
 
-  await button.click();
+  await mainButton.click();
 
   // Verify the result
   await expect.element(page.getByText('Expected Result')).toBeVisible();

@@ -24,7 +24,7 @@ The atomic components are placed in the `src/components` directory. They are org
 - `atomic-test-component.new.stories.tsx`: The Storybook stories for the component.
 - `atomic-test-component.ts`: The main component file.
 - `atomic-test-component.spec.ts`: The test file for the component.
-- `atomic-test-component.tw.css`: The CSS file for the component.c
+- `atomic-test-component.tw.css`: The CSS file for the component.
 - `e2e/atomic-test-component.e2e.ts`: The end-to-end test file.
 - `e2e/fixture.ts`: The E2E test fixture.
 - `e2e/page-object.ts`: The E2E page object.
