@@ -57,14 +57,12 @@ export class AtomicProduct extends LitElement {
 
   /**
    * The InteractiveProduct item.
-   * @alpha
    */
   @property({type: Object, attribute: 'interactive-product'})
   interactiveProduct!: InteractiveProduct;
 
   /**
    * Global Atomic state.
-   * @alpha
    */
   @property({type: Object}) store?: CommerceStore | CommerceRecommendationStore;
 
@@ -106,7 +104,12 @@ export class AtomicProduct extends LitElement {
   @property({type: String}) classes = '';
 
   /**
-   * @alpha
+   * A unique identifier for tracking the loading state of this product component.
+   * When set, this flag is added to the global loading flags array and automatically
+   * removed when the component finishes its initial render. This allows the framework
+   * to determine when all components have finished loading.
+   *
+   * @internal
    */
   @property({type: String, attribute: 'loading-flag'}) loadingFlag?: string;
 
@@ -114,7 +117,7 @@ export class AtomicProduct extends LitElement {
    * Internal function used in advanced setups, which lets you bypass the standard HTML template system.
    * Particularly useful for Atomic React
    *
-   * @alpha
+   * @internal
    */
   @property({type: Object, attribute: 'rendering-function'})
   renderingFunction: ItemRenderingFunction;
