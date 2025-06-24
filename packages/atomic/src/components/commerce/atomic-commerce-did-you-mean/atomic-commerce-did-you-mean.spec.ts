@@ -112,8 +112,8 @@ describe('atomic-commerce-did-you-mean', () => {
   });
 
   describe('when query was automatically corrected', () => {
-    let noResults: Element | null;
-    let autoCorrected: Element | null;
+    let noResults: Element;
+    let autoCorrected: Element;
 
     beforeEach(async () => {
       const rendered = await renderDidYouMean({
@@ -124,8 +124,8 @@ describe('atomic-commerce-did-you-mean', () => {
           wasCorrectedTo: 'corrected search',
         },
       });
-      noResults = rendered.noResults ?? null;
-      autoCorrected = rendered.autoCorrected ?? null;
+      noResults = rendered.noResults!;
+      autoCorrected = rendered.autoCorrected!;
     });
 
     it('should display the auto correction no results content', () => {
@@ -162,7 +162,7 @@ describe('atomic-commerce-did-you-mean', () => {
   });
 
   describe('when query has manual correction available', () => {
-    let didYouMean: Element | null;
+    let didYouMean: Element;
 
     beforeEach(async () => {
       const rendered = await renderDidYouMean({
@@ -175,7 +175,7 @@ describe('atomic-commerce-did-you-mean', () => {
           },
         },
       });
-      didYouMean = rendered.didYouMean ?? null;
+      didYouMean = rendered.didYouMean!;
     });
 
     it('should render correction did you mean text', () => {
@@ -200,9 +200,9 @@ describe('atomic-commerce-did-you-mean', () => {
   });
 
   describe('when query was modified by trigger', () => {
-    let showingResultsFor: Element | null;
-    let searchInsteadFor: Element | null;
-    let undoBtn: Element | null;
+    let showingResultsFor: Element;
+    let searchInsteadFor: Element;
+    let undoBtn: Element;
 
     beforeEach(async () => {
       const rendered = await renderDidYouMean({
@@ -212,9 +212,9 @@ describe('atomic-commerce-did-you-mean', () => {
           newQuery: 'modified query',
         },
       });
-      showingResultsFor = rendered.showingResultsFor ?? null;
-      searchInsteadFor = rendered.searchInsteadFor ?? null;
-      undoBtn = rendered.undoBtn ?? null;
+      showingResultsFor = rendered.showingResultsFor!;
+      searchInsteadFor = rendered.searchInsteadFor!;
+      undoBtn = rendered.undoBtn!;
     });
 
     it('should display modified query in showing-results-for section', () => {
