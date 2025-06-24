@@ -10,6 +10,10 @@ export default {
     await import(
       './atomic-commerce-product-list/atomic-commerce-product-list.js'
     ),
+  'atomic-commerce-products-per-page': async () =>
+    await import(
+      './atomic-commerce-products-per-page/atomic-commerce-products-per-page.js'
+    ),
   'atomic-commerce-query-summary': async () =>
     await import(
       './atomic-commerce-query-summary/atomic-commerce-query-summary.js'
