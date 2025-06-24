@@ -11,6 +11,7 @@ import {
   DidYouMean,
   QueryTrigger,
 } from '@coveo/headless/commerce';
+import {userEvent} from '@vitest/browser/context';
 import {html} from 'lit';
 import {describe, expect, it, vi, beforeEach} from 'vitest';
 import './atomic-commerce-did-you-mean';
@@ -163,6 +164,7 @@ describe('atomic-commerce-did-you-mean', () => {
 
   describe('when query has manual correction available', () => {
     let didYouMean: Element;
+    let element: AtomicCommerceDidYouMean;
 
     beforeEach(async () => {
       const rendered = await renderDidYouMean({
@@ -176,6 +178,7 @@ describe('atomic-commerce-did-you-mean', () => {
         },
       });
       didYouMean = rendered.didYouMean!;
+      element = rendered.element;
     });
 
     it('should render correction did you mean text', () => {
@@ -195,8 +198,18 @@ describe('atomic-commerce-did-you-mean', () => {
       expect(correctionBtn).toHaveTextContent('suggested correction');
     });
 
-    //TODO: KIT-3691
-    it('should call applyQueryCorrection when correction button is clicked', async () => {});
+    it('should call applyCorrection when correction button is clicked', async () => {
+      const correctionBtn = didYouMean?.querySelector(
+        'button[part="correction-btn"]'
+      );
+      const applyCorrectionSpy = vi.spyOn(
+        element.didYouMean,
+        'applyCorrection'
+      );
+
+      await userEvent.click(correctionBtn!);
+      expect(applyCorrectionSpy).toHaveBeenCalled();
+    });
   });
 
   describe('when query was modified by trigger', () => {
