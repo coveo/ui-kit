@@ -4,8 +4,8 @@ import {
 } from '@coveo/headless';
 import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
 import {
-  AppProxyConfig,
-  AppProxyResponse,
+  AppProxyOptions,
+  CoveoShopifyOptions,
   fetchAppProxyConfig,
   CoveoShopifyCustomEvent,
   publishCustomShopifyEvent,
@@ -27,10 +27,10 @@ const getSampleSearchEngineConfigurationWithoutTrackingId = () => ({
 });
 
 it('should export the correct types', () => {
-  void ({} as AppProxyConfig);
-  void ({} as AppProxyResponse);
-  void ({} as BuildShopifySearchEngineOptions);
+  void ({} as AppProxyOptions);
+  void ({} as CoveoShopifyOptions);
   void ({} as CoveoShopifyCustomEvent);
+  void ({} as BuildShopifySearchEngineOptions);
   expect(fetchAppProxyConfig).toBeDefined();
   expect(publishCustomShopifyEvent).toBeDefined();
   expect(COVEO_SHOPIFY_CONFIG_KEY).toBeDefined();
