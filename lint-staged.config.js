@@ -1,9 +1,11 @@
 module.exports = {
-  '**/*.{ts?(x),?(m)js,json,css,pcss,html,md,yml}': (files) => {
+  '**/*.{ts?(x),?(m)js,json,css,html,md,yml}': (files) => {
     const filteredFiles = files.filter(
       (file) =>
         !(file.includes('/stencil-generated/') && file.endsWith('.ts')) &&
-        !file.includes('/packages/quantic/')
+        !file.includes('/packages/quantic/') &&
+        !file.endsWith('.tw.css') &&
+        !file.endsWith('.pcss')
     );
     return `biome check --write ${filteredFiles.join(' ')}`;
   },
