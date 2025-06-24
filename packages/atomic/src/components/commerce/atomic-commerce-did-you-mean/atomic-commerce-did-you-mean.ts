@@ -114,3 +114,8 @@ export class AtomicCommerceDidYouMean
     return html`${when(hasCorrection, () => this.content)}`;
   }
 }
+declare global {
+  interface HTMLElementTagNameMap {
+    'atomic-commerce-did-you-mean': AtomicCommerceDidYouMean;
+  }
+}
