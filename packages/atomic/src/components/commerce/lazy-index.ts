@@ -1,5 +1,9 @@
 // Auto-generated file
 export default {
+  'atomic-commerce-did-you-mean': async () =>
+    await import(
+      './atomic-commerce-did-you-mean/atomic-commerce-did-you-mean.js'
+    ),
   'atomic-commerce-interface': async () =>
     await import('./atomic-commerce-interface/atomic-commerce-interface.js'),
   'atomic-commerce-layout': async () =>
