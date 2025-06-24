@@ -10,6 +10,22 @@
 
 ---
 
+## �️ Migration Overview
+
+### Problem Statement
+- **25+ ESLint configs** with significant duplication across packages
+- **Performance bottleneck:** 15-20s linting time blocking developer workflows
+- **Maintenance overhead:** Multiple tools requiring coordination (ESLint + Prettier)
+- **Tool conflicts:** Inconsistent formatting between ESLint and Prettier
+
+### Solution: Biome v2
+- **Unified tooling:** Single tool for both linting and formatting
+- **Performance boost:** 13-18x faster than previous setup
+- **Zero code changes:** 97% Prettier compatibility maintained
+- **Simplified maintenance:** 96% reduction in configuration files
+
+---
+
 ## 📊 Performance Results
 
 ### Speed Comparison (Real Data)
@@ -295,14 +311,24 @@ npm run lint:fix -- --reporter=json          # Custom reporter
 
 **The migration exceeded expectations by delivering:**
 
-1. **Massive performance gains** (13-18x faster)
+1. **Massive performance gains** (13-18x faster than ESLint + Prettier)
 2. **Zero disruption** (same commands, same formatting)
-3. **Simplified maintenance** (96% fewer configs)
-4. **Better developer experience** (real-time feedback)
+3. **Simplified maintenance** (96% fewer configs, unified tooling)
+4. **Better developer experience** (real-time feedback, no tool conflicts)
 
-**Bottom line:** Biome provides everything ESLint + Prettier did, but significantly faster and with less complexity.
+### 🎯 Why Biome v2
 
-**Recommendation:** This migration represents a strategic improvement that benefits every developer on the team through faster feedback loops and simplified tooling.
+**Biome v2 was chosen as the optimal solution** for our linting and formatting needs due to:
+
+- **Unified approach:** One tool replaces both ESLint + Prettier
+- **Excellent performance:** 13-18x improvement over previous setup
+- **Lower complexity:** Single dependency vs coordinating multiple tools
+- **Better ecosystem:** Mature VS Code integration and community support
+- **Future-proof:** Active development with strong plugin support
+
+**Bottom line:** Biome v2 provides everything ESLint + Prettier did, significantly faster, with dramatically less complexity.
+
+**Result:** This migration represents a strategic improvement that benefits every developer through faster feedback loops, simplified tooling, and eliminated tool conflicts.
 
 ---
 
@@ -312,3 +338,6 @@ npm run lint:fix -- --reporter=json          # Custom reporter
 - **Performance benchmarks:** https://biomejs.dev/blog/biome-wins-prettier-challenge/
 - **VS Code extension:** Search "Biome" in VS Code extensions
 - **Migration help:** See this document or ask the team
+
+### Future Considerations
+- **oxlint:** A promising Rust-based linter project worth monitoring. While currently linting-only (no formatting) and with limited plugin support, it shows excellent performance characteristics. We'll keep an eye on its development as a potential future alternative if it becomes a full ESLint + Prettier replacement with extensible plugin ecosystem.
