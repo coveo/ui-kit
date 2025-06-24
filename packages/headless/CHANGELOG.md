@@ -1,7 +1,3 @@
-## <small>3.26.2 (2025-06-24)</small>
-
-- chore(headless): deprecate `restoreTab` action (KIT-4398) - will be removed in V4
-
 ## <small>3.26.1 (2025-06-18)</small>
 
 - chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
