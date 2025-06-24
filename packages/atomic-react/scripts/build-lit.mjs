@@ -1,6 +1,6 @@
 import cem from '@coveo/atomic/custom-elements-manifest' with {type: 'json'};
 import {writeFileSync} from 'node:fs';
-import * as prettier from 'prettier';
+import {execSync} from 'node:child_process';
 
 const isLitDeclaration = (declaration) =>
   declaration?.superclass?.name === 'LitElement';
@@ -45,16 +45,14 @@ export const ${declaration.name} = createComponent({
 });
 `;
 
-// Sort modules by path to ensure deterministic processing order
-const sortedModules = [...cem.modules].toSorted((a, b) => (a.path || '').localeCompare(b.path || ''));
-for (const module of sortedModules) {
+for (const module of cem.modules) {
   if (module.declarations.length === 0) {
     continue;
   }
-  const sortedDeclarations = module.declarations.toSorted((a, b) =>
+  module.declarations.sort((a, b) =>
     a.name.localeCompare(b.name)
   );
-  for (const declaration of sortedDeclarations) {
+  for (const declaration of module.declarations) {
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {
         if (
@@ -75,26 +73,21 @@ for (const module of sortedModules) {
 }
 
 for (const entry of entries) {
-  const prettierConfig = {
-    ...(await prettier.resolveConfig(entry.path)),
-    parser: 'typescript'
-  };
   if(entry.computedComponentImports.length===0) {
-    writeFileSync(entry.path, await prettier.format('export {}', prettierConfig));
+    writeFileSync(entry.path, 'export {}');
+    // Format with Biome, like the original prettier.format() calls
+    execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
     continue;
   }
-  // Sort component imports to ensure deterministic order
-  entry.computedComponentImports = entry.computedComponentImports.toSorted();
   writeFileSync(
     entry.path,
-    await prettier.format(
-      [
-        `import {createComponent} from '@lit/react';`,
-        `import React from 'react';`,
-        `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
-        entry.content
-      ].join('\n'),
-      prettierConfig
-    )
-  )
+    [
+      `import {createComponent} from '@lit/react';`,
+      `import React from 'react';`,
+      `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
+      entry.content
+    ].join('\n')
+  );
+  // Format with Biome, like the original prettier.format() calls
+  execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
 }

@@ -1,3 +1,5 @@
+import {createComponent} from '@lit/react';
+import React from 'react';
 import {
   AtomicCommerceInterface as LitAtomicCommerceInterface,
   AtomicCommerceLayout as LitAtomicCommerceLayout,
@@ -13,8 +15,6 @@ import {
   AtomicComponentError as LitAtomicComponentError,
   AtomicIcon as LitAtomicIcon,
 } from '@coveo/atomic/components';
-import {createComponent} from '@lit/react';
-import React from 'react';
 
 export const AtomicCommerceInterface = createComponent({
   tagName: 'atomic-commerce-interface',

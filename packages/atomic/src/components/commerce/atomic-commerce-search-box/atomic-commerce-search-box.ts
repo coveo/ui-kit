@@ -597,8 +597,7 @@ export class AtomicCommerceSearchBox
       !this.isSearchDisabledForEndUser;
 
     const classes = {
-      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border':
-        true,
+      'bg-background border-neutral absolute top-full left-0 z-10 flex w-full rounded-md border': true,
       hidden: !isVisible,
     };
 
