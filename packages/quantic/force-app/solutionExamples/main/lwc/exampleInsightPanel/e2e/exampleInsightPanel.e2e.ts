@@ -1,22 +1,22 @@
 import {testInsight, expect} from './fixture';
 
 const test = testInsight;
+let consoleErrors: string[] = [];
 
 test.describe('Example Insight Panel E2E Tests', () => {
+  test.beforeEach(async ({page}) => {
+    consoleErrors = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+  });
+
   test.describe('when loading the Insight Panel', () => {
     test('should render correctly and load results automatically', async ({
       insightPanel,
-      page,
     }) => {
-      const consoleErrors = [];
-
-      // Listen for console error messages
-      page.on('console', (msg) => {
-        if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
-        }
-      });
-
       await expect(insightPanel.errorComponent).not.toBeVisible();
       expect(consoleErrors.length).toBe(0);
       expect(insightPanel.insightPanel).toBeVisible();
@@ -41,6 +41,8 @@ test.describe('Example Insight Panel E2E Tests', () => {
       insightPanel,
       search,
     }) => {
+      await expect(insightPanel.errorComponent).not.toBeVisible();
+      expect(consoleErrors.length).toBe(0);
       // Trigger a search
       const exampleQuery = 'Test';
       const searchRequestPromise = search.waitForSearchRequest();
