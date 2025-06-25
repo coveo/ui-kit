@@ -13,6 +13,11 @@ export interface BreadcrumbContentProps {
   breadcrumb: Breadcrumb;
 }
 
+/*
+ * breadcrumb.content is currently of type VNode from stencil.
+ * When migrating atomic-breadbox, we will first have to change what atomic-rating-facet sends as 'content' to an HtmlElement.
+ * (By doing something similar to recent-queries.ts)
+ */
 export const renderBreadcrumbContent: FunctionalComponent<
   BreadcrumbContentProps
 > = ({props}) => {
@@ -32,17 +37,18 @@ export const renderBreadcrumbContent: FunctionalComponent<
   });
 
   const valueClass = tw({
-    'ml-1 max-w-[30ch] truncate': true,
-    idle: isIdle,
-    selected: isSelected,
-    excluded: isExclusion,
+    'ml-1': true,
+    'max-w-[30ch] truncate': !props.breadcrumb.content,
+    idle: isIdle && !props.breadcrumb.content,
+    selected: isSelected && !props.breadcrumb.content,
+    excluded: isExclusion && !props.breadcrumb.content,
   });
 
   return html`<span part="breadcrumb-label" class=${multiClassMap(labelClass)}>
       ${props.i18n.t('with-colon', {text: props.breadcrumb.label})}
     </span>
     <span part="breadcrumb-value" class=${multiClassMap(valueClass)}>
-      ${value}
+      ${props.breadcrumb.content ?? value}
     </span>
     <atomic-icon
       part="breadcrumb-clear"

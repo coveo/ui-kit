@@ -1,3 +1,17 @@
+## <small>3.24.1 (2025-06-25)</small>
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(quantic): quantic searchbox always clears filters on suggestion click (#5495) ([735a423](https://github.com/coveo/ui-kit/commits/735a423)), closes [#5495](https://github.com/coveo/ui-kit/issues/5495)
+- test(quantic): Playwright migration for quantic searchbox component (#5449) ([f003f4c](https://github.com/coveo/ui-kit/commits/f003f4c)), closes [#5449](https://github.com/coveo/ui-kit/issues/5449)
+- test(quantic): standalone searchbox tests (#5428) ([6eed3a2](https://github.com/coveo/ui-kit/commits/6eed3a2)), closes [#5428](https://github.com/coveo/ui-kit/issues/5428)
+
+## 3.24.0 (2025-06-18)
+
+- fix(deps): update all dependencies j:kit-282 (#5476) ([c5ea600](https://github.com/coveo/ui-kit/commits/c5ea600)), closes [#5476](https://github.com/coveo/ui-kit/issues/5476)
+- feat(quantic): added attach results feature to the example insight panel (#5432) ([1986dd3](https://github.com/coveo/ui-kit/commits/1986dd3)), closes [#5432](https://github.com/coveo/ui-kit/issues/5432)
+- test(quantic): added unit tests for refine toggle component (#5397) ([cf02a08](https://github.com/coveo/ui-kit/commits/cf02a08)), closes [#5397](https://github.com/coveo/ui-kit/issues/5397)
+- test(quantic): Playwright migration for quanticRecentResultsList component (#5381) ([07052a0](https://github.com/coveo/ui-kit/commits/07052a0)), closes [#5381](https://github.com/coveo/ui-kit/issues/5381)
+
 ## 3.23.0 (2025-06-11)
 
 - test(quantic): Tests for QuanticSearchBoxSuggestionsList (#5425) ([ea7abaf](https://github.com/coveo/ui-kit/commits/ea7abaf)), closes [#5425](https://github.com/coveo/ui-kit/issues/5425)

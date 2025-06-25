@@ -32,6 +32,8 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * @part search-tips - The search tips to help the user correct the query.
  * @part highlight - The highlighted query.
  * @part icon - The magnifying glass icon.
+ *
+ * @slot default - Any additional content slotted inside of its element will be displayed as well.
  */
 @Component({
   tag: 'atomic-no-results',

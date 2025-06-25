@@ -23,7 +23,7 @@ import {CommerceBindings} from '../atomic-commerce-interface/atomic-commerce-int
 /**
  * @alpha
  *
- * The `atomic-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
+ * The `atomic-commerce-no-products` component displays search tips when there are no products. Any additional content slotted inside of its element will be displayed as well.
  *
  * @part no-results - The text indicating that no products were found for the search.
  * @part search-tips - The search tips to help the user correct the query.

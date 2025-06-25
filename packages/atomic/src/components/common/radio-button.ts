@@ -32,7 +32,9 @@ export interface RadioButtonProps {
   ref?: RefOrCallback;
 }
 
-export const radioButton: FunctionalComponent<RadioButtonProps> = ({props}) => {
+export const renderRadioButton: FunctionalComponent<RadioButtonProps> = ({
+  props,
+}) => {
   const classNames = {
     'btn-radio': true,
     selected: Boolean(props.checked),

@@ -25,9 +25,10 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
     test('should change the activeDescendant of the search box', async ({
       commerceSearchBoxQuerySuggestions,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.searchBox
-      ).not.toHaveAttribute('aria-activedescendant');
+      await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
+        'aria-activedescendant',
+        ''
+      );
 
       await commerceSearchBoxQuerySuggestions.suggestion.first().hover();
 
@@ -60,9 +61,10 @@ test.describe('AtomicCommerceSearchBoxQuerySuggestions', () => {
       commerceSearchBoxQuerySuggestions,
       page,
     }) => {
-      await expect(
-        commerceSearchBoxQuerySuggestions.searchBox
-      ).not.toHaveAttribute('aria-activedescendant');
+      await expect(commerceSearchBoxQuerySuggestions.searchBox).toHaveAttribute(
+        'aria-activedescendant',
+        ''
+      );
 
       await expect(
         commerceSearchBoxQuerySuggestions.suggestion.first()

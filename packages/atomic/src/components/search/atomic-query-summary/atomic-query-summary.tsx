@@ -20,7 +20,6 @@ import {Bindings} from '../atomic-search-interface/atomic-search-interface';
  * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
  *
  * @part container - The container for the whole summary.
- * @part results - The container for the results.
  * @part duration - The container for the duration.
  * @part highlight - The summary highlights.
  * @part query - The summary highlighted query.

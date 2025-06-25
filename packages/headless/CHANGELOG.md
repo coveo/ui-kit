@@ -1,3 +1,15 @@
+## 3.27.0 (2025-06-25)
+
+- fix(deps): update all dependencies j:kit-282 (#5522) ([ee7a9ab](https://github.com/coveo/ui-kit/commits/ee7a9ab)), closes [#5522](https://github.com/coveo/ui-kit/issues/5522)
+- fix(headless commerce): support show more / show less on root category facet values (#5466) ([90229d6](https://github.com/coveo/ui-kit/commits/90229d6)), closes [#5466](https://github.com/coveo/ui-kit/issues/5466)
+- feat(headless): support domain property on date / numeric range facet controller states (#5497) ([4f26dec](https://github.com/coveo/ui-kit/commits/4f26dec)), closes [#5497](https://github.com/coveo/ui-kit/issues/5497)
+
+## <small>3.26.1 (2025-06-18)</small>
+
+- chore(deps): update vite to v3.2.3 j:kit-282 (#5475) ([32f2b2e](https://github.com/coveo/ui-kit/commits/32f2b2e)), closes [#5475](https://github.com/coveo/ui-kit/issues/5475)
+- fix(headless): missing actionCause analytics (#5436) ([b646ba0](https://github.com/coveo/ui-kit/commits/b646ba0)), closes [#5436](https://github.com/coveo/ui-kit/issues/5436)
+- fix(headless): move facet display reg. tabs to the facet condition manager (#5441) ([c761925](https://github.com/coveo/ui-kit/commits/c761925)), closes [#5441](https://github.com/coveo/ui-kit/issues/5441)
+
 ## 3.26.0 (2025-06-11)
 
 - chore: map package.json into the exports (#5414) ([357dfa8](https://github.com/coveo/ui-kit/commits/357dfa8)), closes [#5414](https://github.com/coveo/ui-kit/issues/5414)
