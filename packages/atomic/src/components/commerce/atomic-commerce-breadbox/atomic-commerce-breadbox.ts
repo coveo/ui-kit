@@ -127,9 +127,9 @@ export class AtomicCommerceBreadbox
     this.context = buildContext(this.bindings.engine);
     this.breadcrumbManager = this.searchOrListing.breadcrumbManager();
 
-    if (window.ResizeObserver) {
+    if (window.ResizeObserver && this.parentElement) {
       this.resizeObserver = new ResizeObserver(() => this.adaptBreadcrumbs());
-      this.resizeObserver.observe(this.parentElement!);
+      this.resizeObserver.observe(this.parentElement);
     }
 
     this.breadcrumbRemovedFocus = new FocusTargetController(
@@ -147,6 +147,7 @@ export class AtomicCommerceBreadbox
   }
 
   updated(changedProperties: Map<string, unknown>) {
+    super.updated(changedProperties);
     if (changedProperties.has('pathLimit')) {
       this.validateProps();
     }
@@ -420,11 +421,13 @@ export class AtomicCommerceBreadbox
       })}
       ${renderBreadcrumbClearAll({
         props: {
-          refCallback: () => {
+          refCallback: (ref) => {
             const isFocusTarget =
               this.lastRemovedBreadcrumbIndex === this.numberOfBreadcrumbs;
 
-            isFocusTarget ? this.breadcrumbRemovedFocus.setTarget : undefined;
+            if (isFocusTarget) {
+              this.breadcrumbRemovedFocus.setTarget(ref);
+            }
           },
           onClick: () => {
             this.breadcrumbManager.deselectAll();

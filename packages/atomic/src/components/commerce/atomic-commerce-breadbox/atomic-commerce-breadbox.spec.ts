@@ -382,4 +382,11 @@ describe('AtomicCommerceBreadbox', () => {
     await expect.element(partsElements.showMore!).toBeInTheDocument();
     await expect.element(partsElements.clearAll!).toBeInTheDocument();
   });
+
+  it('should disconnect the resize observer when disconnected', async () => {
+    const {element} = await renderBreadbox();
+    const disconnectSpy = vi.spyOn(ResizeObserver.prototype, 'disconnect');
+    element.disconnectedCallback();
+    expect(disconnectSpy).toHaveBeenCalled();
+  });
 });
