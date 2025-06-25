@@ -10,17 +10,17 @@ if (typeof window !== 'undefined') {
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
+    const rootIsCustomElement = rootTagName?.includes('-');
     const tags = [...root.querySelectorAll(':not(:defined)')]
       .map((el) => el.tagName.toLowerCase())
-      .filter((tag) => tag.startsWith('atomic-'));
+      .filter((tag) => tag.includes('-'));
 
     // If the root element is an undefined Atomic component, add it to the list
-    if (rootIsAtomicElement && !customElements.get(rootTagName)) {
+    if (rootIsCustomElement && !customElements.get(rootTagName)) {
       tags.push(rootTagName);
     }
 
-    if (rootIsAtomicElement) {
+    if (rootIsCustomElement) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {

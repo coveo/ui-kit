@@ -39,20 +39,20 @@ export function registerAutoloader(
   const discover = async (root: Element | ShadowRoot | DocumentFragment) => {
     const rootTagName =
       root instanceof Element ? root.tagName.toLowerCase() : '';
-    const rootIsAtomicElement = rootTagName?.startsWith('atomic-');
-    const allAtomicElements = [...root.querySelectorAll('*')].filter((el) =>
-      el.tagName.toLowerCase().startsWith('atomic-')
+    const rootIsCustomElement = rootTagName?.includes('-');
+    const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
+      el.tagName.toLowerCase().includes('atomic-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
     if (
-      rootIsAtomicElement &&
+      rootIsCustomElement &&
       root instanceof Element &&
       !customElements.get(rootTagName)
     ) {
-      allAtomicElements.push(root);
+      allCustomElements.push(root);
     }
-    if (rootIsAtomicElement) {
+    if (rootIsCustomElement) {
       const childTemplates = root.querySelectorAll('template');
       //This is necessary to load the components that are inside the templates
       for (const template of childTemplates) {
@@ -66,7 +66,7 @@ export function registerAutoloader(
       }
     }
     const litRegistrationPromises = [];
-    for (const atomicElement of allAtomicElements) {
+    for (const atomicElement of allCustomElements) {
       const tagName = atomicElement.tagName.toLowerCase();
       if (tagName in elementMap && !customElements.get(tagName)) {
         // The element uses Lit already, we don't need to jam the lazy loader in the Shadow DOM.
