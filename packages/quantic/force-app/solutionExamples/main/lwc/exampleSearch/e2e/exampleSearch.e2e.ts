@@ -1,23 +1,24 @@
 import {testSearch, expect} from './fixture';
 
 let test = testSearch;
+let consoleErrors: string[] = [];
 
 test.describe('Example Search Page E2E Tests', () => {
+  test.beforeEach(async ({page}) => {
+    consoleErrors = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+  });
+
   test.describe('when loading the search page', () => {
     test('should render correctly and load results automatically', async ({
       searchPage,
-      page,
     }) => {
-      const consoleErrors = [];
-
-      // Listen for console error messages
-      page.on('console', (msg) => {
-        if (msg.type() === 'error') {
-          consoleErrors.push(msg.text());
-        }
-      });
-
       await expect(searchPage.errorComponent).not.toBeVisible();
+      expect(consoleErrors.length).toBe(0);
       expect(searchPage.searchbox).toBeVisible();
       expect(searchPage.facetsManager).toBeVisible();
       expect(searchPage.facets).toBeVisible();
@@ -42,6 +43,8 @@ test.describe('Example Search Page E2E Tests', () => {
       searchPage,
       search,
     }) => {
+      await expect(searchPage.errorComponent).not.toBeVisible();
+      expect(consoleErrors.length).toBe(0);
       // Trigger a search query
       const exampleQuery = 'test';
       const searchRequestPromise = search.waitForSearchRequest();
