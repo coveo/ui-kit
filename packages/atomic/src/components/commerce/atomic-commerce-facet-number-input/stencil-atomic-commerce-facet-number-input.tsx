@@ -1,17 +1,17 @@
 import {isUndefined} from '@coveo/bueno';
 import {NumericFacet} from '@coveo/headless/commerce';
 import {Component, h, Prop, Event, EventEmitter, State} from '@stencil/core';
-import {Button} from '../../../common/stencil-button';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-
-export type Range = {start: number; end: number};
+import {Button} from '../../common/stencil-button';
+import {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
+import type {Range} from './atomic-commerce-facet-number-input';
 
 /**
  * Internal component made to be integrated in a NumericFacet.
  * @alpha
  */
+// TODO: delete this component
 @Component({
-  tag: 'atomic-commerce-facet-number-input',
+  tag: 'stencil-atomic-commerce-facet-number-input',
   styleUrl: 'atomic-commerce-facet-number-input.pcss',
   shadow: false,
 })

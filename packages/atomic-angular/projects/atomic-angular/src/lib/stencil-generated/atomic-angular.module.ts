@@ -5,16 +5,6 @@ import {APP_INITIALIZER, ModuleWithProviders, NgModule, Provider} from '@angular
 
         
 import {
-AtomicCommerceFacet,
-AtomicCommerceInterface,
-AtomicCommercePager,
-AtomicCommerceProductList,
-AtomicCommerceSearchBoxInstantProducts,
-AtomicCommerceSearchBoxQuerySuggestions,
-AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -24,12 +14,10 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
 AtomicCommerceNoProducts,
-AtomicCommerceNumericFacet,
 AtomicCommerceProductsPerPage,
 AtomicCommerceQueryError,
 AtomicCommerceQuerySummary,
@@ -142,21 +130,13 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceFacetNumberInput,
+StencilAtomicCommerceNumericFacet
 } from './components';
 
         
 const DECLARATIONS = [
-AtomicCommerceFacet,
-AtomicCommerceInterface,
-AtomicCommercePager,
-AtomicCommerceProductList,
-AtomicCommerceSearchBoxInstantProducts,
-AtomicCommerceSearchBoxQuerySuggestions,
-AtomicCommerceSearchBoxRecentQueries,
-AtomicCommerceSortDropdown,
-AtomicComponentError,
-AtomicIcon,
 AtomicAriaLive,
 AtomicAutomaticFacet,
 AtomicAutomaticFacetGenerator,
@@ -166,12 +146,10 @@ AtomicColorFacet,
 AtomicCommerceBreadbox,
 AtomicCommerceCategoryFacet,
 AtomicCommerceDidYouMean,
-AtomicCommerceFacetNumberInput,
 AtomicCommerceFacets,
 AtomicCommerceLayout,
 AtomicCommerceLoadMoreProducts,
 AtomicCommerceNoProducts,
-AtomicCommerceNumericFacet,
 AtomicCommerceProductsPerPage,
 AtomicCommerceQueryError,
 AtomicCommerceQuerySummary,
@@ -284,7 +262,9 @@ AtomicTabManager,
 AtomicTableElement,
 AtomicText,
 AtomicTimeframe,
-AtomicTimeframeFacet
+AtomicTimeframeFacet,
+StencilAtomicCommerceFacetNumberInput,
+StencilAtomicCommerceNumericFacet
 ]
 
         

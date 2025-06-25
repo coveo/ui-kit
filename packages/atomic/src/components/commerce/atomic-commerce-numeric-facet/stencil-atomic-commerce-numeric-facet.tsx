@@ -14,22 +14,22 @@ import {
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../../../utils/initialization-utils';
-import {FocusTargetController} from '../../../../utils/stencil-accessibility-utils';
-import {FacetInfo} from '../../../common/facets/facet-common-store';
-import {FacetContainer} from '../../../common/facets/facet-container/stencil-facet-container';
-import {FacetGuard} from '../../../common/facets/facet-guard';
-import {FacetHeader} from '../../../common/facets/facet-header/stencil-facet-header';
-import {NumericFacetValueLink} from '../../../common/facets/numeric-facet/value-link';
-import {NumericFacetValuesContainer} from '../../../common/facets/numeric-facet/values-container';
-import {initializePopover} from '../../../common/facets/popover/popover-type';
-import {shouldDisplayInputForFacetRange} from '../../../common/facets/stencil-facet-common';
+} from '../../../utils/initialization-utils';
+import {FocusTargetController} from '../../../utils/stencil-accessibility-utils';
+import {FacetInfo} from '../../common/facets/facet-common-store';
+import {FacetContainer} from '../../common/facets/facet-container/stencil-facet-container';
+import {FacetGuard} from '../../common/facets/facet-guard';
+import {FacetHeader} from '../../common/facets/facet-header/stencil-facet-header';
+import {NumericFacetValueLink} from '../../common/facets/numeric-facet/stencil-value-link';
+import {NumericFacetValuesContainer} from '../../common/facets/numeric-facet/stencil-values-container';
+import {initializePopover} from '../../common/facets/popover/popover-type';
+import {shouldDisplayInputForFacetRange} from '../../common/facets/stencil-facet-common';
 import {
   defaultCurrencyFormatter,
   defaultNumberFormatter,
-} from '../../../common/formats/format-common';
-import {CommerceBindings as Bindings} from '../../atomic-commerce-interface/atomic-commerce-interface';
-import type {Range} from '../facet-number-input/atomic-commerce-facet-number-input';
+} from '../../common/formats/format-common';
+import {Range} from '../atomic-commerce-facet-number-input/atomic-commerce-facet-number-input';
+import {CommerceBindings as Bindings} from '../atomic-commerce-interface/atomic-commerce-interface';
 
 /**
  * The `atomic-commerce-numeric-facet` component is responsible for rendering a commerce facet that allows the user to filter products using numeric ranges.
@@ -37,10 +37,11 @@ import type {Range} from '../facet-number-input/atomic-commerce-facet-number-inp
  * @alpha
  */
 @Component({
-  tag: 'atomic-commerce-numeric-facet',
+  tag: 'stencil-atomic-commerce-numeric-facet',
   styleUrl: './atomic-commerce-numeric-facet.pcss',
   shadow: true,
 })
+// TODO: delete this component
 export class AtomicCommerceNumericFacet
   implements InitializableComponent<Bindings>
 {
