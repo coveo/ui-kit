@@ -11,7 +11,7 @@ const {decorator, play} = wrapInCommerceInterface({skipFirstRequest: true});
 
 const meta: Meta = {
   component: 'atomic-commerce-search-box',
-  title: 'Atomic-Commerce/Interface Components/atomic-commerce-search-box',
+  title: 'Commerce/atomic-commerce-search-box',
   id: 'atomic-commerce-search-box',
   render: renderComponent,
   decorators: [decorator],
@@ -21,9 +21,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const Default: Story = {
-  name: 'atomic-commerce-search-box',
-};
+export const Default: Story = {};
 
 export const RichSearchBox: Story = {
   name: 'With suggestions and recent queries',
@@ -37,7 +35,7 @@ export const RichSearchBox: Story = {
 };
 
 export const StandaloneSearchBox: Story = {
-  name: 'Standalone search box',
+  name: 'As a standalone search box',
   args: {
     'attributes-redirection-url':
       './iframe.html?id=atomic-commerce-search-box--in-page&viewMode=story&args=enable-query-syntax:!true;suggestion-timeout:5000',

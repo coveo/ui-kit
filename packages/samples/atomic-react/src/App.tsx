@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import './App.css';
 import {HeaderLink} from './components/HeaderLink';
+import {CommerceRecommendationPage} from './pages/CommerceRecommendationPage';
 import {CommerceSearchPage} from './pages/CommerceSearchPage';
 import {FoldedResultListPage} from './pages/FoldedResultListPage';
 import {InstantResultsPage} from './pages/InstantResultsPage';
@@ -14,6 +15,7 @@ const INSTANT_RESULTS_PAGE = 'Instant results';
 const TABLE_RESULT_LIST_PAGE = 'Table result list';
 const RECS_PAGE = 'Recs Interface';
 const COMMERCE_SEARCH_PAGE = 'Commerce Search Page';
+const COMMERCE_RECOMMENDATIONS_PAGE = 'Commerce Recommendations Page';
 
 const pages = [
   LIST_PAGE,
@@ -22,6 +24,7 @@ const pages = [
   TABLE_RESULT_LIST_PAGE,
   RECS_PAGE,
   COMMERCE_SEARCH_PAGE,
+  COMMERCE_RECOMMENDATIONS_PAGE,
 ];
 
 function App() {
@@ -56,6 +59,11 @@ function App() {
             currentPage={page}
             setPage={setPage}
           />
+          <HeaderLink
+            page={COMMERCE_RECOMMENDATIONS_PAGE}
+            currentPage={page}
+            setPage={setPage}
+          />
         </ul>
       </header>
       {page === LIST_PAGE && <ResultListPage />}
@@ -64,6 +72,7 @@ function App() {
       {page === TABLE_RESULT_LIST_PAGE && <TableResultListPage />}
       {page === RECS_PAGE && <RecsPage />}
       {page === COMMERCE_SEARCH_PAGE && <CommerceSearchPage />}
+      {page === COMMERCE_RECOMMENDATIONS_PAGE && <CommerceRecommendationPage />}
     </>
   );
 }

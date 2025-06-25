@@ -29,14 +29,14 @@ export const StandaloneSearchBoxSelectors: StandaloneSearchBoxSelector = {
     ),
   clearButton: () =>
     StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-clear-button"]'
+      'c-quantic-search-box-input [data-testid="search-box-clear-button"]'
     ),
   searchIcon: () =>
     StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-search-icon"]'
+      'c-quantic-search-box-input [data-testid="search-box-search-icon"]'
     ),
   searchButton: () =>
     StandaloneSearchBoxSelectors.get().find(
-      'c-quantic-search-box-input [data-cy="search-box-submit-button"]'
+      'c-quantic-search-box-input [data-testid="search-box-submit-button"]'
     ),
 };
