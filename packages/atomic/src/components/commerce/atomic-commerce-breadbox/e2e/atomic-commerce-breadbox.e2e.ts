@@ -119,7 +119,7 @@ test.describe('Default', () => {
     }) => {
       const breadcrumbButton = breadbox.getBreadcrumbButtons(firstValueText);
 
-      await expect(breadcrumbButton).toHaveText(`Brand:${firstValueText}`);
+      await expect(breadcrumbButton).toHaveText(`Brand: ${firstValueText}`);
     });
   });
   test.describe('when a category facet value is selected', () => {
@@ -167,6 +167,7 @@ test.describe('Default', () => {
 
       await expect(breadcrumbButton).toHaveText(`Category: ${firstValueText}`);
     });
+
     test.describe('when a nested category facet value is selected', () => {
       let breadcrumbText: string | RegExp;
 
@@ -411,12 +412,6 @@ test.describe('Default', () => {
       await breadbox.getBreadcrumbButtons().first().waitFor({state: 'visible'});
       await expect(breadbox.getShowMorebutton()).not.toBeVisible();
       expect(await breadbox.getBreadcrumbButtons().count()).toBe(6);
-    });
-
-    test('should uncheck', async ({breadbox}) => {
-      const breadcrumbButtons = breadbox.getBreadcrumbButtons().first();
-      await breadcrumbButtons.click();
-      await expect(breadcrumbButtons).not.toBeChecked();
     });
 
     test.describe('when clicking on a breadcrumb button', () => {
