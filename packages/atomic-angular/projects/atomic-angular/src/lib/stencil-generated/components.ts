@@ -2896,32 +2896,6 @@ export declare interface AtomicCommerceRecommendationList extends LitAtomicComme
 }
 
 @ProxyCmp({
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'suggestionDelay', 'disableSearch', 'minimumQueryLength', 'clearFilters'],
-  methods: ['initialize', 'watchRedirectionUrl'],
-  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box') || customElements.define('atomic-commerce-search-box', LitAtomicCommerceSearchBox);}
-})
-@Component({
-  selector: 'atomic-commerce-search-box',
-  standalone: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<ng-content></ng-content>',
-  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
-  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'suggestionDelay', 'disableSearch', 'minimumQueryLength', 'clearFilters']
-})
-export class AtomicCommerceSearchBox {
-  protected readonly el: HTMLElement;
-  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
-    c.detach();
-    this.el = el.nativeElement;
-    proxyOutputs(this, this.el, ['redirect']);
-  }
-}
-
-export declare interface AtomicCommerceSearchBox extends LitAtomicCommerceSearchBox {
-  'redirect': EventEmitter<CustomEvent<any>>;
-}
-
-@ProxyCmp({
   inputs: ['density', 'imageSize', 'ariaLabelGenerator'],
   methods: ['setRenderFunction', 'initialize'],
   defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box-instant-products') || customElements.define('atomic-commerce-search-box-instant-products', LitAtomicCommerceSearchBoxInstantProducts);}
@@ -2997,6 +2971,32 @@ export class AtomicCommerceSearchBoxRecentQueries {
 
 export declare interface AtomicCommerceSearchBoxRecentQueries extends LitAtomicCommerceSearchBoxRecentQueries {
 
+}
+
+@ProxyCmp({
+  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'suggestionDelay', 'disableSearch', 'minimumQueryLength', 'clearFilters'],
+  methods: ['initialize', 'watchRedirectionUrl'],
+  defineCustomElementFn: () => {customElements.get('atomic-commerce-search-box') || customElements.define('atomic-commerce-search-box', LitAtomicCommerceSearchBox);}
+})
+@Component({
+  selector: 'atomic-commerce-search-box',
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: '<ng-content></ng-content>',
+  // eslint-disable-next-line @angular-eslint/no-inputs-metadata-property
+  inputs: ['numberOfQueries', 'redirectionUrl', 'suggestionTimeout', 'suggestionDelay', 'disableSearch', 'minimumQueryLength', 'clearFilters']
+})
+export class AtomicCommerceSearchBox {
+  protected readonly el: HTMLElement;
+  constructor(c: ChangeDetectorRef, el: ElementRef, protected z: NgZone) {
+    c.detach();
+    this.el = el.nativeElement;
+    proxyOutputs(this, this.el, ['redirect']);
+  }
+}
+
+export declare interface AtomicCommerceSearchBox extends LitAtomicCommerceSearchBox {
+  'redirect': EventEmitter<CustomEvent<any>>;
 }
 
 @ProxyCmp({
