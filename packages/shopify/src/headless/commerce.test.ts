@@ -4,8 +4,8 @@ import {
 } from '@coveo/headless/commerce';
 import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
 import {
-  AppProxyConfig,
-  AppProxyResponse,
+  AppProxyOptions,
+  CoveoShopifyOptions,
   fetchAppProxyConfig,
   CoveoShopifyCustomEvent,
   publishCustomShopifyEvent,
@@ -15,10 +15,10 @@ import {
 } from './commerce';
 
 it('should export the correct types', () => {
-  void ({} as AppProxyConfig);
-  void ({} as AppProxyResponse);
-  void ({} as BuildShopifyCommerceEngineOptions);
+  void ({} as AppProxyOptions);
+  void ({} as CoveoShopifyOptions);
   void ({} as CoveoShopifyCustomEvent);
+  void ({} as BuildShopifyCommerceEngineOptions);
   expect(fetchAppProxyConfig).toBeDefined();
   expect(publishCustomShopifyEvent).toBeDefined();
   expect(COVEO_SHOPIFY_CONFIG_KEY).toBeDefined();

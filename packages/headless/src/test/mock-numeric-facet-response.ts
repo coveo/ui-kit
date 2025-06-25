@@ -9,6 +9,10 @@ export function buildMockNumericFacetResponse(
     indexScore: 0,
     moreValuesAvailable: false,
     values: [],
+    domain: {
+      start: 0,
+      end: 0,
+    },
     ...config,
   };
 }
