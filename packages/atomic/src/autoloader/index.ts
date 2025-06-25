@@ -41,7 +41,7 @@ export function registerAutoloader(
       root instanceof Element ? root.tagName.toLowerCase() : '';
     const rootIsCustomElement = rootTagName?.includes('-');
     const allCustomElements = [...root.querySelectorAll('*')].filter((el) =>
-      el.tagName.toLowerCase().includes('atomic-')
+      el.tagName.toLowerCase().includes('-')
     );
 
     // If the root element is an undefined Atomic component, add it to the list
