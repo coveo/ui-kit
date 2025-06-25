@@ -49,10 +49,11 @@ for (const module of cem.modules) {
   if (module.declarations.length === 0) {
     continue;
   }
-  module.declarations.sort((a, b) =>
-    a.name.localeCompare(b.name)
+  // Use toSorted() to create a new sorted array without mutating the original
+  const sortedDeclarations = module.declarations.toSorted((a, b) => 
+    a.name.localeCompare(b.name, 'en-US', { sensitivity: 'base' })
   );
-  for (const declaration of module.declarations) {
+  for (const declaration of sortedDeclarations) {
     if (isLitDeclaration(declaration)) {
       for (const entry of entries) {
         if (
@@ -79,12 +80,18 @@ for (const entry of entries) {
     execSync(`npx @biomejs/biome format --write "${entry.path}"`, {stdio: 'pipe'});
     continue;
   }
+  
+  // Sort imports deterministically to ensure consistent output across environments
+  const sortedImports = entry.computedComponentImports.toSorted((a, b) => 
+    a.localeCompare(b, 'en-US', { sensitivity: 'base' })
+  );
+  
   writeFileSync(
     entry.path,
     [
       `import {createComponent} from '@lit/react';`,
       `import React from 'react';`,
-      `import {${entry.computedComponentImports.join(',')}} from '@coveo/atomic/components';`,
+      `import {${sortedImports.join(',')}} from '@coveo/atomic/components';`,
       entry.content
     ].join('\n')
   );
