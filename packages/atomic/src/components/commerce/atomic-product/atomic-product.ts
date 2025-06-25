@@ -24,8 +24,7 @@ import {
 import styles from './atomic-product.tw.css';
 
 /**
- * The `atomic-product` component is used internally by the `atomic-commerce-product-list` component.
- * @alpha
+ * The `atomic-product` component is used internally by the `atomic-commerce-product-list` and `atomic-commerce-recommendation-list` components.
  */
 @customElement('atomic-product')
 @withTailwindStyles
@@ -38,7 +37,7 @@ export class AtomicProduct extends LitElement {
   static styles: CSSResultGroup = [unsafeCSS(styles)];
 
   /**
-   * Whether an atomic-product-link inside atomic-product should stop click event propagation.
+   * Whether `atomic-product-link` components nested in the `atomic-product` should stop click event propagation.
    */
   @property({
     attribute: 'stop-propagation',
@@ -115,7 +114,7 @@ export class AtomicProduct extends LitElement {
 
   /**
    * Internal function used in advanced setups, which lets you bypass the standard HTML template system.
-   * Particularly useful for Atomic React
+   * Particularly useful for Atomic React.
    *
    * @internal
    */
@@ -157,16 +156,26 @@ export class AtomicProduct extends LitElement {
     if (this.stopPropagation) {
       event.stopPropagation();
     }
-    this.shadowRoot!.querySelector<HTMLAnchorElement>(
-      '.link-container > atomic-product-link a:not([slot])'
-    )?.click();
+    this.shadowRoot
+      ?.querySelector<HTMLAnchorElement>(
+        '.link-container > atomic-product-link a:not([slot])'
+      )
+      ?.click();
   };
 
   public connectedCallback() {
     super.connectedCallback();
 
+    if (!this.content) {
+      console.warn(
+        'AtomicProduct: content property is undefined. Cannot create layout.',
+        this
+      );
+      return;
+    }
+
     this.layout = new ItemLayout(
-      this.content!.children,
+      this.content.children,
       this.display,
       this.density,
       this.imageSize
@@ -218,7 +227,14 @@ export class AtomicProduct extends LitElement {
   }
 
   private getContentHTML() {
-    return parentNodeToString(this.content!);
+    if (!this.content) {
+      console.warn(
+        'AtomicProduct: content property is undefined. Cannot get content HTML.',
+        this
+      );
+      return '';
+    }
+    return parentNodeToString(this.content);
   }
 
   private getLinkHTML() {
@@ -248,6 +264,12 @@ export class AtomicProduct extends LitElement {
         </div>
       `;
     }
+
+    // Handle case where content is undefined and layout was not created
+    if (!this.layout) {
+      return html`<div class=${resultComponentClass}></div>`;
+    }
+
     return html`
       <div class=${resultComponentClass}>
         <div
@@ -273,13 +295,15 @@ export class AtomicProduct extends LitElement {
       const customRenderOutputAsString = this.renderingFunction!(
         this.product,
         this.productRootRef!,
-        this.linkContainerRef!
+        this.linkContainerRef
       );
 
-      this.productRootRef!.className += ` ${this.layout
-        .getClasses(customRenderOutputAsString)
-        .concat(this.classes)
-        .join(' ')}`;
+      if (this.layout) {
+        this.productRootRef!.className += ` ${this.layout
+          .getClasses(customRenderOutputAsString)
+          .concat(this.classes)
+          .join(' ')}`;
+      }
 
       this.executedRenderingFunctionOnce = true;
     }
