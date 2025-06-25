@@ -50,6 +50,17 @@ export interface BaseFacetValueRequest {
    * @defaultValue `idle`
    */
   state: FacetValueState;
+  /**
+   * The previous facet value state in the search interface.
+   */
+  previousState?: Exclude<FacetValueState, 'idle'>;
+}
+
+export interface BaseFacetValueRequest {
+  /** The current facet value state.
+   * @defaultValue `idle`
+   */
+  state: FacetValueState;
 }
 
 export interface CurrentValues<T> {

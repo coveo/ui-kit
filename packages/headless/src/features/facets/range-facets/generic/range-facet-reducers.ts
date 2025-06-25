@@ -109,7 +109,12 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetSlice>(
     return;
   }
 
-  facetRequest.currentValues.forEach((request) => (request.state = 'idle'));
+  facetRequest.currentValues.forEach((request) => {
+    if (request.state !== 'idle') {
+      request.previousState = request.state;
+    }
+    request.state = 'idle';
+  });
 }
 
 export function handleRangeFacetSearchParameterRestoration<

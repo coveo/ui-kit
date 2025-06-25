@@ -108,6 +108,6 @@ export function convertToNumericRangeRequests(
 ): NumericRangeRequest[] {
   return values.map((value) => {
     const {numberOfResults, ...rest} = value;
-    return rest;
+    return {...rest, ...(rest.state !== 'idle' && {previousState: rest.state})};
   });
 }

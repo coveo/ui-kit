@@ -316,7 +316,7 @@ export function convertFacetValueToRequest(
 ): FacetValueRequest {
   const {value, state} = facetValue;
 
-  return {value, state};
+  return {value, state, ...(state !== 'idle' && {previousState: state})};
 }
 
 function buildSelectedFacetValueRequest(value: string): FacetValueRequest {

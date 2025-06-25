@@ -764,6 +764,7 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe(facetValueState);
+            expect(targetValue?.previousState).toBeUndefined();
           });
 
           it(`sets the state of an ${oppositeFacetValueState} value to ${facetValueState}`, () => {
@@ -789,6 +790,7 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe(facetValueState);
+            expect(targetValue?.previousState).toBe(oppositeFacetValueState);
           });
 
           it(`sets the state of a ${facetValueState} value to idle`, () => {
@@ -814,6 +816,7 @@ describe('commerceFacetSetReducer', () => {
               finalState[facetId]?.request.values as FacetValueRequest[]
             ).find((req) => req.value === facetValue.value);
             expect(targetValue?.state).toBe('idle');
+            expect(targetValue?.previousState).toBe(facetValueState);
           });
 
           it('sets #preventAutoSelect to true', () => {
