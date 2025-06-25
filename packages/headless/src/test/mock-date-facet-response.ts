@@ -9,6 +9,10 @@ export function buildMockDateFacetResponse(
     indexScore: 0,
     moreValuesAvailable: false,
     values: [],
+    domain: {
+      start: '',
+      end: '',
+    },
     ...config,
   };
 }
