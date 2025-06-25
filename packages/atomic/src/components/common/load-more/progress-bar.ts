@@ -11,7 +11,7 @@ export const renderLoadMoreProgressBar: FunctionalComponent<
   LoadMoreProgressBarProps
 > = ({props}) => {
   const {from, to} = props;
-  const percentage = to > 0 ? (from / to) * 100 : 0;
+  const percentage = to > 0 ? Math.min((from / to) * 100, 100) : 0;
   const width = `${Math.ceil(percentage)}%`;
 
   return html`

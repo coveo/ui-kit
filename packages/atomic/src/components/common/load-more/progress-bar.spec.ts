@@ -62,4 +62,10 @@ describe('#renderLoadMoreProgressBar', () => {
 
     expect(progressBar).toHaveStyle('width: 0%');
   });
+
+  it('should clamp percentage to 100% when from exceeds to', async () => {
+    const {progressBar} = await renderComponent({from: 150, to: 100});
+
+    expect(progressBar).toHaveStyle('width: 100%');
+  });
 });
