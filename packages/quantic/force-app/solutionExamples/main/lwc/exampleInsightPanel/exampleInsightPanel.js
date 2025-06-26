@@ -107,10 +107,9 @@ export default class ExampleInsightPanel extends LightningElement {
       ...this.headless.loadInsightSearchActions(engine),
     };
 
-    this.caseNumber = this.getFieldValueFromRecord(
-      this.caseRecord,
-      'Case.CaseNumber'
-    );
+    this.caseNumber =
+      this.getFieldValueFromRecord(this.caseRecord, 'Case.CaseNumber') ||
+      this.caseId;
     this.engine.dispatch(this.actions.setCaseId(this.caseId));
     this.engine.dispatch(this.actions.setCaseNumber(this.caseNumber));
     this.initAttachedResults();
