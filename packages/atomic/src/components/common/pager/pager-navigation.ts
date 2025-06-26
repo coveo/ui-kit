@@ -6,7 +6,7 @@ interface PagerNavigationProps {
   i18n: i18n;
 }
 
-export const pagerNavigation: FunctionalComponentWithChildren<
+export const renderPagerNavigation: FunctionalComponentWithChildren<
   PagerNavigationProps
 > =
   ({props}) =>
