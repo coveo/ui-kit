@@ -1,3 +1,12 @@
+## <small>3.3.37 (2025-06-25)</small>
+
+- ci: fix generated files desync (#5532) ([52afab5](https://github.com/coveo/ui-kit/commits/52afab5)), closes [#5532](https://github.com/coveo/ui-kit/issues/5532) [#5470](https://github.com/coveo/ui-kit/issues/5470) [#5198](https://github.com/coveo/ui-kit/issues/5198)
+- chore(atomic): migrate atomic-commerce-layout (#5444) ([49f57b0](https://github.com/coveo/ui-kit/commits/49f57b0)), closes [#5444](https://github.com/coveo/ui-kit/issues/5444)
+- chore(atomic): migrate atomic-commerce-query-summary (#5480) ([d21d37f](https://github.com/coveo/ui-kit/commits/d21d37f)), closes [#5480](https://github.com/coveo/ui-kit/issues/5480)
+- chore(atomic): migrate atomic-commerce-recommendation-list to Lit (#5156) ([38e84af](https://github.com/coveo/ui-kit/commits/38e84af)), closes [#5156](https://github.com/coveo/ui-kit/issues/5156)
+- chore(atomic): migrate atomic-commerce-search-box (#5189) ([94a8a70](https://github.com/coveo/ui-kit/commits/94a8a70)), closes [#5189](https://github.com/coveo/ui-kit/issues/5189)
+- chore(atomic): migrate atomic-product-template (#5376) ([6eb35aa](https://github.com/coveo/ui-kit/commits/6eb35aa)), closes [#5376](https://github.com/coveo/ui-kit/issues/5376)
+
 ## <small>3.3.36 (2025-06-18)</small>
 
 - chore(atomic commerce): migrate atomic-product-list (#5374) ([39a35b4](https://github.com/coveo/ui-kit/commits/39a35b4)), closes [#5374](https://github.com/coveo/ui-kit/issues/5374)
